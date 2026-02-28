@@ -1,5 +1,10 @@
-# 🐸 FROG — Free Open Graphical Language
+<p align="center">
+  <img src="FROG logo.png" alt="FROG logo" width="400"/>
+</p>
 
+<h1 align="center">🐸 FROG — Free Open Graphical Language</h1>
+
+---
 
 # DETERMINISTIC DATAFLOW EXECUTION
 
@@ -46,6 +51,3 @@ FROG is a foundation for graphical programming where:
 - the program expression is fully open  
 - execution is secure and optimized  
 - the language remains independent  
-
-
-
