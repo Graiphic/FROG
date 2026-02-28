@@ -1,3 +1,6 @@
+# 🐸 FROG — Free Open Graphical Language
+
+
 # DETERMINISTIC DATAFLOW EXECUTION
 
 FROG uses a true dataflow execution model.
@@ -44,6 +47,5 @@ FROG is a foundation for graphical programming where:
 - execution is secure and optimized  
 - the language remains independent  
 
----
 
-# 🐸 FROG — Free Open Graphical Language
+
