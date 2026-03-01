@@ -359,3 +359,5 @@ Discussions, feedback, and contributions are welcome.
 <p>
 This project is licensed under the <strong>Apache License 2.0</strong>. See <code>LICENSE</code> for details.
 </p>
+
+[![CLA Assistant](https://cla-assistant.io/readme/badge/Graiphic/FROG)](https://cla-assistant.io/Graiphic/FROG)
