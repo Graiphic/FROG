@@ -18,20 +18,22 @@ FROG is an open, hardware-agnostic graphical dataflow language designed to provi
 </p>
 
 <p>
-This document defines the language itself — not an IDE, not a runtime, not a compiler.
+The fundamental executable unit of the language is called a <strong>Frog</strong>.
 </p>
 
 <p>
-The specification describes:
+A Frog is a structured, versioned, and self-contained graphical program composed of:
 </p>
 
 <ul>
-  <li>The FROG Expression file format (<code>.frog</code>)</li>
-  <li>The diagram model</li>
-  <li>The front panel model</li>
-  <li>The node and edge model</li>
-  <li>Versioning and validation rules</li>
+  <li>a <strong>diagram</strong>, defining executable dataflow logic</li>
+  <li>a <strong>front panel</strong>, defining the user interaction layer</li>
+  <li>a typed <strong>interface</strong>, defining its public contract</li>
 </ul>
+
+<p>
+This document defines the language itself — not an IDE, not a runtime, not a compiler.
+</p>
 
 <p>
 Implementations must conform to this specification.
@@ -43,7 +45,7 @@ Implementations must conform to this specification.
 
 <h3>2.1 Language Independence</h3>
 <p>
-The language must remain independent from:
+The language MUST remain independent from:
 </p>
 <ul>
   <li>Any specific IDE implementation</li>
@@ -53,7 +55,7 @@ The language must remain independent from:
 
 <h3>2.2 Explicit Graph Model</h3>
 <p>
-A FROG program is an explicit directed dataflow graph composed of:
+A Frog is an explicit directed dataflow graph composed of:
 </p>
 <ul>
   <li>Nodes</li>
@@ -64,12 +66,12 @@ A FROG program is an explicit directed dataflow graph composed of:
 
 <h3>2.3 Determinism</h3>
 <p>
-Execution semantics must be derivable from data availability and graph structure.
+Execution semantics MUST be derivable from data availability and graph structure.
 </p>
 
 <h3>2.4 Open Representation</h3>
 <p>
-FROG source files must be:
+FROG source files MUST be:
 </p>
 <ul>
   <li>Human-readable</li>
@@ -85,7 +87,7 @@ FROG source files must be:
 <h3>3.1 General Structure</h3>
 
 <p>
-A FROG file is a structured JSON document with a required version declaration.
+A Frog is stored as a structured JSON document with a required version declaration.
 </p>
 
 <pre>
@@ -114,16 +116,16 @@ A FROG file is a structured JSON document with a required version declaration.
 
 <pre>
 "metadata": {
-  "name": "ExampleVI",
-  "description": "Short description",
+  "name": "Add",
+  "description": "Adds two floating-point numbers.",
   "author": "Author Name",
   "version": "0.1.0",
-  "tags": ["math", "example"]
+  "tags": ["math", "primitive"]
 }
 </pre>
 
 <p>
-This section describes the identity and documentation of the program.
+The metadata section defines the identity and documentation of the Frog.
 </p>
 
 <hr/>
@@ -143,7 +145,11 @@ This section describes the identity and documentation of the program.
 </pre>
 
 <p>
-The interface defines the public contract of the program.
+The interface defines the public contract of the Frog.
+</p>
+
+<p>
+Ports declared in the interface MUST be consistent with the diagram.
 </p>
 
 <hr/>
@@ -181,6 +187,10 @@ The interface defines the public contract of the program.
 }
 </pre>
 
+<p>
+Nodes represent executable operations.
+</p>
+
 <h3>6.2 Edge Structure</h3>
 
 <pre>
@@ -190,6 +200,10 @@ The interface defines the public contract of the program.
   "to": { "node": "node_2", "port": "a" }
 }
 </pre>
+
+<p>
+Edges define data connections between node ports.
+</p>
 
 <hr/>
 
@@ -204,7 +218,7 @@ The interface defines the public contract of the program.
 </pre>
 
 <p>
-Front panel elements must be explicitly bound to diagram ports.
+Front panel elements MUST be explicitly bound to diagram ports.
 </p>
 
 <h3>7.1 Control Example</h3>
@@ -229,7 +243,7 @@ Front panel elements must be explicitly bound to diagram ports.
 <h2>8. Icon Definition</h2>
 
 <p>
-Each program MAY define a 40x40 SVG icon.
+Each Frog MAY define a 40x40 SVG icon.
 </p>
 
 <pre>
@@ -252,9 +266,9 @@ MAJOR.MINOR.PATCH
 </pre>
 
 <ul>
-  <li><strong>MAJOR</strong> — breaking structural changes</li>
+  <li><strong>MAJOR</strong> — incompatible structural changes</li>
   <li><strong>MINOR</strong> — backward-compatible additions</li>
-  <li><strong>PATCH</strong> — documentation clarifications</li>
+  <li><strong>PATCH</strong> — clarifications</li>
 </ul>
 
 <p>
@@ -285,7 +299,7 @@ The goal of v0.1 is to define:
 </p>
 
 <ul>
-  <li>A minimal but coherent file format</li>
+  <li>A minimal but coherent Frog structure</li>
   <li>A deterministic structural model</li>
   <li>A stable foundation for future evolution</li>
 </ul>
