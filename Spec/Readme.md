@@ -1,13 +1,13 @@
 <h1 align="center">🐸 FROG Specification</h1>
 
 <p align="center">
-  <strong>FROG — Free Open Graphical Language</strong><br/>
-  Official Language and File Format Specification
+<strong>FROG — Free Open Graphical Language</strong><br>
+Official Language and File Format Specification
 </p>
 
-<hr/>
+<hr>
 
-<h2>1. Purpose</h2>
+<h2>Overview</h2>
 
 <p>
 This repository defines the official specification of <strong>FROG — Free Open Graphical Language</strong>.
@@ -18,133 +18,102 @@ FROG is an open, hardware-agnostic graphical dataflow language designed to provi
 </p>
 
 <p>
-This specification defines:
+The fundamental executable unit of the language is called a <strong>Frog</strong>.
+</p>
+
+<p>
+A Frog is stored as a <strong>structured JSON document</strong> describing:
 </p>
 
 <ul>
-  <li>The fundamental executable unit: a <strong>Frog</strong></li>
-  <li>The <code>.frog</code> file format</li>
-  <li>The structural graph model</li>
-  <li>The interface model</li>
-  <li>The front panel model</li>
-  <li>The execution semantics</li>
-  <li>The validation rules</li>
+<li>the executable graph</li>
+<li>the interface of the program</li>
+<li>the graphical interaction layer</li>
+<li>the connector used when the Frog is embedded inside another Frog</li>
 </ul>
 
-<p>
-This document defines the language itself — not an IDE, not a runtime, not a compiler.
-</p>
+<hr>
+
+<h2>Structure of a <code>.frog</code> File</h2>
 
 <p>
-All compliant implementations MUST conform to this specification.
-</p>
-
-<hr/>
-
-<h2>2. Core Concepts</h2>
-
-<h3>2.1 The Frog</h3>
-
-<p>
-A <strong>Frog</strong> is the fundamental executable unit of the FROG language.
-</p>
-
-<p>
-A Frog is:
-</p>
-
-<ul>
-  <li>Self-contained</li>
-  <li>Versioned</li>
-  <li>Statically structured</li>
-  <li>Represented as an explicit directed dataflow graph</li>
-  <li>Optionally associated with a graphical interaction layer (front panel)</li>
-</ul>
-
-<p>
-A Frog consists of:
-</p>
-
-<ul>
-  <li>A <strong>diagram</strong> (executable graph)</li>
-  <li>A <strong>typed interface</strong> (public contract)</li>
-  <li>An optional <strong>front panel</strong> (interaction layer)</li>
-</ul>
-
-<hr/>
-
-<h2>3. Design Principles</h2>
-
-<h3>3.1 Independence</h3>
-
-<p>
-The language MUST remain independent from:
-</p>
-
-<ul>
-  <li>Any specific development environment</li>
-  <li>Any runtime implementation</li>
-  <li>Any compiler backend</li>
-</ul>
-
-<h3>3.2 Explicit Structure</h3>
-
-<p>
-All execution semantics MUST be derivable from explicit graph structure and data availability.
-</p>
-
-<h3>3.3 Determinism</h3>
-
-<p>
-Given identical inputs and identical graph structure, execution results MUST be deterministic.
-</p>
-
-<h3>3.4 Source Transparency</h3>
-
-<p>
-A <code>.frog</code> file MUST:
-</p>
-
-<ul>
-  <li>Be human-readable</li>
-  <li>Be version-control friendly</li>
-  <li>Contain no hidden compiled artifacts</li>
-  <li>Contain no embedded binary execution code</li>
-</ul>
-
-<hr/>
-
-<h2>4. File Format — <code>.frog</code></h2>
-
-<h3>4.1 General Structure</h3>
-
-<p>
-A Frog is stored as a structured JSON document.
+A Frog is represented as a JSON document with the following high-level structure:
 </p>
 
 <pre>
 {
   "spec_version": "0.1",
+
   "metadata": {},
   "interface": {},
+  "connector": {},
+
   "diagram": {},
-  "front_panel": {}
+  "front_panel": {},
+
+  "icon": {},
+  "catalog": {}
 }
 </pre>
 
-<h3>4.2 Required Top-Level Fields</h3>
+<p>
+Each section describes a specific aspect of the Frog program.
+</p>
+
+<hr>
+
+<h2>Specification Contents</h2>
+
+<p>
+The following sections introduce the components of a <code>.frog</code> file.
+</p>
 
 <ul>
-  <li><code>spec_version</code> (string) — MUST be present</li>
-  <li><code>metadata</code> (object) — MUST be present</li>
-  <li><code>interface</code> (object) — MUST be present</li>
-  <li><code>diagram</code> (object) — MUST be present</li>
-  <li><code>front_panel</code> (object) — MUST be present (may be empty)</li>
+
+<li>
+<a href="#metadata-section"><strong>Metadata</strong></a><br>
+Identity, versioning and documentation of the Frog.
+</li>
+
+<li>
+<a href="#interface-section"><strong>Interface</strong></a><br>
+Definition of the public inputs and outputs of the Frog.
+</li>
+
+<li>
+<a href="#connector-section"><strong>Connector</strong></a><br>
+Graphical mapping of interface ports when the Frog is used as a node.
+</li>
+
+<li>
+<a href="#diagram-section"><strong>Diagram</strong></a><br>
+Executable dataflow graph composed of nodes and edges.
+</li>
+
+<li>
+<a href="#frontpanel-section"><strong>Front Panel</strong></a><br>
+Graphical interaction layer connected to diagram ports.
+</li>
+
+<li>
+<a href="#icon-section"><strong>Icon</strong></a><br>
+Optional 40×40 SVG icon representing the Frog in the diagram.
+</li>
+
+<li>
+<a href="#catalog-section"><strong>Catalog Metadata</strong></a><br>
+Optional information used by development environments for indexing and example discovery.
+</li>
+
 </ul>
 
-<hr/>
+<hr>
 
-<h2>5. Metadata Section</h2>
+<h2 id="metadata-section">Metadata</h2>
+
+<p>
+The metadata section defines the identity and documentation of a Frog.
+</p>
 
 <pre>
 "metadata": {
@@ -157,12 +126,24 @@ A Frog is stored as a structured JSON document.
 </pre>
 
 <p>
-The metadata section defines the identity and documentation of the Frog.
+This information is used for documentation, indexing and versioning.
 </p>
 
-<hr/>
+<p>
+Detailed specification: <em>(future document)</em>
+</p>
 
-<h2>6. Interface Definition</h2>
+<hr>
+
+<h2 id="interface-section">Interface</h2>
+
+<p>
+The interface defines the public contract of a Frog.
+</p>
+
+<p>
+It declares the inputs and outputs visible when the Frog is used inside another diagram.
+</p>
 
 <pre>
 "interface": {
@@ -177,16 +158,52 @@ The metadata section defines the identity and documentation of the Frog.
 </pre>
 
 <p>
-The interface defines the public contract of the Frog.
+Interface ports MUST correspond to ports used in the diagram.
 </p>
 
 <p>
-Ports declared in the interface MUST be consistent with the diagram.
+Detailed specification: <em>(future document)</em>
 </p>
 
-<hr/>
+<hr>
 
-<h2>7. Diagram Model</h2>
+<h2 id="connector-section">Connector</h2>
+
+<p>
+The connector defines how interface ports are represented graphically
+when the Frog appears as a node inside another diagram.
+</p>
+
+<pre>
+"connector": {
+  "pattern": "2x2",
+  "ports": [
+    { "interface_port": "a", "side": "left", "index": 0 },
+    { "interface_port": "b", "side": "left", "index": 1 },
+    { "interface_port": "result", "side": "right", "index": 0 }
+  ]
+}
+</pre>
+
+<p>
+Each connector port MUST reference a port declared in the interface.
+</p>
+
+<p>
+Detailed specification: <em>(future document)</em>
+</p>
+
+<hr>
+
+<h2 id="diagram-section">Diagram</h2>
+
+<p>
+The diagram defines the executable logic of the Frog.
+</p>
+
+<p>
+It is a directed dataflow graph composed of nodes and edges.
+</p>
 
 <pre>
 "diagram": {
@@ -195,86 +212,25 @@ Ports declared in the interface MUST be consistent with the diagram.
 }
 </pre>
 
-<h3>7.1 Node Structure</h3>
-
-<pre>
-{
-  "id": "node_1",
-  "kind": "primitive",
-  "type": "Add",
-  "ports": {
-    "inputs": [
-      { "id": "a", "type": "float64" },
-      { "id": "b", "type": "float64" }
-    ],
-    "outputs": [
-      { "id": "result", "type": "float64" }
-    ]
-  },
-  "parameters": {},
-  "layout": {
-    "x": 100,
-    "y": 200
-  }
-}
-</pre>
-
 <p>
-Node identifiers MUST be unique within the diagram.
-</p>
-
-<h3>7.2 Edge Structure</h3>
-
-<pre>
-{
-  "id": "edge_1",
-  "from": { "node": "node_1", "port": "result" },
-  "to": { "node": "node_2", "port": "a" }
-}
-</pre>
-
-<p>
-Edges MUST reference existing node identifiers and port identifiers.
-</p>
-
-<hr/>
-
-<h2>8. Execution Model</h2>
-
-<p>
-Execution follows a pure dataflow model.
-</p>
-
-<ul>
-  <li>A node becomes eligible for execution when all required input data are available.</li>
-  <li>Execution order MUST be derived solely from data dependencies.</li>
-  <li>Nodes MAY execute in parallel if data dependencies allow.</li>
-  <li>Graph structure MUST fully determine scheduling constraints.</li>
-</ul>
-
-<p>
-A <code>.frog</code> file MUST NOT be executed directly.
+Nodes represent operations and edges represent data connections.
 </p>
 
 <p>
-It MUST first be validated and transformed into an intermediate representation prior to execution.
+Detailed specification: <em>(future document)</em>
 </p>
 
-<hr/>
+<hr>
 
-<h2>9. Graph Validation Rules</h2>
+<h2 id="frontpanel-section">Front Panel</h2>
 
-<ul>
-  <li>Node identifiers MUST be unique.</li>
-  <li>Edge identifiers MUST be unique.</li>
-  <li>All edge references MUST reference existing nodes and ports.</li>
-  <li>Port types connected by edges MUST be compatible.</li>
-  <li>Interface ports MUST be bound to corresponding diagram ports.</li>
-</ul>
+<p>
+The front panel defines the graphical interaction layer of the Frog.
+</p>
 
-<hr/>
-
-<h2>10. Front Panel Model</h2>
+<p>
+Controls provide inputs to the diagram and indicators expose outputs.
+</p>
 
 <pre>
 "front_panel": {
@@ -285,19 +241,19 @@ It MUST first be validated and transformed into an intermediate representation p
 </pre>
 
 <p>
-Front panel elements represent the interaction layer of the Frog.
+Each element MUST bind to a corresponding diagram port.
 </p>
 
 <p>
-Front panel elements MUST explicitly bind to diagram ports.
+Detailed specification: <em>(future document)</em>
 </p>
 
-<hr/>
+<hr>
 
-<h2>11. Icon Definition (Optional)</h2>
+<h2 id="icon-section">Icon</h2>
 
 <p>
-A Frog MAY define a 40x40 SVG icon.
+A Frog may define an optional icon used in graphical diagrams.
 </p>
 
 <pre>
@@ -307,12 +263,21 @@ A Frog MAY define a 40x40 SVG icon.
 }
 </pre>
 
-<hr/>
-
-<h2>12. Catalog Metadata (Optional)</h2>
+<p>
+The icon SHOULD be a 40×40 SVG image.
+</p>
 
 <p>
-A Frog MAY include a <code>catalog</code> object to support IDE indexing and discovery.
+Detailed specification: <em>(future document)</em>
+</p>
+
+<hr>
+
+<h2 id="catalog-section">Catalog Metadata</h2>
+
+<p>
+The catalog section provides metadata used by development environments
+to index Frogs, organize examples and enable search.
 </p>
 
 <pre>
@@ -324,58 +289,30 @@ A Frog MAY include a <code>catalog</code> object to support IDE indexing and dis
 }
 </pre>
 
-<hr/>
-
-<h2>13. Versioning Policy</h2>
-
 <p>
-The specification follows semantic versioning:
+This section is optional and does not affect execution semantics.
 </p>
 
-<pre>
-MAJOR.MINOR.PATCH
-</pre>
+<p>
+Detailed specification: <em>(future document)</em>
+</p>
 
-<ul>
-  <li><strong>MAJOR</strong> — incompatible structural changes</li>
-  <li><strong>MINOR</strong> — backward-compatible additions</li>
-  <li><strong>PATCH</strong> — clarifications</li>
-</ul>
+<hr>
 
-<hr/>
-
-<h2>14. Normative Terminology</h2>
-
-<ul>
-  <li><strong>MUST</strong> — required for compliance</li>
-  <li><strong>SHOULD</strong> — recommended</li>
-  <li><strong>MAY</strong> — optional</li>
-  <li><strong>MUST NOT</strong> — prohibited</li>
-</ul>
-
-<hr/>
-
-<h2>15. Current Status</h2>
+<h2>Current Status</h2>
 
 <p>
 FROG Specification v0.1 — Draft.
 </p>
 
 <p>
-This version defines a minimal but coherent structural foundation for the language.
+This document provides an overview of the Frog file structure.
+Detailed specifications for each section will be defined in dedicated documents.
 </p>
 
-<hr/>
-
-<h2>16. License</h2>
-
-<p>
-This specification is released under the Apache License 2.0.
-</p>
-
-<hr/>
+<hr>
 
 <p align="center">
-<strong>FROG — Free Open Graphical Language</strong><br/>
+<strong>FROG — Free Open Graphical Language</strong><br>
 An open foundation for graphical programming.
 </p>
