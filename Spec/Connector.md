@@ -14,14 +14,12 @@ Definition of connector mapping for <strong>.frog</strong> programs<br/>
 <li><a href="#purpose">2. Purpose of the Connector</a></li>
 <li><a href="#location">3. Location in a .frog file</a></li>
 <li><a href="#structure">4. Connector Structure</a></li>
-<li><a href="#patterns">5. Connector Patterns</a></li>
+<li><a href="#perimeter-model">5. Perimeter Slot Model</a></li>
 <li><a href="#port-mapping">6. Port Mapping</a></li>
-<li><a href="#port-positioning">7. Port Positioning</a></li>
-<li><a href="#layout">8. Graphical Layout</a></li>
-<li><a href="#examples">9. Examples</a></li>
-<li><a href="#validation">10. Validation Rules</a></li>
-<li><a href="#extensibility">11. Extensibility</a></li>
-<li><a href="#summary">12. Summary</a></li>
+<li><a href="#examples">7. Examples</a></li>
+<li><a href="#validation">8. Validation Rules</a></li>
+<li><a href="#extensibility">9. Extensibility</a></li>
+<li><a href="#summary">10. Summary</a></li>
 </ul>
 
 <hr/>
@@ -33,12 +31,12 @@ The <strong>connector</strong> section defines how a Frog appears when it is use
 </p>
 
 <p>
-While the <strong>interface</strong> defines the logical inputs and outputs, the connector defines their
-<strong>graphical representation and placement</strong>.
+While the <strong>interface</strong> defines the logical inputs and outputs of the Frog,
+the connector defines their <strong>graphical placement</strong> around the node.
 </p>
 
 <p>
-The connector maps interface ports to positions around the node.
+Connector ports are positioned along the perimeter of the node using a discrete slot system.
 </p>
 
 <hr/>
@@ -48,17 +46,17 @@ The connector maps interface ports to positions around the node.
 The connector provides:
 
 <ul>
-<li>a consistent graphical representation of the Frog</li>
-<li>a mapping between interface ports and node edges</li>
-<li>a stable node shape for visual programming</li>
+<li>a consistent graphical representation of a Frog when reused as a node</li>
+<li>a deterministic mapping between interface ports and visual connection points</li>
+<li>a simple and extensible connector layout model</li>
 </ul>
 
 The connector ensures that:
 
 <ul>
-<li>ports appear in predictable positions</li>
-<li>connections remain readable</li>
-<li>nodes remain visually consistent</li>
+<li>ports appear in predictable locations</li>
+<li>connections remain visually readable</li>
+<li>nodes remain visually consistent across development tools</li>
 </ul>
 
 <hr/>
@@ -67,7 +65,7 @@ The connector ensures that:
 
 The connector is defined as a top-level object.
 
-Example:
+Example structure:
 
 <pre>
 {
@@ -90,11 +88,11 @@ Example connector definition:
 
 <pre>
 "connector": {
-  "pattern": "2x2",
+  "granularity": 40,
   "ports": [
-    { "interface_port": "a", "side": "left", "index": 0 },
-    { "interface_port": "b", "side": "left", "index": 1 },
-    { "interface_port": "result", "side": "right", "index": 0 }
+    { "interface_port": "a", "slot": 34 },
+    { "interface_port": "b", "slot": 36 },
+    { "interface_port": "result", "slot": 14 }
   ]
 }
 </pre>
@@ -102,49 +100,79 @@ Example connector definition:
 Fields:
 
 <ul>
-<li><strong>pattern</strong>: connector layout pattern</li>
-<li><strong>ports</strong>: mapping of interface ports to graphical positions</li>
+<li><strong>granularity</strong>: number of discrete connector positions along the node perimeter</li>
+<li><strong>ports</strong>: mapping between interface ports and connector slots</li>
 </ul>
+
+If <code>granularity</code> is omitted, implementations SHOULD assume the default value of <strong>40</strong>.
 
 <hr/>
 
-<h2 id="patterns">5. Connector Patterns</h2>
+<h2 id="perimeter-model">5. Perimeter Slot Model</h2>
 
-Connector patterns define the available positions for ports.
+<p>
+The node is treated as a normalized square.
+Connector positions are defined along the perimeter of this square.
+</p>
 
-Examples:
+<p>
+Slots are ordered clockwise starting from the <strong>top-left corner</strong>.
+</p>
+
+<p>
+With the default granularity of 40, the perimeter is divided into four equal sides:
+</p>
 
 <ul>
-<li>1x1</li>
-<li>2x2</li>
-<li>3x2</li>
-<li>4x2</li>
-<li>custom</li>
+<li>Top side: slots <code>0..9</code></li>
+<li>Right side: slots <code>10..19</code></li>
+<li>Bottom side: slots <code>20..29</code></li>
+<li>Left side: slots <code>30..39</code></li>
 </ul>
 
-Example:
+<p>Conceptual model:</p>
 
 <pre>
-"pattern": "2x2"
+
+                 0   1   2   3   4   5   6   7   8   9
+               ●   ●   ●   ●   ●   ●   ●   ●   ●   ●
+
+          39 ●                                     ● 10
+          38 ●                                     ● 11
+          37 ●                                     ● 12
+          36 ●                                     ● 13
+          35 ●                                     ● 14
+          34 ●                                     ● 15
+          33 ●                                     ● 16
+          32 ●                                     ● 17
+          31 ●                                     ● 18
+          30 ●                                     ● 19
+
+               ●   ●   ●   ●   ●   ●   ●   ●   ●   ●
+                29  28  27  26  25  24  23  22  21  20
 </pre>
 
-Patterns determine the number of port positions available on each side.
+<p>
+Each slot represents a discrete position on the perimeter of the node.
+</p>
 
-Implementations MAY support additional patterns.
+<p>
+The connector specification does not define pixel dimensions.
+Rendering systems determine the actual graphical layout.
+</p>
 
 <hr/>
 
 <h2 id="port-mapping">6. Port Mapping</h2>
 
-Each connector entry maps an interface port to a graphical position.
+Each entry maps an interface port to a connector slot.
 
 Example:
 
 <pre>
 {
   "interface_port": "temperature",
-  "side": "left",
-  "index": 0
+  "slot": 12
 }
 </pre>
 
@@ -152,77 +180,23 @@ Fields:
 
 <ul>
 <li><strong>interface_port</strong>: name of the interface port</li>
-<li><strong>side</strong>: position side</li>
-<li><strong>index</strong>: position index on that side</li>
+<li><strong>slot</strong>: index of the connector position</li>
 </ul>
 
-Valid sides:
-
-<ul>
-<li>left</li>
-<li>right</li>
-<li>top</li>
-<li>bottom</li>
-</ul>
+The slot determines where the connection point appears on the node.
 
 <hr/>
 
-<h2 id="port-positioning">7. Port Positioning</h2>
-
-Ports are placed relative to the node bounding box.
-
-Example layout:
-
-<pre>
-       top
-
- left  NODE  right
-
-      bottom
-</pre>
-
-Ports on the same side are ordered using the index value.
-
-Example:
-
-<pre>
-index 0
-index 1
-index 2
-</pre>
-
-The lowest index appears closest to the top or left edge.
-
-<hr/>
-
-<h2 id="layout">8. Graphical Layout</h2>
-
-The connector does not define node dimensions.
-
-Node size and layout are determined by the development environment.
-
-The connector only defines:
-
-<ul>
-<li>port placement</li>
-<li>port ordering</li>
-</ul>
-
-Rendering systems are responsible for the visual appearance.
-
-<hr/>
-
-<h2 id="examples">9. Examples</h2>
+<h2 id="examples">7. Examples</h2>
 
 <h3>Basic Arithmetic Node</h3>
 
 <pre>
 "connector": {
-  "pattern": "2x2",
   "ports": [
-    { "interface_port": "a", "side": "left", "index": 0 },
-    { "interface_port": "b", "side": "left", "index": 1 },
-    { "interface_port": "result", "side": "right", "index": 0 }
+    { "interface_port": "a", "slot": 34 },
+    { "interface_port": "b", "slot": 36 },
+    { "interface_port": "result", "slot": 14 }
   ]
 }
 </pre>
@@ -231,44 +205,41 @@ Rendering systems are responsible for the visual appearance.
 
 <pre>
 "connector": {
-  "pattern": "3x2",
   "ports": [
-    { "interface_port": "setpoint", "side": "left", "index": 0 },
-    { "interface_port": "measurement", "side": "left", "index": 1 },
-    { "interface_port": "enable", "side": "top", "index": 0 },
-    { "interface_port": "output", "side": "right", "index": 0 }
+    { "interface_port": "setpoint", "slot": 2 },
+    { "interface_port": "measurement", "slot": 6 },
+    { "interface_port": "enable", "slot": 1 },
+    { "interface_port": "output", "slot": 22 }
   ]
 }
 </pre>
 
 <hr/>
 
-<h2 id="validation">10. Validation Rules</h2>
+<h2 id="validation">8. Validation Rules</h2>
 
 Implementations MUST enforce:
 
 <ul>
 <li>Each connector port MUST reference an existing interface port</li>
+<li>Slot values MUST satisfy <code>0 ≤ slot &lt; granularity</code></li>
 <li>Each interface port SHOULD appear at most once in the connector</li>
-<li>Side values MUST be valid</li>
-<li>Index values MUST be non-negative integers</li>
 </ul>
 
 Invalid connector mappings MUST trigger validation errors.
 
 <hr/>
 
-<h2 id="extensibility">11. Extensibility</h2>
+<h2 id="extensibility">9. Extensibility</h2>
 
-Tools MAY extend the connector definition.
+Tools MAY extend connector entries with additional properties.
 
 Example:
 
 <pre>
 {
   "interface_port": "speed",
-  "side": "left",
-  "index": 0,
+  "slot": 8,
   "label": "Speed Input"
 }
 </pre>
@@ -277,16 +248,16 @@ Unknown properties MUST be ignored by runtimes.
 
 <hr/>
 
-<h2 id="summary">12. Summary</h2>
+<h2 id="summary">10. Summary</h2>
 
-The connector defines how a Frog appears as a reusable node.
+The connector defines how interface ports are positioned when a Frog is used as a reusable node.
 
-It ensures:
+It provides:
 
 <ul>
-<li>consistent port placement</li>
-<li>clear visual connections</li>
-<li>predictable node interfaces</li>
+<li>a deterministic connector placement model</li>
+<li>a simple and standardized perimeter layout</li>
+<li>consistent node representation across tools</li>
 </ul>
 
-The connector bridges the logical interface and the graphical representation of the program.
+The connector bridges the logical interface of a Frog with its graphical representation inside diagrams.
