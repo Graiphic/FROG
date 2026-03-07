@@ -18,22 +18,27 @@ The FROG IDE is the graphical development environment used to design, edit, debu
 </p>
 
 <p>
-The IDE is designed as a modular system where the user interface, program representation, compilation, and execution runtime are clearly separated.
+The IDE constructs and maintains the <b>FROG Intermediate Representation (IR)</b> directly while the user edits the diagram.
 </p>
 
 <p>
-This architecture ensures that the FROG language itself remains independent from the IDE implementation while enabling execution across multiple targets and environments.
+Programs are stored as a serialized representation called the <b>FROG Expression</b>.
 </p>
 
 <p>
-The development environment focuses on three main activities:
+This architecture separates:
 </p>
 
 <ul>
-<li>graphical programming through a diagram editor</li>
-<li>user interface design through a front panel editor</li>
-<li>visual debugging and execution</li>
+<li>the graphical editing environment</li>
+<li>the program representation</li>
+<li>the compiler toolchain</li>
+<li>the execution runtime</li>
 </ul>
+
+<p>
+This ensures that the language remains independent from any specific IDE implementation.
+</p>
 
 <hr>
 
@@ -53,28 +58,16 @@ The development environment focuses on three main activities:
 |              |                         |              |
 |              +------------+------------+              |
 |                           |                           |
-|                   FROG Expression                     |
-|                       (.frog JSON)                   |
+|                       FROG IR                        |
+|                (execution graph model)               |
 +---------------------------|--------------------------+
                             |
                             v
-                   +-------------------+
-                   |   FROG Compiler   |
-                   |       Rust        |
-                   +-------------------+
+                     Serialization
                             |
                             v
-                      Intermediate
-                     Representation
-                            |
-                            v
-                   +-------------------+
-                   |    FROG Runtime   |
-                   |         C         |
-                   +-------------------+
-                            |
-                            v
-                         Execution
+                     FROG Expression
+                        (.frog JSON)
 
 </pre>
 
@@ -90,14 +83,6 @@ The development environment focuses on three main activities:
 The IDE shell is the main application responsible for managing the development environment.
 </p>
 
-<p>
-It integrates all editors and tools and provides the user interface structure.
-</p>
-
-<p>
-Responsibilities include:
-</p>
-
 <ul>
 <li>window and layout management</li>
 <li>menus and toolbars</li>
@@ -108,7 +93,7 @@ Responsibilities include:
 </ul>
 
 <p>
-The IDE shell is implemented using:
+Implemented using:
 </p>
 
 <ul>
@@ -117,7 +102,7 @@ The IDE shell is implemented using:
 </ul>
 
 <p>
-The IDE is packaged as a desktop application using technologies such as:
+The IDE can be packaged using technologies such as:
 </p>
 
 <ul>
@@ -125,32 +110,27 @@ The IDE is packaged as a desktop application using technologies such as:
 <li>Electron</li>
 </ul>
 
-<p>
-This architecture allows the IDE to run consistently across Windows, Linux, and macOS.
-</p>
-
 <hr>
 
 <h3>Diagram Editor</h3>
 
 <p>
-The diagram editor is the graphical programming environment where users construct dataflow programs.
+The diagram editor is the graphical programming environment where users construct FROG dataflow programs.
 </p>
 
 <p>
-Programs are represented as graphs composed of nodes connected by wires representing data dependencies.
+While the user edits the diagram, the IDE continuously updates the <b>FROG IR</b>.
 </p>
 
 <p>
-Users can:
+The IR represents the executable graph including:
 </p>
 
 <ul>
-<li>create nodes</li>
-<li>connect wires</li>
-<li>configure node properties</li>
-<li>organize graph layouts</li>
-<li>visualize execution</li>
+<li>nodes (operations)</li>
+<li>connections (data flow)</li>
+<li>typed ports</li>
+<li>execution metadata</li>
 </ul>
 
 <p>
@@ -163,7 +143,7 @@ The diagram editor is implemented using:
 </ul>
 
 <p>
-Using WebGL allows the diagram editor to support large graphs with smooth interaction.
+WebGL enables smooth interaction with very large graphs.
 </p>
 
 <p>
@@ -189,10 +169,6 @@ The front panel editor allows developers to design the user interface associated
 The front panel represents the interaction layer between the user and the program logic.
 </p>
 
-<p>
-Typical elements include:
-</p>
-
 <ul>
 <li>buttons</li>
 <li>numeric controls</li>
@@ -213,11 +189,31 @@ The front panel editor is implemented using:
 </ul>
 
 <p>
-SVG provides resolution-independent vector rendering and allows interfaces to scale cleanly across displays.
+SVG provides resolution-independent rendering and allows interfaces to scale across displays.
+</p>
+
+<hr>
+
+<h3>FROG IR</h3>
+
+<p>
+The <b>FROG Intermediate Representation</b> is the internal program model maintained by the IDE.
 </p>
 
 <p>
-This architecture also allows front panels to be rendered directly in web environments.
+It describes the executable dataflow graph including:
+</p>
+
+<ul>
+<li>nodes and operations</li>
+<li>data connections</li>
+<li>type information</li>
+<li>execution constraints</li>
+<li>scheduling metadata</li>
+</ul>
+
+<p>
+All compilation, validation, and execution processes operate on this representation.
 </p>
 
 <hr>
@@ -225,36 +221,40 @@ This architecture also allows front panels to be rendered directly in web enviro
 <h3>FROG Expression</h3>
 
 <p>
-Programs created in the IDE are stored as structured expressions using a JSON-based format.
+Programs are stored as serialized expressions using a JSON-based format.
 </p>
 
 <p>
 File extension:
 </p>
 
-<pre>
-.frog
-</pre>
+<pre>.frog</pre>
 
 <p>
-The expression contains:
+The expression is generated by serializing the current IR.
+</p>
+
+<p>
+The file contains:
 </p>
 
 <ul>
-<li>diagram definition</li>
+<li>diagram structure</li>
 <li>node configuration</li>
-<li>connections between nodes</li>
+<li>connections</li>
 <li>front panel layout</li>
+<li>SVG interface definitions</li>
 </ul>
 
 <p>
-This representation is designed to be:
+This format is designed to be:
 </p>
 
 <ul>
-<li>human-readable</li>
-<li>version-control friendly</li>
-<li>open and portable</li>
+<li>human readable</li>
+<li>version control friendly</li>
+<li>portable</li>
+<li>tool independent</li>
 </ul>
 
 <hr>
@@ -262,7 +262,7 @@ This representation is designed to be:
 <h3>Compiler</h3>
 
 <p>
-The compiler transforms the FROG program expression into an intermediate representation suitable for execution.
+The compiler transforms the validated <b>FROG IR</b> into executable representations for specific targets.
 </p>
 
 <p>
@@ -274,31 +274,11 @@ Responsibilities include:
 <li>type checking</li>
 <li>semantic verification</li>
 <li>graph optimization</li>
-<li>intermediate representation generation</li>
+<li>target code generation</li>
 </ul>
 
 <p>
-The compiler is implemented in <b>Rust</b>, providing strong safety guarantees and high performance.
-</p>
-
-<hr>
-
-<h3>Incremental Compilation</h3>
-
-<p>
-To provide an instantaneous execution experience similar to traditional graphical programming environments, the compiler operates incrementally.
-</p>
-
-<p>
-Whenever the user modifies the diagram or front panel, only the affected parts of the program are recompiled.
-</p>
-
-<p>
-This ensures that the intermediate representation remains continuously updated while editing.
-</p>
-
-<p>
-As a result, program execution can start immediately without requiring a full recompilation.
+The compiler is implemented in <b>Rust</b> to provide safety and performance.
 </p>
 
 <hr>
@@ -306,39 +286,24 @@ As a result, program execution can start immediately without requiring a full re
 <h3>Runtime</h3>
 
 <p>
-The runtime is the execution engine responsible for running compiled FROG programs.
+The runtime is the execution engine responsible for executing compiled FROG programs.
 </p>
 
 <p>
-It implements the dataflow scheduler that controls node execution and data propagation.
-</p>
-
-<p>
-Responsibilities include:
+It implements the dataflow scheduler responsible for:
 </p>
 
 <ul>
-<li>dataflow scheduling</li>
-<li>node execution</li>
+<li>node scheduling</li>
+<li>data propagation</li>
 <li>parallel execution</li>
 <li>memory management</li>
 <li>debug instrumentation</li>
 </ul>
 
 <p>
-The runtime is implemented in <b>C</b> to ensure maximum portability and compatibility with embedded systems.
+The runtime is implemented in <b>C</b> to ensure maximum portability across platforms and embedded systems.
 </p>
-
-<p>
-The runtime can therefore be deployed on:
-</p>
-
-<ul>
-<li>desktop systems</li>
-<li>embedded devices</li>
-<li>real-time environments</li>
-<li>hardware interfaces</li>
-</ul>
 
 <hr>
 
@@ -350,13 +315,13 @@ The runtime can therefore be deployed on:
 
 User edits diagram
         ↓
-Incremental compilation
-        ↓
-Intermediate Representation updated
+IDE updates FROG IR
         ↓
 User presses Run
         ↓
-Runtime executes IR immediately
+Compiler generates executable form
+        ↓
+Runtime executes program
 
 </pre>
 
@@ -367,32 +332,13 @@ Runtime executes IR immediately
 <h2>Design Principles</h2>
 
 <ul>
-<li><b>Language independence</b> — the language specification is independent from the IDE</li>
-<li><b>Incremental compilation</b> for instant execution</li>
-<li><b>Hardware agnostic execution</b></li>
-<li><b>Open program representation</b></li>
+<li><b>Language independence</b></li>
+<li><b>IR-centered architecture</b></li>
+<li><b>instant editing feedback</b></li>
+<li><b>hardware agnostic execution</b></li>
+<li><b>open program representation</b></li>
 <li><b>GPU accelerated graphical editing</b></li>
-<li><b>Cross-platform development</b></li>
-</ul>
-
-<hr>
-
-<h2>Future Evolution</h2>
-
-<p>
-The architecture of the FROG IDE is designed to evolve over time.
-</p>
-
-<p>
-Potential future features include:
-</p>
-
-<ul>
-<li>plugin architecture</li>
-<li>collaborative editing</li>
-<li>remote front panels</li>
-<li>web-based IDE</li>
-<li>hardware-specific toolchains (RT / FPGA)</li>
+<li><b>cross platform development</b></li>
 </ul>
 
 <hr>
@@ -409,9 +355,7 @@ FROG/
 │   └── front-panel-editor/
 │
 ├── compiler/
-│
 ├── runtime/
-│
 └── expression/
 
 </pre>
