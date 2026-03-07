@@ -17,9 +17,9 @@ Definition of program interfaces for <strong>.frog</strong> files<br/>
 <li><a href="#inputs">5. Input Ports</a></li>
 <li><a href="#outputs">6. Output Ports</a></li>
 <li><a href="#port-properties">7. Port Properties</a></li>
-<li><a href="#port-types">8. Type System Integration</a></li>
-<li><a href="#binding">9. Binding with the Diagram</a></li>
-<li><a href="#connector">10. Relation with Connector</a></li>
+<li><a href="#type-system">8. Type System Integration</a></li>
+<li><a href="#diagram-binding">9. Binding with the Diagram</a></li>
+<li><a href="#connector-relation">10. Relation with Connector</a></li>
 <li><a href="#examples">11. Examples</a></li>
 <li><a href="#validation">12. Validation Rules</a></li>
 <li><a href="#extensibility">13. Extensibility</a></li>
@@ -41,12 +41,16 @@ It specifies:
 <ul>
 <li>the program inputs</li>
 <li>the program outputs</li>
-<li>their data types</li>
 <li>their identifiers</li>
+<li>their data types</li>
 </ul>
 
 <p>
-The interface defines how a Frog communicates with the outside world and with other Frogs.
+The interface defines how a Frog exchanges data with the outside world and with other Frogs.
+</p>
+
+<p>
+It is the logical boundary of the program. It does not define graphical layout, connector placement, or execution scheduling.
 </p>
 
 <hr/>
@@ -54,22 +58,22 @@ The interface defines how a Frog communicates with the outside world and with ot
 <h2 id="purpose">2. Purpose of the Interface</h2>
 
 <p>
-The interface provides a stable and explicit contract between programs.
+The interface provides a stable and explicit contract between reusable program units.
 </p>
 
 <p>
-It allows:
+It enables:
 </p>
 
 <ul>
 <li>composition of Frogs into larger graphs</li>
 <li>static validation of connections</li>
-<li>clear program boundaries</li>
-<li>safe integration across libraries</li>
+<li>clear and auditable program boundaries</li>
+<li>safe reuse across libraries and tools</li>
 </ul>
 
 <p>
-The interface is independent from layout or execution scheduling.
+The interface is part of the program definition and remains independent from IDE-specific presentation details.
 </p>
 
 <hr/>
@@ -108,7 +112,9 @@ The interface object contains two arrays:
 <li><strong>outputs</strong></li>
 </ul>
 
-Example:
+<p>
+Each entry in these arrays defines one interface port.
+</p>
 
 <pre>
 "interface": {
@@ -117,15 +123,18 @@ Example:
 }
 </pre>
 
-Each entry describes a port.
+<p>
+The interface describes the logical contract only.
+It does not define where ports are drawn on a node. That responsibility belongs to the <code>connector</code> section.
+</p>
 
 <hr/>
 
 <h2 id="inputs">5. Input Ports</h2>
 
-Input ports represent data entering the Frog.
-
-Example:
+<p>
+Input ports represent data entering the Frog from the outside.
+</p>
 
 <pre>
 "inputs": [
@@ -140,21 +149,24 @@ Example:
 ]
 </pre>
 
+<p>
 Rules:
+</p>
 
 <ul>
-<li>Input ports MUST have unique identifiers.</li>
-<li>Input ports MUST define a type.</li>
-<li>Input ports represent external data sources.</li>
+<li>Each input port MUST define an <code>id</code>.</li>
+<li>Each input port MUST define a <code>type</code>.</li>
+<li>Input port identifiers MUST be unique within the interface.</li>
+<li>Input ports represent externally provided values, signals, events, or references.</li>
 </ul>
 
 <hr/>
 
 <h2 id="outputs">6. Output Ports</h2>
 
-Output ports represent data produced by the Frog.
-
-Example:
+<p>
+Output ports represent data produced by the Frog and exposed to the outside.
+</p>
 
 <pre>
 "outputs": [
@@ -165,58 +177,69 @@ Example:
 ]
 </pre>
 
+<p>
 Rules:
+</p>
 
 <ul>
-<li>Output ports MUST have unique identifiers.</li>
-<li>Output ports MUST define a type.</li>
-<li>Output ports represent values exposed to other Frogs.</li>
+<li>Each output port MUST define an <code>id</code>.</li>
+<li>Each output port MUST define a <code>type</code>.</li>
+<li>Output port identifiers MUST be unique within the interface.</li>
+<li>Output ports represent values, signals, events, or references made available to other Frogs or hosting environments.</li>
 </ul>
 
 <hr/>
 
 <h2 id="port-properties">7. Port Properties</h2>
 
-Each port object contains the following properties.
+<p>
+Each port object contains required logical properties and MAY contain additional metadata.
+</p>
 
 <h3>id</h3>
 
+<p>
 Unique identifier of the port.
-
-Example:
+</p>
 
 <pre>
 "id": "temperature"
 </pre>
 
+<p>
 Rules:
+</p>
 
 <ul>
 <li>MUST be a string.</li>
-<li>MUST be unique within its port list.</li>
+<li>MUST be unique across all interface ports.</li>
+<li>MUST remain stable enough to support reuse, validation, and connector mapping.</li>
 </ul>
 
 <h3>type</h3>
 
-Defines the data type.
-
-Example:
+<p>
+Defines the declared data type of the port.
+</p>
 
 <pre>
 "type": "float64"
 </pre>
 
+<p>
 Rules:
+</p>
 
 <ul>
 <li>MUST reference a valid FROG type.</li>
+<li>MUST be sufficient for static compatibility checks.</li>
 </ul>
 
-<h3>optional properties</h3>
+<h3>Optional Properties</h3>
 
-Additional metadata may be defined.
-
-Example:
+<p>
+Additional metadata MAY be attached to a port.
+</p>
 
 <pre>
 {
@@ -227,13 +250,21 @@ Example:
 }
 </pre>
 
+<p>
+Such metadata does not change the meaning of the interface contract unless explicitly defined by a future specification.
+</p>
+
 <hr/>
 
-<h2 id="port-types">8. Type System Integration</h2>
+<h2 id="type-system">8. Type System Integration</h2>
 
+<p>
 The interface relies on the FROG type system.
+</p>
 
-Examples:
+<p>
+Examples of valid type expressions may include:
+</p>
 
 <pre>
 float64
@@ -243,53 +274,84 @@ string
 array&lt;float64&gt;
 </pre>
 
-Custom types MAY be introduced by libraries.
-
+<p>
 Type compatibility MUST be validated during graph validation.
+</p>
+
+<p>
+Libraries MAY introduce additional types, provided that tools can validate or safely reject them according to the active specification profile.
+</p>
 
 <hr/>
 
-<h2 id="binding">9. Binding with the Diagram</h2>
+<h2 id="diagram-binding">9. Binding with the Diagram</h2>
 
-Interface ports must connect to nodes inside the diagram.
+<p>
+Interface ports define the external contract of the Frog and MUST be bound to the internal program graph.
+</p>
 
-Example:
+<p>
+A diagram implementation MAY represent interface boundaries using dedicated entry and exit nodes, or any equivalent internal mechanism.
+</p>
+
+<p>
+Conceptually:
+</p>
 
 <pre>
-diagram input
-      ↓
-interface input
+external input  ->  interface input  ->  diagram
+diagram         ->  interface output ->  external output
 </pre>
 
-The diagram may contain special nodes representing interface entry and exit points.
-
+<p>
 Rules:
+</p>
 
 <ul>
-<li>Each interface port MUST be reachable in the diagram.</li>
-<li>Unbound interface ports MUST trigger validation errors.</li>
+<li>Each declared interface input MUST be consumable by the diagram.</li>
+<li>Each declared interface output MUST be producible by the diagram.</li>
+<li>Unbound or inconsistent interface definitions MUST trigger validation errors.</li>
 </ul>
 
 <hr/>
 
-<h2 id="connector">10. Relation with Connector</h2>
+<h2 id="connector-relation">10. Relation with Connector</h2>
 
-The <code>connector</code> section defines how interface ports appear when the Frog is used as a node.
+<p>
+The <code>interface</code> section defines the logical ports of the Frog.
+The <code>connector</code> section defines how those ports appear graphically when the Frog is reused as a node inside another diagram.
+</p>
 
-The connector maps interface ports to graphical positions.
+<p>
+The connector does not redefine the interface.
+It only maps existing interface ports to graphical positions on the node perimeter.
+</p>
 
-Example:
+<p>
+This mapping is done by referencing the interface port identifier and assigning it to a perimeter <code>slot</code>.
+</p>
 
 <pre>
 "connector": {
-  "pattern": "2x2",
+  "granularity": 40,
   "ports": [
-    { "interface_port": "a", "side": "left", "index": 0 },
-    { "interface_port": "b", "side": "left", "index": 1 },
-    { "interface_port": "result", "side": "right", "index": 0 }
+    { "interface_port": "a", "slot": 34 },
+    { "interface_port": "b", "slot": 36 },
+    { "interface_port": "result", "slot": 14 }
   ]
 }
 </pre>
+
+<p>
+Rules:
+</p>
+
+<ul>
+<li>Each <code>interface_port</code> value in the connector MUST reference an existing port declared in <code>interface</code>.</li>
+<li>The connector MUST NOT introduce new logical ports.</li>
+<li>The connector MUST NOT modify port types or port semantics.</li>
+<li>A port MAY exist in the interface without appearing in the connector if a given tool or profile allows it.</li>
+</ul>
 
 <hr/>
 
@@ -308,16 +370,42 @@ Example:
 }
 </pre>
 
-<h3>Multi-Input Example</h3>
+<h3>Arithmetic Node with Connector Mapping</h3>
+
+<pre>
+{
+  "interface": {
+    "inputs": [
+      { "id": "a", "type": "float64" },
+      { "id": "b", "type": "float64" }
+    ],
+    "outputs": [
+      { "id": "result", "type": "float64" }
+    ]
+  },
+  "connector": {
+    "granularity": 40,
+    "ports": [
+      { "interface_port": "a", "slot": 34 },
+      { "interface_port": "b", "slot": 36 },
+      { "interface_port": "result", "slot": 14 }
+    ]
+  }
+}
+</pre>
+
+<h3>Multi-Input Process Node</h3>
 
 <pre>
 "interface": {
   "inputs": [
     { "id": "temperature", "type": "float64" },
-    { "id": "pressure", "type": "float64" }
+    { "id": "pressure", "type": "float64" },
+    { "id": "enable", "type": "bool", "default": true }
   ],
   "outputs": [
-    { "id": "density", "type": "float64" }
+    { "id": "density", "type": "float64" },
+    { "id": "status", "type": "string" }
   ]
 }
 </pre>
@@ -326,48 +414,87 @@ Example:
 
 <h2 id="validation">12. Validation Rules</h2>
 
-Implementations MUST enforce:
+<p>
+Implementations MUST enforce the following rules:
+</p>
 
 <ul>
-<li>interface MUST exist</li>
-<li>inputs and outputs MUST be arrays</li>
-<li>port ids MUST be unique</li>
-<li>ports MUST define a type</li>
-<li>diagram connections MUST match interface ports</li>
+<li><code>interface</code> MUST exist.</li>
+<li><code>inputs</code> and <code>outputs</code> MUST exist and MUST be arrays.</li>
+<li>Each port object MUST define an <code>id</code>.</li>
+<li>Each port object MUST define a <code>type</code>.</li>
+<li>Port identifiers MUST be unique across the whole interface.</li>
+<li>Declared types MUST be syntactically valid according to the active specification profile.</li>
+<li>The diagram binding MUST be consistent with the declared interface.</li>
 </ul>
 
-Unknown properties MUST be ignored.
+<p>
+When a connector is present:
+</p>
+
+<ul>
+<li>each referenced <code>interface_port</code> MUST exist in the interface</li>
+<li>connector mappings MUST remain compatible with the interface definition</li>
+</ul>
+
+<p>
+Unknown properties MUST be ignored unless a stricter profile explicitly defines them.
+</p>
 
 <hr/>
 
 <h2 id="extensibility">13. Extensibility</h2>
 
-Tools MAY add additional fields.
-
-Example:
+<p>
+Tools and libraries MAY add additional non-breaking metadata fields to port definitions.
+</p>
 
 <pre>
 {
   "id": "speed",
   "type": "float64",
-  "unit": "m/s"
+  "unit": "m/s",
+  "description": "Measured linear speed"
 }
 </pre>
 
-Runtime systems MUST ignore unknown fields.
+<p>
+Examples of such metadata may include:
+</p>
+
+<ul>
+<li>human-readable descriptions</li>
+<li>units</li>
+<li>default values</li>
+<li>editor hints</li>
+<li>documentation annotations</li>
+</ul>
+
+<p>
+Runtime systems and validators that do not understand these extra properties MUST ignore them unless a stricter profile specifies otherwise.
+</p>
 
 <hr/>
 
 <h2 id="summary">14. Summary</h2>
 
-The interface defines the external contract of a Frog.
+<p>
+The interface defines the external logical contract of a Frog.
+</p>
 
-It ensures:
+<p>
+It provides:
+</p>
 
 <ul>
 <li>clear program boundaries</li>
-<li>type-safe composition</li>
-<li>modular program construction</li>
+<li>type-aware composition</li>
+<li>stable port identifiers</li>
+<li>a foundation for reusable graphical nodes</li>
 </ul>
 
-The interface is the foundation for connecting Frogs into larger executable graphs.
+<p>
+The interface describes <strong>what</strong> a Frog exposes.
+The connector describes <strong>where</strong> those ports appear graphically.
+Together, they allow Frogs to be safely validated, reused, and composed into larger executable graphs.
+</p>
