@@ -1,4 +1,4 @@
-<div class="go-pages-link" data-render-target="github">
+<div align="center" class="go-pages-link" data-render-target="github">
   <a href="https://graiphic.github.io/FROG/">
     <img src="./assets/open-github-pages-banner.svg" alt="Open the GitHub Pages version" width="640" />
   </a>
@@ -20,11 +20,17 @@
 </p>
 
 <p align="center">
+  <strong>FROG attacks the structural lock-in of graphical industrial programming by opening the language layer itself:</strong><br/>
+  canonical source, validated meaning, execution-facing FIR, lowering, backend contracts, runtime bridges, and compiler bridges.
+</p>
+
+<p align="center">
   Specification work initiated: <strong>8 March 2026</strong>
 </p>
 
 <p align="center">
   <a href="#what-is-frog">What is FROG?</a> •
+  <a href="#what-makes-frog-different">What makes FROG different?</a> •
   <a href="#from-go-hw-to-frog">From GO HW to FROG</a> •
   <a href="#what-this-repository-defines">What this repository defines</a> •
   <a href="#what-frog-is-not">What FROG is not</a> •
@@ -91,6 +97,96 @@ That separation provides a durable basis for multiple independent implementation
 
 <p>
 FROG is intended to scale from accessible graphical authoring to demanding execution contexts such as industrial automation, embedded systems, heterogeneous compute targets, and future conforming execution ecosystems.
+</p>
+
+<hr/>
+
+<h2 id="what-makes-frog-different">What makes FROG different?</h2>
+
+<p>
+FROG is not differentiated by one isolated feature.
+Graphical programming, multi-target deployment, model-based execution, runtime systems, compilers, and open specifications already exist in different forms across the software landscape.
+</p>
+
+<p>
+FROG’s differentiation is the <strong>combination</strong> of those concerns into one open graphical language architecture where source, meaning, execution-facing representation, lowering, runtime consumption, compiler consumption, and hardware adaptation remain explicitly separated.
+</p>
+
+<p>
+The strategic claim is therefore precise:
+FROG aims to open the language layer of graphical industrial programming itself.
+It does this by making the canonical source open, the validated meaning explicit, the FIR inspectable, and the downstream runtime/compiler bridge boundaries modular.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>What it means in FROG</th>
+      <th>Why it matters</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Inspectable</strong></td>
+      <td>Source, graph structure, FIR, lowering, backend contracts, acceptance artifacts, and runtime behavior are intended to remain traceable.</td>
+      <td>Generated or transformed systems can be reviewed as structured artifacts rather than trusted as opaque output.</td>
+    </tr>
+    <tr>
+      <td><strong>Hardware-agnostic</strong></td>
+      <td>The language is not owned by one CPU, OS, runtime, compiler, board family, or hardware vendor.</td>
+      <td>The same upstream program model can be bridged toward heterogeneous execution targets.</td>
+    </tr>
+    <tr>
+      <td><strong>FIR-open</strong></td>
+      <td>FIR is treated as a public execution-facing bridge surface, not as a backend-private internal object.</td>
+      <td>Runtime families, compiler families, and hardware bridges can attach downstream without redefining the language.</td>
+    </tr>
+    <tr>
+      <td><strong>Hyper-modular</strong></td>
+      <td>IDE, source, semantics, FIR, lowering, backend contracts, runtime families, compiler families, and profiles remain distinct.</td>
+      <td>The ecosystem can grow without collapsing into one monolithic product stack.</td>
+    </tr>
+    <tr>
+      <td><strong>AI-compatible</strong></td>
+      <td>The canonical source is structured, the program graph is reviewable, and execution-facing artifacts are inspectable.</td>
+      <td>AI-assisted generation and transformation can be paired with human review and validation instead of opaque automation.</td>
+    </tr>
+    <tr>
+      <td><strong>Security-oriented</strong></td>
+      <td>FROG does not claim that graphical form automatically guarantees safety; it reduces opacity through explicit structure and inspectable artifacts.</td>
+      <td>Security and assurance conversations can be grounded in auditability, traceability, and controlled downstream handoff.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+A useful analogy is the historical role of C as a portable systems-language layer above many hardware targets.
+FROG does not claim to be C, and it does not yet claim universal target coverage.
+The analogy is architectural:
+FROG aims to provide an open upstream graphical language layer whose FIR can be bridged toward many downstream runtime, compiler, and hardware families.
+</p>
+
+<pre><code>open graphical source
+        |
+        v
+validated language meaning
+        |
+        v
+open execution-facing FIR
+        |
+        +--------------------------+--------------------------+
+        |                          |                          |
+        v                          v                          v
+runtime-family bridges      compiler-family bridges     hardware/vendor bridges
+        |                          |                          |
+        v                          v                          v
+live execution services     native / optimized paths    operational target stacks
+</code></pre>
+
+<p>
+This is the core disruption hypothesis of FROG:
+industrial graphical programming should no longer require the language, the editor, the runtime, the compiler, and the hardware ecosystem to be owned by one inseparable stack.
 </p>
 
 <hr/>
@@ -179,6 +275,7 @@ It does not equate the language with one IDE, one runtime, one compiler, one ven
   <li><strong>FROG is not a single runtime.</strong></li>
   <li><strong>FROG is not a single compiler.</strong></li>
   <li><strong>FROG is not a vendor product.</strong></li>
+  <li><strong>FROG is not a security guarantee just because a program is graphical.</strong></li>
   <li><strong>FROG is an open language specification with distinct source, semantic, FIR, library, profile, IDE-facing, conformance, and version-governance layers.</strong></li>
 </ul>
 
@@ -506,6 +603,14 @@ This reduces the gap between:
 
 <p>
 That open FIR is also strategically important because it preserves the possibility of attaching multiple downstream runtime families and compiler families without making any one of them the hidden truth of the language.
+</p>
+
+<p>
+This is why FROG is AI-compatible by architecture rather than by slogan.
+AI-assisted generation can target structured source.
+Human reviewers can inspect graph-level meaning.
+Toolchains can validate semantics and derive FIR.
+Downstream consumers can receive explicit contracts rather than opaque intent.
 </p>
 
 <hr/>
@@ -1331,7 +1436,13 @@ Those downstream stages may vary across implementations while remaining downstre
 <p>
 Security claims must remain disciplined.
 FROG does not claim that graphical form automatically guarantees safety or security.
-Its narrower and stronger claim is that open source, explicit graph structure, open FIR, and readable governance reduce structural opacity and improve inspectability.
+Its narrower and stronger claim is that open source, explicit graph structure, open FIR, readable governance, and explicit downstream handoff reduce structural opacity and improve inspectability.
+</p>
+
+<p>
+This means FROG is security-relevant through architecture:
+it favors auditability, traceability, reviewable transformation, explicit validation, bounded acceptance surfaces, and controlled runtime/compiler boundaries.
+Those properties do not replace security engineering, but they make security engineering less opaque.
 </p>
 
 <hr/>
