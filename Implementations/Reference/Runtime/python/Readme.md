@@ -1,21 +1,15 @@
-<p align="center">
-  <img src="../../../../FROG logo.svg" alt="FROG logo" width="140" />
-</p>
-
 # Reference Runtime (Python)
 
-<p>Python realization of the published <code>reference_host_runtime_ui_binding</code> family.</p>
+Python realization of the published `reference_host_runtime_ui_binding` family
 
-<p>
-  Repository governance and publication state are centralized in
-  <a href="../../../../Versioning/Readme.md"><code>Versioning/Readme.md</code></a>.
-</p>
+Repository governance and publication state are centralized in [`Versioning/Readme.md`](../../../Versioning/Readme.md).
 
-<hr/>
+* * *
 
-<h2>Directory navigation</h2>
+## Directory navigation
 
-<pre><code>Implementations/Reference/Runtime/python/
+```text
+Implementations/Reference/Runtime/python/
 ├── Readme.md
 ├── __init__.py
 ├── cli.py
@@ -24,190 +18,99 @@
 ├── runtime_core.py
 ├── ui_runtime.py
 └── tests/
-    ├── __pycache__/                    [generated, not intended source]
-    ├── test_runtime_slice05.py        [acceptance-driven]
-    ├── test_runtime_ui_slice05.py     [acceptance-driven]
-    ├── test_slice05_contract.py       [legacy smoke test]
-    └── test_slice05_ui_runtime.py     [legacy smoke test]</code></pre>
+    ├── test_runtime_slice05.py
+    └── test_runtime_ui_slice05.py
+```
 
-<p>
-Generated cache directories such as <code>tests/__pycache__/</code> are not part of the intended source surface of this runtime and should not be versioned.
-</p>
+Generated cache directories are not part of the intended source surface of this runtime and should not be versioned.
 
-<h2>Role</h2>
+* * *
 
-<p>
-This directory contains the Python consumer for the published Example 05 runtime corridor.
-It accepts the emitted backend contract, loads the published <code>.wfrog</code> package,
-resolves the referenced SVG assets, executes the bounded kernel, and can expose the panel through a minimal browser-host UI.
-</p>
+## Role
 
-<p>
+This directory contains the Python consumer for the published Example 05 runtime-family corridor.
+
+It accepts the emitted backend contract, loads the published `.wfrog` package, resolves the referenced SVG assets, executes the bounded kernel, and can expose the panel through a minimal browser-host UI.
+
 This directory is downstream from:
-</p>
 
-<pre><code>main.frog
-  -&gt; main.fir.json
-  -&gt; main.lowering.json
-  -&gt; reference_host_runtime_ui_binding contract</code></pre>
+```text
+main.frog
+  -> main.fir.json
+  -> main.lowering.json
+  -> reference_host_runtime_ui_binding contract
+  -> shared runtime-family acceptance
+```
 
-<p>
 It is not a source parser, not a lowering stage, and not a language-definition layer.
-</p>
 
-<h2>Current published entry points</h2>
+* * *
 
-<h3><code>cli.py</code></h3>
+## Current published entry points
 
-<p>
-The main entry point for this directory.
-It exposes two modes:
-</p>
+### `cli.py`
 
-<ul>
-  <li><code>run</code> — headless contract + <code>.wfrog</code> execution.</li>
-  <li><code>ui</code> — browser-host UI service for the same runtime core.</li>
-</ul>
+The main entry point for this directory. It exposes two modes:
 
-<p>Examples from the repository root:</p>
+- `run` — headless contract + `.wfrog` execution,
+- `ui` — browser-host UI service for the same runtime core.
 
-<pre><code>python -m Implementations.Reference.Runtime.python.cli run 3
+Examples from the repository root:
+
+```text
+python -m Implementations.Reference.Runtime.python.cli run 3
 python -m Implementations.Reference.Runtime.python.cli ui
-python -m Implementations.Reference.Runtime.python.cli ui --host 127.0.0.1 --port 8080 --no-open-browser</code></pre>
+python -m Implementations.Reference.Runtime.python.cli ui --host 127.0.0.1 --port 8080 --no-open-browser
+```
 
-<h3><code>run_slice05_ui.py</code></h3>
+### `execute_contract.py`
 
-<p>
-Convenience wrapper that starts the same browser-host UI path as <code>cli.py ui</code>.
-It remains useful as a small example-specific launcher, but <code>cli.py</code> is the primary surface.
-</p>
+Headless execution entry used by tests and helper wrappers.
 
-<h3><code>execute_contract.py</code> and <code>runtime_core.py</code></h3>
+### `ui_runtime.py`
 
-<p>
-These files hold the actual execution path. The current runtime core validates the bounded Example 05 contract,
-checks the accepted package shape, enforces the bounded execution model, and produces a runtime result artifact.
-</p>
+Browser-host runtime surface for the same bounded Example 05 corridor.
 
-<h3><code>ui_runtime.py</code></h3>
+* * *
 
-<p>
-Browser-host realization for the same runtime core. The published tests exercise HTML rendering,
-SVG asset routing, and the JSON snapshot endpoint.
-</p>
+## Current published test surface
 
-<h2>Current bounded surface</h2>
+The currently published Python test surface is acceptance-driven and aligned with the shared runtime-family artifacts:
 
-<p>
-The Python runtime is intentionally strict. The currently published bounded surface is:
-</p>
+- `tests/test_runtime_slice05.py`
+- `tests/test_runtime_ui_slice05.py`
 
-<ul>
-  <li>backend family <code>reference_host_runtime_ui_binding</code>,</li>
-  <li>one contract unit named <code>main</code>,</li>
-  <li>one public input <code>input_value : u16</code>,</li>
-  <li>one public output <code>result : u16</code>,</li>
-  <li>one explicit state carrier based on <code>frog.core.delay</code>,</li>
-  <li>exactly five loop iterations,</li>
-  <li>two widget classes: <code>frog.widgets.numeric_control</code> and <code>frog.widgets.numeric_indicator</code>,</li>
-  <li>five supported widget properties: <code>value</code>, <code>label</code>, <code>visible</code>, <code>enabled</code>, and <code>foreground_color</code>,</li>
-  <li>two bounded method accepts: <code>ctrl_input.focus</code> and <code>ind_result.reset_to_default_style</code>.</li>
-</ul>
+These tests are expected to remain aligned with:
 
-<p>
-The current accepted slice also requires the host binding to advertise:
-<code>window</code>, <code>basic_widget_rendering</code>, <code>property_write</code>,
-<code>widget_value_binding</code>, and <code>widget_reference_binding</code>.
-The Python runtime reads those requirements from the emitted contract and the accepted package shape before execution begins.
-</p>
+- `Implementations/Reference/Runtime/acceptance/example05_runtime_family.acceptance.json`,
+- `Implementations/Reference/Runtime/acceptance/example05_input_3.snapshot.json`.
 
-<h2>Inputs and outputs</h2>
+* * *
 
-<h3>Inputs</h3>
+## Required host-binding capabilities
 
-<ul>
-  <li>The emitted contract artifact under <code>Implementations/Reference/ContractEmitter/examples/</code>.</li>
-  <li>The Example 05 package <code>Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog</code>.</li>
-  <li>The SVG assets referenced by that package.</li>
-  <li>The shared acceptance reading posture under <code>Implementations/Reference/Runtime/acceptance/</code>.</li>
-</ul>
+The current published Python runtime expects the Example 05 host binding to require:
 
-<h3>Outputs</h3>
+- `window`,
+- `basic_widget_rendering`,
+- `property_write`,
+- `widget_value_binding`,
+- `widget_reference_binding`.
 
-<ul>
-  <li>A headless runtime result artifact.</li>
-  <li>A browser-host page driven by the same runtime core.</li>
-  <li>A runtime snapshot JSON surface for the accepted Example 05 slice.</li>
-</ul>
+Those capabilities match the currently published `.wfrog` package and the emitted backend contract for the bounded slice.
 
-<h2>Acceptance-driven tests</h2>
+* * *
 
-<p>From the repository root:</p>
+## Freeze posture
 
-<pre><code>python -m pytest Implementations/Reference/Runtime/python/tests/test_runtime_slice05.py
-python -m pytest Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice05.py</code></pre>
+For the current published repository state, this runtime should be read as one downstream consumer of the frozen Example 05 reference corridor.
 
-<p>
-The published Python tests are acceptance-driven and should remain aligned with
-<a href="../acceptance/Readme.md"><code>Implementations/Reference/Runtime/acceptance/Readme.md</code></a>.
-</p>
+Routine maintenance may improve portability, CI, or implementation clarity, but it should preserve the shared acceptance posture and the observable Example 05 result.
 
-<ul>
-  <li><code>test_runtime_slice05.py</code> checks headless acceptance for the bounded runtime corridor.</li>
-  <li><code>test_runtime_ui_slice05.py</code> checks browser-host HTML rendering and snapshot acceptance for the same corridor.</li>
-</ul>
+* * *
 
-<h2>Legacy tests still visible in the current tree</h2>
+## Summary
 
-<p>
-The current published Python test directory still contains:
-</p>
+This directory is the Python runtime-family consumer for the current frozen bounded Example 05 corridor.
 
-<ul>
-  <li><code>test_slice05_contract.py</code></li>
-  <li><code>test_slice05_ui_runtime.py</code></li>
-</ul>
-
-<p>
-These are legacy pre-acceptance smoke tests. They are useful as transitional checks, but they are not the family-level source of truth anymore.
-The acceptance-driven tests above are the primary published line that should remain aligned with the shared acceptance artifacts.
-</p>
-
-<h2>Relationship to the other runtime consumers</h2>
-
-<p>
-This directory should remain aligned with the Rust and C/C++ consumers on:
-</p>
-
-<ul>
-  <li>contract acceptance,</li>
-  <li>package acceptance,</li>
-  <li>execution semantics for the bounded accumulator slice,</li>
-  <li>the minimal widget-property surface,</li>
-  <li>the browser-host UI shape for Example 05,</li>
-  <li>the shared acceptance artifacts for the runtime family.</li>
-</ul>
-
-<p>
-The parent runtime-family definition is documented in
-<a href="../Readme.md"><code>Implementations/Reference/Runtime/Readme.md</code></a>.
-</p>
-
-<h2>Non-goals</h2>
-
-<ul>
-  <li>General runtime support for arbitrary contracts.</li>
-  <li>Widget-law ownership.</li>
-  <li>Compiler-family responsibilities.</li>
-  <li>Native compiled UI closure.</li>
-</ul>
-
-<h2>Summary</h2>
-
-<p>
-Read this directory as the Python consumer of the current runtime family:
-</p>
-
-<pre><code>contract + .wfrog + SVG assets
-=&gt; Python runtime core
-=&gt; headless result or browser-host UI</code></pre>
+Its job is to consume the published contract and `.wfrog` package, not to redefine the language or the corridor itself.
