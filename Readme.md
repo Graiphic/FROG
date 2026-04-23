@@ -1,6 +1,6 @@
 <div class="go-pages-link" data-render-target="github">
   <a href="https://graiphic.github.io/FROG/">
-    <img src="./assets/open-github-pages-banner.svg" alt="Open the GitHub Pages version" />
+    <img src="./assets/open-github-pages-banner.svg" alt="Open the GitHub Pages version" width="640" />
   </a>
 </div>
 
@@ -12,7 +12,11 @@
 
 <p align="center">
   <strong>Free Open Graphical Dataflow Programming Language</strong><br/>
-  FROG is an open, hardware-agnostic graphical dataflow programming language designed to describe computation as explicit executable graphs while remaining accessible, explicit, inspectable, portable, auditable, and scalable across heterogeneous execution targets.
+  FROG is an open, hardware-agnostic graphical dataflow programming language designed to describe computation as explicit executable graphs while remaining accessible, explicit, inspectable, portable, auditable, modular, and scalable across heterogeneous execution targets.
+</p>
+
+<p align="center">
+  FROG aims to establish itself as the open-source standard foundation for graphical dataflow language infrastructure.
 </p>
 
 <p align="center">
@@ -21,16 +25,20 @@
 
 <p align="center">
   <a href="#what-is-frog">What is FROG?</a> •
+  <a href="#from-go-hw-to-frog">From GO HW to FROG</a> •
   <a href="#what-this-repository-defines">What this repository defines</a> •
+  <a href="#what-frog-is-not">What FROG is not</a> •
   <a href="#published-repository-state">Published repository state</a> •
   <a href="#campaign-priority">Campaign priority</a> •
   <a href="#positioning">Positioning</a> •
   <a href="#breaking-the-syntax-first-bottleneck">Breaking the syntax-first bottleneck</a> •
-  <a href="#why-frog-exists">Why FROG exists</a> •
+  <a href="#why-frog-exists-now">Why FROG exists now</a> •
   <a href="#frog-in-the-ai-era">FROG in the AI era</a> •
   <a href="#dataflow-programming">Dataflow programming</a> •
   <a href="#from-prototyping-to-critical-systems">From prototyping to critical systems</a> •
   <a href="#core-concept-diagram-front-panel-and-public-interface">Core concept</a> •
+  <a href="#runtime-and-compiler-complementarity">Runtime and compiler complementarity</a> •
+  <a href="#open-fir-bridges-and-deployment-modularity">Open FIR bridges and deployment modularity</a> •
   <a href="#repository-structure">Repository structure</a> •
   <a href="#repository-runtime-and-native-execution-direction">Runtime and native execution direction</a> •
   <a href="#internal-documentation-map">Internal documentation map</a> •
@@ -44,7 +52,7 @@
   <a href="#security-and-optimization-by-design">Security &amp; optimization</a> •
   <a href="#interoperability">Interoperability</a> •
   <a href="#separation-of-language-and-tooling">Language separation</a> •
-  <a href="#governance-and-ecosystem">Governance and ecosystem</a> •
+  <a href="#governance-official-branding-and-ecosystem">Governance, official branding, and ecosystem</a> •
   <a href="#project-status">Project status</a> •
   <a href="#license">License</a>
 </p>
@@ -87,6 +95,44 @@ FROG is intended to scale from accessible graphical authoring to demanding execu
 
 <hr/>
 
+<h2 id="from-go-hw-to-frog">From GO HW to FROG</h2>
+
+<p>
+FROG is not an isolated idea.
+It is a deeper architectural step in Graiphic’s trajectory.
+</p>
+
+<p>
+GO HW made visible how powerful graphical orchestration can become when AI, logic, and hardware are treated as one executable system.
+That work demonstrated the value of a graphical cockpit able to design, deploy, and monitor complex graph-based execution paths.
+It also revealed a structural limit:
+as long as the language boundary, the saved format, and the execution-facing representation remain too tightly coupled to one stack, long-term openness, modularity, inspectability, and sovereignty remain constrained.
+</p>
+
+<p>
+FROG is the answer to that limit.
+It takes the ambition one layer deeper.
+Instead of stopping at graphical orchestration as a tooling achievement, FROG opens the language foundation itself:
+</p>
+
+<ul>
+  <li>open canonical source,</li>
+  <li>open validated semantic layering,</li>
+  <li>open execution-facing FIR,</li>
+  <li>explicit lowering and backend handoff boundaries,</li>
+  <li>runtime-family modularity,</li>
+  <li>compiler-family modularity,</li>
+  <li>and an ecosystem where language truth is not owned by one product stack.</li>
+</ul>
+
+<p>
+This is a more difficult path.
+It is also the more ambitious one.
+It aims at full architectural mastery from source to execution, while preserving openness and long-term industrial sovereignty.
+</p>
+
+<hr/>
+
 <h2 id="what-this-repository-defines">What this repository defines</h2>
 
 <p>
@@ -124,6 +170,10 @@ This repository does <strong>not</strong> define one mandatory product implement
 It does not equate the language with one IDE, one runtime, one compiler, one vendor stack, or one deployment model.
 </p>
 
+<hr/>
+
+<h2 id="what-frog-is-not">What FROG is not</h2>
+
 <ul>
   <li><strong>FROG is not an IDE.</strong></li>
   <li><strong>FROG is not a single runtime.</strong></li>
@@ -131,6 +181,13 @@ It does not equate the language with one IDE, one runtime, one compiler, one ven
   <li><strong>FROG is not a vendor product.</strong></li>
   <li><strong>FROG is an open language specification with distinct source, semantic, FIR, library, profile, IDE-facing, conformance, and version-governance layers.</strong></li>
 </ul>
+
+<p>
+That distinction matters.
+Multiple independent implementations should be possible around the standard.
+At the same time, the official <strong>FROG</strong> product identity and official branding can remain steward-controlled.
+Graiphic may build the flagship official IDE carrying the FROG name, while the language itself remains open and implementable by others.
+</p>
 
 <hr/>
 
@@ -293,7 +350,7 @@ Its ambition is to reduce the historical trade-off between:
 
 <p align="center">
   <em>
-    FROG aims to combine graphical accessibility, explicit dataflow, auditability, and system-grade execution in one open language model.
+    FROG aims to combine graphical accessibility, explicit dataflow, auditability, modular downstream execution, and system-grade deployment in one open language model.
   </em>
 </p>
 
@@ -344,7 +401,7 @@ The goal is to shift complexity toward the system itself rather than toward synt
 
 <hr/>
 
-<h2 id="why-frog-exists">Why FROG exists</h2>
+<h2 id="why-frog-exists-now">Why FROG exists now</h2>
 
 <p>
 Graphical dataflow programming has already demonstrated major advantages in many engineering domains:
@@ -376,6 +433,11 @@ FROG exists to define an <strong>open language specification</strong> for graphi
   <li>any single compiler,</li>
   <li>any single hardware vendor.</li>
 </ul>
+
+<p>
+It also exists because the AI era changes the stakes.
+Generated software, AI-assisted transformation, multi-target deployment, industrial security, and technological sovereignty all increase the value of open source formats, open execution-facing IRs, and modular downstream bridge boundaries.
+</p>
 
 <p>
 This repository therefore defines the language standard and the surrounding specification layers needed to support future conforming implementations.
@@ -421,11 +483,11 @@ The program is not primarily hidden behind text parsing, coding idioms, or recon
 A reviewer can inspect nodes, ports, graph connections, structures, state boundaries, interface boundaries, widget interaction paths, probes, watch surfaces, and other source-meaningful execution objects directly as program objects.
 </p>
 
-<h3>Inspectable execution-facing IR</h3>
+<h3>Inspectable execution-facing FIR</h3>
 
 <p>
 FROG does not stop at an open source file.
-The execution-facing IR layer also remains open, inspectable, attributable, and recoverable.
+The execution-facing FIR layer also remains open, inspectable, attributable, and recoverable.
 This reduces the gap between:
 </p>
 
@@ -435,6 +497,10 @@ This reduces the gap between:
   <li>what was derived for execution-facing preparation,</li>
   <li>what is later lowered toward backend consumption.</li>
 </ul>
+
+<p>
+That open FIR is also strategically important because it preserves the possibility of attaching multiple downstream runtime families and compiler families without making any one of them the hidden truth of the language.
+</p>
 
 <hr/>
 
@@ -582,6 +648,93 @@ The long-term IDE-facing posture should support at least:
 Probes and watches do not redefine the program’s executable meaning.
 They belong to the observability, debugging, and IDE-facing architecture.
 They matter because graphical dataflow systems are especially strong when live execution can be inspected directly on the graph and on its public interaction surfaces.
+</p>
+
+<hr/>
+
+<h2 id="runtime-and-compiler-complementarity">Runtime and compiler complementarity</h2>
+
+<p>
+FROG explicitly rejects the idea that runtime and compiler must be treated as competing ideologies.
+They are complementary downstream strategies that can both begin from the same canonical source and the same open FIR.
+</p>
+
+<p>
+A compiler path prepares deployable artifacts specialized for a target family.
+A runtime path provides live execution services such as state management, observability, communication, hosting, front-panel interaction, monitoring, or controlled operational adaptation.
+</p>
+
+<p>
+Different targets require different balances:
+</p>
+
+<ul>
+  <li>some deployments are compiler-heavy,</li>
+  <li>some are runtime-heavy,</li>
+  <li>some are hybrid,</li>
+  <li>and some need bridge paths toward existing operational hardware runtimes already present in the field.</li>
+</ul>
+
+<p>
+FROG is designed so that the language does not have to choose one of those paths as its permanent identity.
+The language stays upstream.
+The deployment strategy stays modular.
+</p>
+
+<hr/>
+
+<h2 id="open-fir-bridges-and-deployment-modularity">Open FIR bridges and deployment modularity</h2>
+
+<p>
+The openness of FIR is one of the most strategically important properties of FROG.
+An open FIR is not only an inspectable intermediate representation.
+It is the public architectural bridge surface that makes downstream combinability possible.
+</p>
+
+<p>
+Because FIR remains open:
+</p>
+
+<ul>
+  <li>bridges can be built from FIR toward compiler families,</li>
+  <li>bridges can be built from FIR toward runtime families,</li>
+  <li>bridges can be built toward existing operational hardware stacks,</li>
+  <li>and the same upstream program can support multiple deployment combinations without redefining the language itself.</li>
+</ul>
+
+<p>
+This is especially important for heterogeneous hardware ecosystems.
+Some vendors expose their value primarily through runtime stacks.
+Others expose it through compiler flows.
+Others use a hybrid posture.
+FROG’s goal is to remain upstream from those differences rather than being captured by one of them.
+</p>
+
+<pre><code>canonical .frog source
+        |
+        v
+validated meaning
+        |
+        v
+open FIR
+   +----+-----------------------------+-----------------------------+
+   |                                  |                             |
+   v                                  v                             v
+runtime bridge family         compiler bridge family       hybrid bridge family
+   |                                  |                             |
+   v                                  v                             v
+Python / Rust / C++            LLVM / native paths          target-specific mixes
+reference runtimes             vendor compiler chains       runtime + compiled flows
+   |                                  |                             |
+   +--------------------------+-------+-----------------------------+
+                              |
+                              v
+                heterogeneous deployment targets
+</code></pre>
+
+<p>
+That modularity does not mean all downstream bridges already exist.
+It means the architecture is deliberately shaped so they can exist without changing the language truth.
 </p>
 
 <hr/>
@@ -1038,16 +1191,18 @@ The architectural posture below deliberately combines three requirements:
                                                                      v
                                                     Lowering / backend-facing handoff
                                                                      |
-                                                                     v
-                                          Compiler(s) / Backend(s) / Runtime(s)
-                                                                     |
-                                                                     v
-                                                       Target execution instance
-                                                                     |
-                          +------------------------------------------+-------------------------+
-                          |                                                                    |
-                          v                                                                    v
-        Source-aligned execution observability                            Runtime activity on the active target
+                                  +----------------------------------+----------------------------------+
+                                  |                                                                     |
+                                  v                                                                     v
+                         Runtime-family consumers                                             Compiler-family consumers
+                                  |                                                                     |
+                                  v                                                                     v
+                        Target execution instance                                          Target artifact / executable
+                                  |                                                                     |
+                          +-------+------------------------------------------+--------------------------+
+                          |                                                  |
+                          v                                                  v
+        Source-aligned execution observability                  Runtime activity on the active target
         (mapped back to meaningful FROG objects)
                           |
                           v
@@ -1142,6 +1297,10 @@ FROG aims to be more than a language that merely supports multiple targets.
 Its long-term goal is to provide an <strong>open industrial graphical programming standard</strong> that hardware and software ecosystems can build on without requiring a proprietary language boundary.
 </p>
 
+<p>
+That ambition includes a future where hardware vendors can expose runtime bridges, compiler bridges, backend contracts, and operational integration layers against the same open upstream language basis rather than forcing users into isolated graphical silos.
+</p>
+
 <hr/>
 
 <h2 id="security-and-optimization-by-design">Security and optimization by design</h2>
@@ -1153,6 +1312,12 @@ FROG integrates validation, inspectability, governance, and optimization into it
 <p>
 Optimization occurs primarily in execution preparation, FIR normalization, lowering, compilation, and backend stages.
 Those downstream stages may vary across implementations while remaining downstream from the same open language corridor.
+</p>
+
+<p>
+Security claims must remain disciplined.
+FROG does not claim that graphical form automatically guarantees safety or security.
+Its narrower and stronger claim is that open source, explicit graph structure, open FIR, and readable governance reduce structural opacity and improve inspectability.
 </p>
 
 <hr/>
@@ -1185,6 +1350,10 @@ Representative integration targets may include:
   <li>.NET,</li>
   <li>other ABI-compatible environments.</li>
 </ul>
+
+<p>
+In the long-term architectural model, interoperability also means that one open FIR may be bridged toward multiple runtime or compiler families without forcing one operational stack to become the language definition.
+</p>
 
 <hr/>
 
@@ -1232,7 +1401,7 @@ At the modeling level, FROG also separates:
 
 <hr/>
 
-<h2 id="governance-and-ecosystem">Governance and ecosystem</h2>
+<h2 id="governance-official-branding-and-ecosystem">Governance, official branding, and ecosystem</h2>
 
 <p>
 FROG is governed as an <strong>open specification</strong>.
@@ -1247,6 +1416,13 @@ Graiphic is the initial steward of the FROG specification repository and is resp
 <p>
 Version governance, transition rules, and current repository status belong to the dedicated repository governance surfaces under <code>Versioning/</code>.
 Individual architectural documents should remain modular and should not become standalone version-governance documents.
+</p>
+
+<p>
+The ecosystem direction is intentionally open:
+multiple independent IDEs, runtimes, compiler bridges, validators, and tooling layers may eventually coexist around the same open standard.
+At the same time, official branding and the official flagship product identity may remain controlled.
+Graiphic intends to build the flagship proprietary IDE on top of the FROG standard, and that official IDE may be the one carrying the formal FROG product name.
 </p>
 
 <hr/>
@@ -1306,7 +1482,7 @@ Repository stewardship, governance direction, and ecosystem positioning are desc
 
 <p align="center">
   <a href="https://cla-assistant.io/Graiphic/FROG">
-    <img src="./assets/cla-assistant-badge.svg" alt="CLA Assistant" />
+    <img src="./assets/cla-assistant-badge.svg" alt="CLA Assistant" width="640" />
   </a>
 </p>
 
