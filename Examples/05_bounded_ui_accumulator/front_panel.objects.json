@@ -17,7 +17,7 @@
     "semantic_authority_owned_here": false,
     "widget_contract_authority_owned_here": false,
     "execution_authority_owned_here": false,
-    "purpose": "Expose one concrete browser-host projection for the published Example 05 front-panel slice without redefining source, FIR, lowering, or widget-contract meaning."
+    "purpose": "Expose one concrete browser-host projection for the published Example 05 front-panel slice without redefining source, FIR, lowering, widget-contract meaning, or runtime-family contract ownership."
   },
   "ownership_boundary": {
     "semantic_authority": "canonical_source_and_execution_facing_artifacts",
@@ -34,10 +34,11 @@
     "host_realization_authority": "this_file",
     "notes": [
       "This file is downstream from canonical source-owned and execution-facing meaning.",
-      "This file must not redefine executable semantics, FIR structure, or lowering obligations.",
+      "This file must not redefine executable semantics, FIR structure, lowering obligations, or backend-contract meaning.",
       "This file may define concrete host widgets, layout, styling, and host-private realization metadata.",
+      "This file describes the currently published browser-host projection used by the visible Example 05 runtime slice.",
       "Widget class names in this file must remain aligned with the published widget surface used by the example corridor.",
-      "If this file diverges from the canonical source, FIR, lowering, or published UI package, those upstream artifacts win."
+      "If this file diverges from the canonical source, FIR, lowering, emitted contract, or published UI package, those upstream artifacts win."
     ]
   },
   "host_runtime_model": {

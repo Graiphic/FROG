@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../../FROG logo.svg" alt="FROG logo" width="140" />
+</p>
+
 # Reference Runtime
 
 <p>Runtime-family consumers for the non-normative FROG reference implementation.</p>
@@ -33,7 +37,7 @@ canonical .frog source
   -> runtime-family consumer
 ```
 
-The runtime family begins **after** source, meaning, FIR, lowering, and backend-contract emission. It consumes published contract artifacts. It does not define the language, the widget law, the front panel, or the compiler-family corridor.
+The runtime family begins after source, meaning, FIR, lowering, and backend-contract emission. It consumes published contract artifacts. It does not define the language, the widget law, the front panel, or the compiler-family corridor.
 
 ## Published runtime family
 
@@ -55,7 +59,7 @@ The current family is intentionally small. It exists to close one inspectable co
 
 ## Shared acceptance posture
 
-The runtime family now carries a shared acceptance layer under:
+The runtime family carries a shared acceptance layer under:
 
 ```text
 Implementations/Reference/Runtime/acceptance/
@@ -93,8 +97,11 @@ Implementations/Reference/Runtime/
 │   ├── runtime_core.py
 │   ├── ui_runtime.py
 │   └── tests/
-│       ├── test_runtime_slice05.py
-│       └── test_runtime_ui_slice05.py
+│       ├── __pycache__/                    [generated, not intended source]
+│       ├── test_runtime_slice05.py        [acceptance-driven]
+│       ├── test_runtime_ui_slice05.py     [acceptance-driven]
+│       ├── test_slice05_contract.py       [legacy smoke test]
+│       └── test_slice05_ui_runtime.py     [legacy smoke test]
 ├── rust/
 │   ├── Readme.md
 │   ├── Cargo.toml
@@ -124,7 +131,7 @@ Implementations/Reference/Runtime/
         └── test_slice05.cpp
 ```
 
-Generated cache and build artifacts are not part of the intended runtime-family source contract and should not be versioned.
+Generated cache and build artifacts are not part of the intended runtime-family source contract and should not be versioned. The Python tree still shows transitional smoke tests beside the acceptance-driven tests. The acceptance-driven line is the current family-level source of truth.
 
 ## First corridor this directory coordinates
 
@@ -174,7 +181,7 @@ Examples/05_bounded_ui_accumulator/ui/assets/numeric_control.svg
 Examples/05_bounded_ui_accumulator/ui/assets/numeric_indicator.svg
 ```
 
-The runtime family does **not** take semantic authority away from `main.frog`, FIR, lowering, or the `.wfrog` package.
+The runtime family does not take semantic authority away from `main.frog`, FIR, lowering, or the `.wfrog` package.
 
 ## Current published entry points
 
@@ -218,8 +225,6 @@ build/frog_runtime_cpp/frog_reference_runtime_cpp ui --host 127.0.0.1 --port 808
 
 ## Multi-runtime posture
 
-This parent directory no longer documents only one host-facing Python path plus secondary parity placeholders.
-
 At the current published code state, all three consumer languages expose:
 
 - a headless execution path for the bounded contract,
@@ -228,7 +233,7 @@ At the current published code state, all three consumer languages expose:
 - the same example-local contract and `.wfrog` package corridor,
 - the same acceptance-driven reading posture.
 
-That does **not** mean the three implementations are already identical in tooling maturity. It means the first common runtime-family slice is now visible across Python, Rust, and C/C++ at the level of published code structure, command surfaces, and shared acceptance artifacts.
+That does not mean the three implementations are already identical in tooling maturity. It means the first common runtime-family slice is now visible across Python, Rust, and C/C++ at the level of published code structure, command surfaces, and shared acceptance artifacts.
 
 ## What this directory owns
 
@@ -260,46 +265,3 @@ runtime-family consumer != language definition
 runtime-private structures != backend contract
 browser-host UI != native compiled UI closure
 ```
-
-## Current closure reading
-
-For the published Example 05 corridor, the runtime-family closure should now be read as:
-
-```text
-contract + .wfrog + SVG assets
-  -> Python runtime core or browser-host UI
-  -> Rust runtime core or browser-host UI
-  -> C/C++ runtime core or browser-host UI
-```
-
-LLVM remains a separate downstream compiler-family corridor. It is related to the same example, but it is not part of the runtime-family definition itself.
-
-## Immediate cleanup targets
-
-The next useful cleanup in this directory is no longer “invent three runtimes”.
-
-It is to keep the published runtime family coherent:
-
-1. keep the acceptance layer and per-language tests aligned,
-2. remove duplicated pre-acceptance smoke tests once the acceptance-driven line is published,
-3. remove generated cache or build artifacts from version control,
-4. keep all three consumers aligned on the same contract shape,
-5. keep all three consumers aligned on the same `.wfrog` package shape,
-6. keep the browser-host UI surface minimal and identical in meaning,
-7. preserve the rule that runtime remains downstream from source, meaning, FIR, lowering, and contract emission.
-
-## Summary
-
-Read this directory as the coordination boundary for the first common runtime-family slice in the reference implementation.
-
-The important repository-level posture is now:
-
-```text
-one canonical example
-  -> one runtime-family contract
-  -> one shared acceptance layer
-  -> three language-specific consumers
-  -> one bounded browser-host UI family
-```
-
-That closure remains intentionally narrow, but it is now a real published corridor rather than a future-only aspiration.

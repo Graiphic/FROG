@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../../../FROG logo.svg" alt="FROG logo" width="140" />
+</p>
+
 # Reference Runtime (Python)
 
 <p>Python realization of the published <code>reference_host_runtime_ui_binding</code> family.</p>
@@ -20,8 +24,11 @@
 ├── runtime_core.py
 ├── ui_runtime.py
 └── tests/
-    ├── test_runtime_slice05.py
-    └── test_runtime_ui_slice05.py</code></pre>
+    ├── __pycache__/                    [generated, not intended source]
+    ├── test_runtime_slice05.py        [acceptance-driven]
+    ├── test_runtime_ui_slice05.py     [acceptance-driven]
+    ├── test_slice05_contract.py       [legacy smoke test]
+    └── test_slice05_ui_runtime.py     [legacy smoke test]</code></pre>
 
 <p>
 Generated cache directories such as <code>tests/__pycache__/</code> are not part of the intended source surface of this runtime and should not be versioned.
@@ -72,19 +79,21 @@ python -m Implementations.Reference.Runtime.python.cli ui --host 127.0.0.1 --por
 
 <p>
 Convenience wrapper that starts the same browser-host UI path as <code>cli.py ui</code>.
-It is still useful as a small example-specific launcher, but <code>cli.py</code> is the primary surface.
+It remains useful as a small example-specific launcher, but <code>cli.py</code> is the primary surface.
 </p>
 
 <h3><code>execute_contract.py</code> and <code>runtime_core.py</code></h3>
 
 <p>
-These files hold the actual execution path. The current runtime core validates the bounded Example 05 contract and package shape, then produces a runtime result artifact.
+These files hold the actual execution path. The current runtime core validates the bounded Example 05 contract,
+checks the accepted package shape, enforces the bounded execution model, and produces a runtime result artifact.
 </p>
 
 <h3><code>ui_runtime.py</code></h3>
 
 <p>
-Browser-host realization for the same runtime core. The published tests exercise HTML rendering and the JSON snapshot endpoint.
+Browser-host realization for the same runtime core. The published tests exercise HTML rendering,
+SVG asset routing, and the JSON snapshot endpoint.
 </p>
 
 <h2>Current bounded surface</h2>
@@ -106,7 +115,9 @@ The Python runtime is intentionally strict. The currently published bounded surf
 </ul>
 
 <p>
-The current accepted slice also requires widget-value and widget-reference binding support for the published members it consumes.
+The current accepted slice also requires the host binding to advertise:
+<code>window</code>, <code>basic_widget_rendering</code>, <code>property_write</code>,
+<code>widget_value_binding</code>, and <code>widget_reference_binding</code>.
 The Python runtime reads those requirements from the emitted contract and the accepted package shape before execution begins.
 </p>
 
@@ -131,9 +142,7 @@ The Python runtime reads those requirements from the emitted contract and the ac
 
 <h2>Acceptance-driven tests</h2>
 
-<p>
-From the repository root:
-</p>
+<p>From the repository root:</p>
 
 <pre><code>python -m pytest Implementations/Reference/Runtime/python/tests/test_runtime_slice05.py
 python -m pytest Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice05.py</code></pre>
@@ -148,8 +157,20 @@ The published Python tests are acceptance-driven and should remain aligned with
   <li><code>test_runtime_ui_slice05.py</code> checks browser-host HTML rendering and snapshot acceptance for the same corridor.</li>
 </ul>
 
+<h2>Legacy tests still visible in the current tree</h2>
+
 <p>
-Legacy pre-acceptance smoke tests should not be kept in parallel once the acceptance-driven line is the published source of truth.
+The current published Python test directory still contains:
+</p>
+
+<ul>
+  <li><code>test_slice05_contract.py</code></li>
+  <li><code>test_slice05_ui_runtime.py</code></li>
+</ul>
+
+<p>
+These are legacy pre-acceptance smoke tests. They are useful as transitional checks, but they are not the family-level source of truth anymore.
+The acceptance-driven tests above are the primary published line that should remain aligned with the shared acceptance artifacts.
 </p>
 
 <h2>Relationship to the other runtime consumers</h2>

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../../../FROG logo.svg" alt="FROG logo" width="140" />
+</p>
+
 # Reference Runtime (Rust)
 
 <p>Rust realization of the published <code>reference_host_runtime_ui_binding</code> family.</p>
@@ -30,7 +34,9 @@
 <h2>Role</h2>
 
 <p>
-This directory contains the Rust consumer for the published Example 05 runtime corridor. It accepts the emitted backend contract, loads the published <code>.wfrog</code> package, resolves the referenced SVG assets, executes the bounded kernel, and can expose the panel through a minimal browser-host UI.
+This directory contains the Rust consumer for the published Example 05 runtime corridor.
+It accepts the emitted backend contract, loads the published <code>.wfrog</code> package,
+resolves the referenced SVG assets, executes the bounded kernel, and can expose the panel through a minimal browser-host UI.
 </p>
 
 <p>
@@ -65,13 +71,16 @@ cargo run -- ui --host 127.0.0.1 --port 8080 --no-open-browser</code></pre>
 <h3><code>src/runtime.rs</code> and <code>src/execute.rs</code></h3>
 
 <p>
-These files hold the bounded runtime core and the headless execution path. The current runtime validates the contract family, package shape, widget classes, property writes, and the Example 05 execution model before producing a runtime result artifact.
+These files hold the bounded runtime core and the headless execution path.
+The current runtime validates the contract family, package shape, host-binding requirements,
+widget classes, property writes, and the Example 05 execution model before producing a runtime result artifact.
 </p>
 
 <h3><code>src/ui.rs</code></h3>
 
 <p>
-Browser-host realization for the same runtime core. The current HTML rendering path exposes the panel title, both widget labels, both SVG asset routes, and a runtime snapshot surface.
+Browser-host realization for the same runtime core. The current HTML rendering path exposes the panel title,
+both widget labels, both SVG asset routes, and a runtime snapshot surface.
 </p>
 
 <h2>Current bounded surface</h2>
@@ -88,7 +97,9 @@ Browser-host realization for the same runtime core. The current HTML rendering p
 </ul>
 
 <p>
-The current accepted slice also requires widget-value and widget-reference binding support for the published members it consumes.
+The current accepted slice also requires the host binding to advertise:
+<code>window</code>, <code>basic_widget_rendering</code>, <code>property_write</code>,
+<code>widget_value_binding</code>, and <code>widget_reference_binding</code>.
 The Rust runtime reads those requirements from the emitted contract and the accepted package shape before execution begins.
 </p>
 
@@ -130,10 +141,6 @@ The published Rust tests are acceptance-driven and should remain aligned with
   <li><code>slice05_runtime.rs</code> checks headless acceptance for the bounded runtime corridor.</li>
   <li><code>slice05_ui.rs</code> checks browser-host HTML rendering and snapshot acceptance for the same corridor.</li>
 </ul>
-
-<p>
-Legacy pre-acceptance smoke tests should not be kept in parallel once the acceptance-driven line is the published source of truth.
-</p>
 
 <h2>Relationship to the other runtime consumers</h2>
 
