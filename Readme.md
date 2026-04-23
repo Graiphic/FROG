@@ -243,8 +243,10 @@ That slice is currently the primary named source-to-runtime-to-native anchor bec
   <li>bounded structured control,</li>
   <li>explicit local state,</li>
   <li>public output publication,</li>
+  <li>a published FIR artifact,</li>
   <li>a published backend contract artifact,</li>
   <li>published downstream reference runtime consumers,</li>
+  <li>shared runtime-family acceptance material,</li>
   <li>and a first LLVM-oriented native proof corridor.</li>
 </ul>
 
@@ -254,16 +256,17 @@ The current published runtime and native surface already includes:
 
 <ul>
   <li>a repository-visible runtime directory under <code>Implementations/Reference/Runtime/</code>,</li>
-  <li>a Python execution entry point for the published bounded slice,</li>
-  <li>a Rust runtime-side consumer posture under <code>Implementations/Reference/Runtime/rust/</code>,</li>
-  <li>a C/C++ runtime-side consumer posture under <code>Implementations/Reference/Runtime/cpp/</code>,</li>
+  <li>a shared runtime-family acceptance surface under <code>Implementations/Reference/Runtime/acceptance/</code>,</li>
+  <li>a Python runtime-family consumer under <code>Implementations/Reference/Runtime/python/</code>,</li>
+  <li>a Rust runtime-family consumer under <code>Implementations/Reference/Runtime/rust/</code>,</li>
+  <li>a C/C++ runtime-family consumer under <code>Implementations/Reference/Runtime/cpp/</code>,</li>
   <li>and a first LLVM-oriented downstream dossier under <code>Implementations/Reference/LLVM/</code>.</li>
 </ul>
 
 <p>
 At the same time, the repository does <strong>not</strong> claim full generalized symmetry across all future examples, all runtime families, or full rendered-native front-panel closure.
 The correct current statement is narrower:
-the repository now materially exposes a <strong>repository-visible bounded symmetry</strong> for the canonical Example 05 corridor across Python, Rust, C/C++, and a first LLVM-oriented native proof path.
+the repository now materially exposes a <strong>repository-visible bounded symmetry</strong> for the canonical Example 05 corridor across FIR, lowering, backend contract emission, shared acceptance material, Python, Rust, C/C++, and a first LLVM-oriented native proof path.
 </p>
 
 <p>
@@ -292,6 +295,7 @@ A serious example should progressively converge toward:
   <li>one explicit FIR reading,</li>
   <li>one explicit lowering posture,</li>
   <li>one backend contract,</li>
+  <li>one shared runtime-family acceptance posture,</li>
   <li>one Python mini runtime path,</li>
   <li>one Rust mini runtime path,</li>
   <li>one C/C++ mini runtime path,</li>
@@ -313,6 +317,8 @@ That slice should be read as the first repository-visible proof that the same na
   <li>front-panel package,</li>
   <li>FIR,</li>
   <li>lowering,</li>
+  <li>backend contract emission,</li>
+  <li>runtime-family acceptance,</li>
   <li>runtime-family consumption,</li>
   <li>and a first native compiler-family corridor.</li>
 </ul>
@@ -829,7 +835,9 @@ backend contract and/or compiler-facing lowered artifact
       v                               v                               v
 Python mini runtime            Rust mini runtime               C/C++ mini runtime
       |
-      \------------------------------- optional LLVM-oriented native path -------------------------------&gt;
+      +------------------------------- shared acceptance surface -------------------------------+
+      |
+      \------------------------------- optional LLVM-oriented native path ----------------------->
 </code></pre>
 
 <p>
@@ -837,9 +845,10 @@ For the canonical Example 05 slice, the repository now materially exposes this d
 </p>
 
 <ul>
-  <li>a Python runtime path,</li>
-  <li>a Rust runtime verification path,</li>
-  <li>a C/C++ narrow runner path,</li>
+  <li>a Python runtime-family consumer,</li>
+  <li>a Rust runtime-family consumer,</li>
+  <li>a C/C++ runtime-family consumer,</li>
+  <li>a shared runtime-family acceptance posture,</li>
   <li>and a first LLVM-oriented native proof path.</li>
 </ul>
 
@@ -865,91 +874,93 @@ The map below summarizes the intended role of the major Markdown documents in th
 
 <pre><code>FROG/
 ├── Readme.md
-│   -&gt; repository landing page and global architectural entry point
+│   -> repository landing page and global architectural entry point
 ├── CONTRIBUTING.md
-│   -&gt; contribution workflow, expectations, and cross-document coherence rules
+│   -> contribution workflow, expectations, and cross-document coherence rules
 ├── CLA.md
-│   -&gt; contributor license agreement entry point and legal contribution notice
+│   -> contributor license agreement entry point and legal contribution notice
 ├── GOVERNANCE.md
-│   -&gt; repository governance, stewardship model, conformance direction,
+│   -> repository governance, stewardship model, conformance direction,
 │      certification direction, and branding boundary
 │
 ├── Examples/
 │   └── Readme.md
-│       -&gt; architectural role of named slices, executable example dossiers,
+│       -> architectural role of named slices, executable example dossiers,
 │          closure status expectations, and relation with reference consumers
 │
 ├── Conformance/
 │   └── Readme.md
-│       -&gt; public conformance posture, staged expected outcomes,
+│       -> public conformance posture, staged expected outcomes,
 │          preservation obligations, and rejection expectations
 │
 ├── Implementations/
 │   └── Reference/
 │       └── Readme.md
-│           -&gt; non-normative reference workspace, executable-slice purpose,
+│           -> non-normative reference workspace, executable-slice purpose,
 │              stage-separated architecture, runtime-family posture,
 │              and native-path direction
 │
 ├── Expression/
 │   ├── Readme.md
-│   │   -&gt; architectural entry point for canonical source representation
+│   │   -> architectural entry point for canonical source representation
 │   ├── Schema.md
-│   │   -&gt; source-schema posture and machine-checkable structural validation boundary
+│   │   -> source-schema posture and machine-checkable structural validation boundary
 │   ├── Diagram.md
-│   │   -&gt; authoritative executable graph as canonical source representation
+│   │   -> authoritative executable graph as canonical source representation
 │   ├── Front panel.md
-│   │   -&gt; optional front-panel composition and interaction surface
+│   │   -> optional front-panel composition and interaction surface
 │   ├── Widget.md
-│   │   -&gt; widget instance model, identity, value behavior, properties, methods, and events
+│   │   -> widget instance model, identity, value behavior, properties, methods, and events
 │   └── Widget interaction.md
-│       -&gt; diagram-side widget interaction paths and execution-facing access model
+│       -> diagram-side widget interaction paths and execution-facing access model
 │
 ├── Language/
 │   ├── Readme.md
-│   │   -&gt; architectural entry point for normative execution semantics
+│   │   -> architectural entry point for normative execution semantics
 │   ├── Control structures.md
-│   │   -&gt; normative execution meaning of case, for_loop, and while_loop
+│   │   -> normative execution meaning of case, for_loop, and while_loop
 │   └── State and cycles.md
-│       -&gt; normative meaning of explicit local memory and valid feedback cycles
+│       -> normative meaning of explicit local memory and valid feedback cycles
 │
 ├── IR/
 │   ├── Readme.md
-│   │   -&gt; architectural entry point for the FIR / IR layer and ownership boundary
+│   │   -> architectural entry point for the FIR / IR layer and ownership boundary
 │   ├── Execution IR.md
-│   │   -&gt; canonical open execution-facing representation
+│   │   -> canonical open execution-facing representation
 │   ├── Derivation rules.md
-│   │   -&gt; correspondence rules from validated meaning to execution-facing representation
+│   │   -> correspondence rules from validated meaning to execution-facing representation
 │   ├── Lowering.md
-│   │   -&gt; lowering boundary toward target-oriented executable forms
+│   │   -> lowering boundary toward target-oriented executable forms
 │   └── Backend contract.md
-│       -&gt; backend-facing contract for downstream consumers
+│       -> backend-facing contract for downstream consumers
 │
 ├── IDE/
 │   ├── Readme.md
-│   │   -&gt; IDE architecture entry point
+│   │   -> IDE architecture entry point
 │   ├── Observability.md
-│   │   -&gt; probes, watches, execution projection, and inspection-facing posture
+│   │   -> probes, watches, execution projection, and inspection-facing posture
 │   ├── Debugging.md
-│   │   -&gt; debugging control, stop semantics at the IDE layer, and runtime-to-source projection consumption
+│   │   -> debugging control, stop semantics at the IDE layer, and runtime-to-source projection consumption
 │   ├── Probes.md
-│   │   -&gt; local live inspection tools
+│   │   -> local live inspection tools
 │   └── Watch.md
-│       -&gt; persistent centralized inspection tools
+│       -> persistent centralized inspection tools
 │
 ├── Implementations/Reference/Runtime/
 │   ├── Readme.md
-│   │   -&gt; runtime-family entry point and shared consumer posture
+│   │   -> runtime-family entry point and shared consumer posture
+│   ├── acceptance/Readme.md
+│   │   -> shared acceptance material for runtime-family consumers
 │   ├── python/Readme.md
-│   │   -&gt; Python mini-runtime posture and example pipe direction
+│   │   -> Python mini-runtime posture and example pipe direction
 │   ├── rust/Readme.md
-│   │   -&gt; Rust mini-runtime posture and example pipe direction
+│   │   -> Rust mini-runtime posture and example pipe direction
 │   └── cpp/Readme.md
-│       -&gt; C/C++ mini-runtime posture and example pipe direction
+│       -> C/C++ mini-runtime posture and example pipe direction
 │
 └── Implementations/Reference/LLVM/
     └── Readme.md
-        -&gt; LLVM-oriented native path posture and ownership boundary
+        -> LLVM-oriented native path posture and ownership boundary
 </code></pre>
 
 <hr/>
@@ -1004,6 +1015,8 @@ Implementations/Reference/Readme.md
    v
 Implementations/Reference/Runtime/Readme.md
    |
+   +-- Implementations/Reference/Runtime/acceptance/Readme.md
+   |
    +-- Implementations/Reference/Runtime/python/Readme.md
    +-- Implementations/Reference/Runtime/rust/Readme.md
    +-- Implementations/Reference/Runtime/cpp/Readme.md
@@ -1021,6 +1034,7 @@ That second path answers a staged set of questions:
   <li><strong><code>Conformance/</code></strong> — what those slices are expected to validate, preserve, or reject,</li>
   <li><strong><code>Implementations/Reference/</code></strong> — how a non-normative prototype pipeline currently tries to process them,</li>
   <li><strong><code>Runtime/</code></strong> — how the shared runtime family is organized,</li>
+  <li><strong><code>Runtime/acceptance/</code></strong> — which observables keep runtime-family consumers aligned,</li>
   <li><strong><code>python/</code>, <code>rust/</code>, <code>cpp/</code></strong> — how the example corridor is consumed per runtime language,</li>
   <li><strong><code>LLVM/</code></strong> — how the native compiler-oriented path stays downstream from FROG rather than defining it.</li>
 </ul>
@@ -1048,20 +1062,20 @@ It prevents the language from being reduced to one editor, one runtime, one comp
 </p>
 
 <pre>
-Expression/   -&gt; canonical source form and structural validity
-Language/     -&gt; validated program meaning
-IR/           -&gt; canonical open execution-facing representation
-Libraries/    -&gt; intrinsic standardized primitive vocabularies
-Profiles/     -&gt; optional standardized capability families
-IDE/          -&gt; authoring, observability, debugging, inspection
+Expression/   -> canonical source form and structural validity
+Language/     -> validated program meaning
+IR/           -> canonical open execution-facing representation
+Libraries/    -> intrinsic standardized primitive vocabularies
+Profiles/     -> optional standardized capability families
+IDE/          -> authoring, observability, debugging, inspection
 </pre>
 
 <pre>
-what is saved      -&gt; Expression/
-what is true       -&gt; Language/
-what is derived    -&gt; IR/
-what exists        -&gt; Libraries/ and Profiles/
-what is edited     -&gt; IDE/
+what is saved      -> Expression/
+what is true       -> Language/
+what is derived    -> IR/
+what exists        -> Libraries/ and Profiles/
+what is edited     -> IDE/
 </pre>
 
 <p>
@@ -1069,10 +1083,10 @@ Beyond those six core families, the published repository also contains support a
 </p>
 
 <pre>
-what is exemplified   -&gt; Examples/
-what is expected      -&gt; Conformance/
-what is prototyped    -&gt; Implementations/Reference/
-what version means    -&gt; Versioning/
+what is exemplified   -> Examples/
+what is expected      -> Conformance/
+what is prototyped    -> Implementations/Reference/
+what version means    -> Versioning/
 </pre>
 
 <hr/>
@@ -1436,7 +1450,7 @@ The repository already contains substantial material across canonical source rep
 
 <p>
 At the current published state, the repository has now reached a stronger closure milestone than before:
-it materially exposes a repository-visible bounded Example 05 corridor across source, front-panel package, FIR, lowering, Python runtime, Rust runtime, C/C++ runtime, and a first LLVM-oriented native path.
+it materially exposes a repository-visible bounded Example 05 corridor across source, front-panel package, FIR, lowering, backend contract emission, shared runtime-family acceptance, Python runtime, Rust runtime, C/C++ runtime, and a first LLVM-oriented native path.
 </p>
 
 <p>
