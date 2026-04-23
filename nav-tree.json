@@ -224,6 +224,13 @@
               "kind": "category",
               "children": [
                 {
+                  "key": "examples/05_bounded_ui_accumulator/freeze.md",
+                  "title": "Freeze",
+                  "path": "/Examples/05_bounded_ui_accumulator/Freeze.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
                   "key": "examples/05_bounded_ui_accumulator/main.frog",
                   "title": "main.frog",
                   "path": "/Examples/05_bounded_ui_accumulator/main.frog",
@@ -2746,6 +2753,7 @@
     "/Examples/03_ui_property_write/Readme.md",
     "/Examples/04_stateful_feedback_delay/main.frog",
     "/Examples/04_stateful_feedback_delay/Readme.md",
+    "/Examples/05_bounded_ui_accumulator/Freeze.md",
     "/Examples/05_bounded_ui_accumulator/main.frog",
     "/Examples/05_bounded_ui_accumulator/ui/Readme.md",
     "/Examples/05_bounded_ui_accumulator/Readme.md",
