@@ -25,6 +25,11 @@
 </p>
 
 <p align="center">
+  In the generative AI era, software production becomes abundant, but accountable understanding becomes scarce.<br/>
+  FROG is designed to make generated or human-authored logic structured, graphical, inspectable, controllable, and governable.
+</p>
+
+<p align="center">
   Specification work initiated: <strong>8 March 2026</strong>
 </p>
 
@@ -40,6 +45,7 @@
   <a href="#breaking-the-syntax-first-bottleneck">Breaking the syntax-first bottleneck</a> •
   <a href="#why-frog-exists-now">Why FROG exists now</a> •
   <a href="#frog-in-the-ai-era">FROG in the AI era</a> •
+  <a href="#post-ai-accountability-inspection-and-control">Post-AI accountability</a> •
   <a href="#dataflow-programming">Dataflow programming</a> •
   <a href="#from-prototyping-to-critical-systems">From prototyping to critical systems</a> •
   <a href="#core-concept-diagram-front-panel-and-public-interface">Core concept</a> •
@@ -151,6 +157,11 @@ It does this by making the canonical source open, the validated meaning explicit
       <td><strong>AI-compatible</strong></td>
       <td>The canonical source is structured, the program graph is reviewable, and execution-facing artifacts are inspectable.</td>
       <td>AI-assisted generation and transformation can be paired with human review and validation instead of opaque automation.</td>
+    </tr>
+    <tr>
+      <td><strong>Accountability-oriented</strong></td>
+      <td>Generated or human-authored logic can be carried through explicit source, validation, FIR, lowering, backend contracts, acceptance, and runtime/compiler consumption.</td>
+      <td>Industrial users can reason about responsibility, review, control, and evolution instead of receiving a large opaque block of generated code.</td>
     </tr>
     <tr>
       <td><strong>Security-oriented</strong></td>
@@ -543,6 +554,20 @@ Generated software, AI-assisted transformation, multi-target deployment, industr
 </p>
 
 <p>
+Generative AI changes the economics of software creation.
+It can produce code, tests, documentation, and system logic far faster than traditional human review processes were designed to absorb.
+That acceleration does not remove the need for responsibility.
+It makes responsibility, understanding, inspection, integration, and controlled evolution more important.
+</p>
+
+<p>
+In industrial environments, software cannot merely be produced.
+It must be understood, validated, attributed, maintained, audited, and controlled.
+FROG exists in that context:
+not as a rejection of AI-assisted software generation, but as a language architecture intended to make fast-generated or human-authored logic structurally inspectable and governable before it reaches real execution.
+</p>
+
+<p>
 This repository therefore defines the language standard and the surrounding specification layers needed to support future conforming implementations.
 The objective is to make it possible for different actors to build compatible FROG tooling while targeting one shared open language definition.
 </p>
@@ -611,6 +636,83 @@ AI-assisted generation can target structured source.
 Human reviewers can inspect graph-level meaning.
 Toolchains can validate semantics and derive FIR.
 Downstream consumers can receive explicit contracts rather than opaque intent.
+</p>
+
+<p>
+The strategic point is not that AI should be rejected.
+The strategic point is that AI-assisted system creation needs better control surfaces.
+When generation becomes cheap and fast, understanding becomes the scarce resource.
+FROG is shaped for that scarcity: it provides structured source, graphical meaning, semantic validation, open FIR, explicit downstream handoff, and observable runtime/compiler consumption.
+</p>
+
+<hr/>
+
+<h2 id="post-ai-accountability-inspection-and-control">Post-AI accountability: inspection and control</h2>
+
+<p>
+Generative AI is changing the bottleneck of software engineering.
+The bottleneck is no longer only the ability to produce code.
+Increasingly, the bottleneck is the ability to understand, inspect, validate, attribute, integrate, maintain, and evolve what has been produced.
+</p>
+
+<p>
+That shift matters especially in industry.
+When software drives machines, instruments, robots, production lines, embedded systems, energy systems, medical systems, or safety-relevant workflows, a generated artifact is not enough.
+A serious organization must be able to answer:
+</p>
+
+<ul>
+  <li>what logic is being executed,</li>
+  <li>which source artifact owns that logic,</li>
+  <li>which semantic rules validated it,</li>
+  <li>which execution-facing representation was derived,</li>
+  <li>which lowering and backend contract were consumed,</li>
+  <li>which runtime or compiler family executed it,</li>
+  <li>which behavior was expected,</li>
+  <li>which behavior was observed,</li>
+  <li>and who is responsible for accepting that chain.</li>
+</ul>
+
+<p>
+FROG is designed to support that responsibility chain.
+It does not claim that graphical representation automatically makes software correct.
+It claims that structured graphical source, explicit dataflow, validated meaning, open FIR, lowering, backend contracts, acceptance artifacts, and runtime/compiler separation make the system easier to inspect and govern than opaque generated code alone.
+</p>
+
+<pre><code>AI-generated or human-authored intent
+        |
+        v
+structured .frog source
+        |
+        v
+graphical review and source-level inspection
+        |
+        v
+semantic validation
+        |
+        v
+open execution-facing FIR
+        |
+        v
+lowering and backend contract
+        |
+        v
+runtime-family or compiler-family consumption
+        |
+        v
+observable execution and accountable evolution
+</code></pre>
+
+<p>
+In that sense, FROG is not anti-AI.
+FROG is a control architecture for a world where AI can generate more software than humans can comfortably inspect through linear text alone.
+It gives humans and organizations a structured interface for understanding, reviewing, controlling, and evolving fast-produced software.
+</p>
+
+<p>
+This is also why FROG matters for future engineering roles.
+As code generation becomes more automated, the most valuable engineers will increasingly be those who can specify, inspect, validate, integrate, and govern complex generated systems.
+FROG aims to provide a language and representation stack suited to that shift.
 </p>
 
 <hr/>
@@ -1445,6 +1547,13 @@ it favors auditability, traceability, reviewable transformation, explicit valida
 Those properties do not replace security engineering, but they make security engineering less opaque.
 </p>
 
+<p>
+The same point applies to responsibility.
+In an AI-assisted development context, the critical question is not only whether code can be produced.
+The critical question is whether the produced logic can be inspected, explained, accepted, and evolved by accountable humans and organizations.
+FROG is designed to make that responsibility chain more explicit.
+</p>
+
 <hr/>
 
 <h2 id="interoperability">Interoperability</h2>
@@ -1585,6 +1694,11 @@ The current direction is therefore twofold:
 
 <p>
 The long-term ambition is to establish a durable open graphical programming ecosystem that can scale from experimentation to deeply integrated industrial deployment while remaining inspectable across the source, semantic, execution-facing, observability, and governance layers.
+</p>
+
+<p>
+In the generative AI era, that ambition also carries a responsibility dimension:
+FROG aims to help keep fast-produced software understandable, attributable, controllable, and evolvable by humans and organizations that remain responsible for real execution.
 </p>
 
 <hr/>
