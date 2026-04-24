@@ -9,6 +9,11 @@
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
+<p align="center">
+  FROG is a post-AI accountability architecture for executable graphical programming:<br/>
+  it aims to make generated or human-authored system logic inspectable, attributable, controllable, evolvable, and bridgeable across runtime, compiler, and hardware families.
+</p>
+
 <hr/>
 
 <h2>Contents</h2>
@@ -60,12 +65,19 @@ That shift is difficult, ambitious, and deliberate.
 It moves the center of gravity from “how to build and operate graphical systems well” toward “how to make the language, the execution-facing representation, and the downstream bridge boundaries themselves open, inspectable, modular, and governable.”
 </p>
 
+<p>
+In the generative AI era, that shift becomes even more important.
+The ability to produce software is becoming increasingly abundant.
+The scarce resource becomes accountable understanding:
+the ability to know what was produced, what it means, who validated it, how it changed, what it will execute, and who remains responsible for it.
+</p>
+
 <hr/>
 
 <h2 id="strategic-thesis">2. Strategic Thesis</h2>
 
 <p>
-FROG aims to make <strong>graphical system-grade programming open, inspectable, hardware-agnostic, compiler-agnostic, auditable, and deployable</strong> across heterogeneous execution targets.
+FROG aims to make <strong>graphical system-grade programming open, inspectable, hardware-agnostic, compiler-agnostic, auditable, accountable, evolvable, and deployable</strong> across heterogeneous execution targets.
 </p>
 
 <p>
@@ -92,6 +104,7 @@ In practical terms, FROG seeks to combine:
   <li>the execution seriousness required for industrial and system-grade deployment,</li>
   <li>the openness and inspectability needed for modern interoperability and portability,</li>
   <li>the auditability and structured artifacts needed for AI-assisted generation and transformation workflows,</li>
+  <li>the accountability needed to assign responsibility, validate behavior, and control evolution in industrial contexts,</li>
   <li>the sovereignty-preserving properties needed for long-term industrial independence from opaque vendor-controlled formats,</li>
   <li>and the modularity needed to combine runtimes, compilers, hardware bridges, and deployment strategies without redefining the language each time.</li>
 </ul>
@@ -104,6 +117,7 @@ It is that the next generation of graphical industrial programming infrastructur
 <ul>
   <li>machine-friendly enough for AI-era tooling,</li>
   <li>human-reviewable enough for security and engineering trust,</li>
+  <li>accountable enough for industrial validation, responsibility assignment, and controlled maintenance,</li>
   <li>open enough for multi-vendor implementation,</li>
   <li>structured enough to preserve meaning across validation, derivation, and backend handoff,</li>
   <li>modular enough to support multiple runtime and compiler combinations from the same source program,</li>
@@ -112,7 +126,7 @@ It is that the next generation of graphical industrial programming infrastructur
 
 <p>
 FROG is therefore not trying to make graphical programming merely more pleasant.
-It is trying to make executable graphical programming more open, more serious, more composable, more inspectable, and more future-proof.
+It is trying to make executable graphical programming more open, more serious, more composable, more inspectable, more accountable, and more future-proof.
 </p>
 
 <hr/>
@@ -129,9 +143,10 @@ At the other end of the spectrum, accessible graphical or low-code environments 
 </p>
 
 <p>
-The gap is now even wider in the AI era.
+The gap is now even wider in the generative AI era.
 Modern toolchains increasingly generate, rewrite, transform, explain, validate, and assist program structure.
 That increases the value of representations that are both machine-friendly and human-reviewable.
+It also increases the value of representations that make responsibility assignable and change control practical.
 Many current environments satisfy one side of that requirement better than the other.
 </p>
 
@@ -146,6 +161,7 @@ FROG targets the missing zone where the following properties are combined rather
   <li>compiler agnosticism at the architectural boundary rather than one downstream toolchain becoming hidden language truth,</li>
   <li>runtime agnosticism at the architectural boundary rather than one runtime becoming hidden language truth,</li>
   <li>open and inspectable program artifacts rather than opaque saved formats,</li>
+  <li>accountable software evolution rather than fast production without explainable responsibility,</li>
   <li>a path from rapid prototyping to deployment rather than a permanent split between prototype tooling and production tooling,</li>
   <li>structured machine-compatible source artifacts together with direct human structural review,</li>
   <li>and an open execution-facing IR that can be bridged toward existing operational runtimes or compiler families rather than forcing one execution doctrine for all targets.</li>
@@ -155,7 +171,7 @@ FROG targets the missing zone where the following properties are combined rather
 This is why FROG matters.
 The opportunity is not to imitate historical graphical tools.
 The opportunity is to open a missing systems capability category:
-<strong>executable graphical programming with an open language layer and an inspectable bridge surface to heterogeneous execution ecosystems</strong>.
+<strong>executable graphical programming with an open language layer, an inspectable bridge surface to heterogeneous execution ecosystems, and a responsibility-oriented review path for the post-AI software era</strong>.
 </p>
 
 <hr/>
@@ -178,6 +194,7 @@ In simple terms, the project is trying to make the following possible:
   <li>bridge that IR toward runtime families when execution should remain runtime-driven,</li>
   <li>bridge that IR toward compiler families when deployment should become artifact-driven,</li>
   <li>combine runtime services and compiled artifacts when a hybrid deployment is the right answer,</li>
+  <li>track what was generated, validated, transformed, accepted, and handed downstream,</li>
   <li>run or compile those programs on heterogeneous targets without making one private vendor stack the definition of the language.</li>
 </ul>
 
@@ -206,6 +223,7 @@ It aims to provide a language stack where:
   <li>the execution-facing FIR remains open to inspection,</li>
   <li>downstream compilation remains separate from the normative language definition,</li>
   <li>downstream runtime realization remains separate from the normative language definition,</li>
+  <li>responsibility can be attached to inspectable artifacts rather than only to opaque generated output,</li>
   <li>and the repository can state its current posture explicitly without forcing that truth into strategic prose.</li>
 </ul>
 
@@ -237,6 +255,31 @@ FROG therefore aims to support a world where one canonical <code>.frog</code> so
 That is one of the most important strategic consequences of an open FIR:
 it does not merely preserve inspectability.
 It preserves combinability.
+</p>
+
+<h3>Post-AI accountability and control</h3>
+
+<p>
+Generative AI changes the economics of software creation.
+It can produce code, tests, documentation, and system logic at a speed that traditional human review processes were not designed to absorb.
+This does not remove the need for responsibility.
+It makes responsibility harder.
+</p>
+
+<p>
+In industrial contexts, software cannot only be produced.
+It must be understood, inspected, validated, attributed, maintained, controlled, and evolved.
+A generated artifact that cannot be explained, traced, or governed is not enough for serious system-grade deployment.
+</p>
+
+<p>
+FROG addresses this accountability gap by giving generated or human-authored logic a structured path through graphical source, semantic validation, open FIR, lowering, backend contracts, runtime-family consumption, compiler-family consumption, and observable execution.
+</p>
+
+<p>
+The goal is not to reject generative AI.
+The goal is to make AI-assisted system creation governable.
+FROG provides an architectural interface through which humans can inspect, understand, control, assign responsibility for, and evolve software that may increasingly be produced with AI assistance.
 </p>
 
 <hr/>
@@ -288,6 +331,27 @@ or one hardware vendor means one mandatory operational stack.
 That limits deployment freedom and makes it hard to reuse serious existing runtime or compiler infrastructure already present in industry.
 </p>
 
+<h3>The post-AI inspection bottleneck</h3>
+
+<p>
+A new limitation is emerging as generative AI becomes common in software work:
+production is accelerating faster than review capacity.
+AI-assisted tools can generate large quantities of plausible-looking code, tests, documentation, and integration logic.
+But understanding, verification, licensing confidence, safety analysis, operational validation, and long-term maintenance still require accountable human and organizational control.
+</p>
+
+<p>
+The result is an inspection bottleneck.
+The scarce resource is no longer only the ability to produce software.
+The scarce resource becomes the ability to inspect, understand, govern, and trust what has been produced.
+</p>
+
+<p>
+For industrial systems, this is not optional.
+A system must have a responsible owner, a reviewable behavior, a controlled change path, an auditable execution chain, and a maintainable evolution path.
+Generating more code faster is not enough if responsibility becomes harder to assign and behavior becomes harder to explain.
+</p>
+
 <p>
 The issue is therefore not merely “better usability”.
 The issue is that graphical industrial programming has historically lacked a sufficiently open and standardized architectural foundation,
@@ -298,6 +362,7 @@ and AI-era software generation is making the cost of opaque or weakly reviewable
 FROG departs from that pattern.
 It preserves the spirit of serious graphical system programming,
 but it does not accept the historical collapse of language, file format, IDE, runtime, compiler, and hardware ecosystem into one inseparable product stack.
+It also does not accept that AI-generated system logic should remain a mass of opaque text without a structured review and accountability path.
 </p>
 
 <hr/>
@@ -317,6 +382,7 @@ What is new is the combination of the following architectural commitments inside
   <li>a backend-family-oriented lowering path rather than one hidden private execution pipeline,</li>
   <li>a future path toward known backend/compiler targets without making those targets the definition of the language,</li>
   <li>a runtime-bridge posture that allows execution services to remain modular rather than becoming hidden language truth,</li>
+  <li>a responsibility-oriented representation stack for software increasingly authored, modified, or accelerated by AI-assisted tools,</li>
   <li>a centralized repository-visible versioning surface rather than scattered implicit version claims.</li>
 </ul>
 
@@ -412,6 +478,44 @@ That is not yet the same as saying the whole space is closed.
 It is the strategic claim that FROG is being shaped to make that space structurally possible.
 </p>
 
+<h3>FROG as a responsibility architecture</h3>
+
+<p>
+FROG can also work because it turns software creation into a chain of inspectable artifacts rather than a jump from intent to opaque implementation.
+That matters when code is generated or transformed by AI-assisted tools.
+</p>
+
+<pre><code>human or AI-assisted intent
+        |
+        v
+structured .frog source
+        |
+        v
+graphical review
+        |
+        v
+semantic validation
+        |
+        v
+open FIR
+        |
+        v
+lowering / backend contract
+        |
+        +-----------------------------+-----------------------------+
+        |                             |
+        v                             v
+runtime family                  compiler family
+        |                             |
+        v                             v
+observable execution            deployable artifact
+</code></pre>
+
+<p>
+This chain does not remove the need for expert engineering.
+It makes expert engineering more governable by giving reviewers and organizations explicit surfaces where meaning, transformation, responsibility, and downstream handoff can be inspected.
+</p>
+
 <hr/>
 
 <h2 id="heilmeier-h4">7. Heilmeier H4 — Who cares if we succeed?</h2>
@@ -423,8 +527,9 @@ If FROG succeeds, multiple groups should care.
 <ul>
   <li><strong>Industrial users and integrators</strong> gain an open graphical programming foundation that is not structurally locked to one hardware vendor or one execution stack.</li>
   <li><strong>Hardware vendors</strong> gain a path to expose serious industrial capabilities through open upstream language artifacts while still attaching their own downstream runtime or compiler bridges where appropriate.</li>
-  <li><strong>System builders</strong> gain a cleaner way to target CPUs, embedded systems, edge devices, FPGA-oriented flows, and future hardware families through one architectural language stack.</li>
+  <li><strong>System builders</strong> gain a cleaner way to target CPUs, embedded systems, edge devices, FPGA-oriented flows, GPU-oriented flows, and future hardware families through one architectural language stack.</li>
   <li><strong>AI and tooling ecosystems</strong> gain structured source and open IR artifacts rather than opaque graphical artifacts.</li>
+  <li><strong>Engineering managers and accountable system owners</strong> gain a more structured way to understand what was generated, validated, changed, accepted, and deployed.</li>
   <li><strong>Security and assurance stakeholders</strong> gain a more direct way to inspect generated or transformed logic across source and execution-facing layers.</li>
   <li><strong>Runtime and compiler implementers</strong> gain a public bridge surface from which serious execution paths can be constructed without redefining the language.</li>
   <li><strong>The broader engineering community</strong> gains an alternative model for graphical programming that is open, portable, modular, and structurally modern.</li>
@@ -441,6 +546,12 @@ It could also support a healthier market structure.
 Multiple independent IDEs, runtimes, compiler bridges, analysis tools, and hardware integrations could coexist around one open language basis.
 That openness remains compatible with steward-controlled official branding and with a future Graiphic flagship IDE carrying official FROG identity.
 Openness of the language does not require branding collapse.
+</p>
+
+<p>
+In the generative AI era, another group should care deeply:
+organizations that must remain responsible for systems they did not write line by line.
+FROG can provide a structured interface through which fast generated work can be inspected, validated, accepted, and evolved under human and organizational responsibility.
 </p>
 
 <hr/>
@@ -483,6 +594,30 @@ If FROG succeeds fully, it could make possible something that has historically r
 a serious graphical language stack that can travel from authoring to operation across many kinds of hardware and many kinds of downstream execution infrastructure without surrendering the language to one proprietary execution authority.
 </p>
 
+<h3>Impact on post-AI engineering responsibility</h3>
+
+<p>
+If FROG succeeds, it would also change how organizations manage AI-assisted software creation.
+The question would no longer be only “can an AI produce code quickly?”
+The question would become:
+</p>
+
+<ul>
+  <li>what structure was produced,</li>
+  <li>what semantic meaning was accepted,</li>
+  <li>what execution-facing representation was derived,</li>
+  <li>what backend contract was handed downstream,</li>
+  <li>what runtime or compiler consumed it,</li>
+  <li>what behavior was observed,</li>
+  <li>who reviewed and accepted the change,</li>
+  <li>and how the system can evolve without losing responsibility.</li>
+</ul>
+
+<p>
+That is the accountability difference.
+FROG can make fast software creation more compatible with responsible industrial control.
+</p>
+
 <hr/>
 
 <h2 id="heilmeier-h6">9. Heilmeier H6 — What are the risks and what still needs to be proved?</h2>
@@ -501,6 +636,7 @@ Several important things still need to be proved.
   <li>Reference runtime recipes must grow beyond one bounded corridor strongly enough to prove that runtime plurality is architectural rather than rhetorical.</li>
   <li>The relationship between operational targets, observability services, communication variables, and remote or distributed front-panel patterns must be shown more concretely.</li>
   <li>The claimed auditability advantage must remain disciplined and credible rather than overstated.</li>
+  <li>The claimed post-AI accountability advantage must be demonstrated through real review and acceptance workflows, not only stated as strategy.</li>
   <li>The distinction between strategy, roadmap sequencing, and current repository-status truth must remain explicit.</li>
 </ul>
 
@@ -522,6 +658,13 @@ If FIR becomes too tied to one reference runtime, or too tied to one compiler co
 That must be actively prevented.
 </p>
 
+<p>
+There is also a post-AI accountability risk.
+FROG should not claim that AI-generated logic becomes trustworthy merely because it is represented graphically.
+The credible claim is that FROG can give humans and organizations better surfaces for inspection, validation, attribution, and controlled evolution.
+That advantage must be proved through examples, acceptance artifacts, validation flows, and real downstream consumers.
+</p>
+
 <hr/>
 
 <h2 id="heilmeier-h7">10. Heilmeier H7 — How much will it cost?</h2>
@@ -531,7 +674,7 @@ At the current repository stage, the project should be understood as an architec
 </p>
 
 <p>
-The cost profile should eventually separate into at least five layers:
+The cost profile should eventually separate into at least six layers:
 </p>
 
 <ul>
@@ -539,6 +682,7 @@ The cost profile should eventually separate into at least five layers:
   <li>reference implementation and executable slice closure,</li>
   <li>future backend/compiler/runtime proof of concept work,</li>
   <li>bridge-family work toward heterogeneous hardware ecosystems,</li>
+  <li>post-AI review, accountability, and acceptance workflow proof work,</li>
   <li>future IDE and ecosystem-enablement work.</li>
 </ul>
 
@@ -569,6 +713,7 @@ Natural milestone categories are:
   <li><strong>Midterm exam</strong> — stabilize the execution-facing FROG IR and the backend-lowering story more fully.</li>
   <li><strong>Advanced exam</strong> — demonstrate credible FIR bridge paths toward both runtime families and compiler families.</li>
   <li><strong>Deeper advanced exam</strong> — demonstrate an end-to-end backend/compiler proof of concept, ideally including a known backend family such as LLVM for CPU-oriented execution.</li>
+  <li><strong>Post-AI accountability exam</strong> — demonstrate that AI-assisted or human-authored graph logic can be generated, reviewed, validated, attributed, accepted, and evolved through explicit repository-visible artifacts.</li>
   <li><strong>Distributed systems exam</strong> — demonstrate a credible path where operational execution can live on a target while observability and front-panel interaction can remain external through explicit communication layers.</li>
   <li><strong>Long-term exam</strong> — demonstrate a credible path toward a serious IDE, a broader primitive base, stronger structures, richer memory semantics, and multi-target deployment.</li>
 </ul>
@@ -587,6 +732,9 @@ In the AI-era framing, a particularly important exam is whether FROG can demonst
   <li>semantic validation,</li>
   <li>inspectable FIR derivation,</li>
   <li>backend handoff without loss of architectural traceability,</li>
+  <li>runtime or compiler consumption without hidden ownership transfer,</li>
+  <li>explicit acceptance artifacts,</li>
+  <li>responsibility assignment around generated or transformed logic,</li>
   <li>and, eventually, the ability to select between runtime-heavy, compiler-heavy, or hybrid deployment strategies without changing the upstream language truth.</li>
 </ul>
 
@@ -653,7 +801,7 @@ When that information is needed, the authoritative repository-visible entry poin
 </ul>
 
 <p>
-This boundary matters especially in a project like FROG because strategy can explain why runtime/compiler modularity matters, but it must not silently redefine the normative ownership of FIR, lowering, profiles, runtime responsibilities, or implementation behavior.
+This boundary matters especially in a project like FROG because strategy can explain why runtime/compiler modularity, FIR openness, and post-AI accountability matter, but it must not silently redefine the normative ownership of FIR, lowering, profiles, runtime responsibilities, or implementation behavior.
 </p>
 
 <hr/>
@@ -693,7 +841,7 @@ But it does mean that the architecture has moved beyond theory.
 
 <p>
 These published slices also matter strategically because they keep the project grounded in inspectable repository-visible artifacts.
-The strategic argument for openness, auditability, modular downstream seriousness, and future FIR-bridge value is stronger when each stage is already exercised in public.
+The strategic argument for openness, auditability, modular downstream seriousness, future FIR-bridge value, and post-AI accountability is stronger when each stage is already exercised in public.
 The authoritative current repository-wide status of those published surfaces remains centralized in <code>Versioning/</code>.
 </p>
 
@@ -769,6 +917,23 @@ Another meaningful proof point would be a distributed execution demonstration in
   <li>the end-to-end chain remains attributable and auditable.</li>
 </ul>
 
+<h3>Future post-AI accountability demonstration</h3>
+
+<p>
+A future proof should also demonstrate the accountability loop explicitly.
+A realistic demonstration could show an AI-assisted tool producing or modifying a FROG graph, then forcing that output through human graphical review, validation, FIR derivation, lowering, backend contract emission, shared acceptance, and runtime or compiler consumption.
+</p>
+
+<p>
+The goal of such a proof would not be to show that AI-generated systems are automatically correct.
+The goal would be to show that AI-assisted creation can be controlled through structured artifacts, explicit validation, human review surfaces, and traceable downstream handoff.
+</p>
+
+<p>
+That is the strategic answer to the post-AI inspection problem:
+not rejecting generation, but making generated system logic inspectable, attributable, controlled, and evolvable.
+</p>
+
 <p>
 The strategic importance of those proofs belongs here.
 The ordering of the work belongs to <code>Roadmap/</code>.
@@ -781,7 +946,7 @@ The current repository-status truth and detailed surface status belong to <code>
 
 <p>
 FROG is trying to open a missing category:
-accessible graphical programming with a serious path to system-grade execution, hardware agnosticism, compiler agnosticism at the architectural boundary, runtime agnosticism at the architectural boundary, inspectable intermediate representation, and future deployable backend/runtime integration.
+accessible graphical programming with a serious path to system-grade execution, hardware agnosticism, compiler agnosticism at the architectural boundary, runtime agnosticism at the architectural boundary, inspectable intermediate representation, post-AI accountability, and future deployable backend/runtime integration.
 </p>
 
 <p>
@@ -803,6 +968,7 @@ The strategic case for FROG is therefore clear:
   <li>prepare future paths toward runtime-family and compiler-family combinations from one source program,</li>
   <li>enable an open, multi-vendor, industrial graphical programming ecosystem,</li>
   <li>reduce the auditability gap introduced by increasingly AI-assisted software generation,</li>
+  <li>support assignable responsibility through structured, inspectable, validated, and traceable artifacts,</li>
   <li>support industrial security and technological sovereignty through open, inspectable, and governable program artifacts.</li>
 </ul>
 
