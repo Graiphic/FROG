@@ -1753,7 +1753,7 @@ Repository stewardship, governance direction, and ecosystem positioning are desc
 
 <p align="center">
   <a href="https://cla-assistant.io/Graiphic/FROG">
-    <img src="./assets/cla-assistant-badge.svg" alt="CLA Assistant" width="640" />
+    <img src="./assets/cla-assistant-badge.svg" alt="CLA Assistant" />
   </a>
 </p>
 
@@ -1763,3 +1763,7 @@ Repository stewardship, governance direction, and ecosystem positioning are desc
   <strong>FROG — Free Open Graphical Language</strong><br/>
   Open graphical dataflow programming, specified as a language rather than owned as a product.
 </p>
+
+<hr/>
+
+
