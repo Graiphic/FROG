@@ -35,6 +35,7 @@
 
 <p align="center">
   <a href="#what-is-frog">What is FROG?</a> •
+  <a href="#frog-whitepaper">FROG whitepaper</a> •
   <a href="#what-makes-frog-different">What makes FROG different?</a> •
   <a href="#from-go-hw-to-frog">From GO HW to FROG</a> •
   <a href="#what-this-repository-defines">What this repository defines</a> •
@@ -67,6 +68,37 @@
   <a href="#governance-official-branding-and-ecosystem">Governance, official branding, and ecosystem</a> •
   <a href="#project-status">Project status</a> •
   <a href="#license">License</a>
+</p>
+
+<hr/>
+
+<h2 id="frog-whitepaper">FROG Whitepaper</h2>
+
+<p>
+A dedicated strategic and technical whitepaper is available for readers who want a broader explanation of FROG’s purpose, technological ambition, relationship with SOTA GO and GO HW, AI-era relevance, runtime/compiler modularity, open FIR posture, and long-term ecosystem strategy.
+</p>
+
+<p>
+This whitepaper explains why FROG should be understood not merely as a graphical tool, but as an open graphical dataflow language foundation designed for inspectable, hardware-agnostic, compiler-agnostic, AI-ready industrial software.
+</p>
+
+<ul>
+  <li>
+    <a href="https://github.com/Graiphic/GO-Whitepapers/tree/main/FROG%20-%20Opening%20the%20Next%20Era%20of%20Graphical">
+      Open the FROG whitepaper repository page
+    </a>
+  </li>
+  <li>
+    <a href="https://graiphic.github.io/GO-Whitepapers/#/FROG%20-%20Opening%20the%20Next%20Era%20of%20Graphical/Readme">
+      Open the FROG whitepaper on GitHub Pages
+    </a>
+  </li>
+</ul>
+
+<p>
+The whitepaper is non-normative.
+The authoritative specification remains this FROG repository.
+The whitepaper provides strategic framing, industrial positioning, and a higher-level explanation of why FROG matters in the continuity of Graiphic’s GO program.
 </p>
 
 <hr/>
@@ -1044,7 +1076,7 @@ Python mini runtime            Rust mini runtime               C/C++ mini runtim
       |
       +------------------------------- shared acceptance surface -------------------------------+
       |
-      \------------------------------- optional LLVM-oriented native path ----------------------->
+      \------------------------------- optional LLVM-oriented native path -----------------------&gt;
 </code></pre>
 
 <p>
