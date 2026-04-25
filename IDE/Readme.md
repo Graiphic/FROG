@@ -453,6 +453,8 @@ The IDE layer is currently organized as follows:
 │      conditional profile-defined entries, and third-party entries
 ├── Express.md
 │   -&gt; guided Express authoring model and normalization to canonical FROG content
+├── Authoring provenance.md
+│   -&gt; IDE-side creation, verification, display, review, and preservation workflows for source-carried provenance
 ├── Observability.md
 │   -&gt; source-aligned live execution observability contract for IDE tooling
 ├── Debugging.md
@@ -466,7 +468,7 @@ The IDE layer is currently organized as follows:
 </code></pre>
 
 <p>
-Together, these documents define the current IDE-facing baseline for authoring, discoverability, source-aligned execution visibility, interactive debugging, inspection, and portable authoring-fragment transport.
+Together, these documents define the current IDE-facing baseline for authoring, discoverability, source-carried provenance display and review, source-aligned execution visibility, interactive debugging, inspection, and portable authoring-fragment transport.
 </p>
 
 <hr/>
@@ -486,6 +488,7 @@ A FROG IDE typically includes the following architectural components:
   <li>validation and execution-preparation integration,</li>
   <li>palette services,</li>
   <li>Express authoring services,</li>
+  <li>authoring provenance services,</li>
   <li>execution observability integration,</li>
   <li>debugging services,</li>
   <li>probe services,</li>
@@ -501,6 +504,7 @@ Authoring components
 - front panel editor
 - palette
 - Express services
+- authoring provenance services
 - snippets
 
 Model components
@@ -659,6 +663,10 @@ It unifies the information required for editing and IDE-side consistency managem
   <li>cross-section consistency information,</li>
   <li>authoring-side view state where such state is needed to preserve a stable editing experience without redefining canonical meaning.</li>
 </ul>
+
+<p>
+When source provenance is enabled, the Program Model SHOULD keep enough stable source-object identity to create, verify, display, and update <code>ide.provenance</code> attestations without allowing those attestations to redefine canonical meaning.
+</p>
 
 <pre><code>Authoring ownership
 
@@ -1008,6 +1016,8 @@ The detailed snippet transport and insertion model belongs in <code>IDE/Snippet.
   <li>Express authoring as an IDE convenience layer rather than a separate language</li>
   <li>Deterministic normalization from guided authoring to canonical source content</li>
   <li>Optional IDE recoverability metadata without executable authority</li>
+  <li>Optional authoring provenance metadata without executable authority</li>
+  <li>Visible distinction between unknown, AI-generated, human-direct, human-reviewed, stale, invalid, and untrusted provenance states where provenance-aware tooling is enabled</li>
   <li>Clear distinction between intrinsic capability discovery, optional profile discovery, and third-party discovery</li>
 </ul>
 

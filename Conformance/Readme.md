@@ -188,6 +188,10 @@ It includes:
 </ul>
 
 <p>
+Where published cases include <code>ide.provenance</code>, conformance expectations MAY also test preservation and reporting behavior: provenance-aware tools should preserve valid or unknown attestations when safe, report stale or malformed provenance explicitly, and never use provenance to redefine what the program computes.
+</p>
+
+<p>
 Conformance therefore requires both:
 </p>
 
@@ -392,6 +396,8 @@ backend contract               != private runtime structure
 backend family                 != target profile
 deployment mode                != runtime-private realization
 compiler-family route          != FROG semantic truth
+source provenance            != executable truth
+missing provenance           != automatic AI origin
 </code></pre>
 
 <p>

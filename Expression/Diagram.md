@@ -219,6 +219,10 @@ documentation and visible organization of the diagram.
 It MUST NOT affect execution semantics.
 </p>
 
+<p>
+Diagram objects such as nodes, edges, structure regions, and annotations MAY be referenced by source provenance attestations through <code>ide.provenance</code>. The diagram object itself remains the executable source object; provenance evidence SHOULD be carried outside the object rather than adding mandatory signature or trust fields to every node or edge.
+</p>
+
 <hr/>
 
 <h2 id="diagram-scopes">6. Diagram Scopes</h2>
@@ -1520,6 +1524,7 @@ sub-FROG invocation, explicit local memory, and graph-level documentation are re
   <li>Language structures are explicit graph nodes, not hidden function expansions.</li>
   <li>Cycles and explicit local memory participate directly in the diagram graph.</li>
   <li>The diagram owns graph structure representation; annotations and layout do not change execution semantics.</li>
+  <li>Diagram nodes, edges, regions, and annotations may be subjects of source provenance attestations, but provenance does not change graph meaning.</li>
   <li>The diagram does not define source-format compatibility law or published specification corpus versioning.</li>
 </ul>
 

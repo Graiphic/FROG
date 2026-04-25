@@ -586,7 +586,8 @@ The embedded payload of a snippet image is conceptually:
   "dependencies": { },
   "preview": { },
   "metadata": { },
-  "recoverability": { }
+  "recoverability": { },
+  "provenance": { }
 }</code></pre>
 
 <h3>13.2 Rules</h3>
@@ -601,6 +602,10 @@ The embedded payload of a snippet image is conceptually:
 
 <p>
 Auxiliary sections such as <code>preview</code>, <code>metadata</code>, and <code>recoverability</code> MAY be present provided that they remain non-authoritative with respect to source-aligned snippet meaning.
+</p>
+
+<p>
+A snippet payload MAY also carry provenance evidence when the relationship between the original source objects and the transported fragment remains clear. During insertion, the IDE SHOULD either preserve valid provenance with explicit imported context, mark the inserted objects as <code>snippet_inserted</code> or <code>imported</code>, or require a fresh human-review attestation after the fragment is placed in the target program.
 </p>
 
 <h3>13.3 Embedded payload requirement</h3>
@@ -870,6 +875,10 @@ If such metadata is absent, ignored, or cannot safely be applied, the IDE MUST s
 <p>
 Snippet insertion MUST still validate against the target scope and active insertable space.
 A snippet may carry valid source-aligned content and still be rejected if the target editing context does not support the required canonical target family or required optional profile support.
+</p>
+
+<p>
+Snippet insertion MUST NOT silently turn copied or imported provenance into a fresh <code>human_direct</code> claim. A direct human drag-and-drop action is evidence about the insertion action; it is not automatically evidence that the carried canonical objects were originally authored manually.
 </p>
 
 <h3>18.5 Drag-and-drop equivalence</h3>

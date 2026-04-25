@@ -632,6 +632,10 @@ Such context-aware presentations remain authoring conveniences.
 They MUST NOT alter the canonical identity or language semantics of the inserted construct.
 </p>
 
+<p>
+When a user places a node, structure, annotation, or other canonical object through a direct palette interaction, a provenance-aware IDE MAY emit an <code>ide.provenance</code> attestation such as <code>human_direct</code> for the created source object. This evidence is authoring metadata only; it does not alter the canonical insertable space or the meaning of the inserted construct.
+</p>
+
 <pre><code>Context helps ranking
 Context does not change meaning
 

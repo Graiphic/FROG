@@ -1,9 +1,15 @@
-<h1>FROG Source Provenance Specification</h1>
+<p align="center">
+  <img src="../FROG logo.svg" alt="FROG logo" width="140" />
+</p>
 
-<p>Definition of source-carried authoring provenance, signed attestations, source-object digests, issuer trust, and human review markers for <code>.frog</code> programs.</p>
-<p>FROG — Free Open Graphical Language</p>
+<h1 align="center">FROG Source Provenance Specification</h1>
 
-<hr />
+<p align="center">
+  <strong>Definition of source-carried authoring provenance, signed attestations, source-object digests, issuer trust, and human review markers for <code>.frog</code> programs</strong><br/>
+  <em>FROG — Free Open Graphical Language</em>
+</p>
+
+<hr/>
 
 <h2>Contents</h2>
 

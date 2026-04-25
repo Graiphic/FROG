@@ -369,6 +369,10 @@ This openness is also one of the reasons FROG can credibly support:
   <li>technological sovereignty through independent implementation.</li>
 </ul>
 
+<p>
+Source provenance follows the same governance model. The open specification may define the shape of <code>ide.provenance</code> attestations, but no single IDE is required to be the only possible issuer. Graiphic may maintain proprietary signing infrastructure, certified issuer programs, or product-specific trust policies while the source format remains open to conforming third-party IDEs and organizational trust policies.
+</p>
+
 <hr/>
 
 <h2 id="decision-model">8. Decision Model</h2>

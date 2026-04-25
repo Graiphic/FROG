@@ -133,6 +133,8 @@ This document depends on the following repository surfaces:
   <li><code>Expression/Front panel.md</code> — source-visible front-panel layer,</li>
   <li><code>Expression/Widget.md</code> — source-visible widget instance model,</li>
   <li><code>Expression/Widget interaction.md</code> — source-visible widget interaction paths,</li>
+  <li><code>Expression/Source provenance.md</code> — optional source-carried authoring and review evidence,</li>
+  <li><code>IDE/Authoring provenance.md</code> — IDE-side provenance verification, display, and review workflow,</li>
   <li><code>Language/Readme.md</code> — normative execution semantics,</li>
   <li><code>Language/Control structures.md</code> — normative structure execution meaning,</li>
   <li><code>Language/State and cycles.md</code> — normative local-memory meaning,</li>
@@ -220,6 +222,10 @@ That is why observability is separated from both:
 The runtime may implement many private scheduling and execution details.
 The debugger may expose pause, resume, step, and break behavior.
 Observability is the shared source-aligned projection layer that makes both inspection and debugging intelligible.
+</p>
+
+<p>
+A provenance-aware IDE MAY combine observability overlays with provenance overlays so that a reviewer can see both live execution state and authoring/review state. These overlays MUST remain distinguishable: execution observability describes what is happening at runtime, while provenance describes source-carried authoring evidence and review status.
 </p>
 
 <hr/>
@@ -451,6 +457,12 @@ a reader should be able to follow meaningful attribution from source-level objec
 <hr/>
 
 <h2 id="pause-consistent-observation">11. Pause-Consistent Observation</h2>
+
+<p>
+Where <code>ide.provenance</code> exists, source-aligned identity also lets the IDE associate an observable object with its provenance state. That association is useful for inspection and review, but it is not a runtime semantic fact.
+</p>
+
+
 
 <p>
 When a live execution is paused for debugging or fault inspection, the observability layer MUST be able to support a <strong>pause-consistent</strong> IDE view.

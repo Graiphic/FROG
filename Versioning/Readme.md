@@ -475,6 +475,10 @@ This means that a newer version should normally introduce:
 </ul>
 
 <p>
+Source provenance is an example of an additive source-format extension when it is carried under the optional <code>ide.provenance</code> object and remains safely ignorable for execution semantics. Older tools may lack provenance verification, but they SHOULD preserve unknown <code>ide</code> fields when safe and MUST NOT reinterpret missing provenance as AI-generated source.
+</p>
+
+<p>
 This rule does not mean that any addition is automatically safe for every older tool.
 Additivity must be evaluated not only syntactically, but also with respect to degraded semantic readability.
 </p>
@@ -960,6 +964,10 @@ The near-term version objective is to consolidate the first coherent published c
   <li>the repository-wide additive versioning and safe degraded readability doctrine,</li>
   <li>the cumulative version model for later specification evolution.</li>
 </ul>
+
+<p>
+The near-term source closure also includes keeping <code>Expression/Source provenance.md</code> and <code>IDE/Authoring provenance.md</code> aligned with the additive, non-executable, degraded-reading model: provenance may improve inspection and review without changing canonical program meaning.
+</p>
 
 <h3>23.3 Explicitly not yet implied by this baseline</h3>
 <p>

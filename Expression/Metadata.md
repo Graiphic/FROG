@@ -343,6 +343,10 @@ All other standard fields are optional unless a profile, repository policy, or t
 Tools MAY add additional metadata fields, provided that those fields remain non-executable and safely ignorable by execution-facing systems.
 </p>
 
+<p>
+Metadata fields such as <code>author</code>, <code>created</code>, and <code>updated</code> are descriptive document-level fields. They do not replace fine-grain source provenance for individual nodes, edges, widgets, regions, or review actions.
+</p>
+
 <pre>
 Metadata structure model
 
@@ -620,6 +624,10 @@ Example:
 However, transient authoring state SHOULD NOT be stored in <code>metadata</code>.
 That kind of information belongs in <code>ide</code> when it is source-carried authoring metadata,
 or in <code>cache</code> when it is derived and regenerable tooling data.
+</p>
+
+<p>
+Authoring-origin evidence, AI-generation markers, signed issuer claims, and human-review attestations belong in <code>ide.provenance</code> when they are serialized with source. They SHOULD NOT be collapsed into <code>metadata.author</code>, because document-level authorship is not the same thing as per-object provenance or review acceptance.
 </p>
 
 <pre>

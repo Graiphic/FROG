@@ -383,6 +383,10 @@ At the current repository stage, those subsystems include:
 </ul>
 
 <p>
+The optional source provenance model is another cross-cutting source subsystem. A schema MAY check the structural shape of <code>ide.provenance</code> when that object is present, but signature verification, issuer trust, and review policy remain provenance-verification concerns rather than executable semantic validation.
+</p>
+
+<p>
 These subsystems may contribute machine-checkable structural rules when they affect canonical source shape. However, their semantic consequences remain outside the schema layer when they belong to validated meaning.
 </p>
 
@@ -554,6 +558,10 @@ A validator SHOULD report at least:
   <li>semantic validation failures,</li>
   <li>unsupported-but-valid situations when an implementation subset is narrower than repository law.</li>
 </ul>
+
+<p>
+A provenance-aware validator MAY additionally report malformed, stale, unsupported, invalid, or untrusted provenance. Such reporting MUST remain distinct from determining whether the program computes a valid result. Missing provenance is a valid base source condition unless a separate optional policy or profile requires provenance for a deployment workflow.
+</p>
 
 <p>
 A validator MAY use repository-visible machine-checkable artifacts to support structural validation. However:

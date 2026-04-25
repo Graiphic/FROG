@@ -160,6 +160,7 @@ The current milestone bias remains:
   <li>preserve the bounded executable reference corridor,</li>
   <li>preserve widget-object corridor coherence,</li>
   <li>preserve centralized version-governance clarity,</li>
+  <li>preserve source provenance and human-review attestation boundaries without turning them into execution semantics,</li>
   <li>only then broaden backend families, runtime families, deployment families, or ecosystem claims.</li>
 </ol>
 
@@ -187,10 +188,10 @@ In other words, the project should continue to prefer coherent corridor closure 
       <td>Preserve coherence rather than reopening the foundation</td>
     </tr>
     <tr>
-      <td>M1 — Canonical source and source-schema closure</td>
+      <td>M1 — Canonical source, source-schema, and provenance closure</td>
       <td>[~]</td>
       <td>The canonical <code>.frog</code> source model and its structural-validity posture are made increasingly precise and stable</td>
-      <td>Tighten source-shape, section ownership, and structural validation boundaries</td>
+      <td>Tighten source-shape, section ownership, structural validation boundaries, and optional <code>ide.provenance</code> preservation rules</td>
     </tr>
     <tr>
       <td>M2 — Validated semantic closure</td>

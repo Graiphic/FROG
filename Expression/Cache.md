@@ -502,6 +502,10 @@ Embedded cache does not become authoritative merely because it is physically sto
 Its storage location does not change its semantic status.
 </p>
 
+<p>
+Source provenance is not cache. An attestation stored under <code>ide.provenance</code> may include a signature, issuer, digest, or human-review claim for a specific source state. Such evidence is source-carried audit metadata and SHOULD NOT be discarded merely because it is non-executable or because a formatter normally removes derived cache entries.
+</p>
+
 <pre>Authority rule
 
 canonical source -> authoritative

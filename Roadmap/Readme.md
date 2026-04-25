@@ -455,6 +455,10 @@ It is the point where enough repository-visible closure exists to sustain a cred
 <h2 id="cross-cutting-workstreams">17. Cross-cutting workstreams</h2>
 
 <p>
+Source provenance and human-review attestations are a cross-cutting workstream across <code>Expression/</code>, <code>IDE/</code>, <code>Conformance/</code>, <code>Versioning/</code>, and later optional deployment policy profiles. The immediate objective is not to block execution by default, but to make authoring origin, AI participation, import status, review acceptance, stale evidence, and untrusted issuers visible without corrupting source semantics.
+</p>
+
+<p>
 Some workstreams cut across several phases and must remain continuously aligned:
 </p>
 

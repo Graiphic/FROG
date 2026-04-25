@@ -30,6 +30,10 @@
 </p>
 
 <p align="center">
+  FROG can also carry optional source provenance through <code>ide.provenance</code>, allowing provenance-aware tools to distinguish unknown, human-direct, AI-generated, AI-assisted, imported, reviewed, stale, invalid, and untrusted source-object states without changing executable meaning.
+</p>
+
+<p align="center">
   Specification work initiated: <strong>8 March 2026</strong>
 </p>
 
@@ -192,8 +196,8 @@ It does this by making the canonical source open, the validated meaning explicit
     </tr>
     <tr>
       <td><strong>Accountability-oriented</strong></td>
-      <td>Generated or human-authored logic can be carried through explicit source, validation, FIR, lowering, backend contracts, acceptance, and runtime/compiler consumption.</td>
-      <td>Industrial users can reason about responsibility, review, control, and evolution instead of receiving a large opaque block of generated code.</td>
+      <td>Generated or human-authored logic can be carried through explicit source, validation, FIR, lowering, backend contracts, acceptance, runtime/compiler consumption, and optional <code>ide.provenance</code> evidence.</td>
+      <td>Industrial users can reason about responsibility, review, control, provenance, and evolution instead of receiving a large opaque block of generated code.</td>
     </tr>
     <tr>
       <td><strong>Security-oriented</strong></td>

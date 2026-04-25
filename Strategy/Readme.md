@@ -347,6 +347,10 @@ The goal is to make AI-assisted system creation governable.
 FROG can act as an architectural interface between rapid generation and responsible execution by turning generated or human-authored logic into structured, graphical, inspectable, and validated artifacts.
 </p>
 
+<p>
+The source provenance direction makes this strategic claim more concrete: <code>ide.provenance</code> can carry signed or unsigned attestations for direct human authoring, AI assistance, tool generation, import, unknown origin, and human review. The strategic value is not a promise that provenance makes software safe; it is that review state and authoring evidence become visible instead of hidden.
+</p>
+
 <hr/>
 
 <h2 id="post-ai-accountability-inspection-responsibility-and-control">7. Post-AI Accountability: Inspection, Responsibility, and Control</h2>

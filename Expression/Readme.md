@@ -298,6 +298,8 @@ The FROG Expression is defined through the following documents in this directory
 │   -&gt; reusable-node icon representation
 ├── IDE preferences.md
 │   -&gt; optional IDE-facing source metadata and recoverability-oriented authoring preferences
+├── Source provenance.md
+│   -&gt; optional source-carried authoring provenance, signed attestations, issuer trust, and human review markers
 └── Cache.md
     -&gt; optional non-authoritative cache content for tooling convenience
 </code></pre>
@@ -343,6 +345,10 @@ Other documents define cross-cutting source subsystems used throughout the sourc
   <li><code>Widget interaction.md</code> defines how executable diagrams may interact with widgets through standardized diagram-level interaction mechanisms.</li>
   <li><code>Control structures.md</code> and <code>State and cycles.md</code> define source-facing representation rules that participate in later semantic interpretation but must appear explicitly in canonical source.</li>
 </ul>
+<p>
+Source provenance is also a cross-cutting source-carried subsystem. <code>Source provenance.md</code> defines the optional <code>ide.provenance</code> object used to record authoring, generation, import, modification, and human-review attestations for source-visible objects without changing executable meaning.
+</p>
+
 
 <h3>5.3 Widget-oriented source package boundary documents</h3>
 
@@ -890,6 +896,27 @@ Widget class-side contract shape        -&gt; Expression/
 Diagram-side widget interaction shape   -&gt; Expression/
 Source-side widget package boundary     -&gt; Expression/
 Validated meaning of widget interaction -&gt; Language/ and related primitive/profile ownership
+</code></pre>
+
+<h3>13.7 Source Provenance Boundary</h3>
+
+<p>
+FROG defines an optional source provenance boundary in <code>Source provenance.md</code>. Its standardized home is <code>ide.provenance</code>, where tools may carry attestations for nodes, edges, structures, widgets, interface objects, annotations, changesets, or whole-document review states.
+</p>
+
+<p>
+This boundary is deliberately non-executable. Missing provenance means unknown or unattested, not automatically AI-generated. Valid provenance may support inspection, review, and accountability, but it MUST NOT define canonical source meaning, validated program meaning, FIR derivation, lowering, backend handoff, or runtime execution semantics.
+</p>
+
+<pre><code>Source provenance boundary
+
+ide.provenance
+  -&gt; authoring / generation / review evidence
+  -/-> executable meaning
+
+diagram / interface / front_panel
+  -&gt; source objects that may be attested
+  -&gt; remain authoritative for their own source roles
 </code></pre>
 
 <hr/>

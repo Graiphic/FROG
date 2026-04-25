@@ -750,6 +750,10 @@ A conforming implementation MUST NOT rely on undocumented ordering conventions o
 </p>
 
 <p>
+Source provenance is not an IR identity system and does not become IR semantics. However, when a source-visible contributor is covered by <code>ide.provenance</code>, identity and mapping carriers SHOULD remain sufficient for tools to navigate from execution-facing records back to the provenance-covered source object where such a source object contributed to validated meaning.
+</p>
+
+<p>
 For widget-related execution structure, attribution and correspondence records SHOULD be able to represent, where relevant:
 </p>
 

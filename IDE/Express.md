@@ -494,6 +494,19 @@ They do not consume:
 - guided UI state
 </code></pre>
 
+<p>
+If an Express workflow materializes canonical content through guided user choices, deterministic generation, or AI participation, a provenance-aware IDE SHOULD classify that authoring path explicitly. Direct human configuration, tool generation, and AI-assisted generation SHOULD NOT be collapsed into the same provenance claim merely because all of them normalize to valid canonical content.
+</p>
+
+<pre><code>Express provenance posture
+
+guided human configuration  -&gt; human_guided or equivalent claim
+deterministic materializer   -&gt; tool_generated or equivalent claim
+AI-assisted materializer     -&gt; ai_assisted / ai_generated claim
+
+all cases still normalize to canonical FROG content
+</code></pre>
+
 <hr/>
 
 <h2 id="instance-model">11. Instance Model</h2>

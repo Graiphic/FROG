@@ -1,9 +1,15 @@
-<h1>FROG IDE Authoring Provenance</h1>
+<p align="center">
+  <img src="../FROG logo.svg" alt="FROG logo" width="140" />
+</p>
 
-<p>IDE-side creation, verification, display, review, and preservation workflows for source-carried FROG provenance.</p>
-<p>FROG — Free Open Graphical Language</p>
+<h1 align="center">FROG IDE Authoring Provenance</h1>
 
-<hr />
+<p align="center">
+  <strong>IDE-side creation, verification, display, review, and preservation workflows for source-carried FROG provenance</strong><br/>
+  <em>FROG — Free Open Graphical Language</em>
+</p>
+
+<hr/>
 
 <h2>Contents</h2>
 

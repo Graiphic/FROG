@@ -347,7 +347,8 @@ The following shape is recommended for the standardized v0.1 baseline:
   "front_panel": {},
   "execution": {},
   "workflow": {},
-  "recoverability": {}
+  "recoverability": {},
+  "provenance": {}
 }</pre>
 
 <p>
@@ -364,11 +365,16 @@ ide
 ├─ front_panel
 ├─ execution
 ├─ workflow
-└─ recoverability
+├─ recoverability
+└─ provenance
 </pre>
 
 <p>
 This structure is recommended for clarity, not required as a closed schema for every implementation.
+</p>
+
+<p>
+The optional <code>provenance</code> sub-object is defined by <code>Expression/Source provenance.md</code>. It may carry authoring, generation, import, modification, signature, issuer, and human-review attestations. It remains part of the <code>ide</code> section because it is authoring and audit metadata, not executable program meaning.
 </p>
 
 <hr/>
@@ -707,9 +713,15 @@ Implementations MUST enforce the following rules:
   <li>IDE metadata MUST NOT redefine execution semantics.</li>
   <li>IDE metadata MUST NOT be required for canonical semantic interpretation.</li>
   <li>Unknown IDE fields MUST be safely ignored by runtimes and other execution-facing systems.</li>
+  <li>If present, <code>ide.provenance</code> MUST remain non-executable and MUST NOT be required for canonical semantic interpretation.</li>
+  <li>Missing <code>ide.provenance</code> MUST be interpreted as unknown or unattested provenance, not as automatically AI-generated source.</li>
   <li>If <code>ide</code> metadata conflicts with canonical source content, canonical source content MUST win.</li>
   <li>Recoverability metadata MUST remain optional and non-authoritative.</li>
 </ul>
+
+<p>
+Recoverability and provenance have different responsibilities. <code>ide.recoverability</code> helps reopen or reconstruct authoring flows. <code>ide.provenance</code> records source-carried evidence about authoring origin, tool generation, import, signature, issuer trust, and human review. Neither sub-object may redefine executable meaning.
+</p>
 
 <p>
 Tools SHOULD preserve unknown fields to support interoperability between editors and future extensions of the <code>ide</code> model.
