@@ -122,6 +122,13 @@
               "children": []
             },
             {
+              "key": "expression/source-provenance.md",
+              "title": "Source provenance",
+              "path": "/Expression/Source%20provenance.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "expression/widget-behavior.md",
               "title": "Widget behavior",
               "path": "/Expression/Widget%20behavior.md",
@@ -796,6 +803,13 @@
               "children": []
             },
             {
+              "key": "profiles/trusted-authoring.md",
+              "title": "Trusted authoring",
+              "path": "/Profiles/Trusted%20authoring.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "profiles/ui-widget-classes.md",
               "title": "UI Widget Classes",
               "path": "/Profiles/UI%20Widget%20Classes.md",
@@ -810,6 +824,13 @@
           "path": "/IDE/Readme.md",
           "kind": "category",
           "children": [
+            {
+              "key": "ide/authoring-provenance.md",
+              "title": "Authoring provenance",
+              "path": "/IDE/Authoring%20provenance.md",
+              "kind": "page",
+              "children": []
+            },
             {
               "key": "ide/debugging.md",
               "title": "Debugging",
@@ -2740,6 +2761,7 @@
     "/Expression/Widget%20interaction.md",
     "/Expression/Widget.md",
     "/Expression/Front-panel%20object%20model.md",
+    "/Expression/Source%20provenance.md",
     "/Expression/Widget%20behavior.md",
     "/Expression/Widget%20class%20contract.md",
     "/Expression/Widget%20package%20%28.wfrog%29.md",
@@ -2834,8 +2856,10 @@
     "/Profiles/Interop.md",
     "/Profiles/Native%20CPU%20LLVM.md",
     "/Profiles/Native%20CPU%20LLVM%20Execution%20contract.md",
+    "/Profiles/Trusted%20authoring.md",
     "/Profiles/UI%20Widget%20Classes.md",
     "/Profiles/Readme.md",
+    "/IDE/Authoring%20provenance.md",
     "/IDE/Debugging.md",
     "/IDE/Express.md",
     "/IDE/Observability.md",
