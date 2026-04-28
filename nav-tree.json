@@ -610,6 +610,13 @@
                           "path": "/Libraries/Realizations/Default/assets/boolean/Readme.md",
                           "kind": "category",
                           "children": []
+                        },
+                        {
+                          "key": "libraries/realizations/default/assets/string/",
+                          "title": "string",
+                          "path": "/Libraries/Realizations/Default/assets/string/Readme.md",
+                          "kind": "category",
+                          "children": []
                         }
                       ]
                     },
@@ -2842,6 +2849,7 @@
     "/Libraries/Realizations/Default/Table.md",
     "/Libraries/Realizations/Default/Tree.md",
     "/Libraries/Realizations/Default/assets/boolean/Readme.md",
+    "/Libraries/Realizations/Default/assets/string/Readme.md",
     "/Libraries/Realizations/Default/Assets/Naming.md",
     "/Libraries/Realizations/Default/Assets/Readme.md",
     "/Libraries/Realizations/Default/Examples/Button%20default%20realization.wfrog.md",
