@@ -11,22 +11,40 @@
 
 <hr/>
 
+<h2>Navigation</h2>
+
+<ul>
+  <li><a href="./Readme.md">Widgets index</a></li>
+  <li><a href="../../Expression/Widget.md">Expression widget instances</a></li>
+  <li><a href="../../Expression/Widget%20interaction.md">Expression widget interaction</a></li>
+  <li><a href="../../Expression/Widget%20realization.md">Expression widget realization</a></li>
+  <li><a href="../../Expression/Widget%20package%20(.wfrog).md">Widget package publication</a></li>
+  <li><a href="../../Libraries/UI.md">Executable UI primitives</a></li>
+  <li><a href="../../Libraries/Realizations/Default/Numeric.md">Default numeric realization</a></li>
+  <li><a href="../../Examples/05_bounded_ui_accumulator/NumericCompatibility.md">Example 05 numeric compatibility note</a></li>
+</ul>
+
+<hr/>
+
 <h2>Contents</h2>
 
 <ul>
   <li><a href="#overview">1. Overview</a></li>
   <li><a href="#classes-defined-here">2. Classes Defined Here</a></li>
-  <li><a href="#common-family-posture">3. Common Family Posture</a></li>
-  <li><a href="#label-and-caption-posture">4. Label and Caption Posture</a></li>
-  <li><a href="#numeric-value-and-representation-posture">5. Numeric Value and Representation Posture</a></li>
-  <li><a href="#frogwidgetsnumeric_control">6. <code>frog.widgets.numeric_control</code></a></li>
-  <li><a href="#frogwidgetsnumeric_indicator">7. <code>frog.widgets.numeric_indicator</code></a></li>
-  <li><a href="#common-parts">8. Common Parts</a></li>
-  <li><a href="#common-behavior-expectations">9. Common Behavior Expectations</a></li>
-  <li><a href="#common-realization-expectations">10. Common Realization Expectations</a></li>
-  <li><a href="#diagram-interaction-posture">11. Diagram Interaction Posture</a></li>
-  <li><a href="#validation-expectations">12. Validation Expectations</a></li>
-  <li><a href="#summary">13. Summary</a></li>
+  <li><a href="#numeric-class-versus-realization">3. Numeric Class versus Realization</a></li>
+  <li><a href="#label-caption-and-value-text-posture">4. Label, Caption, and Value Text Posture</a></li>
+  <li><a href="#common-family-posture">5. Common Family Posture</a></li>
+  <li><a href="#numeric-representation-model">6. Numeric Representation Model</a></li>
+  <li><a href="#public-visual-part-model">7. Public Visual Part Model</a></li>
+  <li><a href="#standard-property-surface">8. Standard Property Surface</a></li>
+  <li><a href="#frogwidgetsnumeric_control">9. <code>frog.widgets.numeric_control</code></a></li>
+  <li><a href="#frogwidgetsnumeric_indicator">10. <code>frog.widgets.numeric_indicator</code></a></li>
+  <li><a href="#default-svg-realization-posture">11. Default SVG Realization Posture</a></li>
+  <li><a href="#diagram-interaction-posture">12. Diagram Interaction Posture</a></li>
+  <li><a href="#behavior-expectations">13. Behavior Expectations</a></li>
+  <li><a href="#compatibility-with-example-05-flat-surface">14. Compatibility with Example 05 Flat Surface</a></li>
+  <li><a href="#validation-expectations">15. Validation Expectations</a></li>
+  <li><a href="#summary">16. Summary</a></li>
 </ul>
 
 <hr/>
@@ -39,131 +57,168 @@ This document defines the intrinsic standardized baseline for numeric widgets in
 
 <p>
 The numeric family provides the standard widget surfaces used for numeric entry and numeric display.
-The family is intended to cover the common scalar-number posture of mature graphical systems while remaining inspectable, portable, and implementation-neutral.
+It is richer than the boolean and string families because a numeric widget naturally combines scalar value semantics, representation selection, data-entry limits, formatting, radix presentation, optional unit labels, and optional increment/decrement interaction.
 </p>
 
 <p>
-The standard numeric family is therefore defined here as a real object surface with:
+The standard numeric family is defined as a real object surface with:
 </p>
 
 <ul>
   <li>a primary numeric value posture,</li>
-  <li>a published representation posture,</li>
-  <li>a minimal but real property surface,</li>
+  <li>a portable representation model,</li>
+  <li>a portable data-entry model,</li>
+  <li>a portable display-format model,</li>
   <li>a minimal but real method surface,</li>
   <li>a minimal but real event surface,</li>
   <li>a stable public part model for realization targeting.</li>
 </ul>
 
 <p>
-This keeps the intrinsic baseline close in spirit to LabVIEW-like numeric widgets while modernizing the representation model and the public contract.
+The design is intentionally analogous to mature graphical environments such as LabVIEW, while modernizing the public contract and preserving strict separation between class law, realization assets, runtime interpretation, and IDE tooling.
 </p>
 
 <hr/>
 
 <h2 id="classes-defined-here">2. Classes Defined Here</h2>
 
-<p>
-This document defines the following standardized widget classes:
-</p>
-
 <ul>
   <li><code>frog.widgets.numeric_control</code></li>
   <li><code>frog.widgets.numeric_indicator</code></li>
 </ul>
 
+<p>
+Both classes share one numeric family posture.
+The control is user-editable in the portable baseline.
+The indicator is display-oriented and receives its value from diagram/runtime publication.
+</p>
+
 <hr/>
 
-<h2 id="common-family-posture">3. Common Family Posture</h2>
+<h2 id="numeric-class-versus-realization">3. Numeric Class versus Realization</h2>
 
 <p>
-The numeric family has the following common posture:
+A numeric class is not the same thing as a host numeric text box, a spinbox, a fixed-point editor, a runtime-private field, or a SVG picture containing a number.
 </p>
+
+<p>
+The class owns:
+</p>
+
+<ul>
+  <li>the numeric value surface,</li>
+  <li>the control-versus-indicator distinction,</li>
+  <li>the representation model,</li>
+  <li>the data-entry model,</li>
+  <li>the display-format model,</li>
+  <li>the public property inventory,</li>
+  <li>the public method inventory,</li>
+  <li>the public event inventory,</li>
+  <li>the public part model.</li>
+</ul>
+
+<p>
+The realization owns:
+</p>
+
+<ul>
+  <li>the visible text box or numeric face geometry,</li>
+  <li>increment/decrement button embodiment,</li>
+  <li>radix badge placement,</li>
+  <li>unit-label placement,</li>
+  <li>SVG assets or host-native drawing resources,</li>
+  <li>state maps,</li>
+  <li>style application,</li>
+  <li>skin and variant selection.</li>
+</ul>
+
+<p>
+A spinbox-like realization, a compact numeric indicator, or a radix-badge style does not automatically create a new numeric class.
+A distinct standardized class should be introduced only when the public contract itself changes.
+</p>
+
+<hr/>
+
+<h2 id="label-caption-and-value-text-posture">4. Label, Caption, and Value Text Posture</h2>
+
+<p>
+The numeric family follows the shared FROG label/caption convention and adds a numeric-specific value-text surface.
+</p>
+
+<pre><code>label.*
+    - structural / logical widget name surface
+
+caption.*
+    - front-panel presentation caption shown near the numeric widget
+
+value / text_value
+    - semantic numeric value and its rendered text surface
+</code></pre>
+
+<ul>
+  <li><code>label.text</code> names the object for tooling, references, diagram readability, accessibility, and debugging.</li>
+  <li><code>caption.text</code> is the external front-panel caption shown near the numeric widget.</li>
+  <li><code>value</code> is the semantic numeric value.</li>
+  <li><code>text_value</code> is the rendered value text part owned by realization but fed by the class-owned <code>value</code>.</li>
+</ul>
+
+<hr/>
+
+<h2 id="common-family-posture">5. Common Family Posture</h2>
 
 <ul>
   <li>family: scalar numeric widget family</li>
   <li>primary value: present</li>
   <li>value kind: numeric scalar</li>
-  <li>public value-facing surface: yes</li>
-  <li>object-style access surface: yes</li>
   <li>primary value mirror property: <code>value</code></li>
-  <li>common label property: <code>label.text</code></li>
-  <li>common caption property: <code>caption.text</code></li>
-  <li>common visibility property: <code>interaction.visible</code></li>
-</ul>
-
-<p>
-The numeric family also follows an important architectural rule:
-</p>
-
-<ul>
-  <li><code>value</code> is class-owned semantic numeric data,</li>
-  <li><code>representation.kind</code> selects the published numeric representation posture,</li>
-  <li><code>text_value</code> is a stable public dynamic part,</li>
-  <li><code>spinner</code> is a stable public optional interaction part,</li>
-  <li>the visual embodiment of face, buttons, arrows, badges, or text layout belongs downstream to realization.</li>
+  <li>natural value participation: yes</li>
+  <li>object-style access surface: yes</li>
+  <li>structural label surface: <code>label.*</code></li>
+  <li>front-panel caption surface: <code>caption.*</code></li>
+  <li>representation surface: <code>representation.*</code></li>
+  <li>data-entry surface: <code>data_entry.*</code></li>
+  <li>display-format surface: <code>display.*</code></li>
+  <li>unit-label surface: <code>unit_label.*</code></li>
+  <li>interaction surface: <code>interaction.*</code></li>
+  <li>portable style surface: <code>style.*</code></li>
+  <li>portable realization-selection surface: <code>realization.*</code></li>
 </ul>
 
 <hr/>
 
-<h2 id="label-and-caption-posture">4. Label and Caption Posture</h2>
+<h2 id="numeric-representation-model">6. Numeric Representation Model</h2>
 
 <p>
-Numeric widgets follow the shared distinction between <code>label</code> and <code>caption</code>.
+The canonical property is:
 </p>
 
-<ul>
-  <li><code>label.*</code> is the structural or logical widget-identification surface.</li>
-  <li><code>caption.*</code> is the front-panel user-facing text surface.</li>
-</ul>
-
-<p>
-A realization MAY display both, one, or neither according to their visibility properties.
-However, the semantic owner of these surfaces remains the class-owned public properties.
-</p>
-
-<hr/>
-
-<h2 id="numeric-value-and-representation-posture">5. Numeric Value and Representation Posture</h2>
-
-<p>
-The intrinsic numeric family uses one semantic value property named <code>value</code> and one published representation posture named <code>representation.kind</code>.
-</p>
+<pre><code>representation.kind</code></pre>
 
 <p>
 The standard representation kinds are:
 </p>
 
 <ul>
-  <li><code>int8</code></li>
-  <li><code>int16</code></li>
-  <li><code>int32</code></li>
-  <li><code>int64</code></li>
-  <li><code>uint8</code></li>
-  <li><code>uint16</code></li>
-  <li><code>uint32</code></li>
-  <li><code>uint64</code></li>
-  <li><code>float32</code></li>
-  <li><code>float64</code></li>
-  <li><code>decimal64</code></li>
-  <li><code>decimal128</code></li>
-  <li><code>fixed_point_signed</code></li>
-  <li><code>fixed_point_unsigned</code></li>
-  <li><code>complex64</code></li>
-  <li><code>complex128</code></li>
+  <li><code>int8</code>, <code>int16</code>, <code>int32</code>, <code>int64</code></li>
+  <li><code>uint8</code>, <code>uint16</code>, <code>uint32</code>, <code>uint64</code></li>
+  <li><code>float32</code>, <code>float64</code></li>
+  <li><code>decimal64</code>, <code>decimal128</code></li>
+  <li><code>fixed_point_signed</code>, <code>fixed_point_unsigned</code></li>
+  <li><code>complex64</code>, <code>complex128</code></li>
 </ul>
 
 <p>
-Profiles, IDEs, and runtimes MAY expose ergonomic aliases such as <code>I32</code>, <code>DBL</code>, <code>SGL</code>, or <code>FXP</code>.
-However, the public standard representation contract should remain the explicit names above.
+IDEs may expose aliases such as <code>I32</code>, <code>DBL</code>, <code>SGL</code>, or <code>FXP</code>.
+Those aliases are ergonomic presentation names.
+The canonical class law should preserve explicit representation identifiers.
 </p>
 
 <p>
-When the active representation is fixed-point, the following additional public members become relevant:
+When the active representation is fixed-point, the following additional members are relevant:
 </p>
 
 <ul>
-  <li><code>representation.encoding</code> with values <code>signed</code> or <code>unsigned</code></li>
+  <li><code>representation.encoding</code> — <code>signed</code> or <code>unsigned</code></li>
   <li><code>representation.word_length_bits</code></li>
   <li><code>representation.integer_word_length_bits</code></li>
   <li><code>representation.include_overflow_status</code></li>
@@ -171,9 +226,112 @@ When the active representation is fixed-point, the following additional public m
 
 <hr/>
 
-<h2 id="frogwidgetsnumeric_control">6. <code>frog.widgets.numeric_control</code></h2>
+<h2 id="public-visual-part-model">7. Public Visual Part Model</h2>
 
-<h3>6.1 Class identity</h3>
+<ul>
+  <li><code>root</code></li>
+  <li><code>label</code></li>
+  <li><code>caption</code></li>
+  <li><code>frame</code></li>
+  <li><code>value_face</code></li>
+  <li><code>text_value</code></li>
+  <li><code>spinner</code> when present</li>
+  <li><code>increment_up</code> when present</li>
+  <li><code>increment_down</code> when present</li>
+  <li><code>radix_badge</code> when present</li>
+  <li><code>unit_label</code> when present</li>
+  <li><code>focus_ring</code> when present</li>
+</ul>
+
+<hr/>
+
+<h2 id="standard-property-surface">8. Standard Property Surface</h2>
+
+<h3>8.1 Value and representation</h3>
+
+<ul>
+  <li><code>value : numeric</code></li>
+  <li><code>representation.kind : enum</code></li>
+  <li><code>representation.encoding : enum</code> when applicable</li>
+  <li><code>representation.word_length_bits : u32</code> when applicable</li>
+  <li><code>representation.integer_word_length_bits : u32</code> when applicable</li>
+  <li><code>representation.include_overflow_status : bool</code> when applicable</li>
+</ul>
+
+<h3>8.2 Label, caption, and unit label</h3>
+
+<ul>
+  <li><code>label.visible : bool</code></li>
+  <li><code>label.text : string</code></li>
+  <li><code>label.style.*</code></li>
+  <li><code>caption.visible : bool</code></li>
+  <li><code>caption.text : string</code></li>
+  <li><code>caption.placement : enum</code></li>
+  <li><code>caption.padding : length</code></li>
+  <li><code>caption.style.*</code></li>
+  <li><code>unit_label.visible : bool</code></li>
+  <li><code>unit_label.text : string</code></li>
+  <li><code>unit_label.style.*</code></li>
+</ul>
+
+<h3>8.3 Interaction</h3>
+
+<ul>
+  <li><code>interaction.visible : bool</code></li>
+  <li><code>interaction.enabled : bool</code></li>
+  <li><code>interaction.read_only : bool</code></li>
+  <li><code>interaction.focusable : bool</code></li>
+  <li><code>interaction.focused : bool</code></li>
+</ul>
+
+<h3>8.4 Data entry</h3>
+
+<ul>
+  <li><code>data_entry.minimum : numeric</code></li>
+  <li><code>data_entry.maximum : numeric</code></li>
+  <li><code>data_entry.increment_step : numeric</code></li>
+  <li><code>data_entry.coerce_on_commit : bool</code></li>
+  <li><code>data_entry.response_to_out_of_range : enum</code> — <code>reject</code>, <code>coerce</code>, <code>warn</code>, or <code>allow_with_status</code></li>
+</ul>
+
+<h3>8.5 Display format</h3>
+
+<ul>
+  <li><code>display.format_kind : enum</code> — <code>default</code>, <code>decimal</code>, <code>scientific</code>, <code>engineering</code>, <code>hex</code>, <code>binary</code>, <code>octal</code>, or <code>custom</code></li>
+  <li><code>display.format_string : string</code></li>
+  <li><code>display.precision_digits : u32</code></li>
+  <li><code>display.radix_visible : bool</code></li>
+  <li><code>display.increment_buttons_visible : bool</code></li>
+  <li><code>display.text_width_chars : u32</code></li>
+</ul>
+
+<h3>8.6 Key bindings</h3>
+
+<ul>
+  <li><code>key_binding.focus : string</code> when exposed</li>
+  <li><code>key_binding.increment : string</code> when exposed</li>
+  <li><code>key_binding.decrement : string</code> when exposed</li>
+</ul>
+
+<h3>8.7 Style and realization</h3>
+
+<ul>
+  <li><code>style.frame.*</code></li>
+  <li><code>style.value_face.*</code></li>
+  <li><code>style.text_value.*</code></li>
+  <li><code>style.spinner.*</code></li>
+  <li><code>style.focus_ring.*</code></li>
+  <li><code>style.disabled.opacity : number</code></li>
+  <li><code>realization.family : string</code></li>
+  <li><code>realization.variant : string</code></li>
+  <li><code>realization.skin_id : string</code></li>
+</ul>
+
+<hr/>
+
+<h2 id="frogwidgetsnumeric_control">9. <code>frog.widgets.numeric_control</code></h2>
+
+<h3>9.1 Class identity</h3>
 
 <ul>
   <li><strong>class_id:</strong> <code>frog.widgets.numeric_control</code></li>
@@ -181,96 +339,39 @@ When the active representation is fixed-point, the following additional public m
   <li><strong>compatible role:</strong> <code>control</code></li>
 </ul>
 
-<h3>6.2 Primary value posture</h3>
-
-<ul>
-  <li>primary value: present</li>
-  <li>natural value participation: yes</li>
-  <li>user-mutable: yes</li>
-  <li>diagram-mutable: yes</li>
-  <li>mirrored property: <code>value</code></li>
-</ul>
-
-<h3>6.3 Standard properties</h3>
-
-<ul>
-  <li><code>value</code> — readable and writable</li>
-  <li><code>label.text</code> — readable and writable</li>
-  <li><code>label.visible</code> — readable and writable</li>
-  <li><code>caption.text</code> — readable and writable</li>
-  <li><code>caption.visible</code> — readable and writable</li>
-  <li><code>interaction.enabled</code> — readable and writable</li>
-  <li><code>interaction.visible</code> — readable and writable</li>
-  <li><code>interaction.read_only</code> — readable and writable</li>
-  <li><code>representation.kind</code> — readable and writable</li>
-  <li><code>representation.encoding</code> — readable and writable when applicable</li>
-  <li><code>representation.word_length_bits</code> — readable and writable when applicable</li>
-  <li><code>representation.integer_word_length_bits</code> — readable and writable when applicable</li>
-  <li><code>representation.include_overflow_status</code> — readable and writable when applicable</li>
-  <li><code>data_entry.minimum</code> — readable and writable</li>
-  <li><code>data_entry.maximum</code> — readable and writable</li>
-  <li><code>data_entry.increment_step</code> — readable and writable</li>
-  <li><code>data_entry.coerce_on_commit</code> — readable and writable</li>
-  <li><code>data_entry.response_to_out_of_range</code> — readable and writable</li>
-  <li><code>display.format_kind</code> — readable and writable</li>
-  <li><code>display.format_string</code> — readable and writable</li>
-  <li><code>display.precision_digits</code> — readable and writable</li>
-  <li><code>display.radix_visible</code> — readable and writable</li>
-  <li><code>display.increment_buttons_visible</code> — readable and writable</li>
-  <li><code>unit_label.text</code> — readable and writable</li>
-  <li><code>unit_label.visible</code> — readable and writable</li>
-  <li><code>portable style.*</code> surfaces when exposed by the class or active profile</li>
-  <li><code>realization.family</code> when realization selection is publicly exposed</li>
-  <li><code>realization.variant</code> when realization selection is publicly exposed</li>
-  <li><code>realization.skin_id</code> when realization selection is publicly exposed</li>
-</ul>
-
-<h3>6.4 Standard methods</h3>
+<h3>9.2 Standard methods</h3>
 
 <ul>
   <li><code>focus()</code></li>
   <li><code>select_text()</code></li>
+  <li><code>set_value(number)</code></li>
   <li><code>increment()</code></li>
   <li><code>decrement()</code></li>
-  <li><code>set_value(number)</code></li>
   <li><code>clamp_to_limits()</code></li>
-  <li><code>reset_to_default()</code> when a default value exists</li>
+  <li><code>format_value()</code></li>
   <li><code>parse_and_commit(text)</code></li>
+  <li><code>reset_to_default()</code></li>
 </ul>
 
-<h3>6.5 Standard events</h3>
+<h3>9.3 Standard events</h3>
 
 <ul>
   <li><code>value_changed</code></li>
   <li><code>value_committed</code></li>
+  <li><code>edit_started</code></li>
+  <li><code>edit_committed</code></li>
+  <li><code>out_of_range</code></li>
   <li><code>increment_pressed</code></li>
   <li><code>decrement_pressed</code></li>
-  <li><code>limits_changed</code></li>
   <li><code>focus_gained</code></li>
   <li><code>focus_lost</code></li>
 </ul>
 
-<h3>6.6 Standard parts</h3>
-
-<ul>
-  <li><code>root</code></li>
-  <li><code>label</code></li>
-  <li><code>caption</code></li>
-  <li><code>frame</code></li>
-  <li><code>value_face</code></li>
-  <li><code>text_value</code></li>
-  <li><code>spinner</code> when present</li>
-  <li><code>increment_up</code> when present</li>
-  <li><code>increment_down</code> when present</li>
-  <li><code>unit_label</code> when present</li>
-  <li><code>focus_ring</code> when present</li>
-</ul>
-
 <hr/>
 
-<h2 id="frogwidgetsnumeric_indicator">7. <code>frog.widgets.numeric_indicator</code></h2>
+<h2 id="frogwidgetsnumeric_indicator">10. <code>frog.widgets.numeric_indicator</code></h2>
 
-<h3>7.1 Class identity</h3>
+<h3>10.1 Class identity</h3>
 
 <ul>
   <li><strong>class_id:</strong> <code>frog.widgets.numeric_indicator</code></li>
@@ -278,47 +379,15 @@ When the active representation is fixed-point, the following additional public m
   <li><strong>compatible role:</strong> <code>indicator</code></li>
 </ul>
 
-<h3>7.2 Primary value posture</h3>
-
-<ul>
-  <li>primary value: present</li>
-  <li>natural value participation: yes</li>
-  <li>user-mutable: no in the standard portable posture</li>
-  <li>diagram-mutable: yes</li>
-  <li>mirrored property: <code>value</code></li>
-</ul>
-
-<h3>7.3 Standard properties</h3>
-
-<ul>
-  <li><code>value</code> — readable and writable for diagram/runtime update surfaces where legal</li>
-  <li><code>label.text</code> — readable and writable</li>
-  <li><code>label.visible</code> — readable and writable</li>
-  <li><code>caption.text</code> — readable and writable</li>
-  <li><code>caption.visible</code> — readable and writable</li>
-  <li><code>interaction.visible</code> — readable and writable</li>
-  <li><code>representation.kind</code> — readable and writable</li>
-  <li><code>display.format_kind</code> — readable and writable</li>
-  <li><code>display.format_string</code> — readable and writable</li>
-  <li><code>display.precision_digits</code> — readable and writable</li>
-  <li><code>display.radix_visible</code> — readable and writable</li>
-  <li><code>unit_label.text</code> — readable and writable</li>
-  <li><code>unit_label.visible</code> — readable and writable</li>
-  <li><code>portable style.*</code> surfaces when exposed by the class or active profile</li>
-  <li><code>realization.family</code> when realization selection is publicly exposed</li>
-  <li><code>realization.variant</code> when realization selection is publicly exposed</li>
-  <li><code>realization.skin_id</code> when realization selection is publicly exposed</li>
-</ul>
-
-<h3>7.4 Standard methods</h3>
+<h3>10.2 Standard methods</h3>
 
 <ul>
   <li><code>focus()</code> when supported by the host</li>
   <li><code>format_value()</code></li>
-  <li><code>reset_to_default()</code> when a default numeric value exists and the active class posture exposes it</li>
+  <li><code>reset_to_default_style()</code></li>
 </ul>
 
-<h3>7.5 Standard events</h3>
+<h3>10.3 Standard events</h3>
 
 <ul>
   <li><code>value_rendered</code></li>
@@ -326,138 +395,94 @@ When the active representation is fixed-point, the following additional public m
   <li><code>focus_lost</code></li>
 </ul>
 
-<h3>7.6 Standard parts</h3>
+<hr/>
+
+<h2 id="default-svg-realization-posture">11. Default SVG Realization Posture</h2>
+
+<p>
+The default numeric realization SHOULD support a rectangular SVG template with:
+</p>
 
 <ul>
-  <li><code>root</code></li>
-  <li><code>label</code></li>
-  <li><code>caption</code></li>
-  <li><code>frame</code></li>
-  <li><code>value_face</code></li>
-  <li><code>text_value</code></li>
-  <li><code>unit_label</code> when present</li>
-  <li><code>focus_ring</code> when present</li>
+  <li>a value face,</li>
+  <li>dynamic value text,</li>
+  <li>optional increment/decrement buttons,</li>
+  <li>optional radix badge,</li>
+  <li>optional unit label,</li>
+  <li>label and caption surfaces,</li>
+  <li>focus-ring posture.</li>
 </ul>
 
 <hr/>
 
-<h2 id="common-parts">8. Common Parts</h2>
+<h2 id="diagram-interaction-posture">12. Diagram Interaction Posture</h2>
 
 <p>
-The numeric family uses the following common stable parts:
+The numeric family supports natural value participation through <code>widget_value</code>, property access through <code>frog.ui.property_read</code> and <code>frog.ui.property_write</code>, method invocation through <code>frog.ui.method_invoke</code>, and event observation where legal.
 </p>
-
-<ul>
-  <li><code>root</code></li>
-  <li><code>label</code></li>
-  <li><code>caption</code></li>
-  <li><code>frame</code></li>
-  <li><code>value_face</code></li>
-  <li><code>text_value</code></li>
-  <li><code>spinner</code> when present</li>
-  <li><code>increment_up</code> when present</li>
-  <li><code>increment_down</code> when present</li>
-  <li><code>unit_label</code> when present</li>
-  <li><code>focus_ring</code> when present</li>
-</ul>
 
 <hr/>
 
-<h2 id="common-behavior-expectations">9. Common Behavior Expectations</h2>
-
-<p>
-The intrinsic behavior baseline of the numeric family includes at least:
-</p>
+<h2 id="behavior-expectations">13. Behavior Expectations</h2>
 
 <ul>
-  <li>the primary value remains numeric,</li>
-  <li>representation changes preserve numeric meaning while changing interpretation and formatting posture,</li>
   <li>numeric controls accept user-originated editing only when enabled and not read-only,</li>
-  <li>increment and decrement actions use <code>data_entry.increment_step</code>,</li>
-  <li>commits respect the configured out-of-range posture,</li>
-  <li>indicator realizations may emit <code>value_rendered</code> when their visible state is refreshed.</li>
+  <li>increment and decrement use <code>data_entry.increment_step</code>,</li>
+  <li>commits respect <code>data_entry.response_to_out_of_range</code>,</li>
+  <li>formatting follows <code>display.*</code>,</li>
+  <li>representation changes must preserve or explicitly convert numeric meaning according to the active validation posture.</li>
 </ul>
 
 <hr/>
 
-<h2 id="common-realization-expectations">10. Common Realization Expectations</h2>
+<h2 id="compatibility-with-example-05-flat-surface">14. Compatibility with Example 05 Flat Surface</h2>
 
 <p>
-A conforming realization of the numeric family SHOULD provide:
+Example 05 was intentionally frozen as an executable corridor and uses a bounded flat numeric surface for its acceptance path.
+That frozen surface should not be silently rewritten by the general numeric baseline.
+</p>
+
+<p>
+The compatibility mapping is:
 </p>
 
 <ul>
-  <li>a visible numeric value surface,</li>
-  <li>optional visible label support,</li>
-  <li>optional visible caption support,</li>
-  <li>optional visible unit-label support,</li>
-  <li>optional visible radix support,</li>
-  <li>optional increment/decrement buttons for controls,</li>
-  <li>part-to-visual mapping for the published parts.</li>
+  <li><code>label</code> maps to <code>caption.text</code> or <code>label.text</code> depending on the host compatibility mode.</li>
+  <li><code>visible</code> maps to <code>interaction.visible</code>.</li>
+  <li><code>enabled</code> maps to <code>interaction.enabled</code>.</li>
+  <li><code>foreground_color</code> maps to a compatible text or foreground style surface in the runtime-family corridor.</li>
 </ul>
 
 <p>
-The realization MAY be SVG-backed, host-native, toolkit-driven, template-driven, or mixed.
-It MUST NOT change the published class meaning.
+New numeric work should use the canonical hierarchical surface defined here.
+The frozen Example 05 runtime-family acceptance path may continue to preserve its existing compatibility surface.
 </p>
 
 <hr/>
 
-<h2 id="diagram-interaction-posture">11. Diagram Interaction Posture</h2>
-
-<p>
-The numeric family supports:
-</p>
-
-<ul>
-  <li>natural value participation through <code>widget_value</code>,</li>
-  <li>property access through <code>frog.ui.property_read</code> and <code>frog.ui.property_write</code>,</li>
-  <li>method invocation where legal,</li>
-  <li>event observation where legal.</li>
-</ul>
-
-<p>
-Typical legal object-style surfaces include:
-</p>
-
-<ul>
-  <li><code>value</code></li>
-  <li><code>label.*</code></li>
-  <li><code>caption.*</code></li>
-  <li><code>representation.*</code></li>
-  <li><code>data_entry.*</code></li>
-  <li><code>display.*</code></li>
-  <li><code>unit_label.*</code></li>
-  <li><code>interaction.*</code></li>
-  <li>portable <code>style.*</code> properties when publicly exposed</li>
-  <li>realization-selection members when publicly exposed</li>
-</ul>
-
-<hr/>
-
-<h2 id="validation-expectations">12. Validation Expectations</h2>
+<h2 id="validation-expectations">15. Validation Expectations</h2>
 
 <p>
 Validators SHOULD diagnose at least:
 </p>
 
 <ul>
-  <li>non-numeric <code>value_type</code> on numeric widgets,</li>
-  <li>role/class mismatches,</li>
+  <li>non-numeric values on numeric widgets,</li>
   <li>unknown representation kinds,</li>
   <li>fixed-point members used without a fixed-point representation kind,</li>
   <li>minimum greater than maximum,</li>
-  <li>non-positive increment steps where the control posture requires a positive step,</li>
-  <li>attempts to write user-edit surfaces on indicator-only classes where forbidden,</li>
-  <li>unknown numeric family members or parts.</li>
+  <li>non-positive increment steps for increment/decrement posture,</li>
+  <li>out-of-range values where the configured response forbids them,</li>
+  <li>unsupported public members,</li>
+  <li>attempts to treat realization-only spinner internals as public class members.</li>
 </ul>
 
 <hr/>
 
-<h2 id="summary">13. Summary</h2>
+<h2 id="summary">16. Summary</h2>
 
 <p>
-The numeric widget family defines the intrinsic standardized numeric widget baseline of FROG:
+The numeric widget family defines the intrinsic standardized numeric baseline of FROG:
 </p>
 
 <ul>
@@ -466,6 +491,5 @@ The numeric widget family defines the intrinsic standardized numeric widget base
 </ul>
 
 <p>
-These classes provide the standard portable numeric interaction and display surfaces of the reusable widget core.
-They expose a real minimal object surface with properties, methods, events, and parts while keeping realization ownership and runtime-private embodiment clearly separated from class meaning.
+It standardizes numeric value, representation, data-entry limits, display format, optional unit and radix surfaces, optional increment/decrement interaction, and a realization-ready public part model while preserving the class-versus-realization boundary.
 </p>

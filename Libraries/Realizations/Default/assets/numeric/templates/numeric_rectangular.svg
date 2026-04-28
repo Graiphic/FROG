@@ -1,48 +1,199 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="360" height="130" viewBox="0 0 360 130">
-  <title>FROG Default Numeric Rectangular Template</title>
-  <desc>Semantic SVG template for a numeric control or numeric indicator.</desc>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 380 150"
+     role="img"
+     aria-label="FROG default numeric rectangular realization template"
+     data-frog-template="frog.realizations.default.numeric.rectangular"
+     data-frog-target-classes="frog.widgets.numeric_control frog.widgets.numeric_indicator"
+     data-frog-variant="rectangular">
+  <title>FROG Default Numeric Rectangular Realization Template</title>
+  <desc>
+    Semantic SVG template for the default rectangular realization variant of FROG numeric widgets.
+    The runtime or IDE binds public widget properties to stable parts declared by id and data-frog-part.
+  </desc>
 
-  <g data-frog-part="root">
-    <text x="12" y="16" font-family="Arial, sans-serif" font-size="12" fill="#444444"
-          data-frog-part="label" data-frog-bind="text" data-frog-member="label.text" data-frog-anchor="label.anchor">Numeric</text>
+  <defs>
+    <style>
+      :root {
+        --frog-numeric-label-display: none;
+        --frog-numeric-label-fill: #6b7280;
+        --frog-numeric-label-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-numeric-label-font-size: 12px;
 
-    <text x="12" y="34" font-family="Arial, sans-serif" font-size="12" fill="#666666"
-          data-frog-part="caption" data-frog-bind="text" data-frog-member="caption.text" data-frog-anchor="caption.anchor">Caption</text>
+        --frog-numeric-caption-display: inline;
+        --frog-numeric-caption-fill: #d00000;
+        --frog-numeric-caption-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-numeric-caption-font-size: 18px;
 
-    <rect x="8" y="42" width="300" height="56" rx="4" ry="4"
-          fill="#000000" stroke="#000000" stroke-width="2"
-          data-frog-part="frame" data-frog-bind="style" data-frog-member="style.frame"/>
+        --frog-numeric-frame-fill: #ffffff;
+        --frog-numeric-frame-stroke: #000000;
+        --frog-numeric-frame-stroke-width: 6px;
 
-    <rect x="14" y="48" width="244" height="44" rx="2" ry="2"
-          fill="#5b9bd5" stroke="#5b9bd5" stroke-width="1"
-          data-frog-part="value_face" data-frog-bind="style" data-frog-member="style.value_face"/>
+        --frog-numeric-value-face-fill: #5b9bd5;
+        --frog-numeric-value-face-stroke: transparent;
+        --frog-numeric-value-face-stroke-width: 0px;
 
-    <text x="136" y="75" text-anchor="middle" dominant-baseline="middle"
-          font-family="Arial, sans-serif" font-size="20" fill="#000000"
-          data-frog-part="text_value" data-frog-bind="text" data-frog-member="value" data-frog-anchor="text_value.center">0</text>
+        --frog-numeric-text-fill: #111111;
+        --frog-numeric-text-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-numeric-text-font-size: 20px;
 
-    <g data-frog-part="spinner" data-frog-bind="visibility" data-frog-member="display.increment_buttons_visible">
-      <g data-frog-part="increment_up">
-        <rect x="268" y="48" width="34" height="20" rx="1" ry="1" fill="#5b9bd5" stroke="#5b9bd5" stroke-width="1"/>
-        <path d="M285 53 L294 63 L276 63 Z" fill="none" stroke="#ffffff" stroke-width="2"/>
+        --frog-numeric-spinner-display: inline;
+        --frog-numeric-spinner-fill: #5b9bd5;
+        --frog-numeric-spinner-stroke: #ffffff;
+        --frog-numeric-focus-display: none;
+        --frog-numeric-focus-stroke: #2f80ed;
+        --frog-numeric-focus-stroke-width: 3px;
+      }
+
+      #label_text {
+        display: var(--frog-numeric-label-display);
+        fill: var(--frog-numeric-label-fill);
+        font-family: var(--frog-numeric-label-font-family);
+        font-size: var(--frog-numeric-label-font-size);
+      }
+
+      #caption_text {
+        display: var(--frog-numeric-caption-display);
+        fill: var(--frog-numeric-caption-fill);
+        font-family: var(--frog-numeric-caption-font-family);
+        font-size: var(--frog-numeric-caption-font-size);
+      }
+
+      #frame {
+        fill: var(--frog-numeric-frame-fill);
+        stroke: var(--frog-numeric-frame-stroke);
+        stroke-width: var(--frog-numeric-frame-stroke-width);
+      }
+
+      #value_face {
+        fill: var(--frog-numeric-value-face-fill);
+        stroke: var(--frog-numeric-value-face-stroke);
+        stroke-width: var(--frog-numeric-value-face-stroke-width);
+      }
+
+      #text_value {
+        fill: var(--frog-numeric-text-fill);
+        font-family: var(--frog-numeric-text-font-family);
+        font-size: var(--frog-numeric-text-font-size);
+      }
+
+      #spinner {
+        display: var(--frog-numeric-spinner-display);
+      }
+
+      #increment_up rect,
+      #increment_down rect {
+        fill: var(--frog-numeric-spinner-fill);
+      }
+
+      #increment_up path,
+      #increment_down path {
+        stroke: var(--frog-numeric-spinner-stroke);
+      }
+
+      #focus_ring {
+        display: var(--frog-numeric-focus-display);
+        fill: none;
+        stroke: var(--frog-numeric-focus-stroke);
+        stroke-width: var(--frog-numeric-focus-stroke-width);
+      }
+    </style>
+  </defs>
+
+  <g id="root" data-frog-part="root">
+    <text id="label_text"
+          data-frog-part="label"
+          data-frog-member="label.text"
+          data-frog-anchor="label.anchor"
+          x="16"
+          y="18">numeric_1</text>
+
+    <text id="caption_text"
+          data-frog-part="caption"
+          data-frog-member="caption.text"
+          data-frog-anchor="caption.anchor"
+          x="16"
+          y="46">Numeric</text>
+
+    <rect id="focus_ring"
+          data-frog-part="focus_ring"
+          x="4"
+          y="64"
+          width="360"
+          height="64"
+          rx="6"
+          data-frog-bind="interaction.focused style.focus_ring.*" />
+
+    <rect id="frame"
+          data-frog-part="frame"
+          x="12"
+          y="72"
+          width="276"
+          height="48"
+          rx="0"
+          data-frog-bind="style.frame.*" />
+
+    <rect id="value_face"
+          data-frog-part="value_face"
+          x="22"
+          y="82"
+          width="214"
+          height="28"
+          rx="0"
+          data-frog-bind="style.value_face.*" />
+
+    <text id="text_value"
+          data-frog-part="text_value"
+          data-frog-member="value"
+          data-frog-anchor="text_value.center"
+          x="129"
+          y="97"
+          text-anchor="middle"
+          dominant-baseline="middle">0</text>
+
+    <g id="spinner"
+       data-frog-part="spinner"
+       data-frog-bind="display.increment_buttons_visible">
+      <g id="increment_up" data-frog-part="increment_up">
+        <rect x="246" y="82" width="30" height="13" />
+        <path d="M261 85 L269 92 L253 92 Z" fill="none" stroke-width="2" />
       </g>
-      <g data-frog-part="increment_down">
-        <rect x="268" y="72" width="34" height="20" rx="1" ry="1" fill="#5b9bd5" stroke="#5b9bd5" stroke-width="1"/>
-        <path d="M276 77 L294 77 L285 87 Z" fill="none" stroke="#ffffff" stroke-width="2"/>
+      <g id="increment_down" data-frog-part="increment_down">
+        <rect x="246" y="97" width="30" height="13" />
+        <path d="M253 100 L269 100 L261 107 Z" fill="none" stroke-width="2" />
       </g>
     </g>
 
-    <rect x="314" y="48" width="38" height="20" rx="1" ry="1" fill="#ffffff" stroke="#5b9bd5" stroke-width="1"
-          data-frog-part="radix_badge" data-frog-bind="visibility" data-frog-member="display.radix_visible"/>
-    <text x="333" y="58" text-anchor="middle" dominant-baseline="middle"
-          font-family="Arial, sans-serif" font-size="10" fill="#000000">DBL</text>
+    <rect id="radix_badge"
+          data-frog-part="radix_badge"
+          x="300"
+          y="82"
+          width="42"
+          height="16"
+          rx="1"
+          fill="#ffffff"
+          stroke="#5b9bd5"
+          stroke-width="1"
+          data-frog-bind="display.radix_visible representation.kind" />
 
-    <text x="333" y="82" text-anchor="middle" dominant-baseline="middle"
-          font-family="Arial, sans-serif" font-size="12" fill="#444444"
-          data-frog-part="unit_label" data-frog-bind="text" data-frog-member="unit_label.text">unit</text>
+    <text id="radix_text"
+          x="321"
+          y="90"
+          text-anchor="middle"
+          dominant-baseline="middle"
+          font-family="system-ui, Segoe UI, Arial, sans-serif"
+          font-size="9"
+          fill="#000000">DBL</text>
 
-    <rect x="6" y="40" width="304" height="60" rx="6" ry="6"
-          fill="none" stroke="#ff8800" stroke-width="2" opacity="0"
-          data-frog-part="focus_ring" data-frog-bind="style" data-frog-member="style.focus_ring"/>
+    <text id="unit_label"
+          data-frog-part="unit_label"
+          data-frog-member="unit_label.text"
+          data-frog-anchor="unit_label.anchor"
+          x="321"
+          y="112"
+          text-anchor="middle"
+          dominant-baseline="middle"
+          font-family="system-ui, Segoe UI, Arial, sans-serif"
+          font-size="11"
+          fill="#444444">unit</text>
   </g>
 </svg>
