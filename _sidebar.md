@@ -84,6 +84,8 @@
       - [Tab](/Libraries/Realizations/Default/Tab.md)
       - [Table](/Libraries/Realizations/Default/Table.md)
       - [Tree](/Libraries/Realizations/Default/Tree.md)
+      - assets
+        - [boolean](/Libraries/Realizations/Default/assets/boolean/Readme.md)
       - [Assets](/Libraries/Realizations/Default/Assets/Readme.md)
         - [Naming](/Libraries/Realizations/Default/Assets/Naming.md)
       - [Examples](/Libraries/Realizations/Default/Examples/Readme.md)
