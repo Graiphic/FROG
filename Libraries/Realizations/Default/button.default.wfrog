@@ -1,0 +1,266 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_button_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.button",
+    "name": "FROG Default Button Realization",
+    "namespace": "frog.realizations.default.button",
+    "family": "default",
+    "summary": "Machine-readable default realization manifest for the standardized button widget."
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.button",
+      "role": "control",
+      "primary_value": {
+        "present": true,
+        "type": "bool",
+        "mechanical_action_dependent": true
+      }
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.button"
+    ],
+    "variants": [
+      "frog.realizations.default.button.rectangular"
+    ],
+    "resources": [
+      "frog.realizations.default.button.assets.rectangular_template_svg",
+      "frog.realizations.default.button.assets.state.false_svg",
+      "frog.realizations.default.button.assets.state.true_svg",
+      "frog.realizations.default.button.assets.state.hover_false_svg",
+      "frog.realizations.default.button.assets.state.hover_true_svg",
+      "frog.realizations.default.button.assets.state.transition_false_to_true_svg",
+      "frog.realizations.default.button.assets.state.transition_true_to_false_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.button",
+      "family": "default",
+      "target_class": "frog.widgets.button",
+      "variant_property": "realization.variant",
+      "default_variant": "rectangular",
+      "supported_variants": [
+        "rectangular"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "face",
+        "state_face",
+        "state_text",
+        "focus_ring"
+      ],
+      "supported_visual_states": [
+        "false",
+        "true",
+        "hover_false",
+        "hover_true",
+        "pressed_false",
+        "pressed_true",
+        "disabled_false",
+        "disabled_true",
+        "focused_false",
+        "focused_true",
+        "transition_false_to_true",
+        "transition_true_to_false"
+      ],
+      "supported_mechanical_actions": [
+        "switch_when_pressed",
+        "switch_when_released",
+        "switch_until_released",
+        "latch_when_pressed",
+        "latch_when_released",
+        "latch_until_released"
+      ],
+      "fallbacks": {
+        "missing_state_override": "parameterized_rectangular_template",
+        "missing_focus_ring": "host_native_focus_ring",
+        "missing_caption": "host_external_caption_region"
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "frog.realizations.default.button.rectangular",
+      "variant": "rectangular",
+      "target_class": "frog.widgets.button",
+      "resource_ref": "frog.realizations.default.button.assets.rectangular_template_svg"
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.button.assets.rectangular_template_svg",
+      "kind": "svg",
+      "path": "./assets/button/templates/button_rectangular.svg",
+      "target_class": "frog.widgets.button",
+      "target_variant": "rectangular"
+    },
+    {
+      "id": "frog.realizations.default.button.assets.state.false_svg",
+      "kind": "svg",
+      "path": "./assets/button/states/button_false.svg",
+      "target_class": "frog.widgets.button",
+      "target_state": "false",
+      "override_posture": "optional_state_resource"
+    },
+    {
+      "id": "frog.realizations.default.button.assets.state.true_svg",
+      "kind": "svg",
+      "path": "./assets/button/states/button_true.svg",
+      "target_class": "frog.widgets.button",
+      "target_state": "true",
+      "override_posture": "optional_state_resource"
+    },
+    {
+      "id": "frog.realizations.default.button.assets.state.hover_false_svg",
+      "kind": "svg",
+      "path": "./assets/button/states/button_hover_false.svg",
+      "target_class": "frog.widgets.button",
+      "target_state": "hover_false",
+      "override_posture": "optional_state_resource"
+    },
+    {
+      "id": "frog.realizations.default.button.assets.state.hover_true_svg",
+      "kind": "svg",
+      "path": "./assets/button/states/button_hover_true.svg",
+      "target_class": "frog.widgets.button",
+      "target_state": "hover_true",
+      "override_posture": "optional_state_resource"
+    },
+    {
+      "id": "frog.realizations.default.button.assets.state.transition_false_to_true_svg",
+      "kind": "svg",
+      "path": "./assets/button/states/button_transition_false_to_true.svg",
+      "target_class": "frog.widgets.button",
+      "target_state": "transition_false_to_true",
+      "override_posture": "optional_transition_resource"
+    },
+    {
+      "id": "frog.realizations.default.button.assets.state.transition_true_to_false_svg",
+      "kind": "svg",
+      "path": "./assets/button/states/button_transition_true_to_false.svg",
+      "target_class": "frog.widgets.button",
+      "target_state": "transition_true_to_false",
+      "override_posture": "optional_transition_resource"
+    }
+  ],
+  "part_bindings": [
+    {
+      "part": "root",
+      "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "label",
+      "binding_selector": "[data-frog-part='label']",
+      "semantic_member": "label.text"
+    },
+    {
+      "part": "caption",
+      "binding_selector": "[data-frog-part='caption']",
+      "semantic_member": "caption.text"
+    },
+    {
+      "part": "frame",
+      "binding_selector": "[data-frog-part='frame']",
+      "style_binding_group": "style.frame"
+    },
+    {
+      "part": "face",
+      "binding_selector": "[data-frog-part='face']",
+      "style_binding_group": "style.face"
+    },
+    {
+      "part": "state_face",
+      "binding_selector": "[data-frog-part='state_face']",
+      "style_binding_group": "style.state_face"
+    },
+    {
+      "part": "state_text",
+      "binding_selector": "[data-frog-part='state_text']",
+      "semantic_members": [
+        "state_text.false_text",
+        "state_text.true_text"
+      ]
+    },
+    {
+      "part": "focus_ring",
+      "binding_selector": "[data-frog-part='focus_ring']",
+      "style_binding_group": "style.focus_ring"
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "false",
+      "value_condition": {
+        "value": false
+      },
+      "resource_ref": "frog.realizations.default.button.assets.state.false_svg"
+    },
+    {
+      "state": "true",
+      "value_condition": {
+        "value": true
+      },
+      "resource_ref": "frog.realizations.default.button.assets.state.true_svg"
+    },
+    {
+      "state": "hover_false",
+      "value_condition": {
+        "value": false,
+        "interaction.hovered": true
+      },
+      "inherits": "false",
+      "resource_ref": "frog.realizations.default.button.assets.state.hover_false_svg"
+    },
+    {
+      "state": "hover_true",
+      "value_condition": {
+        "value": true,
+        "interaction.hovered": true
+      },
+      "inherits": "true",
+      "resource_ref": "frog.realizations.default.button.assets.state.hover_true_svg"
+    },
+    {
+      "state": "transition_false_to_true",
+      "transition_condition": {
+        "from": false,
+        "to": true
+      },
+      "resource_ref": "frog.realizations.default.button.assets.state.transition_false_to_true_svg",
+      "optional": true
+    },
+    {
+      "state": "transition_true_to_false",
+      "transition_condition": {
+        "from": true,
+        "to": false
+      },
+      "resource_ref": "frog.realizations.default.button.assets.state.transition_true_to_false_svg",
+      "optional": true
+    }
+  ],
+  "mechanical_action_model": {
+    "property": "behavior.mechanical_action",
+    "values": [
+      "switch_when_pressed",
+      "switch_when_released",
+      "switch_until_released",
+      "latch_when_pressed",
+      "latch_when_released",
+      "latch_until_released"
+    ],
+    "latch_reset_policy": {
+      "default": "reset_on_natural_value_consumption",
+      "property_read_resets_latch": false
+    }
+  }
+}

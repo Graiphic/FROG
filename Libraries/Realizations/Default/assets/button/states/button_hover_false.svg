@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 340 220"
+     role="img"
+     aria-label="FROG default button hover_false realization resource"
+     data-frog-template="frog.realizations.default.button.state.hover_false"
+     data-frog-target-class="frog.widgets.button"
+     data-frog-state="hover_false">
+  <title>FROG Default Button hover_false Resource</title>
+  <defs>
+    <style>
+      :root {
+        --frog-button-label-display: none;
+        --frog-button-label-fill: #6b7280;
+        --frog-button-label-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-button-label-font-size: 12px;
+        --frog-button-caption-display: inline;
+        --frog-button-caption-fill: #d00000;
+        --frog-button-caption-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-button-caption-font-size: 18px;
+        --frog-button-frame-fill: #ffffff;
+        --frog-button-frame-stroke: #2f80ed;
+        --frog-button-frame-stroke-width: 6px;
+        --frog-button-face-fill: #e8f2fb;
+        --frog-button-state-face-fill: #e8f2fb;
+        --frog-button-state-text-fill: #111111;
+        --frog-button-state-text-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-button-state-text-font-size: 20px;
+        --frog-button-focus-display: none;
+        --frog-button-focus-stroke: #2f80ed;
+        --frog-button-focus-stroke-width: 3px;
+      }
+      #label_text { display: var(--frog-button-label-display); fill: var(--frog-button-label-fill); font-family: var(--frog-button-label-font-family); font-size: var(--frog-button-label-font-size); }
+      #caption_text { display: var(--frog-button-caption-display); fill: var(--frog-button-caption-fill); font-family: var(--frog-button-caption-font-family); font-size: var(--frog-button-caption-font-size); }
+      #frame { fill: var(--frog-button-frame-fill); stroke: var(--frog-button-frame-stroke); stroke-width: var(--frog-button-frame-stroke-width); }
+      #face { fill: var(--frog-button-face-fill); stroke: transparent; stroke-width: 0px; }
+      #state_face { fill: var(--frog-button-state-face-fill); stroke: transparent; stroke-width: 0px; }
+      #state_text { fill: var(--frog-button-state-text-fill); font-family: var(--frog-button-state-text-font-family); font-size: var(--frog-button-state-text-font-size); }
+      #focus_ring { display: var(--frog-button-focus-display); fill: none; stroke: var(--frog-button-focus-stroke); stroke-width: var(--frog-button-focus-stroke-width); }
+    </style>
+  </defs>
+  <g id="root" data-frog-part="root">
+    <text id="label_text" data-frog-part="label" data-frog-member="label.text" data-frog-anchor="label.anchor" x="16" y="18">button_1</text>
+    <text id="caption_text" data-frog-part="caption" data-frog-member="caption.text" data-frog-anchor="caption.anchor" x="16" y="46">Button</text>
+    <rect id="focus_ring" data-frog-part="focus_ring" x="4" y="64" width="332" height="124" rx="6" data-frog-bind="interaction.focused style.focus_ring.*" />
+    <rect id="frame" data-frog-part="frame" x="12" y="72" width="316" height="108" rx="0" data-frog-bind="style.frame.*" />
+    <rect id="face" data-frog-part="face" x="26" y="86" width="288" height="80" rx="0" data-frog-bind="style.face.*" />
+    <rect id="state_face" data-frog-part="state_face" x="42" y="102" width="256" height="48" rx="0" data-frog-bind="style.state_face.*" />
+    <text id="state_text" data-frog-part="state_text" data-frog-member="state_text.false_text state_text.true_text" data-frog-anchor="state_text.center" x="170" y="127" text-anchor="middle" dominant-baseline="middle">OFF</text>
+  </g>
+</svg>
