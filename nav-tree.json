@@ -612,6 +612,13 @@
                           "children": []
                         },
                         {
+                          "key": "libraries/realizations/default/assets/button/",
+                          "title": "button",
+                          "path": "/Libraries/Realizations/Default/assets/button/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        },
+                        {
                           "key": "libraries/realizations/default/assets/string/",
                           "title": "string",
                           "path": "/Libraries/Realizations/Default/assets/string/Readme.md",
@@ -2849,6 +2856,7 @@
     "/Libraries/Realizations/Default/Table.md",
     "/Libraries/Realizations/Default/Tree.md",
     "/Libraries/Realizations/Default/assets/boolean/Readme.md",
+    "/Libraries/Realizations/Default/assets/button/Readme.md",
     "/Libraries/Realizations/Default/assets/string/Readme.md",
     "/Libraries/Realizations/Default/Assets/Naming.md",
     "/Libraries/Realizations/Default/Assets/Readme.md",
