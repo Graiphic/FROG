@@ -60,34 +60,19 @@ Both assets target:
 They are realization variants, not separate widget classes.
 </p>
 
-<pre><code>frog.widgets.boolean_control
-frog.widgets.boolean_indicator
-    |
-    +-- realization.variant = rectangular
-    |
-    +-- realization.variant = circular
-</code></pre>
-
 <hr/>
 
 <h2>4. Required Template Markers</h2>
 
-<p>
-The SVG templates should expose stable markers for these public parts:
-</p>
-
 <ul>
   <li><code>root</code></li>
   <li><code>label</code></li>
+  <li><code>caption</code></li>
   <li><code>outer_face</code></li>
   <li><code>inner_face</code></li>
   <li><code>state_text</code></li>
   <li><code>focus_ring</code></li>
 </ul>
-
-<p>
-These markers allow an IDE or runtime to bind public boolean properties to realization surfaces without inferring semantics from raw geometry.
-</p>
 
 <hr/>
 
@@ -95,24 +80,5 @@ These markers allow an IDE or runtime to bind public boolean properties to reali
 
 <p>
 The assets may define geometry, template markers, SVG groups, CSS variables, and fallback visual defaults.
-They must not redefine:
+They must not redefine the meaning of <code>value</code>, the control-versus-indicator distinction, or the public boolean property, method, and event inventory.
 </p>
-
-<ul>
-  <li>the meaning of <code>value</code>,</li>
-  <li>the control-versus-indicator distinction,</li>
-  <li>the public boolean property inventory,</li>
-  <li>the public boolean method inventory,</li>
-  <li>the public boolean event inventory.</li>
-</ul>
-
-<hr/>
-
-<h2>6. Summary</h2>
-
-<p>
-This directory provides the first default SVG template resources for boolean widgets.
-The machine-readable manifest that binds those assets to the default realization family is:
-</p>
-
-<pre><code>Libraries/Realizations/Default/boolean.default.wfrog</code></pre>

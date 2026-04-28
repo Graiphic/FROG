@@ -21,19 +21,20 @@
   <li><a href="#ownership-boundary">5. Ownership Boundary</a></li>
   <li><a href="#what-a-standard-widget-class-is">6. What a Standard Widget Class Is</a></li>
   <li><a href="#minimum-object-surface-rule">7. Minimum Object-Surface Rule</a></li>
-  <li><a href="#baseline-widget-families">8. Baseline Widget Families</a></li>
-  <li><a href="#baseline-standardization-phases">9. Baseline Standardization Phases</a></li>
-  <li><a href="#class-versus-realization-rule">10. Class versus Realization Rule</a></li>
-  <li><a href="#shared-baseline-conventions">11. Shared Baseline Conventions</a></li>
-  <li><a href="#primitive-vs-composite-posture">12. Primitive vs Composite Posture</a></li>
-  <li><a href="#relation-with-frog-source">13. Relation with <code>.frog</code> Source</a></li>
-  <li><a href="#relation-with-wfrog-publication">14. Relation with <code>.wfrog</code> Publication</a></li>
-  <li><a href="#relation-with-frogui-primitives">15. Relation with <code>frog.ui.*</code> Primitives</a></li>
-  <li><a href="#relation-with-realization-families">16. Relation with Realization Families</a></li>
-  <li><a href="#portability-across-runtimes">17. Portability Across Runtimes</a></li>
-  <li><a href="#conformance-posture">18. Conformance Posture</a></li>
-  <li><a href="#status">19. Status</a></li>
-  <li><a href="#summary">20. Summary</a></li>
+  <li><a href="#label-and-caption-convention">8. Label and Caption Convention</a></li>
+  <li><a href="#baseline-widget-families">9. Baseline Widget Families</a></li>
+  <li><a href="#baseline-standardization-phases">10. Baseline Standardization Phases</a></li>
+  <li><a href="#class-versus-realization-rule">11. Class versus Realization Rule</a></li>
+  <li><a href="#shared-baseline-conventions">12. Shared Baseline Conventions</a></li>
+  <li><a href="#primitive-vs-composite-posture">13. Primitive vs Composite Posture</a></li>
+  <li><a href="#relation-with-frog-source">14. Relation with <code>.frog</code> Source</a></li>
+  <li><a href="#relation-with-wfrog-publication">15. Relation with <code>.wfrog</code> Publication</a></li>
+  <li><a href="#relation-with-frogui-primitives">16. Relation with <code>frog.ui.*</code> Primitives</a></li>
+  <li><a href="#relation-with-realization-families">17. Relation with Realization Families</a></li>
+  <li><a href="#portability-across-runtimes">18. Portability Across Runtimes</a></li>
+  <li><a href="#conformance-posture">19. Conformance Posture</a></li>
+  <li><a href="#status">20. Status</a></li>
+  <li><a href="#summary">21. Summary</a></li>
 </ul>
 
 <hr/>
@@ -50,7 +51,7 @@ Its role is to publish a small, portable, inspectable set of standard widget cla
 
 <p>
 This baseline is intentionally modest but concrete.
-It defines the first standard widget families that are sufficient to support a credible front-panel ecosystem and a first serious executable vertical slice.
+It defines the first standard widget families that are sufficient to support a credible front-panel ecosystem and serious executable vertical slices.
 </p>
 
 <p>
@@ -116,31 +117,12 @@ This directory defines:
 </ul>
 
 <p>
-This directory does not define:
-</p>
-
-<ul>
-  <li>canonical <code>.frog</code> source serialization,</li>
-  <li>front-panel composition structure,</li>
-  <li>the full generic widget class contract model,</li>
-  <li>the full <code>.wfrog</code> package format,</li>
-  <li>the general bounded behavior doctrine,</li>
-  <li>the general realization doctrine,</li>
-  <li>one mandatory host toolkit or one mandatory runtime architecture.</li>
-</ul>
-
-<p>
-Those ownerships remain defined elsewhere in the repository.
-This directory publishes standard reusable widget classes inside those already-established boundaries.
+This directory does not define canonical <code>.frog</code> serialization, front-panel composition structure, the full generic widget class contract model, the full <code>.wfrog</code> package format, one mandatory host toolkit, or one mandatory runtime architecture.
 </p>
 
 <hr/>
 
 <h2 id="architectural-position">4. Architectural Position</h2>
-
-<p>
-The standardized widget baseline occupies the following architectural position:
-</p>
 
 <pre><code>Expression/                 - widget source model and widget architecture
 Libraries/Widgets/          - intrinsic standardized widget classes
@@ -159,17 +141,9 @@ frog.ui.*        - executable interaction primitives
 realization      - official embodiment posture for published classes
 </code></pre>
 
-<p>
-The standardized widget layer is therefore upstream from realization families and upstream from runtime-private embodiment details.
-</p>
-
 <hr/>
 
 <h2 id="ownership-boundary">5. Ownership Boundary</h2>
-
-<p>
-The following ownership boundary is normative:
-</p>
 
 <ul>
   <li><code>Expression/Widget.md</code> owns widget instances in canonical source.</li>
@@ -183,17 +157,9 @@ The following ownership boundary is normative:
 </ul>
 
 <p>
-Therefore:
+This directory defines which standard classes exist and what their portable public surfaces mean.
+It does not redefine the generic widget architecture, does not replace <code>.wfrog</code>, does not make one runtime the owner of class law, and does not delegate public class meaning to realization assets.
 </p>
-
-<ul>
-  <li>this directory defines which standard classes exist,</li>
-  <li>this directory defines the portable public surface of those classes,</li>
-  <li>it does not redefine the generic widget architecture,</li>
-  <li>it does not replace <code>.wfrog</code> as the widget-oriented publication family,</li>
-  <li>it does not make one runtime the owner of the class law,</li>
-  <li>it does not delegate public class meaning to realization assets.</li>
-</ul>
 
 <hr/>
 
@@ -220,49 +186,9 @@ A standard class defines, at minimum:
 </ul>
 
 <p>
-A standard class is therefore more than an abstract name and more than a visual control template.
+A standard class is more than an abstract name and more than a visual control template.
 It is a published portable object surface that runtimes may implement and programs may rely on.
 </p>
-
-<p>
-That public surface may include semantic label-bearing or value-bearing members such as <code>label.text</code>, <code>value</code>, <code>value_display</code>, <code>text_display</code>, <code>plot_area</code>, or other public surfaces when the class requires them.
-However, the existence of such members does not mean that realization-side placement, styling defaults, anchors, text regions, skin resources, or decorative assets become part of the intrinsic class law unless explicitly published here.
-</p>
-
-<p>
-A standard class may also expose bounded public styling or realization-selection surfaces when those surfaces are intended to be portable and inspectable.
-Typical examples include:
-</p>
-
-<ul>
-  <li>portable <code>style.*</code> properties,</li>
-  <li><code>realization.family</code>,</li>
-  <li><code>realization.variant</code>,</li>
-  <li><code>realization.skin_id</code>.</li>
-</ul>
-
-<p>
-The standard widget class therefore owns:
-</p>
-
-<ul>
-  <li>what public members exist,</li>
-  <li>what those members mean,</li>
-  <li>which methods and events are legal,</li>
-  <li>which public parts are stable realization targets.</li>
-</ul>
-
-<p>
-Downstream realization publication owns:
-</p>
-
-<ul>
-  <li>where dynamic public surfaces are placed,</li>
-  <li>how visual states are embodied,</li>
-  <li>which anchors, text regions, or resource layers are used,</li>
-  <li>which assets or host-native layers provide the embodiment,</li>
-  <li>how compatible variants and skins are selected and applied.</li>
-</ul>
 
 <hr/>
 
@@ -270,11 +196,7 @@ Downstream realization publication owns:
 
 <p>
 The intrinsic widget baseline follows a strict minimum object-surface rule.
-</p>
-
-<p>
 A standard widget in the intrinsic baseline must not collapse into a passive value plus a runtime-private visual shell.
-Instead, each intrinsic baseline widget is expected to expose a minimal but real public object surface.
 </p>
 
 <p>
@@ -293,21 +215,59 @@ This rule is intentionally close in spirit to mature graphical object systems su
 the intrinsic baseline remains small, but standard widgets still have a real minimum of property-node, method-node, and event-observation usefulness.
 </p>
 
+<hr/>
+
+<h2 id="label-and-caption-convention">8. Label and Caption Convention</h2>
+
 <p>
-At the same time, this rule does not justify overloading the intrinsic core with every possible surface.
-The baseline remains minimal, disciplined, and portable.
+The standard widget baseline distinguishes <code>label</code> from <code>caption</code>.
+</p>
+
+<pre><code>label.*
+    - structural / logical widget name surface
+    - useful for diagrams, references, tooling, accessibility, debugging, and program review
+    - may be displayed by an IDE or host, but is not primarily the presentation caption
+
+caption.*
+    - user-facing presentation text surface
+    - intended for front-panel display
+    - may be shown, hidden, styled, and positioned by realization
+</code></pre>
+
+<p>
+This distinction is inspired by mature graphical environments while being made explicit in FROG.
+It prevents one text field from serving every purpose at once.
+</p>
+
+<p>
+The recommended portable surfaces are:
+</p>
+
+<ul>
+  <li><code>label.text</code> — logical widget name or structural label.</li>
+  <li><code>label.visible</code> — whether the logical label is host-visible when the active authoring or realization corridor supports it.</li>
+  <li><code>caption.text</code> — user-facing display caption.</li>
+  <li><code>caption.visible</code> — whether the caption is visible on the front panel.</li>
+  <li><code>caption.placement</code> — preferred caption placement when supported.</li>
+  <li><code>caption.style.*</code> — presentation style for the visible caption.</li>
+</ul>
+
+<p>
+A class may choose not to expose a caption when it is not meaningful.
+However, when both a structural label and a user-facing display text are needed, the canonical distinction is <code>label.*</code> versus <code>caption.*</code>.
+</p>
+
+<p>
+Realization assets may place and style a caption, but they do not become the semantic owner of <code>caption.text</code>.
+Likewise, a runtime may display or hide labels and captions, but it must not silently collapse the logical label and the user-facing caption into one private field when both are published.
 </p>
 
 <hr/>
 
-<h2 id="baseline-widget-families">8. Baseline Widget Families</h2>
+<h2 id="baseline-widget-families">9. Baseline Widget Families</h2>
 
 <p>
 The intrinsic standardized widget space is organized around a small core plus additional standardized families outside that core.
-</p>
-
-<p>
-The current core families are:
 </p>
 
 <ul>
@@ -320,34 +280,19 @@ The current core families are:
 
 <p>
 These families intentionally form a small but credible front-panel core:
-</p>
-
-<ul>
-  <li>typed editable values,</li>
-  <li>typed displayed values,</li>
-  <li>basic command interaction,</li>
-  <li>a first structured visual history widget.</li>
-</ul>
-
-<p>
-The chart strategy is intentionally conservative:
-the intrinsic core standardizes one minimal waveform-chart-style baseline rather than trying to standardize, all at once, the full family of waveform graph, XY graph, intensity graph, legend, cursor, and annotation systems.
+typed editable values, typed displayed values, basic command interaction, and a first structured visual history widget.
 </p>
 
 <hr/>
 
-<h2 id="baseline-standardization-phases">9. Baseline Standardization Phases</h2>
+<h2 id="baseline-standardization-phases">10. Baseline Standardization Phases</h2>
 
 <p>
 The intrinsic widget baseline should remain intentionally phased.
-This helps preserve a credible v1 core while keeping the path open for later expansion.
+This helps preserve a credible core while keeping the path open for later expansion.
 </p>
 
-<h3>9.1 Intrinsic baseline v1</h3>
-
-<p>
-The recommended intrinsic baseline v1 consists of:
-</p>
+<h3>10.1 Intrinsic baseline core</h3>
 
 <ul>
   <li><code>frog.widgets.numeric_control</code></li>
@@ -360,38 +305,14 @@ The recommended intrinsic baseline v1 consists of:
   <li><code>frog.widgets.waveform_chart</code></li>
 </ul>
 
-<p>
-This v1 core is the smallest serious portable widget set that still supports:
-</p>
-
-<ul>
-  <li>scalar editable values,</li>
-  <li>scalar displayed values,</li>
-  <li>command-oriented interaction,</li>
-  <li>a first bounded history-oriented visualization surface.</li>
-</ul>
-
-<h3>9.2 Standardized support widgets outside intrinsic baseline v1</h3>
-
-<p>
-The following support widgets may be standardized and fully documented without being treated as part of the intrinsic baseline v1 core:
-</p>
+<h3>10.2 Standardized support widgets outside the intrinsic baseline core</h3>
 
 <ul>
   <li><code>frog.widgets.label</code></li>
   <li><code>frog.widgets.frame</code></li>
 </ul>
 
-<p>
-This posture is intentional.
-It allows support widgets to exist as real standardized classes with disciplined public contracts while keeping the intrinsic v1 core small and centered on the most essential reusable value, command, and chart surfaces.
-</p>
-
-<h3>9.3 Near-core standardized candidates</h3>
-
-<p>
-The following classes are strong near-core candidates, but do not need to enter the intrinsic baseline before the core above is fully stabilized:
-</p>
+<h3>10.3 Near-core standardized candidates</h3>
 
 <ul>
   <li><code>frog.widgets.enum_control</code> and <code>frog.widgets.enum_indicator</code></li>
@@ -400,11 +321,7 @@ The following classes are strong near-core candidates, but do not need to enter 
   <li><code>frog.widgets.array</code></li>
 </ul>
 
-<h3>9.4 Deferred standardization</h3>
-
-<p>
-The following families should generally remain outside the intrinsic baseline v1 core even if they are standardized later in repository-visible form:
-</p>
+<h3>10.4 Deferred standardization</h3>
 
 <ul>
   <li>listbox</li>
@@ -418,19 +335,9 @@ The following families should generally remain outside the intrinsic baseline v1
   <li>canvas-like widget families</li>
 </ul>
 
-<p>
-This phased posture is not a rejection of those classes.
-It is a discipline rule intended to keep the intrinsic baseline coherent.
-</p>
-
-<p>
-In particular, a class such as <code>switch</code> should not be introduced merely because one realization family supports a switch-like visual embodiment.
-A distinct class should only be standardized when it contributes distinct public semantics rather than only a different visible embodiment.
-</p>
-
 <hr/>
 
-<h2 id="class-versus-realization-rule">10. Class versus Realization Rule</h2>
+<h2 id="class-versus-realization-rule">11. Class versus Realization Rule</h2>
 
 <p>
 A distinct visible embodiment does not, by itself, justify a distinct standardized class.
@@ -447,56 +354,19 @@ The preferred architecture is:
 </ul>
 
 <p>
-This rule is especially important for boolean-like and command-like surfaces.
-For example:
-</p>
-
-<ul>
-  <li>a checkbox-like boolean embodiment,</li>
-  <li>a switch-like boolean embodiment,</li>
-  <li>an LED-like boolean embodiment,</li>
-  <li>a toggle-pill-like boolean embodiment</li>
-</ul>
-
-<p>
-do not automatically require four distinct classes.
-If they share the same public semantics, they should remain realization variants of the same standardized boolean class.
-</p>
-
-<p>
-A new class is justified only when the public contract changes in a meaningful way, such as:
-</p>
-
-<ul>
-  <li>different public properties,</li>
-  <li>different public methods,</li>
-  <li>different public events,</li>
-  <li>different public parts,</li>
-  <li>different standardized behavior meaning.</li>
-</ul>
-
-<p>
-The same rule also applies to skinning and styling.
 A different skin, a different compatible SVG set, a different host-native chrome, or a different compatible realization variant does not automatically create a new class.
 A widget remains the same standardized class as long as its public contract remains unchanged.
 </p>
 
 <hr/>
 
-<h2 id="shared-baseline-conventions">11. Shared Baseline Conventions</h2>
-
-<p>
-The baseline families in this directory follow a shared normalization posture.
-</p>
-
-<p>
-At minimum:
-</p>
+<h2 id="shared-baseline-conventions">12. Shared Baseline Conventions</h2>
 
 <ul>
   <li>standard class identifiers use the <code>frog.widgets.*</code> namespace,</li>
   <li>value-carrying classes expose a primary value mirrored as property <code>value</code>,</li>
-  <li>label-bearing classes use property <code>label.text</code> where label-bearing posture is part of public class meaning,</li>
+  <li>structural widget names use <code>label.text</code> when a logical label is part of public class meaning,</li>
+  <li>front-panel presentation captions use <code>caption.text</code> when a visible caption is part of public class meaning,</li>
   <li>visibility uses property <code>interaction.visible</code>,</li>
   <li>interactive classes use property <code>interaction.enabled</code> where applicable,</li>
   <li>the root part is named <code>root</code>,</li>
@@ -507,49 +377,22 @@ At minimum:
   <li>indicators typically emit <code>value_rendered</code> for visible refresh-oriented notification.</li>
 </ul>
 
-<p>
-This normalization keeps the baseline coherent while leaving room for richer families and richer realization-specific surfaces later.
-</p>
-
-<p>
-The baseline deliberately avoids pushing realization-heavy appearance structure into every class.
-Portable semantic surfaces may still be standardized when they belong to public class meaning, but realization-specific anchors, text regions, skin layers, placement maps, and most visual-theme machinery belong downstream in realization publication.
-</p>
-
 <hr/>
 
-<h2 id="primitive-vs-composite-posture">12. Primitive vs Composite Posture</h2>
+<h2 id="primitive-vs-composite-posture">13. Primitive vs Composite Posture</h2>
 
 <p>
 The classes defined in this directory are the initial standardized primitive baseline.
-</p>
-
-<p>
-They are intended to serve as:
-</p>
-
-<ul>
-  <li>a portable reusable widget core,</li>
-  <li>a foundation for serious examples,</li>
-  <li>a foundation for future standardized or developer-defined composite widgets.</li>
-</ul>
-
-<p>
-Composite widgets are expected to be published through the widget package corridor and to remain compatible with the standard primitive classes defined here.
-This means the primitive baseline should remain small, clear, and stable rather than absorbing every higher-level interaction pattern into the intrinsic core.
+They are intended to serve as a portable reusable widget core, a foundation for serious examples, and a foundation for future standardized or developer-defined composite widgets.
 </p>
 
 <hr/>
 
-<h2 id="relation-with-frog-source">13. Relation with <code>.frog</code> Source</h2>
+<h2 id="relation-with-frog-source">14. Relation with <code>.frog</code> Source</h2>
 
 <p>
 Canonical <code>.frog</code> source instantiates widgets through widget instances in <code>front_panel</code>.
 Those widget instances may reference the standard classes defined in this directory.
-</p>
-
-<p>
-For example, a widget instance may declare a class reference such as:
 </p>
 
 <pre><code>frog.widgets.numeric_control
@@ -560,36 +403,17 @@ frog.widgets.waveform_chart
 </code></pre>
 
 <p>
-This directory does not define the instance serialization itself.
-It defines the published classes that such instances may target.
-</p>
-
-<p>
 Canonical source owns the instance.
 This directory owns the standardized class being instantiated.
 </p>
 
 <hr/>
 
-<h2 id="relation-with-wfrog-publication">14. Relation with <code>.wfrog</code> Publication</h2>
+<h2 id="relation-with-wfrog-publication">15. Relation with <code>.wfrog</code> Publication</h2>
 
 <p>
 The classes defined in this directory are intrinsic standardized classes.
 They may be published, mirrored, or accompanied by official widget-oriented package artifacts through the <code>.wfrog</code> corridor.
-</p>
-
-<p>
-That means:
-</p>
-
-<ul>
-  <li>this directory defines the normative class baseline,</li>
-  <li><code>.wfrog</code> provides the machine-readable widget-oriented publication family,</li>
-  <li>realization resources, realization mappings, bounded composite publication, and related artifacts may be published through <code>.wfrog</code> artifacts associated with these classes.</li>
-</ul>
-
-<p>
-The governing distinction remains:
 </p>
 
 <pre><code>published class law
@@ -605,21 +429,12 @@ runtime-private implementation
 
 <hr/>
 
-<h2 id="relation-with-frogui-primitives">15. Relation with <code>frog.ui.*</code> Primitives</h2>
+<h2 id="relation-with-frogui-primitives">16. Relation with <code>frog.ui.*</code> Primitives</h2>
 
 <p>
 The executable object-style interaction surface for widgets is defined by <code>frog.ui.*</code> primitives.
 Those primitives operate on widget classes defined by this directory and on compatible developer-defined classes published elsewhere.
 </p>
-
-<p>
-This means:
-</p>
-
-<ul>
-  <li><code>Libraries/Widgets/</code> defines which standard widget classes exist and what public surfaces they expose,</li>
-  <li><code>Libraries/UI.md</code> defines how executable diagrams may read properties, write properties, invoke methods, and observe events on those classes when allowed.</li>
-</ul>
 
 <pre><code>class law
     - what exists
@@ -629,131 +444,49 @@ frog.ui.*
 </code></pre>
 
 <p>
-This distinction is especially important for members such as <code>value</code>.
-A class may expose <code>value</code> as a legal public property, while the execution layer still preserves the distinction between:
-</p>
-
-<ul>
-  <li>natural <code>widget_value</code> participation,</li>
-  <li>object-style property access to member <code>value</code> through <code>frog.ui.property_read</code> or <code>frog.ui.property_write</code>.</li>
-</ul>
-
-<p>
-Likewise, if a class exposes members such as <code>label.text</code>, axis properties, history members, portable <code>style.*</code> surfaces, portable <code>realization.*</code> members, or methods such as <code>append_sample(sample)</code> or <code>clear_history()</code>, this directory owns their legality and meaning, while <code>frog.ui.*</code> owns the executable primitive vocabulary used to access them.
+If a class exposes members such as <code>label.text</code>, <code>caption.text</code>, <code>value</code>, portable <code>style.*</code> surfaces, portable <code>realization.*</code> members, or methods such as <code>clear()</code> or <code>append_text(text)</code>, this directory owns their legality and meaning, while <code>frog.ui.*</code> owns the executable primitive vocabulary used to access them.
 </p>
 
 <hr/>
 
-<h2 id="relation-with-realization-families">16. Relation with Realization Families</h2>
+<h2 id="relation-with-realization-families">17. Relation with Realization Families</h2>
 
 <p>
 The classes defined here are not identical to one skin and are not identical to one realization resource family.
 </p>
 
 <p>
-A standard widget class may later be accompanied by:
+A standard widget class may be accompanied by one or more official realization families, machine-readable realization packages, state-sensitive resource maps, structural part bindings, anchor or text-region publication for dynamic public parts, and compatible realization variants.
 </p>
-
-<ul>
-  <li>one or more official realization families,</li>
-  <li>one or more machine-readable realization packages,</li>
-  <li>state-sensitive resource maps,</li>
-  <li>structural part bindings,</li>
-  <li>anchor or text-region publication for dynamic public parts,</li>
-  <li>compatible realization variants and compatible skin identities.</li>
-</ul>
 
 <p>
 Those realization layers remain subordinate to the class law.
 </p>
 
-<p>
-For example:
-</p>
-
-<ul>
-  <li>a button may expose semantic label text through <code>label.text</code>,</li>
-  <li>a numeric widget may expose a dynamic <code>value_display</code> surface,</li>
-  <li>a string widget may expose a dynamic <code>text_display</code> surface,</li>
-  <li>a chart may expose <code>plot_area</code>, axis surfaces, and <code>label.text</code>,</li>
-  <li>the corresponding realization family may publish where those surfaces are placed or how they are visually embodied,</li>
-  <li>an associated asset may provide geometry, decoration, anchor support, or text-region support,</li>
-  <li>a runtime may render the final result through its own host toolkit.</li>
-</ul>
-
-<p>
-But the existence of those realization layers does not mean that the realization owns the semantics of the class.
-The class remains primary.
-The realization remains subordinate.
-</p>
-
-<p>
-A realization family may also publish several compatible embodiment variants for the same class.
-That does not, by itself, create several classes.
-A distinct standardized class should only appear when a distinct public contract is explicitly published.
-</p>
-
 <hr/>
 
-<h2 id="portability-across-runtimes">17. Portability Across Runtimes</h2>
+<h2 id="portability-across-runtimes">18. Portability Across Runtimes</h2>
 
 <p>
 The standard classes defined here are intended to be portable across runtime families such as Python, Rust, and C/C++ implementations.
 </p>
 
 <p>
-Portability does not require:
-</p>
-
-<ul>
-  <li>identical host toolkit choice,</li>
-  <li>identical rendering internals,</li>
-  <li>identical pixel output in every case.</li>
-</ul>
-
-<p>
-Portability does require:
-</p>
-
-<ul>
-  <li>stable class identity,</li>
-  <li>stable public properties, methods, events, and parts,</li>
-  <li>stable primary value posture,</li>
-  <li>stable behavior meaning,</li>
-  <li>stable diagram-interaction meaning.</li>
-</ul>
-
-<p>
-Where a class exposes semantic text-bearing or value-bearing public surfaces, portability also requires that runtimes preserve their public meaning even if the visual embodiment differs.
-</p>
-
-<p>
-Where a class exposes portable styling or realization-selection surfaces, portability also requires that runtimes treat those surfaces as bounded public configuration surfaces rather than as permission to redefine class semantics.
+Portability does not require identical host toolkit choice, identical rendering internals, or identical pixel output in every case.
+Portability does require stable class identity, stable public properties, methods, events, and parts, stable primary value posture, stable behavior meaning, and stable diagram-interaction meaning.
 </p>
 
 <hr/>
 
-<h2 id="conformance-posture">18. Conformance Posture</h2>
+<h2 id="conformance-posture">19. Conformance Posture</h2>
 
 <p>
 A runtime claiming support for one of the standard classes defined here MUST preserve the published portable class surface of that class for the surfaces it claims to implement.
 </p>
 
 <p>
-Partial support is allowed.
-However, a runtime claiming partial support SHOULD identify which surfaces it supports and which it does not.
+A runtime MUST NOT invent undocumented public members while claiming conformance, silently redefine the meaning of standard parts, silently redefine standard events, or use one private realization strategy as if it were the standard class law itself.
 </p>
-
-<p>
-A runtime MUST NOT:
-</p>
-
-<ul>
-  <li>invent undocumented public members while claiming conformance,</li>
-  <li>silently redefine the meaning of standard parts,</li>
-  <li>silently redefine standard events,</li>
-  <li>use one private realization strategy as if it were the standard class law itself.</li>
-</ul>
 
 <p>
 A runtime also MUST NOT silently transfer semantic ownership of dynamic public text or value-bearing surfaces into realization assets, anchors, text regions, or toolkit-private layers.
@@ -761,54 +494,24 @@ Those structures may embody, place, or render the surface.
 They do not redefine its class meaning.
 </p>
 
-<p>
-Likewise, a runtime MUST NOT use styling, skinning, or variant selection as a hidden mechanism for silently introducing a different class contract while still claiming conformance to the original published class.
-</p>
-
 <hr/>
 
-<h2 id="status">19. Status</h2>
+<h2 id="status">20. Status</h2>
 
 <p>
 This directory defines the first intrinsic standardized widget baseline of FROG.
 </p>
 
 <p>
-Its closure direction is:
+The immediate closure direction is to stabilize the intrinsic core, keep the class-versus-realization boundary explicit, preserve the minimum object-surface rule, adopt the shared <code>label</code> / <code>caption</code> convention, and add near-core classes only after the intrinsic core is coherent.
 </p>
-
-<ul>
-  <li>a small but credible standard widget core,</li>
-  <li>clear reusable class publication,</li>
-  <li>clean alignment with <code>frog.ui.*</code> interaction primitives,</li>
-  <li>clean downstream alignment with official realization families,</li>
-  <li>future growth through composite widgets and realization publication without architectural drift.</li>
-</ul>
-
-<p>
-The immediate closure direction is:
-</p>
-
-<ul>
-  <li>stabilize the intrinsic v1 widget core,</li>
-  <li>stabilize the status of standardized support widgets relative to that core,</li>
-  <li>stabilize the doctrine that distinct visible embodiments do not automatically create distinct classes,</li>
-  <li>stabilize the doctrine that bounded styling and skinning remain realization-oriented unless explicitly promoted into class law,</li>
-  <li>avoid premature expansion of the intrinsic core,</li>
-  <li>preserve the minimum object-surface rule across all intrinsic baseline widgets,</li>
-  <li>add near-core classes only after the intrinsic core is fully coherent.</li>
-</ul>
 
 <hr/>
 
-<h2 id="summary">20. Summary</h2>
+<h2 id="summary">21. Summary</h2>
 
 <p>
 This directory publishes the first intrinsic standardized widget classes of FROG.
-</p>
-
-<p>
-It exists so that the widget corridor is not only architecturally well separated, but also concretely instantiated through a portable reusable baseline.
 </p>
 
 <p>
@@ -822,26 +525,3 @@ In short:
   <li><code>Libraries/Realizations/</code> defines how official realization families embody them,</li>
   <li><code>.wfrog</code> artifacts publish machine-readable widget and realization artifacts without collapsing those ownership layers.</li>
 </ul>
-
-<p>
-The intrinsic baseline is intentionally semantic-first:
-</p>
-
-<ul>
-  <li>class law defines public meaning,</li>
-  <li>realization defines embodiment,</li>
-  <li>skins and variants remain compatible realization choices unless public class law explicitly diverges.</li>
-</ul>
-
-<p>
-The next most coherent file to handle after this rewrite is:
-</p>
-
-<ul>
-  <li><code>Libraries/Realizations/Default/Package.md</code></li>
-</ul>
-
-<p>
-That file is the next strongest consolidation point because it should now mirror the same doctrine in machine-readable publication form:
-portable class-owned semantics, explicit realization-owned embodiment, explicit variant and skin selection posture, and no semantic drift hidden inside resource selection.
-</p>

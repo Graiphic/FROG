@@ -86,6 +86,7 @@
       "supported_parts": [
         "root",
         "label",
+        "caption",
         "outer_face",
         "inner_face",
         "state_text",
@@ -106,7 +107,8 @@
         "missing_variant": "rectangular",
         "missing_focus_ring": "host_native_focus_ring",
         "missing_state_text": "host_centered_text_region",
-        "missing_label": "host_external_label_region",
+        "missing_caption": "host_external_caption_region",
+        "missing_label": "host_metadata_label",
         "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
       }
     },
@@ -123,6 +125,7 @@
       "supported_parts": [
         "root",
         "label",
+        "caption",
         "outer_face",
         "inner_face",
         "state_text",
@@ -141,7 +144,8 @@
         "missing_variant": "circular",
         "missing_focus_ring": "host_native_focus_ring",
         "missing_state_text": "host_centered_text_region",
-        "missing_label": "host_external_label_region",
+        "missing_caption": "host_external_caption_region",
+        "missing_label": "host_metadata_label",
         "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
       }
     }
@@ -232,11 +236,19 @@
     },
     {
       "part": "label",
-      "binding_kind": "svg_text_or_host_text",
+      "binding_kind": "svg_text_or_metadata",
       "binding_selector": "[data-frog-part='label']",
       "semantic_member": "label.text",
       "visibility_member": "label.visible",
-      "placement_role": "external_label"
+      "placement_role": "structural_label"
+    },
+    {
+      "part": "caption",
+      "binding_kind": "svg_text_or_host_text",
+      "binding_selector": "[data-frog-part='caption']",
+      "semantic_member": "caption.text",
+      "visibility_member": "caption.visible",
+      "placement_role": "front_panel_caption"
     },
     {
       "part": "outer_face",
@@ -385,23 +397,33 @@
       "target_operation": "set_visibility"
     },
     {
-      "member": "label.style.text_color",
-      "target_part": "label",
+      "member": "caption.text",
+      "target_part": "caption",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "caption.visible",
+      "target_part": "caption",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "caption.style.text_color",
+      "target_part": "caption",
       "target_operation": "set_text_fill"
     },
     {
-      "member": "label.style.font_family",
-      "target_part": "label",
+      "member": "caption.style.font_family",
+      "target_part": "caption",
       "target_operation": "set_font_family"
     },
     {
-      "member": "label.style.font_size",
-      "target_part": "label",
+      "member": "caption.style.font_size",
+      "target_part": "caption",
       "target_operation": "set_font_size"
     },
     {
-      "member": "label.style.font_weight",
-      "target_part": "label",
+      "member": "caption.style.font_weight",
+      "target_part": "caption",
       "target_operation": "set_font_weight"
     },
     {
@@ -418,16 +440,6 @@
       "member": "state_text.false_text",
       "target_part": "state_text",
       "target_operation": "set_text_content_when_false"
-    },
-    {
-      "member": "state_text.style.text_color.true",
-      "target_part": "state_text",
-      "target_operation": "set_text_fill_when_true"
-    },
-    {
-      "member": "state_text.style.text_color.false",
-      "target_part": "state_text",
-      "target_operation": "set_text_fill_when_false"
     },
     {
       "member": "style.outer.fill_color.true",
@@ -480,16 +492,6 @@
       "target_operation": "set_fill_when_false"
     },
     {
-      "member": "style.inner.border_color.true",
-      "target_part": "inner_face",
-      "target_operation": "set_stroke_when_true"
-    },
-    {
-      "member": "style.inner.border_color.false",
-      "target_part": "inner_face",
-      "target_operation": "set_stroke_when_false"
-    },
-    {
       "member": "style.inner.border_width",
       "target_part": "inner_face",
       "target_operation": "set_stroke_width"
@@ -525,6 +527,14 @@
       "default_vertical_alignment": "baseline"
     },
     {
+      "id": "frog.realizations.default.boolean.caption.anchor",
+      "target_part": "caption",
+      "source_selector": "[data-frog-anchor='caption.anchor']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "baseline"
+    },
+    {
       "id": "frog.realizations.default.boolean.state_text.center",
       "target_part": "state_text",
       "source_selector": "[data-frog-anchor='state_text.center']",
@@ -541,7 +551,8 @@
     "accessibility_posture": {
       "role": "switch_or_indicator_by_target_class",
       "state_source": "value",
-      "label_source": "label.text"
+      "label_source": "label.text",
+      "caption_source": "caption.text"
     }
   },
   "validation_expectations": [

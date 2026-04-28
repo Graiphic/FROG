@@ -42,21 +42,26 @@ This document describes how the default realization family can embody that law t
 
 <hr/>
 
-<h2>2. Published Default Variants</h2>
+<h2>2. Label, Caption, and State Text</h2>
 
 <p>
-The default boolean realization publishes two compatible variants:
+The default boolean realization follows the shared widget convention:
 </p>
+
+<ul>
+  <li><code>label</code> realizes the structural/logical label surface when a host chooses to expose it.</li>
+  <li><code>caption</code> realizes the front-panel display caption.</li>
+  <li><code>state_text</code> realizes optional internal true/false text.</li>
+</ul>
+
+<hr/>
+
+<h2>3. Published Default Variants</h2>
 
 <ul>
   <li><code>rectangular</code></li>
   <li><code>circular</code></li>
 </ul>
-
-<p>
-Both variants target the same boolean classes.
-They are not separate widget classes.
-</p>
 
 <pre><code>frog.widgets.boolean_control
 frog.widgets.boolean_indicator
@@ -68,75 +73,40 @@ frog.widgets.boolean_indicator
 
 <hr/>
 
-<h2>3. Machine-Readable Manifest</h2>
-
-<p>
-The machine-readable publication for this realization family is:
-</p>
+<h2>4. Machine-Readable Manifest</h2>
 
 <pre><code>Libraries/Realizations/Default/boolean.default.wfrog</code></pre>
 
 <p>
-That manifest declares:
+That manifest declares target classes, realization records, variants, SVG resources, part bindings, state maps, property bindings, anchors, and host hints.
 </p>
-
-<ul>
-  <li>target classes,</li>
-  <li>realization records,</li>
-  <li>realization variants,</li>
-  <li>SVG resources,</li>
-  <li>part bindings,</li>
-  <li>state maps,</li>
-  <li>property bindings,</li>
-  <li>anchors,</li>
-  <li>host hints.</li>
-</ul>
 
 <hr/>
 
-<h2>4. Public Parts Realized</h2>
-
-<p>
-The default boolean realization maps the following boolean public parts:
-</p>
+<h2>5. Public Parts Realized</h2>
 
 <ul>
   <li><code>root</code></li>
   <li><code>label</code></li>
+  <li><code>caption</code></li>
   <li><code>outer_face</code></li>
   <li><code>inner_face</code></li>
   <li><code>state_text</code></li>
   <li><code>focus_ring</code></li>
 </ul>
 
-<p>
-The default realization may approximate these parts through SVG, host-native drawing, or a mixed host strategy, but it must preserve their public class meaning.
-</p>
-
 <hr/>
 
-<h2>5. SVG Template Assets</h2>
-
-<p>
-The default SVG template assets are:
-</p>
+<h2>6. SVG Template Assets</h2>
 
 <ul>
   <li><code>assets/boolean/templates/boolean_rectangular.svg</code></li>
   <li><code>assets/boolean/templates/boolean_circular.svg</code></li>
 </ul>
 
-<p>
-These assets contain stable <code>data-frog-*</code> markers so that IDEs and runtimes can bind widget properties to realization surfaces without guessing from geometry.
-</p>
-
 <hr/>
 
-<h2>6. Property Binding Posture</h2>
-
-<p>
-The default realization uses the following conceptual mapping:
-</p>
+<h2>7. Property Binding Posture</h2>
 
 <pre><code>boolean public property
     -> realization property binding
@@ -144,43 +114,7 @@ The default realization uses the following conceptual mapping:
 </code></pre>
 
 <p>
-Representative bindings include:
-</p>
-
-<ul>
-  <li><code>label.text</code> to <code>label</code></li>
-  <li><code>state_text.true_text</code> and <code>state_text.false_text</code> to <code>state_text</code></li>
-  <li><code>style.outer.*</code> to <code>outer_face</code></li>
-  <li><code>style.inner.*</code> to <code>inner_face</code></li>
-  <li><code>style.focus_ring.*</code> to <code>focus_ring</code></li>
-</ul>
-
-<hr/>
-
-<h2>7. State Posture</h2>
-
-<p>
-The semantic boolean value remains <code>value</code>.
-The default realization uses state maps only to select visual embodiment for the true and false postures and their interaction-derived visual states.
-</p>
-
-<p>
-Representative visual states include:
-</p>
-
-<ul>
-  <li><code>false</code></li>
-  <li><code>true</code></li>
-  <li><code>disabled_false</code></li>
-  <li><code>disabled_true</code></li>
-  <li><code>focused_false</code></li>
-  <li><code>focused_true</code></li>
-  <li><code>pressed_false</code></li>
-  <li><code>pressed_true</code></li>
-</ul>
-
-<p>
-Those visual states do not create additional boolean values.
+Representative bindings include <code>label.text</code> to <code>label</code>, <code>caption.text</code> to <code>caption</code>, <code>state_text.true_text</code> and <code>state_text.false_text</code> to <code>state_text</code>, <code>style.outer.*</code> to <code>outer_face</code>, <code>style.inner.*</code> to <code>inner_face</code>, and <code>style.focus_ring.*</code> to <code>focus_ring</code>.
 </p>
 
 <hr/>
@@ -188,6 +122,5 @@ Those visual states do not create additional boolean values.
 <h2>8. Summary</h2>
 
 <p>
-The default boolean realization completes the first reusable default-asset posture for the boolean widget family.
-It keeps the class law in <code>Libraries/Widgets/Boolean.md</code>, publishes SVG template resources under <code>assets/boolean/</code>, and binds them through <code>boolean.default.wfrog</code>.
+The default boolean realization keeps class law in <code>Libraries/Widgets/Boolean.md</code>, publishes SVG template resources under <code>assets/boolean/</code>, and binds them through <code>boolean.default.wfrog</code>.
 </p>

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 320 220"
+     viewBox="0 0 320 250"
      role="img"
      aria-label="FROG default boolean rectangular realization template"
      data-frog-template="frog.realizations.default.boolean.rectangular"
@@ -8,17 +8,23 @@
   <title>FROG Default Boolean Rectangular Realization Template</title>
   <desc>
     Semantic SVG template for the default rectangular realization variant of FROG boolean widgets.
-    The runtime or IDE binds public widget properties to the stable parts declared by id and data-frog-part.
+    The runtime or IDE binds public widget properties to stable parts declared by id and data-frog-part.
   </desc>
 
   <defs>
     <style>
       :root {
-        --frog-boolean-label-display: inline;
-        --frog-boolean-label-fill: #d00000;
+        --frog-boolean-label-display: none;
+        --frog-boolean-label-fill: #6b7280;
         --frog-boolean-label-font-family: system-ui, Segoe UI, Arial, sans-serif;
-        --frog-boolean-label-font-size: 18px;
+        --frog-boolean-label-font-size: 12px;
         --frog-boolean-label-font-weight: 400;
+
+        --frog-boolean-caption-display: inline;
+        --frog-boolean-caption-fill: #d00000;
+        --frog-boolean-caption-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-boolean-caption-font-size: 18px;
+        --frog-boolean-caption-font-weight: 400;
 
         --frog-boolean-outer-fill: #ffffff;
         --frog-boolean-outer-stroke: #000000;
@@ -46,6 +52,14 @@
         font-family: var(--frog-boolean-label-font-family);
         font-size: var(--frog-boolean-label-font-size);
         font-weight: var(--frog-boolean-label-font-weight);
+      }
+
+      #caption_text {
+        display: var(--frog-boolean-caption-display);
+        fill: var(--frog-boolean-caption-fill);
+        font-family: var(--frog-boolean-caption-font-family);
+        font-size: var(--frog-boolean-caption-font-size);
+        font-weight: var(--frog-boolean-caption-font-weight);
       }
 
       #outer_face {
@@ -84,21 +98,28 @@
           data-frog-member="label.text"
           data-frog-anchor="label.anchor"
           x="16"
-          y="28">Boolean</text>
+          y="18">boolean_1</text>
+
+    <text id="caption_text"
+          data-frog-part="caption"
+          data-frog-member="caption.text"
+          data-frog-anchor="caption.anchor"
+          x="16"
+          y="46">Boolean</text>
 
     <rect id="focus_ring"
           data-frog-part="focus_ring"
           x="4"
-          y="42"
+          y="64"
           width="312"
           height="154"
           rx="8"
-          data-frog-bind="interaction.focused style.focus.*" />
+          data-frog-bind="interaction.focused style.focus_ring.*" />
 
     <rect id="outer_face"
           data-frog-part="outer_face"
           x="12"
-          y="50"
+          y="72"
           width="296"
           height="138"
           rx="0"
@@ -107,7 +128,7 @@
     <rect id="inner_face"
           data-frog-part="inner_face"
           x="32"
-          y="70"
+          y="92"
           width="256"
           height="98"
           rx="0"
@@ -118,7 +139,7 @@
           data-frog-member="state_text.true_text state_text.false_text"
           data-frog-anchor="state_text.center"
           x="160"
-          y="122"
+          y="144"
           text-anchor="middle"
           dominant-baseline="middle">TRUE</text>
   </g>

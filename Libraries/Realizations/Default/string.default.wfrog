@@ -1,0 +1,449 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_string_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.string",
+    "name": "FROG Default String Realization",
+    "namespace": "frog.realizations.default.string",
+    "family": "default",
+    "summary": "Machine-readable default realization manifest for standardized string widgets."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default string realization records",
+      "string realization resource references",
+      "string part bindings",
+      "string realization property bindings",
+      "string host hints"
+    ],
+    "does_not_own": [
+      "string widget class law",
+      "string widget semantic value meaning",
+      "canonical .frog source",
+      "frog.ui primitive semantics",
+      "runtime-private text editor handles",
+      "IDE-private editing behavior"
+    ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/String.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.string_control",
+      "role": "control",
+      "primary_value": {
+        "present": true,
+        "type": "string",
+        "user_mutable": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.string_indicator",
+      "role": "indicator",
+      "primary_value": {
+        "present": true,
+        "type": "string",
+        "user_mutable": false
+      }
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.string_control",
+      "frog.realizations.default.string_indicator"
+    ],
+    "variants": [
+      "frog.realizations.default.string.rectangular"
+    ],
+    "resources": [
+      "frog.realizations.default.string.assets.rectangular_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.string_control",
+      "family": "default",
+      "target_class": "frog.widgets.string_control",
+      "variant_property": "realization.variant",
+      "default_variant": "rectangular",
+      "supported_variants": [
+        "rectangular"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "text_region",
+        "text_value",
+        "placeholder",
+        "focus_ring"
+      ],
+      "supported_visual_states": [
+        "normal",
+        "disabled",
+        "focused",
+        "read_only",
+        "empty"
+      ],
+      "fallbacks": {
+        "missing_variant": "rectangular",
+        "missing_focus_ring": "host_native_focus_ring",
+        "missing_caption": "host_external_caption_region",
+        "missing_placeholder": "hide_placeholder",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+      }
+    },
+    {
+      "id": "frog.realizations.default.string_indicator",
+      "family": "default",
+      "target_class": "frog.widgets.string_indicator",
+      "variant_property": "realization.variant",
+      "default_variant": "rectangular",
+      "supported_variants": [
+        "rectangular"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "text_region",
+        "text_value",
+        "focus_ring"
+      ],
+      "supported_visual_states": [
+        "normal",
+        "disabled",
+        "focused",
+        "empty"
+      ],
+      "fallbacks": {
+        "missing_variant": "rectangular",
+        "missing_focus_ring": "host_native_focus_ring",
+        "missing_caption": "host_external_caption_region",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "frog.realizations.default.string.rectangular",
+      "variant": "rectangular",
+      "target_classes": [
+        "frog.widgets.string_control",
+        "frog.widgets.string_indicator"
+      ],
+      "resource_ref": "frog.realizations.default.string.assets.rectangular_svg",
+      "geometry_posture": {
+        "shape_family": "rectangular",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "supports_corner_radius": true,
+        "supports_text_region_inset": true,
+        "supports_caption": true,
+        "supports_placeholder": true
+      },
+      "fallback": "host_rectangle_text_box"
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.string.assets.rectangular_svg",
+      "kind": "svg",
+      "path": "./assets/string/templates/string_rectangular.svg",
+      "target_classes": [
+        "frog.widgets.string_control",
+        "frog.widgets.string_indicator"
+      ],
+      "target_variant": "rectangular",
+      "template_markers": {
+        "template": "frog.realizations.default.string.rectangular",
+        "variant": "rectangular",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
+    }
+  ],
+  "part_bindings": [
+    {
+      "part": "root",
+      "binding_kind": "svg_element",
+      "binding_selector": "[data-frog-part='root']",
+      "role": "widget_root"
+    },
+    {
+      "part": "label",
+      "binding_kind": "svg_text_or_metadata",
+      "binding_selector": "[data-frog-part='label']",
+      "semantic_member": "label.text",
+      "visibility_member": "label.visible",
+      "placement_role": "structural_label"
+    },
+    {
+      "part": "caption",
+      "binding_kind": "svg_text_or_host_text",
+      "binding_selector": "[data-frog-part='caption']",
+      "semantic_member": "caption.text",
+      "visibility_member": "caption.visible",
+      "placement_role": "front_panel_caption"
+    },
+    {
+      "part": "frame",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='frame']",
+      "style_binding_group": "style.frame"
+    },
+    {
+      "part": "text_region",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='text_region']",
+      "style_binding_group": "style.text_region"
+    },
+    {
+      "part": "text_value",
+      "binding_kind": "svg_text_or_host_text",
+      "binding_selector": "[data-frog-part='text_value']",
+      "semantic_member": "value",
+      "style_binding_group": "style.text",
+      "placement_role": "string_value_text"
+    },
+    {
+      "part": "placeholder",
+      "binding_kind": "svg_text_or_host_text",
+      "binding_selector": "[data-frog-part='placeholder']",
+      "semantic_member": "placeholder.text",
+      "visibility_member": "placeholder.visible",
+      "placement_role": "placeholder_text"
+    },
+    {
+      "part": "focus_ring",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='focus_ring']",
+      "style_binding_group": "style.focus_ring",
+      "state_sensitive": true
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "normal",
+      "value_condition": {
+        "interaction.enabled": true
+      }
+    },
+    {
+      "state": "disabled",
+      "value_condition": {
+        "interaction.enabled": false
+      },
+      "property_bindings": [
+        "style.disabled.opacity"
+      ]
+    },
+    {
+      "state": "focused",
+      "value_condition": {
+        "interaction.focused": true
+      },
+      "property_bindings": [
+        "style.focus_ring.visible",
+        "style.focus_ring.color",
+        "style.focus_ring.width"
+      ]
+    },
+    {
+      "state": "read_only",
+      "value_condition": {
+        "interaction.read_only": true
+      },
+      "target_roles": [
+        "control"
+      ]
+    },
+    {
+      "state": "empty",
+      "value_condition": {
+        "value": ""
+      },
+      "property_bindings": [
+        "placeholder.text",
+        "placeholder.visible"
+      ]
+    }
+  ],
+  "property_bindings": [
+    {
+      "member": "label.text",
+      "target_part": "label",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "label.visible",
+      "target_part": "label",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "caption.text",
+      "target_part": "caption",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "caption.visible",
+      "target_part": "caption",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "caption.style.text_color",
+      "target_part": "caption",
+      "target_operation": "set_text_fill"
+    },
+    {
+      "member": "value",
+      "target_part": "text_value",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "placeholder.text",
+      "target_part": "placeholder",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "placeholder.visible",
+      "target_part": "placeholder",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "style.frame.fill_color",
+      "target_part": "frame",
+      "target_operation": "set_fill"
+    },
+    {
+      "member": "style.frame.border_color",
+      "target_part": "frame",
+      "target_operation": "set_stroke"
+    },
+    {
+      "member": "style.frame.border_width",
+      "target_part": "frame",
+      "target_operation": "set_stroke_width"
+    },
+    {
+      "member": "style.frame.corner_radius",
+      "target_part": "frame",
+      "target_operation": "set_rect_corner_radius"
+    },
+    {
+      "member": "style.text_region.fill_color",
+      "target_part": "text_region",
+      "target_operation": "set_fill"
+    },
+    {
+      "member": "style.text_region.border_color",
+      "target_part": "text_region",
+      "target_operation": "set_stroke"
+    },
+    {
+      "member": "style.text_region.border_width",
+      "target_part": "text_region",
+      "target_operation": "set_stroke_width"
+    },
+    {
+      "member": "style.text_region.inset",
+      "target_part": "text_region",
+      "target_operation": "set_inset_relative_to_frame"
+    },
+    {
+      "member": "style.text.color",
+      "target_part": "text_value",
+      "target_operation": "set_text_fill"
+    },
+    {
+      "member": "style.text.font_family",
+      "target_part": "text_value",
+      "target_operation": "set_font_family"
+    },
+    {
+      "member": "style.text.font_size",
+      "target_part": "text_value",
+      "target_operation": "set_font_size"
+    },
+    {
+      "member": "style.text.font_weight",
+      "target_part": "text_value",
+      "target_operation": "set_font_weight"
+    },
+    {
+      "member": "style.focus_ring.visible",
+      "target_part": "focus_ring",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "style.focus_ring.color",
+      "target_part": "focus_ring",
+      "target_operation": "set_stroke"
+    },
+    {
+      "member": "style.focus_ring.width",
+      "target_part": "focus_ring",
+      "target_operation": "set_stroke_width"
+    }
+  ],
+  "anchors": [
+    {
+      "id": "frog.realizations.default.string.label.anchor",
+      "target_part": "label",
+      "source_selector": "[data-frog-anchor='label.anchor']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "baseline"
+    },
+    {
+      "id": "frog.realizations.default.string.caption.anchor",
+      "target_part": "caption",
+      "source_selector": "[data-frog-anchor='caption.anchor']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "baseline"
+    },
+    {
+      "id": "frog.realizations.default.string.text_region.left_center",
+      "target_part": "text_value",
+      "source_selector": "[data-frog-anchor='text_region.left_center']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "middle"
+    }
+  ],
+  "host_hints": {
+    "preferred_host_kind": "svg_template_host",
+    "resize_posture": "scale_template_to_front_panel_layout_rectangle",
+    "text_rendering_posture": "host_may_replace_template_text_content_or_host_native_editor",
+    "style_application_posture": "apply_property_bindings_before_render",
+    "accessibility_posture": {
+      "role": "textbox_or_static_text_by_target_class",
+      "value_source": "value",
+      "label_source": "label.text",
+      "caption_source": "caption.text"
+    }
+  },
+  "validation_expectations": [
+    "target classes must exist in Libraries/Widgets/String.md",
+    "all declared public parts must exist in the string class law",
+    "resources must resolve relative to this package file",
+    "resource SVG templates should expose data-frog-part markers for declared parts",
+    "placeholder text must not replace the semantic value",
+    "property bindings must target public string members declared by the class law",
+    "variant selection must not create a new widget class"
+  ]
+}

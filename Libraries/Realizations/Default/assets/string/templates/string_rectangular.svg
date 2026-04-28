@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 420 190"
+     role="img"
+     aria-label="FROG default string rectangular realization template"
+     data-frog-template="frog.realizations.default.string.rectangular"
+     data-frog-target-classes="frog.widgets.string_control frog.widgets.string_indicator"
+     data-frog-variant="rectangular">
+  <title>FROG Default String Rectangular Realization Template</title>
+  <desc>
+    Semantic SVG template for the default rectangular realization variant of FROG string widgets.
+    The runtime or IDE binds public widget properties to stable parts declared by id and data-frog-part.
+  </desc>
+
+  <defs>
+    <style>
+      :root {
+        --frog-string-label-display: none;
+        --frog-string-label-fill: #6b7280;
+        --frog-string-label-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-string-label-font-size: 12px;
+        --frog-string-label-font-weight: 400;
+
+        --frog-string-caption-display: inline;
+        --frog-string-caption-fill: #d00000;
+        --frog-string-caption-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-string-caption-font-size: 18px;
+        --frog-string-caption-font-weight: 400;
+
+        --frog-string-frame-fill: #ffffff;
+        --frog-string-frame-stroke: #000000;
+        --frog-string-frame-stroke-width: 6px;
+
+        --frog-string-text-region-fill: #5b9bd5;
+        --frog-string-text-region-stroke: transparent;
+        --frog-string-text-region-stroke-width: 0px;
+
+        --frog-string-text-fill: #111111;
+        --frog-string-text-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-string-text-font-size: 20px;
+        --frog-string-text-font-weight: 400;
+
+        --frog-string-placeholder-display: none;
+        --frog-string-placeholder-fill: #6b7280;
+        --frog-string-focus-display: none;
+        --frog-string-focus-stroke: #2f80ed;
+        --frog-string-focus-stroke-width: 3px;
+        --frog-string-focus-opacity: 1;
+      }
+
+      #label_text {
+        display: var(--frog-string-label-display);
+        fill: var(--frog-string-label-fill);
+        font-family: var(--frog-string-label-font-family);
+        font-size: var(--frog-string-label-font-size);
+        font-weight: var(--frog-string-label-font-weight);
+      }
+
+      #caption_text {
+        display: var(--frog-string-caption-display);
+        fill: var(--frog-string-caption-fill);
+        font-family: var(--frog-string-caption-font-family);
+        font-size: var(--frog-string-caption-font-size);
+        font-weight: var(--frog-string-caption-font-weight);
+      }
+
+      #frame {
+        fill: var(--frog-string-frame-fill);
+        stroke: var(--frog-string-frame-stroke);
+        stroke-width: var(--frog-string-frame-stroke-width);
+      }
+
+      #text_region {
+        fill: var(--frog-string-text-region-fill);
+        stroke: var(--frog-string-text-region-stroke);
+        stroke-width: var(--frog-string-text-region-stroke-width);
+      }
+
+      #text_value {
+        fill: var(--frog-string-text-fill);
+        font-family: var(--frog-string-text-font-family);
+        font-size: var(--frog-string-text-font-size);
+        font-weight: var(--frog-string-text-font-weight);
+      }
+
+      #placeholder {
+        display: var(--frog-string-placeholder-display);
+        fill: var(--frog-string-placeholder-fill);
+        font-family: var(--frog-string-text-font-family);
+        font-size: var(--frog-string-text-font-size);
+      }
+
+      #focus_ring {
+        display: var(--frog-string-focus-display);
+        fill: none;
+        stroke: var(--frog-string-focus-stroke);
+        stroke-width: var(--frog-string-focus-stroke-width);
+        opacity: var(--frog-string-focus-opacity);
+      }
+    </style>
+  </defs>
+
+  <g id="root" data-frog-part="root">
+    <text id="label_text"
+          data-frog-part="label"
+          data-frog-member="label.text"
+          data-frog-anchor="label.anchor"
+          x="16"
+          y="18">string_1</text>
+
+    <text id="caption_text"
+          data-frog-part="caption"
+          data-frog-member="caption.text"
+          data-frog-anchor="caption.anchor"
+          x="16"
+          y="46">String</text>
+
+    <rect id="focus_ring"
+          data-frog-part="focus_ring"
+          x="4"
+          y="64"
+          width="412"
+          height="104"
+          rx="6"
+          data-frog-bind="interaction.focused style.focus_ring.*" />
+
+    <rect id="frame"
+          data-frog-part="frame"
+          x="12"
+          y="72"
+          width="396"
+          height="88"
+          rx="0"
+          data-frog-bind="style.frame.fill_color style.frame.border_color style.frame.border_width style.frame.corner_radius" />
+
+    <rect id="text_region"
+          data-frog-part="text_region"
+          x="28"
+          y="88"
+          width="364"
+          height="56"
+          rx="0"
+          data-frog-bind="style.text_region.fill_color style.text_region.border_color style.text_region.border_width style.text_region.inset" />
+
+    <text id="placeholder"
+          data-frog-part="placeholder"
+          data-frog-member="placeholder.text"
+          data-frog-anchor="text_region.left_center"
+          x="44"
+          y="118"
+          dominant-baseline="middle">placeholder</text>
+
+    <text id="text_value"
+          data-frog-part="text_value"
+          data-frog-member="value"
+          data-frog-anchor="text_region.left_center"
+          x="44"
+          y="118"
+          dominant-baseline="middle">TEXT</text>
+  </g>
+</svg>
