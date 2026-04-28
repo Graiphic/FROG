@@ -1,0 +1,394 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_numeric_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.numeric",
+    "name": "FROG Default Numeric Realization",
+    "namespace": "frog.realizations.default.numeric",
+    "family": "default",
+    "summary": "Machine-readable default realization manifest for standardized numeric widgets."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default numeric realization record",
+      "numeric realization variant declarations",
+      "numeric realization resource references",
+      "numeric part bindings",
+      "numeric state maps",
+      "numeric realization property bindings",
+      "numeric anchors",
+      "numeric host hints",
+      "numeric realization validation expectations"
+    ],
+    "does_not_own": [
+      "numeric widget class law",
+      "numeric value semantics",
+      "numeric representation semantics",
+      "canonical .frog source",
+      "frog.ui primitive semantics",
+      "runtime-private control handles",
+      "IDE-private editing behavior"
+    ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Numeric.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.numeric_control",
+      "role": "control",
+      "primary_value": {
+        "present": true,
+        "kind": "numeric_scalar"
+      }
+    },
+    {
+      "class_id": "frog.widgets.numeric_indicator",
+      "role": "indicator",
+      "primary_value": {
+        "present": true,
+        "kind": "numeric_scalar"
+      }
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.numeric"
+    ],
+    "variants": [
+      "frog.realizations.default.numeric.rectangular"
+    ],
+    "resources": [
+      "frog.realizations.default.numeric.assets.rectangular_template_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.numeric",
+      "family": "default",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "variant_property": "realization.variant",
+      "default_variant": "rectangular",
+      "supported_variants": [
+        "rectangular"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "value_face",
+        "text_value",
+        "spinner",
+        "increment_up",
+        "increment_down",
+        "unit_label",
+        "radix_badge",
+        "focus_ring"
+      ],
+      "supported_visual_states": [
+        "normal",
+        "hovered",
+        "focused",
+        "disabled",
+        "read_only",
+        "out_of_range"
+      ],
+      "fallbacks": {
+        "missing_variant": "rectangular",
+        "missing_spinner": "host_native_spinner_or_hidden",
+        "missing_caption": "host_external_caption_region",
+        "missing_label": "host_metadata_label",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "frog.realizations.default.numeric.rectangular",
+      "variant": "rectangular",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "resource_ref": "frog.realizations.default.numeric.assets.rectangular_template_svg",
+      "geometry_posture": {
+        "shape_family": "rectangular",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "supports_spinner_cluster": true,
+        "supports_caption": true,
+        "supports_unit_label": true,
+        "supports_radix_badge": true
+      },
+      "fallback": "host_rectangle_numeric"
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.numeric.assets.rectangular_template_svg",
+      "kind": "svg",
+      "path": "./assets/numeric/templates/numeric_rectangular.svg",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "target_variant": "rectangular",
+      "template_markers": {
+        "template": "frog.realizations.default.numeric.rectangular",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
+    }
+  ],
+  "part_bindings": [
+    {
+      "part": "root",
+      "binding_kind": "svg_element",
+      "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "label",
+      "binding_kind": "svg_text_or_metadata",
+      "binding_selector": "[data-frog-part='label']",
+      "semantic_member": "label.text"
+    },
+    {
+      "part": "caption",
+      "binding_kind": "svg_text_or_host_text",
+      "binding_selector": "[data-frog-part='caption']",
+      "semantic_member": "caption.text"
+    },
+    {
+      "part": "frame",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='frame']"
+    },
+    {
+      "part": "value_face",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='value_face']"
+    },
+    {
+      "part": "text_value",
+      "binding_kind": "svg_text_or_host_text",
+      "binding_selector": "[data-frog-part='text_value']",
+      "semantic_member": "value"
+    },
+    {
+      "part": "spinner",
+      "binding_kind": "svg_group",
+      "binding_selector": "[data-frog-part='spinner']"
+    },
+    {
+      "part": "increment_up",
+      "binding_kind": "svg_group",
+      "binding_selector": "[data-frog-part='increment_up']"
+    },
+    {
+      "part": "increment_down",
+      "binding_kind": "svg_group",
+      "binding_selector": "[data-frog-part='increment_down']"
+    },
+    {
+      "part": "unit_label",
+      "binding_kind": "svg_text_or_host_text",
+      "binding_selector": "[data-frog-part='unit_label']",
+      "semantic_member": "unit_label.text"
+    },
+    {
+      "part": "radix_badge",
+      "binding_kind": "svg_text_or_host_text",
+      "binding_selector": "[data-frog-part='radix_badge']",
+      "semantic_member": "representation.kind"
+    },
+    {
+      "part": "focus_ring",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='focus_ring']"
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "normal"
+    },
+    {
+      "state": "hovered",
+      "value_condition": {
+        "interaction.hovered": true
+      },
+      "inherits": "normal"
+    },
+    {
+      "state": "focused",
+      "value_condition": {
+        "interaction.focused": true
+      },
+      "inherits": "normal"
+    },
+    {
+      "state": "disabled",
+      "value_condition": {
+        "interaction.enabled": false
+      },
+      "inherits": "normal"
+    },
+    {
+      "state": "read_only",
+      "value_condition": {
+        "interaction.read_only": true
+      },
+      "inherits": "normal"
+    },
+    {
+      "state": "out_of_range",
+      "value_condition": {
+        "numeric_value_out_of_range": true
+      },
+      "inherits": "normal"
+    }
+  ],
+  "property_bindings": [
+    {
+      "member": "label.text",
+      "target_part": "label",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "label.visible",
+      "target_part": "label",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "caption.text",
+      "target_part": "caption",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "caption.visible",
+      "target_part": "caption",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "value",
+      "target_part": "text_value",
+      "target_operation": "format_and_set_text"
+    },
+    {
+      "member": "unit_label.text",
+      "target_part": "unit_label",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "unit_label.visible",
+      "target_part": "unit_label",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "display.increment_buttons_visible",
+      "target_part": "spinner",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "display.radix_visible",
+      "target_part": "radix_badge",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "style.frame.fill_color",
+      "target_part": "frame",
+      "target_operation": "set_fill"
+    },
+    {
+      "member": "style.frame.border_color",
+      "target_part": "frame",
+      "target_operation": "set_stroke"
+    },
+    {
+      "member": "style.frame.border_width",
+      "target_part": "frame",
+      "target_operation": "set_stroke_width"
+    },
+    {
+      "member": "style.value_face.fill_color",
+      "target_part": "value_face",
+      "target_operation": "set_fill"
+    },
+    {
+      "member": "style.value_face.border_color",
+      "target_part": "value_face",
+      "target_operation": "set_stroke"
+    },
+    {
+      "member": "style.text_value.color",
+      "target_part": "text_value",
+      "target_operation": "set_text_fill"
+    },
+    {
+      "member": "style.spinner.fill_color",
+      "target_part": "spinner",
+      "target_operation": "set_fill"
+    },
+    {
+      "member": "style.focus_ring.visible",
+      "target_part": "focus_ring",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "style.focus_ring.color",
+      "target_part": "focus_ring",
+      "target_operation": "set_stroke"
+    }
+  ],
+  "anchors": [
+    {
+      "id": "frog.realizations.default.numeric.label.anchor",
+      "target_part": "label",
+      "source_selector": "[data-frog-anchor='label.anchor']",
+      "anchor_kind": "text_anchor"
+    },
+    {
+      "id": "frog.realizations.default.numeric.caption.anchor",
+      "target_part": "caption",
+      "source_selector": "[data-frog-anchor='caption.anchor']",
+      "anchor_kind": "text_anchor"
+    },
+    {
+      "id": "frog.realizations.default.numeric.value.center",
+      "target_part": "text_value",
+      "source_selector": "[data-frog-anchor='text_value.center']",
+      "anchor_kind": "text_anchor"
+    }
+  ],
+  "host_hints": {
+    "preferred_host_kind": "svg_template_host",
+    "resize_posture": "scale_template_to_front_panel_layout_rectangle",
+    "text_rendering_posture": "host_may_replace_template_text_content",
+    "style_application_posture": "apply_property_bindings_before_render",
+    "accessibility_posture": {
+      "roles": {
+        "frog.widgets.numeric_control": "spinbutton",
+        "frog.widgets.numeric_indicator": "status"
+      },
+      "value_source": "value",
+      "label_source": "caption.text"
+    }
+  },
+  "validation_expectations": [
+    "target classes must exist in Libraries/Widgets/Numeric.md",
+    "all declared public parts must exist in the numeric class law",
+    "resources must resolve relative to this package file",
+    "resource SVG templates should expose data-frog-part markers for declared parts",
+    "property bindings must target public numeric members declared by class law",
+    "variant selection must not create a new widget class"
+  ]
+}

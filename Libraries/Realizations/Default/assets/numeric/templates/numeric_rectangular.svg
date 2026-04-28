@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="130" viewBox="0 0 360 130">
+  <title>FROG Default Numeric Rectangular Template</title>
+  <desc>Semantic SVG template for a numeric control or numeric indicator.</desc>
+
+  <g data-frog-part="root">
+    <text x="12" y="16" font-family="Arial, sans-serif" font-size="12" fill="#444444"
+          data-frog-part="label" data-frog-bind="text" data-frog-member="label.text" data-frog-anchor="label.anchor">Numeric</text>
+
+    <text x="12" y="34" font-family="Arial, sans-serif" font-size="12" fill="#666666"
+          data-frog-part="caption" data-frog-bind="text" data-frog-member="caption.text" data-frog-anchor="caption.anchor">Caption</text>
+
+    <rect x="8" y="42" width="300" height="56" rx="4" ry="4"
+          fill="#000000" stroke="#000000" stroke-width="2"
+          data-frog-part="frame" data-frog-bind="style" data-frog-member="style.frame"/>
+
+    <rect x="14" y="48" width="244" height="44" rx="2" ry="2"
+          fill="#5b9bd5" stroke="#5b9bd5" stroke-width="1"
+          data-frog-part="value_face" data-frog-bind="style" data-frog-member="style.value_face"/>
+
+    <text x="136" y="75" text-anchor="middle" dominant-baseline="middle"
+          font-family="Arial, sans-serif" font-size="20" fill="#000000"
+          data-frog-part="text_value" data-frog-bind="text" data-frog-member="value" data-frog-anchor="text_value.center">0</text>
+
+    <g data-frog-part="spinner" data-frog-bind="visibility" data-frog-member="display.increment_buttons_visible">
+      <g data-frog-part="increment_up">
+        <rect x="268" y="48" width="34" height="20" rx="1" ry="1" fill="#5b9bd5" stroke="#5b9bd5" stroke-width="1"/>
+        <path d="M285 53 L294 63 L276 63 Z" fill="none" stroke="#ffffff" stroke-width="2"/>
+      </g>
+      <g data-frog-part="increment_down">
+        <rect x="268" y="72" width="34" height="20" rx="1" ry="1" fill="#5b9bd5" stroke="#5b9bd5" stroke-width="1"/>
+        <path d="M276 77 L294 77 L285 87 Z" fill="none" stroke="#ffffff" stroke-width="2"/>
+      </g>
+    </g>
+
+    <rect x="314" y="48" width="38" height="20" rx="1" ry="1" fill="#ffffff" stroke="#5b9bd5" stroke-width="1"
+          data-frog-part="radix_badge" data-frog-bind="visibility" data-frog-member="display.radix_visible"/>
+    <text x="333" y="58" text-anchor="middle" dominant-baseline="middle"
+          font-family="Arial, sans-serif" font-size="10" fill="#000000">DBL</text>
+
+    <text x="333" y="82" text-anchor="middle" dominant-baseline="middle"
+          font-family="Arial, sans-serif" font-size="12" fill="#444444"
+          data-frog-part="unit_label" data-frog-bind="text" data-frog-member="unit_label.text">unit</text>
+
+    <rect x="6" y="40" width="304" height="60" rx="6" ry="6"
+          fill="none" stroke="#ff8800" stroke-width="2" opacity="0"
+          data-frog-part="focus_ring" data-frog-bind="style" data-frog-member="style.focus_ring"/>
+  </g>
+</svg>

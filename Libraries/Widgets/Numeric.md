@@ -5,34 +5,459 @@
 <h1 align="center">FROG Standard Numeric Widgets</h1>
 
 <p align="center">
-  <strong>Normative baseline for the currently published numeric control and numeric indicator classes</strong><br/>
+  <strong>Normative baseline for standardized numeric control and numeric indicator widget classes</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
 <hr/>
 
-<h2>Navigation</h2>
+<h2>Contents</h2>
 
 <ul>
-  <li><a href="./Readme.md">Widgets index</a></li>
-  <li><a href="../../Expression/Widget.md">Expression widget instances</a></li>
-  <li><a href="../../Expression/Widget interaction.md">Expression widget interaction</a></li>
-  <li><a href="../../Libraries/UI.md">Executable UI primitives</a></li>
-  <li><a href="../../Examples/05_bounded_ui_accumulator/Readme.md">Example 05 corridor</a></li>
-  <li><a href="../../Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog">Example 05 published <code>.wfrog</code></a></li>
-  <li><a href="../../Profiles/UI%20Widget%20Classes.md">Profile posture for widget-class adoption</a></li>
+  <li><a href="#overview">1. Overview</a></li>
+  <li><a href="#classes-defined-here">2. Classes Defined Here</a></li>
+  <li><a href="#common-family-posture">3. Common Family Posture</a></li>
+  <li><a href="#label-and-caption-posture">4. Label and Caption Posture</a></li>
+  <li><a href="#numeric-value-and-representation-posture">5. Numeric Value and Representation Posture</a></li>
+  <li><a href="#frogwidgetsnumeric_control">6. <code>frog.widgets.numeric_control</code></a></li>
+  <li><a href="#frogwidgetsnumeric_indicator">7. <code>frog.widgets.numeric_indicator</code></a></li>
+  <li><a href="#common-parts">8. Common Parts</a></li>
+  <li><a href="#common-behavior-expectations">9. Common Behavior Expectations</a></li>
+  <li><a href="#common-realization-expectations">10. Common Realization Expectations</a></li>
+  <li><a href="#diagram-interaction-posture">11. Diagram Interaction Posture</a></li>
+  <li><a href="#validation-expectations">12. Validation Expectations</a></li>
+  <li><a href="#summary">13. Summary</a></li>
 </ul>
 
 <hr/>
 
-<h2>1. Overview</h2>
+<h2 id="overview">1. Overview</h2>
 
 <p>
-This document defines the currently published intrinsic numeric widget baseline used by the first executable UI slice.
+This document defines the intrinsic standardized baseline for numeric widgets in FROG.
 </p>
 
 <p>
-The active published numeric classes are:
+The numeric family provides the standard widget surfaces used for numeric entry and numeric display.
+The family is intended to cover the common scalar-number posture of mature graphical systems while remaining inspectable, portable, and implementation-neutral.
+</p>
+
+<p>
+The standard numeric family is therefore defined here as a real object surface with:
+</p>
+
+<ul>
+  <li>a primary numeric value posture,</li>
+  <li>a published representation posture,</li>
+  <li>a minimal but real property surface,</li>
+  <li>a minimal but real method surface,</li>
+  <li>a minimal but real event surface,</li>
+  <li>a stable public part model for realization targeting.</li>
+</ul>
+
+<p>
+This keeps the intrinsic baseline close in spirit to LabVIEW-like numeric widgets while modernizing the representation model and the public contract.
+</p>
+
+<hr/>
+
+<h2 id="classes-defined-here">2. Classes Defined Here</h2>
+
+<p>
+This document defines the following standardized widget classes:
+</p>
+
+<ul>
+  <li><code>frog.widgets.numeric_control</code></li>
+  <li><code>frog.widgets.numeric_indicator</code></li>
+</ul>
+
+<hr/>
+
+<h2 id="common-family-posture">3. Common Family Posture</h2>
+
+<p>
+The numeric family has the following common posture:
+</p>
+
+<ul>
+  <li>family: scalar numeric widget family</li>
+  <li>primary value: present</li>
+  <li>value kind: numeric scalar</li>
+  <li>public value-facing surface: yes</li>
+  <li>object-style access surface: yes</li>
+  <li>primary value mirror property: <code>value</code></li>
+  <li>common label property: <code>label.text</code></li>
+  <li>common caption property: <code>caption.text</code></li>
+  <li>common visibility property: <code>interaction.visible</code></li>
+</ul>
+
+<p>
+The numeric family also follows an important architectural rule:
+</p>
+
+<ul>
+  <li><code>value</code> is class-owned semantic numeric data,</li>
+  <li><code>representation.kind</code> selects the published numeric representation posture,</li>
+  <li><code>text_value</code> is a stable public dynamic part,</li>
+  <li><code>spinner</code> is a stable public optional interaction part,</li>
+  <li>the visual embodiment of face, buttons, arrows, badges, or text layout belongs downstream to realization.</li>
+</ul>
+
+<hr/>
+
+<h2 id="label-and-caption-posture">4. Label and Caption Posture</h2>
+
+<p>
+Numeric widgets follow the shared distinction between <code>label</code> and <code>caption</code>.
+</p>
+
+<ul>
+  <li><code>label.*</code> is the structural or logical widget-identification surface.</li>
+  <li><code>caption.*</code> is the front-panel user-facing text surface.</li>
+</ul>
+
+<p>
+A realization MAY display both, one, or neither according to their visibility properties.
+However, the semantic owner of these surfaces remains the class-owned public properties.
+</p>
+
+<hr/>
+
+<h2 id="numeric-value-and-representation-posture">5. Numeric Value and Representation Posture</h2>
+
+<p>
+The intrinsic numeric family uses one semantic value property named <code>value</code> and one published representation posture named <code>representation.kind</code>.
+</p>
+
+<p>
+The standard representation kinds are:
+</p>
+
+<ul>
+  <li><code>int8</code></li>
+  <li><code>int16</code></li>
+  <li><code>int32</code></li>
+  <li><code>int64</code></li>
+  <li><code>uint8</code></li>
+  <li><code>uint16</code></li>
+  <li><code>uint32</code></li>
+  <li><code>uint64</code></li>
+  <li><code>float32</code></li>
+  <li><code>float64</code></li>
+  <li><code>decimal64</code></li>
+  <li><code>decimal128</code></li>
+  <li><code>fixed_point_signed</code></li>
+  <li><code>fixed_point_unsigned</code></li>
+  <li><code>complex64</code></li>
+  <li><code>complex128</code></li>
+</ul>
+
+<p>
+Profiles, IDEs, and runtimes MAY expose ergonomic aliases such as <code>I32</code>, <code>DBL</code>, <code>SGL</code>, or <code>FXP</code>.
+However, the public standard representation contract should remain the explicit names above.
+</p>
+
+<p>
+When the active representation is fixed-point, the following additional public members become relevant:
+</p>
+
+<ul>
+  <li><code>representation.encoding</code> with values <code>signed</code> or <code>unsigned</code></li>
+  <li><code>representation.word_length_bits</code></li>
+  <li><code>representation.integer_word_length_bits</code></li>
+  <li><code>representation.include_overflow_status</code></li>
+</ul>
+
+<hr/>
+
+<h2 id="frogwidgetsnumeric_control">6. <code>frog.widgets.numeric_control</code></h2>
+
+<h3>6.1 Class identity</h3>
+
+<ul>
+  <li><strong>class_id:</strong> <code>frog.widgets.numeric_control</code></li>
+  <li><strong>family:</strong> <code>numeric_widget</code></li>
+  <li><strong>compatible role:</strong> <code>control</code></li>
+</ul>
+
+<h3>6.2 Primary value posture</h3>
+
+<ul>
+  <li>primary value: present</li>
+  <li>natural value participation: yes</li>
+  <li>user-mutable: yes</li>
+  <li>diagram-mutable: yes</li>
+  <li>mirrored property: <code>value</code></li>
+</ul>
+
+<h3>6.3 Standard properties</h3>
+
+<ul>
+  <li><code>value</code> — readable and writable</li>
+  <li><code>label.text</code> — readable and writable</li>
+  <li><code>label.visible</code> — readable and writable</li>
+  <li><code>caption.text</code> — readable and writable</li>
+  <li><code>caption.visible</code> — readable and writable</li>
+  <li><code>interaction.enabled</code> — readable and writable</li>
+  <li><code>interaction.visible</code> — readable and writable</li>
+  <li><code>interaction.read_only</code> — readable and writable</li>
+  <li><code>representation.kind</code> — readable and writable</li>
+  <li><code>representation.encoding</code> — readable and writable when applicable</li>
+  <li><code>representation.word_length_bits</code> — readable and writable when applicable</li>
+  <li><code>representation.integer_word_length_bits</code> — readable and writable when applicable</li>
+  <li><code>representation.include_overflow_status</code> — readable and writable when applicable</li>
+  <li><code>data_entry.minimum</code> — readable and writable</li>
+  <li><code>data_entry.maximum</code> — readable and writable</li>
+  <li><code>data_entry.increment_step</code> — readable and writable</li>
+  <li><code>data_entry.coerce_on_commit</code> — readable and writable</li>
+  <li><code>data_entry.response_to_out_of_range</code> — readable and writable</li>
+  <li><code>display.format_kind</code> — readable and writable</li>
+  <li><code>display.format_string</code> — readable and writable</li>
+  <li><code>display.precision_digits</code> — readable and writable</li>
+  <li><code>display.radix_visible</code> — readable and writable</li>
+  <li><code>display.increment_buttons_visible</code> — readable and writable</li>
+  <li><code>unit_label.text</code> — readable and writable</li>
+  <li><code>unit_label.visible</code> — readable and writable</li>
+  <li><code>portable style.*</code> surfaces when exposed by the class or active profile</li>
+  <li><code>realization.family</code> when realization selection is publicly exposed</li>
+  <li><code>realization.variant</code> when realization selection is publicly exposed</li>
+  <li><code>realization.skin_id</code> when realization selection is publicly exposed</li>
+</ul>
+
+<h3>6.4 Standard methods</h3>
+
+<ul>
+  <li><code>focus()</code></li>
+  <li><code>select_text()</code></li>
+  <li><code>increment()</code></li>
+  <li><code>decrement()</code></li>
+  <li><code>set_value(number)</code></li>
+  <li><code>clamp_to_limits()</code></li>
+  <li><code>reset_to_default()</code> when a default value exists</li>
+  <li><code>parse_and_commit(text)</code></li>
+</ul>
+
+<h3>6.5 Standard events</h3>
+
+<ul>
+  <li><code>value_changed</code></li>
+  <li><code>value_committed</code></li>
+  <li><code>increment_pressed</code></li>
+  <li><code>decrement_pressed</code></li>
+  <li><code>limits_changed</code></li>
+  <li><code>focus_gained</code></li>
+  <li><code>focus_lost</code></li>
+</ul>
+
+<h3>6.6 Standard parts</h3>
+
+<ul>
+  <li><code>root</code></li>
+  <li><code>label</code></li>
+  <li><code>caption</code></li>
+  <li><code>frame</code></li>
+  <li><code>value_face</code></li>
+  <li><code>text_value</code></li>
+  <li><code>spinner</code> when present</li>
+  <li><code>increment_up</code> when present</li>
+  <li><code>increment_down</code> when present</li>
+  <li><code>unit_label</code> when present</li>
+  <li><code>focus_ring</code> when present</li>
+</ul>
+
+<hr/>
+
+<h2 id="frogwidgetsnumeric_indicator">7. <code>frog.widgets.numeric_indicator</code></h2>
+
+<h3>7.1 Class identity</h3>
+
+<ul>
+  <li><strong>class_id:</strong> <code>frog.widgets.numeric_indicator</code></li>
+  <li><strong>family:</strong> <code>numeric_widget</code></li>
+  <li><strong>compatible role:</strong> <code>indicator</code></li>
+</ul>
+
+<h3>7.2 Primary value posture</h3>
+
+<ul>
+  <li>primary value: present</li>
+  <li>natural value participation: yes</li>
+  <li>user-mutable: no in the standard portable posture</li>
+  <li>diagram-mutable: yes</li>
+  <li>mirrored property: <code>value</code></li>
+</ul>
+
+<h3>7.3 Standard properties</h3>
+
+<ul>
+  <li><code>value</code> — readable and writable for diagram/runtime update surfaces where legal</li>
+  <li><code>label.text</code> — readable and writable</li>
+  <li><code>label.visible</code> — readable and writable</li>
+  <li><code>caption.text</code> — readable and writable</li>
+  <li><code>caption.visible</code> — readable and writable</li>
+  <li><code>interaction.visible</code> — readable and writable</li>
+  <li><code>representation.kind</code> — readable and writable</li>
+  <li><code>display.format_kind</code> — readable and writable</li>
+  <li><code>display.format_string</code> — readable and writable</li>
+  <li><code>display.precision_digits</code> — readable and writable</li>
+  <li><code>display.radix_visible</code> — readable and writable</li>
+  <li><code>unit_label.text</code> — readable and writable</li>
+  <li><code>unit_label.visible</code> — readable and writable</li>
+  <li><code>portable style.*</code> surfaces when exposed by the class or active profile</li>
+  <li><code>realization.family</code> when realization selection is publicly exposed</li>
+  <li><code>realization.variant</code> when realization selection is publicly exposed</li>
+  <li><code>realization.skin_id</code> when realization selection is publicly exposed</li>
+</ul>
+
+<h3>7.4 Standard methods</h3>
+
+<ul>
+  <li><code>focus()</code> when supported by the host</li>
+  <li><code>format_value()</code></li>
+  <li><code>reset_to_default()</code> when a default numeric value exists and the active class posture exposes it</li>
+</ul>
+
+<h3>7.5 Standard events</h3>
+
+<ul>
+  <li><code>value_rendered</code></li>
+  <li><code>focus_gained</code></li>
+  <li><code>focus_lost</code></li>
+</ul>
+
+<h3>7.6 Standard parts</h3>
+
+<ul>
+  <li><code>root</code></li>
+  <li><code>label</code></li>
+  <li><code>caption</code></li>
+  <li><code>frame</code></li>
+  <li><code>value_face</code></li>
+  <li><code>text_value</code></li>
+  <li><code>unit_label</code> when present</li>
+  <li><code>focus_ring</code> when present</li>
+</ul>
+
+<hr/>
+
+<h2 id="common-parts">8. Common Parts</h2>
+
+<p>
+The numeric family uses the following common stable parts:
+</p>
+
+<ul>
+  <li><code>root</code></li>
+  <li><code>label</code></li>
+  <li><code>caption</code></li>
+  <li><code>frame</code></li>
+  <li><code>value_face</code></li>
+  <li><code>text_value</code></li>
+  <li><code>spinner</code> when present</li>
+  <li><code>increment_up</code> when present</li>
+  <li><code>increment_down</code> when present</li>
+  <li><code>unit_label</code> when present</li>
+  <li><code>focus_ring</code> when present</li>
+</ul>
+
+<hr/>
+
+<h2 id="common-behavior-expectations">9. Common Behavior Expectations</h2>
+
+<p>
+The intrinsic behavior baseline of the numeric family includes at least:
+</p>
+
+<ul>
+  <li>the primary value remains numeric,</li>
+  <li>representation changes preserve numeric meaning while changing interpretation and formatting posture,</li>
+  <li>numeric controls accept user-originated editing only when enabled and not read-only,</li>
+  <li>increment and decrement actions use <code>data_entry.increment_step</code>,</li>
+  <li>commits respect the configured out-of-range posture,</li>
+  <li>indicator realizations may emit <code>value_rendered</code> when their visible state is refreshed.</li>
+</ul>
+
+<hr/>
+
+<h2 id="common-realization-expectations">10. Common Realization Expectations</h2>
+
+<p>
+A conforming realization of the numeric family SHOULD provide:
+</p>
+
+<ul>
+  <li>a visible numeric value surface,</li>
+  <li>optional visible label support,</li>
+  <li>optional visible caption support,</li>
+  <li>optional visible unit-label support,</li>
+  <li>optional visible radix support,</li>
+  <li>optional increment/decrement buttons for controls,</li>
+  <li>part-to-visual mapping for the published parts.</li>
+</ul>
+
+<p>
+The realization MAY be SVG-backed, host-native, toolkit-driven, template-driven, or mixed.
+It MUST NOT change the published class meaning.
+</p>
+
+<hr/>
+
+<h2 id="diagram-interaction-posture">11. Diagram Interaction Posture</h2>
+
+<p>
+The numeric family supports:
+</p>
+
+<ul>
+  <li>natural value participation through <code>widget_value</code>,</li>
+  <li>property access through <code>frog.ui.property_read</code> and <code>frog.ui.property_write</code>,</li>
+  <li>method invocation where legal,</li>
+  <li>event observation where legal.</li>
+</ul>
+
+<p>
+Typical legal object-style surfaces include:
+</p>
+
+<ul>
+  <li><code>value</code></li>
+  <li><code>label.*</code></li>
+  <li><code>caption.*</code></li>
+  <li><code>representation.*</code></li>
+  <li><code>data_entry.*</code></li>
+  <li><code>display.*</code></li>
+  <li><code>unit_label.*</code></li>
+  <li><code>interaction.*</code></li>
+  <li>portable <code>style.*</code> properties when publicly exposed</li>
+  <li>realization-selection members when publicly exposed</li>
+</ul>
+
+<hr/>
+
+<h2 id="validation-expectations">12. Validation Expectations</h2>
+
+<p>
+Validators SHOULD diagnose at least:
+</p>
+
+<ul>
+  <li>non-numeric <code>value_type</code> on numeric widgets,</li>
+  <li>role/class mismatches,</li>
+  <li>unknown representation kinds,</li>
+  <li>fixed-point members used without a fixed-point representation kind,</li>
+  <li>minimum greater than maximum,</li>
+  <li>non-positive increment steps where the control posture requires a positive step,</li>
+  <li>attempts to write user-edit surfaces on indicator-only classes where forbidden,</li>
+  <li>unknown numeric family members or parts.</li>
+</ul>
+
+<hr/>
+
+<h2 id="summary">13. Summary</h2>
+
+<p>
+The numeric widget family defines the intrinsic standardized numeric widget baseline of FROG:
 </p>
 
 <ul>
@@ -41,192 +466,6 @@ The active published numeric classes are:
 </ul>
 
 <p>
-These class identifiers match the canonical source, the published Example 05 <code>.wfrog</code> package, the emitted runtime-family contract, and the published reference runtimes.
-</p>
-
-<hr/>
-
-<h2>2. Ownership boundary</h2>
-
-<ul>
-  <li><code>Expression/</code> owns widget instances in canonical source.</li>
-  <li><code>Libraries/UI.md</code> owns executable interaction primitives such as <code>frog.ui.property_write</code>.</li>
-  <li><code>Libraries/Widgets/</code> owns the portable public law of intrinsic standardized widget classes.</li>
-  <li><code>.wfrog</code> packages publish concrete class, panel, asset, and host-binding material for specific corridors.</li>
-  <li>runtimes consume those published artifacts; they do not redefine the class law.</li>
-</ul>
-
-<p>
-Therefore, this file defines the portable public surface of the numeric classes. It does not define host-private handles, toolkit-private structures, or skin-private layer maps.
-</p>
-
-<hr/>
-
-<h2>3. Common numeric-family posture</h2>
-
-<ul>
-  <li>class family: scalar numeric widgets,</li>
-  <li>primary semantic value property: <code>value</code>,</li>
-  <li>shared text label property: <code>label</code>,</li>
-  <li>shared visibility property: <code>visible</code>,</li>
-  <li>shared enablement property: <code>enabled</code>,</li>
-  <li>shared portable presentation property for the first slice: <code>foreground_color</code>,</li>
-  <li>stable public parts: <code>root</code>, <code>label</code>, <code>value_display</code>.</li>
-</ul>
-
-<p>
-The currently published baseline uses <strong>flat public property names</strong>.
-The active published portable surface is therefore <code>label</code>, not <code>label.text</code>; <code>visible</code>, not <code>interaction.visible</code>; and <code>foreground_color</code>, not <code>style.foreground_color</code>.
-</p>
-
-<p>
-Nested property namespaces may be standardized later, but they are not the active portable baseline of the currently published slice.
-</p>
-
-<hr/>
-
-<h2>4. <code>frog.widgets.numeric_control</code></h2>
-
-<h3>4.1 Identity</h3>
-
-<ul>
-  <li><strong>class_id:</strong> <code>frog.widgets.numeric_control</code></li>
-  <li><strong>compatible role:</strong> <code>control</code></li>
-  <li><strong>primary value participation:</strong> editable numeric value</li>
-</ul>
-
-<h3>4.2 Portable public properties</h3>
-
-<ul>
-  <li><code>value</code> — readable and writable numeric primary value</li>
-  <li><code>label</code> — readable and writable string label</li>
-  <li><code>visible</code> — readable and writable boolean visibility</li>
-  <li><code>enabled</code> — readable and writable boolean enablement</li>
-  <li><code>foreground_color</code> — readable and writable portable presentation color token of type <code>frog.color.rgba8</code></li>
-</ul>
-
-<h3>4.3 Portable public methods</h3>
-
-<ul>
-  <li><code>focus()</code> — requests focus on the control when the active host can realize focus transfer</li>
-</ul>
-
-<h3>4.4 Portable public events</h3>
-
-<ul>
-  <li><code>value_changed</code> — runtime-observable event carrying the current numeric value</li>
-</ul>
-
-<h3>4.5 Public parts</h3>
-
-<ul>
-  <li><code>root</code> — widget root container</li>
-  <li><code>label</code> — label presentation target</li>
-  <li><code>value_display</code> — realized numeric editing or display face</li>
-</ul>
-
-<hr/>
-
-<h2>5. <code>frog.widgets.numeric_indicator</code></h2>
-
-<h3>5.1 Identity</h3>
-
-<ul>
-  <li><strong>class_id:</strong> <code>frog.widgets.numeric_indicator</code></li>
-  <li><strong>compatible role:</strong> <code>indicator</code></li>
-  <li><strong>primary value participation:</strong> diagram-published numeric result</li>
-</ul>
-
-<h3>5.2 Portable public properties</h3>
-
-<ul>
-  <li><code>value</code> — readable and writable numeric primary value</li>
-  <li><code>label</code> — readable and writable string label</li>
-  <li><code>visible</code> — readable and writable boolean visibility</li>
-  <li><code>enabled</code> — readable and writable boolean enablement</li>
-  <li><code>foreground_color</code> — readable and writable portable presentation color token of type <code>frog.color.rgba8</code></li>
-</ul>
-
-<h3>5.3 Portable public methods</h3>
-
-<ul>
-  <li><code>reset_to_default_style()</code> — restores the indicator instance to the default style values published by the active panel package</li>
-</ul>
-
-<h3>5.4 Portable public events</h3>
-
-<ul>
-  <li><code>value_rendered</code> — runtime-observable event carrying the realized display text</li>
-</ul>
-
-<h3>5.5 Public parts</h3>
-
-<ul>
-  <li><code>root</code> — widget root container</li>
-  <li><code>label</code> — label presentation target</li>
-  <li><code>value_display</code> — realized numeric display face</li>
-</ul>
-
-<hr/>
-
-<h2>6. Diagram interaction posture</h2>
-
-<p>
-The numeric baseline participates in diagrams through the already-published interaction architecture.
-</p>
-
-<ul>
-  <li><code>widget_value(...)</code> exposes the primary numeric value as natural diagram data.</li>
-  <li><code>widget_reference(...)</code> exposes object-style access for portable member interaction.</li>
-  <li><code>frog.ui.property_write</code> may target portable writable members such as <code>foreground_color</code>.</li>
-  <li>method invocation remains object-style and member-specific; it does not replace value participation.</li>
-</ul>
-
-<p>
-Example 05 is the current corridor anchor for this posture. It uses <code>widget_value</code> for the control and indicator value path, <code>widget_reference</code> for object access, and <code>frog.ui.property_write</code> for <code>foreground_color</code> writes.
-</p>
-
-<hr/>
-
-<h2>7. Realization posture</h2>
-
-<p>
-The numeric classes are semantic and portable. Realization remains downstream.
-</p>
-
-<ul>
-  <li>default SVG assets may be published by a corridor package,</li>
-  <li>host bindings may require windowing, value binding, reference binding, and property writes,</li>
-  <li>skins and visual assets may change without changing the class identity or the public property law.</li>
-</ul>
-
-<p>
-Therefore, a change of skin or rendered face does not create a new numeric class.
-</p>
-
-<hr/>
-
-<h2>8. Current slice commitments</h2>
-
-<p>
-A runtime, package, or profile that claims conformance to the current published Example 05 numeric slice must support at least the following portable public members for these classes:
-</p>
-
-<ul>
-  <li><code>value</code></li>
-  <li><code>label</code></li>
-  <li><code>visible</code></li>
-  <li><code>enabled</code></li>
-  <li><code>foreground_color</code></li>
-  <li><code>focus()</code> for <code>frog.widgets.numeric_control</code></li>
-  <li><code>reset_to_default_style()</code> for <code>frog.widgets.numeric_indicator</code></li>
-</ul>
-
-<hr/>
-
-<h2>9. Summary</h2>
-
-<p>
-The active published numeric baseline is intentionally narrow but real.
-It uses the <code>frog.widgets.*</code> class identifiers, flat property names, portable member interaction through <code>widget_reference</code> and <code>frog.ui.*</code>, and a realization layer that stays downstream from class meaning.
+These classes provide the standard portable numeric interaction and display surfaces of the reusable widget core.
+They expose a real minimal object surface with properties, methods, events, and parts while keeping realization ownership and runtime-private embodiment clearly separated from class meaning.
 </p>

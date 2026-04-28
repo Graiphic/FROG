@@ -1,368 +1,63 @@
 {
-  "spec_version": "0.1",
-  "format": "frog.wfrog",
-  "kind": "front_panel_package",
-  "package": {
-    "name": "frog.examples.05_bounded_ui_accumulator.ui",
-    "version": "0.1.0"
-  },
-  "metadata": {
-    "title": "Accumulator Panel Package",
-    "summary": "Peripheral front-panel package for Example 05 with one numeric control, one numeric indicator, bounded widget realization metadata, and SVG-backed visual resources.",
-    "description": "This .wfrog package provides the widget-oriented realization layer for Example 05.\nIt does not redefine program meaning.\nIt publishes the bounded front-panel package, widget realization metadata, visual resource references, host realization hints, and the small widget class subset used by the example corridor.",
-    "author": "Graiphic",
-    "license": "Apache-2.0",
-    "tags": [
-      "example",
-      "wfrog",
-      "front_panel_package",
-      "widget_class_package",
-      "numeric_control",
-      "numeric_indicator",
-      "svg",
-      "foreground_color",
-      "bounded_ui"
-    ]
-  },
-  "imports": [],
-  "widget_classes": [
+  "format": "frog.ui.panel",
+  "kind": "panel_definition",
+  "panel_id": "example05.accumulator_panel",
+  "title": "Bounded UI Accumulator",
+  "widgets": [
     {
-      "class_id": "frog.widgets.panel",
-      "category": "container",
-      "primary_value": {
-        "present": false
-      },
-      "properties": [
-        {
-          "name": "title",
-          "type": "string",
-          "access": "read_write",
-          "mutability": "design_and_runtime",
-          "persistent": true,
-          "availability": "shared"
-        },
-        {
-          "name": "visible",
-          "type": "bool",
-          "access": "read_write",
-          "mutability": "runtime",
-          "persistent": false,
-          "availability": "runtime"
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "parts": [
-        {
-          "part_id": "root",
-          "kind": "container"
-        }
-      ],
-      "behavior_refs": []
-    },
-    {
+      "id": "input_value",
       "class_id": "frog.widgets.numeric_control",
-      "category": "control",
-      "primary_value": {
-        "present": true,
-        "type": "u16",
-        "access": "read_write",
-        "user_mutable": true,
-        "diagram_mutable": true,
-        "runtime_mutable": true,
-        "persistent": false,
-        "mirrored_property": "value"
-      },
-      "properties": [
-        {
-          "name": "value",
-          "type": "u16",
-          "access": "read_write",
-          "mutability": "runtime",
-          "persistent": false,
-          "availability": "shared"
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "access": "read_write",
-          "mutability": "design_and_runtime",
-          "persistent": true,
-          "availability": "shared"
-        },
-        {
-          "name": "visible",
-          "type": "bool",
-          "access": "read_write",
-          "mutability": "runtime",
-          "persistent": false,
-          "availability": "runtime"
-        },
-        {
-          "name": "enabled",
-          "type": "bool",
-          "access": "read_write",
-          "mutability": "runtime",
-          "persistent": false,
-          "availability": "runtime"
-        },
-        {
-          "name": "foreground_color",
-          "type": "frog.color.rgba8",
-          "access": "read_write",
-          "mutability": "design_and_runtime",
-          "persistent": true,
-          "availability": "shared"
-        }
-      ],
-      "methods": [
-        {
-          "name": "focus",
-          "parameters": [],
-          "returns": {
-            "type": "void"
-          },
-          "availability": "runtime",
-          "side_effect_posture": "host_focus_request",
-          "portability": "portable"
-        }
-      ],
-      "events": [
-        {
-          "name": "value_changed",
-          "payload": {
-            "type": "u16"
-          },
-          "origin_surface": "root",
-          "delivery_posture": "runtime_observable",
-          "portability": "portable"
-        }
-      ],
-      "parts": [
-        {
-          "part_id": "root",
-          "kind": "container"
-        },
-        {
-          "part_id": "label",
-          "kind": "text"
-        },
-        {
-          "part_id": "value_display",
-          "kind": "text"
-        }
-      ],
-      "behavior_refs": [
-        "frog.examples.05_bounded_ui_accumulator.behavior.numeric_value_projection"
-      ],
-      "visual": {
-        "asset_ref": "asset:numeric_control_svg"
-      }
-    },
-    {
-      "class_id": "frog.widgets.numeric_indicator",
-      "category": "indicator",
-      "primary_value": {
-        "present": true,
-        "type": "u16",
-        "access": "read_write",
-        "user_mutable": false,
-        "diagram_mutable": true,
-        "runtime_mutable": true,
-        "persistent": false,
-        "mirrored_property": "value"
-      },
-      "properties": [
-        {
-          "name": "value",
-          "type": "u16",
-          "access": "read_write",
-          "mutability": "runtime",
-          "persistent": false,
-          "availability": "shared"
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "access": "read_write",
-          "mutability": "design_and_runtime",
-          "persistent": true,
-          "availability": "shared"
-        },
-        {
-          "name": "visible",
-          "type": "bool",
-          "access": "read_write",
-          "mutability": "runtime",
-          "persistent": false,
-          "availability": "runtime"
-        },
-        {
-          "name": "enabled",
-          "type": "bool",
-          "access": "read_write",
-          "mutability": "runtime",
-          "persistent": false,
-          "availability": "runtime"
-        },
-        {
-          "name": "foreground_color",
-          "type": "frog.color.rgba8",
-          "access": "read_write",
-          "mutability": "design_and_runtime",
-          "persistent": true,
-          "availability": "shared"
-        }
-      ],
-      "methods": [
-        {
-          "name": "reset_to_default_style",
-          "parameters": [],
-          "returns": {
-            "type": "void"
-          },
-          "availability": "runtime",
-          "side_effect_posture": "widget_local_state_update",
-          "portability": "portable"
-        }
-      ],
-      "events": [
-        {
-          "name": "value_rendered",
-          "payload": {
-            "type": "string"
-          },
-          "origin_surface": "part:value_display",
-          "delivery_posture": "runtime_observable",
-          "portability": "portable"
-        }
-      ],
-      "parts": [
-        {
-          "part_id": "root",
-          "kind": "container"
-        },
-        {
-          "part_id": "label",
-          "kind": "text"
-        },
-        {
-          "part_id": "value_display",
-          "kind": "text"
-        }
-      ],
-      "behavior_refs": [
-        "frog.examples.05_bounded_ui_accumulator.behavior.numeric_value_projection"
-      ],
-      "visual": {
-        "asset_ref": "asset:numeric_indicator_svg"
-      }
-    }
-  ],
-  "behavior_modules": [
-    {
-      "behavior_id": "frog.examples.05_bounded_ui_accumulator.behavior.numeric_value_projection",
-      "kind": "declarative",
-      "portability": "portable",
-      "scope": "class",
-      "description": "Projects the widget primary value to the realized value display text.",
-      "inputs": [
-        {
-          "name": "value",
-          "type": "u16"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "rendered_text",
-          "type": "string"
-        }
-      ]
-    }
-  ],
-  "svg_assets": [
-    {
-      "asset_id": "numeric_control_svg",
-      "path": "./assets/numeric_control.svg",
-      "kind": "widget_face"
-    },
-    {
-      "asset_id": "numeric_indicator_svg",
-      "path": "./assets/numeric_indicator.svg",
-      "kind": "widget_face"
-    }
-  ],
-  "host_bindings": [
-    {
-      "binding_id": "reference_host_default",
-      "target": "reference_host_runtime",
-      "required_capabilities": [
-        "window",
-        "basic_widget_rendering",
-        "property_write",
-        "widget_value_binding",
-        "widget_reference_binding"
-      ],
-      "optional_capabilities": [
-        "event_observe",
-        "focus_request"
-      ]
-    }
-  ],
-  "front_panels": [
-    {
-      "panel_id": "main_panel",
-      "title": "Bounded UI Accumulator",
-      "class_ref": "frog.widgets.panel",
       "layout": {
-        "width": 460,
-        "height": 170,
-        "coordinate_space": "panel_pixels"
+        "x": 24,
+        "y": 24,
+        "width": 220,
+        "height": 56
       },
-      "widgets": [
-        {
-          "instance_id": "ctrl_input",
-          "class_ref": "frog.widgets.numeric_control",
-          "layout": {
-            "x": 20,
-            "y": 24,
-            "width": 140,
-            "height": 32
-          },
-          "props": {
-            "label": "Input",
-            "visible": true,
-            "enabled": true,
-            "foreground_color": "#5B9BD5"
-          },
-          "visual": {
-            "asset_ref": "asset:numeric_control_svg"
-          }
-        },
-        {
-          "instance_id": "ind_result",
-          "class_ref": "frog.widgets.numeric_indicator",
-          "layout": {
-            "x": 240,
-            "y": 24,
-            "width": 160,
-            "height": 32
-          },
-          "props": {
-            "label": "Accumulated result",
-            "visible": true,
-            "enabled": true,
-            "foreground_color": "#70AD47"
-          },
-          "visual": {
-            "asset_ref": "asset:numeric_indicator_svg"
-          }
-        }
-      ],
-      "host_binding_ref": "reference_host_default"
+      "properties": {
+        "label.text": "input_value",
+        "label.visible": false,
+        "caption.text": "Input",
+        "caption.visible": true,
+        "value": 3,
+        "representation.kind": "int32",
+        "data_entry.minimum": 0,
+        "data_entry.maximum": 100,
+        "data_entry.increment_step": 1,
+        "data_entry.coerce_on_commit": true,
+        "display.format_kind": "decimal",
+        "display.increment_buttons_visible": true,
+        "display.radix_visible": false,
+        "unit_label.visible": false,
+        "style.frame.border_width": 2,
+        "style.frame.border_color": "#000000",
+        "style.value_face.fill_color": "#5b9bd5",
+        "style.text_value.color": "#000000"
+      }
+    },
+    {
+      "id": "result_value",
+      "class_id": "frog.widgets.numeric_indicator",
+      "layout": {
+        "x": 24,
+        "y": 104,
+        "width": 220,
+        "height": 56
+      },
+      "properties": {
+        "label.text": "result_value",
+        "label.visible": false,
+        "caption.text": "Result",
+        "caption.visible": true,
+        "value": 15,
+        "representation.kind": "int32",
+        "display.format_kind": "decimal",
+        "display.radix_visible": false,
+        "unit_label.visible": false,
+        "style.frame.border_width": 2,
+        "style.frame.border_color": "#000000",
+        "style.value_face.fill_color": "#90d26d",
+        "style.text_value.color": "#000000"
+      }
     }
-  ],
-  "resources": [],
-  "themes": [],
-  "extensions": []
+  ]
 }
