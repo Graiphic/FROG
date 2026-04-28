@@ -33,6 +33,7 @@
     - [main.frog](/Examples/04_stateful_feedback_delay/main.frog)
   - [05 bounded ui accumulator](/Examples/05_bounded_ui_accumulator/Readme.md)
     - [Freeze](/Examples/05_bounded_ui_accumulator/Freeze.md)
+    - [NumericCompatibility](/Examples/05_bounded_ui_accumulator/NumericCompatibility.md)
     - [main.frog](/Examples/05_bounded_ui_accumulator/main.frog)
     - [ui](/Examples/05_bounded_ui_accumulator/ui/Readme.md)
   - [compiler](/Examples/compiler/Readme.md)
