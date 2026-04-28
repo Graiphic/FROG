@@ -17,7 +17,7 @@
   <li><a href="./Package.md">Default realization package posture</a></li>
   <li><a href="./boolean.default.wfrog">Machine-readable boolean realization manifest</a></li>
   <li><a href="./assets/boolean/Readme.md">Boolean default realization assets</a></li>
-  <li><a href="../Widgets/Boolean.md">Boolean widget class law</a></li>
+  <li><a href="../../Widgets/Boolean.md">Boolean widget class law</a></li>
   <li><a href="../../UI.md">Executable UI primitives</a></li>
 </ul>
 
