@@ -11,20 +11,39 @@
 
 <hr/>
 
+<h2>Navigation</h2>
+
+<ul>
+  <li><a href="./Readme.md">Widgets index</a></li>
+  <li><a href="../../Expression/Widget.md">Expression widget instances</a></li>
+  <li><a href="../../Expression/Widget%20interaction.md">Expression widget interaction</a></li>
+  <li><a href="../../Expression/Widget%20realization.md">Expression widget realization</a></li>
+  <li><a href="../../Expression/Widget%20package%20(.wfrog).md">Widget package publication</a></li>
+  <li><a href="../../Libraries/UI.md">Executable UI primitives</a></li>
+  <li><a href="../../Libraries/Realizations/Default/Path.md">Default path realization</a></li>
+  <li><a href="../../Libraries/Realizations/Default/path.default.wfrog">Default path realization manifest</a></li>
+</ul>
+
+<hr/>
+
 <h2>Contents</h2>
 
 <ul>
   <li><a href="#overview">1. Overview</a></li>
   <li><a href="#classes-defined-here">2. Classes Defined Here</a></li>
-  <li><a href="#common-family-posture">3. Common Family Posture</a></li>
-  <li><a href="#frogwidgetspath_control">4. <code>frog.widgets.path_control</code></a></li>
-  <li><a href="#frogwidgetspath_indicator">5. <code>frog.widgets.path_indicator</code></a></li>
-  <li><a href="#common-parts">6. Common Parts</a></li>
-  <li><a href="#common-behavior-expectations">7. Common Behavior Expectations</a></li>
-  <li><a href="#common-realization-expectations">8. Common Realization Expectations</a></li>
-  <li><a href="#diagram-interaction-posture">9. Diagram Interaction Posture</a></li>
-  <li><a href="#validation-expectations">10. Validation Expectations</a></li>
-  <li><a href="#summary">11. Summary</a></li>
+  <li><a href="#path-class-versus-realization">3. Path Class versus Realization</a></li>
+  <li><a href="#value-and-normalization-model">4. Value and Normalization Model</a></li>
+  <li><a href="#label-caption-and-display-surfaces">5. Label, Caption, and Display Surfaces</a></li>
+  <li><a href="#common-family-posture">6. Common Family Posture</a></li>
+  <li><a href="#public-part-model">7. Public Part Model</a></li>
+  <li><a href="#standard-property-surface">8. Standard Property Surface</a></li>
+  <li><a href="#frogwidgetspath_control">9. <code>frog.widgets.path_control</code></a></li>
+  <li><a href="#frogwidgetspath_indicator">10. <code>frog.widgets.path_indicator</code></a></li>
+  <li><a href="#host-browse-posture">11. Host Browse Posture</a></li>
+  <li><a href="#default-realization-posture">12. Default Realization Posture</a></li>
+  <li><a href="#diagram-interaction-posture">13. Diagram Interaction Posture</a></li>
+  <li><a href="#validation-expectations">14. Validation Expectations</a></li>
+  <li><a href="#summary">15. Summary</a></li>
 </ul>
 
 <hr/>
@@ -32,38 +51,22 @@
 <h2 id="overview">1. Overview</h2>
 
 <p>
-This document defines the intrinsic standardized baseline for path widgets in FROG.
+This document defines the standardized baseline for path widgets in FROG.
 </p>
 
 <p>
-The path family provides the first path-typed widgets used for editable path selection and displayed path output in the portable front-panel baseline.
-These classes remain close to the string family in visible form, but they carry stronger semantic meaning than arbitrary text.
+The path family provides path-typed widgets for editable path selection and displayed path output.
+A path widget looks close to a string widget, but it carries stronger semantic meaning: path kind, path normalization, existence policy, browse posture, and host-specific filesystem boundaries must remain explicit.
 </p>
 
 <p>
-The standard path family is therefore defined here as a real object surface with:
-</p>
-
-<ul>
-  <li>a primary path value posture,</li>
-  <li>a minimal but real property surface,</li>
-  <li>a minimal but real method surface,</li>
-  <li>a minimal but real event surface,</li>
-  <li>a stable public part model for realization targeting.</li>
-</ul>
-
-<p>
-The intrinsic baseline does not standardize a full file-browser, filesystem API, or host dialog specification.
-It standardizes a path-typed widget family with minimal interoperable behavior.
+The intrinsic baseline does not define a filesystem API or one mandatory file-dialog system.
+It defines a portable path-value widget family that runtimes and IDEs can implement consistently.
 </p>
 
 <hr/>
 
 <h2 id="classes-defined-here">2. Classes Defined Here</h2>
-
-<p>
-This document defines the following standardized widget classes:
-</p>
 
 <ul>
   <li><code>frog.widgets.path_control</code></li>
@@ -72,11 +75,84 @@ This document defines the following standardized widget classes:
 
 <hr/>
 
-<h2 id="common-family-posture">3. Common Family Posture</h2>
+<h2 id="path-class-versus-realization">3. Path Class versus Realization</h2>
 
 <p>
-The path family has the following common posture:
+A path class is not the same thing as a string field, a file picker, a folder picker, a browse dialog, or a host-native path control.
 </p>
+
+<p>
+The class owns:
+</p>
+
+<ul>
+  <li>the path value semantics,</li>
+  <li>the path kind and selection-mode posture,</li>
+  <li>the normalization and validation posture,</li>
+  <li>the control-versus-indicator distinction,</li>
+  <li>the public property inventory,</li>
+  <li>the public method inventory,</li>
+  <li>the public event inventory,</li>
+  <li>the public part model.</li>
+</ul>
+
+<p>
+The realization owns visible text-field embodiment, browse-button embodiment, clipping and ellipsis display, icon posture, and host-specific picker interaction.
+</p>
+
+<hr/>
+
+<h2 id="value-and-normalization-model">4. Value and Normalization Model</h2>
+
+<p>
+The canonical path value is:
+</p>
+
+<pre><code>value</code></pre>
+
+<p>
+The value is path-typed rather than an arbitrary string.
+The canonical public surfaces around it are:
+</p>
+
+<ul>
+  <li><code>path.kind</code> — <code>file</code>, <code>directory</code>, <code>any</code>, or <code>uri</code>.</li>
+  <li><code>path.syntax</code> — <code>platform_native</code>, <code>posix</code>, <code>windows</code>, or <code>uri</code>.</li>
+  <li><code>path.normalized_value</code> — normalized path string when exposed.</li>
+  <li><code>path.display_value</code> — shortened or formatted display value when exposed.</li>
+  <li><code>path.exists</code> — readable existence result when the runtime can check it.</li>
+  <li><code>path.validation_state</code> — <code>unknown</code>, <code>valid</code>, <code>missing</code>, <code>invalid</code>, or <code>inaccessible</code>.</li>
+</ul>
+
+<p>
+A runtime MUST NOT silently treat every string as a valid path when a path widget publishes stricter validation surfaces.
+</p>
+
+<hr/>
+
+<h2 id="label-caption-and-display-surfaces">5. Label, Caption, and Display Surfaces</h2>
+
+<p>
+The path family follows the shared FROG label/caption convention.
+</p>
+
+<pre><code>label.*
+    - structural / logical widget name surface
+
+caption.*
+    - front-panel presentation caption shown near the path widget
+
+path_display
+    - visible path text surface
+</code></pre>
+
+<p>
+The logical widget name, visible caption, semantic path value, and shortened display string are separate surfaces.
+</p>
+
+<hr/>
+
+<h2 id="common-family-posture">6. Common Family Posture</h2>
 
 <ul>
   <li>family: path widget family</li>
@@ -85,26 +161,110 @@ The path family has the following common posture:
   <li>natural value participation: yes</li>
   <li>object-style access: yes</li>
   <li>primary value mirror property: <code>value</code></li>
-  <li>common label property: <code>label.text</code></li>
-  <li>common visibility property: <code>interaction.visible</code></li>
-</ul>
-
-<p>
-The path family also follows an important architectural rule:
-</p>
-
-<ul>
-  <li><code>value</code> is class-owned semantic path data,</li>
-  <li><code>label.text</code> is class-owned semantic label text,</li>
-  <li><code>path_display</code> is a stable public dynamic part,</li>
-  <li>browse buttons, host dialogs, clipping rules, ellipsis posture, and decorative embodiment belong downstream to realization unless explicitly standardized as public class surfaces.</li>
+  <li>path behavior surface: <code>path.*</code></li>
+  <li>browse behavior surface: <code>browse.*</code></li>
+  <li>display behavior surface: <code>display.*</code></li>
+  <li>validation behavior surface: <code>validation.*</code></li>
 </ul>
 
 <hr/>
 
-<h2 id="frogwidgetspath_control">4. <code>frog.widgets.path_control</code></h2>
+<h2 id="public-part-model">7. Public Part Model</h2>
 
-<h3>4.1 Class identity</h3>
+<ul>
+  <li><code>root</code></li>
+  <li><code>label</code></li>
+  <li><code>caption</code></li>
+  <li><code>frame</code></li>
+  <li><code>path_face</code></li>
+  <li><code>path_display</code></li>
+  <li><code>browse_button</code> when present</li>
+  <li><code>path_icon</code> when present</li>
+  <li><code>validation_marker</code> when present</li>
+  <li><code>text_overflow_marker</code> when present</li>
+  <li><code>focus_ring</code> when present</li>
+</ul>
+
+<hr/>
+
+<h2 id="standard-property-surface">8. Standard Property Surface</h2>
+
+<h3>8.1 Value and path semantics</h3>
+
+<ul>
+  <li><code>value : path</code></li>
+  <li><code>path.kind : enum</code></li>
+  <li><code>path.syntax : enum</code></li>
+  <li><code>path.normalized_value : string</code> when exposed</li>
+  <li><code>path.display_value : string</code> when exposed</li>
+  <li><code>path.exists : bool</code> when the runtime can check it</li>
+  <li><code>path.validation_state : enum</code></li>
+</ul>
+
+<h3>8.2 Label and caption</h3>
+
+<ul>
+  <li><code>label.visible : bool</code></li>
+  <li><code>label.text : string</code></li>
+  <li><code>label.style.*</code></li>
+  <li><code>caption.visible : bool</code></li>
+  <li><code>caption.text : string</code></li>
+  <li><code>caption.placement : enum</code></li>
+  <li><code>caption.style.*</code></li>
+</ul>
+
+<h3>8.3 Browse and validation</h3>
+
+<ul>
+  <li><code>browse.enabled : bool</code></li>
+  <li><code>browse.button_visible : bool</code></li>
+  <li><code>browse.dialog_title : string</code></li>
+  <li><code>browse.initial_directory : path</code> when exposed</li>
+  <li><code>browse.file_filters[]</code> when file filtering is exposed</li>
+  <li><code>validation.require_exists : bool</code></li>
+  <li><code>validation.allow_create : bool</code></li>
+  <li><code>validation.allow_relative : bool</code></li>
+  <li><code>validation.allow_empty : bool</code></li>
+</ul>
+
+<h3>8.4 Display</h3>
+
+<ul>
+  <li><code>display.shorten_mode : enum</code> — <code>none</code>, <code>middle_ellipsis</code>, <code>tail</code>, or <code>name_only</code></li>
+  <li><code>display.text_overflow_visible : bool</code></li>
+  <li><code>display.icon_visible : bool</code></li>
+  <li><code>display.validation_marker_visible : bool</code></li>
+</ul>
+
+<h3>8.5 Interaction</h3>
+
+<ul>
+  <li><code>interaction.visible : bool</code></li>
+  <li><code>interaction.enabled : bool</code></li>
+  <li><code>interaction.read_only : bool</code></li>
+  <li><code>interaction.focusable : bool</code></li>
+  <li><code>interaction.focused : bool</code></li>
+</ul>
+
+<h3>8.6 Style and realization</h3>
+
+<ul>
+  <li><code>style.frame.*</code></li>
+  <li><code>style.path_face.*</code></li>
+  <li><code>style.path_display.*</code></li>
+  <li><code>style.browse_button.*</code></li>
+  <li><code>style.validation_marker.*</code></li>
+  <li><code>style.focus_ring.*</code></li>
+  <li><code>realization.family : string</code></li>
+  <li><code>realization.variant : string</code></li>
+  <li><code>realization.skin_id : string</code></li>
+</ul>
+
+<hr/>
+
+<h2 id="frogwidgetspath_control">9. <code>frog.widgets.path_control</code></h2>
+
+<h3>9.1 Class identity</h3>
 
 <ul>
   <li><strong>class_id:</strong> <code>frog.widgets.path_control</code></li>
@@ -112,61 +272,35 @@ The path family also follows an important architectural rule:
   <li><strong>compatible role:</strong> <code>control</code></li>
 </ul>
 
-<h3>4.2 Primary value posture</h3>
-
-<ul>
-  <li>primary value: present</li>
-  <li>value type: <code>path</code></li>
-  <li>natural value participation: yes</li>
-  <li>user-mutable: yes</li>
-  <li>diagram-mutable: yes</li>
-  <li>mirrored property: <code>value</code></li>
-</ul>
-
-<h3>4.3 Standard properties</h3>
-
-<ul>
-  <li><code>value</code> — readable and writable</li>
-  <li><code>label.text</code> — readable and writable</li>
-  <li><code>interaction.enabled</code> — readable and writable</li>
-  <li><code>interaction.visible</code> — readable and writable</li>
-  <li><code>path.mode</code> — optional readable and writable hint such as file-oriented or directory-oriented selection posture when the active class posture exposes it</li>
-</ul>
-
-<h3>4.4 Standard methods</h3>
+<h3>9.2 Standard methods</h3>
 
 <ul>
   <li><code>focus()</code></li>
-  <li><code>browse()</code> when the active class posture exposes a host-assisted browsing interaction</li>
+  <li><code>browse()</code></li>
   <li><code>clear()</code></li>
-  <li><code>reset_to_default()</code> when a default value exists</li>
+  <li><code>normalize()</code></li>
+  <li><code>validate()</code></li>
+  <li><code>set_path(path)</code></li>
+  <li><code>reset_to_default()</code></li>
 </ul>
 
-<h3>4.5 Standard events</h3>
+<h3>9.3 Standard events</h3>
 
 <ul>
   <li><code>value_changed</code></li>
-  <li><code>browsing_started</code> when the active class posture exposes a browse interaction</li>
-  <li><code>browsing_committed</code> when the active class posture exposes a browse interaction</li>
+  <li><code>browsing_started</code></li>
+  <li><code>browsing_committed</code></li>
+  <li><code>browsing_cancelled</code></li>
+  <li><code>validation_changed</code></li>
   <li><code>focus_gained</code></li>
   <li><code>focus_lost</code></li>
 </ul>
 
-<h3>4.6 Standard parts</h3>
-
-<ul>
-  <li><code>root</code></li>
-  <li><code>label</code></li>
-  <li><code>path_display</code></li>
-  <li><code>browse_button</code> when the active realization exposes it</li>
-  <li><code>frame</code> when present</li>
-</ul>
-
 <hr/>
 
-<h2 id="frogwidgetspath_indicator">5. <code>frog.widgets.path_indicator</code></h2>
+<h2 id="frogwidgetspath_indicator">10. <code>frog.widgets.path_indicator</code></h2>
 
-<h3>5.1 Class identity</h3>
+<h3>10.1 Class identity</h3>
 
 <ul>
   <li><strong>class_id:</strong> <code>frog.widgets.path_indicator</code></li>
@@ -174,192 +308,67 @@ The path family also follows an important architectural rule:
   <li><strong>compatible role:</strong> <code>indicator</code></li>
 </ul>
 
-<h3>5.2 Primary value posture</h3>
-
-<ul>
-  <li>primary value: present</li>
-  <li>value type: <code>path</code></li>
-  <li>natural value participation: yes</li>
-  <li>user-mutable: no in the standard portable posture</li>
-  <li>diagram-mutable: yes</li>
-  <li>mirrored property: <code>value</code></li>
-</ul>
-
-<h3>5.3 Standard properties</h3>
-
-<ul>
-  <li><code>value</code> — readable and writable for diagram/runtime update surfaces where legal</li>
-  <li><code>label.text</code> — readable and writable</li>
-  <li><code>interaction.visible</code> — readable and writable</li>
-  <li><code>path.mode</code> — optional readable and writable path-kind hint when the active class posture exposes it</li>
-</ul>
-
-<h3>5.4 Standard methods</h3>
+<h3>10.2 Standard methods</h3>
 
 <ul>
   <li><code>focus()</code> when supported by the host</li>
-  <li><code>reset_to_default()</code> when a default value exists and the active class posture exposes it</li>
+  <li><code>normalize()</code></li>
+  <li><code>validate()</code></li>
+  <li><code>reset_to_default_style()</code></li>
 </ul>
 
-<h3>5.5 Standard events</h3>
+<h3>10.3 Standard events</h3>
 
 <ul>
   <li><code>value_rendered</code></li>
+  <li><code>validation_changed</code></li>
   <li><code>focus_gained</code></li>
   <li><code>focus_lost</code></li>
 </ul>
 
-<h3>5.6 Standard parts</h3>
-
-<ul>
-  <li><code>root</code></li>
-  <li><code>label</code></li>
-  <li><code>path_display</code></li>
-  <li><code>frame</code> when present</li>
-</ul>
-
 <hr/>
 
-<h2 id="common-parts">6. Common Parts</h2>
+<h2 id="host-browse-posture">11. Host Browse Posture</h2>
 
 <p>
-The path family uses the following common stable parts:
-</p>
-
-<ul>
-  <li><code>root</code></li>
-  <li><code>label</code></li>
-  <li><code>path_display</code></li>
-  <li><code>frame</code> when present</li>
-</ul>
-
-<p>
-The optional <code>browse_button</code> part may exist in realizations that expose explicit browse affordance, but the intrinsic class law does not require one mandatory browse embodiment.
+The browse action is host-mediated.
+The class law standardizes the public request and resulting value update, not one mandatory native dialog.
 </p>
 
 <p>
-This distinction is important:
-</p>
-
-<ul>
-  <li><code>path_display</code> is a public part of the class model,</li>
-  <li>browse dialogs, popup pickers, clipping helpers, ellipsis posture, and decorative assets belong to realization unless explicitly promoted to class law.</li>
-</ul>
-
-<hr/>
-
-<h2 id="common-behavior-expectations">7. Common Behavior Expectations</h2>
-
-<p>
-The intrinsic behavior baseline of the path family includes at least:
-</p>
-
-<ul>
-  <li>the primary value remains of type <code>path</code>,</li>
-  <li>path controls accept user-originated editing or path selection only when enabled,</li>
-  <li>path changes may emit <code>value_changed</code>,</li>
-  <li>host-assisted browsing, when exposed, may emit <code>browsing_started</code> and <code>browsing_committed</code>,</li>
-  <li>indicator-side visual refresh may emit <code>value_rendered</code>.</li>
-</ul>
-
-<p>
-The family also preserves the distinction between:
-</p>
-
-<ul>
-  <li>semantic path value owned by <code>value</code>,</li>
-  <li>semantic label text owned by <code>label.text</code>,</li>
-  <li>dynamic public display surface exposed through <code>path_display</code>,</li>
-  <li>downstream visual embodiment owned by realization.</li>
-</ul>
-
-<hr/>
-
-<h2 id="common-realization-expectations">8. Common Realization Expectations</h2>
-
-<p>
-A conforming realization of the path family SHOULD provide:
-</p>
-
-<ul>
-  <li>a visible path display surface,</li>
-  <li>optional visible label support,</li>
-  <li>reasonable visual distinction between control and indicator posture,</li>
-  <li>part-to-visual mapping for the published parts.</li>
-</ul>
-
-<p>
-The realization MAY be text-entry-like, browse-assisted, or another host-compatible path embodiment, provided the published public class surface remains preserved.
-</p>
-
-<p>
-In particular:
-</p>
-
-<ul>
-  <li>realization MAY define browse buttons, clipping helpers, path shortening rules, or decorative frames,</li>
-  <li>realization MUST NOT redefine the semantic owner of <code>value</code> or <code>label.text</code>,</li>
-  <li>realization MUST NOT make placeholder path text, preview text, or host-private browse state the only semantic source of visible path meaning.</li>
-</ul>
-
-<hr/>
-
-<h2 id="diagram-interaction-posture">9. Diagram Interaction Posture</h2>
-
-<p>
-The path family supports:
-</p>
-
-<ul>
-  <li>natural value participation through <code>widget_value</code>,</li>
-  <li>property access through <code>frog.ui.property_read</code> and <code>frog.ui.property_write</code>,</li>
-  <li>method invocation where legal,</li>
-  <li>event observation where legal.</li>
-</ul>
-
-<p>
-When the program intent is ordinary path dataflow, the natural value path SHOULD be preferred.
-Object-style access remains available for richer widget interaction.
-</p>
-
-<p>
-Typical legal object-style surfaces include:
-</p>
-
-<ul>
-  <li><code>value</code></li>
-  <li><code>label.text</code></li>
-  <li><code>interaction.enabled</code></li>
-  <li><code>interaction.visible</code></li>
-  <li><code>path.mode</code> when exposed</li>
-</ul>
-
-<p>
-Realization-only browse helpers, popup pickers, resource layers, and asset helpers remain outside the public path class surface unless explicitly standardized elsewhere.
+A runtime may use a native file picker, directory picker, browser-provided file system access mechanism, custom picker, or no picker at all, provided that unsupported browse behavior is explicit and does not redefine path value semantics.
 </p>
 
 <hr/>
 
-<h2 id="validation-expectations">10. Validation Expectations</h2>
+<h2 id="default-realization-posture">12. Default Realization Posture</h2>
 
 <p>
-Validators SHOULD diagnose at least:
+The Default realization should expose a rectangular path field with a value face, path display, optional browse button, optional path icon, optional validation marker, optional overflow marker, caption and label surfaces, and a focus ring.
 </p>
-
-<ul>
-  <li>non-path <code>value_type</code> on path widgets,</li>
-  <li>role/class mismatches,</li>
-  <li>attempts to write user-edit surfaces on indicator-only classes where forbidden,</li>
-  <li>unknown path family members or parts,</li>
-  <li>attempts to treat realization-only browse helpers or host-private picker structures as public class members by default.</li>
-</ul>
 
 <hr/>
 
-<h2 id="summary">11. Summary</h2>
+<h2 id="diagram-interaction-posture">13. Diagram Interaction Posture</h2>
 
 <p>
-The path widget family defines the intrinsic standardized path-value widget baseline of FROG:
+The path family supports natural value participation through <code>widget_value</code>, property access through <code>frog.ui.property_read</code> and <code>frog.ui.property_write</code>, method invocation through <code>frog.ui.method_invoke</code>, event observation where legal, and widget reference targeting through <code>widget_reference</code>.
+</p>
+
+<hr/>
+
+<h2 id="validation-expectations">14. Validation Expectations</h2>
+
+<p>
+Validators SHOULD diagnose non-path values, invalid path syntax, unsupported path kind, selected browse features unsupported by the host, forbidden empty paths, forbidden relative paths, missing paths where existence is required, inaccessible paths, and attempts to treat realization-private browse dialog internals as public members.
+</p>
+
+<hr/>
+
+<h2 id="summary">15. Summary</h2>
+
+<p>
+The path widget family defines standardized path-value control and display widgets:
 </p>
 
 <ul>
@@ -368,6 +377,5 @@ The path widget family defines the intrinsic standardized path-value widget base
 </ul>
 
 <p>
-These classes provide the first standard portable path interaction and display surfaces of the extended widget baseline.
-They expose a real minimal object surface with properties, methods, events, and parts while keeping realization ownership and runtime-private embodiment clearly separated from class meaning.
+The family is path-typed, browse-aware, validation-aware, and realization-neutral.
 </p>

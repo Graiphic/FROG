@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 520 150"
+     role="img"
+     aria-label="FROG default path rectangular field realization template"
+     data-frog-template="frog.realizations.default.path.rectangular_field"
+     data-frog-target-classes="frog.widgets.path_control frog.widgets.path_indicator"
+     data-frog-variant="rectangular_field">
+  <title>FROG Default Path Rectangular Field Realization Template</title>
+  <desc>
+    Semantic SVG template for the default path field realization.
+    The runtime or IDE binds value and path display state to dynamic path_display.
+  </desc>
+
+  <defs>
+    <style>
+      :root {
+        --frog-path-label-display: none;
+        --frog-path-caption-display: inline;
+        --frog-path-frame-fill: #ffffff;
+        --frog-path-frame-stroke: #000000;
+        --frog-path-frame-stroke-width: 6px;
+        --frog-path-face-fill: #ffffff;
+        --frog-path-face-stroke: #94a3b8;
+        --frog-path-text-fill: #111111;
+        --frog-path-button-fill: #5b9bd5;
+        --frog-path-focus-display: none;
+      }
+
+      #label_text { display: var(--frog-path-label-display); fill: #6b7280; font-family: system-ui, Segoe UI, Arial, sans-serif; font-size: 12px; }
+      #caption_text { display: var(--frog-path-caption-display); fill: #d00000; font-family: system-ui, Segoe UI, Arial, sans-serif; font-size: 18px; }
+      #frame { fill: var(--frog-path-frame-fill); stroke: var(--frog-path-frame-stroke); stroke-width: var(--frog-path-frame-stroke-width); }
+      #path_face { fill: var(--frog-path-face-fill); stroke: var(--frog-path-face-stroke); stroke-width: 1px; }
+      #path_display { fill: var(--frog-path-text-fill); font-family: system-ui, Segoe UI, Arial, sans-serif; font-size: 14px; }
+      #browse_button { fill: var(--frog-path-button-fill); stroke: #3b82c4; stroke-width: 1px; }
+      #focus_ring { display: var(--frog-path-focus-display); fill: none; stroke: #2f80ed; stroke-width: 3px; }
+    </style>
+  </defs>
+
+  <g id="root" data-frog-part="root">
+    <text id="label_text"
+          data-frog-part="label"
+          data-frog-member="label.text"
+          data-frog-anchor="label.anchor"
+          x="16"
+          y="18">path_1</text>
+
+    <text id="caption_text"
+          data-frog-part="caption"
+          data-frog-member="caption.text"
+          data-frog-anchor="caption.anchor"
+          x="16"
+          y="46">Path</text>
+
+    <rect id="focus_ring"
+          data-frog-part="focus_ring"
+          x="4"
+          y="64"
+          width="500"
+          height="64"
+          rx="6"
+          data-frog-bind="interaction.focused style.focus_ring.*" />
+
+    <rect id="frame"
+          data-frog-part="frame"
+          x="12"
+          y="72"
+          width="488"
+          height="48"
+          rx="0"
+          data-frog-bind="style.frame.*" />
+
+    <rect id="path_face"
+          data-frog-part="path_face"
+          x="22"
+          y="82"
+          width="390"
+          height="28"
+          rx="0"
+          data-frog-bind="style.path_face.*" />
+
+    <g id="path_icon"
+       data-frog-part="path_icon"
+       data-frog-bind="display.icon_visible path.kind">
+      <rect x="30" y="89" width="16" height="12" fill="#fbbf24" stroke="#b45309" stroke-width="1" />
+      <path d="M30 89 L38 89 L40 92 L46 92 L46 101 L30 101 Z" fill="#fde68a" stroke="#b45309" stroke-width="1" />
+    </g>
+
+    <text id="path_display"
+          data-frog-part="path_display"
+          data-frog-member="value path.display_value"
+          data-frog-anchor="path_display.left_center"
+          x="56"
+          y="97"
+          dominant-baseline="middle"
+          data-frog-bind="value path.* display.* style.path_display.*">C:\data\file.txt</text>
+
+    <text id="text_overflow_marker"
+          data-frog-part="text_overflow_marker"
+          x="398"
+          y="97"
+          text-anchor="middle"
+          dominant-baseline="middle"
+          font-family="system-ui, Segoe UI, Arial, sans-serif"
+          font-size="12"
+          fill="#111111"
+          data-frog-bind="display.text_overflow_visible">…</text>
+
+    <rect id="browse_button"
+          data-frog-part="browse_button"
+          x="424"
+          y="82"
+          width="34"
+          height="28"
+          rx="2"
+          data-frog-bind="browse.enabled browse.button_visible style.browse_button.*" />
+
+    <text x="441"
+          y="97"
+          text-anchor="middle"
+          dominant-baseline="middle"
+          font-family="system-ui, Segoe UI, Arial, sans-serif"
+          font-size="14"
+          fill="#ffffff">…</text>
+
+    <g id="validation_marker"
+       data-frog-part="validation_marker"
+       data-frog-bind="validation.* display.validation_marker_visible">
+      <circle cx="478" cy="96" r="8" fill="#22c55e" />
+      <path d="M474 96 L477 100 L483 91" fill="none" stroke="#ffffff" stroke-width="2" />
+    </g>
+  </g>
+</svg>

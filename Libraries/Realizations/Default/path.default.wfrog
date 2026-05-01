@@ -1,0 +1,434 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_path_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.path",
+    "name": "FROG Default Path Realization",
+    "namespace": "frog.realizations.default.path",
+    "family": "default",
+    "summary": "Machine-readable default realization manifest for standardized path widgets."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default path realization records",
+      "path realization variant declarations",
+      "path realization resource references",
+      "path part bindings",
+      "path state maps",
+      "path realization property bindings",
+      "path anchors",
+      "path host hints",
+      "path realization validation expectations"
+    ],
+    "does_not_own": [
+      "path widget class law",
+      "path value semantics",
+      "host filesystem semantics",
+      "canonical .frog source",
+      "frog.ui primitive semantics",
+      "runtime-private browse handles",
+      "IDE-private picker behavior"
+    ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Path.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.path_control",
+      "role": "control",
+      "primary_value": {
+        "present": true,
+        "type": "path",
+        "user_mutable": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.path_indicator",
+      "role": "indicator",
+      "primary_value": {
+        "present": true,
+        "type": "path",
+        "user_mutable": false
+      }
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.path_control",
+      "frog.realizations.default.path_indicator"
+    ],
+    "variants": [
+      "frog.realizations.default.path.rectangular_field"
+    ],
+    "resources": [
+      "frog.realizations.default.path.assets.rectangular_field_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.path_control",
+      "family": "default",
+      "target_class": "frog.widgets.path_control",
+      "variant_property": "realization.variant",
+      "default_variant": "rectangular_field",
+      "supported_variants": [
+        "rectangular_field"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "path_face",
+        "path_display",
+        "browse_button",
+        "path_icon",
+        "validation_marker",
+        "text_overflow_marker",
+        "focus_ring"
+      ],
+      "supported_visual_states": [
+        "normal",
+        "focused",
+        "disabled",
+        "invalid",
+        "missing",
+        "inaccessible",
+        "browse_pressed"
+      ],
+      "fallbacks": {
+        "missing_browse_button": "host_native_browse_or_text_only",
+        "missing_validation_marker": "hide_validation_marker",
+        "missing_path_icon": "hide_path_icon",
+        "missing_caption": "host_external_caption_region"
+      }
+    },
+    {
+      "id": "frog.realizations.default.path_indicator",
+      "family": "default",
+      "target_class": "frog.widgets.path_indicator",
+      "variant_property": "realization.variant",
+      "default_variant": "rectangular_field",
+      "supported_variants": [
+        "rectangular_field"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "path_face",
+        "path_display",
+        "path_icon",
+        "validation_marker",
+        "text_overflow_marker",
+        "focus_ring"
+      ],
+      "supported_visual_states": [
+        "normal",
+        "focused",
+        "disabled",
+        "invalid",
+        "missing",
+        "inaccessible"
+      ],
+      "fallbacks": {
+        "missing_validation_marker": "hide_validation_marker",
+        "missing_path_icon": "hide_path_icon",
+        "missing_caption": "host_external_caption_region"
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "frog.realizations.default.path.rectangular_field",
+      "variant": "rectangular_field",
+      "target_classes": [
+        "frog.widgets.path_control",
+        "frog.widgets.path_indicator"
+      ],
+      "resource_ref": "frog.realizations.default.path.assets.rectangular_field_svg",
+      "geometry_posture": {
+        "shape_family": "rectangular_path_field",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "supports_browse_button": true,
+        "supports_validation_marker": true,
+        "supports_path_icon": true,
+        "supports_text_overflow_marker": true,
+        "supports_caption": true
+      },
+      "fallback": "host_path_field"
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.path.assets.rectangular_field_svg",
+      "kind": "svg",
+      "path": "./assets/path/templates/path_rectangular_field.svg",
+      "target_classes": [
+        "frog.widgets.path_control",
+        "frog.widgets.path_indicator"
+      ],
+      "target_variant": "rectangular_field",
+      "template_markers": {
+        "template": "frog.realizations.default.path.rectangular_field",
+        "variant": "rectangular_field",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
+    }
+  ],
+  "part_bindings": [
+    {
+      "part": "root",
+      "binding_kind": "svg_element",
+      "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "label",
+      "binding_kind": "svg_text_or_metadata",
+      "binding_selector": "[data-frog-part='label']",
+      "semantic_member": "label.text"
+    },
+    {
+      "part": "caption",
+      "binding_kind": "svg_text_or_host_text",
+      "binding_selector": "[data-frog-part='caption']",
+      "semantic_member": "caption.text"
+    },
+    {
+      "part": "frame",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='frame']",
+      "style_binding_group": "style.frame"
+    },
+    {
+      "part": "path_face",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='path_face']",
+      "style_binding_group": "style.path_face"
+    },
+    {
+      "part": "path_display",
+      "binding_kind": "svg_text_or_host_text",
+      "binding_selector": "[data-frog-part='path_display']",
+      "semantic_members": [
+        "value",
+        "path.display_value"
+      ],
+      "style_binding_group": "style.path_display"
+    },
+    {
+      "part": "browse_button",
+      "binding_kind": "svg_group_or_host_button",
+      "binding_selector": "[data-frog-part='browse_button']",
+      "method_member": "browse()"
+    },
+    {
+      "part": "path_icon",
+      "binding_kind": "svg_group_or_host_icon",
+      "binding_selector": "[data-frog-part='path_icon']",
+      "semantic_member": "path.kind"
+    },
+    {
+      "part": "validation_marker",
+      "binding_kind": "svg_group_or_host_marker",
+      "binding_selector": "[data-frog-part='validation_marker']",
+      "semantic_member": "path.validation_state"
+    },
+    {
+      "part": "text_overflow_marker",
+      "binding_kind": "svg_text_or_host_marker",
+      "binding_selector": "[data-frog-part='text_overflow_marker']",
+      "visibility_member": "display.text_overflow_visible"
+    },
+    {
+      "part": "focus_ring",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='focus_ring']",
+      "style_binding_group": "style.focus_ring"
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "normal"
+    },
+    {
+      "state": "focused",
+      "value_condition": {
+        "interaction.focused": true
+      },
+      "inherits": "normal"
+    },
+    {
+      "state": "disabled",
+      "value_condition": {
+        "interaction.enabled": false
+      },
+      "inherits": "normal"
+    },
+    {
+      "state": "invalid",
+      "value_condition": {
+        "path.validation_state": "invalid"
+      },
+      "inherits": "normal"
+    },
+    {
+      "state": "missing",
+      "value_condition": {
+        "path.validation_state": "missing"
+      },
+      "inherits": "normal"
+    },
+    {
+      "state": "inaccessible",
+      "value_condition": {
+        "path.validation_state": "inaccessible"
+      },
+      "inherits": "normal"
+    },
+    {
+      "state": "browse_pressed",
+      "value_condition": {
+        "browse.button_pressed": true
+      },
+      "inherits": "focused"
+    }
+  ],
+  "property_bindings": [
+    {
+      "member": "label.text",
+      "target_part": "label",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "caption.text",
+      "target_part": "caption",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "value",
+      "target_part": "path_display",
+      "target_operation": "render_path_value"
+    },
+    {
+      "member": "path.display_value",
+      "target_part": "path_display",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "path.kind",
+      "target_part": "path_icon",
+      "target_operation": "select_icon"
+    },
+    {
+      "member": "path.validation_state",
+      "target_part": "validation_marker",
+      "target_operation": "select_validation_visual"
+    },
+    {
+      "member": "browse.button_visible",
+      "target_part": "browse_button",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "display.icon_visible",
+      "target_part": "path_icon",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "display.validation_marker_visible",
+      "target_part": "validation_marker",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "display.text_overflow_visible",
+      "target_part": "text_overflow_marker",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "style.frame.*",
+      "target_part": "frame",
+      "target_operation": "apply_frame_style"
+    },
+    {
+      "member": "style.path_face.*",
+      "target_part": "path_face",
+      "target_operation": "apply_path_face_style"
+    },
+    {
+      "member": "style.path_display.*",
+      "target_part": "path_display",
+      "target_operation": "apply_text_style"
+    },
+    {
+      "member": "style.browse_button.*",
+      "target_part": "browse_button",
+      "target_operation": "apply_browse_button_style"
+    },
+    {
+      "member": "style.focus_ring.*",
+      "target_part": "focus_ring",
+      "target_operation": "apply_focus_ring_style"
+    }
+  ],
+  "anchors": [
+    {
+      "id": "frog.realizations.default.path.label.anchor",
+      "target_part": "label",
+      "source_selector": "[data-frog-anchor='label.anchor']",
+      "anchor_kind": "text_anchor"
+    },
+    {
+      "id": "frog.realizations.default.path.caption.anchor",
+      "target_part": "caption",
+      "source_selector": "[data-frog-anchor='caption.anchor']",
+      "anchor_kind": "text_anchor"
+    },
+    {
+      "id": "frog.realizations.default.path.path_display.left_center",
+      "target_part": "path_display",
+      "source_selector": "[data-frog-anchor='path_display.left_center']",
+      "anchor_kind": "text_anchor"
+    }
+  ],
+  "host_hints": {
+    "preferred_host_kind": "svg_template_host_or_host_native_path_field",
+    "resize_posture": "scale_template_to_front_panel_layout_rectangle",
+    "browse_posture": "host_may_provide_native_file_or_directory_picker",
+    "text_rendering_posture": "host_may_replace_template_text_content",
+    "style_application_posture": "apply_property_bindings_before_render",
+    "accessibility_posture": {
+      "roles": {
+        "frog.widgets.path_control": "textbox",
+        "frog.widgets.path_indicator": "status"
+      },
+      "value_source": "value",
+      "label_source": "label.text",
+      "caption_source": "caption.text"
+    }
+  },
+  "validation_expectations": [
+    "target classes must exist in Libraries/Widgets/Path.md",
+    "all declared public parts must exist in the path class law",
+    "resources must resolve relative to this package file",
+    "resource SVG templates should expose data-frog-part markers for declared parts",
+    "value must be path-typed",
+    "unsupported host browse behavior must be explicit",
+    "property bindings must target public path members declared by class law",
+    "variant selection must not create a new widget class"
+  ]
+}

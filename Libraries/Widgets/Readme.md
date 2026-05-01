@@ -15,7 +15,11 @@
 
 <table>
   <thead>
-    <tr><th>Widget document</th><th>Standard classes</th><th>Current role</th></tr>
+    <tr>
+      <th>Widget document</th>
+      <th>Standard classes</th>
+      <th>Current role</th>
+    </tr>
   </thead>
   <tbody>
     <tr><td><a href="./Boolean.md"><code>Boolean.md</code></a></td><td><code>frog.widgets.boolean_control</code>, <code>frog.widgets.boolean_indicator</code></td><td>True/false control and display baseline.</td></tr>
@@ -26,6 +30,7 @@
     <tr><td><a href="./Label.md"><code>Label.md</code></a></td><td><code>frog.widgets.label</code></td><td>Standalone support text.</td></tr>
     <tr><td><a href="./Frame.md"><code>Frame.md</code></a></td><td><code>frog.widgets.frame</code></td><td>Standalone grouping frame.</td></tr>
     <tr><td><a href="./Enum.md"><code>Enum.md</code></a></td><td><code>frog.widgets.enum_control</code>, <code>frog.widgets.enum_indicator</code></td><td>Finite discrete named-value selection and display.</td></tr>
+    <tr><td><a href="./Path.md"><code>Path.md</code></a></td><td><code>frog.widgets.path_control</code>, <code>frog.widgets.path_indicator</code></td><td>Path-typed selection and display.</td></tr>
   </tbody>
 </table>
 
@@ -39,7 +44,7 @@
 </ul>
 
 <p>
-Widget-specific text surfaces remain class-owned when published, such as <code>text.value</code> for labels, <code>state_text.*</code> for buttons and booleans, and <code>selected.text</code> for enums.
+Widget-specific semantic text surfaces remain class-owned when published, such as <code>text.value</code> for labels, <code>state_text.*</code> for buttons and booleans, <code>selected.text</code> for enums, and <code>path.display_value</code> for paths.
 </p>
 
 <hr/>
@@ -47,5 +52,5 @@ Widget-specific text surfaces remain class-owned when published, such as <code>t
 <h2>Next Growth Direction</h2>
 
 <p>
-The next coherent widget candidates are <code>Path</code>, <code>Array</code>, and <code>Cluster</code>.
+The next coherent widget candidates are <code>Array</code> and <code>Cluster</code>.
 </p>
