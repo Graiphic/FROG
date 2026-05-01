@@ -508,6 +508,13 @@
                       "children": []
                     },
                     {
+                      "key": "libraries/realizations/default/decorations.md",
+                      "title": "Decorations",
+                      "path": "/Libraries/Realizations/Default/Decorations.md",
+                      "kind": "page",
+                      "children": []
+                    },
+                    {
                       "key": "libraries/realizations/default/enum.md",
                       "title": "Enum",
                       "path": "/Libraries/Realizations/Default/Enum.md",
@@ -550,6 +557,13 @@
                       "children": []
                     },
                     {
+                      "key": "libraries/realizations/default/panel.md",
+                      "title": "Panel",
+                      "path": "/Libraries/Realizations/Default/Panel.md",
+                      "kind": "page",
+                      "children": []
+                    },
+                    {
                       "key": "libraries/realizations/default/path.md",
                       "title": "Path",
                       "path": "/Libraries/Realizations/Default/Path.md",
@@ -567,6 +581,13 @@
                       "key": "libraries/realizations/default/resource-model.md",
                       "title": "Resource model",
                       "path": "/Libraries/Realizations/Default/Resource%20model.md",
+                      "kind": "page",
+                      "children": []
+                    },
+                    {
+                      "key": "libraries/realizations/default/splitter.md",
+                      "title": "Splitter",
+                      "path": "/Libraries/Realizations/Default/Splitter.md",
                       "kind": "page",
                       "children": []
                     },
@@ -647,6 +668,13 @@
                           "children": []
                         },
                         {
+                          "key": "libraries/realizations/default/assets/decorations/",
+                          "title": "decorations",
+                          "path": "/Libraries/Realizations/Default/assets/decorations/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        },
+                        {
                           "key": "libraries/realizations/default/assets/enum/",
                           "title": "enum",
                           "path": "/Libraries/Realizations/Default/assets/enum/Readme.md",
@@ -668,9 +696,23 @@
                           "children": []
                         },
                         {
+                          "key": "libraries/realizations/default/assets/listbox/",
+                          "title": "listbox",
+                          "path": "/Libraries/Realizations/Default/assets/listbox/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        },
+                        {
                           "key": "libraries/realizations/default/assets/numeric/",
                           "title": "numeric",
                           "path": "/Libraries/Realizations/Default/assets/numeric/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        },
+                        {
+                          "key": "libraries/realizations/default/assets/panel/",
+                          "title": "panel",
+                          "path": "/Libraries/Realizations/Default/assets/panel/Readme.md",
                           "kind": "category",
                           "children": []
                         },
@@ -682,9 +724,44 @@
                           "children": []
                         },
                         {
+                          "key": "libraries/realizations/default/assets/picture/",
+                          "title": "picture",
+                          "path": "/Libraries/Realizations/Default/assets/picture/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        },
+                        {
+                          "key": "libraries/realizations/default/assets/splitter/",
+                          "title": "splitter",
+                          "path": "/Libraries/Realizations/Default/assets/splitter/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        },
+                        {
                           "key": "libraries/realizations/default/assets/string/",
                           "title": "string",
                           "path": "/Libraries/Realizations/Default/assets/string/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        },
+                        {
+                          "key": "libraries/realizations/default/assets/tab/",
+                          "title": "tab",
+                          "path": "/Libraries/Realizations/Default/assets/tab/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        },
+                        {
+                          "key": "libraries/realizations/default/assets/table/",
+                          "title": "table",
+                          "path": "/Libraries/Realizations/Default/assets/table/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        },
+                        {
+                          "key": "libraries/realizations/default/assets/tree/",
+                          "title": "tree",
+                          "path": "/Libraries/Realizations/Default/assets/tree/Readme.md",
                           "kind": "category",
                           "children": []
                         }
@@ -780,6 +857,13 @@
                   "children": []
                 },
                 {
+                  "key": "libraries/widgets/decorations.md",
+                  "title": "Decorations",
+                  "path": "/Libraries/Widgets/Decorations.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
                   "key": "libraries/widgets/enum.md",
                   "title": "Enum",
                   "path": "/Libraries/Widgets/Enum.md",
@@ -815,6 +899,13 @@
                   "children": []
                 },
                 {
+                  "key": "libraries/widgets/panel.md",
+                  "title": "Panel",
+                  "path": "/Libraries/Widgets/Panel.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
                   "key": "libraries/widgets/path.md",
                   "title": "Path",
                   "path": "/Libraries/Widgets/Path.md",
@@ -825,6 +916,13 @@
                   "key": "libraries/widgets/picture.md",
                   "title": "Picture",
                   "path": "/Libraries/Widgets/Picture.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
+                  "key": "libraries/widgets/splitter.md",
+                  "title": "Splitter",
+                  "path": "/Libraries/Widgets/Splitter.md",
                   "kind": "page",
                   "children": []
                 },
@@ -2905,15 +3003,18 @@
     "/Libraries/Realizations/Default/Button.md",
     "/Libraries/Realizations/Default/Chart.md",
     "/Libraries/Realizations/Default/Cluster.md",
+    "/Libraries/Realizations/Default/Decorations.md",
     "/Libraries/Realizations/Default/Enum.md",
     "/Libraries/Realizations/Default/Frame.md",
     "/Libraries/Realizations/Default/Label.md",
     "/Libraries/Realizations/Default/Listbox.md",
     "/Libraries/Realizations/Default/Numeric.md",
     "/Libraries/Realizations/Default/Package.md",
+    "/Libraries/Realizations/Default/Panel.md",
     "/Libraries/Realizations/Default/Path.md",
     "/Libraries/Realizations/Default/Picture.md",
     "/Libraries/Realizations/Default/Resource%20model.md",
+    "/Libraries/Realizations/Default/Splitter.md",
     "/Libraries/Realizations/Default/State%20mapping.md",
     "/Libraries/Realizations/Default/String.md",
     "/Libraries/Realizations/Default/Tab.md",
@@ -2924,12 +3025,20 @@
     "/Libraries/Realizations/Default/assets/button/Readme.md",
     "/Libraries/Realizations/Default/assets/chart/Readme.md",
     "/Libraries/Realizations/Default/assets/cluster/Readme.md",
+    "/Libraries/Realizations/Default/assets/decorations/Readme.md",
     "/Libraries/Realizations/Default/assets/enum/Readme.md",
     "/Libraries/Realizations/Default/assets/frame/Readme.md",
     "/Libraries/Realizations/Default/assets/label/Readme.md",
+    "/Libraries/Realizations/Default/assets/listbox/Readme.md",
     "/Libraries/Realizations/Default/assets/numeric/Readme.md",
+    "/Libraries/Realizations/Default/assets/panel/Readme.md",
     "/Libraries/Realizations/Default/assets/path/Readme.md",
+    "/Libraries/Realizations/Default/assets/picture/Readme.md",
+    "/Libraries/Realizations/Default/assets/splitter/Readme.md",
     "/Libraries/Realizations/Default/assets/string/Readme.md",
+    "/Libraries/Realizations/Default/assets/tab/Readme.md",
+    "/Libraries/Realizations/Default/assets/table/Readme.md",
+    "/Libraries/Realizations/Default/assets/tree/Readme.md",
     "/Libraries/Realizations/Default/Assets/Naming.md",
     "/Libraries/Realizations/Default/Assets/Readme.md",
     "/Libraries/Realizations/Default/Examples/Button%20default%20realization.wfrog.md",
@@ -2943,13 +3052,16 @@
     "/Libraries/Widgets/Button.md",
     "/Libraries/Widgets/Chart.md",
     "/Libraries/Widgets/Cluster.md",
+    "/Libraries/Widgets/Decorations.md",
     "/Libraries/Widgets/Enum.md",
     "/Libraries/Widgets/Frame.md",
     "/Libraries/Widgets/Label.md",
     "/Libraries/Widgets/Listbox.md",
     "/Libraries/Widgets/Numeric.md",
+    "/Libraries/Widgets/Panel.md",
     "/Libraries/Widgets/Path.md",
     "/Libraries/Widgets/Picture.md",
+    "/Libraries/Widgets/Splitter.md",
     "/Libraries/Widgets/String.md",
     "/Libraries/Widgets/Styling.md",
     "/Libraries/Widgets/Tab.md",
