@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 380 150"
+     role="img"
+     aria-label="FROG default enum rectangular ring realization template"
+     data-frog-template="frog.realizations.default.enum.rectangular_ring"
+     data-frog-target-classes="frog.widgets.enum_control frog.widgets.enum_indicator"
+     data-frog-variant="rectangular_ring">
+  <title>FROG Default Enum Rectangular Ring Realization Template</title>
+  <desc>Semantic SVG template for the default enum ring-like realization.</desc>
+
+  <g id="root" data-frog-part="root">
+    <text id="label_text"
+          data-frog-part="label"
+          data-frog-member="label.text"
+          data-frog-anchor="label.anchor"
+          x="16"
+          y="18"
+          font-family="system-ui, Segoe UI, Arial, sans-serif"
+          font-size="12"
+          fill="#6b7280">enum_1</text>
+
+    <text id="caption_text"
+          data-frog-part="caption"
+          data-frog-member="caption.text"
+          data-frog-anchor="caption.anchor"
+          x="16"
+          y="46"
+          font-family="system-ui, Segoe UI, Arial, sans-serif"
+          font-size="18"
+          fill="#d00000">Enum</text>
+
+    <rect id="focus_ring"
+          data-frog-part="focus_ring"
+          x="4"
+          y="64"
+          width="360"
+          height="64"
+          rx="6"
+          fill="none"
+          stroke="#2f80ed"
+          stroke-width="3"
+          opacity="0"
+          data-frog-bind="interaction.focused style.focus_ring.*" />
+
+    <rect id="frame"
+          data-frog-part="frame"
+          x="12"
+          y="72"
+          width="282"
+          height="48"
+          fill="#ffffff"
+          stroke="#000000"
+          stroke-width="6"
+          data-frog-bind="style.frame.*" />
+
+    <rect id="value_face"
+          data-frog-part="value_face"
+          x="22"
+          y="82"
+          width="206"
+          height="28"
+          fill="#ffffff"
+          stroke="#94a3b8"
+          stroke-width="1"
+          data-frog-bind="style.value_face.*" />
+
+    <text id="value_display"
+          data-frog-part="value_display"
+          data-frog-member="value selected.text"
+          data-frog-anchor="value_display.left_center"
+          x="34"
+          y="97"
+          dominant-baseline="middle"
+          font-family="system-ui, Segoe UI, Arial, sans-serif"
+          font-size="16"
+          fill="#111111"
+          data-frog-bind="value items[] selected.* style.value_display.*">Item 0</text>
+
+    <rect id="selector_face"
+          data-frog-part="selector_face"
+          x="232"
+          y="82"
+          width="20"
+          height="28"
+          rx="1"
+          fill="#e5e7eb"
+          stroke="#94a3b8"
+          stroke-width="1"
+          data-frog-bind="interaction.opened style.selector_face.*" />
+
+    <path id="selector_arrow" d="M237 93 L247 93 L242 101 Z" fill="#111111" />
+
+    <g id="increment_up" data-frog-part="increment_up" data-frog-bind="display.increment_buttons_visible">
+      <rect x="260" y="82" width="24" height="13" fill="#5b9bd5" />
+      <path d="M272 85 L278 92 L266 92 Z" fill="none" stroke="#ffffff" stroke-width="2" />
+    </g>
+
+    <g id="increment_down" data-frog-part="increment_down" data-frog-bind="display.increment_buttons_visible">
+      <rect x="260" y="97" width="24" height="13" fill="#5b9bd5" />
+      <path d="M266 100 L278 100 L272 107 Z" fill="none" stroke="#ffffff" stroke-width="2" />
+    </g>
+
+    <rect id="digital_display"
+          data-frog-part="digital_display"
+          x="304"
+          y="82"
+          width="46"
+          height="28"
+          rx="1"
+          fill="#ffffff"
+          stroke="#94a3b8"
+          stroke-width="1"
+          data-frog-bind="display.digital_display_visible selected.numeric_value" />
+
+    <text id="digital_display_text"
+          x="327"
+          y="97"
+          text-anchor="middle"
+          dominant-baseline="middle"
+          font-family="system-ui, Segoe UI, Arial, sans-serif"
+          font-size="12"
+          fill="#111111">0</text>
+
+    <text id="text_overflow_marker"
+          data-frog-part="text_overflow_marker"
+          data-frog-bind="display.text_overflow_visible"
+          x="216"
+          y="97"
+          text-anchor="middle"
+          dominant-baseline="middle"
+          font-family="system-ui, Segoe UI, Arial, sans-serif"
+          font-size="12"
+          fill="#111111">…</text>
+  </g>
+</svg>

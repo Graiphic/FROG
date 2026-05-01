@@ -1,0 +1,241 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_enum_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.enum",
+    "name": "FROG Default Enum Realization",
+    "namespace": "frog.realizations.default.enum",
+    "family": "default"
+  },
+  "ownership_boundary": {
+    "owns": [
+      "enum realization records",
+      "enum resources",
+      "enum part bindings",
+      "enum state maps",
+      "enum property bindings",
+      "enum anchors",
+      "enum host hints"
+    ],
+    "does_not_own": [
+      "enum widget class law",
+      "enum item semantics",
+      "enum value semantics",
+      "canonical .frog source",
+      "frog.ui primitive semantics"
+    ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Enum.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.enum_control",
+      "role": "control",
+      "primary_value": {
+        "present": true,
+        "kind": "enum_item_id",
+        "user_mutable": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.enum_indicator",
+      "role": "indicator",
+      "primary_value": {
+        "present": true,
+        "kind": "enum_item_id",
+        "user_mutable": false
+      }
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.enum_control",
+      "frog.realizations.default.enum_indicator"
+    ],
+    "variants": [
+      "frog.realizations.default.enum.rectangular_ring"
+    ],
+    "resources": [
+      "frog.realizations.default.enum.assets.rectangular_ring_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.enum_control",
+      "family": "default",
+      "target_class": "frog.widgets.enum_control",
+      "default_variant": "rectangular_ring",
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "value_face",
+        "value_display",
+        "selector_face",
+        "increment_up",
+        "increment_down",
+        "digital_display",
+        "text_overflow_marker",
+        "focus_ring"
+      ],
+      "supported_visual_states": [
+        "normal",
+        "focused",
+        "disabled",
+        "opened",
+        "pressed"
+      ]
+    },
+    {
+      "id": "frog.realizations.default.enum_indicator",
+      "family": "default",
+      "target_class": "frog.widgets.enum_indicator",
+      "default_variant": "rectangular_ring",
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "value_face",
+        "value_display",
+        "digital_display",
+        "text_overflow_marker",
+        "focus_ring"
+      ],
+      "supported_visual_states": [
+        "normal",
+        "focused",
+        "disabled"
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "id": "frog.realizations.default.enum.rectangular_ring",
+      "variant": "rectangular_ring",
+      "target_classes": [
+        "frog.widgets.enum_control",
+        "frog.widgets.enum_indicator"
+      ],
+      "resource_ref": "frog.realizations.default.enum.assets.rectangular_ring_svg"
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.enum.assets.rectangular_ring_svg",
+      "kind": "svg",
+      "path": "./assets/enum/templates/enum_rectangular_ring.svg",
+      "target_classes": [
+        "frog.widgets.enum_control",
+        "frog.widgets.enum_indicator"
+      ],
+      "target_variant": "rectangular_ring"
+    }
+  ],
+  "part_bindings": [
+    {
+      "part": "label",
+      "semantic_member": "label.text"
+    },
+    {
+      "part": "caption",
+      "semantic_member": "caption.text"
+    },
+    {
+      "part": "value_display",
+      "semantic_members": [
+        "value",
+        "selected.text",
+        "items[]"
+      ]
+    },
+    {
+      "part": "digital_display",
+      "semantic_member": "selected.numeric_value"
+    },
+    {
+      "part": "increment_up",
+      "method_member": "select_next()"
+    },
+    {
+      "part": "increment_down",
+      "method_member": "select_previous()"
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "normal"
+    },
+    {
+      "state": "focused"
+    },
+    {
+      "state": "disabled"
+    },
+    {
+      "state": "opened"
+    },
+    {
+      "state": "pressed"
+    }
+  ],
+  "property_bindings": [
+    {
+      "member": "value",
+      "target_part": "value_display",
+      "target_operation": "render_selected_item"
+    },
+    {
+      "member": "items[]",
+      "target_part": "value_display",
+      "target_operation": "resolve_selected_item_text"
+    },
+    {
+      "member": "selected.numeric_value",
+      "target_part": "digital_display",
+      "target_operation": "set_numeric_text"
+    },
+    {
+      "member": "display.digital_display_visible",
+      "target_part": "digital_display",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "display.increment_buttons_visible",
+      "target_part": "increment_up",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "display.text_overflow_visible",
+      "target_part": "text_overflow_marker",
+      "target_operation": "set_visibility"
+    }
+  ],
+  "anchors": [
+    {
+      "id": "frog.realizations.default.enum.value_display.left_center",
+      "target_part": "value_display",
+      "source_selector": "[data-frog-anchor='value_display.left_center']",
+      "anchor_kind": "text_anchor"
+    }
+  ],
+  "host_hints": {
+    "preferred_host_kind": "svg_template_host_or_host_native_single_selector",
+    "popup_posture": "host_may_provide_native_popup_for_item_selection"
+  },
+  "validation_expectations": [
+    "target classes must exist in Libraries/Widgets/Enum.md",
+    "value must resolve to a declared item unless undefined runtime values are explicitly allowed",
+    "items must preserve stable ids"
+  ]
+}

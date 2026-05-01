@@ -23,8 +23,9 @@
     <tr><td>Button</td><td>Published core class law</td><td>Published Default manifest and state SVG resources</td><td>Mechanical-action behavior is part of class law.</td></tr>
     <tr><td>Numeric</td><td>Published core class law</td><td>Published Default manifest and SVG template</td><td>Modern numeric representation model exists while Example 05 flat-surface compatibility is preserved.</td></tr>
     <tr><td>Waveform Chart</td><td>Published composite class law</td><td>Published Default manifest with subobject SVG composition</td><td>Composite model includes plot area, plots, scales, legends, palette, scrollbars, optional cursors, and plot-image layers.</td></tr>
-    <tr><td>Label</td><td>Published support-widget class law</td><td>Published Default manifest and SVG template</td><td>Standalone support-text widget; visible support text is <code>text.value</code>, not common <code>label.text</code>.</td></tr>
-    <tr><td>Frame</td><td>Published support-widget class law</td><td>Published Default manifest and SVG template</td><td>Standalone visual grouping widget; visible title is <code>caption.text</code>.</td></tr>
+    <tr><td>Label</td><td>Published support-widget class law</td><td>Published Default manifest and SVG template</td><td>Standalone support-text widget.</td></tr>
+    <tr><td>Frame</td><td>Published support-widget class law</td><td>Published Default manifest and SVG template</td><td>Standalone grouping-frame widget.</td></tr>
+    <tr><td>Enum</td><td>Published near-core class law</td><td>Published Default manifest and SVG template</td><td>Finite discrete named-value selection and display with explicit item inventory and underlying representation.</td></tr>
   </tbody>
 </table>
 
@@ -33,6 +34,6 @@
 <h2>Summary</h2>
 
 <p>
-The current widget baseline now includes Boolean, String, Button, Numeric, Waveform Chart, Label, and Frame.
-The next coherent widget target is <code>Enum</code> or <code>Path</code>.
+The current widget baseline now includes Boolean, String, Button, Numeric, Waveform Chart, Label, Frame, and Enum.
+The next coherent widget target is <code>Path</code>.
 </p>
