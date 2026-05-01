@@ -5,9 +5,24 @@
 <h1 align="center">FROG Standard Label Widget</h1>
 
 <p align="center">
-  <strong>Normative baseline for the standardized label widget class</strong><br/>
+  <strong>Normative baseline for the standardized standalone label support widget</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
+
+<hr/>
+
+<h2>Navigation</h2>
+
+<ul>
+  <li><a href="./Readme.md">Widgets index</a></li>
+  <li><a href="../../Expression/Widget.md">Expression widget instances</a></li>
+  <li><a href="../../Expression/Widget%20interaction.md">Expression widget interaction</a></li>
+  <li><a href="../../Expression/Widget%20realization.md">Expression widget realization</a></li>
+  <li><a href="../../Expression/Widget%20package%20(.wfrog).md">Widget package publication</a></li>
+  <li><a href="../../Libraries/UI.md">Executable UI primitives</a></li>
+  <li><a href="../../Libraries/Realizations/Default/Label.md">Default label realization</a></li>
+  <li><a href="../../Libraries/Realizations/Default/label.default.wfrog">Default label realization manifest</a></li>
+</ul>
 
 <hr/>
 
@@ -16,14 +31,17 @@
 <ul>
   <li><a href="#overview">1. Overview</a></li>
   <li><a href="#class-defined-here">2. Class Defined Here</a></li>
-  <li><a href="#frogwidgetslabel">3. <code>frog.widgets.label</code></a></li>
-  <li><a href="#text-model">4. Text Model</a></li>
-  <li><a href="#standard-parts">5. Standard Parts</a></li>
-  <li><a href="#behavior-expectations">6. Behavior Expectations</a></li>
-  <li><a href="#realization-expectations">7. Realization Expectations</a></li>
-  <li><a href="#diagram-interaction-posture">8. Diagram Interaction Posture</a></li>
-  <li><a href="#validation-expectations">9. Validation Expectations</a></li>
-  <li><a href="#summary">10. Summary</a></li>
+  <li><a href="#label-property-versus-label-widget">3. Label Property versus Label Widget</a></li>
+  <li><a href="#class-posture">4. Class Posture</a></li>
+  <li><a href="#text-model">5. Text Model</a></li>
+  <li><a href="#public-part-model">6. Public Part Model</a></li>
+  <li><a href="#standard-property-surface">7. Standard Property Surface</a></li>
+  <li><a href="#standard-methods">8. Standard Methods</a></li>
+  <li><a href="#standard-events">9. Standard Events</a></li>
+  <li><a href="#default-realization-posture">10. Default Realization Posture</a></li>
+  <li><a href="#diagram-interaction-posture">11. Diagram Interaction Posture</a></li>
+  <li><a href="#validation-expectations">12. Validation Expectations</a></li>
+  <li><a href="#summary">13. Summary</a></li>
 </ul>
 
 <hr/>
@@ -31,293 +49,229 @@
 <h2 id="overview">1. Overview</h2>
 
 <p>
-This document defines the intrinsic standardized baseline for the label widget of FROG.
+This document defines <code>frog.widgets.label</code>, the standardized standalone label support widget.
 </p>
 
 <p>
-The label is a support-oriented widget.
-Its primary role is to expose portable semantic support text in the front panel rather than a business value intended for ordinary computational dataflow.
+A label widget is a front-panel text object used for titles, instructions, annotations, warnings, section descriptions, and other user-facing support text.
+It is not the same thing as the common <code>label.*</code> property present on other widgets.
 </p>
 
 <p>
-The standard label is therefore defined here as a stable public object surface with a minimal but real property surface, a minimal but real method surface, a minimal but real event surface, and stable public parts.
-It is not defined here as a decorative SVG fragment or a realization-private text layer.
+The label widget is intentionally small, but it is still a real widget class with public properties, methods, events, parts, and a default realization posture.
 </p>
 
 <hr/>
 
 <h2 id="class-defined-here">2. Class Defined Here</h2>
 
-<p>
-This document defines the following standardized widget class:
-</p>
-
 <ul>
   <li><code>frog.widgets.label</code></li>
 </ul>
 
 <hr/>
 
-<h2 id="frogwidgetslabel">3. <code>frog.widgets.label</code></h2>
+<h2 id="label-property-versus-label-widget">3. Label Property versus Label Widget</h2>
 
-<h3>3.1 Class identity</h3>
+<p>
+FROG distinguishes:
+</p>
+
+<pre><code>label.*
+    - common structural / logical widget-name surface
+    - available on many widget classes
+
+frog.widgets.label
+    - standalone support-text widget
+    - placed as an object on the front panel
+</code></pre>
+
+<p>
+For <code>frog.widgets.label</code>, the displayed support text is not <code>label.text</code>.
+The displayed support text is:
+</p>
+
+<pre><code>text.value</code></pre>
+
+<p>
+This avoids the ambiguity where the widget's logical name and its visible support text would otherwise collide.
+</p>
+
+<hr/>
+
+<h2 id="class-posture">4. Class Posture</h2>
 
 <ul>
   <li><strong>class_id:</strong> <code>frog.widgets.label</code></li>
   <li><strong>family:</strong> <code>support_widget</code></li>
   <li><strong>compatible role:</strong> <code>support</code></li>
-</ul>
-
-<h3>3.2 Primary value posture</h3>
-
-<p>
-The intrinsic label baseline does not define a standard primary business-value surface intended for ordinary front-panel dataflow.
-</p>
-
-<p>
-Instead, the standard label is primarily text-oriented and support-oriented.
-Its principal public semantic surface is exposed through <code>text</code>.
-</p>
-
-<p>
-Accordingly:
-</p>
-
-<ul>
-  <li>the intrinsic label baseline does not require natural <code>widget_value</code> participation,</li>
-  <li>the standard label is primarily targeted through <code>widget_reference</code>,</li>
-  <li>its portable baseline is centered on object-style interaction and support-text semantics.</li>
-</ul>
-
-<h3>3.3 Standard properties</h3>
-
-<ul>
-  <li><code>text</code> — semantic support text shown by the label</li>
-  <li><code>interaction.visible</code></li>
-  <li><code>style.text_color</code> when exposed by the class or active profile</li>
-  <li><code>style.font_family</code> when exposed by the class or active profile</li>
-  <li><code>style.font_size</code> when exposed by the class or active profile</li>
-  <li><code>style.font_weight</code> when exposed by the class or active profile</li>
-  <li><code>style.text_alignment</code> when exposed by the class or active profile</li>
-</ul>
-
-<h3>3.4 Standard methods</h3>
-
-<ul>
-  <li><code>set_text(text)</code></li>
-  <li><code>reset_to_default_style()</code> when a style default exists and the active class posture exposes it</li>
+  <li><strong>primary business value:</strong> absent in the intrinsic baseline</li>
+  <li><strong>natural <code>widget_value</code> participation:</strong> not required</li>
+  <li><strong>preferred access posture:</strong> <code>widget_reference</code> plus <code>frog.ui.*</code></li>
 </ul>
 
 <p>
-The baseline method surface is intentionally small.
-It exists to guarantee that the label remains a real support object rather than a realization-private text decoration.
+The standardized label is primarily a front-panel support object.
+It may be dynamically updated, but it is not a computational value input or output in the way that numeric, string, boolean, or chart widgets are.
 </p>
 
-<h3>3.5 Standard events</h3>
+<hr/>
+
+<h2 id="text-model">5. Text Model</h2>
+
+<p>
+The semantic support text is owned by:
+</p>
+
+<pre><code>text.value</code></pre>
 
 <ul>
-  <li><code>text_changed</code></li>
-  <li><code>value_rendered</code> when the active class posture exposes visible refresh-oriented notification</li>
+  <li><code>text.value</code> — support text content.</li>
+  <li><code>text.visible</code> — visibility of the text content inside the label widget.</li>
+  <li><code>text.multiline</code> — whether multiline text is allowed.</li>
+  <li><code>text.wrap_enabled</code> — whether text wraps inside the label text region.</li>
+  <li><code>text.horizontal_alignment</code> — horizontal alignment.</li>
+  <li><code>text.vertical_alignment</code> — vertical alignment.</li>
+  <li><code>text.padding</code> — inset from the label content region.</li>
+  <li><code>text.clip_overflow</code> — whether overflowing text is clipped.</li>
 </ul>
 
-<h3>3.6 Standard parts</h3>
+<p>
+Text styling belongs to portable style surfaces where exposed.
+Text placement belongs to realization.
+The SVG asset must not be the semantic owner of the live label text.
+</p>
+
+<hr/>
+
+<h2 id="public-part-model">6. Public Part Model</h2>
 
 <ul>
   <li><code>root</code></li>
+  <li><code>background</code></li>
+  <li><code>frame</code></li>
   <li><code>text_surface</code></li>
-  <li><code>frame</code> when present</li>
+  <li><code>focus_ring</code> when supported</li>
 </ul>
 
 <hr/>
 
-<h2 id="text-model">4. Text Model</h2>
+<h2 id="standard-property-surface">7. Standard Property Surface</h2>
 
-<h3>4.1 Semantic text ownership</h3>
-
-<p>
-The standard label exposes a semantic text-facing surface through <code>text</code>.
-This property is the portable public owner of the user-authored label content in the intrinsic baseline.
-</p>
-
-<p>
-The semantic label text does not belong to an SVG asset, to a realization-private skin file, or to one runtime's private host structure.
-A realization may position, style, clip, anchor, or decorate the text visually, but it does not become the semantic owner of the text itself.
-</p>
-
-<h3>4.2 Text style posture</h3>
-
-<p>
-When the active profile or standardized class surface exposes text styling, those style properties remain portable widget properties rather than realization-private constants.
-</p>
-
-<p>
-This means that text color, font family, font size, font weight, alignment, and related text-presentation surfaces are expected to be controlled through published widget-visible properties when supported, not hardcoded as the only source of truth inside SVG content.
-</p>
-
-<h3>4.3 Text placement posture</h3>
-
-<p>
-Text placement belongs to realization, not to public label semantics.
-A realization family may define text anchors, alignment boxes, padding regions, clipping regions, or equivalent placement metadata for the <code>text_surface</code> part.
-</p>
-
-<p>
-The class law only defines that <code>text_surface</code> exists as a stable public part and that <code>text</code> is the semantic text surface.
-The realization layer decides where and how that text is visually placed.
-</p>
-
-<h3>4.4 SVG posture</h3>
-
-<p>
-SVG resources may provide background shapes, decorative layers, text anchor geometry, placeholder layout hints, or visual emphasis resources.
-However, the SVG resource must not be the sole owner of the live user-facing label text.
-</p>
-
-<p>
-A host runtime interpreting the label is expected to render or inject the current semantic text dynamically according to the published class surface and the active realization mapping.
-</p>
-
-<hr/>
-
-<h2 id="standard-parts">5. Standard Parts</h2>
-
-<p>
-The label family uses the following common stable parts:
-</p>
+<h3>7.1 Logical widget label</h3>
 
 <ul>
-  <li><code>root</code> — root widget surface</li>
-  <li><code>text_surface</code> — the visible semantic text surface realized by the host</li>
-  <li><code>frame</code> — optional outer emphasis or grouping surface</li>
+  <li><code>label.text</code> — structural / logical name of the label widget.</li>
+  <li><code>label.visible</code> — whether the structural label is host-visible where supported.</li>
 </ul>
 
-<p>
-The <code>text_surface</code> part is especially important because it preserves the distinction between:
-</p>
+<h3>7.2 Support text</h3>
 
 <ul>
-  <li>semantic support text owned by <code>text</code>,</li>
-  <li>text styling exposed through widget-visible style surfaces where supported,</li>
-  <li>text placement owned by realization,</li>
-  <li>decorative or placeholder visual text content that may appear in assets.</li>
+  <li><code>text.value : string</code></li>
+  <li><code>text.visible : bool</code></li>
+  <li><code>text.multiline : bool</code></li>
+  <li><code>text.wrap_enabled : bool</code></li>
+  <li><code>text.horizontal_alignment : enum</code></li>
+  <li><code>text.vertical_alignment : enum</code></li>
+  <li><code>text.padding : length</code></li>
+  <li><code>text.clip_overflow : bool</code></li>
+</ul>
+
+<h3>7.3 Interaction</h3>
+
+<ul>
+  <li><code>interaction.visible : bool</code></li>
+  <li><code>interaction.enabled : bool</code> — host affordance only; the label remains support-oriented.</li>
+  <li><code>interaction.focusable : bool</code> when exposed.</li>
+  <li><code>interaction.focused : bool</code> when exposed.</li>
+</ul>
+
+<h3>7.4 Style</h3>
+
+<ul>
+  <li><code>style.text.color : frog.color.rgba8</code></li>
+  <li><code>style.text.font_family : string</code></li>
+  <li><code>style.text.font_size : length</code></li>
+  <li><code>style.text.font_weight : enum</code></li>
+  <li><code>style.text.font_style : enum</code></li>
+  <li><code>style.text.text_decoration : enum</code></li>
+  <li><code>style.background.visible : bool</code></li>
+  <li><code>style.background.fill_color : frog.color.rgba8</code></li>
+  <li><code>style.frame.visible : bool</code></li>
+  <li><code>style.frame.border_color : frog.color.rgba8</code></li>
+  <li><code>style.frame.border_width : length</code></li>
+  <li><code>style.frame.corner_radius : length</code></li>
+  <li><code>style.focus_ring.*</code> when focus posture is exposed.</li>
+</ul>
+
+<h3>7.5 Realization</h3>
+
+<ul>
+  <li><code>realization.family : string</code></li>
+  <li><code>realization.variant : string</code></li>
+  <li><code>realization.skin_id : string</code></li>
 </ul>
 
 <hr/>
 
-<h2 id="behavior-expectations">6. Behavior Expectations</h2>
-
-<p>
-The intrinsic behavior baseline of the label includes at least:
-</p>
+<h2 id="standard-methods">8. Standard Methods</h2>
 
 <ul>
-  <li>text updates may emit <code>text_changed</code>,</li>
-  <li>visible refresh may emit <code>value_rendered</code> when the class posture exposes it,</li>
-  <li>runtime-private styling or rendering caches do not become public class state.</li>
-</ul>
-
-<p>
-The intrinsic label baseline does not require focus behavior, command behavior, or natural primary-value semantics.
-If such surfaces exist in an extended class or composite posture, they must be published explicitly by that higher-level contract rather than inferred from realization assets.
-</p>
-
-<hr/>
-
-<h2 id="realization-expectations">7. Realization Expectations</h2>
-
-<p>
-A conforming realization of the label SHOULD provide:
-</p>
-
-<ul>
-  <li>a clearly readable text surface,</li>
-  <li>stable part-to-visual mapping for <code>text_surface</code>,</li>
-  <li>text placement metadata or equivalent realization support for the <code>text_surface</code> part,</li>
-  <li>reasonable visible support styling where the active realization uses one.</li>
-</ul>
-
-<p>
-The label is a particularly important example of the realization split:
-multiple SVG resources or other realization assets MAY exist for different visual styles,
-but those assets do not define the semantics of the label.
-They only realize already-published class surfaces.
-</p>
-
-<p>
-In particular:
-</p>
-
-<ul>
-  <li>realization MAY define where label text is drawn,</li>
-  <li>realization MAY define visual style defaults or fallbacks,</li>
-  <li>realization MAY define decorative containers or emphasis surfaces,</li>
-  <li>realization MUST NOT redefine the public owner of the text,</li>
-  <li>realization MUST NOT make hardcoded asset text the only semantic text source.</li>
+  <li><code>set_text(text : string)</code></li>
+  <li><code>clear_text()</code></li>
+  <li><code>append_text(text : string)</code></li>
+  <li><code>size_to_text()</code> when supported by the host</li>
+  <li><code>reset_to_default_style()</code></li>
+  <li><code>focus()</code> when focus posture is supported</li>
 </ul>
 
 <hr/>
 
-<h2 id="diagram-interaction-posture">8. Diagram Interaction Posture</h2>
-
-<p>
-The label supports:
-</p>
+<h2 id="standard-events">9. Standard Events</h2>
 
 <ul>
-  <li>object-style property access where legal,</li>
-  <li>method invocation where legal,</li>
-  <li>event observation through <code>frog.ui.event_observe</code>,</li>
-  <li>widget reference targeting through <code>widget_reference</code>.</li>
-</ul>
-
-<p>
-The intrinsic label baseline is primarily support-oriented.
-It is not standardized here as a natural value-path widget.
-</p>
-
-<p>
-Accordingly:
-</p>
-
-<ul>
-  <li>the label is normally addressed through <code>widget_reference</code>,</li>
-  <li><code>text</code> and <code>interaction.visible</code> may be accessed through <code>frog.ui.property_read</code> and <code>frog.ui.property_write</code> when legal,</li>
-  <li><code>set_text(text)</code> may be accessed through <code>frog.ui.method_invoke</code> when legal,</li>
-  <li><code>text_changed</code> may be observed through <code>frog.ui.event_observe</code>.</li>
+  <li><code>text_changed</code></li>
+  <li><code>value_rendered</code></li>
+  <li><code>focus_gained</code> when focus posture is supported</li>
+  <li><code>focus_lost</code> when focus posture is supported</li>
 </ul>
 
 <hr/>
 
-<h2 id="validation-expectations">9. Validation Expectations</h2>
+<h2 id="default-realization-posture">10. Default Realization Posture</h2>
 
 <p>
-Validators SHOULD diagnose at least:
+The Default realization should expose a rectangular text-region SVG template with a background part, frame part, dynamic text surface, and optional focus ring.
 </p>
-
-<ul>
-  <li>attempts to treat the label as a required scalar value-carrying widget in the intrinsic baseline,</li>
-  <li>access to unknown members or parts,</li>
-  <li>use of role/class combinations incompatible with <code>frog.widgets.label</code>,</li>
-  <li>attempts to treat realization-private text placement or SVG-baked text as the public semantic owner of the label text,</li>
-  <li>attempts to address realization-only anchors, text regions, or asset layers through <code>frog.ui.*</code> as if they were public label members by default.</li>
-</ul>
 
 <hr/>
 
-<h2 id="summary">10. Summary</h2>
+<h2 id="diagram-interaction-posture">11. Diagram Interaction Posture</h2>
 
 <p>
-The standardized label defines the intrinsic support-oriented text widget of the FROG baseline:
+The label supports object-style property access through <code>frog.ui.property_read</code> and <code>frog.ui.property_write</code>, method invocation through <code>frog.ui.method_invoke</code>, event observation where legal, and reference targeting through <code>widget_reference</code>.
 </p>
 
-<ul>
-  <li><code>frog.widgets.label</code></li>
-</ul>
+<p>
+The label is not standardized as a natural value-path widget in the intrinsic baseline.
+</p>
+
+<hr/>
+
+<h2 id="validation-expectations">12. Validation Expectations</h2>
 
 <p>
-It is primarily a support-text object surface with stable properties, methods, events, and parts.
-Its semantic text is owned by <code>text</code>.
-Its text styling, when exposed, remains widget-visible and portable.
-Its text placement belongs to realization.
-Its assets may decorate and anchor the text surface, but they do not become the semantic owner of the label content.
+Validators SHOULD diagnose attempts to treat <code>frog.widgets.label</code> as a required scalar value-carrying widget, use of SVG-baked text as semantic text, and confusion between common <code>label.*</code> and label-widget <code>text.value</code>.
+</p>
+
+<hr/>
+
+<h2 id="summary">13. Summary</h2>
+
+<p>
+<code>frog.widgets.label</code> is the standalone support-text widget of the FROG baseline.
+Its visible text content is owned by <code>text.value</code>.
+Its logical object name remains <code>label.text</code>.
+Its rendering belongs to realization.
 </p>
