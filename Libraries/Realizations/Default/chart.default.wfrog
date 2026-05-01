@@ -1,0 +1,373 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_chart_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.chart",
+    "name": "FROG Default Chart Realization",
+    "namespace": "frog.realizations.default.chart",
+    "family": "default",
+    "summary": "Machine-readable default realization manifest for the composite waveform chart widget."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default waveform chart realization record",
+      "chart realization variant declaration",
+      "chart subobject resources",
+      "chart subobject slots",
+      "chart part bindings",
+      "chart state maps",
+      "chart property bindings",
+      "chart anchors",
+      "chart host hints",
+      "chart realization validation expectations"
+    ],
+    "does_not_own": [
+      "chart widget class law",
+      "chart history semantics",
+      "chart plot semantics",
+      "chart scale semantics",
+      "chart cursor semantics",
+      "canonical .frog source",
+      "frog.ui primitive semantics",
+      "runtime-private plotting handles",
+      "IDE-private editing behavior"
+    ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Chart.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.waveform_chart",
+      "role": "indicator",
+      "primary_value": {
+        "present": true,
+        "kind": "numeric_sample_sequence_or_history"
+      }
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.waveform_chart"
+    ],
+    "variants": [
+      "frog.realizations.default.waveform_chart.rectangular"
+    ],
+    "resources": [
+      "frog.realizations.default.chart.assets.shell_svg",
+      "frog.realizations.default.chart.assets.plot_area_svg",
+      "frog.realizations.default.chart.assets.grid_svg",
+      "frog.realizations.default.chart.assets.x_scale_svg",
+      "frog.realizations.default.chart.assets.y_scale_svg",
+      "frog.realizations.default.chart.assets.plot_legend_svg",
+      "frog.realizations.default.chart.assets.scale_legend_svg",
+      "frog.realizations.default.chart.assets.cursor_legend_svg",
+      "frog.realizations.default.chart.assets.graph_palette_svg",
+      "frog.realizations.default.chart.assets.x_scrollbar_svg",
+      "frog.realizations.default.chart.assets.y_scrollbar_svg",
+      "frog.realizations.default.chart.assets.cursor_layer_svg",
+      "frog.realizations.default.chart.assets.plot_image_layer_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.waveform_chart",
+      "family": "default",
+      "target_class": "frog.widgets.waveform_chart",
+      "variant_property": "realization.variant",
+      "default_variant": "rectangular",
+      "supported_variants": [
+        "rectangular"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "plot_area",
+        "plot_layer",
+        "grid",
+        "x_scale",
+        "y_scale",
+        "x_scale_label",
+        "y_scale_label",
+        "plot_legend",
+        "scale_legend",
+        "cursor_legend",
+        "graph_palette",
+        "x_scrollbar",
+        "y_scrollbar",
+        "cursor_layer",
+        "plot_image_back",
+        "plot_image_middle",
+        "plot_image_front",
+        "focus_ring"
+      ],
+      "subobject_strategy": "separate_svg_assets_composed_by_shell_slots",
+      "fallbacks": {
+        "missing_subobject_asset": "host_native_subobject_or_hide_optional_part",
+        "missing_plot_layer": "host_native_plot_surface",
+        "missing_cursor_layer": "hide_cursor_layer",
+        "missing_legend": "hide_legend",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "frog.realizations.default.waveform_chart.rectangular",
+      "variant": "rectangular",
+      "target_class": "frog.widgets.waveform_chart",
+      "shell_resource_ref": "frog.realizations.default.chart.assets.shell_svg",
+      "geometry_posture": {
+        "shape_family": "rectangular",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "uses_subobject_slots": true
+      },
+      "fallback": "host_rectangle_waveform_chart"
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.chart.assets.shell_svg",
+      "kind": "svg",
+      "path": "./assets/chart/templates/waveform_chart_shell.svg",
+      "target_class": "frog.widgets.waveform_chart",
+      "target_variant": "rectangular",
+      "role": "assembly_shell"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.plot_area_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/plot_area.svg",
+      "target_part": "plot_area"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.grid_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/grid.svg",
+      "target_part": "grid"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.x_scale_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/x_scale.svg",
+      "target_part": "x_scale"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.y_scale_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/y_scale.svg",
+      "target_part": "y_scale"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.plot_legend_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/plot_legend.svg",
+      "target_part": "plot_legend"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.scale_legend_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/scale_legend.svg",
+      "target_part": "scale_legend"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.cursor_legend_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/cursor_legend.svg",
+      "target_part": "cursor_legend"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.graph_palette_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/graph_palette.svg",
+      "target_part": "graph_palette"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.x_scrollbar_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/x_scrollbar.svg",
+      "target_part": "x_scrollbar"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.y_scrollbar_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/y_scrollbar.svg",
+      "target_part": "y_scrollbar"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.cursor_layer_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/cursor_layer.svg",
+      "target_part": "cursor_layer"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.plot_image_layer_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/plot_image_layer.svg",
+      "target_part": "plot_image_layer"
+    }
+  ],
+  "composition": {
+    "shell": "frog.realizations.default.chart.assets.shell_svg",
+    "slots": [
+      {
+        "slot": "plot_legend",
+        "resource_ref": "frog.realizations.default.chart.assets.plot_legend_svg"
+      },
+      {
+        "slot": "plot_area",
+        "resource_ref": "frog.realizations.default.chart.assets.plot_area_svg"
+      },
+      {
+        "slot": "scale_legend",
+        "resource_ref": "frog.realizations.default.chart.assets.scale_legend_svg"
+      },
+      {
+        "slot": "cursor_legend",
+        "resource_ref": "frog.realizations.default.chart.assets.cursor_legend_svg"
+      },
+      {
+        "slot": "graph_palette",
+        "resource_ref": "frog.realizations.default.chart.assets.graph_palette_svg"
+      },
+      {
+        "slot": "x_scrollbar",
+        "resource_ref": "frog.realizations.default.chart.assets.x_scrollbar_svg"
+      },
+      {
+        "slot": "y_scrollbar",
+        "resource_ref": "frog.realizations.default.chart.assets.y_scrollbar_svg"
+      }
+    ],
+    "nested_slots": [
+      {
+        "parent_part": "plot_area",
+        "slot": "grid",
+        "resource_ref": "frog.realizations.default.chart.assets.grid_svg"
+      },
+      {
+        "parent_part": "plot_area",
+        "slot": "cursor_layer",
+        "resource_ref": "frog.realizations.default.chart.assets.cursor_layer_svg"
+      },
+      {
+        "parent_part": "plot_area",
+        "slot": "plot_image_back",
+        "resource_ref": "frog.realizations.default.chart.assets.plot_image_layer_svg"
+      },
+      {
+        "parent_part": "plot_area",
+        "slot": "plot_image_middle",
+        "resource_ref": "frog.realizations.default.chart.assets.plot_image_layer_svg"
+      },
+      {
+        "parent_part": "plot_area",
+        "slot": "plot_image_front",
+        "resource_ref": "frog.realizations.default.chart.assets.plot_image_layer_svg"
+      },
+      {
+        "parent_part": "plot_area",
+        "slot": "x_scale",
+        "resource_ref": "frog.realizations.default.chart.assets.x_scale_svg"
+      },
+      {
+        "parent_part": "plot_area",
+        "slot": "y_scale",
+        "resource_ref": "frog.realizations.default.chart.assets.y_scale_svg"
+      }
+    ]
+  },
+  "part_bindings": [
+    {
+      "part": "plot_area",
+      "resource_ref": "frog.realizations.default.chart.assets.plot_area_svg",
+      "semantic_member": "plot_area.*"
+    },
+    {
+      "part": "plot_layer",
+      "resource_ref": "frog.realizations.default.chart.assets.plot_area_svg",
+      "semantic_members": [
+        "value",
+        "history.data",
+        "plots.*"
+      ]
+    },
+    {
+      "part": "grid",
+      "resource_ref": "frog.realizations.default.chart.assets.grid_svg",
+      "semantic_member": "scales.*.grid.*"
+    },
+    {
+      "part": "x_scale",
+      "resource_ref": "frog.realizations.default.chart.assets.x_scale_svg",
+      "semantic_member": "scales.x.*"
+    },
+    {
+      "part": "y_scale",
+      "resource_ref": "frog.realizations.default.chart.assets.y_scale_svg",
+      "semantic_member": "scales.y.*"
+    },
+    {
+      "part": "plot_legend",
+      "resource_ref": "frog.realizations.default.chart.assets.plot_legend_svg",
+      "semantic_member": "legends.plot.*"
+    },
+    {
+      "part": "scale_legend",
+      "resource_ref": "frog.realizations.default.chart.assets.scale_legend_svg",
+      "semantic_member": "legends.scale.*"
+    },
+    {
+      "part": "cursor_legend",
+      "resource_ref": "frog.realizations.default.chart.assets.cursor_legend_svg",
+      "semantic_member": "legends.cursor.*"
+    },
+    {
+      "part": "graph_palette",
+      "resource_ref": "frog.realizations.default.chart.assets.graph_palette_svg",
+      "semantic_member": "palette.*"
+    },
+    {
+      "part": "x_scrollbar",
+      "resource_ref": "frog.realizations.default.chart.assets.x_scrollbar_svg",
+      "semantic_member": "scrollbars.x.*"
+    },
+    {
+      "part": "y_scrollbar",
+      "resource_ref": "frog.realizations.default.chart.assets.y_scrollbar_svg",
+      "semantic_member": "scrollbars.y.*"
+    },
+    {
+      "part": "cursor_layer",
+      "resource_ref": "frog.realizations.default.chart.assets.cursor_layer_svg",
+      "semantic_member": "cursors.*"
+    }
+  ],
+  "host_hints": {
+    "preferred_host_kind": "subobject_svg_composition_or_host_native_plot",
+    "composition_posture": "assemble_subobject_assets_into_shell_slots",
+    "plot_rendering_posture": "host_may_replace_sample_polyline_with_runtime_plot_layer",
+    "cursor_rendering_posture": "host_may_replace_template_cursor_layer_with_runtime_cursor_layer"
+  },
+  "validation_expectations": [
+    "target class must exist in Libraries/Widgets/Chart.md",
+    "all declared public parts must exist in the chart class law",
+    "shell resource must resolve",
+    "all subobject resources must resolve",
+    "subobject slots must reference declared resources",
+    "resource SVG templates should expose data-frog-part or data-frog-slot markers",
+    "plot_layer must not be treated as semantic storage for history data",
+    "subobject resources must not define chart class semantics"
+  ]
+}

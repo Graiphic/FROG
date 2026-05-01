@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 460 246"
+     role="img"
+     aria-label="FROG waveform chart cursor layer"
+     data-frog-template="frog.realizations.default.waveform_chart.subobject.cursor_layer"
+     data-frog-target-part="cursor_layer">
+  <title>Cursor Layer Subobject</title>
+  <g id="cursor_layer" data-frog-part="cursor_layer" data-frog-bind="cursors.*">
+    <line x1="276" y1="0" x2="276" y2="246" stroke="#111111" stroke-width="1" stroke-dasharray="4 4" />
+    <circle cx="276" cy="64" r="4" fill="#111111" />
+  </g>
+</svg>

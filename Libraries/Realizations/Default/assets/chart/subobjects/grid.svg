@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 460 246"
+     role="img"
+     aria-label="FROG waveform chart grid"
+     data-frog-template="frog.realizations.default.waveform_chart.subobject.grid"
+     data-frog-target-part="grid">
+  <title>Grid Subobject</title>
+  <g id="grid"
+     data-frog-part="grid"
+     data-frog-bind="scales.x[].grid.* scales.y[].grid.* style.grid.*">
+    <line x1="0" y1="41" x2="460" y2="41" stroke="#cbd5e1" stroke-width="1" />
+    <line x1="0" y1="82" x2="460" y2="82" stroke="#cbd5e1" stroke-width="1" />
+    <line x1="0" y1="123" x2="460" y2="123" stroke="#cbd5e1" stroke-width="1" />
+    <line x1="0" y1="164" x2="460" y2="164" stroke="#cbd5e1" stroke-width="1" />
+    <line x1="0" y1="205" x2="460" y2="205" stroke="#cbd5e1" stroke-width="1" />
+    <line x1="76" y1="0" x2="76" y2="246" stroke="#cbd5e1" stroke-width="1" />
+    <line x1="152" y1="0" x2="152" y2="246" stroke="#cbd5e1" stroke-width="1" />
+    <line x1="228" y1="0" x2="228" y2="246" stroke="#cbd5e1" stroke-width="1" />
+    <line x1="304" y1="0" x2="304" y2="246" stroke="#cbd5e1" stroke-width="1" />
+    <line x1="380" y1="0" x2="380" y2="246" stroke="#cbd5e1" stroke-width="1" />
+  </g>
+</svg>

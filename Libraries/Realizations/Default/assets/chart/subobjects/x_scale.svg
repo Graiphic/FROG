@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 460 48"
+     role="img"
+     aria-label="FROG waveform chart X scale"
+     data-frog-template="frog.realizations.default.waveform_chart.subobject.x_scale"
+     data-frog-target-part="x_scale">
+  <title>X Scale Subobject</title>
+  <g id="x_scale_root" data-frog-part="x_scale" data-frog-bind="scales.x.* style.axis.*">
+    <line x1="0" y1="8" x2="460" y2="8" stroke="#111111" stroke-width="2" />
+    <text id="x_scale_label"
+          data-frog-part="x_scale_label"
+          data-frog-member="scales.x[].label.text"
+          data-frog-anchor="x_scale_label.center"
+          x="230"
+          y="38"
+          text-anchor="middle"
+          font-family="system-ui, Segoe UI, Arial, sans-serif"
+          font-size="12"
+          fill="#111111">Time</text>
+  </g>
+</svg>

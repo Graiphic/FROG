@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 460 246"
+     role="img"
+     aria-label="FROG waveform chart plot image layer"
+     data-frog-template="frog.realizations.default.waveform_chart.subobject.plot_image_layer">
+  <title>Plot Image Layer Subobject</title>
+  <g id="plot_image_layer" data-frog-part="plot_image_layer"></g>
+</svg>

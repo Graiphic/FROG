@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 460 246"
+     role="img"
+     aria-label="FROG waveform chart plot area"
+     data-frog-template="frog.realizations.default.waveform_chart.subobject.plot_area"
+     data-frog-target-part="plot_area">
+  <title>Plot Area Subobject</title>
+  <g id="plot_area_root" data-frog-part="plot_area">
+    <rect id="plot_area_background"
+          x="0"
+          y="0"
+          width="460"
+          height="246"
+          fill="#f8fafc"
+          stroke="#111111"
+          stroke-width="1"
+          data-frog-bind="style.plot_area.*" />
+
+    <g id="plot_image_back"
+       data-frog-part="plot_image_back"
+       data-frog-bind="plot_images.back" />
+
+    <g id="grid_slot"
+       data-frog-slot="grid"
+       data-frog-part="grid" />
+
+    <g id="plot_layer"
+       data-frog-part="plot_layer"
+       data-frog-bind="value history.data plots.* style.plot.*">
+      <polyline id="sample_trace"
+                points="10,216 48,176 86,192 124,136 162,148 200,100 238,110 276,64 314,86 352,44 450,22"
+                fill="none"
+                stroke="#2563eb"
+                stroke-width="3" />
+    </g>
+
+    <g id="cursor_layer"
+       data-frog-part="cursor_layer"
+       data-frog-bind="cursors.*">
+      <line x1="276" y1="0" x2="276" y2="246" stroke="#111111" stroke-width="1" stroke-dasharray="4 4" />
+      <circle cx="276" cy="64" r="4" fill="#111111" />
+    </g>
+
+    <g id="plot_image_middle"
+       data-frog-part="plot_image_middle"
+       data-frog-bind="plot_images.middle" />
+
+    <g id="plot_image_front"
+       data-frog-part="plot_image_front"
+       data-frog-bind="plot_images.front" />
+  </g>
+</svg>

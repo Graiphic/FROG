@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 760 430"
+     role="img"
+     aria-label="FROG default waveform chart shell"
+     data-frog-template="frog.realizations.default.waveform_chart.shell"
+     data-frog-target-class="frog.widgets.waveform_chart">
+  <title>FROG Default Waveform Chart Shell</title>
+  <desc>Top-level shell for composing chart subobject assets.</desc>
+
+  <g id="root" data-frog-part="root">
+    <text id="label_text"
+          data-frog-part="label"
+          data-frog-member="label.text"
+          data-frog-anchor="label.anchor"
+          x="18"
+          y="18"
+          font-family="system-ui, Segoe UI, Arial, sans-serif"
+          font-size="11"
+          fill="#6b7280">chart_1</text>
+
+    <text id="caption_text"
+          data-frog-part="caption"
+          data-frog-member="caption.text"
+          data-frog-anchor="caption.anchor"
+          x="156"
+          y="38"
+          font-family="system-ui, Segoe UI, Arial, sans-serif"
+          font-size="16"
+          fill="#111111">Waveform Chart</text>
+
+    <rect id="focus_ring"
+          data-frog-part="focus_ring"
+          x="8"
+          y="48"
+          width="744"
+          height="368"
+          rx="6"
+          fill="none"
+          stroke="#2f80ed"
+          stroke-width="3"
+          opacity="0"
+          data-frog-bind="interaction.focused style.focus_ring.*" />
+
+    <rect id="frame"
+          data-frog-part="frame"
+          x="16"
+          y="56"
+          width="728"
+          height="352"
+          fill="#ffffff"
+          stroke="#000000"
+          stroke-width="2"
+          data-frog-bind="style.frame.*" />
+
+    <g id="slot_plot_legend"
+       data-frog-slot="plot_legend"
+       data-frog-part="plot_legend"
+       transform="translate(26 82)" />
+
+    <g id="slot_plot_area"
+       data-frog-slot="plot_area"
+       data-frog-part="plot_area"
+       transform="translate(150 74)" />
+
+    <g id="slot_scale_legend"
+       data-frog-slot="scale_legend"
+       data-frog-part="scale_legend"
+       transform="translate(626 94)" />
+
+    <g id="slot_cursor_legend"
+       data-frog-slot="cursor_legend"
+       data-frog-part="cursor_legend"
+       transform="translate(626 252)" />
+
+    <g id="slot_graph_palette"
+       data-frog-slot="graph_palette"
+       data-frog-part="graph_palette"
+       transform="translate(626 60)" />
+
+    <g id="slot_x_scrollbar"
+       data-frog-slot="x_scrollbar"
+       data-frog-part="x_scrollbar"
+       transform="translate(150 370)" />
+
+    <g id="slot_y_scrollbar"
+       data-frog-slot="y_scrollbar"
+       data-frog-part="y_scrollbar"
+       transform="translate(620 74)" />
+  </g>
+</svg>

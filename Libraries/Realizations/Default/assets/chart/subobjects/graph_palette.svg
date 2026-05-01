@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 84 24"
+     role="img"
+     aria-label="FROG waveform chart graph palette"
+     data-frog-template="frog.realizations.default.waveform_chart.subobject.graph_palette"
+     data-frog-target-part="graph_palette">
+  <title>Graph Palette Subobject</title>
+  <g id="graph_palette" data-frog-part="graph_palette" data-frog-bind="palette.*">
+    <rect x="0" y="0" width="24" height="24" fill="#ffffff" stroke="#94a3b8" />
+    <rect x="30" y="0" width="24" height="24" fill="#ffffff" stroke="#94a3b8" />
+    <rect x="60" y="0" width="24" height="24" fill="#ffffff" stroke="#94a3b8" />
+    <text x="12" y="17" text-anchor="middle" font-family="Arial" font-size="16">+</text>
+    <text x="42" y="17" text-anchor="middle" font-family="Arial" font-size="14">⌕</text>
+    <text x="72" y="17" text-anchor="middle" font-family="Arial" font-size="14">↔</text>
+  </g>
+</svg>
