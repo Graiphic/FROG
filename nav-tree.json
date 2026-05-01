@@ -633,6 +633,13 @@
                           "children": []
                         },
                         {
+                          "key": "libraries/realizations/default/assets/frame/",
+                          "title": "frame",
+                          "path": "/Libraries/Realizations/Default/assets/frame/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        },
+                        {
                           "key": "libraries/realizations/default/assets/label/",
                           "title": "label",
                           "path": "/Libraries/Realizations/Default/assets/label/Readme.md",
@@ -2887,6 +2894,7 @@
     "/Libraries/Realizations/Default/assets/boolean/Readme.md",
     "/Libraries/Realizations/Default/assets/button/Readme.md",
     "/Libraries/Realizations/Default/assets/chart/Readme.md",
+    "/Libraries/Realizations/Default/assets/frame/Readme.md",
     "/Libraries/Realizations/Default/assets/label/Readme.md",
     "/Libraries/Realizations/Default/assets/numeric/Readme.md",
     "/Libraries/Realizations/Default/assets/string/Readme.md",
