@@ -612,6 +612,13 @@
                       "kind": "category",
                       "children": [
                         {
+                          "key": "libraries/realizations/default/assets/array/",
+                          "title": "array",
+                          "path": "/Libraries/Realizations/Default/assets/array/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        },
+                        {
                           "key": "libraries/realizations/default/assets/boolean/",
                           "title": "boolean",
                           "path": "/Libraries/Realizations/Default/assets/boolean/Readme.md",
@@ -2905,6 +2912,7 @@
     "/Libraries/Realizations/Default/Tab.md",
     "/Libraries/Realizations/Default/Table.md",
     "/Libraries/Realizations/Default/Tree.md",
+    "/Libraries/Realizations/Default/assets/array/Readme.md",
     "/Libraries/Realizations/Default/assets/boolean/Readme.md",
     "/Libraries/Realizations/Default/assets/button/Readme.md",
     "/Libraries/Realizations/Default/assets/chart/Readme.md",

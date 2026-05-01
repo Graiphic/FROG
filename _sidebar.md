@@ -86,6 +86,7 @@
       - [Table](/Libraries/Realizations/Default/Table.md)
       - [Tree](/Libraries/Realizations/Default/Tree.md)
       - assets
+        - [array](/Libraries/Realizations/Default/assets/array/Readme.md)
         - [boolean](/Libraries/Realizations/Default/assets/boolean/Readme.md)
         - [button](/Libraries/Realizations/Default/assets/button/Readme.md)
         - [chart](/Libraries/Realizations/Default/assets/chart/Readme.md)
