@@ -90,6 +90,7 @@
         - [boolean](/Libraries/Realizations/Default/assets/boolean/Readme.md)
         - [button](/Libraries/Realizations/Default/assets/button/Readme.md)
         - [chart](/Libraries/Realizations/Default/assets/chart/Readme.md)
+        - [cluster](/Libraries/Realizations/Default/assets/cluster/Readme.md)
         - [enum](/Libraries/Realizations/Default/assets/enum/Readme.md)
         - [frame](/Libraries/Realizations/Default/assets/frame/Readme.md)
         - [label](/Libraries/Realizations/Default/assets/label/Readme.md)
