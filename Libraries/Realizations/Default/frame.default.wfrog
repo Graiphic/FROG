@@ -1,0 +1,271 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_frame_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.frame",
+    "name": "FROG Default Frame Realization",
+    "namespace": "frog.realizations.default.frame",
+    "family": "default",
+    "summary": "Machine-readable default realization manifest for the standardized standalone frame widget."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default frame realization record",
+      "frame realization variant declarations",
+      "frame realization resource references",
+      "frame part bindings",
+      "frame state maps",
+      "frame realization property bindings",
+      "frame anchors",
+      "frame host hints",
+      "frame realization validation expectations"
+    ],
+    "does_not_own": [
+      "frame widget class law",
+      "front-panel containment semantics",
+      "canonical .frog source",
+      "frog.ui primitive semantics",
+      "runtime-private layout handles",
+      "IDE-private editing behavior"
+    ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Frame.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.frame",
+      "role": "support",
+      "primary_value": {
+        "present": false
+      },
+      "semantic_caption": {
+        "member": "caption.text",
+        "dynamic": true
+      }
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.frame"
+    ],
+    "variants": [
+      "frog.realizations.default.frame.rectangular"
+    ],
+    "resources": [
+      "frog.realizations.default.frame.assets.rectangular_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.frame",
+      "family": "default",
+      "target_class": "frog.widgets.frame",
+      "variant_property": "realization.variant",
+      "default_variant": "rectangular",
+      "supported_variants": [
+        "rectangular"
+      ],
+      "supported_parts": [
+        "root",
+        "background",
+        "border",
+        "caption_surface",
+        "content_region",
+        "focus_ring"
+      ],
+      "supported_visual_states": [
+        "normal",
+        "focused",
+        "disabled",
+        "hidden"
+      ],
+      "fallbacks": {
+        "missing_variant": "rectangular",
+        "missing_background": "transparent_background",
+        "missing_caption": "untitled_frame",
+        "missing_focus_ring": "host_native_focus_ring",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "frog.realizations.default.frame.rectangular",
+      "variant": "rectangular",
+      "target_class": "frog.widgets.frame",
+      "resource_ref": "frog.realizations.default.frame.assets.rectangular_svg",
+      "geometry_posture": {
+        "shape_family": "rectangular_grouping_region",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "supports_caption": true,
+        "supports_background": true,
+        "supports_content_region": true
+      },
+      "fallback": "host_group_box"
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.frame.assets.rectangular_svg",
+      "kind": "svg",
+      "path": "./assets/frame/templates/frame_rectangular.svg",
+      "target_class": "frog.widgets.frame",
+      "target_variant": "rectangular",
+      "template_markers": {
+        "template": "frog.realizations.default.frame.rectangular",
+        "variant": "rectangular",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
+    }
+  ],
+  "part_bindings": [
+    {
+      "part": "root",
+      "binding_kind": "svg_element",
+      "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "background",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='background']",
+      "style_binding_group": "style.background"
+    },
+    {
+      "part": "border",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='border']",
+      "style_binding_group": "style.border"
+    },
+    {
+      "part": "caption_surface",
+      "binding_kind": "svg_text_or_host_text",
+      "binding_selector": "[data-frog-part='caption_surface']",
+      "semantic_member": "caption.text",
+      "style_binding_group": "caption.style"
+    },
+    {
+      "part": "content_region",
+      "binding_kind": "svg_region_or_host_group_region",
+      "binding_selector": "[data-frog-part='content_region']",
+      "style_binding_group": "style.content_region"
+    },
+    {
+      "part": "focus_ring",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='focus_ring']",
+      "style_binding_group": "style.focus_ring"
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "normal"
+    },
+    {
+      "state": "focused",
+      "value_condition": {
+        "interaction.focused": true
+      },
+      "inherits": "normal",
+      "property_bindings": [
+        "style.focus_ring.visible",
+        "style.focus_ring.color"
+      ]
+    },
+    {
+      "state": "disabled",
+      "value_condition": {
+        "interaction.enabled": false
+      },
+      "inherits": "normal",
+      "property_bindings": [
+        "style.disabled.opacity"
+      ]
+    },
+    {
+      "state": "hidden",
+      "value_condition": {
+        "interaction.visible": false
+      }
+    }
+  ],
+  "property_bindings": [
+    {
+      "member": "caption.text",
+      "target_part": "caption_surface",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "caption.visible",
+      "target_part": "caption_surface",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "caption.style.*",
+      "target_part": "caption_surface",
+      "target_operation": "apply_caption_style"
+    },
+    {
+      "member": "style.background.*",
+      "target_part": "background",
+      "target_operation": "apply_background_style"
+    },
+    {
+      "member": "style.border.*",
+      "target_part": "border",
+      "target_operation": "apply_border_style"
+    },
+    {
+      "member": "style.content_region.*",
+      "target_part": "content_region",
+      "target_operation": "apply_content_region_style"
+    },
+    {
+      "member": "style.focus_ring.*",
+      "target_part": "focus_ring",
+      "target_operation": "apply_focus_ring_style"
+    }
+  ],
+  "anchors": [
+    {
+      "id": "frog.realizations.default.frame.caption_surface.left_center",
+      "target_part": "caption_surface",
+      "source_selector": "[data-frog-anchor='caption_surface.left_center']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "middle"
+    }
+  ],
+  "host_hints": {
+    "preferred_host_kind": "svg_template_host_or_host_native_group_box",
+    "resize_posture": "scale_template_to_front_panel_layout_rectangle",
+    "caption_rendering_posture": "host_may_replace_template_text_content",
+    "style_application_posture": "apply_property_bindings_before_render",
+    "accessibility_posture": {
+      "role": "group",
+      "caption_source": "caption.text",
+      "label_source": "label.text"
+    }
+  },
+  "validation_expectations": [
+    "target class must exist in Libraries/Widgets/Frame.md",
+    "all declared public parts must exist in the frame class law",
+    "resources must resolve relative to this package file",
+    "resource SVG templates should expose data-frog-part markers for declared parts",
+    "caption.text must remain the semantic owner of visible frame title text",
+    "content_region must not be treated as owning child widgets unless front-panel composition explicitly says so",
+    "property bindings must target public frame members declared by class law"
+  ]
+}

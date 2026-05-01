@@ -5,9 +5,24 @@
 <h1 align="center">FROG Standard Frame Widget</h1>
 
 <p align="center">
-  <strong>Normative baseline for the standardized frame widget class</strong><br/>
+  <strong>Normative baseline for the standardized standalone frame support widget</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
+
+<hr/>
+
+<h2>Navigation</h2>
+
+<ul>
+  <li><a href="./Readme.md">Widgets index</a></li>
+  <li><a href="../../Expression/Widget.md">Expression widget instances</a></li>
+  <li><a href="../../Expression/Widget%20interaction.md">Expression widget interaction</a></li>
+  <li><a href="../../Expression/Widget%20realization.md">Expression widget realization</a></li>
+  <li><a href="../../Expression/Widget%20package%20(.wfrog).md">Widget package publication</a></li>
+  <li><a href="../../Libraries/UI.md">Executable UI primitives</a></li>
+  <li><a href="../../Libraries/Realizations/Default/Frame.md">Default frame realization</a></li>
+  <li><a href="../../Libraries/Realizations/Default/frame.default.wfrog">Default frame realization manifest</a></li>
+</ul>
 
 <hr/>
 
@@ -16,14 +31,17 @@
 <ul>
   <li><a href="#overview">1. Overview</a></li>
   <li><a href="#class-defined-here">2. Class Defined Here</a></li>
-  <li><a href="#frogwidgetsframe">3. <code>frog.widgets.frame</code></a></li>
-  <li><a href="#title-model">4. Title Model</a></li>
-  <li><a href="#standard-parts">5. Standard Parts</a></li>
-  <li><a href="#behavior-expectations">6. Behavior Expectations</a></li>
-  <li><a href="#realization-expectations">7. Realization Expectations</a></li>
-  <li><a href="#diagram-interaction-posture">8. Diagram Interaction Posture</a></li>
-  <li><a href="#validation-expectations">9. Validation Expectations</a></li>
-  <li><a href="#summary">10. Summary</a></li>
+  <li><a href="#frame-part-versus-frame-widget">3. Frame Part versus Frame Widget</a></li>
+  <li><a href="#class-posture">4. Class Posture</a></li>
+  <li><a href="#caption-and-content-region-model">5. Caption and Content Region Model</a></li>
+  <li><a href="#public-part-model">6. Public Part Model</a></li>
+  <li><a href="#standard-property-surface">7. Standard Property Surface</a></li>
+  <li><a href="#standard-methods">8. Standard Methods</a></li>
+  <li><a href="#standard-events">9. Standard Events</a></li>
+  <li><a href="#default-realization-posture">10. Default Realization Posture</a></li>
+  <li><a href="#diagram-interaction-posture">11. Diagram Interaction Posture</a></li>
+  <li><a href="#validation-expectations">12. Validation Expectations</a></li>
+  <li><a href="#summary">13. Summary</a></li>
 </ul>
 
 <hr/>
@@ -31,283 +49,250 @@
 <h2 id="overview">1. Overview</h2>
 
 <p>
-This document defines the intrinsic standardized baseline for the frame widget of FROG.
+This document defines <code>frog.widgets.frame</code>, the standardized standalone frame support widget.
 </p>
 
 <p>
-The frame is a support-oriented structural widget.
-Its primary role is to expose a portable grouping or emphasis surface in the front panel rather than a business value intended for ordinary computational dataflow.
+A frame widget is a front-panel support object used to visually group related widgets, emphasize a region, mark a section, or provide a bounded content area.
+It is not a computational value input or output.
 </p>
 
 <p>
-The standard frame is therefore defined here as a stable public object surface with a minimal but real property surface, a minimal but real method surface, a minimal but real event surface, and stable public parts.
-It is not defined here as a realization-private border fragment or a host-only grouping primitive.
+The frame widget is intentionally support-oriented, but it is still a real widget class with public properties, methods, events, parts, and a default realization posture.
 </p>
 
 <hr/>
 
 <h2 id="class-defined-here">2. Class Defined Here</h2>
 
-<p>
-This document defines the following standardized widget class:
-</p>
-
 <ul>
   <li><code>frog.widgets.frame</code></li>
 </ul>
 
 <hr/>
 
-<h2 id="frogwidgetsframe">3. <code>frog.widgets.frame</code></h2>
+<h2 id="frame-part-versus-frame-widget">3. Frame Part versus Frame Widget</h2>
 
-<h3>3.1 Class identity</h3>
+<p>
+FROG distinguishes:
+</p>
+
+<pre><code>frame
+    - a public part inside another widget realization
+
+frog.widgets.frame
+    - standalone support widget placed on the front panel
+</code></pre>
+
+<p>
+A numeric widget may have a <code>frame</code> part.
+A button may have a <code>frame</code> part.
+That is not the same thing as <code>frog.widgets.frame</code>.
+</p>
+
+<p>
+The standalone frame widget may visually group or emphasize other widgets, but it does not automatically own their semantics, execution, or layout unless a front-panel composition model explicitly associates them.
+</p>
+
+<hr/>
+
+<h2 id="class-posture">4. Class Posture</h2>
 
 <ul>
   <li><strong>class_id:</strong> <code>frog.widgets.frame</code></li>
   <li><strong>family:</strong> <code>support_widget</code></li>
   <li><strong>compatible role:</strong> <code>support</code></li>
+  <li><strong>primary business value:</strong> absent in the intrinsic baseline</li>
+  <li><strong>natural <code>widget_value</code> participation:</strong> not required</li>
+  <li><strong>preferred access posture:</strong> <code>widget_reference</code> plus <code>frog.ui.*</code></li>
 </ul>
 
-<h3>3.2 Primary value posture</h3>
-
 <p>
-The intrinsic frame baseline does not define a standard primary business-value surface intended for ordinary front-panel dataflow.
+The standardized frame is primarily a front-panel structural support object.
+It may be dynamically shown, hidden, styled, titled, or used as a visual grouping region, but it is not a computational value surface.
 </p>
 
-<p>
-Instead, the standard frame is primarily structure-oriented and support-oriented.
-Its principal public semantic surfaces are grouping visibility and, when exposed, optional title text.
-</p>
+<hr/>
+
+<h2 id="caption-and-content-region-model">5. Caption and Content Region Model</h2>
 
 <p>
-Accordingly:
+The frame follows the shared FROG label/caption convention:
 </p>
+
+<pre><code>label.*
+    - structural / logical widget name surface
+
+caption.*
+    - visible frame title or user-facing section text
+</code></pre>
+
+<p>
+The frame may also expose a <code>content_region</code> part.
+This part is a visual and realization-side grouping region.
+It does not automatically move ownership of child widgets into the frame class.
+Actual front-panel containment, z-order, and grouping semantics belong to the front-panel composition model unless explicitly published elsewhere.
+</p>
+
+<hr/>
+
+<h2 id="public-part-model">6. Public Part Model</h2>
 
 <ul>
-  <li>the intrinsic frame baseline does not require natural <code>widget_value</code> participation,</li>
-  <li>the standard frame is primarily targeted through <code>widget_reference</code>,</li>
-  <li>its portable baseline is centered on object-style interaction and structural grouping semantics.</li>
+  <li><code>root</code></li>
+  <li><code>background</code></li>
+  <li><code>border</code></li>
+  <li><code>caption_surface</code></li>
+  <li><code>content_region</code></li>
+  <li><code>focus_ring</code> when supported</li>
 </ul>
 
-<h3>3.3 Standard properties</h3>
+<p>
+The <code>caption_surface</code> part is the visible title-bearing part when a frame caption is enabled.
+The <code>content_region</code> part is a visual grouping region, not a hidden semantic container for executable logic.
+</p>
+
+<hr/>
+
+<h2 id="standard-property-surface">7. Standard Property Surface</h2>
+
+<h3>7.1 Logical widget label</h3>
 
 <ul>
-  <li><code>interaction.visible</code></li>
-  <li><code>title.text</code> when the active class posture exposes an explicit title surface</li>
-  <li><code>style.border_visible</code> when exposed by the class or active profile</li>
-  <li><code>style.border_thickness</code> when exposed by the class or active profile</li>
-  <li><code>style.corner_radius</code> when exposed by the class or active profile</li>
+  <li><code>label.text : string</code></li>
+  <li><code>label.visible : bool</code></li>
 </ul>
 
-<h3>3.4 Standard methods</h3>
+<h3>7.2 Frame caption</h3>
+
+<ul>
+  <li><code>caption.visible : bool</code></li>
+  <li><code>caption.text : string</code></li>
+  <li><code>caption.placement : enum</code> — <code>top_left</code>, <code>top_center</code>, <code>top_right</code>, <code>bottom_left</code>, <code>bottom_center</code>, <code>bottom_right</code></li>
+  <li><code>caption.padding : length</code></li>
+  <li><code>caption.style.*</code></li>
+</ul>
+
+<h3>7.3 Interaction</h3>
+
+<ul>
+  <li><code>interaction.visible : bool</code></li>
+  <li><code>interaction.enabled : bool</code> — host affordance only; the frame remains support-oriented.</li>
+  <li><code>interaction.focusable : bool</code> when exposed.</li>
+  <li><code>interaction.focused : bool</code> when exposed.</li>
+</ul>
+
+<h3>7.4 Layout hints</h3>
+
+<ul>
+  <li><code>layout.content_inset : length</code></li>
+  <li><code>layout.clip_content : bool</code></li>
+  <li><code>layout.z_order_hint : integer</code> when exposed by the front-panel model.</li>
+</ul>
+
+<h3>7.5 Style</h3>
+
+<ul>
+  <li><code>style.background.visible : bool</code></li>
+  <li><code>style.background.fill_color : frog.color.rgba8</code></li>
+  <li><code>style.border.visible : bool</code></li>
+  <li><code>style.border.color : frog.color.rgba8</code></li>
+  <li><code>style.border.width : length</code></li>
+  <li><code>style.border.corner_radius : length</code></li>
+  <li><code>style.border.line_style : enum</code></li>
+  <li><code>style.content_region.fill_color : frog.color.rgba8</code></li>
+  <li><code>style.focus_ring.*</code> when focus posture is exposed.</li>
+</ul>
+
+<h3>7.6 Realization</h3>
+
+<ul>
+  <li><code>realization.family : string</code></li>
+  <li><code>realization.variant : string</code></li>
+  <li><code>realization.skin_id : string</code></li>
+</ul>
+
+<hr/>
+
+<h2 id="standard-methods">8. Standard Methods</h2>
 
 <ul>
   <li><code>show()</code></li>
   <li><code>hide()</code></li>
-  <li><code>reset_to_default_style()</code> when a style default exists and the active class posture exposes it</li>
+  <li><code>set_caption(text : string)</code></li>
+  <li><code>clear_caption()</code></li>
+  <li><code>reset_to_default_style()</code></li>
+  <li><code>focus()</code> when focus posture is supported</li>
 </ul>
 
-<p>
-The baseline method surface is intentionally small.
-It exists to guarantee that the frame remains a real structural support object rather than a realization-private border decoration.
-</p>
+<hr/>
 
-<h3>3.5 Standard events</h3>
+<h2 id="standard-events">9. Standard Events</h2>
 
 <ul>
   <li><code>visibility_changed</code></li>
-  <li><code>value_rendered</code> when the active class posture exposes visible refresh-oriented notification</li>
-</ul>
-
-<h3>3.6 Standard parts</h3>
-
-<ul>
-  <li><code>root</code></li>
-  <li><code>border</code></li>
-  <li><code>title_surface</code> when the active class posture exposes it</li>
-  <li><code>content_region</code> when the active realization exposes a contained grouping region</li>
+  <li><code>caption_changed</code></li>
+  <li><code>value_rendered</code></li>
+  <li><code>focus_gained</code> when focus posture is supported</li>
+  <li><code>focus_lost</code> when focus posture is supported</li>
 </ul>
 
 <hr/>
 
-<h2 id="title-model">4. Title Model</h2>
-
-<h3>4.1 Semantic title ownership</h3>
+<h2 id="default-realization-posture">10. Default Realization Posture</h2>
 
 <p>
-When the active class posture exposes title text, the standard frame exposes a semantic text-facing surface through <code>title.text</code>.
-This property is the portable public owner of the user-authored frame title in the intrinsic baseline.
+The Default realization should expose a rectangular frame SVG template with:
 </p>
 
-<p>
-The semantic title text does not belong to an SVG asset, to a realization-private skin file, or to one runtime's private host structure.
-A realization may position, style, clip, anchor, or decorate the title visually, but it does not become the semantic owner of the title itself.
-</p>
-
-<h3>4.2 Title posture</h3>
-
-<p>
-The intrinsic standardized frame baseline does not require title text in every embodiment.
-The title surface is optional and only exists when the active class posture exposes it.
-</p>
+<ul>
+  <li>a background part,</li>
+  <li>a border part,</li>
+  <li>a caption surface,</li>
+  <li>a content region,</li>
+  <li>an optional focus ring.</li>
+</ul>
 
 <p>
-When exposed, the title remains a portable public property rather than realization-private static decoration.
-</p>
-
-<h3>4.3 Title placement posture</h3>
-
-<p>
-Title placement belongs to realization, not to public frame semantics.
-A realization family may define title anchors, alignment boxes, padding regions, clipping regions, or equivalent placement metadata for the <code>title_surface</code> part.
-</p>
-
-<p>
-The class law only defines that <code>title_surface</code> may exist as a stable public part and that <code>title.text</code> is the semantic title surface when exposed.
-The realization layer decides where and how that title is visually placed.
+The SVG template provides geometry and placement surfaces.
+It does not own frame semantics or the semantic caption text.
 </p>
 
 <hr/>
 
-<h2 id="standard-parts">5. Standard Parts</h2>
+<h2 id="diagram-interaction-posture">11. Diagram Interaction Posture</h2>
 
 <p>
-The frame family uses the following common stable parts:
+The frame supports object-style property access through <code>frog.ui.property_read</code> and <code>frog.ui.property_write</code>, method invocation through <code>frog.ui.method_invoke</code>, event observation where legal, and reference targeting through <code>widget_reference</code>.
 </p>
 
-<ul>
-  <li><code>root</code> — root widget surface</li>
-  <li><code>border</code> — the main visible grouping or emphasis border surface</li>
-  <li><code>title_surface</code> — optional visible title surface realized by the host</li>
-  <li><code>content_region</code> — optional grouping region associated with the frame embodiment</li>
-</ul>
-
 <p>
-These parts are especially important because they preserve the distinction between:
-</p>
-
-<ul>
-  <li>semantic support structure owned by the frame class,</li>
-  <li>optional semantic title text owned by <code>title.text</code>,</li>
-  <li>title placement and grouping visuals owned by realization,</li>
-  <li>decorative borders or placeholder title text that may appear in assets.</li>
-</ul>
-
-<hr/>
-
-<h2 id="behavior-expectations">6. Behavior Expectations</h2>
-
-<p>
-The intrinsic behavior baseline of the frame includes at least:
-</p>
-
-<ul>
-  <li>visibility changes may emit <code>visibility_changed</code>,</li>
-  <li>visible refresh may emit <code>value_rendered</code> when the class posture exposes it,</li>
-  <li>runtime-private layout or grouping caches do not become public class state.</li>
-</ul>
-
-<p>
-The intrinsic frame baseline does not require focus behavior, command behavior, natural primary-value semantics, or mandatory child-container semantics in the class law itself.
-If such surfaces exist in an extended class or composite posture, they must be published explicitly by that higher-level contract rather than inferred from realization assets.
+The frame is not standardized as a natural value-path widget in the intrinsic baseline.
 </p>
 
 <hr/>
 
-<h2 id="realization-expectations">7. Realization Expectations</h2>
+<h2 id="validation-expectations">12. Validation Expectations</h2>
 
 <p>
-A conforming realization of the frame SHOULD provide:
+Validators SHOULD diagnose:
 </p>
 
 <ul>
-  <li>a clearly perceivable grouping or emphasis border surface,</li>
-  <li>stable part-to-visual mapping for <code>border</code>,</li>
-  <li>title placement metadata or equivalent realization support for the <code>title_surface</code> part when exposed,</li>
-  <li>reasonable visible grouping posture where the active realization uses one.</li>
-</ul>
-
-<p>
-The frame is a particularly important example of the realization split:
-multiple SVG resources or other realization assets MAY exist for different grouping styles,
-but those assets do not define the semantics of the frame.
-They only realize already-published class surfaces.
-</p>
-
-<p>
-In particular:
-</p>
-
-<ul>
-  <li>realization MAY define where frame title text is drawn,</li>
-  <li>realization MAY define visual border defaults or fallbacks,</li>
-  <li>realization MAY define decorative containers, emphasis lines, or grouping surfaces,</li>
-  <li>realization MUST NOT redefine the public owner of <code>title.text</code> when exposed,</li>
-  <li>realization MUST NOT make hardcoded asset title text the only semantic title source.</li>
-</ul>
-
-<hr/>
-
-<h2 id="diagram-interaction-posture">8. Diagram Interaction Posture</h2>
-
-<p>
-The frame supports:
-</p>
-
-<ul>
-  <li>object-style property access where legal,</li>
-  <li>method invocation where legal,</li>
-  <li>event observation through <code>frog.ui.event_observe</code>,</li>
-  <li>widget reference targeting through <code>widget_reference</code>.</li>
-</ul>
-
-<p>
-The intrinsic frame baseline is primarily structure-oriented and support-oriented.
-It is not standardized here as a natural value-path widget.
-</p>
-
-<p>
-Accordingly:
-</p>
-
-<ul>
-  <li>the frame is normally addressed through <code>widget_reference</code>,</li>
-  <li><code>interaction.visible</code> and <code>title.text</code> when exposed may be accessed through <code>frog.ui.property_read</code> and <code>frog.ui.property_write</code> when legal,</li>
-  <li><code>show()</code> and <code>hide()</code> may be accessed through <code>frog.ui.method_invoke</code> when legal,</li>
-  <li><code>visibility_changed</code> may be observed through <code>frog.ui.event_observe</code>.</li>
-</ul>
-
-<hr/>
-
-<h2 id="validation-expectations">9. Validation Expectations</h2>
-
-<p>
-Validators SHOULD diagnose at least:
-</p>
-
-<ul>
-  <li>attempts to treat the frame as a required scalar value-carrying widget in the intrinsic baseline,</li>
+  <li>attempts to treat <code>frog.widgets.frame</code> as a required scalar value-carrying widget,</li>
   <li>access to unknown members or parts,</li>
-  <li>use of role/class combinations incompatible with <code>frog.widgets.frame</code>,</li>
-  <li>attempts to treat realization-private title placement or SVG-baked title text as the public semantic owner of the frame title,</li>
-  <li>attempts to address realization-only anchors, title regions, or asset layers through <code>frog.ui.*</code> as if they were public frame members by default.</li>
+  <li>confusion between a widget-local <code>frame</code> part and the standalone <code>frog.widgets.frame</code> class,</li>
+  <li>use of SVG-baked title text as semantic caption text,</li>
+  <li>attempts to treat <code>content_region</code> as owning child-widget semantics without explicit front-panel composition law.</li>
 </ul>
 
 <hr/>
 
-<h2 id="summary">10. Summary</h2>
+<h2 id="summary">13. Summary</h2>
 
 <p>
-The standardized frame defines the intrinsic support-oriented grouping widget of the FROG baseline:
-</p>
-
-<ul>
-  <li><code>frog.widgets.frame</code></li>
-</ul>
-
-<p>
-It is primarily a structural support object surface with stable properties, methods, events, and parts.
-Its optional semantic title is owned by <code>title.text</code> when exposed.
-Its title placement and grouping visuals belong to realization.
-Its assets may decorate and support grouping, but they do not become the semantic owner of frame meaning.
+<code>frog.widgets.frame</code> is the standalone support grouping widget of the FROG baseline.
+Its logical object name is <code>label.text</code>.
+Its visible title is <code>caption.text</code>.
+Its grouping region is a visual and realization-side surface unless the front-panel composition model explicitly assigns containment semantics.
 </p>

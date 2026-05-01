@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 460 280"
+     role="img"
+     aria-label="FROG default frame rectangular realization template"
+     data-frog-template="frog.realizations.default.frame.rectangular"
+     data-frog-target-class="frog.widgets.frame"
+     data-frog-variant="rectangular">
+  <title>FROG Default Frame Rectangular Realization Template</title>
+  <desc>
+    Semantic SVG template for the default rectangular realization of FROG standalone frame widgets.
+    The runtime or IDE binds caption.text to caption_surface; content_region is a visual grouping surface.
+  </desc>
+
+  <defs>
+    <style>
+      :root {
+        --frog-frame-background-display: inline;
+        --frog-frame-background-fill: #ffffff;
+        --frog-frame-border-display: inline;
+        --frog-frame-border-stroke: #6b7280;
+        --frog-frame-border-stroke-width: 2px;
+        --frog-frame-caption-fill: #111111;
+        --frog-frame-caption-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-frame-caption-font-size: 16px;
+        --frog-frame-focus-display: none;
+        --frog-frame-focus-stroke: #2f80ed;
+      }
+
+      #background { display: var(--frog-frame-background-display); fill: var(--frog-frame-background-fill); }
+      #border { display: var(--frog-frame-border-display); fill: none; stroke: var(--frog-frame-border-stroke); stroke-width: var(--frog-frame-border-stroke-width); }
+      #caption_surface { fill: var(--frog-frame-caption-fill); font-family: var(--frog-frame-caption-font-family); font-size: var(--frog-frame-caption-font-size); }
+      #focus_ring { display: var(--frog-frame-focus-display); fill: none; stroke: var(--frog-frame-focus-stroke); stroke-width: 2px; }
+      #content_region { fill: transparent; stroke: none; }
+    </style>
+  </defs>
+
+  <g id="root" data-frog-part="root">
+    <rect id="background"
+          data-frog-part="background"
+          x="12"
+          y="24"
+          width="436"
+          height="244"
+          rx="8"
+          data-frog-bind="style.background.*" />
+
+    <rect id="border"
+          data-frog-part="border"
+          x="12"
+          y="24"
+          width="436"
+          height="244"
+          rx="8"
+          data-frog-bind="style.border.*" />
+
+    <rect id="caption_backplate"
+          x="28"
+          y="10"
+          width="112"
+          height="26"
+          fill="#ffffff" />
+
+    <text id="caption_surface"
+          data-frog-part="caption_surface"
+          data-frog-member="caption.text"
+          data-frog-anchor="caption_surface.left_center"
+          x="36"
+          y="25"
+          dominant-baseline="middle"
+          data-frog-bind="caption.text caption.style.*">Frame</text>
+
+    <rect id="content_region"
+          data-frog-part="content_region"
+          x="28"
+          y="48"
+          width="404"
+          height="204"
+          data-frog-bind="layout.content_inset style.content_region.*" />
+
+    <rect id="focus_ring"
+          data-frog-part="focus_ring"
+          x="8"
+          y="20"
+          width="444"
+          height="252"
+          rx="10"
+          data-frog-bind="interaction.focused style.focus_ring.*" />
+  </g>
+</svg>

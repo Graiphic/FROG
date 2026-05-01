@@ -14,7 +14,9 @@
 <h2>Widget Baseline Status</h2>
 
 <table>
-  <thead><tr><th>Widget family</th><th>Class-law status</th><th>Default realization status</th><th>Current note</th></tr></thead>
+  <thead>
+    <tr><th>Widget family</th><th>Class-law status</th><th>Default realization status</th><th>Current note</th></tr>
+  </thead>
   <tbody>
     <tr><td>Boolean</td><td>Published core class law</td><td>Published Default manifest and SVG templates</td><td>Rectangular and circular realization variants exist.</td></tr>
     <tr><td>String</td><td>Published core class law</td><td>Published Default manifest and SVG template</td><td>Rectangular string realization exists.</td></tr>
@@ -22,11 +24,15 @@
     <tr><td>Numeric</td><td>Published core class law</td><td>Published Default manifest and SVG template</td><td>Modern numeric representation model exists while Example 05 flat-surface compatibility is preserved.</td></tr>
     <tr><td>Waveform Chart</td><td>Published composite class law</td><td>Published Default manifest with subobject SVG composition</td><td>Composite model includes plot area, plots, scales, legends, palette, scrollbars, optional cursors, and plot-image layers.</td></tr>
     <tr><td>Label</td><td>Published support-widget class law</td><td>Published Default manifest and SVG template</td><td>Standalone support-text widget; visible support text is <code>text.value</code>, not common <code>label.text</code>.</td></tr>
+    <tr><td>Frame</td><td>Published support-widget class law</td><td>Published Default manifest and SVG template</td><td>Standalone visual grouping widget; visible title is <code>caption.text</code>.</td></tr>
   </tbody>
 </table>
 
 <hr/>
 
+<h2>Summary</h2>
+
 <p>
-The next coherent widget target is <code>Frame</code>.
+The current widget baseline now includes Boolean, String, Button, Numeric, Waveform Chart, Label, and Frame.
+The next coherent widget target is <code>Enum</code> or <code>Path</code>.
 </p>
