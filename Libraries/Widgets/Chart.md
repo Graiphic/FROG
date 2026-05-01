@@ -21,6 +21,7 @@
   <li><a href="../../Expression/Widget%20package%20(.wfrog).md">Widget package publication</a></li>
   <li><a href="../../Libraries/UI.md">Executable UI primitives</a></li>
   <li><a href="../../Libraries/Realizations/Default/Chart.md">Default chart realization</a></li>
+  <li><a href="../../Libraries/Realizations/Default/chart.default.wfrog">Default chart realization manifest</a></li>
 </ul>
 
 <hr/>
@@ -43,7 +44,7 @@
   <li><a href="#standard-property-surface">13. Standard Property Surface</a></li>
   <li><a href="#standard-methods">14. Standard Methods</a></li>
   <li><a href="#standard-events">15. Standard Events</a></li>
-  <li><a href="#default-svg-realization-posture">16. Default SVG Realization Posture</a></li>
+  <li><a href="#default-realization-posture">16. Default Realization Posture</a></li>
   <li><a href="#diagram-interaction-posture">17. Diagram Interaction Posture</a></li>
   <li><a href="#core-boundary-and-non-goals">18. Core Boundary and Non-Goals</a></li>
   <li><a href="#validation-expectations">19. Validation Expectations</a></li>
@@ -59,13 +60,13 @@ This document defines the standardized baseline for <code>frog.widgets.waveform_
 </p>
 
 <p>
-A waveform chart is not only a rectangle with a curve.
-It is a composite front-panel object made of several public sub-objects:
-plot area, plots, scales, legends, palette, scrollbars, optional cursors, and plot-image layers.
+A waveform chart is a composite front-panel object.
+It is not just a rectangle containing a curve.
+It contains public sub-objects such as plot area, plots, scales, legends, palette, scrollbars, optional cursors, and plot-image layers.
 </p>
 
 <p>
-The purpose of this document is to define a serious but bounded FROG chart baseline inspired by mature graphical environments while keeping FROG's architecture clean:
+The purpose of this document is to define a serious but bounded FROG chart baseline inspired by mature graphical environments while preserving the FROG architecture:
 class law is not realization, realization is not SVG, SVG is not runtime, and runtime is not the language.
 </p>
 
@@ -78,7 +79,7 @@ class law is not realization, realization is not SVG, SVG is not runtime, and ru
 </ul>
 
 <p>
-The class is indicator-oriented.
+This class is indicator-oriented.
 It displays numeric samples and retained history.
 It is not a user-editable graphing canvas in the intrinsic baseline.
 </p>
@@ -88,7 +89,7 @@ It is not a user-editable graphing canvas in the intrinsic baseline.
 <h2 id="design-position">3. Design Position</h2>
 
 <p>
-The FROG core defines a waveform chart, not a full graphing ecosystem.
+The core FROG chart is a waveform chart, not a full graphing ecosystem.
 </p>
 
 <p>
@@ -142,11 +143,6 @@ The realization owns:
   <li>plot-image layer drawing,</li>
   <li>SVG, canvas, host-native, or mixed rendering.</li>
 </ul>
-
-<p>
-A runtime may implement the chart with a native graph control, a retained vector surface, SVG composition, canvas, WebGL, or another host strategy.
-The public chart contract remains the same.
-</p>
 
 <hr/>
 
@@ -209,11 +205,6 @@ A realization may place these surfaces visually, but it does not own their seman
 
 <h2 id="value-and-history-model">7. Value and History Model</h2>
 
-<p>
-The waveform chart is history-oriented.
-It receives numeric samples or sample batches and retains a bounded visible history.
-</p>
-
 <ul>
   <li><code>value</code> — current chart-compatible value payload.</li>
   <li><code>history.data</code> — retained visible history when exposed.</li>
@@ -229,11 +220,6 @@ A FROG chart SHOULD provide <code>clear_history()</code> as an explicit method r
 <hr/>
 
 <h2 id="plot-model">8. Plot Model</h2>
-
-<p>
-Plots are public sub-objects of the chart baseline.
-The core model is intentionally small but real.
-</p>
 
 <ul>
   <li><code>plots.count</code></li>
@@ -297,10 +283,6 @@ The chart exposes X and Y scale collections rather than a single flat axis field
   <li><code>scales.y[].grid.minor.color</code></li>
 </ul>
 
-<p>
-This gives the baseline enough structure for serious charts without introducing full advanced scale systems.
-</p>
-
 <hr/>
 
 <h2 id="legend-palette-scrollbar-and-cursor-surfaces">10. Legend, Palette, Scrollbar, and Cursor Surfaces</h2>
@@ -340,7 +322,7 @@ This gives the baseline enough structure for serious charts without introducing 
 
 <p>
 Cursors are included as an optional core-light surface because they are structurally important in graphical measurement environments.
-They are intentionally smaller than a full advanced cursor framework.
+They remain smaller than a full advanced cursor framework.
 </p>
 
 <ul>
@@ -361,10 +343,6 @@ They are intentionally smaller than a full advanced cursor framework.
 <hr/>
 
 <h2 id="plot-image-layers">11. Plot Image Layers</h2>
-
-<p>
-The chart may expose realization-oriented plot-image layers:
-</p>
 
 <ul>
   <li><code>plot_images.back</code></li>
@@ -458,14 +436,15 @@ Object-style access through <code>frog.ui.property_read</code> and <code>frog.ui
 
 <hr/>
 
-<h2 id="default-svg-realization-posture">16. Default SVG Realization Posture</h2>
+<h2 id="default-realization-posture">16. Default Realization Posture</h2>
 
 <p>
-The default realization should expose a rectangular SVG template with all public parts required for the composite object model.
+The Default realization uses a subobject composition posture.
+A top-level shell defines slots, and separate SVG resources define subobjects such as plot area, grid, scales, legends, graph palette, scrollbars, cursor layer, and plot-image layers.
 </p>
 
 <p>
-The SVG template does not own chart data.
+The SVG assets do not own chart data.
 A runtime or IDE injects plotted samples into <code>plot_layer</code> and cursor positions into <code>cursor_layer</code>.
 </p>
 
@@ -480,11 +459,6 @@ The waveform chart supports natural value participation through <code>widget_val
 <hr/>
 
 <h2 id="core-boundary-and-non-goals">18. Core Boundary and Non-Goals</h2>
-
-<p>
-The core includes a composite chart object model but remains bounded.
-The following are not part of this baseline:
-</p>
 
 <ul>
   <li>annotation collections,</li>
