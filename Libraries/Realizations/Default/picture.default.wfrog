@@ -1,0 +1,133 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_picture_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.picture",
+    "name": "FROG Default picture Realization",
+    "namespace": "frog.realizations.default.picture",
+    "family": "default",
+    "summary": "Machine-readable default realization manifest for standardized picture widgets."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default picture realization records",
+      "picture realization resources",
+      "picture part bindings",
+      "picture host hints",
+      "picture validation expectations"
+    ],
+    "does_not_own": [
+      "picture widget class law",
+      "canonical .frog source",
+      "frog.ui primitive semantics",
+      "runtime-private host handles",
+      "IDE-private editing behavior"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.picture_control",
+      "role": "widget"
+    },
+    {
+      "class_id": "frog.widgets.picture_indicator",
+      "role": "widget"
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.picture"
+    ],
+    "resources": [
+      "frog.realizations.default.picture.assets.rectangular_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.picture",
+      "family": "default",
+      "target_classes": [
+        "frog.widgets.picture_control",
+        "frog.widgets.picture_indicator"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "picture_region",
+        "overlay_region",
+        "focus_ring"
+      ],
+      "fallbacks": {
+        "missing_resource": "host_native_or_generic_compatible_rendering",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.picture.assets.rectangular_svg",
+      "kind": "svg",
+      "path": "./assets/picture/templates/picture_rectangular.svg",
+      "target_classes": [
+        "frog.widgets.picture_control",
+        "frog.widgets.picture_indicator"
+      ]
+    }
+  ],
+  "part_bindings": [
+    {
+      "part": "root",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "label",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='label']"
+    },
+    {
+      "part": "caption",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='caption']"
+    },
+    {
+      "part": "frame",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='frame']"
+    },
+    {
+      "part": "picture_region",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='picture_region']"
+    },
+    {
+      "part": "overlay_region",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='overlay_region']"
+    },
+    {
+      "part": "focus_ring",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='focus_ring']"
+    }
+  ],
+  "host_hints": {
+    "preferred_host_kind": "svg_template_host_or_host_native_widget",
+    "style_application_posture": "apply_property_bindings_before_render"
+  },
+  "validation_expectations": [
+    "target classes must exist in Libraries/Widgets/",
+    "all declared public parts must exist in widget class law",
+    "resources must resolve relative to this package file",
+    "resources must not become semantic owners of widget value"
+  ]
+}

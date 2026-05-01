@@ -2,10 +2,10 @@
   <img src="../../../FROG logo.svg" alt="FROG logo" width="140" />
 </p>
 
-<h1 align="center">Default Realization — Picture Widgets</h1>
+<h1 align="center">Default Realization — Panel Widgets</h1>
 
 <p align="center">
-  <strong>Default realization posture for the standardized picture widgets</strong><br/>
+  <strong>Default realization posture for the standardized panel widgets</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -14,8 +14,8 @@
 <h2>Target Classes</h2>
 
 <ul>
-  <li><code>frog.widgets.picture_control</code></li>
-  <li><code>frog.widgets.picture_indicator</code></li>
+  <li><code>frog.widgets.panel</code></li>
+  <li><code>frog.widgets.subpanel</code></li>
 </ul>
 
 <hr/>
@@ -27,8 +27,8 @@
   <li><code>label</code></li>
   <li><code>caption</code></li>
   <li><code>frame</code></li>
-  <li><code>picture_region</code></li>
-  <li><code>overlay_region</code></li>
+  <li><code>content_region</code></li>
+  <li><code>subpanel_region</code></li>
   <li><code>focus_ring</code></li>
 </ul>
 
@@ -37,7 +37,9 @@
 <h2>Published Assets</h2>
 
 <ul>
-  <li><code>assets/picture/templates/picture_rectangular.svg</code></li>
+  <li><code>assets/panel/templates/panel_shell.svg</code></li>
+  <li><code>assets/panel/subobjects/content_region.svg</code></li>
+  <li><code>assets/panel/subobjects/subpanel_region.svg</code></li>
 </ul>
 
 <hr/>

@@ -1,0 +1,141 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_listbox_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.listbox",
+    "name": "FROG Default listbox Realization",
+    "namespace": "frog.realizations.default.listbox",
+    "family": "default",
+    "summary": "Machine-readable default realization manifest for standardized listbox widgets."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default listbox realization records",
+      "listbox realization resources",
+      "listbox part bindings",
+      "listbox host hints",
+      "listbox validation expectations"
+    ],
+    "does_not_own": [
+      "listbox widget class law",
+      "canonical .frog source",
+      "frog.ui primitive semantics",
+      "runtime-private host handles",
+      "IDE-private editing behavior"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.listbox_control",
+      "role": "widget"
+    },
+    {
+      "class_id": "frog.widgets.listbox_indicator",
+      "role": "widget"
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.listbox"
+    ],
+    "resources": [
+      "frog.realizations.default.listbox.assets.shell_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.listbox",
+      "family": "default",
+      "target_classes": [
+        "frog.widgets.listbox_control",
+        "frog.widgets.listbox_indicator"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "item_region",
+        "item_row",
+        "selection_face",
+        "vertical_scrollbar",
+        "focus_ring"
+      ],
+      "fallbacks": {
+        "missing_resource": "host_native_or_generic_compatible_rendering",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.listbox.assets.shell_svg",
+      "kind": "svg",
+      "path": "./assets/listbox/templates/listbox_shell.svg"
+    }
+  ],
+  "part_bindings": [
+    {
+      "part": "root",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "label",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='label']"
+    },
+    {
+      "part": "caption",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='caption']"
+    },
+    {
+      "part": "frame",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='frame']"
+    },
+    {
+      "part": "item_region",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='item_region']"
+    },
+    {
+      "part": "item_row",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='item_row']"
+    },
+    {
+      "part": "selection_face",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='selection_face']"
+    },
+    {
+      "part": "vertical_scrollbar",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='vertical_scrollbar']"
+    },
+    {
+      "part": "focus_ring",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='focus_ring']"
+    }
+  ],
+  "host_hints": {
+    "preferred_host_kind": "svg_template_host_or_host_native_widget",
+    "style_application_posture": "apply_property_bindings_before_render"
+  },
+  "validation_expectations": [
+    "target classes must exist in Libraries/Widgets/",
+    "all declared public parts must exist in widget class law",
+    "resources must resolve relative to this package file",
+    "resources must not become semantic owners of widget value"
+  ]
+}

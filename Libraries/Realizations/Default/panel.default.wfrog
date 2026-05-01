@@ -1,0 +1,129 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_panel_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.panel",
+    "name": "FROG Default panel Realization",
+    "namespace": "frog.realizations.default.panel",
+    "family": "default",
+    "summary": "Machine-readable default realization manifest for standardized panel widgets."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default panel realization records",
+      "panel realization resources",
+      "panel part bindings",
+      "panel host hints",
+      "panel validation expectations"
+    ],
+    "does_not_own": [
+      "panel widget class law",
+      "canonical .frog source",
+      "frog.ui primitive semantics",
+      "runtime-private host handles",
+      "IDE-private editing behavior"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.panel",
+      "role": "widget"
+    },
+    {
+      "class_id": "frog.widgets.subpanel",
+      "role": "widget"
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.panel"
+    ],
+    "resources": [
+      "frog.realizations.default.panel.assets.shell_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.panel",
+      "family": "default",
+      "target_classes": [
+        "frog.widgets.panel",
+        "frog.widgets.subpanel"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "content_region",
+        "subpanel_region",
+        "focus_ring"
+      ],
+      "fallbacks": {
+        "missing_resource": "host_native_or_generic_compatible_rendering",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.panel.assets.shell_svg",
+      "kind": "svg",
+      "path": "./assets/panel/templates/panel_shell.svg"
+    }
+  ],
+  "part_bindings": [
+    {
+      "part": "root",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "label",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='label']"
+    },
+    {
+      "part": "caption",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='caption']"
+    },
+    {
+      "part": "frame",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='frame']"
+    },
+    {
+      "part": "content_region",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='content_region']"
+    },
+    {
+      "part": "subpanel_region",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='subpanel_region']"
+    },
+    {
+      "part": "focus_ring",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='focus_ring']"
+    }
+  ],
+  "host_hints": {
+    "preferred_host_kind": "svg_template_host_or_host_native_widget",
+    "style_application_posture": "apply_property_bindings_before_render"
+  },
+  "validation_expectations": [
+    "target classes must exist in Libraries/Widgets/",
+    "all declared public parts must exist in widget class law",
+    "resources must resolve relative to this package file",
+    "resources must not become semantic owners of widget value"
+  ]
+}

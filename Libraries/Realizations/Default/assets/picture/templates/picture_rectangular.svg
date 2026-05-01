@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 300" data-frog-template="frog.realizations.default.picture.rectangular">
+  <title>FROG Default Picture Template</title>
+  <g data-frog-part="root">
+    <text data-frog-part="label" data-frog-member="label.text" x="12" y="18" font-size="12">picture_1</text>
+    <text data-frog-part="caption" data-frog-member="caption.text" x="12" y="42" font-size="16">Picture</text>
+    <rect data-frog-part="frame" x="10" y="54" width="400" height="230" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+    <rect data-frog-part="picture_region" x="20" y="64" width="380" height="210" fill="#e5e7eb" stroke="#94a3b8"/>
+    <g data-frog-part="overlay_region"><line x1="20" y1="64" x2="400" y2="274" stroke="#2563eb" opacity="0.25"/></g>
+    <rect data-frog-part="focus_ring" x="6" y="50" width="408" height="238" fill="none" stroke="#2f80ed" opacity="0"/>
+  </g>
+</svg>

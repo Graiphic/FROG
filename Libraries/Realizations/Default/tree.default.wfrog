@@ -1,0 +1,147 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_tree_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.tree",
+    "name": "FROG Default tree Realization",
+    "namespace": "frog.realizations.default.tree",
+    "family": "default",
+    "summary": "Machine-readable default realization manifest for standardized tree widgets."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default tree realization records",
+      "tree realization resources",
+      "tree part bindings",
+      "tree host hints",
+      "tree validation expectations"
+    ],
+    "does_not_own": [
+      "tree widget class law",
+      "canonical .frog source",
+      "frog.ui primitive semantics",
+      "runtime-private host handles",
+      "IDE-private editing behavior"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.tree_control",
+      "role": "widget"
+    },
+    {
+      "class_id": "frog.widgets.tree_indicator",
+      "role": "widget"
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.tree"
+    ],
+    "resources": [
+      "frog.realizations.default.tree.assets.shell_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.tree",
+      "family": "default",
+      "target_classes": [
+        "frog.widgets.tree_control",
+        "frog.widgets.tree_indicator"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "node_region",
+        "node_row",
+        "selection_face",
+        "expander_face",
+        "vertical_scrollbar",
+        "focus_ring"
+      ],
+      "fallbacks": {
+        "missing_resource": "host_native_or_generic_compatible_rendering",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.tree.assets.shell_svg",
+      "kind": "svg",
+      "path": "./assets/tree/templates/tree_shell.svg"
+    }
+  ],
+  "part_bindings": [
+    {
+      "part": "root",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "label",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='label']"
+    },
+    {
+      "part": "caption",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='caption']"
+    },
+    {
+      "part": "frame",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='frame']"
+    },
+    {
+      "part": "node_region",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='node_region']"
+    },
+    {
+      "part": "node_row",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='node_row']"
+    },
+    {
+      "part": "selection_face",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='selection_face']"
+    },
+    {
+      "part": "expander_face",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='expander_face']"
+    },
+    {
+      "part": "vertical_scrollbar",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='vertical_scrollbar']"
+    },
+    {
+      "part": "focus_ring",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='focus_ring']"
+    }
+  ],
+  "host_hints": {
+    "preferred_host_kind": "svg_template_host_or_host_native_widget",
+    "style_application_posture": "apply_property_bindings_before_render"
+  },
+  "validation_expectations": [
+    "target classes must exist in Libraries/Widgets/",
+    "all declared public parts must exist in widget class law",
+    "resources must resolve relative to this package file",
+    "resources must not become semantic owners of widget value"
+  ]
+}

@@ -14,21 +14,10 @@
 <h2>Active Default Manifests</h2>
 
 <ul>
-  <li><code>boolean.default.wfrog</code></li>
-  <li><code>string.default.wfrog</code></li>
-  <li><code>button.default.wfrog</code></li>
-  <li><code>numeric.default.wfrog</code></li>
-  <li><code>chart.default.wfrog</code></li>
-  <li><code>label.default.wfrog</code></li>
-  <li><code>frame.default.wfrog</code></li>
-  <li><code>enum.default.wfrog</code></li>
-  <li><code>path.default.wfrog</code></li>
-  <li><code>array.default.wfrog</code></li>
-  <li><code>cluster.default.wfrog</code></li>
-</ul>
+  <li><code>boolean.default.wfrog</code></li>\n  <li><code>string.default.wfrog</code></li>\n  <li><code>button.default.wfrog</code></li>\n  <li><code>numeric.default.wfrog</code></li>\n  <li><code>chart.default.wfrog</code></li>\n  <li><code>label.default.wfrog</code></li>\n  <li><code>frame.default.wfrog</code></li>\n  <li><code>enum.default.wfrog</code></li>\n  <li><code>path.default.wfrog</code></li>\n  <li><code>array.default.wfrog</code></li>\n  <li><code>cluster.default.wfrog</code></li>\n  <li><code>picture.default.wfrog</code></li>\n  <li><code>tab.default.wfrog</code></li>\n  <li><code>listbox.default.wfrog</code></li>\n  <li><code>table.default.wfrog</code></li>\n  <li><code>tree.default.wfrog</code></li>\n  <li><code>decorations.default.wfrog</code></li>\n  <li><code>splitter.default.wfrog</code></li>\n  <li><code>panel.default.wfrog</code></li>\n</ul>
+
+<hr/>
 
 <p>
-Array and Cluster both use subobject composition.
-Array repeats homogeneous element slots.
-Cluster places heterogeneous named field slots.
+Default manifests publish realization resources, part bindings, state maps, property bindings, anchors, host hints, and validation expectations. They do not redefine public widget class law.
 </p>

@@ -2,10 +2,10 @@
   <img src="../../../FROG logo.svg" alt="FROG logo" width="140" />
 </p>
 
-<h1 align="center">Default Realization — Picture Widgets</h1>
+<h1 align="center">Default Realization — Splitter Widgets</h1>
 
 <p align="center">
-  <strong>Default realization posture for the standardized picture widgets</strong><br/>
+  <strong>Default realization posture for the standardized splitter widgets</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -14,8 +14,8 @@
 <h2>Target Classes</h2>
 
 <ul>
-  <li><code>frog.widgets.picture_control</code></li>
-  <li><code>frog.widgets.picture_indicator</code></li>
+  <li><code>frog.widgets.horizontal_splitter</code></li>
+  <li><code>frog.widgets.vertical_splitter</code></li>
 </ul>
 
 <hr/>
@@ -24,11 +24,8 @@
 
 <ul>
   <li><code>root</code></li>
-  <li><code>label</code></li>
-  <li><code>caption</code></li>
-  <li><code>frame</code></li>
-  <li><code>picture_region</code></li>
-  <li><code>overlay_region</code></li>
+  <li><code>separator</code></li>
+  <li><code>handle</code></li>
   <li><code>focus_ring</code></li>
 </ul>
 
@@ -37,7 +34,8 @@
 <h2>Published Assets</h2>
 
 <ul>
-  <li><code>assets/picture/templates/picture_rectangular.svg</code></li>
+  <li><code>assets/splitter/templates/horizontal_splitter.svg</code></li>
+  <li><code>assets/splitter/templates/vertical_splitter.svg</code></li>
 </ul>
 
 <hr/>
