@@ -17,21 +17,21 @@
   <thead>
     <tr>
       <th>Widget family</th>
-      <th>Class-law status</th>
-      <th>Default realization status</th>
+      <th>Status</th>
       <th>Current note</th>
     </tr>
   </thead>
   <tbody>
-    <tr><td>Boolean</td><td>Published core class law</td><td>Published Default manifest and SVG templates</td><td>Rectangular and circular realization variants exist.</td></tr>
-    <tr><td>String</td><td>Published core class law</td><td>Published Default manifest and SVG template</td><td>Rectangular string realization exists.</td></tr>
-    <tr><td>Button</td><td>Published core class law</td><td>Published Default manifest and state SVG resources</td><td>Mechanical-action behavior is part of class law.</td></tr>
-    <tr><td>Numeric</td><td>Published core class law</td><td>Published Default manifest and SVG template</td><td>Modern numeric representation model exists while Example 05 flat-surface compatibility is preserved.</td></tr>
-    <tr><td>Waveform Chart</td><td>Published composite class law</td><td>Published Default manifest with subobject SVG composition</td><td>Composite model includes plot area, plots, scales, legends, palette, scrollbars, optional cursors, and plot-image layers.</td></tr>
-    <tr><td>Label</td><td>Published support-widget class law</td><td>Published Default manifest and SVG template</td><td>Standalone support-text widget.</td></tr>
-    <tr><td>Frame</td><td>Published support-widget class law</td><td>Published Default manifest and SVG template</td><td>Standalone grouping-frame widget.</td></tr>
-    <tr><td>Enum</td><td>Published near-core class law</td><td>Published Default manifest and SVG template</td><td>Finite discrete named-value selection and display.</td></tr>
-    <tr><td>Path</td><td>Published near-core class law</td><td>Published Default manifest and SVG template</td><td>Path-typed selection and display with host-mediated browse posture.</td></tr>
+    <tr><td>Boolean</td><td>Published</td><td>True/false control and indicator.</td></tr>
+    <tr><td>String</td><td>Published</td><td>Text control and indicator.</td></tr>
+    <tr><td>Button</td><td>Published</td><td>Mechanical-action command widget.</td></tr>
+    <tr><td>Numeric</td><td>Published</td><td>Numeric representation model and Example 05 compatibility.</td></tr>
+    <tr><td>Waveform Chart</td><td>Published</td><td>Composite plotting widget with subobjects.</td></tr>
+    <tr><td>Label</td><td>Published</td><td>Standalone support text.</td></tr>
+    <tr><td>Frame</td><td>Published</td><td>Standalone grouping frame.</td></tr>
+    <tr><td>Enum</td><td>Published</td><td>Finite discrete named-value selection and display.</td></tr>
+    <tr><td>Path</td><td>Published</td><td>Path value control and indicator.</td></tr>
+    <tr><td>Array</td><td>Published</td><td>Homogeneous collection widget with element template and viewport posture.</td></tr>
   </tbody>
 </table>
 
@@ -40,6 +40,5 @@
 <h2>Summary</h2>
 
 <p>
-The current widget baseline now includes Boolean, String, Button, Numeric, Waveform Chart, Label, Frame, Enum, and Path.
-The next coherent widget target is <code>Array</code> or <code>Cluster</code>.
+The next coherent widget target is <code>Cluster</code>.
 </p>

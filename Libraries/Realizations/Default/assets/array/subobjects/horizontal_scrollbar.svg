@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 16"
+     role="img" aria-label="FROG array horizontal scrollbar"
+     data-frog-template="frog.realizations.default.array.subobject.horizontal_scrollbar">
+  <title>Array Horizontal Scrollbar</title>
+  <g id="horizontal_scrollbar" data-frog-part="horizontal_scrollbar" data-frog-bind="scrollbars.horizontal.*">
+    <rect width="160" height="16" fill="#e5e7eb" stroke="#94a3b8" />
+    <rect x="12" y="3" width="42" height="10" fill="#94a3b8" />
+  </g>
+</svg>

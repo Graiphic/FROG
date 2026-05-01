@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 72"
+     role="img" aria-label="FROG array index display"
+     data-frog-template="frog.realizations.default.array.subobject.index_display">
+  <title>Array Index Display</title>
+  <g id="index_display" data-frog-part="index_display" data-frog-bind="index_display.* viewport.first_indices[]">
+    <rect x="0" y="0" width="32" height="22" fill="#ffffff" stroke="#94a3b8" />
+    <text x="16" y="14" text-anchor="middle" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="11">0</text>
+    <rect x="0" y="26" width="32" height="22" fill="#ffffff" stroke="#94a3b8" />
+    <text x="16" y="40" text-anchor="middle" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="11">1</text>
+  </g>
+</svg>

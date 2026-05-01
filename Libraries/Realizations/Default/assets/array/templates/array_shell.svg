@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 180"
+     role="img" aria-label="FROG default array shell"
+     data-frog-template="frog.realizations.default.array.shell"
+     data-frog-target-class="frog.widgets.array">
+  <title>FROG Default Array Shell</title>
+  <g id="root" data-frog-part="root">
+    <text id="label_text" data-frog-part="label" data-frog-member="label.text" data-frog-anchor="label.anchor"
+          x="12" y="18" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12">array_1</text>
+    <text id="caption_text" data-frog-part="caption" data-frog-member="caption.text" data-frog-anchor="caption.anchor"
+          x="12" y="40" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="14">Array</text>
+    <rect id="focus_ring" data-frog-part="focus_ring" x="4" y="48" width="250" height="120" rx="6"
+          fill="none" stroke="#2f80ed" stroke-width="3" opacity="0"
+          data-frog-bind="interaction.focused style.focus_ring.*" />
+    <rect id="frame" data-frog-part="frame" x="10" y="54" width="238" height="108"
+          fill="#ffffff" stroke="#000000" stroke-width="2" data-frog-bind="style.frame.*" />
+    <g id="slot_index_display" data-frog-slot="index_display" data-frog-part="index_display" transform="translate(18 62)" />
+    <g id="slot_element_region" data-frog-slot="element_region" data-frog-part="element_region" transform="translate(58 62)" />
+    <g id="slot_vertical_scrollbar" data-frog-slot="vertical_scrollbar" data-frog-part="vertical_scrollbar" transform="translate(222 62)" />
+    <g id="slot_horizontal_scrollbar" data-frog-slot="horizontal_scrollbar" data-frog-part="horizontal_scrollbar" transform="translate(58 142)" />
+  </g>
+</svg>

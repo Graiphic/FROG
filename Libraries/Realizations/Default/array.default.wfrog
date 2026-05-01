@@ -1,0 +1,225 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_array_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.array",
+    "name": "FROG Default Array Realization",
+    "namespace": "frog.realizations.default.array",
+    "family": "default",
+    "summary": "Machine-readable default realization manifest for the standardized array widget."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default array realization record",
+      "array shell resource",
+      "array subobject resources",
+      "array composition slots",
+      "array part bindings",
+      "array host hints"
+    ],
+    "does_not_own": [
+      "array widget class law",
+      "array collection semantics",
+      "array element widget class law",
+      "canonical .frog source",
+      "frog.ui primitive semantics",
+      "runtime-private repeater handles"
+    ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Array.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.array",
+      "role": "structured",
+      "primary_value": {
+        "present": true,
+        "kind": "homogeneous_collection"
+      }
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.array"
+    ],
+    "variants": [
+      "frog.realizations.default.array.rectangular_viewport"
+    ],
+    "resources": [
+      "frog.realizations.default.array.assets.shell_svg",
+      "frog.realizations.default.array.assets.index_display_svg",
+      "frog.realizations.default.array.assets.element_region_svg",
+      "frog.realizations.default.array.assets.element_slot_svg",
+      "frog.realizations.default.array.assets.vertical_scrollbar_svg",
+      "frog.realizations.default.array.assets.horizontal_scrollbar_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.array",
+      "family": "default",
+      "target_class": "frog.widgets.array",
+      "variant_property": "realization.variant",
+      "default_variant": "rectangular_viewport",
+      "supported_variants": [
+        "rectangular_viewport"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "index_display",
+        "dimension_controls",
+        "element_region",
+        "element_slot",
+        "element_gap",
+        "horizontal_scrollbar",
+        "vertical_scrollbar",
+        "focus_ring"
+      ],
+      "subobject_strategy": "separate_svg_assets_composed_by_shell_slots",
+      "fallbacks": {
+        "missing_element_slot_asset": "host_native_element_template",
+        "missing_scrollbar": "hide_scrollbar",
+        "unsupported_element_class": "diagnose_invalid_element_model"
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "frog.realizations.default.array.rectangular_viewport",
+      "variant": "rectangular_viewport",
+      "target_class": "frog.widgets.array",
+      "shell_resource_ref": "frog.realizations.default.array.assets.shell_svg",
+      "geometry_posture": {
+        "shape_family": "rectangular_collection_viewport",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "uses_subobject_slots": true
+      },
+      "fallback": "host_rectangle_array_view"
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.array.assets.shell_svg",
+      "kind": "svg",
+      "path": "./assets/array/templates/array_shell.svg",
+      "role": "assembly_shell"
+    },
+    {
+      "id": "frog.realizations.default.array.assets.index_display_svg",
+      "kind": "svg",
+      "path": "./assets/array/subobjects/index_display.svg",
+      "target_part": "index_display"
+    },
+    {
+      "id": "frog.realizations.default.array.assets.element_region_svg",
+      "kind": "svg",
+      "path": "./assets/array/subobjects/element_region.svg",
+      "target_part": "element_region"
+    },
+    {
+      "id": "frog.realizations.default.array.assets.element_slot_svg",
+      "kind": "svg",
+      "path": "./assets/array/subobjects/element_slot.svg",
+      "target_part": "element_slot"
+    },
+    {
+      "id": "frog.realizations.default.array.assets.vertical_scrollbar_svg",
+      "kind": "svg",
+      "path": "./assets/array/subobjects/vertical_scrollbar.svg",
+      "target_part": "vertical_scrollbar"
+    },
+    {
+      "id": "frog.realizations.default.array.assets.horizontal_scrollbar_svg",
+      "kind": "svg",
+      "path": "./assets/array/subobjects/horizontal_scrollbar.svg",
+      "target_part": "horizontal_scrollbar"
+    }
+  ],
+  "composition": {
+    "shell": "frog.realizations.default.array.assets.shell_svg",
+    "slots": [
+      {
+        "slot": "index_display",
+        "resource_ref": "frog.realizations.default.array.assets.index_display_svg"
+      },
+      {
+        "slot": "element_region",
+        "resource_ref": "frog.realizations.default.array.assets.element_region_svg"
+      },
+      {
+        "slot": "vertical_scrollbar",
+        "resource_ref": "frog.realizations.default.array.assets.vertical_scrollbar_svg"
+      },
+      {
+        "slot": "horizontal_scrollbar",
+        "resource_ref": "frog.realizations.default.array.assets.horizontal_scrollbar_svg"
+      }
+    ],
+    "nested_slots": [
+      {
+        "parent_part": "element_region",
+        "slot": "element_slot",
+        "resource_ref": "frog.realizations.default.array.assets.element_slot_svg"
+      }
+    ]
+  },
+  "part_bindings": [
+    {
+      "part": "index_display",
+      "resource_ref": "frog.realizations.default.array.assets.index_display_svg",
+      "semantic_member": "index_display.*"
+    },
+    {
+      "part": "element_region",
+      "resource_ref": "frog.realizations.default.array.assets.element_region_svg",
+      "semantic_members": [
+        "value",
+        "viewport.*",
+        "element.*"
+      ]
+    },
+    {
+      "part": "element_slot",
+      "resource_ref": "frog.realizations.default.array.assets.element_slot_svg",
+      "semantic_member": "element.template_ref"
+    },
+    {
+      "part": "vertical_scrollbar",
+      "resource_ref": "frog.realizations.default.array.assets.vertical_scrollbar_svg",
+      "semantic_member": "scrollbars.vertical.*"
+    },
+    {
+      "part": "horizontal_scrollbar",
+      "resource_ref": "frog.realizations.default.array.assets.horizontal_scrollbar_svg",
+      "semantic_member": "scrollbars.horizontal.*"
+    }
+  ],
+  "host_hints": {
+    "preferred_host_kind": "subobject_svg_composition_or_host_native_repeater",
+    "composition_posture": "assemble_subobject_assets_into_shell_slots",
+    "element_rendering_posture": "host_instantiates_element_template_per_visible_cell",
+    "virtualization_posture": "allowed_if_public_viewport_state_is_preserved"
+  },
+  "validation_expectations": [
+    "target class must exist in Libraries/Widgets/Array.md",
+    "all declared public parts must exist in the array class law",
+    "shell resource must resolve",
+    "all subobject resources must resolve",
+    "element class must be compatible with element model",
+    "element cells must not become the only semantic storage for array value",
+    "scrollbar helpers must not be treated as array semantics"
+  ]
+}
