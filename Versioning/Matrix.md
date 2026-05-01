@@ -31,7 +31,8 @@
     <tr><td>Frame</td><td>Published</td><td>Standalone grouping frame.</td></tr>
     <tr><td>Enum</td><td>Published</td><td>Finite discrete named-value selection and display.</td></tr>
     <tr><td>Path</td><td>Published</td><td>Path value control and indicator.</td></tr>
-    <tr><td>Array</td><td>Published</td><td>Homogeneous collection widget with element template and viewport posture.</td></tr>
+    <tr><td>Array</td><td>Published</td><td>Homogeneous collection widget.</td></tr>
+    <tr><td>Cluster</td><td>Published</td><td>Heterogeneous named-aggregate widget.</td></tr>
   </tbody>
 </table>
 
@@ -40,5 +41,6 @@
 <h2>Summary</h2>
 
 <p>
-The next coherent widget target is <code>Cluster</code>.
+The current widget baseline includes the core scalar widgets, support widgets, chart, path, array, and cluster.
+The next step should be a review pass before adding more complex controls.
 </p>

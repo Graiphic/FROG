@@ -24,12 +24,14 @@
   <li><a href="./Enum.md"><code>Enum.md</code></a></li>
   <li><a href="./Path.md"><code>Path.md</code></a></li>
   <li><a href="./Array.md"><code>Array.md</code></a></li>
+  <li><a href="./Cluster.md"><code>Cluster.md</code></a></li>
 </ul>
 
 <hr/>
 
-<h2>Next Growth Direction</h2>
+<h2>Collection and Structure Rule</h2>
 
-<p>
-The next coherent widget target is <code>Cluster</code>, because arrays establish homogeneous collections and clusters establish heterogeneous records.
-</p>
+<ul>
+  <li><code>frog.widgets.array</code> is the homogeneous collection widget.</li>
+  <li><code>frog.widgets.cluster</code> is the heterogeneous named-aggregate widget.</li>
+</ul>

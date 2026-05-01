@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 84 28"
+     role="img"
+     aria-label="FROG cluster field label"
+     data-frog-template="frog.realizations.default.cluster.subobject.field_label">
+  <title>Cluster Field Label</title>
+  <g id="field_label" data-frog-part="field_label" data-frog-bind="fields[].caption.* style.field_label.*">
+    <text x="0" y="18" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12" fill="#111111">field</text>
+  </g>
+</svg>

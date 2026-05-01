@@ -24,8 +24,11 @@
   <li><code>enum.default.wfrog</code></li>
   <li><code>path.default.wfrog</code></li>
   <li><code>array.default.wfrog</code></li>
+  <li><code>cluster.default.wfrog</code></li>
 </ul>
 
 <p>
-Array uses a subobject composition posture because it is a composite collection widget with element regions, index displays, scrollbars, and element slots.
+Array and Cluster both use subobject composition.
+Array repeats homogeneous element slots.
+Cluster places heterogeneous named field slots.
 </p>

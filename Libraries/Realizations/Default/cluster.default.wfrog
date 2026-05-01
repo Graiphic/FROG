@@ -1,0 +1,188 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_cluster_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.cluster",
+    "name": "FROG Default Cluster Realization",
+    "namespace": "frog.realizations.default.cluster",
+    "family": "default",
+    "summary": "Machine-readable default realization manifest for the standardized cluster widget."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default cluster realization record",
+      "cluster shell resource",
+      "cluster subobject resources",
+      "cluster composition slots",
+      "cluster part bindings",
+      "cluster host hints"
+    ],
+    "does_not_own": [
+      "cluster widget class law",
+      "cluster aggregate semantics",
+      "field widget class law",
+      "canonical .frog source",
+      "frog.ui primitive semantics",
+      "runtime-private layout handles"
+    ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Cluster.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.cluster",
+      "role": "structured",
+      "primary_value": {
+        "present": true,
+        "kind": "heterogeneous_named_aggregate"
+      }
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.cluster"
+    ],
+    "variants": [
+      "frog.realizations.default.cluster.rectangular_group"
+    ],
+    "resources": [
+      "frog.realizations.default.cluster.assets.shell_svg",
+      "frog.realizations.default.cluster.assets.content_region_svg",
+      "frog.realizations.default.cluster.assets.field_slot_svg",
+      "frog.realizations.default.cluster.assets.field_label_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.cluster",
+      "family": "default",
+      "target_class": "frog.widgets.cluster",
+      "variant_property": "realization.variant",
+      "default_variant": "rectangular_group",
+      "supported_variants": [
+        "rectangular_group"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "content_region",
+        "field_slot",
+        "field_label",
+        "field_gap",
+        "focus_ring"
+      ],
+      "subobject_strategy": "separate_svg_assets_composed_by_shell_slots",
+      "fallbacks": {
+        "missing_field_slot_asset": "host_native_field_template",
+        "unsupported_field_widget_class": "diagnose_invalid_field_model"
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "frog.realizations.default.cluster.rectangular_group",
+      "variant": "rectangular_group",
+      "target_class": "frog.widgets.cluster",
+      "shell_resource_ref": "frog.realizations.default.cluster.assets.shell_svg",
+      "geometry_posture": {
+        "shape_family": "rectangular_group",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "uses_subobject_slots": true
+      },
+      "fallback": "host_rectangle_cluster_group"
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.cluster.assets.shell_svg",
+      "kind": "svg",
+      "path": "./assets/cluster/templates/cluster_shell.svg",
+      "role": "assembly_shell"
+    },
+    {
+      "id": "frog.realizations.default.cluster.assets.content_region_svg",
+      "kind": "svg",
+      "path": "./assets/cluster/subobjects/content_region.svg",
+      "target_part": "content_region"
+    },
+    {
+      "id": "frog.realizations.default.cluster.assets.field_slot_svg",
+      "kind": "svg",
+      "path": "./assets/cluster/subobjects/field_slot.svg",
+      "target_part": "field_slot"
+    },
+    {
+      "id": "frog.realizations.default.cluster.assets.field_label_svg",
+      "kind": "svg",
+      "path": "./assets/cluster/subobjects/field_label.svg",
+      "target_part": "field_label"
+    }
+  ],
+  "composition": {
+    "shell": "frog.realizations.default.cluster.assets.shell_svg",
+    "slots": [
+      {
+        "slot": "content_region",
+        "resource_ref": "frog.realizations.default.cluster.assets.content_region_svg"
+      }
+    ],
+    "nested_slots": [
+      {
+        "parent_part": "content_region",
+        "slot": "field_slot",
+        "resource_ref": "frog.realizations.default.cluster.assets.field_slot_svg"
+      },
+      {
+        "parent_part": "content_region",
+        "slot": "field_label",
+        "resource_ref": "frog.realizations.default.cluster.assets.field_label_svg"
+      }
+    ]
+  },
+  "part_bindings": [
+    {
+      "part": "content_region",
+      "resource_ref": "frog.realizations.default.cluster.assets.content_region_svg",
+      "semantic_members": [
+        "fields[]",
+        "layout.*"
+      ]
+    },
+    {
+      "part": "field_slot",
+      "resource_ref": "frog.realizations.default.cluster.assets.field_slot_svg",
+      "semantic_member": "fields[].widget_class_id"
+    },
+    {
+      "part": "field_label",
+      "resource_ref": "frog.realizations.default.cluster.assets.field_label_svg",
+      "semantic_member": "fields[].caption.text"
+    }
+  ],
+  "host_hints": {
+    "preferred_host_kind": "subobject_svg_composition_or_host_native_group",
+    "composition_posture": "assemble_subobject_assets_into_shell_slots",
+    "field_rendering_posture": "host_instantiates_field_widget_template_per_declared_field"
+  },
+  "validation_expectations": [
+    "target class must exist in Libraries/Widgets/Cluster.md",
+    "all declared public parts must exist in the cluster class law",
+    "shell resource must resolve",
+    "all subobject resources must resolve",
+    "field ids must be unique",
+    "field classes must be compatible with field model",
+    "field slots must not become the only semantic storage for aggregate value"
+  ]
+}

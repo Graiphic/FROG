@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 186 28"
+     role="img"
+     aria-label="FROG cluster field slot"
+     data-frog-template="frog.realizations.default.cluster.subobject.field_slot">
+  <title>Cluster Field Slot</title>
+  <g id="field_slot" data-frog-part="field_slot">
+    <rect x="0" y="0" width="186" height="28" fill="#ffffff" stroke="#94a3b8" />
+    <text x="176" y="18" text-anchor="end" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="11" fill="#6b7280">field</text>
+  </g>
+</svg>

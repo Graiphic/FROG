@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 308 110"
+     role="img"
+     aria-label="FROG cluster content region"
+     data-frog-template="frog.realizations.default.cluster.subobject.content_region">
+  <title>Cluster Content Region</title>
+  <g id="content_region" data-frog-part="content_region" data-frog-bind="fields[] layout.* style.content_region.*">
+    <rect x="0" y="0" width="308" height="110" fill="#f8fafc" stroke="#cbd5e1" />
+    <g id="slot_field_label_0" data-frog-slot="field_label" data-frog-part="field_label" transform="translate(10 10)" />
+    <g id="slot_field_0" data-frog-slot="field_slot" data-frog-part="field_slot" transform="translate(102 6)" />
+    <g id="slot_field_label_1" data-frog-slot="field_label" data-frog-part="field_label" transform="translate(10 44)" />
+    <g id="slot_field_1" data-frog-slot="field_slot" data-frog-part="field_slot" transform="translate(102 40)" />
+    <g id="slot_field_label_2" data-frog-slot="field_label" data-frog-part="field_label" transform="translate(10 78)" />
+    <g id="slot_field_2" data-frog-slot="field_slot" data-frog-part="field_slot" transform="translate(102 74)" />
+  </g>
+</svg>
