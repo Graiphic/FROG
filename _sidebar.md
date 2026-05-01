@@ -93,6 +93,7 @@
         - [frame](/Libraries/Realizations/Default/assets/frame/Readme.md)
         - [label](/Libraries/Realizations/Default/assets/label/Readme.md)
         - [numeric](/Libraries/Realizations/Default/assets/numeric/Readme.md)
+        - [path](/Libraries/Realizations/Default/assets/path/Readme.md)
         - [string](/Libraries/Realizations/Default/assets/string/Readme.md)
       - [Assets](/Libraries/Realizations/Default/Assets/Readme.md)
         - [Naming](/Libraries/Realizations/Default/Assets/Naming.md)
