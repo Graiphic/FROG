@@ -633,6 +633,13 @@
                           "children": []
                         },
                         {
+                          "key": "libraries/realizations/default/assets/enum/",
+                          "title": "enum",
+                          "path": "/Libraries/Realizations/Default/assets/enum/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        },
+                        {
                           "key": "libraries/realizations/default/assets/frame/",
                           "title": "frame",
                           "path": "/Libraries/Realizations/Default/assets/frame/Readme.md",
@@ -2894,6 +2901,7 @@
     "/Libraries/Realizations/Default/assets/boolean/Readme.md",
     "/Libraries/Realizations/Default/assets/button/Readme.md",
     "/Libraries/Realizations/Default/assets/chart/Readme.md",
+    "/Libraries/Realizations/Default/assets/enum/Readme.md",
     "/Libraries/Realizations/Default/assets/frame/Readme.md",
     "/Libraries/Realizations/Default/assets/label/Readme.md",
     "/Libraries/Realizations/Default/assets/numeric/Readme.md",
