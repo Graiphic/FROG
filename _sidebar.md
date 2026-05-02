@@ -88,6 +88,7 @@
       - [Tab](/Libraries/Realizations/Default/Tab.md)
       - [Table](/Libraries/Realizations/Default/Table.md)
       - [Tree](/Libraries/Realizations/Default/Tree.md)
+      - [Validation](/Libraries/Realizations/Default/Validation.md)
       - assets
         - [array](/Libraries/Realizations/Default/assets/array/Readme.md)
         - [boolean](/Libraries/Realizations/Default/assets/boolean/Readme.md)
@@ -403,6 +404,8 @@
     - [responsibilities](/Implementations/Reference/Validator/responsibilities.md)
     - [validate source](/Implementations/Reference/Validator/validate_source.md)
     - [reference_validator.py](/Implementations/Reference/Validator/reference_validator.py)
+  - [WidgetValidator](/Implementations/Reference/WidgetValidator/Readme.md)
+    - [validate_widget_layer.py](/Implementations/Reference/WidgetValidator/validate_widget_layer.py)
 - [Roadmap](/Roadmap/Readme.md)
   - [Milestones](/Roadmap/Milestones.md)
 - [Strategy](/Strategy/Heilmeier/Readme.md)

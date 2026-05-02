@@ -627,6 +627,13 @@
                       "children": []
                     },
                     {
+                      "key": "libraries/realizations/default/validation.md",
+                      "title": "Validation",
+                      "path": "/Libraries/Realizations/Default/Validation.md",
+                      "kind": "page",
+                      "children": []
+                    },
+                    {
                       "key": "libraries/realizations/default/assets/",
                       "title": "assets",
                       "path": null,
@@ -2885,6 +2892,21 @@
                   "children": []
                 }
               ]
+            },
+            {
+              "key": "implementations/reference/widgetvalidator/",
+              "title": "WidgetValidator",
+              "path": "/Implementations/Reference/WidgetValidator/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "implementations/reference/widgetvalidator/validate_widget_layer.py",
+                  "title": "validate_widget_layer.py",
+                  "path": "/Implementations/Reference/WidgetValidator/validate_widget_layer.py",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
             }
           ]
         },
@@ -3020,6 +3042,7 @@
     "/Libraries/Realizations/Default/Tab.md",
     "/Libraries/Realizations/Default/Table.md",
     "/Libraries/Realizations/Default/Tree.md",
+    "/Libraries/Realizations/Default/Validation.md",
     "/Libraries/Realizations/Default/assets/array/Readme.md",
     "/Libraries/Realizations/Default/assets/boolean/Readme.md",
     "/Libraries/Realizations/Default/assets/button/Readme.md",
@@ -3330,6 +3353,8 @@
     "/Implementations/Reference/Validator/validate_source.md",
     "/Implementations/Reference/Validator/reference_validator.py",
     "/Implementations/Reference/Validator/Readme.md",
+    "/Implementations/Reference/WidgetValidator/validate_widget_layer.py",
+    "/Implementations/Reference/WidgetValidator/Readme.md",
     "/Implementations/Reference/Readme.md",
     "/Roadmap/Milestones.md",
     "/Roadmap/Readme.md",
