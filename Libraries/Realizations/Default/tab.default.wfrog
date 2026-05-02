@@ -8,6 +8,8 @@
     "name": "FROG Default tab Realization",
     "namespace": "frog.realizations.default.tab",
     "family": "default",
+    "category": "selection / navigation",
+    "role_posture": "control / indicator",
     "summary": "Machine-readable default realization manifest for standardized tab widgets."
   },
   "ownership_boundary": {
@@ -25,6 +27,10 @@
       "runtime-private host handles",
       "IDE-private editing behavior"
     ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Tab.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
     "interaction_refs": [
       "../../../Libraries/UI.md",
       "../../../Expression/Widget interaction.md"
@@ -34,11 +40,11 @@
   "targets": [
     {
       "class_id": "frog.widgets.tab_control",
-      "role": "widget"
+      "role": "control"
     },
     {
       "class_id": "frog.widgets.tab_indicator",
-      "role": "widget"
+      "role": "indicator"
     }
   ],
   "exports": {
@@ -46,7 +52,11 @@
       "frog.realizations.default.tab"
     ],
     "resources": [
-      "frog.realizations.default.tab.assets.shell_svg"
+      "frog.realizations.default.tab.assets.shell_svg",
+      "frog.realizations.default.tab.assets.tab_header_region_svg",
+      "frog.realizations.default.tab.assets.tab_item_svg",
+      "frog.realizations.default.tab.assets.selection_face_svg",
+      "frog.realizations.default.tab.assets.page_region_svg"
     ]
   },
   "realizations": [
@@ -78,7 +88,32 @@
     {
       "id": "frog.realizations.default.tab.assets.shell_svg",
       "kind": "svg",
-      "path": "./assets/tab/templates/tab_shell.svg"
+      "path": "./assets/tab/templates/tab_shell.svg",
+      "role": "assembly_shell"
+    },
+    {
+      "id": "frog.realizations.default.tab.assets.tab_header_region_svg",
+      "kind": "svg",
+      "path": "./assets/tab/subobjects/tab_header_region.svg",
+      "target_part": "tab_header_region"
+    },
+    {
+      "id": "frog.realizations.default.tab.assets.tab_item_svg",
+      "kind": "svg",
+      "path": "./assets/tab/subobjects/tab_item.svg",
+      "target_part": "tab_item"
+    },
+    {
+      "id": "frog.realizations.default.tab.assets.selection_face_svg",
+      "kind": "svg",
+      "path": "./assets/tab/subobjects/selection_face.svg",
+      "target_part": "selection_face"
+    },
+    {
+      "id": "frog.realizations.default.tab.assets.page_region_svg",
+      "kind": "svg",
+      "path": "./assets/tab/subobjects/page_region.svg",
+      "target_part": "page_region"
     }
   ],
   "part_bindings": [
@@ -128,21 +163,62 @@
       "binding_selector": "[data-frog-part='focus_ring']"
     }
   ],
+  "property_bindings": [
+    {
+      "member": "pages[]",
+      "target_part": "tab_header_region",
+      "target_operation": "render_tab_items"
+    },
+    {
+      "member": "selection.*",
+      "target_part": "selection_face",
+      "target_operation": "render_selected_tab"
+    },
+    {
+      "member": "value",
+      "target_part": "page_region",
+      "target_operation": "render_selected_page"
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "normal"
+    }
+  ],
+  "composition": {
+    "shell": "frog.realizations.default.tab.assets.shell_svg",
+    "slots": [
+      {
+        "slot": "tab_header_region",
+        "resource_ref": "frog.realizations.default.tab.assets.tab_header_region_svg"
+      },
+      {
+        "slot": "page_region",
+        "resource_ref": "frog.realizations.default.tab.assets.page_region_svg"
+      }
+    ],
+    "nested_slots": [
+      {
+        "parent_part": "tab_header_region",
+        "slot": "tab_item",
+        "resource_ref": "frog.realizations.default.tab.assets.tab_item_svg"
+      },
+      {
+        "parent_part": "tab_header_region",
+        "slot": "selection_face",
+        "resource_ref": "frog.realizations.default.tab.assets.selection_face_svg"
+      }
+    ]
+  },
   "host_hints": {
     "preferred_host_kind": "svg_template_host_or_host_native_widget",
     "style_application_posture": "apply_property_bindings_before_render"
   },
   "validation_expectations": [
-    "target classes must exist in Libraries/Widgets/",
+    "target classes must exist in the referenced widget class-law document",
     "all declared public parts must exist in widget class law",
     "resources must resolve relative to this package file",
-    "resources must not become semantic owners of widget value"
-  ],
-  "composition": {
-    "shell": "frog.realizations.default.tab.assets.shell_svg",
-    "slots": [
-      "tab_header_region",
-      "page_region"
-    ]
-  }
+    "resources must not become semantic owners of widget value",
+    "runtime-private host handles must not be exposed as public widget members"
+  ]
 }

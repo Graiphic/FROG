@@ -8,6 +8,8 @@
     "name": "FROG Default picture Realization",
     "namespace": "frog.realizations.default.picture",
     "family": "default",
+    "category": "visual data",
+    "role_posture": "control / indicator",
     "summary": "Machine-readable default realization manifest for standardized picture widgets."
   },
   "ownership_boundary": {
@@ -25,6 +27,10 @@
       "runtime-private host handles",
       "IDE-private editing behavior"
     ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Picture.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
     "interaction_refs": [
       "../../../Libraries/UI.md",
       "../../../Expression/Widget interaction.md"
@@ -34,11 +40,11 @@
   "targets": [
     {
       "class_id": "frog.widgets.picture_control",
-      "role": "widget"
+      "role": "control"
     },
     {
       "class_id": "frog.widgets.picture_indicator",
-      "role": "widget"
+      "role": "indicator"
     }
   ],
   "exports": {
@@ -120,14 +126,43 @@
       "binding_selector": "[data-frog-part='focus_ring']"
     }
   ],
+  "property_bindings": [
+    {
+      "member": "value",
+      "target_part": "picture_region",
+      "target_operation": "render_picture_value"
+    },
+    {
+      "member": "image.*",
+      "target_part": "picture_region",
+      "target_operation": "render_image_payload"
+    },
+    {
+      "member": "viewport.*",
+      "target_part": "picture_region",
+      "target_operation": "apply_viewport"
+    },
+    {
+      "member": "pointer.position",
+      "target_part": "overlay_region",
+      "target_operation": "render_pointer_overlay"
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "normal"
+    }
+  ],
+  "composition": null,
   "host_hints": {
     "preferred_host_kind": "svg_template_host_or_host_native_widget",
     "style_application_posture": "apply_property_bindings_before_render"
   },
   "validation_expectations": [
-    "target classes must exist in Libraries/Widgets/",
+    "target classes must exist in the referenced widget class-law document",
     "all declared public parts must exist in widget class law",
     "resources must resolve relative to this package file",
-    "resources must not become semantic owners of widget value"
+    "resources must not become semantic owners of widget value",
+    "runtime-private host handles must not be exposed as public widget members"
   ]
 }

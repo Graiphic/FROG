@@ -8,6 +8,8 @@
     "name": "FROG Default panel Realization",
     "namespace": "frog.realizations.default.panel",
     "family": "default",
+    "category": "layout / container",
+    "role_posture": "container",
     "summary": "Machine-readable default realization manifest for standardized panel widgets."
   },
   "ownership_boundary": {
@@ -25,6 +27,10 @@
       "runtime-private host handles",
       "IDE-private editing behavior"
     ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Panel.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
     "interaction_refs": [
       "../../../Libraries/UI.md",
       "../../../Expression/Widget interaction.md"
@@ -34,11 +40,11 @@
   "targets": [
     {
       "class_id": "frog.widgets.panel",
-      "role": "widget"
+      "role": "container"
     },
     {
       "class_id": "frog.widgets.subpanel",
-      "role": "widget"
+      "role": "container"
     }
   ],
   "exports": {
@@ -46,7 +52,9 @@
       "frog.realizations.default.panel"
     ],
     "resources": [
-      "frog.realizations.default.panel.assets.shell_svg"
+      "frog.realizations.default.panel.assets.shell_svg",
+      "frog.realizations.default.panel.assets.content_region_svg",
+      "frog.realizations.default.panel.assets.subpanel_region_svg"
     ]
   },
   "realizations": [
@@ -76,7 +84,20 @@
     {
       "id": "frog.realizations.default.panel.assets.shell_svg",
       "kind": "svg",
-      "path": "./assets/panel/templates/panel_shell.svg"
+      "path": "./assets/panel/templates/panel_shell.svg",
+      "role": "assembly_shell"
+    },
+    {
+      "id": "frog.realizations.default.panel.assets.content_region_svg",
+      "kind": "svg",
+      "path": "./assets/panel/subobjects/content_region.svg",
+      "target_part": "content_region"
+    },
+    {
+      "id": "frog.realizations.default.panel.assets.subpanel_region_svg",
+      "kind": "svg",
+      "path": "./assets/panel/subobjects/subpanel_region.svg",
+      "target_part": "subpanel_region"
     }
   ],
   "part_bindings": [
@@ -116,14 +137,50 @@
       "binding_selector": "[data-frog-part='focus_ring']"
     }
   ],
+  "property_bindings": [
+    {
+      "member": "hosted_front_panel_ref",
+      "target_part": "subpanel_region",
+      "target_operation": "host_front_panel_reference"
+    },
+    {
+      "member": "layout.*",
+      "target_part": "content_region",
+      "target_operation": "apply_panel_layout"
+    },
+    {
+      "member": "style.*",
+      "target_part": "frame",
+      "target_operation": "apply_panel_style"
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "normal"
+    }
+  ],
+  "composition": {
+    "shell": "frog.realizations.default.panel.assets.shell_svg",
+    "slots": [
+      {
+        "slot": "content_region",
+        "resource_ref": "frog.realizations.default.panel.assets.content_region_svg"
+      },
+      {
+        "slot": "subpanel_region",
+        "resource_ref": "frog.realizations.default.panel.assets.subpanel_region_svg"
+      }
+    ]
+  },
   "host_hints": {
     "preferred_host_kind": "svg_template_host_or_host_native_widget",
     "style_application_posture": "apply_property_bindings_before_render"
   },
   "validation_expectations": [
-    "target classes must exist in Libraries/Widgets/",
+    "target classes must exist in the referenced widget class-law document",
     "all declared public parts must exist in widget class law",
     "resources must resolve relative to this package file",
-    "resources must not become semantic owners of widget value"
+    "resources must not become semantic owners of widget value",
+    "runtime-private host handles must not be exposed as public widget members"
   ]
 }

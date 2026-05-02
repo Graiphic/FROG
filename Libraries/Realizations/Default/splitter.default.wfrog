@@ -8,6 +8,8 @@
     "name": "FROG Default splitter Realization",
     "namespace": "frog.realizations.default.splitter",
     "family": "default",
+    "category": "layout",
+    "role_posture": "layout",
     "summary": "Machine-readable default realization manifest for standardized splitter widgets."
   },
   "ownership_boundary": {
@@ -25,6 +27,10 @@
       "runtime-private host handles",
       "IDE-private editing behavior"
     ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Splitter.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
     "interaction_refs": [
       "../../../Libraries/UI.md",
       "../../../Expression/Widget interaction.md"
@@ -34,11 +40,11 @@
   "targets": [
     {
       "class_id": "frog.widgets.horizontal_splitter",
-      "role": "widget"
+      "role": "layout"
     },
     {
       "class_id": "frog.widgets.vertical_splitter",
-      "role": "widget"
+      "role": "layout"
     }
   ],
   "exports": {
@@ -74,12 +80,14 @@
     {
       "id": "frog.realizations.default.splitter.assets.horizontal_svg",
       "kind": "svg",
-      "path": "./assets/splitter/templates/horizontal_splitter.svg"
+      "path": "./assets/splitter/templates/horizontal_splitter.svg",
+      "target_class": "frog.widgets.horizontal_splitter"
     },
     {
       "id": "frog.realizations.default.splitter.assets.vertical_svg",
       "kind": "svg",
-      "path": "./assets/splitter/templates/vertical_splitter.svg"
+      "path": "./assets/splitter/templates/vertical_splitter.svg",
+      "target_class": "frog.widgets.vertical_splitter"
     }
   ],
   "part_bindings": [
@@ -104,14 +112,38 @@
       "binding_selector": "[data-frog-part='focus_ring']"
     }
   ],
+  "property_bindings": [
+    {
+      "member": "position",
+      "target_part": "handle",
+      "target_operation": "set_splitter_position"
+    },
+    {
+      "member": "style.handle.*",
+      "target_part": "handle",
+      "target_operation": "apply_handle_style"
+    },
+    {
+      "member": "style.separator.*",
+      "target_part": "separator",
+      "target_operation": "apply_separator_style"
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "normal"
+    }
+  ],
+  "composition": null,
   "host_hints": {
     "preferred_host_kind": "svg_template_host_or_host_native_widget",
     "style_application_posture": "apply_property_bindings_before_render"
   },
   "validation_expectations": [
-    "target classes must exist in Libraries/Widgets/",
+    "target classes must exist in the referenced widget class-law document",
     "all declared public parts must exist in widget class law",
     "resources must resolve relative to this package file",
-    "resources must not become semantic owners of widget value"
+    "resources must not become semantic owners of widget value",
+    "runtime-private host handles must not be exposed as public widget members"
   ]
 }

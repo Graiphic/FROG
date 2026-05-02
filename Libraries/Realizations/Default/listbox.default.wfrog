@@ -8,6 +8,8 @@
     "name": "FROG Default listbox Realization",
     "namespace": "frog.realizations.default.listbox",
     "family": "default",
+    "category": "selection / navigation",
+    "role_posture": "control / indicator",
     "summary": "Machine-readable default realization manifest for standardized listbox widgets."
   },
   "ownership_boundary": {
@@ -25,6 +27,10 @@
       "runtime-private host handles",
       "IDE-private editing behavior"
     ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Listbox.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
     "interaction_refs": [
       "../../../Libraries/UI.md",
       "../../../Expression/Widget interaction.md"
@@ -34,11 +40,11 @@
   "targets": [
     {
       "class_id": "frog.widgets.listbox_control",
-      "role": "widget"
+      "role": "control"
     },
     {
       "class_id": "frog.widgets.listbox_indicator",
-      "role": "widget"
+      "role": "indicator"
     }
   ],
   "exports": {
@@ -46,7 +52,11 @@
       "frog.realizations.default.listbox"
     ],
     "resources": [
-      "frog.realizations.default.listbox.assets.shell_svg"
+      "frog.realizations.default.listbox.assets.shell_svg",
+      "frog.realizations.default.listbox.assets.item_region_svg",
+      "frog.realizations.default.listbox.assets.item_row_svg",
+      "frog.realizations.default.listbox.assets.selection_face_svg",
+      "frog.realizations.default.listbox.assets.vertical_scrollbar_svg"
     ]
   },
   "realizations": [
@@ -78,7 +88,32 @@
     {
       "id": "frog.realizations.default.listbox.assets.shell_svg",
       "kind": "svg",
-      "path": "./assets/listbox/templates/listbox_shell.svg"
+      "path": "./assets/listbox/templates/listbox_shell.svg",
+      "role": "assembly_shell"
+    },
+    {
+      "id": "frog.realizations.default.listbox.assets.item_region_svg",
+      "kind": "svg",
+      "path": "./assets/listbox/subobjects/item_region.svg",
+      "target_part": "item_region"
+    },
+    {
+      "id": "frog.realizations.default.listbox.assets.item_row_svg",
+      "kind": "svg",
+      "path": "./assets/listbox/subobjects/item_row.svg",
+      "target_part": "item_row"
+    },
+    {
+      "id": "frog.realizations.default.listbox.assets.selection_face_svg",
+      "kind": "svg",
+      "path": "./assets/listbox/subobjects/selection_face.svg",
+      "target_part": "selection_face"
+    },
+    {
+      "id": "frog.realizations.default.listbox.assets.vertical_scrollbar_svg",
+      "kind": "svg",
+      "path": "./assets/listbox/subobjects/vertical_scrollbar.svg",
+      "target_part": "vertical_scrollbar"
     }
   ],
   "part_bindings": [
@@ -128,14 +163,58 @@
       "binding_selector": "[data-frog-part='focus_ring']"
     }
   ],
+  "property_bindings": [
+    {
+      "member": "items[]",
+      "target_part": "item_region",
+      "target_operation": "render_items"
+    },
+    {
+      "member": "selection.*",
+      "target_part": "selection_face",
+      "target_operation": "render_selection"
+    },
+    {
+      "member": "value",
+      "target_part": "item_region",
+      "target_operation": "resolve_selected_item"
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "normal"
+    }
+  ],
+  "composition": {
+    "shell": "frog.realizations.default.listbox.assets.shell_svg",
+    "slots": [
+      {
+        "slot": "item_region",
+        "resource_ref": "frog.realizations.default.listbox.assets.item_region_svg"
+      },
+      {
+        "slot": "item_row",
+        "resource_ref": "frog.realizations.default.listbox.assets.item_row_svg"
+      },
+      {
+        "slot": "selection_face",
+        "resource_ref": "frog.realizations.default.listbox.assets.selection_face_svg"
+      },
+      {
+        "slot": "vertical_scrollbar",
+        "resource_ref": "frog.realizations.default.listbox.assets.vertical_scrollbar_svg"
+      }
+    ]
+  },
   "host_hints": {
     "preferred_host_kind": "svg_template_host_or_host_native_widget",
     "style_application_posture": "apply_property_bindings_before_render"
   },
   "validation_expectations": [
-    "target classes must exist in Libraries/Widgets/",
+    "target classes must exist in the referenced widget class-law document",
     "all declared public parts must exist in widget class law",
     "resources must resolve relative to this package file",
-    "resources must not become semantic owners of widget value"
+    "resources must not become semantic owners of widget value",
+    "runtime-private host handles must not be exposed as public widget members"
   ]
 }

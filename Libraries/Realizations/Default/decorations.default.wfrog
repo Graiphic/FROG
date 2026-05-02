@@ -8,6 +8,8 @@
     "name": "FROG Default decorations Realization",
     "namespace": "frog.realizations.default.decorations",
     "family": "default",
+    "category": "support",
+    "role_posture": "decorative support",
     "summary": "Machine-readable default realization manifest for standardized decorations widgets."
   },
   "ownership_boundary": {
@@ -25,6 +27,10 @@
       "runtime-private host handles",
       "IDE-private editing behavior"
     ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Decorations.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
     "interaction_refs": [
       "../../../Libraries/UI.md",
       "../../../Expression/Widget interaction.md"
@@ -34,15 +40,15 @@
   "targets": [
     {
       "class_id": "frog.widgets.flat_box",
-      "role": "widget"
+      "role": "support"
     },
     {
       "class_id": "frog.widgets.horizontal_line",
-      "role": "widget"
+      "role": "support"
     },
     {
       "class_id": "frog.widgets.vertical_line",
-      "role": "widget"
+      "role": "support"
     }
   ],
   "exports": {
@@ -79,17 +85,20 @@
     {
       "id": "frog.realizations.default.decorations.assets.flat_box_svg",
       "kind": "svg",
-      "path": "./assets/decorations/templates/flat_box.svg"
+      "path": "./assets/decorations/templates/flat_box.svg",
+      "target_class": "frog.widgets.flat_box"
     },
     {
       "id": "frog.realizations.default.decorations.assets.horizontal_line_svg",
       "kind": "svg",
-      "path": "./assets/decorations/templates/horizontal_line.svg"
+      "path": "./assets/decorations/templates/horizontal_line.svg",
+      "target_class": "frog.widgets.horizontal_line"
     },
     {
       "id": "frog.realizations.default.decorations.assets.vertical_line_svg",
       "kind": "svg",
-      "path": "./assets/decorations/templates/vertical_line.svg"
+      "path": "./assets/decorations/templates/vertical_line.svg",
+      "target_class": "frog.widgets.vertical_line"
     }
   ],
   "part_bindings": [
@@ -109,14 +118,33 @@
       "binding_selector": "[data-frog-part='line']"
     }
   ],
+  "property_bindings": [
+    {
+      "member": "style.*",
+      "target_part": "shape",
+      "target_operation": "apply_decoration_style"
+    },
+    {
+      "member": "style.*",
+      "target_part": "line",
+      "target_operation": "apply_line_style"
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "normal"
+    }
+  ],
+  "composition": null,
   "host_hints": {
     "preferred_host_kind": "svg_template_host_or_host_native_widget",
     "style_application_posture": "apply_property_bindings_before_render"
   },
   "validation_expectations": [
-    "target classes must exist in Libraries/Widgets/",
+    "target classes must exist in the referenced widget class-law document",
     "all declared public parts must exist in widget class law",
     "resources must resolve relative to this package file",
-    "resources must not become semantic owners of widget value"
+    "resources must not become semantic owners of widget value",
+    "runtime-private host handles must not be exposed as public widget members"
   ]
 }
