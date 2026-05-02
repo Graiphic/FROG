@@ -14,26 +14,29 @@
 <h2>Widget Baseline Status</h2>
 
 <table>
-  <thead><tr><th>Widget family</th><th>Status</th><th>Current role</th></tr></thead>
+  <thead>
+    <tr><th>Widget family</th><th>Status</th><th>Category</th><th>Role posture</th><th>Current note</th></tr>
+  </thead>
   <tbody>
-    <tr><td>Boolean</td><td>Published</td><td>True/false control and display</td></tr>
-    <tr><td>String</td><td>Published</td><td>Text control and display</td></tr>
-    <tr><td>Button</td><td>Published</td><td>Command and mechanical-action button</td></tr>
-    <tr><td>Numeric</td><td>Published</td><td>Numeric control and display</td></tr>
-    <tr><td>Enum</td><td>Published</td><td>Finite named-value selection</td></tr>
-    <tr><td>Path</td><td>Published</td><td>File/folder path value</td></tr>
-    <tr><td>Picture</td><td>Published</td><td>Image/RGB/drawable display</td></tr>
-    <tr><td>Waveform Chart</td><td>Published</td><td>History-oriented plot display</td></tr>
-    <tr><td>Listbox</td><td>Published</td><td>Persistent visible item selection</td></tr>
-    <tr><td>Table</td><td>Published</td><td>Flat tabular data</td></tr>
-    <tr><td>Tree</td><td>Published</td><td>Hierarchical node data</td></tr>
-    <tr><td>Label</td><td>Published</td><td>Standalone support text</td></tr>
-    <tr><td>Frame</td><td>Published</td><td>Grouping frame</td></tr>
-    <tr><td>Decorations</td><td>Published</td><td>Visual decorations</td></tr>
-    <tr><td>Splitter</td><td>Published</td><td>Resizable layout separator</td></tr>
-    <tr><td>Panel/SubPanel</td><td>Published</td><td>Composition regions</td></tr>
-    <tr><td>Array</td><td>Published</td><td>Homogeneous collection</td></tr>
-    <tr><td>Cluster</td><td>Published</td><td>Heterogeneous named aggregate</td></tr>
+    <tr><td>Boolean</td><td>Published</td><td>core value</td><td>control / indicator</td><td>published baseline</td></tr>
+    <tr><td>String</td><td>Published</td><td>core value</td><td>control / indicator</td><td>published baseline</td></tr>
+    <tr><td>Button</td><td>Published</td><td>action</td><td>command</td><td>published baseline</td></tr>
+    <tr><td>Numeric</td><td>Published</td><td>core value</td><td>control / indicator</td><td>published baseline</td></tr>
+    <tr><td>Enum</td><td>Published</td><td>core value</td><td>control / indicator</td><td>published baseline</td></tr>
+    <tr><td>Path</td><td>Published</td><td>core value</td><td>control / indicator</td><td>published baseline</td></tr>
+    <tr><td>Picture</td><td>Published</td><td>visual data</td><td>control / indicator</td><td>published baseline, needs later qualitative deepening</td></tr>
+    <tr><td>Waveform Chart</td><td>Published</td><td>visual data</td><td>indicator</td><td>published composite baseline</td></tr>
+    <tr><td>Listbox</td><td>Published</td><td>selection / navigation</td><td>control / indicator</td><td>published baseline, needs later qualitative deepening</td></tr>
+    <tr><td>Tab</td><td>Published</td><td>selection / navigation</td><td>control / indicator</td><td>published composite baseline, needs later qualitative deepening</td></tr>
+    <tr><td>Tree</td><td>Published</td><td>selection / navigation</td><td>control / indicator</td><td>published baseline, needs later qualitative deepening</td></tr>
+    <tr><td>Table</td><td>Published</td><td>structured data</td><td>control / indicator</td><td>published baseline, needs later qualitative deepening</td></tr>
+    <tr><td>Array</td><td>Published</td><td>structured data</td><td>structured collection</td><td>published composite baseline</td></tr>
+    <tr><td>Cluster</td><td>Published</td><td>structured data</td><td>structured aggregate</td><td>published composite baseline</td></tr>
+    <tr><td>Label</td><td>Published</td><td>support</td><td>support</td><td>published baseline</td></tr>
+    <tr><td>Frame</td><td>Published</td><td>support</td><td>support</td><td>published baseline</td></tr>
+    <tr><td>Decorations</td><td>Published</td><td>support</td><td>decorative support</td><td>published baseline, intentionally non-value</td></tr>
+    <tr><td>Splitter</td><td>Published</td><td>layout</td><td>layout</td><td>published baseline</td></tr>
+    <tr><td>Panel/SubPanel</td><td>Published</td><td>layout / container</td><td>container</td><td>published baseline</td></tr>
   </tbody>
 </table>
 
@@ -42,5 +45,9 @@
 <h2>Summary</h2>
 
 <p>
-The current widget baseline now covers scalar values, commands, support text, decorations, image/picture display, chart display, selection/navigation widgets, tabular and hierarchical views, structured collections, and layout composition widgets.
+The current widget baseline covers scalar values, commands, support text, decorations, image and picture display, chart display, selection and navigation widgets, tabular and hierarchical views, structured collections, and layout composition widgets.
+</p>
+
+<p>
+The next widget-layer priority is validation and qualitative deepening, not adding more baseline families.
 </p>

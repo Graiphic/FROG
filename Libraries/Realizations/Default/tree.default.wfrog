@@ -206,20 +206,25 @@
         "resource_ref": "frog.realizations.default.tree.assets.node_region_svg"
       },
       {
+        "slot": "vertical_scrollbar",
+        "resource_ref": "frog.realizations.default.tree.assets.vertical_scrollbar_svg"
+      }
+    ],
+    "nested_slots": [
+      {
+        "parent_part": "node_region",
         "slot": "node_row",
         "resource_ref": "frog.realizations.default.tree.assets.node_row_svg"
       },
       {
+        "parent_part": "node_region",
         "slot": "selection_face",
         "resource_ref": "frog.realizations.default.tree.assets.selection_face_svg"
       },
       {
+        "parent_part": "node_region",
         "slot": "expander_face",
         "resource_ref": "frog.realizations.default.tree.assets.expander_face_svg"
-      },
-      {
-        "slot": "vertical_scrollbar",
-        "resource_ref": "frog.realizations.default.tree.assets.vertical_scrollbar_svg"
       }
     ]
   },

@@ -193,16 +193,20 @@
         "resource_ref": "frog.realizations.default.listbox.assets.item_region_svg"
       },
       {
+        "slot": "vertical_scrollbar",
+        "resource_ref": "frog.realizations.default.listbox.assets.vertical_scrollbar_svg"
+      }
+    ],
+    "nested_slots": [
+      {
+        "parent_part": "item_region",
         "slot": "item_row",
         "resource_ref": "frog.realizations.default.listbox.assets.item_row_svg"
       },
       {
+        "parent_part": "item_region",
         "slot": "selection_face",
         "resource_ref": "frog.realizations.default.listbox.assets.selection_face_svg"
-      },
-      {
-        "slot": "vertical_scrollbar",
-        "resource_ref": "frog.realizations.default.listbox.assets.vertical_scrollbar_svg"
       }
     ]
   },
