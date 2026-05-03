@@ -21,3 +21,4 @@ def test_example05_pipeline_check_passes() -> None:
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Pipeline status: ok" in result.stdout
     assert "runtime acceptance" in result.stdout
+    assert "LLVM module" in result.stdout
