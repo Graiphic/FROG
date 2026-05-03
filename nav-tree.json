@@ -2601,11 +2601,47 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/deriver/__init__.py",
+                  "title": "__init__.py",
+                  "path": "/Implementations/Reference/Deriver/__init__.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "implementations/reference/deriver/derive_example05_fir.py",
+                  "title": "derive_example05_fir.py",
+                  "path": "/Implementations/Reference/Deriver/derive_example05_fir.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/deriver/reference_deriver.py",
                   "title": "reference_deriver.py",
                   "path": "/Implementations/Reference/Deriver/reference_deriver.py",
                   "kind": "code",
                   "children": []
+                },
+                {
+                  "key": "implementations/reference/deriver/acceptance/",
+                  "title": "acceptance",
+                  "path": "/Implementations/Reference/Deriver/acceptance/Readme.md",
+                  "kind": "category",
+                  "children": []
+                },
+                {
+                  "key": "implementations/reference/deriver/tests/",
+                  "title": "tests",
+                  "path": null,
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "implementations/reference/deriver/tests/test_example05_fir_derivation.py",
+                      "title": "test_example05_fir_derivation.py",
+                      "path": "/Implementations/Reference/Deriver/tests/test_example05_fir_derivation.py",
+                      "kind": "code",
+                      "children": []
+                    }
+                  ]
                 }
               ]
             },
@@ -3316,7 +3352,11 @@
     "/Implementations/Reference/ContractEmitter/Readme.md",
     "/Implementations/Reference/Deriver/derive_execution_ir.md",
     "/Implementations/Reference/Deriver/responsibilities.md",
+    "/Implementations/Reference/Deriver/__init__.py",
+    "/Implementations/Reference/Deriver/derive_example05_fir.py",
     "/Implementations/Reference/Deriver/reference_deriver.py",
+    "/Implementations/Reference/Deriver/acceptance/Readme.md",
+    "/Implementations/Reference/Deriver/tests/test_example05_fir_derivation.py",
     "/Implementations/Reference/Deriver/Readme.md",
     "/Implementations/Reference/LLVM/bridge/fir_to_lowering.md",
     "/Implementations/Reference/LLVM/bridge/lowering_to_llvm.md",
