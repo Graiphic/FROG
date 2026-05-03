@@ -384,7 +384,12 @@
   - [Lowerer](/Implementations/Reference/Lowerer/Readme.md)
     - [lower for backend family](/Implementations/Reference/Lowerer/lower_for_backend_family.md)
     - [responsibilities](/Implementations/Reference/Lowerer/responsibilities.md)
+    - [__init__.py](/Implementations/Reference/Lowerer/__init__.py)
+    - [lower_example05_fir.py](/Implementations/Reference/Lowerer/lower_example05_fir.py)
     - [reference_lowerer.py](/Implementations/Reference/Lowerer/reference_lowerer.py)
+    - [acceptance](/Implementations/Reference/Lowerer/acceptance/Readme.md)
+    - tests
+      - [test_example05_lowering.py](/Implementations/Reference/Lowerer/tests/test_example05_lowering.py)
   - [Runtime](/Implementations/Reference/Runtime/Readme.md)
     - [accept contract and execute](/Implementations/Reference/Runtime/accept_contract_and_execute.md)
     - [responsibilities](/Implementations/Reference/Runtime/responsibilities.md)
