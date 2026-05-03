@@ -2711,6 +2711,21 @@
                   ]
                 },
                 {
+                  "key": "implementations/reference/llvm/tests/",
+                  "title": "tests",
+                  "path": null,
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "implementations/reference/llvm/tests/test_example05_llvm_emission.py",
+                      "title": "test_example05_llvm_emission.py",
+                      "path": "/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py",
+                      "kind": "code",
+                      "children": []
+                    }
+                  ]
+                },
+                {
                   "key": "implementations/reference/llvm/tools/",
                   "title": "tools",
                   "path": null,
@@ -3473,6 +3488,7 @@
     "/Implementations/Reference/LLVM/bridge/fir_to_lowering.md",
     "/Implementations/Reference/LLVM/bridge/lowering_to_llvm.md",
     "/Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/Readme.md",
+    "/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py",
     "/Implementations/Reference/LLVM/tools/emit_llvm_module.py",
     "/Implementations/Reference/LLVM/Readme.md",
     "/Implementations/Reference/Loader/responsibilities.md",
