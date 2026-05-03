@@ -2865,6 +2865,13 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/runtime/check_example05_runtime_acceptance.py",
+                  "title": "check_example05_runtime_acceptance.py",
+                  "path": "/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/runtime/reference_runtime.py",
                   "title": "reference_runtime.py",
                   "path": "/Implementations/Reference/Runtime/reference_runtime.py",
@@ -2970,6 +2977,21 @@
                   "path": "/Implementations/Reference/Runtime/rust/Readme.md",
                   "kind": "category",
                   "children": []
+                },
+                {
+                  "key": "implementations/reference/runtime/tests/",
+                  "title": "tests",
+                  "path": null,
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "implementations/reference/runtime/tests/test_example05_runtime_acceptance.py",
+                      "title": "test_example05_runtime_acceptance.py",
+                      "path": "/Implementations/Reference/Runtime/tests/test_example05_runtime_acceptance.py",
+                      "kind": "code",
+                      "children": []
+                    }
+                  ]
                 }
               ]
             },
@@ -3469,6 +3491,7 @@
     "/Implementations/Reference/Pipeline/Readme.md",
     "/Implementations/Reference/Runtime/accept_contract_and_execute.md",
     "/Implementations/Reference/Runtime/responsibilities.md",
+    "/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/reference_runtime.py",
     "/Implementations/Reference/Runtime/run_slice05_contract.py",
     "/Implementations/Reference/Runtime/acceptance/Readme.md",
@@ -3483,6 +3506,7 @@
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice05.py",
     "/Implementations/Reference/Runtime/python/Readme.md",
     "/Implementations/Reference/Runtime/rust/Readme.md",
+    "/Implementations/Reference/Runtime/tests/test_example05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/Readme.md",
     "/Implementations/Reference/UIHost/responsibilities.md",
     "/Implementations/Reference/UIHost/Readme.md",

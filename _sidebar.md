@@ -400,6 +400,7 @@
   - [Runtime](/Implementations/Reference/Runtime/Readme.md)
     - [accept contract and execute](/Implementations/Reference/Runtime/accept_contract_and_execute.md)
     - [responsibilities](/Implementations/Reference/Runtime/responsibilities.md)
+    - [check_example05_runtime_acceptance.py](/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py)
     - [reference_runtime.py](/Implementations/Reference/Runtime/reference_runtime.py)
     - [run_slice05_contract.py](/Implementations/Reference/Runtime/run_slice05_contract.py)
     - [acceptance](/Implementations/Reference/Runtime/acceptance/Readme.md)
@@ -415,6 +416,8 @@
         - [test_runtime_slice05.py](/Implementations/Reference/Runtime/python/tests/test_runtime_slice05.py)
         - [test_runtime_ui_slice05.py](/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice05.py)
     - [rust](/Implementations/Reference/Runtime/rust/Readme.md)
+    - tests
+      - [test_example05_runtime_acceptance.py](/Implementations/Reference/Runtime/tests/test_example05_runtime_acceptance.py)
   - [UIHost](/Implementations/Reference/UIHost/Readme.md)
     - [responsibilities](/Implementations/Reference/UIHost/responsibilities.md)
   - [Validator](/Implementations/Reference/Validator/Readme.md)
