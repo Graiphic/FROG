@@ -21,24 +21,7 @@ Its role is to make the first native corridor repository-visible, executable, an
 
 <hr/>
 
-<h2>Published Files</h2>
-
-<pre><code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/
-├── Readme.md
-├── main.fir.json
-├── main.lowering.json
-├── module.ll
-├── build.sh
-└── expected-output.json
-</code></pre>
-
-<hr/>
-
 <h2>Generation Check</h2>
-
-<p>
-The published <code>module.ll</code> can be regenerated and checked from the upstream lowered artifact:
-</p>
 
 <pre><code>python Implementations/Reference/LLVM/tools/emit_llvm_module.py --check</code></pre>
 
@@ -51,40 +34,51 @@ bash build.sh
 </code></pre>
 
 <p>
-The build script checks the published native module for inputs <code>0</code>, <code>3</code>, and <code>7</code>.
-For input <code>3</code>, the expected observable result is:
+The build script checks:
 </p>
 
-<pre><code>final_state=15
-public_output=15
-status=ok
-</code></pre>
+<ul>
+  <li><code>input 0 -&gt; 0</code></li>
+  <li><code>input 3 -&gt; 15</code></li>
+  <li><code>input 7 -&gt; 35</code></li>
+  <li><code>input 20000 -&gt; status=error</code></li>
+</ul>
 
 <hr/>
 
 <h2>Lowering Fidelity</h2>
 
 <p>
-The LLVM kernel is now emitted as an explicit loop rather than as the closed-form shortcut <code>input_value * 5</code>.
-</p>
-
-<p>
-The generated function mirrors the lowered kernel shape:
+The LLVM kernel is emitted as an explicit loop, not as a closed-form shortcut.
 </p>
 
 <pre><code>state_current = 0
 i = 0
 
 while i &lt; iteration_count:
-    state_next = state_current + input_value
-    state_current = state_next
+    sum = state_current + input_value
+    if sum &gt; 65535:
+        reject
+    state_current = sum
     i = i + 1
 
 return state_current
 </code></pre>
 
+<hr/>
+
+<h2>Overflow Parity</h2>
+
 <p>
-This preserves the visible loop and commit posture of <code>main.lowering.json</code> while remaining a narrow proof path.
+The native proof now mirrors the current runtime-family overflow policy for the bounded <code>u16</code> slice:
+</p>
+
+<pre><code>status=error
+error=final_state must remain in the u16 domain.
+</code></pre>
+
+<p>
+This keeps the native proof aligned with the runtime acceptance case for <code>input_value = 20000</code>.
 </p>
 
 <hr/>

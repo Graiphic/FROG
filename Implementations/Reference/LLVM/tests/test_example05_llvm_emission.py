@@ -24,7 +24,7 @@ def test_example05_llvm_emission_check_passes() -> None:
     assert "LLVM module emission check: ok" in result.stdout
 
 
-def test_example05_llvm_emitter_writes_loop_module(tmp_path: Path) -> None:
+def test_example05_llvm_emitter_writes_loop_module_with_overflow_rejection(tmp_path: Path) -> None:
     output = tmp_path / "module.ll"
     result = subprocess.run(
         [sys.executable, str(EMITTER), "--lowering", str(LOWERING), "--output", str(output)],
@@ -41,6 +41,9 @@ def test_example05_llvm_emitter_writes_loop_module(tmp_path: Path) -> None:
 
     assert generated == expected
     assert "%state_current = phi i16" in generated
-    assert "%state_next = add i16 %state_current, %input_value" in generated
-    assert "%done = icmp uge i32 %i, 5" in generated
+    assert "%state_next = trunc i32 %sum_i32 to i16" in generated
+    assert "%overflow = icmp ugt i32 %sum_i32, 65535" in generated
+    assert "ret i32 -1" in generated
+    assert "status=error" in generated
+    assert "error=final_state must remain in the u16 domain." in generated
     assert "mul i16 %input_value" not in generated

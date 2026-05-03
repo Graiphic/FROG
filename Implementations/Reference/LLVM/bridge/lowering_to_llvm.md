@@ -27,7 +27,7 @@
     </tr>
     <tr>
       <td><code>state_type = u16</code></td>
-      <td><code>i16</code> state and return type for <code>@frog_example05_accumulate</code>.</td>
+      <td><code>i16</code> state value with <code>i32</code> checked intermediate addition.</td>
     </tr>
     <tr>
       <td><code>iteration_count = 5</code></td>
@@ -35,11 +35,15 @@
     </tr>
     <tr>
       <td><code>state_next = state_current + input_value</code></td>
-      <td><code>%state_next = add i16 %state_current, %input_value</code>.</td>
+      <td><code>%sum_i32 = add i32 %state_i32, %input_i32</code>, followed by overflow check and truncation.</td>
     </tr>
     <tr>
       <td><code>state_current &lt;- state_next after each iteration</code></td>
       <td>Loop PHI update from <code>%state_next</code> back to <code>%state_current</code>.</td>
+    </tr>
+    <tr>
+      <td><code>u16 overflow rejection</code></td>
+      <td><code>%overflow = icmp ugt i32 %sum_i32, 65535</code>, returning error status when true.</td>
     </tr>
   </tbody>
 </table>

@@ -3,18 +3,30 @@
   "cases": [
     {
       "input": 0,
+      "status": "ok",
       "final_state": 0,
-      "public_output": 0
+      "public_output": 0,
+      "exit_code": 0
     },
     {
       "input": 3,
+      "status": "ok",
       "final_state": 15,
-      "public_output": 15
+      "public_output": 15,
+      "exit_code": 0
     },
     {
       "input": 7,
+      "status": "ok",
       "final_state": 35,
-      "public_output": 35
+      "public_output": 35,
+      "exit_code": 0
+    },
+    {
+      "input": 20000,
+      "status": "error",
+      "error": "final_state must remain in the u16 domain.",
+      "exit_code": 1
     }
   ]
 }
