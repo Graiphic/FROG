@@ -2453,6 +2453,13 @@
           "kind": "category",
           "children": [
             {
+              "key": "implementations/reference/checks.md",
+              "title": "checks",
+              "path": "/Implementations/Reference/checks.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "implementations/reference/example-artifact-requirements.md",
               "title": "example-artifact-requirements",
               "path": "/Implementations/Reference/example-artifact-requirements.md",
@@ -2478,6 +2485,13 @@
               "title": "pipeline",
               "path": "/Implementations/Reference/pipeline.md",
               "kind": "page",
+              "children": []
+            },
+            {
+              "key": "implementations/reference/check_reference_workspace.py",
+              "title": "check_reference_workspace.py",
+              "path": "/Implementations/Reference/check_reference_workspace.py",
+              "kind": "code",
               "children": []
             },
             {
@@ -3457,10 +3471,12 @@
     "/Conformance/valid/structural/02_front_panel_recursive_children_shape_is_valid/Readme.md",
     "/Conformance/valid/structural/Readme.md",
     "/Conformance/Readme.md",
+    "/Implementations/Reference/checks.md",
     "/Implementations/Reference/example-artifact-requirements.md",
     "/Implementations/Reference/frogc.md",
     "/Implementations/Reference/internal-artifacts.md",
     "/Implementations/Reference/pipeline.md",
+    "/Implementations/Reference/check_reference_workspace.py",
     "/Implementations/Reference/common.py",
     "/Implementations/Reference/CLI/frogc.md",
     "/Implementations/Reference/CLI/frog_demo_pipeline.py",
