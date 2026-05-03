@@ -1,104 +1,104 @@
 <p align="center">
-  <img src="../../../FROG logo.svg" alt="FROG logo" width="200" />
+  <img src="../../../FROG logo.svg" alt="FROG logo" width="140" />
 </p>
 
-<h1 align="center">🐸 Reference Deriver</h1>
+<h1 align="center">Reference Deriver</h1>
 
 <p align="center">
-  Execution IR derivation stage for the non-normative FROG reference implementation<br/>
+  <strong>Non-normative reference derivation workspace for generating FIR from validated FROG source slices</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
 <hr/>
 
-<h2>Overview</h2>
+<h2>Navigation</h2>
 
-<p>
-This directory contains the reference implementation stage that derives open Execution IR from validated program meaning.
-Its role is to consume validated source-side truth and emit an execution-facing representation aligned with the published IR derivation boundary.
-</p>
+<ul>
+  <li><a href="../Readme.md">Reference implementation workspace</a></li>
+  <li><a href="../../../IR/Derivation%20rules.md">IR derivation rules</a></li>
+  <li><a href="../../../IR/Execution%20IR.md">Execution IR</a></li>
+  <li><a href="../../../Examples/05_bounded_ui_accumulator/Readme.md">Example 05</a></li>
+  <li><a href="../../../Examples/05_bounded_ui_accumulator/Freeze.md">Example 05 freeze boundary</a></li>
+</ul>
 
 <hr/>
 
-<h2>Architectural Position</h2>
+<h2>1. Purpose</h2>
 
-<pre><code>canonical source
-      |
-      v
-validated program meaning
-      |
-      v
-Execution IR derivation   &lt;-- this directory
-      |
-      v
-open Execution IR
+<p>
+This directory contains the first non-normative reference deriver for the FROG implementation workspace.
+</p>
+
+<p>
+The first target is intentionally narrow:
+</p>
+
+<pre><code>Examples/05_bounded_ui_accumulator/main.frog
+  -&gt;
+Examples/05_bounded_ui_accumulator/main.fir.json
 </code></pre>
 
 <p>
-This stage begins only after validation has succeeded.
+This tool does not claim to be a complete FROG compiler.
+It exists to make the frozen Example 05 FIR artifact reproducible from the canonical <code>.frog</code> source.
 </p>
 
 <hr/>
 
-<h2>What this Directory Owns</h2>
+<h2>2. Current Scope</h2>
 
 <ul>
-  <li>implementation-side derivation of Execution IR objects,</li>
-  <li>preservation of source attribution and recoverability required by the published IR boundary,</li>
-  <li>introduction of support objects where derivation is allowed to make already-validated execution structure explicit.</li>
+  <li>loads one canonical JSON <code>.frog</code> source file,</li>
+  <li>checks the minimal source shape needed for Example 05,</li>
+  <li>derives the bounded FIR shape currently published for Example 05,</li>
+  <li>preserves the key corridor distinctions: public interface, widget value, widget reference, property write, explicit state, structured loop, and publications,</li>
+  <li>can compare the generated FIR against the published FIR artifact.</li>
 </ul>
 
 <hr/>
 
-<h2>What this Directory Does Not Own</h2>
+<h2>3. Run</h2>
 
-<ul>
-  <li>the normative definition of Execution IR,</li>
-  <li>the derivation rules themselves,</li>
-  <li>lowering,</li>
-  <li>backend contract emission,</li>
-  <li>runtime-private realization.</li>
-</ul>
-
-<hr/>
-
-<h2>First-Slice Focus</h2>
+<pre><code>python Implementations/Reference/Deriver/derive_example05_fir.py --check
+</code></pre>
 
 <p>
-The first reference deriver should cover:
+To write a generated FIR artifact elsewhere:
 </p>
 
-<ul>
-  <li><code>primitive</code>,</li>
-  <li><code>subfrog</code> where needed later,</li>
-  <li><code>interface_input</code>,</li>
-  <li><code>interface_output</code>,</li>
-  <li><code>widget_value</code>,</li>
-  <li><code>widget_reference</code>,</li>
-  <li>explicit local memory through <code>frog.core.delay</code>,</li>
-  <li>basic edge and connectivity derivation.</li>
-</ul>
+<pre><code>python Implementations/Reference/Deriver/derive_example05_fir.py \
+  --source Examples/05_bounded_ui_accumulator/main.frog \
+  --output build/generated/main.fir.json
+</code></pre>
 
 <hr/>
 
-<h2>Design Rules</h2>
-
-<ul>
-  <li>Preserve validated meaning.</li>
-  <li>Preserve attribution.</li>
-  <li>Preserve explicit memory as explicit memory.</li>
-  <li>Preserve the distinction between public interface, widget-value participation, widget-reference participation, and standardized UI-object primitives.</li>
-  <li>Do not smuggle runtime-private assumptions into the open IR.</li>
-</ul>
-
-<hr/>
-
-<h2>Summary</h2>
+<h2>4. Boundary</h2>
 
 <p>
-The deriver is the stage that turns validated meaning into open Execution IR.
-It is the first execution-facing stage of the reference implementation,
-but it remains upstream from lowering,
-backend handoff,
-and runtime realization.
+This deriver is downstream from source and validation.
+It does not own language semantics, widget law, runtime behavior, lowering, backend contracts, or LLVM behavior.
+</p>
+
+<pre><code>.frog source
+  -&gt; validation / accepted meaning
+  -&gt; Deriver
+  -&gt; FIR
+</code></pre>
+
+<hr/>
+
+<h2>5. Next Step</h2>
+
+<p>
+After this deriver is green for Example 05, the next stage is:
+</p>
+
+<pre><code>main.fir.json
+  -&gt;
+main.lowering.json
+</code></pre>
+
+<p>
+That should be implemented separately under <code>Implementations/Reference/Lowerer/</code>.
 </p>
