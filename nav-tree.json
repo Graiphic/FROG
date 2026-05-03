@@ -2577,6 +2577,28 @@
                   "path": "/Implementations/Reference/ContractEmitter/reference_contract_emitter.py",
                   "kind": "code",
                   "children": []
+                },
+                {
+                  "key": "implementations/reference/contractemitter/acceptance/",
+                  "title": "acceptance",
+                  "path": "/Implementations/Reference/ContractEmitter/acceptance/Readme.md",
+                  "kind": "category",
+                  "children": []
+                },
+                {
+                  "key": "implementations/reference/contractemitter/tests/",
+                  "title": "tests",
+                  "path": null,
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "implementations/reference/contractemitter/tests/test_example05_contract_emission.py",
+                      "title": "test_example05_contract_emission.py",
+                      "path": "/Implementations/Reference/ContractEmitter/tests/test_example05_contract_emission.py",
+                      "kind": "code",
+                      "children": []
+                    }
+                  ]
                 }
               ]
             },
@@ -3385,6 +3407,8 @@
     "/Implementations/Reference/ContractEmitter/__init__.py",
     "/Implementations/Reference/ContractEmitter/emit_backend_contract.py",
     "/Implementations/Reference/ContractEmitter/reference_contract_emitter.py",
+    "/Implementations/Reference/ContractEmitter/acceptance/Readme.md",
+    "/Implementations/Reference/ContractEmitter/tests/test_example05_contract_emission.py",
     "/Implementations/Reference/ContractEmitter/Readme.md",
     "/Implementations/Reference/Deriver/derive_execution_ir.md",
     "/Implementations/Reference/Deriver/responsibilities.md",
