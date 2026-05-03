@@ -2815,6 +2815,36 @@
               ]
             },
             {
+              "key": "implementations/reference/pipeline/",
+              "title": "Pipeline",
+              "path": "/Implementations/Reference/Pipeline/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "implementations/reference/pipeline/check_example05_pipeline.py",
+                  "title": "check_example05_pipeline.py",
+                  "path": "/Implementations/Reference/Pipeline/check_example05_pipeline.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "implementations/reference/pipeline/tests/",
+                  "title": "tests",
+                  "path": null,
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "implementations/reference/pipeline/tests/test_example05_pipeline_check.py",
+                      "title": "test_example05_pipeline_check.py",
+                      "path": "/Implementations/Reference/Pipeline/tests/test_example05_pipeline_check.py",
+                      "kind": "code",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "key": "implementations/reference/runtime/",
               "title": "Runtime",
               "path": "/Implementations/Reference/Runtime/Readme.md",
@@ -3434,6 +3464,9 @@
     "/Implementations/Reference/Lowerer/acceptance/Readme.md",
     "/Implementations/Reference/Lowerer/tests/test_example05_lowering.py",
     "/Implementations/Reference/Lowerer/Readme.md",
+    "/Implementations/Reference/Pipeline/check_example05_pipeline.py",
+    "/Implementations/Reference/Pipeline/tests/test_example05_pipeline_check.py",
+    "/Implementations/Reference/Pipeline/Readme.md",
     "/Implementations/Reference/Runtime/accept_contract_and_execute.md",
     "/Implementations/Reference/Runtime/responsibilities.md",
     "/Implementations/Reference/Runtime/reference_runtime.py",

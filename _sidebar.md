@@ -393,6 +393,10 @@
     - [acceptance](/Implementations/Reference/Lowerer/acceptance/Readme.md)
     - tests
       - [test_example05_lowering.py](/Implementations/Reference/Lowerer/tests/test_example05_lowering.py)
+  - [Pipeline](/Implementations/Reference/Pipeline/Readme.md)
+    - [check_example05_pipeline.py](/Implementations/Reference/Pipeline/check_example05_pipeline.py)
+    - tests
+      - [test_example05_pipeline_check.py](/Implementations/Reference/Pipeline/tests/test_example05_pipeline_check.py)
   - [Runtime](/Implementations/Reference/Runtime/Readme.md)
     - [accept contract and execute](/Implementations/Reference/Runtime/accept_contract_and_execute.md)
     - [responsibilities](/Implementations/Reference/Runtime/responsibilities.md)
