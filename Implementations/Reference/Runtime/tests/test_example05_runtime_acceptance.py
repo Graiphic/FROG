@@ -6,12 +6,12 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[4]
-PIPELINE = ROOT / "Implementations" / "Reference" / "Pipeline" / "check_example05_pipeline.py"
+CHECKER = ROOT / "Implementations" / "Reference" / "Runtime" / "check_example05_runtime_acceptance.py"
 
 
-def test_example05_pipeline_check_passes() -> None:
+def test_example05_runtime_acceptance_check_passes() -> None:
     result = subprocess.run(
-        [sys.executable, str(PIPELINE)],
+        [sys.executable, str(CHECKER)],
         cwd=ROOT,
         text=True,
         stdout=subprocess.PIPE,
@@ -19,5 +19,4 @@ def test_example05_pipeline_check_passes() -> None:
         check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    assert "Pipeline status: ok" in result.stdout
-    assert "runtime acceptance" in result.stdout
+    assert "Runtime acceptance check: ok" in result.stdout

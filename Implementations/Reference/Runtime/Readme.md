@@ -15,6 +15,7 @@
 - Runtime-family responsibilities: [`responsibilities.md`](responsibilities.md)
 - Contract-consumption note: [`accept_contract_and_execute.md`](accept_contract_and_execute.md)
 - Shared acceptance material: [`acceptance/Readme.md`](acceptance/Readme.md)
+- Runtime acceptance check: [`check_example05_runtime_acceptance.py`](check_example05_runtime_acceptance.py)
 - Example-specific Python wrapper: [`run_slice05_contract.py`](run_slice05_contract.py)
 - Python consumer: [`python/Readme.md`](python/Readme.md)
 - Rust consumer: [`rust/Readme.md`](rust/Readme.md)
@@ -65,73 +66,36 @@ The runtime family carries a shared acceptance layer under:
 Implementations/Reference/Runtime/acceptance/
 ```
 
-That acceptance layer exists to keep the three consumer languages aligned on:
+That acceptance layer exists to keep the reference runtime consumers aligned on:
 
 - the accepted contract family,
 - the accepted `.wfrog` package shape,
 - the accepted SVG asset surface,
 - the accepted execution result for the bounded slice,
-- the accepted browser-host UI snapshot surface.
+- the accepted browser-host UI snapshot surface,
+- the accepted overflow rejection behavior.
 
-Acceptance artifacts are shared inputs for Python, Rust, and C/C++ consumers. They are not a substitute for source, FIR, lowering, or backend-contract ownership.
+## Runtime acceptance check
 
-## Current published repository shape
+The current repository-visible runtime acceptance check is:
 
 ```text
-Implementations/Reference/Runtime/
-├── Readme.md
-├── accept_contract_and_execute.md
-├── acceptance/
-│   ├── Readme.md
-│   ├── example05_input_3.snapshot.json
-│   └── example05_runtime_family.acceptance.json
-├── reference_runtime.py
-├── responsibilities.md
-├── run_slice05_contract.py
-├── python/
-│   ├── Readme.md
-│   ├── __init__.py
-│   ├── cli.py
-│   ├── execute_contract.py
-│   ├── run_slice05_ui.py
-│   ├── runtime_core.py
-│   ├── ui_runtime.py
-│   └── tests/
-│       ├── __pycache__/                    [generated, not intended source]
-│       ├── test_runtime_slice05.py        [acceptance-driven]
-│       ├── test_runtime_ui_slice05.py     [acceptance-driven]
-│       ├── test_slice05_contract.py       [legacy smoke test]
-│       └── test_slice05_ui_runtime.py     [legacy smoke test]
-├── rust/
-│   ├── Readme.md
-│   ├── Cargo.toml
-│   ├── src/
-│   │   ├── cli.rs
-│   │   ├── contract.rs
-│   │   ├── diagnostics.rs
-│   │   ├── execute.rs
-│   │   ├── lib.rs
-│   │   ├── main.rs
-│   │   ├── runtime.rs
-│   │   └── ui.rs
-│   └── tests/
-│       ├── slice05_runtime.rs
-│       └── slice05_ui.rs
-└── cpp/
-    ├── Readme.md
-    ├── CMakeLists.txt
-    ├── include/
-    │   ├── contract.hpp
-    │   ├── execute.hpp
-    │   ├── json.hpp
-    │   ├── runtime.hpp
-    │   └── ui.hpp
-    ├── src/
-    └── tests/
-        └── test_slice05.cpp
+python Implementations/Reference/Runtime/check_example05_runtime_acceptance.py
 ```
 
-Generated cache and build artifacts are not part of the intended runtime-family source contract and should not be versioned. The Python tree still shows transitional smoke tests beside the acceptance-driven tests. The acceptance-driven line is the current family-level source of truth.
+This check consumes:
+
+```text
+Implementations/Reference/Runtime/acceptance/example05_runtime_family.acceptance.json
+```
+
+and verifies the headless runtime result against:
+
+```text
+Implementations/Reference/Runtime/acceptance/example05_input_3.snapshot.json
+```
+
+It also verifies the expected overflow rejection for the current bounded `u16` slice.
 
 ## First corridor this directory coordinates
 
@@ -159,40 +123,13 @@ Examples/05_bounded_ui_accumulator/main.frog
   -> headless result and/or browser-host UI
 ```
 
-## Inputs consumed by the first common runtime slice
-
-For the current bounded slice, the runtime-family consumers share the same logical inputs:
-
-- the emitted backend contract artifact,
-- the example-local `.wfrog` package,
-- the SVG assets referenced by that package,
-- the shared acceptance reading posture published under `acceptance/`.
-
-For Example 05, the package input is:
-
-```text
-Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog
-```
-
-and the referenced assets are:
-
-```text
-Examples/05_bounded_ui_accumulator/ui/assets/numeric_control.svg
-Examples/05_bounded_ui_accumulator/ui/assets/numeric_indicator.svg
-```
-
-The runtime family does not take semantic authority away from `main.frog`, FIR, lowering, or the `.wfrog` package.
-
 ## Current published entry points
 
-### Parent-level Python convenience entry points
+### Runtime acceptance
 
 ```text
-python -m Implementations.Reference.Runtime.run_slice05_contract 3
-python Implementations/Reference/Runtime/python/run_slice05_ui.py
+python Implementations/Reference/Runtime/check_example05_runtime_acceptance.py
 ```
-
-These remain useful example-specific entry points, but they are convenience surfaces rather than the full parent-level definition of the runtime family.
 
 ### Python consumer
 
@@ -222,18 +159,6 @@ build/frog_runtime_cpp/frog_reference_runtime_cpp 3
 build/frog_runtime_cpp/frog_reference_runtime_cpp ui
 build/frog_runtime_cpp/frog_reference_runtime_cpp ui --host 127.0.0.1 --port 8080 --no-open-browser
 ```
-
-## Multi-runtime posture
-
-At the current published code state, all three consumer languages expose:
-
-- a headless execution path for the bounded contract,
-- a browser-host UI path driven by the same bounded runtime core,
-- a repository-visible test or build posture,
-- the same example-local contract and `.wfrog` package corridor,
-- the same acceptance-driven reading posture.
-
-That does not mean the three implementations are already identical in tooling maturity. It means the first common runtime-family slice is now visible across Python, Rust, and C/C++ at the level of published code structure, command surfaces, and shared acceptance artifacts.
 
 ## What this directory owns
 

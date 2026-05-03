@@ -1,63 +1,142 @@
 {
-  "format": "frog.ui.panel",
-  "kind": "panel_definition",
-  "panel_id": "example05.accumulator_panel",
+  "format": "frog.wfrog",
+  "kind": "front_panel_package",
+  "package_id": "example05.accumulator_panel",
   "title": "Bounded UI Accumulator",
-  "widgets": [
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "05_bounded_ui_accumulator",
+    "source_path": "Examples/05_bounded_ui_accumulator/main.frog",
+    "fir_path": "Examples/05_bounded_ui_accumulator/main.fir.json",
+    "lowering_path": "Examples/05_bounded_ui_accumulator/main.lowering.json"
+  },
+  "ownership_boundary": {
+    "owns": [
+      "example-local front-panel package identity",
+      "example-local widget realization references",
+      "example-local widget initial presentation properties",
+      "example-local SVG asset references"
+    ],
+    "does_not_own": [
+      "canonical source semantics",
+      "FIR semantics",
+      "lowering semantics",
+      "backend contract semantics",
+      "runtime-private execution behavior",
+      "widget class law"
+    ]
+  },
+  "widget_classes": [
     {
-      "id": "input_value",
       "class_id": "frog.widgets.numeric_control",
-      "layout": {
-        "x": 24,
-        "y": 24,
-        "width": 220,
-        "height": 56
-      },
-      "properties": {
-        "label.text": "input_value",
-        "label.visible": false,
-        "caption.text": "Input",
-        "caption.visible": true,
-        "value": 3,
-        "representation.kind": "int32",
-        "data_entry.minimum": 0,
-        "data_entry.maximum": 100,
-        "data_entry.increment_step": 1,
-        "data_entry.coerce_on_commit": true,
-        "display.format_kind": "decimal",
-        "display.increment_buttons_visible": true,
-        "display.radix_visible": false,
-        "unit_label.visible": false,
-        "style.frame.border_width": 2,
-        "style.frame.border_color": "#000000",
-        "style.value_face.fill_color": "#5b9bd5",
-        "style.text_value.color": "#000000"
-      }
+      "role": "control",
+      "value_type": "u16"
     },
     {
-      "id": "result_value",
       "class_id": "frog.widgets.numeric_indicator",
+      "role": "indicator",
+      "value_type": "u16"
+    }
+  ],
+  "host_bindings": [
+    {
+      "binding_id": "reference_host_default",
+      "host_family": "reference_browser_host",
+      "required_capabilities": [
+        "window",
+        "basic_widget_rendering",
+        "property_write",
+        "widget_value_binding",
+        "widget_reference_binding"
+      ]
+    }
+  ],
+  "svg_assets": [
+    {
+      "asset_id": "numeric_control_svg",
+      "path": "assets/numeric_control.svg",
+      "target_class": "frog.widgets.numeric_control"
+    },
+    {
+      "asset_id": "numeric_indicator_svg",
+      "path": "assets/numeric_indicator.svg",
+      "target_class": "frog.widgets.numeric_indicator"
+    }
+  ],
+  "front_panels": [
+    {
+      "panel_id": "main_panel",
+      "title": "Bounded UI Accumulator",
+      "class_ref": "frog.widgets.panel",
       "layout": {
-        "x": 24,
-        "y": 104,
-        "width": 220,
-        "height": 56
+        "width": 460,
+        "height": 170,
+        "coordinate_space": "panel_pixels"
       },
-      "properties": {
-        "label.text": "result_value",
-        "label.visible": false,
-        "caption.text": "Result",
-        "caption.visible": true,
-        "value": 15,
-        "representation.kind": "int32",
-        "display.format_kind": "decimal",
-        "display.radix_visible": false,
-        "unit_label.visible": false,
-        "style.frame.border_width": 2,
-        "style.frame.border_color": "#000000",
-        "style.value_face.fill_color": "#90d26d",
-        "style.text_value.color": "#000000"
-      }
+      "widgets": [
+        {
+          "instance_id": "ctrl_input",
+          "class_ref": "frog.widgets.numeric_control",
+          "role": "control",
+          "value_type": "u16",
+          "layout": {
+            "x": 20,
+            "y": 24,
+            "width": 140,
+            "height": 32
+          },
+          "props": {
+            "value": 3,
+            "label": "Input",
+            "visible": true,
+            "enabled": true,
+            "foreground_color": "#D8D8D8"
+          },
+          "visual": {
+            "asset_ref": "asset:numeric_control_svg"
+          },
+          "binding": {
+            "mode": "widget_value",
+            "public_input_id": "input_value",
+            "widget_reference": true,
+            "supported_members": [
+              "foreground_color"
+            ]
+          }
+        },
+        {
+          "instance_id": "ind_result",
+          "class_ref": "frog.widgets.numeric_indicator",
+          "role": "indicator",
+          "value_type": "u16",
+          "layout": {
+            "x": 240,
+            "y": 24,
+            "width": 160,
+            "height": 32
+          },
+          "props": {
+            "value": 0,
+            "label": "Accumulated result",
+            "visible": true,
+            "enabled": true,
+            "foreground_color": "#D8D8D8"
+          },
+          "visual": {
+            "asset_ref": "asset:numeric_indicator_svg"
+          },
+          "binding": {
+            "mode": "widget_value",
+            "public_output_id": "result",
+            "widget_reference": true,
+            "supported_members": [
+              "foreground_color"
+            ]
+          }
+        }
+      ]
     }
   ]
 }

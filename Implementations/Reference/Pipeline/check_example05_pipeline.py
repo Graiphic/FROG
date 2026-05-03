@@ -5,7 +5,7 @@ This script is intentionally narrow and non-normative. It verifies that the
 published Example 05 staged artifacts are reproducible across the current
 reference implementation stages:
 
-    main.frog -> main.fir.json -> main.lowering.json -> backend contract
+    main.frog -> main.fir.json -> main.lowering.json -> backend contract -> runtime acceptance
 
 Run from the repository root:
 
@@ -53,7 +53,7 @@ def run_stage(stage: Stage) -> int:
     return result.returncode
 
 
-def build_stages(include_widget_validator: bool) -> list[Stage]:
+def build_stages(include_widget_validator: bool, skip_runtime_acceptance: bool) -> list[Stage]:
     python = sys.executable
 
     stages: list[Stage] = []
@@ -99,6 +99,17 @@ def build_stages(include_widget_validator: bool) -> list[Stage]:
         ]
     )
 
+    if not skip_runtime_acceptance:
+        stages.append(
+            Stage(
+                "runtime acceptance",
+                [
+                    python,
+                    "Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",
+                ],
+            )
+        )
+
     return stages
 
 
@@ -108,6 +119,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         "--include-widget-validator",
         action="store_true",
         help="Run WidgetValidator before the Example 05 artifact pipeline checks.",
+    )
+    parser.add_argument(
+        "--skip-runtime-acceptance",
+        action="store_true",
+        help="Skip the contract -> runtime acceptance stage.",
     )
     return parser.parse_args(argv)
 
@@ -119,7 +135,10 @@ def main(argv: list[str]) -> int:
     print("=======================================")
     print(f"Repository root: {ROOT}")
 
-    for stage in build_stages(args.include_widget_validator):
+    for stage in build_stages(
+        include_widget_validator=args.include_widget_validator,
+        skip_runtime_acceptance=args.skip_runtime_acceptance,
+    ):
         code = run_stage(stage)
         if code != 0:
             return code

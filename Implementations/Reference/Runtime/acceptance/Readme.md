@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="../../../FROG logo.svg" alt="FROG logo" width="140" />
+  <img src="../../../../FROG logo.svg" alt="FROG logo" width="140" />
 </p>
 
 <h1 align="center">Reference Runtime Acceptance Artifacts</h1>
@@ -46,23 +46,22 @@ They define the shared acceptance posture for the current published runtime-fami
 
 <hr/>
 
-<h2>Why this directory exists</h2>
+<h2>Reference check</h2>
+
+<pre><code>python Implementations/Reference/Runtime/check_example05_runtime_acceptance.py</code></pre>
 
 <p>
-The runtime-family closure is only credible if the three published reference runtimes are checked against the same observable facts:
+The check validates:
 </p>
 
 <ul>
-  <li>the same contract artifact,</li>
-  <li>the same <code>.wfrog</code> package,</li>
-  <li>the same browser-host routes,</li>
-  <li>the same runtime snapshot after input <code>3</code>,</li>
-  <li>the same overflow rejection message for the shared bounded slice.</li>
+  <li>the acceptance artifact family and example identity,</li>
+  <li>the published backend contract path,</li>
+  <li>the published <code>.wfrog</code> package path,</li>
+  <li>the headless runtime result for input <code>3</code>,</li>
+  <li>the published runtime snapshot,</li>
+  <li>the expected overflow rejection for input <code>20000</code>.</li>
 </ul>
-
-<p>
-These files give the tests one common target instead of letting each runtime drift toward a slightly different local proof.
-</p>
 
 <hr/>
 
