@@ -18,6 +18,10 @@
 ├── emit_backend_contract.py
 ├── reference_contract_emitter.py
 ├── responsibilities.md
+├── acceptance/
+│   └── Readme.md
+├── tests/
+│   └── test_example05_contract_emission.py
 └── examples/
     └── 05_bounded_ui_accumulator.reference_host_runtime_ui_binding.contract.json</code></pre>
 
@@ -25,6 +29,8 @@
 Generated cache directories may appear beside these files in the published tree.
 They are not part of the intended source surface of this stage.
 </p>
+
+<hr/>
 
 <h2>Role</h2>
 
@@ -41,6 +47,8 @@ It exists to make runtime-family consumption explicit.
 It must not redefine source semantics.
 </p>
 
+<hr/>
+
 <h2>Current bounded scope</h2>
 
 <p>
@@ -54,6 +62,8 @@ The current code path accepts the published lowering artifact for that slice and
 It is <strong>not</strong> a general lowering-to-contract compiler for arbitrary programs.
 </p>
 
+<hr/>
+
 <h2>Published input and output</h2>
 
 <h3>Input</h3>
@@ -65,21 +75,45 @@ It is <strong>not</strong> a general lowering-to-contract compiler for arbitrary
 <pre><code>Implementations/Reference/ContractEmitter/examples/
 └── 05_bounded_ui_accumulator.reference_host_runtime_ui_binding.contract.json</code></pre>
 
+<hr/>
+
+<h2>Reproducibility check</h2>
+
 <p>
-The contract artifact is consumed by the runtime-family directories documented in
-<a href="../Runtime/Readme.md"><code>Implementations/Reference/Runtime/</code></a>.
+The current acceptance check is:
 </p>
+
+<pre><code>python -m Implementations.Reference.ContractEmitter.reference_contract_emitter --check</code></pre>
+
+<p>
+This command emits the contract in memory from the published lowering artifact and compares it with the published contract artifact.
+Formatting differences are ignored because comparison is performed over canonical JSON data.
+</p>
+
+<hr/>
+
+<h2>Emit to an output file</h2>
+
+<pre><code>python -m Implementations.Reference.ContractEmitter.reference_contract_emitter \
+  --lowering Examples/05_bounded_ui_accumulator/main.lowering.json \
+  --output Implementations/Reference/ContractEmitter/examples/05_bounded_ui_accumulator.reference_host_runtime_ui_binding.contract.json</code></pre>
+
+<p>
+Useful check override:
+</p>
+
+<pre><code>python -m Implementations.Reference.ContractEmitter.reference_contract_emitter \
+  --lowering Examples/05_bounded_ui_accumulator/main.lowering.json \
+  --expected Implementations/Reference/ContractEmitter/examples/05_bounded_ui_accumulator.reference_host_runtime_ui_binding.contract.json \
+  --check</code></pre>
+
+<hr/>
 
 <h2>What the current emitter preserves</h2>
 
-<p>
-For Example 05, the emitted contract preserves the repository-visible corridor instead of inventing a new private schema.
-The emitted surface includes:
-</p>
-
 <ul>
   <li>backend family <code>reference_host_runtime_ui_binding</code>,</li>
-  <li>the source, FIR, lowering, and <code>.wfrog</code> references used to derive the contract,</li>
+  <li>source, FIR, lowering, and <code>.wfrog</code> references used to derive the contract,</li>
   <li>one executable unit named <code>main</code>,</li>
   <li>one public input <code>input_value : u16</code>,</li>
   <li>one public output <code>result : u16</code>,</li>
@@ -92,38 +126,7 @@ The emitted surface includes:
   <li>one final result publication to both public output and indicator.</li>
 </ul>
 
-<p>
-The current emitted property-write surface is <code>foreground_color</code>.
-The current emitted color type is <code>frog.color.rgba8</code>.
-</p>
-
-<h2>Current entry points</h2>
-
-<h3><code>emit_backend_contract.py</code></h3>
-
-<p>
-Library-side emission helpers and validation for the bounded Example 05 contract shape.
-The current implementation enforces the current slice very explicitly:
-one lowered unit, one public input, one public output, one control binding, one indicator binding,
-two reference writes, one <code>u16</code> state carrier, and five iterations.
-</p>
-
-<h3><code>reference_contract_emitter.py</code></h3>
-
-<p>
-Command-line entry point that emits the published Example 05 contract from the published lowering artifact.
-From the repository root:
-</p>
-
-<pre><code>python -m Implementations.Reference.ContractEmitter.reference_contract_emitter</code></pre>
-
-<p>
-Useful overrides:
-</p>
-
-<pre><code>python -m Implementations.Reference.ContractEmitter.reference_contract_emitter \
-  --lowering Examples/05_bounded_ui_accumulator/main.lowering.json \
-  --output Implementations/Reference/ContractEmitter/examples/05_bounded_ui_accumulator.reference_host_runtime_ui_binding.contract.json</code></pre>
+<hr/>
 
 <h2>Ownership boundary</h2>
 
@@ -137,11 +140,9 @@ The contract emitter is a downstream publication stage.
 If the emitted contract diverges from the canonical source-owned and execution-facing artifacts, the upstream artifacts win.
 </p>
 
-<h2>Relationship to Example 05 and the runtime family</h2>
+<hr/>
 
-<p>
-The current bounded corridor is:
-</p>
+<h2>Relationship to Example 05 and the runtime family</h2>
 
 <pre><code>main.frog
   -&gt; main.fir.json
@@ -149,14 +150,7 @@ The current bounded corridor is:
   -&gt; emitted backend contract
   -&gt; runtime-family consumer</code></pre>
 
-<p>
-The emitted contract is therefore the explicit handoff between:
-</p>
-
-<ul>
-  <li>the example corridor published under <code>Examples/05_bounded_ui_accumulator/</code>,</li>
-  <li>the runtime-family consumers published under <code>Implementations/Reference/Runtime/</code>.</li>
-</ul>
+<hr/>
 
 <h2>Non-goals</h2>
 
@@ -166,6 +160,8 @@ The emitted contract is therefore the explicit handoff between:
   <li>Ownership of runtime behavior.</li>
   <li>Ownership of LLVM or compiler-family lowering.</li>
 </ul>
+
+<hr/>
 
 <h2>Summary</h2>
 
