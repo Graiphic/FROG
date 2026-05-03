@@ -8,12 +8,44 @@
     "name": "FROG Default Button Realization",
     "namespace": "frog.realizations.default.button",
     "family": "default",
+    "category": "action",
+    "role_posture": "command",
     "summary": "Machine-readable default realization manifest for the standardized button widget."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default button realization record",
+      "button realization variant declarations",
+      "button realization resource references",
+      "button part bindings",
+      "button state maps",
+      "button mechanical-action realization posture",
+      "button host hints",
+      "button realization validation expectations"
+    ],
+    "does_not_own": [
+      "button widget class law",
+      "button value semantics",
+      "button mechanical-action semantics",
+      "canonical .frog source",
+      "frog.ui primitive semantics",
+      "runtime-private button handles",
+      "IDE-private editing behavior"
+    ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Button.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
   },
   "targets": [
     {
       "class_id": "frog.widgets.button",
-      "role": "control",
+      "role": "command",
       "primary_value": {
         "present": true,
         "type": "bool",
@@ -83,7 +115,8 @@
       "fallbacks": {
         "missing_state_override": "parameterized_rectangular_template",
         "missing_focus_ring": "host_native_focus_ring",
-        "missing_caption": "host_external_caption_region"
+        "missing_caption": "host_external_caption_region",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
       }
     }
   ],
@@ -155,35 +188,42 @@
   "part_bindings": [
     {
       "part": "root",
+      "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='root']"
     },
     {
       "part": "label",
+      "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='label']",
       "semantic_member": "label.text"
     },
     {
       "part": "caption",
+      "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='caption']",
       "semantic_member": "caption.text"
     },
     {
       "part": "frame",
+      "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='frame']",
       "style_binding_group": "style.frame"
     },
     {
       "part": "face",
+      "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='face']",
       "style_binding_group": "style.face"
     },
     {
       "part": "state_face",
+      "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='state_face']",
       "style_binding_group": "style.state_face"
     },
     {
       "part": "state_text",
+      "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='state_text']",
       "semantic_members": [
         "state_text.false_text",
@@ -192,8 +232,26 @@
     },
     {
       "part": "focus_ring",
+      "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='focus_ring']",
       "style_binding_group": "style.focus_ring"
+    }
+  ],
+  "property_bindings": [
+    {
+      "member": "value",
+      "target_part": "state_face",
+      "target_operation": "resolve_button_state"
+    },
+    {
+      "member": "state_text.*",
+      "target_part": "state_text",
+      "target_operation": "render_state_text"
+    },
+    {
+      "member": "behavior.mechanical_action",
+      "target_part": "root",
+      "target_operation": "configure_mechanical_action"
     }
   ],
   "state_maps": [
@@ -262,5 +320,25 @@
       "default": "reset_on_natural_value_consumption",
       "property_read_resets_latch": false
     }
-  }
+  },
+  "host_hints": {
+    "preferred_host_kind": "svg_template_host_or_host_native_button",
+    "state_rendering_posture": "resolve_state_map_before_render",
+    "style_application_posture": "apply_property_bindings_before_render",
+    "accessibility_posture": {
+      "role": "button",
+      "value_source": "value",
+      "label_source": "caption.text"
+    }
+  },
+  "validation_expectations": [
+    "target class must exist in Libraries/Widgets/Button.md",
+    "all declared public parts must exist in the button class law",
+    "resources must resolve relative to this package file",
+    "optional state resources may fall back to the rectangular template when unavailable",
+    "button value semantics and mechanical-action semantics must remain owned by the button class law",
+    "SVG resources must not become semantic owners of button value or mechanical action",
+    "property bindings must target public button members declared by class law",
+    "variant selection must not create a new widget class"
+  ]
 }
