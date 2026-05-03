@@ -48,10 +48,10 @@ The published <code>module.ll</code> can be regenerated and checked from the ups
 
 <pre><code>cd Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator
 bash build.sh
-./bounded_ui_accumulator_llvm 3
 </code></pre>
 
 <p>
+The build script checks the published native module for inputs <code>0</code>, <code>3</code>, and <code>7</code>.
 For input <code>3</code>, the expected observable result is:
 </p>
 
@@ -59,6 +59,33 @@ For input <code>3</code>, the expected observable result is:
 public_output=15
 status=ok
 </code></pre>
+
+<hr/>
+
+<h2>Lowering Fidelity</h2>
+
+<p>
+The LLVM kernel is now emitted as an explicit loop rather than as the closed-form shortcut <code>input_value * 5</code>.
+</p>
+
+<p>
+The generated function mirrors the lowered kernel shape:
+</p>
+
+<pre><code>state_current = 0
+i = 0
+
+while i &lt; iteration_count:
+    state_next = state_current + input_value
+    state_current = state_next
+    i = i + 1
+
+return state_current
+</code></pre>
+
+<p>
+This preserves the visible loop and commit posture of <code>main.lowering.json</code> while remaining a narrow proof path.
+</p>
 
 <hr/>
 

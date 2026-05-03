@@ -24,7 +24,7 @@ def test_example05_llvm_emission_check_passes() -> None:
     assert "LLVM module emission check: ok" in result.stdout
 
 
-def test_example05_llvm_emitter_writes_module(tmp_path: Path) -> None:
+def test_example05_llvm_emitter_writes_loop_module(tmp_path: Path) -> None:
     output = tmp_path / "module.ll"
     result = subprocess.run(
         [sys.executable, str(EMITTER), "--lowering", str(LOWERING), "--output", str(output)],
@@ -35,4 +35,12 @@ def test_example05_llvm_emitter_writes_module(tmp_path: Path) -> None:
         check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    assert output.read_text(encoding="utf-8").replace("\r\n", "\n").rstrip() == EXPECTED.read_text(encoding="utf-8").replace("\r\n", "\n").rstrip()
+
+    generated = output.read_text(encoding="utf-8").replace("\r\n", "\n").rstrip()
+    expected = EXPECTED.read_text(encoding="utf-8").replace("\r\n", "\n").rstrip()
+
+    assert generated == expected
+    assert "%state_current = phi i16" in generated
+    assert "%state_next = add i16 %state_current, %input_value" in generated
+    assert "%done = icmp uge i32 %i, 5" in generated
+    assert "mul i16 %input_value" not in generated

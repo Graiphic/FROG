@@ -11,21 +11,7 @@
 
 <hr/>
 
-<h2>Contents</h2>
-
-<ul>
-  <li><a href="#overview">1. Overview</a></li>
-  <li><a href="#architectural-boundary">2. Architectural Boundary</a></li>
-  <li><a href="#current-published-directory-shape">3. Current Published Directory Shape</a></li>
-  <li><a href="#current-reproducibility-check">4. Current Reproducibility Check</a></li>
-  <li><a href="#build-check">5. Build Check</a></li>
-  <li><a href="#scope">6. Scope</a></li>
-  <li><a href="#summary">7. Summary</a></li>
-</ul>
-
-<hr/>
-
-<h2 id="overview">1. Overview</h2>
+<h2>Overview</h2>
 
 <p>
 This directory defines the downstream compiler-family posture for LLVM-oriented native executable closure in the non-normative FROG reference implementation.
@@ -40,7 +26,7 @@ At the current published state, this directory exposes a first repository-visibl
 
 <hr/>
 
-<h2 id="architectural-boundary">2. Architectural Boundary</h2>
+<h2>Architectural Boundary</h2>
 
 <pre><code>canonical .frog source
       |
@@ -71,33 +57,9 @@ UI and widget effects remain runtime-mediated in the current architecture.
 
 <hr/>
 
-<h2 id="current-published-directory-shape">3. Current Published Directory Shape</h2>
+<h2>Current Reproducibility Check</h2>
 
-<pre><code>Implementations/Reference/LLVM/
-├── Readme.md
-├── examples/
-│   └── 05_bounded_ui_accumulator/
-│       ├── Readme.md
-│       ├── main.fir.json
-│       ├── main.lowering.json
-│       ├── module.ll
-│       ├── build.sh
-│       └── expected-output.json
-├── bridge/
-│   ├── fir_to_lowering.md
-│   └── lowering_to_llvm.md
-├── tests/
-│   └── test_example05_llvm_emission.py
-└── tools/
-    └── emit_llvm_module.py
-</code></pre>
-
-<hr/>
-
-<h2 id="current-reproducibility-check">4. Current Reproducibility Check</h2>
-
-<pre><code>python Implementations/Reference/LLVM/tools/emit_llvm_module.py --check
-</code></pre>
+<pre><code>python Implementations/Reference/LLVM/tools/emit_llvm_module.py --check</code></pre>
 
 <p>
 This command reads:
@@ -113,53 +75,45 @@ and checks that the emitted LLVM module matches:
 
 <hr/>
 
-<h2 id="build-check">5. Build Check</h2>
-
-<p>
-To also compile and run the published native proof when <code>clang</code> is available:
-</p>
+<h2>Native Build Proof</h2>
 
 <pre><code>python Implementations/Reference/LLVM/tools/emit_llvm_module.py --check --build</code></pre>
 
 <p>
-The build script itself remains:
+The native build proof requires <code>clang</code>.
+The build checks inputs <code>0</code>, <code>3</code>, and <code>7</code>.
 </p>
-
-<pre><code>cd Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator
-bash build.sh
-</code></pre>
 
 <hr/>
 
-<h2 id="scope">6. Scope</h2>
+<h2>Current Fidelity Improvement</h2>
 
 <p>
-The current LLVM emitter supports only the frozen Example 05 lowered shape:
+The current module is emitted from the lowered loop shape:
 </p>
 
 <ul>
-  <li>one lowered unit named <code>main</code>,</li>
-  <li><code>u16</code> state,</li>
-  <li>initial state <code>0</code>,</li>
-  <li>one add operation <code>state_next = state_current + input_value</code>,</li>
-  <li>iteration count read from the lowered artifact,</li>
-  <li>final publication parity with the published runtime corridor.</li>
+  <li><code>initial_state = 0</code>,</li>
+  <li><code>state_type = u16</code>,</li>
+  <li><code>iteration_count</code> read from <code>main.lowering.json</code>,</li>
+  <li><code>state_next = state_current + input_value</code>,</li>
+  <li><code>state_current &lt;- state_next after each iteration</code>.</li>
 </ul>
 
 <p>
-This is not a general LLVM backend.
+This is more faithful than the earlier closed-form multiplication proof while still remaining a narrow Example 05 native kernel proof.
 </p>
 
 <hr/>
 
-<h2 id="summary">7. Summary</h2>
+<h2>Summary</h2>
 
 <p>
-The current LLVM-oriented path now has a reproducibility check:
+The current LLVM-oriented path verifies:
 </p>
 
-<pre><code>main.lowering.json -&gt; module.ll</code></pre>
+<pre><code>main.lowering.json -&gt; loop-shaped module.ll -&gt; native proof</code></pre>
 
 <p>
-The next depth step would be to replace the current closed-form multiply proof with a more explicit loop/state lowering if the project wants the native module to mirror the lowered kernel structure more literally.
+The next depth step would be to add native overflow rejection parity for the runtime-family <code>u16</code> overflow policy.
 </p>

@@ -1,4 +1,12 @@
 ; FROG example 05 - first LLVM-native closure
+; Emitted from the published Example 05 lowered kernel.
+;
+; Lowered kernel shape:
+;   initial_state = 0
+;   state_type = u16
+;   iteration_count = 5
+;   iteration_body = add state_current + input_value -> state_next
+;   commit_rule = state_current <- state_next after each iteration
 
 @fmt_state = private unnamed_addr constant [16 x i8] c"final_state=%d\0A\00"
 @fmt_output = private unnamed_addr constant [18 x i8] c"public_output=%d\0A\00"
@@ -9,8 +17,21 @@ declare i32 @atoi(ptr)
 
 define i16 @frog_example05_accumulate(i16 %input_value) {
 entry:
-  %mul = mul i16 %input_value, 5
-  ret i16 %mul
+  br label %loop
+
+loop:
+  %i = phi i32 [ 0, %entry ], [ %i_next, %loop_body ]
+  %state_current = phi i16 [ 0, %entry ], [ %state_next, %loop_body ]
+  %done = icmp uge i32 %i, 5
+  br i1 %done, label %exit, label %loop_body
+
+loop_body:
+  %state_next = add i16 %state_current, %input_value
+  %i_next = add i32 %i, 1
+  br label %loop
+
+exit:
+  ret i16 %state_current
 }
 
 define i32 @main(i32 %argc, ptr %argv) {
@@ -31,7 +52,7 @@ use_default:
 run:
   %input_value = phi i16 [ %trunc, %parse_arg ], [ 3, %use_default ]
   %result = call i16 @frog_example05_accumulate(i16 %input_value)
-  %result_i32 = sext i16 %result to i32
+  %result_i32 = zext i16 %result to i32
 
   %fmt_state_ptr = getelementptr inbounds [16 x i8], ptr @fmt_state, i64 0, i64 0
   call i32 (ptr, ...) @printf(ptr %fmt_state_ptr, i32 %result_i32)

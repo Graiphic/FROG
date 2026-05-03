@@ -6,11 +6,22 @@ cd "$SCRIPT_DIR"
 
 clang module.ll -o bounded_ui_accumulator_llvm
 
-OUTPUT="$(./bounded_ui_accumulator_llvm 3)"
-printf '%s\n' "$OUTPUT"
+check_case() {
+  local input="$1"
+  local expected_value="$2"
+  local output
+  output="$(./bounded_ui_accumulator_llvm "$input")"
+  printf '%s\n' "$output"
 
-EXPECTED=$'final_state=15\npublic_output=15\nstatus=ok'
-if [[ "$OUTPUT" != "$EXPECTED" ]]; then
-  echo "Unexpected LLVM proof output." >&2
-  exit 1
-fi
+  local expected
+  expected="$(printf 'final_state=%s\npublic_output=%s\nstatus=ok' "$expected_value" "$expected_value")"
+
+  if [[ "$output" != "$expected" ]]; then
+    echo "Unexpected LLVM proof output for input ${input}." >&2
+    exit 1
+  fi
+}
+
+check_case 0 0
+check_case 3 15
+check_case 7 35
