@@ -19,6 +19,7 @@
   <li><a href="../../../IR/Execution%20IR.md">Execution IR</a></li>
   <li><a href="../../../Examples/05_bounded_ui_accumulator/Readme.md">Example 05</a></li>
   <li><a href="../../../Examples/05_bounded_ui_accumulator/Freeze.md">Example 05 freeze boundary</a></li>
+  <li><a href="./rules/example05_fir_derivation.md">Example 05 FIR derivation rules</a></li>
 </ul>
 
 <hr/>
@@ -30,7 +31,7 @@ This directory contains the first non-normative reference deriver for the FROG i
 </p>
 
 <p>
-The first target is intentionally narrow:
+The first target remains intentionally narrow:
 </p>
 
 <pre><code>Examples/05_bounded_ui_accumulator/main.frog
@@ -39,9 +40,13 @@ Examples/05_bounded_ui_accumulator/main.fir.json
 </code></pre>
 
 <p>
-This tool does not claim to be a complete FROG compiler.
-It exists to make the frozen Example 05 FIR artifact reproducible from the canonical <code>.frog</code> source.
+The implementation is now split into:
 </p>
+
+<ul>
+  <li><code>fir_deriver.py</code> — reusable source-graph helpers and supported FIR derivation rules,</li>
+  <li><code>derive_example05_fir.py</code> — command-line wrapper for the frozen Example 05 acceptance target.</li>
+</ul>
 
 <hr/>
 
@@ -51,7 +56,7 @@ It exists to make the frozen Example 05 FIR artifact reproducible from the canon
   <li>loads one canonical JSON <code>.frog</code> source file,</li>
   <li>checks the minimal source shape needed for Example 05,</li>
   <li>derives the bounded FIR shape currently published for Example 05,</li>
-  <li>preserves the key corridor distinctions: public interface, widget value, widget reference, property write, explicit state, structured loop, and publications,</li>
+  <li>preserves public interface, widget value, widget reference, property write, explicit state, structured loop, and publications,</li>
   <li>can compare the generated FIR against the published FIR artifact.</li>
 </ul>
 
@@ -91,14 +96,5 @@ It does not own language semantics, widget law, runtime behavior, lowering, back
 <h2>5. Next Step</h2>
 
 <p>
-After this deriver is green for Example 05, the next stage is:
-</p>
-
-<pre><code>main.fir.json
-  -&gt;
-main.lowering.json
-</code></pre>
-
-<p>
-That should be implemented separately under <code>Implementations/Reference/Lowerer/</code>.
+After this deriver remains green for Example 05, the next growth step is to add another small accepted source pattern rather than making the Example 05 rule more implicit.
 </p>

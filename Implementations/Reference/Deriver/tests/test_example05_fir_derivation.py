@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from Implementations.Reference.Deriver.fir_deriver import derive_fir_from_source, load_json
+
 
 ROOT = Path(__file__).resolve().parents[4]
 DERIVER = ROOT / "Implementations" / "Reference" / "Deriver" / "derive_example05_fir.py"
@@ -38,4 +40,11 @@ def test_example05_deriver_writes_json(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stdout + result.stderr
     generated = json.loads(output.read_text(encoding="utf-8"))
     expected = json.loads(EXPECTED.read_text(encoding="utf-8"))
+    assert generated == expected
+
+
+def test_example05_rule_module_derives_expected_fir() -> None:
+    source = load_json(SOURCE)
+    generated = derive_fir_from_source(source, "Examples/05_bounded_ui_accumulator/main.frog")
+    expected = load_json(EXPECTED)
     assert generated == expected
