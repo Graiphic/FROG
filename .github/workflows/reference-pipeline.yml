@@ -48,6 +48,6 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Check LLVM module emission and native build
+      - name: Check all LLVM native examples
         run: |
-          python Implementations/Reference/LLVM/tools/emit_llvm_module.py --check --build
+          python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-llvm-build
