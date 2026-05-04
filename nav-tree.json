@@ -2502,6 +2502,36 @@
               "children": []
             },
             {
+              "key": "implementations/reference/artifactchecks/",
+              "title": "ArtifactChecks",
+              "path": "/Implementations/Reference/ArtifactChecks/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "implementations/reference/artifactchecks/check_examples01_05_artifacts.py",
+                  "title": "check_examples01_05_artifacts.py",
+                  "path": "/Implementations/Reference/ArtifactChecks/check_examples01_05_artifacts.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "implementations/reference/artifactchecks/tests/",
+                  "title": "tests",
+                  "path": null,
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "implementations/reference/artifactchecks/tests/test_examples01_05_artifacts.py",
+                      "title": "test_examples01_05_artifacts.py",
+                      "path": "/Implementations/Reference/ArtifactChecks/tests/test_examples01_05_artifacts.py",
+                      "kind": "code",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "key": "implementations/reference/cli/",
               "title": "CLI",
               "path": "/Implementations/Reference/CLI/Readme.md",
@@ -3039,6 +3069,21 @@
                       "children": []
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "key": "implementations/reference/repositorymaintenance/",
+              "title": "RepositoryMaintenance",
+              "path": "/Implementations/Reference/RepositoryMaintenance/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "implementations/reference/repositorymaintenance/enrich_root_readme_examples01_05.py",
+                  "title": "enrich_root_readme_examples01_05.py",
+                  "path": "/Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_05.py",
+                  "kind": "code",
+                  "children": []
                 }
               ]
             },
@@ -3661,6 +3706,9 @@
     "/Implementations/Reference/pipeline.md",
     "/Implementations/Reference/check_reference_workspace.py",
     "/Implementations/Reference/common.py",
+    "/Implementations/Reference/ArtifactChecks/check_examples01_05_artifacts.py",
+    "/Implementations/Reference/ArtifactChecks/tests/test_examples01_05_artifacts.py",
+    "/Implementations/Reference/ArtifactChecks/Readme.md",
     "/Implementations/Reference/CLI/frogc.md",
     "/Implementations/Reference/CLI/frog_demo_pipeline.py",
     "/Implementations/Reference/CLI/regression_01_pure_addition.py",
@@ -3727,6 +3775,8 @@
     "/Implementations/Reference/Pipeline/tests/test_example05_pipeline_check.py",
     "/Implementations/Reference/Pipeline/tests/test_examples01_05_full_pipeline.py",
     "/Implementations/Reference/Pipeline/Readme.md",
+    "/Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_05.py",
+    "/Implementations/Reference/RepositoryMaintenance/Readme.md",
     "/Implementations/Reference/Runtime/accept_contract_and_execute.md",
     "/Implementations/Reference/Runtime/responsibilities.md",
     "/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",

@@ -350,6 +350,10 @@
   - [pipeline](/Implementations/Reference/pipeline.md)
   - [check_reference_workspace.py](/Implementations/Reference/check_reference_workspace.py)
   - [common.py](/Implementations/Reference/common.py)
+  - [ArtifactChecks](/Implementations/Reference/ArtifactChecks/Readme.md)
+    - [check_examples01_05_artifacts.py](/Implementations/Reference/ArtifactChecks/check_examples01_05_artifacts.py)
+    - tests
+      - [test_examples01_05_artifacts.py](/Implementations/Reference/ArtifactChecks/tests/test_examples01_05_artifacts.py)
   - [CLI](/Implementations/Reference/CLI/Readme.md)
     - [frogc](/Implementations/Reference/CLI/frogc.md)
     - [frog_demo_pipeline.py](/Implementations/Reference/CLI/frog_demo_pipeline.py)
@@ -425,6 +429,8 @@
     - tests
       - [test_example05_pipeline_check.py](/Implementations/Reference/Pipeline/tests/test_example05_pipeline_check.py)
       - [test_examples01_05_full_pipeline.py](/Implementations/Reference/Pipeline/tests/test_examples01_05_full_pipeline.py)
+  - [RepositoryMaintenance](/Implementations/Reference/RepositoryMaintenance/Readme.md)
+    - [enrich_root_readme_examples01_05.py](/Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_05.py)
   - [Runtime](/Implementations/Reference/Runtime/Readme.md)
     - [accept contract and execute](/Implementations/Reference/Runtime/accept_contract_and_execute.md)
     - [responsibilities](/Implementations/Reference/Runtime/responsibilities.md)
