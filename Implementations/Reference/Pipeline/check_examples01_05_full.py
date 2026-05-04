@@ -43,21 +43,29 @@ def run(stage: Stage) -> int:
     return result.returncode
 
 
-def stages(include_widget_validator: bool, include_llvm_build: bool) -> list[Stage]:
+def stages(include_widget_validator: bool, include_llvm_build: bool, skip_artifact_preflight: bool) -> list[Stage]:
     py = sys.executable
     out: list[Stage] = []
+
+    if not skip_artifact_preflight:
+        out.append(Stage("Examples 01-05 artifact preflight", [py, "Implementations/Reference/ArtifactChecks/check_examples01_05_artifacts.py"]))
+
     if include_widget_validator:
         out.append(Stage("widget layer validation", [py, "Implementations/Reference/WidgetValidator/validate_widget_layer.py"]))
+
     for key, source, fir, lowering in EXAMPLES:
         out.append(Stage(f"Example {key} .frog -> FIR", [py, "Implementations/Reference/Deriver/derive_fir.py", "--source", source, "--expected", fir, "--check"]))
         out.append(Stage(f"Example {key} FIR -> lowering", [py, "Implementations/Reference/Lowerer/lower_fir.py", "--fir", fir, "--expected", lowering, "--check"]))
+
     out.append(Stage("Examples 01-04 lowering -> backend contract", [py, "Implementations/Reference/ContractEmitter/emit_examples01_04_contracts.py", "--check"]))
     out.append(Stage("Examples 01-05 runtime acceptance", [py, "Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py"]))
     out.append(Stage("Examples 01-04 lowering -> LLVM modules", [py, "Implementations/Reference/LLVM/tools/emit_examples01_04_llvm_modules.py", "--check"]))
     out.append(Stage("Example 05 lowering -> LLVM module", [py, "Implementations/Reference/LLVM/tools/emit_llvm_module.py", "--check"]))
+
     if include_llvm_build:
         out.append(Stage("Examples 01-04 LLVM native build", [py, "Implementations/Reference/LLVM/tools/emit_examples01_04_llvm_modules.py", "--build"]))
         out.append(Stage("Example 05 LLVM native build", [py, "Implementations/Reference/LLVM/tools/emit_llvm_module.py", "--check", "--build"]))
+
     return out
 
 
@@ -65,11 +73,18 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--include-widget-validator", action="store_true")
     parser.add_argument("--include-llvm-build", action="store_true")
+    parser.add_argument("--skip-artifact-preflight", action="store_true")
     args = parser.parse_args()
-    for stage in stages(args.include_widget_validator, args.include_llvm_build):
+
+    for stage in stages(
+        include_widget_validator=args.include_widget_validator,
+        include_llvm_build=args.include_llvm_build,
+        skip_artifact_preflight=args.skip_artifact_preflight,
+    ):
         code = run(stage)
         if code != 0:
             return code
+
     print("\nExamples 01-05 full status: ok")
     return 0
 

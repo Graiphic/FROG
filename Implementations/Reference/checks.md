@@ -14,12 +14,9 @@
 <h2>Purpose</h2>
 
 <p>
-This document describes the non-normative repository checks used to keep the current bounded Example 05 corridor and widget layer reproducible.
-</p>
-
-<p>
-These checks do not define the FROG language.
-They verify that the currently published reference artifacts remain aligned.
+This document describes the non-normative repository checks used to keep the current Examples 01–05 executable corridor coherent.
+These checks do not define FROG semantics.
+They verify that the published reference artifacts remain aligned.
 </p>
 
 <hr/>
@@ -29,13 +26,8 @@ They verify that the currently published reference artifacts remain aligned.
 <pre><code>python Implementations/Reference/check_reference_workspace.py</code></pre>
 
 <p>
-This command runs:
+This command runs the Examples 01–05 full pipeline with widget-layer validation enabled.
 </p>
-
-<ul>
-  <li>the widget-layer validator,</li>
-  <li>the Example 05 staged pipeline check.</li>
-</ul>
 
 <hr/>
 
@@ -48,6 +40,7 @@ This additionally runs the pytest suites for:
 </p>
 
 <ul>
+  <li>artifact preflight checks,</li>
   <li>Deriver,</li>
   <li>Lowerer,</li>
   <li>ContractEmitter,</li>
@@ -64,8 +57,20 @@ This additionally runs the pytest suites for:
 
 <p>
 This requires <code>clang</code>.
-It verifies that the published LLVM module builds and produces the expected native observable output for Example 05.
+It verifies the native LLVM proof dossiers for Examples 01–05.
 </p>
+
+<hr/>
+
+<h2>Direct corridor command</h2>
+
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-widget-validator</code></pre>
+
+<p>
+With native builds:
+</p>
+
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-widget-validator --include-llvm-build</code></pre>
 
 <hr/>
 
@@ -78,5 +83,5 @@ The repository-level GitHub Actions workflow is:
 <pre><code>.github/workflows/reference-pipeline.yml</code></pre>
 
 <p>
-It runs the reference pipeline and a native LLVM proof on Ubuntu.
+It runs the reference workspace checks and the LLVM native proof on Ubuntu.
 </p>

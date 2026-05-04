@@ -39,12 +39,23 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--include-pytest", action="store_true")
     parser.add_argument("--include-llvm-build", action="store_true")
     args = parser.parse_args(argv)
+
     py = sys.executable
+
     stages = [
-        Stage("Examples 01-05 full pipeline", [py, "Implementations/Reference/Pipeline/check_examples01_05_full.py", "--include-widget-validator"] + (["--include-llvm-build"] if args.include_llvm_build else [])),
+        Stage(
+            "Examples 01-05 full pipeline",
+            [
+                py,
+                "Implementations/Reference/Pipeline/check_examples01_05_full.py",
+                "--include-widget-validator",
+            ] + (["--include-llvm-build"] if args.include_llvm_build else []),
+        ),
     ]
+
     if args.include_pytest:
         stages.extend([
+            Stage("ArtifactChecks tests", [py, "-m", "pytest", "Implementations/Reference/ArtifactChecks/tests"]),
             Stage("Deriver tests", [py, "-m", "pytest", "Implementations/Reference/Deriver/tests"]),
             Stage("Lowerer tests", [py, "-m", "pytest", "Implementations/Reference/Lowerer/tests"]),
             Stage("ContractEmitter tests", [py, "-m", "pytest", "Implementations/Reference/ContractEmitter/tests"]),
@@ -52,10 +63,12 @@ def main(argv: list[str] | None = None) -> int:
             Stage("LLVM tests", [py, "-m", "pytest", "Implementations/Reference/LLVM/tests"]),
             Stage("Pipeline tests", [py, "-m", "pytest", "Implementations/Reference/Pipeline/tests"]),
         ])
+
     for stage in stages:
         code = run_stage(stage)
         if code != 0:
             return code
+
     print("\nReference workspace status: ok")
     return 0
 

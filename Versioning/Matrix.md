@@ -11,6 +11,32 @@
 
 <hr/>
 
+<h2>Executable Example Closure Matrix</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Example</th>
+      <th>Source</th>
+      <th>FIR</th>
+      <th>Lowering</th>
+      <th>Contract</th>
+      <th>Runtime acceptance</th>
+      <th>LLVM proof</th>
+      <th>Current note</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>01 Pure Addition</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Pure arithmetic corridor.</td></tr>
+    <tr><td>02 UI Value Roundtrip</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Natural <code>widget_value</code> corridor.</td></tr>
+    <tr><td>03 UI Property Write</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Object-style <code>widget_reference</code> / <code>property_write</code> corridor.</td></tr>
+    <tr><td>04 Stateful Feedback Delay</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Explicit delay-state corridor.</td></tr>
+    <tr><td>05 Bounded UI Accumulator</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Published</td><td>Primary applicative UI/state/runtime/native reference corridor.</td></tr>
+  </tbody>
+</table>
+
+<hr/>
+
 <h2>Widget Baseline Status</h2>
 
 <table>
@@ -45,9 +71,6 @@
 <h2>Summary</h2>
 
 <p>
-The current widget baseline covers scalar values, commands, support text, decorations, image and picture display, chart display, selection and navigation widgets, tabular and hierarchical views, structured collections, and layout composition widgets.
-</p>
-
-<p>
-The next widget-layer priority is validation and qualitative deepening, not adding more baseline families.
+The current published repository state contains both a broad widget baseline and a repository-visible executable Examples 01–05 corridor.
+The next priority is to keep the pipeline green, then convert the remaining pattern-specific runtime and LLVM code into more generic contract- and lowered-unit-kind-driven engines.
 </p>

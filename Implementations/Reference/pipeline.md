@@ -5,44 +5,62 @@
 <h1 align="center">Reference Pipeline</h1>
 
 <p align="center">
-  <strong>First executable reference pipeline for the non-normative FROG reference implementation workspace</strong><br/>
+  <strong>Executable reference pipeline for the current Examples 01–05 FROG corridor</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
 <hr/>
 
-<h2>Overview</h2>
+<h2>Current Pipeline</h2>
 
-<p>
-The current reference workspace now has two complementary check surfaces.
-</p>
-
-<ul>
-  <li>Examples <code>01</code> through <code>04</code> are reproducible through source-to-FIR and FIR-to-lowering checks.</li>
-  <li>Example <code>05</code> remains the full corridor through source, FIR, lowering, backend contract, runtime acceptance, and LLVM module emission.</li>
-</ul>
-
-<hr/>
-
-<h2>Example 05 Full Pipeline</h2>
-
-<pre><code>python Implementations/Reference/Pipeline/check_example05_pipeline.py</code></pre>
+<pre><code>Examples 01–05
+  .frog
+    -&gt; FIR
+    -&gt; lowering
+    -&gt; backend contract
+    -&gt; runtime acceptance
+    -&gt; LLVM module / native proof
+</code></pre>
 
 <hr/>
 
-<h2>Full Workspace Check</h2>
+<h2>Command</h2>
 
-<pre><code>python Implementations/Reference/check_reference_workspace.py --include-pytest</code></pre>
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py</code></pre>
 
 <p>
-The pytest pass covers the derivation and lowering slices for Examples <code>01</code> through <code>05</code>.
+With widget validation:
 </p>
+
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-widget-validator</code></pre>
+
+<p>
+With native LLVM builds:
+</p>
+
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-widget-validator --include-llvm-build</code></pre>
+
+<hr/>
+
+<h2>Stage Order</h2>
+
+<ol>
+  <li>Artifact preflight for Examples 01–05.</li>
+  <li>Optional widget-layer validation.</li>
+  <li><code>.frog -&gt; FIR</code> for Examples 01–05.</li>
+  <li><code>FIR -&gt; lowering</code> for Examples 01–05.</li>
+  <li><code>lowering -&gt; backend contract</code>.</li>
+  <li><code>contract -&gt; runtime acceptance</code>.</li>
+  <li><code>lowering -&gt; LLVM module</code>.</li>
+  <li>Optional native LLVM build proof.</li>
+</ol>
 
 <hr/>
 
 <h2>Boundary</h2>
 
 <p>
-These checks are non-normative.
-They protect repository-visible artifacts and do not define FROG semantics.
+The pipeline is non-normative.
+It verifies published artifacts and implementation-stage coherence.
+It does not define the FROG language.
 </p>

@@ -1,0 +1,37 @@
+<p align="center">
+  <img src="../../FROG logo.svg" alt="FROG logo" width="140" />
+</p>
+
+<h1 align="center">Root README Examples 01–05 Enrichment</h1>
+
+<p align="center">
+  <strong>Maintenance note for enriching the existing repository root README without replacing the strategic content</strong><br/>
+  <em>FROG — Free Open Graphical Language</em>
+</p>
+
+<hr/>
+
+<h2>Command</h2>
+
+<pre><code>python Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_05.py</code></pre>
+
+<hr/>
+
+<h2>What It Updates</h2>
+
+<ul>
+  <li><code>Published repository state</code></li>
+  <li><code>Campaign priority</code></li>
+  <li><code>Runtime and native execution direction</code></li>
+  <li><code>Project status</code></li>
+</ul>
+
+<hr/>
+
+<h2>Why This Is a Patch Instead of a Full Replacement</h2>
+
+<p>
+The root <code>Readme.md</code> is long and strategic.
+This maintenance script intentionally enriches existing sections in place.
+It avoids replacing unrelated positioning, AI-era, governance, architecture, and license content.
+</p>
