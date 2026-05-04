@@ -23,11 +23,18 @@
 
 <hr/>
 
-<h2>Checks</h2>
+<h2>Emission Checks</h2>
 
-<pre><code>python Implementations/Reference/LLVM/tools/check_examples01_04_llvm_modules.py --check
+<pre><code>python Implementations/Reference/LLVM/tools/emit_examples01_04_llvm_modules.py --check
 python Implementations/Reference/LLVM/tools/emit_llvm_module.py --check
 </code></pre>
+
+<p>
+Examples <code>01</code> through <code>04</code> now check <code>main.lowering.json -&gt; module.ll</code> through a dedicated emitter.
+Example <code>05</code> keeps its specialized bounded-accumulator emitter.
+</p>
+
+<hr/>
 
 <h2>Native Build</h2>
 

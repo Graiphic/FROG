@@ -53,10 +53,10 @@ def stages(include_widget_validator: bool, include_llvm_build: bool) -> list[Sta
         out.append(Stage(f"Example {key} FIR -> lowering", [py, "Implementations/Reference/Lowerer/lower_fir.py", "--fir", fir, "--expected", lowering, "--check"]))
     out.append(Stage("Examples 01-04 lowering -> backend contract", [py, "Implementations/Reference/ContractEmitter/emit_examples01_04_contracts.py", "--check"]))
     out.append(Stage("Examples 01-05 runtime acceptance", [py, "Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py"]))
-    out.append(Stage("Examples 01-04 LLVM modules", [py, "Implementations/Reference/LLVM/tools/check_examples01_04_llvm_modules.py", "--check"]))
-    out.append(Stage("Example 05 LLVM module", [py, "Implementations/Reference/LLVM/tools/emit_llvm_module.py", "--check"]))
+    out.append(Stage("Examples 01-04 lowering -> LLVM modules", [py, "Implementations/Reference/LLVM/tools/emit_examples01_04_llvm_modules.py", "--check"]))
+    out.append(Stage("Example 05 lowering -> LLVM module", [py, "Implementations/Reference/LLVM/tools/emit_llvm_module.py", "--check"]))
     if include_llvm_build:
-        out.append(Stage("Examples 01-04 LLVM native build", [py, "Implementations/Reference/LLVM/tools/check_examples01_04_llvm_modules.py", "--build"]))
+        out.append(Stage("Examples 01-04 LLVM native build", [py, "Implementations/Reference/LLVM/tools/emit_examples01_04_llvm_modules.py", "--build"]))
         out.append(Stage("Example 05 LLVM native build", [py, "Implementations/Reference/LLVM/tools/emit_llvm_module.py", "--check", "--build"]))
     return out
 
