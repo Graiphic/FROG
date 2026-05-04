@@ -1,0 +1,76 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "04_stateful_feedback_delay",
+    "path": "Examples/04_stateful_feedback_delay/main.frog",
+    "entry_unit": "main"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "stateful_feedback_delay_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "x",
+            "type": "f64"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "y",
+            "type": "f64"
+          }
+        ]
+      },
+      "state_model": {
+        "explicit_state": true,
+        "carrier": {
+          "primitive": "frog.core.delay",
+          "state_id": "delay_1",
+          "type": "f64",
+          "initial_value": 0.0
+        },
+        "commit_rule": "add_1.result becomes the next delayed state at the step commit point"
+      },
+      "execution_model": {
+        "structure": "single_step_feedback_with_explicit_delay",
+        "body_rule": {
+          "kind": "add_input_to_delayed_state",
+          "expression": "state_next = state_current + x"
+        },
+        "edges": [
+          {
+            "from": "public_input.x",
+            "to": "add_1.a"
+          },
+          {
+            "from": "state.delay_1.out",
+            "to": "add_1.b"
+          },
+          {
+            "from": "add_1.result",
+            "to": "state.delay_1.in"
+          },
+          {
+            "from": "add_1.result",
+            "to": "public_output.y"
+          }
+        ]
+      },
+      "publications": [
+        {
+          "target": "public_output.y",
+          "source": "add_1.result"
+        }
+      ],
+      "notes": [
+        "This FIR preserves explicit feedback through frog.core.delay.",
+        "The feedback cycle is valid only because delay_1 provides an explicit initial value."
+      ]
+    }
+  ]
+}

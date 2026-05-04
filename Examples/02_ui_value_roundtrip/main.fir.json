@@ -1,0 +1,86 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "02_ui_value_roundtrip",
+    "path": "Examples/02_ui_value_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "kind": "inline_source_front_panel",
+    "source_section": "front_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "ui_value_roundtrip_unit",
+      "public_interface": {
+        "inputs": [],
+        "outputs": []
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "ctrl_a",
+            "mode": "widget_value",
+            "value_type": "f64"
+          },
+          {
+            "widget_id": "ctrl_b",
+            "mode": "widget_value",
+            "value_type": "f64"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "ind_result",
+            "mode": "widget_value",
+            "value_type": "f64"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "acyclic_dataflow_graph",
+        "primitive_operations": [
+          {
+            "node_id": "add_1",
+            "primitive": "frog.core.add",
+            "inputs": {
+              "a": "widget.ctrl_a.value",
+              "b": "widget.ctrl_b.value"
+            },
+            "outputs": {
+              "result": "add_1.result"
+            }
+          }
+        ],
+        "edges": [
+          {
+            "from": "widget.ctrl_a.value",
+            "to": "add_1.a"
+          },
+          {
+            "from": "widget.ctrl_b.value",
+            "to": "add_1.b"
+          },
+          {
+            "from": "add_1.result",
+            "to": "widget.ind_result.value"
+          }
+        ]
+      },
+      "publications": [
+        {
+          "target": "widget.ind_result.value",
+          "source": "add_1.result"
+        }
+      ],
+      "notes": [
+        "This FIR preserves natural widget_value participation.",
+        "This example has no public interface IO, object-style widget reference, structured control, or explicit local state."
+      ]
+    }
+  ]
+}

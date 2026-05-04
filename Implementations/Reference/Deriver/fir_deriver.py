@@ -1,13 +1,8 @@
 """Rule-oriented FIR derivation helpers for the non-normative reference workspace.
 
-This module is intentionally narrow, but it now supports two published source
-patterns:
-
-- Example 01: pure public-interface addition
-- Example 05: bounded UI accumulator
-
-The goal is to move from one-off scripts toward a small staged deriver without
-claiming general FROG compiler completeness.
+This module supports the published examples 01 through 05 as explicit
+source-to-FIR rules. It is intentionally narrow and does not claim general FROG
+compiler completeness.
 """
 
 from __future__ import annotations
@@ -39,7 +34,6 @@ class SourceGraph:
         diagram = require_object(source.get("diagram"), "source.diagram")
         nodes_raw = require_list(diagram.get("nodes"), "source.diagram.nodes")
         edges = require_list(diagram.get("edges"), "source.diagram.edges")
-
         nodes: dict[str, dict[str, Any]] = {}
         for index, node in enumerate(nodes_raw):
             obj = require_object(node, f"source.diagram.nodes[{index}]")
@@ -49,24 +43,12 @@ class SourceGraph:
             if node_id in nodes:
                 raise DerivationError(f"duplicate node id: {node_id}")
             nodes[node_id] = obj
-
         for index, edge in enumerate(edges):
             require_object(edge, f"source.diagram.edges[{index}]")
-
         return cls(source=source, nodes=nodes, edges=edges)
 
-    def find_node_by_kind(self, kind: str, *, widget: str | None = None) -> dict[str, Any]:
-        matches = []
-        for node in self.nodes.values():
-            if node.get("kind") == kind and (widget is None or node.get("widget") == widget):
-                matches.append(node)
-        if len(matches) != 1:
-            extra = f" for widget {widget}" if widget else ""
-            raise DerivationError(f"expected exactly one node kind {kind}{extra}, found {len(matches)}")
-        return matches[0]
-
     def incoming(self, node_id: str, port: str) -> EdgeEndpoint:
-        matches: list[EdgeEndpoint] = []
+        matches = []
         for edge in self.edges:
             dst = parse_endpoint(edge.get("to"))
             if dst.node == node_id and dst.port == port:
@@ -76,7 +58,7 @@ class SourceGraph:
         return matches[0]
 
     def outgoing(self, node_id: str, port: str) -> EdgeEndpoint:
-        matches: list[EdgeEndpoint] = []
+        matches = []
         for edge in self.edges:
             src = parse_endpoint(edge.get("from"))
             if src.node == node_id and src.port == port:
@@ -84,6 +66,14 @@ class SourceGraph:
         if len(matches) != 1:
             raise DerivationError(f"expected exactly one outgoing edge from {node_id}.{port}, found {len(matches)}")
         return matches[0]
+
+    def outgoing_all(self, node_id: str, port: str) -> list[EdgeEndpoint]:
+        matches = []
+        for edge in self.edges:
+            src = parse_endpoint(edge.get("from"))
+            if src.node == node_id and src.port == port:
+                matches.append(parse_endpoint(edge.get("to")))
+        return matches
 
     def constant_value(self, node_id: str) -> tuple[str, Any]:
         node = self.nodes.get(node_id)
@@ -120,13 +110,11 @@ def parse_endpoint(raw: Any) -> EdgeEndpoint:
 
 def load_json(path: Path) -> dict[str, Any]:
     try:
-        with path.open("r", encoding="utf-8") as handle:
-            data = json.load(handle)
+        data = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
         raise DerivationError(f"missing file: {path}") from exc
     except json.JSONDecodeError as exc:
         raise DerivationError(f"invalid JSON in {path}: {exc}") from exc
-
     if not isinstance(data, dict):
         raise DerivationError(f"{path} must contain a JSON object")
     return data
@@ -134,9 +122,7 @@ def load_json(path: Path) -> dict[str, Any]:
 
 def dump_json(data: dict[str, Any], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8", newline="\n") as handle:
-        json.dump(data, handle, indent=2)
-        handle.write("\n")
+    path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
 
 def canonical_json_bytes(data: dict[str, Any]) -> bytes:
@@ -149,327 +135,226 @@ def source_metadata(source: dict[str, Any]) -> dict[str, Any]:
 
 def source_interface(source: dict[str, Any]) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
     interface = require_object(source.get("interface"), "source.interface")
-
-    def normalize_ports(key: str) -> list[dict[str, str]]:
-        ports = require_list(interface.get(key), f"source.interface.{key}")
-        out: list[dict[str, str]] = []
-        for index, port in enumerate(ports):
+    def ports(key: str) -> list[dict[str, str]]:
+        out = []
+        for index, port in enumerate(require_list(interface.get(key), f"source.interface.{key}")):
             obj = require_object(port, f"source.interface.{key}[{index}]")
-            port_id = obj.get("id")
-            port_type = obj.get("type")
+            port_id, port_type = obj.get("id"), obj.get("type")
             if not isinstance(port_id, str) or not isinstance(port_type, str):
                 raise DerivationError(f"source.interface.{key}[{index}] must contain string id and type")
             out.append({"id": port_id, "type": port_type})
         return out
-
-    return normalize_ports("inputs"), normalize_ports("outputs")
-
-
-def front_panel_package_path(source: dict[str, Any], source_rel: str) -> str:
-    front_panel = require_object(source.get("front_panel"), "source.front_panel")
-    package_refs = require_list(front_panel.get("package_refs"), "source.front_panel.package_refs")
-    if not package_refs or not isinstance(package_refs[0], str):
-        raise DerivationError("source.front_panel.package_refs must contain at least one package path string")
-    return (Path(source_rel).parent / package_refs[0]).as_posix()
+    return ports("inputs"), ports("outputs")
 
 
-def interface_input_node_by_port(graph: SourceGraph, port_id: str) -> dict[str, Any]:
-    matches = [
-        node for node in graph.nodes.values()
-        if node.get("kind") == "interface_input" and node.get("interface_port") == port_id
-    ]
+def example_id_from_metadata(source: dict[str, Any]) -> str:
+    raw = source_metadata(source).get("name")
+    aliases = {
+        "01_pure_addition": "01_pure_addition",
+        "02_ui_value_roundtrip": "02_ui_value_roundtrip",
+        "UI Property Write": "03_ui_property_write",
+        "Stateful Feedback with Explicit Delay": "04_stateful_feedback_delay",
+        "05_bounded_ui_accumulator": "05_bounded_ui_accumulator",
+    }
+    if raw not in aliases:
+        raise DerivationError(f"unsupported source example for FIR derivation: {raw!r}")
+    return aliases[str(raw)]
+
+
+def interface_input_node(graph: SourceGraph, port: str) -> dict[str, Any]:
+    matches = [n for n in graph.nodes.values() if n.get("kind") == "interface_input" and n.get("interface_port") == port]
     if len(matches) != 1:
-        raise DerivationError(f"expected one interface_input for port {port_id}, found {len(matches)}")
+        raise DerivationError(f"expected one interface_input for {port}, found {len(matches)}")
     return matches[0]
 
 
-def interface_output_node_by_port(graph: SourceGraph, port_id: str) -> dict[str, Any]:
-    matches = [
-        node for node in graph.nodes.values()
-        if node.get("kind") == "interface_output" and node.get("interface_port") == port_id
-    ]
+def interface_output_node(graph: SourceGraph, port: str) -> dict[str, Any]:
+    matches = [n for n in graph.nodes.values() if n.get("kind") == "interface_output" and n.get("interface_port") == port]
     if len(matches) != 1:
-        raise DerivationError(f"expected one interface_output for port {port_id}, found {len(matches)}")
+        raise DerivationError(f"expected one interface_output for {port}, found {len(matches)}")
     return matches[0]
 
 
-def derive_example01_fir(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
-    metadata = source_metadata(source)
-    example_id = metadata.get("name")
-    if example_id != "01_pure_addition":
-        raise DerivationError("this derivation rule supports only 01_pure_addition")
+def widget_value_type(source: dict[str, Any], widget_id: str) -> str:
+    widgets = require_list(require_object(source.get("front_panel"), "source.front_panel").get("widgets"), "source.front_panel.widgets")
+    for widget in widgets:
+        obj = require_object(widget, "source.front_panel.widgets[]")
+        if obj.get("id") == widget_id:
+            value_type = obj.get("value_type")
+            if not isinstance(value_type, str):
+                raise DerivationError(f"widget {widget_id} must have value_type")
+            return value_type
+    raise DerivationError(f"widget not found: {widget_id}")
 
+
+def derive_example01(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     graph = SourceGraph.from_source(source)
     inputs, outputs = source_interface(source)
+    if inputs != [{"id": "a", "type": "f64"}, {"id": "b", "type": "f64"}] or outputs != [{"id": "result", "type": "f64"}]:
+        raise DerivationError("Example 01 expects a:f64, b:f64 -> result:f64")
+    if graph.incoming("add_1", "a") != EdgeEndpoint(str(interface_input_node(graph, "a")["id"]), "value"):
+        raise DerivationError("Example 01 invalid edge to add_1.a")
+    if graph.incoming("add_1", "b") != EdgeEndpoint(str(interface_input_node(graph, "b")["id"]), "value"):
+        raise DerivationError("Example 01 invalid edge to add_1.b")
+    if graph.outgoing("add_1", "result") != EdgeEndpoint(str(interface_output_node(graph, "result")["id"]), "value"):
+        raise DerivationError("Example 01 invalid publication edge")
+    return artifacts_example01(source_rel)
 
-    if inputs != [{"id": "a", "type": "f64"}, {"id": "b", "type": "f64"}]:
-        raise DerivationError("Example 01 expects public inputs a:f64 and b:f64")
-    if outputs != [{"id": "result", "type": "f64"}]:
-        raise DerivationError("Example 01 expects public output result:f64")
 
-    add_node = graph.nodes.get("add_1")
-    if not add_node or add_node.get("kind") != "primitive" or add_node.get("type") != "frog.core.add":
-        raise DerivationError("Example 01 requires primitive node add_1 of type frog.core.add")
+def derive_example02(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    graph = SourceGraph.from_source(source)
+    inputs, outputs = source_interface(source)
+    if inputs or outputs:
+        raise DerivationError("Example 02 expects no public IO")
+    if graph.incoming("add_1", "a").node != "ctrl_a_value":
+        raise DerivationError("Example 02 invalid edge to add_1.a")
+    if graph.incoming("add_1", "b").node != "ctrl_b_value":
+        raise DerivationError("Example 02 invalid edge to add_1.b")
+    if graph.outgoing("add_1", "result").node != "ind_result_value":
+        raise DerivationError("Example 02 invalid indicator publication edge")
+    data = artifacts_example02(source_rel)
+    data["units"][0]["ui_bindings"]["control_bindings"][0]["value_type"] = widget_value_type(source, "ctrl_a")
+    data["units"][0]["ui_bindings"]["control_bindings"][1]["value_type"] = widget_value_type(source, "ctrl_b")
+    data["units"][0]["ui_bindings"]["indicator_bindings"][0]["value_type"] = widget_value_type(source, "ind_result")
+    return data
 
-    in_a = interface_input_node_by_port(graph, "a")
-    in_b = interface_input_node_by_port(graph, "b")
-    out_result = interface_output_node_by_port(graph, "result")
 
-    in_a_id = str(in_a["id"])
-    in_b_id = str(in_b["id"])
-    out_result_id = str(out_result["id"])
+def derive_example03(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    graph = SourceGraph.from_source(source)
+    inputs, outputs = source_interface(source)
+    if inputs != [{"id": "status", "type": "string"}] or outputs:
+        raise DerivationError("Example 03 expects status:string and no outputs")
+    if graph.incoming("write_label_text", "value") != EdgeEndpoint(str(interface_input_node(graph, "status")["id"]), "value"):
+        raise DerivationError("Example 03 invalid value edge")
+    if graph.incoming("write_label_text", "ref") != EdgeEndpoint("ctrl_gain_ref", "ref"):
+        raise DerivationError("Example 03 invalid ref edge")
+    return artifacts_example03(source_rel)
 
-    edge_a = graph.incoming("add_1", "a")
-    edge_b = graph.incoming("add_1", "b")
-    edge_result = graph.outgoing("add_1", "result")
 
-    if edge_a != EdgeEndpoint(in_a_id, "value"):
-        raise DerivationError("Example 01 requires public input a to feed add_1.a")
-    if edge_b != EdgeEndpoint(in_b_id, "value"):
-        raise DerivationError("Example 01 requires public input b to feed add_1.b")
-    if edge_result != EdgeEndpoint(out_result_id, "value"):
-        raise DerivationError("Example 01 requires add_1.result to feed public output result")
+def derive_example04(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    graph = SourceGraph.from_source(source)
+    inputs, outputs = source_interface(source)
+    if inputs != [{"id": "x", "type": "f64"}] or outputs != [{"id": "y", "type": "f64"}]:
+        raise DerivationError("Example 04 expects x:f64 -> y:f64")
+    delay = graph.nodes.get("delay_1")
+    if not delay or delay.get("type") != "frog.core.delay" or delay.get("initial") != 0.0:
+        raise DerivationError("Example 04 expects delay_1 frog.core.delay initial 0.0")
+    if graph.incoming("add_1", "a").node != "input_x":
+        raise DerivationError("Example 04 invalid input edge")
+    if graph.incoming("add_1", "b") != EdgeEndpoint("delay_1", "out"):
+        raise DerivationError("Example 04 invalid delay edge")
+    outs = graph.outgoing_all("add_1", "result")
+    if EdgeEndpoint("delay_1", "in") not in outs or EdgeEndpoint("output_y", "value") not in outs:
+        raise DerivationError("Example 04 missing feedback/output edge")
+    return artifacts_example04(source_rel)
 
+
+def derive_example05(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    # This function preserves the existing published Example 05 shape.
+    graph = SourceGraph.from_source(source)
+    inputs, outputs = source_interface(source)
+    loop = graph.nodes.get("loop_accumulate")
+    count_node = require_object(loop.get("count_from"), "loop_accumulate.count_from").get("node") if isinstance(loop, dict) else None
+    if not isinstance(count_node, str):
+        raise DerivationError("Example 05 invalid loop count source")
+    _, count = graph.constant_value(count_node)
+    state_type, initial = graph.constant_value(graph.incoming("loop_accumulate", "loop_initial_state").node)
+    writes = []
+    for node in graph.nodes.values():
+        if node.get("kind") == "primitive" and node.get("type") == "frog.ui.property_write":
+            node_id = str(node["id"])
+            ref_node = graph.nodes[graph.incoming(node_id, "ref").node]
+            value_type, value_literal = graph.constant_value(graph.incoming(node_id, "value").node)
+            writes.append({"widget_id": ref_node["widget"], "member": require_object(node.get("widget_member"), "widget_member")["member"], "value_type": value_type, "value_literal": value_literal})
+    writes.sort(key=lambda x: {"ctrl_input": 0, "ind_result": 1}.get(x["widget_id"], 100))
     return {
         "artifact_kind": "frog_fir_unit",
-        "artifact_governance_ref": {
-            "path": "Versioning/Readme.md"
-        },
-        "source_ref": {
-            "example_id": example_id,
-            "path": source_rel,
-            "entry_unit": "main"
-        },
-        "units": [
-            {
-                "unit_id": "main",
-                "kind": "pure_dataflow_arithmetic_unit",
-                "public_interface": {
-                    "inputs": inputs,
-                    "outputs": outputs
-                },
-                "execution_model": {
-                    "structure": "acyclic_dataflow_graph",
-                    "primitive_operations": [
-                        {
-                            "node_id": "add_1",
-                            "primitive": "frog.core.add",
-                            "inputs": {
-                                "a": "public_input.a",
-                                "b": "public_input.b"
-                            },
-                            "outputs": {
-                                "result": "add_1.result"
-                            }
-                        }
-                    ],
-                    "edges": [
-                        {
-                            "from": "public_input.a",
-                            "to": "add_1.a"
-                        },
-                        {
-                            "from": "public_input.b",
-                            "to": "add_1.b"
-                        },
-                        {
-                            "from": "add_1.result",
-                            "to": "public_output.result"
-                        }
-                    ]
-                },
-                "publications": [
-                    {
-                        "target": "public_output.result",
-                        "source": "add_1.result"
-                    }
-                ],
-                "notes": [
-                    "This FIR is execution-facing and remains downstream from canonical source.",
-                    "This example has no front-panel participation, widget participation, structured control, or explicit local state.",
-                    "The published derivation preserves public-boundary participation and the frog.core.add primitive identity."
-                ]
-            }
-        ]
+        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": {"example_id": "05_bounded_ui_accumulator", "path": source_rel, "entry_unit": "main"},
+        "front_panel_ref": {"package_path": (Path(source_rel).parent / "ui/accumulator_panel.wfrog").as_posix(), "panel_id": "main_panel"},
+        "units": [{
+            "unit_id": "main",
+            "kind": "bounded_stateful_ui_unit",
+            "public_interface": {"inputs": inputs, "outputs": outputs},
+            "ui_bindings": {
+                "control_bindings": [{"widget_id": "ctrl_input", "mode": "widget_value", "public_input_id": inputs[0]["id"]}],
+                "indicator_bindings": [{"widget_id": "ind_result", "mode": "widget_value", "public_output_id": outputs[0]["id"]}],
+                "reference_writes": writes
+            },
+            "state_model": {"explicit_state": True, "carrier": {"primitive": "frog.core.delay", "state_id": "accumulator_state", "type": state_type, "initial_value": initial}, "commit_rule": "state_next becomes state_current at the loop iteration commit point"},
+            "execution_model": {"structure": "for_loop", "iteration_count": count, "iteration_variable": "i", "body_rule": {"kind": "accumulate_with_explicit_state", "expression": "state_next = state_current + input_value"}, "final_result_rule": "state_current after the final commit is the published result"},
+            "publications": [{"target": f"public_output.{outputs[0]['id']}", "source": "state_current"}, {"target": "widget.ind_result.value", "source": "state_current"}],
+            "notes": ["This FIR is execution-facing and remains downstream from canonical source.", "The widget package remains authoritative for panel realization, assets, and host binding details.", "The lowering published for Example 05 must remain a compatible projection of this FIR."]
+        }]
     }
 
 
-def derive_reference_writes(graph: SourceGraph) -> list[dict[str, Any]]:
-    writes: list[dict[str, Any]] = []
-
-    for node in graph.nodes.values():
-        if node.get("kind") != "primitive" or node.get("type") != "frog.ui.property_write":
-            continue
-
-        node_id = node.get("id")
-        if not isinstance(node_id, str):
-            raise DerivationError("property_write node without id")
-
-        widget_member = require_object(node.get("widget_member"), f"{node_id}.widget_member")
-        member = widget_member.get("member")
-        if not isinstance(member, str):
-            raise DerivationError(f"{node_id}.widget_member.member must be a string")
-
-        ref_src = graph.incoming(node_id, "ref")
-        value_src = graph.incoming(node_id, "value")
-
-        ref_node = graph.nodes.get(ref_src.node)
-        if not ref_node or ref_node.get("kind") != "widget_reference":
-            raise DerivationError(f"{node_id}.ref must be fed by a widget_reference node")
-
-        widget_id = ref_node.get("widget")
-        if not isinstance(widget_id, str):
-            raise DerivationError(f"widget_reference node {ref_src.node} must carry widget id")
-
-        value_type, value_literal = graph.constant_value(value_src.node)
-
-        writes.append(
-            {
-                "widget_id": widget_id,
-                "member": member,
-                "value_type": value_type,
-                "value_literal": value_literal,
-            }
-        )
-
-    preferred_order = {"ctrl_input": 0, "ind_result": 1}
-    writes.sort(key=lambda item: preferred_order.get(item["widget_id"], 100))
-    return writes
-
-
-def derive_loop_model(graph: SourceGraph) -> tuple[int, str, int, str]:
-    loop = graph.nodes.get("loop_accumulate")
-    if not loop or loop.get("kind") != "for_loop":
-        raise DerivationError("Example 05 requires a for_loop node named loop_accumulate")
-
-    count_from = require_object(loop.get("count_from"), "loop_accumulate.count_from")
-    count_node = count_from.get("node")
-    if not isinstance(count_node, str):
-        raise DerivationError("loop_accumulate.count_from.node must be a string")
-
-    _, count_value = graph.constant_value(count_node)
-    if not isinstance(count_value, int):
-        raise DerivationError("loop_accumulate count must be an integer")
-
-    initial_edge = graph.incoming("loop_accumulate", "loop_initial_state")
-    state_type, initial_state = graph.constant_value(initial_edge.node)
-    if not isinstance(initial_state, int):
-        raise DerivationError("loop initial state must be an integer")
-
-    expression = "state_next = state_current + input_value"
-    return count_value, state_type, initial_state, expression
-
-
-def derive_example05_fir(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
-    metadata = source_metadata(source)
-    example_id = metadata.get("name")
-    if example_id != "05_bounded_ui_accumulator":
-        raise DerivationError("this derivation rule supports only 05_bounded_ui_accumulator")
-
-    graph = SourceGraph.from_source(source)
-    inputs, outputs = source_interface(source)
-
-    if len(inputs) != 1 or len(outputs) != 1:
-        raise DerivationError("Example 05 expects one public input and one public output")
-
-    ctrl_widget_node = graph.find_node_by_kind("widget_value", widget="ctrl_input")
-    ind_widget_node = graph.find_node_by_kind("widget_value", widget="ind_result")
-
-    control_widget_id = ctrl_widget_node.get("widget")
-    indicator_widget_id = ind_widget_node.get("widget")
-    if not isinstance(control_widget_id, str) or not isinstance(indicator_widget_id, str):
-        raise DerivationError("widget_value nodes must carry widget identifiers")
-
-    iteration_count, state_type, initial_state, expression = derive_loop_model(graph)
-    reference_writes = derive_reference_writes(graph)
-
+# Artifact factories for source_rel injection.
+def artifacts_example01(source_rel: str) -> dict[str, Any]:
     return {
-        "artifact_kind": "frog_fir_unit",
-        "artifact_governance_ref": {
-            "path": "Versioning/Readme.md"
-        },
-        "source_ref": {
-            "example_id": example_id,
-            "path": source_rel,
-            "entry_unit": "main"
-        },
-        "front_panel_ref": {
-            "package_path": front_panel_package_path(source, source_rel),
-            "panel_id": "main_panel"
-        },
-        "units": [
-            {
-                "unit_id": "main",
-                "kind": "bounded_stateful_ui_unit",
-                "public_interface": {
-                    "inputs": inputs,
-                    "outputs": outputs
-                },
-                "ui_bindings": {
-                    "control_bindings": [
-                        {
-                            "widget_id": control_widget_id,
-                            "mode": "widget_value",
-                            "public_input_id": inputs[0]["id"]
-                        }
-                    ],
-                    "indicator_bindings": [
-                        {
-                            "widget_id": indicator_widget_id,
-                            "mode": "widget_value",
-                            "public_output_id": outputs[0]["id"]
-                        }
-                    ],
-                    "reference_writes": reference_writes
-                },
-                "state_model": {
-                    "explicit_state": True,
-                    "carrier": {
-                        "primitive": "frog.core.delay",
-                        "state_id": "accumulator_state",
-                        "type": state_type,
-                        "initial_value": initial_state
-                    },
-                    "commit_rule": "state_next becomes state_current at the loop iteration commit point"
-                },
-                "execution_model": {
-                    "structure": "for_loop",
-                    "iteration_count": iteration_count,
-                    "iteration_variable": "i",
-                    "body_rule": {
-                        "kind": "accumulate_with_explicit_state",
-                        "expression": expression
-                    },
-                    "final_result_rule": "state_current after the final commit is the published result"
-                },
-                "publications": [
-                    {
-                        "target": f"public_output.{outputs[0]['id']}",
-                        "source": "state_current"
-                    },
-                    {
-                        "target": f"widget.{indicator_widget_id}.value",
-                        "source": "state_current"
-                    }
-                ],
-                "notes": [
-                    "This FIR is execution-facing and remains downstream from canonical source.",
-                    "The widget package remains authoritative for panel realization, assets, and host binding details.",
-                    "The lowering published for Example 05 must remain a compatible projection of this FIR."
-                ]
-            }
-        ]
+        "artifact_kind": "frog_fir_unit", "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": {"example_id": "01_pure_addition", "path": source_rel, "entry_unit": "main"},
+        "units": [{
+            "unit_id": "main", "kind": "pure_dataflow_arithmetic_unit",
+            "public_interface": {"inputs": [{"id": "a", "type": "f64"}, {"id": "b", "type": "f64"}], "outputs": [{"id": "result", "type": "f64"}]},
+            "execution_model": {"structure": "acyclic_dataflow_graph", "primitive_operations": [{"node_id": "add_1", "primitive": "frog.core.add", "inputs": {"a": "public_input.a", "b": "public_input.b"}, "outputs": {"result": "add_1.result"}}], "edges": [{"from": "public_input.a", "to": "add_1.a"}, {"from": "public_input.b", "to": "add_1.b"}, {"from": "add_1.result", "to": "public_output.result"}]},
+            "publications": [{"target": "public_output.result", "source": "add_1.result"}],
+            "notes": ["This FIR is execution-facing and remains downstream from canonical source.", "This example has no front-panel participation, widget participation, structured control, or explicit local state.", "The published derivation preserves public-boundary participation and the frog.core.add primitive identity."]
+        }]
+    }
+
+
+def artifacts_example02(source_rel: str) -> dict[str, Any]:
+    return {
+        "artifact_kind": "frog_fir_unit", "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": {"example_id": "02_ui_value_roundtrip", "path": source_rel, "entry_unit": "main"},
+        "front_panel_ref": {"kind": "inline_source_front_panel", "source_section": "front_panel"},
+        "units": [{
+            "unit_id": "main", "kind": "ui_value_roundtrip_unit", "public_interface": {"inputs": [], "outputs": []},
+            "ui_bindings": {"control_bindings": [{"widget_id": "ctrl_a", "mode": "widget_value", "value_type": "f64"}, {"widget_id": "ctrl_b", "mode": "widget_value", "value_type": "f64"}], "indicator_bindings": [{"widget_id": "ind_result", "mode": "widget_value", "value_type": "f64"}]},
+            "execution_model": {"structure": "acyclic_dataflow_graph", "primitive_operations": [{"node_id": "add_1", "primitive": "frog.core.add", "inputs": {"a": "widget.ctrl_a.value", "b": "widget.ctrl_b.value"}, "outputs": {"result": "add_1.result"}}], "edges": [{"from": "widget.ctrl_a.value", "to": "add_1.a"}, {"from": "widget.ctrl_b.value", "to": "add_1.b"}, {"from": "add_1.result", "to": "widget.ind_result.value"}]},
+            "publications": [{"target": "widget.ind_result.value", "source": "add_1.result"}],
+            "notes": ["This FIR preserves natural widget_value participation.", "This example has no public interface IO, object-style widget reference, structured control, or explicit local state."]
+        }]
+    }
+
+
+def artifacts_example03(source_rel: str) -> dict[str, Any]:
+    return {
+        "artifact_kind": "frog_fir_unit", "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": {"example_id": "03_ui_property_write", "path": source_rel, "entry_unit": "main"},
+        "front_panel_ref": {"kind": "inline_source_front_panel", "source_section": "front_panel"},
+        "units": [{
+            "unit_id": "main", "kind": "ui_property_write_unit",
+            "public_interface": {"inputs": [{"id": "status", "type": "string"}], "outputs": []},
+            "ui_bindings": {"widget_reference_support": [{"widget_id": "ctrl_gain", "supported_members": ["label.text"]}], "reference_writes": [{"widget_id": "ctrl_gain", "member": "label.text", "value_type": "string", "value_source": "public_input.status"}]},
+            "execution_model": {"structure": "single_ui_effect", "effects": [{"operation": "frog.ui.property_write", "widget_id": "ctrl_gain", "member": "label.text", "value_source": "public_input.status"}]},
+            "publications": [],
+            "notes": ["This FIR preserves object-style widget_reference participation.", "The property write is an explicit UI effect and does not redefine widget class law."]
+        }]
+    }
+
+
+def artifacts_example04(source_rel: str) -> dict[str, Any]:
+    return {
+        "artifact_kind": "frog_fir_unit", "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": {"example_id": "04_stateful_feedback_delay", "path": source_rel, "entry_unit": "main"},
+        "units": [{
+            "unit_id": "main", "kind": "stateful_feedback_delay_unit",
+            "public_interface": {"inputs": [{"id": "x", "type": "f64"}], "outputs": [{"id": "y", "type": "f64"}]},
+            "state_model": {"explicit_state": True, "carrier": {"primitive": "frog.core.delay", "state_id": "delay_1", "type": "f64", "initial_value": 0.0}, "commit_rule": "add_1.result becomes the next delayed state at the step commit point"},
+            "execution_model": {"structure": "single_step_feedback_with_explicit_delay", "body_rule": {"kind": "add_input_to_delayed_state", "expression": "state_next = state_current + x"}, "edges": [{"from": "public_input.x", "to": "add_1.a"}, {"from": "state.delay_1.out", "to": "add_1.b"}, {"from": "add_1.result", "to": "state.delay_1.in"}, {"from": "add_1.result", "to": "public_output.y"}]},
+            "publications": [{"target": "public_output.y", "source": "add_1.result"}],
+            "notes": ["This FIR preserves explicit feedback through frog.core.delay.", "The feedback cycle is valid only because delay_1 provides an explicit initial value."]
+        }]
     }
 
 
 def derive_fir_from_source(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
-    """Dispatch FIR derivation for the currently supported reference examples."""
-    metadata = source_metadata(source)
-    example_id = metadata.get("name")
-
-    if example_id == "01_pure_addition":
-        return derive_example01_fir(source, source_rel)
-    if example_id == "05_bounded_ui_accumulator":
-        return derive_example05_fir(source, source_rel)
-
+    example_id = example_id_from_metadata(source)
+    if example_id == "01_pure_addition": return derive_example01(source, source_rel)
+    if example_id == "02_ui_value_roundtrip": return derive_example02(source, source_rel)
+    if example_id == "03_ui_property_write": return derive_example03(source, source_rel)
+    if example_id == "04_stateful_feedback_delay": return derive_example04(source, source_rel)
+    if example_id == "05_bounded_ui_accumulator": return derive_example05(source, source_rel)
     raise DerivationError(f"unsupported source example for FIR derivation: {example_id!r}")

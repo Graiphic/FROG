@@ -1,0 +1,61 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "03_ui_property_write",
+    "path": "Examples/03_ui_property_write/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/03_ui_property_write/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "purpose": "make the object-style UI property-write slice consumable by a simple UI-effect runtime family",
+    "backend_family_target": "reference_ui_property_write",
+    "compiler_family_targets": []
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "ui_property_write_effect_unit",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "status",
+            "type": "string"
+          }
+        ],
+        "outputs": []
+      },
+      "ui_bindings": {
+        "widget_reference_support": [
+          {
+            "widget_id": "ctrl_gain",
+            "supported_members": [
+              "label.text"
+            ]
+          }
+        ],
+        "reference_writes": [
+          {
+            "widget_id": "ctrl_gain",
+            "member": "label.text",
+            "value_type": "string",
+            "value_source": "public_input.status"
+          }
+        ]
+      },
+      "execution_effects": [
+        {
+          "op": "frog.ui.property_write",
+          "widget_id": "ctrl_gain",
+          "member": "label.text",
+          "value_source": "public_input.status"
+        }
+      ]
+    }
+  ]
+}

@@ -14,70 +14,35 @@
 <h2>Overview</h2>
 
 <p>
-The current reference pipeline makes the frozen Example 05 corridor reproducible across staged artifacts, runtime acceptance, and a first LLVM module emission check.
+The current reference workspace now has two complementary check surfaces.
 </p>
 
-<pre><code>canonical .frog source
-  -&gt; FIR
-  -&gt; lowering
-  -&gt; backend contract
-  -&gt; runtime-family acceptance
-  -&gt; LLVM module check
-</code></pre>
-
-<p>
-The reference pipeline remains non-normative.
-It consumes published artifacts and does not define FROG.
-</p>
+<ul>
+  <li>Examples <code>01</code> through <code>04</code> are reproducible through source-to-FIR and FIR-to-lowering checks.</li>
+  <li>Example <code>05</code> remains the full corridor through source, FIR, lowering, backend contract, runtime acceptance, and LLVM module emission.</li>
+</ul>
 
 <hr/>
 
-<h2>Current Check</h2>
+<h2>Example 05 Full Pipeline</h2>
 
 <pre><code>python Implementations/Reference/Pipeline/check_example05_pipeline.py</code></pre>
 
-<p>
-The default check runs:
-</p>
-
-<ul>
-  <li><code>Deriver/derive_example05_fir.py --check</code></li>
-  <li><code>Lowerer/lower_example05_fir.py --check</code></li>
-  <li><code>ContractEmitter/reference_contract_emitter.py --check</code></li>
-  <li><code>Runtime/check_example05_runtime_acceptance.py</code></li>
-  <li><code>LLVM/tools/emit_llvm_module.py --check</code></li>
-</ul>
-
 <hr/>
 
-<h2>Options</h2>
+<h2>Full Workspace Check</h2>
 
-<ul>
-  <li><code>--include-widget-validator</code> — run widget-layer validation first.</li>
-  <li><code>--skip-runtime-acceptance</code> — stop before runtime acceptance.</li>
-  <li><code>--skip-llvm</code> — stop before LLVM module emission.</li>
-  <li><code>--include-llvm-build</code> — also run the native <code>build.sh</code> check; requires <code>clang</code>.</li>
-</ul>
+<pre><code>python Implementations/Reference/check_reference_workspace.py --include-pytest</code></pre>
+
+<p>
+The pytest pass covers the derivation and lowering slices for Examples <code>01</code> through <code>05</code>.
+</p>
 
 <hr/>
 
 <h2>Boundary</h2>
 
 <p>
-The LLVM check verifies that <code>main.lowering.json</code> can reproduce the published <code>module.ll</code>.
-It does not claim that FROG IR is LLVM IR, and it does not compile the rendered front panel natively.
-</p>
-
-<hr/>
-
-<h2>Summary</h2>
-
-<p>
-The current pipeline now verifies:
-</p>
-
-<pre><code>.frog -&gt; FIR -&gt; lowering -&gt; backend contract -&gt; runtime acceptance -&gt; LLVM module</code></pre>
-
-<p>
-The next step is not to add more stages, but to execute the full pipeline and fix any concrete failures.
+These checks are non-normative.
+They protect repository-visible artifacts and do not define FROG semantics.
 </p>

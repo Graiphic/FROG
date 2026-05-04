@@ -1,0 +1,70 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "02_ui_value_roundtrip",
+    "path": "Examples/02_ui_value_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/02_ui_value_roundtrip/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "purpose": "make the widget-value roundtrip slice consumable by a simple UI-value runtime family",
+    "backend_family_target": "reference_ui_value_roundtrip",
+    "compiler_family_targets": []
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "ui_value_roundtrip_kernel",
+      "public_io": {
+        "inputs": [],
+        "outputs": []
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "ctrl_a",
+            "mode": "widget_value",
+            "value_type": "f64"
+          },
+          {
+            "widget_id": "ctrl_b",
+            "mode": "widget_value",
+            "value_type": "f64"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "ind_result",
+            "mode": "widget_value",
+            "value_type": "f64"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operations": [
+          {
+            "op": "add",
+            "dst": "result_value",
+            "type": "f64",
+            "src": [
+              "widget.ctrl_a.value",
+              "widget.ctrl_b.value"
+            ]
+          }
+        ],
+        "final_publication": [
+          {
+            "target": "widget.ind_result.value",
+            "source": "result_value"
+          }
+        ]
+      }
+    }
+  ]
+}

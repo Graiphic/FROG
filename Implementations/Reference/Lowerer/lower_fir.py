@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lower Example 05 FIR into its published lowered artifact."""
+"""Generic reference lowerer CLI for supported FIR examples."""
 
 from __future__ import annotations
 
@@ -15,8 +15,6 @@ except ImportError:  # pragma: no cover
 
 
 ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_FIR = ROOT / "Examples" / "05_bounded_ui_accumulator" / "main.fir.json"
-DEFAULT_EXPECTED_LOWERING = ROOT / "Examples" / "05_bounded_ui_accumulator" / "main.lowering.json"
 
 
 def repo_relative(path: Path) -> str:
@@ -24,10 +22,10 @@ def repo_relative(path: Path) -> str:
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Lower Example 05 FIR into the published lowered artifact.")
-    parser.add_argument("--fir", type=Path, default=DEFAULT_FIR)
+    parser = argparse.ArgumentParser(description="Lower a supported FIR artifact.")
+    parser.add_argument("--fir", type=Path, required=True)
     parser.add_argument("--output", type=Path, default=None)
-    parser.add_argument("--expected", type=Path, default=DEFAULT_EXPECTED_LOWERING)
+    parser.add_argument("--expected", type=Path, default=None)
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--print", action="store_true", dest="print_json")
     return parser.parse_args(argv)
@@ -36,7 +34,6 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 def main(argv: list[str]) -> int:
     args = parse_args(argv)
     fir_path = args.fir if args.fir.is_absolute() else ROOT / args.fir
-    expected_path = args.expected if args.expected.is_absolute() else ROOT / args.expected
 
     try:
         fir = load_json(fir_path)
@@ -52,9 +49,13 @@ def main(argv: list[str]) -> int:
             sys.stdout.write("\n")
 
         if args.check:
+            if args.expected is None:
+                raise LoweringError("--check requires --expected")
+            expected_path = args.expected if args.expected.is_absolute() else ROOT / args.expected
             expected = load_json(expected_path)
             if canonical_json_bytes(generated) != canonical_json_bytes(expected):
                 print("Lowering check: FAILED", file=sys.stderr)
+                print(f"fir:      {fir_path}", file=sys.stderr)
                 print(f"expected: {expected_path}", file=sys.stderr)
                 return 1
             print("Lowering check: ok")

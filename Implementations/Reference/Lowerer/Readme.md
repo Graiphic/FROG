@@ -11,95 +11,42 @@
 
 <hr/>
 
-<h2>Navigation</h2>
-
-<ul>
-  <li><a href="../Readme.md">Reference implementation workspace</a></li>
-  <li><a href="../../../IR/Lowering.md">IR lowering boundary</a></li>
-  <li><a href="../../../IR/Derivation%20rules.md">IR derivation rules</a></li>
-  <li><a href="../../../Examples/05_bounded_ui_accumulator/Readme.md">Example 05</a></li>
-  <li><a href="../../../Examples/05_bounded_ui_accumulator/Freeze.md">Example 05 freeze boundary</a></li>
-  <li><a href="../ContractEmitter/Readme.md">ContractEmitter</a></li>
-</ul>
-
-<hr/>
-
-<h2>1. Purpose</h2>
+<h2>Purpose</h2>
 
 <p>
 This directory contains the first non-normative reference lowerer for the FROG implementation workspace.
 </p>
 
 <p>
-The first target is intentionally narrow:
+The supported lowering targets are intentionally bounded:
 </p>
-
-<pre><code>Examples/05_bounded_ui_accumulator/main.fir.json
-  -&gt;
-Examples/05_bounded_ui_accumulator/main.lowering.json
-</code></pre>
-
-<p>
-This tool does not claim to be a complete lowering engine.
-It exists to make the frozen Example 05 lowering artifact reproducible from the published FIR.
-</p>
-
-<hr/>
-
-<h2>2. Current Scope</h2>
 
 <ul>
-  <li>loads one published FIR artifact,</li>
-  <li>checks the minimal FIR shape needed for Example 05,</li>
-  <li>projects the bounded stateful UI unit into the current lowered unit shape,</li>
-  <li>preserves public IO, UI bindings, reference writes, explicit state, loop count, iteration body, commit rule, and final publications,</li>
-  <li>can compare the generated lowering against the published lowering artifact.</li>
+  <li><code>Examples/01_pure_addition/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/02_ui_value_roundtrip/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/03_ui_property_write/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/04_stateful_feedback_delay/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/05_bounded_ui_accumulator/main.fir.json -&gt; main.lowering.json</code></li>
 </ul>
 
 <hr/>
 
-<h2>3. Run</h2>
+<h2>Commands</h2>
+
+<pre><code>python Implementations/Reference/Lowerer/lower_fir.py \
+  --fir Examples/01_pure_addition/main.fir.json \
+  --expected Examples/01_pure_addition/main.lowering.json \
+  --check
+</code></pre>
 
 <pre><code>python Implementations/Reference/Lowerer/lower_example05_fir.py --check
 </code></pre>
 
-<p>
-To write a generated lowering artifact elsewhere:
-</p>
-
-<pre><code>python Implementations/Reference/Lowerer/lower_example05_fir.py \
-  --fir Examples/05_bounded_ui_accumulator/main.fir.json \
-  --output build/generated/main.lowering.json
-</code></pre>
-
 <hr/>
 
-<h2>4. Boundary</h2>
+<h2>Boundary</h2>
 
 <p>
-This lowerer is downstream from FIR and upstream from backend contract emission.
-It does not own language semantics, FIR law, backend contracts, runtime behavior, or LLVM behavior.
-</p>
-
-<pre><code>FIR
-  -&gt; Lowerer
-  -&gt; lowered backend-oriented form
-  -&gt; ContractEmitter / compiler-family consumer
-</code></pre>
-
-<hr/>
-
-<h2>5. Next Step</h2>
-
-<p>
-After this lowerer is green for Example 05, the next stage is:
-</p>
-
-<pre><code>main.lowering.json
-  -&gt;
-reference_host_runtime_ui_binding.contract.json
-</code></pre>
-
-<p>
-That path should remain owned by <code>Implementations/Reference/ContractEmitter/</code>.
+The lowerer is downstream from FIR and upstream from backend contracts, runtime consumers, and compiler-family consumers.
+It does not define FROG semantics.
 </p>

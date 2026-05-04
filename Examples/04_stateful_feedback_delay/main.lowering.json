@@ -1,0 +1,64 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "04_stateful_feedback_delay",
+    "path": "Examples/04_stateful_feedback_delay/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/04_stateful_feedback_delay/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "purpose": "make the explicit feedback delay slice consumable by a simple stateful runtime or compiler-family path",
+    "backend_family_target": "reference_stateful_feedback_delay",
+    "compiler_family_targets": [
+      "llvm_oriented_native_path"
+    ]
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "stateful_feedback_delay_kernel",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "x",
+            "type": "f64"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "y",
+            "type": "f64"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "initial_state": 0.0,
+        "state_type": "f64",
+        "step_body": [
+          {
+            "op": "add",
+            "dst": "state_next",
+            "type": "f64",
+            "src": [
+              "state_current",
+              "x"
+            ]
+          }
+        ],
+        "commit_rule": "state_current <- state_next after each execution step",
+        "final_publication": [
+          {
+            "target": "public_output.y",
+            "source": "state_next"
+          }
+        ]
+      }
+    }
+  ]
+}
