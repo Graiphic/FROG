@@ -1,0 +1,76 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "01_pure_addition",
+    "path": "Examples/01_pure_addition/main.frog",
+    "entry_unit": "main"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "pure_dataflow_arithmetic_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "a",
+            "type": "f64"
+          },
+          {
+            "id": "b",
+            "type": "f64"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "type": "f64"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "acyclic_dataflow_graph",
+        "primitive_operations": [
+          {
+            "node_id": "add_1",
+            "primitive": "frog.core.add",
+            "inputs": {
+              "a": "public_input.a",
+              "b": "public_input.b"
+            },
+            "outputs": {
+              "result": "add_1.result"
+            }
+          }
+        ],
+        "edges": [
+          {
+            "from": "public_input.a",
+            "to": "add_1.a"
+          },
+          {
+            "from": "public_input.b",
+            "to": "add_1.b"
+          },
+          {
+            "from": "add_1.result",
+            "to": "public_output.result"
+          }
+        ]
+      },
+      "publications": [
+        {
+          "target": "public_output.result",
+          "source": "add_1.result"
+        }
+      ],
+      "notes": [
+        "This FIR is execution-facing and remains downstream from canonical source.",
+        "This example has no front-panel participation, widget participation, structured control, or explicit local state.",
+        "The published derivation preserves public-boundary participation and the frog.core.add primitive identity."
+      ]
+    }
+  ]
+}

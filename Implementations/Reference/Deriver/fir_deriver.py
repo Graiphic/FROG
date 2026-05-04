@@ -1,10 +1,12 @@
 """Rule-oriented FIR derivation helpers for the non-normative reference workspace.
 
-This module is still intentionally narrow. It supports the frozen Example 05
-corridor, but it separates reusable source-graph helpers and FIR projection
-rules from the CLI wrapper.
+This module is intentionally narrow, but it now supports two published source
+patterns:
 
-The goal is to move from a one-off script toward a small staged deriver without
+- Example 01: pure public-interface addition
+- Example 05: bounded UI accumulator
+
+The goal is to move from one-off scripts toward a small staged deriver without
 claiming general FROG compiler completeness.
 """
 
@@ -71,6 +73,16 @@ class SourceGraph:
                 matches.append(parse_endpoint(edge.get("from")))
         if len(matches) != 1:
             raise DerivationError(f"expected exactly one incoming edge to {node_id}.{port}, found {len(matches)}")
+        return matches[0]
+
+    def outgoing(self, node_id: str, port: str) -> EdgeEndpoint:
+        matches: list[EdgeEndpoint] = []
+        for edge in self.edges:
+            src = parse_endpoint(edge.get("from"))
+            if src.node == node_id and src.port == port:
+                matches.append(parse_endpoint(edge.get("to")))
+        if len(matches) != 1:
+            raise DerivationError(f"expected exactly one outgoing edge from {node_id}.{port}, found {len(matches)}")
         return matches[0]
 
     def constant_value(self, node_id: str) -> tuple[str, Any]:
@@ -161,6 +173,127 @@ def front_panel_package_path(source: dict[str, Any], source_rel: str) -> str:
     return (Path(source_rel).parent / package_refs[0]).as_posix()
 
 
+def interface_input_node_by_port(graph: SourceGraph, port_id: str) -> dict[str, Any]:
+    matches = [
+        node for node in graph.nodes.values()
+        if node.get("kind") == "interface_input" and node.get("interface_port") == port_id
+    ]
+    if len(matches) != 1:
+        raise DerivationError(f"expected one interface_input for port {port_id}, found {len(matches)}")
+    return matches[0]
+
+
+def interface_output_node_by_port(graph: SourceGraph, port_id: str) -> dict[str, Any]:
+    matches = [
+        node for node in graph.nodes.values()
+        if node.get("kind") == "interface_output" and node.get("interface_port") == port_id
+    ]
+    if len(matches) != 1:
+        raise DerivationError(f"expected one interface_output for port {port_id}, found {len(matches)}")
+    return matches[0]
+
+
+def derive_example01_fir(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    metadata = source_metadata(source)
+    example_id = metadata.get("name")
+    if example_id != "01_pure_addition":
+        raise DerivationError("this derivation rule supports only 01_pure_addition")
+
+    graph = SourceGraph.from_source(source)
+    inputs, outputs = source_interface(source)
+
+    if inputs != [{"id": "a", "type": "f64"}, {"id": "b", "type": "f64"}]:
+        raise DerivationError("Example 01 expects public inputs a:f64 and b:f64")
+    if outputs != [{"id": "result", "type": "f64"}]:
+        raise DerivationError("Example 01 expects public output result:f64")
+
+    add_node = graph.nodes.get("add_1")
+    if not add_node or add_node.get("kind") != "primitive" or add_node.get("type") != "frog.core.add":
+        raise DerivationError("Example 01 requires primitive node add_1 of type frog.core.add")
+
+    in_a = interface_input_node_by_port(graph, "a")
+    in_b = interface_input_node_by_port(graph, "b")
+    out_result = interface_output_node_by_port(graph, "result")
+
+    in_a_id = str(in_a["id"])
+    in_b_id = str(in_b["id"])
+    out_result_id = str(out_result["id"])
+
+    edge_a = graph.incoming("add_1", "a")
+    edge_b = graph.incoming("add_1", "b")
+    edge_result = graph.outgoing("add_1", "result")
+
+    if edge_a != EdgeEndpoint(in_a_id, "value"):
+        raise DerivationError("Example 01 requires public input a to feed add_1.a")
+    if edge_b != EdgeEndpoint(in_b_id, "value"):
+        raise DerivationError("Example 01 requires public input b to feed add_1.b")
+    if edge_result != EdgeEndpoint(out_result_id, "value"):
+        raise DerivationError("Example 01 requires add_1.result to feed public output result")
+
+    return {
+        "artifact_kind": "frog_fir_unit",
+        "artifact_governance_ref": {
+            "path": "Versioning/Readme.md"
+        },
+        "source_ref": {
+            "example_id": example_id,
+            "path": source_rel,
+            "entry_unit": "main"
+        },
+        "units": [
+            {
+                "unit_id": "main",
+                "kind": "pure_dataflow_arithmetic_unit",
+                "public_interface": {
+                    "inputs": inputs,
+                    "outputs": outputs
+                },
+                "execution_model": {
+                    "structure": "acyclic_dataflow_graph",
+                    "primitive_operations": [
+                        {
+                            "node_id": "add_1",
+                            "primitive": "frog.core.add",
+                            "inputs": {
+                                "a": "public_input.a",
+                                "b": "public_input.b"
+                            },
+                            "outputs": {
+                                "result": "add_1.result"
+                            }
+                        }
+                    ],
+                    "edges": [
+                        {
+                            "from": "public_input.a",
+                            "to": "add_1.a"
+                        },
+                        {
+                            "from": "public_input.b",
+                            "to": "add_1.b"
+                        },
+                        {
+                            "from": "add_1.result",
+                            "to": "public_output.result"
+                        }
+                    ]
+                },
+                "publications": [
+                    {
+                        "target": "public_output.result",
+                        "source": "add_1.result"
+                    }
+                ],
+                "notes": [
+                    "This FIR is execution-facing and remains downstream from canonical source.",
+                    "This example has no front-panel participation, widget participation, structured control, or explicit local state.",
+                    "The published derivation preserves public-boundary participation and the frog.core.add primitive identity."
+                ]
+            }
+        ]
+    }
+
+
 def derive_reference_writes(graph: SourceGraph) -> list[dict[str, Any]]:
     writes: list[dict[str, Any]] = []
 
@@ -199,7 +332,6 @@ def derive_reference_writes(graph: SourceGraph) -> list[dict[str, Any]]:
             }
         )
 
-    # Keep deterministic output for the frozen Example 05 publication.
     preferred_order = {"ctrl_input": 0, "ind_result": 1}
     writes.sort(key=lambda item: preferred_order.get(item["widget_id"], 100))
     return writes
@@ -224,7 +356,6 @@ def derive_loop_model(graph: SourceGraph) -> tuple[int, str, int, str]:
     if not isinstance(initial_state, int):
         raise DerivationError("loop initial state must be an integer")
 
-    # Current supported source pattern.
     expression = "state_next = state_current + input_value"
     return count_value, state_type, initial_state, expression
 
@@ -233,7 +364,7 @@ def derive_example05_fir(source: dict[str, Any], source_rel: str) -> dict[str, A
     metadata = source_metadata(source)
     example_id = metadata.get("name")
     if example_id != "05_bounded_ui_accumulator":
-        raise DerivationError("this deriver currently supports only 05_bounded_ui_accumulator")
+        raise DerivationError("this derivation rule supports only 05_bounded_ui_accumulator")
 
     graph = SourceGraph.from_source(source)
     inputs, outputs = source_interface(source)
@@ -336,6 +467,8 @@ def derive_fir_from_source(source: dict[str, Any], source_rel: str) -> dict[str,
     metadata = source_metadata(source)
     example_id = metadata.get("name")
 
+    if example_id == "01_pure_addition":
+        return derive_example01_fir(source, source_rel)
     if example_id == "05_bounded_ui_accumulator":
         return derive_example05_fir(source, source_rel)
 
