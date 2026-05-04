@@ -26,6 +26,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pytest
 
+      - name: Enrich root README status sections
+        run: |
+          python Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_05.py
+          git diff --exit-code Readme.md
+
       - name: Run reference workspace checks
         run: |
           python Implementations/Reference/check_reference_workspace.py --include-pytest
