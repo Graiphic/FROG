@@ -2586,6 +2586,13 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/contractemitter/emit_examples01_04_contracts.py",
+                  "title": "emit_examples01_04_contracts.py",
+                  "path": "/Implementations/Reference/ContractEmitter/emit_examples01_04_contracts.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/contractemitter/reference_contract_emitter.py",
                   "title": "reference_contract_emitter.py",
                   "path": "/Implementations/Reference/ContractEmitter/reference_contract_emitter.py",
@@ -2609,6 +2616,13 @@
                       "key": "implementations/reference/contractemitter/tests/test_example05_contract_emission.py",
                       "title": "test_example05_contract_emission.py",
                       "path": "/Implementations/Reference/ContractEmitter/tests/test_example05_contract_emission.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/contractemitter/tests/test_examples01_04_contract_emission.py",
+                      "title": "test_examples01_04_contract_emission.py",
+                      "path": "/Implementations/Reference/ContractEmitter/tests/test_examples01_04_contract_emission.py",
                       "kind": "code",
                       "children": []
                     }
@@ -2787,6 +2801,34 @@
                   "kind": "category",
                   "children": [
                     {
+                      "key": "implementations/reference/llvm/examples/01_pure_addition/",
+                      "title": "01 pure addition",
+                      "path": "/Implementations/Reference/LLVM/examples/01_pure_addition/Readme.md",
+                      "kind": "category",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/llvm/examples/02_ui_value_roundtrip/",
+                      "title": "02 ui value roundtrip",
+                      "path": "/Implementations/Reference/LLVM/examples/02_ui_value_roundtrip/Readme.md",
+                      "kind": "category",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/llvm/examples/03_ui_property_write/",
+                      "title": "03 ui property write",
+                      "path": "/Implementations/Reference/LLVM/examples/03_ui_property_write/Readme.md",
+                      "kind": "category",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/llvm/examples/04_stateful_feedback_delay/",
+                      "title": "04 stateful feedback delay",
+                      "path": "/Implementations/Reference/LLVM/examples/04_stateful_feedback_delay/Readme.md",
+                      "kind": "category",
+                      "children": []
+                    },
+                    {
                       "key": "implementations/reference/llvm/examples/05_bounded_ui_accumulator/",
                       "title": "05 bounded ui accumulator",
                       "path": "/Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/Readme.md",
@@ -2807,6 +2849,13 @@
                       "path": "/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py",
                       "kind": "code",
                       "children": []
+                    },
+                    {
+                      "key": "implementations/reference/llvm/tests/test_examples01_04_llvm_modules.py",
+                      "title": "test_examples01_04_llvm_modules.py",
+                      "path": "/Implementations/Reference/LLVM/tests/test_examples01_04_llvm_modules.py",
+                      "kind": "code",
+                      "children": []
                     }
                   ]
                 },
@@ -2816,6 +2865,20 @@
                   "path": null,
                   "kind": "category",
                   "children": [
+                    {
+                      "key": "implementations/reference/llvm/tools/check_examples01_04_llvm_modules.py",
+                      "title": "check_examples01_04_llvm_modules.py",
+                      "path": "/Implementations/Reference/LLVM/tools/check_examples01_04_llvm_modules.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/llvm/tools/emit_examples01_04_llvm_modules.py",
+                      "title": "emit_examples01_04_llvm_modules.py",
+                      "path": "/Implementations/Reference/LLVM/tools/emit_examples01_04_llvm_modules.py",
+                      "kind": "code",
+                      "children": []
+                    },
                     {
                       "key": "implementations/reference/llvm/tools/emit_llvm_module.py",
                       "title": "emit_llvm_module.py",
@@ -2949,6 +3012,13 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/pipeline/check_examples01_05_full.py",
+                  "title": "check_examples01_05_full.py",
+                  "path": "/Implementations/Reference/Pipeline/check_examples01_05_full.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/pipeline/tests/",
                   "title": "tests",
                   "path": null,
@@ -2958,6 +3028,13 @@
                       "key": "implementations/reference/pipeline/tests/test_example05_pipeline_check.py",
                       "title": "test_example05_pipeline_check.py",
                       "path": "/Implementations/Reference/Pipeline/tests/test_example05_pipeline_check.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/pipeline/tests/test_examples01_05_full_pipeline.py",
+                      "title": "test_examples01_05_full_pipeline.py",
+                      "path": "/Implementations/Reference/Pipeline/tests/test_examples01_05_full_pipeline.py",
                       "kind": "code",
                       "children": []
                     }
@@ -2989,6 +3066,13 @@
                   "key": "implementations/reference/runtime/check_example05_runtime_acceptance.py",
                   "title": "check_example05_runtime_acceptance.py",
                   "path": "/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "implementations/reference/runtime/check_examples01_05_runtime_acceptance.py",
+                  "title": "check_examples01_05_runtime_acceptance.py",
+                  "path": "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",
                   "kind": "code",
                   "children": []
                 },
@@ -3109,6 +3193,13 @@
                       "key": "implementations/reference/runtime/tests/test_example05_runtime_acceptance.py",
                       "title": "test_example05_runtime_acceptance.py",
                       "path": "/Implementations/Reference/Runtime/tests/test_example05_runtime_acceptance.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/runtime/tests/test_examples01_05_runtime_acceptance.py",
+                      "title": "test_examples01_05_runtime_acceptance.py",
+                      "path": "/Implementations/Reference/Runtime/tests/test_examples01_05_runtime_acceptance.py",
                       "kind": "code",
                       "children": []
                     }
@@ -3581,9 +3672,11 @@
     "/Implementations/Reference/ContractEmitter/responsibilities.md",
     "/Implementations/Reference/ContractEmitter/__init__.py",
     "/Implementations/Reference/ContractEmitter/emit_backend_contract.py",
+    "/Implementations/Reference/ContractEmitter/emit_examples01_04_contracts.py",
     "/Implementations/Reference/ContractEmitter/reference_contract_emitter.py",
     "/Implementations/Reference/ContractEmitter/acceptance/Readme.md",
     "/Implementations/Reference/ContractEmitter/tests/test_example05_contract_emission.py",
+    "/Implementations/Reference/ContractEmitter/tests/test_examples01_04_contract_emission.py",
     "/Implementations/Reference/ContractEmitter/Readme.md",
     "/Implementations/Reference/Deriver/derive_execution_ir.md",
     "/Implementations/Reference/Deriver/responsibilities.md",
@@ -3604,8 +3697,15 @@
     "/Implementations/Reference/Deriver/Readme.md",
     "/Implementations/Reference/LLVM/bridge/fir_to_lowering.md",
     "/Implementations/Reference/LLVM/bridge/lowering_to_llvm.md",
+    "/Implementations/Reference/LLVM/examples/01_pure_addition/Readme.md",
+    "/Implementations/Reference/LLVM/examples/02_ui_value_roundtrip/Readme.md",
+    "/Implementations/Reference/LLVM/examples/03_ui_property_write/Readme.md",
+    "/Implementations/Reference/LLVM/examples/04_stateful_feedback_delay/Readme.md",
     "/Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/Readme.md",
     "/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py",
+    "/Implementations/Reference/LLVM/tests/test_examples01_04_llvm_modules.py",
+    "/Implementations/Reference/LLVM/tools/check_examples01_04_llvm_modules.py",
+    "/Implementations/Reference/LLVM/tools/emit_examples01_04_llvm_modules.py",
     "/Implementations/Reference/LLVM/tools/emit_llvm_module.py",
     "/Implementations/Reference/LLVM/Readme.md",
     "/Implementations/Reference/Loader/responsibilities.md",
@@ -3623,11 +3723,14 @@
     "/Implementations/Reference/Lowerer/tests/test_examples01_05_lowering.py",
     "/Implementations/Reference/Lowerer/Readme.md",
     "/Implementations/Reference/Pipeline/check_example05_pipeline.py",
+    "/Implementations/Reference/Pipeline/check_examples01_05_full.py",
     "/Implementations/Reference/Pipeline/tests/test_example05_pipeline_check.py",
+    "/Implementations/Reference/Pipeline/tests/test_examples01_05_full_pipeline.py",
     "/Implementations/Reference/Pipeline/Readme.md",
     "/Implementations/Reference/Runtime/accept_contract_and_execute.md",
     "/Implementations/Reference/Runtime/responsibilities.md",
     "/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",
+    "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/reference_runtime.py",
     "/Implementations/Reference/Runtime/run_slice05_contract.py",
     "/Implementations/Reference/Runtime/acceptance/Readme.md",
@@ -3643,6 +3746,7 @@
     "/Implementations/Reference/Runtime/python/Readme.md",
     "/Implementations/Reference/Runtime/rust/Readme.md",
     "/Implementations/Reference/Runtime/tests/test_example05_runtime_acceptance.py",
+    "/Implementations/Reference/Runtime/tests/test_examples01_05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/Readme.md",
     "/Implementations/Reference/UIHost/responsibilities.md",
     "/Implementations/Reference/UIHost/Readme.md",
