@@ -377,10 +377,14 @@
     - [acceptance](/Implementations/Reference/Deriver/acceptance/Readme.md)
     - rules
       - [example01 fir derivation](/Implementations/Reference/Deriver/rules/example01_fir_derivation.md)
+      - [example02 fir derivation](/Implementations/Reference/Deriver/rules/example02_fir_derivation.md)
+      - [example03 fir derivation](/Implementations/Reference/Deriver/rules/example03_fir_derivation.md)
+      - [example04 fir derivation](/Implementations/Reference/Deriver/rules/example04_fir_derivation.md)
       - [example05 fir derivation](/Implementations/Reference/Deriver/rules/example05_fir_derivation.md)
     - tests
       - [test_example01_fir_derivation.py](/Implementations/Reference/Deriver/tests/test_example01_fir_derivation.py)
       - [test_example05_fir_derivation.py](/Implementations/Reference/Deriver/tests/test_example05_fir_derivation.py)
+      - [test_examples01_05_fir_derivation.py](/Implementations/Reference/Deriver/tests/test_examples01_05_fir_derivation.py)
   - [LLVM](/Implementations/Reference/LLVM/Readme.md)
     - bridge
       - [fir to lowering](/Implementations/Reference/LLVM/bridge/fir_to_lowering.md)
@@ -398,11 +402,14 @@
     - [lower for backend family](/Implementations/Reference/Lowerer/lower_for_backend_family.md)
     - [responsibilities](/Implementations/Reference/Lowerer/responsibilities.md)
     - [__init__.py](/Implementations/Reference/Lowerer/__init__.py)
+    - [fir_lowerer.py](/Implementations/Reference/Lowerer/fir_lowerer.py)
     - [lower_example05_fir.py](/Implementations/Reference/Lowerer/lower_example05_fir.py)
+    - [lower_fir.py](/Implementations/Reference/Lowerer/lower_fir.py)
     - [reference_lowerer.py](/Implementations/Reference/Lowerer/reference_lowerer.py)
     - [acceptance](/Implementations/Reference/Lowerer/acceptance/Readme.md)
     - tests
       - [test_example05_lowering.py](/Implementations/Reference/Lowerer/tests/test_example05_lowering.py)
+      - [test_examples01_05_lowering.py](/Implementations/Reference/Lowerer/tests/test_examples01_05_lowering.py)
   - [Pipeline](/Implementations/Reference/Pipeline/Readme.md)
     - [check_example05_pipeline.py](/Implementations/Reference/Pipeline/check_example05_pipeline.py)
     - tests
