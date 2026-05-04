@@ -1,0 +1,21 @@
+{
+  "artifact_kind": "frog_reference_runtime_acceptance",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "runtime_family": "reference_pure_dataflow_arithmetic",
+  "example_id": "01_pure_addition",
+  "artifact_refs": {
+    "contract_path": "Implementations/Reference/ContractEmitter/examples/01_pure_addition.reference_pure_dataflow_arithmetic.contract.json",
+    "snapshot_path": "Implementations/Reference/Runtime/acceptance/example01_pure_addition.snapshot.json"
+  },
+  "cases": [
+    {
+      "inputs": {
+        "a": 2.25,
+        "b": 3.75
+      },
+      "expected_status": "ok"
+    }
+  ]
+}

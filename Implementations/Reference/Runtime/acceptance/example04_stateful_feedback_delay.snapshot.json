@@ -1,0 +1,17 @@
+{
+  "artifact_kind": "frog_reference_runtime_snapshot",
+  "example_id": "04_stateful_feedback_delay",
+  "status": "ok",
+  "inputs": {
+    "x": 2.5
+  },
+  "initial_state": {
+    "delay_1": 0.0
+  },
+  "public_outputs": {
+    "y": 2.5
+  },
+  "final_state": {
+    "delay_1": 2.5
+  }
+}

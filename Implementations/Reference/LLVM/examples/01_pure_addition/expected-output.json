@@ -1,0 +1,27 @@
+{
+  "example": "01_pure_addition",
+  "cases": [
+    {
+      "args": [
+        "2.25",
+        "3.75"
+      ],
+      "expected_stdout": [
+        "result=6.000000",
+        "status=ok"
+      ],
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "-1.5",
+        "2.0"
+      ],
+      "expected_stdout": [
+        "result=0.500000",
+        "status=ok"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

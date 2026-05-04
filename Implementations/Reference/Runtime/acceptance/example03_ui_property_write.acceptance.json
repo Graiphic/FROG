@@ -1,0 +1,20 @@
+{
+  "artifact_kind": "frog_reference_runtime_acceptance",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "runtime_family": "reference_ui_property_write",
+  "example_id": "03_ui_property_write",
+  "artifact_refs": {
+    "contract_path": "Implementations/Reference/ContractEmitter/examples/03_ui_property_write.reference_ui_property_write.contract.json",
+    "snapshot_path": "Implementations/Reference/Runtime/acceptance/example03_ui_property_write.snapshot.json"
+  },
+  "cases": [
+    {
+      "inputs": {
+        "status": "Ready"
+      },
+      "expected_status": "ok"
+    }
+  ]
+}

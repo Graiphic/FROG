@@ -1,0 +1,55 @@
+{
+  "artifact_kind": "frog_backend_contract",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "backend_family": "reference_stateful_feedback_delay",
+  "example_id": "04_stateful_feedback_delay",
+  "artifact_refs": {
+    "source_path": "Examples/04_stateful_feedback_delay/main.frog",
+    "fir_path": "Examples/04_stateful_feedback_delay/main.fir.json",
+    "lowering_path": "Examples/04_stateful_feedback_delay/main.lowering.json"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "stateful_feedback_delay_kernel",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "x",
+            "type": "f64"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "y",
+            "type": "f64"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "initial_state": 0.0,
+        "state_type": "f64",
+        "step_body": [
+          {
+            "op": "add",
+            "dst": "state_next",
+            "type": "f64",
+            "src": [
+              "state_current",
+              "x"
+            ]
+          }
+        ],
+        "commit_rule": "state_current <- state_next after each execution step",
+        "final_publication": [
+          {
+            "target": "public_output.y",
+            "source": "state_next"
+          }
+        ]
+      }
+    }
+  ]
+}

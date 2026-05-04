@@ -1,0 +1,27 @@
+{
+  "example": "02_ui_value_roundtrip",
+  "cases": [
+    {
+      "args": [
+        "1.0",
+        "2.0"
+      ],
+      "expected_stdout": [
+        "widget.ind_result.value=3.000000",
+        "status=ok"
+      ],
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "4.5",
+        "5.5"
+      ],
+      "expected_stdout": [
+        "widget.ind_result.value=10.000000",
+        "status=ok"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

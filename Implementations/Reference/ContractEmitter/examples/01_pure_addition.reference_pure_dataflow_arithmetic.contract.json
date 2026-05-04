@@ -1,0 +1,52 @@
+{
+  "artifact_kind": "frog_backend_contract",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "backend_family": "reference_pure_dataflow_arithmetic",
+  "example_id": "01_pure_addition",
+  "artifact_refs": {
+    "source_path": "Examples/01_pure_addition/main.frog",
+    "fir_path": "Examples/01_pure_addition/main.fir.json",
+    "lowering_path": "Examples/01_pure_addition/main.lowering.json"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "pure_addition_kernel",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "a",
+            "type": "f64"
+          },
+          {
+            "id": "b",
+            "type": "f64"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "type": "f64"
+          }
+        ]
+      },
+      "execution": {
+        "op": "add",
+        "dst": "result",
+        "type": "f64",
+        "src": [
+          "a",
+          "b"
+        ]
+      },
+      "publications": [
+        {
+          "target": "public_output.result",
+          "source": "result"
+        }
+      ]
+    }
+  ]
+}

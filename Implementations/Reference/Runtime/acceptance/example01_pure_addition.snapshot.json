@@ -1,0 +1,12 @@
+{
+  "artifact_kind": "frog_reference_runtime_snapshot",
+  "example_id": "01_pure_addition",
+  "status": "ok",
+  "inputs": {
+    "a": 2.25,
+    "b": 3.75
+  },
+  "public_outputs": {
+    "result": 6.0
+  }
+}

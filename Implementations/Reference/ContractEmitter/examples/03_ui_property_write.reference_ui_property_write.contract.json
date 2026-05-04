@@ -1,0 +1,54 @@
+{
+  "artifact_kind": "frog_backend_contract",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "backend_family": "reference_ui_property_write",
+  "example_id": "03_ui_property_write",
+  "artifact_refs": {
+    "source_path": "Examples/03_ui_property_write/main.frog",
+    "fir_path": "Examples/03_ui_property_write/main.fir.json",
+    "lowering_path": "Examples/03_ui_property_write/main.lowering.json"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "ui_property_write_effect_unit",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "status",
+            "type": "string"
+          }
+        ],
+        "outputs": []
+      },
+      "ui_bindings": {
+        "widget_reference_support": [
+          {
+            "widget_id": "ctrl_gain",
+            "supported_members": [
+              "label.text"
+            ]
+          }
+        ],
+        "reference_writes": [
+          {
+            "widget_id": "ctrl_gain",
+            "member": "label.text",
+            "value_type": "string",
+            "value_source": "public_input.status"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "frog.ui.property_write",
+          "widget_id": "ctrl_gain",
+          "member": "label.text",
+          "value_source": "public_input.status"
+        }
+      ]
+    }
+  ]
+}

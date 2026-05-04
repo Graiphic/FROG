@@ -1,0 +1,27 @@
+{
+  "example": "04_stateful_feedback_delay",
+  "cases": [
+    {
+      "args": [
+        "2.5"
+      ],
+      "expected_stdout": [
+        "public_output.y=2.500000",
+        "state.delay_1=2.500000",
+        "status=ok"
+      ],
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "7.25"
+      ],
+      "expected_stdout": [
+        "public_output.y=7.250000",
+        "state.delay_1=7.250000",
+        "status=ok"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

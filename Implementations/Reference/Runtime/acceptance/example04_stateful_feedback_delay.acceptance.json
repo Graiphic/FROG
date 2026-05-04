@@ -1,0 +1,20 @@
+{
+  "artifact_kind": "frog_reference_runtime_acceptance",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "runtime_family": "reference_stateful_feedback_delay",
+  "example_id": "04_stateful_feedback_delay",
+  "artifact_refs": {
+    "contract_path": "Implementations/Reference/ContractEmitter/examples/04_stateful_feedback_delay.reference_stateful_feedback_delay.contract.json",
+    "snapshot_path": "Implementations/Reference/Runtime/acceptance/example04_stateful_feedback_delay.snapshot.json"
+  },
+  "cases": [
+    {
+      "inputs": {
+        "x": 2.5
+      },
+      "expected_status": "ok"
+    }
+  ]
+}

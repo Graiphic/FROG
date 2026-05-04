@@ -1,0 +1,59 @@
+{
+  "artifact_kind": "frog_backend_contract",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "backend_family": "reference_ui_value_roundtrip",
+  "example_id": "02_ui_value_roundtrip",
+  "artifact_refs": {
+    "source_path": "Examples/02_ui_value_roundtrip/main.frog",
+    "fir_path": "Examples/02_ui_value_roundtrip/main.fir.json",
+    "lowering_path": "Examples/02_ui_value_roundtrip/main.lowering.json"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "ui_value_roundtrip_kernel",
+      "public_io": {
+        "inputs": [],
+        "outputs": []
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "ctrl_a",
+            "mode": "widget_value",
+            "value_type": "f64"
+          },
+          {
+            "widget_id": "ctrl_b",
+            "mode": "widget_value",
+            "value_type": "f64"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "ind_result",
+            "mode": "widget_value",
+            "value_type": "f64"
+          }
+        ]
+      },
+      "execution": {
+        "op": "add",
+        "dst": "result_value",
+        "type": "f64",
+        "src": [
+          "widget.ctrl_a.value",
+          "widget.ctrl_b.value"
+        ]
+      },
+      "publications": [
+        {
+          "target": "widget.ind_result.value",
+          "source": "result_value"
+        }
+      ]
+    }
+  ]
+}

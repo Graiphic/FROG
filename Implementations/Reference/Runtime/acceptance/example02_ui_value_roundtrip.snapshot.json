@@ -1,0 +1,10 @@
+{
+  "artifact_kind": "frog_reference_runtime_snapshot",
+  "example_id": "02_ui_value_roundtrip",
+  "status": "ok",
+  "widget_values": {
+    "ctrl_a": 1.0,
+    "ctrl_b": 2.0,
+    "ind_result": 3.0
+  }
+}

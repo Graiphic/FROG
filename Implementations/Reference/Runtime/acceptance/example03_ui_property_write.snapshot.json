@@ -1,0 +1,21 @@
+{
+  "artifact_kind": "frog_reference_runtime_snapshot",
+  "example_id": "03_ui_property_write",
+  "status": "ok",
+  "public_inputs": {
+    "status": "Ready"
+  },
+  "widget_state": {
+    "ctrl_gain": {
+      "label.text": "Ready"
+    }
+  },
+  "effects": [
+    {
+      "op": "frog.ui.property_write",
+      "widget_id": "ctrl_gain",
+      "member": "label.text",
+      "value": "Ready"
+    }
+  ]
+}

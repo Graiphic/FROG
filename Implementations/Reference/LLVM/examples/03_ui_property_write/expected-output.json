@@ -1,0 +1,29 @@
+{
+  "example": "03_ui_property_write",
+  "cases": [
+    {
+      "args": [
+        "Ready"
+      ],
+      "expected_stdout": [
+        "widget=ctrl_gain",
+        "member=label.text",
+        "value=Ready",
+        "status=ok"
+      ],
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "Running"
+      ],
+      "expected_stdout": [
+        "widget=ctrl_gain",
+        "member=label.text",
+        "value=Running",
+        "status=ok"
+      ],
+      "exit_code": 0
+    }
+  ]
+}
