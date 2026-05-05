@@ -4,7 +4,7 @@
 
 # Reference Runtime
 
-<p>Runtime-family consumers for the non-normative FROG reference implementation.</p>
+<p>Runtime-family consumers and contract-driven acceptance checks for the non-normative FROG reference implementation.</p>
 <p>FROG — Free Open Graphical Language</p>
 
 ---
@@ -12,181 +12,81 @@
 ## Navigation
 
 - Parent reference implementation: [`../Readme.md`](../Readme.md)
-- Runtime-family responsibilities: [`responsibilities.md`](responsibilities.md)
-- Contract-consumption note: [`accept_contract_and_execute.md`](accept_contract_and_execute.md)
 - Shared acceptance material: [`acceptance/Readme.md`](acceptance/Readme.md)
-- Runtime acceptance check: [`check_example05_runtime_acceptance.py`](check_example05_runtime_acceptance.py)
-- Example-specific Python wrapper: [`run_slice05_contract.py`](run_slice05_contract.py)
+- Generic contract executor: [`contract_executor.py`](contract_executor.py)
+- Contract execution CLI: [`execute_reference_contract.py`](execute_reference_contract.py)
+- Examples 01–05 runtime check: [`check_examples01_05_runtime_acceptance.py`](check_examples01_05_runtime_acceptance.py)
+- Example 05 specialized runtime-family check: [`check_example05_runtime_acceptance.py`](check_example05_runtime_acceptance.py)
 - Python consumer: [`python/Readme.md`](python/Readme.md)
 - Rust consumer: [`rust/Readme.md`](rust/Readme.md)
 - C/C++ consumer: [`cpp/Readme.md`](cpp/Readme.md)
-- Example corridor anchor: [`../../../Examples/05_bounded_ui_accumulator/Readme.md`](../../../Examples/05_bounded_ui_accumulator/Readme.md)
-- Contract artifact family: [`../ContractEmitter/Readme.md`](../ContractEmitter/Readme.md)
 
 ## Overview
 
-This directory is the parent coordination point for the first published FROG runtime family in the non-normative reference implementation.
+This directory is the parent coordination point for runtime-family checks in the non-normative reference implementation.
 
-Its job is narrow and downstream:
-
-```text
-canonical .frog source
-  -> semantic acceptance
-  -> FIR
-  -> lowering
-  -> backend-family contract
-  -> runtime-family consumer
-```
-
-The runtime family begins after source, meaning, FIR, lowering, and backend-contract emission. It consumes published contract artifacts. It does not define the language, the widget law, the front panel, or the compiler-family corridor.
-
-## Published runtime family
-
-The first published runtime family is:
+The current runtime surface has two levels:
 
 ```text
-reference_host_runtime_ui_binding
+Examples 01–04
+  backend contract
+    -> generic contract executor
+    -> runtime acceptance snapshot
+
+Example 05
+  backend contract + .wfrog package
+    -> specialized runtime-family acceptance checker
+    -> richer UI/state/overflow acceptance snapshot
 ```
 
-For the current bounded corridor, the family reads:
+## Generic contract executor
 
-- one single-process host execution posture,
-- one deterministic bounded execution model,
-- one explicit state carrier,
-- one minimal UI binding surface,
-- one browser-host realization path for the first visible runtime UI slice.
-
-The current family is intentionally small. It exists to close one inspectable corridor, not to claim general runtime closure for the whole language.
-
-## Shared acceptance posture
-
-The runtime family carries a shared acceptance layer under:
+The generic executor lives in:
 
 ```text
-Implementations/Reference/Runtime/acceptance/
+Implementations/Reference/Runtime/contract_executor.py
 ```
 
-That acceptance layer exists to keep the reference runtime consumers aligned on:
+It is driven by backend-contract unit kind rather than by example id.
 
-- the accepted contract family,
-- the accepted `.wfrog` package shape,
-- the accepted SVG asset surface,
-- the accepted execution result for the bounded slice,
-- the accepted browser-host UI snapshot surface,
-- the accepted overflow rejection behavior.
-
-## Runtime acceptance check
-
-The current repository-visible runtime acceptance check is:
+Supported unit kinds:
 
 ```text
-python Implementations/Reference/Runtime/check_example05_runtime_acceptance.py
+pure_addition_kernel
+ui_value_roundtrip_kernel
+ui_property_write_effect_unit
+stateful_feedback_delay_kernel
 ```
 
-This check consumes:
+The goal is to move runtime acceptance for simple slices from:
 
 ```text
-Implementations/Reference/Runtime/acceptance/example05_runtime_family.acceptance.json
+if example_id == ...
 ```
 
-and verifies the headless runtime result against:
+toward:
 
 ```text
-Implementations/Reference/Runtime/acceptance/example05_input_3.snapshot.json
+contract JSON -> unit.kind -> executor -> snapshot
 ```
 
-It also verifies the expected overflow rejection for the current bounded `u16` slice.
+## Commands
 
-## First corridor this directory coordinates
-
-The current canonical runtime slice is anchored in:
+Check Examples 01–05 runtime acceptance:
 
 ```text
-Examples/05_bounded_ui_accumulator/
+python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py
 ```
 
-The runtime-family handoff for that slice is the published backend contract artifact:
+Check one simple acceptance through the generic contract executor:
 
 ```text
-Implementations/Reference/ContractEmitter/examples/
-└── 05_bounded_ui_accumulator.reference_host_runtime_ui_binding.contract.json
+python Implementations/Reference/Runtime/execute_reference_contract.py \
+  --acceptance Implementations/Reference/Runtime/acceptance/example01_pure_addition.acceptance.json \
+  --check
 ```
 
-The family-level reading posture is therefore:
+## Boundary
 
-```text
-Examples/05_bounded_ui_accumulator/main.frog
-  -> Examples/05_bounded_ui_accumulator/main.fir.json
-  -> Examples/05_bounded_ui_accumulator/main.lowering.json
-  -> backend-family contract
-  -> runtime-family consumer
-  -> headless result and/or browser-host UI
-```
-
-## Current published entry points
-
-### Runtime acceptance
-
-```text
-python Implementations/Reference/Runtime/check_example05_runtime_acceptance.py
-```
-
-### Python consumer
-
-```text
-python -m Implementations.Reference.Runtime.python.cli run 3
-python -m Implementations.Reference.Runtime.python.cli ui
-python -m Implementations.Reference.Runtime.python.cli ui --host 127.0.0.1 --port 8080 --no-open-browser
-```
-
-### Rust consumer
-
-```text
-cd Implementations/Reference/Runtime/rust
-cargo test
-cargo run -- 3
-cargo run -- ui
-cargo run -- ui --host 127.0.0.1 --port 8080 --no-open-browser
-```
-
-### C/C++ consumer
-
-```text
-cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
-cmake --build build/frog_runtime_cpp
-ctest --test-dir build/frog_runtime_cpp
-build/frog_runtime_cpp/frog_reference_runtime_cpp 3
-build/frog_runtime_cpp/frog_reference_runtime_cpp ui
-build/frog_runtime_cpp/frog_reference_runtime_cpp ui --host 127.0.0.1 --port 8080 --no-open-browser
-```
-
-## What this directory owns
-
-This directory owns runtime-family concerns only:
-
-- contract consumption after backend-family handoff,
-- runtime-private state and scheduling mechanics,
-- runtime-private success and failure reporting,
-- minimal host-side UI realization for the accepted slice,
-- shared acceptance alignment across the Python, Rust, and C/C++ consumers,
-- coordination between the Python, Rust, and C/C++ consumers.
-
-## What this directory does not own
-
-This directory does not own:
-
-- the language,
-- the canonical `.frog` source model,
-- semantic acceptance,
-- FIR,
-- lowering,
-- the backend-contract boundary,
-- widget-law ownership,
-- compiler-family behavior,
-- LLVM-native executable definition.
-
-```text
-runtime-family consumer != language definition
-runtime-private structures != backend contract
-browser-host UI != native compiled UI closure
-```
+This directory does not define FROG semantics.
+It consumes emitted backend contracts and verifies repository-visible runtime acceptance.

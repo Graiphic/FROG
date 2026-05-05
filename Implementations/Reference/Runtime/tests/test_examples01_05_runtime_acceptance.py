@@ -10,6 +10,13 @@ SCRIPT = ROOT / "Implementations" / "Reference" / "Runtime" / "check_examples01_
 
 
 def test_examples01_05_runtime_acceptance_passes() -> None:
-    result = subprocess.run([sys.executable, str(SCRIPT)], cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT)],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Runtime acceptance status: ok" in result.stdout

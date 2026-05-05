@@ -2,7 +2,7 @@
 """Emit or check backend contracts for reference Examples 01-04.
 
 This tool is intentionally narrow and non-normative. It makes the currently
-published FIR/lowering slices for Examples 01-04 consumable by simple runtime
+published FIR/lowering slices for Examples 01-04 consumable by runtime
 acceptance checks.
 """
 
@@ -72,15 +72,19 @@ def single_unit(lowering: dict[str, Any]) -> dict[str, Any]:
     return units[0]
 
 
-def emit_contract(lowering: dict[str, Any]) -> dict[str, Any]:
-    example_id = lowering.get("source_ref", {}).get("example_id")
-    unit = single_unit(lowering)
-    kind = unit.get("kind")
-    refs = {
+def refs_for(example_id: str, lowering: dict[str, Any]) -> dict[str, str]:
+    return {
         "source_path": lowering["source_ref"]["path"],
         "fir_path": lowering["fir_ref"]["path"],
         "lowering_path": next(v["lowering"] for v in EXAMPLES.values() if v["example_id"] == example_id),
     }
+
+
+def emit_contract(lowering: dict[str, Any]) -> dict[str, Any]:
+    example_id = lowering.get("source_ref", {}).get("example_id")
+    unit = single_unit(lowering)
+    kind = unit.get("kind")
+    refs = refs_for(str(example_id), lowering)
 
     if example_id == "01_pure_addition":
         return {
@@ -132,6 +136,9 @@ def emit_contract(lowering: dict[str, Any]) -> dict[str, Any]:
         }
 
     if example_id == "04_stateful_feedback_delay":
+        kernel = unit["execution_kernel"]
+        if "state_id" not in kernel:
+            raise ContractEmissionError("Example 04 lowering execution_kernel must carry state_id")
         return {
             "artifact_kind": "frog_backend_contract",
             "artifact_governance_ref": {"path": "Versioning/Readme.md"},
@@ -142,7 +149,7 @@ def emit_contract(lowering: dict[str, Any]) -> dict[str, Any]:
                 "unit_id": "main",
                 "kind": kind,
                 "public_io": unit["public_io"],
-                "execution_kernel": unit["execution_kernel"],
+                "execution_kernel": kernel,
             }],
         }
 

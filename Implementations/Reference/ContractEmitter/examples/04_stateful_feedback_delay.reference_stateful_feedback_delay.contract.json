@@ -29,6 +29,7 @@
         ]
       },
       "execution_kernel": {
+        "state_id": "delay_1",
         "initial_state": 0.0,
         "state_type": "f64",
         "step_body": [

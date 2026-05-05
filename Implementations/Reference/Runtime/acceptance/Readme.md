@@ -5,7 +5,7 @@
 <h1 align="center">Reference Runtime Acceptance Artifacts</h1>
 
 <p align="center">
-  <strong>Shared non-normative acceptance material for Examples 01-05 runtime closure</strong><br/>
+  <strong>Shared non-normative acceptance material for Examples 01–05 runtime closure</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -20,6 +20,25 @@
   <li><code>example04_stateful_feedback_delay.acceptance.json</code></li>
   <li><code>example05_runtime_family.acceptance.json</code></li>
 </ul>
+
+<hr/>
+
+<h2>Execution Model</h2>
+
+<p>
+Examples <code>01</code> through <code>04</code> are checked through the generic reference contract executor:
+</p>
+
+<pre><code>contract JSON
+  -> unit.kind
+  -> generic executor
+  -> observed snapshot
+  -> compare with published snapshot
+</code></pre>
+
+<p>
+Example <code>05</code> remains on the richer specialized runtime-family checker because it also covers front-panel package loading, UI bindings, and bounded <code>u16</code> overflow rejection.
+</p>
 
 <hr/>
 
