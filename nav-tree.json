@@ -3122,6 +3122,20 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/runtime/contract_executor.py",
+                  "title": "contract_executor.py",
+                  "path": "/Implementations/Reference/Runtime/contract_executor.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "implementations/reference/runtime/execute_reference_contract.py",
+                  "title": "execute_reference_contract.py",
+                  "path": "/Implementations/Reference/Runtime/execute_reference_contract.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/runtime/reference_runtime.py",
                   "title": "reference_runtime.py",
                   "path": "/Implementations/Reference/Runtime/reference_runtime.py",
@@ -3234,6 +3248,13 @@
                   "path": null,
                   "kind": "category",
                   "children": [
+                    {
+                      "key": "implementations/reference/runtime/tests/test_contract_executor.py",
+                      "title": "test_contract_executor.py",
+                      "path": "/Implementations/Reference/Runtime/tests/test_contract_executor.py",
+                      "kind": "code",
+                      "children": []
+                    },
                     {
                       "key": "implementations/reference/runtime/tests/test_example05_runtime_acceptance.py",
                       "title": "test_example05_runtime_acceptance.py",
@@ -3781,6 +3802,8 @@
     "/Implementations/Reference/Runtime/responsibilities.md",
     "/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",
+    "/Implementations/Reference/Runtime/contract_executor.py",
+    "/Implementations/Reference/Runtime/execute_reference_contract.py",
     "/Implementations/Reference/Runtime/reference_runtime.py",
     "/Implementations/Reference/Runtime/run_slice05_contract.py",
     "/Implementations/Reference/Runtime/acceptance/Readme.md",
@@ -3795,6 +3818,7 @@
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice05.py",
     "/Implementations/Reference/Runtime/python/Readme.md",
     "/Implementations/Reference/Runtime/rust/Readme.md",
+    "/Implementations/Reference/Runtime/tests/test_contract_executor.py",
     "/Implementations/Reference/Runtime/tests/test_example05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/tests/test_examples01_05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/Readme.md",
