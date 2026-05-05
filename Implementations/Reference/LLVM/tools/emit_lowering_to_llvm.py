@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
-"""Emit/check the Example 05 LLVM module from its published lowering.
+"""Emit/check an LLVM module from a supported lowered FROG artifact.
 
-Compatibility wrapper around the generic lowered-unit-kind LLVM emitter.
+This is the generic-by-kind LLVM entry point for the non-normative reference
+workspace.
+
+Example:
+
+    python Implementations/Reference/LLVM/tools/emit_lowering_to_llvm.py \
+      --lowering Examples/01_pure_addition/main.lowering.json \
+      --expected Implementations/Reference/LLVM/examples/01_pure_addition/module.ll \
+      --check
 """
 
 from __future__ import annotations
@@ -12,16 +20,26 @@ import sys
 from pathlib import Path
 
 try:
-    from .llvm_lowering_emitter import LLVMEmissionError, emit_llvm_from_lowering_path, normalize_text, write_text
+    from .llvm_lowering_emitter import (
+        LLVMEmissionError,
+        emit_llvm_from_lowering_path,
+        normalize_text,
+        write_text,
+    )
 except ImportError:  # pragma: no cover
-    from llvm_lowering_emitter import LLVMEmissionError, emit_llvm_from_lowering_path, normalize_text, write_text  # type: ignore
+    from llvm_lowering_emitter import (  # type: ignore
+        LLVMEmissionError,
+        emit_llvm_from_lowering_path,
+        normalize_text,
+        write_text,
+    )
 
 
 ROOT = Path(__file__).resolve().parents[4]
 
-DEFAULT_LOWERING = ROOT / "Examples" / "05_bounded_ui_accumulator" / "main.lowering.json"
-DEFAULT_EXPECTED_MODULE = ROOT / "Implementations" / "Reference" / "LLVM" / "examples" / "05_bounded_ui_accumulator" / "module.ll"
-DEFAULT_EXAMPLE_DIR = DEFAULT_EXPECTED_MODULE.parent
+
+def repo_path(path: Path) -> Path:
+    return path if path.is_absolute() else ROOT / path
 
 
 def check_expected(generated: str, expected_path: Path) -> bool:
@@ -50,22 +68,24 @@ def run_build(example_dir: Path) -> int:
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Emit/check Example 05 LLVM module from lowering.")
-    parser.add_argument("--lowering", type=Path, default=DEFAULT_LOWERING)
+    parser = argparse.ArgumentParser(description="Emit/check LLVM module from a supported lowering artifact.")
+    parser.add_argument("--lowering", type=Path, required=True)
     parser.add_argument("--output", type=Path, default=None)
-    parser.add_argument("--expected", type=Path, default=DEFAULT_EXPECTED_MODULE)
+    parser.add_argument("--expected", type=Path, default=None)
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--print", action="store_true", dest="print_module")
     parser.add_argument("--build", action="store_true")
+    parser.add_argument("--example-dir", type=Path, default=None, help="Directory containing build.sh for --build.")
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or [])
 
-    lowering_path = args.lowering if args.lowering.is_absolute() else ROOT / args.lowering
-    expected_path = args.expected if args.expected.is_absolute() else ROOT / args.expected
-    output_path = args.output if args.output is None or args.output.is_absolute() else ROOT / args.output
+    lowering_path = repo_path(args.lowering)
+    output_path = repo_path(args.output) if args.output is not None else None
+    expected_path = repo_path(args.expected) if args.expected is not None else None
+    example_dir = repo_path(args.example_dir) if args.example_dir is not None else None
 
     try:
         generated = emit_llvm_from_lowering_path(lowering_path)
@@ -78,6 +98,8 @@ def main(argv: list[str] | None = None) -> int:
             sys.stdout.write(normalize_text(generated))
 
         if args.check:
+            if expected_path is None:
+                raise LLVMEmissionError("--check requires --expected")
             if not check_expected(generated, expected_path):
                 print("LLVM module emission check: FAILED", file=sys.stderr)
                 print(f"lowering: {lowering_path}", file=sys.stderr)
@@ -88,7 +110,9 @@ def main(argv: list[str] | None = None) -> int:
             print(f"expected: {expected_path.relative_to(ROOT)}")
 
         if args.build:
-            code = run_build(DEFAULT_EXAMPLE_DIR)
+            if example_dir is None:
+                raise LLVMEmissionError("--build requires --example-dir")
+            code = run_build(example_dir)
             if code != 0:
                 print(f"LLVM build check: FAILED (exit {code})", file=sys.stderr)
                 return code

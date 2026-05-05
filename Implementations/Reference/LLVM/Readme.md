@@ -23,15 +23,40 @@
 
 <hr/>
 
-<h2>Emission Checks</h2>
+<h2>Generic Lowering-to-LLVM Entry Point</h2>
+
+<pre><code>python Implementations/Reference/LLVM/tools/emit_lowering_to_llvm.py \
+  --lowering Examples/01_pure_addition/main.lowering.json \
+  --expected Implementations/Reference/LLVM/examples/01_pure_addition/module.ll \
+  --check
+</code></pre>
+
+<p>
+The generic emitter dispatches by <code>lowered_units[0].kind</code>.
+</p>
+
+<p>
+Supported lowered unit kinds:
+</p>
+
+<ul>
+  <li><code>pure_addition_kernel</code></li>
+  <li><code>ui_value_roundtrip_kernel</code></li>
+  <li><code>ui_property_write_effect_unit</code></li>
+  <li><code>stateful_feedback_delay_kernel</code></li>
+  <li><code>bounded_accumulator_kernel_with_ui_bindings</code></li>
+</ul>
+
+<hr/>
+
+<h2>Compatibility Wrappers</h2>
 
 <pre><code>python Implementations/Reference/LLVM/tools/emit_examples01_04_llvm_modules.py --check
 python Implementations/Reference/LLVM/tools/emit_llvm_module.py --check
 </code></pre>
 
 <p>
-Examples <code>01</code> through <code>04</code> now check <code>main.lowering.json -&gt; module.ll</code> through a dedicated emitter.
-Example <code>05</code> keeps its specialized bounded-accumulator emitter.
+These wrappers are kept for continuity, but both now delegate to the generic lowered-unit-kind emitter.
 </p>
 
 <hr/>
