@@ -395,6 +395,7 @@
     - bridge
       - [fir to lowering](/Implementations/Reference/LLVM/bridge/fir_to_lowering.md)
       - [lowering to llvm](/Implementations/Reference/LLVM/bridge/lowering_to_llvm.md)
+      - [lowering to llvm dispatch](/Implementations/Reference/LLVM/bridge/lowering_to_llvm_dispatch.md)
     - examples
       - [01 pure addition](/Implementations/Reference/LLVM/examples/01_pure_addition/Readme.md)
       - [02 ui value roundtrip](/Implementations/Reference/LLVM/examples/02_ui_value_roundtrip/Readme.md)
@@ -404,10 +405,13 @@
     - tests
       - [test_example05_llvm_emission.py](/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py)
       - [test_examples01_04_llvm_modules.py](/Implementations/Reference/LLVM/tests/test_examples01_04_llvm_modules.py)
+      - [test_generic_lowering_to_llvm.py](/Implementations/Reference/LLVM/tests/test_generic_lowering_to_llvm.py)
     - tools
       - [check_examples01_04_llvm_modules.py](/Implementations/Reference/LLVM/tools/check_examples01_04_llvm_modules.py)
       - [emit_examples01_04_llvm_modules.py](/Implementations/Reference/LLVM/tools/emit_examples01_04_llvm_modules.py)
       - [emit_llvm_module.py](/Implementations/Reference/LLVM/tools/emit_llvm_module.py)
+      - [emit_lowering_to_llvm.py](/Implementations/Reference/LLVM/tools/emit_lowering_to_llvm.py)
+      - [llvm_lowering_emitter.py](/Implementations/Reference/LLVM/tools/llvm_lowering_emitter.py)
   - [Loader](/Implementations/Reference/Loader/Readme.md)
     - [responsibilities](/Implementations/Reference/Loader/responsibilities.md)
     - [reference_loader.py](/Implementations/Reference/Loader/reference_loader.py)

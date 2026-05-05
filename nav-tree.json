@@ -2821,6 +2821,13 @@
                       "path": "/Implementations/Reference/LLVM/bridge/lowering_to_llvm.md",
                       "kind": "page",
                       "children": []
+                    },
+                    {
+                      "key": "implementations/reference/llvm/bridge/lowering_to_llvm_dispatch.md",
+                      "title": "lowering to llvm dispatch",
+                      "path": "/Implementations/Reference/LLVM/bridge/lowering_to_llvm_dispatch.md",
+                      "kind": "page",
+                      "children": []
                     }
                   ]
                 },
@@ -2886,6 +2893,13 @@
                       "path": "/Implementations/Reference/LLVM/tests/test_examples01_04_llvm_modules.py",
                       "kind": "code",
                       "children": []
+                    },
+                    {
+                      "key": "implementations/reference/llvm/tests/test_generic_lowering_to_llvm.py",
+                      "title": "test_generic_lowering_to_llvm.py",
+                      "path": "/Implementations/Reference/LLVM/tests/test_generic_lowering_to_llvm.py",
+                      "kind": "code",
+                      "children": []
                     }
                   ]
                 },
@@ -2913,6 +2927,20 @@
                       "key": "implementations/reference/llvm/tools/emit_llvm_module.py",
                       "title": "emit_llvm_module.py",
                       "path": "/Implementations/Reference/LLVM/tools/emit_llvm_module.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/llvm/tools/emit_lowering_to_llvm.py",
+                      "title": "emit_lowering_to_llvm.py",
+                      "path": "/Implementations/Reference/LLVM/tools/emit_lowering_to_llvm.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/llvm/tools/llvm_lowering_emitter.py",
+                      "title": "llvm_lowering_emitter.py",
+                      "path": "/Implementations/Reference/LLVM/tools/llvm_lowering_emitter.py",
                       "kind": "code",
                       "children": []
                     }
@@ -3766,6 +3794,7 @@
     "/Implementations/Reference/Deriver/Readme.md",
     "/Implementations/Reference/LLVM/bridge/fir_to_lowering.md",
     "/Implementations/Reference/LLVM/bridge/lowering_to_llvm.md",
+    "/Implementations/Reference/LLVM/bridge/lowering_to_llvm_dispatch.md",
     "/Implementations/Reference/LLVM/examples/01_pure_addition/Readme.md",
     "/Implementations/Reference/LLVM/examples/02_ui_value_roundtrip/Readme.md",
     "/Implementations/Reference/LLVM/examples/03_ui_property_write/Readme.md",
@@ -3773,9 +3802,12 @@
     "/Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/Readme.md",
     "/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py",
     "/Implementations/Reference/LLVM/tests/test_examples01_04_llvm_modules.py",
+    "/Implementations/Reference/LLVM/tests/test_generic_lowering_to_llvm.py",
     "/Implementations/Reference/LLVM/tools/check_examples01_04_llvm_modules.py",
     "/Implementations/Reference/LLVM/tools/emit_examples01_04_llvm_modules.py",
     "/Implementations/Reference/LLVM/tools/emit_llvm_module.py",
+    "/Implementations/Reference/LLVM/tools/emit_lowering_to_llvm.py",
+    "/Implementations/Reference/LLVM/tools/llvm_lowering_emitter.py",
     "/Implementations/Reference/LLVM/Readme.md",
     "/Implementations/Reference/Loader/responsibilities.md",
     "/Implementations/Reference/Loader/reference_loader.py",
