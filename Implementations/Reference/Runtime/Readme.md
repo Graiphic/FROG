@@ -9,21 +9,9 @@
 
 ---
 
-## Navigation
-
-- Parent reference implementation: [`../Readme.md`](../Readme.md)
-- Shared acceptance material: [`acceptance/Readme.md`](acceptance/Readme.md)
-- Generic contract executor: [`contract_executor.py`](contract_executor.py)
-- Contract execution CLI: [`execute_reference_contract.py`](execute_reference_contract.py)
-- Examples 01–05 runtime check: [`check_examples01_05_runtime_acceptance.py`](check_examples01_05_runtime_acceptance.py)
-- Example 05 specialized runtime-family check: [`check_example05_runtime_acceptance.py`](check_example05_runtime_acceptance.py)
-- Python consumer: [`python/Readme.md`](python/Readme.md)
-- Rust consumer: [`rust/Readme.md`](rust/Readme.md)
-- C/C++ consumer: [`cpp/Readme.md`](cpp/Readme.md)
-
 ## Overview
 
-This directory is the parent coordination point for runtime-family checks in the non-normative reference implementation.
+This directory coordinates runtime-family checks in the non-normative reference implementation.
 
 The current runtime surface has two levels:
 
@@ -34,55 +22,34 @@ Examples 01–04
     -> runtime acceptance snapshot
 
 Example 05
-  backend contract + .wfrog package
-    -> specialized runtime-family acceptance checker
+  homogenized backend contract + .wfrog package
+    -> generic contract executor
+    -> specialized runtime-family checker using normalized fields
     -> richer UI/state/overflow acceptance snapshot
 ```
 
-## Generic contract executor
+## Normalized Example 05 Runtime
 
-The generic executor lives in:
-
-```text
-Implementations/Reference/Runtime/contract_executor.py
-```
-
-It is driven by backend-contract unit kind rather than by example id.
-
-Supported unit kinds:
+The specialized Python runtime now consumes the normalized Example 05 contract surface:
 
 ```text
-pure_addition_kernel
-ui_value_roundtrip_kernel
-ui_property_write_effect_unit
-stateful_feedback_delay_kernel
+public_io
+ui_bindings
+execution_kernel
+effects
+publications
 ```
 
-The goal is to move runtime acceptance for simple slices from:
-
-```text
-if example_id == ...
-```
-
-toward:
-
-```text
-contract JSON -> unit.kind -> executor -> snapshot
-```
+It no longer depends on the legacy compatibility fields, although those fields may remain in the contract temporarily while the transition is being finalized.
 
 ## Commands
 
-Check Examples 01–05 runtime acceptance:
-
 ```text
 python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py
-```
-
-Check one simple acceptance through the generic contract executor:
-
-```text
+python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py --skip-specialized-example05
+python Implementations/Reference/Runtime/python/execute_contract.py 3
 python Implementations/Reference/Runtime/execute_reference_contract.py \
-  --acceptance Implementations/Reference/Runtime/acceptance/example01_pure_addition.acceptance.json \
+  --acceptance Implementations/Reference/Runtime/acceptance/example05_runtime_family.acceptance.json \
   --check
 ```
 

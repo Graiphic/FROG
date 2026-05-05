@@ -8,11 +8,19 @@ from typing import Any, Dict, List, Optional
 
 REFERENCE_BACKEND_FAMILY = "reference_host_runtime_ui_binding"
 EXPECTED_OVERFLOW_BEHAVIOR = "reject_execution_on_u16_overflow"
+
 SUPPORTED_WIDGET_CLASSES = {
     "frog.widgets.numeric_control": "control",
     "frog.widgets.numeric_indicator": "indicator",
 }
-SUPPORTED_WIDGET_PROPERTIES = {"value", "label", "visible", "enabled", "foreground_color"}
+
+SUPPORTED_WIDGET_PROPERTIES = {
+    "value",
+    "label",
+    "visible",
+    "enabled",
+    "foreground_color",
+}
 
 
 class RuntimeValidationError(RuntimeError):
@@ -57,6 +65,16 @@ def ensure(condition: bool, message: str) -> None:
         raise RuntimeValidationError(message)
 
 
+def require_object(value: Any, name: str) -> Dict[str, Any]:
+    ensure(isinstance(value, dict), f"{name} must be an object.")
+    return value
+
+
+def require_list(value: Any, name: str) -> List[Any]:
+    ensure(isinstance(value, list), f"{name} must be a list.")
+    return value
+
+
 def checked_u16(value: int, *, label: str) -> int:
     if value < 0 or value > 65535:
         raise RuntimeExecutionError(f"{label} must remain in the u16 domain.")
@@ -76,25 +94,47 @@ class WidgetState:
 
 
 class Slice05RuntimeCore:
-    """Strict, minimal runtime core for the published Example 05 contract corridor."""
+    """Strict, minimal runtime core for the published Example 05 normalized contract corridor.
+
+    This runtime intentionally consumes the normalized contract surface:
+
+    - units[].public_io
+    - units[].ui_bindings
+    - units[].execution_kernel
+    - units[].effects
+    - units[].publications
+
+    Legacy compatibility fields such as public_interface, ui_binding, state_model,
+    execution_model, property_writes, and public_output_publication are not read here.
+    """
 
     def __init__(self, contract_path: Path | str | None = None, wfrog_path: Path | str | None = None) -> None:
         self.contract_path = Path(contract_path or default_contract_path()).resolve()
         self.wfrog_path = Path(wfrog_path or default_wfrog_path()).resolve()
+
         self.contract = load_json(self.contract_path)
         self.package = load_json(self.wfrog_path)
+
         self.unit = self._load_and_validate()
+        self.public_io = require_object(self.unit.get("public_io"), "unit.public_io")
+        self.ui_bindings = require_object(self.unit.get("ui_bindings"), "unit.ui_bindings")
+        self.execution_kernel = require_object(self.unit.get("execution_kernel"), "unit.execution_kernel")
+        self.effects = require_list(self.unit.get("effects"), "unit.effects")
+        self.publications = require_list(self.unit.get("publications"), "unit.publications")
+
         self.panel = dict(self.package["front_panels"][0])
         self.asset_map = {
             item["asset_id"]: (self.wfrog_path.parent / Path(item["path"])).resolve()
             for item in self.package.get("svg_assets", [])
         }
+
         self.widgets = self._build_widgets()
         self.last_final_state: int = 0
         self.last_public_outputs: Dict[str, int] = {"result": 0}
         self.diagnostics: List[Dict[str, Any]] = []
         self.applied_widget_references: List[Dict[str, Any]] = []
-        self.apply_contract_property_writes()
+
+        self.apply_contract_effects()
 
     def _load_and_validate(self) -> Dict[str, Any]:
         ensure(self.contract.get("artifact_kind") == "frog_backend_contract", "Expected frog_backend_contract.")
@@ -102,37 +142,75 @@ class Slice05RuntimeCore:
             self.contract.get("backend_family") == REFERENCE_BACKEND_FAMILY,
             f"Expected backend family {REFERENCE_BACKEND_FAMILY}.",
         )
-        assumptions = self.contract.get("assumptions")
-        ensure(isinstance(assumptions, dict), "Missing contract assumptions.")
-        runtime_family = assumptions.get("runtime_family")
-        ensure(isinstance(runtime_family, dict), "Missing assumptions.runtime_family.")
+
+        assumptions = require_object(self.contract.get("assumptions"), "contract.assumptions")
+        runtime_family = require_object(assumptions.get("runtime_family"), "contract.assumptions.runtime_family")
         ensure(runtime_family.get("name") == REFERENCE_BACKEND_FAMILY, "Unexpected assumptions.runtime_family.name.")
-        ui_binding = runtime_family.get("ui_binding")
-        ensure(isinstance(ui_binding, dict), "Missing assumptions.runtime_family.ui_binding.")
-        ensure(ui_binding.get("widget_value_binding") is True, "Contract must require widget_value_binding.")
-        ensure(ui_binding.get("widget_reference_binding") is True, "Contract must require widget_reference_binding.")
-        numeric_behavior = assumptions.get("numeric_behavior")
-        ensure(isinstance(numeric_behavior, dict), "Missing assumptions.numeric_behavior.")
+
+        ui_binding_assumptions = require_object(
+            runtime_family.get("ui_binding"),
+            "contract.assumptions.runtime_family.ui_binding",
+        )
+        ensure(ui_binding_assumptions.get("widget_value_binding") is True, "Contract must require widget_value_binding.")
+        ensure(ui_binding_assumptions.get("widget_reference_binding") is True, "Contract must require widget_reference_binding.")
+
+        numeric_behavior = require_object(assumptions.get("numeric_behavior"), "contract.assumptions.numeric_behavior")
         ensure(numeric_behavior.get("value_domain") == "u16", "Contract numeric behavior must target the u16 domain.")
         ensure(
             numeric_behavior.get("overflow_behavior") == EXPECTED_OVERFLOW_BEHAVIOR,
             f"Contract overflow behavior must be {EXPECTED_OVERFLOW_BEHAVIOR}.",
         )
 
-        units = self.contract.get("units")
-        ensure(isinstance(units, list) and len(units) == 1, "Expected exactly one contract unit.")
-        unit = units[0]
+        units = require_list(self.contract.get("units"), "contract.units")
+        ensure(len(units) == 1, "Expected exactly one contract unit.")
+        unit = require_object(units[0], "contract.units[0]")
         ensure(unit.get("unit_id") == "main", "Expected unit_id main.")
         ensure(unit.get("kind") == "bounded_executable_ui_unit", "Unexpected runtime unit kind.")
 
+        # Normalized surface is mandatory.
+        public_io = require_object(unit.get("public_io"), "unit.public_io")
+        ui_bindings = require_object(unit.get("ui_bindings"), "unit.ui_bindings")
+        execution_kernel = require_object(unit.get("execution_kernel"), "unit.execution_kernel")
+        effects = require_list(unit.get("effects"), "unit.effects")
+        publications = require_list(unit.get("publications"), "unit.publications")
+
+        public_inputs = require_list(public_io.get("inputs"), "unit.public_io.inputs")
+        public_outputs = require_list(public_io.get("outputs"), "unit.public_io.outputs")
+        ensure(len(public_inputs) == 1 and public_inputs[0]["id"] == "input_value", "Expected public input input_value.")
+        ensure(len(public_outputs) == 1 and public_outputs[0]["id"] == "result", "Expected public output result.")
+
+        ensure(execution_kernel.get("state_id") == "accumulator_state", "Expected execution_kernel.state_id accumulator_state.")
+        ensure(execution_kernel.get("state_type") == "u16", "Expected execution_kernel.state_type u16.")
+        ensure(execution_kernel.get("initial_state") == 0, "Expected execution_kernel.initial_state 0.")
+        ensure(execution_kernel.get("iteration_count") == 5, "Slice 05 expects five iterations.")
+        ensure(
+            execution_kernel.get("overflow_behavior") == EXPECTED_OVERFLOW_BEHAVIOR,
+            "Unexpected execution_kernel.overflow_behavior.",
+        )
+
+        iteration_body = require_list(execution_kernel.get("iteration_body"), "unit.execution_kernel.iteration_body")
+        ensure(len(iteration_body) == 1, "Expected one iteration body operation.")
+        op = require_object(iteration_body[0], "unit.execution_kernel.iteration_body[0]")
+        ensure(op.get("op") == "add", "Expected add iteration operation.")
+        ensure(op.get("dst") == "state_next", "Expected state_next iteration destination.")
+        ensure(op.get("src") == ["state_current", "input_value"], "Unexpected iteration sources.")
+
+        ensure(publications == execution_kernel.get("final_publication"), "unit.publications must match execution_kernel.final_publication.")
+
         ensure(self.package.get("format") == "frog.wfrog", "Unsupported .wfrog format.")
         ensure(self.package.get("kind") == "front_panel_package", "Only front_panel_package is supported.")
-        front_panels = self.package.get("front_panels")
-        ensure(isinstance(front_panels, list) and len(front_panels) == 1, "Expected exactly one front panel.")
-        widget_classes = {entry["class_id"]: entry for entry in self.package.get("widget_classes", [])}
+        front_panels = require_list(self.package.get("front_panels"), "wfrog.front_panels")
+        ensure(len(front_panels) == 1, "Expected exactly one front panel.")
+
+        widget_classes = {
+            entry["class_id"]: entry for entry in require_list(self.package.get("widget_classes"), "wfrog.widget_classes")
+        }
         ensure("frog.widgets.numeric_control" in widget_classes, "Missing numeric_control class in .wfrog.")
         ensure("frog.widgets.numeric_indicator" in widget_classes, "Missing numeric_indicator class in .wfrog.")
-        host_bindings = {entry["binding_id"]: entry for entry in self.package.get("host_bindings", [])}
+
+        host_bindings = {
+            entry["binding_id"]: entry for entry in require_list(self.package.get("host_bindings"), "wfrog.host_bindings")
+        }
         ensure("reference_host_default" in host_bindings, "Missing reference_host_default host binding.")
         required_capabilities = set(host_bindings["reference_host_default"].get("required_capabilities", []))
         ensure(
@@ -141,15 +219,9 @@ class Slice05RuntimeCore:
             "Host binding is missing required capabilities.",
         )
 
-        public_inputs = unit["public_interface"]["inputs"]
-        public_outputs = unit["public_interface"]["outputs"]
-        ensure(len(public_inputs) == 1 and public_inputs[0]["id"] == "input_value", "Expected public input input_value.")
-        ensure(len(public_outputs) == 1 and public_outputs[0]["id"] == "result", "Expected public output result.")
-        ensure(unit["execution_model"]["iteration_count"] == 5, "Slice 05 expects five iterations.")
-        ensure(unit["state_model"]["carrier"]["initial_value"] == 0, "Slice 05 expects initial state 0.")
-
         panel_widgets = {entry["instance_id"]: entry for entry in front_panels[0].get("widgets", [])}
-        for contract_widget in unit["ui_binding"]["widgets"]:
+        widgets = require_list(ui_bindings.get("widgets"), "unit.ui_bindings.widgets")
+        for contract_widget in widgets:
             widget_id = contract_widget["widget_id"]
             ensure(widget_id in panel_widgets, f"Panel is missing widget {widget_id}.")
             panel_widget = panel_widgets[widget_id]
@@ -162,34 +234,50 @@ class Slice05RuntimeCore:
                 f"Unsupported widget class {panel_widget['class_ref']}.",
             )
 
-        reference_support = {item["widget_id"]: item["supported_members"] for item in unit["ui_binding"]["widget_reference_support"]}
-        for item in unit["property_writes"]:
-            widget_id = item["widget_id"]
-            member = item["member"]
+        reference_support = {
+            item["widget_id"]: item["supported_members"]
+            for item in require_list(ui_bindings.get("widget_reference_support"), "unit.ui_bindings.widget_reference_support")
+        }
+        for item in effects:
+            effect = require_object(item, "unit.effects[]")
+            widget_id = effect["widget_id"]
+            member = effect["member"]
+            ensure(effect.get("op") == "frog.ui.property_write", "Only frog.ui.property_write effects are supported.")
             ensure(member in SUPPORTED_WIDGET_PROPERTIES, f"Unsupported property write {member}.")
-            ensure(widget_id in reference_support and member in reference_support[widget_id], f"Unsupported widget reference member {widget_id}.{member}.")
+            ensure(
+                widget_id in reference_support and member in reference_support[widget_id],
+                f"Unsupported widget reference member {widget_id}.{member}.",
+            )
+
         return unit
 
     def _build_widgets(self) -> Dict[str, WidgetState]:
         panel_widgets = {entry["instance_id"]: entry for entry in self.panel.get("widgets", [])}
-        support = {item["widget_id"]: list(item["supported_members"]) for item in self.unit["ui_binding"]["widget_reference_support"]}
+        support = {
+            item["widget_id"]: list(item["supported_members"])
+            for item in self.ui_bindings["widget_reference_support"]
+        }
+
         widgets: Dict[str, WidgetState] = {}
-        for contract_widget in self.unit["ui_binding"]["widgets"]:
+        for contract_widget in self.ui_bindings["widgets"]:
             widget_id = contract_widget["widget_id"]
             panel_widget = panel_widgets[widget_id]
             visual = panel_widget.get("visual", {})
             asset_ref = visual.get("asset_ref")
             asset_id = None
             asset_path = None
+
             if isinstance(asset_ref, str) and asset_ref.startswith("asset:"):
                 asset_id = asset_ref.split(":", 1)[1]
                 asset_path = self.asset_map.get(asset_id)
+
             props = dict(panel_widget.get("props", {}))
             props.setdefault("value", 0)
             props.setdefault("label", "")
             props.setdefault("visible", True)
             props.setdefault("enabled", True)
             props.setdefault("foreground_color", "#D8D8D8")
+
             widgets[widget_id] = WidgetState(
                 widget_id=widget_id,
                 class_ref=contract_widget["widget_class"],
@@ -200,14 +288,18 @@ class Slice05RuntimeCore:
                 asset_path=asset_path,
                 supported_members=support.get(widget_id, []),
             )
+
         return widgets
 
-    def apply_contract_property_writes(self) -> None:
+    def apply_contract_effects(self) -> None:
         self.applied_widget_references = []
-        for item in self.unit.get("property_writes", []):
+
+        for item in self.effects:
             widget = self.widgets[item["widget_id"]]
             member = item["member"]
-            value = item["value"]["value"]
+            value_field = item["value"]
+            value = value_field["value"] if isinstance(value_field, dict) else value_field
+
             ensure(member in widget.supported_members, f"Property {member} is not supported by widget {widget.widget_id}.")
             widget.properties[member] = value
             self.applied_widget_references.append(
@@ -242,14 +334,18 @@ class Slice05RuntimeCore:
 
     def execute(self, *, control_value: Optional[int] = None) -> Dict[str, Any]:
         self.diagnostics = []
-        self.apply_contract_property_writes()
+        self.apply_contract_effects()
+
         if control_value is not None:
             self.set_control_value(control_value)
+
         input_value = self.get_control_value()
-        iterations = int(self.unit["execution_model"]["iteration_count"])
-        state = int(self.unit["state_model"]["carrier"]["initial_value"])
+        iterations = int(self.execution_kernel["iteration_count"])
+        state = int(self.execution_kernel["initial_state"])
+
         for _ in range(iterations):
             state = checked_u16(state + input_value, label="final_state")
+
         self.widgets["ind_result"].properties["value"] = state
         self.last_final_state = state
         self.last_public_outputs = {"result": state}
@@ -287,9 +383,9 @@ class Slice05RuntimeCore:
             "execution_summary": {
                 "mode": "contract_and_wfrog",
                 "executed_unit": self.unit["unit_id"],
-                "iterations": int(self.unit["execution_model"]["iteration_count"]),
+                "iterations": int(self.execution_kernel["iteration_count"]),
                 "state_initialized": True,
-                "initial_state": int(self.unit["state_model"]["carrier"]["initial_value"]),
+                "initial_state": int(self.execution_kernel["initial_state"]),
                 "final_state": int(self.last_final_state),
             },
             "outputs": {

@@ -1,116 +1,63 @@
-# Reference Runtime (Python)
+<p align="center">
+  <img src="../../../../FROG logo.svg" alt="FROG logo" width="140" />
+</p>
 
-Python realization of the published `reference_host_runtime_ui_binding` family
+<h1 align="center">Reference Python Runtime</h1>
 
-Repository governance and publication state are centralized in [`Versioning/Readme.md`](../../../Versioning/Readme.md).
+<p align="center">
+  <strong>Python runtime-family consumer for the non-normative FROG reference implementation</strong><br/>
+  <em>FROG — Free Open Graphical Language</em>
+</p>
 
-* * *
+<hr/>
 
-## Directory navigation
+<h2>Current Scope</h2>
 
-```text
-Implementations/Reference/Runtime/python/
-├── Readme.md
-├── __init__.py
-├── cli.py
-├── execute_contract.py
-├── run_slice05_ui.py
-├── runtime_core.py
-├── ui_runtime.py
-└── tests/
-    ├── test_runtime_slice05.py
-    └── test_runtime_ui_slice05.py
-```
+<p>
+The Python runtime currently carries the specialized Example 05 runtime-family consumer.
+It validates the Example 05 backend contract and <code>.wfrog</code> front-panel package, executes the bounded accumulator path, applies widget property effects, and produces the published runtime snapshot.
+</p>
 
-Generated cache directories are not part of the intended source surface of this runtime and should not be versioned.
+<hr/>
 
-* * *
+<h2>Normalized Contract Surface</h2>
 
-## Role
+<p>
+The specialized runtime now consumes the normalized Example 05 contract surface:
+</p>
 
-This directory contains the Python consumer for the published Example 05 runtime-family corridor.
+<ul>
+  <li><code>units[].public_io</code></li>
+  <li><code>units[].ui_bindings</code></li>
+  <li><code>units[].execution_kernel</code></li>
+  <li><code>units[].effects</code></li>
+  <li><code>units[].publications</code></li>
+</ul>
 
-It accepts the emitted backend contract, loads the published `.wfrog` package, resolves the referenced SVG assets, executes the bounded kernel, and can expose the panel through a minimal browser-host UI.
+<p>
+It no longer reads the legacy compatibility fields:
+</p>
 
-This directory is downstream from:
+<ul>
+  <li><code>public_interface</code></li>
+  <li><code>ui_binding</code></li>
+  <li><code>state_model</code></li>
+  <li><code>execution_model</code></li>
+  <li><code>property_writes</code></li>
+  <li><code>public_output_publication</code></li>
+</ul>
 
-```text
-main.frog
-  -> main.fir.json
-  -> main.lowering.json
-  -> reference_host_runtime_ui_binding contract
-  -> shared runtime-family acceptance
-```
+<hr/>
 
-It is not a source parser, not a lowering stage, and not a language-definition layer.
+<h2>Command</h2>
 
-* * *
+<pre><code>python Implementations/Reference/Runtime/python/execute_contract.py 3</code></pre>
 
-## Current published entry points
+<hr/>
 
-### `cli.py`
+<h2>Boundary</h2>
 
-The main entry point for this directory. It exposes two modes:
-
-- `run` — headless contract + `.wfrog` execution,
-- `ui` — browser-host UI service for the same runtime core.
-
-Examples from the repository root:
-
-```text
-python -m Implementations.Reference.Runtime.python.cli run 3
-python -m Implementations.Reference.Runtime.python.cli ui
-python -m Implementations.Reference.Runtime.python.cli ui --host 127.0.0.1 --port 8080 --no-open-browser
-```
-
-### `execute_contract.py`
-
-Headless execution entry used by tests and helper wrappers.
-
-### `ui_runtime.py`
-
-Browser-host runtime surface for the same bounded Example 05 corridor.
-
-* * *
-
-## Current published test surface
-
-The currently published Python test surface is acceptance-driven and aligned with the shared runtime-family artifacts:
-
-- `tests/test_runtime_slice05.py`
-- `tests/test_runtime_ui_slice05.py`
-
-These tests are expected to remain aligned with:
-
-- `Implementations/Reference/Runtime/acceptance/example05_runtime_family.acceptance.json`,
-- `Implementations/Reference/Runtime/acceptance/example05_input_3.snapshot.json`.
-
-* * *
-
-## Required host-binding capabilities
-
-The current published Python runtime expects the Example 05 host binding to require:
-
-- `window`,
-- `basic_widget_rendering`,
-- `property_write`,
-- `widget_value_binding`,
-- `widget_reference_binding`.
-
-Those capabilities match the currently published `.wfrog` package and the emitted backend contract for the bounded slice.
-
-* * *
-
-## Freeze posture
-
-For the current published repository state, this runtime should be read as one downstream consumer of the frozen Example 05 reference corridor.
-
-Routine maintenance may improve portability, CI, or implementation clarity, but it should preserve the shared acceptance posture and the observable Example 05 result.
-
-* * *
-
-## Summary
-
-This directory is the Python runtime-family consumer for the current frozen bounded Example 05 corridor.
-
-Its job is to consume the published contract and `.wfrog` package, not to redefine the language or the corridor itself.
+<p>
+This runtime is non-normative.
+It verifies repository-visible runtime closure for the current bounded example corridor.
+</p>
