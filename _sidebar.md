@@ -369,6 +369,8 @@
     - [emit_examples01_04_contracts.py](/Implementations/Reference/ContractEmitter/emit_examples01_04_contracts.py)
     - [reference_contract_emitter.py](/Implementations/Reference/ContractEmitter/reference_contract_emitter.py)
     - [acceptance](/Implementations/Reference/ContractEmitter/acceptance/Readme.md)
+    - bridge
+      - [example05 contract homogenization](/Implementations/Reference/ContractEmitter/bridge/example05_contract_homogenization.md)
     - tests
       - [test_example05_contract_emission.py](/Implementations/Reference/ContractEmitter/tests/test_example05_contract_emission.py)
       - [test_examples01_04_contract_emission.py](/Implementations/Reference/ContractEmitter/tests/test_examples01_04_contract_emission.py)
