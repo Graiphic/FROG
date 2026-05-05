@@ -456,6 +456,7 @@
       - [runtime_core.py](/Implementations/Reference/Runtime/python/runtime_core.py)
       - [ui_runtime.py](/Implementations/Reference/Runtime/python/ui_runtime.py)
       - tests
+        - [test_runtime_core_normalized_contract.py](/Implementations/Reference/Runtime/python/tests/test_runtime_core_normalized_contract.py)
         - [test_runtime_slice05.py](/Implementations/Reference/Runtime/python/tests/test_runtime_slice05.py)
         - [test_runtime_ui_slice05.py](/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice05.py)
     - [rust](/Implementations/Reference/Runtime/rust/Readme.md)
