@@ -371,6 +371,7 @@
     - [acceptance](/Implementations/Reference/ContractEmitter/acceptance/Readme.md)
     - bridge
       - [example05 contract homogenization](/Implementations/Reference/ContractEmitter/bridge/example05_contract_homogenization.md)
+      - [example05 contract normalization](/Implementations/Reference/ContractEmitter/bridge/example05_contract_normalization.md)
     - tests
       - [test_example05_contract_emission.py](/Implementations/Reference/ContractEmitter/tests/test_example05_contract_emission.py)
       - [test_examples01_04_contract_emission.py](/Implementations/Reference/ContractEmitter/tests/test_examples01_04_contract_emission.py)
@@ -462,6 +463,7 @@
     - [rust](/Implementations/Reference/Runtime/rust/Readme.md)
     - tests
       - [test_contract_executor.py](/Implementations/Reference/Runtime/tests/test_contract_executor.py)
+      - [test_example05_normalized_contract.py](/Implementations/Reference/Runtime/tests/test_example05_normalized_contract.py)
       - [test_example05_runtime_acceptance.py](/Implementations/Reference/Runtime/tests/test_example05_runtime_acceptance.py)
       - [test_examples01_05_runtime_acceptance.py](/Implementations/Reference/Runtime/tests/test_examples01_05_runtime_acceptance.py)
   - [UIHost](/Implementations/Reference/UIHost/Readme.md)

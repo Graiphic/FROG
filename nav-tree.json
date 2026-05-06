@@ -2648,6 +2648,13 @@
                       "path": "/Implementations/Reference/ContractEmitter/bridge/example05_contract_homogenization.md",
                       "kind": "page",
                       "children": []
+                    },
+                    {
+                      "key": "implementations/reference/contractemitter/bridge/example05_contract_normalization.md",
+                      "title": "example05 contract normalization",
+                      "path": "/Implementations/Reference/ContractEmitter/bridge/example05_contract_normalization.md",
+                      "kind": "page",
+                      "children": []
                     }
                   ]
                 },
@@ -3306,6 +3313,13 @@
                       "children": []
                     },
                     {
+                      "key": "implementations/reference/runtime/tests/test_example05_normalized_contract.py",
+                      "title": "test_example05_normalized_contract.py",
+                      "path": "/Implementations/Reference/Runtime/tests/test_example05_normalized_contract.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
                       "key": "implementations/reference/runtime/tests/test_example05_runtime_acceptance.py",
                       "title": "test_example05_runtime_acceptance.py",
                       "path": "/Implementations/Reference/Runtime/tests/test_example05_runtime_acceptance.py",
@@ -3795,6 +3809,7 @@
     "/Implementations/Reference/ContractEmitter/reference_contract_emitter.py",
     "/Implementations/Reference/ContractEmitter/acceptance/Readme.md",
     "/Implementations/Reference/ContractEmitter/bridge/example05_contract_homogenization.md",
+    "/Implementations/Reference/ContractEmitter/bridge/example05_contract_normalization.md",
     "/Implementations/Reference/ContractEmitter/tests/test_example05_contract_emission.py",
     "/Implementations/Reference/ContractEmitter/tests/test_examples01_04_contract_emission.py",
     "/Implementations/Reference/ContractEmitter/Readme.md",
@@ -3875,6 +3890,7 @@
     "/Implementations/Reference/Runtime/python/Readme.md",
     "/Implementations/Reference/Runtime/rust/Readme.md",
     "/Implementations/Reference/Runtime/tests/test_contract_executor.py",
+    "/Implementations/Reference/Runtime/tests/test_example05_normalized_contract.py",
     "/Implementations/Reference/Runtime/tests/test_example05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/tests/test_examples01_05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/Readme.md",
