@@ -21,15 +21,34 @@ python -m Implementations.Reference.ContractEmitter.reference_contract_emitter -
 
 <hr/>
 
-<h2>Contract-to-runtime direction</h2>
+<h2>Example 05 Normalized Contract Surface</h2>
 
 <p>
-The current Examples <code>01</code> through <code>04</code> contracts are intentionally shaped so that runtime acceptance can be executed by a generic contract executor rather than by hard-coded example identifiers.
+The Example 05 contract now exposes the normalized surface only:
 </p>
 
+<ul>
+  <li><code>example_id</code></li>
+  <li><code>artifact_refs</code></li>
+  <li><code>units[].public_io</code></li>
+  <li><code>units[].ui_bindings</code></li>
+  <li><code>units[].execution_kernel</code></li>
+  <li><code>units[].effects</code></li>
+  <li><code>units[].publications</code></li>
+</ul>
+
 <p>
-Example <code>04_stateful_feedback_delay</code> now carries <code>execution_kernel.state_id</code> in its lowering and contract so that runtime snapshots can identify the delay state without relying on an implicit name.
+The legacy compatibility fields have been removed:
 </p>
+
+<ul>
+  <li><code>public_interface</code></li>
+  <li><code>ui_binding</code></li>
+  <li><code>state_model</code></li>
+  <li><code>execution_model</code></li>
+  <li><code>property_writes</code></li>
+  <li><code>public_output_publication</code></li>
+</ul>
 
 <hr/>
 

@@ -4,6 +4,13 @@
     "path": "Versioning/Readme.md"
   },
   "backend_family": "reference_host_runtime_ui_binding",
+  "example_id": "05_bounded_ui_accumulator",
+  "artifact_refs": {
+    "source_path": "Examples/05_bounded_ui_accumulator/main.frog",
+    "fir_path": "Examples/05_bounded_ui_accumulator/main.fir.json",
+    "lowering_path": "Examples/05_bounded_ui_accumulator/main.lowering.json",
+    "wfrog_path": "Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog"
+  },
   "producer": {
     "implementation": "FROG Reference ContractEmitter",
     "implementation_kind": "non_normative_reference_emitter",
@@ -65,7 +72,7 @@
     {
       "unit_id": "main",
       "kind": "bounded_executable_ui_unit",
-      "public_interface": {
+      "public_io": {
         "inputs": [
           {
             "id": "input_value",
@@ -81,7 +88,7 @@
           }
         ]
       },
-      "ui_binding": {
+      "ui_bindings": {
         "package_refs": [
           "Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog"
         ],
@@ -107,6 +114,20 @@
             }
           }
         ],
+        "control_bindings": [
+          {
+            "widget_id": "ctrl_input",
+            "mode": "widget_value",
+            "public_input_id": "input_value"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "ind_result",
+            "mode": "widget_value",
+            "public_output_id": "result"
+          }
+        ],
         "widget_reference_support": [
           {
             "widget_id": "ctrl_input",
@@ -120,31 +141,53 @@
               "foreground_color"
             ]
           }
+        ],
+        "reference_writes": [
+          {
+            "widget_id": "ctrl_input",
+            "member": "foreground_color",
+            "value_type": "frog.color.rgba8",
+            "value_literal": "#5B9BD5"
+          },
+          {
+            "widget_id": "ind_result",
+            "member": "foreground_color",
+            "value_type": "frog.color.rgba8",
+            "value_literal": "#70AD47"
+          }
         ]
       },
-      "state_model": {
-        "explicit_state": true,
-        "carrier": {
-          "primitive": "frog.core.delay",
-          "state_id": "accumulator_state",
-          "type": "u16",
-          "initial_value": 0
-        },
-        "commit_rule": "state_next becomes state_current at the loop iteration commit point"
-      },
-      "execution_model": {
-        "structure": "for_loop",
+      "execution_kernel": {
+        "state_id": "accumulator_state",
+        "initial_state": 0,
+        "state_type": "u16",
         "iteration_count": 5,
-        "iteration_variable": "i",
-        "body_rule": {
-          "kind": "accumulate_with_explicit_state",
-          "expression": "state_next = state_current + input_value"
-        },
-        "final_result_rule": "final_state is published to public output result and to indicator ind_result"
+        "iteration_body": [
+          {
+            "op": "add",
+            "dst": "state_next",
+            "src": [
+              "state_current",
+              "input_value"
+            ]
+          }
+        ],
+        "commit_rule": "state_current <- state_next after each iteration",
+        "overflow_behavior": "reject_execution_on_u16_overflow",
+        "final_publication": [
+          {
+            "target": "public_output.result",
+            "source": "state_current"
+          },
+          {
+            "target": "widget.ind_result.value",
+            "source": "state_current"
+          }
+        ]
       },
-      "property_writes": [
+      "effects": [
         {
-          "operation": "frog.ui.property_write",
+          "op": "frog.ui.property_write",
           "widget_id": "ctrl_input",
           "member": "foreground_color",
           "value": {
@@ -153,7 +196,7 @@
           }
         },
         {
-          "operation": "frog.ui.property_write",
+          "op": "frog.ui.property_write",
           "widget_id": "ind_result",
           "member": "foreground_color",
           "value": {
@@ -162,10 +205,16 @@
           }
         }
       ],
-      "public_output_publication": {
-        "output_id": "result",
-        "source": "final_state"
-      }
+      "publications": [
+        {
+          "target": "public_output.result",
+          "source": "state_current"
+        },
+        {
+          "target": "widget.ind_result.value",
+          "source": "state_current"
+        }
+      ]
     }
   ],
   "unsupported": [],

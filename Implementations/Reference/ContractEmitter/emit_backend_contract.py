@@ -74,12 +74,16 @@ def _expect_execution_kernel(unit: Dict[str, Any]) -> Dict[str, Any]:
     kernel = unit.get("execution_kernel")
     _ensure(isinstance(kernel, dict), "Missing execution_kernel section.")
     _ensure(kernel.get("state_type") == "u16", "Slice 05 only supports u16 state.")
+    _ensure(kernel.get("initial_state") == 0, "Slice 05 expects initial state 0.")
     _ensure(kernel.get("iteration_count") == 5, "Slice 05 expects exactly five iterations.")
+
     body = kernel.get("iteration_body")
     _ensure(isinstance(body, list) and len(body) == 1, "Slice 05 expects exactly one iteration body operation.")
     operation = body[0]
     _ensure(operation.get("op") == "add", "Slice 05 expects an add iteration body.")
+    _ensure(operation.get("dst") == "state_next", "Slice 05 expects iteration body dst state_next.")
     _ensure(operation.get("src") == ["state_current", "input_value"], "Unexpected iteration body sources.")
+
     publication = kernel.get("final_publication")
     _ensure(isinstance(publication, list) and len(publication) == 2, "Slice 05 expects exactly two final publications.")
     return kernel
@@ -110,6 +114,7 @@ def _load_and_validate_fir(
     _ensure(isinstance(fir_ref, dict), "Missing fir_ref.")
     fir_path_text = fir_ref.get("path")
     _ensure(isinstance(fir_path_text, str) and fir_path_text.endswith("main.fir.json"), "Invalid fir_ref.path.")
+
     repo_root = find_repo_root(Path(lowering_path).resolve())
     fir_path = _resolve_repo_relative_path(repo_root, fir_path_text)
     _ensure(fir_path.is_file(), f"Missing FIR artifact: {fir_path_text}")
@@ -139,6 +144,7 @@ def _load_and_validate_fir(
     execution_kernel = _expect_execution_kernel(lowering_unit)
     _ensure(isinstance(fir_state_model, dict), "Missing FIR state_model.")
     _ensure(fir_state_model.get("explicit_state") is True, "FIR must declare explicit_state = true.")
+
     carrier = fir_state_model.get("carrier")
     _ensure(isinstance(carrier, dict), "Missing FIR state_model.carrier.")
     _ensure(carrier.get("primitive") == "frog.core.delay", "FIR state carrier must use frog.core.delay.")
@@ -149,16 +155,54 @@ def _load_and_validate_fir(
     _ensure(isinstance(fir_execution_model, dict), "Missing FIR execution_model.")
     _ensure(fir_execution_model.get("structure") == "for_loop", "FIR execution_model.structure must be for_loop.")
     _ensure(fir_execution_model.get("iteration_count") == execution_kernel.get("iteration_count"), "FIR iteration_count must match lowering iteration_count.")
+
     body_rule = fir_execution_model.get("body_rule")
     _ensure(isinstance(body_rule, dict), "Missing FIR execution_model.body_rule.")
     _ensure(body_rule.get("kind") == "accumulate_with_explicit_state", "Unexpected FIR body_rule.kind.")
     _ensure(body_rule.get("expression") == "state_next = state_current + input_value", "Unexpected FIR body_rule.expression.")
-
     _ensure(fir_unit.get("publications") == execution_kernel.get("final_publication"), "FIR publications must match lowering final_publication.")
     return fir
 
 
-def _build_widget_bindings(ui_bindings: Dict[str, Any], public_io: Dict[str, Any]) -> Dict[str, Any]:
+def _value_dict(value_type: str, value_literal: Any) -> Dict[str, Any]:
+    return {"type": value_type, "value": value_literal}
+
+
+def _normalized_public_io(public_io: Dict[str, Any]) -> Dict[str, Any]:
+    public_input = public_io["inputs"][0]
+    public_output = public_io["outputs"][0]
+    return {
+        "inputs": [
+            {
+                "id": public_input.get("id"),
+                "type": public_input.get("type"),
+                "binding_origin": "widget.ctrl_input.value",
+            }
+        ],
+        "outputs": [
+            {
+                "id": public_output.get("id"),
+                "type": public_output.get("type"),
+                "binding_target": "interface.result",
+            }
+        ],
+    }
+
+
+def _normalized_execution_kernel(execution_kernel: Dict[str, Any]) -> Dict[str, Any]:
+    return {
+        "state_id": "accumulator_state",
+        "initial_state": execution_kernel.get("initial_state"),
+        "state_type": execution_kernel.get("state_type"),
+        "iteration_count": execution_kernel.get("iteration_count"),
+        "iteration_body": execution_kernel.get("iteration_body"),
+        "commit_rule": execution_kernel.get("commit_rule"),
+        "overflow_behavior": EXPECTED_OVERFLOW_BEHAVIOR,
+        "final_publication": execution_kernel.get("final_publication"),
+    }
+
+
+def _build_normalized_widget_bindings(ui_bindings: Dict[str, Any], public_io: Dict[str, Any], ui_package_path: str) -> Dict[str, Any]:
     public_input = public_io["inputs"][0]
     public_output = public_io["outputs"][0]
 
@@ -175,22 +219,34 @@ def _build_widget_bindings(ui_bindings: Dict[str, Any], public_io: Dict[str, Any
     _ensure(indicator_binding.get("public_output_id") == public_output.get("id"), "Unexpected indicator public_output_id.")
 
     widget_reference_support = []
-    property_writes = []
+    reference_write_contracts = []
+    effects = []
+
     for item in reference_writes:
         widget_id = item.get("widget_id")
         member = item.get("member")
         value_type = item.get("value_type")
         value_literal = item.get("value_literal")
+
         _ensure(widget_id in {"ctrl_input", "ind_result"}, f"Unexpected widget reference target: {widget_id}")
         _ensure(member == "foreground_color", "Slice 05 only supports foreground_color property writes.")
         _ensure(value_type == "frog.color.rgba8", "foreground_color writes must use frog.color.rgba8.")
+
         widget_reference_support.append({"widget_id": widget_id, "supported_members": [member]})
-        property_writes.append(
+        reference_write_contracts.append(
             {
-                "operation": "frog.ui.property_write",
                 "widget_id": widget_id,
                 "member": member,
-                "value": {"type": value_type, "value": value_literal},
+                "value_type": value_type,
+                "value_literal": value_literal,
+            }
+        )
+        effects.append(
+            {
+                "op": "frog.ui.property_write",
+                "widget_id": widget_id,
+                "member": member,
+                "value": _value_dict(value_type, value_literal),
             }
         )
 
@@ -213,7 +269,18 @@ def _build_widget_bindings(ui_bindings: Dict[str, Any], public_io: Dict[str, Any
             "binding": {"mode": "widget_value", "public_output_id": public_output.get("id")},
         },
     ]
-    return {"widgets": widgets, "widget_reference_support": ordered_support, "property_writes": property_writes}
+
+    return {
+        "ui_bindings": {
+            "package_refs": [ui_package_path],
+            "widgets": widgets,
+            "control_bindings": ui_bindings["control_bindings"],
+            "indicator_bindings": ui_bindings["indicator_bindings"],
+            "widget_reference_support": ordered_support,
+            "reference_writes": reference_write_contracts,
+        },
+        "effects": effects,
+    }
 
 
 def emit_reference_host_runtime_contract(
@@ -223,11 +290,13 @@ def emit_reference_host_runtime_contract(
     lowering_path: Path | str | None = None,
 ) -> Dict[str, Any]:
     _ensure(lowering.get("artifact_kind") == "frog_lowered_unit", "Expected artifact_kind == frog_lowered_unit.")
+
     source_ref = lowering.get("source_ref")
     fir_ref = lowering.get("fir_ref")
     _ensure(isinstance(source_ref, dict), "Missing source_ref.")
     _ensure(isinstance(fir_ref, dict), "Missing fir_ref.")
     _ensure(source_ref.get("example_id") == EXAMPLE_ID, "Only Example 05 is supported by this emitter.")
+
     lowering_intent = lowering.get("lowering_intent")
     _ensure(isinstance(lowering_intent, dict), "Missing lowering_intent.")
     _ensure(
@@ -242,18 +311,36 @@ def emit_reference_host_runtime_contract(
     public_io = _expect_public_io(unit)
     ui_bindings = _expect_ui_bindings(unit)
     execution_kernel = _expect_execution_kernel(unit)
+
     ui_package_path_value = _infer_ui_package_path(lowering, ui_package_path)
     if lowering_path is not None:
         _load_and_validate_fir(lowering, lowering_path=lowering_path, ui_package_path=ui_package_path_value)
-    widget_artifacts = _build_widget_bindings(ui_bindings, public_io)
 
-    public_input = public_io["inputs"][0]
-    public_output = public_io["outputs"][0]
+    normalized_public_io = _normalized_public_io(public_io)
+    normalized_execution_kernel = _normalized_execution_kernel(execution_kernel)
+    widget_artifacts = _build_normalized_widget_bindings(ui_bindings, normalized_public_io, ui_package_path_value)
 
-    contract = {
+    unit_contract = {
+        "unit_id": "main",
+        "kind": "bounded_executable_ui_unit",
+        "public_io": normalized_public_io,
+        "ui_bindings": widget_artifacts["ui_bindings"],
+        "execution_kernel": normalized_execution_kernel,
+        "effects": widget_artifacts["effects"],
+        "publications": normalized_execution_kernel["final_publication"],
+    }
+
+    return {
         "artifact_kind": "frog_backend_contract",
         "artifact_governance_ref": {"path": "Versioning/Readme.md"},
         "backend_family": REFERENCE_BACKEND_FAMILY,
+        "example_id": source_ref.get("example_id"),
+        "artifact_refs": {
+            "source_path": source_ref.get("path"),
+            "fir_path": fir_ref.get("path"),
+            "lowering_path": source_ref.get("path", "").replace("main.frog", "main.lowering.json"),
+            "wfrog_path": ui_package_path_value,
+        },
         "producer": {
             "implementation": "FROG Reference ContractEmitter",
             "implementation_kind": "non_normative_reference_emitter",
@@ -296,59 +383,10 @@ def emit_reference_host_runtime_contract(
             "execution_start": {"input_binding_complete": True, "ui_host_available": True, "initial_state_materialized": True},
             "numeric_behavior": {"value_domain": "u16", "overflow_behavior": EXPECTED_OVERFLOW_BEHAVIOR},
         },
-        "units": [
-            {
-                "unit_id": "main",
-                "kind": "bounded_executable_ui_unit",
-                "public_interface": {
-                    "inputs": [
-                        {
-                            "id": public_input.get("id"),
-                            "type": public_input.get("type"),
-                            "binding_origin": "widget.ctrl_input.value",
-                        }
-                    ],
-                    "outputs": [
-                        {
-                            "id": public_output.get("id"),
-                            "type": public_output.get("type"),
-                            "binding_target": "interface.result",
-                        }
-                    ],
-                },
-                "ui_binding": {
-                    "package_refs": [ui_package_path_value],
-                    "widgets": widget_artifacts["widgets"],
-                    "widget_reference_support": widget_artifacts["widget_reference_support"],
-                },
-                "state_model": {
-                    "explicit_state": True,
-                    "carrier": {
-                        "primitive": "frog.core.delay",
-                        "state_id": "accumulator_state",
-                        "type": execution_kernel.get("state_type"),
-                        "initial_value": execution_kernel.get("initial_state"),
-                    },
-                    "commit_rule": "state_next becomes state_current at the loop iteration commit point",
-                },
-                "execution_model": {
-                    "structure": "for_loop",
-                    "iteration_count": execution_kernel.get("iteration_count"),
-                    "iteration_variable": "i",
-                    "body_rule": {
-                        "kind": "accumulate_with_explicit_state",
-                        "expression": "state_next = state_current + input_value",
-                    },
-                    "final_result_rule": "final_state is published to public output result and to indicator ind_result",
-                },
-                "property_writes": widget_artifacts["property_writes"],
-                "public_output_publication": {"output_id": public_output.get("id"), "source": "final_state"},
-            }
-        ],
+        "units": [unit_contract],
         "unsupported": [],
         "diagnostics": [],
     }
-    return contract
 
 
 def load_lowering_from_path(path: Path | str) -> Dict[str, Any]:

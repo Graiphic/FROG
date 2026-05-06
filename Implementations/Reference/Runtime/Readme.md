@@ -22,15 +22,15 @@ Examples 01–04
     -> runtime acceptance snapshot
 
 Example 05
-  homogenized backend contract + .wfrog package
+  normalized backend contract + .wfrog package
     -> generic contract executor
-    -> specialized runtime-family checker using normalized fields
+    -> specialized runtime-family checker
     -> richer UI/state/overflow acceptance snapshot
 ```
 
 ## Normalized Example 05 Runtime
 
-The specialized Python runtime now consumes the normalized Example 05 contract surface:
+The specialized Python runtime and the generic contract executor now consume the normalized Example 05 contract surface:
 
 ```text
 public_io
@@ -40,7 +40,7 @@ effects
 publications
 ```
 
-It no longer depends on the legacy compatibility fields, although those fields may remain in the contract temporarily while the transition is being finalized.
+The legacy compatibility fields have been removed from the published Example 05 contract.
 
 ## Commands
 
