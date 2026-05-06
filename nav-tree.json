@@ -3393,6 +3393,36 @@
                   "path": "/Implementations/Reference/WidgetValidator/validate_widget_layer.py",
                   "kind": "code",
                   "children": []
+                },
+                {
+                  "key": "implementations/reference/widgetvalidator/notes/",
+                  "title": "notes",
+                  "path": null,
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "implementations/reference/widgetvalidator/notes/table_deepening.md",
+                      "title": "table deepening",
+                      "path": "/Implementations/Reference/WidgetValidator/notes/table_deepening.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "key": "implementations/reference/widgetvalidator/tests/",
+                  "title": "tests",
+                  "path": null,
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "implementations/reference/widgetvalidator/tests/test_table_deepening.py",
+                      "title": "test_table_deepening.py",
+                      "path": "/Implementations/Reference/WidgetValidator/tests/test_table_deepening.py",
+                      "kind": "code",
+                      "children": []
+                    }
+                  ]
                 }
               ]
             }
@@ -3901,6 +3931,8 @@
     "/Implementations/Reference/Validator/reference_validator.py",
     "/Implementations/Reference/Validator/Readme.md",
     "/Implementations/Reference/WidgetValidator/validate_widget_layer.py",
+    "/Implementations/Reference/WidgetValidator/notes/table_deepening.md",
+    "/Implementations/Reference/WidgetValidator/tests/test_table_deepening.py",
     "/Implementations/Reference/WidgetValidator/Readme.md",
     "/Implementations/Reference/Readme.md",
     "/Roadmap/Milestones.md",
