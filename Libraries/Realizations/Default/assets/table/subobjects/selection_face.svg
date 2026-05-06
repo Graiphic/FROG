@@ -1,1 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 42"><g data-frog-part="selection_face"><rect width="220" height="42" fill="#f8fafc" stroke="#94a3b8"/><text x="10" y="26" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12">selection_face</text></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 34">
+  <g data-frog-part="selection_face">
+    <rect width="150" height="34" fill="#60a5fa" opacity="0.22" stroke="#2563eb"/>
+  </g>
+</svg>

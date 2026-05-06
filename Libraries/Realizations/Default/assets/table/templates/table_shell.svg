@@ -1,1 +1,68 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 260" data-frog-template="frog.realizations.default.table.shell"><g data-frog-part="root"><text data-frog-part="label" x="12" y="18">table_1</text><text data-frog-part="caption" x="12" y="42">Table</text><rect data-frog-part="frame" x="10" y="54" width="400" height="190" fill="#fff" stroke="#000"/><g data-frog-slot="main_region" transform="translate(22 68)"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 390" data-frog-template="frog.realizations.default.table.shell">
+  <title>FROG Default Table Shell</title>
+  <desc>Default SVG-backed table widget realization with headers, grid, rows, cells, selection, editing, sort, resize, scrollbars, label, caption, frame, and focus surfaces.</desc>
+  <g data-frog-part="root">
+    <text data-frog-part="label" x="16" y="22" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">table_1</text>
+    <text data-frog-part="caption" x="16" y="48" font-size="16" font-family="Inter, Arial, sans-serif" font-weight="600" fill="#111827">Table</text>
+
+    <rect data-frog-part="frame" x="14" y="64" width="592" height="310" rx="8" fill="#ffffff" stroke="#111827" stroke-width="2"/>
+
+    <g data-frog-part="header_region">
+      <rect x="28" y="82" width="540" height="34" fill="#f1f5f9" stroke="#94a3b8"/>
+      <g data-frog-part="column_header_region">
+        <rect x="78" y="82" width="470" height="34" fill="#e2e8f0" stroke="#94a3b8"/>
+        <text x="96" y="104" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">Column A</text>
+        <text x="244" y="104" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">Column B</text>
+        <text x="392" y="104" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">Column C</text>
+      </g>
+      <g data-frog-part="row_header_region">
+        <rect x="28" y="116" width="50" height="238" fill="#f8fafc" stroke="#cbd5e1"/>
+        <text x="42" y="142" font-size="11" font-family="Inter, Arial, sans-serif" fill="#475569">1</text>
+        <text x="42" y="176" font-size="11" font-family="Inter, Arial, sans-serif" fill="#475569">2</text>
+        <text x="42" y="210" font-size="11" font-family="Inter, Arial, sans-serif" fill="#475569">3</text>
+      </g>
+      <g data-frog-part="sort_indicator">
+        <path d="M530 96 L538 88 L546 96 Z" fill="#2563eb"/>
+      </g>
+      <g data-frog-part="resize_handle">
+        <line x1="226" y1="88" x2="226" y2="110" stroke="#64748b" stroke-width="2"/>
+        <line x1="374" y1="88" x2="374" y2="110" stroke="#64748b" stroke-width="2"/>
+      </g>
+    </g>
+
+    <g data-frog-part="grid_region">
+      <rect x="78" y="116" width="470" height="238" fill="#ffffff" stroke="#cbd5e1"/>
+      <g data-frog-part="body_region">
+        <g data-frog-part="row">
+          <rect x="78" y="116" width="470" height="34" fill="#ffffff" stroke="#e2e8f0"/>
+          <g data-frog-part="cell">
+            <rect x="78" y="116" width="148" height="34" fill="#ffffff" stroke="#e2e8f0"/>
+            <text x="94" y="137" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">12.5</text>
+          </g>
+          <rect x="226" y="116" width="148" height="34" fill="#ffffff" stroke="#e2e8f0"/>
+          <rect x="374" y="116" width="148" height="34" fill="#ffffff" stroke="#e2e8f0"/>
+        </g>
+        <rect x="78" y="150" width="470" height="34" fill="#f8fafc" stroke="#e2e8f0"/>
+        <rect x="78" y="184" width="470" height="34" fill="#ffffff" stroke="#e2e8f0"/>
+        <rect x="78" y="218" width="470" height="34" fill="#f8fafc" stroke="#e2e8f0"/>
+      </g>
+      <rect data-frog-part="selection_face" x="226" y="150" width="148" height="34" fill="#60a5fa" opacity="0.22" stroke="#2563eb"/>
+      <rect data-frog-part="active_cell" x="78" y="116" width="148" height="34" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+      <g data-frog-part="edit_overlay" opacity="0.95">
+        <rect x="80" y="118" width="144" height="30" rx="3" fill="none" stroke="#f97316" stroke-width="2" stroke-dasharray="5 4"/>
+      </g>
+    </g>
+
+    <g data-frog-part="vertical_scrollbar">
+      <rect x="568" y="116" width="18" height="238" rx="8" fill="#e2e8f0" stroke="#94a3b8"/>
+      <rect x="571" y="144" width="12" height="78" rx="6" fill="#94a3b8"/>
+    </g>
+
+    <g data-frog-part="horizontal_scrollbar">
+      <rect x="78" y="354" width="470" height="16" rx="8" fill="#e2e8f0" stroke="#94a3b8"/>
+      <rect x="128" y="357" width="140" height="10" rx="5" fill="#94a3b8"/>
+    </g>
+
+    <rect data-frog-part="focus_ring" x="10" y="60" width="600" height="314" rx="10" fill="none" stroke="#2f80ed" stroke-width="3" opacity="0"/>
+  </g>
+</svg>

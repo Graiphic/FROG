@@ -5,7 +5,7 @@
   "version_governance_ref": "../../../Versioning/Readme.md",
   "package": {
     "id": "frog.realizations.default.table",
-    "name": "FROG Default table Realization",
+    "name": "FROG Default Table Realization",
     "namespace": "frog.realizations.default.table",
     "family": "default",
     "category": "structured data",
@@ -25,6 +25,8 @@
       "canonical .frog source",
       "frog.ui primitive semantics",
       "runtime-private host handles",
+      "row virtualization caches",
+      "host-native cell renderer handles",
       "IDE-private editing behavior"
     ],
     "class_law_refs": [
@@ -57,6 +59,10 @@
       "frog.realizations.default.table.assets.grid_region_svg",
       "frog.realizations.default.table.assets.cell_svg",
       "frog.realizations.default.table.assets.selection_face_svg",
+      "frog.realizations.default.table.assets.active_cell_svg",
+      "frog.realizations.default.table.assets.edit_overlay_svg",
+      "frog.realizations.default.table.assets.sort_indicator_svg",
+      "frog.realizations.default.table.assets.resize_handle_svg",
       "frog.realizations.default.table.assets.vertical_scrollbar_svg",
       "frog.realizations.default.table.assets.horizontal_scrollbar_svg"
     ]
@@ -75,16 +81,42 @@
         "caption",
         "frame",
         "header_region",
+        "column_header_region",
+        "row_header_region",
         "grid_region",
+        "body_region",
+        "row",
         "cell",
+        "active_cell",
         "selection_face",
+        "edit_overlay",
+        "sort_indicator",
+        "resize_handle",
         "vertical_scrollbar",
         "horizontal_scrollbar",
         "focus_ring"
       ],
+      "supported_selection_modes": [
+        "none",
+        "cell",
+        "row",
+        "column",
+        "range",
+        "multi_range"
+      ],
+      "supported_editing_modes": [
+        "none",
+        "cell"
+      ],
+      "supported_sort_directions": [
+        "ascending",
+        "descending"
+      ],
       "fallbacks": {
         "missing_resource": "host_native_or_generic_compatible_rendering",
-        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint",
+        "unsupported_selection_mode": "reject_or_downgrade_to_cell_selection",
+        "unsupported_editing_mode": "reject_or_display_only"
       }
     }
   ],
@@ -118,6 +150,30 @@
       "kind": "svg",
       "path": "./assets/table/subobjects/selection_face.svg",
       "target_part": "selection_face"
+    },
+    {
+      "id": "frog.realizations.default.table.assets.active_cell_svg",
+      "kind": "svg",
+      "path": "./assets/table/subobjects/active_cell.svg",
+      "target_part": "active_cell"
+    },
+    {
+      "id": "frog.realizations.default.table.assets.edit_overlay_svg",
+      "kind": "svg",
+      "path": "./assets/table/subobjects/edit_overlay.svg",
+      "target_part": "edit_overlay"
+    },
+    {
+      "id": "frog.realizations.default.table.assets.sort_indicator_svg",
+      "kind": "svg",
+      "path": "./assets/table/subobjects/sort_indicator.svg",
+      "target_part": "sort_indicator"
+    },
+    {
+      "id": "frog.realizations.default.table.assets.resize_handle_svg",
+      "kind": "svg",
+      "path": "./assets/table/subobjects/resize_handle.svg",
+      "target_part": "resize_handle"
     },
     {
       "id": "frog.realizations.default.table.assets.vertical_scrollbar_svg",
@@ -159,9 +215,29 @@
       "binding_selector": "[data-frog-part='header_region']"
     },
     {
+      "part": "column_header_region",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='column_header_region']"
+    },
+    {
+      "part": "row_header_region",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='row_header_region']"
+    },
+    {
       "part": "grid_region",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='grid_region']"
+    },
+    {
+      "part": "body_region",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='body_region']"
+    },
+    {
+      "part": "row",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='row']"
     },
     {
       "part": "cell",
@@ -169,9 +245,29 @@
       "binding_selector": "[data-frog-part='cell']"
     },
     {
+      "part": "active_cell",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='active_cell']"
+    },
+    {
       "part": "selection_face",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='selection_face']"
+    },
+    {
+      "part": "edit_overlay",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='edit_overlay']"
+    },
+    {
+      "part": "sort_indicator",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='sort_indicator']"
+    },
+    {
+      "part": "resize_handle",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='resize_handle']"
     },
     {
       "part": "vertical_scrollbar",
@@ -197,22 +293,173 @@
     },
     {
       "member": "columns.headers",
+      "target_part": "column_header_region",
+      "target_operation": "render_column_headers"
+    },
+    {
+      "member": "columns.schema",
       "target_part": "header_region",
-      "target_operation": "render_headers"
+      "target_operation": "apply_column_schema"
+    },
+    {
+      "member": "rows.*",
+      "target_part": "body_region",
+      "target_operation": "render_rows"
+    },
+    {
+      "member": "cells.*",
+      "target_part": "cell",
+      "target_operation": "render_cells"
     },
     {
       "member": "selection.*",
       "target_part": "selection_face",
       "target_operation": "render_selection"
+    },
+    {
+      "member": "editing.*",
+      "target_part": "edit_overlay",
+      "target_operation": "render_editing_state"
+    },
+    {
+      "member": "viewport.*",
+      "target_part": "grid_region",
+      "target_operation": "apply_viewport"
+    },
+    {
+      "member": "sort.*",
+      "target_part": "sort_indicator",
+      "target_operation": "render_sort_state"
+    },
+    {
+      "member": "filter.*",
+      "target_part": "body_region",
+      "target_operation": "apply_filter_view"
+    }
+  ],
+  "method_bindings": [
+    {
+      "method": "clear_selection",
+      "target_operation": "clear_selection"
+    },
+    {
+      "method": "set_selection",
+      "target_operation": "set_selection"
+    },
+    {
+      "method": "select_cell",
+      "target_operation": "set_active_cell"
+    },
+    {
+      "method": "scroll_to",
+      "target_operation": "apply_viewport"
+    },
+    {
+      "method": "set_cell_value",
+      "target_operation": "update_cell_value"
+    },
+    {
+      "method": "append_row",
+      "target_operation": "append_row"
+    },
+    {
+      "method": "remove_row",
+      "target_operation": "remove_row"
+    },
+    {
+      "method": "resize_column",
+      "target_operation": "resize_column"
+    },
+    {
+      "method": "sort_by",
+      "target_operation": "apply_sort"
+    },
+    {
+      "method": "apply_filter",
+      "target_operation": "apply_filter"
+    }
+  ],
+  "event_bindings": [
+    {
+      "event": "value_changed",
+      "source_part": "grid_region"
+    },
+    {
+      "event": "cell_value_changed",
+      "source_part": "cell"
+    },
+    {
+      "event": "selection_changed",
+      "source_part": "selection_face"
+    },
+    {
+      "event": "viewport_changed",
+      "source_part": "grid_region"
+    },
+    {
+      "event": "sort_changed",
+      "source_part": "sort_indicator"
+    },
+    {
+      "event": "filter_changed",
+      "source_part": "body_region"
+    },
+    {
+      "event": "edit_started",
+      "source_part": "edit_overlay"
+    },
+    {
+      "event": "edit_committed",
+      "source_part": "edit_overlay"
+    },
+    {
+      "event": "cell_clicked",
+      "source_part": "cell"
+    },
+    {
+      "event": "header_clicked",
+      "source_part": "column_header_region"
     }
   ],
   "state_maps": [
     {
       "state": "normal"
+    },
+    {
+      "state": "focused"
+    },
+    {
+      "state": "disabled"
+    },
+    {
+      "state": "editing"
+    },
+    {
+      "state": "selection_active"
     }
   ],
   "composition": {
     "shell": "frog.realizations.default.table.assets.shell_svg",
+    "layer_order": [
+      "frame",
+      "header_region",
+      "column_header_region",
+      "row_header_region",
+      "grid_region",
+      "body_region",
+      "row",
+      "cell",
+      "selection_face",
+      "active_cell",
+      "edit_overlay",
+      "sort_indicator",
+      "resize_handle",
+      "vertical_scrollbar",
+      "horizontal_scrollbar",
+      "focus_ring",
+      "label",
+      "caption"
+    ],
     "slots": [
       {
         "slot": "header_region",
@@ -241,18 +488,37 @@
         "parent_part": "grid_region",
         "slot": "selection_face",
         "resource_ref": "frog.realizations.default.table.assets.selection_face_svg"
+      },
+      {
+        "parent_part": "grid_region",
+        "slot": "active_cell",
+        "resource_ref": "frog.realizations.default.table.assets.active_cell_svg"
+      },
+      {
+        "parent_part": "grid_region",
+        "slot": "edit_overlay",
+        "resource_ref": "frog.realizations.default.table.assets.edit_overlay_svg"
       }
     ]
   },
   "host_hints": {
-    "preferred_host_kind": "svg_template_host_or_host_native_widget",
-    "style_application_posture": "apply_property_bindings_before_render"
+    "preferred_host_kind": "svg_template_host_or_host_native_virtual_grid",
+    "style_application_posture": "apply_property_bindings_before_render",
+    "host_native_replacement_allowed": true,
+    "virtualization_allowed": true,
+    "minimum_visible_grid": {
+      "rows": 1,
+      "columns": 1
+    }
   },
   "validation_expectations": [
     "target classes must exist in the referenced widget class-law document",
     "all declared public parts must exist in widget class law",
     "resources must resolve relative to this package file",
     "resources must not become semantic owners of widget value",
-    "runtime-private host handles must not be exposed as public widget members"
+    "runtime-private host handles must not be exposed as public widget members",
+    "virtualized row and cell handles must remain realization-private",
+    "declared SVG resources should expose all supported data-frog-part markers",
+    "unsupported edit operations on indicator classes must be rejected"
   ]
 }

@@ -1,1 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 42"><g data-frog-part="grid_region"><rect width="220" height="42" fill="#f8fafc" stroke="#94a3b8"/><text x="10" y="26" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12">grid_region</text></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 170">
+  <g data-frog-part="grid_region">
+    <rect width="460" height="170" fill="#ffffff" stroke="#94a3b8"/>
+    <g data-frog-part="body_region">
+      <g data-frog-part="row">
+        <rect x="0" y="0" width="460" height="34" fill="#ffffff" stroke="#e2e8f0"/>
+        <g data-frog-part="cell">
+          <rect x="0" y="0" width="150" height="34" fill="#ffffff" stroke="#e2e8f0"/>
+          <text x="12" y="22" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12">cell</text>
+        </g>
+      </g>
+      <rect x="0" y="34" width="460" height="34" fill="#f8fafc" stroke="#e2e8f0"/>
+      <rect x="0" y="68" width="460" height="34" fill="#ffffff" stroke="#e2e8f0"/>
+    </g>
+    <rect data-frog-part="selection_face" x="150" y="34" width="150" height="34" fill="#60a5fa" opacity="0.22" stroke="#2563eb"/>
+    <rect data-frog-part="active_cell" x="0" y="0" width="150" height="34" fill="none" stroke="#22c55e" stroke-width="2"/>
+    <rect data-frog-part="edit_overlay" x="2" y="2" width="146" height="30" fill="none" stroke="#f97316" stroke-width="2" stroke-dasharray="5 4"/>
+  </g>
+</svg>
