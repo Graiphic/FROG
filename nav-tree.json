@@ -3062,6 +3062,13 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/lowerer/rules/",
+                  "title": "rules",
+                  "path": "/Implementations/Reference/Lowerer/rules/Readme.md",
+                  "kind": "category",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/lowerer/tests/",
                   "title": "tests",
                   "path": null,
@@ -3953,6 +3960,7 @@
     "/Implementations/Reference/Lowerer/lower_fir.py",
     "/Implementations/Reference/Lowerer/reference_lowerer.py",
     "/Implementations/Reference/Lowerer/acceptance/Readme.md",
+    "/Implementations/Reference/Lowerer/rules/Readme.md",
     "/Implementations/Reference/Lowerer/tests/test_example05_lowering.py",
     "/Implementations/Reference/Lowerer/tests/test_examples01_05_lowering.py",
     "/Implementations/Reference/Lowerer/Readme.md",

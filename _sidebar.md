@@ -428,6 +428,7 @@
     - [lower_fir.py](/Implementations/Reference/Lowerer/lower_fir.py)
     - [reference_lowerer.py](/Implementations/Reference/Lowerer/reference_lowerer.py)
     - [acceptance](/Implementations/Reference/Lowerer/acceptance/Readme.md)
+    - [rules](/Implementations/Reference/Lowerer/rules/Readme.md)
     - tests
       - [test_example05_lowering.py](/Implementations/Reference/Lowerer/tests/test_example05_lowering.py)
       - [test_examples01_05_lowering.py](/Implementations/Reference/Lowerer/tests/test_examples01_05_lowering.py)
