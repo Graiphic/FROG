@@ -16,7 +16,24 @@
 <pre><code>python Implementations/Reference/check_reference_workspace.py</code></pre>
 
 <p>
-This command runs the Examples 01–05 full pipeline with widget-layer validation enabled.
+This command runs the Examples 01–05 full pipeline.
+Widget-layer validation is included by default through the pipeline.
+</p>
+
+<hr/>
+
+<h2>Widget-layer only command</h2>
+
+<pre><code>python Implementations/Reference/check_reference_workspace.py --widget-layer-only</code></pre>
+
+<p>
+This runs only the non-normative widget-layer repository hygiene validator:
+</p>
+
+<pre><code>python Implementations/Reference/WidgetValidator/validate_widget_layer.py</code></pre>
+
+<p>
+Use this command when changing widget class-law documents, Default realization documents, <code>*.default.wfrog</code> manifests, SVG resources, public part names, package bindings, or validation expectations.
 </p>
 
 <hr/>
@@ -48,4 +65,17 @@ python Implementations/Reference/Runtime/execute_reference_contract.py \
 <p>
 This requires <code>clang</code>.
 It verifies the native LLVM proof dossiers for Examples 01–05.
+Widget-layer validation remains enabled unless explicitly skipped.
+</p>
+
+<hr/>
+
+<h2>Explicit widget-validator skip</h2>
+
+<pre><code>python Implementations/Reference/check_reference_workspace.py --skip-widget-validator</code></pre>
+
+<p>
+This skips widget-layer validation inside the Examples 01–05 pipeline.
+It should be used only for narrow debugging of unrelated pipeline stages.
+The default repository-quality posture is to keep widget validation enabled.
 </p>
