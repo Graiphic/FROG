@@ -3401,6 +3401,13 @@
                   "kind": "category",
                   "children": [
                     {
+                      "key": "implementations/reference/widgetvalidator/notes/tab_deepening.md",
+                      "title": "tab deepening",
+                      "path": "/Implementations/Reference/WidgetValidator/notes/tab_deepening.md",
+                      "kind": "page",
+                      "children": []
+                    },
+                    {
                       "key": "implementations/reference/widgetvalidator/notes/table_deepening.md",
                       "title": "table deepening",
                       "path": "/Implementations/Reference/WidgetValidator/notes/table_deepening.md",
@@ -3422,6 +3429,13 @@
                   "path": null,
                   "kind": "category",
                   "children": [
+                    {
+                      "key": "implementations/reference/widgetvalidator/tests/test_tab_deepening.py",
+                      "title": "test_tab_deepening.py",
+                      "path": "/Implementations/Reference/WidgetValidator/tests/test_tab_deepening.py",
+                      "kind": "code",
+                      "children": []
+                    },
                     {
                       "key": "implementations/reference/widgetvalidator/tests/test_table_deepening.py",
                       "title": "test_table_deepening.py",
@@ -3945,8 +3959,10 @@
     "/Implementations/Reference/Validator/reference_validator.py",
     "/Implementations/Reference/Validator/Readme.md",
     "/Implementations/Reference/WidgetValidator/validate_widget_layer.py",
+    "/Implementations/Reference/WidgetValidator/notes/tab_deepening.md",
     "/Implementations/Reference/WidgetValidator/notes/table_deepening.md",
     "/Implementations/Reference/WidgetValidator/notes/tree_deepening.md",
+    "/Implementations/Reference/WidgetValidator/tests/test_tab_deepening.py",
     "/Implementations/Reference/WidgetValidator/tests/test_table_deepening.py",
     "/Implementations/Reference/WidgetValidator/tests/test_tree_deepening.py",
     "/Implementations/Reference/WidgetValidator/Readme.md",

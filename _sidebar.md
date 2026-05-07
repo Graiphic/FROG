@@ -475,9 +475,11 @@
   - [WidgetValidator](/Implementations/Reference/WidgetValidator/Readme.md)
     - [validate_widget_layer.py](/Implementations/Reference/WidgetValidator/validate_widget_layer.py)
     - notes
+      - [tab deepening](/Implementations/Reference/WidgetValidator/notes/tab_deepening.md)
       - [table deepening](/Implementations/Reference/WidgetValidator/notes/table_deepening.md)
       - [tree deepening](/Implementations/Reference/WidgetValidator/notes/tree_deepening.md)
     - tests
+      - [test_tab_deepening.py](/Implementations/Reference/WidgetValidator/tests/test_tab_deepening.py)
       - [test_table_deepening.py](/Implementations/Reference/WidgetValidator/tests/test_table_deepening.py)
       - [test_tree_deepening.py](/Implementations/Reference/WidgetValidator/tests/test_tree_deepening.py)
 - [Roadmap](/Roadmap/Readme.md)
