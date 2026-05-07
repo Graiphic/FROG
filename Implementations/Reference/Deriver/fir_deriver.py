@@ -97,9 +97,7 @@ class SourceGraph:
         return matches
 
     def constant_value(self, node_id: str) -> tuple[str, Any]:
-        node = self.nodes.get(node_id)
-        if not node:
-            raise DerivationError(f"unknown constant node: {node_id}")
+        node = require_node(self, node_id, "constant")
         if node.get("kind") != "constant":
             raise DerivationError(f"node {node_id} is not a constant")
         value_type = node.get("type")
@@ -170,12 +168,54 @@ def source_interface(source: dict[str, Any]) -> tuple[list[dict[str, str]], list
     return ports("inputs"), ports("outputs")
 
 
+def assert_interface(
+    source: dict[str, Any],
+    expected_inputs: list[dict[str, str]],
+    expected_outputs: list[dict[str, str]],
+    context: str,
+) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
+    inputs, outputs = source_interface(source)
+    if inputs != expected_inputs or outputs != expected_outputs:
+        raise DerivationError(f"{context} expects inputs={expected_inputs!r}, outputs={expected_outputs!r}")
+    return inputs, outputs
+
+
 def metadata_name_for_diagnostics(source: dict[str, Any]) -> str:
     try:
         name = source_metadata(source).get("name")
     except DerivationError:
         return "<missing metadata.name>"
     return str(name) if isinstance(name, str) else repr(name)
+
+
+def require_node(graph: SourceGraph, node_id: str, context: str) -> dict[str, Any]:
+    node = graph.nodes.get(node_id)
+    if not isinstance(node, dict):
+        raise DerivationError(f"{context} expected node {node_id!r}")
+    return node
+
+
+def require_primitive(graph: SourceGraph, node_id: str, primitive_type: str, context: str) -> dict[str, Any]:
+    node = require_node(graph, node_id, context)
+    if node.get("kind") != "primitive" or node.get("type") != primitive_type:
+        raise DerivationError(f"{context} expected {node_id} to be primitive {primitive_type}")
+    return node
+
+
+def require_constant(
+    graph: SourceGraph,
+    node_id: str,
+    context: str,
+    *,
+    expected_type: str | None = None,
+    expected_value: Any | None = None,
+) -> tuple[str, Any]:
+    value_type, value = graph.constant_value(node_id)
+    if expected_type is not None and value_type != expected_type:
+        raise DerivationError(f"{context} expected constant {node_id} type {expected_type}, got {value_type}")
+    if expected_value is not None and value != expected_value:
+        raise DerivationError(f"{context} expected constant {node_id} value {expected_value!r}, got {value!r}")
+    return value_type, value
 
 
 def interface_input_node(graph: SourceGraph, port: str) -> dict[str, Any]:
@@ -192,6 +232,22 @@ def interface_output_node(graph: SourceGraph, port: str) -> dict[str, Any]:
     return matches[0]
 
 
+def property_write_nodes(graph: SourceGraph) -> list[dict[str, Any]]:
+    return [
+        node
+        for node in graph.nodes.values()
+        if node.get("kind") == "primitive" and node.get("type") == "frog.ui.property_write"
+    ]
+
+
+def widget_ref_target(graph: SourceGraph, ref_node_id: str, context: str) -> str:
+    ref_node = require_node(graph, ref_node_id, context)
+    widget_id = ref_node.get("widget")
+    if not isinstance(widget_id, str):
+        raise DerivationError(f"{context} expected widget reference node {ref_node_id} to expose string widget")
+    return widget_id
+
+
 def widget_value_type(source: dict[str, Any], widget_id: str) -> str:
     widgets = require_list(require_object(source.get("front_panel"), "source.front_panel").get("widgets"), "source.front_panel.widgets")
     for widget in widgets:
@@ -205,30 +261,35 @@ def widget_value_type(source: dict[str, Any], widget_id: str) -> str:
 
 
 def derive_example01(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    context = "pure addition pattern"
     graph = SourceGraph.from_source(source)
-    inputs, outputs = source_interface(source)
-    if inputs != [{"id": "a", "type": "f64"}, {"id": "b", "type": "f64"}] or outputs != [{"id": "result", "type": "f64"}]:
-        raise DerivationError("pure addition pattern expects a:f64, b:f64 -> result:f64")
+    assert_interface(
+        source,
+        [{"id": "a", "type": "f64"}, {"id": "b", "type": "f64"}],
+        [{"id": "result", "type": "f64"}],
+        context,
+    )
+    require_primitive(graph, "add_1", "frog.core.add", context)
     if graph.incoming("add_1", "a") != EdgeEndpoint(str(interface_input_node(graph, "a")["id"]), "value"):
-        raise DerivationError("pure addition pattern has invalid edge to add_1.a")
+        raise DerivationError(f"{context} has invalid edge to add_1.a")
     if graph.incoming("add_1", "b") != EdgeEndpoint(str(interface_input_node(graph, "b")["id"]), "value"):
-        raise DerivationError("pure addition pattern has invalid edge to add_1.b")
+        raise DerivationError(f"{context} has invalid edge to add_1.b")
     if graph.outgoing("add_1", "result") != EdgeEndpoint(str(interface_output_node(graph, "result")["id"]), "value"):
-        raise DerivationError("pure addition pattern has invalid publication edge")
+        raise DerivationError(f"{context} has invalid publication edge")
     return artifacts_example01(source_rel)
 
 
 def derive_example02(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    context = "UI value roundtrip pattern"
     graph = SourceGraph.from_source(source)
-    inputs, outputs = source_interface(source)
-    if inputs or outputs:
-        raise DerivationError("UI value roundtrip pattern expects no public IO")
+    assert_interface(source, [], [], context)
+    require_primitive(graph, "add_1", "frog.core.add", context)
     if graph.incoming("add_1", "a").node != "ctrl_a_value":
-        raise DerivationError("UI value roundtrip pattern has invalid edge to add_1.a")
+        raise DerivationError(f"{context} has invalid edge to add_1.a")
     if graph.incoming("add_1", "b").node != "ctrl_b_value":
-        raise DerivationError("UI value roundtrip pattern has invalid edge to add_1.b")
+        raise DerivationError(f"{context} has invalid edge to add_1.b")
     if graph.outgoing("add_1", "result").node != "ind_result_value":
-        raise DerivationError("UI value roundtrip pattern has invalid indicator publication edge")
+        raise DerivationError(f"{context} has invalid indicator publication edge")
     data = artifacts_example02(source_rel)
     data["units"][0]["ui_bindings"]["control_bindings"][0]["value_type"] = widget_value_type(source, "ctrl_a")
     data["units"][0]["ui_bindings"]["control_bindings"][1]["value_type"] = widget_value_type(source, "ctrl_b")
@@ -237,61 +298,67 @@ def derive_example02(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
 
 
 def derive_example03(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    context = "UI property-write pattern"
     graph = SourceGraph.from_source(source)
-    inputs, outputs = source_interface(source)
-    if inputs != [{"id": "status", "type": "string"}] or outputs:
-        raise DerivationError("UI property-write pattern expects status:string and no outputs")
+    assert_interface(source, [{"id": "status", "type": "string"}], [], context)
+    require_primitive(graph, "write_label_text", "frog.ui.property_write", context)
     if graph.incoming("write_label_text", "value") != EdgeEndpoint(str(interface_input_node(graph, "status")["id"]), "value"):
-        raise DerivationError("UI property-write pattern has invalid value edge")
+        raise DerivationError(f"{context} has invalid value edge")
     if graph.incoming("write_label_text", "ref") != EdgeEndpoint("ctrl_gain_ref", "ref"):
-        raise DerivationError("UI property-write pattern has invalid ref edge")
+        raise DerivationError(f"{context} has invalid ref edge")
+    widget_ref_target(graph, "ctrl_gain_ref", context)
     return artifacts_example03(source_rel)
 
 
 def derive_example04(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    context = "stateful feedback delay pattern"
     graph = SourceGraph.from_source(source)
-    inputs, outputs = source_interface(source)
-    if inputs != [{"id": "x", "type": "f64"}] or outputs != [{"id": "y", "type": "f64"}]:
-        raise DerivationError("stateful feedback delay pattern expects x:f64 -> y:f64")
-    delay = graph.nodes.get("delay_1")
-    if not delay or delay.get("type") != "frog.core.delay" or delay.get("initial") != 0.0:
-        raise DerivationError("stateful feedback delay pattern expects delay_1 frog.core.delay initial 0.0")
+    assert_interface(source, [{"id": "x", "type": "f64"}], [{"id": "y", "type": "f64"}], context)
+    require_primitive(graph, "add_1", "frog.core.add", context)
+    delay = require_node(graph, "delay_1", context)
+    if delay.get("type") != "frog.core.delay" or delay.get("initial") != 0.0:
+        raise DerivationError(f"{context} expects delay_1 frog.core.delay initial 0.0")
     if graph.incoming("add_1", "a").node != "input_x":
-        raise DerivationError("stateful feedback delay pattern has invalid input edge")
+        raise DerivationError(f"{context} has invalid input edge")
     if graph.incoming("add_1", "b") != EdgeEndpoint("delay_1", "out"):
-        raise DerivationError("stateful feedback delay pattern has invalid delay edge")
+        raise DerivationError(f"{context} has invalid delay edge")
     outs = graph.outgoing_all("add_1", "result")
     if EdgeEndpoint("delay_1", "in") not in outs or EdgeEndpoint("output_y", "value") not in outs:
-        raise DerivationError("stateful feedback delay pattern is missing feedback/output edge")
+        raise DerivationError(f"{context} is missing feedback/output edge")
     return artifacts_example04(source_rel)
 
 
 def derive_example05(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    context = "bounded UI accumulator pattern"
     graph = SourceGraph.from_source(source)
-    inputs, outputs = source_interface(source)
-    if inputs != [{"id": "input_value", "type": "u16"}] or outputs != [{"id": "result", "type": "u16"}]:
-        raise DerivationError("bounded UI accumulator pattern expects input_value:u16 -> result:u16")
-    loop = graph.nodes.get("loop_accumulate")
-    if not isinstance(loop, dict):
-        raise DerivationError("bounded UI accumulator pattern expects loop_accumulate")
+    inputs, outputs = assert_interface(
+        source,
+        [{"id": "input_value", "type": "u16"}],
+        [{"id": "result", "type": "u16"}],
+        context,
+    )
+    loop = require_node(graph, "loop_accumulate", context)
     count_node = require_object(loop.get("count_from"), "loop_accumulate.count_from").get("node")
     if not isinstance(count_node, str):
-        raise DerivationError("bounded UI accumulator pattern has invalid loop count source")
+        raise DerivationError(f"{context} has invalid loop count source")
     _, count = graph.constant_value(count_node)
-    state_type, initial = graph.constant_value(graph.incoming("loop_accumulate", "loop_initial_state").node)
-    if state_type != "u16" or initial != 0:
-        raise DerivationError("bounded UI accumulator pattern expects u16 initial state 0")
+    state_type, initial = require_constant(
+        graph,
+        graph.incoming("loop_accumulate", "loop_initial_state").node,
+        context,
+        expected_type="u16",
+        expected_value=0,
+    )
     writes = []
-    for node in graph.nodes.values():
-        if node.get("kind") == "primitive" and node.get("type") == "frog.ui.property_write":
-            node_id = str(node["id"])
-            ref_endpoint = graph.incoming(node_id, "ref")
-            ref_node = require_object(graph.nodes.get(ref_endpoint.node), f"{ref_endpoint.node}")
-            value_type, value_literal = graph.constant_value(graph.incoming(node_id, "value").node)
-            writes.append({"widget_id": ref_node["widget"], "member": require_object(node.get("widget_member"), "widget_member")["member"], "value_type": value_type, "value_literal": value_literal})
+    for node in property_write_nodes(graph):
+        node_id = str(node["id"])
+        ref_endpoint = graph.incoming(node_id, "ref")
+        widget_id = widget_ref_target(graph, ref_endpoint.node, context)
+        value_type, value_literal = graph.constant_value(graph.incoming(node_id, "value").node)
+        writes.append({"widget_id": widget_id, "member": require_object(node.get("widget_member"), "widget_member")["member"], "value_type": value_type, "value_literal": value_literal})
     writes.sort(key=lambda x: {"ctrl_input": 0, "ind_result": 1}.get(x["widget_id"], 100))
     if [write["widget_id"] for write in writes] != ["ctrl_input", "ind_result"]:
-        raise DerivationError("bounded UI accumulator pattern expects property writes for ctrl_input and ind_result")
+        raise DerivationError(f"{context} expects property writes for ctrl_input and ind_result")
     return {
         "artifact_kind": "frog_fir_unit",
         "artifact_governance_ref": {"path": "Versioning/Readme.md"},
