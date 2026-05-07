@@ -55,86 +55,95 @@ def source_ref(fir: dict[str, Any]) -> dict[str, Any]:
     return require_object(fir.get("source_ref"), "fir.source_ref")
 
 
-def lower_example01(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
-    u = unit(fir)
-    public_interface = require_object(u.get("public_interface"), "unit.public_interface")
+def base_lowering(fir: dict[str, Any], fir_rel: str, unit_id: str, purpose: str, backend_family_target: str, compiler_family_targets: list[str]) -> dict[str, Any]:
     return {
         "artifact_kind": "frog_lowered_unit",
         "artifact_governance_ref": {"path": "Versioning/Readme.md"},
         "source_ref": source_ref(fir),
-        "fir_ref": {"path": fir_rel, "unit_id": u["unit_id"]},
+        "fir_ref": {"path": fir_rel, "unit_id": unit_id},
         "lowering_intent": {
-            "purpose": "make the pure arithmetic slice consumable by simple runtime or compiler-family paths",
-            "backend_family_target": "reference_pure_dataflow_arithmetic",
-            "compiler_family_targets": ["llvm_oriented_native_path"],
+            "purpose": purpose,
+            "backend_family_target": backend_family_target,
+            "compiler_family_targets": compiler_family_targets,
         },
-        "lowered_units": [{
-            "unit_id": u["unit_id"],
-            "kind": "pure_addition_kernel",
-            "public_io": public_interface,
-            "execution_kernel": {
-                "operations": [{"op": "add", "dst": "result", "type": "f64", "src": ["a", "b"]}],
-                "final_publication": [{"target": "public_output.result", "source": "result"}],
-            },
-        }],
+        "lowered_units": [],
     }
+
+
+def lower_example01(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    u = unit(fir)
+    public_interface = require_object(u.get("public_interface"), "unit.public_interface")
+    out = base_lowering(
+        fir,
+        fir_rel,
+        u["unit_id"],
+        "make the pure arithmetic slice consumable by simple runtime or compiler-family paths",
+        "reference_pure_dataflow_arithmetic",
+        ["llvm_oriented_native_path"],
+    )
+    out["lowered_units"] = [{
+        "unit_id": u["unit_id"],
+        "kind": "pure_addition_kernel",
+        "public_io": public_interface,
+        "execution_kernel": {
+            "operations": [{"op": "add", "dst": "result", "type": "f64", "src": ["a", "b"]}],
+            "final_publication": [{"target": "public_output.result", "source": "result"}],
+        },
+    }]
+    return out
 
 
 def lower_example02(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     u = unit(fir)
-    return {
-        "artifact_kind": "frog_lowered_unit",
-        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
-        "source_ref": source_ref(fir),
-        "fir_ref": {"path": fir_rel, "unit_id": u["unit_id"]},
-        "lowering_intent": {
-            "purpose": "make the widget-value roundtrip slice consumable by a simple UI-value runtime family",
-            "backend_family_target": "reference_ui_value_roundtrip",
-            "compiler_family_targets": [],
+    out = base_lowering(
+        fir,
+        fir_rel,
+        u["unit_id"],
+        "make the widget-value roundtrip slice consumable by a simple UI-value runtime family",
+        "reference_ui_value_roundtrip",
+        [],
+    )
+    out["lowered_units"] = [{
+        "unit_id": u["unit_id"],
+        "kind": "ui_value_roundtrip_kernel",
+        "public_io": u["public_interface"],
+        "ui_bindings": u["ui_bindings"],
+        "execution_kernel": {
+            "operations": [{
+                "op": "add",
+                "dst": "result_value",
+                "type": "f64",
+                "src": ["widget.ctrl_a.value", "widget.ctrl_b.value"],
+            }],
+            "final_publication": [{"target": "widget.ind_result.value", "source": "result_value"}],
         },
-        "lowered_units": [{
-            "unit_id": u["unit_id"],
-            "kind": "ui_value_roundtrip_kernel",
-            "public_io": u["public_interface"],
-            "ui_bindings": u["ui_bindings"],
-            "execution_kernel": {
-                "operations": [{
-                    "op": "add",
-                    "dst": "result_value",
-                    "type": "f64",
-                    "src": ["widget.ctrl_a.value", "widget.ctrl_b.value"],
-                }],
-                "final_publication": [{"target": "widget.ind_result.value", "source": "result_value"}],
-            },
-        }],
-    }
+    }]
+    return out
 
 
 def lower_example03(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     u = unit(fir)
-    return {
-        "artifact_kind": "frog_lowered_unit",
-        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
-        "source_ref": source_ref(fir),
-        "fir_ref": {"path": fir_rel, "unit_id": u["unit_id"]},
-        "lowering_intent": {
-            "purpose": "make the object-style UI property-write slice consumable by a simple UI-effect runtime family",
-            "backend_family_target": "reference_ui_property_write",
-            "compiler_family_targets": [],
-        },
-        "lowered_units": [{
-            "unit_id": u["unit_id"],
-            "kind": "ui_property_write_effect_unit",
-            "public_io": u["public_interface"],
-            "ui_bindings": u["ui_bindings"],
-            "execution_effects": [{
-                "op": "frog.ui.property_write",
-                "widget_id": "ctrl_gain",
-                "member": "label.text",
-                "value_source": "public_input.status",
-            }],
+    out = base_lowering(
+        fir,
+        fir_rel,
+        u["unit_id"],
+        "make the object-style UI property-write slice consumable by a simple UI-effect runtime family",
+        "reference_ui_property_write",
+        [],
+    )
+    out["lowered_units"] = [{
+        "unit_id": u["unit_id"],
+        "kind": "ui_property_write_effect_unit",
+        "public_io": u["public_interface"],
+        "ui_bindings": u["ui_bindings"],
+        "execution_effects": [{
+            "op": "frog.ui.property_write",
+            "widget_id": "ctrl_gain",
+            "member": "label.text",
+            "value_source": "public_input.status",
         }],
-    }
+    }]
+    return out
 
 
 def lower_example04(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
@@ -144,35 +153,33 @@ def lower_example04(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     state_id = carrier.get("state_id")
     if not isinstance(state_id, str):
         raise LoweringError("Example 04 state carrier must expose state_id")
-    return {
-        "artifact_kind": "frog_lowered_unit",
-        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
-        "source_ref": source_ref(fir),
-        "fir_ref": {"path": fir_rel, "unit_id": u["unit_id"]},
-        "lowering_intent": {
-            "purpose": "make the explicit feedback delay slice consumable by a simple stateful runtime or compiler-family path",
-            "backend_family_target": "reference_stateful_feedback_delay",
-            "compiler_family_targets": ["llvm_oriented_native_path"],
+    out = base_lowering(
+        fir,
+        fir_rel,
+        u["unit_id"],
+        "make the explicit feedback delay slice consumable by a simple stateful runtime or compiler-family path",
+        "reference_stateful_feedback_delay",
+        ["llvm_oriented_native_path"],
+    )
+    out["lowered_units"] = [{
+        "unit_id": u["unit_id"],
+        "kind": "stateful_feedback_delay_kernel",
+        "public_io": u["public_interface"],
+        "execution_kernel": {
+            "state_id": state_id,
+            "initial_state": carrier["initial_value"],
+            "state_type": carrier["type"],
+            "step_body": [{
+                "op": "add",
+                "dst": "state_next",
+                "type": carrier["type"],
+                "src": ["state_current", "x"],
+            }],
+            "commit_rule": "state_current <- state_next after each execution step",
+            "final_publication": [{"target": "public_output.y", "source": "state_next"}],
         },
-        "lowered_units": [{
-            "unit_id": u["unit_id"],
-            "kind": "stateful_feedback_delay_kernel",
-            "public_io": u["public_interface"],
-            "execution_kernel": {
-                "state_id": state_id,
-                "initial_state": carrier["initial_value"],
-                "state_type": carrier["type"],
-                "step_body": [{
-                    "op": "add",
-                    "dst": "state_next",
-                    "type": carrier["type"],
-                    "src": ["state_current", "x"],
-                }],
-                "commit_rule": "state_current <- state_next after each execution step",
-                "final_publication": [{"target": "public_output.y", "source": "state_next"}],
-            },
-        }],
-    }
+    }]
+    return out
 
 
 def lower_example05(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
@@ -181,31 +188,29 @@ def lower_example05(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     state_model = require_object(u.get("state_model"), "unit.state_model")
     carrier = require_object(state_model.get("carrier"), "unit.state_model.carrier")
     execution_model = require_object(u.get("execution_model"), "unit.execution_model")
-    return {
-        "artifact_kind": "frog_lowered_unit",
-        "artifact_version": "0.1-draft",
-        "source_ref": source_ref(fir),
-        "fir_ref": {"path": fir_rel, "unit_id": u["unit_id"]},
-        "lowering_intent": {
-            "purpose": "make the bounded example corridor consumable by runtime families and by future compiler-family paths",
-            "backend_family_target": "reference_host_runtime_ui_binding",
-            "compiler_family_targets": ["llvm_oriented_native_path"],
+    out = base_lowering(
+        fir,
+        fir_rel,
+        u["unit_id"],
+        "make the bounded example corridor consumable by runtime families and by future compiler-family paths",
+        "reference_host_runtime_ui_binding",
+        ["llvm_oriented_native_path"],
+    )
+    out["lowered_units"] = [{
+        "unit_id": u["unit_id"],
+        "kind": "bounded_accumulator_kernel_with_ui_bindings",
+        "public_io": public_interface,
+        "ui_bindings": u["ui_bindings"],
+        "execution_kernel": {
+            "initial_state": carrier["initial_value"],
+            "state_type": carrier["type"],
+            "iteration_count": execution_model["iteration_count"],
+            "iteration_body": [{"op": "add", "dst": "state_next", "src": ["state_current", "input_value"]}],
+            "commit_rule": "state_current <- state_next after each iteration",
+            "final_publication": u["publications"],
         },
-        "lowered_units": [{
-            "unit_id": u["unit_id"],
-            "kind": "bounded_accumulator_kernel_with_ui_bindings",
-            "public_io": public_interface,
-            "ui_bindings": u["ui_bindings"],
-            "execution_kernel": {
-                "initial_state": carrier["initial_value"],
-                "state_type": carrier["type"],
-                "iteration_count": execution_model["iteration_count"],
-                "iteration_body": [{"op": "add", "dst": "state_next", "src": ["state_current", "input_value"]}],
-                "commit_rule": "state_current <- state_next after each iteration",
-                "final_publication": u["publications"],
-            },
-        }],
-    }
+    }]
+    return out
 
 
 def lower_fir_artifact(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
