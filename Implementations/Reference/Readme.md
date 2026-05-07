@@ -24,12 +24,14 @@ The workspace protects a numbered progression of examples and the published widg
 
 <pre><code>Libraries/Widgets/
 Libraries/Realizations/Default/
-  -> WidgetValidator
+  -&gt; WidgetValidator
 
 Examples 01–05
   .frog
-    -&gt; FIR
-    -&gt; lowering
+    -&gt; source-pattern FIR derivation
+    -&gt; FIR unit.kind
+    -&gt; lowering rule
+    -&gt; lowered_unit.kind
     -&gt; backend contract
     -&gt; runtime acceptance
     -&gt; LLVM proof
@@ -39,6 +41,47 @@ Examples 01–05
 Example 05 remains the primary applicative UI/state/runtime/native corridor.
 Examples 01–04 provide smaller executable proof slices for pure arithmetic, widget values, UI property writes, and explicit feedback state.
 </p>
+
+<hr/>
+
+<h2>Current Reference Corridor Discipline</h2>
+
+<p>
+The current reference workspace is organized around explicit rule handoffs rather than example-name dispatch:
+</p>
+
+<pre><code>.frog source pattern
+  -&gt; FIR unit.kind
+  -&gt; lowered_unit.kind
+  -&gt; backend/runtime/LLVM consumers
+</code></pre>
+
+<table>
+  <thead>
+    <tr>
+      <th>Stage</th>
+      <th>Dispatch surface</th>
+      <th>Reference documentation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Deriver</td>
+      <td>Recognized source pattern</td>
+      <td><code>Implementations/Reference/Deriver/rules/Readme.md</code></td>
+    </tr>
+    <tr>
+      <td>Lowerer</td>
+      <td><code>FIR units[0].kind</code></td>
+      <td><code>Implementations/Reference/Lowerer/rules/Readme.md</code></td>
+    </tr>
+    <tr>
+      <td>LLVM proof path</td>
+      <td><code>lowered_units[0].kind</code></td>
+      <td><code>Implementations/Reference/LLVM/rules/Readme.md</code></td>
+    </tr>
+  </tbody>
+</table>
 
 <hr/>
 
@@ -69,8 +112,8 @@ Examples 01–04 provide smaller executable proof slices for pure arithmetic, wi
 <ul>
   <li><code>ArtifactChecks/</code> verifies that the artifacts announced by the executable corridor exist and have the expected high-level identity.</li>
   <li><code>WidgetValidator/</code> protects the published widget class-law and Default realization layer.</li>
-  <li><code>Deriver/</code> derives FIR from supported canonical <code>.frog</code> source slices.</li>
-  <li><code>Lowerer/</code> lowers supported FIR artifacts into backend- or compiler-facing lowered units.</li>
+  <li><code>Deriver/</code> derives FIR from supported canonical <code>.frog</code> source patterns.</li>
+  <li><code>Lowerer/</code> lowers supported FIR unit kinds into backend- or compiler-facing lowered unit kinds.</li>
   <li><code>ContractEmitter/</code> emits backend contracts from published lowerings.</li>
   <li><code>Runtime/</code> checks contract-driven runtime acceptance.</li>
   <li><code>LLVM/</code> checks lowering-to-native proof modules.</li>
@@ -89,6 +132,7 @@ python Implementations/Reference/check_reference_workspace.py --include-llvm-bui
 <p>
 The default workspace command includes widget-layer validation through the Examples 01–05 pipeline.
 The <code>--widget-layer-only</code> command exists for fast validation when editing widget class-law documents, Default realization documents, manifests, or SVG resources.
+The <code>--include-pytest</code> command additionally protects source-pattern derivation, FIR-unit-kind lowering, lowered-unit-kind LLVM emission, and unsupported-pattern / unsupported-kind failure behavior.
 </p>
 
 <hr/>
@@ -102,7 +146,7 @@ The repository publishes a GitHub Actions workflow for the reference workspace:
 <pre><code>.github/workflows/reference-workspace.yml</code></pre>
 
 <p>
-The workflow runs both the full reference workspace check and the widget-layer-only check on relevant repository changes.
+The workflow runs the full reference workspace check, the reference pytest suite, and the widget-layer-only check on relevant repository changes.
 </p>
 
 <hr/>
@@ -111,7 +155,7 @@ The workflow runs both the full reference workspace check and the widget-layer-o
 
 <p>
 This workspace consumes the published specification layers.
-It does not define FROG source law, semantic law, FIR law, widget law, realization law, runtime law, or LLVM backend law.
+It does not define FROG source law, semantic law, FIR law, widget law, realization law, runtime law, backend contract law, or LLVM backend law.
 </p>
 
 <pre><code>reference implementation
