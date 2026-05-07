@@ -2813,6 +2813,13 @@
                       "path": "/Implementations/Reference/Deriver/tests/test_examples01_05_fir_derivation.py",
                       "kind": "code",
                       "children": []
+                    },
+                    {
+                      "key": "implementations/reference/deriver/tests/test_fir_deriver.py",
+                      "title": "test_fir_deriver.py",
+                      "path": "/Implementations/Reference/Deriver/tests/test_fir_deriver.py",
+                      "kind": "code",
+                      "children": []
                     }
                   ]
                 }
@@ -3915,6 +3922,7 @@
     "/Implementations/Reference/Deriver/tests/test_example01_fir_derivation.py",
     "/Implementations/Reference/Deriver/tests/test_example05_fir_derivation.py",
     "/Implementations/Reference/Deriver/tests/test_examples01_05_fir_derivation.py",
+    "/Implementations/Reference/Deriver/tests/test_fir_deriver.py",
     "/Implementations/Reference/Deriver/Readme.md",
     "/Implementations/Reference/LLVM/bridge/fir_to_lowering.md",
     "/Implementations/Reference/LLVM/bridge/lowering_to_llvm.md",

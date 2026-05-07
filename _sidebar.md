@@ -394,6 +394,7 @@
       - [test_example01_fir_derivation.py](/Implementations/Reference/Deriver/tests/test_example01_fir_derivation.py)
       - [test_example05_fir_derivation.py](/Implementations/Reference/Deriver/tests/test_example05_fir_derivation.py)
       - [test_examples01_05_fir_derivation.py](/Implementations/Reference/Deriver/tests/test_examples01_05_fir_derivation.py)
+      - [test_fir_deriver.py](/Implementations/Reference/Deriver/tests/test_fir_deriver.py)
   - [LLVM](/Implementations/Reference/LLVM/Readme.md)
     - bridge
       - [fir to lowering](/Implementations/Reference/LLVM/bridge/fir_to_lowering.md)
