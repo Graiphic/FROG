@@ -2747,7 +2747,7 @@
                 {
                   "key": "implementations/reference/deriver/rules/",
                   "title": "rules",
-                  "path": null,
+                  "path": "/Implementations/Reference/Deriver/rules/Readme.md",
                   "kind": "category",
                   "children": [
                     {
@@ -3919,6 +3919,7 @@
     "/Implementations/Reference/Deriver/rules/example03_fir_derivation.md",
     "/Implementations/Reference/Deriver/rules/example04_fir_derivation.md",
     "/Implementations/Reference/Deriver/rules/example05_fir_derivation.md",
+    "/Implementations/Reference/Deriver/rules/Readme.md",
     "/Implementations/Reference/Deriver/tests/test_example01_fir_derivation.py",
     "/Implementations/Reference/Deriver/tests/test_example05_fir_derivation.py",
     "/Implementations/Reference/Deriver/tests/test_examples01_05_fir_derivation.py",

@@ -384,7 +384,7 @@
     - [fir_deriver.py](/Implementations/Reference/Deriver/fir_deriver.py)
     - [reference_deriver.py](/Implementations/Reference/Deriver/reference_deriver.py)
     - [acceptance](/Implementations/Reference/Deriver/acceptance/Readme.md)
-    - rules
+    - [rules](/Implementations/Reference/Deriver/rules/Readme.md)
       - [example01 fir derivation](/Implementations/Reference/Deriver/rules/example01_fir_derivation.md)
       - [example02 fir derivation](/Implementations/Reference/Deriver/rules/example02_fir_derivation.md)
       - [example03 fir derivation](/Implementations/Reference/Deriver/rules/example03_fir_derivation.md)
