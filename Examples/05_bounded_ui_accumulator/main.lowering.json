@@ -1,6 +1,8 @@
 {
   "artifact_kind": "frog_lowered_unit",
-  "artifact_version": "0.1-draft",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
   "source_ref": {
     "example_id": "05_bounded_ui_accumulator",
     "path": "Examples/05_bounded_ui_accumulator/main.frog",
