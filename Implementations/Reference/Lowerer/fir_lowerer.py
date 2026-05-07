@@ -1,14 +1,34 @@
-"""Rule-oriented lowering helpers for the non-normative reference workspace."""
+"""Rule-oriented lowering helpers for the non-normative reference workspace.
+
+This module supports the published Examples 01 through 05 through explicit
+FIR-unit-kind recognition and FIR-to-lowering projection rules.
+
+It is intentionally narrow and does not claim general FROG compiler
+completeness. The important boundary is that lowering rule selection is based
+on the FIR unit kind and required FIR structure, not on trusting an example id
+as the semantic lowering authority.
+"""
 
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 
 class LoweringError(RuntimeError):
     """Raised when a supported FIR lowering cannot proceed."""
+
+
+@dataclass(frozen=True)
+class LoweringRule:
+    """Bounded reference lowering rule for one supported FIR unit kind."""
+
+    rule_id: str
+    fir_unit_kind: str
+    lowered_unit_kind: str
+    lower: Callable[[dict[str, Any], str], dict[str, Any]]
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -51,6 +71,13 @@ def unit(fir: dict[str, Any]) -> dict[str, Any]:
     return require_object(units[0], "fir.units[0]")
 
 
+def fir_unit_kind(fir: dict[str, Any]) -> str:
+    kind = unit(fir).get("kind")
+    if not isinstance(kind, str):
+        raise LoweringError("FIR unit must expose string kind")
+    return kind
+
+
 def source_ref(fir: dict[str, Any]) -> dict[str, Any]:
     return require_object(fir.get("source_ref"), "fir.source_ref")
 
@@ -70,8 +97,16 @@ def base_lowering(fir: dict[str, Any], fir_rel: str, unit_id: str, purpose: str,
     }
 
 
-def lower_example01(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+def ensure_unit_kind(fir: dict[str, Any], expected: str) -> dict[str, Any]:
     u = unit(fir)
+    observed = u.get("kind")
+    if observed != expected:
+        raise LoweringError(f"expected FIR unit kind {expected!r}, got {observed!r}")
+    return u
+
+
+def lower_pure_dataflow_arithmetic(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    u = ensure_unit_kind(fir, "pure_dataflow_arithmetic_unit")
     public_interface = require_object(u.get("public_interface"), "unit.public_interface")
     out = base_lowering(
         fir,
@@ -93,8 +128,8 @@ def lower_example01(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     return out
 
 
-def lower_example02(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
-    u = unit(fir)
+def lower_ui_value_roundtrip(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    u = ensure_unit_kind(fir, "ui_value_roundtrip_unit")
     out = base_lowering(
         fir,
         fir_rel,
@@ -121,8 +156,8 @@ def lower_example02(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     return out
 
 
-def lower_example03(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
-    u = unit(fir)
+def lower_ui_property_write(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    u = ensure_unit_kind(fir, "ui_property_write_unit")
     out = base_lowering(
         fir,
         fir_rel,
@@ -146,13 +181,13 @@ def lower_example03(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     return out
 
 
-def lower_example04(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
-    u = unit(fir)
+def lower_stateful_feedback_delay(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    u = ensure_unit_kind(fir, "stateful_feedback_delay_unit")
     state_model = require_object(u.get("state_model"), "unit.state_model")
     carrier = require_object(state_model.get("carrier"), "unit.state_model.carrier")
     state_id = carrier.get("state_id")
     if not isinstance(state_id, str):
-        raise LoweringError("Example 04 state carrier must expose state_id")
+        raise LoweringError("stateful_feedback_delay_unit state carrier must expose state_id")
     out = base_lowering(
         fir,
         fir_rel,
@@ -182,8 +217,8 @@ def lower_example04(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     return out
 
 
-def lower_example05(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
-    u = unit(fir)
+def lower_bounded_stateful_ui(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    u = ensure_unit_kind(fir, "bounded_stateful_ui_unit")
     public_interface = require_object(u.get("public_interface"), "unit.public_interface")
     state_model = require_object(u.get("state_model"), "unit.state_model")
     carrier = require_object(state_model.get("carrier"), "unit.state_model.carrier")
@@ -213,18 +248,45 @@ def lower_example05(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     return out
 
 
+LOWERING_RULES = [
+    LoweringRule("lower_pure_dataflow_arithmetic", "pure_dataflow_arithmetic_unit", "pure_addition_kernel", lower_pure_dataflow_arithmetic),
+    LoweringRule("lower_ui_value_roundtrip", "ui_value_roundtrip_unit", "ui_value_roundtrip_kernel", lower_ui_value_roundtrip),
+    LoweringRule("lower_ui_property_write", "ui_property_write_unit", "ui_property_write_effect_unit", lower_ui_property_write),
+    LoweringRule("lower_stateful_feedback_delay", "stateful_feedback_delay_unit", "stateful_feedback_delay_kernel", lower_stateful_feedback_delay),
+    LoweringRule("lower_bounded_stateful_ui", "bounded_stateful_ui_unit", "bounded_accumulator_kernel_with_ui_bindings", lower_bounded_stateful_ui),
+]
+
+
+def rule_for_fir_unit_kind(kind: str) -> LoweringRule:
+    matches = [rule for rule in LOWERING_RULES if rule.fir_unit_kind == kind]
+    if len(matches) == 1:
+        return matches[0]
+    if len(matches) > 1:
+        matched_rules = ", ".join(rule.rule_id for rule in matches)
+        raise LoweringError(f"ambiguous lowering rules for FIR unit kind {kind!r}: {matched_rules}")
+    supported = ", ".join(rule.fir_unit_kind for rule in LOWERING_RULES)
+    raise LoweringError(f"unsupported FIR unit kind for lowering: {kind!r}; supported: {supported}")
+
+
 def lower_fir_artifact(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     if fir.get("artifact_kind") != "frog_fir_unit":
         raise LoweringError("input artifact_kind must be frog_fir_unit")
-    example_id = source_ref(fir).get("example_id")
-    if example_id == "01_pure_addition":
-        return lower_example01(fir, fir_rel)
-    if example_id == "02_ui_value_roundtrip":
-        return lower_example02(fir, fir_rel)
-    if example_id == "03_ui_property_write":
-        return lower_example03(fir, fir_rel)
-    if example_id == "04_stateful_feedback_delay":
-        return lower_example04(fir, fir_rel)
-    if example_id == "05_bounded_ui_accumulator":
-        return lower_example05(fir, fir_rel)
-    raise LoweringError(f"unsupported FIR example for lowering: {example_id!r}")
+    kind = fir_unit_kind(fir)
+    rule = rule_for_fir_unit_kind(kind)
+    lowered = rule.lower(fir, fir_rel)
+    lowered_unit = unit_like_single_lowered_unit(lowered)
+    observed_lowered_kind = lowered_unit.get("kind")
+    if observed_lowered_kind != rule.lowered_unit_kind:
+        raise LoweringError(
+            f"lowering rule {rule.rule_id} produced lowered unit kind {observed_lowered_kind!r}, expected {rule.lowered_unit_kind!r}"
+        )
+    return lowered
+
+
+def unit_like_single_lowered_unit(lowering: dict[str, Any]) -> dict[str, Any]:
+    if lowering.get("artifact_kind") != "frog_lowered_unit":
+        raise LoweringError("lowering artifact_kind must be frog_lowered_unit")
+    lowered_units = require_list(lowering.get("lowered_units"), "lowering.lowered_units")
+    if len(lowered_units) != 1:
+        raise LoweringError(f"expected one lowered unit, found {len(lowered_units)}")
+    return require_object(lowered_units[0], "lowering.lowered_units[0]")
