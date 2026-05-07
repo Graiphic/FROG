@@ -432,6 +432,7 @@
     - tests
       - [test_example05_lowering.py](/Implementations/Reference/Lowerer/tests/test_example05_lowering.py)
       - [test_examples01_05_lowering.py](/Implementations/Reference/Lowerer/tests/test_examples01_05_lowering.py)
+      - [test_fir_lowerer.py](/Implementations/Reference/Lowerer/tests/test_fir_lowerer.py)
   - [Pipeline](/Implementations/Reference/Pipeline/Readme.md)
     - [check_example05_pipeline.py](/Implementations/Reference/Pipeline/check_example05_pipeline.py)
     - [check_examples01_05_full.py](/Implementations/Reference/Pipeline/check_examples01_05_full.py)

@@ -3087,6 +3087,13 @@
                       "path": "/Implementations/Reference/Lowerer/tests/test_examples01_05_lowering.py",
                       "kind": "code",
                       "children": []
+                    },
+                    {
+                      "key": "implementations/reference/lowerer/tests/test_fir_lowerer.py",
+                      "title": "test_fir_lowerer.py",
+                      "path": "/Implementations/Reference/Lowerer/tests/test_fir_lowerer.py",
+                      "kind": "code",
+                      "children": []
                     }
                   ]
                 }
@@ -3963,6 +3970,7 @@
     "/Implementations/Reference/Lowerer/rules/Readme.md",
     "/Implementations/Reference/Lowerer/tests/test_example05_lowering.py",
     "/Implementations/Reference/Lowerer/tests/test_examples01_05_lowering.py",
+    "/Implementations/Reference/Lowerer/tests/test_fir_lowerer.py",
     "/Implementations/Reference/Lowerer/Readme.md",
     "/Implementations/Reference/Pipeline/check_example05_pipeline.py",
     "/Implementations/Reference/Pipeline/check_examples01_05_full.py",
