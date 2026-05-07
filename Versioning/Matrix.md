@@ -47,6 +47,73 @@ Version governance remains centralized in this directory and in the repository h
 
 <hr/>
 
+<h2>Reference Rule-Handoff Matrix</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Stage</th>
+      <th>Input authority</th>
+      <th>Dispatch surface</th>
+      <th>Output surface</th>
+      <th>Reference documentation</th>
+      <th>Current status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>.frog -&gt; FIR</code></td>
+      <td>Canonical source pattern</td>
+      <td>recognized source-pattern rule</td>
+      <td><code>FIR units[0].kind</code></td>
+      <td><code>Implementations/Reference/Deriver/rules/Readme.md</code></td>
+      <td>Published and tested</td>
+    </tr>
+    <tr>
+      <td><code>FIR -&gt; lowering</code></td>
+      <td><code>frog_fir_unit</code></td>
+      <td><code>FIR units[0].kind</code></td>
+      <td><code>lowered_units[0].kind</code></td>
+      <td><code>Implementations/Reference/Lowerer/rules/Readme.md</code></td>
+      <td>Published and tested</td>
+    </tr>
+    <tr>
+      <td><code>lowering -&gt; LLVM</code></td>
+      <td><code>frog_lowered_unit</code></td>
+      <td><code>lowered_units[0].kind</code></td>
+      <td><code>module.ll</code></td>
+      <td><code>Implementations/Reference/LLVM/rules/Readme.md</code></td>
+      <td>Published and tested</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<h2>Current FIR and Lowering Kind Matrix</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Example</th>
+      <th>Derivation rule</th>
+      <th>FIR unit kind</th>
+      <th>Lowering rule</th>
+      <th>Lowered unit kind</th>
+      <th>LLVM proof emitter</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>01 Pure Addition</td><td><code>pure_public_addition</code></td><td><code>pure_dataflow_arithmetic_unit</code></td><td><code>lower_pure_dataflow_arithmetic</code></td><td><code>pure_addition_kernel</code></td><td><code>pure_addition_kernel</code></td></tr>
+    <tr><td>02 UI Value Roundtrip</td><td><code>ui_value_roundtrip</code></td><td><code>ui_value_roundtrip_unit</code></td><td><code>lower_ui_value_roundtrip</code></td><td><code>ui_value_roundtrip_kernel</code></td><td><code>ui_value_roundtrip_kernel</code></td></tr>
+    <tr><td>03 UI Property Write</td><td><code>ui_property_write</code></td><td><code>ui_property_write_unit</code></td><td><code>lower_ui_property_write</code></td><td><code>ui_property_write_effect_unit</code></td><td><code>ui_property_write_effect_unit</code></td></tr>
+    <tr><td>04 Stateful Feedback Delay</td><td><code>stateful_feedback_delay</code></td><td><code>stateful_feedback_delay_unit</code></td><td><code>lower_stateful_feedback_delay</code></td><td><code>stateful_feedback_delay_kernel</code></td><td><code>stateful_feedback_delay_kernel</code></td></tr>
+    <tr><td>05 Bounded UI Accumulator</td><td><code>bounded_ui_accumulator</code></td><td><code>bounded_stateful_ui_unit</code></td><td><code>lower_bounded_stateful_ui</code></td><td><code>bounded_accumulator_kernel_with_ui_bindings</code></td><td><code>bounded_accumulator_kernel_with_ui_bindings</code></td></tr>
+  </tbody>
+</table>
+
+<hr/>
+
 <h2>Backend Contract Common Surface</h2>
 
 <p>
@@ -150,6 +217,7 @@ publications
   <tbody>
     <tr><td>Example corridor checks</td><td><code>Implementations/Reference/Pipeline/check_examples01_05_full.py</code></td><td>Published</td><td>Protects Examples 01–05 source / FIR / lowering / contract / runtime / LLVM corridor.</td></tr>
     <tr><td>Reference workspace checks</td><td><code>Implementations/Reference/check_reference_workspace.py</code></td><td>Published</td><td>Repository-wide reference workspace hygiene check.</td></tr>
+    <tr><td>Reference pytest checks</td><td><code>Implementations/Reference/check_reference_workspace.py --include-pytest</code></td><td>Published</td><td>Protects source-pattern derivation, FIR-kind lowering, lowered-kind LLVM emission, and unsupported-pattern / unsupported-kind failure behavior.</td></tr>
     <tr><td>Widget layer validator</td><td><code>Implementations/Reference/WidgetValidator/validate_widget_layer.py</code></td><td>Published and strengthened</td><td>Protects widget docs, Default docs, manifests, target classes, resources, SVG part markers, composition references, bindings, and public-part alignment.</td></tr>
   </tbody>
 </table>
@@ -159,22 +227,22 @@ publications
 <h2>Current Widget-Layer Boundary</h2>
 
 <pre><code>Libraries/Widgets/
-  -> widget class law
+  -&gt; widget class law
 
 Libraries/Realizations/Default/*.md
-  -> Default realization explanation
+  -&gt; Default realization explanation
 
 Libraries/Realizations/Default/*.default.wfrog
-  -> machine-readable Default realization manifests
+  -&gt; machine-readable Default realization manifests
 
 Libraries/Realizations/Default/assets/
-  -> SVG templates and subobject resources
+  -&gt; SVG templates and subobject resources
 
 Implementations/Reference/WidgetValidator/
-  -> non-normative repository hygiene validation
+  -&gt; non-normative repository hygiene validation
 </code></pre>
 
 <p>
-The widget layer is now organized as a real standard-facing surface rather than a collection of isolated documents.
-The strongest remaining implementation direction is to connect the published widget package layer to a widget-gallery example and a runtime/UI host consumption path.
+The widget layer is organized as a standard-facing surface rather than a collection of isolated documents.
+The current implementation priority remains to keep the Examples 01–05 executable corridor, reference checks, widget validation, and version-governance posture coherent before broadening into new examples or new widget families.
 </p>
