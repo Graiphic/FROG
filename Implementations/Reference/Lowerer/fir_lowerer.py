@@ -82,12 +82,44 @@ def source_ref(fir: dict[str, Any]) -> dict[str, Any]:
     return require_object(fir.get("source_ref"), "fir.source_ref")
 
 
-def base_lowering(fir: dict[str, Any], fir_rel: str, unit_id: str, purpose: str, backend_family_target: str, compiler_family_targets: list[str]) -> dict[str, Any]:
+def ensure_unit_kind(fir: dict[str, Any], expected: str) -> dict[str, Any]:
+    u = unit(fir)
+    observed = u.get("kind")
+    if observed != expected:
+        raise LoweringError(f"expected FIR unit kind {expected!r}, got {observed!r}")
+    return u
+
+
+def unit_id(u: dict[str, Any]) -> str:
+    value = u.get("unit_id")
+    if not isinstance(value, str):
+        raise LoweringError("FIR unit must expose string unit_id")
+    return value
+
+
+def public_interface(u: dict[str, Any]) -> dict[str, Any]:
+    return require_object(u.get("public_interface"), "unit.public_interface")
+
+
+def ui_bindings(u: dict[str, Any]) -> dict[str, Any]:
+    return require_object(u.get("ui_bindings"), "unit.ui_bindings")
+
+
+def state_carrier(u: dict[str, Any]) -> dict[str, Any]:
+    state_model = require_object(u.get("state_model"), "unit.state_model")
+    return require_object(state_model.get("carrier"), "unit.state_model.carrier")
+
+
+def execution_model(u: dict[str, Any]) -> dict[str, Any]:
+    return require_object(u.get("execution_model"), "unit.execution_model")
+
+
+def base_lowering(fir: dict[str, Any], fir_rel: str, unit_id_value: str, purpose: str, backend_family_target: str, compiler_family_targets: list[str]) -> dict[str, Any]:
     return {
         "artifact_kind": "frog_lowered_unit",
         "artifact_governance_ref": {"path": "Versioning/Readme.md"},
         "source_ref": source_ref(fir),
-        "fir_ref": {"path": fir_rel, "unit_id": unit_id},
+        "fir_ref": {"path": fir_rel, "unit_id": unit_id_value},
         "lowering_intent": {
             "purpose": purpose,
             "backend_family_target": backend_family_target,
@@ -97,53 +129,56 @@ def base_lowering(fir: dict[str, Any], fir_rel: str, unit_id: str, purpose: str,
     }
 
 
-def ensure_unit_kind(fir: dict[str, Any], expected: str) -> dict[str, Any]:
-    u = unit(fir)
-    observed = u.get("kind")
-    if observed != expected:
-        raise LoweringError(f"expected FIR unit kind {expected!r}, got {observed!r}")
-    return u
+def single_lowered_unit(unit_id_value: str, kind: str, **sections: Any) -> dict[str, Any]:
+    out: dict[str, Any] = {"unit_id": unit_id_value, "kind": kind}
+    out.update(sections)
+    return out
+
+
+def with_lowered_unit(lowering: dict[str, Any], lowered_unit: dict[str, Any]) -> dict[str, Any]:
+    lowering["lowered_units"] = [lowered_unit]
+    return lowering
 
 
 def lower_pure_dataflow_arithmetic(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     u = ensure_unit_kind(fir, "pure_dataflow_arithmetic_unit")
-    public_interface = require_object(u.get("public_interface"), "unit.public_interface")
+    uid = unit_id(u)
     out = base_lowering(
         fir,
         fir_rel,
-        u["unit_id"],
+        uid,
         "make the pure arithmetic slice consumable by simple runtime or compiler-family paths",
         "reference_pure_dataflow_arithmetic",
         ["llvm_oriented_native_path"],
     )
-    out["lowered_units"] = [{
-        "unit_id": u["unit_id"],
-        "kind": "pure_addition_kernel",
-        "public_io": public_interface,
-        "execution_kernel": {
+    return with_lowered_unit(out, single_lowered_unit(
+        uid,
+        "pure_addition_kernel",
+        public_io=public_interface(u),
+        execution_kernel={
             "operations": [{"op": "add", "dst": "result", "type": "f64", "src": ["a", "b"]}],
             "final_publication": [{"target": "public_output.result", "source": "result"}],
         },
-    }]
-    return out
+    ))
 
 
 def lower_ui_value_roundtrip(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     u = ensure_unit_kind(fir, "ui_value_roundtrip_unit")
+    uid = unit_id(u)
     out = base_lowering(
         fir,
         fir_rel,
-        u["unit_id"],
+        uid,
         "make the widget-value roundtrip slice consumable by a simple UI-value runtime family",
         "reference_ui_value_roundtrip",
         [],
     )
-    out["lowered_units"] = [{
-        "unit_id": u["unit_id"],
-        "kind": "ui_value_roundtrip_kernel",
-        "public_io": u["public_interface"],
-        "ui_bindings": u["ui_bindings"],
-        "execution_kernel": {
+    return with_lowered_unit(out, single_lowered_unit(
+        uid,
+        "ui_value_roundtrip_kernel",
+        public_io=public_interface(u),
+        ui_bindings=ui_bindings(u),
+        execution_kernel={
             "operations": [{
                 "op": "add",
                 "dst": "result_value",
@@ -152,55 +187,54 @@ def lower_ui_value_roundtrip(fir: dict[str, Any], fir_rel: str) -> dict[str, Any
             }],
             "final_publication": [{"target": "widget.ind_result.value", "source": "result_value"}],
         },
-    }]
-    return out
+    ))
 
 
 def lower_ui_property_write(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     u = ensure_unit_kind(fir, "ui_property_write_unit")
+    uid = unit_id(u)
     out = base_lowering(
         fir,
         fir_rel,
-        u["unit_id"],
+        uid,
         "make the object-style UI property-write slice consumable by a simple UI-effect runtime family",
         "reference_ui_property_write",
         [],
     )
-    out["lowered_units"] = [{
-        "unit_id": u["unit_id"],
-        "kind": "ui_property_write_effect_unit",
-        "public_io": u["public_interface"],
-        "ui_bindings": u["ui_bindings"],
-        "execution_effects": [{
+    return with_lowered_unit(out, single_lowered_unit(
+        uid,
+        "ui_property_write_effect_unit",
+        public_io=public_interface(u),
+        ui_bindings=ui_bindings(u),
+        execution_effects=[{
             "op": "frog.ui.property_write",
             "widget_id": "ctrl_gain",
             "member": "label.text",
             "value_source": "public_input.status",
         }],
-    }]
-    return out
+    ))
 
 
 def lower_stateful_feedback_delay(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     u = ensure_unit_kind(fir, "stateful_feedback_delay_unit")
-    state_model = require_object(u.get("state_model"), "unit.state_model")
-    carrier = require_object(state_model.get("carrier"), "unit.state_model.carrier")
+    uid = unit_id(u)
+    carrier = state_carrier(u)
     state_id = carrier.get("state_id")
     if not isinstance(state_id, str):
         raise LoweringError("stateful_feedback_delay_unit state carrier must expose state_id")
     out = base_lowering(
         fir,
         fir_rel,
-        u["unit_id"],
+        uid,
         "make the explicit feedback delay slice consumable by a simple stateful runtime or compiler-family path",
         "reference_stateful_feedback_delay",
         ["llvm_oriented_native_path"],
     )
-    out["lowered_units"] = [{
-        "unit_id": u["unit_id"],
-        "kind": "stateful_feedback_delay_kernel",
-        "public_io": u["public_interface"],
-        "execution_kernel": {
+    return with_lowered_unit(out, single_lowered_unit(
+        uid,
+        "stateful_feedback_delay_kernel",
+        public_io=public_interface(u),
+        execution_kernel={
             "state_id": state_id,
             "initial_state": carrier["initial_value"],
             "state_type": carrier["type"],
@@ -213,39 +247,36 @@ def lower_stateful_feedback_delay(fir: dict[str, Any], fir_rel: str) -> dict[str
             "commit_rule": "state_current <- state_next after each execution step",
             "final_publication": [{"target": "public_output.y", "source": "state_next"}],
         },
-    }]
-    return out
+    ))
 
 
 def lower_bounded_stateful_ui(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     u = ensure_unit_kind(fir, "bounded_stateful_ui_unit")
-    public_interface = require_object(u.get("public_interface"), "unit.public_interface")
-    state_model = require_object(u.get("state_model"), "unit.state_model")
-    carrier = require_object(state_model.get("carrier"), "unit.state_model.carrier")
-    execution_model = require_object(u.get("execution_model"), "unit.execution_model")
+    uid = unit_id(u)
+    carrier = state_carrier(u)
+    model = execution_model(u)
     out = base_lowering(
         fir,
         fir_rel,
-        u["unit_id"],
+        uid,
         "make the bounded example corridor consumable by runtime families and by future compiler-family paths",
         "reference_host_runtime_ui_binding",
         ["llvm_oriented_native_path"],
     )
-    out["lowered_units"] = [{
-        "unit_id": u["unit_id"],
-        "kind": "bounded_accumulator_kernel_with_ui_bindings",
-        "public_io": public_interface,
-        "ui_bindings": u["ui_bindings"],
-        "execution_kernel": {
+    return with_lowered_unit(out, single_lowered_unit(
+        uid,
+        "bounded_accumulator_kernel_with_ui_bindings",
+        public_io=public_interface(u),
+        ui_bindings=ui_bindings(u),
+        execution_kernel={
             "initial_state": carrier["initial_value"],
             "state_type": carrier["type"],
-            "iteration_count": execution_model["iteration_count"],
+            "iteration_count": model["iteration_count"],
             "iteration_body": [{"op": "add", "dst": "state_next", "src": ["state_current", "input_value"]}],
             "commit_rule": "state_current <- state_next after each iteration",
             "final_publication": u["publications"],
         },
-    }]
-    return out
+    ))
 
 
 LOWERING_RULES = [
