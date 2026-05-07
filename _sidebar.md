@@ -476,11 +476,13 @@
     - [validate_widget_layer.py](/Implementations/Reference/WidgetValidator/validate_widget_layer.py)
     - notes
       - [chart deepening](/Implementations/Reference/WidgetValidator/notes/chart_deepening.md)
+      - [listbox deepening](/Implementations/Reference/WidgetValidator/notes/listbox_deepening.md)
       - [tab deepening](/Implementations/Reference/WidgetValidator/notes/tab_deepening.md)
       - [table deepening](/Implementations/Reference/WidgetValidator/notes/table_deepening.md)
       - [tree deepening](/Implementations/Reference/WidgetValidator/notes/tree_deepening.md)
     - tests
       - [test_chart_deepening.py](/Implementations/Reference/WidgetValidator/tests/test_chart_deepening.py)
+      - [test_listbox_deepening.py](/Implementations/Reference/WidgetValidator/tests/test_listbox_deepening.py)
       - [test_tab_deepening.py](/Implementations/Reference/WidgetValidator/tests/test_tab_deepening.py)
       - [test_table_deepening.py](/Implementations/Reference/WidgetValidator/tests/test_table_deepening.py)
       - [test_tree_deepening.py](/Implementations/Reference/WidgetValidator/tests/test_tree_deepening.py)
