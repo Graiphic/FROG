@@ -43,6 +43,25 @@ jobs:
       - name: Run reference workspace checks
         run: python Implementations/Reference/check_reference_workspace.py
 
+  reference-pytest:
+    name: Reference pytest
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pytest
+        run: python -m pip install pytest
+
+      - name: Run reference workspace pytest checks
+        run: python Implementations/Reference/check_reference_workspace.py --include-pytest
+
   widget-layer-only:
     name: Widget layer only
     runs-on: ubuntu-latest
