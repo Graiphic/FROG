@@ -1,0 +1,60 @@
+name: Reference Workspace
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Examples/**"
+      - "Expression/**"
+      - "IR/**"
+      - "Libraries/**"
+      - "Implementations/Reference/**"
+      - "Versioning/**"
+      - ".github/workflows/reference-workspace.yml"
+  pull_request:
+    paths:
+      - "Examples/**"
+      - "Expression/**"
+      - "IR/**"
+      - "Libraries/**"
+      - "Implementations/Reference/**"
+      - "Versioning/**"
+      - ".github/workflows/reference-workspace.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reference-workspace:
+    name: Reference workspace
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run reference workspace checks
+        run: python Implementations/Reference/check_reference_workspace.py
+
+  widget-layer-only:
+    name: Widget layer only
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run widget-layer validation
+        run: python Implementations/Reference/check_reference_workspace.py --widget-layer-only
