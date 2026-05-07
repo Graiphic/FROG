@@ -1,8 +1,12 @@
 """Rule-oriented FIR derivation helpers for the non-normative reference workspace.
 
-This module supports the published examples 01 through 05 as explicit
-source-to-FIR rules. It is intentionally narrow and does not claim general FROG
-compiler completeness.
+This module supports the published examples 01 through 05 through explicit
+source-pattern recognition and source-to-FIR derivation rules.
+
+It is intentionally narrow and does not claim general FROG compiler
+completeness. The important boundary is that rule selection is based on the
+validated source shape being recognized, not on trusting a document-local
+example name as semantic authority.
 """
 
 from __future__ import annotations
@@ -10,7 +14,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 
 class DerivationError(RuntimeError):
@@ -21,6 +25,23 @@ class DerivationError(RuntimeError):
 class EdgeEndpoint:
     node: str
     port: str
+
+
+@dataclass(frozen=True)
+class DerivationRule:
+    """Bounded reference derivation rule for one supported source pattern."""
+
+    rule_id: str
+    fir_example_id: str
+    derive: Callable[[dict[str, Any], str], dict[str, Any]]
+
+
+@dataclass(frozen=True)
+class RuleAttempt:
+    rule_id: str
+    fir_example_id: str
+    result: dict[str, Any] | None
+    error: str | None
 
 
 @dataclass(frozen=True)
@@ -135,6 +156,7 @@ def source_metadata(source: dict[str, Any]) -> dict[str, Any]:
 
 def source_interface(source: dict[str, Any]) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
     interface = require_object(source.get("interface"), "source.interface")
+
     def ports(key: str) -> list[dict[str, str]]:
         out = []
         for index, port in enumerate(require_list(interface.get(key), f"source.interface.{key}")):
@@ -144,21 +166,16 @@ def source_interface(source: dict[str, Any]) -> tuple[list[dict[str, str]], list
                 raise DerivationError(f"source.interface.{key}[{index}] must contain string id and type")
             out.append({"id": port_id, "type": port_type})
         return out
+
     return ports("inputs"), ports("outputs")
 
 
-def example_id_from_metadata(source: dict[str, Any]) -> str:
-    raw = source_metadata(source).get("name")
-    aliases = {
-        "01_pure_addition": "01_pure_addition",
-        "02_ui_value_roundtrip": "02_ui_value_roundtrip",
-        "UI Property Write": "03_ui_property_write",
-        "Stateful Feedback with Explicit Delay": "04_stateful_feedback_delay",
-        "05_bounded_ui_accumulator": "05_bounded_ui_accumulator",
-    }
-    if raw not in aliases:
-        raise DerivationError(f"unsupported source example for FIR derivation: {raw!r}")
-    return aliases[str(raw)]
+def metadata_name_for_diagnostics(source: dict[str, Any]) -> str:
+    try:
+        name = source_metadata(source).get("name")
+    except DerivationError:
+        return "<missing metadata.name>"
+    return str(name) if isinstance(name, str) else repr(name)
 
 
 def interface_input_node(graph: SourceGraph, port: str) -> dict[str, Any]:
@@ -191,13 +208,13 @@ def derive_example01(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     graph = SourceGraph.from_source(source)
     inputs, outputs = source_interface(source)
     if inputs != [{"id": "a", "type": "f64"}, {"id": "b", "type": "f64"}] or outputs != [{"id": "result", "type": "f64"}]:
-        raise DerivationError("Example 01 expects a:f64, b:f64 -> result:f64")
+        raise DerivationError("pure addition pattern expects a:f64, b:f64 -> result:f64")
     if graph.incoming("add_1", "a") != EdgeEndpoint(str(interface_input_node(graph, "a")["id"]), "value"):
-        raise DerivationError("Example 01 invalid edge to add_1.a")
+        raise DerivationError("pure addition pattern has invalid edge to add_1.a")
     if graph.incoming("add_1", "b") != EdgeEndpoint(str(interface_input_node(graph, "b")["id"]), "value"):
-        raise DerivationError("Example 01 invalid edge to add_1.b")
+        raise DerivationError("pure addition pattern has invalid edge to add_1.b")
     if graph.outgoing("add_1", "result") != EdgeEndpoint(str(interface_output_node(graph, "result")["id"]), "value"):
-        raise DerivationError("Example 01 invalid publication edge")
+        raise DerivationError("pure addition pattern has invalid publication edge")
     return artifacts_example01(source_rel)
 
 
@@ -205,13 +222,13 @@ def derive_example02(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     graph = SourceGraph.from_source(source)
     inputs, outputs = source_interface(source)
     if inputs or outputs:
-        raise DerivationError("Example 02 expects no public IO")
+        raise DerivationError("UI value roundtrip pattern expects no public IO")
     if graph.incoming("add_1", "a").node != "ctrl_a_value":
-        raise DerivationError("Example 02 invalid edge to add_1.a")
+        raise DerivationError("UI value roundtrip pattern has invalid edge to add_1.a")
     if graph.incoming("add_1", "b").node != "ctrl_b_value":
-        raise DerivationError("Example 02 invalid edge to add_1.b")
+        raise DerivationError("UI value roundtrip pattern has invalid edge to add_1.b")
     if graph.outgoing("add_1", "result").node != "ind_result_value":
-        raise DerivationError("Example 02 invalid indicator publication edge")
+        raise DerivationError("UI value roundtrip pattern has invalid indicator publication edge")
     data = artifacts_example02(source_rel)
     data["units"][0]["ui_bindings"]["control_bindings"][0]["value_type"] = widget_value_type(source, "ctrl_a")
     data["units"][0]["ui_bindings"]["control_bindings"][1]["value_type"] = widget_value_type(source, "ctrl_b")
@@ -223,11 +240,11 @@ def derive_example03(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     graph = SourceGraph.from_source(source)
     inputs, outputs = source_interface(source)
     if inputs != [{"id": "status", "type": "string"}] or outputs:
-        raise DerivationError("Example 03 expects status:string and no outputs")
+        raise DerivationError("UI property-write pattern expects status:string and no outputs")
     if graph.incoming("write_label_text", "value") != EdgeEndpoint(str(interface_input_node(graph, "status")["id"]), "value"):
-        raise DerivationError("Example 03 invalid value edge")
+        raise DerivationError("UI property-write pattern has invalid value edge")
     if graph.incoming("write_label_text", "ref") != EdgeEndpoint("ctrl_gain_ref", "ref"):
-        raise DerivationError("Example 03 invalid ref edge")
+        raise DerivationError("UI property-write pattern has invalid ref edge")
     return artifacts_example03(source_rel)
 
 
@@ -235,38 +252,46 @@ def derive_example04(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     graph = SourceGraph.from_source(source)
     inputs, outputs = source_interface(source)
     if inputs != [{"id": "x", "type": "f64"}] or outputs != [{"id": "y", "type": "f64"}]:
-        raise DerivationError("Example 04 expects x:f64 -> y:f64")
+        raise DerivationError("stateful feedback delay pattern expects x:f64 -> y:f64")
     delay = graph.nodes.get("delay_1")
     if not delay or delay.get("type") != "frog.core.delay" or delay.get("initial") != 0.0:
-        raise DerivationError("Example 04 expects delay_1 frog.core.delay initial 0.0")
+        raise DerivationError("stateful feedback delay pattern expects delay_1 frog.core.delay initial 0.0")
     if graph.incoming("add_1", "a").node != "input_x":
-        raise DerivationError("Example 04 invalid input edge")
+        raise DerivationError("stateful feedback delay pattern has invalid input edge")
     if graph.incoming("add_1", "b") != EdgeEndpoint("delay_1", "out"):
-        raise DerivationError("Example 04 invalid delay edge")
+        raise DerivationError("stateful feedback delay pattern has invalid delay edge")
     outs = graph.outgoing_all("add_1", "result")
     if EdgeEndpoint("delay_1", "in") not in outs or EdgeEndpoint("output_y", "value") not in outs:
-        raise DerivationError("Example 04 missing feedback/output edge")
+        raise DerivationError("stateful feedback delay pattern is missing feedback/output edge")
     return artifacts_example04(source_rel)
 
 
 def derive_example05(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
-    # This function preserves the existing published Example 05 shape.
     graph = SourceGraph.from_source(source)
     inputs, outputs = source_interface(source)
+    if inputs != [{"id": "input_value", "type": "u16"}] or outputs != [{"id": "result", "type": "u16"}]:
+        raise DerivationError("bounded UI accumulator pattern expects input_value:u16 -> result:u16")
     loop = graph.nodes.get("loop_accumulate")
-    count_node = require_object(loop.get("count_from"), "loop_accumulate.count_from").get("node") if isinstance(loop, dict) else None
+    if not isinstance(loop, dict):
+        raise DerivationError("bounded UI accumulator pattern expects loop_accumulate")
+    count_node = require_object(loop.get("count_from"), "loop_accumulate.count_from").get("node")
     if not isinstance(count_node, str):
-        raise DerivationError("Example 05 invalid loop count source")
+        raise DerivationError("bounded UI accumulator pattern has invalid loop count source")
     _, count = graph.constant_value(count_node)
     state_type, initial = graph.constant_value(graph.incoming("loop_accumulate", "loop_initial_state").node)
+    if state_type != "u16" or initial != 0:
+        raise DerivationError("bounded UI accumulator pattern expects u16 initial state 0")
     writes = []
     for node in graph.nodes.values():
         if node.get("kind") == "primitive" and node.get("type") == "frog.ui.property_write":
             node_id = str(node["id"])
-            ref_node = graph.nodes[graph.incoming(node_id, "ref").node]
+            ref_endpoint = graph.incoming(node_id, "ref")
+            ref_node = require_object(graph.nodes.get(ref_endpoint.node), f"{ref_endpoint.node}")
             value_type, value_literal = graph.constant_value(graph.incoming(node_id, "value").node)
             writes.append({"widget_id": ref_node["widget"], "member": require_object(node.get("widget_member"), "widget_member")["member"], "value_type": value_type, "value_literal": value_literal})
     writes.sort(key=lambda x: {"ctrl_input": 0, "ind_result": 1}.get(x["widget_id"], 100))
+    if [write["widget_id"] for write in writes] != ["ctrl_input", "ind_result"]:
+        raise DerivationError("bounded UI accumulator pattern expects property writes for ctrl_input and ind_result")
     return {
         "artifact_kind": "frog_fir_unit",
         "artifact_governance_ref": {"path": "Versioning/Readme.md"},
@@ -350,11 +375,33 @@ def artifacts_example04(source_rel: str) -> dict[str, Any]:
     }
 
 
+DERIVATION_RULES = [
+    DerivationRule("pure_public_addition", "01_pure_addition", derive_example01),
+    DerivationRule("ui_value_roundtrip", "02_ui_value_roundtrip", derive_example02),
+    DerivationRule("ui_property_write", "03_ui_property_write", derive_example03),
+    DerivationRule("stateful_feedback_delay", "04_stateful_feedback_delay", derive_example04),
+    DerivationRule("bounded_ui_accumulator", "05_bounded_ui_accumulator", derive_example05),
+]
+
+
+def try_rule(rule: DerivationRule, source: dict[str, Any], source_rel: str) -> RuleAttempt:
+    try:
+        return RuleAttempt(rule.rule_id, rule.fir_example_id, rule.derive(source, source_rel), None)
+    except (DerivationError, KeyError, TypeError, IndexError) as exc:
+        return RuleAttempt(rule.rule_id, rule.fir_example_id, None, str(exc))
+
+
 def derive_fir_from_source(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
-    example_id = example_id_from_metadata(source)
-    if example_id == "01_pure_addition": return derive_example01(source, source_rel)
-    if example_id == "02_ui_value_roundtrip": return derive_example02(source, source_rel)
-    if example_id == "03_ui_property_write": return derive_example03(source, source_rel)
-    if example_id == "04_stateful_feedback_delay": return derive_example04(source, source_rel)
-    if example_id == "05_bounded_ui_accumulator": return derive_example05(source, source_rel)
-    raise DerivationError(f"unsupported source example for FIR derivation: {example_id!r}")
+    attempts = [try_rule(rule, source, source_rel) for rule in DERIVATION_RULES]
+    matches = [attempt for attempt in attempts if attempt.result is not None]
+
+    if len(matches) == 1:
+        return require_object(matches[0].result, f"{matches[0].rule_id}.result")
+
+    if len(matches) > 1:
+        matched_rules = ", ".join(attempt.rule_id for attempt in matches)
+        raise DerivationError(f"ambiguous FIR derivation: source matches multiple derivation rules: {matched_rules}")
+
+    diagnostics = "; ".join(f"{attempt.rule_id}: {attempt.error}" for attempt in attempts)
+    metadata_name = metadata_name_for_diagnostics(source)
+    raise DerivationError(f"unsupported source pattern for FIR derivation: metadata.name={metadata_name}; attempts: {diagnostics}")
