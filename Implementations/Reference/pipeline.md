@@ -14,13 +14,18 @@
 <h2>Current Pipeline</h2>
 
 <pre><code>Examples 01–05
-  .frog
+  widget layer validation
+    -&gt; .frog
     -&gt; FIR
     -&gt; lowering
     -&gt; backend contract
     -&gt; runtime acceptance
     -&gt; LLVM module / native proof
 </code></pre>
+
+<p>
+The widget-layer validator is included by default because the current Examples 01–05 corridor depends on a stable published UI/widget layer, especially through <code>widget_value</code>, <code>widget_reference</code>, <code>frog.ui.property_write</code>, and the Example 05 front-panel package.
+</p>
 
 <hr/>
 
@@ -29,16 +34,22 @@
 <pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py</code></pre>
 
 <p>
-With widget validation:
-</p>
-
-<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-widget-validator</code></pre>
-
-<p>
 With native LLVM builds:
 </p>
 
-<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-widget-validator --include-llvm-build</code></pre>
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-llvm-build</code></pre>
+
+<p>
+To validate only the widget layer through the workspace entry point:
+</p>
+
+<pre><code>python Implementations/Reference/check_reference_workspace.py --widget-layer-only</code></pre>
+
+<p>
+To skip widget validation for narrow debugging of unrelated stages:
+</p>
+
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py --skip-widget-validator</code></pre>
 
 <hr/>
 
@@ -46,7 +57,7 @@ With native LLVM builds:
 
 <ol>
   <li>Artifact preflight for Examples 01–05.</li>
-  <li>Optional widget-layer validation.</li>
+  <li>Widget-layer validation.</li>
   <li><code>.frog -&gt; FIR</code> for Examples 01–05.</li>
   <li><code>FIR -&gt; lowering</code> for Examples 01–05.</li>
   <li><code>lowering -&gt; backend contract</code>.</li>
@@ -57,10 +68,31 @@ With native LLVM builds:
 
 <hr/>
 
+<h2>Widget-Layer Validation Scope</h2>
+
+<p>
+The widget-layer validation stage checks repository hygiene for:
+</p>
+
+<ul>
+  <li>widget class-law documents under <code>Libraries/Widgets/</code>,</li>
+  <li>Default realization documents under <code>Libraries/Realizations/Default/</code>,</li>
+  <li><code>*.default.wfrog</code> manifests,</li>
+  <li>target class references,</li>
+  <li>resource references,</li>
+  <li>SVG <code>data-frog-part</code> markers,</li>
+  <li>public-part alignment,</li>
+  <li>part / property / method / event binding posture,</li>
+  <li>composition resource references,</li>
+  <li>host-native replacement boundaries.</li>
+</ul>
+
+<hr/>
+
 <h2>Boundary</h2>
 
 <p>
 The pipeline is non-normative.
 It verifies published artifacts and implementation-stage coherence.
-It does not define the FROG language.
+It does not define the FROG language, widget semantics, realization semantics, runtime semantics, or compiler semantics.
 </p>
