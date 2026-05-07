@@ -411,6 +411,7 @@
       - [test_example05_llvm_emission.py](/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py)
       - [test_examples01_04_llvm_modules.py](/Implementations/Reference/LLVM/tests/test_examples01_04_llvm_modules.py)
       - [test_generic_lowering_to_llvm.py](/Implementations/Reference/LLVM/tests/test_generic_lowering_to_llvm.py)
+      - [test_llvm_lowering_emitter.py](/Implementations/Reference/LLVM/tests/test_llvm_lowering_emitter.py)
     - tools
       - [check_examples01_04_llvm_modules.py](/Implementations/Reference/LLVM/tools/check_examples01_04_llvm_modules.py)
       - [emit_examples01_04_llvm_modules.py](/Implementations/Reference/LLVM/tools/emit_examples01_04_llvm_modules.py)

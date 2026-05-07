@@ -2936,6 +2936,13 @@
                       "path": "/Implementations/Reference/LLVM/tests/test_generic_lowering_to_llvm.py",
                       "kind": "code",
                       "children": []
+                    },
+                    {
+                      "key": "implementations/reference/llvm/tests/test_llvm_lowering_emitter.py",
+                      "title": "test_llvm_lowering_emitter.py",
+                      "path": "/Implementations/Reference/LLVM/tests/test_llvm_lowering_emitter.py",
+                      "kind": "code",
+                      "children": []
                     }
                   ]
                 },
@@ -3958,6 +3965,7 @@
     "/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py",
     "/Implementations/Reference/LLVM/tests/test_examples01_04_llvm_modules.py",
     "/Implementations/Reference/LLVM/tests/test_generic_lowering_to_llvm.py",
+    "/Implementations/Reference/LLVM/tests/test_llvm_lowering_emitter.py",
     "/Implementations/Reference/LLVM/tools/check_examples01_04_llvm_modules.py",
     "/Implementations/Reference/LLVM/tools/emit_examples01_04_llvm_modules.py",
     "/Implementations/Reference/LLVM/tools/emit_llvm_module.py",
