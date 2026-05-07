@@ -20,7 +20,7 @@ It exists to make the published source-to-FIR corridor executable and checkable 
 
 <p>
 The supported source-to-FIR targets cover the published numbered examples from <code>01</code> through <code>05</code>.
-Rule selection is now based on explicit source-pattern recognition rather than trusting <code>metadata.name</code> as semantic authority.
+Rule selection is based on explicit source-pattern recognition rather than trusting <code>metadata.name</code> as semantic authority.
 </p>
 
 <hr/>
@@ -97,9 +97,10 @@ The generic <code>derive_fir.py</code> entry point is the preferred path for Exa
 
 <hr/>
 
-<h2>Supported Rule Files</h2>
+<h2>Rule Family Documentation</h2>
 
 <ul>
+  <li><a href="./rules/Readme.md">Reference FIR derivation rule-family index</a></li>
   <li><a href="./rules/example01_fir_derivation.md">Example 01 FIR derivation rules</a></li>
   <li><a href="./rules/example02_fir_derivation.md">Example 02 FIR derivation rules</a></li>
   <li><a href="./rules/example03_fir_derivation.md">Example 03 FIR derivation rules</a></li>
@@ -118,6 +119,27 @@ The generic <code>derive_fir.py</code> entry point is the preferred path for Exa
   <li><code>stateful_feedback_delay</code></li>
   <li><code>bounded_ui_accumulator</code></li>
 </ul>
+
+<hr/>
+
+<h2>Current Family-to-FIR Mapping</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Rule ID</th>
+      <th>Family</th>
+      <th>Derived FIR unit kind</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>pure_public_addition</code></td><td>Pure public-interface arithmetic</td><td><code>pure_dataflow_arithmetic_unit</code></td></tr>
+    <tr><td><code>ui_value_roundtrip</code></td><td>Natural widget-value dataflow</td><td><code>ui_value_roundtrip_unit</code></td></tr>
+    <tr><td><code>ui_property_write</code></td><td>Object-style UI property effect</td><td><code>ui_property_write_unit</code></td></tr>
+    <tr><td><code>stateful_feedback_delay</code></td><td>Explicit delay-backed state</td><td><code>stateful_feedback_delay_unit</code></td></tr>
+    <tr><td><code>bounded_ui_accumulator</code></td><td>Bounded UI accumulator</td><td><code>bounded_stateful_ui_unit</code></td></tr>
+  </tbody>
+</table>
 
 <hr/>
 
