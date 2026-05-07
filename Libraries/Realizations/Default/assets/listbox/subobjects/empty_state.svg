@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 70">
+  <g data-frog-part="empty_state">
+    <rect width="260" height="70" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="92" y="40" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="13" fill="#64748b">No items</text>
+  </g>
+</svg>

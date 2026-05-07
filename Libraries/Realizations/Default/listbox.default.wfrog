@@ -5,7 +5,7 @@
   "version_governance_ref": "../../../Versioning/Readme.md",
   "package": {
     "id": "frog.realizations.default.listbox",
-    "name": "FROG Default listbox Realization",
+    "name": "FROG Default Listbox Realization",
     "namespace": "frog.realizations.default.listbox",
     "family": "default",
     "category": "selection / navigation",
@@ -25,6 +25,9 @@
       "canonical .frog source",
       "frog.ui primitive semantics",
       "runtime-private host handles",
+      "host-native list handles",
+      "virtualized item handles",
+      "row renderer handles",
       "IDE-private editing behavior"
     ],
     "class_law_refs": [
@@ -56,7 +59,13 @@
       "frog.realizations.default.listbox.assets.item_region_svg",
       "frog.realizations.default.listbox.assets.item_row_svg",
       "frog.realizations.default.listbox.assets.selection_face_svg",
-      "frog.realizations.default.listbox.assets.vertical_scrollbar_svg"
+      "frog.realizations.default.listbox.assets.active_item_svg",
+      "frog.realizations.default.listbox.assets.hover_face_svg",
+      "frog.realizations.default.listbox.assets.disabled_face_svg",
+      "frog.realizations.default.listbox.assets.empty_state_svg",
+      "frog.realizations.default.listbox.assets.search_highlight_svg",
+      "frog.realizations.default.listbox.assets.vertical_scrollbar_svg",
+      "frog.realizations.default.listbox.assets.horizontal_scrollbar_svg"
     ]
   },
   "realizations": [
@@ -74,13 +83,39 @@
         "frame",
         "item_region",
         "item_row",
+        "item_icon",
+        "item_label",
+        "active_item",
         "selection_face",
+        "hover_face",
+        "disabled_face",
+        "empty_state",
+        "search_highlight",
         "vertical_scrollbar",
+        "horizontal_scrollbar",
         "focus_ring"
+      ],
+      "supported_selection_modes": [
+        "none",
+        "single",
+        "multiple",
+        "range"
+      ],
+      "supported_item_features": [
+        "label",
+        "value",
+        "icon",
+        "enabled",
+        "visible",
+        "tooltip",
+        "metadata"
       ],
       "fallbacks": {
         "missing_resource": "host_native_or_generic_compatible_rendering",
-        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint",
+        "unsupported_selection_mode": "reject_or_downgrade_to_single_selection",
+        "unsupported_icon": "hide_icon_preserve_label",
+        "unsupported_filter": "preserve_items_ignore_filter_view"
       }
     }
   ],
@@ -110,10 +145,46 @@
       "target_part": "selection_face"
     },
     {
+      "id": "frog.realizations.default.listbox.assets.active_item_svg",
+      "kind": "svg",
+      "path": "./assets/listbox/subobjects/active_item.svg",
+      "target_part": "active_item"
+    },
+    {
+      "id": "frog.realizations.default.listbox.assets.hover_face_svg",
+      "kind": "svg",
+      "path": "./assets/listbox/subobjects/hover_face.svg",
+      "target_part": "hover_face"
+    },
+    {
+      "id": "frog.realizations.default.listbox.assets.disabled_face_svg",
+      "kind": "svg",
+      "path": "./assets/listbox/subobjects/disabled_face.svg",
+      "target_part": "disabled_face"
+    },
+    {
+      "id": "frog.realizations.default.listbox.assets.empty_state_svg",
+      "kind": "svg",
+      "path": "./assets/listbox/subobjects/empty_state.svg",
+      "target_part": "empty_state"
+    },
+    {
+      "id": "frog.realizations.default.listbox.assets.search_highlight_svg",
+      "kind": "svg",
+      "path": "./assets/listbox/subobjects/search_highlight.svg",
+      "target_part": "search_highlight"
+    },
+    {
       "id": "frog.realizations.default.listbox.assets.vertical_scrollbar_svg",
       "kind": "svg",
       "path": "./assets/listbox/subobjects/vertical_scrollbar.svg",
       "target_part": "vertical_scrollbar"
+    },
+    {
+      "id": "frog.realizations.default.listbox.assets.horizontal_scrollbar_svg",
+      "kind": "svg",
+      "path": "./assets/listbox/subobjects/horizontal_scrollbar.svg",
+      "target_part": "horizontal_scrollbar"
     }
   ],
   "part_bindings": [
@@ -148,14 +219,54 @@
       "binding_selector": "[data-frog-part='item_row']"
     },
     {
+      "part": "item_icon",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='item_icon']"
+    },
+    {
+      "part": "item_label",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='item_label']"
+    },
+    {
+      "part": "active_item",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='active_item']"
+    },
+    {
       "part": "selection_face",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='selection_face']"
     },
     {
+      "part": "hover_face",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='hover_face']"
+    },
+    {
+      "part": "disabled_face",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='disabled_face']"
+    },
+    {
+      "part": "empty_state",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='empty_state']"
+    },
+    {
+      "part": "search_highlight",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='search_highlight']"
+    },
+    {
       "part": "vertical_scrollbar",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='vertical_scrollbar']"
+    },
+    {
+      "part": "horizontal_scrollbar",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='horizontal_scrollbar']"
     },
     {
       "part": "focus_ring",
@@ -165,9 +276,29 @@
   ],
   "property_bindings": [
     {
-      "member": "items[]",
+      "member": "value",
+      "target_part": "selection_face",
+      "target_operation": "render_selected_value"
+    },
+    {
+      "member": "items.*",
       "target_part": "item_region",
       "target_operation": "render_items"
+    },
+    {
+      "member": "items.icon",
+      "target_part": "item_icon",
+      "target_operation": "render_item_icon"
+    },
+    {
+      "member": "items.label",
+      "target_part": "item_label",
+      "target_operation": "render_item_label"
+    },
+    {
+      "member": "items.enabled",
+      "target_part": "disabled_face",
+      "target_operation": "render_disabled_state"
     },
     {
       "member": "selection.*",
@@ -175,18 +306,191 @@
       "target_operation": "render_selection"
     },
     {
-      "member": "value",
+      "member": "active.*",
+      "target_part": "active_item",
+      "target_operation": "render_active_item"
+    },
+    {
+      "member": "hover.*",
+      "target_part": "hover_face",
+      "target_operation": "render_hover"
+    },
+    {
+      "member": "viewport.*",
       "target_part": "item_region",
-      "target_operation": "resolve_selected_item"
+      "target_operation": "apply_viewport"
+    },
+    {
+      "member": "search.*",
+      "target_part": "search_highlight",
+      "target_operation": "render_search_matches"
+    },
+    {
+      "member": "filter.*",
+      "target_part": "item_region",
+      "target_operation": "apply_filter_view"
+    },
+    {
+      "member": "empty_state.*",
+      "target_part": "empty_state",
+      "target_operation": "render_empty_state"
+    }
+  ],
+  "method_bindings": [
+    {
+      "method": "focus",
+      "target_operation": "focus_listbox"
+    },
+    {
+      "method": "clear_selection",
+      "target_operation": "clear_selection"
+    },
+    {
+      "method": "set_selection",
+      "target_operation": "set_selection"
+    },
+    {
+      "method": "select_index",
+      "target_operation": "select_index"
+    },
+    {
+      "method": "select_id",
+      "target_operation": "select_id"
+    },
+    {
+      "method": "select_next",
+      "target_operation": "select_next_item"
+    },
+    {
+      "method": "select_previous",
+      "target_operation": "select_previous_item"
+    },
+    {
+      "method": "scroll_to",
+      "target_operation": "apply_viewport"
+    },
+    {
+      "method": "scroll_to_id",
+      "target_operation": "scroll_to_id"
+    },
+    {
+      "method": "set_active_index",
+      "target_operation": "set_active_index"
+    },
+    {
+      "method": "add_item",
+      "target_operation": "add_item"
+    },
+    {
+      "method": "remove_item",
+      "target_operation": "remove_item"
+    },
+    {
+      "method": "set_item_enabled",
+      "target_operation": "set_item_enabled"
+    },
+    {
+      "method": "set_item_visible",
+      "target_operation": "set_item_visible"
+    },
+    {
+      "method": "find_items",
+      "target_operation": "search_items"
+    },
+    {
+      "method": "clear_filter",
+      "target_operation": "clear_filter"
+    }
+  ],
+  "event_bindings": [
+    {
+      "event": "value_changed",
+      "source_part": "selection_face"
+    },
+    {
+      "event": "selection_changed",
+      "source_part": "selection_face"
+    },
+    {
+      "event": "active_item_changed",
+      "source_part": "active_item"
+    },
+    {
+      "event": "item_activated",
+      "source_part": "item_row"
+    },
+    {
+      "event": "item_clicked",
+      "source_part": "item_row"
+    },
+    {
+      "event": "item_double_clicked",
+      "source_part": "item_row"
+    },
+    {
+      "event": "item_added",
+      "source_part": "item_region"
+    },
+    {
+      "event": "item_removed",
+      "source_part": "item_region"
+    },
+    {
+      "event": "viewport_changed",
+      "source_part": "item_region"
+    },
+    {
+      "event": "search_changed",
+      "source_part": "search_highlight"
+    },
+    {
+      "event": "filter_changed",
+      "source_part": "item_region"
     }
   ],
   "state_maps": [
     {
       "state": "normal"
+    },
+    {
+      "state": "focused"
+    },
+    {
+      "state": "disabled"
+    },
+    {
+      "state": "selection_active"
+    },
+    {
+      "state": "hover"
+    },
+    {
+      "state": "empty"
+    },
+    {
+      "state": "filtered"
     }
   ],
   "composition": {
     "shell": "frog.realizations.default.listbox.assets.shell_svg",
+    "layer_order": [
+      "frame",
+      "item_region",
+      "item_row",
+      "disabled_face",
+      "hover_face",
+      "selection_face",
+      "active_item",
+      "item_icon",
+      "item_label",
+      "search_highlight",
+      "empty_state",
+      "vertical_scrollbar",
+      "horizontal_scrollbar",
+      "focus_ring",
+      "label",
+      "caption"
+    ],
     "slots": [
       {
         "slot": "item_region",
@@ -195,6 +499,10 @@
       {
         "slot": "vertical_scrollbar",
         "resource_ref": "frog.realizations.default.listbox.assets.vertical_scrollbar_svg"
+      },
+      {
+        "slot": "horizontal_scrollbar",
+        "resource_ref": "frog.realizations.default.listbox.assets.horizontal_scrollbar_svg"
       }
     ],
     "nested_slots": [
@@ -207,18 +515,49 @@
         "parent_part": "item_region",
         "slot": "selection_face",
         "resource_ref": "frog.realizations.default.listbox.assets.selection_face_svg"
+      },
+      {
+        "parent_part": "item_region",
+        "slot": "active_item",
+        "resource_ref": "frog.realizations.default.listbox.assets.active_item_svg"
+      },
+      {
+        "parent_part": "item_region",
+        "slot": "hover_face",
+        "resource_ref": "frog.realizations.default.listbox.assets.hover_face_svg"
+      },
+      {
+        "parent_part": "item_region",
+        "slot": "disabled_face",
+        "resource_ref": "frog.realizations.default.listbox.assets.disabled_face_svg"
+      },
+      {
+        "parent_part": "item_region",
+        "slot": "search_highlight",
+        "resource_ref": "frog.realizations.default.listbox.assets.search_highlight_svg"
+      },
+      {
+        "parent_part": "item_region",
+        "slot": "empty_state",
+        "resource_ref": "frog.realizations.default.listbox.assets.empty_state_svg"
       }
     ]
   },
   "host_hints": {
-    "preferred_host_kind": "svg_template_host_or_host_native_widget",
-    "style_application_posture": "apply_property_bindings_before_render"
+    "preferred_host_kind": "svg_template_host_or_host_native_list",
+    "style_application_posture": "apply_property_bindings_before_render",
+    "host_native_replacement_allowed": true,
+    "virtualization_allowed": true,
+    "minimum_visible_items": 1
   },
   "validation_expectations": [
     "target classes must exist in the referenced widget class-law document",
     "all declared public parts must exist in widget class law",
     "resources must resolve relative to this package file",
     "resources must not become semantic owners of widget value",
-    "runtime-private host handles must not be exposed as public widget members"
+    "runtime-private host handles must not be exposed as public widget members",
+    "virtualized item and row handles must remain realization-private",
+    "declared SVG resources should expose all supported data-frog-part markers",
+    "unsupported selection mutation on indicator classes must be rejected"
   ]
 }

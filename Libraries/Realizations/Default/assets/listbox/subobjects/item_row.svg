@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 42"><g data-frog-part="item_row"><rect width="220" height="42" fill="#f8fafc" stroke="#94a3b8"/><text x="10" y="26" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12">item_row</text></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 34">
+  <g data-frog-part="item_row">
+    <rect width="300" height="34" fill="#ffffff" stroke="#e2e8f0"/>
+    <g data-frog-part="item_icon"><rect x="12" y="9" width="16" height="16" rx="3" fill="#60a5fa" stroke="#2563eb"/></g>
+    <text data-frog-part="item_label" x="42" y="22" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12">item_label</text>
+  </g>
+</svg>
