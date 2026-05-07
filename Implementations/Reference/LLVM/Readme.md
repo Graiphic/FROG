@@ -5,8 +5,32 @@
 <h1 align="center">Reference LLVM-Oriented Path</h1>
 
 <p align="center">
-  <strong>Downstream compiler-family posture for native executable closure in the non-normative FROG reference implementation</strong><br/>
+  <strong>Downstream compiler-family proof path for native executable closure in the non-normative FROG reference implementation</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
+</p>
+
+<hr/>
+
+<h2>Purpose</h2>
+
+<p>
+This directory contains the current LLVM-oriented proof path for the FROG reference implementation workspace.
+It exists to prove that selected lowered artifacts can be consumed by a native compiler-family path without making LLVM the definition of FROG semantics.
+</p>
+
+<p>
+The correct current path is:
+</p>
+
+<pre><code>.frog
+  -&gt; FIR
+  -&gt; lowering
+  -&gt; LLVM module / native proof
+</code></pre>
+
+<p>
+LLVM consumes lowering artifacts.
+It does not consume canonical source or FIR directly.
 </p>
 
 <hr/>
@@ -35,17 +59,34 @@
 The generic emitter dispatches by <code>lowered_units[0].kind</code>.
 </p>
 
-<p>
-Supported lowered unit kinds:
-</p>
+<hr/>
+
+<h2>Rule Family Documentation</h2>
 
 <ul>
-  <li><code>pure_addition_kernel</code></li>
-  <li><code>ui_value_roundtrip_kernel</code></li>
-  <li><code>ui_property_write_effect_unit</code></li>
-  <li><code>stateful_feedback_delay_kernel</code></li>
-  <li><code>bounded_accumulator_kernel_with_ui_bindings</code></li>
+  <li><a href="./rules/Readme.md">Reference lowering-to-LLVM rule-family index</a></li>
 </ul>
+
+<hr/>
+
+<h2>Supported Lowered Unit Kinds</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Lowered unit kind</th>
+      <th>Published example</th>
+      <th>Proof posture</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>pure_addition_kernel</code></td><td><code>01_pure_addition</code></td><td>Native proof for pure <code>f64</code> addition.</td></tr>
+    <tr><td><code>ui_value_roundtrip_kernel</code></td><td><code>02_ui_value_roundtrip</code></td><td>Native proof payload for widget-value arithmetic.</td></tr>
+    <tr><td><code>ui_property_write_effect_unit</code></td><td><code>03_ui_property_write</code></td><td>Native proof payload for explicit UI property effect.</td></tr>
+    <tr><td><code>stateful_feedback_delay_kernel</code></td><td><code>04_stateful_feedback_delay</code></td><td>Native proof for one explicit delay-backed state step.</td></tr>
+    <tr><td><code>bounded_accumulator_kernel_with_ui_bindings</code></td><td><code>05_bounded_ui_accumulator</code></td><td>Native proof for bounded <code>u16</code> accumulation with overflow rejection.</td></tr>
+  </tbody>
+</table>
 
 <hr/>
 
@@ -65,9 +106,17 @@ These wrappers are kept for continuity, but both now delegate to the generic low
 
 <pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-llvm-build</code></pre>
 
+<p>
+The native build path requires <code>clang</code>.
+It verifies the published native proof dossiers for Examples 01–05 when the toolchain is available.
+</p>
+
 <hr/>
+
+<h2>Boundary</h2>
 
 <p>
 LLVM remains downstream from FROG.
 These examples are native proof dossiers, not a generalized production backend.
+The LLVM-oriented path must not redefine canonical source, validated meaning, FIR, lowering law, backend contracts, runtime behavior, widget law, or UI host behavior.
 </p>
