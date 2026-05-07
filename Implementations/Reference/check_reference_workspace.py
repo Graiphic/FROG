@@ -38,31 +38,50 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run FROG reference workspace checks.")
     parser.add_argument("--include-pytest", action="store_true")
     parser.add_argument("--include-llvm-build", action="store_true")
+    parser.add_argument(
+        "--widget-layer-only",
+        action="store_true",
+        help="Run only the non-normative widget-layer repository hygiene validator.",
+    )
+    parser.add_argument(
+        "--skip-widget-validator",
+        action="store_true",
+        help="Skip widget-layer validation inside the Examples 01-05 pipeline.",
+    )
     args = parser.parse_args(argv)
 
     py = sys.executable
 
-    stages = [
-        Stage(
-            "Examples 01-05 full pipeline",
-            [
-                py,
-                "Implementations/Reference/Pipeline/check_examples01_05_full.py",
-                "--include-widget-validator",
-            ] + (["--include-llvm-build"] if args.include_llvm_build else []),
-        ),
-    ]
+    if args.widget_layer_only:
+        stages = [
+            Stage(
+                "Widget layer validation",
+                [py, "Implementations/Reference/WidgetValidator/validate_widget_layer.py"],
+            ),
+        ]
+    else:
+        stages = [
+            Stage(
+                "Examples 01-05 full pipeline",
+                [
+                    py,
+                    "Implementations/Reference/Pipeline/check_examples01_05_full.py",
+                ]
+                + (["--skip-widget-validator"] if args.skip_widget_validator else [])
+                + (["--include-llvm-build"] if args.include_llvm_build else []),
+            ),
+        ]
 
-    if args.include_pytest:
-        stages.extend([
-            Stage("ArtifactChecks tests", [py, "-m", "pytest", "Implementations/Reference/ArtifactChecks/tests"]),
-            Stage("Deriver tests", [py, "-m", "pytest", "Implementations/Reference/Deriver/tests"]),
-            Stage("Lowerer tests", [py, "-m", "pytest", "Implementations/Reference/Lowerer/tests"]),
-            Stage("ContractEmitter tests", [py, "-m", "pytest", "Implementations/Reference/ContractEmitter/tests"]),
-            Stage("Runtime tests", [py, "-m", "pytest", "Implementations/Reference/Runtime/tests"]),
-            Stage("LLVM tests", [py, "-m", "pytest", "Implementations/Reference/LLVM/tests"]),
-            Stage("Pipeline tests", [py, "-m", "pytest", "Implementations/Reference/Pipeline/tests"]),
-        ])
+        if args.include_pytest:
+            stages.extend([
+                Stage("ArtifactChecks tests", [py, "-m", "pytest", "Implementations/Reference/ArtifactChecks/tests"]),
+                Stage("Deriver tests", [py, "-m", "pytest", "Implementations/Reference/Deriver/tests"]),
+                Stage("Lowerer tests", [py, "-m", "pytest", "Implementations/Reference/Lowerer/tests"]),
+                Stage("ContractEmitter tests", [py, "-m", "pytest", "Implementations/Reference/ContractEmitter/tests"]),
+                Stage("Runtime tests", [py, "-m", "pytest", "Implementations/Reference/Runtime/tests"]),
+                Stage("LLVM tests", [py, "-m", "pytest", "Implementations/Reference/LLVM/tests"]),
+                Stage("Pipeline tests", [py, "-m", "pytest", "Implementations/Reference/Pipeline/tests"]),
+            ])
 
     for stage in stages:
         code = run_stage(stage)
