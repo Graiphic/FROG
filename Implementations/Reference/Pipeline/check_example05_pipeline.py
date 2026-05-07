@@ -68,10 +68,7 @@ def build_stages(
         stages.append(
             Stage(
                 "widget-layer validation",
-                [
-                    python,
-                    "Implementations/Reference/WidgetValidator/validate_widget_layer.py",
-                ],
+                [python, "Implementations/Reference/WidgetValidator/validate_widget_layer.py"],
             )
         )
 
@@ -79,28 +76,15 @@ def build_stages(
         [
             Stage(
                 "derive .frog -> FIR",
-                [
-                    python,
-                    "Implementations/Reference/Deriver/derive_example05_fir.py",
-                    "--check",
-                ],
+                [python, "Implementations/Reference/Deriver/derive_example05_fir.py", "--check"],
             ),
             Stage(
                 "lower FIR -> lowering",
-                [
-                    python,
-                    "Implementations/Reference/Lowerer/lower_example05_fir.py",
-                    "--check",
-                ],
+                [python, "Implementations/Reference/Lowerer/lower_example05_fir.py", "--check"],
             ),
             Stage(
                 "emit lowering -> backend contract",
-                [
-                    python,
-                    "-m",
-                    "Implementations.Reference.ContractEmitter.reference_contract_emitter",
-                    "--check",
-                ],
+                [python, "-m", "Implementations.Reference.ContractEmitter.reference_contract_emitter", "--check"],
             ),
         ]
     )
@@ -109,27 +93,15 @@ def build_stages(
         stages.append(
             Stage(
                 "runtime acceptance",
-                [
-                    python,
-                    "Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",
-                ],
+                [python, "Implementations/Reference/Runtime/check_example05_runtime_acceptance.py"],
             )
         )
 
     if not skip_llvm:
-        llvm_command = [
-            python,
-            "Implementations/Reference/LLVM/tools/emit_llvm_module.py",
-            "--check",
-        ]
+        llvm_command = [python, "Implementations/Reference/LLVM/tools/emit_llvm_module.py", "--check"]
         if include_llvm_build:
             llvm_command.append("--build")
-        stages.append(
-            Stage(
-                "emit lowering -> LLVM module",
-                llvm_command,
-            )
-        )
+        stages.append(Stage("emit lowering -> LLVM module", llvm_command))
 
     return stages
 
@@ -139,7 +111,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--include-widget-validator",
         action="store_true",
-        help="Run WidgetValidator before the Example 05 artifact pipeline checks.",
+        help="Compatibility flag. Widget validation is included by default unless --skip-widget-validator is used.",
+    )
+    parser.add_argument(
+        "--skip-widget-validator",
+        action="store_true",
+        help="Skip the non-normative widget-layer repository hygiene validator.",
     )
     parser.add_argument(
         "--skip-runtime-acceptance",
@@ -161,13 +138,14 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 def main(argv: list[str]) -> int:
     args = parse_args(argv)
+    include_widget_validator = args.include_widget_validator or not args.skip_widget_validator
 
     print("FROG Example 05 reference pipeline check")
     print("=======================================")
     print(f"Repository root: {ROOT}")
 
     for stage in build_stages(
-        include_widget_validator=args.include_widget_validator,
+        include_widget_validator=include_widget_validator,
         skip_runtime_acceptance=args.skip_runtime_acceptance,
         skip_llvm=args.skip_llvm,
         include_llvm_build=args.include_llvm_build,
