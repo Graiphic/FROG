@@ -476,8 +476,10 @@
     - [validate_widget_layer.py](/Implementations/Reference/WidgetValidator/validate_widget_layer.py)
     - notes
       - [table deepening](/Implementations/Reference/WidgetValidator/notes/table_deepening.md)
+      - [tree deepening](/Implementations/Reference/WidgetValidator/notes/tree_deepening.md)
     - tests
       - [test_table_deepening.py](/Implementations/Reference/WidgetValidator/tests/test_table_deepening.py)
+      - [test_tree_deepening.py](/Implementations/Reference/WidgetValidator/tests/test_tree_deepening.py)
 - [Roadmap](/Roadmap/Readme.md)
   - [Milestones](/Roadmap/Milestones.md)
 - [Strategy](/Strategy/Heilmeier/Readme.md)
