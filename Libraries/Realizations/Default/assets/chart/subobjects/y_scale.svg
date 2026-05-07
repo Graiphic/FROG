@@ -1,22 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 48 246"
-     role="img"
-     aria-label="FROG waveform chart Y scale"
-     data-frog-template="frog.realizations.default.waveform_chart.subobject.y_scale"
-     data-frog-target-part="y_scale">
-  <title>Y Scale Subobject</title>
-  <g id="y_scale_root" data-frog-part="y_scale" data-frog-bind="scales.y.* style.axis.*">
-    <line x1="40" y1="0" x2="40" y2="246" stroke="#111111" stroke-width="2" />
-    <text id="y_scale_label"
-          data-frog-part="y_scale_label"
-          data-frog-member="scales.y[].label.text"
-          data-frog-anchor="y_scale_label.center"
-          x="12"
-          y="123"
-          text-anchor="middle"
-          transform="rotate(-90 12 123)"
-          font-family="system-ui, Segoe UI, Arial, sans-serif"
-          font-size="12"
-          fill="#111111">Amplitude</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 130">
+  <g data-frog-part="y_scale">
+    <line x1="30" y1="0" x2="30" y2="120" stroke="#111827"/>
+    <g data-frog-part="axis_tick"><line x1="24" y1="60" x2="36" y2="60" stroke="#111827"/></g>
+    <text data-frog-part="y_scale_label" transform="translate(12 82) rotate(-90)" font-family="system-ui" font-size="12">value</text>
   </g>
 </svg>

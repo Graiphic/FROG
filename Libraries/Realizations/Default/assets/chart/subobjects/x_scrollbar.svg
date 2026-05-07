@@ -1,12 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 460 16"
-     role="img"
-     aria-label="FROG waveform chart X scrollbar"
-     data-frog-template="frog.realizations.default.waveform_chart.subobject.x_scrollbar"
-     data-frog-target-part="x_scrollbar">
-  <title>X Scrollbar Subobject</title>
-  <g id="x_scrollbar" data-frog-part="x_scrollbar" data-frog-bind="scrollbars.x.*">
-    <rect width="460" height="16" fill="#e5e7eb" stroke="#94a3b8" />
-    <rect x="120" y="2" width="130" height="12" fill="#94a3b8" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 18">
+  <g data-frog-part="x_scrollbar">
+    <rect width="220" height="18" rx="9" fill="#e2e8f0" stroke="#94a3b8"/>
+    <rect x="44" y="4" width="78" height="10" rx="5" fill="#94a3b8"/>
   </g>
 </svg>

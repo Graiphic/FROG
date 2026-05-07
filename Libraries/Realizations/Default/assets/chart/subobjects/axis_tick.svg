@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 42">
+  <g data-frog-part="axis_tick">
+    <line x1="10" y1="0" x2="10" y2="20" stroke="#111827"/>
+    <text x="2" y="36" font-family="system-ui" font-size="10">0</text>
+  </g>
+</svg>

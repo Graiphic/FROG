@@ -1,13 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 108 56"
-     role="img"
-     aria-label="FROG waveform chart scale legend"
-     data-frog-template="frog.realizations.default.waveform_chart.subobject.scale_legend"
-     data-frog-target-part="scale_legend">
-  <title>Scale Legend Subobject</title>
-  <g id="scale_legend" data-frog-part="scale_legend" data-frog-bind="legends.scale.*">
-    <rect width="108" height="56" fill="#ffffff" stroke="#94a3b8" stroke-width="1" />
-    <text x="10" y="22" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12">Time</text>
-    <text x="10" y="44" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12">Amplitude</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 42">
+  <g data-frog-part="scale_legend">
+    <rect width="150" height="42" rx="5" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="14" y="26" font-family="system-ui" font-size="12">X/Y scales</text>
   </g>
 </svg>

@@ -1,16 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 84 24"
-     role="img"
-     aria-label="FROG waveform chart graph palette"
-     data-frog-template="frog.realizations.default.waveform_chart.subobject.graph_palette"
-     data-frog-target-part="graph_palette">
-  <title>Graph Palette Subobject</title>
-  <g id="graph_palette" data-frog-part="graph_palette" data-frog-bind="palette.*">
-    <rect x="0" y="0" width="24" height="24" fill="#ffffff" stroke="#94a3b8" />
-    <rect x="30" y="0" width="24" height="24" fill="#ffffff" stroke="#94a3b8" />
-    <rect x="60" y="0" width="24" height="24" fill="#ffffff" stroke="#94a3b8" />
-    <text x="12" y="17" text-anchor="middle" font-family="Arial" font-size="16">+</text>
-    <text x="42" y="17" text-anchor="middle" font-family="Arial" font-size="14">⌕</text>
-    <text x="72" y="17" text-anchor="middle" font-family="Arial" font-size="14">↔</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 38">
+  <g data-frog-part="graph_palette">
+    <rect width="150" height="38" rx="5" fill="#eef2ff" stroke="#818cf8"/>
+    <text x="18" y="24" font-family="system-ui" font-size="12">zoom pan select</text>
   </g>
 </svg>

@@ -8,6 +8,8 @@
     "name": "FROG Default Chart Realization",
     "namespace": "frog.realizations.default.chart",
     "family": "default",
+    "category": "visual data",
+    "role_posture": "indicator",
     "summary": "Machine-readable default realization manifest for the composite waveform chart widget."
   },
   "ownership_boundary": {
@@ -32,6 +34,8 @@
       "canonical .frog source",
       "frog.ui primitive semantics",
       "runtime-private plotting handles",
+      "host-native canvas handles",
+      "GPU surfaces",
       "IDE-private editing behavior"
     ],
     "class_law_refs": [
@@ -50,7 +54,7 @@
       "role": "indicator",
       "primary_value": {
         "present": true,
-        "kind": "numeric_sample_sequence_or_history"
+        "kind": "frog.waveform_chart_value"
       }
     }
   ],
@@ -74,7 +78,12 @@
       "frog.realizations.default.chart.assets.x_scrollbar_svg",
       "frog.realizations.default.chart.assets.y_scrollbar_svg",
       "frog.realizations.default.chart.assets.cursor_layer_svg",
-      "frog.realizations.default.chart.assets.plot_image_layer_svg"
+      "frog.realizations.default.chart.assets.plot_image_layer_svg",
+      "frog.realizations.default.chart.assets.axis_tick_svg",
+      "frog.realizations.default.chart.assets.plot_marker_svg",
+      "frog.realizations.default.chart.assets.cursor_readout_svg",
+      "frog.realizations.default.chart.assets.annotation_layer_svg",
+      "frog.realizations.default.chart.assets.threshold_band_svg"
     ]
   },
   "realizations": [
@@ -93,8 +102,12 @@
         "caption",
         "frame",
         "plot_area",
+        "history_region",
         "plot_layer",
+        "plot_polyline",
+        "plot_marker",
         "grid",
+        "axis_tick",
         "x_scale",
         "y_scale",
         "x_scale_label",
@@ -106,10 +119,36 @@
         "x_scrollbar",
         "y_scrollbar",
         "cursor_layer",
+        "cursor_readout",
         "plot_image_back",
         "plot_image_middle",
         "plot_image_front",
+        "annotation_layer",
+        "threshold_band",
         "focus_ring"
+      ],
+      "supported_payload_kinds": [
+        "single_sample",
+        "sample_array",
+        "multi_plot_sample",
+        "multi_plot_arrays",
+        "waveform",
+        "history_replace"
+      ],
+      "supported_timebase_modes": [
+        "sample_index",
+        "relative_time",
+        "absolute_time"
+      ],
+      "supported_interpolations": [
+        "none",
+        "linear",
+        "step_left",
+        "step_right"
+      ],
+      "supported_cursor_snap_modes": [
+        "free",
+        "nearest_sample"
       ],
       "subobject_strategy": "separate_svg_assets_composed_by_shell_slots",
       "fallbacks": {
@@ -141,8 +180,6 @@
       "id": "frog.realizations.default.chart.assets.shell_svg",
       "kind": "svg",
       "path": "./assets/chart/templates/waveform_chart_shell.svg",
-      "target_class": "frog.widgets.waveform_chart",
-      "target_variant": "rectangular",
       "role": "assembly_shell"
     },
     {
@@ -216,18 +253,76 @@
       "kind": "svg",
       "path": "./assets/chart/subobjects/plot_image_layer.svg",
       "target_part": "plot_image_layer"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.axis_tick_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/axis_tick.svg",
+      "target_part": "axis_tick"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.plot_marker_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/plot_marker.svg",
+      "target_part": "plot_marker"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.cursor_readout_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/cursor_readout.svg",
+      "target_part": "cursor_readout"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.annotation_layer_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/annotation_layer.svg",
+      "target_part": "annotation_layer"
+    },
+    {
+      "id": "frog.realizations.default.chart.assets.threshold_band_svg",
+      "kind": "svg",
+      "path": "./assets/chart/subobjects/threshold_band.svg",
+      "target_part": "threshold_band"
     }
   ],
   "composition": {
     "shell": "frog.realizations.default.chart.assets.shell_svg",
+    "layer_order": [
+      "frame",
+      "plot_area",
+      "plot_image_back",
+      "history_region",
+      "grid",
+      "threshold_band",
+      "plot_image_middle",
+      "plot_layer",
+      "plot_polyline",
+      "plot_marker",
+      "annotation_layer",
+      "cursor_layer",
+      "cursor_readout",
+      "plot_image_front",
+      "x_scale",
+      "y_scale",
+      "axis_tick",
+      "plot_legend",
+      "scale_legend",
+      "cursor_legend",
+      "graph_palette",
+      "x_scrollbar",
+      "y_scrollbar",
+      "focus_ring",
+      "label",
+      "caption"
+    ],
     "slots": [
-      {
-        "slot": "plot_legend",
-        "resource_ref": "frog.realizations.default.chart.assets.plot_legend_svg"
-      },
       {
         "slot": "plot_area",
         "resource_ref": "frog.realizations.default.chart.assets.plot_area_svg"
+      },
+      {
+        "slot": "plot_legend",
+        "resource_ref": "frog.realizations.default.chart.assets.plot_legend_svg"
       },
       {
         "slot": "scale_legend",
@@ -278,87 +373,345 @@
       },
       {
         "parent_part": "plot_area",
-        "slot": "x_scale",
-        "resource_ref": "frog.realizations.default.chart.assets.x_scale_svg"
+        "slot": "annotation_layer",
+        "resource_ref": "frog.realizations.default.chart.assets.annotation_layer_svg"
       },
       {
         "parent_part": "plot_area",
-        "slot": "y_scale",
-        "resource_ref": "frog.realizations.default.chart.assets.y_scale_svg"
+        "slot": "threshold_band",
+        "resource_ref": "frog.realizations.default.chart.assets.threshold_band_svg"
+      },
+      {
+        "parent_part": "plot_area",
+        "slot": "plot_marker",
+        "resource_ref": "frog.realizations.default.chart.assets.plot_marker_svg"
+      },
+      {
+        "parent_part": "plot_area",
+        "slot": "axis_tick",
+        "resource_ref": "frog.realizations.default.chart.assets.axis_tick_svg"
       }
     ]
   },
   "part_bindings": [
     {
+      "part": "root",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "label",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='label']"
+    },
+    {
+      "part": "caption",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='caption']"
+    },
+    {
+      "part": "frame",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='frame']"
+    },
+    {
       "part": "plot_area",
-      "resource_ref": "frog.realizations.default.chart.assets.plot_area_svg",
-      "semantic_member": "plot_area.*"
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='plot_area']"
+    },
+    {
+      "part": "history_region",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='history_region']"
     },
     {
       "part": "plot_layer",
-      "resource_ref": "frog.realizations.default.chart.assets.plot_area_svg",
-      "semantic_members": [
-        "value",
-        "history.data",
-        "plots.*"
-      ]
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='plot_layer']"
+    },
+    {
+      "part": "plot_polyline",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='plot_polyline']"
+    },
+    {
+      "part": "plot_marker",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='plot_marker']"
     },
     {
       "part": "grid",
-      "resource_ref": "frog.realizations.default.chart.assets.grid_svg",
-      "semantic_member": "scales.*.grid.*"
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='grid']"
+    },
+    {
+      "part": "axis_tick",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='axis_tick']"
     },
     {
       "part": "x_scale",
-      "resource_ref": "frog.realizations.default.chart.assets.x_scale_svg",
-      "semantic_member": "scales.x.*"
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='x_scale']"
     },
     {
       "part": "y_scale",
-      "resource_ref": "frog.realizations.default.chart.assets.y_scale_svg",
-      "semantic_member": "scales.y.*"
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='y_scale']"
+    },
+    {
+      "part": "x_scale_label",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='x_scale_label']"
+    },
+    {
+      "part": "y_scale_label",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='y_scale_label']"
     },
     {
       "part": "plot_legend",
-      "resource_ref": "frog.realizations.default.chart.assets.plot_legend_svg",
-      "semantic_member": "legends.plot.*"
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='plot_legend']"
     },
     {
       "part": "scale_legend",
-      "resource_ref": "frog.realizations.default.chart.assets.scale_legend_svg",
-      "semantic_member": "legends.scale.*"
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='scale_legend']"
     },
     {
       "part": "cursor_legend",
-      "resource_ref": "frog.realizations.default.chart.assets.cursor_legend_svg",
-      "semantic_member": "legends.cursor.*"
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='cursor_legend']"
     },
     {
       "part": "graph_palette",
-      "resource_ref": "frog.realizations.default.chart.assets.graph_palette_svg",
-      "semantic_member": "palette.*"
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='graph_palette']"
     },
     {
       "part": "x_scrollbar",
-      "resource_ref": "frog.realizations.default.chart.assets.x_scrollbar_svg",
-      "semantic_member": "scrollbars.x.*"
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='x_scrollbar']"
     },
     {
       "part": "y_scrollbar",
-      "resource_ref": "frog.realizations.default.chart.assets.y_scrollbar_svg",
-      "semantic_member": "scrollbars.y.*"
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='y_scrollbar']"
     },
     {
       "part": "cursor_layer",
-      "resource_ref": "frog.realizations.default.chart.assets.cursor_layer_svg",
-      "semantic_member": "cursors.*"
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='cursor_layer']"
+    },
+    {
+      "part": "cursor_readout",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='cursor_readout']"
+    },
+    {
+      "part": "plot_image_back",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='plot_image_back']"
+    },
+    {
+      "part": "plot_image_middle",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='plot_image_middle']"
+    },
+    {
+      "part": "plot_image_front",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='plot_image_front']"
+    },
+    {
+      "part": "annotation_layer",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='annotation_layer']"
+    },
+    {
+      "part": "threshold_band",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='threshold_band']"
+    },
+    {
+      "part": "focus_ring",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='focus_ring']"
+    }
+  ],
+  "property_bindings": [
+    {
+      "member": "value",
+      "target_part": "plot_layer",
+      "target_operation": "append_or_render_chart_value"
+    },
+    {
+      "member": "history.*",
+      "target_part": "history_region",
+      "target_operation": "manage_history_window"
+    },
+    {
+      "member": "samples.*",
+      "target_part": "plot_layer",
+      "target_operation": "render_samples"
+    },
+    {
+      "member": "timebase.*",
+      "target_part": "x_scale",
+      "target_operation": "apply_timebase"
+    },
+    {
+      "member": "plots.*",
+      "target_part": "plot_layer",
+      "target_operation": "render_plots"
+    },
+    {
+      "member": "scales.x.*",
+      "target_part": "x_scale",
+      "target_operation": "render_x_scale"
+    },
+    {
+      "member": "scales.y.*",
+      "target_part": "y_scale",
+      "target_operation": "render_y_scale"
+    },
+    {
+      "member": "legends.plot.*",
+      "target_part": "plot_legend",
+      "target_operation": "render_plot_legend"
+    },
+    {
+      "member": "legends.scale.*",
+      "target_part": "scale_legend",
+      "target_operation": "render_scale_legend"
+    },
+    {
+      "member": "legends.cursor.*",
+      "target_part": "cursor_legend",
+      "target_operation": "render_cursor_legend"
+    },
+    {
+      "member": "palette.*",
+      "target_part": "graph_palette",
+      "target_operation": "render_palette"
+    },
+    {
+      "member": "scrollbars.x.*",
+      "target_part": "x_scrollbar",
+      "target_operation": "render_x_scrollbar"
+    },
+    {
+      "member": "scrollbars.y.*",
+      "target_part": "y_scrollbar",
+      "target_operation": "render_y_scrollbar"
+    },
+    {
+      "member": "cursors.*",
+      "target_part": "cursor_layer",
+      "target_operation": "render_cursors"
+    },
+    {
+      "member": "annotations.*",
+      "target_part": "annotation_layer",
+      "target_operation": "render_annotations"
+    },
+    {
+      "member": "thresholds.*",
+      "target_part": "threshold_band",
+      "target_operation": "render_thresholds"
+    }
+  ],
+  "method_bindings": [
+    {
+      "method": "append_sample",
+      "target_operation": "append_sample"
+    },
+    {
+      "method": "append_samples",
+      "target_operation": "append_samples"
+    },
+    {
+      "method": "append_waveform",
+      "target_operation": "append_waveform"
+    },
+    {
+      "method": "replace_history",
+      "target_operation": "replace_history"
+    },
+    {
+      "method": "clear_history",
+      "target_operation": "clear_history"
+    },
+    {
+      "method": "autoscale_all",
+      "target_operation": "autoscale_all"
+    },
+    {
+      "method": "move_cursor",
+      "target_operation": "move_cursor"
+    },
+    {
+      "method": "add_threshold",
+      "target_operation": "add_threshold"
+    }
+  ],
+  "event_bindings": [
+    {
+      "event": "value_rendered",
+      "source_part": "plot_layer"
+    },
+    {
+      "event": "sample_appended",
+      "source_part": "plot_layer"
+    },
+    {
+      "event": "history_cleared",
+      "source_part": "history_region"
+    },
+    {
+      "event": "axis_range_changed",
+      "source_part": "x_scale"
+    },
+    {
+      "event": "cursor_moved",
+      "source_part": "cursor_layer"
+    },
+    {
+      "event": "threshold_changed",
+      "source_part": "threshold_band"
+    },
+    {
+      "event": "palette_action",
+      "source_part": "graph_palette"
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "normal"
+    },
+    {
+      "state": "focused"
+    },
+    {
+      "state": "disabled"
+    },
+    {
+      "state": "history_empty"
+    },
+    {
+      "state": "cursor_active"
+    },
+    {
+      "state": "palette_active"
     }
   ],
   "host_hints": {
     "preferred_host_kind": "subobject_svg_composition_or_host_native_plot",
     "composition_posture": "assemble_subobject_assets_into_shell_slots",
     "plot_rendering_posture": "host_may_replace_sample_polyline_with_runtime_plot_layer",
-    "cursor_rendering_posture": "host_may_replace_template_cursor_layer_with_runtime_cursor_layer"
+    "cursor_rendering_posture": "host_may_replace_template_cursor_layer_with_runtime_cursor_layer",
+    "host_native_replacement_allowed": true
   },
   "validation_expectations": [
     "target class must exist in Libraries/Widgets/Chart.md",
@@ -368,6 +721,6 @@
     "subobject slots must reference declared resources",
     "resource SVG templates should expose data-frog-part or data-frog-slot markers",
     "plot_layer must not be treated as semantic storage for history data",
-    "subobject resources must not define chart class semantics"
+    "host-native plotting handles must remain realization-private"
   ]
 }

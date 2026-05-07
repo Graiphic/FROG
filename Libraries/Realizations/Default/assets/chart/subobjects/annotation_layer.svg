@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 52">
+  <g data-frog-part="annotation_layer">
+    <text x="10" y="20" font-family="system-ui" font-size="12" fill="#334155">annotation</text>
+    <line x1="70" y1="18" x2="120" y2="38" stroke="#334155"/>
+  </g>
+</svg>

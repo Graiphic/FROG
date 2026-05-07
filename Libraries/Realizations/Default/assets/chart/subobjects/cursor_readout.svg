@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 28">
+  <g data-frog-part="cursor_readout">
+    <rect width="130" height="28" rx="4" fill="#111827" opacity="0.88"/>
+    <text x="10" y="18" fill="#f8fafc" font-family="Consolas, monospace" font-size="11">x=0 y=0</text>
+  </g>
+</svg>

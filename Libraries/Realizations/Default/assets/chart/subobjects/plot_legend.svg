@@ -1,17 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 96 222"
-     role="img"
-     aria-label="FROG waveform chart plot legend"
-     data-frog-template="frog.realizations.default.waveform_chart.subobject.plot_legend"
-     data-frog-target-part="plot_legend">
-  <title>Plot Legend Subobject</title>
-  <g id="plot_legend" data-frog-part="plot_legend" data-frog-bind="legends.plot.*">
-    <rect width="96" height="222" fill="#ffffff" stroke="#94a3b8" stroke-width="1" />
-    <text x="10" y="24" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12">Plot 0</text>
-    <line x1="56" y1="20" x2="86" y2="20" stroke="#2563eb" stroke-width="3" />
-    <text x="10" y="48" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12">Plot 1</text>
-    <line x1="56" y1="44" x2="86" y2="44" stroke="#ef4444" stroke-width="3" />
-    <text x="10" y="72" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12">Plot 2</text>
-    <line x1="56" y1="68" x2="86" y2="68" stroke="#22c55e" stroke-width="3" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 54">
+  <g data-frog-part="plot_legend">
+    <rect width="150" height="54" rx="5" fill="#f8fafc" stroke="#cbd5e1"/>
+    <line x1="14" y1="24" x2="44" y2="24" stroke="#2563eb" stroke-width="3"/>
+    <text x="54" y="28" font-family="system-ui" font-size="12">Plot 0</text>
   </g>
 </svg>
