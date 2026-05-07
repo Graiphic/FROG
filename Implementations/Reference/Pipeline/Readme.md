@@ -5,7 +5,7 @@
 <h1 align="center">Reference Pipeline Checks</h1>
 
 <p align="center">
-  <strong>Repository-visible checks for the bounded Example 05 reference pipeline</strong><br/>
+  <strong>Repository-visible checks for the bounded Examples 01–05 reference pipeline</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -22,7 +22,7 @@
   <li><a href="../ContractEmitter/Readme.md">Reference ContractEmitter</a></li>
   <li><a href="../Runtime/Readme.md">Reference Runtime</a></li>
   <li><a href="../LLVM/Readme.md">Reference LLVM-oriented path</a></li>
-  <li><a href="../../../Examples/05_bounded_ui_accumulator/Freeze.md">Example 05 freeze boundary</a></li>
+  <li><a href="../../../Examples/Readme.md">Examples index</a></li>
 </ul>
 
 <hr/>
@@ -30,39 +30,66 @@
 <h2>Purpose</h2>
 
 <p>
-This directory coordinates the current reproducibility checks for the frozen Example 05 corridor.
+This directory coordinates the current reproducibility checks for the published Examples 01–05 corridor.
+The default repository-quality posture is to validate the widget layer before checking source derivation, lowering, backend contracts, runtime acceptance, and LLVM proof artifacts.
 </p>
 
-<pre><code>main.frog
+<pre><code>widget layer validation
+  -&gt; main.frog
   -&gt; main.fir.json
   -&gt; main.lowering.json
-  -&gt; reference_host_runtime_ui_binding contract
+  -&gt; backend contract
   -&gt; runtime acceptance
-  -&gt; LLVM module check
+  -&gt; LLVM module / native proof
 </code></pre>
 
 <hr/>
 
-<h2>Command</h2>
+<h2>Primary Command</h2>
+
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py</code></pre>
+
+<p>
+This command includes widget-layer validation by default.
+</p>
+
+<hr/>
+
+<h2>Example 05 Legacy Corridor Command</h2>
 
 <pre><code>python Implementations/Reference/Pipeline/check_example05_pipeline.py</code></pre>
+
+<p>
+This command keeps a narrow Example 05-only staged check available for focused debugging.
+It also includes widget-layer validation by default.
+</p>
 
 <hr/>
 
 <h2>Options</h2>
 
 <ul>
-  <li><code>--include-widget-validator</code> — run WidgetValidator before the Example 05 artifact pipeline checks.</li>
-  <li><code>--skip-runtime-acceptance</code> — skip the contract-to-runtime acceptance stage.</li>
-  <li><code>--skip-llvm</code> — skip the lowering-to-LLVM module reproducibility stage.</li>
   <li><code>--include-llvm-build</code> — also run the LLVM native build proof. Requires <code>clang</code>.</li>
+  <li><code>--skip-widget-validator</code> — skip the widget-layer validator for narrow debugging of unrelated pipeline stages.</li>
+  <li><code>--skip-runtime-acceptance</code> — available on the Example 05-only pipeline to skip the contract-to-runtime acceptance stage.</li>
+  <li><code>--skip-llvm</code> — available on the Example 05-only pipeline to skip the lowering-to-LLVM module reproducibility stage.</li>
 </ul>
+
+<hr/>
+
+<h2>Widget-Layer Only Check</h2>
+
+<pre><code>python Implementations/Reference/check_reference_workspace.py --widget-layer-only</code></pre>
+
+<p>
+Use this command when modifying widget class-law documents, Default realization documents, <code>*.default.wfrog</code> manifests, SVG resources, public parts, or realization bindings.
+</p>
 
 <hr/>
 
 <h2>Boundary</h2>
 
 <p>
-This pipeline check proves staged artifact reproducibility for Example 05.
-It does not claim general compiler coverage.
+These pipeline checks prove staged artifact reproducibility for the current reference workspace.
+They do not claim general compiler coverage and do not define FROG language semantics, widget semantics, runtime semantics, or native backend semantics.
 </p>
