@@ -11,6 +11,16 @@
 
 <hr/>
 
+<h2>Purpose</h2>
+
+<p>
+This matrix summarizes the current repository-visible status of major FROG specification and reference surfaces.
+It does not define document-specific versions.
+Version governance remains centralized in this directory and in the repository history.
+</p>
+
+<hr/>
+
 <h2>Executable Example Closure Matrix</h2>
 
 <table>
@@ -40,7 +50,7 @@
 <h2>Backend Contract Common Surface</h2>
 
 <p>
-Examples <code>01</code> through <code>05</code> now share the common backend-contract unit surface:
+Examples <code>01</code> through <code>05</code> share the common backend-contract unit surface:
 </p>
 
 <pre><code>public_io
@@ -49,3 +59,122 @@ execution_kernel
 effects
 publications
 </code></pre>
+
+<hr/>
+
+<h2>Widget Class-Law Matrix</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Family</th>
+      <th>Class-law document</th>
+      <th>Classes</th>
+      <th>Current status</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Boolean</td><td><code>Libraries/Widgets/Boolean.md</code></td><td><code>frog.widgets.boolean_control</code>, <code>frog.widgets.boolean_indicator</code></td><td>Published</td><td>Scalar control / indicator baseline.</td></tr>
+    <tr><td>String</td><td><code>Libraries/Widgets/String.md</code></td><td><code>frog.widgets.string_control</code>, <code>frog.widgets.string_indicator</code></td><td>Published</td><td>Scalar text control / indicator baseline.</td></tr>
+    <tr><td>Button</td><td><code>Libraries/Widgets/Button.md</code></td><td><code>frog.widgets.button</code></td><td>Published</td><td>Command widget baseline.</td></tr>
+    <tr><td>Numeric</td><td><code>Libraries/Widgets/Numeric.md</code></td><td><code>frog.widgets.numeric_control</code>, <code>frog.widgets.numeric_indicator</code></td><td>Published</td><td>Scalar numeric control / indicator baseline.</td></tr>
+    <tr><td>Enum</td><td><code>Libraries/Widgets/Enum.md</code></td><td><code>frog.widgets.enum_control</code>, <code>frog.widgets.enum_indicator</code></td><td>Published</td><td>Scalar enumeration control / indicator baseline.</td></tr>
+    <tr><td>Path</td><td><code>Libraries/Widgets/Path.md</code></td><td><code>frog.widgets.path_control</code>, <code>frog.widgets.path_indicator</code></td><td>Published</td><td>Path value control / indicator baseline.</td></tr>
+    <tr><td>Picture</td><td><code>Libraries/Widgets/Picture.md</code></td><td><code>frog.widgets.picture_control</code>, <code>frog.widgets.picture_indicator</code></td><td>Published</td><td>Image payload, pixel metadata, viewport, display, overlay, and pointer posture.</td></tr>
+    <tr><td>Waveform Chart</td><td><code>Libraries/Widgets/Chart.md</code></td><td><code>frog.widgets.waveform_chart</code></td><td>Published</td><td>Composite chart class law: history, plots, scales, legends, cursors, palette, scrollbars, overlays.</td></tr>
+    <tr><td>Listbox</td><td><code>Libraries/Widgets/Listbox.md</code></td><td><code>frog.widgets.listbox_control</code>, <code>frog.widgets.listbox_indicator</code></td><td>Published</td><td>Item identity, selection, active item, viewport, search/filter, and public item parts.</td></tr>
+    <tr><td>Tab</td><td><code>Libraries/Widgets/Tab.md</code></td><td><code>frog.widgets.tab_control</code>, <code>frog.widgets.tab_indicator</code></td><td>Published</td><td>Page identity, selected-page value, header posture, overflow, close/reorder, and page surfaces.</td></tr>
+    <tr><td>Tree</td><td><code>Libraries/Widgets/Tree.md</code></td><td><code>frog.widgets.tree_control</code>, <code>frog.widgets.tree_indicator</code></td><td>Published</td><td>Finite hierarchy, node identity, selection, expansion, check state, editing, drag/drop, and node parts.</td></tr>
+    <tr><td>Table</td><td><code>Libraries/Widgets/Table.md</code></td><td><code>frog.widgets.table_control</code>, <code>frog.widgets.table_indicator</code></td><td>Published</td><td>Flat tabular value, schema, rows, cells, selection, editing, sorting, filtering, and grid parts.</td></tr>
+    <tr><td>Array</td><td><code>Libraries/Widgets/Array.md</code></td><td><code>frog.widgets.array</code></td><td>Published</td><td>Homogeneous collection widget baseline.</td></tr>
+    <tr><td>Cluster</td><td><code>Libraries/Widgets/Cluster.md</code></td><td><code>frog.widgets.cluster</code></td><td>Published</td><td>Heterogeneous aggregate widget baseline.</td></tr>
+    <tr><td>Label</td><td><code>Libraries/Widgets/Label.md</code></td><td><code>frog.widgets.label</code></td><td>Published</td><td>Support widget baseline.</td></tr>
+    <tr><td>Frame</td><td><code>Libraries/Widgets/Frame.md</code></td><td><code>frog.widgets.frame</code></td><td>Published</td><td>Support widget baseline.</td></tr>
+    <tr><td>Decorations</td><td><code>Libraries/Widgets/Decorations.md</code></td><td><code>frog.widgets.flat_box</code>, <code>frog.widgets.horizontal_line</code>, <code>frog.widgets.vertical_line</code></td><td>Published</td><td>Decorative non-value baseline.</td></tr>
+    <tr><td>Splitter</td><td><code>Libraries/Widgets/Splitter.md</code></td><td><code>frog.widgets.horizontal_splitter</code>, <code>frog.widgets.vertical_splitter</code></td><td>Published</td><td>Layout baseline.</td></tr>
+    <tr><td>Panel/SubPanel</td><td><code>Libraries/Widgets/Panel.md</code></td><td><code>frog.widgets.panel</code>, <code>frog.widgets.subpanel</code></td><td>Published</td><td>Container baseline.</td></tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<h2>Default Realization Matrix</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Family</th>
+      <th>Default document</th>
+      <th>Manifest</th>
+      <th>Assets</th>
+      <th>Current status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Boolean</td><td><code>Libraries/Realizations/Default/Boolean.md</code></td><td><code>boolean.default.wfrog</code></td><td>SVG-backed scalar resources</td><td>Published</td></tr>
+    <tr><td>String</td><td><code>Libraries/Realizations/Default/String.md</code></td><td><code>string.default.wfrog</code></td><td>SVG-backed scalar resources</td><td>Published</td></tr>
+    <tr><td>Button</td><td><code>Libraries/Realizations/Default/Button.md</code></td><td><code>button.default.wfrog</code></td><td>SVG-backed command resources</td><td>Published</td></tr>
+    <tr><td>Numeric</td><td><code>Libraries/Realizations/Default/Numeric.md</code></td><td><code>numeric.default.wfrog</code></td><td>SVG-backed scalar resources</td><td>Published</td></tr>
+    <tr><td>Enum</td><td><code>Libraries/Realizations/Default/Enum.md</code></td><td><code>enum.default.wfrog</code></td><td>SVG-backed scalar resources</td><td>Published</td></tr>
+    <tr><td>Path</td><td><code>Libraries/Realizations/Default/Path.md</code></td><td><code>path.default.wfrog</code></td><td>SVG-backed scalar resources</td><td>Published</td></tr>
+    <tr><td>Picture</td><td><code>Libraries/Realizations/Default/Picture.md</code></td><td><code>picture.default.wfrog</code></td><td><code>assets/picture/</code></td><td>Published rectangular image-surface realization.</td></tr>
+    <tr><td>Waveform Chart</td><td><code>Libraries/Realizations/Default/Chart.md</code></td><td><code>chart.default.wfrog</code></td><td><code>assets/chart/</code></td><td>Published composite realization with shell, subobjects, composition slots, bindings, and host-native plot allowance.</td></tr>
+    <tr><td>Listbox</td><td><code>Libraries/Realizations/Default/Listbox.md</code></td><td><code>listbox.default.wfrog</code></td><td><code>assets/listbox/</code></td><td>Published composite item-list realization with virtual-list host allowance.</td></tr>
+    <tr><td>Tab</td><td><code>Libraries/Realizations/Default/Tab.md</code></td><td><code>tab.default.wfrog</code></td><td><code>assets/tab/</code></td><td>Published composite page-navigation realization with page-hosting surfaces.</td></tr>
+    <tr><td>Tree</td><td><code>Libraries/Realizations/Default/Tree.md</code></td><td><code>tree.default.wfrog</code></td><td><code>assets/tree/</code></td><td>Published composite hierarchical realization with virtual-tree host allowance.</td></tr>
+    <tr><td>Table</td><td><code>Libraries/Realizations/Default/Table.md</code></td><td><code>table.default.wfrog</code></td><td><code>assets/table/</code></td><td>Published composite tabular realization with virtual-grid host allowance.</td></tr>
+    <tr><td>Array</td><td><code>Libraries/Realizations/Default/Array.md</code></td><td><code>array.default.wfrog</code></td><td>SVG-backed structured resources</td><td>Published</td></tr>
+    <tr><td>Cluster</td><td><code>Libraries/Realizations/Default/Cluster.md</code></td><td><code>cluster.default.wfrog</code></td><td>SVG-backed structured resources</td><td>Published</td></tr>
+    <tr><td>Label</td><td><code>Libraries/Realizations/Default/Label.md</code></td><td><code>label.default.wfrog</code></td><td>SVG-backed support resources</td><td>Published</td></tr>
+    <tr><td>Frame</td><td><code>Libraries/Realizations/Default/Frame.md</code></td><td><code>frame.default.wfrog</code></td><td>SVG-backed support resources</td><td>Published</td></tr>
+    <tr><td>Decorations</td><td><code>Libraries/Realizations/Default/Decorations.md</code></td><td><code>decorations.default.wfrog</code></td><td>SVG-backed decorative resources</td><td>Published</td></tr>
+    <tr><td>Splitter</td><td><code>Libraries/Realizations/Default/Splitter.md</code></td><td><code>splitter.default.wfrog</code></td><td>SVG-backed layout resources</td><td>Published</td></tr>
+    <tr><td>Panel/SubPanel</td><td><code>Libraries/Realizations/Default/Panel.md</code></td><td><code>panel.default.wfrog</code></td><td>SVG-backed container resources</td><td>Published</td></tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<h2>Reference Validation Matrix</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Surface</th>
+      <th>Reference path</th>
+      <th>Current status</th>
+      <th>Validation role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Example corridor checks</td><td><code>Implementations/Reference/Pipeline/check_examples01_05_full.py</code></td><td>Published</td><td>Protects Examples 01–05 source / FIR / lowering / contract / runtime / LLVM corridor.</td></tr>
+    <tr><td>Reference workspace checks</td><td><code>Implementations/Reference/check_reference_workspace.py</code></td><td>Published</td><td>Repository-wide reference workspace hygiene check.</td></tr>
+    <tr><td>Widget layer validator</td><td><code>Implementations/Reference/WidgetValidator/validate_widget_layer.py</code></td><td>Published and strengthened</td><td>Protects widget docs, Default docs, manifests, target classes, resources, SVG part markers, composition references, bindings, and public-part alignment.</td></tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<h2>Current Widget-Layer Boundary</h2>
+
+<pre><code>Libraries/Widgets/
+  -> widget class law
+
+Libraries/Realizations/Default/*.md
+  -> Default realization explanation
+
+Libraries/Realizations/Default/*.default.wfrog
+  -> machine-readable Default realization manifests
+
+Libraries/Realizations/Default/assets/
+  -> SVG templates and subobject resources
+
+Implementations/Reference/WidgetValidator/
+  -> non-normative repository hygiene validation
+</code></pre>
+
+<p>
+The widget layer is now organized as a real standard-facing surface rather than a collection of isolated documents.
+The strongest remaining implementation direction is to connect the published widget package layer to a widget-gallery example and a runtime/UI host consumption path.
+</p>
