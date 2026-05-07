@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 30">
+  <g data-frog-part="drag_feedback">
+    <rect x="2" y="2" width="216" height="26" rx="4" fill="#334155" opacity="0.16" stroke="#334155" stroke-dasharray="5 4"/>
+  </g>
+</svg>

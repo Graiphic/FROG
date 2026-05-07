@@ -5,7 +5,7 @@
   "version_governance_ref": "../../../Versioning/Readme.md",
   "package": {
     "id": "frog.realizations.default.tree",
-    "name": "FROG Default tree Realization",
+    "name": "FROG Default Tree Realization",
     "namespace": "frog.realizations.default.tree",
     "family": "default",
     "category": "selection / navigation",
@@ -25,6 +25,8 @@
       "canonical .frog source",
       "frog.ui primitive semantics",
       "runtime-private host handles",
+      "virtualized node handles",
+      "host-native tree renderer handles",
       "IDE-private editing behavior"
     ],
     "class_law_refs": [
@@ -56,8 +58,15 @@
       "frog.realizations.default.tree.assets.node_region_svg",
       "frog.realizations.default.tree.assets.node_row_svg",
       "frog.realizations.default.tree.assets.selection_face_svg",
+      "frog.realizations.default.tree.assets.active_node_svg",
       "frog.realizations.default.tree.assets.expander_face_svg",
-      "frog.realizations.default.tree.assets.vertical_scrollbar_svg"
+      "frog.realizations.default.tree.assets.checkbox_face_svg",
+      "frog.realizations.default.tree.assets.node_icon_svg",
+      "frog.realizations.default.tree.assets.edit_overlay_svg",
+      "frog.realizations.default.tree.assets.drag_feedback_svg",
+      "frog.realizations.default.tree.assets.drop_target_svg",
+      "frog.realizations.default.tree.assets.vertical_scrollbar_svg",
+      "frog.realizations.default.tree.assets.horizontal_scrollbar_svg"
     ]
   },
   "realizations": [
@@ -75,14 +84,43 @@
         "frame",
         "node_region",
         "node_row",
-        "selection_face",
+        "node_indent",
+        "node_connector",
         "expander_face",
+        "checkbox_face",
+        "node_icon",
+        "node_label",
+        "active_node",
+        "selection_face",
+        "edit_overlay",
+        "drag_feedback",
+        "drop_target",
         "vertical_scrollbar",
+        "horizontal_scrollbar",
         "focus_ring"
+      ],
+      "supported_selection_modes": [
+        "none",
+        "single_node",
+        "multi_node",
+        "range"
+      ],
+      "supported_check_modes": [
+        "none",
+        "boolean",
+        "tri_state"
+      ],
+      "supported_drop_positions": [
+        "before",
+        "inside",
+        "after"
       ],
       "fallbacks": {
         "missing_resource": "host_native_or_generic_compatible_rendering",
-        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint",
+        "unsupported_selection_mode": "reject_or_downgrade_to_single_node_selection",
+        "unsupported_check_mode": "reject_or_disable_check_surface",
+        "unsupported_drag_drop": "reject_or_preserve_selection_only"
       }
     }
   ],
@@ -112,16 +150,58 @@
       "target_part": "selection_face"
     },
     {
+      "id": "frog.realizations.default.tree.assets.active_node_svg",
+      "kind": "svg",
+      "path": "./assets/tree/subobjects/active_node.svg",
+      "target_part": "active_node"
+    },
+    {
       "id": "frog.realizations.default.tree.assets.expander_face_svg",
       "kind": "svg",
       "path": "./assets/tree/subobjects/expander_face.svg",
       "target_part": "expander_face"
     },
     {
+      "id": "frog.realizations.default.tree.assets.checkbox_face_svg",
+      "kind": "svg",
+      "path": "./assets/tree/subobjects/checkbox_face.svg",
+      "target_part": "checkbox_face"
+    },
+    {
+      "id": "frog.realizations.default.tree.assets.node_icon_svg",
+      "kind": "svg",
+      "path": "./assets/tree/subobjects/node_icon.svg",
+      "target_part": "node_icon"
+    },
+    {
+      "id": "frog.realizations.default.tree.assets.edit_overlay_svg",
+      "kind": "svg",
+      "path": "./assets/tree/subobjects/edit_overlay.svg",
+      "target_part": "edit_overlay"
+    },
+    {
+      "id": "frog.realizations.default.tree.assets.drag_feedback_svg",
+      "kind": "svg",
+      "path": "./assets/tree/subobjects/drag_feedback.svg",
+      "target_part": "drag_feedback"
+    },
+    {
+      "id": "frog.realizations.default.tree.assets.drop_target_svg",
+      "kind": "svg",
+      "path": "./assets/tree/subobjects/drop_target.svg",
+      "target_part": "drop_target"
+    },
+    {
       "id": "frog.realizations.default.tree.assets.vertical_scrollbar_svg",
       "kind": "svg",
       "path": "./assets/tree/subobjects/vertical_scrollbar.svg",
       "target_part": "vertical_scrollbar"
+    },
+    {
+      "id": "frog.realizations.default.tree.assets.horizontal_scrollbar_svg",
+      "kind": "svg",
+      "path": "./assets/tree/subobjects/horizontal_scrollbar.svg",
+      "target_part": "horizontal_scrollbar"
     }
   ],
   "part_bindings": [
@@ -156,9 +236,14 @@
       "binding_selector": "[data-frog-part='node_row']"
     },
     {
-      "part": "selection_face",
+      "part": "node_indent",
       "binding_kind": "svg_or_host_surface",
-      "binding_selector": "[data-frog-part='selection_face']"
+      "binding_selector": "[data-frog-part='node_indent']"
+    },
+    {
+      "part": "node_connector",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='node_connector']"
     },
     {
       "part": "expander_face",
@@ -166,9 +251,54 @@
       "binding_selector": "[data-frog-part='expander_face']"
     },
     {
+      "part": "checkbox_face",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='checkbox_face']"
+    },
+    {
+      "part": "node_icon",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='node_icon']"
+    },
+    {
+      "part": "node_label",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='node_label']"
+    },
+    {
+      "part": "active_node",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='active_node']"
+    },
+    {
+      "part": "selection_face",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='selection_face']"
+    },
+    {
+      "part": "edit_overlay",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='edit_overlay']"
+    },
+    {
+      "part": "drag_feedback",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='drag_feedback']"
+    },
+    {
+      "part": "drop_target",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='drop_target']"
+    },
+    {
       "part": "vertical_scrollbar",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='vertical_scrollbar']"
+    },
+    {
+      "part": "horizontal_scrollbar",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='horizontal_scrollbar']"
     },
     {
       "part": "focus_ring",
@@ -183,23 +313,229 @@
       "target_operation": "render_tree_value"
     },
     {
+      "member": "nodes.*",
+      "target_part": "node_row",
+      "target_operation": "render_nodes"
+    },
+    {
+      "member": "nodes.label",
+      "target_part": "node_label",
+      "target_operation": "render_node_label"
+    },
+    {
+      "member": "nodes.icon",
+      "target_part": "node_icon",
+      "target_operation": "render_node_icon"
+    },
+    {
       "member": "selection.*",
       "target_part": "selection_face",
       "target_operation": "render_selection"
     },
     {
-      "member": "expansion.paths",
+      "member": "selection.active_node_id",
+      "target_part": "active_node",
+      "target_operation": "render_active_node"
+    },
+    {
+      "member": "expansion.*",
       "target_part": "expander_face",
       "target_operation": "render_expansion"
+    },
+    {
+      "member": "check.*",
+      "target_part": "checkbox_face",
+      "target_operation": "render_check_state"
+    },
+    {
+      "member": "viewport.*",
+      "target_part": "node_region",
+      "target_operation": "apply_viewport"
+    },
+    {
+      "member": "search.*",
+      "target_part": "node_region",
+      "target_operation": "render_search_matches"
+    },
+    {
+      "member": "filter.*",
+      "target_part": "node_region",
+      "target_operation": "apply_filter_view"
+    },
+    {
+      "member": "editing.*",
+      "target_part": "edit_overlay",
+      "target_operation": "render_editing_state"
+    },
+    {
+      "member": "drag.*",
+      "target_part": "drag_feedback",
+      "target_operation": "render_drag_feedback"
+    },
+    {
+      "member": "drop.*",
+      "target_part": "drop_target",
+      "target_operation": "render_drop_target"
+    }
+  ],
+  "method_bindings": [
+    {
+      "method": "clear_selection",
+      "target_operation": "clear_selection"
+    },
+    {
+      "method": "set_selection",
+      "target_operation": "set_selection"
+    },
+    {
+      "method": "select_node",
+      "target_operation": "set_active_node"
+    },
+    {
+      "method": "expand_node",
+      "target_operation": "expand_node"
+    },
+    {
+      "method": "collapse_node",
+      "target_operation": "collapse_node"
+    },
+    {
+      "method": "toggle_node",
+      "target_operation": "toggle_node_expansion"
+    },
+    {
+      "method": "scroll_to_node",
+      "target_operation": "apply_viewport"
+    },
+    {
+      "method": "set_node_label",
+      "target_operation": "update_node_label"
+    },
+    {
+      "method": "append_child",
+      "target_operation": "append_child_node"
+    },
+    {
+      "method": "remove_node",
+      "target_operation": "remove_node"
+    },
+    {
+      "method": "move_node",
+      "target_operation": "move_node"
+    },
+    {
+      "method": "set_checked",
+      "target_operation": "update_check_state"
+    },
+    {
+      "method": "find_nodes",
+      "target_operation": "search_nodes"
+    },
+    {
+      "method": "clear_filter",
+      "target_operation": "clear_filter"
+    }
+  ],
+  "event_bindings": [
+    {
+      "event": "value_changed",
+      "source_part": "node_region"
+    },
+    {
+      "event": "selection_changed",
+      "source_part": "selection_face"
+    },
+    {
+      "event": "expansion_changed",
+      "source_part": "expander_face"
+    },
+    {
+      "event": "node_expanded",
+      "source_part": "expander_face"
+    },
+    {
+      "event": "node_collapsed",
+      "source_part": "expander_face"
+    },
+    {
+      "event": "check_changed",
+      "source_part": "checkbox_face"
+    },
+    {
+      "event": "viewport_changed",
+      "source_part": "node_region"
+    },
+    {
+      "event": "edit_started",
+      "source_part": "edit_overlay"
+    },
+    {
+      "event": "edit_committed",
+      "source_part": "edit_overlay"
+    },
+    {
+      "event": "node_clicked",
+      "source_part": "node_row"
+    },
+    {
+      "event": "node_double_clicked",
+      "source_part": "node_row"
+    },
+    {
+      "event": "drag_started",
+      "source_part": "drag_feedback"
+    },
+    {
+      "event": "drop_completed",
+      "source_part": "drop_target"
     }
   ],
   "state_maps": [
     {
       "state": "normal"
+    },
+    {
+      "state": "focused"
+    },
+    {
+      "state": "disabled"
+    },
+    {
+      "state": "selection_active"
+    },
+    {
+      "state": "editing"
+    },
+    {
+      "state": "dragging"
+    },
+    {
+      "state": "drop_target"
     }
   ],
   "composition": {
     "shell": "frog.realizations.default.tree.assets.shell_svg",
+    "layer_order": [
+      "frame",
+      "node_region",
+      "node_connector",
+      "node_indent",
+      "node_row",
+      "selection_face",
+      "active_node",
+      "expander_face",
+      "checkbox_face",
+      "node_icon",
+      "node_label",
+      "edit_overlay",
+      "drag_feedback",
+      "drop_target",
+      "vertical_scrollbar",
+      "horizontal_scrollbar",
+      "focus_ring",
+      "label",
+      "caption"
+    ],
     "slots": [
       {
         "slot": "node_region",
@@ -208,6 +544,10 @@
       {
         "slot": "vertical_scrollbar",
         "resource_ref": "frog.realizations.default.tree.assets.vertical_scrollbar_svg"
+      },
+      {
+        "slot": "horizontal_scrollbar",
+        "resource_ref": "frog.realizations.default.tree.assets.horizontal_scrollbar_svg"
       }
     ],
     "nested_slots": [
@@ -223,20 +563,56 @@
       },
       {
         "parent_part": "node_region",
+        "slot": "active_node",
+        "resource_ref": "frog.realizations.default.tree.assets.active_node_svg"
+      },
+      {
+        "parent_part": "node_region",
         "slot": "expander_face",
         "resource_ref": "frog.realizations.default.tree.assets.expander_face_svg"
+      },
+      {
+        "parent_part": "node_region",
+        "slot": "checkbox_face",
+        "resource_ref": "frog.realizations.default.tree.assets.checkbox_face_svg"
+      },
+      {
+        "parent_part": "node_region",
+        "slot": "node_icon",
+        "resource_ref": "frog.realizations.default.tree.assets.node_icon_svg"
+      },
+      {
+        "parent_part": "node_region",
+        "slot": "edit_overlay",
+        "resource_ref": "frog.realizations.default.tree.assets.edit_overlay_svg"
+      },
+      {
+        "parent_part": "node_region",
+        "slot": "drag_feedback",
+        "resource_ref": "frog.realizations.default.tree.assets.drag_feedback_svg"
+      },
+      {
+        "parent_part": "node_region",
+        "slot": "drop_target",
+        "resource_ref": "frog.realizations.default.tree.assets.drop_target_svg"
       }
     ]
   },
   "host_hints": {
-    "preferred_host_kind": "svg_template_host_or_host_native_widget",
-    "style_application_posture": "apply_property_bindings_before_render"
+    "preferred_host_kind": "svg_template_host_or_host_native_virtual_tree",
+    "style_application_posture": "apply_property_bindings_before_render",
+    "host_native_replacement_allowed": true,
+    "virtualization_allowed": true,
+    "minimum_visible_nodes": 1
   },
   "validation_expectations": [
     "target classes must exist in the referenced widget class-law document",
     "all declared public parts must exist in widget class law",
     "resources must resolve relative to this package file",
     "resources must not become semantic owners of widget value",
-    "runtime-private host handles must not be exposed as public widget members"
+    "runtime-private host handles must not be exposed as public widget members",
+    "virtualized node and row handles must remain realization-private",
+    "declared SVG resources should expose all supported data-frog-part markers",
+    "unsupported edit or drag/drop operations on indicator classes must be rejected"
   ]
 }

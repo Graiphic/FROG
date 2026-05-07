@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+  <g data-frog-part="checkbox_face">
+    <rect x="1" y="1" width="16" height="16" rx="3" fill="#ffffff" stroke="#64748b"/>
+    <path d="M4 9 L8 13 L14 5" fill="none" stroke="#2563eb" stroke-width="2"/>
+  </g>
+</svg>
