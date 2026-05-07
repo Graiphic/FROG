@@ -86,7 +86,7 @@ def stages(include_widget_validator: bool, include_llvm_build: bool, skip_artifa
         out.append(Stage("Examples 01-05 artifact preflight", [py, "Implementations/Reference/ArtifactChecks/check_examples01_05_artifacts.py"]))
 
     if include_widget_validator:
-        out.append(Stage("widget layer validation", [py, "Implementations/Reference/WidgetValidator/validate_widget_layer.py"]))
+        out.append(Stage("Widget layer validation", [py, "Implementations/Reference/WidgetValidator/validate_widget_layer.py"]))
 
     for key, source, fir, lowering, module, example_dir in EXAMPLES:
         out.append(Stage(f"Example {key} .frog -> FIR", [py, "Implementations/Reference/Deriver/derive_fir.py", "--source", source, "--expected", fir, "--check"]))
@@ -128,13 +128,24 @@ def stages(include_widget_validator: bool, include_llvm_build: bool, skip_artifa
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--include-widget-validator", action="store_true")
+    parser.add_argument(
+        "--include-widget-validator",
+        action="store_true",
+        help="Compatibility flag. Widget validation is included by default unless --skip-widget-validator is used.",
+    )
+    parser.add_argument(
+        "--skip-widget-validator",
+        action="store_true",
+        help="Skip the non-normative widget-layer repository hygiene validator.",
+    )
     parser.add_argument("--include-llvm-build", action="store_true")
     parser.add_argument("--skip-artifact-preflight", action="store_true")
     args = parser.parse_args()
 
+    include_widget_validator = args.include_widget_validator or not args.skip_widget_validator
+
     for stage in stages(
-        include_widget_validator=args.include_widget_validator,
+        include_widget_validator=include_widget_validator,
         include_llvm_build=args.include_llvm_build,
         skip_artifact_preflight=args.skip_artifact_preflight,
     ):
