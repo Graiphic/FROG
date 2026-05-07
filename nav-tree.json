@@ -2904,6 +2904,13 @@
                   ]
                 },
                 {
+                  "key": "implementations/reference/llvm/rules/",
+                  "title": "rules",
+                  "path": "/Implementations/Reference/LLVM/rules/Readme.md",
+                  "kind": "category",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/llvm/tests/",
                   "title": "tests",
                   "path": null,
@@ -3947,6 +3954,7 @@
     "/Implementations/Reference/LLVM/examples/03_ui_property_write/Readme.md",
     "/Implementations/Reference/LLVM/examples/04_stateful_feedback_delay/Readme.md",
     "/Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/Readme.md",
+    "/Implementations/Reference/LLVM/rules/Readme.md",
     "/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py",
     "/Implementations/Reference/LLVM/tests/test_examples01_04_llvm_modules.py",
     "/Implementations/Reference/LLVM/tests/test_generic_lowering_to_llvm.py",
