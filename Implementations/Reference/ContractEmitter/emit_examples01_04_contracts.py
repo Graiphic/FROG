@@ -4,6 +4,10 @@
 This tool is intentionally narrow and non-normative. It makes the currently
 published FIR/lowering slices for Examples 01-04 consumable by runtime
 acceptance checks.
+
+Contract-family selection is based on the lowered unit kind. The source example
+identifier is preserved as traceability metadata, but it is not the contract
+emission authority.
 """
 
 from __future__ import annotations
@@ -40,6 +44,13 @@ EXAMPLES: dict[str, dict[str, str]] = {
     },
 }
 
+LOWERED_KIND_TO_EXAMPLE_KEY = {
+    "pure_addition_kernel": "01",
+    "ui_value_roundtrip_kernel": "02",
+    "ui_property_write_effect_unit": "03",
+    "stateful_feedback_delay_kernel": "04",
+}
+
 
 class ContractEmissionError(RuntimeError):
     pass
@@ -66,27 +77,56 @@ def repo_path(path_text: str) -> Path:
 
 
 def single_unit(lowering: dict[str, Any]) -> dict[str, Any]:
+    if lowering.get("artifact_kind") != "frog_lowered_unit":
+        raise ContractEmissionError("lowering artifact_kind must be frog_lowered_unit")
     units = lowering.get("lowered_units")
     if not isinstance(units, list) or len(units) != 1 or not isinstance(units[0], dict):
         raise ContractEmissionError("lowering must contain exactly one lowered unit")
     return units[0]
 
 
-def refs_for(example_id: str, lowering: dict[str, Any]) -> dict[str, str]:
+def source_ref(lowering: dict[str, Any]) -> dict[str, Any]:
+    ref = lowering.get("source_ref")
+    if not isinstance(ref, dict):
+        raise ContractEmissionError("lowering must contain source_ref")
+    return ref
+
+
+def fir_ref(lowering: dict[str, Any]) -> dict[str, Any]:
+    ref = lowering.get("fir_ref")
+    if not isinstance(ref, dict):
+        raise ContractEmissionError("lowering must contain fir_ref")
+    return ref
+
+
+def example_key_for_lowered_kind(kind: str) -> str:
+    key = LOWERED_KIND_TO_EXAMPLE_KEY.get(kind)
+    if key is None:
+        supported = ", ".join(sorted(LOWERED_KIND_TO_EXAMPLE_KEY))
+        raise ContractEmissionError(f"unsupported lowered unit kind for Examples 01-04 contract emission: {kind!r}; supported: {supported}")
+    return key
+
+
+def refs_for(lowering: dict[str, Any], example_key: str) -> dict[str, str]:
+    src = source_ref(lowering)
+    fir = fir_ref(lowering)
     return {
-        "source_path": lowering["source_ref"]["path"],
-        "fir_path": lowering["fir_ref"]["path"],
-        "lowering_path": next(v["lowering"] for v in EXAMPLES.values() if v["example_id"] == example_id),
+        "source_path": src["path"],
+        "fir_path": fir["path"],
+        "lowering_path": EXAMPLES[example_key]["lowering"],
     }
 
 
 def emit_contract(lowering: dict[str, Any]) -> dict[str, Any]:
-    example_id = lowering.get("source_ref", {}).get("example_id")
     unit = single_unit(lowering)
     kind = unit.get("kind")
-    refs = refs_for(str(example_id), lowering)
+    if not isinstance(kind, str):
+        raise ContractEmissionError("lowered unit must expose string kind")
+    example_key = example_key_for_lowered_kind(kind)
+    example_id = source_ref(lowering).get("example_id")
+    refs = refs_for(lowering, example_key)
 
-    if example_id == "01_pure_addition":
+    if kind == "pure_addition_kernel":
         return {
             "artifact_kind": "frog_backend_contract",
             "artifact_governance_ref": {"path": "Versioning/Readme.md"},
@@ -102,7 +142,7 @@ def emit_contract(lowering: dict[str, Any]) -> dict[str, Any]:
             }],
         }
 
-    if example_id == "02_ui_value_roundtrip":
+    if kind == "ui_value_roundtrip_kernel":
         return {
             "artifact_kind": "frog_backend_contract",
             "artifact_governance_ref": {"path": "Versioning/Readme.md"},
@@ -119,7 +159,7 @@ def emit_contract(lowering: dict[str, Any]) -> dict[str, Any]:
             }],
         }
 
-    if example_id == "03_ui_property_write":
+    if kind == "ui_property_write_effect_unit":
         return {
             "artifact_kind": "frog_backend_contract",
             "artifact_governance_ref": {"path": "Versioning/Readme.md"},
@@ -135,10 +175,10 @@ def emit_contract(lowering: dict[str, Any]) -> dict[str, Any]:
             }],
         }
 
-    if example_id == "04_stateful_feedback_delay":
+    if kind == "stateful_feedback_delay_kernel":
         kernel = unit["execution_kernel"]
         if "state_id" not in kernel:
-            raise ContractEmissionError("Example 04 lowering execution_kernel must carry state_id")
+            raise ContractEmissionError("stateful_feedback_delay_kernel execution_kernel must carry state_id")
         return {
             "artifact_kind": "frog_backend_contract",
             "artifact_governance_ref": {"path": "Versioning/Readme.md"},
@@ -153,7 +193,7 @@ def emit_contract(lowering: dict[str, Any]) -> dict[str, Any]:
             }],
         }
 
-    raise ContractEmissionError(f"unsupported example: {example_id!r}")
+    raise ContractEmissionError(f"unsupported lowered unit kind: {kind!r}")
 
 
 def check_example(key: str) -> None:
