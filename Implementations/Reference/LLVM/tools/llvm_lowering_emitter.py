@@ -71,6 +71,11 @@ def require_list(value: Any, name: str) -> list[Any]:
     return value
 
 
+def expect_equal(value: Any, expected: Any, message: str) -> None:
+    if value != expected:
+        raise LLVMEmissionError(message)
+
+
 def single_lowered_unit(lowering: dict[str, Any]) -> dict[str, Any]:
     if lowering.get("artifact_kind") != "frog_lowered_unit":
         raise LLVMEmissionError("input artifact_kind must be frog_lowered_unit")
@@ -88,19 +93,43 @@ def unit_kind(lowering: dict[str, Any]) -> str:
     return kind
 
 
-def first_operation(unit: dict[str, Any]) -> dict[str, Any]:
-    kernel = require_object(unit.get("execution_kernel"), "unit.execution_kernel")
+def execution_kernel(unit: dict[str, Any]) -> dict[str, Any]:
+    return require_object(unit.get("execution_kernel"), "unit.execution_kernel")
+
+
+def single_operation(unit: dict[str, Any]) -> dict[str, Any]:
+    kernel = execution_kernel(unit)
     operations = require_list(kernel.get("operations"), "unit.execution_kernel.operations")
     if len(operations) != 1:
         raise LLVMEmissionError("expected exactly one execution operation")
     return require_object(operations[0], "unit.execution_kernel.operations[0]")
 
 
+def single_effect(unit: dict[str, Any]) -> dict[str, Any]:
+    effects = require_list(unit.get("execution_effects"), "unit.execution_effects")
+    if len(effects) != 1:
+        raise LLVMEmissionError("ui_property_write_effect_unit supports exactly one effect")
+    return require_object(effects[0], "unit.execution_effects[0]")
+
+
+def single_step_operation(kernel: dict[str, Any]) -> dict[str, Any]:
+    step_body = require_list(kernel.get("step_body"), "unit.execution_kernel.step_body")
+    if len(step_body) != 1:
+        raise LLVMEmissionError("stateful_feedback_delay_kernel supports exactly one step operation")
+    return require_object(step_body[0], "unit.execution_kernel.step_body[0]")
+
+
+def single_iteration_operation(kernel: dict[str, Any]) -> dict[str, Any]:
+    iteration_body = require_list(kernel.get("iteration_body"), "unit.execution_kernel.iteration_body")
+    if len(iteration_body) != 1:
+        raise LLVMEmissionError("bounded accumulator supports exactly one iteration operation")
+    return require_object(iteration_body[0], "unit.execution_kernel.iteration_body[0]")
+
+
 def emit_pure_addition(lowering: dict[str, Any]) -> str:
     unit = single_lowered_unit(lowering)
-    op = first_operation(unit)
-    if op != {"op": "add", "dst": "result", "type": "f64", "src": ["a", "b"]}:
-        raise LLVMEmissionError("pure_addition_kernel supports only f64 result = a + b")
+    op = single_operation(unit)
+    expect_equal(op, {"op": "add", "dst": "result", "type": "f64", "src": ["a", "b"]}, "pure_addition_kernel supports only f64 result = a + b")
 
     fmt_result = "result=%f\n"
     fmt_status = "status=ok\n"
@@ -153,7 +182,7 @@ run:
 
 def emit_ui_value_roundtrip(lowering: dict[str, Any]) -> str:
     unit = single_lowered_unit(lowering)
-    op = first_operation(unit)
+    op = single_operation(unit)
     if op.get("op") != "add" or op.get("type") != "f64" or op.get("src") != ["widget.ctrl_a.value", "widget.ctrl_b.value"]:
         raise LLVMEmissionError("ui_value_roundtrip_kernel supports only f64 widget ctrl_a + ctrl_b")
 
@@ -208,10 +237,7 @@ run:
 
 def emit_ui_property_write(lowering: dict[str, Any]) -> str:
     unit = single_lowered_unit(lowering)
-    effects = require_list(unit.get("execution_effects"), "unit.execution_effects")
-    if len(effects) != 1:
-        raise LLVMEmissionError("ui_property_write_effect_unit supports exactly one effect")
-    effect = require_object(effects[0], "unit.execution_effects[0]")
+    effect = single_effect(unit)
     if effect.get("op") != "frog.ui.property_write" or effect.get("widget_id") != "ctrl_gain" or effect.get("member") != "label.text":
         raise LLVMEmissionError("ui_property_write_effect_unit supports only ctrl_gain.label.text property_write")
 
@@ -266,13 +292,10 @@ run:
 
 def emit_stateful_feedback_delay(lowering: dict[str, Any]) -> str:
     unit = single_lowered_unit(lowering)
-    kernel = require_object(unit.get("execution_kernel"), "unit.execution_kernel")
+    kernel = execution_kernel(unit)
     if kernel.get("initial_state") != 0.0 or kernel.get("state_type") != "f64":
         raise LLVMEmissionError("stateful_feedback_delay_kernel expects f64 initial state 0.0")
-    step_body = require_list(kernel.get("step_body"), "unit.execution_kernel.step_body")
-    if len(step_body) != 1:
-        raise LLVMEmissionError("stateful_feedback_delay_kernel supports exactly one step operation")
-    op = require_object(step_body[0], "unit.execution_kernel.step_body[0]")
+    op = single_step_operation(kernel)
     if op.get("op") != "add" or op.get("src") != ["state_current", "x"]:
         raise LLVMEmissionError("stateful_feedback_delay_kernel supports only state_current + x")
 
@@ -332,7 +355,7 @@ run:
 
 def emit_bounded_accumulator(lowering: dict[str, Any]) -> str:
     unit = single_lowered_unit(lowering)
-    kernel = require_object(unit.get("execution_kernel"), "unit.execution_kernel")
+    kernel = execution_kernel(unit)
 
     if kernel.get("state_type") != "u16":
         raise LLVMEmissionError("bounded_accumulator_kernel_with_ui_bindings supports only u16 state")
@@ -343,10 +366,7 @@ def emit_bounded_accumulator(lowering: dict[str, Any]) -> str:
     if not isinstance(iterations, int) or iterations < 0:
         raise LLVMEmissionError("iteration_count must be a non-negative integer")
 
-    iteration_body = require_list(kernel.get("iteration_body"), "unit.execution_kernel.iteration_body")
-    if len(iteration_body) != 1:
-        raise LLVMEmissionError("bounded accumulator supports exactly one iteration operation")
-    op = require_object(iteration_body[0], "unit.execution_kernel.iteration_body[0]")
+    op = single_iteration_operation(kernel)
     if op.get("op") != "add" or op.get("dst") != "state_next" or op.get("src") != ["state_current", "input_value"]:
         raise LLVMEmissionError("bounded accumulator supports only state_next = state_current + input_value")
 
