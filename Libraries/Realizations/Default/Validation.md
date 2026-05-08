@@ -63,7 +63,7 @@ Each published widget family should provide:
   <li>Each declared supported part should appear in the corresponding widget class-law document.</li>
   <li>SVG resources should expose declared public parts through <code>data-frog-part</code> markers when applicable.</li>
   <li>SVG shell resources may expose composition slots through <code>data-frog-slot</code> markers.</li>
-  <li>Documentation files should not contain literal escaped newline artifacts such as <code>\n</code> in rendered lists.</li>
+  <li>Documentation files should not contain literal escaped newline artifacts in rendered lists.</li>
 </ul>
 
 <hr/>
