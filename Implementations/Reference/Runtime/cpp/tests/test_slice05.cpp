@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cstdint>
 #include <filesystem>
 #include <iostream>
 #include <stdexcept>
@@ -8,6 +9,17 @@
 #include "execute.hpp"
 #include "json.hpp"
 #include "ui.hpp"
+
+extern "C" frog::runtime::FrogRunResult frog_example05_run(std::uint16_t input_value) {
+    std::uint32_t state = 0;
+    for (std::uint32_t index = 0; index < 5; ++index) {
+        state += input_value;
+        if (state > 65535u) {
+            return frog::runtime::FrogRunResult{0, 0, 1};
+        }
+    }
+    return frog::runtime::FrogRunResult{1, static_cast<std::uint16_t>(state), 0};
+}
 
 namespace {
 
@@ -21,6 +33,11 @@ frog::json::Value load_json(const std::filesystem::path& path) {
 
 std::filesystem::path resolve_repo_path(const std::string& relative_path) {
     return repo_root() / relative_path;
+}
+
+std::filesystem::path native_manifest_path() {
+    return repo_root() / "Implementations" / "Reference" / "LLVM" / "examples" /
+           "05_bounded_ui_accumulator" / "native_kernel_manifest.json";
 }
 
 std::string canonical_json(const frog::json::Value& value) {
@@ -67,6 +84,39 @@ void test_overflow_rejection() {
             static_cast<std::uint16_t>(overflow.at("input_value").as_i64()),
             contract_path,
             wfrog_path));
+    } catch (const std::exception& error) {
+        rejected = true;
+        assert(std::string(error.what()) == overflow.at("expected_error").as_string());
+    }
+    assert(rejected);
+}
+
+void test_native_kernel_bridge() {
+    const auto& root = acceptance_root();
+    const auto& refs = root.at("artifact_refs").as_object();
+    const auto& headless = root.at("headless").as_object();
+    const auto& overflow = root.at("overflow").as_object();
+    const auto contract_path = resolve_repo_path(refs.at("contract_path").as_string());
+    const auto wfrog_path = resolve_repo_path(refs.at("wfrog_path").as_string());
+    const auto snapshot_path = resolve_repo_path(refs.at("snapshot_path").as_string());
+
+    const auto bridge = frog::runtime::make_linked_native_kernel_bridge(native_manifest_path(), &frog_example05_run);
+    assert(bridge.manifest().entry_symbol == "frog_example05_run");
+    assert(bridge.manifest().abi == "frog_u16_to_result_status");
+    assert(bridge.manifest().backend_family == "llvm");
+
+    frog::runtime::Slice05RuntimeCore runtime(contract_path, wfrog_path);
+    const auto expected = load_json(snapshot_path);
+    const auto actual = runtime.execute_with_native_kernel_bridge(
+        bridge,
+        static_cast<std::uint16_t>(headless.at("input_value").as_i64()));
+    assert(canonical_json(actual) == canonical_json(expected));
+
+    bool rejected = false;
+    try {
+        static_cast<void>(runtime.execute_with_native_kernel_bridge(
+            bridge,
+            static_cast<std::uint16_t>(overflow.at("input_value").as_i64())));
     } catch (const std::exception& error) {
         rejected = true;
         assert(std::string(error.what()) == overflow.at("expected_error").as_string());
@@ -125,6 +175,7 @@ void test_ui_surface() {
 int main() {
     test_headless_snapshot();
     test_overflow_rejection();
+    test_native_kernel_bridge();
     test_ui_surface();
     std::cout << "slice05 runtime acceptance passed" << std::endl;
     return 0;
