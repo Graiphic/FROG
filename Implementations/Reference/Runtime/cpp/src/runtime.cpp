@@ -269,6 +269,25 @@ Value Slice05RuntimeCore::execute(std::optional<std::uint16_t> control_value_ove
     return execution_artifact();
 }
 
+Value Slice05RuntimeCore::execute_with_native_kernel_bridge(
+    const NativeKernelBridge& bridge,
+    std::optional<std::uint16_t> control_value_override) {
+    require(bridge.manifest().source_lowered_unit == "Examples/05_bounded_ui_accumulator/main.lowering.json", "Unexpected native kernel source lowered unit.");
+    apply_contract_property_writes();
+    if (control_value_override.has_value()) {
+        set_control_value(*control_value_override);
+    }
+
+    const auto result = bridge.run(control_value());
+    if (!result.ok) {
+        throw std::runtime_error(result.diagnostic.empty() ? "native kernel execution failed." : result.diagnostic);
+    }
+
+    last_final_state = result.result;
+    widgets.at("ind_result").properties["value"] = Value(static_cast<std::int64_t>(last_final_state));
+    return execution_artifact();
+}
+
 Value Slice05RuntimeCore::execution_artifact() const {
     Array widget_entries;
     for (const auto& entry : widgets) {
