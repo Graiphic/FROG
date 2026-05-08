@@ -23,6 +23,11 @@ The current runtime executor dispatches by <code>contract.units[0].kind</code>.
 The source example identifier remains preserved as traceability metadata, but it is not the runtime-executor authority.
 </p>
 
+<p>
+The native-kernel bridge direction is documented in <a href="./KernelBridge.md"><code>KernelBridge.md</code></a>.
+That document records the compiler-agnostic runtime/backend boundary for the next Example 05 closure step.
+</p>
+
 <hr/>
 
 <h2>Current Runtime Surface</h2>
@@ -60,6 +65,25 @@ Example 05
     <tr><td><code>bounded_executable_ui_unit</code></td><td>Normalized bounded UI accumulator executor with <code>.wfrog</code> support.</td><td><code>05_bounded_ui_accumulator</code></td></tr>
   </tbody>
 </table>
+
+<hr/>
+
+<h2>Compiler-Agnostic Kernel Bridge Direction</h2>
+
+<p>
+The next native-runtime closure milestone is not to make the runtime LLVM-specific.
+The target direction is to keep a common runtime that hosts execution and UI while consuming backend-produced kernels through explicit manifests and stable ABI surfaces.
+</p>
+
+<pre><code>FROG runtime hosts execution and UI.
+FROG backends compile lowered units.
+Explicit manifests and stable ABI surfaces connect both worlds.
+</code></pre>
+
+<p>
+The first bridge target remains Example 05.
+Until that bridge is implemented, the current C++ runtime should be described as hosting the Example 05 UI and executing the backend contract, while the LLVM path separately proves native-oriented compiler output from the lowered unit.
+</p>
 
 <hr/>
 
@@ -107,6 +131,10 @@ The runtime pytest surface includes checks that executor selection depends on <c
 <h2>Boundary</h2>
 
 <p>
-This directory does not define FROG semantics, backend contract law, widget law, or UI host law.
+This directory does not define FROG semantics, backend contract law, widget law, UI host law, backend compilation behavior, or compiler-family behavior.
 It consumes emitted backend contracts and validates repository-visible runtime behavior for the current bounded reference corridor.
+</p>
+
+<p>
+The native-kernel bridge posture in <a href="./KernelBridge.md"><code>KernelBridge.md</code></a> preserves this boundary: the runtime hosts execution and UI; backends compile lowered units; explicit manifests and stable ABI surfaces connect both sides.
 </p>
