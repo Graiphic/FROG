@@ -25,12 +25,14 @@ Repository governance and publication state are centralized in
 │   ├── contract.hpp
 │   ├── execute.hpp
 │   ├── json.hpp
+│   ├── kernel_bridge.hpp
 │   ├── runtime.hpp
 │   └── ui.hpp
 ├── src/
 │   ├── contract.cpp
 │   ├── execute.cpp
 │   ├── json.cpp
+│   ├── kernel_bridge.cpp
 │   ├── main.cpp
 │   ├── runtime.cpp
 │   └── ui.cpp
@@ -48,7 +50,7 @@ They are not part of the intended source surface of this runtime.
 
 <p>
 This directory contains the C/C++ consumer for the published Example 05 runtime corridor.
-It accepts the emitted backend contract, loads the published <code>.wfrog</code> package, resolves the referenced SVG assets, executes the bounded kernel, and can expose the panel through a browser-host UI.
+It accepts the emitted backend contract, loads the published <code>.wfrog</code> package, resolves the referenced SVG assets, executes the bounded runtime corridor, and can expose the panel through a browser-host UI.
 </p>
 
 <p>
@@ -82,7 +84,24 @@ build/frog_runtime_cpp/frog_reference_runtime_cpp ui --host 127.0.0.1 --port 808
 
 <p>
 These files hold the bounded runtime core and the headless execution path.
-The current runtime validates the contract family, package shape, widget classes, property writes, and the Example 05 execution model before producing a runtime result artifact.
+The current default runtime path validates the contract family, package shape, widget classes, property writes, and the Example 05 execution model before producing a runtime result artifact.
+</p>
+
+<p>
+The runtime also exposes <code>execute_with_native_kernel_bridge(...)</code> for the manifest-declared native-kernel bridge path.
+That path consumes a loaded <code>NativeKernelBridge</code>, binds the current control value to the ABI input, calls the native kernel entry point, maps returned status into diagnostics, and publishes the result to the same runtime artifact surface.
+</p>
+
+<h3><code>src/kernel_bridge.cpp</code></h3>
+
+<p>
+Compiler-agnostic native-kernel bridge helper for Example 05.
+It loads <code>native_kernel_manifest.json</code>, validates the manifest-declared entry symbol, ABI name, IO surface, and overflow model, then calls a linked native kernel through a stable function pointer surface.
+</p>
+
+<p>
+The current C++ test uses a linked ABI-compatible kernel stub so the standard CMake build does not depend on LLVM or <code>clang</code>.
+The separate LLVM-oriented artifact remains published under <code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll</code>.
 </p>
 
 <h3><code>src/ui.cpp</code></h3>
@@ -93,7 +112,7 @@ The current host serves a browser page, the referenced SVG assets, and a runtime
 </p>
 
 <p>
-The Example 05 renderer now uses the published <code>.wfrog</code> panel layout as the positioning authority, the referenced SVG assets as the visible widget skins, and overlayed label/value surfaces aligned from the SVG anchor and value-box markers.
+The Example 05 renderer uses the published <code>.wfrog</code> panel layout as the positioning authority, the referenced SVG assets as the visible widget skins, and overlayed label/value surfaces aligned from the SVG anchor and value-box markers.
 This is a bounded fidelity pass for the current Example 05 numeric widgets, not a complete generalized <code>.wfrog</code> renderer.
 </p>
 
@@ -112,13 +131,32 @@ This is a bounded fidelity pass for the current Example 05 numeric widgets, not 
   <li>five supported widget properties: <code>value</code>, <code>label</code>, <code>visible</code>, <code>enabled</code>, and <code>foreground_color</code>,</li>
   <li>panel-pixel layout from <code>Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog</code>,</li>
   <li>SVG skin assets from <code>Examples/05_bounded_ui_accumulator/ui/assets/</code>,</li>
-  <li>label/value overlays aligned from <code>label_anchor</code>, <code>value_anchor</code>, and <code>value_box</code> markers where present.</li>
+  <li>label/value overlays aligned from <code>label_anchor</code>, <code>value_anchor</code>, and <code>value_box</code> markers where present,</li>
+  <li>manifest-declared native-kernel bridge path through <code>kernel_bridge.hpp</code> / <code>kernel_bridge.cpp</code>.</li>
 </ul>
 
 <p>
 The browser-host closure is intentionally narrow.
 It exists to prove that the published contract and the published package are enough for a real visible host runtime in C/C++.
+The native-kernel bridge path exists to prove that the runtime can call a manifest-declared kernel through an ABI surface without becoming compiler-specific.
 It does not claim native compiled UI closure through LLVM and does not claim a full LabVIEW-like runtime.
+</p>
+
+<hr/>
+
+<h2>Native Kernel Bridge Surface</h2>
+
+<pre><code>native_kernel_manifest.json
+  -&gt; NativeKernelManifest
+  -&gt; NativeKernelBridge
+  -&gt; frog_example05_run(input_value)
+  -&gt; FrogRunResult { ok, result, error_code }
+  -&gt; runtime result / diagnostic / snapshot
+</code></pre>
+
+<p>
+The runtime consumes a manifest-declared function pointer.
+The fact that the first published backend artifact is LLVM-oriented remains manifest metadata, not a runtime-core dependency.
 </p>
 
 <hr/>
@@ -131,6 +169,7 @@ It does not claim native compiled UI closure through LLVM and does not claim a f
   <li>The emitted contract artifact under <code>Implementations/Reference/ContractEmitter/examples/</code>.</li>
   <li>The Example 05 package <code>Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog</code>.</li>
   <li>The SVG assets referenced by that package.</li>
+  <li>The native-kernel manifest under <code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json</code> for bridge-specific tests.</li>
 </ul>
 
 <h3>Outputs</h3>
@@ -138,6 +177,7 @@ It does not claim native compiled UI closure through LLVM and does not claim a f
 <ul>
   <li>A headless runtime result artifact.</li>
   <li>A browser-host page driven by the same runtime core.</li>
+  <li>A native-kernel bridge result projected onto the same runtime artifact surface.</li>
 </ul>
 
 <hr/>
@@ -145,7 +185,7 @@ It does not claim native compiled UI closure through LLVM and does not claim a f
 <h2>Tests</h2>
 
 <p>
-The published C/C++ test target checks both the execution result and the HTML rendering path.
+The published C/C++ test target checks execution, native-kernel bridge behavior, and HTML rendering.
 After configuring and building, run:
 </p>
 
@@ -156,6 +196,9 @@ After configuring and building, run:
 <ul>
   <li>headless execution with input <code>3</code> and final result <code>15</code>,</li>
   <li>overflow rejection behavior,</li>
+  <li>native-kernel manifest loading, entry-symbol validation, ABI validation, and bridge execution through a linked ABI-compatible kernel stub,</li>
+  <li>native-kernel bridge success with input <code>3</code> and final result <code>15</code>,</li>
+  <li>native-kernel bridge overflow mapping to <code>final_state must remain in the u16 domain.</code>,</li>
   <li>indicator publication through the runtime artifact,</li>
   <li>browser-host HTML rendering with both SVG asset routes,</li>
   <li>front-panel dimensions from the <code>.wfrog</code> package,</li>
@@ -200,6 +243,7 @@ The runtime/compiler native-kernel bridge direction is documented in
   <li>Native compiled UI closure.</li>
   <li>A complete generalized <code>.wfrog</code> renderer.</li>
   <li>A complete LabVIEW-like runtime surface.</li>
+  <li>A mandatory runtime dependency on LLVM or <code>clang</code>.</li>
 </ul>
 
 <hr/>
@@ -210,7 +254,11 @@ The runtime/compiler native-kernel bridge direction is documented in
 
 <pre><code>contract + .wfrog + SVG assets
 =&gt; C/C++ runtime core
-=&gt; headless result or browser-host UI</code></pre>
+=&gt; headless result or browser-host UI
+
+native kernel manifest + linked ABI-compatible kernel
+=&gt; C/C++ NativeKernelBridge
+=&gt; same runtime result / diagnostic / snapshot surface</code></pre>
 
 <p>
 The current browser-host renderer is closer to the Example 05 <code>.wfrog</code> package than the earlier HTML-card posture, because it uses the package layout, SVG skins, label/value overlays, and dynamic property writes.
