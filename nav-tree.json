@@ -2665,6 +2665,13 @@
                   "kind": "category",
                   "children": [
                     {
+                      "key": "implementations/reference/contractemitter/tests/test_contract_emitter_by_kind.py",
+                      "title": "test_contract_emitter_by_kind.py",
+                      "path": "/Implementations/Reference/ContractEmitter/tests/test_contract_emitter_by_kind.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
                       "key": "implementations/reference/contractemitter/tests/test_example05_contract_emission.py",
                       "title": "test_example05_contract_emission.py",
                       "path": "/Implementations/Reference/ContractEmitter/tests/test_example05_contract_emission.py",
@@ -3931,6 +3938,7 @@
     "/Implementations/Reference/ContractEmitter/acceptance/Readme.md",
     "/Implementations/Reference/ContractEmitter/bridge/example05_contract_homogenization.md",
     "/Implementations/Reference/ContractEmitter/bridge/example05_contract_normalization.md",
+    "/Implementations/Reference/ContractEmitter/tests/test_contract_emitter_by_kind.py",
     "/Implementations/Reference/ContractEmitter/tests/test_example05_contract_emission.py",
     "/Implementations/Reference/ContractEmitter/tests/test_examples01_04_contract_emission.py",
     "/Implementations/Reference/ContractEmitter/Readme.md",

@@ -373,6 +373,7 @@
       - [example05 contract homogenization](/Implementations/Reference/ContractEmitter/bridge/example05_contract_homogenization.md)
       - [example05 contract normalization](/Implementations/Reference/ContractEmitter/bridge/example05_contract_normalization.md)
     - tests
+      - [test_contract_emitter_by_kind.py](/Implementations/Reference/ContractEmitter/tests/test_contract_emitter_by_kind.py)
       - [test_example05_contract_emission.py](/Implementations/Reference/ContractEmitter/tests/test_example05_contract_emission.py)
       - [test_examples01_04_contract_emission.py](/Implementations/Reference/ContractEmitter/tests/test_examples01_04_contract_emission.py)
   - [Deriver](/Implementations/Reference/Deriver/Readme.md)
