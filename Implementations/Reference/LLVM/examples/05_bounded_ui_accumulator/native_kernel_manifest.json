@@ -1,0 +1,51 @@
+{
+  "artifact_kind": "frog_native_kernel_manifest",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "kernel": {
+    "id": "example05_accumulator_kernel",
+    "source_lowered_unit": "Examples/05_bounded_ui_accumulator/main.lowering.json",
+    "backend": {
+      "family": "llvm",
+      "artifact_kind": "native_object_or_library",
+      "source_artifact": "Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll"
+    },
+    "entry": {
+      "symbol": "frog_example05_run",
+      "abi": "frog_u16_to_result_status"
+    },
+    "io": {
+      "inputs": [
+        {
+          "id": "input_value",
+          "type": "u16"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "result",
+          "type": "u16"
+        }
+      ]
+    },
+    "error_model": {
+      "overflow": "reject_execution_on_u16_overflow",
+      "error_codes": [
+        {
+          "code": 0,
+          "meaning": "no_error"
+        },
+        {
+          "code": 1,
+          "meaning": "u16_overflow",
+          "diagnostic": "final_state must remain in the u16 domain."
+        }
+      ]
+    }
+  },
+  "runtime_boundary": {
+    "reference": "Implementations/Reference/Runtime/KernelBridge.md",
+    "runtime_dependency_posture": "runtime_consumes_manifest_declared_kernel_not_llvm"
+  }
+}
