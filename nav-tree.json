@@ -3374,6 +3374,13 @@
                       "path": "/Implementations/Reference/Runtime/tests/test_examples01_05_runtime_acceptance.py",
                       "kind": "code",
                       "children": []
+                    },
+                    {
+                      "key": "implementations/reference/runtime/tests/test_runtime_executor_by_kind.py",
+                      "title": "test_runtime_executor_by_kind.py",
+                      "path": "/Implementations/Reference/Runtime/tests/test_runtime_executor_by_kind.py",
+                      "kind": "code",
+                      "children": []
                     }
                   ]
                 }
@@ -4028,6 +4035,7 @@
     "/Implementations/Reference/Runtime/tests/test_example05_normalized_contract.py",
     "/Implementations/Reference/Runtime/tests/test_example05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/tests/test_examples01_05_runtime_acceptance.py",
+    "/Implementations/Reference/Runtime/tests/test_runtime_executor_by_kind.py",
     "/Implementations/Reference/Runtime/Readme.md",
     "/Implementations/Reference/UIHost/responsibilities.md",
     "/Implementations/Reference/UIHost/Readme.md",

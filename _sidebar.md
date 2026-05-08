@@ -472,6 +472,7 @@
       - [test_example05_normalized_contract.py](/Implementations/Reference/Runtime/tests/test_example05_normalized_contract.py)
       - [test_example05_runtime_acceptance.py](/Implementations/Reference/Runtime/tests/test_example05_runtime_acceptance.py)
       - [test_examples01_05_runtime_acceptance.py](/Implementations/Reference/Runtime/tests/test_examples01_05_runtime_acceptance.py)
+      - [test_runtime_executor_by_kind.py](/Implementations/Reference/Runtime/tests/test_runtime_executor_by_kind.py)
   - [UIHost](/Implementations/Reference/UIHost/Readme.md)
     - [responsibilities](/Implementations/Reference/UIHost/responsibilities.md)
   - [Validator](/Implementations/Reference/Validator/Readme.md)
