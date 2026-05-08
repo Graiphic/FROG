@@ -27,6 +27,10 @@ std::string canonical_json(const frog::json::Value& value) {
     return frog::json::stringify(value, true, 2);
 }
 
+void assert_contains(const std::string& haystack, const std::string& needle) {
+    assert(haystack.find(needle) != std::string::npos);
+}
+
 const frog::json::Object& acceptance_root() {
     static const frog::json::Value acceptance = load_json(
         repo_root() / "Implementations" / "Reference" / "Runtime" / "acceptance" / "example05_runtime_family.acceptance.json");
@@ -86,8 +90,29 @@ void test_ui_surface() {
         if (route == "/") {
             continue;
         }
-        assert(html.find(route) != std::string::npos);
+        assert_contains(html, route);
     }
+
+    assert_contains(html, "class='front-panel'");
+    assert_contains(html, "data-panel-id='main_panel'");
+    assert_contains(html, "data-coordinate-space='panel_pixels'");
+    assert_contains(html, "style='width:460px;height:170px;'");
+
+    assert_contains(html, "data-widget-id='ctrl_input'");
+    assert_contains(html, "data-widget-id='ind_result'");
+    assert_contains(html, "data-class-ref='frog.widgets.numeric_control'");
+    assert_contains(html, "data-class-ref='frog.widgets.numeric_indicator'");
+    assert_contains(html, "data-asset-route='/asset/numeric_control_svg'");
+    assert_contains(html, "data-asset-route='/asset/numeric_indicator_svg'");
+
+    assert_contains(html, "left:20px;top:24px;width:140px;height:32px;");
+    assert_contains(html, "left:240px;top:24px;width:160px;height:32px;");
+    assert_contains(html, "class='numeric-skin'");
+    assert_contains(html, "data-svg-anchor='label_anchor'");
+    assert_contains(html, "data-svg-anchor='value_anchor'");
+    assert_contains(html, "data-svg-part='value_box'");
+    assert_contains(html, "Input");
+    assert_contains(html, "Accumulated result");
 
     runtime.core.execute(static_cast<std::uint16_t>(root.at("headless").as_object().at("input_value").as_i64()));
     assert(canonical_json(runtime.core.execution_artifact()) == canonical_json(expected));
