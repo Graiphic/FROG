@@ -101,6 +101,14 @@ Version governance remains centralized in this directory and in the repository h
       <td><code>Implementations/Reference/LLVM/rules/Readme.md</code></td>
       <td>Published and tested</td>
     </tr>
+    <tr>
+      <td><code>native kernel manifest -&gt; runtime bridge</code></td>
+      <td>backend-produced native kernel manifest</td>
+      <td>manifest-declared entry symbol and ABI surface</td>
+      <td>runtime result, diagnostics, and snapshot</td>
+      <td><code>Implementations/Reference/Runtime/KernelBridge.md</code></td>
+      <td>Documented target; implementation not yet published</td>
+    </tr>
   </tbody>
 </table>
 
@@ -236,6 +244,8 @@ publications
     <tr><td>Example corridor checks</td><td><code>Implementations/Reference/Pipeline/check_examples01_05_full.py</code></td><td>Published</td><td>Protects Examples 01–05 source / FIR / lowering / contract / runtime / LLVM corridor.</td></tr>
     <tr><td>Reference workspace checks</td><td><code>Implementations/Reference/check_reference_workspace.py</code></td><td>Published</td><td>Repository-wide reference workspace hygiene check.</td></tr>
     <tr><td>Reference pytest checks</td><td><code>Implementations/Reference/check_reference_workspace.py --include-pytest</code></td><td>Published</td><td>Protects source-pattern derivation, FIR-kind lowering, lowered-kind contract emission, contract-kind runtime execution, lowered-kind LLVM emission, and unsupported-pattern / unsupported-kind failure behavior.</td></tr>
+    <tr><td>Reference native build checks</td><td><code>Implementations/Reference/check_reference_workspace.py --include-llvm-build</code></td><td>Published</td><td>Protects optional clang-backed native proof material for the current LLVM-oriented dossiers when the toolchain is available.</td></tr>
+    <tr><td>Native kernel bridge validation</td><td><code>Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge</code></td><td>Documented target; validation command not yet published</td><td>Future check for manifest resolution, ABI declaration, native artifact availability, runtime consumption, result publication, overflow diagnostics, and snapshot preservation.</td></tr>
     <tr><td>Widget layer validator</td><td><code>Implementations/Reference/WidgetValidator/validate_widget_layer.py</code></td><td>Published and strengthened</td><td>Protects widget docs, Default docs, manifests, target classes, resources, SVG part markers, composition references, bindings, and public-part alignment.</td></tr>
   </tbody>
 </table>
