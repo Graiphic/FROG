@@ -42,7 +42,7 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
         "${CMAKE_CURRENT_SOURCE_DIR}/../../LLVM/examples/05_bounded_ui_accumulator/kernel.ll"
     )
     set(FROG_EXAMPLE05_KERNEL_OBJECT
-        "${CMAKE_CURRENT_BINARY_DIR}/example05_kernel${CMAKE_C_OUTPUT_EXTENSION}"
+        "${CMAKE_CURRENT_BINARY_DIR}/example05_kernel${CMAKE_CXX_OUTPUT_EXTENSION}"
     )
 
     add_custom_command(
