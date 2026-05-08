@@ -37,7 +37,8 @@ Repository governance and publication state are centralized in
 │   ├── runtime.cpp
 │   └── ui.cpp
 └── tests/
-    └── test_slice05.cpp</code></pre>
+    ├── test_slice05.cpp
+    └── test_slice05_llvm_kernel.cpp</code></pre>
 
 <p>
 Generated build directories may appear beside these files in local workspaces.
@@ -100,8 +101,8 @@ It loads <code>native_kernel_manifest.json</code>, validates the manifest-declar
 </p>
 
 <p>
-The current C++ test uses a linked ABI-compatible kernel stub so the standard CMake build does not depend on LLVM or <code>clang</code>.
-The separate LLVM-oriented artifact remains published under <code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll</code>.
+The standard C++ test uses a linked ABI-compatible kernel stub so the baseline CMake build does not depend on LLVM or <code>clang</code>.
+The optional bridge test compiles the published LLVM artifact <code>kernel.ll</code> with <code>clang</code> and links it into a dedicated C++ test target.
 </p>
 
 <h3><code>src/ui.cpp</code></h3>
@@ -170,6 +171,7 @@ The fact that the first published backend artifact is LLVM-oriented remains mani
   <li>The Example 05 package <code>Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog</code>.</li>
   <li>The SVG assets referenced by that package.</li>
   <li>The native-kernel manifest under <code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json</code> for bridge-specific tests.</li>
+  <li>The LLVM kernel artifact under <code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll</code> for the optional LLVM-produced bridge test.</li>
 </ul>
 
 <h3>Outputs</h3>
@@ -178,6 +180,7 @@ The fact that the first published backend artifact is LLVM-oriented remains mani
   <li>A headless runtime result artifact.</li>
   <li>A browser-host page driven by the same runtime core.</li>
   <li>A native-kernel bridge result projected onto the same runtime artifact surface.</li>
+  <li>An optional C++ test executable linked against an object compiled from <code>kernel.ll</code>.</li>
 </ul>
 
 <hr/>
@@ -185,18 +188,41 @@ The fact that the first published backend artifact is LLVM-oriented remains mani
 <h2>Tests</h2>
 
 <p>
-The published C/C++ test target checks execution, native-kernel bridge behavior, and HTML rendering.
+The published standard C/C++ test target checks execution, native-kernel bridge behavior with an ABI-compatible stub, and HTML rendering.
 After configuring and building, run:
 </p>
 
-<pre><code>ctest --test-dir build/frog_runtime_cpp</code></pre>
+<pre><code>cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
+cmake --build build/frog_runtime_cpp
+ctest --test-dir build/frog_runtime_cpp</code></pre>
 
-<p>The current test target checks:</p>
+<p>
+The optional LLVM-produced native-kernel bridge target requires <code>clang</code> and can be run through the repository checker:
+</p>
+
+<pre><code>python Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
+python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge</code></pre>
+
+<p>
+Or directly with CMake:
+</p>
+
+<pre><code>cmake -S Implementations/Reference/Runtime/cpp \
+  -B build/frog_runtime_cpp_native_kernel_bridge \
+  -DFROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE=ON
+cmake --build build/frog_runtime_cpp_native_kernel_bridge \
+  --target frog_reference_runtime_cpp_llvm_kernel_tests
+ctest --test-dir build/frog_runtime_cpp_native_kernel_bridge \
+  -R frog_reference_runtime_cpp_llvm_kernel_tests \
+  --output-on-failure</code></pre>
+
+<p>The current test surfaces check:</p>
 
 <ul>
   <li>headless execution with input <code>3</code> and final result <code>15</code>,</li>
   <li>overflow rejection behavior,</li>
   <li>native-kernel manifest loading, entry-symbol validation, ABI validation, and bridge execution through a linked ABI-compatible kernel stub,</li>
+  <li>optional native-kernel bridge execution against an object compiled from <code>kernel.ll</code>,</li>
   <li>native-kernel bridge success with input <code>3</code> and final result <code>15</code>,</li>
   <li>native-kernel bridge overflow mapping to <code>final_state must remain in the u16 domain.</code>,</li>
   <li>indicator publication through the runtime artifact,</li>
@@ -257,7 +283,11 @@ The runtime/compiler native-kernel bridge direction is documented in
 =&gt; headless result or browser-host UI
 
 native kernel manifest + linked ABI-compatible kernel
-=&gt; C/C++ NativeKernelBridge
+=&gt; C++ NativeKernelBridge
+=&gt; same runtime result / diagnostic / snapshot surface
+
+kernel.ll + clang + optional CMake target
+=&gt; object linked into C++ bridge test
 =&gt; same runtime result / diagnostic / snapshot surface</code></pre>
 
 <p>
