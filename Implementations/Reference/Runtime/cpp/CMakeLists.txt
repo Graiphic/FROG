@@ -9,6 +9,7 @@ add_library(
     frog_reference_runtime_cpp_lib
     src/json.cpp
     src/contract.cpp
+    src/kernel_bridge.cpp
     src/runtime.cpp
     src/execute.cpp
     src/ui.cpp
