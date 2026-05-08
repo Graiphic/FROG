@@ -85,7 +85,7 @@ The legacy compatibility fields have been removed from the published Example 05 
 <h2>Commands</h2>
 
 <pre><code>python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py
-python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py --skip-specialized-example05
+python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py --skip-example05
 python Implementations/Reference/Runtime/python/execute_contract.py 3
 python Implementations/Reference/Runtime/execute_reference_contract.py \
   --acceptance Implementations/Reference/Runtime/acceptance/example05_runtime_family.acceptance.json \
