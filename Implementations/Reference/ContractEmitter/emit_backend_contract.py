@@ -6,9 +6,10 @@ from typing import Any, Dict, Optional
 
 
 REFERENCE_BACKEND_FAMILY = "reference_host_runtime_ui_binding"
-EXAMPLE_ID = "05_bounded_ui_accumulator"
 DEFAULT_UI_PACKAGE_SUFFIX = "ui/accumulator_panel.wfrog"
 EXPECTED_OVERFLOW_BEHAVIOR = "reject_execution_on_u16_overflow"
+SUPPORTED_LOWERED_UNIT_KIND = "bounded_accumulator_kernel_with_ui_bindings"
+CONTRACT_UNIT_KIND = "bounded_executable_ui_unit"
 
 
 class ContractEmissionError(RuntimeError):
@@ -73,19 +74,19 @@ def _expect_ui_bindings(unit: Dict[str, Any]) -> Dict[str, Any]:
 def _expect_execution_kernel(unit: Dict[str, Any]) -> Dict[str, Any]:
     kernel = unit.get("execution_kernel")
     _ensure(isinstance(kernel, dict), "Missing execution_kernel section.")
-    _ensure(kernel.get("state_type") == "u16", "Slice 05 only supports u16 state.")
-    _ensure(kernel.get("initial_state") == 0, "Slice 05 expects initial state 0.")
-    _ensure(kernel.get("iteration_count") == 5, "Slice 05 expects exactly five iterations.")
+    _ensure(kernel.get("state_type") == "u16", "Bounded accumulator contract supports only u16 state.")
+    _ensure(kernel.get("initial_state") == 0, "Bounded accumulator contract expects initial state 0.")
+    _ensure(kernel.get("iteration_count") == 5, "Bounded accumulator contract expects exactly five iterations.")
 
     body = kernel.get("iteration_body")
-    _ensure(isinstance(body, list) and len(body) == 1, "Slice 05 expects exactly one iteration body operation.")
+    _ensure(isinstance(body, list) and len(body) == 1, "Bounded accumulator contract expects exactly one iteration body operation.")
     operation = body[0]
-    _ensure(operation.get("op") == "add", "Slice 05 expects an add iteration body.")
-    _ensure(operation.get("dst") == "state_next", "Slice 05 expects iteration body dst state_next.")
+    _ensure(operation.get("op") == "add", "Bounded accumulator contract expects an add iteration body.")
+    _ensure(operation.get("dst") == "state_next", "Bounded accumulator contract expects iteration body dst state_next.")
     _ensure(operation.get("src") == ["state_current", "input_value"], "Unexpected iteration body sources.")
 
     publication = kernel.get("final_publication")
-    _ensure(isinstance(publication, list) and len(publication) == 2, "Slice 05 expects exactly two final publications.")
+    _ensure(isinstance(publication, list) and len(publication) == 2, "Bounded accumulator contract expects exactly two final publications.")
     return kernel
 
 
@@ -229,7 +230,7 @@ def _build_normalized_widget_bindings(ui_bindings: Dict[str, Any], public_io: Di
         value_literal = item.get("value_literal")
 
         _ensure(widget_id in {"ctrl_input", "ind_result"}, f"Unexpected widget reference target: {widget_id}")
-        _ensure(member == "foreground_color", "Slice 05 only supports foreground_color property writes.")
+        _ensure(member == "foreground_color", "Bounded accumulator contract only supports foreground_color property writes.")
         _ensure(value_type == "frog.color.rgba8", "foreground_color writes must use frog.color.rgba8.")
 
         widget_reference_support.append({"widget_id": widget_id, "supported_members": [member]})
@@ -295,7 +296,6 @@ def emit_reference_host_runtime_contract(
     fir_ref = lowering.get("fir_ref")
     _ensure(isinstance(source_ref, dict), "Missing source_ref.")
     _ensure(isinstance(fir_ref, dict), "Missing fir_ref.")
-    _ensure(source_ref.get("example_id") == EXAMPLE_ID, "Only Example 05 is supported by this emitter.")
 
     lowering_intent = lowering.get("lowering_intent")
     _ensure(isinstance(lowering_intent, dict), "Missing lowering_intent.")
@@ -306,7 +306,7 @@ def emit_reference_host_runtime_contract(
 
     unit = _expect_single_lowered_unit(lowering)
     _ensure(unit.get("unit_id") == "main", "Expected lowered unit main.")
-    _ensure(unit.get("kind") == "bounded_accumulator_kernel_with_ui_bindings", "Unexpected lowered unit kind.")
+    _ensure(unit.get("kind") == SUPPORTED_LOWERED_UNIT_KIND, f"Expected lowered unit kind {SUPPORTED_LOWERED_UNIT_KIND}.")
 
     public_io = _expect_public_io(unit)
     ui_bindings = _expect_ui_bindings(unit)
@@ -322,7 +322,7 @@ def emit_reference_host_runtime_contract(
 
     unit_contract = {
         "unit_id": "main",
-        "kind": "bounded_executable_ui_unit",
+        "kind": CONTRACT_UNIT_KIND,
         "public_io": normalized_public_io,
         "ui_bindings": widget_artifacts["ui_bindings"],
         "execution_kernel": normalized_execution_kernel,
