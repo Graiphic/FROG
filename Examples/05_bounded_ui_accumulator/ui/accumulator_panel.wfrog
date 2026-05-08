@@ -44,6 +44,7 @@
     {
       "binding_id": "reference_host_default",
       "host_family": "reference_browser_host",
+      "target": "reference_browser_host",
       "required_capabilities": [
         "window",
         "basic_widget_rendering",
@@ -56,11 +57,13 @@
   "svg_assets": [
     {
       "asset_id": "numeric_control_svg",
+      "kind": "svg",
       "path": "assets/numeric_control.svg",
       "target_class": "frog.widgets.numeric_control"
     },
     {
       "asset_id": "numeric_indicator_svg",
+      "kind": "svg",
       "path": "assets/numeric_indicator.svg",
       "target_class": "frog.widgets.numeric_indicator"
     }
@@ -70,6 +73,7 @@
       "panel_id": "main_panel",
       "title": "Bounded UI Accumulator",
       "class_ref": "frog.widgets.panel",
+      "host_binding_ref": "reference_host_default",
       "layout": {
         "width": 460,
         "height": 170,
