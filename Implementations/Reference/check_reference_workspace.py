@@ -50,10 +50,16 @@ def main(argv: list[str] | None = None) -> int:
         stages.append(("Examples 01-05 full pipeline", pipeline))
 
         if args.include_native_kernel_bridge:
-            stages.append((
-                "Example 05 native kernel bridge publication",
-                [py, "Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py"],
-            ))
+            stages.extend([
+                (
+                    "Example 05 native kernel bridge publication",
+                    [py, "Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py"],
+                ),
+                (
+                    "Example 05 C++ LLVM-produced native kernel bridge",
+                    [py, "Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py"],
+                ),
+            ])
 
         if args.include_pytest:
             stages.extend([
