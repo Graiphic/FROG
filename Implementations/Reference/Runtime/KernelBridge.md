@@ -32,13 +32,13 @@ The browser renderer is currently an Example 05 bounded fidelity pass, not a gen
 </p>
 
 <p>
-The native-kernel bridge publication surface is now present as a manifest plus ABI-oriented LLVM artifact.
+The native-kernel bridge publication surface is present as a manifest plus ABI-oriented LLVM artifact.
 The C++ runtime bridge code is also published: it loads the manifest, validates the declared ABI, calls a linked ABI-compatible kernel entry point, maps <code>error_code</code> to diagnostics, and projects the result onto the existing runtime snapshot surface.
 </p>
 
 <p>
-The current C++ test uses a linked ABI-compatible kernel stub so the standard CMake test does not depend on LLVM or <code>clang</code>.
-The remaining closure step is to build or link the compiler-produced LLVM kernel artifact into the C++ runtime bridge path.
+The standard CMake test uses a linked ABI-compatible kernel stub so the baseline runtime build does not depend on LLVM or <code>clang</code>.
+An optional CMake path now compiles the published LLVM <code>kernel.ll</code> artifact with <code>clang</code>, links it into a dedicated C++ bridge test, and exercises the same runtime bridge path.
 </p>
 
 <hr/>
@@ -57,8 +57,10 @@ Explicit manifests and stable ABI surfaces connect both worlds.
 <pre><code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json
 Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll
 Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
+Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
 Implementations/Reference/Runtime/cpp/include/kernel_bridge.hpp
 Implementations/Reference/Runtime/cpp/src/kernel_bridge.cpp
+Implementations/Reference/Runtime/cpp/tests/test_slice05_llvm_kernel.cpp
 </code></pre>
 
 <p>
@@ -69,14 +71,20 @@ The C++ bridge consumes the same manifest and calls a linked entry point through
 </p>
 
 <p>
-The publication checker can be run with:
+The publication surface can be checked with:
 </p>
 
-<pre><code>python Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
+<pre><code>python Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py</code></pre>
+
+<p>
+The optional C++ bridge closure against the LLVM-produced artifact can be checked with:
+</p>
+
+<pre><code>python Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
 python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge</code></pre>
 
 <p>
-The C++ runtime bridge path is exercised by:
+The standard C++ bridge path remains available without requiring LLVM or <code>clang</code>:
 </p>
 
 <pre><code>cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
@@ -103,8 +111,8 @@ Overflow is reported with <code>error_code = 1</code> and mapped by the runtime 
 
 <ul>
   <li>The runtime does not compile diagrams.</li>
-  <li>The runtime does not depend on LLVM.</li>
+  <li>The baseline runtime build does not depend on LLVM.</li>
   <li>This bridge does not claim a complete production runtime.</li>
   <li>This bridge does not introduce Example 06 or new widget classes.</li>
-  <li>The standard CMake bridge test does not yet link the LLVM-produced <code>kernel.ll</code> artifact directly.</li>
+  <li>The optional LLVM-produced bridge test does not make LLVM the conceptual runtime authority.</li>
 </ul>
