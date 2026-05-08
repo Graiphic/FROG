@@ -11,6 +11,7 @@ check_ok_case() {
   local expected_value="$2"
   local output
   output="$(./bounded_ui_accumulator_llvm "$input")"
+  output="${output//$'\r'/}"
   printf '%s\n' "$output"
 
   local expected
@@ -31,6 +32,7 @@ check_error_case() {
   output="$(./bounded_ui_accumulator_llvm "$input")"
   status="$?"
   set -e
+  output="${output//$'\r'/}"
 
   printf '%s\n' "$output"
 
