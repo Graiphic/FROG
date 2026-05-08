@@ -13,7 +13,10 @@ struct FrogRunResult {
     std::uint16_t error_code;
 };
 
-using FrogNativeKernelFunction = FrogRunResult (*)(std::uint16_t input_value);
+static_assert(sizeof(FrogRunResult) == 6, "FrogRunResult ABI layout must remain {u8, u16, u16} with natural padding.");
+static_assert(alignof(FrogRunResult) == 2, "FrogRunResult ABI alignment must remain 2 bytes.");
+
+using FrogNativeKernelFunction = void (*)(std::uint16_t input_value, FrogRunResult* out_result);
 
 struct NativeKernelManifest {
     std::filesystem::path manifest_path;
