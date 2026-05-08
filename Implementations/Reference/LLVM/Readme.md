@@ -69,9 +69,9 @@ That bridge keeps the runtime compiler-agnostic: the runtime hosts execution and
 </p>
 
 <p>
-For the first native bridge milestone, LLVM may produce the Example 05 native kernel artifact and its manifest.
+For the first native bridge milestone, LLVM publishes the Example 05 native kernel manifest and ABI-oriented LLVM artifact.
 That does not make LLVM a runtime dependency.
-LLVM remains a backend-family producer of native-oriented material, and the runtime consumes the resulting manifest-defined artifact.
+LLVM remains a backend-family producer of native-oriented material, and the runtime should consume the resulting manifest-defined artifact.
 </p>
 
 <pre><code>lowering
@@ -84,6 +84,36 @@ runtime
   -&gt; ABI call
   -&gt; diagnostics and snapshots
 </code></pre>
+
+<hr/>
+
+<h2>Example 05 Native Kernel Bridge Artifacts</h2>
+
+<p>
+The current publication surface for the first compiler-agnostic bridge is:
+</p>
+
+<pre><code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json
+Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll
+Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
+</code></pre>
+
+<p>
+The manifest declares the entry symbol <code>frog_example05_run</code>, the ABI name <code>frog_u16_to_result_status</code>, the input <code>input_value : u16</code>, the output <code>result : u16</code>, and the overflow diagnostic mapping for <code>error_code = 1</code>.
+The <code>kernel.ll</code> artifact exposes the corresponding LLVM-level ABI shape.
+</p>
+
+<p>
+The publication surface can be checked with:
+</p>
+
+<pre><code>python Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
+python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge</code></pre>
+
+<p>
+This validates the manifest and ABI publication surface.
+It does not yet claim that the C++ runtime loads or calls the native kernel.
+</p>
 
 <hr/>
 
@@ -148,5 +178,5 @@ The LLVM-oriented path must not redefine canonical source, validated meaning, FI
 </p>
 
 <p>
-When the native kernel bridge is implemented, LLVM should remain a compiler-family producer of manifest-declared kernel artifacts rather than becoming part of the runtime definition.
+For the native kernel bridge, LLVM remains a compiler-family producer of manifest-declared kernel artifacts rather than becoming part of the runtime definition.
 </p>
