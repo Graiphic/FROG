@@ -92,12 +92,13 @@ def _expect_execution_kernel(unit: Dict[str, Any]) -> Dict[str, Any]:
 
 def _infer_ui_package_path(lowering: Dict[str, Any], explicit_ui_package_path: Optional[str]) -> str:
     if explicit_ui_package_path:
-        return explicit_ui_package_path
+        return explicit_ui_package_path.replace("\\", "/")
     source_ref = lowering.get("source_ref", {})
     source_path = source_ref.get("path")
     _ensure(isinstance(source_path, str) and source_path.endswith("main.frog"), "Unable to infer UI package path from source_ref.path.")
-    example_dir = Path(source_path).parent
-    return str(example_dir / DEFAULT_UI_PACKAGE_SUFFIX)
+    source_path = source_path.replace("\\", "/")
+    example_dir = source_path.rsplit("/", 1)[0]
+    return f"{example_dir}/{DEFAULT_UI_PACKAGE_SUFFIX}"
 
 
 def _resolve_repo_relative_path(repo_root: Path, text_path: str) -> Path:
