@@ -12,6 +12,7 @@ check_case() {
   local output
   # shellcheck disable=SC2086
   output="$(./pure_addition_llvm $args)"
+  output="${output//$'\r'/}"
   printf '%s\n' "$output"
   if [[ "$output" != "$expected" ]]; then
     echo "Unexpected LLVM proof output for 01_pure_addition with args '$args'." >&2
