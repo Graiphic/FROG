@@ -12,6 +12,7 @@ check_case() {
   local output
   # shellcheck disable=SC2086
   output="$(./ui_property_write_llvm $args)"
+  output="${output//$'\r'/}"
   printf '%s\n' "$output"
   if [[ "$output" != "$expected" ]]; then
     echo "Unexpected LLVM proof output for 03_ui_property_write with args '$args'." >&2
