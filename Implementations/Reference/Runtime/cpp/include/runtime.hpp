@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "contract.hpp"
+#include "kernel_bridge.hpp"
 
 namespace frog::runtime {
 
@@ -33,6 +34,9 @@ public:
     std::uint16_t control_value() const;
     void invoke_method(const std::string& widget_id, const std::string& method_name);
     frog::json::Value execute(std::optional<std::uint16_t> control_value = std::nullopt);
+    frog::json::Value execute_with_native_kernel_bridge(
+        const NativeKernelBridge& bridge,
+        std::optional<std::uint16_t> control_value = std::nullopt);
     frog::json::Value execution_artifact() const;
 
     std::filesystem::path contract_path;
