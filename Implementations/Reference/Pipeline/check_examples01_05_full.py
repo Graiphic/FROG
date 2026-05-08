@@ -93,6 +93,7 @@ def stages(include_widget_validator: bool, include_llvm_build: bool, skip_artifa
         out.append(Stage(f"Example {key} FIR -> lowering", [py, "Implementations/Reference/Lowerer/lower_fir.py", "--fir", fir, "--expected", lowering, "--check"]))
 
     out.append(Stage("Examples 01-04 lowering -> backend contract", [py, "Implementations/Reference/ContractEmitter/emit_examples01_04_contracts.py", "--check"]))
+    out.append(Stage("Example 05 lowering -> backend contract", [py, "-m", "Implementations.Reference.ContractEmitter.reference_contract_emitter", "--check"]))
     out.append(Stage("Examples 01-05 runtime acceptance", [py, "Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py"]))
 
     for key, source, fir, lowering, module, example_dir in EXAMPLES:
