@@ -152,7 +152,7 @@ Expected published result:
 
 <h3>Backend contract</h3>
 
-<pre><code>python Implementations/Reference/ContractEmitter/reference_contract_emitter.py \
+<pre><code>python -m Implementations.Reference.ContractEmitter.reference_contract_emitter \
   --lowering Examples/05_bounded_ui_accumulator/main.lowering.json \
   --expected Implementations/Reference/ContractEmitter/examples/05_bounded_ui_accumulator.reference_host_runtime_ui_binding.contract.json \
   --check
