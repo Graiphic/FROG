@@ -60,11 +60,26 @@ To skip widget validation for narrow debugging of unrelated stages:
   <li>Widget-layer validation.</li>
   <li><code>.frog -&gt; FIR</code> for Examples 01–05.</li>
   <li><code>FIR -&gt; lowering</code> for Examples 01–05.</li>
-  <li><code>lowering -&gt; backend contract</code>.</li>
-  <li><code>contract -&gt; runtime acceptance</code>.</li>
-  <li><code>lowering -&gt; LLVM module</code>.</li>
+  <li><code>lowering -&gt; backend contract</code> for Examples 01–04 through the shared contract emitter.</li>
+  <li><code>lowering -&gt; backend contract</code> for Example 05 through the host-runtime UI-binding contract emitter.</li>
+  <li><code>contract -&gt; runtime acceptance</code> for Examples 01–05.</li>
+  <li><code>lowering -&gt; LLVM module</code> for Examples 01–05.</li>
   <li>Optional native LLVM build proof.</li>
 </ol>
+
+<hr/>
+
+<h2>Current Rule-Handoff Discipline</h2>
+
+<pre><code>.frog source pattern
+  -&gt; FIR unit.kind
+  -&gt; lowered_unit.kind
+  -&gt; backend/runtime/LLVM consumers
+</code></pre>
+
+<p>
+The reference pipeline protects this handoff discipline by checking source-to-FIR derivation, FIR-to-lowering projection, backend-contract emission, runtime acceptance, and lowered-unit-kind LLVM module emission.
+</p>
 
 <hr/>
 
@@ -94,5 +109,5 @@ The widget-layer validation stage checks repository hygiene for:
 <p>
 The pipeline is non-normative.
 It verifies published artifacts and implementation-stage coherence.
-It does not define the FROG language, widget semantics, realization semantics, runtime semantics, or compiler semantics.
+It does not define the FROG language, widget semantics, realization semantics, runtime semantics, backend contract semantics, or compiler semantics.
 </p>
