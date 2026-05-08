@@ -78,6 +78,22 @@ Version governance remains centralized in this directory and in the repository h
       <td>Published and tested</td>
     </tr>
     <tr>
+      <td><code>lowering -&gt; backend contract</code></td>
+      <td><code>frog_lowered_unit</code></td>
+      <td><code>lowered_units[0].kind</code></td>
+      <td><code>contract.units[0].kind</code></td>
+      <td><code>Implementations/Reference/ContractEmitter/</code></td>
+      <td>Published and tested</td>
+    </tr>
+    <tr>
+      <td><code>backend contract -&gt; runtime</code></td>
+      <td><code>frog_backend_contract</code></td>
+      <td><code>contract.units[0].kind</code></td>
+      <td>runtime snapshot</td>
+      <td><code>Implementations/Reference/Runtime/Readme.md</code></td>
+      <td>Published and tested</td>
+    </tr>
+    <tr>
       <td><code>lowering -&gt; LLVM</code></td>
       <td><code>frog_lowered_unit</code></td>
       <td><code>lowered_units[0].kind</code></td>
@@ -90,7 +106,7 @@ Version governance remains centralized in this directory and in the repository h
 
 <hr/>
 
-<h2>Current FIR and Lowering Kind Matrix</h2>
+<h2>Current FIR, Lowering, Contract, Runtime, and LLVM Kind Matrix</h2>
 
 <table>
   <thead>
@@ -100,15 +116,17 @@ Version governance remains centralized in this directory and in the repository h
       <th>FIR unit kind</th>
       <th>Lowering rule</th>
       <th>Lowered unit kind</th>
+      <th>Contract unit kind</th>
+      <th>Runtime executor kind</th>
       <th>LLVM proof emitter</th>
     </tr>
   </thead>
   <tbody>
-    <tr><td>01 Pure Addition</td><td><code>pure_public_addition</code></td><td><code>pure_dataflow_arithmetic_unit</code></td><td><code>lower_pure_dataflow_arithmetic</code></td><td><code>pure_addition_kernel</code></td><td><code>pure_addition_kernel</code></td></tr>
-    <tr><td>02 UI Value Roundtrip</td><td><code>ui_value_roundtrip</code></td><td><code>ui_value_roundtrip_unit</code></td><td><code>lower_ui_value_roundtrip</code></td><td><code>ui_value_roundtrip_kernel</code></td><td><code>ui_value_roundtrip_kernel</code></td></tr>
-    <tr><td>03 UI Property Write</td><td><code>ui_property_write</code></td><td><code>ui_property_write_unit</code></td><td><code>lower_ui_property_write</code></td><td><code>ui_property_write_effect_unit</code></td><td><code>ui_property_write_effect_unit</code></td></tr>
-    <tr><td>04 Stateful Feedback Delay</td><td><code>stateful_feedback_delay</code></td><td><code>stateful_feedback_delay_unit</code></td><td><code>lower_stateful_feedback_delay</code></td><td><code>stateful_feedback_delay_kernel</code></td><td><code>stateful_feedback_delay_kernel</code></td></tr>
-    <tr><td>05 Bounded UI Accumulator</td><td><code>bounded_ui_accumulator</code></td><td><code>bounded_stateful_ui_unit</code></td><td><code>lower_bounded_stateful_ui</code></td><td><code>bounded_accumulator_kernel_with_ui_bindings</code></td><td><code>bounded_accumulator_kernel_with_ui_bindings</code></td></tr>
+    <tr><td>01 Pure Addition</td><td><code>pure_public_addition</code></td><td><code>pure_dataflow_arithmetic_unit</code></td><td><code>lower_pure_dataflow_arithmetic</code></td><td><code>pure_addition_kernel</code></td><td><code>pure_addition_kernel</code></td><td><code>pure_addition_kernel</code></td><td><code>pure_addition_kernel</code></td></tr>
+    <tr><td>02 UI Value Roundtrip</td><td><code>ui_value_roundtrip</code></td><td><code>ui_value_roundtrip_unit</code></td><td><code>lower_ui_value_roundtrip</code></td><td><code>ui_value_roundtrip_kernel</code></td><td><code>ui_value_roundtrip_kernel</code></td><td><code>ui_value_roundtrip_kernel</code></td><td><code>ui_value_roundtrip_kernel</code></td></tr>
+    <tr><td>03 UI Property Write</td><td><code>ui_property_write</code></td><td><code>ui_property_write_unit</code></td><td><code>lower_ui_property_write</code></td><td><code>ui_property_write_effect_unit</code></td><td><code>ui_property_write_effect_unit</code></td><td><code>ui_property_write_effect_unit</code></td><td><code>ui_property_write_effect_unit</code></td></tr>
+    <tr><td>04 Stateful Feedback Delay</td><td><code>stateful_feedback_delay</code></td><td><code>stateful_feedback_delay_unit</code></td><td><code>lower_stateful_feedback_delay</code></td><td><code>stateful_feedback_delay_kernel</code></td><td><code>stateful_feedback_delay_kernel</code></td><td><code>stateful_feedback_delay_kernel</code></td><td><code>stateful_feedback_delay_kernel</code></td></tr>
+    <tr><td>05 Bounded UI Accumulator</td><td><code>bounded_ui_accumulator</code></td><td><code>bounded_stateful_ui_unit</code></td><td><code>lower_bounded_stateful_ui</code></td><td><code>bounded_accumulator_kernel_with_ui_bindings</code></td><td><code>bounded_executable_ui_unit</code></td><td><code>bounded_executable_ui_unit</code></td><td><code>bounded_accumulator_kernel_with_ui_bindings</code></td></tr>
   </tbody>
 </table>
 
@@ -217,7 +235,7 @@ publications
   <tbody>
     <tr><td>Example corridor checks</td><td><code>Implementations/Reference/Pipeline/check_examples01_05_full.py</code></td><td>Published</td><td>Protects Examples 01–05 source / FIR / lowering / contract / runtime / LLVM corridor.</td></tr>
     <tr><td>Reference workspace checks</td><td><code>Implementations/Reference/check_reference_workspace.py</code></td><td>Published</td><td>Repository-wide reference workspace hygiene check.</td></tr>
-    <tr><td>Reference pytest checks</td><td><code>Implementations/Reference/check_reference_workspace.py --include-pytest</code></td><td>Published</td><td>Protects source-pattern derivation, FIR-kind lowering, lowered-kind LLVM emission, and unsupported-pattern / unsupported-kind failure behavior.</td></tr>
+    <tr><td>Reference pytest checks</td><td><code>Implementations/Reference/check_reference_workspace.py --include-pytest</code></td><td>Published</td><td>Protects source-pattern derivation, FIR-kind lowering, lowered-kind contract emission, contract-kind runtime execution, lowered-kind LLVM emission, and unsupported-pattern / unsupported-kind failure behavior.</td></tr>
     <tr><td>Widget layer validator</td><td><code>Implementations/Reference/WidgetValidator/validate_widget_layer.py</code></td><td>Published and strengthened</td><td>Protects widget docs, Default docs, manifests, target classes, resources, SVG part markers, composition references, bindings, and public-part alignment.</td></tr>
   </tbody>
 </table>
