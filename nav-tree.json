@@ -3193,6 +3193,13 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/runtime/kernelbridge.md",
+                  "title": "KernelBridge",
+                  "path": "/Implementations/Reference/Runtime/KernelBridge.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/runtime/responsibilities.md",
                   "title": "responsibilities",
                   "path": "/Implementations/Reference/Runtime/responsibilities.md",
@@ -4011,6 +4018,7 @@
     "/Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_05.py",
     "/Implementations/Reference/RepositoryMaintenance/Readme.md",
     "/Implementations/Reference/Runtime/accept_contract_and_execute.md",
+    "/Implementations/Reference/Runtime/KernelBridge.md",
     "/Implementations/Reference/Runtime/responsibilities.md",
     "/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",

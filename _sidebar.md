@@ -446,6 +446,7 @@
     - [enrich_root_readme_examples01_05.py](/Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_05.py)
   - [Runtime](/Implementations/Reference/Runtime/Readme.md)
     - [accept contract and execute](/Implementations/Reference/Runtime/accept_contract_and_execute.md)
+    - [KernelBridge](/Implementations/Reference/Runtime/KernelBridge.md)
     - [responsibilities](/Implementations/Reference/Runtime/responsibilities.md)
     - [check_example05_runtime_acceptance.py](/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py)
     - [check_examples01_05_runtime_acceptance.py](/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py)
