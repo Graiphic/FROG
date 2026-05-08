@@ -27,11 +27,14 @@ This document is non-normative. Version governance remains centralized in <code>
 <h2>Current Status</h2>
 
 <p>
-The C++ reference runtime currently hosts the Example 05 UI and executes the backend contract. The LLVM proof path separately validates native-oriented compiler output from the lowered unit. The browser renderer is functional but not yet a faithful <code>.wfrog</code> renderer.
+The C++ reference runtime currently hosts the Example 05 UI and executes the backend contract.
+The LLVM proof path separately validates native-oriented compiler output from the lowered unit.
+The browser renderer is currently an Example 05 bounded fidelity pass, not a generalized faithful <code>.wfrog</code> renderer.
 </p>
 
 <p>
-The bridge described here is a target milestone, not an already completed runtime property.
+The first bridge publication surface is now present as a manifest plus ABI-oriented LLVM artifact.
+The C++ runtime bridge code that loads or links that manifest-declared kernel is not yet published.
 </p>
 
 <hr/>
@@ -45,15 +48,37 @@ Explicit manifests and stable ABI surfaces connect both worlds.
 
 <hr/>
 
+<h2>Published Example 05 Bridge Artifacts</h2>
+
+<pre><code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json
+Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll
+Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
+</code></pre>
+
+<p>
+The manifest declares <code>frog_example05_run</code> with ABI <code>frog_u16_to_result_status</code>.
+The ABI artifact returns a compact result status with <code>ok</code>, <code>result</code>, and <code>error_code</code> fields.
+The publication checker validates the manifest, source lowering reference, ABI declaration, exported symbol shape, and overflow diagnostic mapping.
+</p>
+
+<p>
+The checker can be run directly with:
+</p>
+
+<pre><code>python Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py</code></pre>
+
+<hr/>
+
 <h2>Example 05 Target</h2>
 
 <p>
-The first implementation target should remain <code>Examples/05_bounded_ui_accumulator/</code>.
+The first implementation target remains <code>Examples/05_bounded_ui_accumulator/</code>.
 The runtime should consume a manifest-declared compiled artifact instead of owning the Example 05 algorithm internally.
 </p>
 
 <p>
-The first success case remains <code>input_value = 3</code> and <code>result = 15</code>. Overflow should be reported through a machine-readable status that the runtime maps to diagnostics.
+The first success case remains <code>input_value = 3</code> and <code>result = 15</code>.
+Overflow should be reported with <code>error_code = 1</code> and mapped by the runtime to <code>final_state must remain in the u16 domain.</code>
 </p>
 
 <hr/>
