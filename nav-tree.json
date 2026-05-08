@@ -3207,6 +3207,13 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/runtime/check_example05_native_kernel_bridge.py",
+                  "title": "check_example05_native_kernel_bridge.py",
+                  "path": "/Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/runtime/check_example05_runtime_acceptance.py",
                   "title": "check_example05_runtime_acceptance.py",
                   "path": "/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",
@@ -4020,6 +4027,7 @@
     "/Implementations/Reference/Runtime/accept_contract_and_execute.md",
     "/Implementations/Reference/Runtime/KernelBridge.md",
     "/Implementations/Reference/Runtime/responsibilities.md",
+    "/Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/contract_executor.py",
