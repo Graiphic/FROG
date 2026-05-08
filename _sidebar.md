@@ -448,6 +448,7 @@
     - [accept contract and execute](/Implementations/Reference/Runtime/accept_contract_and_execute.md)
     - [KernelBridge](/Implementations/Reference/Runtime/KernelBridge.md)
     - [responsibilities](/Implementations/Reference/Runtime/responsibilities.md)
+    - [check_example05_cpp_native_kernel_bridge.py](/Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py)
     - [check_example05_native_kernel_bridge.py](/Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py)
     - [check_example05_runtime_acceptance.py](/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py)
     - [check_examples01_05_runtime_acceptance.py](/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py)
