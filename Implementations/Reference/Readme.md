@@ -32,8 +32,9 @@ Examples 01–05
     -&gt; FIR unit.kind
     -&gt; lowering rule
     -&gt; lowered_unit.kind
-    -&gt; backend contract
-    -&gt; runtime acceptance
+    -&gt; backend contract unit.kind
+    -&gt; runtime executor kind
+    -&gt; runtime acceptance snapshot
     -&gt; LLVM proof
 </code></pre>
 
@@ -53,7 +54,13 @@ The current reference workspace is organized around explicit rule handoffs rathe
 <pre><code>.frog source pattern
   -&gt; FIR unit.kind
   -&gt; lowered_unit.kind
-  -&gt; backend/runtime/LLVM consumers
+  -&gt; backend contract unit.kind
+  -&gt; runtime executor kind
+  -&gt; runtime snapshot
+
+lowered_unit.kind
+  -&gt; LLVM proof emitter
+  -&gt; module.ll
 </code></pre>
 
 <table>
@@ -74,6 +81,16 @@ The current reference workspace is organized around explicit rule handoffs rathe
       <td>Lowerer</td>
       <td><code>FIR units[0].kind</code></td>
       <td><code>Implementations/Reference/Lowerer/rules/Readme.md</code></td>
+    </tr>
+    <tr>
+      <td>ContractEmitter</td>
+      <td><code>lowered_units[0].kind</code></td>
+      <td><code>Implementations/Reference/ContractEmitter/</code></td>
+    </tr>
+    <tr>
+      <td>Runtime</td>
+      <td><code>contract.units[0].kind</code></td>
+      <td><code>Implementations/Reference/Runtime/Readme.md</code></td>
     </tr>
     <tr>
       <td>LLVM proof path</td>
@@ -114,9 +131,9 @@ The current reference workspace is organized around explicit rule handoffs rathe
   <li><code>WidgetValidator/</code> protects the published widget class-law and Default realization layer.</li>
   <li><code>Deriver/</code> derives FIR from supported canonical <code>.frog</code> source patterns.</li>
   <li><code>Lowerer/</code> lowers supported FIR unit kinds into backend- or compiler-facing lowered unit kinds.</li>
-  <li><code>ContractEmitter/</code> emits backend contracts from published lowerings.</li>
-  <li><code>Runtime/</code> checks contract-driven runtime acceptance.</li>
-  <li><code>LLVM/</code> checks lowering-to-native proof modules.</li>
+  <li><code>ContractEmitter/</code> emits backend contracts from published lowered unit kinds.</li>
+  <li><code>Runtime/</code> checks contract-unit-kind-driven runtime acceptance.</li>
+  <li><code>LLVM/</code> checks lowered-unit-kind-to-native proof modules.</li>
 </ul>
 
 <hr/>
@@ -132,7 +149,7 @@ python Implementations/Reference/check_reference_workspace.py --include-llvm-bui
 <p>
 The default workspace command includes widget-layer validation through the Examples 01–05 pipeline.
 The <code>--widget-layer-only</code> command exists for fast validation when editing widget class-law documents, Default realization documents, manifests, or SVG resources.
-The <code>--include-pytest</code> command additionally protects source-pattern derivation, FIR-unit-kind lowering, lowered-unit-kind LLVM emission, and unsupported-pattern / unsupported-kind failure behavior.
+The <code>--include-pytest</code> command additionally protects source-pattern derivation, FIR-unit-kind lowering, lowered-unit-kind contract emission, contract-unit-kind runtime execution, lowered-unit-kind LLVM emission, and unsupported-pattern / unsupported-kind failure behavior.
 </p>
 
 <hr/>
