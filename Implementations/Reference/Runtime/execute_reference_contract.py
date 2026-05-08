@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Execute or check a simple reference backend contract acceptance.
+"""Execute or check a reference backend contract acceptance.
 
 This is the CLI wrapper around Runtime/contract_executor.py.
-It currently targets Examples 01-04. Example 05 remains on its specialized
-runtime-family checker because it has richer UI package and overflow behavior.
+It supports the current Examples 01-05 acceptance surface. When an acceptance
+artifact declares artifact_refs.wfrog_path, the referenced .wfrog package is
+loaded and provided to the generic contract executor as support_artifacts['wfrog'].
 """
 
 from __future__ import annotations
@@ -37,8 +38,15 @@ def repo_path(path_text: str) -> Path:
     return path if path.is_absolute() else ROOT / path
 
 
+def support_artifacts_from_refs(refs: dict[str, object]) -> dict[str, object]:
+    wfrog_path = refs.get("wfrog_path")
+    if not isinstance(wfrog_path, str) or not wfrog_path:
+        return {}
+    return {"wfrog": load_json(repo_path(wfrog_path))}
+
+
 def parse_args(argv: list[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Execute or check a simple reference backend contract acceptance.")
+    parser = argparse.ArgumentParser(description="Execute or check a reference backend contract acceptance.")
     parser.add_argument("--acceptance", type=Path, required=True)
     parser.add_argument("--contract", type=Path, default=None)
     parser.add_argument("--snapshot", type=Path, default=None)
@@ -67,7 +75,8 @@ def main(argv: list[str]) -> int:
             snapshot_path = ROOT / snapshot_path
 
         contract = load_json(contract_path)
-        observed = execute_acceptance(acceptance, contract)
+        support_artifacts = support_artifacts_from_refs(refs)
+        observed = execute_acceptance(acceptance, contract, support_artifacts)
 
         if args.print_json:
             json.dump(observed, sys.stdout, indent=2)
@@ -75,7 +84,7 @@ def main(argv: list[str]) -> int:
 
         if args.check:
             snapshot = load_json(snapshot_path)
-            check_acceptance_against_snapshot(acceptance, contract, snapshot)
+            check_acceptance_against_snapshot(acceptance, contract, snapshot, support_artifacts)
             print(f"Reference contract execution check ok: {acceptance.get('example_id')}")
 
         return 0
