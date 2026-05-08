@@ -61,6 +61,32 @@ The generic emitter dispatches by <code>lowered_units[0].kind</code>.
 
 <hr/>
 
+<h2>Runtime Kernel Bridge Relationship</h2>
+
+<p>
+The runtime kernel bridge direction is documented in <a href="../Runtime/KernelBridge.md"><code>Implementations/Reference/Runtime/KernelBridge.md</code></a>.
+That bridge keeps the runtime compiler-agnostic: the runtime hosts execution and UI, while compiler-family paths produce artifacts that can be consumed through explicit manifests and stable ABI surfaces.
+</p>
+
+<p>
+For the first native bridge milestone, LLVM may produce the Example 05 native kernel artifact and its manifest.
+That does not make LLVM a runtime dependency.
+LLVM remains a backend-family producer of native-oriented material, and the runtime consumes the resulting manifest-defined artifact.
+</p>
+
+<pre><code>lowering
+  -&gt; LLVM-oriented backend path
+       -&gt; native kernel artifact
+       -&gt; native kernel manifest
+
+runtime
+  -&gt; manifest-declared kernel
+  -&gt; ABI call
+  -&gt; diagnostics and snapshots
+</code></pre>
+
+<hr/>
+
 <h2>Rule Family Documentation</h2>
 
 <ul>
@@ -119,4 +145,8 @@ It verifies the published native proof dossiers for Examples 01–05 when the to
 LLVM remains downstream from FROG.
 These examples are native proof dossiers, not a generalized production backend.
 The LLVM-oriented path must not redefine canonical source, validated meaning, FIR, lowering law, backend contracts, runtime behavior, widget law, or UI host behavior.
+</p>
+
+<p>
+When the native kernel bridge is implemented, LLVM should remain a compiler-family producer of manifest-declared kernel artifacts rather than becoming part of the runtime definition.
 </p>
