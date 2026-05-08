@@ -12,6 +12,7 @@ check_case() {
   local output
   # shellcheck disable=SC2086
   output="$(./stateful_feedback_delay_llvm $args)"
+  output="${output//$'\r'/}"
   printf '%s\n' "$output"
   if [[ "$output" != "$expected" ]]; then
     echo "Unexpected LLVM proof output for 04_stateful_feedback_delay with args '$args'." >&2
