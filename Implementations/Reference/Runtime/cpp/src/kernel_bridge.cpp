@@ -102,7 +102,9 @@ NativeKernelBridge::NativeKernelBridge(NativeKernelManifest manifest, FrogNative
 }
 
 NativeKernelResult NativeKernelBridge::run(std::uint16_t input_value) const {
-    const auto raw = entry_point_(input_value);
+    FrogRunResult raw{0, 0, 0};
+    entry_point_(input_value, &raw);
+
     NativeKernelResult result;
     result.ok = raw.ok != 0;
     result.result = raw.result;
