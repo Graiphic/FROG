@@ -75,7 +75,7 @@
       "class_ref": "frog.widgets.panel",
       "host_binding_ref": "reference_host_default",
       "layout": {
-        "width": 460,
+        "width": 500,
         "height": 170,
         "coordinate_space": "panel_pixels"
       },
@@ -88,8 +88,8 @@
           "layout": {
             "x": 20,
             "y": 24,
-            "width": 140,
-            "height": 32
+            "width": 220,
+            "height": 88
           },
           "props": {
             "value": 3,
@@ -116,10 +116,10 @@
           "role": "indicator",
           "value_type": "u16",
           "layout": {
-            "x": 240,
+            "x": 260,
             "y": 24,
-            "width": 160,
-            "height": 32
+            "width": 220,
+            "height": 88
           },
           "props": {
             "value": 0,
