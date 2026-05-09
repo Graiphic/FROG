@@ -38,7 +38,7 @@
       "title": "Bounded UI Accumulator",
       "class_ref": "frog.widgets.panel",
       "layout": {
-        "width": 460,
+        "width": 500,
         "height": 170,
         "coordinate_space": "panel_pixels"
       }
@@ -51,8 +51,8 @@
         "layout": {
           "x": 20,
           "y": 24,
-          "width": 140,
-          "height": 32
+          "width": 220,
+          "height": 88
         },
         "runtime": {
           "value": 3,
@@ -68,10 +68,10 @@
         "class_ref": "frog.widgets.numeric_indicator",
         "role": "indicator",
         "layout": {
-          "x": 240,
+          "x": 260,
           "y": 24,
-          "width": 160,
-          "height": 32
+          "width": 220,
+          "height": 88
         },
         "runtime": {
           "value": 15,
