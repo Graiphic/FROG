@@ -19,7 +19,7 @@ The package contains one Boolean control and one Boolean indicator.
 </p>
 
 <p>
-The package owns layout, initial presentation properties, and references to the default Boolean realization assets.
+The package owns layout, initial presentation properties, realization references, and widget-local asset references.
 Executable meaning remains owned by the canonical <code>.frog</code> source and downstream runtime acceptance artifacts.
 </p>
 
@@ -37,8 +37,31 @@ bool_result: x=240, y=32, width=160, height=80
 <h2>Realization Posture</h2>
 
 <p>
-The package references Boolean default realization resources from <code>Libraries/Realizations/Default/boolean.default.wfrog</code>.
-These realization resources support the visible body of the widgets, but they do not own Boolean class semantics.
+The package references the Default Boolean realization manifest:
+</p>
+
+<pre><code>Libraries/Realizations/Default/boolean.default.wfrog</code></pre>
+
+<p>
+The package also declares the concrete assets used by its widget instances:
+</p>
+
+<pre><code>asset:boolean_rectangular_svg -> Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg
+asset:boolean_circular_svg    -> Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg
+</code></pre>
+
+<p>
+The official Example 06 checker must render those assets or fail validation.
+A hardcoded card, CSS switch, native checkbox face, or other handcrafted approximation is not a valid front-panel rendering for this example.
+</p>
+
+<hr/>
+
+<h2>Debug Boundary</h2>
+
+<p>
+Runtime snapshots and diagnostics may remain available through debug routes such as <code>/state.json</code>.
+They must not be shown as raw preformatted content in the normal user-facing front panel by default.
 </p>
 
 <hr/>
