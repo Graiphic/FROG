@@ -8,7 +8,7 @@
 #include "json.hpp"
 #include "runtime.hpp"
 
-extern "C" frog::runtime::FrogRunResult frog_example05_run(std::uint16_t input_value);
+extern "C" void frog_example05_run(std::uint16_t input_value, frog::runtime::FrogRunResult* out_result);
 
 namespace {
 
@@ -45,7 +45,7 @@ void test_direct_llvm_kernel_bridge_call() {
 
     const auto bridge = frog::runtime::make_linked_native_kernel_bridge(native_manifest_path(), &frog_example05_run);
     assert(bridge.manifest().entry_symbol == "frog_example05_run");
-    assert(bridge.manifest().abi == "frog_u16_to_result_status");
+    assert(bridge.manifest().abi == "frog_u16_to_result_status_outptr");
     assert(bridge.manifest().source_artifact == "Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll");
 
     const auto ok = bridge.run(3);
