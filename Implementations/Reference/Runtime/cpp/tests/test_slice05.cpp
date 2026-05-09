@@ -1,7 +1,9 @@
 #include <cassert>
 #include <cstdint>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 
@@ -45,8 +47,23 @@ std::string canonical_json(const frog::json::Value& value) {
     return frog::json::stringify(value, true, 2);
 }
 
+std::string read_text(const std::filesystem::path& path) {
+    std::ifstream input(path, std::ios::binary);
+    assert(input);
+    std::ostringstream buffer;
+    buffer << input.rdbuf();
+    return buffer.str();
+}
+
 void assert_contains(const std::string& haystack, const std::string& needle) {
     assert(haystack.find(needle) != std::string::npos);
+}
+
+std::int64_t object_i64(const frog::json::Object& object, const std::string& key) {
+    const auto it = object.find(key);
+    assert(it != object.end());
+    assert(it->second.is_number());
+    return it->second.as_i64();
 }
 
 const frog::json::Object& acceptance_root() {
@@ -125,6 +142,52 @@ void test_native_kernel_bridge() {
     assert(rejected);
 }
 
+void test_wfrog_widget_geometry_matches_svg_skin_size() {
+    const auto& root = acceptance_root();
+    const auto& refs = root.at("artifact_refs").as_object();
+    const auto wfrog_path = resolve_repo_path(refs.at("wfrog_path").as_string());
+    const auto wfrog = load_json(wfrog_path);
+    const auto& wfrog_object = wfrog.as_object();
+    const auto& panel = wfrog_object.at("front_panels").as_array().front().as_object();
+    const auto& panel_layout = panel.at("layout").as_object();
+    assert(object_i64(panel_layout, "width") == 500);
+    assert(object_i64(panel_layout, "height") == 170);
+
+    const auto& widgets = panel.at("widgets").as_array();
+    assert(widgets.size() == 2);
+
+    const auto control_svg = read_text(wfrog_path.parent_path() / "assets" / "numeric_control.svg");
+    const auto indicator_svg = read_text(wfrog_path.parent_path() / "assets" / "numeric_indicator.svg");
+    assert_contains(control_svg, "width=\"220\"");
+    assert_contains(control_svg, "height=\"88\"");
+    assert_contains(control_svg, "viewBox=\"0 0 220 88\"");
+    assert_contains(control_svg, "id=\"label_anchor\"");
+    assert_contains(control_svg, "id=\"value_anchor\"");
+    assert_contains(control_svg, "id=\"value_box\"");
+    assert_contains(indicator_svg, "width=\"220\"");
+    assert_contains(indicator_svg, "height=\"88\"");
+    assert_contains(indicator_svg, "viewBox=\"0 0 220 88\"");
+    assert_contains(indicator_svg, "id=\"label_anchor\"");
+    assert_contains(indicator_svg, "id=\"value_anchor\"");
+    assert_contains(indicator_svg, "id=\"value_box\"");
+
+    const auto& control = widgets.at(0).as_object();
+    const auto& control_layout = control.at("layout").as_object();
+    assert(control.at("instance_id").as_string() == "ctrl_input");
+    assert(object_i64(control_layout, "x") == 20);
+    assert(object_i64(control_layout, "y") == 24);
+    assert(object_i64(control_layout, "width") == 220);
+    assert(object_i64(control_layout, "height") == 88);
+
+    const auto& indicator = widgets.at(1).as_object();
+    const auto& indicator_layout = indicator.at("layout").as_object();
+    assert(indicator.at("instance_id").as_string() == "ind_result");
+    assert(object_i64(indicator_layout, "x") == 260);
+    assert(object_i64(indicator_layout, "y") == 24);
+    assert(object_i64(indicator_layout, "width") == 220);
+    assert(object_i64(indicator_layout, "height") == 88);
+}
+
 void test_ui_surface() {
     const auto& root = acceptance_root();
     const auto& refs = root.at("artifact_refs").as_object();
@@ -147,7 +210,7 @@ void test_ui_surface() {
     assert_contains(html, "class='front-panel'");
     assert_contains(html, "data-panel-id='main_panel'");
     assert_contains(html, "data-coordinate-space='panel_pixels'");
-    assert_contains(html, "style='width:460px;height:170px;'");
+    assert_contains(html, "style='width:500px;height:170px;'");
 
     assert_contains(html, "data-widget-id='ctrl_input'");
     assert_contains(html, "data-widget-id='ind_result'");
@@ -156,8 +219,8 @@ void test_ui_surface() {
     assert_contains(html, "data-asset-route='/asset/numeric_control_svg'");
     assert_contains(html, "data-asset-route='/asset/numeric_indicator_svg'");
 
-    assert_contains(html, "left:20px;top:24px;width:140px;height:32px;");
-    assert_contains(html, "left:240px;top:24px;width:160px;height:32px;");
+    assert_contains(html, "left:20px;top:24px;width:220px;height:88px;");
+    assert_contains(html, "left:260px;top:24px;width:220px;height:88px;");
     assert_contains(html, "class='numeric-skin'");
     assert_contains(html, "data-svg-anchor='label_anchor'");
     assert_contains(html, "data-svg-anchor='value_anchor'");
@@ -177,6 +240,7 @@ int main() {
     test_headless_snapshot();
     test_overflow_rejection();
     test_native_kernel_bridge();
+    test_wfrog_widget_geometry_matches_svg_skin_size();
     test_ui_surface();
     std::cout << "slice05 runtime acceptance passed" << std::endl;
     return 0;
