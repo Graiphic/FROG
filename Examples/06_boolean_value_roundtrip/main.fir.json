@@ -1,0 +1,74 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "06_boolean_value_roundtrip",
+    "path": "Examples/06_boolean_value_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/06_boolean_value_roundtrip/ui/boolean_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "boolean_value_roundtrip_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "input_value",
+            "type": "bool"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "type": "bool"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "bool_input",
+            "mode": "widget_value",
+            "public_input_id": "input_value",
+            "value_type": "bool"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "bool_result",
+            "mode": "widget_value",
+            "public_output_id": "result",
+            "value_type": "bool"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "single_value_copy",
+        "body_rule": {
+          "kind": "copy_widget_value_to_output",
+          "expression": "result = input_value"
+        }
+      },
+      "publications": [
+        {
+          "target": "public_output.result",
+          "source": "input_value"
+        },
+        {
+          "target": "widget.bool_result.value",
+          "source": "input_value"
+        }
+      ],
+      "notes": [
+        "This FIR is a bounded scalar widget pilot and remains downstream from canonical source.",
+        "No LLVM lowering or native-kernel bridge is required for this example at this stage."
+      ]
+    }
+  ]
+}

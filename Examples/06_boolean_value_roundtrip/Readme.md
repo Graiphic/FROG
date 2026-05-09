@@ -1,0 +1,107 @@
+<p align="center">
+  <img src="../../FROG logo.svg" alt="FROG logo" width="140" />
+</p>
+
+<h1 align="center">Example 06 — Boolean Value Roundtrip</h1>
+
+<p align="center">
+  <strong>Bounded scalar widget pilot for boolean control-to-indicator value binding</strong><br/>
+  <em>FROG — Free Open Graphical Language</em>
+</p>
+
+<hr/>
+
+<h2>Overview</h2>
+
+<p>
+Example 06 is the first conservative scalar-widget pilot after the Examples 01–05 executable corridor.
+It publishes one boolean control on the left side of the front panel and one boolean indicator on the right side.
+The runtime behavior is intentionally minimal: <code>bool_input.value</code> is copied to <code>bool_result.value</code> and to the public output <code>result</code>.
+</p>
+
+<p>
+This example is runtime/UI-binding only at this stage.
+It does not add LLVM coverage, does not broaden the Deriver, Lowerer, or ContractEmitter rule families, and does not weaken Example 05 native-kernel coverage.
+</p>
+
+<hr/>
+
+<h2>Published Files</h2>
+
+<pre><code>Examples/06_boolean_value_roundtrip/
+├── Readme.md
+├── main.frog
+├── main.fir.json
+├── main.lowering.json
+└── ui/
+    ├── Readme.md
+    └── boolean_panel.wfrog
+
+Implementations/Reference/ContractEmitter/examples/
+└── 06_boolean_value_roundtrip.reference_host_runtime_ui_binding.contract.json
+
+Implementations/Reference/Runtime/acceptance/
+├── example06_boolean_value_roundtrip.acceptance.json
+└── example06_input_true.snapshot.json
+
+Implementations/Reference/Runtime/
+└── check_example06_boolean_value_roundtrip.py
+</code></pre>
+
+<hr/>
+
+<h2>Front Panel</h2>
+
+<p>
+The front panel package is published at:
+</p>
+
+<pre><code>Examples/06_boolean_value_roundtrip/ui/boolean_panel.wfrog</code></pre>
+
+<p>
+It contains exactly two widget instances:
+</p>
+
+<ul>
+  <li><code>bool_input</code> — <code>frog.widgets.boolean_control</code>, role <code>control</code>, value type <code>bool</code>.</li>
+  <li><code>bool_result</code> — <code>frog.widgets.boolean_indicator</code>, role <code>indicator</code>, value type <code>bool</code>.</li>
+</ul>
+
+<p>
+The front panel uses <code>panel_pixels</code> as its layout coordinate space.
+The published runtime check treats the <code>.wfrog</code> package as layout authority and checks that the rendered front panel does not expose the runtime snapshot by default.
+</p>
+
+<hr/>
+
+<h2>Runtime Shape</h2>
+
+<pre><code>bool_input.value
+  -&gt; public_input.input_value
+  -&gt; public_output.result
+  -&gt; bool_result.value
+</code></pre>
+
+<p>
+For the published acceptance case, <code>input_value = true</code> produces <code>result = true</code> and <code>bool_result.value = true</code>.
+</p>
+
+<hr/>
+
+<h2>Check</h2>
+
+<pre><code>python Implementations/Reference/Runtime/check_example06_boolean_value_roundtrip.py</code></pre>
+
+<p>
+This check is intentionally bounded.
+It validates the source artifact, FIR artifact, lowering artifact, backend contract artifact, <code>.wfrog</code> package, Boolean widget class-law reference, Default Boolean realization manifest reference, rendered front-panel posture, and expected runtime snapshot.
+</p>
+
+<hr/>
+
+<h2>Boundary</h2>
+
+<p>
+Example 06 does not claim a generalized scalar-widget runtime, a generalized <code>.wfrog</code> renderer, or a new compiler-family path.
+It is the first small pilot for scalar widget coverage and remains subordinate to the published widget class law, the default realization manifest, and the centralized version-governance surface.
+</p>

@@ -1,0 +1,125 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "06_boolean_value_roundtrip",
+    "summary": "Bounded boolean control-to-indicator value roundtrip using a published .wfrog front panel package.",
+    "description": "Reads a bool value from one boolean control, exposes that value through the public input surface, copies it to one public output, and publishes it to one boolean indicator. This is a runtime/UI-binding pilot and does not introduce LLVM coverage.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "widget_value",
+      "boolean",
+      "roundtrip",
+      "wfrog",
+      "front_panel_package"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "input_value",
+        "type": "bool",
+        "binding_origin": "widget.bool_input.value"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "result",
+        "type": "bool"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "bool_input_value",
+        "kind": "widget_value",
+        "widget": "bool_input"
+      },
+      {
+        "id": "bool_result_value",
+        "kind": "widget_value",
+        "widget": "bool_result"
+      },
+      {
+        "id": "output_result",
+        "kind": "interface_output",
+        "interface_port": "result"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "bool_input_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "bool_result_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "bool_input_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_result",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 420,
+      "height": 150,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/boolean_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "bool_input",
+        "role": "control",
+        "class_ref": "frog.widgets.boolean_control",
+        "instance_ref": "bool_input",
+        "value_type": "bool",
+        "layout": {
+          "x": 20,
+          "y": 32,
+          "width": 160,
+          "height": 80
+        },
+        "props": {
+          "label.text": "Input",
+          "caption.text": "Boolean input"
+        }
+      },
+      {
+        "id": "bool_result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.boolean_indicator",
+        "instance_ref": "bool_result",
+        "value_type": "bool",
+        "layout": {
+          "x": 240,
+          "y": 32,
+          "width": 160,
+          "height": 80
+        },
+        "props": {
+          "label.text": "Result",
+          "caption.text": "Boolean result"
+        }
+      }
+    ]
+  }
+}

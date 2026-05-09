@@ -1,0 +1,85 @@
+{
+  "artifact_kind": "frog_runtime_execution_result",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "status": "ok",
+  "contract_ref": {
+    "unit_ids": [
+      "main"
+    ],
+    "backend_family": "reference_host_runtime_ui_binding",
+    "source_ref": {
+      "example_id": "06_boolean_value_roundtrip",
+      "path": "Examples/06_boolean_value_roundtrip/main.frog",
+      "entry_unit": "main"
+    }
+  },
+  "execution_summary": {
+    "mode": "boolean_value_roundtrip",
+    "executed_unit": "main",
+    "operation": "copy",
+    "input_value": true,
+    "result": true
+  },
+  "outputs": {
+    "public": {
+      "result": true
+    },
+    "ui": {
+      "bool_input": true,
+      "bool_result": true
+    }
+  },
+  "ui_runtime": {
+    "panel": {
+      "panel_id": "main_panel",
+      "title": "Boolean Value Roundtrip",
+      "class_ref": "frog.widgets.panel",
+      "layout": {
+        "width": 420,
+        "height": 150,
+        "coordinate_space": "panel_pixels"
+      }
+    },
+    "widgets": [
+      {
+        "widget_id": "bool_input",
+        "class_ref": "frog.widgets.boolean_control",
+        "role": "control",
+        "layout": {
+          "x": 20,
+          "y": 32,
+          "width": 160,
+          "height": 80
+        },
+        "runtime": {
+          "value": true,
+          "label.text": "Input",
+          "caption.text": "Boolean input",
+          "asset_ref": "asset:boolean_rectangular_svg",
+          "realization.variant": "rectangular"
+        }
+      },
+      {
+        "widget_id": "bool_result",
+        "class_ref": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "layout": {
+          "x": 240,
+          "y": 32,
+          "width": 160,
+          "height": 80
+        },
+        "runtime": {
+          "value": true,
+          "label.text": "Result",
+          "caption.text": "Boolean result",
+          "asset_ref": "asset:boolean_circular_svg",
+          "realization.variant": "circular"
+        }
+      }
+    ]
+  },
+  "diagnostics": []
+}

@@ -1,0 +1,151 @@
+{
+  "format": "frog.wfrog",
+  "kind": "front_panel_package",
+  "package_id": "example06.boolean_panel",
+  "title": "Boolean Value Roundtrip",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "06_boolean_value_roundtrip",
+    "source_path": "Examples/06_boolean_value_roundtrip/main.frog",
+    "fir_path": "Examples/06_boolean_value_roundtrip/main.fir.json",
+    "lowering_path": "Examples/06_boolean_value_roundtrip/main.lowering.json"
+  },
+  "ownership_boundary": {
+    "owns": [
+      "example-local front-panel package identity",
+      "example-local Boolean widget realization references",
+      "example-local Boolean widget initial presentation properties"
+    ],
+    "does_not_own": [
+      "canonical source semantics",
+      "FIR semantics",
+      "lowering semantics",
+      "runtime-private execution behavior",
+      "widget class law"
+    ]
+  },
+  "widget_classes": [
+    {
+      "class_id": "frog.widgets.boolean_control",
+      "role": "control",
+      "value_type": "bool"
+    },
+    {
+      "class_id": "frog.widgets.boolean_indicator",
+      "role": "indicator",
+      "value_type": "bool"
+    }
+  ],
+  "host_bindings": [
+    {
+      "binding_id": "reference_host_default",
+      "host_family": "reference_browser_host",
+      "target": "reference_browser_host",
+      "required_capabilities": [
+        "window",
+        "basic_widget_rendering",
+        "widget_value_binding"
+      ]
+    }
+  ],
+  "realization_refs": [
+    {
+      "package_ref": "Libraries/Realizations/Default/boolean.default.wfrog",
+      "target_classes": [
+        "frog.widgets.boolean_control",
+        "frog.widgets.boolean_indicator"
+      ]
+    }
+  ],
+  "svg_assets": [
+    {
+      "asset_id": "boolean_rectangular_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg",
+      "target_class": "frog.widgets.boolean_control"
+    },
+    {
+      "asset_id": "boolean_circular_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg",
+      "target_class": "frog.widgets.boolean_indicator"
+    }
+  ],
+  "front_panels": [
+    {
+      "panel_id": "main_panel",
+      "title": "Boolean Value Roundtrip",
+      "class_ref": "frog.widgets.panel",
+      "host_binding_ref": "reference_host_default",
+      "layout": {
+        "width": 420,
+        "height": 150,
+        "coordinate_space": "panel_pixels"
+      },
+      "widgets": [
+        {
+          "instance_id": "bool_input",
+          "class_ref": "frog.widgets.boolean_control",
+          "role": "control",
+          "value_type": "bool",
+          "layout": {
+            "x": 20,
+            "y": 32,
+            "width": 160,
+            "height": 80
+          },
+          "props": {
+            "value": true,
+            "label.text": "Input",
+            "caption.text": "Boolean input",
+            "caption.visible": true,
+            "state_text.true_text": "TRUE",
+            "state_text.false_text": "FALSE",
+            "state_text.visible": true,
+            "interaction.enabled": true,
+            "realization.variant": "rectangular"
+          },
+          "visual": {
+            "asset_ref": "asset:boolean_rectangular_svg"
+          },
+          "binding": {
+            "mode": "widget_value",
+            "public_input_id": "input_value"
+          }
+        },
+        {
+          "instance_id": "bool_result",
+          "class_ref": "frog.widgets.boolean_indicator",
+          "role": "indicator",
+          "value_type": "bool",
+          "layout": {
+            "x": 240,
+            "y": 32,
+            "width": 160,
+            "height": 80
+          },
+          "props": {
+            "value": false,
+            "label.text": "Result",
+            "caption.text": "Boolean result",
+            "caption.visible": true,
+            "state_text.true_text": "TRUE",
+            "state_text.false_text": "FALSE",
+            "state_text.visible": true,
+            "interaction.enabled": false,
+            "realization.variant": "circular"
+          },
+          "visual": {
+            "asset_ref": "asset:boolean_circular_svg"
+          },
+          "binding": {
+            "mode": "widget_value",
+            "public_output_id": "result"
+          }
+        }
+      ]
+    }
+  ]
+}
