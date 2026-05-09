@@ -10,15 +10,16 @@
 #include "json.hpp"
 #include "ui.hpp"
 
-extern "C" frog::runtime::FrogRunResult frog_example05_run(std::uint16_t input_value) {
+extern "C" void frog_example05_run(std::uint16_t input_value, frog::runtime::FrogRunResult* out_result) {
     std::uint32_t state = 0;
     for (std::uint32_t index = 0; index < 5; ++index) {
         state += input_value;
         if (state > 65535u) {
-            return frog::runtime::FrogRunResult{0, 0, 1};
+            *out_result = frog::runtime::FrogRunResult{0, 0, 1};
+            return;
         }
     }
-    return frog::runtime::FrogRunResult{1, static_cast<std::uint16_t>(state), 0};
+    *out_result = frog::runtime::FrogRunResult{1, static_cast<std::uint16_t>(state), 0};
 }
 
 namespace {
@@ -102,7 +103,7 @@ void test_native_kernel_bridge() {
 
     const auto bridge = frog::runtime::make_linked_native_kernel_bridge(native_manifest_path(), &frog_example05_run);
     assert(bridge.manifest().entry_symbol == "frog_example05_run");
-    assert(bridge.manifest().abi == "frog_u16_to_result_status");
+    assert(bridge.manifest().abi == "frog_u16_to_result_status_outptr");
     assert(bridge.manifest().backend_family == "llvm");
 
     frog::runtime::Slice05RuntimeCore runtime(contract_path, wfrog_path);
