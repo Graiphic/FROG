@@ -165,6 +165,13 @@
           "kind": "category",
           "children": [
             {
+              "key": "examples/widget_coverage_plan.md",
+              "title": "widget coverage plan",
+              "path": "/Examples/widget_coverage_plan.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "examples/01_pure_addition/",
               "title": "01 pure addition",
               "path": "/Examples/01_pure_addition/Readme.md",
@@ -255,6 +262,28 @@
                   "key": "examples/05_bounded_ui_accumulator/ui/",
                   "title": "ui",
                   "path": "/Examples/05_bounded_ui_accumulator/ui/Readme.md",
+                  "kind": "category",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "key": "examples/06_boolean_value_roundtrip/",
+              "title": "06 boolean value roundtrip",
+              "path": "/Examples/06_boolean_value_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/06_boolean_value_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/06_boolean_value_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "examples/06_boolean_value_roundtrip/ui/",
+                  "title": "ui",
+                  "path": "/Examples/06_boolean_value_roundtrip/ui/Readme.md",
                   "kind": "category",
                   "children": []
                 }
@@ -3228,6 +3257,13 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/runtime/check_example06_boolean_value_roundtrip.py",
+                  "title": "check_example06_boolean_value_roundtrip.py",
+                  "path": "/Implementations/Reference/Runtime/check_example06_boolean_value_roundtrip.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/runtime/check_examples01_05_runtime_acceptance.py",
                   "title": "check_examples01_05_runtime_acceptance.py",
                   "path": "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",
@@ -3623,6 +3659,7 @@
     "/Expression/Widget%20package%20%28.wfrog%29.md",
     "/Expression/Widget%20realization.md",
     "/Expression/Readme.md",
+    "/Examples/widget_coverage_plan.md",
     "/Examples/01_pure_addition/main.frog",
     "/Examples/01_pure_addition/Readme.md",
     "/Examples/02_ui_value_roundtrip/main.frog",
@@ -3636,6 +3673,9 @@
     "/Examples/05_bounded_ui_accumulator/main.frog",
     "/Examples/05_bounded_ui_accumulator/ui/Readme.md",
     "/Examples/05_bounded_ui_accumulator/Readme.md",
+    "/Examples/06_boolean_value_roundtrip/main.frog",
+    "/Examples/06_boolean_value_roundtrip/ui/Readme.md",
+    "/Examples/06_boolean_value_roundtrip/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
@@ -4037,6 +4077,7 @@
     "/Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",
+    "/Implementations/Reference/Runtime/check_example06_boolean_value_roundtrip.py",
     "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/contract_executor.py",
     "/Implementations/Reference/Runtime/execute_reference_contract.py",
