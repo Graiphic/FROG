@@ -71,7 +71,7 @@ That bridge keeps the runtime compiler-agnostic: the runtime hosts execution and
 <p>
 For the first native bridge milestone, LLVM publishes the Example 05 native kernel manifest and ABI-oriented LLVM artifact.
 That does not make LLVM a runtime dependency.
-LLVM remains a backend-family producer of native-oriented material, and the runtime should consume the resulting manifest-defined artifact.
+LLVM remains a backend-family producer of native-oriented material, and the runtime consumes the resulting manifest-defined artifact through a compiler-agnostic bridge.
 </p>
 
 <pre><code>lowering
@@ -96,11 +96,19 @@ The current publication surface for the first compiler-agnostic bridge is:
 <pre><code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json
 Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll
 Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
+Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
 </code></pre>
 
 <p>
-The manifest declares the entry symbol <code>frog_example05_run</code>, the ABI name <code>frog_u16_to_result_status</code>, the input <code>input_value : u16</code>, the output <code>result : u16</code>, and the overflow diagnostic mapping for <code>error_code = 1</code>.
-The <code>kernel.ll</code> artifact exposes the corresponding LLVM-level ABI shape.
+The manifest declares the entry symbol <code>frog_example05_run</code>, the ABI name <code>frog_u16_to_result_status_outptr</code>, the input <code>input_value : u16</code>, the output <code>result : u16</code>, and the overflow diagnostic mapping for <code>error_code = 1</code>.
+The ABI uses an explicit out-parameter carrier:
+</p>
+
+<pre><code>void frog_example05_run(uint16_t input_value, FrogRunResult* out_result)</code></pre>
+
+<p>
+The <code>kernel.ll</code> artifact exposes the corresponding LLVM-level ABI shape and writes <code>ok</code>, <code>result</code>, and <code>error_code</code> into the provided result-status pointer.
+This avoids relying on compiler- or platform-specific struct-return behavior while keeping the result-status model explicit.
 </p>
 
 <p>
@@ -111,8 +119,8 @@ The publication surface can be checked with:
 python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge</code></pre>
 
 <p>
-This validates the manifest and ABI publication surface.
-It does not yet claim that the C++ runtime loads or calls the native kernel.
+The optional C++ bridge check compiles <code>kernel.ll</code> with <code>clang</code>, links it into a dedicated C++ test target, and exercises the same <code>NativeKernelBridge</code> path.
+The baseline runtime build remains independent from LLVM and <code>clang</code>.
 </p>
 
 <hr/>
@@ -140,7 +148,7 @@ It does not yet claim that the C++ runtime loads or calls the native kernel.
     <tr><td><code>ui_value_roundtrip_kernel</code></td><td><code>02_ui_value_roundtrip</code></td><td>Native proof payload for widget-value arithmetic.</td></tr>
     <tr><td><code>ui_property_write_effect_unit</code></td><td><code>03_ui_property_write</code></td><td>Native proof payload for explicit UI property effect.</td></tr>
     <tr><td><code>stateful_feedback_delay_kernel</code></td><td><code>04_stateful_feedback_delay</code></td><td>Native proof for one explicit delay-backed state step.</td></tr>
-    <tr><td><code>bounded_accumulator_kernel_with_ui_bindings</code></td><td><code>05_bounded_ui_accumulator</code></td><td>Native proof for bounded <code>u16</code> accumulation with overflow rejection.</td></tr>
+    <tr><td><code>bounded_accumulator_kernel_with_ui_bindings</code></td><td><code>05_bounded_ui_accumulator</code></td><td>Native proof for bounded <code>u16</code> accumulation with overflow rejection and optional runtime-bridge closure.</td></tr>
   </tbody>
 </table>
 
@@ -166,6 +174,12 @@ These wrappers are kept for continuity, but both now delegate to the generic low
 The native build path requires <code>clang</code>.
 It verifies the published native proof dossiers for Examples 01–05 when the toolchain is available.
 </p>
+
+<p>
+The optional native-kernel bridge closure can be checked with:
+</p>
+
+<pre><code>python Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py</code></pre>
 
 <hr/>
 
