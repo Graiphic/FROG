@@ -167,8 +167,9 @@ WidgetReferenceSupport parse_widget_reference_support(const Value& value) {
 PropertyWrite parse_property_write(const Value& value) {
     const auto& object = as_object(value, "Expected property write object.");
     const auto& value_object = as_object(object.at("value"), "Expected property write value object.");
+    const auto operation = get_optional_string(object, "operation");
     return PropertyWrite{
-        get_string(object, "operation"),
+        operation.has_value() ? *operation : get_string(object, "op"),
         get_string(object, "widget_id"),
         get_string(object, "member"),
         PropertyWriteValue{get_string(value_object, "type"), get_string(value_object, "value")},
@@ -196,14 +197,15 @@ WidgetClass parse_widget_class(const Value& value) {
 
 SvgAsset parse_svg_asset(const Value& value) {
     const auto& object = as_object(value, "Expected svg asset object.");
-    return SvgAsset{get_string(object, "asset_id"), get_string(object, "path"), get_string(object, "kind")};
+    const auto kind = get_optional_string(object, "kind").value_or(get_optional_string(object, "target_class").value_or(""));
+    return SvgAsset{get_string(object, "asset_id"), get_string(object, "path"), kind};
 }
 
 HostBinding parse_host_binding(const Value& value) {
     const auto& object = as_object(value, "Expected host binding object.");
     HostBinding binding;
     binding.binding_id = get_string(object, "binding_id");
-    binding.target = get_string(object, "target");
+    binding.target = get_optional_string(object, "target").value_or(get_optional_string(object, "host_family").value_or(""));
     if (const auto* required = optional_field(object, "required_capabilities")) {
         binding.required_capabilities = parse_string_vector(*required, "required_capabilities");
     }
@@ -235,7 +237,7 @@ FrontPanel parse_front_panel(const Value& value) {
     panel.title = get_string(object, "title");
     panel.class_ref = get_string(object, "class_ref");
     panel.layout = object.at("layout");
-    panel.host_binding_ref = get_string(object, "host_binding_ref");
+    panel.host_binding_ref = get_optional_string(object, "host_binding_ref").value_or("reference_host_default");
     for (const auto& item : as_array(object.at("widgets"), "front_panel.widgets")) {
         panel.widgets.push_back(parse_panel_widget(item));
     }
@@ -292,7 +294,12 @@ BackendContract load_contract_from_path(const std::filesystem::path& path) {
         unit.unit_id = get_string(unit_object, "unit_id");
         unit.kind = get_string(unit_object, "kind");
         {
-            const auto& public_interface = as_object(unit_object.at("public_interface"), "Expected public_interface object.");
+            auto public_interface_value = optional_field(unit_object, "public_interface");
+            if (public_interface_value == nullptr) {
+                public_interface_value = optional_field(unit_object, "public_io");
+            }
+            require(public_interface_value != nullptr, "Expected public_interface or public_io object.");
+            const auto& public_interface = as_object(*public_interface_value, "Expected public_interface or public_io object.");
             for (const auto& item : as_array(public_interface.at("inputs"), "public_interface.inputs")) {
                 unit.public_interface.inputs.push_back(parse_interface_port(item));
             }
@@ -301,7 +308,12 @@ BackendContract load_contract_from_path(const std::filesystem::path& path) {
             }
         }
         {
-            const auto& ui_binding = as_object(unit_object.at("ui_binding"), "Expected ui_binding object.");
+            auto ui_binding_value = optional_field(unit_object, "ui_binding");
+            if (ui_binding_value == nullptr) {
+                ui_binding_value = optional_field(unit_object, "ui_bindings");
+            }
+            require(ui_binding_value != nullptr, "Expected ui_binding or ui_bindings object.");
+            const auto& ui_binding = as_object(*ui_binding_value, "Expected ui_binding or ui_bindings object.");
             if (const auto* package_refs = optional_field(ui_binding, "package_refs")) {
                 unit.ui_binding.package_refs = parse_string_vector(*package_refs, "ui_binding.package_refs");
             }
@@ -312,8 +324,8 @@ BackendContract load_contract_from_path(const std::filesystem::path& path) {
                 unit.ui_binding.widget_reference_support.push_back(parse_widget_reference_support(item));
             }
         }
-        {
-            const auto& state_model = as_object(unit_object.at("state_model"), "Expected state_model object.");
+        if (const auto* state_model_value = optional_field(unit_object, "state_model")) {
+            const auto& state_model = as_object(*state_model_value, "Expected state_model object.");
             const auto& carrier = as_object(state_model.at("carrier"), "Expected state carrier object.");
             unit.state_model = StateModel{
                 get_bool(state_model, "explicit_state"),
@@ -325,9 +337,21 @@ BackendContract load_contract_from_path(const std::filesystem::path& path) {
                 },
                 get_string(state_model, "commit_rule"),
             };
+        } else {
+            const auto& execution_kernel = as_object(unit_object.at("execution_kernel"), "Expected execution_kernel object.");
+            unit.state_model = StateModel{
+                true,
+                StateCarrier{
+                    "frog.core.delay",
+                    get_string(execution_kernel, "state_id"),
+                    get_string(execution_kernel, "state_type"),
+                    static_cast<std::uint16_t>(get_i64(execution_kernel, "initial_state")),
+                },
+                get_string(execution_kernel, "commit_rule"),
+            };
         }
-        {
-            const auto& execution_model = as_object(unit_object.at("execution_model"), "Expected execution_model object.");
+        if (const auto* execution_model_value = optional_field(unit_object, "execution_model")) {
+            const auto& execution_model = as_object(*execution_model_value, "Expected execution_model object.");
             const auto& body_rule = as_object(execution_model.at("body_rule"), "Expected body_rule object.");
             unit.execution_model = ExecutionModel{
                 get_string(execution_model, "structure"),
@@ -336,15 +360,41 @@ BackendContract load_contract_from_path(const std::filesystem::path& path) {
                 BodyRule{get_string(body_rule, "kind"), get_string(body_rule, "expression")},
                 get_string(execution_model, "final_result_rule"),
             };
+        } else {
+            const auto& execution_kernel = as_object(unit_object.at("execution_kernel"), "Expected execution_kernel object.");
+            unit.execution_model = ExecutionModel{
+                "bounded_loop",
+                static_cast<std::uint32_t>(get_i64(execution_kernel, "iteration_count")),
+                std::nullopt,
+                BodyRule{"kernel_commit_rule", get_string(execution_kernel, "commit_rule")},
+                "state_current",
+            };
         }
-        if (const auto* property_writes = optional_field(unit_object, "property_writes")) {
+        auto property_writes = optional_field(unit_object, "property_writes");
+        if (property_writes == nullptr) {
+            property_writes = optional_field(unit_object, "effects");
+        }
+        if (property_writes != nullptr) {
             for (const auto& item : as_array(*property_writes, "property_writes")) {
                 unit.property_writes.push_back(parse_property_write(item));
             }
         }
-        {
-            const auto& publication = as_object(unit_object.at("public_output_publication"), "Expected public_output_publication object.");
+        if (const auto* publication_value = optional_field(unit_object, "public_output_publication")) {
+            const auto& publication = as_object(*publication_value, "Expected public_output_publication object.");
             unit.public_output_publication = PublicOutputPublication{get_string(publication, "output_id"), get_string(publication, "source")};
+        } else {
+            bool found_public_output = false;
+            for (const auto& item : as_array(unit_object.at("publications"), "publications")) {
+                const auto& publication = as_object(item, "Expected publication object.");
+                const auto target = get_string(publication, "target");
+                const std::string prefix = "public_output.";
+                if (target.rfind(prefix, 0) == 0) {
+                    unit.public_output_publication = PublicOutputPublication{target.substr(prefix.size()), get_string(publication, "source")};
+                    found_public_output = true;
+                    break;
+                }
+            }
+            require(found_public_output, "Expected public output publication.");
         }
         contract.units.push_back(std::move(unit));
     }
