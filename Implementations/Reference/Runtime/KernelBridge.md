@@ -38,7 +38,7 @@ The C++ runtime bridge code is also published: it loads the manifest, validates 
 
 <p>
 The standard CMake test uses a linked ABI-compatible kernel stub so the baseline runtime build does not depend on LLVM or <code>clang</code>.
-An optional CMake path now compiles the published LLVM <code>kernel.ll</code> artifact with <code>clang</code>, links it into a dedicated C++ bridge test, and exercises the same runtime bridge path.
+An optional CMake path compiles the published LLVM <code>kernel.ll</code> artifact with <code>clang</code>, links it into a dedicated C++ bridge test, and exercises the same runtime bridge path.
 </p>
 
 <hr/>
@@ -64,9 +64,15 @@ Implementations/Reference/Runtime/cpp/tests/test_slice05_llvm_kernel.cpp
 </code></pre>
 
 <p>
-The manifest declares <code>frog_example05_run</code> with ABI <code>frog_u16_to_result_status</code>.
-The ABI artifact returns a compact result status with <code>ok</code>, <code>result</code>, and <code>error_code</code> fields.
-The publication checker validates the manifest, source lowering reference, ABI declaration, exported symbol shape, and overflow diagnostic mapping.
+The manifest declares <code>frog_example05_run</code> with ABI <code>frog_u16_to_result_status_outptr</code>.
+The ABI uses an explicit out-parameter carrier:
+</p>
+
+<pre><code>void frog_example05_run(uint16_t input_value, FrogRunResult* out_result)</code></pre>
+
+<p>
+The result-status payload contains <code>ok</code>, <code>result</code>, and <code>error_code</code> fields.
+The publication checker validates the manifest, source lowering reference, ABI declaration, exported symbol shape, out-parameter result layout, and overflow diagnostic mapping.
 The C++ bridge consumes the same manifest and calls a linked entry point through a compiler-agnostic function pointer surface.
 </p>
 
