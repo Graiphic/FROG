@@ -24,9 +24,24 @@ This example is runtime/UI-binding only at this stage.
 It does not add LLVM coverage, does not broaden the Deriver, Lowerer, or ContractEmitter rule families, and does not weaken Example 05 native-kernel coverage.
 </p>
 
+<hr/>
+
+<h2>Rendering Requirement</h2>
+
 <p>
-Example 06 must not pass official validation through a handcrafted HTML approximation.
-The visible front panel must be derived from <code>boolean_panel.wfrog</code>, the Boolean widget class law, the Default Boolean realization manifest, and the SVG assets referenced by each widget instance.
+Example 06 must not pass validation with a handcrafted HTML approximation of a Boolean widget.
+The visible front panel must consume the <code>.wfrog</code> layout, the Default Boolean realization manifest, and the SVG assets declared by the package.
+</p>
+
+<p>
+The control and indicator widgets declare these asset references:
+</p>
+
+<pre><code>bool_input.visual.asset_ref  = asset:boolean_rectangular_svg
+bool_result.visual.asset_ref = asset:boolean_circular_svg</code></pre>
+
+<p>
+The official checker fails if these assets are not rendered, if the Default Boolean realization manifest does not target the expected classes, if the referenced asset files are missing, or if raw snapshot/debug output is visible in the normal front panel.
 </p>
 
 <hr/>
@@ -47,6 +62,7 @@ Implementations/Reference/ContractEmitter/examples/
 
 Implementations/Reference/Runtime/acceptance/
 ├── example06_boolean_value_roundtrip.acceptance.json
+├── example06_input_false.snapshot.json
 └── example06_input_true.snapshot.json
 
 Implementations/Reference/Runtime/
@@ -68,40 +84,13 @@ It contains exactly two widget instances:
 </p>
 
 <ul>
-  <li><code>bool_input</code> — <code>frog.widgets.boolean_control</code>, role <code>control</code>, value type <code>bool</code>, visual asset <code>asset:boolean_rectangular_svg</code>.</li>
-  <li><code>bool_result</code> — <code>frog.widgets.boolean_indicator</code>, role <code>indicator</code>, value type <code>bool</code>, visual asset <code>asset:boolean_circular_svg</code>.</li>
+  <li><code>bool_input</code> — <code>frog.widgets.boolean_control</code>, role <code>control</code>, value type <code>bool</code>.</li>
+  <li><code>bool_result</code> — <code>frog.widgets.boolean_indicator</code>, role <code>indicator</code>, value type <code>bool</code>.</li>
 </ul>
 
 <p>
 The front panel uses <code>panel_pixels</code> as its layout coordinate space.
-The checker treats the <code>.wfrog</code> package as layout authority and fails if any declared <code>visual.asset_ref</code> is not rendered by the visible front panel.
-</p>
-
-<pre><code>main_panel: 420 x 150 panel_pixels
-bool_input:  x=20,  y=32, width=160, height=80
-bool_result: x=240, y=32, width=160, height=80
-</code></pre>
-
-<hr/>
-
-<h2>Realization Assets</h2>
-
-<p>
-The <code>.wfrog</code> package references the Default Boolean realization manifest:
-</p>
-
-<pre><code>Libraries/Realizations/Default/boolean.default.wfrog</code></pre>
-
-<p>
-The rendered front panel must visibly use the declared SVG assets:
-</p>
-
-<pre><code>/asset/boolean_rectangular_svg
-/asset/boolean_circular_svg</code></pre>
-
-<p>
-The runtime snapshot may provide execution and debug data, but it is not a replacement for the front-panel rendering source.
-Raw snapshot output must not appear in the normal front panel by default.
+The published runtime check treats the <code>.wfrog</code> package as layout authority and checks that the rendered front panel does not expose the runtime snapshot by default.
 </p>
 
 <hr/>
@@ -115,7 +104,8 @@ Raw snapshot output must not appear in the normal front panel by default.
 </code></pre>
 
 <p>
-For the published acceptance case, <code>input_value = true</code> produces <code>result = true</code> and <code>bool_result.value = true</code>.
+For the published acceptance cases, <code>input_value = false</code> produces <code>result = false</code>, and <code>input_value = true</code> produces <code>result = true</code>.
+The visible Boolean control is rendered as a clickable control body; clicking it posts the opposite Boolean value.
 </p>
 
 <hr/>
@@ -126,7 +116,7 @@ For the published acceptance case, <code>input_value = true</code> produces <cod
 
 <p>
 This check is intentionally bounded.
-It validates the source artifact, FIR artifact, lowering artifact, backend contract artifact, <code>.wfrog</code> package, Boolean widget class-law reference, Default Boolean realization manifest reference, realization asset existence, rendered front-panel asset routes, and expected runtime snapshot.
+It validates the source artifact, FIR artifact, lowering artifact, backend contract artifact, <code>.wfrog</code> package, Boolean widget class-law reference, Default Boolean realization manifest reference, rendered front-panel posture, asset usage, toggle behavior, and expected runtime snapshots.
 </p>
 
 <hr/>
@@ -134,8 +124,6 @@ It validates the source artifact, FIR artifact, lowering artifact, backend contr
 <h2>Boundary</h2>
 
 <p>
-Example 06 does not claim a generated full source-to-FIR-to-lowering corridor yet.
-It does not claim LLVM coverage.
-It does not claim support by the general C++ runtime.
-It is a bounded runtime/UI-binding pilot fixture for the Boolean widget family, subordinate to the published widget class law, the default realization manifest, and the centralized version-governance surface.
+Example 06 does not claim a generalized scalar-widget runtime, a generalized <code>.wfrog</code> renderer, a generated Deriver/Lowerer/ContractEmitter corridor, or a new compiler-family path.
+It is the first small pilot for scalar widget coverage and remains subordinate to the published widget class law, the default realization manifest, and the centralized version-governance surface.
 </p>

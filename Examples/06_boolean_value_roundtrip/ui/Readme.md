@@ -19,7 +19,7 @@ The package contains one Boolean control and one Boolean indicator.
 </p>
 
 <p>
-The package owns layout, initial presentation properties, realization references, and widget-local asset references.
+The package owns layout, initial presentation properties, realization references, and asset references.
 Executable meaning remains owned by the canonical <code>.frog</code> source and downstream runtime acceptance artifacts.
 </p>
 
@@ -43,25 +43,24 @@ The package references the Default Boolean realization manifest:
 <pre><code>Libraries/Realizations/Default/boolean.default.wfrog</code></pre>
 
 <p>
-The package also declares the concrete assets used by its widget instances:
+The visible widget bodies must use the declared SVG asset references:
 </p>
 
-<pre><code>asset:boolean_rectangular_svg -> Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg
-asset:boolean_circular_svg    -> Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg
-</code></pre>
+<pre><code>bool_input.visual.asset_ref  = asset:boolean_rectangular_svg
+bool_result.visual.asset_ref = asset:boolean_circular_svg</code></pre>
 
 <p>
-The official Example 06 checker must render those assets or fail validation.
-A hardcoded card, CSS switch, native checkbox face, or other handcrafted approximation is not a valid front-panel rendering for this example.
+The rendered user-facing front panel must not replace these assets with a handcrafted CSS-only Boolean card or toggle.
+Fallback rendering may be useful for diagnostics, but it cannot pass official Example 06 validation.
 </p>
 
 <hr/>
 
-<h2>Debug Boundary</h2>
+<h2>Text Ownership</h2>
 
 <p>
-Runtime snapshots and diagnostics may remain available through debug routes such as <code>/state.json</code>.
-They must not be shown as raw preformatted content in the normal user-facing front panel by default.
+For this bounded pilot, the SVG templates expose the public text parts but hide template text by default.
+The host overlay owns the visible caption and state text, preventing duplicated text between SVG template text and HTML overlays.
 </p>
 
 <hr/>

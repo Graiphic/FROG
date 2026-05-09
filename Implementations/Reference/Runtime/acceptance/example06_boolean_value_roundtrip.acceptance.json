@@ -19,6 +19,20 @@
     "input_value": true,
     "expected_result": true
   },
+  "cases": [
+    {
+      "id": "input_false",
+      "input_value": false,
+      "expected_result": false,
+      "snapshot_path": "Implementations/Reference/Runtime/acceptance/example06_input_false.snapshot.json"
+    },
+    {
+      "id": "input_true",
+      "input_value": true,
+      "expected_result": true,
+      "snapshot_path": "Implementations/Reference/Runtime/acceptance/example06_input_true.snapshot.json"
+    }
+  ],
   "ui": {
     "expected_routes": [
       "/",
@@ -26,11 +40,24 @@
       "/asset/boolean_rectangular_svg",
       "/asset/boolean_circular_svg"
     ],
-    "debug_snapshot_visible_by_default": false
+    "debug_snapshot_visible_by_default": false,
+    "asset_routes_required": true,
+    "hardcoded_fallback_allowed": false,
+    "toggle_expectations": [
+      {
+        "current_value": true,
+        "posted_value": false
+      },
+      {
+        "current_value": false,
+        "posted_value": true
+      }
+    ]
   },
   "scope": {
     "runtime_only": true,
     "llvm_required": false,
-    "broad_runtime_rewrite": false
+    "broad_runtime_rewrite": false,
+    "generated_deriver_lowerer_contract_corridor": false
   }
 }

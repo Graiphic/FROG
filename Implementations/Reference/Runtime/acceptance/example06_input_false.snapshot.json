@@ -19,16 +19,16 @@
     "mode": "boolean_value_roundtrip",
     "executed_unit": "main",
     "operation": "copy",
-    "input_value": true,
-    "result": true
+    "input_value": false,
+    "result": false
   },
   "outputs": {
     "public": {
-      "result": true
+      "result": false
     },
     "ui": {
-      "bool_input": true,
-      "bool_result": true
+      "bool_input": false,
+      "bool_result": false
     }
   },
   "ui_runtime": {
@@ -54,7 +54,7 @@
           "height": 80
         },
         "runtime": {
-          "value": true,
+          "value": false,
           "label.text": "Input",
           "caption.text": "Boolean input",
           "state_text.true_text": "TRUE",
@@ -74,7 +74,7 @@
           "height": 80
         },
         "runtime": {
-          "value": true,
+          "value": false,
           "label.text": "Result",
           "caption.text": "Boolean result",
           "state_text.true_text": "TRUE",
