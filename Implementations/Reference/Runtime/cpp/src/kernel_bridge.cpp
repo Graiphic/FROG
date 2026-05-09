@@ -78,7 +78,7 @@ NativeKernelManifest load_native_kernel_manifest(const std::filesystem::path& ma
     manifest.overflow_model = string_field(error_model, "overflow");
 
     require(manifest.entry_symbol == "frog_example05_run", "Unexpected native kernel entry symbol.");
-    require(manifest.abi == "frog_u16_to_result_status", "Unexpected native kernel ABI.");
+    require(manifest.abi == "frog_u16_to_result_status_outptr", "Unexpected native kernel ABI.");
     require(manifest.input_id == "input_value" && manifest.input_type == "u16", "Unexpected native kernel input surface.");
     require(manifest.output_id == "result" && manifest.output_type == "u16", "Unexpected native kernel output surface.");
     require(manifest.overflow_model == "reject_execution_on_u16_overflow", "Unexpected native kernel overflow model.");
