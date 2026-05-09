@@ -52,7 +52,7 @@
   "window": {
     "id": "main_window",
     "title": "Bounded UI Accumulator",
-    "width": 460,
+    "width": 500,
     "height": 170,
     "resizable": false,
     "background": "#F5F7FA"
@@ -66,8 +66,8 @@
       "layout": {
         "x": 20,
         "y": 24,
-        "width": 140,
-        "height": 32
+        "width": 220,
+        "height": 88
       },
       "canonical_alignment": {
         "value_type": "u16",
@@ -108,10 +108,10 @@
       "widget_class": "frog.widgets.numeric_indicator",
       "role": "indicator",
       "layout": {
-        "x": 240,
+        "x": 260,
         "y": 24,
-        "width": 160,
-        "height": 32
+        "width": 220,
+        "height": 88
       },
       "canonical_alignment": {
         "value_type": "u16",
