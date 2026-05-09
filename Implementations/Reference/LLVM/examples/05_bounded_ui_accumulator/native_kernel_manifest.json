@@ -13,7 +13,7 @@
     },
     "entry": {
       "symbol": "frog_example05_run",
-      "abi": "frog_u16_to_result_status"
+      "abi": "frog_u16_to_result_status_outptr"
     },
     "io": {
       "inputs": [
@@ -25,6 +25,24 @@
       "outputs": [
         {
           "id": "result",
+          "type": "u16"
+        }
+      ]
+    },
+    "result_status_layout": {
+      "carrier": "out_parameter",
+      "c_signature": "void frog_example05_run(uint16_t input_value, FrogRunResult* out_result)",
+      "fields": [
+        {
+          "id": "ok",
+          "type": "u8"
+        },
+        {
+          "id": "result",
+          "type": "u16"
+        },
+        {
+          "id": "error_code",
           "type": "u16"
         }
       ]
