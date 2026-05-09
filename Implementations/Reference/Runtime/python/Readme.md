@@ -18,6 +18,18 @@ The Python runtime currently carries the specialized Example 05 runtime-family c
 It validates the Example 05 backend contract and <code>.wfrog</code> front-panel package, executes the bounded accumulator path, applies widget property effects, and produces the published runtime snapshot.
 </p>
 
+<p>
+The Python browser UI remains a functional HTTP smoke-test host for Example 05.
+It serves the same runtime state and assets, validates HTTP routing, and checks that the runtime snapshot matches the shared acceptance artifact.
+It is not currently the highest-fidelity visual renderer for the front panel.
+</p>
+
+<p>
+The C++ browser-host runtime is the current bounded visual-fidelity reference for Example 05.
+It consumes the <code>.wfrog</code> panel pixel layout, widget coordinates, SVG skins, <code>label_anchor</code>, <code>value_anchor</code>, and <code>value_box</code> overlays.
+The Python UI may later be aligned to the same visual-fidelity rules, but it should not be presented as a peer faithful renderer until that work is implemented and tested.
+</p>
+
 <hr/>
 
 <h2>Normalized Contract Surface</h2>
@@ -60,4 +72,5 @@ It no longer reads the legacy compatibility fields:
 <p>
 This runtime is non-normative.
 It verifies repository-visible runtime closure for the current bounded example corridor.
+The Python HTTP UI remains useful for behavioral and routing checks, while the current C++ browser-host runtime carries the stricter bounded <code>.wfrog</code> visual-fidelity posture for Example 05.
 </p>
