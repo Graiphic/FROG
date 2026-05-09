@@ -3,7 +3,7 @@ project(frog_reference_runtime_cpp LANGUAGES CXX)
 
 option(
     FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE
-    "Build the optional Example 05 LLVM-produced native kernel bridge test."
+    "Build the optional Example 05 LLVM-produced native kernel bridge test and runtime executable."
     OFF
 )
 
@@ -66,4 +66,12 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
         NAME frog_reference_runtime_cpp_llvm_kernel_tests
         COMMAND frog_reference_runtime_cpp_llvm_kernel_tests
     )
+
+    add_executable(
+        frog_reference_runtime_cpp_llvm_kernel
+        src/main_llvm_kernel.cpp
+        "${FROG_EXAMPLE05_KERNEL_OBJECT}"
+    )
+    add_dependencies(frog_reference_runtime_cpp_llvm_kernel frog_example05_llvm_kernel_object)
+    target_link_libraries(frog_reference_runtime_cpp_llvm_kernel PRIVATE frog_reference_runtime_cpp_lib)
 endif()

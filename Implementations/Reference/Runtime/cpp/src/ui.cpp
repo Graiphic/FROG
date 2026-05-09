@@ -516,8 +516,23 @@ void open_in_browser(const std::string& url) {
 
 BrowserUiRuntime::BrowserUiRuntime(
     std::optional<std::filesystem::path> contract_path,
-    std::optional<std::filesystem::path> wfrog_path)
-    : core(contract_path.value_or(default_contract_path()), wfrog_path.value_or(default_wfrog_path())) {}
+    std::optional<std::filesystem::path> wfrog_path,
+    std::shared_ptr<const NativeKernelBridge> native_kernel_bridge_)
+    : core(contract_path.value_or(default_contract_path()), wfrog_path.value_or(default_wfrog_path())),
+      native_kernel_bridge(std::move(native_kernel_bridge_)) {}
+
+frog::json::Value BrowserUiRuntime::run_once(std::uint16_t input_value) {
+    try {
+        frog::json::Value artifact = native_kernel_bridge == nullptr
+            ? core.execute(input_value)
+            : core.execute_with_native_kernel_bridge(*native_kernel_bridge, input_value);
+        last_error.reset();
+        return artifact;
+    } catch (const std::exception& error) {
+        last_error = error.what();
+        throw;
+    }
+}
 
 std::string BrowserUiRuntime::render_html() const {
     const auto& ctrl = core.widgets.at("ctrl_input");
@@ -525,6 +540,7 @@ std::string BrowserUiRuntime::render_html() const {
     const auto snapshot = frog::json::stringify(core.execution_artifact(), true, 2);
     const auto panel_width = layout_i64(core.panel.layout, "width", 460);
     const auto panel_height = layout_i64(core.panel.layout, "height", 170);
+    const bool uses_native_kernel = native_kernel_bridge != nullptr;
 
     std::string diagnostics;
     if (last_error.has_value()) {
@@ -555,10 +571,13 @@ std::string BrowserUiRuntime::render_html() const {
             "pre{white-space:pre-wrap;word-break:break-word;background:#0b1020;color:#dbeafe;padding:12px;border-radius:8px;font-size:12px;}"
             "</style></head><body>";
     html << "<h1>" << html_escape(core.panel.title) << "</h1>";
-    html << "<p class='meta'>Example 05 — contract + .wfrog + browser host runtime</p>";
+    html << "<p class='meta'>Example 05 — contract + .wfrog + "
+         << (uses_native_kernel ? "native kernel bridge" : "browser host runtime")
+         << "</p>";
     html << diagnostics;
     html << "<form method='post' action='/run'>";
     html << "<div class='front-panel' data-panel-id='" << html_escape(core.panel.panel_id) << "' data-coordinate-space='panel_pixels'";
+    html << " data-execution-path='" << (uses_native_kernel ? "native_kernel_bridge" : "contract_executor") << "'";
     html << " style='width:" << css_px(panel_width) << ";height:" << css_px(panel_height) << ";'>";
     html << render_numeric_widget(ctrl);
     html << render_numeric_widget(ind);
@@ -640,8 +659,7 @@ void BrowserUiRuntime::serve(const std::string& host, std::uint16_t port, bool s
             } else if (request.method == "POST" && request.path == "/run") {
                 try {
                     const auto form_value = parse_form_value(request.body, "input_value").value_or("0");
-                    core.execute(parse_u16_form_value(form_value));
-                    last_error.reset();
+                    run_once(parse_u16_form_value(form_value));
                 } catch (const std::exception& error) {
                     last_error = error.what();
                 }

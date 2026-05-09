@@ -15,34 +15,52 @@
 
 <p>
 This directory coordinates runtime-family checks in the non-normative reference implementation.
-The runtime consumes emitted backend contracts and verifies repository-visible runtime acceptance snapshots.
+The runtime consumes emitted backend contracts, validates repository-visible runtime acceptance snapshots, and, for Example 05, also contains a manifest-driven native-kernel bridge path.
 </p>
 
 <p>
-The current runtime executor dispatches by <code>contract.units[0].kind</code>.
+The default runtime executor dispatches by <code>contract.units[0].kind</code>.
 The source example identifier remains preserved as traceability metadata, but it is not the runtime-executor authority.
 </p>
 
 <p>
-The native-kernel bridge direction is documented in <a href="./KernelBridge.md"><code>KernelBridge.md</code></a>.
-That document records the compiler-agnostic runtime/backend boundary for the next Example 05 closure step.
+The native-kernel bridge posture is documented in <a href="./KernelBridge.md"><code>KernelBridge.md</code></a>.
+That document records the compiler-agnostic runtime/backend boundary for the Example 05 compiled-kernel closure.
 </p>
 
 <hr/>
 
 <h2>Current Runtime Surface</h2>
 
-<pre><code>Examples 01–04
+<pre><code>Examples 01-04
   backend contract
     -&gt; contract.units[0].kind
     -&gt; generic contract executor
     -&gt; runtime acceptance snapshot
 
-Example 05
+Example 05 standard runtime
   normalized backend contract + .wfrog package
     -&gt; contract.units[0].kind
-    -&gt; generic contract executor
-    -&gt; specialized UI/state/overflow acceptance snapshot
+    -&gt; bounded contract executor
+    -&gt; C++ browser-host UI / Python HTTP smoke UI
+    -&gt; runtime acceptance snapshot
+
+Example 05 native-kernel runtime closure
+  .frog source
+    -&gt; FIR
+    -&gt; lowering
+    -&gt; LLVM-oriented backend artifact kernel.ll
+    -&gt; native kernel manifest
+
+  .wfrog front panel
+    -&gt; bounded C++ browser-host renderer
+    -&gt; widget input / output binding
+
+  C++ runtime
+    -&gt; NativeKernelBridge
+    -&gt; frog_example05_run(...)
+    -&gt; result / diagnostic
+    -&gt; same runtime snapshot surface
 </code></pre>
 
 <hr/>
@@ -68,29 +86,50 @@ Example 05
 
 <hr/>
 
-<h2>Compiler-Agnostic Kernel Bridge Direction</h2>
+<h2>Example 05 Native-Kernel Runtime Closure</h2>
 
 <p>
-The next native-runtime closure milestone is not to make the runtime LLVM-specific.
-The target direction is to keep a common runtime that hosts execution and UI while consuming backend-produced kernels through explicit manifests and stable ABI surfaces.
+Example 05 now has two intentionally distinct C++ runtime paths:
 </p>
 
-<pre><code>FROG runtime hosts execution and UI.
-FROG backends compile lowered units.
-Explicit manifests and stable ABI surfaces connect both worlds.
+<ul>
+  <li>a standard contract-driven path, which remains available without LLVM or <code>clang</code>;</li>
+  <li>an optional native-kernel path, where <code>kernel.ll</code> is compiled by <code>clang</code>, linked into a dedicated runtime executable, and consumed through <code>NativeKernelBridge</code>.</li>
+</ul>
+
+<p>
+The native-kernel path does not make the runtime LLVM-only.
+LLVM is a backend/native-kernel producer.
+The runtime consumes a manifest-declared ABI and a linked C-compatible entry point.
+</p>
+
+<pre><code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll
+  -&gt; clang
+  -&gt; object linked into frog_reference_runtime_cpp_llvm_kernel
+
+Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json
+  -&gt; NativeKernelManifest
+  -&gt; NativeKernelBridge
+  -&gt; frog_example05_run(uint16_t, FrogRunResult*)
+
+Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog
+  -&gt; BrowserUiRuntime
+  -&gt; panel_pixels + SVG skins + label/value overlays
+
+Browser POST /run
+  -&gt; ctrl_input.value
+  -&gt; native kernel ABI call
+  -&gt; public output result
+  -&gt; ind_result.value
+  -&gt; state.json / runtime snapshot
 </code></pre>
-
-<p>
-The first bridge target remains Example 05.
-Until that bridge is implemented, the current C++ runtime should be described as hosting the Example 05 UI and executing the backend contract, while the LLVM path separately proves native-oriented compiler output from the lowered unit.
-</p>
 
 <hr/>
 
-<h2>Normalized Example 05 Runtime</h2>
+<h2>Normalized Example 05 Runtime Contract</h2>
 
 <p>
-The specialized Python runtime and the generic contract executor consume the normalized Example 05 contract surface:
+The specialized Example 05 runtimes consume the normalized backend-contract surface:
 </p>
 
 <pre><code>public_io
@@ -109,22 +148,12 @@ The legacy compatibility fields have been removed from the published Example 05 
 <h2>Commands</h2>
 
 <pre><code>python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py
-python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py --skip-example05
 python Implementations/Reference/Runtime/python/execute_contract.py 3
-python Implementations/Reference/Runtime/execute_reference_contract.py \
-  --acceptance Implementations/Reference/Runtime/acceptance/example05_runtime_family.acceptance.json \
-  --check
+
+python Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
+python Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
+python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge
 </code></pre>
-
-<hr/>
-
-<h2>Test Coverage</h2>
-
-<p>
-The runtime pytest surface includes checks that executor selection depends on <code>contract.units[0].kind</code>, not on <code>example_id</code>.
-</p>
-
-<pre><code>python -m pytest Implementations/Reference/Runtime/tests</code></pre>
 
 <hr/>
 
@@ -136,5 +165,6 @@ It consumes emitted backend contracts and validates repository-visible runtime b
 </p>
 
 <p>
-The native-kernel bridge posture in <a href="./KernelBridge.md"><code>KernelBridge.md</code></a> preserves this boundary: the runtime hosts execution and UI; backends compile lowered units; explicit manifests and stable ABI surfaces connect both sides.
+The native-kernel bridge preserves this boundary: the runtime hosts execution and UI; backends compile lowered units; explicit manifests and stable ABI surfaces connect both sides.
+The Example 05 native-kernel closure is a bounded LabVIEW-like proof corridor, not a generalized production runtime.
 </p>

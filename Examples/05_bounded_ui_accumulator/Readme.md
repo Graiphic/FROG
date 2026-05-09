@@ -5,7 +5,7 @@
 <h1 align="center">Example 05 — Bounded UI Accumulator</h1>
 
 <p align="center">
-  <strong>Primary applicative corridor combining UI binding, property writes, bounded iteration, explicit state, runtime acceptance, and LLVM proof</strong><br/>
+  <strong>Bounded LabVIEW-like corridor combining front panel, diagram lowering, native kernel, runtime bridge, and snapshot publication</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -15,11 +15,44 @@
 
 <p>
 This example is the primary applicative vertical slice of the current repository state.
-It combines standardized numeric widgets, a published front-panel package, natural <code>widget_value</code> binding, object-style <code>frog.ui.property_write</code> effects, bounded iteration, explicit accumulator state, backend-contract emission, runtime-family acceptance, and an LLVM-oriented native proof path.
+It combines standardized numeric widgets, a published front-panel package, natural <code>widget_value</code> binding, object-style <code>frog.ui.property_write</code> effects, bounded iteration, explicit accumulator state, backend-contract emission, runtime-family acceptance, and an LLVM-produced native-kernel bridge.
 </p>
 
 <p>
 For input <code>3</code>, the bounded accumulator executes five iterations and publishes the expected result <code>15</code>.
+</p>
+
+<hr/>
+
+<h2>Bounded LabVIEW-Like Closure</h2>
+
+<p>
+The Example 05 closure is intentionally bounded and explicit:
+</p>
+
+<pre><code>.frog source
+  -&gt; FIR
+  -&gt; lowering
+  -&gt; LLVM-oriented backend artifact kernel.ll
+  -&gt; native kernel manifest
+
+.wfrog front panel
+  -&gt; panel_pixels layout
+  -&gt; numeric SVG skins
+  -&gt; label_anchor / value_anchor / value_box overlays
+
+C++ runtime
+  -&gt; loads contract and .wfrog
+  -&gt; loads native kernel manifest
+  -&gt; binds ctrl_input.value to input_value
+  -&gt; calls frog_example05_run(...)
+  -&gt; publishes result to public output and ind_result.value
+  -&gt; emits runtime snapshot and state.json
+</code></pre>
+
+<p>
+This is a bounded proof that FROG can execute a compiled visual-program kernel through a hosted front-panel runtime.
+It is not a claim of a generalized LabVIEW runtime, arbitrary diagram compiler, or complete <code>.wfrog</code> renderer.
 </p>
 
 <hr/>
@@ -39,7 +72,9 @@ For input <code>3</code>, the bounded accumulator executes five iterations and p
   <li>backend-contract emission for the reference host runtime UI binding family,</li>
   <li>runtime acceptance with a published snapshot,</li>
   <li>LLVM module emission from the lowering artifact,</li>
-  <li>optional native LLVM build proof when <code>clang</code> is available.</li>
+  <li>native-kernel manifest publication,</li>
+  <li>C++ runtime bridge invocation through the manifest-declared ABI,</li>
+  <li>C++ browser-host consumption of the <code>.wfrog</code> panel layout and SVG widget skins.</li>
 </ul>
 
 <hr/>
@@ -52,8 +87,12 @@ For input <code>3</code>, the bounded accumulator executes five iterations and p
 ├── main.frog
 ├── main.fir.json
 ├── main.lowering.json
+├── front_panel.objects.json
 └── ui/
-    └── accumulator_panel.wfrog
+    ├── accumulator_panel.wfrog
+    └── assets/
+        ├── numeric_control.svg
+        └── numeric_indicator.svg
 
 Implementations/Reference/ContractEmitter/examples/
 └── 05_bounded_ui_accumulator.reference_host_runtime_ui_binding.contract.json
@@ -64,6 +103,8 @@ Implementations/Reference/Runtime/acceptance/
 
 Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/
 ├── module.ll
+├── kernel.ll
+├── native_kernel_manifest.json
 ├── build.sh
 └── expected-output.json
 </code></pre>
@@ -79,30 +120,20 @@ The front-panel package is published at:
 <pre><code>Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog</code></pre>
 
 <p>
-Its widget posture aligns with the standardized numeric widget family:
+It declares:
 </p>
 
 <ul>
-  <li><code>ctrl_input</code> / <code>input_value</code> is a <code>frog.widgets.numeric_control</code>,</li>
-  <li><code>ind_result</code> / <code>result_value</code> is a <code>frog.widgets.numeric_indicator</code>.</li>
+  <li><code>main_panel</code> as a <code>500x170</code> panel in <code>panel_pixels</code>,</li>
+  <li><code>ctrl_input</code> as a <code>frog.widgets.numeric_control</code> at <code>x=20</code>, <code>y=24</code>, <code>width=220</code>, <code>height=88</code>,</li>
+  <li><code>ind_result</code> as a <code>frog.widgets.numeric_indicator</code> at <code>x=260</code>, <code>y=24</code>, <code>width=220</code>, <code>height=88</code>,</li>
+  <li>SVG asset references for both numeric widgets.</li>
 </ul>
 
 <p>
 The widget package owns the front-panel publication and realization-facing host details.
-The executable semantics remain carried through canonical source, FIR, lowering, backend contract, runtime acceptance, and LLVM proof artifacts.
+The executable semantics remain carried through canonical source, FIR, lowering, backend contract, runtime acceptance, and native-kernel bridge artifacts.
 </p>
-
-<hr/>
-
-<h2>Corridor</h2>
-
-<pre><code>Examples/05_bounded_ui_accumulator/main.frog
-  -&gt; Examples/05_bounded_ui_accumulator/main.fir.json
-  -&gt; Examples/05_bounded_ui_accumulator/main.lowering.json
-  -&gt; Implementations/Reference/ContractEmitter/examples/05_bounded_ui_accumulator.reference_host_runtime_ui_binding.contract.json
-  -&gt; Implementations/Reference/Runtime/acceptance/example05_input_3.snapshot.json
-  -&gt; Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/module.ll
-</code></pre>
 
 <hr/>
 
@@ -117,12 +148,10 @@ for each iteration:
   state_current &lt;- state_next
 
 result = state_current
-result_value = state_current
+ind_result.value = state_current
 </code></pre>
 
-<p>
-Expected published result:
-</p>
+<p>Expected published result:</p>
 
 <pre><code>3 * 5 = 15</code></pre>
 
@@ -134,73 +163,30 @@ Expected published result:
 
 <pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py</code></pre>
 
-<h3>Source to FIR</h3>
-
-<pre><code>python Implementations/Reference/Deriver/derive_fir.py \
-  --source Examples/05_bounded_ui_accumulator/main.frog \
-  --expected Examples/05_bounded_ui_accumulator/main.fir.json \
-  --check
-</code></pre>
-
-<h3>FIR to lowering</h3>
-
-<pre><code>python Implementations/Reference/Lowerer/lower_fir.py \
-  --fir Examples/05_bounded_ui_accumulator/main.fir.json \
-  --expected Examples/05_bounded_ui_accumulator/main.lowering.json \
-  --check
-</code></pre>
-
-<h3>Backend contract</h3>
-
-<pre><code>python -m Implementations.Reference.ContractEmitter.reference_contract_emitter \
-  --lowering Examples/05_bounded_ui_accumulator/main.lowering.json \
-  --expected Implementations/Reference/ContractEmitter/examples/05_bounded_ui_accumulator.reference_host_runtime_ui_binding.contract.json \
-  --check
-</code></pre>
-
 <h3>Runtime acceptance</h3>
 
-<pre><code>python Implementations/Reference/Runtime/check_example05_runtime_acceptance.py</code></pre>
+<pre><code>python Implementations/Reference/Runtime/check_example05_runtime_acceptance.py
+python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py</code></pre>
 
-<p>
-The shared Examples 01–05 runtime check also includes Example 05:
-</p>
-
-<pre><code>python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py</code></pre>
-
-<h3>LLVM module</h3>
+<h3>LLVM module and native proof</h3>
 
 <pre><code>python Implementations/Reference/LLVM/tools/emit_lowering_to_llvm.py \
   --lowering Examples/05_bounded_ui_accumulator/main.lowering.json \
   --expected Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/module.ll \
   --check
-</code></pre>
 
-<h3>Optional native LLVM build</h3>
-
-<pre><code>python Implementations/Reference/LLVM/tools/emit_lowering_to_llvm.py \
+python Implementations/Reference/LLVM/tools/emit_lowering_to_llvm.py \
   --lowering Examples/05_bounded_ui_accumulator/main.lowering.json \
   --expected Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/module.ll \
   --check \
   --build \
-  --example-dir Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator
-</code></pre>
+  --example-dir Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator</code></pre>
 
-<hr/>
+<h3>Native-kernel runtime bridge</h3>
 
-<h2>Expected Runtime Snapshot</h2>
-
-<p>
-The published runtime snapshot for input <code>3</code> is:
-</p>
-
-<pre><code>Implementations/Reference/Runtime/acceptance/example05_input_3.snapshot.json</code></pre>
-
-<p>
-The published native proof expected output is:
-</p>
-
-<pre><code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/expected-output.json</code></pre>
+<pre><code>python Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
+python Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
+python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge</code></pre>
 
 <hr/>
 
@@ -208,6 +194,10 @@ The published native proof expected output is:
 
 <p>
 This example is the richest current applicative corridor, but it is still bounded.
-It does not define a general UI host, a complete widget renderer, a general loop compiler, a production runtime, or a complete native backend.
-It proves a coherent path through the currently published repository surfaces while remaining subordinate to the owning specification documents and centralized version-governance surface.
+It does not define a general UI host, a complete widget renderer, a general loop compiler, a production runtime, a complete native backend, or a generalized LabVIEW-compatible runtime.
+</p>
+
+<p>
+It proves a coherent path through the currently published repository surfaces while preserving the runtime/compiler boundary:
+LLVM produces a native kernel artifact and manifest; the runtime consumes a manifest-declared ABI.
 </p>

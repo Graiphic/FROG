@@ -2,9 +2,11 @@
 
 #include <cstdint>
 #include <filesystem>
+#include <memory>
 #include <optional>
 #include <string>
 
+#include "kernel_bridge.hpp"
 #include "runtime.hpp"
 
 namespace frog::runtime {
@@ -13,12 +15,15 @@ class BrowserUiRuntime {
 public:
     BrowserUiRuntime(
         std::optional<std::filesystem::path> contract_path = std::nullopt,
-        std::optional<std::filesystem::path> wfrog_path = std::nullopt);
+        std::optional<std::filesystem::path> wfrog_path = std::nullopt,
+        std::shared_ptr<const NativeKernelBridge> native_kernel_bridge = nullptr);
 
+    frog::json::Value run_once(std::uint16_t input_value);
     std::string render_html() const;
     void serve(const std::string& host = "127.0.0.1", std::uint16_t port = 0, bool open_browser = true);
 
     Slice05RuntimeCore core;
+    std::shared_ptr<const NativeKernelBridge> native_kernel_bridge;
     std::optional<std::string> last_error;
 };
 

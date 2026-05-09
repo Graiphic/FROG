@@ -15,11 +15,14 @@
 
 <p>
 This document records the boundary between the FROG reference runtime and backend-produced compiled artifacts.
-The runtime hosts execution and UI. Backends compile lowered units. Explicit manifests and stable call surfaces connect both worlds.
+The runtime hosts execution and UI.
+Backends compile lowered units.
+Explicit manifests and stable call surfaces connect both worlds.
 </p>
 
 <p>
-This document is non-normative. Version governance remains centralized in <code>Versioning/Readme.md</code> and repository history.
+This document is non-normative.
+Version governance remains centralized in <code>Versioning/Readme.md</code> and repository history.
 </p>
 
 <hr/>
@@ -27,18 +30,18 @@ This document is non-normative. Version governance remains centralized in <code>
 <h2>Current Status</h2>
 
 <p>
-The C++ reference runtime currently hosts the Example 05 UI and still keeps the default backend-contract execution path available.
+Example 05 now has a published native-kernel bridge surface.
+The LLVM-oriented backend path publishes <code>kernel.ll</code> and <code>native_kernel_manifest.json</code>.
+The C++ runtime bridge loads the manifest, validates the declared ABI, calls a linked ABI-compatible kernel entry point, maps <code>error_code</code> to diagnostics, and projects the result onto the existing runtime snapshot surface.
+</p>
+
+<p>
+The standard C++ runtime path still keeps the backend-contract executor available.
+The optional native-kernel runtime executable links the LLVM-produced kernel artifact and runs the same <code>.wfrog</code> front panel through <code>BrowserUiRuntime</code> and <code>NativeKernelBridge</code>.
+</p>
+
+<p>
 The browser renderer is currently an Example 05 bounded fidelity pass, not a generalized faithful <code>.wfrog</code> renderer.
-</p>
-
-<p>
-The native-kernel bridge publication surface is present as a manifest plus ABI-oriented LLVM artifact.
-The C++ runtime bridge code is also published: it loads the manifest, validates the declared ABI, calls a linked ABI-compatible kernel entry point, maps <code>error_code</code> to diagnostics, and projects the result onto the existing runtime snapshot surface.
-</p>
-
-<p>
-The standard CMake test uses a linked ABI-compatible kernel stub so the baseline runtime build does not depend on LLVM or <code>clang</code>.
-An optional CMake path compiles the published LLVM <code>kernel.ll</code> artifact with <code>clang</code>, links it into a dedicated C++ bridge test, and exercises the same runtime bridge path.
 </p>
 
 <hr/>
@@ -60,6 +63,7 @@ Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
 Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
 Implementations/Reference/Runtime/cpp/include/kernel_bridge.hpp
 Implementations/Reference/Runtime/cpp/src/kernel_bridge.cpp
+Implementations/Reference/Runtime/cpp/src/main_llvm_kernel.cpp
 Implementations/Reference/Runtime/cpp/tests/test_slice05_llvm_kernel.cpp
 </code></pre>
 
@@ -76,26 +80,31 @@ The publication checker validates the manifest, source lowering reference, ABI d
 The C++ bridge consumes the same manifest and calls a linked entry point through a compiler-agnostic function pointer surface.
 </p>
 
-<p>
-The publication surface can be checked with:
-</p>
+<hr/>
 
-<pre><code>python Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py</code></pre>
+<h2>Native Runtime Closure</h2>
 
 <p>
-The optional C++ bridge closure against the LLVM-produced artifact can be checked with:
+The optional native-kernel C++ runtime executable is:
 </p>
 
-<pre><code>python Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
-python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge</code></pre>
+<pre><code>frog_reference_runtime_cpp_llvm_kernel</code></pre>
 
 <p>
-The standard C++ bridge path remains available without requiring LLVM or <code>clang</code>:
+It is built only when <code>FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE=ON</code>.
+That build compiles <code>kernel.ll</code> with <code>clang</code>, links it into the executable, loads the manifest, and routes headless and browser UI execution through the native kernel bridge.
 </p>
 
-<pre><code>cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
-cmake --build build/frog_runtime_cpp
-ctest --test-dir build/frog_runtime_cpp</code></pre>
+<pre><code>cmake -S Implementations/Reference/Runtime/cpp \
+  -B build/frog_runtime_cpp_native_kernel_bridge \
+  -DFROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE=ON
+
+cmake --build build/frog_runtime_cpp_native_kernel_bridge \
+  --target frog_reference_runtime_cpp_llvm_kernel
+
+build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel 3
+build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel ui --no-open-browser
+</code></pre>
 
 <hr/>
 
@@ -103,7 +112,7 @@ ctest --test-dir build/frog_runtime_cpp</code></pre>
 
 <p>
 The first implementation target remains <code>Examples/05_bounded_ui_accumulator/</code>.
-The runtime bridge path consumes a manifest-declared kernel entry surface instead of owning the Example 05 algorithm internally.
+The native-kernel runtime path consumes a manifest-declared kernel entry surface instead of owning the Example 05 algorithm internally.
 </p>
 
 <p>
@@ -116,9 +125,10 @@ Overflow is reported with <code>error_code = 1</code> and mapped by the runtime 
 <h2>Non-Goals</h2>
 
 <ul>
-  <li>The runtime does not compile diagrams.</li>
+  <li>The runtime does not compile diagrams at runtime.</li>
   <li>The baseline runtime build does not depend on LLVM.</li>
   <li>This bridge does not claim a complete production runtime.</li>
   <li>This bridge does not introduce Example 06 or new widget classes.</li>
   <li>The optional LLVM-produced bridge test does not make LLVM the conceptual runtime authority.</li>
+  <li>The bounded Example 05 <code>.wfrog</code> renderer does not claim to be a full general renderer.</li>
 </ul>
