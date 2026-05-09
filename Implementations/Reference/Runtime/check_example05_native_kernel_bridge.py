@@ -2,8 +2,7 @@
 """Validate the Example 05 native-kernel bridge publication surface.
 
 This check is intentionally narrow. It verifies the manifest and ABI artifact
-needed by the compiler-agnostic runtime bridge direction. It does not claim that
-the C++ runtime already loads or calls the native kernel.
+needed by the compiler-agnostic runtime bridge direction.
 """
 
 from __future__ import annotations
@@ -57,7 +56,12 @@ def main() -> int:
     entry = kernel.get("entry")
     require(isinstance(entry, dict), "manifest.kernel.entry must be an object")
     require(entry.get("symbol") == "frog_example05_run", "unexpected entry symbol")
-    require(entry.get("abi") == "frog_u16_to_result_status", "unexpected ABI name")
+    require(entry.get("abi") == "frog_u16_to_result_status_outptr", "unexpected ABI name")
+
+    layout = kernel.get("result_status_layout")
+    require(isinstance(layout, dict), "manifest.kernel.result_status_layout must be an object")
+    require(layout.get("carrier") == "out_parameter", "native bridge ABI must use an out parameter carrier")
+    require(layout.get("c_signature") == "void frog_example05_run(uint16_t input_value, FrogRunResult* out_result)", "unexpected C signature")
 
     io = kernel.get("io")
     require(isinstance(io, dict), "manifest.kernel.io must be an object")
@@ -80,10 +84,11 @@ def main() -> int:
     require(execution_kernel.get("iteration_count") == 5, "native bridge expects five iterations")
 
     require("%FrogRunResult = type { i8, i16, i16 }" in kernel_text, "kernel.ll must declare FrogRunResult layout")
-    require("define %FrogRunResult @frog_example05_run(i16 %input_value)" in kernel_text, "kernel.ll must export frog_example05_run")
-    require("insertvalue %FrogRunResult" in kernel_text, "kernel.ll must build the result status struct")
-    require("i16 1, 2" in kernel_text, "kernel.ll must encode overflow error_code 1")
-    require("ret %FrogRunResult" in kernel_text, "kernel.ll must return FrogRunResult")
+    require("define void @frog_example05_run(i16 %input_value, ptr %out_result)" in kernel_text, "kernel.ll must export out-parameter frog_example05_run")
+    require("getelementptr inbounds %FrogRunResult, ptr %out_result" in kernel_text, "kernel.ll must write through the out result pointer")
+    require("store i8 1" in kernel_text, "kernel.ll must encode success ok=1")
+    require("store i16 1" in kernel_text, "kernel.ll must encode overflow error_code 1")
+    require("ret void" in kernel_text, "kernel.ll must return void for the out-parameter ABI")
 
     print("Example 05 native kernel bridge publication check: ok")
     print(f"manifest: {MANIFEST.relative_to(ROOT)}")
