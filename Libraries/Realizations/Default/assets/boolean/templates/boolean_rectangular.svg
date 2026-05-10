@@ -21,8 +21,8 @@
       }
 
       #frame_shadow {
-        fill: #0f172a;
-        opacity: 0.12;
+        fill: transparent;
+        opacity: 0;
       }
 
       #outer_face {
@@ -76,7 +76,8 @@
           y="25"
           width="144"
           height="48"
-          rx="11" />
+          rx="11"
+          data-frog-bind="style.frame.visible style.frame.fill_color.* style.frame.opacity.*" />
 
     <rect id="outer_face"
           data-frog-part="outer_face"

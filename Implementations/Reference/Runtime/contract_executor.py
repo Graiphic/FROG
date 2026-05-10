@@ -379,6 +379,8 @@ def execute_boolean_value_roundtrip_ui_unit(contract: dict[str, Any], unit: dict
         for member in (
             "state_text.style.text_color.false",
             "state_text.style.text_color.true",
+            "state_text.visible",
+            "style.frame.visible",
             "style.outer.border_color.false",
             "style.outer.border_color.true",
             "style.outer.border_color.hover_false",

@@ -428,6 +428,8 @@ std::string render_boolean_widget(const WidgetState& widget) {
     const std::string transition_ms = property_string(widget.properties, "style.transition.duration_ms", "120");
     const std::string transition_timing = property_string(widget.properties, "style.transition.timing", "ease-out");
     const std::string pressed_inset = property_string(widget.properties, "style.pressed.inset", "1px");
+    const bool state_text_visible = property_bool(widget.properties, "state_text.visible", true);
+    const bool frame_visible = property_bool(widget.properties, "style.frame.visible", true);
 
     std::ostringstream html;
     if (is_control) {
@@ -453,6 +455,8 @@ std::string render_boolean_widget(const WidgetState& widget) {
     html << " data-frog-hover-state='" << html_escape(hover_state) << "'";
     html << " data-frog-pressed-state='" << html_escape(pressed_state) << "'";
     html << " data-frog-transition-state='" << html_escape(transition_state) << "'";
+    html << " data-frog-state-text-visible='" << (state_text_visible ? "true" : "false") << "'";
+    html << " data-frog-frame-visible='" << (frame_visible ? "true" : "false") << "'";
     html << " style='position:absolute;left:" << css_px(x) << ";top:" << css_px(y)
          << ";width:" << css_px(width) << ";height:" << css_px(height) << ";"
          << "--boolean-fill:" << html_escape(state_fill) << ";"
@@ -476,7 +480,9 @@ std::string render_boolean_widget(const WidgetState& widget) {
         html << "<div class='boolean-skin missing-skin'></div>";
     }
     html << "<span class='boolean-caption-overlay' data-frog-part='caption'>" << html_escape(caption) << "</span>";
-    html << "<span class='boolean-state-overlay' data-frog-part='state_text'>" << html_escape(state_text) << "</span>";
+    if (state_text_visible) {
+        html << "<span class='boolean-state-overlay' data-frog-part='state_text'>" << html_escape(state_text) << "</span>";
+    }
     html << (is_control ? "</button>" : "</section>");
     return html.str();
 }

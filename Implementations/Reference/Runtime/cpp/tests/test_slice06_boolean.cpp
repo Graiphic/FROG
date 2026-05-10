@@ -92,6 +92,8 @@ void test_boolean_runtime_core_consumes_wfrog_assets() {
     assert_contains(rectangular_svg, "data-frog-part=\"state_text\"");
     assert_contains(circular_svg, "data-frog-part=\"state_text\"");
     assert_contains(rectangular_svg, "stroke: transparent;");
+    assert_contains(rectangular_svg, "fill: transparent;");
+    assert_contains(rectangular_svg, "opacity: 0;");
     assert_contains(circular_svg, "stroke: transparent;");
 }
 
@@ -129,7 +131,10 @@ void test_boolean_browser_ui_surface() {
     assert_contains(html, "data-frog-hover-state='hover_true'");
     assert_contains(html, "data-frog-pressed-state='pressed_true'");
     assert_contains(html, "data-frog-transition-state='transition_true_to_false'");
+    assert_contains(html, "data-frog-frame-visible='false'");
+    assert_contains(html, "data-frog-state-text-visible='false'");
     assert_contains(html, "--boolean-fill:#8bd86f;");
+    assert_contains(html, "--boolean-fill:#22c55e;");
     assert_contains(html, "--boolean-border:transparent;");
     assert_contains(html, "--boolean-transition:120ms ease-out;");
     assert_contains(html, "--boolean-pressed-inset:1px;");
@@ -153,6 +158,7 @@ void test_boolean_browser_ui_surface() {
     assert_contains(html, "data-frog-pressed-state='pressed_false'");
     assert_contains(html, "data-frog-transition-state='transition_false_to_true'");
     assert_contains(html, "--boolean-fill:#ffffff;");
+    assert_contains(html, "--boolean-fill:#ef4444;");
     assert_contains(html, ">FALSE</span>");
 }
 

@@ -243,6 +243,9 @@ def validate_svg_template(svg_text: str, *, label: str, expected_class: str, exp
     require("#caption_text" in svg_text and "display:none" in svg_text.replace(" ", ""), f"{label} template caption text must be hidden by default")
     require("#state_text" in svg_text and "display:none" in svg_text.replace(" ", ""), f"{label} template state text must be hidden by default")
     require("stroke:transparent" in svg_text.replace(" ", ""), f"{label} outer template border must be transparent by default")
+    if expected_class == "frog.widgets.boolean_control":
+        compact = svg_text.replace(" ", "")
+        require("#frame_shadow" in svg_text and "fill:transparent" in compact and "opacity:0" in compact, f"{label} template frame must be transparent by default")
 
 
 def validate_layout(panel: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -262,6 +265,11 @@ def validate_layout(panel: dict[str, Any]) -> dict[str, dict[str, Any]]:
     require(widgets["bool_result"]["visual"]["asset_ref"] == "asset:boolean_circular_svg", "bool_result asset_ref mismatch")
     input_props = widgets["bool_input"].get("props", {})
     result_props = widgets["bool_result"].get("props", {})
+    require(input_props.get("style.frame.visible") is False, "bool_input external frame must be disabled through .wfrog")
+    require(input_props.get("state_text.visible") is True, "bool_input state text must remain visible through .wfrog")
+    require(result_props.get("state_text.visible") is False, "bool_result state text must be hidden through .wfrog")
+    require(result_props.get("style.inner.fill_color.false") == "#ef4444", "bool_result false state must be red through .wfrog")
+    require(result_props.get("style.inner.fill_color.true") == "#22c55e", "bool_result true state must be green through .wfrog")
     for props, widget_id in ((input_props, "bool_input"), (result_props, "bool_result")):
         require("style.inner.fill_color.false" in props, f"{widget_id} must declare false fill color through .wfrog")
         require("style.inner.fill_color.true" in props, f"{widget_id} must declare true fill color through .wfrog")
@@ -323,6 +331,8 @@ def execute_boolean_roundtrip(contract: dict[str, Any], wfrog: dict[str, Any], i
                         "caption.text": widgets_by_id["bool_input"]["props"]["caption.text"],
                         "state_text.true_text": widgets_by_id["bool_input"]["props"]["state_text.true_text"],
                         "state_text.false_text": widgets_by_id["bool_input"]["props"]["state_text.false_text"],
+                        "state_text.visible": widgets_by_id["bool_input"]["props"]["state_text.visible"],
+                        "style.frame.visible": widgets_by_id["bool_input"]["props"]["style.frame.visible"],
                         "state_text.style.text_color.false": widgets_by_id["bool_input"]["props"]["state_text.style.text_color.false"],
                         "state_text.style.text_color.true": widgets_by_id["bool_input"]["props"]["state_text.style.text_color.true"],
                         "style.outer.border_color.false": widgets_by_id["bool_input"]["props"]["style.outer.border_color.false"],
@@ -355,6 +365,7 @@ def execute_boolean_roundtrip(contract: dict[str, Any], wfrog: dict[str, Any], i
                         "caption.text": widgets_by_id["bool_result"]["props"]["caption.text"],
                         "state_text.true_text": widgets_by_id["bool_result"]["props"]["state_text.true_text"],
                         "state_text.false_text": widgets_by_id["bool_result"]["props"]["state_text.false_text"],
+                        "state_text.visible": widgets_by_id["bool_result"]["props"]["state_text.visible"],
                         "state_text.style.text_color.false": widgets_by_id["bool_result"]["props"]["state_text.style.text_color.false"],
                         "state_text.style.text_color.true": widgets_by_id["bool_result"]["props"]["state_text.style.text_color.true"],
                         "style.outer.border_color.false": widgets_by_id["bool_result"]["props"]["style.outer.border_color.false"],
@@ -413,6 +424,8 @@ def render_boolean_widget(widget: dict[str, Any], *, default_manifest_path: str)
     transition_ms = str(runtime.get("style.transition.duration_ms", 120))
     transition_timing = str(runtime.get("style.transition.timing", "ease-out"))
     pressed_inset = str(runtime.get("style.pressed.inset", "1px"))
+    state_text_visible = bool(runtime.get("state_text.visible", True))
+    frame_visible = bool(runtime.get("style.frame.visible", True))
 
     style = (
         f"left:{layout['x']}px;top:{layout['y']}px;"
@@ -441,6 +454,8 @@ def render_boolean_widget(widget: dict[str, Any], *, default_manifest_path: str)
         f" data-frog-hover-state='{hover_state}'"
         f" data-frog-pressed-state='{pressed_state}'"
         f" data-frog-transition-state='{transition_state}'"
+        f" data-frog-state-text-visible='{str(state_text_visible).lower()}'"
+        f" data-frog-frame-visible='{str(frame_visible).lower()}'"
         f" data-default-realization-manifest='{html.escape(default_manifest_path)}'"
         f" style='position:absolute;{style}'"
     )
@@ -450,10 +465,9 @@ def render_boolean_widget(widget: dict[str, Any], *, default_manifest_path: str)
         f"<img class='boolean-skin' src='{html.escape(route)}' "
         f"alt='' aria-hidden='true' />"
     )
-    overlays = (
-        f"<span class='boolean-caption-overlay' data-frog-part='caption'>{html.escape(caption)}</span>"
-        f"<span class='boolean-state-overlay' data-frog-part='state_text'>{html.escape(value_text)}</span>"
-    )
+    overlays = f"<span class='boolean-caption-overlay' data-frog-part='caption'>{html.escape(caption)}</span>"
+    if state_text_visible:
+        overlays += f"<span class='boolean-state-overlay' data-frog-part='state_text'>{html.escape(value_text)}</span>"
 
     if role == "control":
         return (
@@ -538,12 +552,15 @@ def validate_rendered_front_panel(rendered: str, *, expected_value: bool, widget
     require("data-frog-pressed-state='pressed_true'" in rendered or "data-frog-pressed-state='pressed_false'" in rendered, "control must expose pressed visual-state mapping")
     require("data-frog-transition-state='transition_true_to_false'" in rendered or "data-frog-transition-state='transition_false_to_true'" in rendered, "widgets must expose transition visual-state mapping")
     require("--boolean-fill:" in rendered and "--boolean-border:" in rendered and "--boolean-transition:" in rendered and "--boolean-pressed-inset:" in rendered, "visual state styles must come from .wfrog Boolean properties")
+    require("data-frog-frame-visible='false'" in rendered, "bool_input must expose the .wfrog transparent external frame state")
+    require("data-frog-state-text-visible='false'" in rendered, "bool_result must expose hidden state text from .wfrog")
+    require("--boolean-fill:#22c55e;" in rendered or "--boolean-fill:#ef4444;" in rendered, "indicator color must come from .wfrog true/false fill properties")
     require("transform:translateY(1px)" not in rendered, "pressed movement must be driven by .wfrog style.pressed.inset, not a runtime hardcoded value")
     require("font-size:18px" in rendered and "font-size:14px" in rendered, "rendered text must remain readable at the published size")
 
     state_word = "TRUE" if expected_value else "FALSE"
     other_word = "FALSE" if expected_value else "TRUE"
-    require(rendered.count(f">{state_word}</span>") == 2, f"rendered front panel must show exactly one {state_word} state overlay per widget")
+    require(rendered.count(f">{state_word}</span>") == 1, f"rendered front panel must show only the control {state_word} state overlay")
     require(rendered.count(f">{other_word}</span>") == 0, f"rendered front panel must not duplicate inactive {other_word} state text")
     require(rendered.count(f"data-frog-visual-state='{str(expected_value).lower()}'") == 2, "rendered widgets must expose the active true/false realization state")
 
