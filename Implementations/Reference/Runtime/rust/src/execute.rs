@@ -310,7 +310,7 @@ fn execute_boolean_case(contract: &Value, unit: &Map<String, Value>, case_value:
         let widget = object(widgets.get(widget_id).ok_or_else(|| message(format!("missing widget {widget_id}")))? , widget_id)?;
         let props = object(widget.get("props").ok_or_else(|| message("widget.props is required."))?, "widget.props")?;
         let visual = object(widget.get("visual").ok_or_else(|| message("widget.visual is required."))?, "widget.visual")?;
-        Ok(json!({
+        let mut runtime = json!({
             "value": input_value,
             "label.text": props.get("label.text").cloned().unwrap_or(Value::Null),
             "caption.text": props.get("caption.text").cloned().unwrap_or(Value::Null),
@@ -318,7 +318,32 @@ fn execute_boolean_case(contract: &Value, unit: &Map<String, Value>, case_value:
             "state_text.false_text": props.get("state_text.false_text").cloned().unwrap_or(Value::Null),
             "asset_ref": visual.get("asset_ref").cloned().unwrap_or(Value::Null),
             "realization.variant": props.get("realization.variant").cloned().unwrap_or(Value::Null)
-        }))
+        });
+        if let Some(runtime_object) = runtime.as_object_mut() {
+            for member in [
+                "state_text.style.text_color.false",
+                "state_text.style.text_color.true",
+                "style.outer.border_color.false",
+                "style.outer.border_color.true",
+                "style.outer.border_color.hover_false",
+                "style.outer.border_color.hover_true",
+                "style.outer.border_color.pressed_false",
+                "style.outer.border_color.pressed_true",
+                "style.inner.fill_color.false",
+                "style.inner.fill_color.true",
+                "style.inner.fill_color.hover_false",
+                "style.inner.fill_color.hover_true",
+                "style.inner.fill_color.pressed_false",
+                "style.inner.fill_color.pressed_true",
+                "style.transition.duration_ms",
+                "style.transition.timing",
+            ] {
+                if let Some(value) = props.get(member) {
+                    runtime_object.insert(member.to_string(), value.clone());
+                }
+            }
+        }
+        Ok(runtime)
     };
     let bool_input = object(widgets.get("bool_input").ok_or_else(|| message("missing bool_input"))?, "bool_input")?;
     let bool_result = object(widgets.get("bool_result").ok_or_else(|| message("missing bool_result"))?, "bool_result")?;

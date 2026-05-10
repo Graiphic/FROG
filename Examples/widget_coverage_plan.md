@@ -50,6 +50,7 @@ The visible front panel must be derived from the published <code>.wfrog</code> l
   <li>The default realization manifest in <code>Libraries/Realizations/Default/</code> is the realization authority for default assets.</li>
   <li>If a widget declares <code>visual.asset_ref = asset:&lt;id&gt;</code>, the rendered front panel must visibly use that asset or fail validation.</li>
   <li>If a package references <code>realization_refs</code>, the checker must verify that the realization manifest exists and targets the widget classes used by the example.</li>
+  <li>The visible widget state must be selected from the realization state map. A Boolean example must expose and apply the relevant <code>false</code>, <code>true</code>, <code>hover_*</code>, <code>pressed_*</code>, <code>focused_*</code>, <code>disabled_*</code>, and transition visual states where the class law and realization publish them.</li>
   <li>Fallback rendering may be used only when explicitly marked as fallback and must not pass official widget-example validation.</li>
   <li>Raw runtime snapshots and preformatted debug dumps must not appear in the user-facing front panel by default; a route such as <code>/state.json</code> may remain available for validation.</li>
 </ul>
@@ -118,6 +119,7 @@ The visible front panel must be derived from the published <code>.wfrog</code> l
   <li>The <code>.wfrog</code> package owns panel layout and realization references.</li>
   <li>The check consumes the Boolean widget class law and the default Boolean realization manifest.</li>
   <li>The rendered front panel uses the <code>visual.asset_ref</code> assets declared by the package.</li>
+  <li>The rendered Boolean state is materialized through the <code>.wfrog</code> properties and Default Boolean realization <code>state_maps</code>, not through untracked HTML/CSS fallback styling.</li>
   <li>The visible control body is clickable and posts the opposite Boolean value.</li>
   <li>Both <code>true</code> and <code>false</code> states are checked.</li>
   <li>The user-facing front panel is clean and does not show the runtime snapshot by default.</li>

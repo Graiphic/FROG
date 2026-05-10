@@ -398,6 +398,10 @@ std::string boolean_text(bool value, const Object& properties) {
     return property_string(properties, value ? "state_text.true_text" : "state_text.false_text", value ? "TRUE" : "FALSE");
 }
 
+std::string state_property(const Object& properties, const std::string& base, const std::string& state, const std::string& fallback) {
+    return property_string(properties, base + "." + state, fallback);
+}
+
 std::string render_boolean_widget(const WidgetState& widget) {
     const bool is_control = widget.role == "control";
     const auto x = layout_i64(widget.layout, "x", 0);
@@ -405,10 +409,24 @@ std::string render_boolean_widget(const WidgetState& widget) {
     const auto width = layout_i64(widget.layout, "width", 160);
     const auto height = layout_i64(widget.layout, "height", 80);
     const bool value = property_bool(widget.properties, "value", false);
+    const std::string visual_state = value ? "true" : "false";
+    const std::string hover_state = value ? "hover_true" : "hover_false";
+    const std::string pressed_state = value ? "pressed_true" : "pressed_false";
+    const std::string transition_state = value ? "transition_true_to_false" : "transition_false_to_true";
+    const std::string variant = property_string(widget.properties, "realization.variant", widget.class_ref.find("indicator") != std::string::npos ? "circular" : "rectangular");
     const std::string state_text = boolean_text(value, widget.properties);
     const std::string caption = property_string(widget.properties, "caption.text", widget.widget_id);
     const std::string route = asset_route(widget);
     const std::string next_value = value ? "false" : "true";
+    const std::string state_fill = state_property(widget.properties, "style.inner.fill_color", visual_state, value ? "#8bd86f" : "#ffffff");
+    const std::string hover_fill = state_property(widget.properties, "style.inner.fill_color", hover_state, value ? "#9be884" : "#eef6ff");
+    const std::string pressed_fill = state_property(widget.properties, "style.inner.fill_color", pressed_state, value ? "#6fc657" : "#dbeafe");
+    const std::string state_border = state_property(widget.properties, "style.outer.border_color", visual_state, value ? "#184a24" : "#111827");
+    const std::string hover_border = state_property(widget.properties, "style.outer.border_color", hover_state, value ? "#166534" : "#2563eb");
+    const std::string pressed_border = state_property(widget.properties, "style.outer.border_color", pressed_state, value ? "#14532d" : "#1d4ed8");
+    const std::string text_color = state_property(widget.properties, "state_text.style.text_color", visual_state, value ? "#0b3d19" : "#111827");
+    const std::string transition_ms = property_string(widget.properties, "style.transition.duration_ms", "120");
+    const std::string transition_timing = property_string(widget.properties, "style.transition.timing", "ease-out");
 
     std::ostringstream html;
     if (is_control) {
@@ -428,13 +446,28 @@ std::string render_boolean_widget(const WidgetState& widget) {
         html << " data-asset-route='" << html_escape(route) << "'";
     }
     html << " data-current-value='" << (value ? "true" : "false") << "'";
+    html << " data-realization-variant='" << html_escape(variant) << "'";
+    html << " data-frog-visual-law='wfrog-realization-state-map'";
+    html << " data-frog-visual-state='" << html_escape(visual_state) << "'";
+    html << " data-frog-hover-state='" << html_escape(hover_state) << "'";
+    html << " data-frog-pressed-state='" << html_escape(pressed_state) << "'";
+    html << " data-frog-transition-state='" << html_escape(transition_state) << "'";
     html << " style='position:absolute;left:" << css_px(x) << ";top:" << css_px(y)
-         << ";width:" << css_px(width) << ";height:" << css_px(height) << ";";
+         << ";width:" << css_px(width) << ";height:" << css_px(height) << ";"
+         << "--boolean-fill:" << html_escape(state_fill) << ";"
+         << "--boolean-hover-fill:" << html_escape(hover_fill) << ";"
+         << "--boolean-pressed-fill:" << html_escape(pressed_fill) << ";"
+         << "--boolean-border:" << html_escape(state_border) << ";"
+         << "--boolean-hover-border:" << html_escape(hover_border) << ";"
+         << "--boolean-pressed-border:" << html_escape(pressed_border) << ";"
+         << "--boolean-text:" << html_escape(text_color) << ";"
+         << "--boolean-transition:" << html_escape(transition_ms) << "ms " << html_escape(transition_timing) << ";";
     if (!property_bool(widget.properties, "visible", true)) {
         html << "display:none;";
     }
     html << "'>";
 
+    html << "<span class='boolean-state-face' data-frog-part='inner_face' aria-hidden='true'></span>";
     if (!route.empty()) {
         html << "<img class='boolean-skin' src='" << html_escape(route) << "' alt='' aria-hidden='true' />";
     } else {
@@ -785,13 +818,18 @@ std::string BooleanBrowserUiRuntime::render_html() const {
             ".runtime-facts dd{margin:0;color:#1f2933;font-size:12px;font-weight:600;}"
             ".front-panel{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}"
             ".frog-widget{position:absolute;box-sizing:border-box;}"
-            ".boolean-widget{border:0;padding:0;background:transparent;font:inherit;color:inherit;}"
+            ".boolean-widget{border:0;padding:0;background:transparent;font:inherit;color:inherit;overflow:visible;}"
             ".boolean-control{cursor:pointer;}"
             ".boolean-indicator{pointer-events:none;}"
-            ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;}"
+            ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}"
             ".missing-skin{background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;}"
-            ".boolean-caption-overlay{position:absolute;left:10px;top:8px;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;}"
-            ".boolean-state-overlay{position:absolute;left:0;right:0;top:41px;transform:translateY(-50%);text-align:center;font-size:18px;font-weight:700;line-height:1;color:#0f172a;pointer-events:none;}"
+            ".boolean-caption-overlay{position:absolute;left:8px;top:6px;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}"
+            ".boolean-state-face{position:absolute;left:8px;top:27px;width:144px;height:43px;border:2px solid var(--boolean-border);border-radius:8px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
+            ".boolean-widget[data-realization-variant='circular'] .boolean-state-face{left:52px;top:23px;width:56px;height:56px;border-radius:50%;}"
+            ".boolean-control:hover .boolean-state-face{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-border);box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 2px 5px rgba(15,23,42,.18);}"
+            ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(1px);}"
+            ".boolean-control:focus-visible .boolean-state-face{outline:2px solid #2563eb;outline-offset:2px;}"
+            ".boolean-state-overlay{position:absolute;left:0;right:0;top:49px;transform:translateY(-50%);text-align:center;font-size:18px;font-weight:700;line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;}"
             ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
             ".state-link{font-size:16px;}"
             ".diagnostic{margin:12px 0;padding:10px 12px;border-radius:6px;}"
