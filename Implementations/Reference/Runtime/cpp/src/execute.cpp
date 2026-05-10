@@ -270,6 +270,9 @@ Value execute_boolean_case(const Value& contract, const Object& unit, const Valu
         };
         copy_prop("state_text.style.text_color.false");
         copy_prop("state_text.style.text_color.true");
+        copy_prop("state_text.visible");
+        copy_prop("caption.align.horizontal");
+        copy_prop("style.frame.visible");
         copy_prop("style.outer.border_color.false");
         copy_prop("style.outer.border_color.true");
         copy_prop("style.outer.border_color.hover_false");
@@ -282,6 +285,16 @@ Value execute_boolean_case(const Value& contract, const Object& unit, const Valu
         copy_prop("style.inner.fill_color.hover_true");
         copy_prop("style.inner.fill_color.pressed_false");
         copy_prop("style.inner.fill_color.pressed_true");
+        copy_prop("style.inner.border_color.false");
+        copy_prop("style.inner.border_color.true");
+        copy_prop("style.inner.border_color.hover_false");
+        copy_prop("style.inner.border_color.hover_true");
+        copy_prop("style.inner.border_color.pressed_false");
+        copy_prop("style.inner.border_color.pressed_true");
+        copy_prop("style.inner.left");
+        copy_prop("style.inner.top");
+        copy_prop("style.inner.width");
+        copy_prop("style.inner.height");
         copy_prop("style.pressed.inset");
         copy_prop("style.transition.duration_ms");
         copy_prop("style.transition.timing");

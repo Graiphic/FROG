@@ -13,10 +13,12 @@ from typing import Any, Dict, Optional
 
 try:
     from .runtime_core import Slice05RuntimeCore, default_contract_path, default_wfrog_path
+    from .native_kernel import NativeBoolKernelBridge, NativeKernelBridge
     from ..contract_executor import execute_contract_case, load_json as load_contract_json
 except ImportError:  # pragma: no cover
     sys.path.append(str(Path(__file__).resolve().parents[1]))
     from runtime_core import Slice05RuntimeCore, default_contract_path, default_wfrog_path
+    from native_kernel import NativeBoolKernelBridge, NativeKernelBridge
     from contract_executor import execute_contract_case, load_json as load_contract_json
 
 
@@ -104,18 +106,49 @@ class BooleanRuntimeCore:
         }
         widgets = {entry["instance_id"]: entry for entry in self.panel.get("widgets", [])}
         self.current_value = bool(widgets.get("bool_input", {}).get("props", {}).get("value", True))
+        self.last_result = self.current_value
 
     def execute(self, control_value: bool | None = None) -> dict[str, Any]:
         if control_value is not None:
             self.current_value = bool(control_value)
-        return execute_contract_case(
+        self.last_result = self.current_value
+        return self._execution_artifact_from_values(self.current_value, self.last_result)
+
+    def execute_with_native_kernel_bridge(
+        self,
+        bridge: NativeBoolKernelBridge,
+        control_value: bool | None = None,
+    ) -> dict[str, Any]:
+        if bridge.manifest.source_lowered_unit != "Examples/06_boolean_value_roundtrip/main.lowering.json":
+            raise RuntimeError("Unexpected native bool kernel source lowered unit.")
+        if control_value is not None:
+            self.current_value = bool(control_value)
+        result = bridge.run(self.current_value)
+        if not result.ok:
+            raise RuntimeError(result.diagnostic or "native bool kernel execution failed.")
+        self.last_result = result.result
+        return self._execution_artifact_from_values(self.current_value, self.last_result)
+
+    def _execution_artifact_from_values(self, input_value: bool, result_value: bool) -> dict[str, Any]:
+        artifact = execute_contract_case(
             self.contract,
-            {"input_value": self.current_value},
+            {"input_value": input_value},
             {"wfrog": self.package},
         )
+        artifact["execution_summary"]["input_value"] = input_value
+        artifact["execution_summary"]["result"] = result_value
+        artifact["outputs"]["public"]["result"] = result_value
+        artifact["outputs"]["ui"]["bool_input"] = input_value
+        artifact["outputs"]["ui"]["bool_result"] = result_value
+        for widget in artifact["ui_runtime"]["widgets"]:
+            if widget.get("widget_id") == "bool_input":
+                widget["runtime"]["value"] = input_value
+            if widget.get("widget_id") == "bool_result":
+                widget["runtime"]["value"] = result_value
+        return artifact
 
     def execution_artifact(self) -> dict[str, Any]:
-        return self.execute()
+        return self._execution_artifact_from_values(self.current_value, self.last_result)
 
 
 def render_boolean_widget(widget: dict[str, Any]) -> str:
@@ -207,11 +240,13 @@ class BrowserUiRuntime:
         host: str = "127.0.0.1",
         port: int = 0,
         open_browser: bool = True,
+        native_kernel_bridge: NativeKernelBridge | None = None,
     ) -> None:
         self.runtime = Slice05RuntimeCore(contract_path=contract_path, wfrog_path=wfrog_path)
         self.host = host
         self.port = port
         self.open_browser = open_browser
+        self.native_kernel_bridge = native_kernel_bridge
         self.last_error: Optional[str] = None
         self._httpd: Optional[ThreadingHTTPServer] = None
 
@@ -251,6 +286,7 @@ class BrowserUiRuntime:
                 + html.escape(self.last_error)
                 + "</div>"
             )
+        uses_native_kernel = self.native_kernel_bridge is not None
 
         return f"""<!doctype html>
 <html lang="en">
@@ -387,8 +423,8 @@ pre {{
 <p class="meta">Example 05 - .wfrog front panel + Python runtime</p>
 <dl class="runtime-facts" aria-label="Runtime facts">
   <div><dt>Runtime</dt><dd>Python reference runtime</dd></div>
-  <div><dt>Execution</dt><dd>contract executor</dd></div>
-  <div><dt>Compiler backend</dt><dd>none in runtime path</dd></div>
+  <div><dt>Execution</dt><dd>{'native kernel bridge' if uses_native_kernel else 'contract executor'}</dd></div>
+  <div><dt>Compiler backend</dt><dd>{'LLVM native kernel artifact' if uses_native_kernel else 'none in runtime path'}</dd></div>
 </dl>
 {error_block}
 <div class="panel">
@@ -462,7 +498,13 @@ pre {{
         form = urllib.parse.parse_qs(body, keep_blank_values=True)
         raw_value = form.get("input_value", ["0"])[0]
         try:
-            self.runtime.execute(control_value=int(raw_value))
+            if self.native_kernel_bridge is None:
+                self.runtime.execute(control_value=int(raw_value))
+            else:
+                self.runtime.execute_with_native_kernel_bridge(
+                    self.native_kernel_bridge,
+                    control_value=int(raw_value),
+                )
             self.last_error = None
         except Exception as exc:  # pragma: no cover - exact error rendering is covered through state.json/headless tests
             self.last_error = str(exc)
@@ -495,11 +537,13 @@ class BooleanBrowserUiRuntime:
         host: str = "127.0.0.1",
         port: int = 0,
         open_browser: bool = True,
+        native_kernel_bridge: NativeBoolKernelBridge | None = None,
     ) -> None:
         self.runtime = BooleanRuntimeCore(contract_path=contract_path, wfrog_path=wfrog_path)
         self.host = host
         self.port = port
         self.open_browser = open_browser
+        self.native_kernel_bridge = native_kernel_bridge
         self.last_error: Optional[str] = None
         self._httpd: Optional[ThreadingHTTPServer] = None
 
@@ -530,6 +574,7 @@ class BooleanBrowserUiRuntime:
         error_block = ""
         if self.last_error:
             error_block = "<div class='diagnostic error'>" + html.escape(self.last_error) + "</div>"
+        uses_native_kernel = self.native_kernel_bridge is not None
 
         rendered_widgets = "".join(render_boolean_widget(widget) for widget in widgets)
         return f"""<!doctype html>
@@ -572,12 +617,12 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 <p class="meta">Example 06 - .wfrog front panel + Default Boolean realization assets + Python runtime</p>
 <dl class="runtime-facts" aria-label="Runtime facts">
   <div><dt>Runtime</dt><dd>Python reference runtime</dd></div>
-  <div><dt>Execution</dt><dd>boolean contract executor</dd></div>
-  <div><dt>Compiler backend</dt><dd>none for Example 06</dd></div>
+  <div><dt>Execution</dt><dd>{'native kernel bridge' if uses_native_kernel else 'boolean contract executor'}</dd></div>
+  <div><dt>Compiler backend</dt><dd>{'LLVM native bool kernel artifact' if uses_native_kernel else 'none for Example 06'}</dd></div>
 </dl>
 {error_block}
 <form method="post" action="/run">
-  <div class="front-panel" data-panel-id="{html.escape(panel['panel_id'])}" data-coordinate-space="panel_pixels" data-runtime-language="python" data-compiler-backend="none" data-execution-path="python_boolean_contract_executor" style="width:{panel_layout['width']}px;height:{panel_layout['height']}px;">
+  <div class="front-panel" data-panel-id="{html.escape(panel['panel_id'])}" data-coordinate-space="panel_pixels" data-runtime-language="python" data-compiler-backend="{'llvm' if uses_native_kernel else 'none'}" data-execution-path="{'native_kernel_bridge' if uses_native_kernel else 'python_boolean_contract_executor'}" style="width:{panel_layout['width']}px;height:{panel_layout['height']}px;">
     {rendered_widgets}
   </div>
   <div class="actions"><a class="state-link" href="/state.json">state.json</a></div>
@@ -627,7 +672,13 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
         form = urllib.parse.parse_qs(body, keep_blank_values=True)
         raw_value = form.get("input_value", ["false"])[0]
         try:
-            self.runtime.execute(control_value=parse_bool_input(raw_value))
+            if self.native_kernel_bridge is None:
+                self.runtime.execute(control_value=parse_bool_input(raw_value))
+            else:
+                self.runtime.execute_with_native_kernel_bridge(
+                    self.native_kernel_bridge,
+                    control_value=parse_bool_input(raw_value),
+                )
             self.last_error = None
         except Exception as exc:  # pragma: no cover
             self.last_error = str(exc)
@@ -659,6 +710,7 @@ def build_runtime(
     host: str = "127.0.0.1",
     port: int = 0,
     open_browser: bool = True,
+    native_kernel_bridge: NativeKernelBridge | NativeBoolKernelBridge | None = None,
 ) -> BrowserUiRuntime | BooleanBrowserUiRuntime:
     if wants_example06(example) or is_example06_contract(contract_path):
         return BooleanBrowserUiRuntime(
@@ -667,6 +719,7 @@ def build_runtime(
             host=host,
             port=port,
             open_browser=open_browser,
+            native_kernel_bridge=native_kernel_bridge if isinstance(native_kernel_bridge, NativeBoolKernelBridge) else None,
         )
     return BrowserUiRuntime(
         contract_path=contract_path or default_contract_path(),
@@ -674,4 +727,5 @@ def build_runtime(
         host=host,
         port=port,
         open_browser=open_browser,
+        native_kernel_bridge=native_kernel_bridge if isinstance(native_kernel_bridge, NativeKernelBridge) else None,
     )

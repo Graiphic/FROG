@@ -6,6 +6,8 @@ use serde_json::{json, to_string_pretty, Value};
 use crate::contract::{default_contract_path, default_wfrog_path, find_repo_root};
 use crate::diagnostics::{Result, RuntimeError};
 use crate::execute::{execute_contract, execute_reference_contract_case};
+use crate::native_kernel::{NativeBoolKernelBridge, NativeKernelBridge};
+use crate::runtime::RuntimeCore;
 use crate::ui::{BooleanBrowserUiRuntime, BrowserUiRuntime};
 
 fn repo_root() -> Result<PathBuf> {
@@ -63,6 +65,8 @@ pub fn run_cli() -> Result<()> {
         let mut host = "127.0.0.1".to_string();
         let mut port: u16 = 0;
         let mut open_browser = true;
+        let mut native_kernel_manifest: Option<PathBuf> = None;
+        let mut native_kernel_library: Option<PathBuf> = None;
 
         let mut index = 0usize;
         while index < args.len() {
@@ -91,27 +95,49 @@ pub fn run_cli() -> Result<()> {
                         .parse::<u16>()?;
                 }
                 "--no-open-browser" => open_browser = false,
+                "--native-kernel-manifest" => {
+                    index += 1;
+                    native_kernel_manifest = Some(PathBuf::from(args.get(index).ok_or_else(|| RuntimeError::Message("Missing --native-kernel-manifest value.".to_string()))?));
+                }
+                "--native-kernel-library" => {
+                    index += 1;
+                    native_kernel_library = Some(PathBuf::from(args.get(index).ok_or_else(|| RuntimeError::Message("Missing --native-kernel-library value.".to_string()))?));
+                }
                 value => return Err(RuntimeError::Message(format!("Unknown ui argument: {value}"))),
             }
             index += 1;
         }
 
         if example.as_deref().is_some_and(wants_example06) {
-            let runtime = BooleanBrowserUiRuntime::new(
+            let native_bridge = match (&native_kernel_manifest, &native_kernel_library) {
+                (Some(manifest), Some(library)) => Some(NativeBoolKernelBridge::from_paths(manifest, library)?),
+                _ => None,
+            };
+            let runtime = BooleanBrowserUiRuntime::with_native_kernel_bridge(
                 contract_path.unwrap_or(example06_contract_path()?),
                 wfrog_path.unwrap_or(example06_wfrog_path()?),
+                native_bridge,
             )?;
             return runtime.serve(&host, port, open_browser);
         }
         if contract_path.as_deref().is_some_and(contract_is_example06) {
-            let runtime = BooleanBrowserUiRuntime::new(
+            let native_bridge = match (&native_kernel_manifest, &native_kernel_library) {
+                (Some(manifest), Some(library)) => Some(NativeBoolKernelBridge::from_paths(manifest, library)?),
+                _ => None,
+            };
+            let runtime = BooleanBrowserUiRuntime::with_native_kernel_bridge(
                 contract_path.unwrap(),
                 wfrog_path.unwrap_or(example06_wfrog_path()?),
+                native_bridge,
             )?;
             return runtime.serve(&host, port, open_browser);
         }
 
-        let runtime = BrowserUiRuntime::new(contract_path, wfrog_path)?;
+        let native_bridge = match (&native_kernel_manifest, &native_kernel_library) {
+            (Some(manifest), Some(library)) => Some(NativeKernelBridge::from_paths(manifest, library)?),
+            _ => None,
+        };
+        let runtime = BrowserUiRuntime::with_native_kernel_bridge(contract_path, wfrog_path, native_bridge)?;
         return runtime.serve(&host, port, open_browser);
     }
 
@@ -131,6 +157,8 @@ pub fn run_cli() -> Result<()> {
     let mut contract_path = default_contract_path()?;
     let mut wfrog_path = default_wfrog_path()?;
     let mut example: Option<String> = None;
+    let mut native_kernel_manifest: Option<PathBuf> = None;
+    let mut native_kernel_library: Option<PathBuf> = None;
     let mut index = 0usize;
     while index < args.len() {
         match args[index].as_str() {
@@ -145,6 +173,14 @@ pub fn run_cli() -> Result<()> {
             "--wfrog" => {
                 index += 1;
                 wfrog_path = PathBuf::from(args.get(index).ok_or_else(|| RuntimeError::Message("Missing --wfrog value.".to_string()))?);
+            }
+            "--native-kernel-manifest" => {
+                index += 1;
+                native_kernel_manifest = Some(PathBuf::from(args.get(index).ok_or_else(|| RuntimeError::Message("Missing --native-kernel-manifest value.".to_string()))?));
+            }
+            "--native-kernel-library" => {
+                index += 1;
+                native_kernel_library = Some(PathBuf::from(args.get(index).ok_or_else(|| RuntimeError::Message("Missing --native-kernel-library value.".to_string()))?));
             }
             value => return Err(RuntimeError::Message(format!("Unknown argument: {value}"))),
         }
@@ -162,13 +198,23 @@ pub fn run_cli() -> Result<()> {
         } else {
             wfrog_path
         };
-        let contract = load_json(&contract_path)?;
-        let wfrog = load_json(&wfrog_path)?;
-        execute_reference_contract_case(
-            &contract,
-            &json!({"input_value": parse_bool_input(&input_value_text)?}),
-            Some(&wfrog),
-        )?
+        if let (Some(manifest), Some(library)) = (&native_kernel_manifest, &native_kernel_library) {
+            let bridge = NativeBoolKernelBridge::from_paths(manifest, library)?;
+            let mut runtime = BooleanBrowserUiRuntime::with_native_kernel_bridge(contract_path, wfrog_path, Some(bridge))?;
+            runtime.run_once(parse_bool_input(&input_value_text)?)?
+        } else {
+            let contract = load_json(&contract_path)?;
+            let wfrog = load_json(&wfrog_path)?;
+            execute_reference_contract_case(
+                &contract,
+                &json!({"input_value": parse_bool_input(&input_value_text)?}),
+                Some(&wfrog),
+            )?
+        }
+    } else if let (Some(manifest), Some(library)) = (&native_kernel_manifest, &native_kernel_library) {
+        let bridge = NativeKernelBridge::from_paths(manifest, library)?;
+        let mut runtime = RuntimeCore::from_paths(&contract_path, &wfrog_path)?;
+        runtime.execute_with_native_kernel_bridge(&bridge, Some(input_value_text.parse::<u16>()?))?
     } else {
         execute_contract(input_value_text.parse::<u16>()?, Some(contract_path), Some(wfrog_path))?
     };

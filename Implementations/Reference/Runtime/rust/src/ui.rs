@@ -11,22 +11,47 @@ use serde_json::{json, to_string_pretty, Value};
 use crate::contract::{default_contract_path, default_wfrog_path};
 use crate::diagnostics::{Result, RuntimeError};
 use crate::execute::execute_reference_contract_case;
+use crate::native_kernel::{NativeBoolKernelBridge, NativeKernelBridge};
 use crate::runtime::RuntimeCore;
 
 pub struct BrowserUiRuntime {
     pub core: RuntimeCore,
     pub last_error: Option<String>,
+    pub native_kernel_bridge: Option<NativeKernelBridge>,
 }
 
 impl BrowserUiRuntime {
     pub fn new(contract_path: Option<PathBuf>, wfrog_path: Option<PathBuf>) -> Result<Self> {
+        Self::with_native_kernel_bridge(contract_path, wfrog_path, None)
+    }
+
+    pub fn with_native_kernel_bridge(
+        contract_path: Option<PathBuf>,
+        wfrog_path: Option<PathBuf>,
+        native_kernel_bridge: Option<NativeKernelBridge>,
+    ) -> Result<Self> {
         let contract = contract_path.unwrap_or(default_contract_path()?);
         let wfrog = wfrog_path.unwrap_or(default_wfrog_path()?);
         let core = RuntimeCore::from_paths(contract, wfrog)?;
         Ok(Self {
             core,
             last_error: None,
+            native_kernel_bridge,
         })
+    }
+
+    pub fn run_once(&mut self, input_value: u16) -> Result<Value> {
+        let artifact = if let Some(bridge) = &self.native_kernel_bridge {
+            self.core.execute_with_native_kernel_bridge(bridge, Some(input_value))?
+        } else {
+            self.core.execute(Some(input_value))?
+        };
+        self.last_error = None;
+        Ok(artifact)
+    }
+
+    pub fn execution_artifact(&self) -> Value {
+        self.core.execution_artifact()
     }
 
     pub fn render_html(&self) -> String {
@@ -64,6 +89,7 @@ impl BrowserUiRuntime {
                 escape_html(message)
             );
         }
+        let uses_native_kernel = self.native_kernel_bridge.is_some();
 
         format!(
             "<!doctype html><html lang='en'><head><meta charset='utf-8'><title>{title}</title>\
@@ -93,8 +119,8 @@ impl BrowserUiRuntime {
              <p class='meta'>Example 05 - .wfrog front panel + Rust runtime</p>\
              <dl class='runtime-facts' aria-label='Runtime facts'>\
              <div><dt>Runtime</dt><dd>Rust reference runtime</dd></div>\
-             <div><dt>Execution</dt><dd>contract executor</dd></div>\
-             <div><dt>Compiler backend</dt><dd>none in runtime path</dd></div>\
+             <div><dt>Execution</dt><dd>{execution_path}</dd></div>\
+             <div><dt>Compiler backend</dt><dd>{compiler_backend}</dd></div>\
              </dl>\
              {diagnostics}\
              <div class='panel'><form method='post' action='/run'>\
@@ -112,6 +138,8 @@ impl BrowserUiRuntime {
              </body></html>",
             title = escape_html(snapshot["ui_runtime"]["panel"]["title"].as_str().unwrap_or("FROG")),
             diagnostics = diagnostics,
+            execution_path = if uses_native_kernel { "native kernel bridge" } else { "contract executor" },
+            compiler_backend = if uses_native_kernel { "LLVM native kernel artifact" } else { "none in runtime path" },
             ctrl_color = escape_html(ctrl_runtime["foreground_color"].as_str().unwrap_or("#5B9BD5")),
             ctrl_label = escape_html(ctrl_runtime["label"].as_str().unwrap_or("Input")),
             ctrl_asset_url = escape_html(&ctrl_asset_url),
@@ -162,7 +190,7 @@ impl BrowserUiRuntime {
             );
         }
         if request.method == "GET" && request.path == "/state.json" {
-            let payload = to_string_pretty(&self.core.execution_artifact()).unwrap().into_bytes();
+            let payload = to_string_pretty(&self.execution_artifact()).unwrap().into_bytes();
             return write_response(stream, "200 OK", "application/json; charset=utf-8", payload, None);
         }
         if request.method == "GET" && request.path.starts_with("/asset/") {
@@ -191,10 +219,8 @@ impl BrowserUiRuntime {
             let value = parse_form_value(&body, "input_value").unwrap_or_else(|| "0".to_string());
             match value.parse::<u16>() {
                 Ok(parsed) => {
-                    if let Err(error) = self.core.execute(Some(parsed)) {
+                    if let Err(error) = self.run_once(parsed) {
                         self.last_error = Some(error.to_string());
-                    } else {
-                        self.last_error = None;
                     }
                 }
                 Err(error) => self.last_error = Some(error.to_string()),
@@ -222,11 +248,21 @@ pub struct BooleanBrowserUiRuntime {
     pub wfrog: Value,
     pub asset_map: BTreeMap<String, PathBuf>,
     pub current_value: bool,
+    pub last_result: bool,
     pub last_error: Option<String>,
+    pub native_kernel_bridge: Option<NativeBoolKernelBridge>,
 }
 
 impl BooleanBrowserUiRuntime {
     pub fn new(contract_path: PathBuf, wfrog_path: PathBuf) -> Result<Self> {
+        Self::with_native_kernel_bridge(contract_path, wfrog_path, None)
+    }
+
+    pub fn with_native_kernel_bridge(
+        contract_path: PathBuf,
+        wfrog_path: PathBuf,
+        native_kernel_bridge: Option<NativeBoolKernelBridge>,
+    ) -> Result<Self> {
         let contract: Value = serde_json::from_str(&fs::read_to_string(contract_path)?)?;
         let wfrog: Value = serde_json::from_str(&fs::read_to_string(&wfrog_path)?)?;
         let mut asset_map = BTreeMap::new();
@@ -255,12 +291,27 @@ impl BooleanBrowserUiRuntime {
             wfrog,
             asset_map,
             current_value,
+            last_result: current_value,
             last_error: None,
+            native_kernel_bridge,
         })
     }
 
     pub fn run_once(&mut self, input_value: bool) -> Result<Value> {
         self.current_value = input_value;
+        if let Some(bridge) = &self.native_kernel_bridge {
+            if bridge.manifest().source_lowered_unit != "Examples/06_boolean_value_roundtrip/main.lowering.json" {
+                return Err(RuntimeError::Message("Unexpected native bool kernel source lowered unit.".to_string()));
+            }
+            let result = bridge.run(input_value);
+            if !result.ok {
+                self.last_error = Some(bridge.manifest().diagnostic(result.error_code));
+                return Err(RuntimeError::Message(bridge.manifest().diagnostic(result.error_code)));
+            }
+            self.last_result = result.result;
+        } else {
+            self.last_result = input_value;
+        }
         match self.execution_artifact() {
             Ok(artifact) => {
                 self.last_error = None;
@@ -274,11 +325,27 @@ impl BooleanBrowserUiRuntime {
     }
 
     pub fn execution_artifact(&self) -> Result<Value> {
-        execute_reference_contract_case(
+        let mut artifact = execute_reference_contract_case(
             &self.contract,
             &json!({"input_value": self.current_value}),
             Some(&self.wfrog),
-        )
+        )?;
+        artifact["execution_summary"]["input_value"] = Value::Bool(self.current_value);
+        artifact["execution_summary"]["result"] = Value::Bool(self.last_result);
+        artifact["outputs"]["public"]["result"] = Value::Bool(self.last_result);
+        artifact["outputs"]["ui"]["bool_input"] = Value::Bool(self.current_value);
+        artifact["outputs"]["ui"]["bool_result"] = Value::Bool(self.last_result);
+        if let Some(widgets) = artifact["ui_runtime"]["widgets"].as_array_mut() {
+            for widget in widgets {
+                if widget["widget_id"].as_str() == Some("bool_input") {
+                    widget["runtime"]["value"] = Value::Bool(self.current_value);
+                }
+                if widget["widget_id"].as_str() == Some("bool_result") {
+                    widget["runtime"]["value"] = Value::Bool(self.last_result);
+                }
+            }
+        }
+        Ok(artifact)
     }
 
     pub fn render_html(&self) -> String {
@@ -296,6 +363,7 @@ impl BooleanBrowserUiRuntime {
                 escape_html(message)
             );
         }
+        let uses_native_kernel = self.native_kernel_bridge.is_some();
 
         let rendered_widgets = widgets
             .iter()
@@ -338,17 +406,21 @@ impl BooleanBrowserUiRuntime {
              <p class='meta'>Example 06 - .wfrog front panel + Default Boolean realization assets + Rust runtime</p>\
              <dl class='runtime-facts' aria-label='Runtime facts'>\
              <div><dt>Runtime</dt><dd>Rust reference runtime</dd></div>\
-             <div><dt>Execution</dt><dd>boolean contract executor</dd></div>\
-             <div><dt>Compiler backend</dt><dd>none for Example 06</dd></div>\
+             <div><dt>Execution</dt><dd>{execution_path}</dd></div>\
+             <div><dt>Compiler backend</dt><dd>{compiler_backend}</dd></div>\
              </dl>\
              {diagnostics}\
              <form method='post' action='/run'>\
-             <div class='front-panel' data-panel-id='{panel_id}' data-coordinate-space='panel_pixels' data-runtime-language='rust' data-compiler-backend='none' data-execution-path='rust_boolean_contract_executor' style='width:{panel_width}px;height:{panel_height}px;'>\
+             <div class='front-panel' data-panel-id='{panel_id}' data-coordinate-space='panel_pixels' data-runtime-language='rust' data-compiler-backend='{compiler_backend_id}' data-execution-path='{execution_path_id}' style='width:{panel_width}px;height:{panel_height}px;'>\
              {rendered_widgets}\
              </div><div class='actions'><a class='state-link' href='/state.json'>state.json</a></div></form>\
              </body></html>",
             title = escape_html(panel["title"].as_str().unwrap_or("FROG")),
             diagnostics = diagnostics,
+            execution_path = if uses_native_kernel { "native kernel bridge" } else { "boolean contract executor" },
+            compiler_backend = if uses_native_kernel { "LLVM native bool kernel artifact" } else { "none for Example 06" },
+            compiler_backend_id = if uses_native_kernel { "llvm" } else { "none" },
+            execution_path_id = if uses_native_kernel { "native_kernel_bridge" } else { "rust_boolean_contract_executor" },
             panel_id = escape_html(panel["panel_id"].as_str().unwrap_or("")),
             panel_width = panel_width,
             panel_height = panel_height,

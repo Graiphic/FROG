@@ -8,6 +8,7 @@ use crate::contract::{
     PanelWidget, WfrogPackage, EXPECTED_OVERFLOW_BEHAVIOR, REFERENCE_BACKEND_FAMILY,
 };
 use crate::diagnostics::{ensure, Result, RuntimeError};
+use crate::native_kernel::NativeKernelBridge;
 
 const SUPPORTED_WIDGET_CLASSES: &[(&str, &str)] = &[
     ("frog.widgets.numeric_control", "control"),
@@ -178,6 +179,32 @@ impl RuntimeCore {
             indicator
                 .properties
                 .insert("value".to_string(), Value::Number(final_state.into()));
+        }
+        Ok(self.execution_artifact())
+    }
+
+    pub fn execute_with_native_kernel_bridge(
+        &mut self,
+        bridge: &NativeKernelBridge,
+        control_value: Option<u16>,
+    ) -> Result<Value> {
+        ensure(
+            bridge.manifest().source_lowered_unit == "Examples/05_bounded_ui_accumulator/main.lowering.json",
+            "Unexpected native kernel source lowered unit.",
+        )?;
+        self.apply_contract_property_writes()?;
+        if let Some(value) = control_value {
+            self.set_control_value(value);
+        }
+        let result = bridge.run(self.control_value()?);
+        if !result.ok {
+            return Err(RuntimeError::Message(bridge.manifest().diagnostic(result.error_code)));
+        }
+        self.last_final_state = result.result;
+        if let Some(indicator) = self.widgets.get_mut("ind_result") {
+            indicator
+                .properties
+                .insert("value".to_string(), Value::Number(result.result.into()));
         }
         Ok(self.execution_artifact())
     }
