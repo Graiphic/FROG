@@ -69,7 +69,7 @@
           "style.outer.border_color.hover_true": "transparent",
           "style.outer.border_color.pressed_false": "transparent",
           "style.outer.border_color.pressed_true": "transparent",
-          "style.inner.fill_color.false": "#ffffff",
+          "style.inner.fill_color.false": "#e5e7eb",
           "style.inner.fill_color.true": "#8bd86f",
           "style.inner.fill_color.hover_false": "#eef6ff",
           "style.inner.fill_color.hover_true": "#9be884",

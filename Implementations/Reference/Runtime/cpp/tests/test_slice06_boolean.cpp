@@ -160,7 +160,7 @@ void test_boolean_browser_ui_surface() {
     assert_contains(html, "data-frog-hover-state='hover_false'");
     assert_contains(html, "data-frog-pressed-state='pressed_false'");
     assert_contains(html, "data-frog-transition-state='transition_false_to_true'");
-    assert_contains(html, "--boolean-fill:#ffffff;");
+    assert_contains(html, "--boolean-fill:#e5e7eb;");
     assert_contains(html, "--boolean-fill:#ef4444;");
     assert_contains(html, ">FALSE</span>");
 }
