@@ -76,6 +76,7 @@ def main(argv: list[str] | None = None) -> int:
                 ("Lowerer tests", [py, "-m", "pytest", "Implementations/Reference/Lowerer/tests"]),
                 ("ContractEmitter tests", [py, "-m", "pytest", "Implementations/Reference/ContractEmitter/tests"]),
                 ("Runtime tests", [py, "-m", "pytest", "Implementations/Reference/Runtime/tests"]),
+                ("Runtime Python tests", [py, "-m", "pytest", "Implementations/Reference/Runtime/python/tests"]),
                 ("LLVM tests", [py, "-m", "pytest", "Implementations/Reference/LLVM/tests"]),
                 ("Pipeline tests", [py, "-m", "pytest", "Implementations/Reference/Pipeline/tests"]),
             ])
