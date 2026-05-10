@@ -70,8 +70,8 @@
 
     <circle id="frame_shadow"
             data-frog-part="frame"
-            cx="82"
-            cy="52"
+            cx="80"
+            cy="50"
             r="28" />
 
     <circle id="outer_face"

@@ -3,7 +3,7 @@
   "metadata": {
     "name": "06_boolean_value_roundtrip",
     "summary": "Bounded boolean control-to-indicator value roundtrip using a published .wfrog front panel package.",
-    "description": "Reads a bool value from one boolean control, exposes that value through the public input surface, copies it to one public output, and publishes it to one boolean indicator. This is a runtime/UI-binding pilot and does not introduce LLVM coverage.",
+    "description": "Reads a bool value from one boolean control, exposes that value through the public input surface, copies it to one public output, and publishes it to one boolean indicator. The reference C++ closure can consume the published .wfrog front panel and an LLVM-produced native bool kernel through an explicit manifest.",
     "author": "Graiphic",
     "program_version": "0.1.0",
     "tags": [

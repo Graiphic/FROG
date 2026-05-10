@@ -13,7 +13,10 @@
     "wfrog_path": "Examples/06_boolean_value_roundtrip/ui/boolean_panel.wfrog",
     "snapshot_path": "Implementations/Reference/Runtime/acceptance/example06_input_true.snapshot.json",
     "widget_class_law_path": "Libraries/Widgets/Boolean.md",
-    "default_realization_manifest_path": "Libraries/Realizations/Default/boolean.default.wfrog"
+    "default_realization_manifest_path": "Libraries/Realizations/Default/boolean.default.wfrog",
+    "llvm_module_path": "Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/module.ll",
+    "llvm_kernel_path": "Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/kernel.ll",
+    "native_kernel_manifest_path": "Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/native_kernel_manifest.json"
   },
   "headless": {
     "input_value": true,
@@ -55,8 +58,9 @@
     ]
   },
   "scope": {
-    "runtime_only": true,
-    "llvm_required": false,
+    "runtime_only": false,
+    "llvm_required": true,
+    "cpp_native_kernel_bridge": true,
     "broad_runtime_rewrite": false,
     "generated_deriver_lowerer_contract_corridor": false
   }

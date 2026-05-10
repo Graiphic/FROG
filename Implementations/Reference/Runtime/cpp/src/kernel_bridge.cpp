@@ -77,11 +77,19 @@ NativeKernelManifest load_native_kernel_manifest(const std::filesystem::path& ma
     manifest.output_type = string_field(output, "type");
     manifest.overflow_model = string_field(error_model, "overflow");
 
-    require(manifest.entry_symbol == "frog_example05_run", "Unexpected native kernel entry symbol.");
-    require(manifest.abi == "frog_u16_to_result_status_outptr", "Unexpected native kernel ABI.");
-    require(manifest.input_id == "input_value" && manifest.input_type == "u16", "Unexpected native kernel input surface.");
-    require(manifest.output_id == "result" && manifest.output_type == "u16", "Unexpected native kernel output surface.");
-    require(manifest.overflow_model == "reject_execution_on_u16_overflow", "Unexpected native kernel overflow model.");
+    if (manifest.abi == "frog_u16_to_result_status_outptr") {
+        require(manifest.entry_symbol == "frog_example05_run", "Unexpected native kernel entry symbol.");
+        require(manifest.input_id == "input_value" && manifest.input_type == "u16", "Unexpected native kernel input surface.");
+        require(manifest.output_id == "result" && manifest.output_type == "u16", "Unexpected native kernel output surface.");
+        require(manifest.overflow_model == "reject_execution_on_u16_overflow", "Unexpected native kernel overflow model.");
+    } else if (manifest.abi == "frog_bool_to_result_status_outptr") {
+        require(manifest.entry_symbol == "frog_example06_run", "Unexpected native bool kernel entry symbol.");
+        require(manifest.input_id == "input_value" && manifest.input_type == "bool", "Unexpected native bool kernel input surface.");
+        require(manifest.output_id == "result" && manifest.output_type == "bool", "Unexpected native bool kernel output surface.");
+        require(manifest.overflow_model == "not_applicable", "Unexpected native bool kernel overflow model.");
+    } else {
+        throw std::runtime_error("Unsupported native kernel ABI: " + manifest.abi);
+    }
 
     if (const auto it = error_model.find("error_codes"); it != error_model.end()) {
         for (const auto& item : as_array(it->second, "Expected error_codes array.")) {
@@ -99,6 +107,7 @@ NativeKernelManifest load_native_kernel_manifest(const std::filesystem::path& ma
 NativeKernelBridge::NativeKernelBridge(NativeKernelManifest manifest, FrogNativeKernelFunction entry_point)
     : manifest_(std::move(manifest)), entry_point_(entry_point) {
     require(entry_point_ != nullptr, "Native kernel bridge requires a non-null entry point.");
+    require(manifest_.abi == "frog_u16_to_result_status_outptr", "NativeKernelBridge requires the u16 result-status ABI.");
 }
 
 NativeKernelResult NativeKernelBridge::run(std::uint16_t input_value) const {
@@ -129,6 +138,42 @@ NativeKernelBridge make_linked_native_kernel_bridge(
     const std::filesystem::path& manifest_path,
     FrogNativeKernelFunction entry_point) {
     return NativeKernelBridge(load_native_kernel_manifest(manifest_path), entry_point);
+}
+
+NativeBoolKernelBridge::NativeBoolKernelBridge(NativeKernelManifest manifest, FrogNativeBoolKernelFunction entry_point)
+    : manifest_(std::move(manifest)), entry_point_(entry_point) {
+    require(entry_point_ != nullptr, "Native bool kernel bridge requires a non-null entry point.");
+    require(manifest_.abi == "frog_bool_to_result_status_outptr", "NativeBoolKernelBridge requires the bool result-status ABI.");
+}
+
+NativeBoolKernelResult NativeBoolKernelBridge::run(bool input_value) const {
+    FrogBoolRunResult raw{0, 0, 0};
+    entry_point_(input_value ? 1 : 0, &raw);
+
+    NativeBoolKernelResult result;
+    result.ok = raw.ok != 0;
+    result.result = raw.result != 0;
+    result.error_code = raw.error_code;
+
+    if (!result.ok || result.error_code != 0) {
+        const auto diagnostic = manifest_.diagnostics_by_error_code.find(result.error_code);
+        result.diagnostic = diagnostic == manifest_.diagnostics_by_error_code.end()
+            ? "native bool kernel returned an unmapped error_code."
+            : diagnostic->second;
+        result.ok = false;
+    }
+
+    return result;
+}
+
+const NativeKernelManifest& NativeBoolKernelBridge::manifest() const {
+    return manifest_;
+}
+
+NativeBoolKernelBridge make_linked_native_bool_kernel_bridge(
+    const std::filesystem::path& manifest_path,
+    FrogNativeBoolKernelFunction entry_point) {
+    return NativeBoolKernelBridge(load_native_kernel_manifest(manifest_path), entry_point);
 }
 
 } // namespace frog::runtime

@@ -483,6 +483,24 @@ Value Slice06BooleanRuntimeCore::execute(std::optional<bool> control_value_overr
     return execution_artifact();
 }
 
+Value Slice06BooleanRuntimeCore::execute_with_native_kernel_bridge(
+    const NativeBoolKernelBridge& bridge,
+    std::optional<bool> control_value_override) {
+    require(bridge.manifest().source_lowered_unit == "Examples/06_boolean_value_roundtrip/main.lowering.json", "Unexpected native bool kernel source lowered unit.");
+    if (control_value_override.has_value()) {
+        set_control_value(*control_value_override);
+    }
+
+    const auto result = bridge.run(control_value());
+    if (!result.ok) {
+        throw std::runtime_error(result.diagnostic.empty() ? "native bool kernel execution failed." : result.diagnostic);
+    }
+
+    last_result = result.result;
+    widgets.at("bool_result").properties["value"] = Value(last_result);
+    return execution_artifact();
+}
+
 Value Slice06BooleanRuntimeCore::execution_artifact() const {
     Array widget_entries;
     for (const auto& entry : widgets) {
@@ -517,6 +535,7 @@ Value Slice06BooleanRuntimeCore::execution_artifact() const {
         copy_property("style.inner.fill_color.hover_true");
         copy_property("style.inner.fill_color.pressed_false");
         copy_property("style.inner.fill_color.pressed_true");
+        copy_property("style.pressed.inset");
         copy_property("style.transition.duration_ms");
         copy_property("style.transition.timing");
         widget_entries.push_back(make_object({

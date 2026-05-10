@@ -2,8 +2,8 @@
 """Check Example 06 Boolean value roundtrip realization fidelity.
 
 This check is intentionally narrow. It validates Example 06 as a bounded
-runtime/UI-binding pilot without generalizing Deriver, Lowerer, ContractEmitter,
-or LLVM coverage.
+runtime/UI-binding and native bool-kernel pilot without generalizing Deriver,
+Lowerer, ContractEmitter, widget rendering, or compiler backend behavior.
 
 The check is intentionally stricter than an ID/layout/value smoke test:
 the visible front panel must consume the .wfrog-declared asset references and
@@ -269,6 +269,7 @@ def validate_layout(panel: dict[str, Any]) -> dict[str, dict[str, Any]]:
         require("state_text.style.text_color.false" in props, f"{widget_id} must declare false state text color through .wfrog")
         require("state_text.style.text_color.true" in props, f"{widget_id} must declare true state text color through .wfrog")
         require("style.transition.duration_ms" in props, f"{widget_id} must declare transition timing through .wfrog")
+    require("style.pressed.inset" in input_props, "bool_input must declare pressed inset through .wfrog")
     for state in ("hover_false", "hover_true", "pressed_false", "pressed_true"):
         require(f"style.inner.fill_color.{state}" in input_props, f"bool_input must declare {state} fill color through .wfrog")
         require(f"style.outer.border_color.{state}" in input_props, f"bool_input must declare {state} border color through .wfrog")
@@ -331,6 +332,7 @@ def execute_boolean_roundtrip(contract: dict[str, Any], wfrog: dict[str, Any], i
                         "style.inner.fill_color.hover_true": widgets_by_id["bool_input"]["props"]["style.inner.fill_color.hover_true"],
                         "style.inner.fill_color.pressed_false": widgets_by_id["bool_input"]["props"]["style.inner.fill_color.pressed_false"],
                         "style.inner.fill_color.pressed_true": widgets_by_id["bool_input"]["props"]["style.inner.fill_color.pressed_true"],
+                        "style.pressed.inset": widgets_by_id["bool_input"]["props"]["style.pressed.inset"],
                         "style.transition.duration_ms": widgets_by_id["bool_input"]["props"]["style.transition.duration_ms"],
                         "style.transition.timing": widgets_by_id["bool_input"]["props"]["style.transition.timing"],
                         "asset_ref": widgets_by_id["bool_input"]["visual"]["asset_ref"],
@@ -401,6 +403,7 @@ def render_boolean_widget(widget: dict[str, Any], *, default_manifest_path: str)
     text_color = state_runtime_value(runtime, "state_text.style.text_color", visual_state, "#0b3d19" if value else "#111827")
     transition_ms = str(runtime.get("style.transition.duration_ms", 120))
     transition_timing = str(runtime.get("style.transition.timing", "ease-out"))
+    pressed_inset = str(runtime.get("style.pressed.inset", "1px"))
 
     style = (
         f"left:{layout['x']}px;top:{layout['y']}px;"
@@ -413,6 +416,7 @@ def render_boolean_widget(widget: dict[str, Any], *, default_manifest_path: str)
         f"--boolean-pressed-border:{pressed_border};"
         f"--boolean-text:{text_color};"
         f"--boolean-transition:{transition_ms}ms {transition_timing};"
+        f"--boolean-pressed-inset:{pressed_inset};"
     )
 
     attrs = (
@@ -472,10 +476,10 @@ def render_front_panel(snapshot: dict[str, Any], *, default_manifest_path: str) 
         ".boolean-indicator{pointer-events:none;}"
         ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}"
         ".boolean-caption-overlay{position:absolute;left:8px;top:6px;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}"
-        ".boolean-state-face{position:absolute;left:8px;top:27px;width:144px;height:43px;border:2px solid var(--boolean-border);border-radius:8px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
+        ".boolean-state-face{position:absolute;left:18px;top:31px;width:124px;height:34px;border:2px solid var(--boolean-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
         ".boolean-widget[data-realization-variant='circular'] .boolean-state-face{left:52px;top:23px;width:56px;height:56px;border-radius:50%;}"
         ".boolean-control:hover .boolean-state-face{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-border);box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 2px 5px rgba(15,23,42,.18);}"
-        ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(1px);}"
+        ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}"
         ".boolean-control:focus-visible .boolean-state-face{outline:2px solid #2563eb;outline-offset:2px;}"
         ".boolean-state-overlay{position:absolute;left:0;right:0;top:49px;transform:translateY(-50%);text-align:center;font-size:18px;font-weight:700;line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;}"
         ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
@@ -524,7 +528,8 @@ def validate_rendered_front_panel(rendered: str, *, expected_value: bool, widget
     require("data-frog-hover-state='hover_true'" in rendered or "data-frog-hover-state='hover_false'" in rendered, "control must expose hover visual-state mapping")
     require("data-frog-pressed-state='pressed_true'" in rendered or "data-frog-pressed-state='pressed_false'" in rendered, "control must expose pressed visual-state mapping")
     require("data-frog-transition-state='transition_true_to_false'" in rendered or "data-frog-transition-state='transition_false_to_true'" in rendered, "widgets must expose transition visual-state mapping")
-    require("--boolean-fill:" in rendered and "--boolean-border:" in rendered and "--boolean-transition:" in rendered, "visual state styles must come from .wfrog Boolean properties")
+    require("--boolean-fill:" in rendered and "--boolean-border:" in rendered and "--boolean-transition:" in rendered and "--boolean-pressed-inset:" in rendered, "visual state styles must come from .wfrog Boolean properties")
+    require("transform:translateY(1px)" not in rendered, "pressed movement must be driven by .wfrog style.pressed.inset, not a runtime hardcoded value")
     require("font-size:18px" in rendered and "font-size:14px" in rendered, "rendered text must remain readable at the published size")
 
     state_word = "TRUE" if expected_value else "FALSE"
@@ -553,8 +558,55 @@ def check_source_fir_lowering_contract(source: dict[str, Any], fir: dict[str, An
 
     require(fir_unit["kind"] == "boolean_value_roundtrip_ui_unit", "unexpected FIR unit kind")
     require(lowered_unit["kind"] == "boolean_value_roundtrip_kernel_with_ui_bindings", "unexpected lowered unit kind")
+    require(
+        lowering.get("lowering_intent", {}).get("compiler_family_targets") == ["llvm_native_kernel_bridge"],
+        "Example 06 lowering must declare the LLVM native kernel bridge target",
+    )
     require(contract_unit["kind"] == "boolean_value_roundtrip_ui_unit", "unexpected contract unit kind")
     require(contract_unit["execution_kernel"] == {"operation": "copy", "src": "input_value", "dst": "result", "type": "bool"}, "unexpected execution kernel")
+
+
+def check_native_kernel_publication(refs: dict[str, Any]) -> None:
+    manifest = load_json(repo_path(refs["native_kernel_manifest_path"]))
+    kernel_text = read_text(repo_path(refs["llvm_kernel_path"]))
+    module_text = read_text(repo_path(refs["llvm_module_path"]))
+
+    require(manifest.get("artifact_kind") == "frog_native_kernel_manifest", "unexpected native manifest artifact_kind")
+    kernel = manifest.get("kernel")
+    require(isinstance(kernel, dict), "native manifest kernel must be an object")
+    require(kernel.get("id") == "example06_boolean_roundtrip_kernel", "unexpected Example 06 kernel id")
+    require(kernel.get("source_lowered_unit") == "Examples/06_boolean_value_roundtrip/main.lowering.json", "unexpected Example 06 native source lowering")
+
+    backend = kernel.get("backend")
+    require(isinstance(backend, dict), "native manifest backend must be an object")
+    require(backend.get("family") == "llvm", "Example 06 native backend family must be llvm")
+    require(backend.get("source_artifact") == refs["llvm_kernel_path"], "Example 06 native source artifact mismatch")
+
+    entry = kernel.get("entry")
+    require(isinstance(entry, dict), "native manifest entry must be an object")
+    require(entry.get("symbol") == "frog_example06_run", "unexpected Example 06 native entry symbol")
+    require(entry.get("abi") == "frog_bool_to_result_status_outptr", "unexpected Example 06 native ABI")
+
+    io = kernel.get("io")
+    require(isinstance(io, dict), "native manifest io must be an object")
+    require(io.get("inputs") == [{"id": "input_value", "type": "bool"}], "unexpected Example 06 native input surface")
+    require(io.get("outputs") == [{"id": "result", "type": "bool"}], "unexpected Example 06 native output surface")
+
+    layout = kernel.get("result_status_layout")
+    require(isinstance(layout, dict), "native manifest result_status_layout must be an object")
+    require(layout.get("carrier") == "out_parameter", "Example 06 native ABI must use an out parameter")
+    require(layout.get("c_signature") == "void frog_example06_run(uint8_t input_value, FrogBoolRunResult* out_result)", "unexpected Example 06 native C signature")
+
+    error_model = kernel.get("error_model")
+    require(isinstance(error_model, dict), "native manifest error_model must be an object")
+    require(error_model.get("overflow") == "not_applicable", "Example 06 bool kernel must not claim u16 overflow behavior")
+
+    require("%FrogBoolRunResult = type { i8, i8, i16 }" in kernel_text, "kernel.ll must declare FrogBoolRunResult layout")
+    require("define void @frog_example06_run(i8 %input_value, ptr %out_result)" in kernel_text, "kernel.ll must export frog_example06_run")
+    require("store i8 %result" in kernel_text, "kernel.ll must write the bool result through the out parameter")
+    require("store i16 0" in kernel_text, "kernel.ll must publish error_code 0")
+    require("define i1 @frog_example06_copy_bool" in module_text, "module.ll must expose the lowered bool copy proof")
+    require("public_output=%s" in module_text and "status=ok" in module_text, "module.ll must publish the bool proof output surface")
 
 
 def snapshot_path_for_case(case: dict[str, Any], acceptance_refs: dict[str, Any]) -> Path:
@@ -583,6 +635,7 @@ def check_acceptance(acceptance_path: Path, *, print_json: bool = False) -> None
     default_manifest = load_json(default_manifest_path)
 
     check_source_fir_lowering_contract(source, fir, lowering, contract)
+    check_native_kernel_publication(refs)
     class_law_contains_boolean_surfaces(widget_class_law)
 
     expected_classes = {"frog.widgets.boolean_control", "frog.widgets.boolean_indicator"}

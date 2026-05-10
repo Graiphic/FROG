@@ -427,6 +427,7 @@ std::string render_boolean_widget(const WidgetState& widget) {
     const std::string text_color = state_property(widget.properties, "state_text.style.text_color", visual_state, value ? "#0b3d19" : "#111827");
     const std::string transition_ms = property_string(widget.properties, "style.transition.duration_ms", "120");
     const std::string transition_timing = property_string(widget.properties, "style.transition.timing", "ease-out");
+    const std::string pressed_inset = property_string(widget.properties, "style.pressed.inset", "1px");
 
     std::ostringstream html;
     if (is_control) {
@@ -461,7 +462,8 @@ std::string render_boolean_widget(const WidgetState& widget) {
          << "--boolean-hover-border:" << html_escape(hover_border) << ";"
          << "--boolean-pressed-border:" << html_escape(pressed_border) << ";"
          << "--boolean-text:" << html_escape(text_color) << ";"
-         << "--boolean-transition:" << html_escape(transition_ms) << "ms " << html_escape(transition_timing) << ";";
+         << "--boolean-transition:" << html_escape(transition_ms) << "ms " << html_escape(transition_timing) << ";"
+         << "--boolean-pressed-inset:" << html_escape(pressed_inset) << ";";
     if (!property_bool(widget.properties, "visible", true)) {
         html << "display:none;";
     }
@@ -781,12 +783,18 @@ void BrowserUiRuntime::serve(const std::string& host, std::uint16_t port, bool s
     }
 }
 
-BooleanBrowserUiRuntime::BooleanBrowserUiRuntime(std::filesystem::path contract_path, std::filesystem::path wfrog_path)
-    : core(std::move(contract_path), std::move(wfrog_path)) {}
+BooleanBrowserUiRuntime::BooleanBrowserUiRuntime(
+    std::filesystem::path contract_path,
+    std::filesystem::path wfrog_path,
+    std::shared_ptr<const NativeBoolKernelBridge> native_kernel_bridge_)
+    : core(std::move(contract_path), std::move(wfrog_path)),
+      native_kernel_bridge(std::move(native_kernel_bridge_)) {}
 
 frog::json::Value BooleanBrowserUiRuntime::run_once(bool input_value) {
     try {
-        frog::json::Value artifact = core.execute(input_value);
+        frog::json::Value artifact = native_kernel_bridge == nullptr
+            ? core.execute(input_value)
+            : core.execute_with_native_kernel_bridge(*native_kernel_bridge, input_value);
         last_error.reset();
         return artifact;
     } catch (const std::exception& error) {
@@ -800,6 +808,7 @@ std::string BooleanBrowserUiRuntime::render_html() const {
     const auto& ind = core.widgets.at("bool_result");
     const auto panel_width = layout_i64(core.panel.layout, "width", 420);
     const auto panel_height = layout_i64(core.panel.layout, "height", 150);
+    const bool uses_native_kernel = native_kernel_bridge != nullptr;
 
     std::string diagnostics;
     if (last_error.has_value()) {
@@ -824,10 +833,10 @@ std::string BooleanBrowserUiRuntime::render_html() const {
             ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}"
             ".missing-skin{background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;}"
             ".boolean-caption-overlay{position:absolute;left:8px;top:6px;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}"
-            ".boolean-state-face{position:absolute;left:8px;top:27px;width:144px;height:43px;border:2px solid var(--boolean-border);border-radius:8px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
+            ".boolean-state-face{position:absolute;left:18px;top:31px;width:124px;height:34px;border:2px solid var(--boolean-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
             ".boolean-widget[data-realization-variant='circular'] .boolean-state-face{left:52px;top:23px;width:56px;height:56px;border-radius:50%;}"
             ".boolean-control:hover .boolean-state-face{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-border);box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 2px 5px rgba(15,23,42,.18);}"
-            ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(1px);}"
+            ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}"
             ".boolean-control:focus-visible .boolean-state-face{outline:2px solid #2563eb;outline-offset:2px;}"
             ".boolean-state-overlay{position:absolute;left:0;right:0;top:49px;transform:translateY(-50%);text-align:center;font-size:18px;font-weight:700;line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;}"
             ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
@@ -839,13 +848,15 @@ std::string BooleanBrowserUiRuntime::render_html() const {
     html << "<p class='meta'>Example 06 - .wfrog front panel + Default Boolean realization assets + C++ runtime</p>";
     html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
     html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
-    html << "<div><dt>Execution</dt><dd>boolean contract executor</dd></div>";
-    html << "<div><dt>Compiler backend</dt><dd>none for Example 06</dd></div>";
+    html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : "boolean contract executor") << "</dd></div>";
+    html << "<div><dt>Compiler backend</dt><dd>" << (uses_native_kernel ? "LLVM native bool kernel artifact" : "none for Example 06") << "</dd></div>";
     html << "</dl>";
     html << diagnostics;
     html << "<form method='post' action='/run'>";
     html << "<div class='front-panel' data-panel-id='" << html_escape(core.panel.panel_id)
-         << "' data-coordinate-space='panel_pixels' data-runtime-language='cpp' data-compiler-backend='none' data-execution-path='cpp_boolean_contract_executor'";
+         << "' data-coordinate-space='panel_pixels' data-runtime-language='cpp'";
+    html << " data-compiler-backend='" << (uses_native_kernel ? "llvm" : "none") << "'";
+    html << " data-execution-path='" << (uses_native_kernel ? "native_kernel_bridge" : "cpp_boolean_contract_executor") << "'";
     html << " style='width:" << css_px(panel_width) << ";height:" << css_px(panel_height) << ";'>";
     html << render_boolean_widget(ctrl);
     html << render_boolean_widget(ind);

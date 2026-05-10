@@ -59,6 +59,14 @@ def main(argv: list[str] | None = None) -> int:
                     "Example 05 C++ LLVM-produced native kernel bridge",
                     [py, "Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py"],
                 ),
+                (
+                    "Example 06 native bool kernel bridge publication",
+                    [py, "Implementations/Reference/Runtime/check_example06_native_kernel_bridge.py"],
+                ),
+                (
+                    "Example 06 C++ LLVM-produced native bool kernel bridge",
+                    [py, "Implementations/Reference/Runtime/check_example06_cpp_native_kernel_bridge.py"],
+                ),
             ])
 
         if args.include_pytest:

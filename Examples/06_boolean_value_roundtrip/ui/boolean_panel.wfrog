@@ -118,6 +118,7 @@
             "style.inner.fill_color.hover_true": "#9be884",
             "style.inner.fill_color.pressed_false": "#dbeafe",
             "style.inner.fill_color.pressed_true": "#6fc657",
+            "style.pressed.inset": "1px",
             "style.transition.duration_ms": 120,
             "style.transition.timing": "ease-out",
             "interaction.enabled": true,

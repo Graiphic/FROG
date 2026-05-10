@@ -282,6 +282,7 @@ Value execute_boolean_case(const Value& contract, const Object& unit, const Valu
         copy_prop("style.inner.fill_color.hover_true");
         copy_prop("style.inner.fill_color.pressed_false");
         copy_prop("style.inner.fill_color.pressed_true");
+        copy_prop("style.pressed.inset");
         copy_prop("style.transition.duration_ms");
         copy_prop("style.transition.timing");
         return Value(runtime);

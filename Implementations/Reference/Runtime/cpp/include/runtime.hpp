@@ -64,6 +64,9 @@ public:
     void set_control_value(bool value);
     bool control_value() const;
     frog::json::Value execute(std::optional<bool> control_value = std::nullopt);
+    frog::json::Value execute_with_native_kernel_bridge(
+        const NativeBoolKernelBridge& bridge,
+        std::optional<bool> control_value = std::nullopt);
     frog::json::Value execution_artifact() const;
 
     std::filesystem::path contract_path;

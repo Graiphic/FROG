@@ -130,6 +130,8 @@ void test_boolean_browser_ui_surface() {
     assert_contains(html, "--boolean-fill:#8bd86f;");
     assert_contains(html, "--boolean-border:#184a24;");
     assert_contains(html, "--boolean-transition:120ms ease-out;");
+    assert_contains(html, "--boolean-pressed-inset:1px;");
+    assert_contains(html, "transform:translateY(var(--boolean-pressed-inset));");
     assert_contains(html, "name='input_value' value='false'");
     assert_contains(html, "data-toggle-target='false'");
     assert_contains(html, "aria-readonly='true'");

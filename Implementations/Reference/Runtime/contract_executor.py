@@ -391,6 +391,7 @@ def execute_boolean_value_roundtrip_ui_unit(contract: dict[str, Any], unit: dict
             "style.inner.fill_color.hover_true",
             "style.inner.fill_color.pressed_false",
             "style.inner.fill_color.pressed_true",
+            "style.pressed.inset",
             "style.transition.duration_ms",
             "style.transition.timing",
         ):
