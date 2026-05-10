@@ -523,6 +523,8 @@ Value Slice06BooleanRuntimeCore::execution_artifact() const {
         };
         copy_property("state_text.style.text_color.false");
         copy_property("state_text.style.text_color.true");
+        copy_property("state_text.visible");
+        copy_property("style.frame.visible");
         copy_property("style.outer.border_color.false");
         copy_property("style.outer.border_color.true");
         copy_property("style.outer.border_color.hover_false");
@@ -535,6 +537,12 @@ Value Slice06BooleanRuntimeCore::execution_artifact() const {
         copy_property("style.inner.fill_color.hover_true");
         copy_property("style.inner.fill_color.pressed_false");
         copy_property("style.inner.fill_color.pressed_true");
+        copy_property("style.inner.border_color.false");
+        copy_property("style.inner.border_color.true");
+        copy_property("style.inner.border_color.hover_false");
+        copy_property("style.inner.border_color.hover_true");
+        copy_property("style.inner.border_color.pressed_false");
+        copy_property("style.inner.border_color.pressed_true");
         copy_property("style.pressed.inset");
         copy_property("style.transition.duration_ms");
         copy_property("style.transition.timing");

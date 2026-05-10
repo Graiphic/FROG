@@ -21,19 +21,19 @@
       }
 
       #frame_shadow {
-        fill: #0f172a;
-        opacity: 0.14;
+        fill: transparent;
+        opacity: 0;
       }
 
       #outer_face {
         fill: none;
-        stroke: #111827;
+        stroke: transparent;
         stroke-width: 3px;
       }
 
       #inner_face {
         fill: none;
-        stroke: rgba(255,255,255,0.55);
+        stroke: transparent;
         stroke-width: 1px;
       }
 
@@ -72,7 +72,8 @@
             data-frog-part="frame"
             cx="80"
             cy="50"
-            r="28" />
+            r="28"
+            data-frog-bind="style.frame.visible style.frame.fill_color.* style.frame.opacity.*" />
 
     <circle id="outer_face"
             data-frog-part="outer_face"
