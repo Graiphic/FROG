@@ -351,4 +351,198 @@ Value Slice05RuntimeCore::execution_artifact() const {
     });
 }
 
+Slice06BooleanRuntimeCore::Slice06BooleanRuntimeCore(std::filesystem::path contract_path_, std::filesystem::path wfrog_path_)
+    : contract_path(std::move(contract_path_)),
+      wfrog_path(std::move(wfrog_path_)),
+      contract(load_contract_from_path(contract_path)),
+      package(load_wfrog_from_path(wfrog_path)),
+      unit(load_and_validate()),
+      panel(package.front_panels.at(0)) {
+    for (const auto& asset : package.svg_assets) {
+        asset_map.emplace(asset.asset_id, std::filesystem::absolute(wfrog_path.parent_path() / asset.path));
+    }
+    widgets = build_widgets();
+    last_result = control_value();
+    widgets.at("bool_result").properties["value"] = Value(last_result);
+}
+
+ContractUnit Slice06BooleanRuntimeCore::load_and_validate() const {
+    require(contract.backend_family == REFERENCE_BACKEND_FAMILY, "Unexpected backend family.");
+    require(contract.source_ref.example_id == "06_boolean_value_roundtrip", "Slice 06 expects Example 06.");
+    require(contract.assumptions.runtime_family.name == REFERENCE_BACKEND_FAMILY, "Unexpected runtime-family assumption name.");
+    require(contract.assumptions.runtime_family.ui_binding.widget_value_binding, "Contract must require widget_value_binding.");
+    require(contract.units.size() == 1, "Expected exactly one contract unit.");
+
+    const ContractUnit& current_unit = contract.units.front();
+    require(current_unit.unit_id == "main", "Expected unit_id main.");
+    require(current_unit.kind == "boolean_value_roundtrip_ui_unit", "Unexpected runtime unit kind.");
+    require(current_unit.public_interface.inputs.size() == 1, "Expected one public input.");
+    require(current_unit.public_interface.outputs.size() == 1, "Expected one public output.");
+    require(current_unit.public_interface.inputs.front().id == "input_value", "Expected public input input_value.");
+    require(current_unit.public_interface.inputs.front().port_type == "bool", "Expected bool public input.");
+    require(current_unit.public_interface.outputs.front().id == "result", "Expected public output result.");
+    require(current_unit.public_interface.outputs.front().port_type == "bool", "Expected bool public output.");
+    require(current_unit.execution_model.structure == "single_step", "Slice 06 expects a single-step copy execution model.");
+    require(current_unit.execution_model.body_rule.kind == "copy", "Slice 06 expects a copy body rule.");
+    require(current_unit.property_writes.empty(), "Slice 06 does not use property writes.");
+
+    require(package.front_panels.size() == 1, "Expected exactly one front panel.");
+    const auto& current_panel = package.front_panels.front();
+    require(current_panel.host_binding_ref == "reference_host_default", "Expected host_binding_ref reference_host_default.");
+
+    const auto host_it = std::find_if(
+        package.host_bindings.begin(),
+        package.host_bindings.end(),
+        [&](const HostBinding& binding) { return binding.binding_id == "reference_host_default"; });
+    require(host_it != package.host_bindings.end(), "Missing reference_host_default host binding.");
+    const std::set<std::string> required(host_it->required_capabilities.begin(), host_it->required_capabilities.end());
+    require(required.count("window") == 1, "Missing host capability window.");
+    require(required.count("basic_widget_rendering") == 1, "Missing host capability basic_widget_rendering.");
+    require(required.count("widget_value_binding") == 1, "Missing host capability widget_value_binding.");
+
+    std::map<std::string, const PanelWidget*> panel_widgets;
+    for (const auto& widget : current_panel.widgets) {
+        panel_widgets.emplace(widget.instance_id, &widget);
+    }
+    require(panel_widgets.count("bool_input") == 1, "Missing panel widget bool_input.");
+    require(panel_widgets.count("bool_result") == 1, "Missing panel widget bool_result.");
+
+    for (const auto& binding : current_unit.ui_binding.widgets) {
+        const auto widget_it = panel_widgets.find(binding.widget_id);
+        require(widget_it != panel_widgets.end(), "Missing panel widget " + binding.widget_id + ".");
+        require(widget_it->second->class_ref == binding.widget_class, "Class mismatch for widget " + binding.widget_id + ".");
+        require(binding.value_type == "bool", "Slice 06 supports only bool widget values.");
+        require(
+            binding.widget_class == "frog.widgets.boolean_control" || binding.widget_class == "frog.widgets.boolean_indicator",
+            "Unsupported widget class " + binding.widget_class + ".");
+    }
+
+    return current_unit;
+}
+
+std::map<std::string, WidgetState> Slice06BooleanRuntimeCore::build_widgets() const {
+    std::map<std::string, const PanelWidget*> panel_widgets;
+    for (const auto& widget : panel.widgets) {
+        panel_widgets.emplace(widget.instance_id, &widget);
+    }
+
+    std::map<std::string, WidgetState> result;
+    for (const auto& binding : unit.ui_binding.widgets) {
+        const auto* panel_widget = panel_widgets.at(binding.widget_id);
+        std::optional<std::string> asset_id;
+        std::filesystem::path asset_path;
+        if (const auto visual_it = panel_widget->visual.find("asset_ref"); visual_it != panel_widget->visual.end() && visual_it->second.is_string()) {
+            const std::string& asset_ref = visual_it->second.as_string();
+            if (asset_ref.rfind("asset:", 0) == 0) {
+                asset_id = asset_ref.substr(6);
+                const auto asset_it = asset_map.find(*asset_id);
+                if (asset_it != asset_map.end()) {
+                    asset_path = asset_it->second;
+                }
+            }
+        }
+
+        auto properties = panel_widget->props;
+        properties.emplace("value", properties.count("value") ? properties.at("value") : Value(false));
+        properties.emplace("caption.text", properties.count("caption.text") ? properties.at("caption.text") : Value(binding.widget_id));
+        properties.emplace("state_text.true_text", properties.count("state_text.true_text") ? properties.at("state_text.true_text") : Value("TRUE"));
+        properties.emplace("state_text.false_text", properties.count("state_text.false_text") ? properties.at("state_text.false_text") : Value("FALSE"));
+        properties.emplace("interaction.enabled", properties.count("interaction.enabled") ? properties.at("interaction.enabled") : Value(binding.role == "control"));
+        properties.emplace("realization.variant", properties.count("realization.variant") ? properties.at("realization.variant") : Value(""));
+
+        result.emplace(
+            binding.widget_id,
+            WidgetState{
+                binding.widget_id,
+                binding.widget_class,
+                binding.role,
+                panel_widget->layout,
+                std::move(properties),
+                asset_id,
+                asset_path,
+                {},
+            });
+    }
+    return result;
+}
+
+void Slice06BooleanRuntimeCore::set_control_value(bool value) {
+    widgets.at("bool_input").properties["value"] = Value(value);
+}
+
+bool Slice06BooleanRuntimeCore::control_value() const {
+    return json_bool(widgets.at("bool_input").properties, "value", false);
+}
+
+Value Slice06BooleanRuntimeCore::execute(std::optional<bool> control_value_override) {
+    if (control_value_override.has_value()) {
+        set_control_value(*control_value_override);
+    }
+    last_result = control_value();
+    widgets.at("bool_result").properties["value"] = Value(last_result);
+    return execution_artifact();
+}
+
+Value Slice06BooleanRuntimeCore::execution_artifact() const {
+    Array widget_entries;
+    for (const auto& entry : widgets) {
+        const auto& widget = entry.second;
+        const bool value = json_bool(widget.properties, "value", false);
+        widget_entries.push_back(make_object({
+            {"widget_id", Value(widget.widget_id)},
+            {"class_ref", Value(widget.class_ref)},
+            {"role", Value(widget.role)},
+            {"layout", widget.layout},
+            {"runtime", make_object({
+                {"value", Value(value)},
+                {"label.text", Value(json_string(widget.properties, "label.text"))},
+                {"caption.text", Value(json_string(widget.properties, "caption.text"))},
+                {"state_text.true_text", Value(json_string(widget.properties, "state_text.true_text", "TRUE"))},
+                {"state_text.false_text", Value(json_string(widget.properties, "state_text.false_text", "FALSE"))},
+                {"asset_ref", widget.asset_id.has_value() ? Value("asset:" + *widget.asset_id) : Value(nullptr)},
+                {"realization.variant", Value(json_string(widget.properties, "realization.variant"))},
+            })},
+        }));
+    }
+
+    return make_object({
+        {"artifact_kind", Value("frog_runtime_execution_result")},
+        {"artifact_governance_ref", make_object({{"path", Value("Versioning/Readme.md")}})},
+        {"status", Value("ok")},
+        {"contract_ref", make_object({
+            {"unit_ids", make_array({Value(unit.unit_id)})},
+            {"backend_family", Value(contract.backend_family)},
+            {"source_ref", make_object({
+                {"example_id", Value(contract.source_ref.example_id)},
+                {"path", Value(contract.source_ref.path)},
+                {"entry_unit", Value(contract.source_ref.entry_unit)},
+            })},
+        })},
+        {"execution_summary", make_object({
+            {"mode", Value("boolean_value_roundtrip")},
+            {"executed_unit", Value(unit.unit_id)},
+            {"operation", Value("copy")},
+            {"input_value", Value(control_value())},
+            {"result", Value(last_result)},
+        })},
+        {"outputs", make_object({
+            {"public", make_object({{"result", Value(last_result)}})},
+            {"ui", make_object({
+                {"bool_input", Value(control_value())},
+                {"bool_result", Value(last_result)},
+            })},
+        })},
+        {"ui_runtime", make_object({
+            {"panel", make_object({
+                {"panel_id", Value(panel.panel_id)},
+                {"title", Value(panel.title)},
+                {"class_ref", Value(panel.class_ref)},
+                {"layout", panel.layout},
+            })},
+            {"widgets", Value(widget_entries)},
+        })},
+        {"diagnostics", Value(Array{})},
+    });
+}
+
 } // namespace frog::runtime

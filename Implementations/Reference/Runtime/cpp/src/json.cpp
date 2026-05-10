@@ -1,7 +1,9 @@
 #include "json.hpp"
 
+#include <cmath>
 #include <cctype>
 #include <fstream>
+#include <iomanip>
 #include <sstream>
 
 namespace frog::json {
@@ -36,7 +38,7 @@ public:
             return Value(nullptr);
         default:
             if (ch == '-' || std::isdigit(static_cast<unsigned char>(ch))) {
-                return Value(parse_number());
+                return parse_number();
             }
             throw ParseError(std::string("Unexpected character in JSON: ") + ch);
         }
@@ -129,7 +131,7 @@ private:
         throw ParseError("Unterminated JSON string.");
     }
 
-    std::int64_t parse_number() {
+    Value parse_number() {
         const std::size_t start = index_;
         if (peek() == '-') {
             ++index_;
@@ -140,10 +142,35 @@ private:
         while (!eof() && std::isdigit(static_cast<unsigned char>(peek()))) {
             ++index_;
         }
-        if (!eof() && (peek() == '.' || peek() == 'e' || peek() == 'E')) {
-            throw ParseError("This minimal runtime only supports integer JSON numbers.");
+        bool floating = false;
+        if (!eof() && peek() == '.') {
+            floating = true;
+            ++index_;
+            if (eof() || !std::isdigit(static_cast<unsigned char>(peek()))) {
+                throw ParseError("Malformed JSON number.");
+            }
+            while (!eof() && std::isdigit(static_cast<unsigned char>(peek()))) {
+                ++index_;
+            }
         }
-        return std::stoll(text_.substr(start, index_ - start));
+        if (!eof() && (peek() == 'e' || peek() == 'E')) {
+            floating = true;
+            ++index_;
+            if (!eof() && (peek() == '+' || peek() == '-')) {
+                ++index_;
+            }
+            if (eof() || !std::isdigit(static_cast<unsigned char>(peek()))) {
+                throw ParseError("Malformed JSON number.");
+            }
+            while (!eof() && std::isdigit(static_cast<unsigned char>(peek()))) {
+                ++index_;
+            }
+        }
+        const auto token = text_.substr(start, index_ - start);
+        if (floating) {
+            return Value(std::stod(token));
+        }
+        return Value(static_cast<std::int64_t>(std::stoll(token)));
     }
 
     Value parse_array() {
@@ -208,6 +235,16 @@ std::string indent(int level, int indent_size) {
     return std::string(static_cast<std::size_t>(level * indent_size), ' ');
 }
 
+std::string format_double(double value) {
+    std::ostringstream number;
+    number << std::setprecision(15) << value;
+    std::string text = number.str();
+    if (text.find('.') == std::string::npos && text.find('e') == std::string::npos && text.find('E') == std::string::npos) {
+        text += ".0";
+    }
+    return text;
+}
+
 void append_string(std::ostringstream& out, const Value& value, bool pretty, int indent_size, int level) {
     (void)pretty;
     (void)indent_size;
@@ -217,7 +254,7 @@ void append_string(std::ostringstream& out, const Value& value, bool pretty, int
     } else if (value.is_bool()) {
         out << (value.as_bool() ? "true" : "false");
     } else if (value.is_number()) {
-        out << value.as_i64();
+        out << (value.is_floating_number() ? format_double(value.as_f64()) : std::to_string(value.as_i64()));
     } else if (value.is_string()) {
         out << '"' << escape_string(value.as_string()) << '"';
     } else if (value.is_array()) {
@@ -289,6 +326,7 @@ Value::Value() : storage_(nullptr) {}
 Value::Value(std::nullptr_t) : storage_(nullptr) {}
 Value::Value(bool value) : storage_(value) {}
 Value::Value(std::int64_t value) : storage_(value) {}
+Value::Value(double value) : storage_(value) {}
 Value::Value(int value) : storage_(static_cast<std::int64_t>(value)) {}
 Value::Value(unsigned int value) : storage_(static_cast<std::int64_t>(value)) {}
 Value::Value(std::uint64_t value) : storage_(static_cast<std::int64_t>(value)) {}
@@ -299,13 +337,15 @@ Value::Value(Object value) : storage_(std::move(value)) {}
 
 bool Value::is_null() const { return std::holds_alternative<std::nullptr_t>(storage_); }
 bool Value::is_bool() const { return std::holds_alternative<bool>(storage_); }
-bool Value::is_number() const { return std::holds_alternative<std::int64_t>(storage_); }
+bool Value::is_number() const { return std::holds_alternative<std::int64_t>(storage_) || std::holds_alternative<double>(storage_); }
+bool Value::is_floating_number() const { return std::holds_alternative<double>(storage_); }
 bool Value::is_string() const { return std::holds_alternative<std::string>(storage_); }
 bool Value::is_array() const { return std::holds_alternative<Array>(storage_); }
 bool Value::is_object() const { return std::holds_alternative<Object>(storage_); }
 
 bool Value::as_bool() const { return std::get<bool>(storage_); }
-std::int64_t Value::as_i64() const { return std::get<std::int64_t>(storage_); }
+std::int64_t Value::as_i64() const { return std::holds_alternative<double>(storage_) ? static_cast<std::int64_t>(std::get<double>(storage_)) : std::get<std::int64_t>(storage_); }
+double Value::as_f64() const { return std::holds_alternative<double>(storage_) ? std::get<double>(storage_) : static_cast<double>(std::get<std::int64_t>(storage_)); }
 const std::string& Value::as_string() const { return std::get<std::string>(storage_); }
 const Array& Value::as_array() const { return std::get<Array>(storage_); }
 const Object& Value::as_object() const { return std::get<Object>(storage_); }

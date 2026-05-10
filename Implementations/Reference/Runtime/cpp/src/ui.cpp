@@ -381,6 +381,71 @@ std::uint16_t parse_u16_form_value(const std::string& value) {
     return static_cast<std::uint16_t>(parsed);
 }
 
+bool parse_bool_form_value(std::string value) {
+    std::transform(value.begin(), value.end(), value.begin(), [](unsigned char ch) {
+        return static_cast<char>(std::tolower(ch));
+    });
+    if (value == "true" || value == "1" || value == "on") {
+        return true;
+    }
+    if (value == "false" || value == "0" || value.empty()) {
+        return false;
+    }
+    throw std::runtime_error("input_value must be a Boolean value.");
+}
+
+std::string boolean_text(bool value, const Object& properties) {
+    return property_string(properties, value ? "state_text.true_text" : "state_text.false_text", value ? "TRUE" : "FALSE");
+}
+
+std::string render_boolean_widget(const WidgetState& widget) {
+    const bool is_control = widget.role == "control";
+    const auto x = layout_i64(widget.layout, "x", 0);
+    const auto y = layout_i64(widget.layout, "y", 0);
+    const auto width = layout_i64(widget.layout, "width", 160);
+    const auto height = layout_i64(widget.layout, "height", 80);
+    const bool value = property_bool(widget.properties, "value", false);
+    const std::string state_text = boolean_text(value, widget.properties);
+    const std::string caption = property_string(widget.properties, "caption.text", widget.widget_id);
+    const std::string route = asset_route(widget);
+    const std::string next_value = value ? "false" : "true";
+
+    std::ostringstream html;
+    if (is_control) {
+        html << "<button class='frog-widget boolean-widget boolean-control' type='submit'";
+        html << " name='input_value' value='" << next_value << "' data-toggle-target='" << next_value << "'";
+        html << " aria-pressed='" << (value ? "true" : "false") << "'";
+    } else {
+        html << "<section class='frog-widget boolean-widget boolean-indicator' aria-readonly='true'";
+    }
+    html << " data-widget-id='" << html_escape(widget.widget_id) << "'";
+    html << " data-class-ref='" << html_escape(widget.class_ref) << "'";
+    html << " data-role='" << html_escape(widget.role) << "'";
+    if (widget.asset_id.has_value()) {
+        html << " data-asset-ref='asset:" << html_escape(*widget.asset_id) << "'";
+    }
+    if (!route.empty()) {
+        html << " data-asset-route='" << html_escape(route) << "'";
+    }
+    html << " data-current-value='" << (value ? "true" : "false") << "'";
+    html << " style='position:absolute;left:" << css_px(x) << ";top:" << css_px(y)
+         << ";width:" << css_px(width) << ";height:" << css_px(height) << ";";
+    if (!property_bool(widget.properties, "visible", true)) {
+        html << "display:none;";
+    }
+    html << "'>";
+
+    if (!route.empty()) {
+        html << "<img class='boolean-skin' src='" << html_escape(route) << "' alt='' aria-hidden='true' />";
+    } else {
+        html << "<div class='boolean-skin missing-skin'></div>";
+    }
+    html << "<span class='boolean-caption-overlay' data-frog-part='caption'>" << html_escape(caption) << "</span>";
+    html << "<span class='boolean-state-overlay' data-frog-part='state_text'>" << html_escape(state_text) << "</span>";
+    html << (is_control ? "</button>" : "</section>");
+    return html.str();
+}
+
 struct Request {
     std::string method;
     std::string path;
@@ -660,6 +725,150 @@ void BrowserUiRuntime::serve(const std::string& host, std::uint16_t port, bool s
                 try {
                     const auto form_value = parse_form_value(request.body, "input_value").value_or("0");
                     run_once(parse_u16_form_value(form_value));
+                } catch (const std::exception& error) {
+                    last_error = error.what();
+                }
+                send_response(client, "303 See Other", "text/plain; charset=utf-8", "", std::make_pair(std::string("Location"), std::string("/")));
+            } else {
+                send_response(client, "404 Not Found", "text/plain; charset=utf-8", "not found");
+            }
+        } catch (const std::exception& error) {
+            send_response(client, "500 Internal Server Error", "text/plain; charset=utf-8", error.what());
+        }
+        close_socket(client);
+    }
+}
+
+BooleanBrowserUiRuntime::BooleanBrowserUiRuntime(std::filesystem::path contract_path, std::filesystem::path wfrog_path)
+    : core(std::move(contract_path), std::move(wfrog_path)) {}
+
+frog::json::Value BooleanBrowserUiRuntime::run_once(bool input_value) {
+    try {
+        frog::json::Value artifact = core.execute(input_value);
+        last_error.reset();
+        return artifact;
+    } catch (const std::exception& error) {
+        last_error = error.what();
+        throw;
+    }
+}
+
+std::string BooleanBrowserUiRuntime::render_html() const {
+    const auto& ctrl = core.widgets.at("bool_input");
+    const auto& ind = core.widgets.at("bool_result");
+    const auto panel_width = layout_i64(core.panel.layout, "width", 420);
+    const auto panel_height = layout_i64(core.panel.layout, "height", 150);
+
+    std::string diagnostics;
+    if (last_error.has_value()) {
+        diagnostics = "<div class='diagnostic error'>" + html_escape(*last_error) + "</div>";
+    }
+
+    std::ostringstream html;
+    html << "<!doctype html><html lang='en'><head><meta charset='utf-8'><title>" << html_escape(core.panel.title) << "</title>";
+    html << "<style>"
+            "body{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}"
+            "h1{font-size:24px;margin:0 0 12px 0;}"
+            "p.meta{margin:0 0 20px 0;color:#52606d;}"
+            ".front-panel{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}"
+            ".frog-widget{position:absolute;box-sizing:border-box;}"
+            ".boolean-widget{border:0;padding:0;background:transparent;font:inherit;color:inherit;}"
+            ".boolean-control{cursor:pointer;}"
+            ".boolean-indicator{pointer-events:none;}"
+            ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;}"
+            ".missing-skin{background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;}"
+            ".boolean-caption-overlay{position:absolute;left:10px;top:8px;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;}"
+            ".boolean-state-overlay{position:absolute;left:0;right:0;top:41px;transform:translateY(-50%);text-align:center;font-size:18px;font-weight:700;line-height:1;color:#0f172a;pointer-events:none;}"
+            ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
+            ".state-link{font-size:16px;}"
+            ".diagnostic{margin:12px 0;padding:10px 12px;border-radius:6px;}"
+            ".diagnostic.error{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}"
+            "</style></head><body>";
+    html << "<h1>" << html_escape(core.panel.title) << "</h1>";
+    html << "<p class='meta'>Example 06 - .wfrog front panel + Default Boolean realization assets + C++ runtime</p>";
+    html << diagnostics;
+    html << "<form method='post' action='/run'>";
+    html << "<div class='front-panel' data-panel-id='" << html_escape(core.panel.panel_id)
+         << "' data-coordinate-space='panel_pixels' data-execution-path='cpp_boolean_contract_executor'";
+    html << " style='width:" << css_px(panel_width) << ";height:" << css_px(panel_height) << ";'>";
+    html << render_boolean_widget(ctrl);
+    html << render_boolean_widget(ind);
+    html << "</div><div class='actions'><a class='state-link' href='/state.json'>state.json</a></div></form></body></html>";
+    return html.str();
+}
+
+void BooleanBrowserUiRuntime::serve(const std::string& host, std::uint16_t port, bool should_open_browser) {
+    NetworkBootstrap network_bootstrap;
+    (void)network_bootstrap;
+
+    socket_t server = ::socket(AF_INET, SOCK_STREAM, 0);
+    if (server == invalid_socket) {
+        throw std::runtime_error("Unable to create server socket.");
+    }
+
+#ifndef _WIN32
+    int opt = 1;
+    setsockopt(server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+#endif
+
+    sockaddr_in address{};
+    address.sin_family = AF_INET;
+    address.sin_port = htons(port);
+    if (inet_pton(AF_INET, host.c_str(), &address.sin_addr) != 1) {
+        close_socket(server);
+        throw std::runtime_error("Only numeric IPv4 host values are supported by this minimal runtime.");
+    }
+
+    if (bind(server, reinterpret_cast<sockaddr*>(&address), sizeof(address)) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to bind server socket.");
+    }
+    if (listen(server, 16) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to listen on server socket.");
+    }
+
+    sockaddr_in bound_address{};
+#ifdef _WIN32
+    int bound_length = sizeof(bound_address);
+#else
+    socklen_t bound_length = sizeof(bound_address);
+#endif
+    if (getsockname(server, reinterpret_cast<sockaddr*>(&bound_address), &bound_length) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to inspect bound server socket.");
+    }
+
+    const std::string url = "http://" + host + ":" + std::to_string(ntohs(bound_address.sin_port)) + "/";
+    std::cout << url << std::endl;
+    if (should_open_browser) {
+        open_in_browser(url);
+    }
+
+    while (true) {
+        socket_t client = accept(server, nullptr, nullptr);
+        if (client == invalid_socket) {
+            continue;
+        }
+        try {
+            const auto raw = receive_request(client);
+            const auto request = parse_request(raw);
+            if (request.method == "GET" && request.path == "/") {
+                send_response(client, "200 OK", "text/html; charset=utf-8", render_html());
+            } else if (request.method == "GET" && request.path == "/state.json") {
+                send_response(client, "200 OK", "application/json; charset=utf-8", frog::json::stringify(core.execution_artifact(), true, 2));
+            } else if (request.method == "GET" && request.path.rfind("/asset/", 0) == 0) {
+                const std::string asset_id = request.path.substr(std::string("/asset/").size());
+                const auto asset_it = core.asset_map.find(asset_id);
+                if (asset_it == core.asset_map.end() || !std::filesystem::exists(asset_it->second)) {
+                    send_response(client, "404 Not Found", "text/plain; charset=utf-8", "missing asset");
+                } else {
+                    send_response(client, "200 OK", "image/svg+xml", read_text_file(asset_it->second));
+                }
+            } else if (request.method == "POST" && request.path == "/run") {
+                try {
+                    const auto form_value = parse_form_value(request.body, "input_value").value_or("false");
+                    run_once(parse_bool_form_value(form_value));
                 } catch (const std::exception& error) {
                     last_error = error.what();
                 }

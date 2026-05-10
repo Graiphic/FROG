@@ -320,8 +320,10 @@ BackendContract load_contract_from_path(const std::filesystem::path& path) {
             for (const auto& item : as_array(ui_binding.at("widgets"), "ui_binding.widgets")) {
                 unit.ui_binding.widgets.push_back(parse_widget_binding(item));
             }
-            for (const auto& item : as_array(ui_binding.at("widget_reference_support"), "ui_binding.widget_reference_support")) {
-                unit.ui_binding.widget_reference_support.push_back(parse_widget_reference_support(item));
+            if (const auto* widget_reference_support = optional_field(ui_binding, "widget_reference_support")) {
+                for (const auto& item : as_array(*widget_reference_support, "ui_binding.widget_reference_support")) {
+                    unit.ui_binding.widget_reference_support.push_back(parse_widget_reference_support(item));
+                }
             }
         }
         if (const auto* state_model_value = optional_field(unit_object, "state_model")) {
@@ -339,16 +341,25 @@ BackendContract load_contract_from_path(const std::filesystem::path& path) {
             };
         } else {
             const auto& execution_kernel = as_object(unit_object.at("execution_kernel"), "Expected execution_kernel object.");
-            unit.state_model = StateModel{
-                true,
-                StateCarrier{
-                    "frog.core.delay",
-                    get_string(execution_kernel, "state_id"),
-                    get_string(execution_kernel, "state_type"),
-                    static_cast<std::uint16_t>(get_i64(execution_kernel, "initial_state")),
-                },
-                get_string(execution_kernel, "commit_rule"),
-            };
+            const auto operation = get_optional_string(execution_kernel, "operation").value_or("");
+            if (operation == "copy") {
+                unit.state_model = StateModel{
+                    false,
+                    StateCarrier{"", "", get_optional_string(execution_kernel, "type").value_or(""), 0},
+                    "",
+                };
+            } else {
+                unit.state_model = StateModel{
+                    true,
+                    StateCarrier{
+                        "frog.core.delay",
+                        get_string(execution_kernel, "state_id"),
+                        get_string(execution_kernel, "state_type"),
+                        static_cast<std::uint16_t>(get_i64(execution_kernel, "initial_state")),
+                    },
+                    get_string(execution_kernel, "commit_rule"),
+                };
+            }
         }
         if (const auto* execution_model_value = optional_field(unit_object, "execution_model")) {
             const auto& execution_model = as_object(*execution_model_value, "Expected execution_model object.");
@@ -362,13 +373,24 @@ BackendContract load_contract_from_path(const std::filesystem::path& path) {
             };
         } else {
             const auto& execution_kernel = as_object(unit_object.at("execution_kernel"), "Expected execution_kernel object.");
-            unit.execution_model = ExecutionModel{
-                "bounded_loop",
-                static_cast<std::uint32_t>(get_i64(execution_kernel, "iteration_count")),
-                std::nullopt,
-                BodyRule{"kernel_commit_rule", get_string(execution_kernel, "commit_rule")},
-                "state_current",
-            };
+            const auto operation = get_optional_string(execution_kernel, "operation").value_or("");
+            if (operation == "copy") {
+                unit.execution_model = ExecutionModel{
+                    "single_step",
+                    1,
+                    std::nullopt,
+                    BodyRule{"copy", get_string(execution_kernel, "src") + " -> " + get_string(execution_kernel, "dst")},
+                    get_string(execution_kernel, "src"),
+                };
+            } else {
+                unit.execution_model = ExecutionModel{
+                    "bounded_loop",
+                    static_cast<std::uint32_t>(get_i64(execution_kernel, "iteration_count")),
+                    std::nullopt,
+                    BodyRule{"kernel_commit_rule", get_string(execution_kernel, "commit_rule")},
+                    "state_current",
+                };
+            }
         }
         auto property_writes = optional_field(unit_object, "property_writes");
         if (property_writes == nullptr) {

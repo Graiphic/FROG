@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-BUILD_DIR = ROOT / "build" / "frog_runtime_cpp_native_kernel_bridge"
+BUILD_DIR = ROOT / "build" / "frog_cpp_native_bridge"
 
 
 @dataclass(frozen=True)
@@ -64,13 +64,15 @@ def prepare_build_dir() -> Path:
     try:
         remove_build_dir(BUILD_DIR)
         return BUILD_DIR
-    except PermissionError:
-        return ROOT / "build" / f"frog_runtime_cpp_native_kernel_bridge_{os.getpid()}"
+    except OSError:
+        return ROOT / "build" / f"frog_cpp_native_bridge_{os.getpid()}"
 
 
 def configure_candidates() -> list[ConfigureCandidate]:
     candidates: list[ConfigureCandidate] = []
-    compiler_arg = ["-DCMAKE_CXX_COMPILER=clang++"] if shutil.which("clang++") is not None else []
+    # The runtime itself must remain compiler-agnostic. CMake will locate clang
+    # separately for the LLVM-produced kernel object.
+    compiler_arg: list[str] = []
 
     if sys.platform == "win32":
         if shutil.which("ninja") is not None:
@@ -101,8 +103,8 @@ def configure_build_dir(build_dir: Path) -> Path:
         candidate_build_dir = build_dir
         try:
             remove_build_dir(candidate_build_dir)
-        except PermissionError:
-            candidate_build_dir = ROOT / "build" / f"frog_runtime_cpp_native_kernel_bridge_{os.getpid()}_{candidate.name.replace(' ', '_')}"
+        except OSError:
+            candidate_build_dir = ROOT / "build" / f"frog_cpp_native_bridge_{os.getpid()}_{candidate.name.replace(' ', '_')}"
 
         command = cmake_configure_base_command(candidate_build_dir) + candidate.args
         result = run_result(command)

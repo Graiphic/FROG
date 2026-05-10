@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <cctype>
 #include <filesystem>
 #include <iostream>
 #include <optional>
@@ -6,9 +7,14 @@
 #include <string>
 #include <vector>
 
+#include "contract.hpp"
 #include "execute.hpp"
 #include "json.hpp"
 #include "ui.hpp"
+
+#ifndef FROG_RUNTIME_CPP_SOURCE_DIR
+#define FROG_RUNTIME_CPP_SOURCE_DIR "."
+#endif
 
 namespace {
 
@@ -18,6 +24,36 @@ std::string require_value(const std::vector<std::string>& args, std::size_t& ind
         throw std::runtime_error("Missing value for option " + option_name + ".");
     }
     return args[index];
+}
+
+std::filesystem::path repo_root() {
+    return frog::runtime::find_repo_root(std::filesystem::path(FROG_RUNTIME_CPP_SOURCE_DIR));
+}
+
+std::filesystem::path example06_contract_path() {
+    return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
+           "06_boolean_value_roundtrip.reference_host_runtime_ui_binding.contract.json";
+}
+
+std::filesystem::path example06_wfrog_path() {
+    return repo_root() / "Examples" / "06_boolean_value_roundtrip" / "ui" / "boolean_panel.wfrog";
+}
+
+bool wants_example06(const std::string& value) {
+    return value == "06" || value == "6" || value == "example06" || value == "06_boolean_value_roundtrip";
+}
+
+bool parse_bool_input(std::string value) {
+    for (auto& ch : value) {
+        ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+    }
+    if (value == "true" || value == "1" || value == "on") {
+        return true;
+    }
+    if (value == "false" || value == "0" || value.empty()) {
+        return false;
+    }
+    throw std::runtime_error("Boolean input must be true or false.");
 }
 
 } // namespace
@@ -34,12 +70,15 @@ int main(int argc, char** argv) {
             args.erase(args.begin());
             std::optional<std::filesystem::path> contract_path;
             std::optional<std::filesystem::path> wfrog_path;
+            std::optional<std::string> example;
             std::string host = "127.0.0.1";
             std::uint16_t port = 0;
             bool open_browser = true;
 
             for (std::size_t index = 0; index < args.size(); ++index) {
-                if (args[index] == "--contract") {
+                if (args[index] == "--example") {
+                    example = require_value(args, index, "--example");
+                } else if (args[index] == "--contract") {
                     contract_path = require_value(args, index, "--contract");
                 } else if (args[index] == "--wfrog") {
                     wfrog_path = require_value(args, index, "--wfrog");
@@ -54,25 +93,45 @@ int main(int argc, char** argv) {
                 }
             }
 
-            frog::runtime::BrowserUiRuntime runtime(contract_path, wfrog_path);
-            runtime.serve(host, port, open_browser);
+            if (example.has_value() && wants_example06(*example)) {
+                frog::runtime::BooleanBrowserUiRuntime runtime(
+                    contract_path.value_or(example06_contract_path()),
+                    wfrog_path.value_or(example06_wfrog_path()));
+                runtime.serve(host, port, open_browser);
+                return 0;
+            }
+
+            const auto effective_contract = contract_path.value_or(frog::runtime::default_contract_path());
+            const auto contract = frog::runtime::load_contract_from_path(effective_contract);
+            if (contract.source_ref.example_id == "06_boolean_value_roundtrip") {
+                frog::runtime::BooleanBrowserUiRuntime runtime(
+                    effective_contract,
+                    wfrog_path.value_or(example06_wfrog_path()));
+                runtime.serve(host, port, open_browser);
+            } else {
+                frog::runtime::BrowserUiRuntime runtime(effective_contract, wfrog_path);
+                runtime.serve(host, port, open_browser);
+            }
             return 0;
         }
 
         std::optional<std::filesystem::path> contract_path;
         std::optional<std::filesystem::path> wfrog_path;
-        std::uint16_t input_value = 3;
+        std::optional<std::string> example;
+        std::optional<std::string> input_value_text;
 
         if (!args.empty() && args.front() == "run") {
             args.erase(args.begin());
         }
         if (!args.empty() && !args.front().starts_with("--")) {
-            input_value = static_cast<std::uint16_t>(std::stoul(args.front()));
+            input_value_text = args.front();
             args.erase(args.begin());
         }
 
         for (std::size_t index = 0; index < args.size(); ++index) {
-            if (args[index] == "--contract") {
+            if (args[index] == "--example") {
+                example = require_value(args, index, "--example");
+            } else if (args[index] == "--contract") {
                 contract_path = require_value(args, index, "--contract");
             } else if (args[index] == "--wfrog") {
                 wfrog_path = require_value(args, index, "--wfrog");
@@ -81,7 +140,28 @@ int main(int argc, char** argv) {
             }
         }
 
-        const auto artifact = frog::runtime::execute_contract(input_value, contract_path, wfrog_path);
+        if (example.has_value() && wants_example06(*example)) {
+            const auto artifact = frog::runtime::execute_boolean_contract(
+                parse_bool_input(input_value_text.value_or("true")),
+                contract_path.value_or(example06_contract_path()),
+                wfrog_path.value_or(example06_wfrog_path()));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+
+        const auto effective_contract = contract_path.value_or(frog::runtime::default_contract_path());
+        const auto contract = frog::runtime::load_contract_from_path(effective_contract);
+        if (contract.source_ref.example_id == "06_boolean_value_roundtrip") {
+            const auto artifact = frog::runtime::execute_boolean_contract(
+                parse_bool_input(input_value_text.value_or("true")),
+                effective_contract,
+                wfrog_path.value_or(example06_wfrog_path()));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+
+        const auto input_value = static_cast<std::uint16_t>(std::stoul(input_value_text.value_or("3")));
+        const auto artifact = frog::runtime::execute_contract(input_value, effective_contract, wfrog_path);
         std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
         return 0;
     } catch (const std::exception& error) {

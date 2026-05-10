@@ -57,4 +57,28 @@ private:
     void reset_to_default_style(const std::string& widget_id);
 };
 
+class Slice06BooleanRuntimeCore {
+public:
+    Slice06BooleanRuntimeCore(std::filesystem::path contract_path, std::filesystem::path wfrog_path);
+
+    void set_control_value(bool value);
+    bool control_value() const;
+    frog::json::Value execute(std::optional<bool> control_value = std::nullopt);
+    frog::json::Value execution_artifact() const;
+
+    std::filesystem::path contract_path;
+    std::filesystem::path wfrog_path;
+    BackendContract contract;
+    WfrogPackage package;
+    ContractUnit unit;
+    FrontPanel panel;
+    std::map<std::string, WidgetState> widgets;
+    std::map<std::string, std::filesystem::path> asset_map;
+    bool last_result = false;
+
+private:
+    ContractUnit load_and_validate() const;
+    std::map<std::string, WidgetState> build_widgets() const;
+};
+
 } // namespace frog::runtime
