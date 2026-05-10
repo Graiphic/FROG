@@ -36,6 +36,24 @@ add_executable(frog_reference_runtime_cpp_tests tests/test_slice05.cpp)
 target_link_libraries(frog_reference_runtime_cpp_tests PRIVATE frog_reference_runtime_cpp_lib)
 add_test(NAME frog_reference_runtime_cpp_tests COMMAND frog_reference_runtime_cpp_tests)
 
+add_executable(frog_reference_runtime_cpp_slice06_tests tests/test_slice06_boolean.cpp)
+target_link_libraries(frog_reference_runtime_cpp_slice06_tests PRIVATE frog_reference_runtime_cpp_lib)
+add_test(NAME frog_reference_runtime_cpp_slice06_tests COMMAND frog_reference_runtime_cpp_slice06_tests)
+
+add_executable(frog_reference_runtime_cpp_reference_examples_tests tests/test_reference_examples.cpp)
+target_link_libraries(frog_reference_runtime_cpp_reference_examples_tests PRIVATE frog_reference_runtime_cpp_lib)
+add_test(NAME frog_reference_runtime_cpp_reference_examples_tests COMMAND frog_reference_runtime_cpp_reference_examples_tests)
+
+if(WIN32)
+    get_filename_component(FROG_RUNTIME_CPP_COMPILER_BIN "${CMAKE_CXX_COMPILER}" DIRECTORY)
+    set_tests_properties(
+        frog_reference_runtime_cpp_tests
+        frog_reference_runtime_cpp_slice06_tests
+        frog_reference_runtime_cpp_reference_examples_tests
+        PROPERTIES ENVIRONMENT "PATH=${FROG_RUNTIME_CPP_COMPILER_BIN}\\;$ENV{PATH}"
+    )
+endif()
+
 if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
     find_program(CLANG_EXECUTABLE NAMES clang REQUIRED)
     set(FROG_EXAMPLE05_KERNEL_LL
@@ -66,6 +84,12 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
         NAME frog_reference_runtime_cpp_llvm_kernel_tests
         COMMAND frog_reference_runtime_cpp_llvm_kernel_tests
     )
+    if(WIN32)
+        set_tests_properties(
+            frog_reference_runtime_cpp_llvm_kernel_tests
+            PROPERTIES ENVIRONMENT "PATH=${FROG_RUNTIME_CPP_COMPILER_BIN}\\;$ENV{PATH}"
+        )
+    endif()
 
     add_executable(
         frog_reference_runtime_cpp_llvm_kernel

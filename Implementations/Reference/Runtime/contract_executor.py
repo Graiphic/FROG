@@ -322,12 +322,98 @@ def execute_bounded_executable_ui_unit(contract: dict[str, Any], unit: dict[str,
     }
 
 
+def execute_boolean_value_roundtrip_ui_unit(contract: dict[str, Any], unit: dict[str, Any], case: dict[str, Any], support_artifacts: dict[str, Any] | None = None) -> dict[str, Any]:
+    support_artifacts = support_artifacts or {}
+    wfrog = support_artifacts.get("wfrog")
+    if not isinstance(wfrog, dict):
+        raise ContractExecutionError("boolean_value_roundtrip_ui_unit requires support_artifacts['wfrog']")
+
+    public_io = require_object(unit.get("public_io"), "unit.public_io")
+    inputs = require_list(public_io.get("inputs"), "unit.public_io.inputs")
+    outputs = require_list(public_io.get("outputs"), "unit.public_io.outputs")
+    if len(inputs) != 1 or inputs[0].get("id") != "input_value" or inputs[0].get("type") != "bool":
+        raise ContractExecutionError("boolean_value_roundtrip_ui_unit expects bool public input input_value")
+    if len(outputs) != 1 or outputs[0].get("id") != "result" or outputs[0].get("type") != "bool":
+        raise ContractExecutionError("boolean_value_roundtrip_ui_unit expects bool public output result")
+
+    kernel = require_object(unit.get("execution_kernel"), "unit.execution_kernel")
+    if kernel.get("operation") != "copy":
+        raise ContractExecutionError("boolean_value_roundtrip_ui_unit expects copy execution_kernel")
+    if kernel.get("src") != "input_value" or kernel.get("dst") != "result":
+        raise ContractExecutionError("boolean_value_roundtrip_ui_unit expects input_value -> result")
+
+    input_value = case.get("input_value")
+    if input_value is None:
+        inputs_case = case.get("inputs")
+        if isinstance(inputs_case, dict):
+            input_value = inputs_case.get("input_value")
+    if not isinstance(input_value, bool):
+        raise ContractExecutionError("input_value must be a boolean")
+
+    panel = wfrog_main_panel(wfrog)
+    widgets_by_id: dict[str, dict[str, Any]] = {}
+    for widget in require_list(panel.get("widgets"), "wfrog.front_panels[0].widgets"):
+        obj = require_object(widget, "wfrog widget")
+        widget_id = obj.get("instance_id")
+        if not isinstance(widget_id, str):
+            raise ContractExecutionError("wfrog widget instance_id must be a string")
+        widgets_by_id[widget_id] = obj
+
+    for widget_id in ("bool_input", "bool_result"):
+        if widget_id not in widgets_by_id:
+            raise ContractExecutionError(f"boolean_value_roundtrip_ui_unit requires widget {widget_id}")
+
+    def widget_runtime(widget_id: str, value: bool) -> dict[str, Any]:
+        widget = widgets_by_id[widget_id]
+        props = require_object(widget.get("props"), f"wfrog widget {widget_id}.props")
+        visual = require_object(widget.get("visual"), f"wfrog widget {widget_id}.visual")
+        return {
+            "value": value,
+            "label.text": props.get("label.text"),
+            "caption.text": props.get("caption.text"),
+            "state_text.true_text": props.get("state_text.true_text"),
+            "state_text.false_text": props.get("state_text.false_text"),
+            "asset_ref": visual.get("asset_ref"),
+            "realization.variant": props.get("realization.variant"),
+        }
+
+    return {
+        "artifact_kind": "frog_runtime_execution_result",
+        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "status": "ok",
+        "contract_ref": {"unit_ids": [unit.get("unit_id")], "backend_family": contract.get("backend_family"), "source_ref": contract.get("source_ref")},
+        "execution_summary": {"mode": "boolean_value_roundtrip", "executed_unit": unit.get("unit_id"), "operation": "copy", "input_value": input_value, "result": input_value},
+        "outputs": {"public": {"result": input_value}, "ui": {"bool_input": input_value, "bool_result": input_value}},
+        "ui_runtime": {
+            "panel": {"panel_id": panel.get("panel_id"), "title": panel.get("title"), "class_ref": panel.get("class_ref"), "layout": panel.get("layout")},
+            "widgets": [
+                {
+                    "widget_id": "bool_input",
+                    "class_ref": widgets_by_id["bool_input"].get("class_ref"),
+                    "role": "control",
+                    "layout": widgets_by_id["bool_input"].get("layout"),
+                    "runtime": widget_runtime("bool_input", input_value),
+                },
+                {
+                    "widget_id": "bool_result",
+                    "class_ref": widgets_by_id["bool_result"].get("class_ref"),
+                    "role": "indicator",
+                    "layout": widgets_by_id["bool_result"].get("layout"),
+                    "runtime": widget_runtime("bool_result", input_value),
+                },
+            ],
+        },
+        "diagnostics": [],
+    }
+
+
 KIND_EXECUTORS = {
     "pure_addition_kernel": execute_pure_addition,
     "ui_value_roundtrip_kernel": execute_ui_value_roundtrip,
     "ui_property_write_effect_unit": execute_ui_property_write,
     "stateful_feedback_delay_kernel": execute_stateful_feedback_delay,
     "bounded_executable_ui_unit": execute_bounded_executable_ui_unit,
+    "boolean_value_roundtrip_ui_unit": execute_boolean_value_roundtrip_ui_unit,
 }
 
 
@@ -346,6 +432,10 @@ def execute_acceptance(acceptance: dict[str, Any], contract: dict[str, Any], sup
     unit = single_unit(contract)
     if unit.get("kind") == "bounded_executable_ui_unit":
         return execute_contract_case(contract, case_for_bounded_ui_acceptance(acceptance), support_artifacts)
+    if unit.get("kind") == "boolean_value_roundtrip_ui_unit":
+        headless = acceptance.get("headless")
+        if isinstance(headless, dict) and isinstance(headless.get("input_value"), bool):
+            return execute_contract_case(contract, {"input_value": headless["input_value"]}, support_artifacts)
     cases = acceptance.get("cases")
     if not isinstance(cases, list) or len(cases) != 1 or not isinstance(cases[0], dict):
         raise ContractExecutionError("runtime acceptance currently requires exactly one case object")

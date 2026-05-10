@@ -2,6 +2,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
+use serde_json::{json, Value};
 
 use crate::diagnostics::{ensure, Result, RuntimeError};
 
@@ -285,13 +286,132 @@ pub fn default_wfrog_path() -> Result<PathBuf> {
 
 pub fn load_contract_from_path(path: &Path) -> Result<BackendContract> {
     let text = fs::read_to_string(path)?;
-    let contract: BackendContract = serde_json::from_str(&text)?;
+    let mut raw: Value = serde_json::from_str(&text)?;
+    migrate_contract_shape(&mut raw);
+    let contract: BackendContract = serde_json::from_value(raw)?;
     ensure(contract.artifact_kind == "frog_backend_contract", "Expected frog_backend_contract.")?;
     ensure(
         contract.backend_family == REFERENCE_BACKEND_FAMILY,
         format!("Unsupported backend family: {}", contract.backend_family),
     )?;
     Ok(contract)
+}
+
+fn migrate_contract_shape(raw: &mut Value) {
+    let Some(units) = raw.get_mut("units").and_then(Value::as_array_mut) else {
+        return;
+    };
+
+    for unit in units {
+        let Some(object) = unit.as_object_mut() else {
+            continue;
+        };
+
+        if !object.contains_key("public_interface") {
+            if let Some(public_io) = object.get("public_io").cloned() {
+                object.insert("public_interface".to_string(), public_io);
+            }
+        }
+
+        if !object.contains_key("ui_binding") {
+            if let Some(ui_bindings) = object.get("ui_bindings").cloned() {
+                object.insert("ui_binding".to_string(), ui_bindings);
+            }
+        }
+
+        if let Some(kernel) = object.get("execution_kernel").cloned() {
+            if !object.contains_key("state_model") {
+                let state_id = kernel
+                    .get("state_id")
+                    .and_then(Value::as_str)
+                    .unwrap_or("state");
+                let state_type = kernel
+                    .get("state_type")
+                    .and_then(Value::as_str)
+                    .unwrap_or("u16");
+                let initial_value = kernel
+                    .get("initial_state")
+                    .and_then(Value::as_u64)
+                    .unwrap_or(0);
+                let commit_rule = kernel
+                    .get("commit_rule")
+                    .and_then(Value::as_str)
+                    .unwrap_or("");
+                object.insert(
+                    "state_model".to_string(),
+                    json!({
+                        "explicit_state": true,
+                        "carrier": {
+                            "primitive": "register",
+                            "state_id": state_id,
+                            "type": state_type,
+                            "initial_value": initial_value
+                        },
+                        "commit_rule": commit_rule
+                    }),
+                );
+            }
+
+            if !object.contains_key("execution_model") {
+                let iteration_count = kernel
+                    .get("iteration_count")
+                    .and_then(Value::as_u64)
+                    .unwrap_or(0);
+                object.insert(
+                    "execution_model".to_string(),
+                    json!({
+                        "structure": "bounded_loop",
+                        "iteration_count": iteration_count,
+                        "body_rule": {
+                            "kind": "iteration_body",
+                            "expression": "state_current + input_value"
+                        },
+                        "final_result_rule": "state_current"
+                    }),
+                );
+            }
+        }
+
+        if !object.contains_key("property_writes") {
+            if let Some(effects) = object.get("effects").and_then(Value::as_array) {
+                let writes: Vec<Value> = effects
+                    .iter()
+                    .filter_map(|effect| {
+                        let effect = effect.as_object()?;
+                        let widget_id = effect.get("widget_id")?.clone();
+                        let member = effect.get("member")?.clone();
+                        let value = effect.get("value")?.clone();
+                        Some(json!({
+                            "operation": effect.get("op").cloned().unwrap_or_else(|| json!("frog.ui.property_write")),
+                            "widget_id": widget_id,
+                            "member": member,
+                            "value": value
+                        }))
+                    })
+                    .collect();
+                object.insert("property_writes".to_string(), Value::Array(writes));
+            }
+        }
+
+        if !object.contains_key("public_output_publication") {
+            let publication = object
+                .get("publications")
+                .and_then(Value::as_array)
+                .and_then(|publications| {
+                    publications.iter().find_map(|entry| {
+                        let entry = entry.as_object()?;
+                        let target = entry.get("target")?.as_str()?;
+                        let output_id = target.strip_prefix("public_output.")?;
+                        Some(json!({
+                            "output_id": output_id,
+                            "source": entry.get("source").cloned().unwrap_or_else(|| json!(""))
+                        }))
+                    })
+                })
+                .unwrap_or_else(|| json!({"output_id": "result", "source": "state_current"}));
+            object.insert("public_output_publication".to_string(), publication);
+        }
+    }
 }
 
 pub fn load_wfrog_from_path(path: &Path) -> Result<WfrogPackage> {

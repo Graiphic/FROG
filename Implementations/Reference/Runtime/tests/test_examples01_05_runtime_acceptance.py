@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[4]
 SCRIPT = ROOT / "Implementations" / "Reference" / "Runtime" / "check_examples01_05_runtime_acceptance.py"
 
 
-def test_examples01_05_runtime_acceptance_passes() -> None:
+def test_published_examples_runtime_acceptance_passes() -> None:
     result = subprocess.run(
         [sys.executable, str(SCRIPT)],
         cwd=ROOT,

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Check runtime acceptance for Examples 01-05.
+"""Check runtime acceptance for the published reference runtime examples.
 
 Examples 01-04 use the generic reference contract executor.
 Example 05 delegates to the existing richer runtime-family acceptance checker.
+Example 06 uses the generic executor with its .wfrog front panel package.
 """
 
 from __future__ import annotations
@@ -25,6 +26,7 @@ ACCEPTANCE_FILES = [
     "Implementations/Reference/Runtime/acceptance/example02_ui_value_roundtrip.acceptance.json",
     "Implementations/Reference/Runtime/acceptance/example03_ui_property_write.acceptance.json",
     "Implementations/Reference/Runtime/acceptance/example04_stateful_feedback_delay.acceptance.json",
+    "Implementations/Reference/Runtime/acceptance/example06_boolean_value_roundtrip.acceptance.json",
 ]
 
 
@@ -46,7 +48,10 @@ def check_acceptance_file(rel_path: str) -> None:
 
     contract = load_json(repo_path(str(refs.get("contract_path"))))
     snapshot = load_json(repo_path(str(refs.get("snapshot_path"))))
-    check_acceptance_against_snapshot(acceptance, contract, snapshot)
+    support_artifacts = {}
+    if refs.get("wfrog_path"):
+        support_artifacts["wfrog"] = load_json(repo_path(str(refs["wfrog_path"])))
+    check_acceptance_against_snapshot(acceptance, contract, snapshot, support_artifacts)
     print(f"Runtime acceptance ok: {acceptance['example_id']}")
 
 
@@ -68,7 +73,7 @@ def check_example05() -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Check runtime acceptance for Examples 01-05.")
+    parser = argparse.ArgumentParser(description="Check runtime acceptance for the published reference examples.")
     parser.add_argument("--skip-example05", action="store_true")
     args = parser.parse_args(argv)
 

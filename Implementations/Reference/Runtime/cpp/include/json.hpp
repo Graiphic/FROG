@@ -19,12 +19,13 @@ class Value {
 public:
     using Array = std::vector<Value>;
     using Object = std::map<std::string, Value>;
-    using Storage = std::variant<std::nullptr_t, bool, std::int64_t, std::string, Array, Object>;
+    using Storage = std::variant<std::nullptr_t, bool, std::int64_t, double, std::string, Array, Object>;
 
     Value();
     Value(std::nullptr_t);
     Value(bool value);
     Value(std::int64_t value);
+    Value(double value);
     Value(int value);
     Value(unsigned int value);
     Value(std::uint64_t value);
@@ -36,12 +37,14 @@ public:
     bool is_null() const;
     bool is_bool() const;
     bool is_number() const;
+    bool is_floating_number() const;
     bool is_string() const;
     bool is_array() const;
     bool is_object() const;
 
     bool as_bool() const;
     std::int64_t as_i64() const;
+    double as_f64() const;
     const std::string& as_string() const;
     const Array& as_array() const;
     const Object& as_object() const;
