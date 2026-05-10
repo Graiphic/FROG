@@ -414,6 +414,7 @@
     - [rules](/Implementations/Reference/LLVM/rules/Readme.md)
     - tests
       - [test_example05_llvm_emission.py](/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py)
+      - [test_example06_llvm_emission.py](/Implementations/Reference/LLVM/tests/test_example06_llvm_emission.py)
       - [test_examples01_04_llvm_modules.py](/Implementations/Reference/LLVM/tests/test_examples01_04_llvm_modules.py)
       - [test_generic_lowering_to_llvm.py](/Implementations/Reference/LLVM/tests/test_generic_lowering_to_llvm.py)
       - [test_llvm_lowering_emitter.py](/Implementations/Reference/LLVM/tests/test_llvm_lowering_emitter.py)
@@ -456,6 +457,8 @@
     - [check_example05_native_kernel_bridge.py](/Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py)
     - [check_example05_runtime_acceptance.py](/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py)
     - [check_example06_boolean_value_roundtrip.py](/Implementations/Reference/Runtime/check_example06_boolean_value_roundtrip.py)
+    - [check_example06_cpp_native_kernel_bridge.py](/Implementations/Reference/Runtime/check_example06_cpp_native_kernel_bridge.py)
+    - [check_example06_native_kernel_bridge.py](/Implementations/Reference/Runtime/check_example06_native_kernel_bridge.py)
     - [check_examples01_05_runtime_acceptance.py](/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py)
     - [contract_executor.py](/Implementations/Reference/Runtime/contract_executor.py)
     - [execute_reference_contract.py](/Implementations/Reference/Runtime/execute_reference_contract.py)

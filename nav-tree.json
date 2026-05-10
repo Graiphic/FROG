@@ -2960,6 +2960,13 @@
                       "children": []
                     },
                     {
+                      "key": "implementations/reference/llvm/tests/test_example06_llvm_emission.py",
+                      "title": "test_example06_llvm_emission.py",
+                      "path": "/Implementations/Reference/LLVM/tests/test_example06_llvm_emission.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
                       "key": "implementations/reference/llvm/tests/test_examples01_04_llvm_modules.py",
                       "title": "test_examples01_04_llvm_modules.py",
                       "path": "/Implementations/Reference/LLVM/tests/test_examples01_04_llvm_modules.py",
@@ -3260,6 +3267,20 @@
                   "key": "implementations/reference/runtime/check_example06_boolean_value_roundtrip.py",
                   "title": "check_example06_boolean_value_roundtrip.py",
                   "path": "/Implementations/Reference/Runtime/check_example06_boolean_value_roundtrip.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "implementations/reference/runtime/check_example06_cpp_native_kernel_bridge.py",
+                  "title": "check_example06_cpp_native_kernel_bridge.py",
+                  "path": "/Implementations/Reference/Runtime/check_example06_cpp_native_kernel_bridge.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "implementations/reference/runtime/check_example06_native_kernel_bridge.py",
+                  "title": "check_example06_native_kernel_bridge.py",
+                  "path": "/Implementations/Reference/Runtime/check_example06_native_kernel_bridge.py",
                   "kind": "code",
                   "children": []
                 },
@@ -4039,6 +4060,7 @@
     "/Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/Readme.md",
     "/Implementations/Reference/LLVM/rules/Readme.md",
     "/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py",
+    "/Implementations/Reference/LLVM/tests/test_example06_llvm_emission.py",
     "/Implementations/Reference/LLVM/tests/test_examples01_04_llvm_modules.py",
     "/Implementations/Reference/LLVM/tests/test_generic_lowering_to_llvm.py",
     "/Implementations/Reference/LLVM/tests/test_llvm_lowering_emitter.py",
@@ -4078,6 +4100,8 @@
     "/Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/check_example06_boolean_value_roundtrip.py",
+    "/Implementations/Reference/Runtime/check_example06_cpp_native_kernel_bridge.py",
+    "/Implementations/Reference/Runtime/check_example06_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/contract_executor.py",
     "/Implementations/Reference/Runtime/execute_reference_contract.py",
