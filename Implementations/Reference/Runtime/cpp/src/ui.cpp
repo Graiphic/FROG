@@ -424,6 +424,9 @@ std::string render_boolean_widget(const WidgetState& widget) {
     const std::string state_border = state_property(widget.properties, "style.outer.border_color", visual_state, value ? "#184a24" : "#111827");
     const std::string hover_border = state_property(widget.properties, "style.outer.border_color", hover_state, value ? "#166534" : "#2563eb");
     const std::string pressed_border = state_property(widget.properties, "style.outer.border_color", pressed_state, value ? "#14532d" : "#1d4ed8");
+    const std::string state_inner_border = state_property(widget.properties, "style.inner.border_color", visual_state, state_border);
+    const std::string hover_inner_border = state_property(widget.properties, "style.inner.border_color", hover_state, hover_border);
+    const std::string pressed_inner_border = state_property(widget.properties, "style.inner.border_color", pressed_state, pressed_border);
     const std::string text_color = state_property(widget.properties, "state_text.style.text_color", visual_state, value ? "#0b3d19" : "#111827");
     const std::string transition_ms = property_string(widget.properties, "style.transition.duration_ms", "120");
     const std::string transition_timing = property_string(widget.properties, "style.transition.timing", "ease-out");
@@ -465,6 +468,9 @@ std::string render_boolean_widget(const WidgetState& widget) {
          << "--boolean-border:" << html_escape(state_border) << ";"
          << "--boolean-hover-border:" << html_escape(hover_border) << ";"
          << "--boolean-pressed-border:" << html_escape(pressed_border) << ";"
+         << "--boolean-inner-border:" << html_escape(state_inner_border) << ";"
+         << "--boolean-hover-inner-border:" << html_escape(hover_inner_border) << ";"
+         << "--boolean-pressed-inner-border:" << html_escape(pressed_inner_border) << ";"
          << "--boolean-text:" << html_escape(text_color) << ";"
          << "--boolean-transition:" << html_escape(transition_ms) << "ms " << html_escape(transition_timing) << ";"
          << "--boolean-pressed-inset:" << html_escape(pressed_inset) << ";";
@@ -839,10 +845,13 @@ std::string BooleanBrowserUiRuntime::render_html() const {
             ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}"
             ".missing-skin{background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;}"
             ".boolean-caption-overlay{position:absolute;left:8px;top:6px;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}"
-            ".boolean-state-face{position:absolute;left:18px;top:31px;width:124px;height:34px;border:2px solid var(--boolean-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
+            ".boolean-state-face{position:absolute;left:18px;top:31px;width:124px;height:34px;border:2px solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
             ".boolean-widget[data-realization-variant='circular'] .boolean-state-face{left:52px;top:23px;width:56px;height:56px;border-radius:50%;}"
-            ".boolean-control:hover .boolean-state-face{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-border);box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 2px 5px rgba(15,23,42,.18);}"
-            ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}"
+            ".boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{box-shadow:none;}"
+            ".boolean-control:hover .boolean-state-face{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-inner-border);box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 2px 5px rgba(15,23,42,.18);}"
+            ".boolean-control[data-frog-frame-visible='false']:hover .boolean-state-face{box-shadow:none;}"
+            ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-inner-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}"
+            ".boolean-control[data-frog-frame-visible='false']:active .boolean-state-face{box-shadow:none;}"
             ".boolean-control:focus-visible .boolean-state-face{outline:2px solid #2563eb;outline-offset:2px;}"
             ".boolean-state-overlay{position:absolute;left:0;right:0;top:49px;transform:translateY(-50%);text-align:center;font-size:18px;font-weight:700;line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;}"
             ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"

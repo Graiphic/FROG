@@ -33,7 +33,7 @@
 
       #inner_face {
         fill: none;
-        stroke: rgba(255,255,255,0.55);
+        stroke: transparent;
         stroke-width: 1px;
       }
 

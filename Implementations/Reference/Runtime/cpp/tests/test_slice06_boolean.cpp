@@ -95,6 +95,8 @@ void test_boolean_runtime_core_consumes_wfrog_assets() {
     assert_contains(rectangular_svg, "fill: transparent;");
     assert_contains(rectangular_svg, "opacity: 0;");
     assert_contains(circular_svg, "stroke: transparent;");
+    assert_contains(circular_svg, "fill: transparent;");
+    assert_contains(circular_svg, "opacity: 0;");
 }
 
 void test_boolean_browser_ui_surface() {
@@ -136,6 +138,7 @@ void test_boolean_browser_ui_surface() {
     assert_contains(html, "--boolean-fill:#8bd86f;");
     assert_contains(html, "--boolean-fill:#22c55e;");
     assert_contains(html, "--boolean-border:transparent;");
+    assert_contains(html, "--boolean-inner-border:transparent;");
     assert_contains(html, "--boolean-transition:120ms ease-out;");
     assert_contains(html, "--boolean-pressed-inset:1px;");
     assert_contains(html, "transform:translateY(var(--boolean-pressed-inset));");
