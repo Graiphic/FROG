@@ -524,6 +524,7 @@ Value Slice06BooleanRuntimeCore::execution_artifact() const {
         copy_property("state_text.style.text_color.false");
         copy_property("state_text.style.text_color.true");
         copy_property("state_text.visible");
+        copy_property("caption.align.horizontal");
         copy_property("style.frame.visible");
         copy_property("style.outer.border_color.false");
         copy_property("style.outer.border_color.true");
@@ -543,6 +544,10 @@ Value Slice06BooleanRuntimeCore::execution_artifact() const {
         copy_property("style.inner.border_color.hover_true");
         copy_property("style.inner.border_color.pressed_false");
         copy_property("style.inner.border_color.pressed_true");
+        copy_property("style.inner.left");
+        copy_property("style.inner.top");
+        copy_property("style.inner.width");
+        copy_property("style.inner.height");
         copy_property("style.pressed.inset");
         copy_property("style.transition.duration_ms");
         copy_property("style.transition.timing");

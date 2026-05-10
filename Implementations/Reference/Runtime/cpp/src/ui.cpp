@@ -433,6 +433,12 @@ std::string render_boolean_widget(const WidgetState& widget) {
     const std::string pressed_inset = property_string(widget.properties, "style.pressed.inset", "1px");
     const bool state_text_visible = property_bool(widget.properties, "state_text.visible", true);
     const bool frame_visible = property_bool(widget.properties, "style.frame.visible", true);
+    const std::string caption_align = property_string(widget.properties, "caption.align.horizontal", "left");
+    const bool caption_centered = caption_align == "center";
+    const std::string inner_left = property_string(widget.properties, "style.inner.left", variant == "circular" ? "52px" : "18px");
+    const std::string inner_top = property_string(widget.properties, "style.inner.top", variant == "circular" ? "23px" : "31px");
+    const std::string inner_width = property_string(widget.properties, "style.inner.width", variant == "circular" ? "56px" : "124px");
+    const std::string inner_height = property_string(widget.properties, "style.inner.height", variant == "circular" ? "56px" : "34px");
 
     std::ostringstream html;
     if (is_control) {
@@ -471,6 +477,13 @@ std::string render_boolean_widget(const WidgetState& widget) {
          << "--boolean-inner-border:" << html_escape(state_inner_border) << ";"
          << "--boolean-hover-inner-border:" << html_escape(hover_inner_border) << ";"
          << "--boolean-pressed-inner-border:" << html_escape(pressed_inner_border) << ";"
+         << "--boolean-inner-left:" << html_escape(inner_left) << ";"
+         << "--boolean-inner-top:" << html_escape(inner_top) << ";"
+         << "--boolean-inner-width:" << html_escape(inner_width) << ";"
+         << "--boolean-inner-height:" << html_escape(inner_height) << ";"
+         << "--boolean-caption-left:" << (caption_centered ? "50%" : "8px") << ";"
+         << "--boolean-caption-transform:" << (caption_centered ? "translateX(-50%)" : "none") << ";"
+         << "--boolean-caption-text-align:" << (caption_centered ? "center" : "left") << ";"
          << "--boolean-text:" << html_escape(text_color) << ";"
          << "--boolean-transition:" << html_escape(transition_ms) << "ms " << html_escape(transition_timing) << ";"
          << "--boolean-pressed-inset:" << html_escape(pressed_inset) << ";";
@@ -844,9 +857,9 @@ std::string BooleanBrowserUiRuntime::render_html() const {
             ".boolean-indicator{pointer-events:none;}"
             ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}"
             ".missing-skin{background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;}"
-            ".boolean-caption-overlay{position:absolute;left:8px;top:6px;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}"
-            ".boolean-state-face{position:absolute;left:18px;top:31px;width:124px;height:34px;border:2px solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
-            ".boolean-widget[data-realization-variant='circular'] .boolean-state-face{left:52px;top:23px;width:56px;height:56px;border-radius:50%;}"
+            ".boolean-caption-overlay{position:absolute;left:var(--boolean-caption-left);top:6px;transform:var(--boolean-caption-transform);text-align:var(--boolean-caption-text-align);font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}"
+            ".boolean-state-face{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:2px solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
+            ".boolean-widget[data-realization-variant='circular'] .boolean-state-face{border-radius:50%;}"
             ".boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{box-shadow:none;}"
             ".boolean-control:hover .boolean-state-face{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-inner-border);box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 2px 5px rgba(15,23,42,.18);}"
             ".boolean-control[data-frog-frame-visible='false']:hover .boolean-state-face{box-shadow:none;}"
