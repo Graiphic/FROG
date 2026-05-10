@@ -618,6 +618,10 @@ std::string BrowserUiRuntime::render_html() const {
             "body{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}"
             "h1{margin:0 0 12px 0;font-size:24px;}"
             "p.meta{margin:0 0 20px 0;color:#52606d;}"
+            ".runtime-facts{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 18px 0;}"
+            ".runtime-facts div{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}"
+            ".runtime-facts dt{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}"
+            ".runtime-facts dd{margin:0;color:#1f2933;font-size:12px;font-weight:600;}"
             ".front-panel{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}"
             ".frog-widget{position:absolute;box-sizing:border-box;}"
             ".numeric-widget{font-family:Segoe UI,Arial,sans-serif;}"
@@ -636,12 +640,17 @@ std::string BrowserUiRuntime::render_html() const {
             "pre{white-space:pre-wrap;word-break:break-word;background:#0b1020;color:#dbeafe;padding:12px;border-radius:8px;font-size:12px;}"
             "</style></head><body>";
     html << "<h1>" << html_escape(core.panel.title) << "</h1>";
-    html << "<p class='meta'>Example 05 — contract + .wfrog + "
-         << (uses_native_kernel ? "native kernel bridge" : "browser host runtime")
-         << "</p>";
+    html << "<p class='meta'>Example 05 - .wfrog front panel + C++ runtime</p>";
+    html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
+    html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
+    html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : "contract executor") << "</dd></div>";
+    html << "<div><dt>Compiler backend</dt><dd>" << (uses_native_kernel ? "LLVM native kernel artifact" : "none in runtime path") << "</dd></div>";
+    html << "</dl>";
     html << diagnostics;
     html << "<form method='post' action='/run'>";
     html << "<div class='front-panel' data-panel-id='" << html_escape(core.panel.panel_id) << "' data-coordinate-space='panel_pixels'";
+    html << " data-runtime-language='cpp'";
+    html << " data-compiler-backend='" << (uses_native_kernel ? "llvm" : "none") << "'";
     html << " data-execution-path='" << (uses_native_kernel ? "native_kernel_bridge" : "contract_executor") << "'";
     html << " style='width:" << css_px(panel_width) << ";height:" << css_px(panel_height) << ";'>";
     html << render_numeric_widget(ctrl);
@@ -770,6 +779,10 @@ std::string BooleanBrowserUiRuntime::render_html() const {
             "body{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}"
             "h1{font-size:24px;margin:0 0 12px 0;}"
             "p.meta{margin:0 0 20px 0;color:#52606d;}"
+            ".runtime-facts{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 18px 0;}"
+            ".runtime-facts div{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}"
+            ".runtime-facts dt{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}"
+            ".runtime-facts dd{margin:0;color:#1f2933;font-size:12px;font-weight:600;}"
             ".front-panel{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}"
             ".frog-widget{position:absolute;box-sizing:border-box;}"
             ".boolean-widget{border:0;padding:0;background:transparent;font:inherit;color:inherit;}"
@@ -786,10 +799,15 @@ std::string BooleanBrowserUiRuntime::render_html() const {
             "</style></head><body>";
     html << "<h1>" << html_escape(core.panel.title) << "</h1>";
     html << "<p class='meta'>Example 06 - .wfrog front panel + Default Boolean realization assets + C++ runtime</p>";
+    html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
+    html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
+    html << "<div><dt>Execution</dt><dd>boolean contract executor</dd></div>";
+    html << "<div><dt>Compiler backend</dt><dd>none for Example 06</dd></div>";
+    html << "</dl>";
     html << diagnostics;
     html << "<form method='post' action='/run'>";
     html << "<div class='front-panel' data-panel-id='" << html_escape(core.panel.panel_id)
-         << "' data-coordinate-space='panel_pixels' data-execution-path='cpp_boolean_contract_executor'";
+         << "' data-coordinate-space='panel_pixels' data-runtime-language='cpp' data-compiler-backend='none' data-execution-path='cpp_boolean_contract_executor'";
     html << " style='width:" << css_px(panel_width) << ";height:" << css_px(panel_height) << ";'>";
     html << render_boolean_widget(ctrl);
     html << render_boolean_widget(ind);

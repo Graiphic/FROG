@@ -117,8 +117,12 @@ void test_browser_ui_runtime_uses_llvm_kernel_bridge() {
 
     const auto html = runtime.render_html();
     assert_contains(html, "data-execution-path='native_kernel_bridge'");
+    assert_contains(html, "data-runtime-language='cpp'");
+    assert_contains(html, "data-compiler-backend='llvm'");
     assert_contains(html, "Example 05");
+    assert_contains(html, "C++ reference runtime");
     assert_contains(html, "native kernel bridge");
+    assert_contains(html, "LLVM native kernel artifact");
     assert_contains(html, "style='width:500px;height:170px;'");
     assert_contains(html, "left:20px;top:24px;width:220px;height:88px;");
     assert_contains(html, "left:260px;top:24px;width:220px;height:88px;");
