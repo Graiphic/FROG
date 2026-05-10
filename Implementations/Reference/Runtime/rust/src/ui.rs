@@ -68,6 +68,10 @@ impl BrowserUiRuntime {
              body{{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}}\
              h1{{margin:0 0 12px 0;font-size:24px;}}\
              p.meta{{margin:0 0 20px 0;color:#52606d;}}\
+             .runtime-facts{{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 18px 0;}}\
+             .runtime-facts div{{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}}\
+             .runtime-facts dt{{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}}\
+             .runtime-facts dd{{margin:0;color:#1f2933;font-size:12px;font-weight:600;}}\
              .panel{{width:460px;min-height:170px;background:#ffffff;border-radius:10px;padding:16px;box-shadow:0 4px 14px rgba(15,23,42,0.08);}}\
              .widgets{{display:flex;gap:24px;align-items:flex-start;}}\
              .widget{{width:180px;padding:12px;border-radius:8px;border:2px solid #cbd2d9;background:#fbfdff;}}\
@@ -83,7 +87,12 @@ impl BrowserUiRuntime {
              pre{{white-space:pre-wrap;word-break:break-word;background:#0b1020;color:#dbeafe;padding:12px;border-radius:8px;font-size:12px;}}\
              </style></head><body>\
              <h1>{title}</h1>\
-             <p class='meta'>Example 05 — contract + .wfrog + browser host runtime</p>\
+             <p class='meta'>Example 05 - .wfrog front panel + Rust runtime</p>\
+             <dl class='runtime-facts' aria-label='Runtime facts'>\
+             <div><dt>Runtime</dt><dd>Rust reference runtime</dd></div>\
+             <div><dt>Execution</dt><dd>contract executor</dd></div>\
+             <div><dt>Compiler backend</dt><dd>none in runtime path</dd></div>\
+             </dl>\
              {diagnostics}\
              <div class='panel'><form method='post' action='/run'>\
              <div class='widgets'>\

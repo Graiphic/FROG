@@ -41,6 +41,9 @@ fn slice05_ui_surface_matches_shared_acceptance() {
 
     let mut runtime = BrowserUiRuntime::new(Some(contract_path), Some(wfrog_path)).expect("build runtime");
     let html = runtime.render_html();
+    assert!(html.contains("Rust reference runtime"));
+    assert!(html.contains("contract executor"));
+    assert!(html.contains("none in runtime path"));
     for route in routes {
         let route = route.as_str().unwrap();
         if route == "/" {
