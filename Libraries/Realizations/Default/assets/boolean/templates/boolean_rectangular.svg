@@ -27,7 +27,7 @@
 
       #outer_face {
         fill: none;
-        stroke: #111827;
+        stroke: transparent;
         stroke-width: 3px;
       }
 

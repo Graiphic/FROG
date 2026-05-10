@@ -242,6 +242,7 @@ def validate_svg_template(svg_text: str, *, label: str, expected_class: str, exp
     # still exposes the public text parts, but the template text must not also render.
     require("#caption_text" in svg_text and "display:none" in svg_text.replace(" ", ""), f"{label} template caption text must be hidden by default")
     require("#state_text" in svg_text and "display:none" in svg_text.replace(" ", ""), f"{label} template state text must be hidden by default")
+    require("stroke:transparent" in svg_text.replace(" ", ""), f"{label} outer template border must be transparent by default")
 
 
 def validate_layout(panel: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -266,13 +267,17 @@ def validate_layout(panel: dict[str, Any]) -> dict[str, dict[str, Any]]:
         require("style.inner.fill_color.true" in props, f"{widget_id} must declare true fill color through .wfrog")
         require("style.outer.border_color.false" in props, f"{widget_id} must declare false border color through .wfrog")
         require("style.outer.border_color.true" in props, f"{widget_id} must declare true border color through .wfrog")
+        require(props["style.outer.border_color.false"] == "transparent", f"{widget_id} false border must be transparent through .wfrog")
+        require(props["style.outer.border_color.true"] == "transparent", f"{widget_id} true border must be transparent through .wfrog")
         require("state_text.style.text_color.false" in props, f"{widget_id} must declare false state text color through .wfrog")
         require("state_text.style.text_color.true" in props, f"{widget_id} must declare true state text color through .wfrog")
         require("style.transition.duration_ms" in props, f"{widget_id} must declare transition timing through .wfrog")
     require("style.pressed.inset" in input_props, "bool_input must declare pressed inset through .wfrog")
     for state in ("hover_false", "hover_true", "pressed_false", "pressed_true"):
         require(f"style.inner.fill_color.{state}" in input_props, f"bool_input must declare {state} fill color through .wfrog")
-        require(f"style.outer.border_color.{state}" in input_props, f"bool_input must declare {state} border color through .wfrog")
+        for props, widget_id in ((input_props, "bool_input"), (result_props, "bool_result")):
+            require(f"style.outer.border_color.{state}" in props, f"{widget_id} must declare {state} border color through .wfrog")
+            require(props[f"style.outer.border_color.{state}"] == "transparent", f"{widget_id} {state} border must be transparent through .wfrog")
     return widgets
 
 
@@ -354,6 +359,10 @@ def execute_boolean_roundtrip(contract: dict[str, Any], wfrog: dict[str, Any], i
                         "state_text.style.text_color.true": widgets_by_id["bool_result"]["props"]["state_text.style.text_color.true"],
                         "style.outer.border_color.false": widgets_by_id["bool_result"]["props"]["style.outer.border_color.false"],
                         "style.outer.border_color.true": widgets_by_id["bool_result"]["props"]["style.outer.border_color.true"],
+                        "style.outer.border_color.hover_false": widgets_by_id["bool_result"]["props"]["style.outer.border_color.hover_false"],
+                        "style.outer.border_color.hover_true": widgets_by_id["bool_result"]["props"]["style.outer.border_color.hover_true"],
+                        "style.outer.border_color.pressed_false": widgets_by_id["bool_result"]["props"]["style.outer.border_color.pressed_false"],
+                        "style.outer.border_color.pressed_true": widgets_by_id["bool_result"]["props"]["style.outer.border_color.pressed_true"],
                         "style.inner.fill_color.false": widgets_by_id["bool_result"]["props"]["style.inner.fill_color.false"],
                         "style.inner.fill_color.true": widgets_by_id["bool_result"]["props"]["style.inner.fill_color.true"],
                         "style.transition.duration_ms": widgets_by_id["bool_result"]["props"]["style.transition.duration_ms"],
