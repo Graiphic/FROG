@@ -210,6 +210,11 @@ void test_ui_surface() {
     assert_contains(html, "class='front-panel'");
     assert_contains(html, "data-panel-id='main_panel'");
     assert_contains(html, "data-coordinate-space='panel_pixels'");
+    assert_contains(html, "C++ reference runtime");
+    assert_contains(html, "contract executor");
+    assert_contains(html, "none in runtime path");
+    assert_contains(html, "data-runtime-language='cpp'");
+    assert_contains(html, "data-compiler-backend='none'");
     assert_contains(html, "style='width:500px;height:170px;'");
 
     assert_contains(html, "data-widget-id='ctrl_input'");

@@ -45,6 +45,9 @@ def test_slice05_ui_routes_and_state_match_shared_acceptance() -> None:
         response = connection.getresponse()
         html = response.read().decode("utf-8")
         assert response.status == 200
+        assert "Python reference runtime" in html
+        assert "contract executor" in html
+        assert "none in runtime path" in html
         for route in acceptance["ui"]["expected_routes"]:
             if route in {"/", "/run"}:
                 continue

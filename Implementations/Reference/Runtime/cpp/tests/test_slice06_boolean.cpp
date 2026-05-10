@@ -106,6 +106,11 @@ void test_boolean_browser_ui_surface() {
     assert_contains(html, "class='front-panel'");
     assert_contains(html, "style='width:420px;height:150px;'");
     assert_contains(html, "data-panel-id='main_panel'");
+    assert_contains(html, "C++ reference runtime");
+    assert_contains(html, "boolean contract executor");
+    assert_contains(html, "none for Example 06");
+    assert_contains(html, "data-runtime-language='cpp'");
+    assert_contains(html, "data-compiler-backend='none'");
     assert_contains(html, "data-execution-path='cpp_boolean_contract_executor'");
     assert_contains(html, "data-widget-id='bool_input'");
     assert_contains(html, "data-widget-id='bool_result'");
