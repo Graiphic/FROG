@@ -119,6 +119,19 @@ void test_boolean_browser_ui_surface() {
     assert_contains(html, "data-asset-route='/asset/boolean_rectangular_svg'");
     assert_contains(html, "data-asset-route='/asset/boolean_circular_svg'");
     assert_contains(html, "class='boolean-skin'");
+    assert_contains(html, "class='boolean-state-face'");
+    assert_contains(html, "data-frog-visual-law='wfrog-realization-state-map'");
+    assert_contains(html, "data-realization-variant='rectangular'");
+    assert_contains(html, "data-realization-variant='circular'");
+    assert_contains(html, "data-frog-visual-state='true'");
+    assert_contains(html, "data-frog-hover-state='hover_true'");
+    assert_contains(html, "data-frog-pressed-state='pressed_true'");
+    assert_contains(html, "data-frog-transition-state='transition_true_to_false'");
+    assert_contains(html, "--boolean-fill:#8bd86f;");
+    assert_contains(html, "--boolean-border:#184a24;");
+    assert_contains(html, "--boolean-transition:120ms ease-out;");
+    assert_contains(html, "--boolean-pressed-inset:1px;");
+    assert_contains(html, "transform:translateY(var(--boolean-pressed-inset));");
     assert_contains(html, "name='input_value' value='false'");
     assert_contains(html, "data-toggle-target='false'");
     assert_contains(html, "aria-readonly='true'");
@@ -133,6 +146,11 @@ void test_boolean_browser_ui_surface() {
     html = runtime.render_html();
     assert_contains(html, "name='input_value' value='true'");
     assert_contains(html, "data-toggle-target='true'");
+    assert_contains(html, "data-frog-visual-state='false'");
+    assert_contains(html, "data-frog-hover-state='hover_false'");
+    assert_contains(html, "data-frog-pressed-state='pressed_false'");
+    assert_contains(html, "data-frog-transition-state='transition_false_to_true'");
+    assert_contains(html, "--boolean-fill:#ffffff;");
     assert_contains(html, ">FALSE</span>");
 }
 

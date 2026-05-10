@@ -1,0 +1,19 @@
+{
+  "example": "06_boolean_value_roundtrip",
+  "cases": [
+    {
+      "input": 0,
+      "status": "ok",
+      "input_value": false,
+      "public_output": false,
+      "exit_code": 0
+    },
+    {
+      "input": 1,
+      "status": "ok",
+      "input_value": true,
+      "public_output": true,
+      "exit_code": 0
+    }
+  ]
+}

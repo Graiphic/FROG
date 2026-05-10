@@ -367,7 +367,7 @@ def execute_boolean_value_roundtrip_ui_unit(contract: dict[str, Any], unit: dict
         widget = widgets_by_id[widget_id]
         props = require_object(widget.get("props"), f"wfrog widget {widget_id}.props")
         visual = require_object(widget.get("visual"), f"wfrog widget {widget_id}.visual")
-        return {
+        runtime = {
             "value": value,
             "label.text": props.get("label.text"),
             "caption.text": props.get("caption.text"),
@@ -376,6 +376,28 @@ def execute_boolean_value_roundtrip_ui_unit(contract: dict[str, Any], unit: dict
             "asset_ref": visual.get("asset_ref"),
             "realization.variant": props.get("realization.variant"),
         }
+        for member in (
+            "state_text.style.text_color.false",
+            "state_text.style.text_color.true",
+            "style.outer.border_color.false",
+            "style.outer.border_color.true",
+            "style.outer.border_color.hover_false",
+            "style.outer.border_color.hover_true",
+            "style.outer.border_color.pressed_false",
+            "style.outer.border_color.pressed_true",
+            "style.inner.fill_color.false",
+            "style.inner.fill_color.true",
+            "style.inner.fill_color.hover_false",
+            "style.inner.fill_color.hover_true",
+            "style.inner.fill_color.pressed_false",
+            "style.inner.fill_color.pressed_true",
+            "style.pressed.inset",
+            "style.transition.duration_ms",
+            "style.transition.timing",
+        ):
+            if member in props:
+                runtime[member] = props[member]
+        return runtime
 
     return {
         "artifact_kind": "frog_runtime_execution_result",

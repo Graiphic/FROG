@@ -69,7 +69,7 @@ That bridge keeps the runtime compiler-agnostic: the runtime hosts execution and
 </p>
 
 <p>
-For the first native bridge milestone, LLVM publishes the Example 05 native kernel manifest and ABI-oriented LLVM artifact.
+For the first native bridge milestones, LLVM publishes the Example 05 native numeric kernel manifest and the Example 06 native Boolean kernel manifest.
 That does not make LLVM a runtime dependency.
 LLVM remains a backend-family producer of native-oriented material, and the runtime consumes the resulting manifest-defined artifact through a compiler-agnostic bridge.
 </p>
@@ -87,7 +87,7 @@ runtime
 
 <hr/>
 
-<h2>Example 05 Native Kernel Bridge Artifacts</h2>
+<h2>Example 05 And 06 Native Kernel Bridge Artifacts</h2>
 
 <p>
 The current publication surface for the first compiler-agnostic bridge is:
@@ -97,14 +97,20 @@ The current publication surface for the first compiler-agnostic bridge is:
 Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll
 Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
 Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
+Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/native_kernel_manifest.json
+Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/kernel.ll
+Implementations/Reference/Runtime/check_example06_native_kernel_bridge.py
+Implementations/Reference/Runtime/check_example06_cpp_native_kernel_bridge.py
 </code></pre>
 
 <p>
-The manifest declares the entry symbol <code>frog_example05_run</code>, the ABI name <code>frog_u16_to_result_status_outptr</code>, the input <code>input_value : u16</code>, the output <code>result : u16</code>, and the overflow diagnostic mapping for <code>error_code = 1</code>.
+The Example 05 manifest declares the entry symbol <code>frog_example05_run</code>, the ABI name <code>frog_u16_to_result_status_outptr</code>, the input <code>input_value : u16</code>, the output <code>result : u16</code>, and the overflow diagnostic mapping for <code>error_code = 1</code>.
+The Example 06 manifest declares the entry symbol <code>frog_example06_run</code>, the ABI name <code>frog_bool_to_result_status_outptr</code>, the input <code>input_value : bool</code>, and the output <code>result : bool</code>.
 The ABI uses an explicit out-parameter carrier:
 </p>
 
-<pre><code>void frog_example05_run(uint16_t input_value, FrogRunResult* out_result)</code></pre>
+<pre><code>void frog_example05_run(uint16_t input_value, FrogRunResult* out_result)
+void frog_example06_run(uint8_t input_value, FrogBoolRunResult* out_result)</code></pre>
 
 <p>
 The <code>kernel.ll</code> artifact exposes the corresponding LLVM-level ABI shape and writes <code>ok</code>, <code>result</code>, and <code>error_code</code> into the provided result-status pointer.
@@ -116,6 +122,7 @@ The publication surface can be checked with:
 </p>
 
 <pre><code>python Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
+python Implementations/Reference/Runtime/check_example06_native_kernel_bridge.py
 python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge</code></pre>
 
 <p>

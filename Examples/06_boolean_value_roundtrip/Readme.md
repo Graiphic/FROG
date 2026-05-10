@@ -20,8 +20,8 @@ The runtime behavior is intentionally minimal: <code>bool_input.value</code> is 
 </p>
 
 <p>
-This example is runtime/UI-binding only at this stage.
-It does not add LLVM coverage, does not broaden the Deriver, Lowerer, or ContractEmitter rule families, and does not weaken Example 05 native-kernel coverage.
+This example now has a bounded C++ native-kernel closure.
+It keeps the standard runtime/UI-binding path, adds an LLVM-produced Boolean kernel artifact behind an explicit manifest, and does not broaden the Deriver, Lowerer, or ContractEmitter rule families.
 </p>
 
 <hr/>
@@ -116,7 +116,7 @@ The visible Boolean control is rendered as a clickable control body; clicking it
 
 <p>
 This check is intentionally bounded.
-It validates the source artifact, FIR artifact, lowering artifact, backend contract artifact, <code>.wfrog</code> package, Boolean widget class-law reference, Default Boolean realization manifest reference, rendered front-panel posture, asset usage, toggle behavior, and expected runtime snapshots.
+It validates the source artifact, FIR artifact, lowering artifact, backend contract artifact, <code>.wfrog</code> package, Boolean widget class-law reference, Default Boolean realization manifest reference, rendered front-panel posture, asset usage, toggle behavior, expected runtime snapshots, and the published LLVM native-kernel manifest surface.
 </p>
 
 <hr/>
@@ -124,6 +124,6 @@ It validates the source artifact, FIR artifact, lowering artifact, backend contr
 <h2>Boundary</h2>
 
 <p>
-Example 06 does not claim a generalized scalar-widget runtime, a generalized <code>.wfrog</code> renderer, a generated Deriver/Lowerer/ContractEmitter corridor, or a new compiler-family path.
+Example 06 does not claim a generalized scalar-widget runtime, a generalized <code>.wfrog</code> renderer, or a generated Deriver/Lowerer/ContractEmitter corridor.
 It is the first small pilot for scalar widget coverage and remains subordinate to the published widget class law, the default realization manifest, and the centralized version-governance surface.
 </p>

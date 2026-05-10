@@ -55,24 +55,31 @@ Explicit manifests and stable ABI surfaces connect both worlds.
 
 <hr/>
 
-<h2>Published Example 05 Bridge Artifacts</h2>
+<h2>Published Example 05 And 06 Bridge Artifacts</h2>
 
 <pre><code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json
 Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll
+Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/native_kernel_manifest.json
+Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/kernel.ll
 Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
 Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
+Implementations/Reference/Runtime/check_example06_native_kernel_bridge.py
+Implementations/Reference/Runtime/check_example06_cpp_native_kernel_bridge.py
 Implementations/Reference/Runtime/cpp/include/kernel_bridge.hpp
 Implementations/Reference/Runtime/cpp/src/kernel_bridge.cpp
 Implementations/Reference/Runtime/cpp/src/main_llvm_kernel.cpp
 Implementations/Reference/Runtime/cpp/tests/test_slice05_llvm_kernel.cpp
+Implementations/Reference/Runtime/cpp/tests/test_slice06_llvm_kernel.cpp
 </code></pre>
 
 <p>
-The manifest declares <code>frog_example05_run</code> with ABI <code>frog_u16_to_result_status_outptr</code>.
+The Example 05 manifest declares <code>frog_example05_run</code> with ABI <code>frog_u16_to_result_status_outptr</code>.
+The Example 06 manifest declares <code>frog_example06_run</code> with ABI <code>frog_bool_to_result_status_outptr</code>.
 The ABI uses an explicit out-parameter carrier:
 </p>
 
-<pre><code>void frog_example05_run(uint16_t input_value, FrogRunResult* out_result)</code></pre>
+<pre><code>void frog_example05_run(uint16_t input_value, FrogRunResult* out_result)
+void frog_example06_run(uint8_t input_value, FrogBoolRunResult* out_result)</code></pre>
 
 <p>
 The result-status payload contains <code>ok</code>, <code>result</code>, and <code>error_code</code> fields.
@@ -92,7 +99,7 @@ The optional native-kernel C++ runtime executable is:
 
 <p>
 It is built only when <code>FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE=ON</code>.
-That build compiles <code>kernel.ll</code> with <code>clang</code>, links it into the executable, loads the manifest, and routes headless and browser UI execution through the native kernel bridge.
+That build compiles the published Example 05 and Example 06 <code>kernel.ll</code> artifacts with <code>clang</code>, links them into the executable, loads the selected manifest, and routes headless and browser UI execution through the native kernel bridge.
 </p>
 
 <pre><code>cmake -S Implementations/Reference/Runtime/cpp \
@@ -103,7 +110,9 @@ cmake --build build/frog_runtime_cpp_native_kernel_bridge \
   --target frog_reference_runtime_cpp_llvm_kernel
 
 build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel 3
+build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel run true --example 06
 build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel ui --no-open-browser
+build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel ui --example 06 --no-open-browser
 </code></pre>
 
 <hr/>
@@ -128,7 +137,7 @@ Overflow is reported with <code>error_code = 1</code> and mapped by the runtime 
   <li>The runtime does not compile diagrams at runtime.</li>
   <li>The baseline runtime build does not depend on LLVM.</li>
   <li>This bridge does not claim a complete production runtime.</li>
-  <li>This bridge does not introduce Example 06 or new widget classes.</li>
+  <li>This bridge does not introduce new widget classes beyond the published Example 06 Boolean control and indicator.</li>
   <li>The optional LLVM-produced bridge test does not make LLVM the conceptual runtime authority.</li>
   <li>The bounded Example 05 <code>.wfrog</code> renderer does not claim to be a full general renderer.</li>
 </ul>

@@ -90,11 +90,11 @@ build/frog_runtime_cpp/frog_reference_runtime_cpp ui --host 127.0.0.1 --port 808
 
 <p>
 The optional native-kernel executable is built when <code>FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE=ON</code>.
-CMake compiles <code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll</code> with <code>clang</code>, links the resulting object into the executable, and uses <code>native_kernel_manifest.json</code> to validate and call the ABI surface.
+CMake compiles the published Example 05 and Example 06 <code>kernel.ll</code> artifacts with <code>clang</code>, links the resulting objects into the executable, and uses <code>native_kernel_manifest.json</code> to validate and call the selected ABI surface.
 </p>
 
 <p>
-This executable is the bounded Example 05 LabVIEW-like proof path:
+This executable is the bounded Example 05 and Example 06 LabVIEW-like proof path:
 </p>
 
 <pre><code>.frog source
@@ -110,14 +110,17 @@ This executable is the bounded Example 05 LabVIEW-like proof path:
 runtime C++
   -&gt; NativeKernelBridge
   -&gt; frog_example05_run(input_value, out_result)
+  -&gt; or frog_example06_run(input_value, out_result)
   -&gt; public result
   -&gt; ind_result.value
   -&gt; runtime snapshot / state.json
 </code></pre>
 
 <pre><code>python Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
+python Implementations/Reference/Runtime/check_example06_cpp_native_kernel_bridge.py
 
 build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel 3
+build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel run true --example 06
 build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel ui --host 127.0.0.1 --port 8080 --no-open-browser</code></pre>
 
 <hr/>
@@ -180,7 +183,7 @@ The fact that the first published backend artifact is LLVM-oriented remains mani
   <li>manifest loading, entry-symbol validation, ABI validation, and error mapping,</li>
   <li>direct calls through an object compiled from <code>kernel.ll</code>,</li>
   <li>runtime snapshot publication through <code>execute_with_native_kernel_bridge(...)</code>,</li>
-  <li>browser UI runtime execution through <code>BrowserUiRuntime</code> with a native kernel bridge.</li>
+  <li>browser UI runtime execution through <code>BrowserUiRuntime</code> or <code>BooleanBrowserUiRuntime</code> with a native kernel bridge.</li>
 </ul>
 
 <hr/>

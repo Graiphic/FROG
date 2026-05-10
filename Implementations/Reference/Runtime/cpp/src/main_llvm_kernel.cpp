@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <cctype>
 #include <filesystem>
 #include <iostream>
 #include <memory>
@@ -13,6 +14,7 @@
 #include "ui.hpp"
 
 extern "C" void frog_example05_run(std::uint16_t input_value, frog::runtime::FrogRunResult* out_result);
+extern "C" void frog_example06_run(std::uint8_t input_value, frog::runtime::FrogBoolRunResult* out_result);
 
 namespace {
 
@@ -28,9 +30,40 @@ std::filesystem::path repo_root() {
     return frog::runtime::find_repo_root(std::filesystem::path(FROG_RUNTIME_CPP_SOURCE_DIR));
 }
 
-std::filesystem::path default_manifest_path() {
+std::filesystem::path default_example05_manifest_path() {
     return repo_root() / "Implementations" / "Reference" / "LLVM" / "examples" /
            "05_bounded_ui_accumulator" / "native_kernel_manifest.json";
+}
+
+std::filesystem::path default_example06_manifest_path() {
+    return repo_root() / "Implementations" / "Reference" / "LLVM" / "examples" /
+           "06_boolean_value_roundtrip" / "native_kernel_manifest.json";
+}
+
+std::filesystem::path example06_contract_path() {
+    return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
+           "06_boolean_value_roundtrip.reference_host_runtime_ui_binding.contract.json";
+}
+
+std::filesystem::path example06_wfrog_path() {
+    return repo_root() / "Examples" / "06_boolean_value_roundtrip" / "ui" / "boolean_panel.wfrog";
+}
+
+bool wants_example06(const std::string& value) {
+    return value == "06" || value == "6" || value == "example06" || value == "06_boolean_value_roundtrip";
+}
+
+bool parse_bool_input(std::string value) {
+    for (auto& ch : value) {
+        ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+    }
+    if (value == "true" || value == "1" || value == "on") {
+        return true;
+    }
+    if (value == "false" || value == "0" || value.empty()) {
+        return false;
+    }
+    throw std::runtime_error("Boolean input must be true or false.");
 }
 
 std::uint16_t parse_u16_value(const std::string& raw, const std::string& label) {
@@ -41,9 +74,14 @@ std::uint16_t parse_u16_value(const std::string& raw, const std::string& label) 
     return static_cast<std::uint16_t>(parsed);
 }
 
-std::shared_ptr<const frog::runtime::NativeKernelBridge> make_bridge(const std::filesystem::path& manifest_path) {
+std::shared_ptr<const frog::runtime::NativeKernelBridge> make_example05_bridge(const std::filesystem::path& manifest_path) {
     return std::make_shared<const frog::runtime::NativeKernelBridge>(
         frog::runtime::make_linked_native_kernel_bridge(manifest_path, &frog_example05_run));
+}
+
+std::shared_ptr<const frog::runtime::NativeBoolKernelBridge> make_example06_bridge(const std::filesystem::path& manifest_path) {
+    return std::make_shared<const frog::runtime::NativeBoolKernelBridge>(
+        frog::runtime::make_linked_native_bool_kernel_bridge(manifest_path, &frog_example06_run));
 }
 
 } // namespace
@@ -60,13 +98,16 @@ int main(int argc, char** argv) {
             args.erase(args.begin());
             std::optional<std::filesystem::path> contract_path;
             std::optional<std::filesystem::path> wfrog_path;
-            std::filesystem::path manifest_path = default_manifest_path();
+            std::optional<std::filesystem::path> manifest_path;
+            std::optional<std::string> example;
             std::string host = "127.0.0.1";
             std::uint16_t port = 0;
             bool open_browser = true;
 
             for (std::size_t index = 0; index < args.size(); ++index) {
-                if (args[index] == "--contract") {
+                if (args[index] == "--example") {
+                    example = require_value(args, index, "--example");
+                } else if (args[index] == "--contract") {
                     contract_path = require_value(args, index, "--contract");
                 } else if (args[index] == "--wfrog") {
                     wfrog_path = require_value(args, index, "--wfrog");
@@ -83,26 +124,41 @@ int main(int argc, char** argv) {
                 }
             }
 
-            frog::runtime::BrowserUiRuntime runtime(contract_path, wfrog_path, make_bridge(manifest_path));
+            if (example.has_value() && wants_example06(*example)) {
+                frog::runtime::BooleanBrowserUiRuntime runtime(
+                    contract_path.value_or(example06_contract_path()),
+                    wfrog_path.value_or(example06_wfrog_path()),
+                    make_example06_bridge(manifest_path.value_or(default_example06_manifest_path())));
+                runtime.serve(host, port, open_browser);
+                return 0;
+            }
+
+            frog::runtime::BrowserUiRuntime runtime(
+                contract_path,
+                wfrog_path,
+                make_example05_bridge(manifest_path.value_or(default_example05_manifest_path())));
             runtime.serve(host, port, open_browser);
             return 0;
         }
 
         std::optional<std::filesystem::path> contract_path;
         std::optional<std::filesystem::path> wfrog_path;
-        std::filesystem::path manifest_path = default_manifest_path();
-        std::uint16_t input_value = 3;
+        std::optional<std::filesystem::path> manifest_path;
+        std::optional<std::string> example;
+        std::optional<std::string> input_value_text;
 
         if (!args.empty() && args.front() == "run") {
             args.erase(args.begin());
         }
         if (!args.empty() && !args.front().starts_with("--")) {
-            input_value = parse_u16_value(args.front(), "input_value");
+            input_value_text = args.front();
             args.erase(args.begin());
         }
 
         for (std::size_t index = 0; index < args.size(); ++index) {
-            if (args[index] == "--contract") {
+            if (args[index] == "--example") {
+                example = require_value(args, index, "--example");
+            } else if (args[index] == "--contract") {
                 contract_path = require_value(args, index, "--contract");
             } else if (args[index] == "--wfrog") {
                 wfrog_path = require_value(args, index, "--wfrog");
@@ -113,10 +169,24 @@ int main(int argc, char** argv) {
             }
         }
 
+        if (example.has_value() && wants_example06(*example)) {
+            frog::runtime::Slice06BooleanRuntimeCore runtime(
+                contract_path.value_or(example06_contract_path()),
+                wfrog_path.value_or(example06_wfrog_path()));
+            const auto artifact = runtime.execute_with_native_kernel_bridge(
+                *make_example06_bridge(manifest_path.value_or(default_example06_manifest_path())),
+                parse_bool_input(input_value_text.value_or("true")));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+
+        const auto input_value = parse_u16_value(input_value_text.value_or("3"), "input_value");
         frog::runtime::Slice05RuntimeCore runtime(
             contract_path.value_or(frog::runtime::default_contract_path()),
             wfrog_path.value_or(frog::runtime::default_wfrog_path()));
-        const auto artifact = runtime.execute_with_native_kernel_bridge(*make_bridge(manifest_path), input_value);
+        const auto artifact = runtime.execute_with_native_kernel_bridge(
+            *make_example05_bridge(manifest_path.value_or(default_example05_manifest_path())),
+            input_value);
         std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
         return 0;
     } catch (const std::exception& error) {

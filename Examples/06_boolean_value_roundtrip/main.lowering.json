@@ -15,7 +15,9 @@
   "lowering_intent": {
     "purpose": "make the Boolean value roundtrip consumable by a bounded runtime/UI-binding check",
     "backend_family_target": "reference_host_runtime_ui_binding",
-    "compiler_family_targets": []
+    "compiler_family_targets": [
+      "llvm_native_kernel_bridge"
+    ]
   },
   "lowered_units": [
     {

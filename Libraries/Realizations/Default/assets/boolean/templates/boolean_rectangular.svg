@@ -7,52 +7,40 @@
      data-frog-variant="rectangular">
   <title>FROG Default Boolean Rectangular Realization Template</title>
   <desc>
-    Semantic SVG template for the default rectangular realization variant of FROG boolean widgets.
-    The runtime or IDE binds public widget properties to stable parts declared by id and data-frog-part.
-    Example 06 renders caption and state text through host overlays, so template text is hidden by default.
+    State-aware structural SVG template for the default rectangular realization variant of FROG boolean widgets.
+    Runtime hosts bind public widget properties to stable data-frog-part surfaces and apply false, true,
+    hover, pressed, focused, disabled, and transition visual states.
   </desc>
 
   <defs>
     <style>
-      #label_text {
+      #label_text,
+      #caption_text,
+      #state_text {
         display: none;
-        fill: #6b7280;
-        font-family: system-ui, Segoe UI, Arial, sans-serif;
-        font-size: 12px;
       }
 
-      #caption_text {
-        display: none;
-        fill: #1f2933;
-        font-family: system-ui, Segoe UI, Arial, sans-serif;
-        font-size: 14px;
-        font-weight: 600;
+      #frame_shadow {
+        fill: #0f172a;
+        opacity: 0.12;
       }
 
       #outer_face {
-        fill: #ffffff;
+        fill: none;
         stroke: #111827;
-        stroke-width: 4px;
+        stroke-width: 3px;
       }
 
       #inner_face {
-        fill: #f8fafc;
-        stroke: #cbd5e1;
+        fill: none;
+        stroke: rgba(255,255,255,0.55);
         stroke-width: 1px;
-      }
-
-      #state_text {
-        display: none;
-        fill: #111827;
-        font-family: system-ui, Segoe UI, Arial, sans-serif;
-        font-size: 18px;
-        font-weight: 700;
       }
 
       #focus_ring {
         display: none;
         fill: none;
-        stroke: #2f80ed;
+        stroke: #2563eb;
         stroke-width: 2px;
       }
     </style>
@@ -63,41 +51,49 @@
           data-frog-part="label"
           data-frog-member="label.text"
           data-frog-anchor="label.anchor"
-          x="10"
-          y="14">boolean_1</text>
+          x="8"
+          y="13">boolean_1</text>
 
     <text id="caption_text"
           data-frog-part="caption"
           data-frog-member="caption.text"
           data-frog-anchor="caption.anchor"
-          x="10"
-          y="17">Boolean</text>
+          x="8"
+          y="15">Boolean</text>
 
     <rect id="focus_ring"
           data-frog-part="focus_ring"
-          x="4"
-          y="18"
-          width="152"
+          x="3"
+          y="19"
+          width="154"
           height="58"
-          rx="9"
+          rx="12"
           data-frog-bind="interaction.focused style.focus_ring.*" />
+
+    <rect id="frame_shadow"
+          data-frog-part="frame"
+          x="8"
+          y="25"
+          width="144"
+          height="48"
+          rx="11" />
 
     <rect id="outer_face"
           data-frog-part="outer_face"
-          x="8"
+          x="6"
           y="22"
-          width="144"
+          width="148"
           height="52"
-          rx="8"
+          rx="11"
           data-frog-bind="style.outer.fill_color.* style.outer.border_color.* style.outer.border_width style.outer.corner_radius" />
 
     <rect id="inner_face"
           data-frog-part="inner_face"
           x="18"
-          y="32"
+          y="31"
           width="124"
-          height="32"
-          rx="5"
+          height="34"
+          rx="7"
           data-frog-bind="style.inner.visible.* style.inner.fill_color.* style.inner.border_color.* style.inner.border_width style.inner.corner_radius style.inner.inset" />
 
     <text id="state_text"

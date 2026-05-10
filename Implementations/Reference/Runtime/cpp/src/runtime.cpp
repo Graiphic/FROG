@@ -483,25 +483,67 @@ Value Slice06BooleanRuntimeCore::execute(std::optional<bool> control_value_overr
     return execution_artifact();
 }
 
+Value Slice06BooleanRuntimeCore::execute_with_native_kernel_bridge(
+    const NativeBoolKernelBridge& bridge,
+    std::optional<bool> control_value_override) {
+    require(bridge.manifest().source_lowered_unit == "Examples/06_boolean_value_roundtrip/main.lowering.json", "Unexpected native bool kernel source lowered unit.");
+    if (control_value_override.has_value()) {
+        set_control_value(*control_value_override);
+    }
+
+    const auto result = bridge.run(control_value());
+    if (!result.ok) {
+        throw std::runtime_error(result.diagnostic.empty() ? "native bool kernel execution failed." : result.diagnostic);
+    }
+
+    last_result = result.result;
+    widgets.at("bool_result").properties["value"] = Value(last_result);
+    return execution_artifact();
+}
+
 Value Slice06BooleanRuntimeCore::execution_artifact() const {
     Array widget_entries;
     for (const auto& entry : widgets) {
         const auto& widget = entry.second;
         const bool value = json_bool(widget.properties, "value", false);
+        Object runtime_fields{
+            {"value", Value(value)},
+            {"label.text", Value(json_string(widget.properties, "label.text"))},
+            {"caption.text", Value(json_string(widget.properties, "caption.text"))},
+            {"state_text.true_text", Value(json_string(widget.properties, "state_text.true_text", "TRUE"))},
+            {"state_text.false_text", Value(json_string(widget.properties, "state_text.false_text", "FALSE"))},
+            {"asset_ref", widget.asset_id.has_value() ? Value("asset:" + *widget.asset_id) : Value(nullptr)},
+            {"realization.variant", Value(json_string(widget.properties, "realization.variant"))},
+        };
+        const auto copy_property = [&](const std::string& key) {
+            const auto it = widget.properties.find(key);
+            if (it != widget.properties.end()) {
+                runtime_fields.emplace(key, it->second);
+            }
+        };
+        copy_property("state_text.style.text_color.false");
+        copy_property("state_text.style.text_color.true");
+        copy_property("style.outer.border_color.false");
+        copy_property("style.outer.border_color.true");
+        copy_property("style.outer.border_color.hover_false");
+        copy_property("style.outer.border_color.hover_true");
+        copy_property("style.outer.border_color.pressed_false");
+        copy_property("style.outer.border_color.pressed_true");
+        copy_property("style.inner.fill_color.false");
+        copy_property("style.inner.fill_color.true");
+        copy_property("style.inner.fill_color.hover_false");
+        copy_property("style.inner.fill_color.hover_true");
+        copy_property("style.inner.fill_color.pressed_false");
+        copy_property("style.inner.fill_color.pressed_true");
+        copy_property("style.pressed.inset");
+        copy_property("style.transition.duration_ms");
+        copy_property("style.transition.timing");
         widget_entries.push_back(make_object({
             {"widget_id", Value(widget.widget_id)},
             {"class_ref", Value(widget.class_ref)},
             {"role", Value(widget.role)},
             {"layout", widget.layout},
-            {"runtime", make_object({
-                {"value", Value(value)},
-                {"label.text", Value(json_string(widget.properties, "label.text"))},
-                {"caption.text", Value(json_string(widget.properties, "caption.text"))},
-                {"state_text.true_text", Value(json_string(widget.properties, "state_text.true_text", "TRUE"))},
-                {"state_text.false_text", Value(json_string(widget.properties, "state_text.false_text", "FALSE"))},
-                {"asset_ref", widget.asset_id.has_value() ? Value("asset:" + *widget.asset_id) : Value(nullptr)},
-                {"realization.variant", Value(json_string(widget.properties, "realization.variant"))},
-            })},
+            {"runtime", Value(runtime_fields)},
         }));
     }
 

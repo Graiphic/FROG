@@ -1,7 +1,7 @@
 """Generic-by-kind LLVM emitter for the non-normative FROG reference workspace.
 
 This module is intentionally narrow and non-normative. It does not implement a
-general production LLVM backend. It consolidates the current Examples 01-05
+general production LLVM backend. It consolidates the current Examples 01-06
 native proof emitters around one dispatch key:
 
     lowered_units[0].kind
@@ -13,6 +13,7 @@ Supported lowered unit kinds:
 - ui_property_write_effect_unit
 - stateful_feedback_delay_kernel
 - bounded_accumulator_kernel_with_ui_bindings
+- boolean_value_roundtrip_kernel_with_ui_bindings
 """
 
 from __future__ import annotations
@@ -484,12 +485,91 @@ print_error:
 """
 
 
+def emit_boolean_value_roundtrip(lowering: dict[str, Any]) -> str:
+    unit = single_lowered_unit(lowering)
+    kernel = execution_kernel(unit)
+    public_io = require_object(unit.get("public_io"), "unit.public_io")
+    inputs = require_list(public_io.get("inputs"), "unit.public_io.inputs")
+    outputs = require_list(public_io.get("outputs"), "unit.public_io.outputs")
+
+    expect_equal(kernel.get("operation"), "copy", "boolean_value_roundtrip expects copy operation")
+    expect_equal(kernel.get("src"), "input_value", "boolean_value_roundtrip expects src input_value")
+    expect_equal(kernel.get("dst"), "result", "boolean_value_roundtrip expects dst result")
+    expect_equal(kernel.get("type"), "bool", "boolean_value_roundtrip expects bool copy type")
+    expect_equal(inputs, [{"id": "input_value", "type": "bool"}], "boolean_value_roundtrip expects one bool input")
+    expect_equal(outputs, [{"id": "result", "type": "bool"}], "boolean_value_roundtrip expects one bool output")
+
+    fmt_input = "input_value=%s\n"
+    fmt_output = "public_output=%s\n"
+    fmt_status_ok = "status=ok\n"
+
+    return f"""; FROG example 06 - LLVM Boolean value roundtrip proof
+; Emitted from the published Example 06 lowered Boolean copy kernel.
+;
+; Lowered kernel shape:
+;   input_value : bool
+;   result      : bool
+;   operation   : copy input_value -> result
+
+{c_const("text_true", "true")}
+{c_const("text_false", "false")}
+{c_const("fmt_input", fmt_input)}
+{c_const("fmt_output", fmt_output)}
+{c_const("fmt_status_ok", fmt_status_ok)}
+
+declare i32 @printf(ptr, ...)
+declare i32 @atoi(ptr)
+
+define i1 @frog_example06_copy_bool(i1 %input_value) {{
+entry:
+  ret i1 %input_value
+}}
+
+define i32 @main(i32 %argc, ptr %argv) {{
+entry:
+  %true_ptr = getelementptr inbounds [5 x i8], ptr @text_true, i64 0, i64 0
+  %false_ptr = getelementptr inbounds [6 x i8], ptr @text_false, i64 0, i64 0
+  %has_arg = icmp sgt i32 %argc, 1
+  br i1 %has_arg, label %parse_arg, label %use_default
+
+parse_arg:
+  %argv1ptr = getelementptr inbounds ptr, ptr %argv, i64 1
+  %argv1 = load ptr, ptr %argv1ptr, align 8
+  %parsed = call i32 @atoi(ptr %argv1)
+  %parsed_bool = icmp ne i32 %parsed, 0
+  br label %run
+
+use_default:
+  br label %run
+
+run:
+  %input_value = phi i1 [ %parsed_bool, %parse_arg ], [ true, %use_default ]
+  %result = call i1 @frog_example06_copy_bool(i1 %input_value)
+
+  %input_text = select i1 %input_value, ptr %true_ptr, ptr %false_ptr
+  %result_text = select i1 %result, ptr %true_ptr, ptr %false_ptr
+
+  %fmt_input_ptr = getelementptr inbounds [{c_len(fmt_input)} x i8], ptr @fmt_input, i64 0, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt_input_ptr, ptr %input_text)
+
+  %fmt_output_ptr = getelementptr inbounds [{c_len(fmt_output)} x i8], ptr @fmt_output, i64 0, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt_output_ptr, ptr %result_text)
+
+  %fmt_status_ok_ptr = getelementptr inbounds [{c_len(fmt_status_ok)} x i8], ptr @fmt_status_ok, i64 0, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt_status_ok_ptr)
+
+  ret i32 0
+}}
+"""
+
+
 EMITTERS_BY_KIND: dict[str, Callable[[dict[str, Any]], str]] = {
     "pure_addition_kernel": emit_pure_addition,
     "ui_value_roundtrip_kernel": emit_ui_value_roundtrip,
     "ui_property_write_effect_unit": emit_ui_property_write,
     "stateful_feedback_delay_kernel": emit_stateful_feedback_delay,
     "bounded_accumulator_kernel_with_ui_bindings": emit_bounded_accumulator,
+    "boolean_value_roundtrip_kernel_with_ui_bindings": emit_boolean_value_roundtrip,
 }
 
 

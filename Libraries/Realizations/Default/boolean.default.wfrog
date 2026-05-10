@@ -96,12 +96,16 @@
       "supported_visual_states": [
         "false",
         "true",
+        "hover_false",
+        "hover_true",
         "disabled_false",
         "disabled_true",
         "focused_false",
         "focused_true",
         "pressed_false",
-        "pressed_true"
+        "pressed_true",
+        "transition_false_to_true",
+        "transition_true_to_false"
       ],
       "fallbacks": {
         "missing_variant": "rectangular",
@@ -135,10 +139,14 @@
       "supported_visual_states": [
         "false",
         "true",
+        "hover_false",
+        "hover_true",
         "disabled_false",
         "disabled_true",
         "focused_false",
-        "focused_true"
+        "focused_true",
+        "transition_false_to_true",
+        "transition_true_to_false"
       ],
       "fallbacks": {
         "missing_variant": "circular",
@@ -363,6 +371,38 @@
       ]
     },
     {
+      "state": "hover_false",
+      "value_condition": {
+        "value": false,
+        "interaction.hovered": true
+      },
+      "target_roles": [
+        "control"
+      ],
+      "inherits": "false",
+      "property_bindings": [
+        "style.inner.fill_color.hover_false",
+        "style.outer.border_color.hover_false",
+        "style.hover.cursor"
+      ]
+    },
+    {
+      "state": "hover_true",
+      "value_condition": {
+        "value": true,
+        "interaction.hovered": true
+      },
+      "target_roles": [
+        "control"
+      ],
+      "inherits": "true",
+      "property_bindings": [
+        "style.inner.fill_color.hover_true",
+        "style.outer.border_color.hover_true",
+        "style.hover.cursor"
+      ]
+    },
+    {
       "state": "pressed_false",
       "value_condition": {
         "value": false,
@@ -371,7 +411,12 @@
       "target_roles": [
         "control"
       ],
-      "inherits": "false"
+      "inherits": "false",
+      "property_bindings": [
+        "style.inner.fill_color.pressed_false",
+        "style.outer.border_color.pressed_false",
+        "style.pressed.inset"
+      ]
     },
     {
       "state": "pressed_true",
@@ -382,7 +427,44 @@
       "target_roles": [
         "control"
       ],
-      "inherits": "true"
+      "inherits": "true",
+      "property_bindings": [
+        "style.inner.fill_color.pressed_true",
+        "style.outer.border_color.pressed_true",
+        "style.pressed.inset"
+      ]
+    },
+    {
+      "state": "transition_false_to_true",
+      "value_condition": {
+        "previous_value": false,
+        "value": true
+      },
+      "target_roles": [
+        "control",
+        "indicator"
+      ],
+      "inherits": "true",
+      "property_bindings": [
+        "style.transition.duration_ms",
+        "style.transition.timing"
+      ]
+    },
+    {
+      "state": "transition_true_to_false",
+      "value_condition": {
+        "previous_value": true,
+        "value": false
+      },
+      "target_roles": [
+        "control",
+        "indicator"
+      ],
+      "inherits": "false",
+      "property_bindings": [
+        "style.transition.duration_ms",
+        "style.transition.timing"
+      ]
     }
   ],
   "property_bindings": [

@@ -67,7 +67,7 @@
       ],
       "notes": [
         "This FIR is a bounded scalar widget pilot and remains downstream from canonical source.",
-        "No LLVM lowering or native-kernel bridge is required for this example at this stage."
+        "The reference C++ closure may consume an LLVM-produced native bool kernel through an explicit manifest without making the runtime LLVM-only."
       ]
     }
   ]

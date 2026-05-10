@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Build and test the Example 05 C++ bridge with the LLVM-produced kernel artifact.
-
-This check is intentionally optional. It requires CMake, a C++ toolchain, and
-clang. The standard C++ runtime build remains independent from LLVM/clang.
-"""
+"""Build and test the Example 06 C++ bridge with the LLVM-produced bool kernel."""
 
 from __future__ import annotations
 
@@ -15,8 +11,9 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+
 ROOT = Path(__file__).resolve().parents[3]
-BUILD_DIR = ROOT / "b" / "cppn5"
+BUILD_DIR = ROOT / "b" / "cppn6"
 
 
 @dataclass(frozen=True)
@@ -53,9 +50,8 @@ def run_result(command: list[str]) -> subprocess.CompletedProcess[str]:
 
 
 def remove_build_dir(build_dir: Path) -> None:
-    if not build_dir.exists():
-        return
-    shutil.rmtree(build_dir)
+    if build_dir.exists():
+        shutil.rmtree(build_dir)
 
 
 def prepare_build_dir() -> Path:
@@ -65,15 +61,12 @@ def prepare_build_dir() -> Path:
         remove_build_dir(BUILD_DIR)
         return BUILD_DIR
     except OSError:
-        return ROOT / "b" / f"cppn5_{os.getpid()}"
+        return ROOT / "b" / f"cppn6_{os.getpid()}"
 
 
 def configure_candidates() -> list[ConfigureCandidate]:
     candidates: list[ConfigureCandidate] = []
-    # The runtime itself must remain compiler-agnostic. CMake will locate clang
-    # separately for the LLVM-produced kernel object.
     compiler_arg: list[str] = []
-
     if sys.platform == "win32":
         if shutil.which("mingw32-make") is not None:
             candidates.append(ConfigureCandidate("MinGW Makefiles", ["-G", "MinGW Makefiles", *compiler_arg]))
@@ -82,7 +75,6 @@ def configure_candidates() -> list[ConfigureCandidate]:
         candidates.append(ConfigureCandidate("default", compiler_arg))
     else:
         candidates.append(ConfigureCandidate("default", compiler_arg))
-
     return candidates
 
 
@@ -104,17 +96,15 @@ def configure_build_dir(build_dir: Path) -> Path:
         try:
             remove_build_dir(candidate_build_dir)
         except OSError:
-            candidate_build_dir = ROOT / "b" / f"cppn5_{os.getpid()}_{candidate.name.replace(' ', '_')}"
+            candidate_build_dir = ROOT / "b" / f"cppn6_{os.getpid()}_{candidate.name.replace(' ', '_')}"
 
-        command = cmake_configure_base_command(candidate_build_dir) + candidate.args
-        result = run_result(command)
+        result = run_result(cmake_configure_base_command(candidate_build_dir) + candidate.args)
         if result.returncode == 0:
             print(f"CMake configure selected: {candidate.name}")
             return candidate_build_dir
         errors.append(f"{candidate.name}: exit {result.returncode}")
 
-    joined = "; ".join(errors)
-    raise RuntimeError(f"no usable CMake generator for native bridge check ({joined})")
+    raise RuntimeError(f"no usable CMake generator for native bool bridge check ({'; '.join(errors)})")
 
 
 def executable_candidates(build_dir: Path, name: str) -> list[Path]:
@@ -137,16 +127,14 @@ def executable_path(build_dir: Path, name: str) -> Path:
 
 def check_native_runtime_headless(build_dir: Path) -> None:
     executable = executable_path(build_dir, "frog_reference_runtime_cpp_llvm_kernel")
-    result = run([str(executable.relative_to(ROOT)), "3"])
+    result = run([str(executable.relative_to(ROOT)), "run", "true", "--example", "06"])
     artifact = json.loads(result.stdout)
     assert artifact["status"] == "ok"
-    assert artifact["execution_summary"]["final_state"] == 15
-    assert artifact["outputs"]["public"]["result"] == 15
-    assert artifact["outputs"]["ui"]["ctrl_input"] == 3
-    assert artifact["outputs"]["ui"]["ind_result"] == 15
-    assert artifact["ui_runtime"]["panel"]["layout"]["width"] == 500
-    assert artifact["ui_runtime"]["widgets"][0]["layout"]["width"] == 220
-    assert artifact["ui_runtime"]["widgets"][1]["layout"]["width"] == 220
+    assert artifact["execution_summary"]["input_value"] is True
+    assert artifact["outputs"]["public"]["result"] is True
+    assert artifact["outputs"]["ui"]["bool_input"] is True
+    assert artifact["outputs"]["ui"]["bool_result"] is True
+    assert artifact["ui_runtime"]["panel"]["layout"]["width"] == 420
 
 
 def main() -> int:
@@ -161,14 +149,14 @@ def main() -> int:
             "--build",
             str(build_dir.relative_to(ROOT)),
             "--target",
-            "frog_reference_runtime_cpp_llvm_kernel_tests",
+            "frog_reference_runtime_cpp_llvm_bool_kernel_tests",
         ])
         run([
             "ctest",
             "--test-dir",
             str(build_dir.relative_to(ROOT)),
             "-R",
-            "frog_reference_runtime_cpp_llvm_kernel_tests",
+            "frog_reference_runtime_cpp_llvm_bool_kernel_tests",
             "--output-on-failure",
         ])
         run([
@@ -180,10 +168,10 @@ def main() -> int:
         ])
         check_native_runtime_headless(build_dir)
 
-        print("Example 05 C++ native kernel bridge check: ok")
+        print("Example 06 C++ native bool kernel bridge check: ok")
         return 0
     except (RuntimeError, AssertionError, json.JSONDecodeError) as exc:
-        print(f"Example 05 C++ native kernel bridge check: FAILED: {exc}", file=sys.stderr)
+        print(f"Example 06 C++ native bool kernel bridge check: FAILED: {exc}", file=sys.stderr)
         return 1
 
 

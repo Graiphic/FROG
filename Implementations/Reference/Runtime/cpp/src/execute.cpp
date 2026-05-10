@@ -253,7 +253,7 @@ Value execute_boolean_case(const Value& contract, const Object& unit, const Valu
         const auto& widget = as_object(widgets_by_id.at(widget_id), "boolean widget");
         const auto& props = as_object(widget.at("props"), "boolean widget props");
         const auto& visual = as_object(widget.at("visual"), "boolean widget visual");
-        return object({
+        Object runtime{
             {"value", Value(input_value)},
             {"label.text", props.at("label.text")},
             {"caption.text", props.at("caption.text")},
@@ -261,7 +261,31 @@ Value execute_boolean_case(const Value& contract, const Object& unit, const Valu
             {"state_text.false_text", props.at("state_text.false_text")},
             {"asset_ref", visual.at("asset_ref")},
             {"realization.variant", props.at("realization.variant")},
-        });
+        };
+        const auto copy_prop = [&](const std::string& key) {
+            const auto it = props.find(key);
+            if (it != props.end()) {
+                runtime.emplace(key, it->second);
+            }
+        };
+        copy_prop("state_text.style.text_color.false");
+        copy_prop("state_text.style.text_color.true");
+        copy_prop("style.outer.border_color.false");
+        copy_prop("style.outer.border_color.true");
+        copy_prop("style.outer.border_color.hover_false");
+        copy_prop("style.outer.border_color.hover_true");
+        copy_prop("style.outer.border_color.pressed_false");
+        copy_prop("style.outer.border_color.pressed_true");
+        copy_prop("style.inner.fill_color.false");
+        copy_prop("style.inner.fill_color.true");
+        copy_prop("style.inner.fill_color.hover_false");
+        copy_prop("style.inner.fill_color.hover_true");
+        copy_prop("style.inner.fill_color.pressed_false");
+        copy_prop("style.inner.fill_color.pressed_true");
+        copy_prop("style.pressed.inset");
+        copy_prop("style.transition.duration_ms");
+        copy_prop("style.transition.timing");
+        return Value(runtime);
     };
 
     return object({
