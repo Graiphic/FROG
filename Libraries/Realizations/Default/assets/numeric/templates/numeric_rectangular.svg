@@ -22,23 +22,37 @@
         --frog-numeric-caption-display: inline;
         --frog-numeric-caption-fill: #d00000;
         --frog-numeric-caption-font-family: system-ui, Segoe UI, Arial, sans-serif;
-        --frog-numeric-caption-font-size: 18px;
+        --frog-numeric-caption-font-size: 20px;
+        --frog-numeric-caption-font-weight: 400;
 
         --frog-numeric-frame-fill: #ffffff;
         --frog-numeric-frame-stroke: #000000;
-        --frog-numeric-frame-stroke-width: 6px;
+        --frog-numeric-frame-stroke-width: 2px;
 
         --frog-numeric-value-face-fill: #5b9bd5;
         --frog-numeric-value-face-stroke: transparent;
         --frog-numeric-value-face-stroke-width: 0px;
 
+        --frog-numeric-text-display: inline;
         --frog-numeric-text-fill: #111111;
         --frog-numeric-text-font-family: system-ui, Segoe UI, Arial, sans-serif;
         --frog-numeric-text-font-size: 20px;
 
+        --frog-numeric-unit-display: none;
+        --frog-numeric-unit-fill: #111111;
+        --frog-numeric-unit-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-numeric-unit-font-size: 20px;
+
+        --frog-numeric-radix-display: none;
+        --frog-numeric-radix-fill: #111111;
+        --frog-numeric-radix-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-numeric-radix-font-size: 9px;
+
         --frog-numeric-spinner-display: inline;
         --frog-numeric-spinner-fill: #5b9bd5;
         --frog-numeric-spinner-stroke: #ffffff;
+        --frog-numeric-spinner-fill-pressed: #2b4f7b;
+        --frog-numeric-spinner-stroke-pressed: #ffffff;
         --frog-numeric-focus-display: none;
         --frog-numeric-focus-stroke: #2f80ed;
         --frog-numeric-focus-stroke-width: 3px;
@@ -56,6 +70,7 @@
         fill: var(--frog-numeric-caption-fill);
         font-family: var(--frog-numeric-caption-font-family);
         font-size: var(--frog-numeric-caption-font-size);
+        font-weight: var(--frog-numeric-caption-font-weight);
       }
 
       #frame {
@@ -71,9 +86,28 @@
       }
 
       #text_value {
+        display: var(--frog-numeric-text-display);
         fill: var(--frog-numeric-text-fill);
         font-family: var(--frog-numeric-text-font-family);
         font-size: var(--frog-numeric-text-font-size);
+      }
+
+      #unit_label {
+        display: var(--frog-numeric-unit-display);
+        fill: var(--frog-numeric-unit-fill);
+        font-family: var(--frog-numeric-unit-font-family);
+        font-size: var(--frog-numeric-unit-font-size);
+      }
+
+      #radix_badge,
+      #radix_text {
+        display: var(--frog-numeric-radix-display);
+      }
+
+      #radix_text {
+        fill: var(--frog-numeric-radix-fill);
+        font-family: var(--frog-numeric-radix-font-family);
+        font-size: var(--frog-numeric-radix-font-size);
       }
 
       #spinner {
@@ -125,10 +159,10 @@
 
     <rect id="frame"
           data-frog-part="frame"
-          x="12"
-          y="72"
-          width="276"
-          height="48"
+          x="18"
+          y="78"
+          width="222"
+          height="36"
           rx="0"
           data-frog-bind="style.frame.*" />
 
@@ -145,19 +179,36 @@
           data-frog-part="text_value"
           data-frog-member="value"
           data-frog-anchor="text_value.center"
-          x="129"
+          x="126"
           y="97"
           text-anchor="middle"
           dominant-baseline="middle">0</text>
 
+    <text id="unit_label"
+          data-frog-part="unit_label"
+          data-frog-member="unit_label.text"
+          data-frog-anchor="unit_label.inline_after_value"
+          x="194"
+          y="97"
+          text-anchor="start"
+          dominant-baseline="middle">unit</text>
+
     <g id="spinner"
        data-frog-part="spinner"
        data-frog-bind="display.increment_buttons_visible">
-      <g id="increment_up" data-frog-part="increment_up">
+      <g id="increment_up"
+         data-frog-part="increment_up"
+         data-frog-states="normal pressed"
+         data-frog-state-law="normal-pressed-color-only"
+         data-frog-bind="style.increment_button.*">
         <rect x="246" y="82" width="30" height="13" />
         <path d="M261 85 L269 92 L253 92 Z" fill="none" stroke-width="2" />
       </g>
-      <g id="increment_down" data-frog-part="increment_down">
+      <g id="increment_down"
+         data-frog-part="increment_down"
+         data-frog-states="normal pressed"
+         data-frog-state-law="normal-pressed-color-only"
+         data-frog-bind="style.increment_button.*">
         <rect x="246" y="97" width="30" height="13" />
         <path d="M253 100 L269 100 L261 107 Z" fill="none" stroke-width="2" />
       </g>
@@ -180,20 +231,6 @@
           y="90"
           text-anchor="middle"
           dominant-baseline="middle"
-          font-family="system-ui, Segoe UI, Arial, sans-serif"
-          font-size="9"
-          fill="#000000">DBL</text>
-
-    <text id="unit_label"
-          data-frog-part="unit_label"
-          data-frog-member="unit_label.text"
-          data-frog-anchor="unit_label.anchor"
-          x="321"
-          y="112"
-          text-anchor="middle"
-          dominant-baseline="middle"
-          font-family="system-ui, Segoe UI, Arial, sans-serif"
-          font-size="11"
-          fill="#444444">unit</text>
+          data-frog-member="representation.kind">type</text>
   </g>
 </svg>

@@ -60,7 +60,7 @@
           "visible": true,
           "enabled": true,
           "foreground_color": "#5B9BD5",
-          "asset_ref": "asset:numeric_control_svg"
+          "asset_ref": "asset:numeric_rectangular_svg"
         }
       },
       {
@@ -79,7 +79,7 @@
           "visible": true,
           "enabled": true,
           "foreground_color": "#70AD47",
-          "asset_ref": "asset:numeric_indicator_svg"
+          "asset_ref": "asset:numeric_rectangular_svg"
         }
       }
     ],

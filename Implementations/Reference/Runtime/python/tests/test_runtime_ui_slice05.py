@@ -59,26 +59,47 @@ def test_slice05_ui_routes_and_state_match_shared_acceptance() -> None:
         assert "data-class-ref='frog.widgets.numeric_control'" in html
         assert "data-class-ref='frog.widgets.numeric_indicator'" in html
         assert "data-frog-visual-law='wfrog-realization-state-map'" in html
-        assert "data-asset-route='/asset/numeric_control_svg'" in html
-        assert "data-asset-route='/asset/numeric_indicator_svg'" in html
+        assert "data-asset-route='/asset/numeric_rectangular_svg'" in html
         assert "left:20px;top:24px;width:220px;height:88px;" in html
         assert "left:260px;top:24px;width:220px;height:88px;" in html
         assert "class='numeric-skin'" in html
-        assert "data-svg-anchor='label_anchor'" in html
-        assert "data-svg-anchor='value_anchor'" in html
-        assert "data-svg-part='value_box'" in html
+        assert "<svg" in html
+        assert "data-frog-part='caption'" in html
+        assert "data-svg-anchor='caption.anchor'" in html
+        assert "data-frog-part='text_value'" in html
+        assert "data-svg-anchor='text_value.center'" in html
+        assert "data-frog-part='increment_up'" in html
+        assert "data-frog-method='increment'" in html
+        assert "data-frog-part='increment_down'" in html
+        assert "data-frog-method='decrement'" in html
+        assert "data-frog-button-state-law='normal-pressed'" in html
+        assert "--frog-numeric-frame-stroke:transparent" in html
+        assert "--frog-numeric-frame-stroke-width:2px" in html
+        assert "--frog-numeric-step-fill:#5B9BD5" in html
+        assert "--frog-numeric-step-fill-pressed:#2B4F7B" in html
+        assert "font-size: 12px;" in html
+        assert "font-weight:400;" in html
         assert "color:#111827;" in html
         for route in acceptance["ui"]["expected_routes"]:
             if route in {"/", "/run"}:
                 continue
             assert route in html
 
-        for asset_route in ("/asset/numeric_control_svg", "/asset/numeric_indicator_svg"):
-            connection.request("GET", asset_route)
-            asset_response = connection.getresponse()
-            asset_body = asset_response.read().decode("utf-8")
-            assert asset_response.status == 200
-            assert "<svg" in asset_body
+        connection.request("GET", "/asset/numeric_rectangular_svg")
+        asset_response = connection.getresponse()
+        asset_body = asset_response.read().decode("utf-8")
+        assert asset_response.status == 200
+        assert "<svg" in asset_body
+        assert 'viewBox="0 0 380 150"' in asset_body
+        assert 'id="caption_text"' in asset_body
+        assert 'id="frame"' in asset_body
+        assert 'width="222"' in asset_body
+        assert 'id="value_face"' in asset_body
+        assert 'id="increment_up"' in asset_body
+        assert 'id="increment_down"' in asset_body
+        assert 'data-frog-states="normal pressed"' in asset_body
+        assert 'data-frog-state-law="normal-pressed-color-only"' in asset_body
+        assert 'data-frog-bind="style.increment_button.*"' in asset_body
 
         body = urllib.parse.urlencode({"input_value": str(acceptance["headless"]["input_value"])})
         connection.request(

@@ -74,7 +74,7 @@
         "value_mode": "widget_value",
         "reference_mode": true,
         "label": "Input",
-        "package_asset_ref": "Examples/05_bounded_ui_accumulator/ui/assets/numeric_control.svg"
+        "package_asset_ref": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
       },
       "host_realization": {
         "host_class": "reference.numeric_spinbox",
@@ -118,7 +118,7 @@
         "value_mode": "widget_value",
         "reference_mode": true,
         "label": "Accumulated result",
-        "package_asset_ref": "Examples/05_bounded_ui_accumulator/ui/assets/numeric_indicator.svg"
+        "package_asset_ref": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
       },
       "host_realization": {
         "host_class": "reference.numeric_display",

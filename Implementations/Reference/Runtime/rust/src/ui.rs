@@ -86,20 +86,44 @@ impl BrowserUiRuntime {
              .front-panel{{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}}\
              .frog-widget{{position:absolute;box-sizing:border-box;}}\
              .numeric-widget{{font-family:Segoe UI,Arial,sans-serif;}}\
-             .numeric-skin{{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;}}\
+             .numeric-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;}}\
+             .numeric-skin svg{{width:100%;height:100%;display:block;}}\
              .missing-skin{{background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;}}\
-             .numeric-label-overlay{{position:absolute;transform:translateY(-50%);font-size:10px;font-weight:700;line-height:1;white-space:nowrap;pointer-events:none;}}\
+             .numeric-label-overlay{{position:absolute;transform:translateY(-50%);font-size:12px;line-height:1;white-space:nowrap;pointer-events:none;}}\
              .numeric-value-overlay{{position:absolute;box-sizing:border-box;font-family:Consolas,Segoe UI Mono,monospace;font-size:11px;font-weight:700;line-height:1;border:0;background:transparent;}}\
-             .numeric-control-editor{{padding:0 4px;border-radius:4px;outline:1px solid rgba(15,23,42,0.18);background:rgba(255,255,255,0.72);appearance:textfield;}}\
-             .numeric-control-editor:focus{{outline:2px solid #0f62fe;background:rgba(255,255,255,0.9);}}\
+             .numeric-control-editor{{padding:0 4px;border-radius:0;outline:0;background:transparent;appearance:textfield;-moz-appearance:textfield;}}\
+             .numeric-control-editor::-webkit-outer-spin-button,.numeric-control-editor::-webkit-inner-spin-button{{appearance:none;margin:0;}}\
+             .numeric-control-editor:focus{{outline:0;background:transparent;}}\
              .numeric-indicator-value{{display:flex;align-items:center;padding:0 4px;pointer-events:none;}}\
+             .numeric-step-overlay{{position:absolute;box-sizing:border-box;padding:0;border:1px solid var(--frog-numeric-step-border);border-radius:0;background:var(--frog-numeric-step-fill);color:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;}}\
+             .numeric-step-overlay:focus{{outline:0;}}\
+             .numeric-step-overlay:active{{background:var(--frog-numeric-step-fill-pressed);border-color:var(--frog-numeric-step-border-pressed);}}\
+             .numeric-step-overlay::before{{content:'';display:block;width:0;height:0;}}\
+             .numeric-increment::before{{border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:6px solid var(--frog-numeric-step-symbol);}}\
+             .numeric-decrement::before{{border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--frog-numeric-step-symbol);}}\
+             .numeric-increment:active::before{{border-bottom-color:var(--frog-numeric-step-symbol-pressed);}}\
+             .numeric-decrement:active::before{{border-top-color:var(--frog-numeric-step-symbol-pressed);}}\
              .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}\
              button{{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}}\
+             .numeric-step-overlay{{padding:0;border-radius:0;color:transparent;font-weight:400;}}\
              .diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}\
              .diagnostic.error{{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}}\
              summary{{cursor:pointer;margin-top:16px;font-weight:600;}}\
              pre{{white-space:pre-wrap;word-break:break-word;background:#0b1020;color:#dbeafe;padding:12px;border-radius:8px;font-size:12px;}}\
-             </style></head><body>\
+             </style><script>\
+             document.addEventListener('click',function(event){{\
+             const button=event.target.closest('.numeric-step-overlay');\
+             if(!button)return;\
+             const input=document.getElementById(button.dataset.target);\
+             if(!input||input.disabled)return;\
+             const step=Number(button.dataset.step||'1');\
+             const min=Number(input.min||'0');\
+             const max=Number(input.max||'65535');\
+             const next=Math.min(max,Math.max(min,Number(input.value||'0')+step));\
+             input.value=String(next);\
+             input.dispatchEvent(new Event('input',{{bubbles:true}}));\
+             }});\
+             </script></head><body>\
              <h1>{title}</h1>\
              <p class='meta'>Example 05 - .wfrog front panel + Rust runtime</p>\
              <dl class='runtime-facts' aria-label='Runtime facts'>\
@@ -223,25 +247,41 @@ impl BrowserUiRuntime {
 struct NumericSvgGeometry {
     view_width: f64,
     view_height: f64,
-    label_x: f64,
-    label_y: f64,
-    value_box_x: f64,
-    value_box_y: f64,
-    value_box_width: f64,
-    value_box_height: f64,
+    caption_x: f64,
+    caption_y: f64,
+    value_face_x: f64,
+    value_face_y: f64,
+    value_face_width: f64,
+    value_face_height: f64,
+    increment_up_x: f64,
+    increment_up_y: f64,
+    increment_up_width: f64,
+    increment_up_height: f64,
+    increment_down_x: f64,
+    increment_down_y: f64,
+    increment_down_width: f64,
+    increment_down_height: f64,
 }
 
 impl Default for NumericSvgGeometry {
     fn default() -> Self {
         Self {
-            view_width: 220.0,
-            view_height: 88.0,
-            label_x: 16.0,
-            label_y: 24.0,
-            value_box_x: 14.0,
-            value_box_y: 40.0,
-            value_box_width: 192.0,
-            value_box_height: 32.0,
+            view_width: 380.0,
+            view_height: 150.0,
+            caption_x: 16.0,
+            caption_y: 46.0,
+            value_face_x: 22.0,
+            value_face_y: 82.0,
+            value_face_width: 214.0,
+            value_face_height: 28.0,
+            increment_up_x: 246.0,
+            increment_up_y: 82.0,
+            increment_up_width: 30.0,
+            increment_up_height: 13.0,
+            increment_down_x: 246.0,
+            increment_down_y: 97.0,
+            increment_down_width: 30.0,
+            increment_down_height: 13.0,
         }
     }
 }
@@ -266,10 +306,40 @@ fn pct(value: f64, total: f64) -> f64 {
 }
 
 fn safe_css_color(value: &str, fallback: &str) -> String {
+    if value == "transparent" {
+        return value.to_string();
+    }
     let bytes = value.as_bytes();
     let valid_len = bytes.len() == 7 || bytes.len() == 9;
     let valid = valid_len && bytes.first() == Some(&b'#') && bytes[1..].iter().all(|byte| byte.is_ascii_hexdigit());
     if valid {
+        value.to_string()
+    } else {
+        fallback.to_string()
+    }
+}
+
+fn safe_css_length(value: &str, fallback: &str) -> String {
+    let suffix = "px";
+    if !value.ends_with(suffix) {
+        return fallback.to_string();
+    }
+    let number = &value[..value.len() - suffix.len()];
+    if !number.is_empty() && number.parse::<f64>().is_ok() {
+        value.to_string()
+    } else {
+        fallback.to_string()
+    }
+}
+
+fn safe_css_font_weight(value: &str, fallback: &str) -> String {
+    if matches!(value, "normal" | "bold" | "lighter" | "bolder") {
+        return value.to_string();
+    }
+    if value.len() == 3
+        && value.as_bytes().iter().all(u8::is_ascii_digit)
+        && value.parse::<u16>().is_ok_and(|weight| (100..=900).contains(&weight) && weight % 100 == 0)
+    {
         value.to_string()
     } else {
         fallback.to_string()
@@ -296,6 +366,11 @@ fn property_u16(properties: &Map<String, Value>, key: &str, fallback: u16) -> u1
         .unwrap_or(fallback)
 }
 
+fn property_step(properties: &Map<String, Value>, key: &str, fallback: u16) -> u16 {
+    let value = property_u16(properties, key, fallback);
+    if value == 0 { fallback } else { value }
+}
+
 fn svg_attribute(svg: &str, element_id: &str, attribute: &str) -> Option<String> {
     let marker = format!("id=\"{element_id}\"");
     let id_pos = svg.find(&marker)?;
@@ -314,26 +389,23 @@ fn svg_attribute_f64(svg: &str, element_id: &str, attribute: &str, fallback: f64
         .unwrap_or(fallback)
 }
 
-fn parse_translate_anchor(svg: &str, anchor_id: &str, x: &mut f64, y: &mut f64) {
-    let Some(transform) = svg_attribute(svg, anchor_id, "transform") else {
-        return;
-    };
-    let Some(start) = transform.find("translate(") else {
-        return;
-    };
-    let Some(end) = transform[start..].find(')') else {
-        return;
-    };
-    let payload = &transform[start + "translate(".len()..start + end];
-    let mut parts = payload
-        .split(|character: char| character == ',' || character.is_whitespace())
-        .filter(|part| !part.is_empty());
-    if let (Some(parsed_x), Some(parsed_y)) = (parts.next(), parts.next()) {
-        if let (Ok(next_x), Ok(next_y)) = (parsed_x.parse::<f64>(), parsed_y.parse::<f64>()) {
-            *x = next_x;
-            *y = next_y;
-        }
-    }
+fn svg_child_rect_attribute(svg: &str, group_id: &str, attribute: &str) -> Option<String> {
+    let marker = format!("id=\"{group_id}\"");
+    let id_pos = svg.find(&marker)?;
+    let group_end = svg[id_pos..].find("</g>")? + id_pos;
+    let rect_start = svg[id_pos..group_end].find("<rect")? + id_pos;
+    let rect_end = svg[rect_start..group_end].find('>')? + rect_start;
+    let tag = &svg[rect_start..rect_end];
+    let attr_marker = format!("{attribute}=\"");
+    let attr_start = tag.find(&attr_marker)? + attr_marker.len();
+    let attr_end = tag[attr_start..].find('"')? + attr_start;
+    Some(tag[attr_start..attr_end].to_string())
+}
+
+fn svg_child_rect_attribute_f64(svg: &str, group_id: &str, attribute: &str, fallback: f64) -> f64 {
+    svg_child_rect_attribute(svg, group_id, attribute)
+        .and_then(|value| value.parse::<f64>().ok())
+        .unwrap_or(fallback)
 }
 
 fn load_numeric_svg_geometry(widget: &WidgetState) -> NumericSvgGeometry {
@@ -361,11 +433,20 @@ fn load_numeric_svg_geometry(widget: &WidgetState) -> NumericSvgGeometry {
         }
     }
 
-    parse_translate_anchor(&svg, "label_anchor", &mut geometry.label_x, &mut geometry.label_y);
-    geometry.value_box_x = svg_attribute_f64(&svg, "value_box", "x", geometry.value_box_x);
-    geometry.value_box_y = svg_attribute_f64(&svg, "value_box", "y", geometry.value_box_y);
-    geometry.value_box_width = svg_attribute_f64(&svg, "value_box", "width", geometry.value_box_width);
-    geometry.value_box_height = svg_attribute_f64(&svg, "value_box", "height", geometry.value_box_height);
+    geometry.caption_x = svg_attribute_f64(&svg, "caption_text", "x", geometry.caption_x);
+    geometry.caption_y = svg_attribute_f64(&svg, "caption_text", "y", geometry.caption_y);
+    geometry.value_face_x = svg_attribute_f64(&svg, "value_face", "x", geometry.value_face_x);
+    geometry.value_face_y = svg_attribute_f64(&svg, "value_face", "y", geometry.value_face_y);
+    geometry.value_face_width = svg_attribute_f64(&svg, "value_face", "width", geometry.value_face_width);
+    geometry.value_face_height = svg_attribute_f64(&svg, "value_face", "height", geometry.value_face_height);
+    geometry.increment_up_x = svg_child_rect_attribute_f64(&svg, "increment_up", "x", geometry.increment_up_x);
+    geometry.increment_up_y = svg_child_rect_attribute_f64(&svg, "increment_up", "y", geometry.increment_up_y);
+    geometry.increment_up_width = svg_child_rect_attribute_f64(&svg, "increment_up", "width", geometry.increment_up_width);
+    geometry.increment_up_height = svg_child_rect_attribute_f64(&svg, "increment_up", "height", geometry.increment_up_height);
+    geometry.increment_down_x = svg_child_rect_attribute_f64(&svg, "increment_down", "x", geometry.increment_down_x);
+    geometry.increment_down_y = svg_child_rect_attribute_f64(&svg, "increment_down", "y", geometry.increment_down_y);
+    geometry.increment_down_width = svg_child_rect_attribute_f64(&svg, "increment_down", "width", geometry.increment_down_width);
+    geometry.increment_down_height = svg_child_rect_attribute_f64(&svg, "increment_down", "height", geometry.increment_down_height);
     geometry
 }
 
@@ -387,6 +468,55 @@ fn svg_box_style(x: f64, y: f64, width: f64, height: f64, geometry: NumericSvgGe
     )
 }
 
+fn render_numeric_skin(widget: &WidgetState, is_control: bool, value_face_color: &str) -> String {
+    let Some(path) = &widget.asset_path else {
+        return "<div class='numeric-skin missing-skin'></div>".to_string();
+    };
+    let Ok(svg) = fs::read_to_string(path) else {
+        return "<div class='numeric-skin missing-skin'></div>".to_string();
+    };
+    let unit_display = if property_bool(&widget.properties, "unit_label.visible", false) { "inline" } else { "none" };
+    let radix_display = if property_bool(&widget.properties, "display.radix_visible", false) { "inline" } else { "none" };
+    let spinner_display = if is_control && property_bool(&widget.properties, "display.increment_buttons_visible", true) { "inline" } else { "none" };
+    let frame_fill = safe_css_color(&property_string(&widget.properties, "style.frame.fill_color", "#ffffff"), "#ffffff");
+    let frame_stroke = safe_css_color(&property_string(&widget.properties, "style.frame.border_color", "#000000"), "#000000");
+    let frame_stroke_width = safe_css_length(&property_string(&widget.properties, "style.frame.border_width", "2px"), "2px");
+    let value_face_fill = safe_css_color(&property_string(&widget.properties, "style.value_face.fill_color", value_face_color), value_face_color);
+    let value_face_stroke = safe_css_color(&property_string(&widget.properties, "style.value_face.border_color", "transparent"), "transparent");
+    let value_face_stroke_width = safe_css_length(&property_string(&widget.properties, "style.value_face.border_width", "0px"), "0px");
+    let step_fill = safe_css_color(&property_string(&widget.properties, "style.increment_button.fill_color.normal", value_face_color), value_face_color);
+    let step_symbol = safe_css_color(&property_string(&widget.properties, "style.increment_button.symbol_color.normal", "#ffffff"), "#ffffff");
+    format!(
+        "<div class='numeric-skin' aria-hidden='true' style='--frog-numeric-caption-display:none;--frog-numeric-text-display:none;--frog-numeric-frame-fill:{};--frog-numeric-frame-stroke:{};--frog-numeric-frame-stroke-width:{};--frog-numeric-unit-display:{unit_display};--frog-numeric-radix-display:{radix_display};--frog-numeric-spinner-display:{spinner_display};--frog-numeric-value-face-fill:{};--frog-numeric-value-face-stroke:{};--frog-numeric-value-face-stroke-width:{};--frog-numeric-spinner-fill:{};--frog-numeric-spinner-stroke:{};'>{svg}</div>",
+        escape_html(&frame_fill),
+        escape_html(&frame_stroke),
+        escape_html(&frame_stroke_width),
+        escape_html(&value_face_fill),
+        escape_html(&value_face_stroke),
+        escape_html(&value_face_stroke_width),
+        escape_html(&step_fill),
+        escape_html(&step_symbol)
+    )
+}
+
+fn numeric_step_button_state_style(widget: &WidgetState) -> String {
+    let normal_fill = safe_css_color(&property_string(&widget.properties, "style.increment_button.fill_color.normal", "#5B9BD5"), "#5B9BD5");
+    let pressed_fill = safe_css_color(&property_string(&widget.properties, "style.increment_button.fill_color.pressed", "#2B4F7B"), "#2B4F7B");
+    let normal_border = safe_css_color(&property_string(&widget.properties, "style.increment_button.border_color.normal", "transparent"), "transparent");
+    let pressed_border = safe_css_color(&property_string(&widget.properties, "style.increment_button.border_color.pressed", &normal_border), &normal_border);
+    let normal_symbol = safe_css_color(&property_string(&widget.properties, "style.increment_button.symbol_color.normal", "#ffffff"), "#ffffff");
+    let pressed_symbol = safe_css_color(&property_string(&widget.properties, "style.increment_button.symbol_color.pressed", &normal_symbol), &normal_symbol);
+    format!(
+        "--frog-numeric-step-fill:{};--frog-numeric-step-fill-pressed:{};--frog-numeric-step-border:{};--frog-numeric-step-border-pressed:{};--frog-numeric-step-symbol:{};--frog-numeric-step-symbol-pressed:{};",
+        escape_html(&normal_fill),
+        escape_html(&pressed_fill),
+        escape_html(&normal_border),
+        escape_html(&pressed_border),
+        escape_html(&normal_symbol),
+        escape_html(&pressed_symbol)
+    )
+}
+
 fn render_numeric_widget(widget: &WidgetState) -> String {
     let is_control = widget.role == "control";
     let geometry = load_numeric_svg_geometry(widget);
@@ -395,10 +525,18 @@ fn render_numeric_widget(widget: &WidgetState) -> String {
     let width = layout_i64(&widget.layout, "width", 160);
     let height = layout_i64(&widget.layout, "height", 48);
     let value = property_u16(&widget.properties, "value", 0);
-    let label = property_string(&widget.properties, "label", &widget.widget_id);
-    let value_color = safe_css_color(&property_string(&widget.properties, "foreground_color", "#1f2933"), "#1f2933");
+    let label = property_string(
+        &widget.properties,
+        "caption.text",
+        &property_string(&widget.properties, "label", &widget.widget_id),
+    );
+    let value_face_color = safe_css_color(&property_string(&widget.properties, "foreground_color", "#ffffff"), "#ffffff");
     let label_color = safe_css_color(&property_string(&widget.properties, "label_color", "#111827"), "#111827");
+    let label_weight = safe_css_font_weight(&property_string(&widget.properties, "style.caption.font_weight", "400"), "400");
     let route = widget.asset_id.as_ref().map(|id| format!("/asset/{id}")).unwrap_or_default();
+    let minimum = property_u16(&widget.properties, "data_entry.minimum", 0);
+    let maximum = property_u16(&widget.properties, "data_entry.maximum", 65535);
+    let step = property_step(&widget.properties, "data_entry.increment_step", 1);
 
     let mut style = format!("position:absolute;left:{x}px;top:{y}px;width:{width}px;height:{height}px;");
     if !property_bool(&widget.properties, "visible", true) {
@@ -419,44 +557,63 @@ fn render_numeric_widget(widget: &WidgetState) -> String {
     }
     let _ = write!(html, " style='{style}'>");
 
-    if route.is_empty() {
-        html.push_str("<div class='numeric-skin missing-skin'></div>");
-    } else {
-        let _ = write!(html, "<img class='numeric-skin' src='{}' alt='' aria-hidden='true' />", escape_html(&route));
-    }
+    html.push_str(&render_numeric_skin(widget, is_control, &value_face_color));
 
-    let label_style = svg_anchor_style(geometry.label_x, geometry.label_y, geometry);
+    let label_style = svg_anchor_style(geometry.caption_x, geometry.caption_y, geometry);
     let value_style = svg_box_style(
-        geometry.value_box_x,
-        geometry.value_box_y,
-        geometry.value_box_width,
-        geometry.value_box_height,
+        geometry.value_face_x,
+        geometry.value_face_y,
+        geometry.value_face_width,
+        geometry.value_face_height,
         geometry,
     );
     let _ = write!(
         html,
-        "<span class='numeric-label-overlay' data-svg-anchor='label_anchor' style='{}color:{};'>{}</span>",
+        "<span class='numeric-label-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}color:{};font-weight:{};'>{}</span>",
         label_style,
         escape_html(&label_color),
+        escape_html(&label_weight),
         escape_html(&label)
     );
 
     if is_control {
         let _ = write!(
             html,
-            "<input id='{}_value' name='input_value' type='number' min='0' max='65535' class='numeric-value-overlay numeric-control-editor' data-svg-part='value_box' data-svg-anchor='value_anchor' style='{}color:{};' value='{}'{} />",
+            "<input id='{}_value' name='input_value' type='number' min='{}' max='{}' step='{}' class='numeric-value-overlay numeric-control-editor' data-frog-part='text_value' data-svg-anchor='text_value.center' style='{}color:#111827;' value='{}'{} />",
             escape_html(&widget.widget_id),
+            minimum,
+            maximum,
+            step,
             value_style,
-            escape_html(&value_color),
             value,
             if property_bool(&widget.properties, "enabled", true) { "" } else { " disabled" }
         );
+        if property_bool(&widget.properties, "display.increment_buttons_visible", true) {
+            let step_state_style = numeric_step_button_state_style(widget);
+            let _ = write!(
+                html,
+                "<button type='button' class='numeric-step-overlay numeric-increment' data-target='{}_value' data-step='{}' data-frog-part='increment_up' data-frog-method='increment' data-frog-button-state-law='normal-pressed' aria-label='Increment {}' style='{}{}'></button>",
+                escape_html(&widget.widget_id),
+                step,
+                escape_html(&label),
+                svg_box_style(geometry.increment_up_x, geometry.increment_up_y, geometry.increment_up_width, geometry.increment_up_height, geometry),
+                step_state_style
+            );
+            let _ = write!(
+                html,
+                "<button type='button' class='numeric-step-overlay numeric-decrement' data-target='{}_value' data-step='-{}' data-frog-part='increment_down' data-frog-method='decrement' data-frog-button-state-law='normal-pressed' aria-label='Decrement {}' style='{}{}'></button>",
+                escape_html(&widget.widget_id),
+                step,
+                escape_html(&label),
+                svg_box_style(geometry.increment_down_x, geometry.increment_down_y, geometry.increment_down_width, geometry.increment_down_height, geometry),
+                step_state_style
+            );
+        }
     } else {
         let _ = write!(
             html,
-            "<output class='numeric-value-overlay numeric-indicator-value' data-svg-part='value_box' data-svg-anchor='value_anchor' style='{}color:{};'>{}</output>",
+            "<output class='numeric-value-overlay numeric-indicator-value' data-frog-part='text_value' data-svg-anchor='text_value.center' style='{}color:#111827;'>{}</output>",
             value_style,
-            escape_html(&value_color),
             value
         );
     }

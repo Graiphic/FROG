@@ -38,8 +38,8 @@ The Example 05 closure is intentionally bounded and explicit:
 
 .wfrog front panel
   -&gt; panel_pixels layout
-  -&gt; numeric SVG skins
-  -&gt; label_anchor / value_anchor / value_box overlays
+  -&gt; Default Numeric realization SVG skin
+  -&gt; caption_text / value_face / text_value / increment overlays
 
 C++ runtime
   -&gt; loads contract and .wfrog
@@ -89,10 +89,10 @@ It is not a claim of a generalized LabVIEW runtime, arbitrary diagram compiler, 
 ├── main.lowering.json
 ├── front_panel.objects.json
 └── ui/
-    ├── accumulator_panel.wfrog
-    └── assets/
-        ├── numeric_control.svg
-        └── numeric_indicator.svg
+    └── accumulator_panel.wfrog
+
+Libraries/Realizations/Default/assets/numeric/templates/
+└── numeric_rectangular.svg
 
 Implementations/Reference/ContractEmitter/examples/
 └── 05_bounded_ui_accumulator.reference_host_runtime_ui_binding.contract.json
