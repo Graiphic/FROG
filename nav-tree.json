@@ -3243,6 +3243,13 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/runtime/build_native_kernel_library.py",
+                  "title": "build_native_kernel_library.py",
+                  "path": "/Implementations/Reference/Runtime/build_native_kernel_library.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/runtime/check_example05_cpp_native_kernel_bridge.py",
                   "title": "check_example05_cpp_native_kernel_bridge.py",
                   "path": "/Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py",
@@ -3288,6 +3295,20 @@
                   "key": "implementations/reference/runtime/check_examples01_05_runtime_acceptance.py",
                   "title": "check_examples01_05_runtime_acceptance.py",
                   "path": "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "implementations/reference/runtime/check_python_native_kernel_bridge.py",
+                  "title": "check_python_native_kernel_bridge.py",
+                  "path": "/Implementations/Reference/Runtime/check_python_native_kernel_bridge.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "implementations/reference/runtime/check_rust_native_kernel_bridge.py",
+                  "title": "check_rust_native_kernel_bridge.py",
+                  "path": "/Implementations/Reference/Runtime/check_rust_native_kernel_bridge.py",
                   "kind": "code",
                   "children": []
                 },
@@ -3361,6 +3382,13 @@
                       "children": []
                     },
                     {
+                      "key": "implementations/reference/runtime/python/native_kernel.py",
+                      "title": "native_kernel.py",
+                      "path": "/Implementations/Reference/Runtime/python/native_kernel.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
                       "key": "implementations/reference/runtime/python/run_slice05_ui.py",
                       "title": "run_slice05_ui.py",
                       "path": "/Implementations/Reference/Runtime/python/run_slice05_ui.py",
@@ -3388,6 +3416,13 @@
                       "kind": "category",
                       "children": [
                         {
+                          "key": "implementations/reference/runtime/python/tests/test_native_kernel_bridge.py",
+                          "title": "test_native_kernel_bridge.py",
+                          "path": "/Implementations/Reference/Runtime/python/tests/test_native_kernel_bridge.py",
+                          "kind": "code",
+                          "children": []
+                        },
+                        {
                           "key": "implementations/reference/runtime/python/tests/test_runtime_core_normalized_contract.py",
                           "title": "test_runtime_core_normalized_contract.py",
                           "path": "/Implementations/Reference/Runtime/python/tests/test_runtime_core_normalized_contract.py",
@@ -3405,6 +3440,13 @@
                           "key": "implementations/reference/runtime/python/tests/test_runtime_ui_slice05.py",
                           "title": "test_runtime_ui_slice05.py",
                           "path": "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice05.py",
+                          "kind": "code",
+                          "children": []
+                        },
+                        {
+                          "key": "implementations/reference/runtime/python/tests/test_runtime_ui_slice06.py",
+                          "title": "test_runtime_ui_slice06.py",
+                          "path": "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice06.py",
                           "kind": "code",
                           "children": []
                         }
@@ -4096,6 +4138,7 @@
     "/Implementations/Reference/Runtime/accept_contract_and_execute.md",
     "/Implementations/Reference/Runtime/KernelBridge.md",
     "/Implementations/Reference/Runtime/responsibilities.md",
+    "/Implementations/Reference/Runtime/build_native_kernel_library.py",
     "/Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_example05_runtime_acceptance.py",
@@ -4103,6 +4146,8 @@
     "/Implementations/Reference/Runtime/check_example06_cpp_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_example06_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",
+    "/Implementations/Reference/Runtime/check_python_native_kernel_bridge.py",
+    "/Implementations/Reference/Runtime/check_rust_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/contract_executor.py",
     "/Implementations/Reference/Runtime/execute_reference_contract.py",
     "/Implementations/Reference/Runtime/reference_runtime.py",
@@ -4112,12 +4157,15 @@
     "/Implementations/Reference/Runtime/python/__init__.py",
     "/Implementations/Reference/Runtime/python/cli.py",
     "/Implementations/Reference/Runtime/python/execute_contract.py",
+    "/Implementations/Reference/Runtime/python/native_kernel.py",
     "/Implementations/Reference/Runtime/python/run_slice05_ui.py",
     "/Implementations/Reference/Runtime/python/runtime_core.py",
     "/Implementations/Reference/Runtime/python/ui_runtime.py",
+    "/Implementations/Reference/Runtime/python/tests/test_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_core_normalized_contract.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_slice05.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice05.py",
+    "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice06.py",
     "/Implementations/Reference/Runtime/python/Readme.md",
     "/Implementations/Reference/Runtime/rust/Readme.md",
     "/Implementations/Reference/Runtime/tests/test_contract_executor.py",
