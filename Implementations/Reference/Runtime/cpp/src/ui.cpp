@@ -158,20 +158,63 @@ bool is_safe_hex_color(const std::string& value) {
 }
 
 std::string safe_css_color(const std::string& value, const std::string& fallback) {
+    if (value == "transparent") {
+        return value;
+    }
     return is_safe_hex_color(value) ? value : fallback;
 }
 
+std::string safe_css_length(const std::string& value, const std::string& fallback) {
+    if (value.size() <= 2 || value.substr(value.size() - 2) != "px") {
+        return fallback;
+    }
+    const auto number = value.substr(0, value.size() - 2);
+    bool saw_digit = false;
+    bool saw_dot = false;
+    for (const auto ch : number) {
+        if (std::isdigit(static_cast<unsigned char>(ch)) != 0) {
+            saw_digit = true;
+            continue;
+        }
+        if (ch == '.' && !saw_dot) {
+            saw_dot = true;
+            continue;
+        }
+        return fallback;
+    }
+    return saw_digit ? value : fallback;
+}
+
+std::string safe_css_font_weight(const std::string& value, const std::string& fallback) {
+    if (value == "normal" || value == "bold" || value == "lighter" || value == "bolder") {
+        return value;
+    }
+    if (value.size() != 3 || !std::all_of(value.begin(), value.end(), [](unsigned char ch) {
+            return std::isdigit(ch) != 0;
+        })) {
+        return fallback;
+    }
+    const auto weight = std::stoi(value);
+    return weight >= 100 && weight <= 900 && weight % 100 == 0 ? value : fallback;
+}
+
 struct SvgGeometry {
-    double view_width = 220.0;
-    double view_height = 88.0;
-    double label_x = 16.0;
-    double label_y = 24.0;
-    double value_x = 22.0;
-    double value_y = 62.0;
-    double value_box_x = 14.0;
-    double value_box_y = 40.0;
-    double value_box_width = 192.0;
-    double value_box_height = 32.0;
+    double view_width = 380.0;
+    double view_height = 150.0;
+    double caption_x = 16.0;
+    double caption_y = 46.0;
+    double value_face_x = 22.0;
+    double value_face_y = 82.0;
+    double value_face_width = 214.0;
+    double value_face_height = 28.0;
+    double increment_up_x = 246.0;
+    double increment_up_y = 82.0;
+    double increment_up_width = 30.0;
+    double increment_up_height = 13.0;
+    double increment_down_x = 246.0;
+    double increment_down_y = 97.0;
+    double increment_down_width = 30.0;
+    double increment_down_height = 13.0;
 };
 
 std::optional<std::size_t> find_svg_element_with_id(const std::string& svg, const std::string& id) {
@@ -220,6 +263,44 @@ double svg_attribute_double(const std::string& svg, const std::string& element_i
     }
 }
 
+std::optional<std::string> svg_child_rect_attribute(const std::string& svg, const std::string& group_id, const std::string& attribute) {
+    const auto tag_start = find_svg_element_with_id(svg, group_id);
+    if (!tag_start.has_value()) {
+        return std::nullopt;
+    }
+    const auto group_end = svg.find("</g>", *tag_start);
+    const auto rect_start = svg.find("<rect", *tag_start);
+    if (group_end == std::string::npos || rect_start == std::string::npos || rect_start > group_end) {
+        return std::nullopt;
+    }
+    const auto rect_end = svg.find('>', rect_start);
+    if (rect_end == std::string::npos || rect_end > group_end) {
+        return std::nullopt;
+    }
+    const auto attr_pos = svg.find(attribute + "=\"", rect_start);
+    if (attr_pos == std::string::npos || attr_pos > rect_end) {
+        return std::nullopt;
+    }
+    const auto value_start = attr_pos + attribute.size() + 2;
+    const auto value_end = svg.find('"', value_start);
+    if (value_end == std::string::npos || value_end > rect_end) {
+        return std::nullopt;
+    }
+    return svg.substr(value_start, value_end - value_start);
+}
+
+double svg_child_rect_attribute_double(const std::string& svg, const std::string& group_id, const std::string& attribute, double fallback) {
+    const auto value = svg_child_rect_attribute(svg, group_id, attribute);
+    if (!value.has_value()) {
+        return fallback;
+    }
+    try {
+        return std::stod(*value);
+    } catch (const std::exception&) {
+        return fallback;
+    }
+}
+
 void parse_viewbox(const std::string& svg, SvgGeometry& geometry) {
     const std::string marker = "viewBox=\"";
     const auto start = svg.find(marker);
@@ -246,28 +327,6 @@ void parse_viewbox(const std::string& svg, SvgGeometry& geometry) {
     }
 }
 
-void parse_translate_anchor(const std::string& svg, const std::string& id, double& x, double& y) {
-    const auto transform = svg_attribute(svg, id, "transform");
-    if (!transform.has_value()) {
-        return;
-    }
-    const std::string prefix = "translate(";
-    const auto start = transform->find(prefix);
-    const auto end = transform->find(')', start == std::string::npos ? 0 : start);
-    if (start == std::string::npos || end == std::string::npos) {
-        return;
-    }
-    std::string payload = transform->substr(start + prefix.size(), end - start - prefix.size());
-    std::replace(payload.begin(), payload.end(), ',', ' ');
-    std::istringstream input(payload);
-    double parsed_x = x;
-    double parsed_y = y;
-    if (input >> parsed_x >> parsed_y) {
-        x = parsed_x;
-        y = parsed_y;
-    }
-}
-
 SvgGeometry load_svg_geometry(const WidgetState& widget) {
     SvgGeometry geometry;
     if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
@@ -275,12 +334,20 @@ SvgGeometry load_svg_geometry(const WidgetState& widget) {
     }
     const auto svg = read_text_file(widget.asset_path);
     parse_viewbox(svg, geometry);
-    parse_translate_anchor(svg, "label_anchor", geometry.label_x, geometry.label_y);
-    parse_translate_anchor(svg, "value_anchor", geometry.value_x, geometry.value_y);
-    geometry.value_box_x = svg_attribute_double(svg, "value_box", "x", geometry.value_box_x);
-    geometry.value_box_y = svg_attribute_double(svg, "value_box", "y", geometry.value_box_y);
-    geometry.value_box_width = svg_attribute_double(svg, "value_box", "width", geometry.value_box_width);
-    geometry.value_box_height = svg_attribute_double(svg, "value_box", "height", geometry.value_box_height);
+    geometry.caption_x = svg_attribute_double(svg, "caption_text", "x", geometry.caption_x);
+    geometry.caption_y = svg_attribute_double(svg, "caption_text", "y", geometry.caption_y);
+    geometry.value_face_x = svg_attribute_double(svg, "value_face", "x", geometry.value_face_x);
+    geometry.value_face_y = svg_attribute_double(svg, "value_face", "y", geometry.value_face_y);
+    geometry.value_face_width = svg_attribute_double(svg, "value_face", "width", geometry.value_face_width);
+    geometry.value_face_height = svg_attribute_double(svg, "value_face", "height", geometry.value_face_height);
+    geometry.increment_up_x = svg_child_rect_attribute_double(svg, "increment_up", "x", geometry.increment_up_x);
+    geometry.increment_up_y = svg_child_rect_attribute_double(svg, "increment_up", "y", geometry.increment_up_y);
+    geometry.increment_up_width = svg_child_rect_attribute_double(svg, "increment_up", "width", geometry.increment_up_width);
+    geometry.increment_up_height = svg_child_rect_attribute_double(svg, "increment_up", "height", geometry.increment_up_height);
+    geometry.increment_down_x = svg_child_rect_attribute_double(svg, "increment_down", "x", geometry.increment_down_x);
+    geometry.increment_down_y = svg_child_rect_attribute_double(svg, "increment_down", "y", geometry.increment_down_y);
+    geometry.increment_down_width = svg_child_rect_attribute_double(svg, "increment_down", "width", geometry.increment_down_width);
+    geometry.increment_down_height = svg_child_rect_attribute_double(svg, "increment_down", "height", geometry.increment_down_height);
     return geometry;
 }
 
@@ -311,6 +378,62 @@ std::string asset_route(const WidgetState& widget) {
     return widget.asset_id.has_value() ? "/asset/" + *widget.asset_id : std::string();
 }
 
+std::string render_numeric_skin(const WidgetState& widget, bool is_control, const std::string& color) {
+    if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
+        return "<div class='numeric-skin missing-skin'></div>";
+    }
+    const auto frame_fill = safe_css_color(property_string(widget.properties, "style.frame.fill_color", "#ffffff"), "#ffffff");
+    const auto frame_stroke = safe_css_color(property_string(widget.properties, "style.frame.border_color", "#000000"), "#000000");
+    const auto frame_stroke_width = safe_css_length(property_string(widget.properties, "style.frame.border_width", "2px"), "2px");
+    const auto value_face_fill = safe_css_color(property_string(widget.properties, "style.value_face.fill_color", color), color);
+    const auto value_face_stroke = safe_css_color(property_string(widget.properties, "style.value_face.border_color", "transparent"), "transparent");
+    const auto value_face_stroke_width = safe_css_length(property_string(widget.properties, "style.value_face.border_width", "0px"), "0px");
+    const auto step_fill = safe_css_color(property_string(widget.properties, "style.increment_button.fill_color.normal", color), color);
+    const auto step_symbol = safe_css_color(property_string(widget.properties, "style.increment_button.symbol_color.normal", "#ffffff"), "#ffffff");
+    std::ostringstream style;
+    style << "--frog-numeric-caption-display:none;";
+    style << "--frog-numeric-text-display:none;";
+    style << "--frog-numeric-frame-fill:" << html_escape(frame_fill) << ";";
+    style << "--frog-numeric-frame-stroke:" << html_escape(frame_stroke) << ";";
+    style << "--frog-numeric-frame-stroke-width:" << html_escape(frame_stroke_width) << ";";
+    style << "--frog-numeric-unit-display:" << (property_bool(widget.properties, "unit_label.visible", false) ? "inline" : "none") << ";";
+    style << "--frog-numeric-radix-display:" << (property_bool(widget.properties, "display.radix_visible", false) ? "inline" : "none") << ";";
+    style << "--frog-numeric-spinner-display:" << (is_control && property_bool(widget.properties, "display.increment_buttons_visible", true) ? "inline" : "none") << ";";
+    style << "--frog-numeric-value-face-fill:" << html_escape(value_face_fill) << ";";
+    style << "--frog-numeric-value-face-stroke:" << html_escape(value_face_stroke) << ";";
+    style << "--frog-numeric-value-face-stroke-width:" << html_escape(value_face_stroke_width) << ";";
+    style << "--frog-numeric-spinner-fill:" << html_escape(step_fill) << ";";
+    style << "--frog-numeric-spinner-stroke:" << html_escape(step_symbol) << ";";
+
+    std::ostringstream html;
+    html << "<div class='numeric-skin' aria-hidden='true' style='" << style.str() << "'>";
+    html << read_text_file(widget.asset_path);
+    html << "</div>";
+    return html.str();
+}
+
+std::uint16_t property_step(const Object& properties, const std::string& key, std::uint16_t fallback) {
+    const auto value = property_u16(properties, key, fallback);
+    return value == 0 ? fallback : value;
+}
+
+std::string numeric_step_button_state_style(const WidgetState& widget) {
+    const auto normal_fill = safe_css_color(property_string(widget.properties, "style.increment_button.fill_color.normal", "#5B9BD5"), "#5B9BD5");
+    const auto pressed_fill = safe_css_color(property_string(widget.properties, "style.increment_button.fill_color.pressed", "#2B4F7B"), "#2B4F7B");
+    const auto normal_border = safe_css_color(property_string(widget.properties, "style.increment_button.border_color.normal", "transparent"), "transparent");
+    const auto pressed_border = safe_css_color(property_string(widget.properties, "style.increment_button.border_color.pressed", normal_border), normal_border);
+    const auto normal_symbol = safe_css_color(property_string(widget.properties, "style.increment_button.symbol_color.normal", "#ffffff"), "#ffffff");
+    const auto pressed_symbol = safe_css_color(property_string(widget.properties, "style.increment_button.symbol_color.pressed", normal_symbol), normal_symbol);
+    std::ostringstream style;
+    style << "--frog-numeric-step-fill:" << html_escape(normal_fill) << ";";
+    style << "--frog-numeric-step-fill-pressed:" << html_escape(pressed_fill) << ";";
+    style << "--frog-numeric-step-border:" << html_escape(normal_border) << ";";
+    style << "--frog-numeric-step-border-pressed:" << html_escape(pressed_border) << ";";
+    style << "--frog-numeric-step-symbol:" << html_escape(normal_symbol) << ";";
+    style << "--frog-numeric-step-symbol-pressed:" << html_escape(pressed_symbol) << ";";
+    return style.str();
+}
+
 std::string render_numeric_widget(const WidgetState& widget) {
     const bool is_control = widget.role == "control";
     const auto geometry = load_svg_geometry(widget);
@@ -319,10 +442,14 @@ std::string render_numeric_widget(const WidgetState& widget) {
     const auto width = layout_i64(widget.layout, "width", 160);
     const auto height = layout_i64(widget.layout, "height", 48);
     const auto value = property_u16(widget.properties, "value", 0);
-    const auto label = property_string(widget.properties, "label", widget.widget_id);
-    const auto color = safe_css_color(property_string(widget.properties, "foreground_color", "#1f2933"), "#1f2933");
+    const auto label = property_string(widget.properties, "caption.text", property_string(widget.properties, "label", widget.widget_id));
+    const auto color = safe_css_color(property_string(widget.properties, "foreground_color", "#ffffff"), "#ffffff");
     const auto label_color = safe_css_color(property_string(widget.properties, "label_color", "#111827"), "#111827");
+    const auto label_weight = safe_css_font_weight(property_string(widget.properties, "style.caption.font_weight", "400"), "400");
     const auto route = asset_route(widget);
+    const auto minimum = property_u16(widget.properties, "data_entry.minimum", 0);
+    const auto maximum = property_u16(widget.properties, "data_entry.maximum", 65535);
+    const auto step = property_step(widget.properties, "data_entry.increment_step", 1);
 
     std::ostringstream html;
     html << "<section class='frog-widget numeric-widget " << (is_control ? "numeric-control" : "numeric-indicator") << "'";
@@ -340,35 +467,42 @@ std::string render_numeric_widget(const WidgetState& widget) {
     }
     html << "'>";
 
-    if (!route.empty()) {
-        html << "<img class='numeric-skin' src='" << html_escape(route) << "' alt='' aria-hidden='true' />";
-    } else {
-        html << "<div class='numeric-skin missing-skin'></div>";
-    }
+    html << render_numeric_skin(widget, is_control, color);
 
-    html << "<span class='numeric-label-overlay' data-svg-anchor='label_anchor' style='"
-          << svg_anchor_style(geometry.label_x, geometry.label_y, geometry)
-          << "color:" << html_escape(label_color) << ";'>" << html_escape(label) << "</span>";
+    html << "<span class='numeric-label-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='"
+          << svg_anchor_style(geometry.caption_x, geometry.caption_y, geometry)
+          << "color:" << html_escape(label_color) << ";font-weight:" << html_escape(label_weight) << ";'>" << html_escape(label) << "</span>";
 
     const auto value_style = svg_box_style(
-        geometry.value_box_x,
-        geometry.value_box_y,
-        geometry.value_box_width,
-        geometry.value_box_height,
+        geometry.value_face_x,
+        geometry.value_face_y,
+        geometry.value_face_width,
+        geometry.value_face_height,
         geometry);
 
     if (is_control) {
-        html << "<input id='" << html_escape(widget.widget_id) << "_value' name='input_value' type='number' min='0' max='65535'";
-        html << " class='numeric-value-overlay numeric-control-editor' data-svg-part='value_box' data-svg-anchor='value_anchor'";
-        html << " style='" << value_style << "color:" << html_escape(color) << ";'";
+        html << "<input id='" << html_escape(widget.widget_id) << "_value' name='input_value' type='number' min='" << minimum << "' max='" << maximum << "' step='" << step << "'";
+        html << " class='numeric-value-overlay numeric-control-editor' data-frog-part='text_value' data-svg-anchor='text_value.center'";
+        html << " style='" << value_style << "color:#111827;'";
         html << " value='" << value << "'";
         if (!property_bool(widget.properties, "enabled", true)) {
             html << " disabled";
         }
         html << " />";
+        if (property_bool(widget.properties, "display.increment_buttons_visible", true)) {
+            const auto step_state_style = numeric_step_button_state_style(widget);
+            html << "<button type='button' class='numeric-step-overlay numeric-increment' data-target='" << html_escape(widget.widget_id) << "_value' data-step='" << step << "' data-frog-part='increment_up' data-frog-method='increment' data-frog-button-state-law='normal-pressed' aria-label='Increment " << html_escape(label) << "' style='"
+                 << svg_box_style(geometry.increment_up_x, geometry.increment_up_y, geometry.increment_up_width, geometry.increment_up_height, geometry)
+                 << step_state_style
+                 << "'></button>";
+            html << "<button type='button' class='numeric-step-overlay numeric-decrement' data-target='" << html_escape(widget.widget_id) << "_value' data-step='-" << step << "' data-frog-part='increment_down' data-frog-method='decrement' data-frog-button-state-law='normal-pressed' aria-label='Decrement " << html_escape(label) << "' style='"
+                 << svg_box_style(geometry.increment_down_x, geometry.increment_down_y, geometry.increment_down_width, geometry.increment_down_height, geometry)
+                 << step_state_style
+                 << "'></button>";
+        }
     } else {
-        html << "<output class='numeric-value-overlay numeric-indicator-value' data-svg-part='value_box' data-svg-anchor='value_anchor'";
-        html << " style='" << value_style << "color:" << html_escape(color) << ";'>" << value << "</output>";
+        html << "<output class='numeric-value-overlay numeric-indicator-value' data-frog-part='text_value' data-svg-anchor='text_value.center'";
+        html << " style='" << value_style << "color:#111827;'>" << value << "</output>";
     }
 
     html << "</section>";
@@ -687,20 +821,44 @@ std::string BrowserUiRuntime::render_html() const {
             ".front-panel{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}"
             ".frog-widget{position:absolute;box-sizing:border-box;}"
             ".numeric-widget{font-family:Segoe UI,Arial,sans-serif;}"
-            ".numeric-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;}"
+            ".numeric-skin{position:absolute;inset:0;width:100%;height:100%;display:block;}"
+            ".numeric-skin svg{width:100%;height:100%;display:block;}"
             ".missing-skin{background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;}"
-            ".numeric-label-overlay{position:absolute;transform:translateY(-50%);font-size:10px;font-weight:700;line-height:1;white-space:nowrap;pointer-events:none;text-shadow:0 1px 1px rgba(0,0,0,0.18);}"
+            ".numeric-label-overlay{position:absolute;transform:translateY(-50%);font-size:12px;line-height:1;white-space:nowrap;pointer-events:none;}"
             ".numeric-value-overlay{position:absolute;box-sizing:border-box;font-family:Consolas,Segoe UI Mono,monospace;font-size:11px;font-weight:700;line-height:1;border:0;background:transparent;}"
-            ".numeric-control-editor{padding:0 4px;border-radius:4px;outline:1px solid rgba(15,23,42,0.18);background:rgba(255,255,255,0.72);appearance:textfield;}"
-            ".numeric-control-editor:focus{outline:2px solid #0f62fe;background:rgba(255,255,255,0.9);}"
+            ".numeric-control-editor{padding:0 4px;border-radius:0;outline:0;background:transparent;appearance:textfield;-moz-appearance:textfield;}"
+            ".numeric-control-editor::-webkit-outer-spin-button,.numeric-control-editor::-webkit-inner-spin-button{appearance:none;margin:0;}"
+            ".numeric-control-editor:focus{outline:0;background:transparent;}"
             ".numeric-indicator-value{display:flex;align-items:center;padding:0 4px;pointer-events:none;}"
+            ".numeric-step-overlay{position:absolute;box-sizing:border-box;padding:0;border:1px solid var(--frog-numeric-step-border);border-radius:0;background:var(--frog-numeric-step-fill);color:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;}"
+            ".numeric-step-overlay:focus{outline:0;}"
+            ".numeric-step-overlay:active{background:var(--frog-numeric-step-fill-pressed);border-color:var(--frog-numeric-step-border-pressed);}"
+            ".numeric-step-overlay::before{content:'';display:block;width:0;height:0;}"
+            ".numeric-increment::before{border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:6px solid var(--frog-numeric-step-symbol);}"
+            ".numeric-decrement::before{border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--frog-numeric-step-symbol);}"
+            ".numeric-increment:active::before{border-bottom-color:var(--frog-numeric-step-symbol-pressed);}"
+            ".numeric-decrement:active::before{border-top-color:var(--frog-numeric-step-symbol-pressed);}"
             ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
             "button{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}"
+            ".numeric-step-overlay{padding:0;border-radius:0;color:transparent;font-weight:400;}"
             ".diagnostic{margin:12px 0;padding:10px 12px;border-radius:6px;}"
             ".diagnostic.error{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}"
             "summary{cursor:pointer;margin-top:16px;font-weight:600;}"
             "pre{white-space:pre-wrap;word-break:break-word;background:#0b1020;color:#dbeafe;padding:12px;border-radius:8px;font-size:12px;}"
-            "</style></head><body>";
+            "</style><script>"
+            "document.addEventListener('click',function(event){"
+            "const button=event.target.closest('.numeric-step-overlay');"
+            "if(!button)return;"
+            "const input=document.getElementById(button.dataset.target);"
+            "if(!input||input.disabled)return;"
+            "const step=Number(button.dataset.step||'1');"
+            "const min=Number(input.min||'0');"
+            "const max=Number(input.max||'65535');"
+            "const next=Math.min(max,Math.max(min,Number(input.value||'0')+step));"
+            "input.value=String(next);"
+            "input.dispatchEvent(new Event('input',{bubbles:true}));"
+            "});"
+            "</script></head><body>";
     html << "<h1>" << html_escape(core.panel.title) << "</h1>";
     html << "<p class='meta'>Example 05 - .wfrog front panel + C++ runtime</p>";
     html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
@@ -804,7 +962,10 @@ void BrowserUiRuntime::serve(const std::string& host, std::uint16_t port, bool s
                 send_response(client, "404 Not Found", "text/plain; charset=utf-8", "not found");
             }
         } catch (const std::exception& error) {
-            send_response(client, "500 Internal Server Error", "text/plain; charset=utf-8", error.what());
+            try {
+                send_response(client, "500 Internal Server Error", "text/plain; charset=utf-8", error.what());
+            } catch (...) {
+            }
         }
         close_socket(client);
     }
@@ -974,7 +1135,10 @@ void BooleanBrowserUiRuntime::serve(const std::string& host, std::uint16_t port,
                 send_response(client, "404 Not Found", "text/plain; charset=utf-8", "not found");
             }
         } catch (const std::exception& error) {
-            send_response(client, "500 Internal Server Error", "text/plain; charset=utf-8", error.what());
+            try {
+                send_response(client, "500 Internal Server Error", "text/plain; charset=utf-8", error.what());
+            } catch (...) {
+            }
         }
         close_socket(client);
     }

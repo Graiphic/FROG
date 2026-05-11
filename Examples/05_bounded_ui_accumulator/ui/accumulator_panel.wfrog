@@ -54,18 +54,24 @@
       ]
     }
   ],
+  "realization_refs": [
+    {
+      "package_ref": "Libraries/Realizations/Default/numeric.default.wfrog",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ]
+    }
+  ],
   "svg_assets": [
     {
-      "asset_id": "numeric_control_svg",
+      "asset_id": "numeric_rectangular_svg",
       "kind": "svg",
-      "path": "assets/numeric_control.svg",
-      "target_class": "frog.widgets.numeric_control"
-    },
-    {
-      "asset_id": "numeric_indicator_svg",
-      "kind": "svg",
-      "path": "assets/numeric_indicator.svg",
-      "target_class": "frog.widgets.numeric_indicator"
+      "path": "../../../Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ]
     }
   ],
   "front_panels": [
@@ -94,13 +100,29 @@
           "props": {
             "value": 3,
             "label": "Input",
+            "caption.text": "Input",
+            "representation.kind": "uint16",
+            "data_entry.minimum": 0,
+            "data_entry.maximum": 65535,
+            "data_entry.increment_step": 1,
+            "display.increment_buttons_visible": true,
+            "display.radix_visible": false,
+            "unit_label.visible": false,
+            "style.caption.font_weight": "400",
+            "style.frame.border_color": "transparent",
+            "style.increment_button.fill_color.normal": "#5B9BD5",
+            "style.increment_button.fill_color.pressed": "#2B4F7B",
+            "style.increment_button.border_color.normal": "#2B4F7B",
+            "style.increment_button.border_color.pressed": "#17324F",
+            "style.increment_button.symbol_color.normal": "#FFFFFF",
+            "style.increment_button.symbol_color.pressed": "#FFFFFF",
             "label_color": "#111827",
             "visible": true,
             "enabled": true,
             "foreground_color": "#D8D8D8"
           },
           "visual": {
-            "asset_ref": "asset:numeric_control_svg"
+            "asset_ref": "asset:numeric_rectangular_svg"
           },
           "binding": {
             "mode": "widget_value",
@@ -125,13 +147,20 @@
           "props": {
             "value": 0,
             "label": "Accumulated result",
+            "caption.text": "Accumulated result",
+            "representation.kind": "uint16",
+            "display.increment_buttons_visible": false,
+            "display.radix_visible": false,
+            "unit_label.visible": false,
+            "style.caption.font_weight": "400",
+            "style.frame.border_color": "transparent",
             "label_color": "#111827",
             "visible": true,
             "enabled": true,
             "foreground_color": "#D8D8D8"
           },
           "visual": {
-            "asset_ref": "asset:numeric_indicator_svg"
+            "asset_ref": "asset:numeric_rectangular_svg"
           },
           "binding": {
             "mode": "widget_value",

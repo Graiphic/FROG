@@ -38,8 +38,8 @@ The Example 05 closure is intentionally bounded and explicit:
 
 .wfrog front panel
   -&gt; panel_pixels layout
-  -&gt; numeric SVG skins
-  -&gt; label_anchor / value_anchor / value_box overlays
+  -&gt; Default Numeric realization SVG skin
+  -&gt; caption_text / value_face / text_value / increment overlays
 
 C++ runtime
   -&gt; loads contract and .wfrog

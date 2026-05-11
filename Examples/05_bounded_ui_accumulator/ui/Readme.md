@@ -75,7 +75,7 @@ ctrl_input:
   y: 24
   width: 220
   height: 88
-  visual.asset_ref: asset:numeric_control_svg
+  visual.asset_ref: asset:numeric_rectangular_svg
 
 ind_result:
   class_ref: frog.widgets.numeric_indicator
@@ -83,12 +83,12 @@ ind_result:
   y: 24
   width: 220
   height: 88
-  visual.asset_ref: asset:numeric_indicator_svg
+  visual.asset_ref: asset:numeric_rectangular_svg
 </code></pre>
 
 <p>
-The numeric SVG assets have natural geometry <code>width=220</code>, <code>height=88</code>, and <code>viewBox="0 0 220 88"</code>.
-The <code>.wfrog</code> widget dimensions intentionally match that natural SVG geometry to avoid compressing the skin and overlay anchors.
+The panel uses the shared Default Numeric realization asset, <code>Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg</code>.
+The runtime scales that official realization into the <code>.wfrog</code> widget bounds and uses its published anchors for dynamic overlays.
 </p>
 
 <hr/>
@@ -96,12 +96,11 @@ The <code>.wfrog</code> widget dimensions intentionally match that natural SVG g
 <h2>SVG Asset Role</h2>
 
 <p>
-The SVG files are minimal realization assets for the two widgets used by Example 05:
+The SVG asset is the shared Default Numeric rectangular realization:
 </p>
 
 <ul>
-  <li><code>assets/numeric_control.svg</code></li>
-  <li><code>assets/numeric_indicator.svg</code></li>
+  <li><code>Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg</code></li>
 </ul>
 
 <p>
@@ -109,15 +108,18 @@ Each SVG includes these realization markers:
 </p>
 
 <ul>
-  <li><code>panel_background</code></li>
-  <li><code>value_box</code></li>
-  <li><code>label_anchor</code></li>
-  <li><code>value_anchor</code></li>
+  <li><code>caption_text</code></li>
+  <li><code>value_face</code></li>
+  <li><code>text_value</code></li>
+  <li><code>increment_up</code></li>
+  <li><code>increment_down</code></li>
+  <li><code>unit_label</code></li>
+  <li><code>radix_badge</code></li>
 </ul>
 
 <p>
-The current C++ browser-host renderer treats the SVG skin as the widget body and overlays dynamic label/value surfaces using these markers.
-The native HTML numeric input remains an implementation detail of the current browser host, not the final widget-class law.
+The browser-host runtimes treat the SVG skin as the widget body and overlay only dynamic value and interaction surfaces at these published markers.
+The native HTML numeric input and step buttons remain browser-host implementation details bound to the Default Numeric realization parts.
 </p>
 
 <hr/>
@@ -133,7 +135,7 @@ The C++ browser-host runtime consumes this package by:
   <li>using panel <code>width</code>, <code>height</code>, and <code>coordinate_space</code>,</li>
   <li>placing each widget using <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code>,</li>
   <li>resolving <code>visual.asset_ref</code> to an SVG asset route,</li>
-  <li>using <code>label_anchor</code>, <code>value_anchor</code>, and <code>value_box</code> for overlays,</li>
+  <li>using <code>caption_text</code>, <code>value_face</code>, <code>text_value</code>, <code>increment_up</code>, and <code>increment_down</code> for overlays,</li>
   <li>applying contract-driven property writes such as <code>foreground_color</code>,</li>
   <li>binding <code>ctrl_input.value</code> to <code>input_value</code>,</li>
   <li>publishing <code>result</code> to <code>ind_result.value</code>.</li>
