@@ -139,6 +139,12 @@ void test_boolean_browser_ui_surface() {
     assert_contains(html, "--boolean-fill:#22c55e;");
     assert_contains(html, "--boolean-border:transparent;");
     assert_contains(html, "--boolean-inner-border:transparent;");
+    assert_contains(html, "--boolean-caption-left:50%;");
+    assert_contains(html, "--boolean-caption-transform:translateX(-50%);");
+    assert_contains(html, "--boolean-inner-width:40px;");
+    assert_contains(html, "--boolean-inner-height:40px;");
+    assert_contains(html, "--boolean-inner-left:60px;");
+    assert_contains(html, "--boolean-inner-top:31px;");
     assert_contains(html, "--boolean-transition:120ms ease-out;");
     assert_contains(html, "--boolean-pressed-inset:1px;");
     assert_contains(html, "transform:translateY(var(--boolean-pressed-inset));");

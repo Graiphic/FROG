@@ -5,6 +5,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+try:
+    from .native_kernel import NativeKernelBridge
+except ImportError:  # pragma: no cover
+    from native_kernel import NativeKernelBridge
+
 
 REFERENCE_BACKEND_FAMILY = "reference_host_runtime_ui_binding"
 EXPECTED_OVERFLOW_BEHAVIOR = "reject_execution_on_u16_overflow"
@@ -300,6 +305,30 @@ class Slice05RuntimeCore:
         self.widgets["ind_result"].properties["value"] = state
         self.last_final_state = state
         self.last_public_outputs = {"result": state}
+        return self.execution_artifact()
+
+    def execute_with_native_kernel_bridge(
+        self,
+        bridge: NativeKernelBridge,
+        *,
+        control_value: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        if bridge.manifest.source_lowered_unit != "Examples/05_bounded_ui_accumulator/main.lowering.json":
+            raise RuntimeValidationError("Unexpected native kernel source lowered unit.")
+
+        self.diagnostics = []
+        self.apply_contract_effects()
+
+        if control_value is not None:
+            self.set_control_value(control_value)
+
+        result = bridge.run(self.get_control_value())
+        if not result.ok:
+            raise RuntimeExecutionError(result.diagnostic or "native kernel execution failed.")
+
+        self.widgets["ind_result"].properties["value"] = result.result
+        self.last_final_state = result.result
+        self.last_public_outputs = {"result": result.result}
         return self.execution_artifact()
 
     def execution_artifact(self) -> Dict[str, Any]:
