@@ -44,6 +44,26 @@ fn slice05_ui_surface_matches_shared_acceptance() {
     assert!(html.contains("Rust reference runtime"));
     assert!(html.contains("contract executor"));
     assert!(html.contains("none in runtime path"));
+    assert!(html.contains("class='front-panel'"));
+    assert!(html.contains("data-panel-id='main_panel'"));
+    assert!(html.contains("data-coordinate-space='panel_pixels'"));
+    assert!(html.contains("data-runtime-language='rust'"));
+    assert!(html.contains("data-compiler-backend='none'"));
+    assert!(html.contains("style='width:500px;height:170px;'"));
+    assert!(html.contains("data-widget-id='ctrl_input'"));
+    assert!(html.contains("data-widget-id='ind_result'"));
+    assert!(html.contains("data-class-ref='frog.widgets.numeric_control'"));
+    assert!(html.contains("data-class-ref='frog.widgets.numeric_indicator'"));
+    assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
+    assert!(html.contains("data-asset-route='/asset/numeric_control_svg'"));
+    assert!(html.contains("data-asset-route='/asset/numeric_indicator_svg'"));
+    assert!(html.contains("left:20px;top:24px;width:220px;height:88px;"));
+    assert!(html.contains("left:260px;top:24px;width:220px;height:88px;"));
+    assert!(html.contains("class='numeric-skin'"));
+    assert!(html.contains("data-svg-anchor='label_anchor'"));
+    assert!(html.contains("data-svg-anchor='value_anchor'"));
+    assert!(html.contains("data-svg-part='value_box'"));
+    assert!(html.contains("color:#111827;"));
     for route in routes {
         let route = route.as_str().unwrap();
         if route == "/" {

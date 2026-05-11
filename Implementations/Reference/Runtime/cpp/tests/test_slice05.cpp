@@ -221,6 +221,7 @@ void test_ui_surface() {
     assert_contains(html, "data-widget-id='ind_result'");
     assert_contains(html, "data-class-ref='frog.widgets.numeric_control'");
     assert_contains(html, "data-class-ref='frog.widgets.numeric_indicator'");
+    assert_contains(html, "data-frog-visual-law='wfrog-realization-state-map'");
     assert_contains(html, "data-asset-route='/asset/numeric_control_svg'");
     assert_contains(html, "data-asset-route='/asset/numeric_indicator_svg'");
 
@@ -230,6 +231,7 @@ void test_ui_surface() {
     assert_contains(html, "data-svg-anchor='label_anchor'");
     assert_contains(html, "data-svg-anchor='value_anchor'");
     assert_contains(html, "data-svg-part='value_box'");
+    assert_contains(html, "color:#111827;");
     assert_contains(html, "Input");
     assert_contains(html, "Accumulated result");
 

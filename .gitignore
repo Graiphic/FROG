@@ -5,6 +5,7 @@ scripts/verify-github-pages.ps1
 
 # Generated local validation outputs
 build/
+b/
 .pytest_cache/
 **/__pycache__/
 *.pyc

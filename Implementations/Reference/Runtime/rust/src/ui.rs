@@ -6,13 +6,13 @@ use std::net::{TcpListener, TcpStream};
 use std::path::PathBuf;
 use std::process::Command;
 
-use serde_json::{json, to_string_pretty, Value};
+use serde_json::{json, to_string_pretty, Map, Value};
 
 use crate::contract::{default_contract_path, default_wfrog_path};
 use crate::diagnostics::{Result, RuntimeError};
 use crate::execute::execute_reference_contract_case;
 use crate::native_kernel::{NativeBoolKernelBridge, NativeKernelBridge};
-use crate::runtime::RuntimeCore;
+use crate::runtime::{RuntimeCore, WidgetState};
 
 pub struct BrowserUiRuntime {
     pub core: RuntimeCore,
@@ -56,30 +56,12 @@ impl BrowserUiRuntime {
 
     pub fn render_html(&self) -> String {
         let snapshot = self.core.execution_artifact();
-        let widgets = snapshot["ui_runtime"]["widgets"].as_array().unwrap();
-        let ctrl = widgets
-            .iter()
-            .find(|entry| entry["widget_id"] == "ctrl_input")
-            .unwrap();
-        let ind = widgets
-            .iter()
-            .find(|entry| entry["widget_id"] == "ind_result")
-            .unwrap();
-
-        let ctrl_runtime = &ctrl["runtime"];
-        let ind_runtime = &ind["runtime"];
-        let ctrl_asset = ctrl_runtime["asset_ref"].as_str().unwrap_or("");
-        let ind_asset = ind_runtime["asset_ref"].as_str().unwrap_or("");
-        let ctrl_asset_url = if ctrl_asset.is_empty() {
-            String::new()
-        } else {
-            format!("/asset/{}", ctrl_asset.split_once(':').unwrap().1)
-        };
-        let ind_asset_url = if ind_asset.is_empty() {
-            String::new()
-        } else {
-            format!("/asset/{}", ind_asset.split_once(':').unwrap().1)
-        };
+        let panel = &snapshot["ui_runtime"]["panel"];
+        let panel_layout = &panel["layout"];
+        let panel_width = layout_i64(panel_layout, "width", 500);
+        let panel_height = layout_i64(panel_layout, "height", 170);
+        let ctrl_html = render_numeric_widget(self.core.widgets.get("ctrl_input").unwrap());
+        let ind_html = render_numeric_widget(self.core.widgets.get("ind_result").unwrap());
 
         let mut diagnostics = String::new();
         if let Some(message) = &self.last_error {
@@ -101,13 +83,16 @@ impl BrowserUiRuntime {
              .runtime-facts div{{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}}\
              .runtime-facts dt{{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}}\
              .runtime-facts dd{{margin:0;color:#1f2933;font-size:12px;font-weight:600;}}\
-             .panel{{width:460px;min-height:170px;background:#ffffff;border-radius:10px;padding:16px;box-shadow:0 4px 14px rgba(15,23,42,0.08);}}\
-             .widgets{{display:flex;gap:24px;align-items:flex-start;}}\
-             .widget{{width:180px;padding:12px;border-radius:8px;border:2px solid #cbd2d9;background:#fbfdff;}}\
-             .widget img{{display:block;width:100%;height:32px;object-fit:contain;margin-bottom:8px;}}\
-             .widget label{{display:block;margin-bottom:8px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;}}\
-             .widget input,.widget output{{display:block;width:100%;padding:8px 10px;box-sizing:border-box;border-radius:6px;border:1px solid #9aa5b1;font-size:16px;}}\
-             .widget output{{background:#f8fff0;}}\
+             .front-panel{{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}}\
+             .frog-widget{{position:absolute;box-sizing:border-box;}}\
+             .numeric-widget{{font-family:Segoe UI,Arial,sans-serif;}}\
+             .numeric-skin{{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;}}\
+             .missing-skin{{background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;}}\
+             .numeric-label-overlay{{position:absolute;transform:translateY(-50%);font-size:10px;font-weight:700;line-height:1;white-space:nowrap;pointer-events:none;}}\
+             .numeric-value-overlay{{position:absolute;box-sizing:border-box;font-family:Consolas,Segoe UI Mono,monospace;font-size:11px;font-weight:700;line-height:1;border:0;background:transparent;}}\
+             .numeric-control-editor{{padding:0 4px;border-radius:4px;outline:1px solid rgba(15,23,42,0.18);background:rgba(255,255,255,0.72);appearance:textfield;}}\
+             .numeric-control-editor:focus{{outline:2px solid #0f62fe;background:rgba(255,255,255,0.9);}}\
+             .numeric-indicator-value{{display:flex;align-items:center;padding:0 4px;pointer-events:none;}}\
              .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}\
              button{{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}}\
              .diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}\
@@ -123,32 +108,23 @@ impl BrowserUiRuntime {
              <div><dt>Compiler backend</dt><dd>{compiler_backend}</dd></div>\
              </dl>\
              {diagnostics}\
-             <div class='panel'><form method='post' action='/run'>\
-             <div class='widgets'>\
-             <section class='widget' style='border-color:{ctrl_color}'>\
-             <label>{ctrl_label}</label><img src='{ctrl_asset_url}' alt=''>\
-             <input name='input_value' type='number' min='0' max='65535' value='{ctrl_value}' {ctrl_disabled}>\
-             </section>\
-             <section class='widget' style='border-color:{ind_color}'>\
-             <label>{ind_label}</label><img src='{ind_asset_url}' alt=''>\
-             <output>{ind_value}</output>\
-             </section></div>\
+             <form method='post' action='/run'>\
+             <div class='front-panel' data-panel-id='{panel_id}' data-coordinate-space='panel_pixels' data-runtime-language='rust' data-compiler-backend='{compiler_backend_id}' data-execution-path='{execution_path_id}' style='width:{panel_width}px;height:{panel_height}px;'>\
+             {ctrl_html}{ind_html}</div>\
              <div class='actions'><button type='submit'>Run Example 05</button><a href='/state.json'>state.json</a></div>\
-             </form><details><summary>Current runtime snapshot</summary><pre>{snapshot_pretty}</pre></details></div>\
+             </form><details><summary>Current runtime snapshot</summary><pre>{snapshot_pretty}</pre></details>\
              </body></html>",
             title = escape_html(snapshot["ui_runtime"]["panel"]["title"].as_str().unwrap_or("FROG")),
             diagnostics = diagnostics,
             execution_path = if uses_native_kernel { "native kernel bridge" } else { "contract executor" },
             compiler_backend = if uses_native_kernel { "LLVM native kernel artifact" } else { "none in runtime path" },
-            ctrl_color = escape_html(ctrl_runtime["foreground_color"].as_str().unwrap_or("#5B9BD5")),
-            ctrl_label = escape_html(ctrl_runtime["label"].as_str().unwrap_or("Input")),
-            ctrl_asset_url = escape_html(&ctrl_asset_url),
-            ctrl_value = ctrl_runtime["value"].as_u64().unwrap_or(0),
-            ctrl_disabled = if ctrl_runtime["enabled"].as_bool().unwrap_or(true) { "" } else { "disabled" },
-            ind_color = escape_html(ind_runtime["foreground_color"].as_str().unwrap_or("#70AD47")),
-            ind_label = escape_html(ind_runtime["label"].as_str().unwrap_or("Accumulated result")),
-            ind_asset_url = escape_html(&ind_asset_url),
-            ind_value = ind_runtime["value"].as_u64().unwrap_or(0),
+            compiler_backend_id = if uses_native_kernel { "llvm" } else { "none" },
+            execution_path_id = if uses_native_kernel { "native_kernel_bridge" } else { "contract_executor" },
+            panel_id = escape_html(panel["panel_id"].as_str().unwrap_or("main_panel")),
+            panel_width = panel_width,
+            panel_height = panel_height,
+            ctrl_html = ctrl_html,
+            ind_html = ind_html,
             snapshot_pretty = escape_html(&to_string_pretty(&snapshot).unwrap()),
         )
     }
@@ -241,6 +217,252 @@ impl BrowserUiRuntime {
             None,
         )
     }
+}
+
+#[derive(Clone, Copy)]
+struct NumericSvgGeometry {
+    view_width: f64,
+    view_height: f64,
+    label_x: f64,
+    label_y: f64,
+    value_box_x: f64,
+    value_box_y: f64,
+    value_box_width: f64,
+    value_box_height: f64,
+}
+
+impl Default for NumericSvgGeometry {
+    fn default() -> Self {
+        Self {
+            view_width: 220.0,
+            view_height: 88.0,
+            label_x: 16.0,
+            label_y: 24.0,
+            value_box_x: 14.0,
+            value_box_y: 40.0,
+            value_box_width: 192.0,
+            value_box_height: 32.0,
+        }
+    }
+}
+
+fn layout_i64(layout: &Value, key: &str, fallback: i64) -> i64 {
+    layout
+        .get(key)
+        .and_then(|value| value.as_i64().or_else(|| value.as_u64().map(|item| item as i64)))
+        .unwrap_or(fallback)
+}
+
+fn css_percent(value: f64) -> String {
+    format!("{value:.6}%")
+}
+
+fn pct(value: f64, total: f64) -> f64 {
+    if total <= 0.0 {
+        0.0
+    } else {
+        (value / total) * 100.0
+    }
+}
+
+fn safe_css_color(value: &str, fallback: &str) -> String {
+    let bytes = value.as_bytes();
+    let valid_len = bytes.len() == 7 || bytes.len() == 9;
+    let valid = valid_len && bytes.first() == Some(&b'#') && bytes[1..].iter().all(|byte| byte.is_ascii_hexdigit());
+    if valid {
+        value.to_string()
+    } else {
+        fallback.to_string()
+    }
+}
+
+fn property_string(properties: &Map<String, Value>, key: &str, fallback: &str) -> String {
+    properties
+        .get(key)
+        .and_then(Value::as_str)
+        .unwrap_or(fallback)
+        .to_string()
+}
+
+fn property_bool(properties: &Map<String, Value>, key: &str, fallback: bool) -> bool {
+    properties.get(key).and_then(Value::as_bool).unwrap_or(fallback)
+}
+
+fn property_u16(properties: &Map<String, Value>, key: &str, fallback: u16) -> u16 {
+    properties
+        .get(key)
+        .and_then(Value::as_u64)
+        .and_then(|value| u16::try_from(value).ok())
+        .unwrap_or(fallback)
+}
+
+fn svg_attribute(svg: &str, element_id: &str, attribute: &str) -> Option<String> {
+    let marker = format!("id=\"{element_id}\"");
+    let id_pos = svg.find(&marker)?;
+    let tag_start = svg[..id_pos].rfind('<')?;
+    let tag_end = svg[id_pos..].find('>')? + id_pos;
+    let tag = &svg[tag_start..tag_end];
+    let attr_marker = format!("{attribute}=\"");
+    let attr_start = tag.find(&attr_marker)? + attr_marker.len();
+    let attr_end = tag[attr_start..].find('"')? + attr_start;
+    Some(tag[attr_start..attr_end].to_string())
+}
+
+fn svg_attribute_f64(svg: &str, element_id: &str, attribute: &str, fallback: f64) -> f64 {
+    svg_attribute(svg, element_id, attribute)
+        .and_then(|value| value.parse::<f64>().ok())
+        .unwrap_or(fallback)
+}
+
+fn parse_translate_anchor(svg: &str, anchor_id: &str, x: &mut f64, y: &mut f64) {
+    let Some(transform) = svg_attribute(svg, anchor_id, "transform") else {
+        return;
+    };
+    let Some(start) = transform.find("translate(") else {
+        return;
+    };
+    let Some(end) = transform[start..].find(')') else {
+        return;
+    };
+    let payload = &transform[start + "translate(".len()..start + end];
+    let mut parts = payload
+        .split(|character: char| character == ',' || character.is_whitespace())
+        .filter(|part| !part.is_empty());
+    if let (Some(parsed_x), Some(parsed_y)) = (parts.next(), parts.next()) {
+        if let (Ok(next_x), Ok(next_y)) = (parsed_x.parse::<f64>(), parsed_y.parse::<f64>()) {
+            *x = next_x;
+            *y = next_y;
+        }
+    }
+}
+
+fn load_numeric_svg_geometry(widget: &WidgetState) -> NumericSvgGeometry {
+    let mut geometry = NumericSvgGeometry::default();
+    let Some(path) = &widget.asset_path else {
+        return geometry;
+    };
+    let Ok(svg) = fs::read_to_string(path) else {
+        return geometry;
+    };
+
+    if let Some(start) = svg.find("viewBox=\"") {
+        let value_start = start + "viewBox=\"".len();
+        if let Some(value_end) = svg[value_start..].find('"') {
+            let viewbox = &svg[value_start..value_start + value_end];
+            let parts: Vec<&str> = viewbox.split_whitespace().collect();
+            if parts.len() == 4 {
+                if let (Ok(width), Ok(height)) = (parts[2].parse::<f64>(), parts[3].parse::<f64>()) {
+                    if width > 0.0 && height > 0.0 {
+                        geometry.view_width = width;
+                        geometry.view_height = height;
+                    }
+                }
+            }
+        }
+    }
+
+    parse_translate_anchor(&svg, "label_anchor", &mut geometry.label_x, &mut geometry.label_y);
+    geometry.value_box_x = svg_attribute_f64(&svg, "value_box", "x", geometry.value_box_x);
+    geometry.value_box_y = svg_attribute_f64(&svg, "value_box", "y", geometry.value_box_y);
+    geometry.value_box_width = svg_attribute_f64(&svg, "value_box", "width", geometry.value_box_width);
+    geometry.value_box_height = svg_attribute_f64(&svg, "value_box", "height", geometry.value_box_height);
+    geometry
+}
+
+fn svg_anchor_style(x: f64, y: f64, geometry: NumericSvgGeometry) -> String {
+    format!(
+        "left:{};top:{};",
+        css_percent(pct(x, geometry.view_width)),
+        css_percent(pct(y, geometry.view_height))
+    )
+}
+
+fn svg_box_style(x: f64, y: f64, width: f64, height: f64, geometry: NumericSvgGeometry) -> String {
+    format!(
+        "left:{};top:{};width:{};height:{};",
+        css_percent(pct(x, geometry.view_width)),
+        css_percent(pct(y, geometry.view_height)),
+        css_percent(pct(width, geometry.view_width)),
+        css_percent(pct(height, geometry.view_height))
+    )
+}
+
+fn render_numeric_widget(widget: &WidgetState) -> String {
+    let is_control = widget.role == "control";
+    let geometry = load_numeric_svg_geometry(widget);
+    let x = layout_i64(&widget.layout, "x", 0);
+    let y = layout_i64(&widget.layout, "y", 0);
+    let width = layout_i64(&widget.layout, "width", 160);
+    let height = layout_i64(&widget.layout, "height", 48);
+    let value = property_u16(&widget.properties, "value", 0);
+    let label = property_string(&widget.properties, "label", &widget.widget_id);
+    let value_color = safe_css_color(&property_string(&widget.properties, "foreground_color", "#1f2933"), "#1f2933");
+    let label_color = safe_css_color(&property_string(&widget.properties, "label_color", "#111827"), "#111827");
+    let route = widget.asset_id.as_ref().map(|id| format!("/asset/{id}")).unwrap_or_default();
+
+    let mut style = format!("position:absolute;left:{x}px;top:{y}px;width:{width}px;height:{height}px;");
+    if !property_bool(&widget.properties, "visible", true) {
+        style.push_str("display:none;");
+    }
+
+    let mut html = String::new();
+    let _ = write!(
+        html,
+        "<section class='frog-widget numeric-widget {}' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-frog-visual-law='wfrog-realization-state-map'",
+        if is_control { "numeric-control" } else { "numeric-indicator" },
+        escape_html(&widget.widget_id),
+        escape_html(&widget.class_ref),
+        escape_html(&widget.role)
+    );
+    if !route.is_empty() {
+        let _ = write!(html, " data-asset-route='{}'", escape_html(&route));
+    }
+    let _ = write!(html, " style='{style}'>");
+
+    if route.is_empty() {
+        html.push_str("<div class='numeric-skin missing-skin'></div>");
+    } else {
+        let _ = write!(html, "<img class='numeric-skin' src='{}' alt='' aria-hidden='true' />", escape_html(&route));
+    }
+
+    let label_style = svg_anchor_style(geometry.label_x, geometry.label_y, geometry);
+    let value_style = svg_box_style(
+        geometry.value_box_x,
+        geometry.value_box_y,
+        geometry.value_box_width,
+        geometry.value_box_height,
+        geometry,
+    );
+    let _ = write!(
+        html,
+        "<span class='numeric-label-overlay' data-svg-anchor='label_anchor' style='{}color:{};'>{}</span>",
+        label_style,
+        escape_html(&label_color),
+        escape_html(&label)
+    );
+
+    if is_control {
+        let _ = write!(
+            html,
+            "<input id='{}_value' name='input_value' type='number' min='0' max='65535' class='numeric-value-overlay numeric-control-editor' data-svg-part='value_box' data-svg-anchor='value_anchor' style='{}color:{};' value='{}'{} />",
+            escape_html(&widget.widget_id),
+            value_style,
+            escape_html(&value_color),
+            value,
+            if property_bool(&widget.properties, "enabled", true) { "" } else { " disabled" }
+        );
+    } else {
+        let _ = write!(
+            html,
+            "<output class='numeric-value-overlay numeric-indicator-value' data-svg-part='value_box' data-svg-anchor='value_anchor' style='{}color:{};'>{}</output>",
+            value_style,
+            escape_html(&value_color),
+            value
+        );
+    }
+
+    html.push_str("</section>");
+    html
 }
 
 pub struct BooleanBrowserUiRuntime {

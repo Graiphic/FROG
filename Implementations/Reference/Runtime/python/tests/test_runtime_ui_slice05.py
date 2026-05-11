@@ -48,6 +48,26 @@ def test_slice05_ui_routes_and_state_match_shared_acceptance() -> None:
         assert "Python reference runtime" in html
         assert "contract executor" in html
         assert "none in runtime path" in html
+        assert 'class="front-panel"' in html
+        assert 'data-panel-id="main_panel"' in html
+        assert 'data-coordinate-space="panel_pixels"' in html
+        assert 'data-runtime-language="python"' in html
+        assert 'data-compiler-backend="none"' in html
+        assert 'style="width:500px;height:170px;"' in html
+        assert "data-widget-id='ctrl_input'" in html
+        assert "data-widget-id='ind_result'" in html
+        assert "data-class-ref='frog.widgets.numeric_control'" in html
+        assert "data-class-ref='frog.widgets.numeric_indicator'" in html
+        assert "data-frog-visual-law='wfrog-realization-state-map'" in html
+        assert "data-asset-route='/asset/numeric_control_svg'" in html
+        assert "data-asset-route='/asset/numeric_indicator_svg'" in html
+        assert "left:20px;top:24px;width:220px;height:88px;" in html
+        assert "left:260px;top:24px;width:220px;height:88px;" in html
+        assert "class='numeric-skin'" in html
+        assert "data-svg-anchor='label_anchor'" in html
+        assert "data-svg-anchor='value_anchor'" in html
+        assert "data-svg-part='value_box'" in html
+        assert "color:#111827;" in html
         for route in acceptance["ui"]["expected_routes"]:
             if route in {"/", "/run"}:
                 continue

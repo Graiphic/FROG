@@ -321,6 +321,7 @@ std::string render_numeric_widget(const WidgetState& widget) {
     const auto value = property_u16(widget.properties, "value", 0);
     const auto label = property_string(widget.properties, "label", widget.widget_id);
     const auto color = safe_css_color(property_string(widget.properties, "foreground_color", "#1f2933"), "#1f2933");
+    const auto label_color = safe_css_color(property_string(widget.properties, "label_color", "#111827"), "#111827");
     const auto route = asset_route(widget);
 
     std::ostringstream html;
@@ -328,6 +329,7 @@ std::string render_numeric_widget(const WidgetState& widget) {
     html << " data-widget-id='" << html_escape(widget.widget_id) << "'";
     html << " data-class-ref='" << html_escape(widget.class_ref) << "'";
     html << " data-role='" << html_escape(widget.role) << "'";
+    html << " data-frog-visual-law='wfrog-realization-state-map'";
     if (!route.empty()) {
         html << " data-asset-route='" << html_escape(route) << "'";
     }
@@ -345,8 +347,8 @@ std::string render_numeric_widget(const WidgetState& widget) {
     }
 
     html << "<span class='numeric-label-overlay' data-svg-anchor='label_anchor' style='"
-         << svg_anchor_style(geometry.label_x, geometry.label_y, geometry)
-         << "color:" << html_escape(color) << ";'>" << html_escape(label) << "</span>";
+          << svg_anchor_style(geometry.label_x, geometry.label_y, geometry)
+          << "color:" << html_escape(label_color) << ";'>" << html_escape(label) << "</span>";
 
     const auto value_style = svg_box_style(
         geometry.value_box_x,

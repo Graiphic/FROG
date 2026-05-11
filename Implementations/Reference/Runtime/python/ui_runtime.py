@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import html
 import json
+import re
 import sys
 import threading
 import urllib.parse
@@ -87,6 +88,188 @@ def runtime_string(runtime: dict[str, Any], key: str, fallback: str = "") -> str
 def runtime_bool(runtime: dict[str, Any], key: str, fallback: bool = False) -> bool:
     value = runtime.get(key)
     return value if isinstance(value, bool) else fallback
+
+
+def safe_css_color(value: object, fallback: str) -> str:
+    text = str(value if value is not None else "")
+    if re.fullmatch(r"#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?", text):
+        return text
+    return fallback
+
+
+def layout_int(layout: dict[str, Any], key: str, fallback: int) -> int:
+    try:
+        return int(layout.get(key, fallback))
+    except (TypeError, ValueError):
+        return fallback
+
+
+def css_px(value: int | float) -> str:
+    return f"{int(round(float(value)))}px"
+
+
+def css_percent(value: int | float) -> str:
+    return f"{float(value):.6g}%"
+
+
+def pct(value: float, total: float) -> float:
+    if total <= 0:
+        return 0.0
+    return (value / total) * 100.0
+
+
+def svg_attribute(svg: str, element_id: str, attribute: str) -> str | None:
+    tag_match = re.search(rf"<[^>]*\bid=[\"']{re.escape(element_id)}[\"'][^>]*>", svg)
+    if not tag_match:
+        return None
+    attr_match = re.search(rf"\b{re.escape(attribute)}=[\"']([^\"']*)[\"']", tag_match.group(0))
+    return attr_match.group(1) if attr_match else None
+
+
+def svg_attribute_float(svg: str, element_id: str, attribute: str, fallback: float) -> float:
+    value = svg_attribute(svg, element_id, attribute)
+    if value is None:
+        return fallback
+    try:
+        return float(value)
+    except ValueError:
+        return fallback
+
+
+def load_numeric_svg_geometry(asset_path: Path | None) -> dict[str, float]:
+    geometry = {
+        "view_width": 220.0,
+        "view_height": 88.0,
+        "label_x": 16.0,
+        "label_y": 24.0,
+        "value_x": 22.0,
+        "value_y": 62.0,
+        "value_box_x": 14.0,
+        "value_box_y": 40.0,
+        "value_box_width": 192.0,
+        "value_box_height": 32.0,
+    }
+    if asset_path is None or not asset_path.exists():
+        return geometry
+
+    svg = asset_path.read_text(encoding="utf-8")
+    viewbox = re.search(r"\bviewBox=[\"']([^\"']+)[\"']", svg)
+    if viewbox:
+        parts = viewbox.group(1).replace(",", " ").split()
+        if len(parts) == 4:
+            try:
+                width = float(parts[2])
+                height = float(parts[3])
+                if width > 0 and height > 0:
+                    geometry["view_width"] = width
+                    geometry["view_height"] = height
+            except ValueError:
+                pass
+
+    for anchor_id, x_key, y_key in (
+        ("label_anchor", "label_x", "label_y"),
+        ("value_anchor", "value_x", "value_y"),
+    ):
+        transform = svg_attribute(svg, anchor_id, "transform") or ""
+        match = re.search(r"translate\(([^)]*)\)", transform)
+        if match:
+            parts = match.group(1).replace(",", " ").split()
+            if len(parts) >= 2:
+                try:
+                    geometry[x_key] = float(parts[0])
+                    geometry[y_key] = float(parts[1])
+                except ValueError:
+                    pass
+
+    geometry["value_box_x"] = svg_attribute_float(svg, "value_box", "x", geometry["value_box_x"])
+    geometry["value_box_y"] = svg_attribute_float(svg, "value_box", "y", geometry["value_box_y"])
+    geometry["value_box_width"] = svg_attribute_float(svg, "value_box", "width", geometry["value_box_width"])
+    geometry["value_box_height"] = svg_attribute_float(svg, "value_box", "height", geometry["value_box_height"])
+    return geometry
+
+
+def svg_anchor_style(x: float, y: float, geometry: dict[str, float]) -> str:
+    return (
+        f"left:{css_percent(pct(x, geometry['view_width']))};"
+        f"top:{css_percent(pct(y, geometry['view_height']))};"
+    )
+
+
+def svg_box_style(x: float, y: float, width: float, height: float, geometry: dict[str, float]) -> str:
+    return (
+        f"left:{css_percent(pct(x, geometry['view_width']))};"
+        f"top:{css_percent(pct(y, geometry['view_height']))};"
+        f"width:{css_percent(pct(width, geometry['view_width']))};"
+        f"height:{css_percent(pct(height, geometry['view_height']))};"
+    )
+
+
+def render_numeric_widget(entry: dict[str, Any], widget_state: Any) -> str:
+    runtime = entry["runtime"]
+    layout = entry["layout"]
+    is_control = entry["role"] == "control"
+    geometry = load_numeric_svg_geometry(widget_state.asset_path)
+    x = layout_int(layout, "x", 0)
+    y = layout_int(layout, "y", 0)
+    width = layout_int(layout, "width", 160)
+    height = layout_int(layout, "height", 48)
+    asset_route = asset_url(runtime.get("asset_ref"))
+    value = int(runtime.get("value", 0))
+    label = runtime_string(runtime, "label", entry["widget_id"])
+    value_color = safe_css_color(runtime.get("foreground_color"), "#1f2933")
+    label_color = safe_css_color(widget_state.properties.get("label_color"), "#111827")
+    visible = runtime_bool(runtime, "visible", True)
+    enabled = runtime_bool(runtime, "enabled", True)
+
+    style = (
+        f"position:absolute;left:{css_px(x)};top:{css_px(y)};"
+        f"width:{css_px(width)};height:{css_px(height)};"
+    )
+    if not visible:
+        style += "display:none;"
+
+    class_name = "numeric-control" if is_control else "numeric-indicator"
+    skin = (
+        f"<img class='numeric-skin' src='{html.escape(asset_route)}' alt='' aria-hidden='true' />"
+        if asset_route
+        else "<div class='numeric-skin missing-skin'></div>"
+    )
+    label_style = svg_anchor_style(geometry["label_x"], geometry["label_y"], geometry)
+    value_style = svg_box_style(
+        geometry["value_box_x"],
+        geometry["value_box_y"],
+        geometry["value_box_width"],
+        geometry["value_box_height"],
+        geometry,
+    )
+
+    if is_control:
+        value_part = (
+            f"<input id='{html.escape(entry['widget_id'])}_value' name='input_value' type='number' min='0' max='65535'"
+            " class='numeric-value-overlay numeric-control-editor' data-svg-part='value_box' data-svg-anchor='value_anchor'"
+            f" style='{value_style}color:{html.escape(value_color)};' value='{value}'"
+            f"{' disabled' if not enabled else ''} />"
+        )
+    else:
+        value_part = (
+            "<output class='numeric-value-overlay numeric-indicator-value' data-svg-part='value_box' data-svg-anchor='value_anchor'"
+            f" style='{value_style}color:{html.escape(value_color)};'>{value}</output>"
+        )
+
+    asset_attr = f" data-asset-route='{html.escape(asset_route)}'" if asset_route else ""
+    return (
+        f"<section class='frog-widget numeric-widget {class_name}'"
+        f" data-widget-id='{html.escape(entry['widget_id'])}'"
+        f" data-class-ref='{html.escape(entry['class_ref'])}'"
+        f" data-role='{html.escape(entry['role'])}'"
+        f" data-frog-visual-law='wfrog-realization-state-map'"
+        f"{asset_attr}"
+        f" style='{style}'>"
+        f"{skin}"
+        "<span class='numeric-label-overlay' data-svg-anchor='label_anchor'"
+        f" style='{label_style}color:{html.escape(label_color)};'>{html.escape(label)}</span>"
+        f"{value_part}</section>"
+    )
 
 
 def state_property(runtime: dict[str, Any], base: str, state: str, fallback: str) -> str:
@@ -272,12 +455,11 @@ class BrowserUiRuntime:
     def render_html(self) -> str:
         snapshot = self.state_snapshot()
         widgets = {entry["widget_id"]: entry for entry in snapshot["ui_runtime"]["widgets"]}
-        ctrl = widgets["ctrl_input"]["runtime"]
-        ind = widgets["ind_result"]["runtime"]
-        ctrl_asset = widgets["ctrl_input"]["runtime"].get("asset_ref")
-        ind_asset = widgets["ind_result"]["runtime"].get("asset_ref")
-        ctrl_asset_url = f"/asset/{ctrl_asset.split(':', 1)[1]}" if ctrl_asset else ""
-        ind_asset_url = f"/asset/{ind_asset.split(':', 1)[1]}" if ind_asset else ""
+        ctrl_html = render_numeric_widget(widgets["ctrl_input"], self.runtime.widgets["ctrl_input"])
+        ind_html = render_numeric_widget(widgets["ind_result"], self.runtime.widgets["ind_result"])
+        panel_layout = snapshot["ui_runtime"]["panel"]["layout"]
+        panel_width = layout_int(panel_layout, "width", 500)
+        panel_height = layout_int(panel_layout, "height", 170)
 
         error_block = ""
         if self.last_error:
@@ -330,52 +512,68 @@ p.meta {{ margin: 0 0 20px 0; color: #52606d; }}
   font-size: 12px;
   font-weight: 600;
 }}
-.panel {{
-  width: 460px;
-  min-height: 170px;
+.front-panel {{
+  position: relative;
   background: #ffffff;
   border-radius: 10px;
-  padding: 16px;
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
 }}
-.widgets {{
-  display: flex;
-  gap: 24px;
-  align-items: flex-start;
-}}
-.widget {{
-  width: 180px;
-  padding: 12px;
-  border-radius: 8px;
-  border: 2px solid #cbd2d9;
-  background: #fbfdff;
-}}
-.widget svg, .widget img {{
-  display: block;
-  width: 100%;
-  height: 32px;
-  object-fit: contain;
-  margin-bottom: 8px;
-}}
-.widget label {{
-  display: block;
-  margin-bottom: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}}
-.widget input, .widget output {{
-  display: block;
-  width: 100%;
-  padding: 8px 10px;
+.frog-widget {{
+  position: absolute;
   box-sizing: border-box;
-  border-radius: 6px;
-  border: 1px solid #9aa5b1;
-  font-size: 16px;
 }}
-.widget output {{
-  background: #f8fff0;
+.numeric-widget {{
+  font-family: Segoe UI, Arial, sans-serif;
+}}
+.numeric-skin {{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  display: block;
+}}
+.missing-skin {{
+  background: #e5e7eb;
+  border: 1px solid #9ca3af;
+  border-radius: 6px;
+}}
+.numeric-label-overlay {{
+  position: absolute;
+  transform: translateY(-50%);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}}
+.numeric-value-overlay {{
+  position: absolute;
+  box-sizing: border-box;
+  font-family: Consolas, Segoe UI Mono, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  border: 0;
+  background: transparent;
+}}
+.numeric-control-editor {{
+  padding: 0 4px;
+  border-radius: 4px;
+  outline: 1px solid rgba(15,23,42,0.18);
+  background: rgba(255,255,255,0.72);
+  appearance: textfield;
+}}
+.numeric-control-editor:focus {{
+  outline: 2px solid #0f62fe;
+  background: rgba(255,255,255,0.9);
+}}
+.numeric-indicator-value {{
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  pointer-events: none;
 }}
 .actions {{
   margin-top: 16px;
@@ -427,20 +625,11 @@ pre {{
   <div><dt>Compiler backend</dt><dd>{'LLVM native kernel artifact' if uses_native_kernel else 'none in runtime path'}</dd></div>
 </dl>
 {error_block}
-<div class="panel">
-  <form method="post" action="/run">
-    <div class="widgets">
-      <section class="widget" style="border-color:{html.escape(str(ctrl['foreground_color']))}">
-        <label>{html.escape(str(ctrl['label']))}</label>
-        <img src="{html.escape(ctrl_asset_url)}" alt="">
-        <input name="input_value" type="number" min="0" max="65535" value="{html.escape(str(ctrl['value']))}" {'disabled' if not ctrl['enabled'] else ''}>
-      </section>
-      <section class="widget" style="border-color:{html.escape(str(ind['foreground_color']))}">
-        <label>{html.escape(str(ind['label']))}</label>
-        <img src="{html.escape(ind_asset_url)}" alt="">
-        <output>{html.escape(str(ind['value']))}</output>
-      </section>
-    </div>
+<form method="post" action="/run">
+  <div class="front-panel" data-panel-id="{html.escape(snapshot['ui_runtime']['panel']['panel_id'])}" data-coordinate-space="panel_pixels" data-runtime-language="python" data-compiler-backend="{'llvm' if uses_native_kernel else 'none'}" data-execution-path="{'native_kernel_bridge' if uses_native_kernel else 'contract_executor'}" style="width:{css_px(panel_width)};height:{css_px(panel_height)};">
+    {ctrl_html}
+    {ind_html}
+  </div>
     <div class="actions">
       <button type="submit">Run Example 05</button>
       <a href="/state.json">state.json</a>
@@ -450,7 +639,6 @@ pre {{
     <summary>Current runtime snapshot</summary>
     <pre>{html.escape(json.dumps(snapshot, indent=2))}</pre>
   </details>
-</div>
 </body>
 </html>
 """
