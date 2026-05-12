@@ -34,9 +34,9 @@
 <h2>Role</h2>
 
 <p>
-This directory contains the Rust consumer for the published Example 05 runtime corridor.
-It accepts the emitted backend contract, loads the published <code>.wfrog</code> package,
-resolves the referenced SVG assets, executes the bounded kernel, and can expose the panel through a minimal browser-host UI.
+This directory contains the Rust consumer for the published Examples 05, 06, and 07 runtime slices.
+It accepts emitted backend contracts, loads published <code>.wfrog</code> packages,
+resolves the referenced SVG assets, executes the bounded kernels, and can expose the panels through a minimal browser-host UI.
 </p>
 
 <p>
@@ -73,14 +73,14 @@ cargo run -- ui --host 127.0.0.1 --port 8080 --no-open-browser</code></pre>
 <p>
 These files hold the bounded runtime core and the headless execution path.
 The current runtime validates the contract family, package shape, host-binding requirements,
-widget classes, property writes, and the Example 05 execution model before producing a runtime result artifact.
+widget classes, property writes, and the Example 05/06/07 execution models before producing runtime result artifacts.
 </p>
 
 <h3><code>src/ui.rs</code></h3>
 
 <p>
-Browser-host realization for the same runtime core. The current HTML rendering path exposes the panel title,
-both widget labels, both SVG asset routes, and a runtime snapshot surface.
+Browser-host realization for the same runtime core. The current HTML rendering path exposes panel titles,
+widget captions, SVG asset routes, and state JSON surfaces while consuming the published <code>.wfrog</code> package and Default realization assets.
 </p>
 
 <h2>Current bounded surface</h2>
@@ -92,8 +92,8 @@ both widget labels, both SVG asset routes, and a runtime snapshot surface.
   <li>one public output <code>result : u16</code>,</li>
   <li>one explicit state carrier based on <code>frog.core.delay</code>,</li>
   <li>exactly five loop iterations,</li>
-  <li>two widget classes: <code>frog.widgets.numeric_control</code> and <code>frog.widgets.numeric_indicator</code>,</li>
-  <li>five supported widget properties: <code>value</code>, <code>label</code>, <code>visible</code>, <code>enabled</code>, and <code>foreground_color</code>.</li>
+  <li>Example 05 numeric control/indicator classes, Example 06 Boolean control/indicator classes, and Example 07 String control/indicator classes,</li>
+  <li>bounded widget properties required by the published <code>.wfrog</code> packages and runtime contracts.</li>
 </ul>
 
 <p>
@@ -109,8 +109,8 @@ The Rust runtime reads those requirements from the emitted contract and the acce
 
 <ul>
   <li>The emitted contract artifact under <code>Implementations/Reference/ContractEmitter/examples/</code>.</li>
-  <li>The Example 05 package <code>Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog</code>.</li>
-  <li>The SVG assets referenced by that package.</li>
+  <li>The Example 05, Example 06, and Example 07 <code>.wfrog</code> packages.</li>
+  <li>The SVG assets referenced by those packages.</li>
   <li>The shared acceptance reading posture under <code>Implementations/Reference/Runtime/acceptance/</code>.</li>
 </ul>
 
@@ -119,7 +119,7 @@ The Rust runtime reads those requirements from the emitted contract and the acce
 <ul>
   <li>A headless runtime result artifact.</li>
   <li>A browser-host page driven by the same runtime core.</li>
-  <li>A runtime snapshot JSON surface for the accepted Example 05 slice.</li>
+  <li>A runtime snapshot JSON surface for the accepted Example 05, Example 06, and Example 07 slices.</li>
 </ul>
 
 <p>
@@ -138,8 +138,9 @@ The published Rust tests are acceptance-driven and should remain aligned with
 </p>
 
 <ul>
-  <li><code>slice05_runtime.rs</code> checks headless acceptance for the bounded runtime corridor.</li>
-  <li><code>slice05_ui.rs</code> checks browser-host HTML rendering and snapshot acceptance for the same corridor.</li>
+  <li><code>slice05_runtime.rs</code> checks headless acceptance for the bounded accumulator corridor.</li>
+  <li><code>slice05_ui.rs</code> checks browser-host HTML rendering and snapshot acceptance for the numeric corridor.</li>
+  <li><code>native_kernel_bridge.rs</code> checks dynamic native-kernel bridge parity for the published Example 05, Example 06, and Example 07 surfaces when the local toolchain is available.</li>
 </ul>
 
 <h2>Relationship to the other runtime consumers</h2>
@@ -151,9 +152,9 @@ This directory should remain aligned with the Python and C/C++ consumers on:
 <ul>
   <li>contract acceptance,</li>
   <li>package acceptance,</li>
-  <li>execution semantics for the bounded accumulator slice,</li>
-  <li>the minimal widget-property surface,</li>
-  <li>the browser-host UI shape for Example 05,</li>
+  <li>execution semantics for the bounded accumulator, Boolean roundtrip, and String roundtrip slices,</li>
+  <li>the minimal widget-property surfaces,</li>
+  <li>the browser-host UI shapes for Examples 05, 06, and 07,</li>
   <li>the shared acceptance artifacts for the runtime family.</li>
 </ul>
 

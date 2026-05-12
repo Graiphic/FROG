@@ -9,20 +9,26 @@ from Implementations.Reference.Runtime.build_native_kernel_library import build_
 from Implementations.Reference.Runtime.python.native_kernel import (
     load_native_bool_kernel_bridge,
     load_native_kernel_bridge,
+    load_native_string_kernel_bridge,
 )
 from Implementations.Reference.Runtime.python.runtime_core import Slice05RuntimeCore, find_repo_root
 from Implementations.Reference.Runtime.python.ui_runtime import (
     BrowserUiRuntime,
     BooleanBrowserUiRuntime,
     BooleanRuntimeCore,
+    StringBrowserUiRuntime,
+    StringRuntimeCore,
     default_example06_contract_path,
     default_example06_wfrog_path,
+    default_example07_contract_path,
+    default_example07_wfrog_path,
 )
 
 
 ROOT = find_repo_root(Path(__file__).resolve())
 EXAMPLE05_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json"
 EXAMPLE06_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/native_kernel_manifest.json"
+EXAMPLE07_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/07_string_value_roundtrip/native_kernel_manifest.json"
 
 
 def _build_library(tmp_path: Path, example: str, manifest: Path) -> Path:
@@ -77,3 +83,31 @@ def test_python_dynamic_native_kernel_bridge_executes_example06(tmp_path: Path) 
     assert "LLVM native bool kernel artifact" in html
     assert 'data-compiler-backend="llvm"' in html
     assert 'data-execution-path="native_kernel_bridge"' in html
+
+
+def test_python_dynamic_native_kernel_bridge_executes_example07(tmp_path: Path) -> None:
+    library = _build_library(tmp_path, "07", EXAMPLE07_MANIFEST)
+    bridge = load_native_string_kernel_bridge(EXAMPLE07_MANIFEST, library)
+
+    assert bridge.run("hello world").result == "hello world"
+
+    core = StringRuntimeCore()
+    artifact = core.execute_with_native_kernel_bridge(bridge, "hello world")
+
+    assert artifact["outputs"]["public"]["result_text"] == "hello world"
+    assert artifact["outputs"]["ui"]["str_result"] == "hello world"
+
+    ui = StringBrowserUiRuntime(
+        contract_path=default_example07_contract_path(),
+        wfrog_path=default_example07_wfrog_path(),
+        native_kernel_bridge=bridge,
+        open_browser=False,
+    )
+    html = ui.render_html()
+    assert "native kernel bridge" in html
+    assert "LLVM native string kernel artifact" in html
+    assert 'data-compiler-backend="llvm"' in html
+    assert 'data-execution-path="native_kernel_bridge"' in html
+    assert "data-frog-visual-law='wfrog-realization-state-map'" in html
+    assert "Current runtime snapshot" not in html
+    assert "<pre>" not in html

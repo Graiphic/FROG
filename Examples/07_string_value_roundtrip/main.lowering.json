@@ -1,0 +1,77 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "07_string_value_roundtrip",
+    "path": "Examples/07_string_value_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/07_string_value_roundtrip/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "purpose": "make the string value roundtrip consumable by a bounded runtime/UI-binding check",
+    "backend_family_target": "reference_host_runtime_ui_binding",
+    "compiler_family_targets": [
+      "llvm_native_kernel_bridge"
+    ]
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "string_value_roundtrip_kernel_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "input_text",
+            "type": "string"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result_text",
+            "type": "string"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "str_input",
+            "mode": "widget_value",
+            "public_input_id": "input_text",
+            "value_type": "string"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "str_result",
+            "mode": "widget_value",
+            "public_output_id": "result_text",
+            "value_type": "string"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "copy",
+        "dst": "result_text",
+        "type": "string",
+        "src": "input_text",
+        "max_utf8_bytes": 256,
+        "final_publication": [
+          {
+            "target": "public_output.result_text",
+            "source": "input_text"
+          },
+          {
+            "target": "widget.str_result.value",
+            "source": "input_text"
+          }
+        ]
+      }
+    }
+  ]
+}

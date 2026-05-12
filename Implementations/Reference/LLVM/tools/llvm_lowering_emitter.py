@@ -1,7 +1,7 @@
 """Generic-by-kind LLVM emitter for the non-normative FROG reference workspace.
 
 This module is intentionally narrow and non-normative. It does not implement a
-general production LLVM backend. It consolidates the current Examples 01-06
+general production LLVM backend. It consolidates the current Examples 01-07
 native proof emitters around one dispatch key:
 
     lowered_units[0].kind
@@ -14,6 +14,7 @@ Supported lowered unit kinds:
 - stateful_feedback_delay_kernel
 - bounded_accumulator_kernel_with_ui_bindings
 - boolean_value_roundtrip_kernel_with_ui_bindings
+- string_value_roundtrip_kernel_with_ui_bindings
 """
 
 from __future__ import annotations
@@ -563,6 +564,76 @@ run:
 """
 
 
+def emit_string_value_roundtrip(lowering: dict[str, Any]) -> str:
+    unit = single_lowered_unit(lowering)
+    kernel = execution_kernel(unit)
+    expect_equal(
+        kernel.get("operation"),
+        "copy",
+        "string_value_roundtrip_kernel_with_ui_bindings supports only copy",
+    )
+    expect_equal(
+        kernel.get("dst"),
+        "result_text",
+        "string_value_roundtrip_kernel_with_ui_bindings supports only result_text output",
+    )
+    expect_equal(
+        kernel.get("src"),
+        "input_text",
+        "string_value_roundtrip_kernel_with_ui_bindings supports only input_text source",
+    )
+    expect_equal(
+        kernel.get("type"),
+        "string",
+        "string_value_roundtrip_kernel_with_ui_bindings supports only string values",
+    )
+    expect_equal(
+        kernel.get("max_utf8_bytes"),
+        256,
+        "string_value_roundtrip_kernel_with_ui_bindings supports only max_utf8_bytes = 256",
+    )
+
+    return """%FrogStringRunResult = type { i8, i16, i32, [256 x i8] }
+
+define void @frog_example07_run(ptr %input_ptr, i32 %input_len, ptr %out_result) {
+entry:
+  %too_long = icmp ugt i32 %input_len, 256
+  br i1 %too_long, label %error_too_long, label %copy_check
+
+copy_check:
+  %i = phi i32 [ 0, %entry ], [ %next, %copy_body ]
+  %done = icmp uge i32 %i, %input_len
+  br i1 %done, label %ok, label %copy_body
+
+copy_body:
+  %source_byte_ptr = getelementptr inbounds i8, ptr %input_ptr, i32 %i
+  %source_byte = load i8, ptr %source_byte_ptr, align 1
+  %target_byte_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 3, i32 %i
+  store i8 %source_byte, ptr %target_byte_ptr, align 1
+  %next = add i32 %i, 1
+  br label %copy_check
+
+ok:
+  %ok_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 0
+  store i8 1, ptr %ok_ptr, align 4
+  %error_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 1
+  store i16 0, ptr %error_ptr, align 2
+  %len_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 2
+  store i32 %input_len, ptr %len_ptr, align 4
+  ret void
+
+error_too_long:
+  %err_ok_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 0
+  store i8 0, ptr %err_ok_ptr, align 4
+  %err_code_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 1
+  store i16 1, ptr %err_code_ptr, align 2
+  %err_len_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 2
+  store i32 0, ptr %err_len_ptr, align 4
+  ret void
+}
+"""
+
+
 EMITTERS_BY_KIND: dict[str, Callable[[dict[str, Any]], str]] = {
     "pure_addition_kernel": emit_pure_addition,
     "ui_value_roundtrip_kernel": emit_ui_value_roundtrip,
@@ -570,6 +641,7 @@ EMITTERS_BY_KIND: dict[str, Callable[[dict[str, Any]], str]] = {
     "stateful_feedback_delay_kernel": emit_stateful_feedback_delay,
     "bounded_accumulator_kernel_with_ui_bindings": emit_bounded_accumulator,
     "boolean_value_roundtrip_kernel_with_ui_bindings": emit_boolean_value_roundtrip,
+    "string_value_roundtrip_kernel_with_ui_bindings": emit_string_value_roundtrip,
 }
 
 

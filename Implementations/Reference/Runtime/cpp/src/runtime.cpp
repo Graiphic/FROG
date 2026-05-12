@@ -524,6 +524,9 @@ Value Slice06BooleanRuntimeCore::execution_artifact() const {
         copy_property("state_text.style.text_color.false");
         copy_property("state_text.style.text_color.true");
         copy_property("state_text.visible");
+        copy_property("caption.visible");
+        copy_property("caption.anchor.x");
+        copy_property("caption.anchor.y");
         copy_property("caption.align.horizontal");
         copy_property("style.frame.visible");
         copy_property("style.outer.border_color.false");
@@ -548,6 +551,9 @@ Value Slice06BooleanRuntimeCore::execution_artifact() const {
         copy_property("style.inner.top");
         copy_property("style.inner.width");
         copy_property("style.inner.height");
+        copy_property("style.focus_ring.visible");
+        copy_property("style.focus_ring.color");
+        copy_property("style.focus_ring.width");
         copy_property("style.pressed.inset");
         copy_property("style.transition.duration_ms");
         copy_property("style.transition.timing");
@@ -585,6 +591,246 @@ Value Slice06BooleanRuntimeCore::execution_artifact() const {
             {"ui", make_object({
                 {"bool_input", Value(control_value())},
                 {"bool_result", Value(last_result)},
+            })},
+        })},
+        {"ui_runtime", make_object({
+            {"panel", make_object({
+                {"panel_id", Value(panel.panel_id)},
+                {"title", Value(panel.title)},
+                {"class_ref", Value(panel.class_ref)},
+                {"layout", panel.layout},
+            })},
+            {"widgets", Value(widget_entries)},
+        })},
+        {"diagnostics", Value(Array{})},
+    });
+}
+
+Slice07StringRuntimeCore::Slice07StringRuntimeCore(std::filesystem::path contract_path_, std::filesystem::path wfrog_path_)
+    : contract_path(std::move(contract_path_)),
+      wfrog_path(std::move(wfrog_path_)),
+      contract(load_contract_from_path(contract_path)),
+      package(load_wfrog_from_path(wfrog_path)),
+      unit(load_and_validate()),
+      panel(package.front_panels.at(0)) {
+    for (const auto& asset : package.svg_assets) {
+        asset_map.emplace(asset.asset_id, std::filesystem::absolute(wfrog_path.parent_path() / asset.path));
+    }
+    widgets = build_widgets();
+    last_result = control_value();
+    widgets.at("str_result").properties["value"] = Value(last_result);
+}
+
+ContractUnit Slice07StringRuntimeCore::load_and_validate() const {
+    require(contract.backend_family == REFERENCE_BACKEND_FAMILY, "Unexpected backend family.");
+    require(contract.source_ref.example_id == "07_string_value_roundtrip", "Slice 07 expects Example 07.");
+    require(contract.assumptions.runtime_family.name == REFERENCE_BACKEND_FAMILY, "Unexpected runtime-family assumption name.");
+    require(contract.assumptions.runtime_family.ui_binding.widget_value_binding, "Contract must require widget_value_binding.");
+    require(contract.units.size() == 1, "Expected exactly one contract unit.");
+
+    const ContractUnit& current_unit = contract.units.front();
+    require(current_unit.unit_id == "main", "Expected unit_id main.");
+    require(current_unit.kind == "string_value_roundtrip_ui_unit", "Unexpected runtime unit kind.");
+    require(current_unit.public_interface.inputs.size() == 1, "Expected one public input.");
+    require(current_unit.public_interface.outputs.size() == 1, "Expected one public output.");
+    require(current_unit.public_interface.inputs.front().id == "input_text", "Expected public input input_text.");
+    require(current_unit.public_interface.inputs.front().port_type == "string", "Expected string public input.");
+    require(current_unit.public_interface.outputs.front().id == "result_text", "Expected public output result_text.");
+    require(current_unit.public_interface.outputs.front().port_type == "string", "Expected string public output.");
+    require(current_unit.execution_model.structure == "single_step", "Slice 07 expects a single-step copy execution model.");
+    require(current_unit.execution_model.body_rule.kind == "copy", "Slice 07 expects a copy body rule.");
+    require(current_unit.property_writes.empty(), "Slice 07 does not use property writes.");
+
+    require(package.front_panels.size() == 1, "Expected exactly one front panel.");
+    const auto& current_panel = package.front_panels.front();
+    require(current_panel.host_binding_ref == "reference_host_default", "Expected host_binding_ref reference_host_default.");
+
+    const auto host_it = std::find_if(
+        package.host_bindings.begin(),
+        package.host_bindings.end(),
+        [&](const HostBinding& binding) { return binding.binding_id == "reference_host_default"; });
+    require(host_it != package.host_bindings.end(), "Missing reference_host_default host binding.");
+    const std::set<std::string> required(host_it->required_capabilities.begin(), host_it->required_capabilities.end());
+    require(required.count("window") == 1, "Missing host capability window.");
+    require(required.count("basic_widget_rendering") == 1, "Missing host capability basic_widget_rendering.");
+    require(required.count("widget_value_binding") == 1, "Missing host capability widget_value_binding.");
+
+    std::map<std::string, const PanelWidget*> panel_widgets;
+    for (const auto& widget : current_panel.widgets) {
+        panel_widgets.emplace(widget.instance_id, &widget);
+    }
+    require(panel_widgets.count("str_input") == 1, "Missing panel widget str_input.");
+    require(panel_widgets.count("str_result") == 1, "Missing panel widget str_result.");
+
+    for (const auto& binding : current_unit.ui_binding.widgets) {
+        const auto widget_it = panel_widgets.find(binding.widget_id);
+        require(widget_it != panel_widgets.end(), "Missing panel widget " + binding.widget_id + ".");
+        require(widget_it->second->class_ref == binding.widget_class, "Class mismatch for widget " + binding.widget_id + ".");
+        require(binding.value_type == "string", "Slice 07 supports only string widget values.");
+        require(
+            binding.widget_class == "frog.widgets.string_control" || binding.widget_class == "frog.widgets.string_indicator",
+            "Unsupported widget class " + binding.widget_class + ".");
+    }
+
+    return current_unit;
+}
+
+std::map<std::string, WidgetState> Slice07StringRuntimeCore::build_widgets() const {
+    std::map<std::string, const PanelWidget*> panel_widgets;
+    for (const auto& widget : panel.widgets) {
+        panel_widgets.emplace(widget.instance_id, &widget);
+    }
+
+    std::map<std::string, WidgetState> result;
+    for (const auto& binding : unit.ui_binding.widgets) {
+        const auto* panel_widget = panel_widgets.at(binding.widget_id);
+        std::optional<std::string> asset_id;
+        std::filesystem::path asset_path;
+        if (const auto visual_it = panel_widget->visual.find("asset_ref"); visual_it != panel_widget->visual.end() && visual_it->second.is_string()) {
+            const std::string& asset_ref = visual_it->second.as_string();
+            if (asset_ref.rfind("asset:", 0) == 0) {
+                asset_id = asset_ref.substr(6);
+                const auto asset_it = asset_map.find(*asset_id);
+                if (asset_it != asset_map.end()) {
+                    asset_path = asset_it->second;
+                }
+            }
+        }
+
+        auto properties = panel_widget->props;
+        properties.emplace("value", properties.count("value") ? properties.at("value") : Value(""));
+        properties.emplace("caption.text", properties.count("caption.text") ? properties.at("caption.text") : Value(binding.widget_id));
+        properties.emplace("placeholder.text", properties.count("placeholder.text") ? properties.at("placeholder.text") : Value(""));
+        properties.emplace("placeholder.visible", properties.count("placeholder.visible") ? properties.at("placeholder.visible") : Value(false));
+        properties.emplace("interaction.enabled", properties.count("interaction.enabled") ? properties.at("interaction.enabled") : Value(binding.role == "control"));
+        properties.emplace("interaction.read_only", properties.count("interaction.read_only") ? properties.at("interaction.read_only") : Value(binding.role != "control"));
+        properties.emplace("realization.variant", properties.count("realization.variant") ? properties.at("realization.variant") : Value("rectangular"));
+
+        result.emplace(
+            binding.widget_id,
+            WidgetState{
+                binding.widget_id,
+                binding.widget_class,
+                binding.role,
+                panel_widget->layout,
+                std::move(properties),
+                asset_id,
+                asset_path,
+                {},
+            });
+    }
+    return result;
+}
+
+void Slice07StringRuntimeCore::set_control_value(const std::string& value) {
+    require(value.size() <= 256, "input_text must remain within 256 UTF-8 bytes.");
+    widgets.at("str_input").properties["value"] = Value(value);
+}
+
+std::string Slice07StringRuntimeCore::control_value() const {
+    return json_string(widgets.at("str_input").properties, "value", "");
+}
+
+Value Slice07StringRuntimeCore::execute(std::optional<std::string> control_value_override) {
+    if (control_value_override.has_value()) {
+        set_control_value(*control_value_override);
+    }
+    last_result = control_value();
+    widgets.at("str_result").properties["value"] = Value(last_result);
+    return execution_artifact();
+}
+
+Value Slice07StringRuntimeCore::execute_with_native_kernel_bridge(
+    const NativeStringKernelBridge& bridge,
+    std::optional<std::string> control_value_override) {
+    require(bridge.manifest().source_lowered_unit == "Examples/07_string_value_roundtrip/main.lowering.json", "Unexpected native string kernel source lowered unit.");
+    if (control_value_override.has_value()) {
+        set_control_value(*control_value_override);
+    }
+
+    const auto result = bridge.run(control_value());
+    if (!result.ok) {
+        throw std::runtime_error(result.diagnostic.empty() ? "native string kernel execution failed." : result.diagnostic);
+    }
+
+    last_result = result.result;
+    widgets.at("str_result").properties["value"] = Value(last_result);
+    return execution_artifact();
+}
+
+Value Slice07StringRuntimeCore::execution_artifact() const {
+    Array widget_entries;
+    for (const auto& entry : widgets) {
+        const auto& widget = entry.second;
+        Object runtime_fields{
+            {"value", Value(json_string(widget.properties, "value"))},
+            {"label.text", Value(json_string(widget.properties, "label.text"))},
+            {"caption.text", Value(json_string(widget.properties, "caption.text"))},
+            {"asset_ref", widget.asset_id.has_value() ? Value("asset:" + *widget.asset_id) : Value(nullptr)},
+            {"realization.variant", Value(json_string(widget.properties, "realization.variant", "rectangular"))},
+        };
+        const auto copy_property = [&](const std::string& key) {
+            const auto it = widget.properties.find(key);
+            if (it != widget.properties.end()) {
+                runtime_fields.emplace(key, it->second);
+            }
+        };
+        copy_property("caption.visible");
+        copy_property("caption.anchor.x");
+        copy_property("caption.anchor.y");
+        copy_property("caption.align.horizontal");
+        copy_property("caption.style.text_color");
+        copy_property("style.frame.fill_color");
+        copy_property("style.frame.border_color");
+        copy_property("style.frame.border_width");
+        copy_property("style.text_region.fill_color");
+        copy_property("style.text_region.fill_color.hover");
+        copy_property("style.text_region.border_color");
+        copy_property("style.text_region.border_color.hover");
+        copy_property("style.text_region.border_width");
+        copy_property("style.text_region.border_width.hover");
+        copy_property("style.text.color");
+        copy_property("style.text.font_size");
+        copy_property("style.text.font_weight");
+        copy_property("placeholder.text");
+        copy_property("placeholder.visible");
+        copy_property("interaction.enabled");
+        copy_property("interaction.read_only");
+
+        widget_entries.push_back(make_object({
+            {"widget_id", Value(widget.widget_id)},
+            {"class_ref", Value(widget.class_ref)},
+            {"role", Value(widget.role)},
+            {"layout", widget.layout},
+            {"runtime", Value(runtime_fields)},
+        }));
+    }
+
+    return make_object({
+        {"artifact_kind", Value("frog_runtime_execution_result")},
+        {"artifact_governance_ref", make_object({{"path", Value("Versioning/Readme.md")}})},
+        {"status", Value("ok")},
+        {"contract_ref", make_object({
+            {"unit_ids", make_array({Value(unit.unit_id)})},
+            {"backend_family", Value(contract.backend_family)},
+            {"source_ref", make_object({
+                {"example_id", Value(contract.source_ref.example_id)},
+                {"path", Value(contract.source_ref.path)},
+                {"entry_unit", Value(contract.source_ref.entry_unit)},
+            })},
+        })},
+        {"execution_summary", make_object({
+            {"mode", Value("string_value_roundtrip")},
+            {"executed_unit", Value(unit.unit_id)},
+            {"operation", Value("copy")},
+            {"input_text", Value(control_value())},
+            {"result_text", Value(last_result)},
+        })},
+        {"outputs", make_object({
+            {"public", make_object({{"result_text", Value(last_result)}})},
+            {"ui", make_object({
+                {"str_input", Value(control_value())},
+                {"str_result", Value(last_result)},
             })},
         })},
         {"ui_runtime", make_object({

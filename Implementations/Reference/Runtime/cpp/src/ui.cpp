@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -124,6 +125,14 @@ std::uint16_t property_u16(const Object& properties, const std::string& key, std
         throw std::runtime_error("Widget value must remain in the u16 domain.");
     }
     return static_cast<std::uint16_t>(value);
+}
+
+std::optional<double> property_number(const Object& properties, const std::string& key) {
+    const auto it = properties.find(key);
+    if (it == properties.end() || !it->second.is_number()) {
+        return std::nullopt;
+    }
+    return it->second.as_f64();
 }
 
 std::int64_t layout_i64(const Value& layout, const std::string& key, std::int64_t fallback = 0) {
@@ -365,6 +374,40 @@ std::string svg_anchor_style(double x, double y, const SvgGeometry& geometry) {
     return style.str();
 }
 
+std::string caption_transform_for_align(const std::string& align) {
+    if (align == "center") {
+        return "translate(-50%,-50%)";
+    }
+    if (align == "right" || align == "end") {
+        return "translate(-100%,-50%)";
+    }
+    return "translateY(-50%)";
+}
+
+std::string caption_text_align(const std::string& align) {
+    if (align == "center") {
+        return "center";
+    }
+    if (align == "right" || align == "end") {
+        return "right";
+    }
+    return "left";
+}
+
+std::string caption_anchor_style(const Object& properties, const SvgGeometry& geometry) {
+    const auto x = property_number(properties, "caption.anchor.x").value_or(geometry.caption_x);
+    const auto y = property_number(properties, "caption.anchor.y").value_or(geometry.caption_y);
+    const auto align = property_string(properties, "caption.align.horizontal", "left");
+    std::ostringstream style;
+    style << svg_anchor_style(x, y, geometry);
+    style << "transform:" << caption_transform_for_align(align) << ";";
+    style << "text-align:" << caption_text_align(align) << ";";
+    if (!property_bool(properties, "caption.visible", true)) {
+        style << "display:none;";
+    }
+    return style.str();
+}
+
 std::string svg_box_style(double x, double y, double width, double height, const SvgGeometry& geometry) {
     std::ostringstream style;
     style << "left:" << css_percent(pct(x, geometry.view_width)) << ";";
@@ -470,7 +513,7 @@ std::string render_numeric_widget(const WidgetState& widget) {
     html << render_numeric_skin(widget, is_control, color);
 
     html << "<span class='numeric-label-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='"
-          << svg_anchor_style(geometry.caption_x, geometry.caption_y, geometry)
+          << caption_anchor_style(widget.properties, geometry)
           << "color:" << html_escape(label_color) << ";font-weight:" << html_escape(label_weight) << ";'>" << html_escape(label) << "</span>";
 
     const auto value_style = svg_box_style(
@@ -509,6 +552,133 @@ std::string render_numeric_widget(const WidgetState& widget) {
     return html.str();
 }
 
+SvgGeometry load_string_svg_geometry(const WidgetState& widget) {
+    SvgGeometry geometry;
+    geometry.view_width = 420.0;
+    geometry.view_height = 190.0;
+    geometry.caption_x = 16.0;
+    geometry.caption_y = 46.0;
+    geometry.value_face_x = 28.0;
+    geometry.value_face_y = 88.0;
+    geometry.value_face_width = 364.0;
+    geometry.value_face_height = 56.0;
+    if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
+        return geometry;
+    }
+    const auto svg = read_text_file(widget.asset_path);
+    parse_viewbox(svg, geometry);
+    geometry.caption_x = svg_attribute_double(svg, "caption_text", "x", geometry.caption_x);
+    geometry.caption_y = svg_attribute_double(svg, "caption_text", "y", geometry.caption_y);
+    geometry.value_face_x = svg_attribute_double(svg, "text_region", "x", geometry.value_face_x);
+    geometry.value_face_y = svg_attribute_double(svg, "text_region", "y", geometry.value_face_y);
+    geometry.value_face_width = svg_attribute_double(svg, "text_region", "width", geometry.value_face_width);
+    geometry.value_face_height = svg_attribute_double(svg, "text_region", "height", geometry.value_face_height);
+    return geometry;
+}
+
+std::string render_string_skin(const WidgetState& widget) {
+    if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
+        return "<div class='string-skin missing-skin'></div>";
+    }
+    const auto frame_fill = safe_css_color(property_string(widget.properties, "style.frame.fill_color", "transparent"), "transparent");
+    const auto frame_stroke = safe_css_color(property_string(widget.properties, "style.frame.border_color", "transparent"), "transparent");
+    const auto frame_stroke_width = safe_css_length(property_string(widget.properties, "style.frame.border_width", "0px"), "0px");
+    const auto region_fill = safe_css_color(property_string(widget.properties, "style.text_region.fill_color", "#ffffff"), "#ffffff");
+    const auto region_stroke = safe_css_color(property_string(widget.properties, "style.text_region.border_color", "#64748b"), "#64748b");
+    const auto region_stroke_width = safe_css_length(property_string(widget.properties, "style.text_region.border_width", "2px"), "2px");
+    const auto region_hover_fill = safe_css_color(property_string(widget.properties, "style.text_region.fill_color.hover", region_fill), region_fill);
+    const auto region_hover_stroke = safe_css_color(property_string(widget.properties, "style.text_region.border_color.hover", region_stroke), region_stroke);
+    const auto region_hover_stroke_width =
+        safe_css_length(property_string(widget.properties, "style.text_region.border_width.hover", region_stroke_width), region_stroke_width);
+    const auto text_fill = safe_css_color(property_string(widget.properties, "style.text.color", "#111827"), "#111827");
+    const auto text_size = safe_css_length(property_string(widget.properties, "style.text.font_size", "16px"), "16px");
+    const auto text_weight = safe_css_font_weight(property_string(widget.properties, "style.text.font_weight", "400"), "400");
+    std::ostringstream style;
+    style << "--frog-string-label-display:none;";
+    style << "--frog-string-caption-display:none;";
+    style << "--frog-string-placeholder-display:none;";
+    style << "--frog-string-frame-fill:" << html_escape(frame_fill) << ";";
+    style << "--frog-string-frame-stroke:" << html_escape(frame_stroke) << ";";
+    style << "--frog-string-frame-stroke-width:" << html_escape(frame_stroke_width) << ";";
+    style << "--frog-string-text-region-fill:" << html_escape(region_fill) << ";";
+    style << "--frog-string-text-region-stroke:" << html_escape(region_stroke) << ";";
+    style << "--frog-string-text-region-stroke-width:" << html_escape(region_stroke_width) << ";";
+    style << "--frog-string-text-region-fill-hover:" << html_escape(region_hover_fill) << ";";
+    style << "--frog-string-text-region-stroke-hover:" << html_escape(region_hover_stroke) << ";";
+    style << "--frog-string-text-region-stroke-width-hover:" << html_escape(region_hover_stroke_width) << ";";
+    style << "--frog-string-text-fill:" << html_escape(text_fill) << ";";
+    style << "--frog-string-text-font-size:" << html_escape(text_size) << ";";
+    style << "--frog-string-text-font-weight:" << html_escape(text_weight) << ";";
+
+    std::ostringstream html;
+    html << "<div class='string-skin' aria-hidden='true' style='" << style.str() << "'>";
+    html << read_text_file(widget.asset_path);
+    html << "</div>";
+    return html.str();
+}
+
+std::string render_string_widget(const WidgetState& widget) {
+    const bool is_control = widget.role == "control";
+    const auto geometry = load_string_svg_geometry(widget);
+    const auto x = layout_i64(widget.layout, "x", 0);
+    const auto y = layout_i64(widget.layout, "y", 0);
+    const auto width = layout_i64(widget.layout, "width", 240);
+    const auto height = layout_i64(widget.layout, "height", 110);
+    const auto value = property_string(widget.properties, "value");
+    const auto label = property_string(widget.properties, "caption.text", widget.widget_id);
+    const auto label_color = safe_css_color(property_string(widget.properties, "caption.style.text_color", "#111827"), "#111827");
+    const auto text_color = safe_css_color(property_string(widget.properties, "style.text.color", "#111827"), "#111827");
+    const auto text_size = safe_css_length(property_string(widget.properties, "style.text.font_size", "16px"), "16px");
+    const auto text_weight = safe_css_font_weight(property_string(widget.properties, "style.text.font_weight", "400"), "400");
+    const auto route = asset_route(widget);
+    const auto value_style = svg_box_style(
+        geometry.value_face_x,
+        geometry.value_face_y,
+        geometry.value_face_width,
+        geometry.value_face_height,
+        geometry);
+
+    std::ostringstream html;
+    html << "<section class='frog-widget string-widget " << (is_control ? "string-control" : "string-indicator") << "'";
+    html << " data-widget-id='" << html_escape(widget.widget_id) << "'";
+    html << " data-class-ref='" << html_escape(widget.class_ref) << "'";
+    html << " data-role='" << html_escape(widget.role) << "'";
+    html << " data-frog-visual-law='wfrog-realization-state-map'";
+    if (!route.empty()) {
+        html << " data-asset-route='" << html_escape(route) << "'";
+    }
+    html << " style='position:absolute;left:" << css_px(x) << ";top:" << css_px(y) << ";width:" << css_px(width)
+         << ";height:" << css_px(height) << ";";
+    if (!property_bool(widget.properties, "visible", true)) {
+        html << "display:none;";
+    }
+    html << "'>";
+
+    html << render_string_skin(widget);
+    html << "<span class='string-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='"
+          << caption_anchor_style(widget.properties, geometry)
+          << "color:" << html_escape(label_color) << ";'>" << html_escape(label) << "</span>";
+
+    if (is_control) {
+        html << "<input id='" << html_escape(widget.widget_id) << "_value' name='input_text' type='text'";
+        html << " class='string-value-overlay string-control-editor' data-frog-part='text_value' data-svg-anchor='text_region.left_center'";
+        html << " style='" << value_style << "color:" << html_escape(text_color) << ";font-size:" << html_escape(text_size)
+             << ";font-weight:" << html_escape(text_weight) << ";'";
+        html << " value='" << html_escape(value) << "'";
+        if (!property_bool(widget.properties, "interaction.enabled", true)) {
+            html << " disabled";
+        }
+        html << " />";
+    } else {
+        html << "<output class='string-value-overlay string-indicator-value' data-frog-part='text_value' data-svg-anchor='text_region.left_center'";
+        html << " style='" << value_style << "color:" << html_escape(text_color) << ";font-size:" << html_escape(text_size)
+             << ";font-weight:" << html_escape(text_weight) << ";'>" << html_escape(value) << "</output>";
+    }
+
+    html << "</section>";
+    return html.str();
+}
+
 std::uint16_t parse_u16_form_value(const std::string& value) {
     const auto parsed = std::stoul(value);
     if (parsed > 65535ul) {
@@ -540,6 +710,7 @@ std::string state_property(const Object& properties, const std::string& base, co
 
 std::string render_boolean_widget(const WidgetState& widget) {
     const bool is_control = widget.role == "control";
+    const auto geometry = load_svg_geometry(widget);
     const auto x = layout_i64(widget.layout, "x", 0);
     const auto y = layout_i64(widget.layout, "y", 0);
     const auto width = layout_i64(widget.layout, "width", 160);
@@ -569,12 +740,15 @@ std::string render_boolean_widget(const WidgetState& widget) {
     const std::string pressed_inset = property_string(widget.properties, "style.pressed.inset", "1px");
     const bool state_text_visible = property_bool(widget.properties, "state_text.visible", true);
     const bool frame_visible = property_bool(widget.properties, "style.frame.visible", true);
-    const std::string caption_align = property_string(widget.properties, "caption.align.horizontal", "left");
-    const bool caption_centered = caption_align == "center";
+    const bool focus_visible = property_bool(widget.properties, "style.focus_ring.visible", false);
     const std::string inner_left = property_string(widget.properties, "style.inner.left", variant == "circular" ? "52px" : "18px");
     const std::string inner_top = property_string(widget.properties, "style.inner.top", variant == "circular" ? "23px" : "31px");
     const std::string inner_width = property_string(widget.properties, "style.inner.width", variant == "circular" ? "56px" : "124px");
     const std::string inner_height = property_string(widget.properties, "style.inner.height", variant == "circular" ? "56px" : "34px");
+    const std::string focus_color = safe_css_color(property_string(widget.properties, "style.focus_ring.color", "#2563eb"), "#2563eb");
+    const std::string focus_width = focus_visible
+        ? safe_css_length(property_string(widget.properties, "style.focus_ring.width", "3px"), "3px")
+        : "0px";
 
     std::ostringstream html;
     if (is_control) {
@@ -617,10 +791,9 @@ std::string render_boolean_widget(const WidgetState& widget) {
          << "--boolean-inner-top:" << html_escape(inner_top) << ";"
          << "--boolean-inner-width:" << html_escape(inner_width) << ";"
          << "--boolean-inner-height:" << html_escape(inner_height) << ";"
-         << "--boolean-caption-left:" << (caption_centered ? "50%" : "8px") << ";"
-         << "--boolean-caption-transform:" << (caption_centered ? "translateX(-50%)" : "none") << ";"
-         << "--boolean-caption-text-align:" << (caption_centered ? "center" : "left") << ";"
          << "--boolean-text:" << html_escape(text_color) << ";"
+         << "--boolean-focus-color:" << html_escape(focus_color) << ";"
+         << "--boolean-focus-width:" << html_escape(focus_width) << ";"
          << "--boolean-transition:" << html_escape(transition_ms) << "ms " << html_escape(transition_timing) << ";"
          << "--boolean-pressed-inset:" << html_escape(pressed_inset) << ";";
     if (!property_bool(widget.properties, "visible", true)) {
@@ -634,7 +807,8 @@ std::string render_boolean_widget(const WidgetState& widget) {
     } else {
         html << "<div class='boolean-skin missing-skin'></div>";
     }
-    html << "<span class='boolean-caption-overlay' data-frog-part='caption'>" << html_escape(caption) << "</span>";
+    html << "<span class='boolean-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='"
+         << caption_anchor_style(widget.properties, geometry) << "'>" << html_escape(caption) << "</span>";
     if (state_text_visible) {
         html << "<span class='boolean-state-overlay' data-frog-part='state_text'>" << html_escape(state_text) << "</span>";
     }
@@ -1020,7 +1194,7 @@ std::string BooleanBrowserUiRuntime::render_html() const {
             ".boolean-indicator{pointer-events:none;}"
             ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}"
             ".missing-skin{background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;}"
-            ".boolean-caption-overlay{position:absolute;left:var(--boolean-caption-left);top:6px;transform:var(--boolean-caption-transform);text-align:var(--boolean-caption-text-align);font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}"
+            ".boolean-caption-overlay{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}"
             ".boolean-state-face{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:2px solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
             ".boolean-widget[data-realization-variant='circular'] .boolean-state-face{border-radius:50%;}"
             ".boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{box-shadow:none;}"
@@ -1028,7 +1202,7 @@ std::string BooleanBrowserUiRuntime::render_html() const {
             ".boolean-control[data-frog-frame-visible='false']:hover .boolean-state-face{box-shadow:none;}"
             ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-inner-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}"
             ".boolean-control[data-frog-frame-visible='false']:active .boolean-state-face{box-shadow:none;}"
-            ".boolean-control:focus-visible .boolean-state-face{outline:2px solid #2563eb;outline-offset:2px;}"
+            ".boolean-control:focus-visible .boolean-state-face{outline:var(--boolean-focus-width) solid var(--boolean-focus-color);}"
             ".boolean-state-overlay{position:absolute;left:0;right:0;top:49px;transform:translateY(-50%);text-align:center;font-size:18px;font-weight:700;line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;}"
             ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
             ".state-link{font-size:16px;}"
@@ -1127,6 +1301,174 @@ void BooleanBrowserUiRuntime::serve(const std::string& host, std::uint16_t port,
                 try {
                     const auto form_value = parse_form_value(request.body, "input_value").value_or("false");
                     run_once(parse_bool_form_value(form_value));
+                } catch (const std::exception& error) {
+                    last_error = error.what();
+                }
+                send_response(client, "303 See Other", "text/plain; charset=utf-8", "", std::make_pair(std::string("Location"), std::string("/")));
+            } else {
+                send_response(client, "404 Not Found", "text/plain; charset=utf-8", "not found");
+            }
+        } catch (const std::exception& error) {
+            try {
+                send_response(client, "500 Internal Server Error", "text/plain; charset=utf-8", error.what());
+            } catch (...) {
+            }
+        }
+        close_socket(client);
+    }
+}
+
+StringBrowserUiRuntime::StringBrowserUiRuntime(
+    std::filesystem::path contract_path,
+    std::filesystem::path wfrog_path,
+    std::shared_ptr<const NativeStringKernelBridge> native_kernel_bridge_)
+    : core(std::move(contract_path), std::move(wfrog_path)),
+      native_kernel_bridge(std::move(native_kernel_bridge_)) {}
+
+frog::json::Value StringBrowserUiRuntime::run_once(const std::string& input_value) {
+    try {
+        frog::json::Value artifact = native_kernel_bridge == nullptr
+            ? core.execute(input_value)
+            : core.execute_with_native_kernel_bridge(*native_kernel_bridge, input_value);
+        last_error.reset();
+        return artifact;
+    } catch (const std::exception& error) {
+        last_error = error.what();
+        throw;
+    }
+}
+
+std::string StringBrowserUiRuntime::render_html() const {
+    const auto& ctrl = core.widgets.at("str_input");
+    const auto& ind = core.widgets.at("str_result");
+    const auto panel_width = layout_i64(core.panel.layout, "width", 560);
+    const auto panel_height = layout_i64(core.panel.layout, "height", 170);
+    const bool uses_native_kernel = native_kernel_bridge != nullptr;
+
+    std::string diagnostics;
+    if (last_error.has_value()) {
+        diagnostics = "<div class='diagnostic error'>" + html_escape(*last_error) + "</div>";
+    }
+
+    std::ostringstream html;
+    html << "<!doctype html><html lang='en'><head><meta charset='utf-8'><title>" << html_escape(core.panel.title) << "</title>";
+    html << "<style>"
+            "body{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}"
+            "h1{font-size:24px;margin:0 0 12px 0;}"
+            "p.meta{margin:0 0 20px 0;color:#52606d;}"
+            ".runtime-facts{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 18px 0;}"
+            ".runtime-facts div{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}"
+            ".runtime-facts dt{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}"
+            ".runtime-facts dd{margin:0;color:#1f2933;font-size:12px;font-weight:600;}"
+            ".front-panel{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}"
+            ".frog-widget{position:absolute;box-sizing:border-box;}"
+            ".string-widget{font-family:Segoe UI,Arial,sans-serif;}"
+            ".string-skin{position:absolute;inset:0;width:100%;height:100%;display:block;}"
+            ".string-skin svg{width:100%;height:100%;display:block;--frog-string-label-display:inherit;--frog-string-caption-display:inherit;--frog-string-placeholder-display:inherit;--frog-string-frame-fill:inherit;--frog-string-frame-stroke:inherit;--frog-string-frame-stroke-width:inherit;--frog-string-text-region-fill:inherit;--frog-string-text-region-stroke:inherit;--frog-string-text-region-stroke-width:inherit;--frog-string-text-fill:inherit;--frog-string-text-font-size:inherit;--frog-string-text-font-weight:inherit;}"
+            ".string-skin #label_text,.string-skin #caption_text,.string-skin #placeholder,.string-skin #text_value{display:none;}"
+            ".string-control:hover .string-skin svg{--frog-string-text-region-fill:var(--frog-string-text-region-fill-hover);--frog-string-text-region-stroke:var(--frog-string-text-region-stroke-hover);--frog-string-text-region-stroke-width:var(--frog-string-text-region-stroke-width-hover);}"
+            ".string-caption-overlay{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}"
+            ".string-value-overlay{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1.2;border:0;background:transparent;}"
+            ".string-control-editor{padding:0 8px;outline:0;}"
+            ".string-control-editor:focus{outline:0;}"
+            ".string-indicator-value{display:flex;align-items:center;padding:0 8px;pointer-events:none;}"
+            ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
+            "button{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}"
+            ".diagnostic{margin:12px 0;padding:10px 12px;border-radius:6px;}"
+            ".diagnostic.error{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}"
+            "</style></head><body>";
+    html << "<h1>" << html_escape(core.panel.title) << "</h1>";
+    html << "<p class='meta'>Example 07 - .wfrog front panel + Default String realization assets + C++ runtime</p>";
+    html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
+    html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
+    html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : "string contract executor") << "</dd></div>";
+    html << "<div><dt>Compiler backend</dt><dd>" << (uses_native_kernel ? "LLVM native string kernel artifact" : "none for Example 07") << "</dd></div>";
+    html << "</dl>";
+    html << diagnostics;
+    html << "<form method='post' action='/run'>";
+    html << "<div class='front-panel' data-panel-id='" << html_escape(core.panel.panel_id)
+         << "' data-coordinate-space='panel_pixels' data-runtime-language='cpp'";
+    html << " data-compiler-backend='" << (uses_native_kernel ? "llvm" : "none") << "'";
+    html << " data-execution-path='" << (uses_native_kernel ? "native_kernel_bridge" : "cpp_string_contract_executor") << "'";
+    html << " style='width:" << css_px(panel_width) << ";height:" << css_px(panel_height) << ";'>";
+    html << render_string_widget(ctrl);
+    html << render_string_widget(ind);
+    html << "</div><div class='actions'><button type='submit'>Run Example 07</button><a class='state-link' href='/state.json'>state.json</a></div></form></body></html>";
+    return html.str();
+}
+
+void StringBrowserUiRuntime::serve(const std::string& host, std::uint16_t port, bool should_open_browser) {
+    NetworkBootstrap network_bootstrap;
+    (void)network_bootstrap;
+
+    socket_t server = ::socket(AF_INET, SOCK_STREAM, 0);
+    if (server == invalid_socket) {
+        throw std::runtime_error("Unable to create server socket.");
+    }
+
+#ifndef _WIN32
+    int opt = 1;
+    setsockopt(server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+#endif
+
+    sockaddr_in address{};
+    address.sin_family = AF_INET;
+    address.sin_port = htons(port);
+    if (inet_pton(AF_INET, host.c_str(), &address.sin_addr) != 1) {
+        close_socket(server);
+        throw std::runtime_error("Only numeric IPv4 host values are supported by this minimal runtime.");
+    }
+
+    if (bind(server, reinterpret_cast<sockaddr*>(&address), sizeof(address)) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to bind server socket.");
+    }
+    if (listen(server, 16) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to listen on server socket.");
+    }
+
+    sockaddr_in bound_address{};
+#ifdef _WIN32
+    int bound_length = sizeof(bound_address);
+#else
+    socklen_t bound_length = sizeof(bound_address);
+#endif
+    if (getsockname(server, reinterpret_cast<sockaddr*>(&bound_address), &bound_length) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to inspect bound server socket.");
+    }
+
+    const std::string url = "http://" + host + ":" + std::to_string(ntohs(bound_address.sin_port)) + "/";
+    std::cout << url << std::endl;
+    if (should_open_browser) {
+        open_in_browser(url);
+    }
+
+    while (true) {
+        socket_t client = accept(server, nullptr, nullptr);
+        if (client == invalid_socket) {
+            continue;
+        }
+        try {
+            const auto raw = receive_request(client);
+            const auto request = parse_request(raw);
+            if (request.method == "GET" && request.path == "/") {
+                send_response(client, "200 OK", "text/html; charset=utf-8", render_html());
+            } else if (request.method == "GET" && request.path == "/state.json") {
+                send_response(client, "200 OK", "application/json; charset=utf-8", frog::json::stringify(core.execution_artifact(), true, 2));
+            } else if (request.method == "GET" && request.path.rfind("/asset/", 0) == 0) {
+                const std::string asset_id = request.path.substr(std::string("/asset/").size());
+                const auto asset_it = core.asset_map.find(asset_id);
+                if (asset_it == core.asset_map.end() || !std::filesystem::exists(asset_it->second)) {
+                    send_response(client, "404 Not Found", "text/plain; charset=utf-8", "missing asset");
+                } else {
+                    send_response(client, "200 OK", "image/svg+xml", read_text_file(asset_it->second));
+                }
+            } else if (request.method == "POST" && request.path == "/run") {
+                try {
+                    const auto form_value = parse_form_value(request.body, "input_text").value_or("hello world");
+                    run_once(form_value);
                 } catch (const std::exception& error) {
                     last_error = error.what();
                 }

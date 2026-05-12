@@ -1,0 +1,74 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "07_string_value_roundtrip",
+    "path": "Examples/07_string_value_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "string_value_roundtrip_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "input_text",
+            "type": "string"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result_text",
+            "type": "string"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "str_input",
+            "mode": "widget_value",
+            "public_input_id": "input_text",
+            "value_type": "string"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "str_result",
+            "mode": "widget_value",
+            "public_output_id": "result_text",
+            "value_type": "string"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "single_value_copy",
+        "body_rule": {
+          "kind": "copy_widget_value_to_output",
+          "expression": "result_text = input_text"
+        }
+      },
+      "publications": [
+        {
+          "target": "public_output.result_text",
+          "source": "input_text"
+        },
+        {
+          "target": "widget.str_result.value",
+          "source": "input_text"
+        }
+      ],
+      "notes": [
+        "This FIR is a bounded scalar widget pilot and remains downstream from canonical source.",
+        "The reference C++ closure consumes an LLVM-produced native string kernel through an explicit manifest without making the runtime LLVM-only."
+      ]
+    }
+  ]
+}

@@ -93,7 +93,6 @@ That manifest declares target classes, realization records, variants, SVG resour
   <li><code>text_region</code></li>
   <li><code>text_value</code></li>
   <li><code>placeholder</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
 
 <hr/>
@@ -115,4 +114,9 @@ That manifest declares target classes, realization records, variants, SVG resour
 
 <p>
 Representative bindings include <code>caption.text</code> to <code>caption</code>, <code>value</code> to <code>text_value</code>, <code>placeholder.text</code> to <code>placeholder</code>, <code>style.frame.*</code> to <code>frame</code>, <code>style.text_region.*</code> to <code>text_region</code>, and <code>style.text.*</code> to <code>text_value</code>.
+</p>
+
+<p>
+The published String default realization keeps hover and text-region appearance on <code>style.text_region.*</code>.
+It does not publish a <code>focus_ring</code> part, so runtimes must not add a separate hardcoded String focus surface.
 </p>

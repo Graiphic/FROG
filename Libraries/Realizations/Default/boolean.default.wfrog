@@ -489,6 +489,21 @@
       "target_operation": "set_visibility"
     },
     {
+      "member": "caption.anchor.x",
+      "target_part": "caption",
+      "target_operation": "set_anchor_x"
+    },
+    {
+      "member": "caption.anchor.y",
+      "target_part": "caption",
+      "target_operation": "set_anchor_y"
+    },
+    {
+      "member": "caption.align.horizontal",
+      "target_part": "caption",
+      "target_operation": "set_text_anchor_alignment"
+    },
+    {
       "member": "caption.style.text_color",
       "target_part": "caption",
       "target_operation": "set_text_fill"

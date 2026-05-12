@@ -287,6 +287,31 @@
   ],
   "property_bindings": [
     {
+      "member": "caption.text",
+      "target_part": "caption",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "caption.visible",
+      "target_part": "caption",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "caption.anchor.x",
+      "target_part": "caption",
+      "target_operation": "set_anchor_x"
+    },
+    {
+      "member": "caption.anchor.y",
+      "target_part": "caption",
+      "target_operation": "set_anchor_y"
+    },
+    {
+      "member": "caption.align.horizontal",
+      "target_part": "caption",
+      "target_operation": "set_text_anchor_alignment"
+    },
+    {
       "member": "value",
       "target_part": "grid_region",
       "target_operation": "render_table_value"
@@ -501,6 +526,24 @@
       }
     ]
   },
+  "anchors": [
+    {
+      "id": "frog.realizations.default.table.label.anchor",
+      "target_part": "label",
+      "source_selector": "[data-frog-anchor='label.anchor']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "baseline"
+    },
+    {
+      "id": "frog.realizations.default.table.caption.anchor",
+      "target_part": "caption",
+      "source_selector": "[data-frog-anchor='caption.anchor']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "baseline"
+    }
+  ],
   "host_hints": {
     "preferred_host_kind": "svg_template_host_or_host_native_virtual_grid",
     "style_application_posture": "apply_property_bindings_before_render",

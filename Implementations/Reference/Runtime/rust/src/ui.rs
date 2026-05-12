@@ -11,7 +11,7 @@ use serde_json::{json, to_string_pretty, Map, Value};
 use crate::contract::{default_contract_path, default_wfrog_path};
 use crate::diagnostics::{Result, RuntimeError};
 use crate::execute::execute_reference_contract_case;
-use crate::native_kernel::{NativeBoolKernelBridge, NativeKernelBridge};
+use crate::native_kernel::{NativeBoolKernelBridge, NativeKernelBridge, NativeStringKernelBridge};
 use crate::runtime::{RuntimeCore, WidgetState};
 
 pub struct BrowserUiRuntime {
@@ -358,6 +358,10 @@ fn property_bool(properties: &Map<String, Value>, key: &str, fallback: bool) -> 
     properties.get(key).and_then(Value::as_bool).unwrap_or(fallback)
 }
 
+fn property_number(properties: &Map<String, Value>, key: &str, fallback: f64) -> f64 {
+    properties.get(key).and_then(Value::as_f64).unwrap_or(fallback)
+}
+
 fn property_u16(properties: &Map<String, Value>, key: &str, fallback: u16) -> u16 {
     properties
         .get(key)
@@ -456,6 +460,46 @@ fn svg_anchor_style(x: f64, y: f64, geometry: NumericSvgGeometry) -> String {
         css_percent(pct(x, geometry.view_width)),
         css_percent(pct(y, geometry.view_height))
     )
+}
+
+fn caption_transform_for_align(align: &str) -> &'static str {
+    match align {
+        "center" => "translate(-50%,-50%)",
+        "right" | "end" => "translate(-100%,-50%)",
+        _ => "translateY(-50%)",
+    }
+}
+
+fn caption_text_align(align: &str) -> &'static str {
+    match align {
+        "center" => "center",
+        "right" | "end" => "right",
+        _ => "left",
+    }
+}
+
+fn caption_anchor_style(properties: &Map<String, Value>, geometry: NumericSvgGeometry) -> String {
+    let x = property_number(properties, "caption.anchor.x", geometry.caption_x);
+    let y = property_number(properties, "caption.anchor.y", geometry.caption_y);
+    let align = property_string(properties, "caption.align.horizontal", "left");
+    let mut style = svg_anchor_style(x, y, geometry);
+    let _ = write!(style, "transform:{};text-align:{};", caption_transform_for_align(&align), caption_text_align(&align));
+    if !property_bool(properties, "caption.visible", true) {
+        style.push_str("display:none;");
+    }
+    style
+}
+
+fn runtime_caption_anchor_style(runtime: &Value, geometry: NumericSvgGeometry) -> String {
+    let x = runtime["caption.anchor.x"].as_f64().unwrap_or(geometry.caption_x);
+    let y = runtime["caption.anchor.y"].as_f64().unwrap_or(geometry.caption_y);
+    let align = runtime_string(runtime, "caption.align.horizontal", "left");
+    let mut style = svg_anchor_style(x, y, geometry);
+    let _ = write!(style, "transform:{};text-align:{};", caption_transform_for_align(&align), caption_text_align(&align));
+    if !runtime_bool(runtime, "caption.visible", true) {
+        style.push_str("display:none;");
+    }
+    style
 }
 
 fn svg_box_style(x: f64, y: f64, width: f64, height: f64, geometry: NumericSvgGeometry) -> String {
@@ -559,7 +603,7 @@ fn render_numeric_widget(widget: &WidgetState) -> String {
 
     html.push_str(&render_numeric_skin(widget, is_control, &value_face_color));
 
-    let label_style = svg_anchor_style(geometry.caption_x, geometry.caption_y, geometry);
+    let label_style = caption_anchor_style(&widget.properties, geometry);
     let value_style = svg_box_style(
         geometry.value_face_x,
         geometry.value_face_y,
@@ -766,7 +810,7 @@ impl BooleanBrowserUiRuntime {
              .boolean-control{{cursor:pointer;}}\
              .boolean-indicator{{pointer-events:none;}}\
              .boolean-skin{{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}}\
-             .boolean-caption-overlay{{position:absolute;left:var(--boolean-caption-left);top:6px;transform:var(--boolean-caption-transform);text-align:var(--boolean-caption-text-align);font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}}\
+             .boolean-caption-overlay{{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}}\
              .boolean-state-face{{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:2px solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}}\
              .boolean-widget[data-realization-variant='circular'] .boolean-state-face{{border-radius:50%;}}\
              .boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{{box-shadow:none;}}\
@@ -774,7 +818,7 @@ impl BooleanBrowserUiRuntime {
              .boolean-control[data-frog-frame-visible='false']:hover .boolean-state-face{{box-shadow:none;}}\
              .boolean-control:active .boolean-state-face{{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-inner-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}}\
              .boolean-control[data-frog-frame-visible='false']:active .boolean-state-face{{box-shadow:none;}}\
-             .boolean-control:focus-visible .boolean-state-face{{outline:2px solid #2563eb;outline-offset:2px;}}\
+             .boolean-control:focus-visible .boolean-state-face{{outline:var(--boolean-focus-width) solid var(--boolean-focus-color);}}\
              .boolean-state-overlay{{position:absolute;left:0;right:0;top:49px;transform:translateY(-50%);text-align:center;font-size:18px;font-weight:700;line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;}}\
              .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}\
              .state-link{{font-size:16px;}}\
@@ -897,6 +941,393 @@ impl BooleanBrowserUiRuntime {
     }
 }
 
+pub struct StringBrowserUiRuntime {
+    pub contract: Value,
+    pub wfrog: Value,
+    pub asset_map: BTreeMap<String, PathBuf>,
+    pub current_text: String,
+    pub last_result: String,
+    pub last_error: Option<String>,
+    pub native_kernel_bridge: Option<NativeStringKernelBridge>,
+}
+
+impl StringBrowserUiRuntime {
+    pub fn with_native_kernel_bridge(
+        contract_path: PathBuf,
+        wfrog_path: PathBuf,
+        native_kernel_bridge: Option<NativeStringKernelBridge>,
+    ) -> Result<Self> {
+        let contract: Value = serde_json::from_str(&fs::read_to_string(contract_path)?)?;
+        let wfrog: Value = serde_json::from_str(&fs::read_to_string(&wfrog_path)?)?;
+        let mut asset_map = BTreeMap::new();
+        if let Some(assets) = wfrog["svg_assets"].as_array() {
+            for asset in assets {
+                if let (Some(asset_id), Some(path)) = (asset["asset_id"].as_str(), asset["path"].as_str()) {
+                    asset_map.insert(asset_id.to_string(), wfrog_path.parent().unwrap_or_else(|| std::path::Path::new("")).join(path));
+                }
+            }
+        }
+        let current_text = wfrog["front_panels"][0]["widgets"]
+            .as_array()
+            .and_then(|widgets| {
+                widgets.iter().find_map(|widget| {
+                    if widget["instance_id"].as_str() == Some("str_input") {
+                        widget["props"]["value"].as_str().map(ToString::to_string)
+                    } else {
+                        None
+                    }
+                })
+            })
+            .unwrap_or_else(|| "hello world".to_string());
+
+        Ok(Self {
+            contract,
+            wfrog,
+            asset_map,
+            last_result: current_text.clone(),
+            current_text,
+            last_error: None,
+            native_kernel_bridge,
+        })
+    }
+
+    pub fn run_once(&mut self, input_text: String) -> Result<Value> {
+        self.current_text = input_text;
+        if let Some(bridge) = &self.native_kernel_bridge {
+            if bridge.manifest().source_lowered_unit != "Examples/07_string_value_roundtrip/main.lowering.json" {
+                return Err(RuntimeError::Message("Unexpected native string kernel source lowered unit.".to_string()));
+            }
+            let result = bridge.run(&self.current_text);
+            if !result.ok {
+                self.last_error = Some(bridge.manifest().diagnostic(result.error_code));
+                return Err(RuntimeError::Message(bridge.manifest().diagnostic(result.error_code)));
+            }
+            self.last_result = result.result;
+        } else {
+            if self.current_text.as_bytes().len() > 256 {
+                return Err(RuntimeError::Message("input_text must remain within 256 UTF-8 bytes.".to_string()));
+            }
+            self.last_result = self.current_text.clone();
+        }
+        self.last_error = None;
+        Ok(self.execution_artifact())
+    }
+
+    pub fn execution_artifact(&self) -> Value {
+        let panel = &self.wfrog["front_panels"][0];
+        let widgets = panel["widgets"].as_array().cloned().unwrap_or_default();
+        let widget_by_id = |id: &str| widgets.iter().find(|widget| widget["instance_id"].as_str() == Some(id)).cloned().unwrap_or(Value::Null);
+        let make_runtime = |widget: &Value, value: &str| {
+            let props = &widget["props"];
+            let visual = &widget["visual"];
+            let mut runtime = json!({
+                "value": value,
+                "label.text": props["label.text"].clone(),
+                "caption.text": props["caption.text"].clone(),
+                "asset_ref": visual["asset_ref"].clone(),
+                "realization.variant": props["realization.variant"].clone()
+            });
+            if let Some(runtime_object) = runtime.as_object_mut() {
+                for member in [
+                    "caption.visible",
+                    "caption.anchor.x",
+                    "caption.anchor.y",
+                    "caption.align.horizontal",
+                    "caption.style.text_color",
+                    "style.frame.fill_color",
+                    "style.frame.border_color",
+                    "style.frame.border_width",
+                    "style.text_region.fill_color",
+                    "style.text_region.fill_color.hover",
+                    "style.text_region.border_color",
+                    "style.text_region.border_color.hover",
+                    "style.text_region.border_width",
+                    "style.text_region.border_width.hover",
+                    "style.text.color",
+                    "style.text.font_size",
+                    "style.text.font_weight",
+                    "placeholder.text",
+                    "placeholder.visible",
+                    "interaction.enabled",
+                    "interaction.read_only",
+                ] {
+                    if !props[member].is_null() {
+                        runtime_object.insert(member.to_string(), props[member].clone());
+                    }
+                }
+            }
+            runtime
+        };
+        let input = widget_by_id("str_input");
+        let result = widget_by_id("str_result");
+        json!({
+            "artifact_kind": "frog_runtime_execution_result",
+            "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+            "status": "ok",
+            "contract_ref": {"unit_ids": ["main"], "backend_family": self.contract["backend_family"].clone(), "source_ref": self.contract["source_ref"].clone()},
+            "execution_summary": {"mode": "string_value_roundtrip", "executed_unit": "main", "operation": "copy", "input_text": self.current_text, "result_text": self.last_result},
+            "outputs": {"public": {"result_text": self.last_result}, "ui": {"str_input": self.current_text, "str_result": self.last_result}},
+            "ui_runtime": {
+                "panel": {"panel_id": panel["panel_id"].clone(), "title": panel["title"].clone(), "class_ref": panel["class_ref"].clone(), "layout": panel["layout"].clone()},
+                "widgets": [
+                    {"widget_id": "str_input", "class_ref": input["class_ref"].clone(), "role": "control", "layout": input["layout"].clone(), "runtime": make_runtime(&input, &self.current_text)},
+                    {"widget_id": "str_result", "class_ref": result["class_ref"].clone(), "role": "indicator", "layout": result["layout"].clone(), "runtime": make_runtime(&result, &self.last_result)}
+                ]
+            },
+            "diagnostics": []
+        })
+    }
+
+    pub fn render_html(&self) -> String {
+        let snapshot = self.execution_artifact();
+        let panel = &snapshot["ui_runtime"]["panel"];
+        let widgets = snapshot["ui_runtime"]["widgets"].as_array().unwrap();
+        let panel_width = panel["layout"]["width"].as_i64().unwrap_or(560);
+        let panel_height = panel["layout"]["height"].as_i64().unwrap_or(170);
+        let uses_native_kernel = self.native_kernel_bridge.is_some();
+        let mut diagnostics = String::new();
+        if let Some(message) = &self.last_error {
+            let _ = write!(diagnostics, "<div class='diagnostic error'>{}</div>", escape_html(message));
+        }
+        let rendered_widgets = widgets
+            .iter()
+            .map(|widget| {
+                let asset_id = widget["runtime"]["asset_ref"]
+                    .as_str()
+                    .and_then(|value| value.strip_prefix("asset:"))
+                    .unwrap_or("");
+                render_string_widget(widget, self.asset_map.get(asset_id))
+            })
+            .collect::<Vec<String>>()
+            .join("");
+        format!(
+            "<!doctype html><html lang='en'><head><meta charset='utf-8'><title>{title}</title>\
+             <style>\
+             body{{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}}\
+             h1{{font-size:24px;margin:0 0 12px 0;}}\
+             p.meta{{margin:0 0 20px 0;color:#52606d;}}\
+             .runtime-facts{{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 18px 0;}}\
+             .runtime-facts div{{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}}\
+             .runtime-facts dt{{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}}\
+             .runtime-facts dd{{margin:0;color:#1f2933;font-size:12px;font-weight:600;}}\
+             .front-panel{{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}}\
+             .frog-widget{{position:absolute;box-sizing:border-box;}}\
+             .string-widget{{font-family:Segoe UI,Arial,sans-serif;}}\
+             .string-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;}}\
+             .string-skin svg{{width:100%;height:100%;display:block;--frog-string-label-display:inherit;--frog-string-caption-display:inherit;--frog-string-placeholder-display:inherit;--frog-string-frame-fill:inherit;--frog-string-frame-stroke:inherit;--frog-string-frame-stroke-width:inherit;--frog-string-text-region-fill:inherit;--frog-string-text-region-stroke:inherit;--frog-string-text-region-stroke-width:inherit;--frog-string-text-fill:inherit;--frog-string-text-font-size:inherit;--frog-string-text-font-weight:inherit;}}\
+             .string-skin #label_text,.string-skin #caption_text,.string-skin #placeholder,.string-skin #text_value{{display:none;}}\
+             .string-control:hover .string-skin svg{{--frog-string-text-region-fill:var(--frog-string-text-region-fill-hover);--frog-string-text-region-stroke:var(--frog-string-text-region-stroke-hover);--frog-string-text-region-stroke-width:var(--frog-string-text-region-stroke-width-hover);}}\
+             .string-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}}\
+             .string-value-overlay{{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1.2;border:0;background:transparent;}}\
+             .string-control-editor{{padding:0 8px;outline:0;}}\
+             .string-control-editor:focus{{outline:0;}}\
+             .string-indicator-value{{display:flex;align-items:center;padding:0 8px;pointer-events:none;}}\
+             .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}\
+             button{{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}}\
+             .diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}\
+             .diagnostic.error{{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}}\
+             </style></head><body>\
+             <h1>{title}</h1>\
+             <p class='meta'>Example 07 - .wfrog front panel + Default String realization assets + Rust runtime</p>\
+             <dl class='runtime-facts' aria-label='Runtime facts'>\
+             <div><dt>Runtime</dt><dd>Rust reference runtime</dd></div>\
+             <div><dt>Execution</dt><dd>{execution_path}</dd></div>\
+             <div><dt>Compiler backend</dt><dd>{compiler_backend}</dd></div>\
+             </dl>{diagnostics}\
+             <form method='post' action='/run'>\
+             <div class='front-panel' data-panel-id='{panel_id}' data-coordinate-space='panel_pixels' data-runtime-language='rust' data-compiler-backend='{compiler_backend_id}' data-execution-path='{execution_path_id}' style='width:{panel_width}px;height:{panel_height}px;'>\
+             {rendered_widgets}</div>\
+             <div class='actions'><button type='submit'>Run Example 07</button><a class='state-link' href='/state.json'>state.json</a></div></form>\
+             </body></html>",
+            title = escape_html(panel["title"].as_str().unwrap_or("FROG")),
+            diagnostics = diagnostics,
+            execution_path = if uses_native_kernel { "native kernel bridge" } else { "string contract executor" },
+            compiler_backend = if uses_native_kernel { "LLVM native string kernel artifact" } else { "none for Example 07" },
+            compiler_backend_id = if uses_native_kernel { "llvm" } else { "none" },
+            execution_path_id = if uses_native_kernel { "native_kernel_bridge" } else { "rust_string_contract_executor" },
+            panel_id = escape_html(panel["panel_id"].as_str().unwrap_or("")),
+            panel_width = panel_width,
+            panel_height = panel_height,
+            rendered_widgets = rendered_widgets,
+        )
+    }
+
+    pub fn serve(mut self, host: &str, port: u16, open_browser: bool) -> Result<()> {
+        let listener = TcpListener::bind((host, port))?;
+        let address = listener.local_addr()?;
+        let url = format!("http://{}:{}/", address.ip(), address.port());
+        if open_browser {
+            let _ = open_in_browser(&url);
+        }
+        println!("{url}");
+        for stream in listener.incoming() {
+            let mut stream = stream?;
+            if let Err(error) = self.handle_connection(&mut stream) {
+                let _ = write_response(&mut stream, "500 Internal Server Error", "text/plain; charset=utf-8", format!("{error}").into_bytes(), None);
+            }
+        }
+        Ok(())
+    }
+
+    fn handle_connection(&mut self, stream: &mut TcpStream) -> Result<()> {
+        let request = read_request(stream)?;
+        if request.method == "GET" && request.path == "/" {
+            return write_response(stream, "200 OK", "text/html; charset=utf-8", self.render_html().into_bytes(), None);
+        }
+        if request.method == "GET" && request.path == "/state.json" {
+            let payload = to_string_pretty(&self.execution_artifact()).unwrap().into_bytes();
+            return write_response(stream, "200 OK", "application/json; charset=utf-8", payload, None);
+        }
+        if request.method == "GET" && request.path.starts_with("/asset/") {
+            let asset_id = request.path.trim_start_matches("/asset/");
+            if let Some(path) = self.asset_map.get(asset_id) {
+                if path.exists() {
+                    return write_response(stream, "200 OK", "image/svg+xml", fs::read(path)?, None);
+                }
+            }
+            return write_response(stream, "404 Not Found", "text/plain; charset=utf-8", b"missing asset".to_vec(), None);
+        }
+        if request.method == "POST" && request.path == "/run" {
+            let body = String::from_utf8_lossy(&request.body);
+            let value = parse_form_value(&body, "input_text").unwrap_or_else(|| "hello world".to_string());
+            if let Err(error) = self.run_once(value) {
+                self.last_error = Some(error.to_string());
+            }
+            return write_response(stream, "303 See Other", "text/plain; charset=utf-8", Vec::new(), Some(("Location", "/".to_string())));
+        }
+        write_response(stream, "404 Not Found", "text/plain; charset=utf-8", b"not found".to_vec(), None)
+    }
+}
+
+fn load_string_svg_geometry(asset_path: Option<&PathBuf>) -> NumericSvgGeometry {
+    let mut geometry = NumericSvgGeometry {
+        view_width: 420.0,
+        view_height: 190.0,
+        caption_x: 16.0,
+        caption_y: 46.0,
+        value_face_x: 28.0,
+        value_face_y: 88.0,
+        value_face_width: 364.0,
+        value_face_height: 56.0,
+        ..NumericSvgGeometry::default()
+    };
+    let Some(path) = asset_path else { return geometry; };
+    let Ok(svg) = fs::read_to_string(path) else { return geometry; };
+    if let Some(start) = svg.find("viewBox=\"") {
+        let value_start = start + "viewBox=\"".len();
+        if let Some(value_end) = svg[value_start..].find('"') {
+            let parts: Vec<&str> = svg[value_start..value_start + value_end].split_whitespace().collect();
+            if parts.len() == 4 {
+                if let (Ok(width), Ok(height)) = (parts[2].parse::<f64>(), parts[3].parse::<f64>()) {
+                    geometry.view_width = width;
+                    geometry.view_height = height;
+                }
+            }
+        }
+    }
+    geometry.caption_x = svg_attribute_f64(&svg, "caption_text", "x", geometry.caption_x);
+    geometry.caption_y = svg_attribute_f64(&svg, "caption_text", "y", geometry.caption_y);
+    geometry.value_face_x = svg_attribute_f64(&svg, "text_region", "x", geometry.value_face_x);
+    geometry.value_face_y = svg_attribute_f64(&svg, "text_region", "y", geometry.value_face_y);
+    geometry.value_face_width = svg_attribute_f64(&svg, "text_region", "width", geometry.value_face_width);
+    geometry.value_face_height = svg_attribute_f64(&svg, "text_region", "height", geometry.value_face_height);
+    geometry
+}
+
+fn render_string_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String {
+    let runtime = &widget["runtime"];
+    let layout = &widget["layout"];
+    let geometry = load_string_svg_geometry(asset_path);
+    let asset_ref = runtime["asset_ref"].as_str().unwrap_or("");
+    let asset_route = asset_ref.strip_prefix("asset:").map(|id| format!("/asset/{id}")).unwrap_or_default();
+    let value = runtime_string(runtime, "value", "");
+    let caption = runtime_string(runtime, "caption.text", widget["widget_id"].as_str().unwrap_or(""));
+    let is_control = widget["role"].as_str() == Some("control");
+    let string_skin = if let Some(path) = asset_path {
+        if path.exists() {
+            let svg = fs::read_to_string(path).unwrap_or_default();
+            let region_fill = safe_css_color(&runtime_string(runtime, "style.text_region.fill_color", "#ffffff"), "#ffffff");
+            let region_stroke = safe_css_color(&runtime_string(runtime, "style.text_region.border_color", "#64748b"), "#64748b");
+            let region_stroke_width = safe_css_length(&runtime_string(runtime, "style.text_region.border_width", "2px"), "2px");
+            let region_hover_fill = safe_css_color(&runtime_string(runtime, "style.text_region.fill_color.hover", &region_fill), &region_fill);
+            let region_hover_stroke =
+                safe_css_color(&runtime_string(runtime, "style.text_region.border_color.hover", &region_stroke), &region_stroke);
+            let region_hover_stroke_width = safe_css_length(
+                &runtime_string(runtime, "style.text_region.border_width.hover", &region_stroke_width),
+                &region_stroke_width,
+            );
+            format!(
+                "<div class='string-skin' aria-hidden='true' style='--frog-string-label-display:none;--frog-string-caption-display:none;--frog-string-placeholder-display:none;--frog-string-frame-fill:{};--frog-string-frame-stroke:{};--frog-string-frame-stroke-width:{};--frog-string-text-region-fill:{};--frog-string-text-region-stroke:{};--frog-string-text-region-stroke-width:{};--frog-string-text-region-fill-hover:{};--frog-string-text-region-stroke-hover:{};--frog-string-text-region-stroke-width-hover:{};--frog-string-text-fill:{};--frog-string-text-font-size:{};--frog-string-text-font-weight:{};'>{}</div>",
+                escape_html(&safe_css_color(&runtime_string(runtime, "style.frame.fill_color", "transparent"), "transparent")),
+                escape_html(&safe_css_color(&runtime_string(runtime, "style.frame.border_color", "transparent"), "transparent")),
+                escape_html(&safe_css_length(&runtime_string(runtime, "style.frame.border_width", "0px"), "0px")),
+                escape_html(&region_fill),
+                escape_html(&region_stroke),
+                escape_html(&region_stroke_width),
+                escape_html(&region_hover_fill),
+                escape_html(&region_hover_stroke),
+                escape_html(&region_hover_stroke_width),
+                escape_html(&safe_css_color(&runtime_string(runtime, "style.text.color", "#111827"), "#111827")),
+                escape_html(&safe_css_length(&runtime_string(runtime, "style.text.font_size", "16px"), "16px")),
+                escape_html(&safe_css_font_weight(&runtime_string(runtime, "style.text.font_weight", "400"), "400")),
+                svg
+            )
+        } else {
+            "<div class='string-skin missing-skin'></div>".to_string()
+        }
+    } else {
+        "<div class='string-skin missing-skin'></div>".to_string()
+    };
+    let value_style = svg_box_style(
+        geometry.value_face_x,
+        geometry.value_face_y,
+        geometry.value_face_width,
+        geometry.value_face_height,
+        geometry,
+    );
+    let caption_overlay = format!(
+        "<span class='string-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}color:{};'>{}</span>",
+        runtime_caption_anchor_style(runtime, geometry),
+        escape_html(&safe_css_color(&runtime_string(runtime, "caption.style.text_color", "#111827"), "#111827")),
+        escape_html(&caption)
+    );
+    let value_overlay = if is_control {
+        format!(
+            "<input id='{}_value' name='input_text' type='text' class='string-value-overlay string-control-editor' data-frog-part='text_value' data-svg-anchor='text_region.left_center' style='{}color:{};font-size:{};font-weight:{};' value='{}'>",
+            escape_html(widget["widget_id"].as_str().unwrap_or("str_input")),
+            value_style,
+            escape_html(&safe_css_color(&runtime_string(runtime, "style.text.color", "#111827"), "#111827")),
+            escape_html(&safe_css_length(&runtime_string(runtime, "style.text.font_size", "16px"), "16px")),
+            escape_html(&safe_css_font_weight(&runtime_string(runtime, "style.text.font_weight", "400"), "400")),
+            escape_html(&value)
+        )
+    } else {
+        format!(
+            "<output class='string-value-overlay string-indicator-value' data-frog-part='text_value' data-svg-anchor='text_region.left_center' style='{}color:{};font-size:{};font-weight:{};'>{}</output>",
+            value_style,
+            escape_html(&safe_css_color(&runtime_string(runtime, "style.text.color", "#111827"), "#111827")),
+            escape_html(&safe_css_length(&runtime_string(runtime, "style.text.font_size", "16px"), "16px")),
+            escape_html(&safe_css_font_weight(&runtime_string(runtime, "style.text.font_weight", "400"), "400")),
+            escape_html(&value)
+        )
+    };
+    format!(
+        "<section class='frog-widget string-widget {}' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-frog-visual-law='wfrog-realization-state-map' data-asset-route='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;'>{}{}{}</section>",
+        if is_control { "string-control" } else { "string-indicator" },
+        escape_html(widget["widget_id"].as_str().unwrap_or("")),
+        escape_html(widget["class_ref"].as_str().unwrap_or("")),
+        escape_html(widget["role"].as_str().unwrap_or("")),
+        escape_html(&asset_route),
+        layout["x"].as_i64().unwrap_or(0),
+        layout["y"].as_i64().unwrap_or(0),
+        layout["width"].as_i64().unwrap_or(240),
+        layout["height"].as_i64().unwrap_or(110),
+        string_skin,
+        caption_overlay,
+        value_overlay,
+    )
+}
+
 fn render_boolean_widget(widget: &Value) -> String {
     let runtime = &widget["runtime"];
     let layout = &widget["layout"];
@@ -910,7 +1341,14 @@ fn render_boolean_widget(widget: &Value) -> String {
     let next_value = if value { "false" } else { "true" };
     let state_text_visible = runtime_bool(runtime, "state_text.visible", true);
     let frame_visible = runtime_bool(runtime, "style.frame.visible", true);
-    let caption_centered = runtime_string(runtime, "caption.align.horizontal", "left") == "center";
+    let focus_visible = runtime_bool(runtime, "style.focus_ring.visible", false);
+    let caption_geometry = NumericSvgGeometry {
+        view_width: 160.0,
+        view_height: 80.0,
+        caption_x: 8.0,
+        caption_y: 15.0,
+        ..NumericSvgGeometry::default()
+    };
 
     let state_fill = state_property(runtime, "style.inner.fill_color", visual_state, if value { "#8bd86f" } else { "#ffffff" });
     let hover_fill = state_property(runtime, "style.inner.fill_color", hover_state, if value { "#9be884" } else { "#eef6ff" });
@@ -926,6 +1364,8 @@ fn render_boolean_widget(widget: &Value) -> String {
     let inner_top = runtime_string(runtime, "style.inner.top", if variant == "circular" { "23px" } else { "31px" });
     let inner_width = runtime_string(runtime, "style.inner.width", if variant == "circular" { "56px" } else { "124px" });
     let inner_height = runtime_string(runtime, "style.inner.height", if variant == "circular" { "56px" } else { "34px" });
+    let focus_color = safe_css_color(&runtime_string(runtime, "style.focus_ring.color", "#2563eb"), "#2563eb");
+    let focus_width = if focus_visible { safe_css_length(&runtime_string(runtime, "style.focus_ring.width", "3px"), "3px") } else { "0px".to_string() };
     let transition_ms = runtime_string(runtime, "style.transition.duration_ms", "120");
     let transition_timing = runtime_string(runtime, "style.transition.timing", "ease-out");
     let pressed_inset = runtime_string(runtime, "style.pressed.inset", "1px");
@@ -942,8 +1382,7 @@ fn render_boolean_widget(widget: &Value) -> String {
          --boolean-border:{};--boolean-hover-border:{};--boolean-pressed-border:{};\
          --boolean-inner-border:{};--boolean-hover-inner-border:{};--boolean-pressed-inner-border:{};\
          --boolean-inner-left:{};--boolean-inner-top:{};--boolean-inner-width:{};--boolean-inner-height:{};\
-         --boolean-caption-left:{};--boolean-caption-transform:{};--boolean-caption-text-align:{};\
-         --boolean-text:{};--boolean-transition:{}ms {};--boolean-pressed-inset:{};",
+         --boolean-text:{};--boolean-focus-color:{};--boolean-focus-width:{};--boolean-transition:{}ms {};--boolean-pressed-inset:{};",
         layout["x"].as_i64().unwrap_or(0),
         layout["y"].as_i64().unwrap_or(0),
         layout["width"].as_i64().unwrap_or(160),
@@ -961,10 +1400,9 @@ fn render_boolean_widget(widget: &Value) -> String {
         inner_top,
         inner_width,
         inner_height,
-        if caption_centered { "50%" } else { "8px" },
-        if caption_centered { "translateX(-50%)" } else { "none" },
-        if caption_centered { "center" } else { "left" },
         text_color,
+        focus_color,
+        focus_width,
         transition_ms,
         transition_timing,
         pressed_inset,
@@ -975,7 +1413,8 @@ fn render_boolean_widget(widget: &Value) -> String {
         escape_html(&asset_route)
     );
     let mut overlays = format!(
-        "<span class='boolean-caption-overlay' data-frog-part='caption'>{}</span>",
+        "<span class='boolean-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}'>{}</span>",
+        runtime_caption_anchor_style(runtime, caption_geometry),
         escape_html(&caption)
     );
     if state_text_visible {

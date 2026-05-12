@@ -1,6 +1,7 @@
 """Rule-oriented lowering helpers for the non-normative reference workspace.
 
-This module supports the published Examples 01 through 05 through explicit
+This module supports the published Examples 01 through 05 plus bounded widget
+pilots through explicit
 FIR-unit-kind recognition and FIR-to-lowering projection rules.
 
 It is intentionally narrow and does not claim general FROG compiler
@@ -279,12 +280,45 @@ def lower_bounded_stateful_ui(fir: dict[str, Any], fir_rel: str) -> dict[str, An
     ))
 
 
+def lower_string_value_roundtrip(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    u = ensure_unit_kind(fir, "string_value_roundtrip_ui_unit")
+    uid = unit_id(u)
+    bindings = ui_bindings(u)
+    expect_control = [{"widget_id": "str_input", "mode": "widget_value", "public_input_id": "input_text", "value_type": "string"}]
+    expect_indicator = [{"widget_id": "str_result", "mode": "widget_value", "public_output_id": "result_text", "value_type": "string"}]
+    if bindings.get("control_bindings") != expect_control or bindings.get("indicator_bindings") != expect_indicator:
+        raise LoweringError("string_value_roundtrip_ui_unit bindings must map str_input to input_text and str_result to result_text")
+    out = base_lowering(
+        fir,
+        fir_rel,
+        uid,
+        "make the string value roundtrip consumable by a bounded runtime/UI-binding check",
+        "reference_host_runtime_ui_binding",
+        ["llvm_native_kernel_bridge"],
+    )
+    return with_lowered_unit(out, single_lowered_unit(
+        uid,
+        "string_value_roundtrip_kernel_with_ui_bindings",
+        public_io=public_interface(u),
+        ui_bindings=bindings,
+        execution_kernel={
+            "operation": "copy",
+            "dst": "result_text",
+            "type": "string",
+            "src": "input_text",
+            "max_utf8_bytes": 256,
+            "final_publication": u["publications"],
+        },
+    ))
+
+
 LOWERING_RULES = [
     LoweringRule("lower_pure_dataflow_arithmetic", "pure_dataflow_arithmetic_unit", "pure_addition_kernel", lower_pure_dataflow_arithmetic),
     LoweringRule("lower_ui_value_roundtrip", "ui_value_roundtrip_unit", "ui_value_roundtrip_kernel", lower_ui_value_roundtrip),
     LoweringRule("lower_ui_property_write", "ui_property_write_unit", "ui_property_write_effect_unit", lower_ui_property_write),
     LoweringRule("lower_stateful_feedback_delay", "stateful_feedback_delay_unit", "stateful_feedback_delay_kernel", lower_stateful_feedback_delay),
     LoweringRule("lower_bounded_stateful_ui", "bounded_stateful_ui_unit", "bounded_accumulator_kernel_with_ui_bindings", lower_bounded_stateful_ui),
+    LoweringRule("lower_string_value_roundtrip", "string_value_roundtrip_ui_unit", "string_value_roundtrip_kernel_with_ui_bindings", lower_string_value_roundtrip),
 ]
 
 

@@ -1,0 +1,127 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "07_string_value_roundtrip",
+    "summary": "Hello-world string control-to-indicator value roundtrip using a published .wfrog front panel package.",
+    "description": "Reads the string value hello world from one string control, exposes that value through the public input surface, copies it to one public output, and publishes it to one string indicator. The reference C++ closure consumes the published .wfrog front panel and an LLVM-produced native string kernel through an explicit manifest.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "widget_value",
+      "string",
+      "hello_world",
+      "roundtrip",
+      "wfrog",
+      "front_panel_package"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "input_text",
+        "type": "string",
+        "binding_origin": "widget.str_input.value"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "result_text",
+        "type": "string"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "str_input_value",
+        "kind": "widget_value",
+        "widget": "str_input"
+      },
+      {
+        "id": "str_result_value",
+        "kind": "widget_value",
+        "widget": "str_result"
+      },
+      {
+        "id": "output_result_text",
+        "kind": "interface_output",
+        "interface_port": "result_text"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "str_input_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "str_result_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "str_input_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_result_text",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 560,
+      "height": 170,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/string_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "str_input",
+        "role": "control",
+        "class_ref": "frog.widgets.string_control",
+        "instance_ref": "str_input",
+        "value_type": "string",
+        "layout": {
+          "x": 20,
+          "y": 30,
+          "width": 240,
+          "height": 110
+        },
+        "props": {
+          "value": "hello world",
+          "label.text": "Input",
+          "caption.text": "String input"
+        }
+      },
+      {
+        "id": "str_result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.string_indicator",
+        "instance_ref": "str_result",
+        "value_type": "string",
+        "layout": {
+          "x": 300,
+          "y": 30,
+          "width": 240,
+          "height": 110
+        },
+        "props": {
+          "label.text": "Result",
+          "caption.text": "String result"
+        }
+      }
+    ]
+  }
+}

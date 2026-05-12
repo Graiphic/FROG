@@ -2,8 +2,8 @@
   <title>FROG Default Table Shell</title>
   <desc>Default SVG-backed table widget realization with headers, grid, rows, cells, selection, editing, sort, resize, scrollbars, label, caption, frame, and focus surfaces.</desc>
   <g data-frog-part="root">
-    <text data-frog-part="label" x="16" y="22" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">table_1</text>
-    <text data-frog-part="caption" x="16" y="48" font-size="16" font-family="Inter, Arial, sans-serif" font-weight="600" fill="#111827">Table</text>
+    <text data-frog-part="label" data-frog-anchor="label.anchor" x="16" y="22" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">table_1</text>
+    <text data-frog-part="caption" data-frog-anchor="caption.anchor" x="16" y="48" font-size="16" font-family="Inter, Arial, sans-serif" font-weight="600" fill="#111827">Table</text>
 
     <rect data-frog-part="frame" x="14" y="64" width="592" height="310" rx="8" fill="#ffffff" stroke="#111827" stroke-width="2"/>
 

@@ -14,13 +14,13 @@
 <h2>Current Scope</h2>
 
 <p>
-The Python runtime currently carries the specialized Example 05 runtime-family consumer.
-It validates the Example 05 backend contract and <code>.wfrog</code> front-panel package, executes the bounded accumulator path, applies widget property effects, and produces the published runtime snapshot.
+The Python runtime currently carries the specialized Examples 05, 06, and 07 runtime-family consumers.
+It validates the backend contracts and <code>.wfrog</code> front-panel packages, executes the bounded accumulator, Boolean roundtrip, and String roundtrip paths, applies widget property effects, and produces the published runtime snapshots.
 </p>
 
 <p>
-The Python browser UI is aligned with the shared Example 05 browser-host fidelity surface.
-It consumes the <code>.wfrog</code> panel pixel layout, widget coordinates, the Default Numeric SVG realization, and the published realization anchors such as <code>caption_text</code>, <code>value_face</code>, <code>text_value</code>, <code>increment_up</code>, and <code>increment_down</code>.
+The Python browser UI is aligned with the shared browser-host fidelity surface for the current published runtime examples.
+It consumes the <code>.wfrog</code> panel pixel layout, widget coordinates, Default Numeric/Boolean/String SVG realizations, and the published realization anchors and value/text surfaces instead of local duplicated widget SVGs.
 </p>
 
 <hr/>
@@ -28,7 +28,7 @@ It consumes the <code>.wfrog</code> panel pixel layout, widget coordinates, the 
 <h2>Normalized Contract Surface</h2>
 
 <p>
-The specialized runtime now consumes the normalized Example 05 contract surface:
+The specialized runtime now consumes the normalized Example 05, Example 06, and Example 07 contract surfaces:
 </p>
 
 <ul>
@@ -56,7 +56,10 @@ It no longer reads the legacy compatibility fields:
 
 <h2>Command</h2>
 
-<pre><code>python Implementations/Reference/Runtime/python/execute_contract.py 3</code></pre>
+<pre><code>python Implementations/Reference/Runtime/python/cli.py run 3
+python Implementations/Reference/Runtime/python/cli.py run true --example 06
+python Implementations/Reference/Runtime/python/cli.py run "hello world" --example 07
+python Implementations/Reference/Runtime/check_python_native_kernel_bridge.py</code></pre>
 
 <hr/>
 
@@ -65,5 +68,5 @@ It no longer reads the legacy compatibility fields:
 <p>
 This runtime is non-normative.
 It verifies repository-visible runtime closure for the current bounded example corridor.
-The Python HTTP UI remains useful for behavioral and routing checks, while the current C++ browser-host runtime carries the stricter bounded <code>.wfrog</code> visual-fidelity posture for Example 05.
+The Python HTTP UI remains a first-class parity surface for Examples 05, 06, and 07: it must consume <code>.wfrog</code> packages and Default realization assets with the same no-fallback discipline as the C++ and Rust browser hosts.
 </p>

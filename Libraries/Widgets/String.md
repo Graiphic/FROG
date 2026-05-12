@@ -211,8 +211,7 @@ The string family exposes the following stable public parts:
   <li><code>frame</code> — outer frame or border surface,</li>
   <li><code>text_region</code> — interior text area or editing/display region,</li>
   <li><code>text_value</code> — visible current value text surface,</li>
-  <li><code>placeholder</code> — optional placeholder text surface,</li>
-  <li><code>focus_ring</code> — optional focus visualization surface.</li>
+  <li><code>placeholder</code> — optional placeholder text surface.</li>
 </ul>
 
 <p>
@@ -328,12 +327,9 @@ It is not the value.
   <li><code>style.text.text_decoration : enum</code></li>
 </ul>
 
-<h3>7.10 Focus and disabled style properties</h3>
+<h3>7.10 Disabled style properties</h3>
 
 <ul>
-  <li><code>style.focus_ring.visible : bool</code></li>
-  <li><code>style.focus_ring.color : frog.color.rgba8</code></li>
-  <li><code>style.focus_ring.width : length</code></li>
   <li><code>style.disabled.opacity : number</code></li>
 </ul>
 
@@ -428,7 +424,6 @@ At minimum, a portable implementation should preserve:
   <li><code>text_region</code></li>
   <li><code>text_value</code></li>
   <li><code>placeholder</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
 
 <hr/>
@@ -508,7 +503,6 @@ If published, it controls host affordances only and MUST NOT imply user mutabili
   <li><code>frame</code></li>
   <li><code>text_region</code></li>
   <li><code>text_value</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
 
 <hr/>
@@ -527,14 +521,13 @@ A default SVG realization SHOULD support:
 
 <ul>
   <li>resizing through the front-panel layout rectangle,</li>
-  <li>mapping of <code>root</code>, <code>caption</code>, <code>frame</code>, <code>text_region</code>, <code>text_value</code>, <code>placeholder</code>, and <code>focus_ring</code> to visible SVG or host-rendered surfaces,</li>
+  <li>mapping of <code>root</code>, <code>caption</code>, <code>frame</code>, <code>text_region</code>, <code>text_value</code>, and <code>placeholder</code> to visible SVG or host-rendered surfaces,</li>
   <li>external caption visibility and styling,</li>
   <li>text value rendering or editing inside <code>text_region</code>,</li>
   <li>placeholder visibility when the value is empty,</li>
   <li>configurable frame and text-region border widths,</li>
   <li>configurable frame and text-region fill colors,</li>
-  <li>configurable text style surfaces,</li>
-  <li>focus ring display where supported.</li>
+  <li>configurable text style surfaces.</li>
 </ul>
 
 <p>

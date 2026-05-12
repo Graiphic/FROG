@@ -1,6 +1,7 @@
 """Rule-oriented FIR derivation helpers for the non-normative reference workspace.
 
-This module supports the published examples 01 through 05 through explicit
+This module supports the published examples 01 through 05 plus bounded widget
+pilots through explicit
 source-pattern recognition and source-to-FIR derivation rules.
 
 It is intentionally narrow and does not claim general FROG compiler
@@ -381,6 +382,56 @@ def derive_example05(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     }
 
 
+def derive_example07(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    context = "string value roundtrip pattern"
+    metadata = source_metadata(source)
+    if metadata.get("name") != "07_string_value_roundtrip":
+        raise DerivationError(f"{context} expects metadata.name=07_string_value_roundtrip")
+    inputs, outputs = assert_interface(
+        source,
+        [{"id": "input_text", "type": "string"}],
+        [{"id": "result_text", "type": "string"}],
+        context,
+    )
+    graph = SourceGraph.from_source(source)
+    require_node(graph, "str_input_value", context)
+    require_node(graph, "str_result_value", context)
+    require_node(graph, "output_result_text", context)
+    if graph.nodes["str_input_value"].get("kind") != "widget_value" or graph.nodes["str_input_value"].get("widget") != "str_input":
+        raise DerivationError(f"{context} expects str_input_value widget_value for str_input")
+    if graph.nodes["str_result_value"].get("kind") != "widget_value" or graph.nodes["str_result_value"].get("widget") != "str_result":
+        raise DerivationError(f"{context} expects str_result_value widget_value for str_result")
+    if graph.nodes["output_result_text"].get("kind") != "interface_output" or graph.nodes["output_result_text"].get("interface_port") != "result_text":
+        raise DerivationError(f"{context} expects output_result_text interface output result_text")
+    outs = graph.outgoing_all("str_input_value", "value")
+    if sorted(outs, key=lambda endpoint: endpoint.node) != [
+        EdgeEndpoint("output_result_text", "value"),
+        EdgeEndpoint("str_result_value", "value"),
+    ]:
+        raise DerivationError(f"{context} expects str_input_value.value to feed result widget and public output")
+    return {
+        "artifact_kind": "frog_fir_unit",
+        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": {"example_id": "07_string_value_roundtrip", "path": source_rel, "entry_unit": "main"},
+        "front_panel_ref": {"package_path": (Path(source_rel).parent / "ui/string_panel.wfrog").as_posix(), "panel_id": "main_panel"},
+        "units": [{
+            "unit_id": "main",
+            "kind": "string_value_roundtrip_ui_unit",
+            "public_interface": {"inputs": inputs, "outputs": outputs},
+            "ui_bindings": {
+                "control_bindings": [{"widget_id": "str_input", "mode": "widget_value", "public_input_id": "input_text", "value_type": "string"}],
+                "indicator_bindings": [{"widget_id": "str_result", "mode": "widget_value", "public_output_id": "result_text", "value_type": "string"}],
+            },
+            "execution_model": {"structure": "single_value_copy", "body_rule": {"kind": "copy_widget_value_to_output", "expression": "result_text = input_text"}},
+            "publications": [{"target": "public_output.result_text", "source": "input_text"}, {"target": "widget.str_result.value", "source": "input_text"}],
+            "notes": [
+                "This FIR is a bounded scalar widget pilot and remains downstream from canonical source.",
+                "The reference C++ closure consumes an LLVM-produced native string kernel through an explicit manifest without making the runtime LLVM-only.",
+            ],
+        }],
+    }
+
+
 # Artifact factories for source_rel injection.
 def artifacts_example01(source_rel: str) -> dict[str, Any]:
     return {
@@ -448,6 +499,7 @@ DERIVATION_RULES = [
     DerivationRule("ui_property_write", "03_ui_property_write", derive_example03),
     DerivationRule("stateful_feedback_delay", "04_stateful_feedback_delay", derive_example04),
     DerivationRule("bounded_ui_accumulator", "05_bounded_ui_accumulator", derive_example05),
+    DerivationRule("string_value_roundtrip", "07_string_value_roundtrip", derive_example07),
 ]
 
 

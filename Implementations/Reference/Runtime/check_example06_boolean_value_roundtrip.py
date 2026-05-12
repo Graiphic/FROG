@@ -270,7 +270,12 @@ def validate_layout(panel: dict[str, Any]) -> dict[str, dict[str, Any]]:
     require(result_props.get("style.frame.visible") is False, "bool_result external frame must be disabled through .wfrog")
     require(input_props.get("caption.align.horizontal") == "center", "bool_input caption must be centered through .wfrog")
     require(result_props.get("caption.align.horizontal") == "center", "bool_result caption must be centered through .wfrog")
+    require(input_props.get("caption.anchor.x") == 80 and input_props.get("caption.anchor.y") == 16, "bool_input caption anchor must be declared through .wfrog")
+    require(result_props.get("caption.anchor.x") == 80 and result_props.get("caption.anchor.y") == 16, "bool_result caption anchor must be declared through .wfrog")
     require(input_props.get("state_text.visible") is True, "bool_input state text must remain visible through .wfrog")
+    require(input_props.get("style.focus_ring.visible") is True, "bool_input focus ring visibility must be declared through .wfrog")
+    require(input_props.get("style.focus_ring.color") == "#2563eb", "bool_input focus ring color must be declared through .wfrog")
+    require(input_props.get("style.focus_ring.width") == "3px", "bool_input focus ring width must be declared through .wfrog")
     require(result_props.get("state_text.visible") is False, "bool_result state text must be hidden through .wfrog")
     require(result_props.get("style.inner.fill_color.false") == "#ef4444", "bool_result false state must be red through .wfrog")
     require(result_props.get("style.inner.fill_color.true") == "#22c55e", "bool_result true state must be green through .wfrog")
@@ -341,6 +346,9 @@ def execute_boolean_roundtrip(contract: dict[str, Any], wfrog: dict[str, Any], i
                         "value": result,
                         "label.text": widgets_by_id["bool_input"]["props"]["label.text"],
                         "caption.text": widgets_by_id["bool_input"]["props"]["caption.text"],
+                        "caption.visible": widgets_by_id["bool_input"]["props"]["caption.visible"],
+                        "caption.anchor.x": widgets_by_id["bool_input"]["props"]["caption.anchor.x"],
+                        "caption.anchor.y": widgets_by_id["bool_input"]["props"]["caption.anchor.y"],
                         "caption.align.horizontal": widgets_by_id["bool_input"]["props"]["caption.align.horizontal"],
                         "state_text.true_text": widgets_by_id["bool_input"]["props"]["state_text.true_text"],
                         "state_text.false_text": widgets_by_id["bool_input"]["props"]["state_text.false_text"],
@@ -366,6 +374,9 @@ def execute_boolean_roundtrip(contract: dict[str, Any], wfrog: dict[str, Any], i
                         "style.inner.border_color.hover_true": widgets_by_id["bool_input"]["props"]["style.inner.border_color.hover_true"],
                         "style.inner.border_color.pressed_false": widgets_by_id["bool_input"]["props"]["style.inner.border_color.pressed_false"],
                         "style.inner.border_color.pressed_true": widgets_by_id["bool_input"]["props"]["style.inner.border_color.pressed_true"],
+                        "style.focus_ring.visible": widgets_by_id["bool_input"]["props"]["style.focus_ring.visible"],
+                        "style.focus_ring.color": widgets_by_id["bool_input"]["props"]["style.focus_ring.color"],
+                        "style.focus_ring.width": widgets_by_id["bool_input"]["props"]["style.focus_ring.width"],
                         "style.pressed.inset": widgets_by_id["bool_input"]["props"]["style.pressed.inset"],
                         "style.transition.duration_ms": widgets_by_id["bool_input"]["props"]["style.transition.duration_ms"],
                         "style.transition.timing": widgets_by_id["bool_input"]["props"]["style.transition.timing"],
@@ -382,6 +393,9 @@ def execute_boolean_roundtrip(contract: dict[str, Any], wfrog: dict[str, Any], i
                         "value": result,
                         "label.text": widgets_by_id["bool_result"]["props"]["label.text"],
                         "caption.text": widgets_by_id["bool_result"]["props"]["caption.text"],
+                        "caption.visible": widgets_by_id["bool_result"]["props"]["caption.visible"],
+                        "caption.anchor.x": widgets_by_id["bool_result"]["props"]["caption.anchor.x"],
+                        "caption.anchor.y": widgets_by_id["bool_result"]["props"]["caption.anchor.y"],
                         "caption.align.horizontal": widgets_by_id["bool_result"]["props"]["caption.align.horizontal"],
                         "state_text.true_text": widgets_by_id["bool_result"]["props"]["state_text.true_text"],
                         "state_text.false_text": widgets_by_id["bool_result"]["props"]["state_text.false_text"],
@@ -427,6 +441,29 @@ def state_runtime_value(runtime: dict[str, Any], base: str, state: str, fallback
     return str(runtime.get(f"{base}.{state}", fallback))
 
 
+def caption_anchor_style(runtime: dict[str, Any]) -> str:
+    x = float(runtime.get("caption.anchor.x", 8))
+    y = float(runtime.get("caption.anchor.y", 15))
+    align = str(runtime.get("caption.align.horizontal", "left"))
+    if align == "center":
+        transform = "translate(-50%,-50%)"
+        text_align = "center"
+    elif align in {"right", "end"}:
+        transform = "translate(-100%,-50%)"
+        text_align = "right"
+    else:
+        transform = "translateY(-50%)"
+        text_align = "left"
+    visible = "display:none;" if runtime.get("caption.visible", True) is False else ""
+    return (
+        f"left:{x / 160 * 100:.6g}%;"
+        f"top:{y / 80 * 100:.6g}%;"
+        f"transform:{transform};"
+        f"text-align:{text_align};"
+        f"{visible}"
+    )
+
+
 def render_boolean_widget(widget: dict[str, Any], *, default_manifest_path: str) -> str:
     widget_id = str(widget["widget_id"])
     role = str(widget["role"])
@@ -460,8 +497,8 @@ def render_boolean_widget(widget: dict[str, Any], *, default_manifest_path: str)
     pressed_inset = str(runtime.get("style.pressed.inset", "1px"))
     state_text_visible = bool(runtime.get("state_text.visible", True))
     frame_visible = bool(runtime.get("style.frame.visible", True))
-    caption_align = str(runtime.get("caption.align.horizontal", "left"))
-    caption_centered = caption_align == "center"
+    focus_color = str(runtime.get("style.focus_ring.color", "#2563eb"))
+    focus_width = str(runtime.get("style.focus_ring.width", "3px")) if runtime.get("style.focus_ring.visible", True) else "0px"
     inner_left = str(runtime.get("style.inner.left", "52px" if variant == "circular" else "18px"))
     inner_top = str(runtime.get("style.inner.top", "23px" if variant == "circular" else "31px"))
     inner_width = str(runtime.get("style.inner.width", "56px" if variant == "circular" else "124px"))
@@ -483,10 +520,9 @@ def render_boolean_widget(widget: dict[str, Any], *, default_manifest_path: str)
         f"--boolean-inner-top:{inner_top};"
         f"--boolean-inner-width:{inner_width};"
         f"--boolean-inner-height:{inner_height};"
-        f"--boolean-caption-left:{'50%' if caption_centered else '8px'};"
-        f"--boolean-caption-transform:{'translateX(-50%)' if caption_centered else 'none'};"
-        f"--boolean-caption-text-align:{'center' if caption_centered else 'left'};"
         f"--boolean-text:{text_color};"
+        f"--boolean-focus-color:{focus_color};"
+        f"--boolean-focus-width:{focus_width};"
         f"--boolean-transition:{transition_ms}ms {transition_timing};"
         f"--boolean-pressed-inset:{pressed_inset};"
     )
@@ -515,7 +551,10 @@ def render_boolean_widget(widget: dict[str, Any], *, default_manifest_path: str)
         f"<img class='boolean-skin' src='{html.escape(route)}' "
         f"alt='' aria-hidden='true' />"
     )
-    overlays = f"<span class='boolean-caption-overlay' data-frog-part='caption'>{html.escape(caption)}</span>"
+    overlays = (
+        "<span class='boolean-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' "
+        f"style='{caption_anchor_style(runtime)}'>{html.escape(caption)}</span>"
+    )
     if state_text_visible:
         overlays += f"<span class='boolean-state-overlay' data-frog-part='state_text'>{html.escape(value_text)}</span>"
 
@@ -548,7 +587,7 @@ def render_front_panel(snapshot: dict[str, Any], *, default_manifest_path: str) 
         ".boolean-control{cursor:pointer;}"
         ".boolean-indicator{pointer-events:none;}"
         ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}"
-        ".boolean-caption-overlay{position:absolute;left:var(--boolean-caption-left);top:6px;transform:var(--boolean-caption-transform);text-align:var(--boolean-caption-text-align);font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}"
+        ".boolean-caption-overlay{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}"
         ".boolean-state-face{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:2px solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
         ".boolean-widget[data-realization-variant='circular'] .boolean-state-face{border-radius:50%;}"
         ".boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{box-shadow:none;}"
@@ -556,7 +595,7 @@ def render_front_panel(snapshot: dict[str, Any], *, default_manifest_path: str) 
         ".boolean-control[data-frog-frame-visible='false']:hover .boolean-state-face{box-shadow:none;}"
         ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-inner-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}"
         ".boolean-control[data-frog-frame-visible='false']:active .boolean-state-face{box-shadow:none;}"
-        ".boolean-control:focus-visible .boolean-state-face{outline:2px solid #2563eb;outline-offset:2px;}"
+        ".boolean-control:focus-visible .boolean-state-face{outline:var(--boolean-focus-width) solid var(--boolean-focus-color);outline-offset:2px;}"
         ".boolean-state-overlay{position:absolute;left:0;right:0;top:49px;transform:translateY(-50%);text-align:center;font-size:18px;font-weight:700;line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;}"
         ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
         ".state-link{font-size:16px;}"
@@ -607,12 +646,14 @@ def validate_rendered_front_panel(rendered: str, *, expected_value: bool, widget
     require("--boolean-fill:" in rendered and "--boolean-border:" in rendered and "--boolean-inner-border:" in rendered and "--boolean-transition:" in rendered and "--boolean-pressed-inset:" in rendered, "visual state styles must come from .wfrog Boolean properties")
     require(rendered.count("--boolean-inner-border:transparent;") == 2, "both Boolean widgets must render transparent inner borders from .wfrog")
     require(rendered.count("data-frog-frame-visible='false' data-default-realization-manifest") == 2, "both Boolean widgets must expose transparent external frame state from .wfrog")
-    require(rendered.count("--boolean-caption-left:50%;") == 2, "both Boolean captions must be centered from .wfrog")
+    require(rendered.count("data-svg-anchor='caption.anchor'") == 2, "both Boolean captions must expose the realization caption anchor")
+    require(rendered.count("left:50%;top:20%;transform:translate(-50%,-50%);text-align:center;") == 2, "both Boolean caption positions must come from .wfrog anchor properties")
     require("--boolean-inner-width:40px;" in rendered and "--boolean-inner-height:40px;" in rendered, "indicator LED size must be reduced through .wfrog")
     require("--boolean-inner-left:60px;" in rendered and "--boolean-inner-top:31px;" in rendered, "indicator LED position must remain centered after resizing")
     require("data-frog-state-text-visible='false'" in rendered, "bool_result must expose hidden state text from .wfrog")
     require("--boolean-fill:#22c55e;" in rendered or "--boolean-fill:#ef4444;" in rendered, "indicator color must come from .wfrog true/false fill properties")
     require("transform:translateY(1px)" not in rendered, "pressed movement must be driven by .wfrog style.pressed.inset, not a runtime hardcoded value")
+    require("outline:2px solid #2563eb" not in rendered, "focus styling must be driven by .wfrog focus properties")
     require("font-size:18px" in rendered and "font-size:14px" in rendered, "rendered text must remain readable at the published size")
 
     state_word = "TRUE" if expected_value else "FALSE"

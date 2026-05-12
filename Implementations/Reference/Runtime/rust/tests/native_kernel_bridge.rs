@@ -2,9 +2,9 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use frog_reference_runtime_rust::contract::{default_contract_path, default_wfrog_path, find_repo_root};
-use frog_reference_runtime_rust::native_kernel::{NativeBoolKernelBridge, NativeKernelBridge};
+use frog_reference_runtime_rust::native_kernel::{NativeBoolKernelBridge, NativeKernelBridge, NativeStringKernelBridge};
 use frog_reference_runtime_rust::runtime::RuntimeCore;
-use frog_reference_runtime_rust::ui::{BooleanBrowserUiRuntime, BrowserUiRuntime};
+use frog_reference_runtime_rust::ui::{BooleanBrowserUiRuntime, BrowserUiRuntime, StringBrowserUiRuntime};
 
 fn repo_root() -> PathBuf {
     find_repo_root(Path::new(env!("CARGO_MANIFEST_DIR"))).expect("repo root")
@@ -108,4 +108,44 @@ fn rust_dynamic_native_kernel_bridge_executes_example06() {
     assert!(html.contains("LLVM native bool kernel artifact"));
     assert!(html.contains("data-compiler-backend='llvm'"));
     assert!(html.contains("data-execution-path='native_kernel_bridge'"));
+    assert!(html.contains("--boolean-focus-color:#2563eb;"));
+    assert!(html.contains("--boolean-focus-width:3px;"));
+    assert!(html.contains("outline:var(--boolean-focus-width) solid var(--boolean-focus-color);"));
+    assert!(!html.contains("outline:2px solid #2563eb"));
+}
+
+#[test]
+fn rust_dynamic_native_kernel_bridge_executes_example07() {
+    let root = repo_root();
+    let manifest = root.join("Implementations/Reference/LLVM/examples/07_string_value_roundtrip/native_kernel_manifest.json");
+    let kernel_ll = root.join("Implementations/Reference/LLVM/examples/07_string_value_roundtrip/kernel.ll");
+    let contract = root.join(
+        "Implementations/Reference/ContractEmitter/examples/07_string_value_roundtrip.reference_host_runtime_ui_binding.contract.json",
+    );
+    let wfrog = root.join("Examples/07_string_value_roundtrip/ui/string_panel.wfrog");
+    let Some(library) = build_native_library("07", &kernel_ll) else {
+        return;
+    };
+
+    let bridge = NativeStringKernelBridge::from_paths(&manifest, &library).expect("load native string bridge");
+    let result = bridge.run("hello world");
+    assert!(result.ok);
+    assert_eq!(result.result, "hello world");
+
+    let mut runtime = StringBrowserUiRuntime::with_native_kernel_bridge(contract, wfrog, Some(bridge)).expect("runtime core");
+    let artifact = runtime.run_once("hello world".to_string()).expect("execute native string kernel");
+    assert_eq!(artifact["outputs"]["public"]["result_text"].as_str(), Some("hello world"));
+    assert_eq!(artifact["outputs"]["ui"]["str_result"].as_str(), Some("hello world"));
+    let html = runtime.render_html();
+    assert!(html.contains("native kernel bridge"));
+    assert!(html.contains("LLVM native string kernel artifact"));
+    assert!(html.contains("data-compiler-backend='llvm'"));
+    assert!(html.contains("data-execution-path='native_kernel_bridge'"));
+    assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
+    assert!(html.contains("--frog-string-text-region-fill-hover:#eef6ff;"));
+    assert!(html.contains("--frog-string-text-region-stroke-hover:#2563eb;"));
+    assert!(html.contains(".string-control:hover .string-skin svg"));
+    assert!(!html.contains("Current runtime snapshot"));
+    assert!(!html.contains("<pre>"));
+    assert!(!html.contains("outline:2px solid #2563eb"));
 }

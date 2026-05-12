@@ -1,0 +1,130 @@
+{
+  "artifact_kind": "frog_backend_contract",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "backend_family": "reference_host_runtime_ui_binding",
+  "example_id": "07_string_value_roundtrip",
+  "artifact_refs": {
+    "source_path": "Examples/07_string_value_roundtrip/main.frog",
+    "fir_path": "Examples/07_string_value_roundtrip/main.fir.json",
+    "lowering_path": "Examples/07_string_value_roundtrip/main.lowering.json",
+    "wfrog_path": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog"
+  },
+  "producer": {
+    "implementation": "FROG Reference Example 07 bounded fixture",
+    "implementation_kind": "non_normative_reference_fixture",
+    "version_governance_ref": "Versioning/Readme.md"
+  },
+  "compatibility": "example_specific_bounded_fixture",
+  "source_ref": {
+    "example_id": "07_string_value_roundtrip",
+    "path": "Examples/07_string_value_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "derived_from": {
+    "fir_path": "Examples/07_string_value_roundtrip/main.fir.json",
+    "lowering_path": "Examples/07_string_value_roundtrip/main.lowering.json",
+    "ui_package_path": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog"
+  },
+  "ownership_boundary": {
+    "semantic_authority": "canonical_source_and_execution_facing_artifacts",
+    "semantic_authority_refs": [
+      "Examples/07_string_value_roundtrip/main.frog",
+      "Examples/07_string_value_roundtrip/main.fir.json",
+      "Examples/07_string_value_roundtrip/main.lowering.json"
+    ],
+    "ui_package_authority": "published_front_panel_package",
+    "ui_package_authority_refs": [
+      "Examples/07_string_value_roundtrip/ui/string_panel.wfrog"
+    ],
+    "contract_authority": "this_file"
+  },
+  "assumptions": {
+    "runtime_family": {
+      "name": "reference_host_runtime_ui_binding",
+      "host_model": "single_process_host_runtime",
+      "ui_binding": {
+        "widget_value_binding": true
+      }
+    },
+    "execution_start": {
+      "input_binding_complete": true,
+      "ui_host_available": true
+    },
+    "string_behavior": {
+      "value_domain": "utf8_string",
+      "operation": "copy",
+      "max_utf8_bytes": 256
+    }
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "string_value_roundtrip_ui_unit",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "input_text",
+            "type": "string",
+            "binding_origin": "widget.str_input.value"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result_text",
+            "type": "string",
+            "binding_target": "widget.str_result.value"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "package_refs": [
+          "Examples/07_string_value_roundtrip/ui/string_panel.wfrog"
+        ],
+        "widgets": [
+          {
+            "widget_id": "str_input",
+            "widget_class": "frog.widgets.string_control",
+            "value_type": "string",
+            "role": "control",
+            "binding": {
+              "mode": "widget_value",
+              "public_input_id": "input_text"
+            }
+          },
+          {
+            "widget_id": "str_result",
+            "widget_class": "frog.widgets.string_indicator",
+            "value_type": "string",
+            "role": "indicator",
+            "binding": {
+              "mode": "widget_value",
+              "public_output_id": "result_text"
+            }
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "copy",
+        "src": "input_text",
+        "dst": "result_text",
+        "type": "string",
+        "max_utf8_bytes": 256
+      },
+      "effects": [],
+      "publications": [
+        {
+          "target": "public_output.result_text",
+          "source": "input_text"
+        },
+        {
+          "target": "widget.str_result.value",
+          "source": "input_text"
+        }
+      ]
+    }
+  ],
+  "unsupported": [],
+  "diagnostics": []
+}

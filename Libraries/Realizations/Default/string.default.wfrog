@@ -85,11 +85,11 @@
         "frame",
         "text_region",
         "text_value",
-        "placeholder",
-        "focus_ring"
+        "placeholder"
       ],
       "supported_visual_states": [
         "normal",
+        "hover",
         "disabled",
         "focused",
         "read_only",
@@ -97,7 +97,6 @@
       ],
       "fallbacks": {
         "missing_variant": "rectangular",
-        "missing_focus_ring": "host_native_focus_ring",
         "missing_caption": "host_external_caption_region",
         "missing_placeholder": "hide_placeholder",
         "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
@@ -118,8 +117,7 @@
         "caption",
         "frame",
         "text_region",
-        "text_value",
-        "focus_ring"
+        "text_value"
       ],
       "supported_visual_states": [
         "normal",
@@ -129,7 +127,6 @@
       ],
       "fallbacks": {
         "missing_variant": "rectangular",
-        "missing_focus_ring": "host_native_focus_ring",
         "missing_caption": "host_external_caption_region",
         "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
       }
@@ -226,13 +223,6 @@
       "semantic_member": "placeholder.text",
       "visibility_member": "placeholder.visible",
       "placement_role": "placeholder_text"
-    },
-    {
-      "part": "focus_ring",
-      "binding_kind": "svg_shape",
-      "binding_selector": "[data-frog-part='focus_ring']",
-      "style_binding_group": "style.focus_ring",
-      "state_sensitive": true
     }
   ],
   "state_maps": [
@@ -252,14 +242,19 @@
       ]
     },
     {
-      "state": "focused",
+      "state": "hover",
       "value_condition": {
-        "interaction.focused": true
+        "interaction.hovered": true,
+        "interaction.enabled": true,
+        "interaction.read_only": false
       },
+      "target_roles": [
+        "control"
+      ],
       "property_bindings": [
-        "style.focus_ring.visible",
-        "style.focus_ring.color",
-        "style.focus_ring.width"
+        "style.text_region.fill_color.hover",
+        "style.text_region.border_color.hover",
+        "style.text_region.border_width.hover"
       ]
     },
     {
@@ -302,6 +297,21 @@
       "member": "caption.visible",
       "target_part": "caption",
       "target_operation": "set_visibility"
+    },
+    {
+      "member": "caption.anchor.x",
+      "target_part": "caption",
+      "target_operation": "set_anchor_x"
+    },
+    {
+      "member": "caption.anchor.y",
+      "target_part": "caption",
+      "target_operation": "set_anchor_y"
+    },
+    {
+      "member": "caption.align.horizontal",
+      "target_part": "caption",
+      "target_operation": "set_text_anchor_alignment"
     },
     {
       "member": "caption.style.text_color",
@@ -349,14 +359,41 @@
       "target_operation": "set_fill"
     },
     {
+      "member": "style.text_region.fill_color.hover",
+      "target_part": "text_region",
+      "target_operation": "set_fill",
+      "state": "hover",
+      "target_roles": [
+        "control"
+      ]
+    },
+    {
       "member": "style.text_region.border_color",
       "target_part": "text_region",
       "target_operation": "set_stroke"
     },
     {
+      "member": "style.text_region.border_color.hover",
+      "target_part": "text_region",
+      "target_operation": "set_stroke",
+      "state": "hover",
+      "target_roles": [
+        "control"
+      ]
+    },
+    {
       "member": "style.text_region.border_width",
       "target_part": "text_region",
       "target_operation": "set_stroke_width"
+    },
+    {
+      "member": "style.text_region.border_width.hover",
+      "target_part": "text_region",
+      "target_operation": "set_stroke_width",
+      "state": "hover",
+      "target_roles": [
+        "control"
+      ]
     },
     {
       "member": "style.text_region.inset",
@@ -382,21 +419,6 @@
       "member": "style.text.font_weight",
       "target_part": "text_value",
       "target_operation": "set_font_weight"
-    },
-    {
-      "member": "style.focus_ring.visible",
-      "target_part": "focus_ring",
-      "target_operation": "set_visibility"
-    },
-    {
-      "member": "style.focus_ring.color",
-      "target_part": "focus_ring",
-      "target_operation": "set_stroke"
-    },
-    {
-      "member": "style.focus_ring.width",
-      "target_part": "focus_ring",
-      "target_operation": "set_stroke_width"
     }
   ],
   "anchors": [

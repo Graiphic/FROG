@@ -15,7 +15,7 @@
 
 <p>
 This directory coordinates runtime-family checks in the non-normative reference implementation.
-The runtime consumes emitted backend contracts, validates repository-visible runtime acceptance snapshots, and, for Example 05, also contains a manifest-driven native-kernel bridge path.
+The runtime consumes emitted backend contracts, validates repository-visible runtime acceptance snapshots, and, for Examples 05, 06, and 07, also contains manifest-driven native-kernel bridge paths.
 </p>
 
 <p>
@@ -25,7 +25,7 @@ The source example identifier remains preserved as traceability metadata, but it
 
 <p>
 The native-kernel bridge posture is documented in <a href="./KernelBridge.md"><code>KernelBridge.md</code></a>.
-That document records the compiler-agnostic runtime/backend boundary for the Example 05 compiled-kernel closure.
+That document records the compiler-agnostic runtime/backend boundary for the compiled-kernel closures.
 </p>
 
 <hr/>
@@ -38,14 +38,14 @@ That document records the compiler-agnostic runtime/backend boundary for the Exa
     -&gt; generic contract executor
     -&gt; runtime acceptance snapshot
 
-Example 05 standard runtime
+Examples 05-07 standard runtime slices
   normalized backend contract + .wfrog package
     -&gt; contract.units[0].kind
     -&gt; bounded contract executor
-    -&gt; C++ browser-host UI / Python HTTP smoke UI
+    -&gt; C++ / Python / Rust browser-host UI
     -&gt; runtime acceptance snapshot
 
-Example 05 native-kernel runtime closure
+Examples 05-07 native-kernel runtime closure
   .frog source
     -&gt; FIR
     -&gt; lowering
@@ -53,12 +53,12 @@ Example 05 native-kernel runtime closure
     -&gt; native kernel manifest
 
   .wfrog front panel
-    -&gt; bounded C++ browser-host renderer
+    -&gt; bounded C++ / Python / Rust browser-host renderer
     -&gt; widget input / output binding
 
-  C++ runtime
-    -&gt; NativeKernelBridge
-    -&gt; frog_example05_run(...)
+  runtime
+    -&gt; language-specific NativeKernelBridge
+    -&gt; frog_example05_run(...) / frog_example06_run(...) / frog_example07_run(...)
     -&gt; result / diagnostic
     -&gt; same runtime snapshot surface
 </code></pre>
@@ -81,20 +81,22 @@ Example 05 native-kernel runtime closure
     <tr><td><code>ui_property_write_effect_unit</code></td><td>Explicit UI property-write effect executor.</td><td><code>03_ui_property_write</code></td></tr>
     <tr><td><code>stateful_feedback_delay_kernel</code></td><td>Explicit delay-backed state-step executor.</td><td><code>04_stateful_feedback_delay</code></td></tr>
     <tr><td><code>bounded_executable_ui_unit</code></td><td>Normalized bounded UI accumulator executor with <code>.wfrog</code> support.</td><td><code>05_bounded_ui_accumulator</code></td></tr>
+    <tr><td><code>boolean_value_roundtrip_ui_unit</code></td><td>Boolean value roundtrip executor with <code>.wfrog</code> support.</td><td><code>06_boolean_value_roundtrip</code></td></tr>
+    <tr><td><code>string_value_roundtrip_ui_unit</code></td><td>String value roundtrip executor with <code>.wfrog</code> support.</td><td><code>07_string_value_roundtrip</code></td></tr>
   </tbody>
 </table>
 
 <hr/>
 
-<h2>Example 05 Native-Kernel Runtime Closure</h2>
+<h2>Examples 05-07 Native-Kernel Runtime Closure</h2>
 
 <p>
-Example 05 now has two intentionally distinct C++ runtime paths:
+Examples 05, 06, and 07 now have intentionally distinct runtime paths:
 </p>
 
 <ul>
   <li>a standard contract-driven path, which remains available without LLVM or <code>clang</code>;</li>
-  <li>an optional native-kernel path, where <code>kernel.ll</code> is compiled by <code>clang</code>, linked into a dedicated runtime executable, and consumed through <code>NativeKernelBridge</code>.</li>
+  <li>an optional native-kernel path, where <code>kernel.ll</code> is compiled by <code>clang</code>, loaded or linked by the runtime, and consumed through a manifest-declared native bridge.</li>
 </ul>
 
 <p>
@@ -103,17 +105,17 @@ LLVM is a backend/native-kernel producer.
 The runtime consumes a manifest-declared ABI and a linked C-compatible entry point.
 </p>
 
-<pre><code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll
+<pre><code>Implementations/Reference/LLVM/examples/{05,06,07}_*/kernel.ll
   -&gt; clang
-  -&gt; object linked into frog_reference_runtime_cpp_llvm_kernel
+  -&gt; linked C++ object or Python/Rust dynamic library
 
-Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json
+Implementations/Reference/LLVM/examples/{05,06,07}_*/native_kernel_manifest.json
   -&gt; NativeKernelManifest
   -&gt; NativeKernelBridge
-  -&gt; frog_example05_run(uint16_t, FrogRunResult*)
+  -&gt; example-specific ABI entry point
 
-Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog
-  -&gt; BrowserUiRuntime
+Examples/{05,06,07}_*/ui/*.wfrog
+  -&gt; browser-host runtime
   -&gt; panel_pixels + SVG skins + label/value overlays
 
 Browser POST /run
@@ -126,10 +128,10 @@ Browser POST /run
 
 <hr/>
 
-<h2>Normalized Example 05 Runtime Contract</h2>
+<h2>Normalized Runtime Contracts</h2>
 
 <p>
-The specialized Example 05 runtimes consume the normalized backend-contract surface:
+The specialized Example 05, Example 06, and Example 07 runtimes consume normalized backend-contract surfaces:
 </p>
 
 <pre><code>public_io
@@ -140,7 +142,7 @@ publications
 </code></pre>
 
 <p>
-The legacy compatibility fields have been removed from the published Example 05 contract.
+The legacy compatibility fields have been removed from the published Example 05 contract, and the newer scalar slices keep the same normalized contract-surface discipline.
 </p>
 
 <hr/>
@@ -150,8 +152,10 @@ The legacy compatibility fields have been removed from the published Example 05 
 <pre><code>python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py
 python Implementations/Reference/Runtime/python/execute_contract.py 3
 
-python Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
 python Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
+python Implementations/Reference/Runtime/check_example06_cpp_native_kernel_bridge.py
+python Implementations/Reference/Runtime/check_python_native_kernel_bridge.py
+python Implementations/Reference/Runtime/check_rust_native_kernel_bridge.py
 python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge
 </code></pre>
 
@@ -166,5 +170,5 @@ It consumes emitted backend contracts and validates repository-visible runtime b
 
 <p>
 The native-kernel bridge preserves this boundary: the runtime hosts execution and UI; backends compile lowered units; explicit manifests and stable ABI surfaces connect both sides.
-The Example 05 native-kernel closure is a bounded LabVIEW-like proof corridor, not a generalized production runtime.
+The Example 05-07 native-kernel closures are bounded LabVIEW-like proof corridors, not a generalized production runtime.
 </p>

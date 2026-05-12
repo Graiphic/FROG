@@ -39,15 +39,19 @@ Repository governance and publication state are centralized in
 │   └── ui.cpp
 └── tests/
     ├── test_slice05.cpp
-    └── test_slice05_llvm_kernel.cpp</code></pre>
+    ├── test_slice05_llvm_kernel.cpp
+    ├── test_slice06_boolean.cpp
+    ├── test_slice06_llvm_kernel.cpp
+    ├── test_slice07_string.cpp
+    └── test_slice07_llvm_kernel.cpp</code></pre>
 
 <hr/>
 
 <h2>Role</h2>
 
 <p>
-This directory contains the C/C++ consumer for the published Example 05 runtime corridor.
-It accepts the emitted backend contract, loads the published <code>.wfrog</code> package, resolves the referenced SVG assets, exposes a browser-host UI, and can run either the default contract-executor path or the optional manifest-declared native-kernel bridge path.
+This directory contains the C/C++ consumer for the published Examples 05, 06, and 07 runtime slices.
+It accepts emitted backend contracts, loads the published <code>.wfrog</code> packages, resolves the referenced SVG assets, exposes browser-host UIs, and can run either the default contract-executor path or the optional manifest-declared native-kernel bridge path.
 </p>
 
 <p>
@@ -72,7 +76,7 @@ The standard executable supports:
 
 <p>
 It remains available without LLVM or <code>clang</code>.
-It executes the bounded Example 05 backend contract and produces the published runtime artifact.
+It executes the bounded Example 05, Example 06, and Example 07 backend contracts and produces the published runtime artifacts.
 </p>
 
 <pre><code>cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
@@ -80,6 +84,8 @@ cmake --build build/frog_runtime_cpp
 ctest --test-dir build/frog_runtime_cpp
 
 build/frog_runtime_cpp/frog_reference_runtime_cpp 3
+build/frog_runtime_cpp/frog_reference_runtime_cpp run true --example 06
+build/frog_runtime_cpp/frog_reference_runtime_cpp run "hello world" --example 07
 build/frog_runtime_cpp/frog_reference_runtime_cpp ui --host 127.0.0.1 --port 8080 --no-open-browser</code></pre>
 
 <hr/>
@@ -90,11 +96,11 @@ build/frog_runtime_cpp/frog_reference_runtime_cpp ui --host 127.0.0.1 --port 808
 
 <p>
 The optional native-kernel executable is built when <code>FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE=ON</code>.
-CMake compiles the published Example 05 and Example 06 <code>kernel.ll</code> artifacts with <code>clang</code>, links the resulting objects into the executable, and uses <code>native_kernel_manifest.json</code> to validate and call the selected ABI surface.
+CMake compiles the published Example 05, Example 06, and Example 07 <code>kernel.ll</code> artifacts with <code>clang</code>, links the resulting objects into the executable, and uses <code>native_kernel_manifest.json</code> to validate and call the selected ABI surface.
 </p>
 
 <p>
-This executable is the bounded Example 05 and Example 06 LabVIEW-like proof path:
+This executable is the bounded Example 05, Example 06, and Example 07 LabVIEW-like proof path:
 </p>
 
 <pre><code>.frog source
@@ -111,8 +117,9 @@ runtime C++
   -&gt; NativeKernelBridge
   -&gt; frog_example05_run(input_value, out_result)
   -&gt; or frog_example06_run(input_value, out_result)
+  -&gt; or frog_example07_run(input_text, out_result)
   -&gt; public result
-  -&gt; ind_result.value
+  -&gt; matching indicator value
   -&gt; runtime snapshot / state.json
 </code></pre>
 
@@ -121,6 +128,7 @@ python Implementations/Reference/Runtime/check_example06_cpp_native_kernel_bridg
 
 build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel 3
 build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel run true --example 06
+build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel run "hello world" --example 07
 build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel ui --host 127.0.0.1 --port 8080 --no-open-browser</code></pre>
 
 <hr/>
@@ -128,22 +136,22 @@ build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kern
 <h2>Browser-Host UI Fidelity</h2>
 
 <p>
-The current C++ browser-host renderer consumes the Example 05 <code>.wfrog</code> package as the panel layout authority.
+The current C++ browser-host renderer consumes each published example <code>.wfrog</code> package as the panel layout authority.
 It renders:
 </p>
 
 <ul>
   <li>the front panel in <code>panel_pixels</code>,</li>
   <li>the widget <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> declarations,</li>
-  <li>the numeric SVG skins as the widget bodies,</li>
-  <li>Default Numeric realization anchors including <code>caption_text</code>, <code>value_face</code>, <code>text_value</code>, <code>increment_up</code>, and <code>increment_down</code>,</li>
+  <li>the Default Numeric, Boolean, and String SVG skins as the widget bodies for Examples 05, 06, and 07,</li>
+  <li>published realization anchors including <code>caption.anchor</code>, value/text surfaces, and the Numeric <code>increment_up</code> / <code>increment_down</code> parts,</li>
   <li>dynamic widget values and labels,</li>
   <li>contract-driven <code>foreground_color</code> property writes.</li>
 </ul>
 
 <p>
-The Example 05 panel uses <code>500x170</code> panel bounds and two <code>220x88</code> numeric widgets, matching the natural geometry of the published SVG assets.
-This is a bounded Example 05 fidelity pass, not a complete generalized <code>.wfrog</code> renderer.
+The Example 05 panel uses the shared Default Numeric realization. Example 06 uses the shared Default Boolean realization. Example 07 uses the shared Default String realization without a published String focus-ring part.
+This is a bounded fidelity pass for the current published examples, not a complete generalized <code>.wfrog</code> renderer.
 </p>
 
 <hr/>
@@ -174,7 +182,7 @@ The fact that the first published backend artifact is LLVM-oriented remains mani
   <li>overflow rejection behavior,</li>
   <li>native-kernel bridge behavior with an ABI-compatible stub,</li>
   <li>browser-host HTML rendering with both SVG asset routes,</li>
-  <li><code>.wfrog</code> / SVG geometry coherence for the Example 05 numeric widgets.</li>
+  <li><code>.wfrog</code> / SVG geometry coherence for Example 05 numeric widgets, Example 06 Boolean widgets, and Example 07 String widgets.</li>
 </ul>
 
 <p>The optional LLVM-produced native-kernel bridge target checks:</p>
@@ -183,7 +191,7 @@ The fact that the first published backend artifact is LLVM-oriented remains mani
   <li>manifest loading, entry-symbol validation, ABI validation, and error mapping,</li>
   <li>direct calls through an object compiled from <code>kernel.ll</code>,</li>
   <li>runtime snapshot publication through <code>execute_with_native_kernel_bridge(...)</code>,</li>
-  <li>browser UI runtime execution through <code>BrowserUiRuntime</code> or <code>BooleanBrowserUiRuntime</code> with a native kernel bridge.</li>
+  <li>browser UI runtime execution through <code>BrowserUiRuntime</code>, <code>BooleanBrowserUiRuntime</code>, or <code>StringBrowserUiRuntime</code> with a native kernel bridge.</li>
 </ul>
 
 <hr/>

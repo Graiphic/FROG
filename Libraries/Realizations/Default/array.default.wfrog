@@ -178,6 +178,18 @@
   },
   "part_bindings": [
     {
+      "part": "label",
+      "resource_ref": "frog.realizations.default.array.assets.shell_svg",
+      "binding_selector": "[data-frog-part='label']",
+      "semantic_member": "label.text"
+    },
+    {
+      "part": "caption",
+      "resource_ref": "frog.realizations.default.array.assets.shell_svg",
+      "binding_selector": "[data-frog-part='caption']",
+      "semantic_member": "caption.text"
+    },
+    {
       "part": "index_display",
       "resource_ref": "frog.realizations.default.array.assets.index_display_svg",
       "semantic_member": "index_display.*"
@@ -205,6 +217,51 @@
       "part": "horizontal_scrollbar",
       "resource_ref": "frog.realizations.default.array.assets.horizontal_scrollbar_svg",
       "semantic_member": "scrollbars.horizontal.*"
+    }
+  ],
+  "property_bindings": [
+    {
+      "member": "caption.text",
+      "target_part": "caption",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "caption.visible",
+      "target_part": "caption",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "caption.anchor.x",
+      "target_part": "caption",
+      "target_operation": "set_anchor_x"
+    },
+    {
+      "member": "caption.anchor.y",
+      "target_part": "caption",
+      "target_operation": "set_anchor_y"
+    },
+    {
+      "member": "caption.align.horizontal",
+      "target_part": "caption",
+      "target_operation": "set_text_anchor_alignment"
+    }
+  ],
+  "anchors": [
+    {
+      "id": "frog.realizations.default.array.label.anchor",
+      "target_part": "label",
+      "source_selector": "[data-frog-anchor='label.anchor']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "baseline"
+    },
+    {
+      "id": "frog.realizations.default.array.caption.anchor",
+      "target_part": "caption",
+      "source_selector": "[data-frog-anchor='caption.anchor']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "baseline"
     }
   ],
   "host_hints": {

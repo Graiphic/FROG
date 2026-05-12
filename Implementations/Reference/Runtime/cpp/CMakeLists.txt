@@ -3,7 +3,7 @@ project(frog_reference_runtime_cpp LANGUAGES CXX)
 
 option(
     FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE
-    "Build the optional Example 05/06 LLVM-produced native kernel bridge tests and runtime executable."
+    "Build the optional Example 05/06/07 LLVM-produced native kernel bridge tests and runtime executable."
     OFF
 )
 
@@ -61,6 +61,11 @@ target_link_libraries(frog_reference_runtime_cpp_slice06_tests PRIVATE frog_refe
 frog_copy_mingw_runtime_dlls(frog_reference_runtime_cpp_slice06_tests)
 add_test(NAME frog_reference_runtime_cpp_slice06_tests COMMAND frog_reference_runtime_cpp_slice06_tests)
 
+add_executable(frog_reference_runtime_cpp_slice07_tests tests/test_slice07_string.cpp)
+target_link_libraries(frog_reference_runtime_cpp_slice07_tests PRIVATE frog_reference_runtime_cpp_lib)
+frog_copy_mingw_runtime_dlls(frog_reference_runtime_cpp_slice07_tests)
+add_test(NAME frog_reference_runtime_cpp_slice07_tests COMMAND frog_reference_runtime_cpp_slice07_tests)
+
 add_executable(frog_reference_runtime_cpp_reference_examples_tests tests/test_reference_examples.cpp)
 target_link_libraries(frog_reference_runtime_cpp_reference_examples_tests PRIVATE frog_reference_runtime_cpp_lib)
 frog_copy_mingw_runtime_dlls(frog_reference_runtime_cpp_reference_examples_tests)
@@ -71,6 +76,7 @@ if(WIN32)
     set_tests_properties(
         frog_reference_runtime_cpp_tests
         frog_reference_runtime_cpp_slice06_tests
+        frog_reference_runtime_cpp_slice07_tests
         frog_reference_runtime_cpp_reference_examples_tests
         PROPERTIES ENVIRONMENT "PATH=${FROG_RUNTIME_CPP_COMPILER_BIN}\\;$ENV{PATH}"
     )
@@ -89,6 +95,12 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
     )
     set(FROG_EXAMPLE06_KERNEL_OBJECT
         "${CMAKE_CURRENT_BINARY_DIR}/example06_kernel${CMAKE_CXX_OUTPUT_EXTENSION}"
+    )
+    set(FROG_EXAMPLE07_KERNEL_LL
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../LLVM/examples/07_string_value_roundtrip/kernel.ll"
+    )
+    set(FROG_EXAMPLE07_KERNEL_OBJECT
+        "${CMAKE_CURRENT_BINARY_DIR}/example07_kernel${CMAKE_CXX_OUTPUT_EXTENSION}"
     )
 
     add_custom_command(
@@ -110,6 +122,16 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
     )
 
     add_custom_target(frog_example06_llvm_kernel_object DEPENDS "${FROG_EXAMPLE06_KERNEL_OBJECT}")
+
+    add_custom_command(
+        OUTPUT "${FROG_EXAMPLE07_KERNEL_OBJECT}"
+        COMMAND "${CLANG_EXECUTABLE}" -c "${FROG_EXAMPLE07_KERNEL_LL}" -o "${FROG_EXAMPLE07_KERNEL_OBJECT}"
+        DEPENDS "${FROG_EXAMPLE07_KERNEL_LL}"
+        COMMENT "Compiling Example 07 LLVM native string kernel artifact"
+        VERBATIM
+    )
+
+    add_custom_target(frog_example07_llvm_kernel_object DEPENDS "${FROG_EXAMPLE07_KERNEL_OBJECT}")
 
     add_executable(
         frog_reference_runtime_cpp_llvm_kernel_tests
@@ -150,12 +172,32 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
     endif()
 
     add_executable(
+        frog_reference_runtime_cpp_llvm_string_kernel_tests
+        tests/test_slice07_llvm_kernel.cpp
+        "${FROG_EXAMPLE07_KERNEL_OBJECT}"
+    )
+    add_dependencies(frog_reference_runtime_cpp_llvm_string_kernel_tests frog_example07_llvm_kernel_object)
+    target_link_libraries(frog_reference_runtime_cpp_llvm_string_kernel_tests PRIVATE frog_reference_runtime_cpp_lib)
+    frog_copy_mingw_runtime_dlls(frog_reference_runtime_cpp_llvm_string_kernel_tests)
+    add_test(
+        NAME frog_reference_runtime_cpp_llvm_string_kernel_tests
+        COMMAND frog_reference_runtime_cpp_llvm_string_kernel_tests
+    )
+    if(WIN32)
+        set_tests_properties(
+            frog_reference_runtime_cpp_llvm_string_kernel_tests
+            PROPERTIES ENVIRONMENT "PATH=${FROG_RUNTIME_CPP_COMPILER_BIN}\\;$ENV{PATH}"
+        )
+    endif()
+
+    add_executable(
         frog_reference_runtime_cpp_llvm_kernel
         src/main_llvm_kernel.cpp
         "${FROG_EXAMPLE05_KERNEL_OBJECT}"
         "${FROG_EXAMPLE06_KERNEL_OBJECT}"
+        "${FROG_EXAMPLE07_KERNEL_OBJECT}"
     )
-    add_dependencies(frog_reference_runtime_cpp_llvm_kernel frog_example05_llvm_kernel_object frog_example06_llvm_kernel_object)
+    add_dependencies(frog_reference_runtime_cpp_llvm_kernel frog_example05_llvm_kernel_object frog_example06_llvm_kernel_object frog_example07_llvm_kernel_object)
     target_link_libraries(frog_reference_runtime_cpp_llvm_kernel PRIVATE frog_reference_runtime_cpp_lib)
     frog_copy_mingw_runtime_dlls(frog_reference_runtime_cpp_llvm_kernel)
 endif()

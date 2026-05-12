@@ -1,0 +1,175 @@
+{
+  "format": "frog.wfrog",
+  "kind": "front_panel_package",
+  "package_id": "example07.string_panel",
+  "title": "String Hello World Roundtrip",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "07_string_value_roundtrip",
+    "source_path": "Examples/07_string_value_roundtrip/main.frog",
+    "fir_path": "Examples/07_string_value_roundtrip/main.fir.json",
+    "lowering_path": "Examples/07_string_value_roundtrip/main.lowering.json"
+  },
+  "ownership_boundary": {
+    "owns": [
+      "example-local front-panel package identity",
+      "example-local String widget realization references",
+      "example-local String widget initial presentation properties"
+    ],
+    "does_not_own": [
+      "canonical source semantics",
+      "FIR semantics",
+      "lowering semantics",
+      "runtime-private execution behavior",
+      "widget class law"
+    ]
+  },
+  "widget_classes": [
+    {
+      "class_id": "frog.widgets.string_control",
+      "role": "control",
+      "value_type": "string"
+    },
+    {
+      "class_id": "frog.widgets.string_indicator",
+      "role": "indicator",
+      "value_type": "string"
+    }
+  ],
+  "host_bindings": [
+    {
+      "binding_id": "reference_host_default",
+      "host_family": "reference_browser_host",
+      "target": "reference_browser_host",
+      "required_capabilities": [
+        "window",
+        "basic_widget_rendering",
+        "widget_value_binding"
+      ]
+    }
+  ],
+  "realization_refs": [
+    {
+      "package_ref": "Libraries/Realizations/Default/string.default.wfrog",
+      "target_classes": [
+        "frog.widgets.string_control",
+        "frog.widgets.string_indicator"
+      ]
+    }
+  ],
+  "svg_assets": [
+    {
+      "asset_id": "string_rectangular_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg",
+      "target_classes": [
+        "frog.widgets.string_control",
+        "frog.widgets.string_indicator"
+      ]
+    }
+  ],
+  "front_panels": [
+    {
+      "panel_id": "main_panel",
+      "title": "String Hello World Roundtrip",
+      "class_ref": "frog.widgets.panel",
+      "host_binding_ref": "reference_host_default",
+      "layout": {
+        "width": 560,
+        "height": 170,
+        "coordinate_space": "panel_pixels"
+      },
+      "widgets": [
+        {
+          "instance_id": "str_input",
+          "class_ref": "frog.widgets.string_control",
+          "role": "control",
+          "value_type": "string",
+          "layout": {
+            "x": 20,
+            "y": 30,
+            "width": 240,
+            "height": 110
+          },
+          "props": {
+            "value": "hello world",
+            "label.text": "Input",
+            "caption.text": "String input",
+            "caption.visible": true,
+            "caption.anchor.x": 28,
+            "caption.anchor.y": 64,
+            "caption.align.horizontal": "left",
+            "caption.style.text_color": "#111827",
+            "style.frame.fill_color": "transparent",
+            "style.frame.border_color": "transparent",
+            "style.frame.border_width": "0px",
+            "style.text_region.fill_color": "#ffffff",
+            "style.text_region.fill_color.hover": "#eef6ff",
+            "style.text_region.border_color": "#64748b",
+            "style.text_region.border_color.hover": "#2563eb",
+            "style.text_region.border_width": "2px",
+            "style.text_region.border_width.hover": "2px",
+            "style.text.color": "#111827",
+            "style.text.font_size": "16px",
+            "style.text.font_weight": "400",
+            "placeholder.text": "",
+            "placeholder.visible": false,
+            "interaction.enabled": true,
+            "interaction.read_only": false,
+            "realization.variant": "rectangular"
+          },
+          "visual": {
+            "asset_ref": "asset:string_rectangular_svg"
+          },
+          "binding": {
+            "mode": "widget_value",
+            "public_input_id": "input_text"
+          }
+        },
+        {
+          "instance_id": "str_result",
+          "class_ref": "frog.widgets.string_indicator",
+          "role": "indicator",
+          "value_type": "string",
+          "layout": {
+            "x": 300,
+            "y": 30,
+            "width": 240,
+            "height": 110
+          },
+          "props": {
+            "value": "",
+            "label.text": "Result",
+            "caption.text": "String result",
+            "caption.visible": true,
+            "caption.anchor.x": 28,
+            "caption.anchor.y": 64,
+            "caption.align.horizontal": "left",
+            "caption.style.text_color": "#111827",
+            "style.frame.fill_color": "transparent",
+            "style.frame.border_color": "transparent",
+            "style.frame.border_width": "0px",
+            "style.text_region.fill_color": "#f8fafc",
+            "style.text_region.border_color": "#64748b",
+            "style.text_region.border_width": "2px",
+            "style.text.color": "#111827",
+            "style.text.font_size": "16px",
+            "style.text.font_weight": "400",
+            "interaction.enabled": false,
+            "interaction.read_only": true,
+            "realization.variant": "rectangular"
+          },
+          "visual": {
+            "asset_ref": "asset:string_rectangular_svg"
+          },
+          "binding": {
+            "mode": "widget_value",
+            "public_output_id": "result_text"
+          }
+        }
+      ]
+    }
+  ]
+}

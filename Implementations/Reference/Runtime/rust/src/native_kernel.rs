@@ -22,8 +22,29 @@ pub struct FrogBoolRunResult {
     pub error_code: u16,
 }
 
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct FrogStringRunResult {
+    pub ok: u8,
+    pub error_code: u16,
+    pub result_len: u32,
+    pub result_buffer: [u8; 256],
+}
+
+impl Default for FrogStringRunResult {
+    fn default() -> Self {
+        Self {
+            ok: 0,
+            error_code: 0,
+            result_len: 0,
+            result_buffer: [0; 256],
+        }
+    }
+}
+
 type FrogNativeKernelFunction = unsafe extern "C" fn(u16, *mut FrogRunResult);
 type FrogNativeBoolKernelFunction = unsafe extern "C" fn(u8, *mut FrogBoolRunResult);
+type FrogNativeStringKernelFunction = unsafe extern "C" fn(*const u8, u32, *mut FrogStringRunResult);
 
 #[derive(Debug, Clone)]
 pub struct NativeKernelManifest {
@@ -48,6 +69,13 @@ pub struct NativeBoolKernelResult {
     pub error_code: u16,
 }
 
+#[derive(Debug, Clone)]
+pub struct NativeStringKernelResult {
+    pub ok: bool,
+    pub result: String,
+    pub error_code: u16,
+}
+
 pub struct NativeKernelBridge {
     manifest: NativeKernelManifest,
     library: DynamicLibrary,
@@ -58,6 +86,12 @@ pub struct NativeBoolKernelBridge {
     manifest: NativeKernelManifest,
     library: DynamicLibrary,
     entry_point: FrogNativeBoolKernelFunction,
+}
+
+pub struct NativeStringKernelBridge {
+    manifest: NativeKernelManifest,
+    library: DynamicLibrary,
+    entry_point: FrogNativeStringKernelFunction,
 }
 
 pub fn load_native_kernel_manifest(path: impl AsRef<Path>) -> Result<NativeKernelManifest> {
@@ -194,6 +228,57 @@ impl NativeBoolKernelBridge {
         NativeBoolKernelResult {
             ok: raw.ok != 0 && raw.error_code == 0,
             result: raw.result != 0,
+            error_code: raw.error_code,
+        }
+    }
+}
+
+impl NativeStringKernelBridge {
+    pub fn from_paths(manifest_path: impl AsRef<Path>, library_path: impl AsRef<Path>) -> Result<Self> {
+        ensure(
+            std::mem::size_of::<FrogStringRunResult>() == 264,
+            "FrogStringRunResult ABI layout must be 264 bytes",
+        )?;
+        let manifest = load_native_kernel_manifest(manifest_path)?;
+        ensure(
+            manifest.entry_symbol == "frog_example07_run",
+            "unexpected native string kernel entry symbol",
+        )?;
+        ensure(
+            manifest.abi == "frog_string_utf8_256_to_result_status_outptr",
+            "NativeStringKernelBridge requires frog_string_utf8_256_to_result_status_outptr",
+        )?;
+        let library = DynamicLibrary::open(library_path.as_ref())?;
+        let entry_point = unsafe { library.symbol::<FrogNativeStringKernelFunction>(&manifest.entry_symbol)? };
+        Ok(Self {
+            manifest,
+            library,
+            entry_point,
+        })
+    }
+
+    pub fn manifest(&self) -> &NativeKernelManifest {
+        &self.manifest
+    }
+
+    pub fn run(&self, input_value: &str) -> NativeStringKernelResult {
+        let _keep_alive = &self.library;
+        let input = input_value.as_bytes();
+        if input.len() > 256 {
+            return NativeStringKernelResult {
+                ok: false,
+                result: String::new(),
+                error_code: 1,
+            };
+        }
+        let mut raw = FrogStringRunResult::default();
+        unsafe {
+            (self.entry_point)(input.as_ptr(), input.len() as u32, &mut raw);
+        }
+        let length = raw.result_len.min(256) as usize;
+        NativeStringKernelResult {
+            ok: raw.ok != 0 && raw.error_code == 0 && raw.result_len <= 256,
+            result: String::from_utf8_lossy(&raw.result_buffer[..length]).to_string(),
             error_code: raw.error_code,
         }
     }

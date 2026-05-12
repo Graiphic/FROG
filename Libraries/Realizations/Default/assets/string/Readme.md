@@ -54,5 +54,9 @@ These files are SVG template resources consumed by the default realization manif
   <li><code>text_region</code></li>
   <li><code>text_value</code></li>
   <li><code>placeholder</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
+
+<p>
+The String rectangular template intentionally has no <code>focus_ring</code> marker.
+Interactive hover and text-region styling are carried through the manifest bindings and instance <code>.wfrog</code> properties.
+</p>

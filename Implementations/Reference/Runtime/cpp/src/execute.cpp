@@ -271,6 +271,9 @@ Value execute_boolean_case(const Value& contract, const Object& unit, const Valu
         copy_prop("state_text.style.text_color.false");
         copy_prop("state_text.style.text_color.true");
         copy_prop("state_text.visible");
+        copy_prop("caption.visible");
+        copy_prop("caption.anchor.x");
+        copy_prop("caption.anchor.y");
         copy_prop("caption.align.horizontal");
         copy_prop("style.frame.visible");
         copy_prop("style.outer.border_color.false");
@@ -295,6 +298,9 @@ Value execute_boolean_case(const Value& contract, const Object& unit, const Valu
         copy_prop("style.inner.top");
         copy_prop("style.inner.width");
         copy_prop("style.inner.height");
+        copy_prop("style.focus_ring.visible");
+        copy_prop("style.focus_ring.color");
+        copy_prop("style.focus_ring.width");
         copy_prop("style.pressed.inset");
         copy_prop("style.transition.duration_ms");
         copy_prop("style.transition.timing");

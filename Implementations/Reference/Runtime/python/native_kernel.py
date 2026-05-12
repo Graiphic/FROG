@@ -27,6 +27,15 @@ class FrogBoolRunResult(ctypes.Structure):
     ]
 
 
+class FrogStringRunResult(ctypes.Structure):
+    _fields_ = [
+        ("ok", ctypes.c_uint8),
+        ("error_code", ctypes.c_uint16),
+        ("result_len", ctypes.c_uint32),
+        ("result_buffer", ctypes.c_uint8 * 256),
+    ]
+
+
 @dataclass(frozen=True)
 class NativeKernelManifest:
     manifest_path: Path
@@ -48,6 +57,14 @@ class NativeKernelResult:
 class NativeBoolKernelResult:
     ok: bool
     result: bool
+    error_code: int
+    diagnostic: str
+
+
+@dataclass(frozen=True)
+class NativeStringKernelResult:
+    ok: bool
+    result: str
     error_code: int
     diagnostic: str
 
@@ -160,9 +177,56 @@ class NativeBoolKernelBridge:
         )
 
 
+class NativeStringKernelBridge:
+    def __init__(self, manifest: NativeKernelManifest, library_path: str | Path) -> None:
+        if ctypes.sizeof(FrogStringRunResult) != 264:
+            raise NativeKernelError("FrogStringRunResult ABI layout must be 264 bytes")
+        if manifest.entry_symbol != "frog_example07_run":
+            raise NativeKernelError("unexpected native string kernel entry symbol")
+        if manifest.abi != "frog_string_utf8_256_to_result_status_outptr":
+            raise NativeKernelError("NativeStringKernelBridge requires frog_string_utf8_256_to_result_status_outptr")
+        self._manifest = manifest
+        self._library_path = Path(library_path).resolve()
+        self._library = ctypes.CDLL(str(self._library_path))
+        self._entry = getattr(self._library, manifest.entry_symbol)
+        self._entry.argtypes = [ctypes.POINTER(ctypes.c_uint8), ctypes.c_uint32, ctypes.POINTER(FrogStringRunResult)]
+        self._entry.restype = None
+
+    @property
+    def manifest(self) -> NativeKernelManifest:
+        return self._manifest
+
+    @property
+    def library_path(self) -> Path:
+        return self._library_path
+
+    def run(self, input_value: str) -> NativeStringKernelResult:
+        encoded = input_value.encode("utf-8")
+        if len(encoded) > 256:
+            raise NativeKernelError("input_text must remain within 256 UTF-8 bytes.")
+        buffer_type = ctypes.c_uint8 * max(1, len(encoded))
+        buffer = buffer_type(*encoded) if encoded else buffer_type()
+        raw = FrogStringRunResult()
+        self._entry(buffer, ctypes.c_uint32(len(encoded)), ctypes.byref(raw))
+        error_code = int(raw.error_code)
+        result_len = int(raw.result_len)
+        ok = bool(raw.ok) and error_code == 0 and result_len <= 256
+        result_text = bytes(raw.result_buffer[:result_len]).decode("utf-8") if result_len <= 256 else ""
+        return NativeStringKernelResult(
+            ok=ok,
+            result=result_text,
+            error_code=error_code,
+            diagnostic="" if ok else _diagnostic(self._manifest, error_code),
+        )
+
+
 def load_native_kernel_bridge(manifest_path: str | Path, library_path: str | Path) -> NativeKernelBridge:
     return NativeKernelBridge(load_native_kernel_manifest(manifest_path), library_path)
 
 
 def load_native_bool_kernel_bridge(manifest_path: str | Path, library_path: str | Path) -> NativeBoolKernelBridge:
     return NativeBoolKernelBridge(load_native_kernel_manifest(manifest_path), library_path)
+
+
+def load_native_string_kernel_bridge(manifest_path: str | Path, library_path: str | Path) -> NativeStringKernelBridge:
+    return NativeStringKernelBridge(load_native_kernel_manifest(manifest_path), library_path)

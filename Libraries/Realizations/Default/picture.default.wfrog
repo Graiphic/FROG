@@ -128,6 +128,31 @@
   ],
   "property_bindings": [
     {
+      "member": "caption.text",
+      "target_part": "caption",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "caption.visible",
+      "target_part": "caption",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "caption.anchor.x",
+      "target_part": "caption",
+      "target_operation": "set_anchor_x"
+    },
+    {
+      "member": "caption.anchor.y",
+      "target_part": "caption",
+      "target_operation": "set_anchor_y"
+    },
+    {
+      "member": "caption.align.horizontal",
+      "target_part": "caption",
+      "target_operation": "set_text_anchor_alignment"
+    },
+    {
       "member": "value",
       "target_part": "picture_region",
       "target_operation": "render_picture_value"
@@ -151,6 +176,24 @@
   "state_maps": [
     {
       "state": "normal"
+    }
+  ],
+  "anchors": [
+    {
+      "id": "frog.realizations.default.picture.label.anchor",
+      "target_part": "label",
+      "source_selector": "[data-frog-anchor='label.anchor']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "baseline"
+    },
+    {
+      "id": "frog.realizations.default.picture.caption.anchor",
+      "target_part": "caption",
+      "source_selector": "[data-frog-anchor='caption.anchor']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "baseline"
     }
   ],
   "composition": null,

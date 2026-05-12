@@ -2,8 +2,8 @@
   <title>FROG Default Listbox Shell</title>
   <desc>Default SVG-backed listbox widget realization with items, selection, active item, hover, disabled state, search highlight, scrollbars, label, caption, frame, and focus surfaces.</desc>
   <g data-frog-part="root">
-    <text data-frog-part="label" x="16" y="22" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">listbox_1</text>
-    <text data-frog-part="caption" x="16" y="48" font-size="16" font-family="Inter, Arial, sans-serif" font-weight="600" fill="#111827">Listbox</text>
+    <text data-frog-part="label" data-frog-anchor="label.anchor" x="16" y="22" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">listbox_1</text>
+    <text data-frog-part="caption" data-frog-anchor="caption.anchor" x="16" y="48" font-size="16" font-family="Inter, Arial, sans-serif" font-weight="600" fill="#111827">Listbox</text>
     <rect data-frog-part="frame" x="14" y="64" width="432" height="232" rx="8" fill="#ffffff" stroke="#111827" stroke-width="2"/>
 
     <g data-frog-part="item_region">

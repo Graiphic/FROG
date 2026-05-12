@@ -33,9 +33,14 @@ def test_python_example06_browser_ui_consumes_wfrog_realization() -> None:
     assert "/asset/boolean_rectangular_svg" in html
     assert "/asset/boolean_circular_svg" in html
     assert "data-frog-visual-law='wfrog-realization-state-map'" in html
-    assert "--boolean-caption-left:50%;" in html
+    assert "data-svg-anchor='caption.anchor'" in html
+    assert "left:50%;top:20%;transform:translate(-50%,-50%);text-align:center;" in html
     assert "--boolean-inner-width:40px;" in html
     assert "--boolean-inner-height:40px;" in html
+    assert "--boolean-focus-color:#2563eb;" in html
+    assert "--boolean-focus-width:3px;" in html
+    assert "outline:var(--boolean-focus-width) solid var(--boolean-focus-color);" in html
+    assert "outline:2px solid #2563eb" not in html
     assert "Current runtime snapshot" not in html
 
     runtime.runtime.execute(False)

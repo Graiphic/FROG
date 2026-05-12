@@ -87,6 +87,11 @@ NativeKernelManifest load_native_kernel_manifest(const std::filesystem::path& ma
         require(manifest.input_id == "input_value" && manifest.input_type == "bool", "Unexpected native bool kernel input surface.");
         require(manifest.output_id == "result" && manifest.output_type == "bool", "Unexpected native bool kernel output surface.");
         require(manifest.overflow_model == "not_applicable", "Unexpected native bool kernel overflow model.");
+    } else if (manifest.abi == "frog_string_utf8_256_to_result_status_outptr") {
+        require(manifest.entry_symbol == "frog_example07_run", "Unexpected native string kernel entry symbol.");
+        require(manifest.input_id == "input_text" && manifest.input_type == "string", "Unexpected native string kernel input surface.");
+        require(manifest.output_id == "result_text" && manifest.output_type == "string", "Unexpected native string kernel output surface.");
+        require(manifest.overflow_model == "reject_execution_on_string_buffer_overflow", "Unexpected native string kernel overflow model.");
     } else {
         throw std::runtime_error("Unsupported native kernel ABI: " + manifest.abi);
     }
@@ -174,6 +179,54 @@ NativeBoolKernelBridge make_linked_native_bool_kernel_bridge(
     const std::filesystem::path& manifest_path,
     FrogNativeBoolKernelFunction entry_point) {
     return NativeBoolKernelBridge(load_native_kernel_manifest(manifest_path), entry_point);
+}
+
+NativeStringKernelBridge::NativeStringKernelBridge(NativeKernelManifest manifest, FrogNativeStringKernelFunction entry_point)
+    : manifest_(std::move(manifest)), entry_point_(entry_point) {
+    require(entry_point_ != nullptr, "Native string kernel bridge requires a non-null entry point.");
+    require(manifest_.abi == "frog_string_utf8_256_to_result_status_outptr", "NativeStringKernelBridge requires the string result-status ABI.");
+}
+
+NativeStringKernelResult NativeStringKernelBridge::run(const std::string& input_value) const {
+    require(input_value.size() <= 256, "input_text must remain within 256 UTF-8 bytes.");
+
+    FrogStringRunResult raw{};
+    entry_point_(
+        reinterpret_cast<const std::uint8_t*>(input_value.data()),
+        static_cast<std::uint32_t>(input_value.size()),
+        &raw);
+
+    NativeStringKernelResult result;
+    result.ok = raw.ok != 0;
+    result.error_code = raw.error_code;
+    if (raw.result_len > raw.result_buffer.size()) {
+        result.ok = false;
+        result.error_code = 1;
+    } else {
+        result.result.assign(
+            reinterpret_cast<const char*>(raw.result_buffer.data()),
+            reinterpret_cast<const char*>(raw.result_buffer.data() + raw.result_len));
+    }
+
+    if (!result.ok || result.error_code != 0) {
+        const auto diagnostic = manifest_.diagnostics_by_error_code.find(result.error_code);
+        result.diagnostic = diagnostic == manifest_.diagnostics_by_error_code.end()
+            ? "native string kernel returned an unmapped error_code."
+            : diagnostic->second;
+        result.ok = false;
+    }
+
+    return result;
+}
+
+const NativeKernelManifest& NativeStringKernelBridge::manifest() const {
+    return manifest_;
+}
+
+NativeStringKernelBridge make_linked_native_string_kernel_bridge(
+    const std::filesystem::path& manifest_path,
+    FrogNativeStringKernelFunction entry_point) {
+    return NativeStringKernelBridge(load_native_kernel_manifest(manifest_path), entry_point);
 }
 
 } // namespace frog::runtime

@@ -41,10 +41,6 @@
 
         --frog-string-placeholder-display: none;
         --frog-string-placeholder-fill: #6b7280;
-        --frog-string-focus-display: none;
-        --frog-string-focus-stroke: #2f80ed;
-        --frog-string-focus-stroke-width: 3px;
-        --frog-string-focus-opacity: 1;
       }
 
       #label_text {
@@ -89,13 +85,6 @@
         font-size: var(--frog-string-text-font-size);
       }
 
-      #focus_ring {
-        display: var(--frog-string-focus-display);
-        fill: none;
-        stroke: var(--frog-string-focus-stroke);
-        stroke-width: var(--frog-string-focus-stroke-width);
-        opacity: var(--frog-string-focus-opacity);
-      }
     </style>
   </defs>
 
@@ -111,17 +100,8 @@
           data-frog-part="caption"
           data-frog-member="caption.text"
           data-frog-anchor="caption.anchor"
-          x="16"
-          y="46">String</text>
-
-    <rect id="focus_ring"
-          data-frog-part="focus_ring"
-          x="4"
-          y="64"
-          width="412"
-          height="104"
-          rx="6"
-          data-frog-bind="interaction.focused style.focus_ring.*" />
+          x="28"
+          y="64">String</text>
 
     <rect id="frame"
           data-frog-part="frame"
@@ -139,7 +119,7 @@
           width="364"
           height="56"
           rx="0"
-          data-frog-bind="style.text_region.fill_color style.text_region.border_color style.text_region.border_width style.text_region.inset" />
+          data-frog-bind="style.text_region.fill_color style.text_region.fill_color.hover style.text_region.border_color style.text_region.border_color.hover style.text_region.border_width style.text_region.border_width.hover style.text_region.inset" />
 
     <text id="placeholder"
           data-frog-part="placeholder"

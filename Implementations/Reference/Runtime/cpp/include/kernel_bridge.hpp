@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <array>
 #include <filesystem>
 #include <map>
 #include <string>
@@ -27,6 +28,18 @@ static_assert(alignof(FrogBoolRunResult) == 2, "FrogBoolRunResult ABI alignment 
 
 using FrogNativeKernelFunction = void (*)(std::uint16_t input_value, FrogRunResult* out_result);
 using FrogNativeBoolKernelFunction = void (*)(std::uint8_t input_value, FrogBoolRunResult* out_result);
+
+struct FrogStringRunResult {
+    std::uint8_t ok;
+    std::uint16_t error_code;
+    std::uint32_t result_len;
+    std::array<std::uint8_t, 256> result_buffer;
+};
+
+static_assert(sizeof(FrogStringRunResult) == 264, "FrogStringRunResult ABI layout must remain {u8, u16, u32, u8[256]} with natural padding.");
+static_assert(alignof(FrogStringRunResult) == 4, "FrogStringRunResult ABI alignment must remain 4 bytes.");
+
+using FrogNativeStringKernelFunction = void (*)(const std::uint8_t* input_ptr, std::uint32_t input_len, FrogStringRunResult* out_result);
 
 struct NativeKernelManifest {
     std::filesystem::path manifest_path;
@@ -55,6 +68,13 @@ struct NativeKernelResult {
 struct NativeBoolKernelResult {
     bool ok;
     bool result;
+    std::uint16_t error_code;
+    std::string diagnostic;
+};
+
+struct NativeStringKernelResult {
+    bool ok;
+    std::string result;
     std::uint16_t error_code;
     std::string diagnostic;
 };
@@ -92,5 +112,21 @@ private:
 NativeBoolKernelBridge make_linked_native_bool_kernel_bridge(
     const std::filesystem::path& manifest_path,
     FrogNativeBoolKernelFunction entry_point);
+
+class NativeStringKernelBridge {
+public:
+    NativeStringKernelBridge(NativeKernelManifest manifest, FrogNativeStringKernelFunction entry_point);
+
+    NativeStringKernelResult run(const std::string& input_value) const;
+    const NativeKernelManifest& manifest() const;
+
+private:
+    NativeKernelManifest manifest_;
+    FrogNativeStringKernelFunction entry_point_;
+};
+
+NativeStringKernelBridge make_linked_native_string_kernel_bridge(
+    const std::filesystem::path& manifest_path,
+    FrogNativeStringKernelFunction entry_point);
 
 } // namespace frog::runtime

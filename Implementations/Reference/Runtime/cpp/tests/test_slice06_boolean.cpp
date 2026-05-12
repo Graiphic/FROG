@@ -139,12 +139,15 @@ void test_boolean_browser_ui_surface() {
     assert_contains(html, "--boolean-fill:#22c55e;");
     assert_contains(html, "--boolean-border:transparent;");
     assert_contains(html, "--boolean-inner-border:transparent;");
-    assert_contains(html, "--boolean-caption-left:50%;");
-    assert_contains(html, "--boolean-caption-transform:translateX(-50%);");
+    assert_contains(html, "data-svg-anchor='caption.anchor'");
+    assert_contains(html, "left:50.00%;top:20.00%;transform:translate(-50%,-50%);text-align:center;");
     assert_contains(html, "--boolean-inner-width:40px;");
     assert_contains(html, "--boolean-inner-height:40px;");
     assert_contains(html, "--boolean-inner-left:60px;");
     assert_contains(html, "--boolean-inner-top:31px;");
+    assert_contains(html, "--boolean-focus-color:#2563eb;");
+    assert_contains(html, "--boolean-focus-width:3px;");
+    assert_contains(html, "outline:var(--boolean-focus-width) solid var(--boolean-focus-color);");
     assert_contains(html, "--boolean-transition:120ms ease-out;");
     assert_contains(html, "--boolean-pressed-inset:1px;");
     assert_contains(html, "transform:translateY(var(--boolean-pressed-inset));");
@@ -157,6 +160,7 @@ void test_boolean_browser_ui_surface() {
     assert_not_contains(html, "type='checkbox'");
     assert_not_contains(html, "Current runtime snapshot");
     assert_not_contains(html, "<pre>");
+    assert_not_contains(html, "outline:2px solid #2563eb");
 
     runtime.run_once(false);
     html = runtime.render_html();

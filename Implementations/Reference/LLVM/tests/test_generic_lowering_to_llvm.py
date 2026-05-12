@@ -17,6 +17,8 @@ CASES = [
     ("03", "Examples/03_ui_property_write/main.lowering.json", "Implementations/Reference/LLVM/examples/03_ui_property_write/module.ll"),
     ("04", "Examples/04_stateful_feedback_delay/main.lowering.json", "Implementations/Reference/LLVM/examples/04_stateful_feedback_delay/module.ll"),
     ("05", "Examples/05_bounded_ui_accumulator/main.lowering.json", "Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/module.ll"),
+    ("06", "Examples/06_boolean_value_roundtrip/main.lowering.json", "Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/module.ll"),
+    ("07", "Examples/07_string_value_roundtrip/main.lowering.json", "Implementations/Reference/LLVM/examples/07_string_value_roundtrip/module.ll"),
 ]
 
 

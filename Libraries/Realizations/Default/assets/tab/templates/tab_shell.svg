@@ -2,8 +2,8 @@
   <title>FROG Default Tab Shell</title>
   <desc>Default SVG-backed tab widget realization with tab header, items, selection, overflow, close, scroll, page container, label, caption, frame, and focus surfaces.</desc>
   <g data-frog-part="root">
-    <text data-frog-part="label" x="16" y="22" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">tab_1</text>
-    <text data-frog-part="caption" x="16" y="48" font-size="16" font-family="Inter, Arial, sans-serif" font-weight="600" fill="#111827">Tab Control</text>
+    <text data-frog-part="label" data-frog-anchor="label.anchor" x="16" y="22" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">tab_1</text>
+    <text data-frog-part="caption" data-frog-anchor="caption.anchor" x="16" y="48" font-size="16" font-family="Inter, Arial, sans-serif" font-weight="600" fill="#111827">Tab Control</text>
     <rect data-frog-part="frame" x="14" y="64" width="532" height="260" rx="8" fill="#ffffff" stroke="#111827" stroke-width="2"/>
     <g data-frog-part="tab_header_region">
       <rect x="24" y="74" width="512" height="42" rx="6" fill="#e2e8f0" stroke="#94a3b8"/>

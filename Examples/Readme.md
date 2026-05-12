@@ -63,6 +63,18 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
       <td><code>main.frog</code> + <code>ui/accumulator_panel.wfrog</code></td>
       <td><code>FIR → lowering → contract → runtime acceptance → LLVM module/native proof</code></td>
     </tr>
+    <tr>
+      <td><code>06_boolean_value_roundtrip</code></td>
+      <td>Boolean control/indicator value roundtrip</td>
+      <td><code>main.frog</code> + <code>ui/boolean_panel.wfrog</code></td>
+      <td><code>FIR → lowering → contract → LLVM native manifest → C++/Python/Rust runtime bridge → Default Boolean realization</code></td>
+    </tr>
+    <tr>
+      <td><code>07_string_value_roundtrip</code></td>
+      <td>String control/indicator hello-world roundtrip</td>
+      <td><code>main.frog</code> + <code>ui/string_panel.wfrog</code></td>
+      <td><code>FIR → lowering → contract → LLVM native manifest → C++/Python/Rust runtime bridge → Default String realization</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -83,6 +95,12 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
     |
     v
 05  combined bounded UI accumulator corridor
+    |
+    v
+06  Boolean .wfrog realization and native-kernel runtime bridge
+    |
+    v
+07  String .wfrog realization and native-kernel runtime bridge
 </code></pre>
 
 <hr/>
@@ -110,14 +128,28 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
 │   ├── main.frog
 │   ├── main.fir.json
 │   └── main.lowering.json
-└── 05_bounded_ui_accumulator/
+├── 05_bounded_ui_accumulator/
+│   ├── Readme.md
+│   ├── Freeze.md
+│   ├── main.frog
+│   ├── main.fir.json
+│   ├── main.lowering.json
+│   └── ui/
+│       └── accumulator_panel.wfrog
+├── 06_boolean_value_roundtrip/
+│   ├── Readme.md
+│   ├── main.frog
+│   ├── main.fir.json
+│   ├── main.lowering.json
+│   └── ui/
+│       └── boolean_panel.wfrog
+└── 07_string_value_roundtrip/
     ├── Readme.md
-    ├── Freeze.md
     ├── main.frog
     ├── main.fir.json
     ├── main.lowering.json
     └── ui/
-        └── accumulator_panel.wfrog
+        └── string_panel.wfrog
 </code></pre>
 
 <hr/>
@@ -125,16 +157,18 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
 <h2>Reference Checks</h2>
 
 <p>
-The current full check across the numbered examples is:
+The current reference workspace check across the numbered examples is:
 </p>
 
-<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py</code></pre>
+<pre><code>python Implementations/Reference/check_reference_workspace.py</code></pre>
 
 <p>
-To include native LLVM builds where <code>clang</code> is available:
+To include pytest coverage and optional native proof checks where the local toolchains are available:
 </p>
 
-<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-llvm-build</code></pre>
+<pre><code>python Implementations/Reference/check_reference_workspace.py --include-pytest
+python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge
+python Implementations/Reference/check_reference_workspace.py --include-llvm-build</code></pre>
 
 <hr/>
 
