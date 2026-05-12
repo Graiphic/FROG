@@ -28,10 +28,10 @@ The important architectural rule is that this directory participates in the exam
 
 <pre><code>Examples/05_bounded_ui_accumulator/ui/
 ├── Readme.md
-├── accumulator_panel.wfrog
-└── assets/
-    ├── numeric_control.svg
-    └── numeric_indicator.svg
+└── accumulator_panel.wfrog
+
+Libraries/Realizations/Default/assets/numeric/templates/
+└── numeric_rectangular.svg
 </code></pre>
 
 <hr/>

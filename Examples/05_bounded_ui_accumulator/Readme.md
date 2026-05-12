@@ -89,10 +89,10 @@ It is not a claim of a generalized LabVIEW runtime, arbitrary diagram compiler, 
 ├── main.lowering.json
 ├── front_panel.objects.json
 └── ui/
-    ├── accumulator_panel.wfrog
-    └── assets/
-        ├── numeric_control.svg
-        └── numeric_indicator.svg
+    └── accumulator_panel.wfrog
+
+Libraries/Realizations/Default/assets/numeric/templates/
+└── numeric_rectangular.svg
 
 Implementations/Reference/ContractEmitter/examples/
 └── 05_bounded_ui_accumulator.reference_host_runtime_ui_binding.contract.json
