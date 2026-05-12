@@ -156,20 +156,22 @@ void test_wfrog_widget_geometry_matches_svg_skin_size() {
     const auto& widgets = panel.at("widgets").as_array();
     assert(widgets.size() == 2);
 
-    const auto control_svg = read_text(wfrog_path.parent_path() / "assets" / "numeric_control.svg");
-    const auto indicator_svg = read_text(wfrog_path.parent_path() / "assets" / "numeric_indicator.svg");
-    assert_contains(control_svg, "width=\"220\"");
-    assert_contains(control_svg, "height=\"88\"");
-    assert_contains(control_svg, "viewBox=\"0 0 220 88\"");
-    assert_contains(control_svg, "id=\"label_anchor\"");
-    assert_contains(control_svg, "id=\"value_anchor\"");
-    assert_contains(control_svg, "id=\"value_box\"");
-    assert_contains(indicator_svg, "width=\"220\"");
-    assert_contains(indicator_svg, "height=\"88\"");
-    assert_contains(indicator_svg, "viewBox=\"0 0 220 88\"");
-    assert_contains(indicator_svg, "id=\"label_anchor\"");
-    assert_contains(indicator_svg, "id=\"value_anchor\"");
-    assert_contains(indicator_svg, "id=\"value_box\"");
+    const auto numeric_svg = read_text(
+        repo_root() / "Libraries" / "Realizations" / "Default" / "assets" / "numeric" / "templates" / "numeric_rectangular.svg");
+    assert_contains(numeric_svg, "viewBox=\"0 0 380 150\"");
+    assert_contains(numeric_svg, "id=\"caption_text\"");
+    assert_contains(numeric_svg, "id=\"frame\"");
+    assert_contains(numeric_svg, "width=\"222\"");
+    assert_contains(numeric_svg, "id=\"value_face\"");
+    assert_contains(numeric_svg, "id=\"text_value\"");
+    assert_contains(numeric_svg, "id=\"increment_up\"");
+    assert_contains(numeric_svg, "id=\"increment_down\"");
+    assert_contains(numeric_svg, "data-frog-states=\"normal pressed\"");
+    assert_contains(numeric_svg, "data-frog-state-law=\"normal-pressed-color-only\"");
+    assert_contains(numeric_svg, "data-frog-bind=\"style.increment_button.*\"");
+    assert_contains(numeric_svg, "id=\"unit_label\"");
+    assert_contains(numeric_svg, "id=\"radix_badge\"");
+    assert(numeric_svg.find(">DBL<") == std::string::npos);
 
     const auto& control = widgets.at(0).as_object();
     const auto& control_layout = control.at("layout").as_object();
@@ -222,23 +224,34 @@ void test_ui_surface() {
     assert_contains(html, "data-class-ref='frog.widgets.numeric_control'");
     assert_contains(html, "data-class-ref='frog.widgets.numeric_indicator'");
     assert_contains(html, "data-frog-visual-law='wfrog-realization-state-map'");
-    assert_contains(html, "data-asset-route='/asset/numeric_control_svg'");
-    assert_contains(html, "data-asset-route='/asset/numeric_indicator_svg'");
+    assert_contains(html, "data-asset-route='/asset/numeric_rectangular_svg'");
 
     assert_contains(html, "left:20px;top:24px;width:220px;height:88px;");
     assert_contains(html, "left:260px;top:24px;width:220px;height:88px;");
     assert_contains(html, "class='numeric-skin'");
-    assert_contains(html, "data-svg-anchor='label_anchor'");
-    assert_contains(html, "data-svg-anchor='value_anchor'");
-    assert_contains(html, "data-svg-part='value_box'");
+    assert_contains(html, "<svg");
+    assert_contains(html, "data-frog-part='caption'");
+    assert_contains(html, "data-svg-anchor='caption.anchor'");
+    assert_contains(html, "data-frog-part='text_value'");
+    assert_contains(html, "data-svg-anchor='text_value.center'");
+    assert_contains(html, "data-frog-part='increment_up'");
+    assert_contains(html, "data-frog-method='increment'");
+    assert_contains(html, "data-frog-part='increment_down'");
+    assert_contains(html, "data-frog-method='decrement'");
+    assert_contains(html, "data-frog-button-state-law='normal-pressed'");
+    assert_contains(html, "--frog-numeric-frame-stroke:transparent");
+    assert_contains(html, "--frog-numeric-frame-stroke-width:2px");
+    assert_contains(html, "--frog-numeric-step-fill:#5B9BD5");
+    assert_contains(html, "--frog-numeric-step-fill-pressed:#2B4F7B");
+    assert_contains(html, "font-size:12px;line-height:1;");
+    assert_contains(html, "font-weight:400;");
     assert_contains(html, "color:#111827;");
     assert_contains(html, "Input");
     assert_contains(html, "Accumulated result");
 
     runtime.core.execute(static_cast<std::uint16_t>(root.at("headless").as_object().at("input_value").as_i64()));
     assert(canonical_json(runtime.core.execution_artifact()) == canonical_json(expected));
-    assert(std::filesystem::exists(runtime.core.asset_map.at("numeric_control_svg")));
-    assert(std::filesystem::exists(runtime.core.asset_map.at("numeric_indicator_svg")));
+    assert(std::filesystem::exists(runtime.core.asset_map.at("numeric_rectangular_svg")));
 }
 
 } // namespace

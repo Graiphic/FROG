@@ -19,8 +19,7 @@
       "/",
       "/run",
       "/state.json",
-      "/asset/numeric_control_svg",
-      "/asset/numeric_indicator_svg"
+      "/asset/numeric_rectangular_svg"
     ]
   },
   "overflow": {

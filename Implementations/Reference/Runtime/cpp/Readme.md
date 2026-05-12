@@ -136,7 +136,7 @@ It renders:
   <li>the front panel in <code>panel_pixels</code>,</li>
   <li>the widget <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> declarations,</li>
   <li>the numeric SVG skins as the widget bodies,</li>
-  <li><code>label_anchor</code>, <code>value_anchor</code>, and <code>value_box</code> overlays,</li>
+  <li>Default Numeric realization anchors including <code>caption_text</code>, <code>value_face</code>, <code>text_value</code>, <code>increment_up</code>, and <code>increment_down</code>,</li>
   <li>dynamic widget values and labels,</li>
   <li>contract-driven <code>foreground_color</code> property writes.</li>
 </ul>

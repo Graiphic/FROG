@@ -101,6 +101,7 @@
         "normal",
         "hovered",
         "focused",
+        "pressed",
         "disabled",
         "read_only",
         "out_of_range"
@@ -134,6 +135,7 @@
       "supported_visual_states": [
         "normal",
         "focused",
+        "pressed",
         "disabled",
         "out_of_range"
       ],
@@ -200,7 +202,8 @@
       "part": "caption",
       "binding_kind": "svg_text_or_host_text",
       "binding_selector": "[data-frog-part='caption']",
-      "semantic_member": "caption.text"
+      "semantic_member": "caption.text",
+      "style_binding_group": "style.caption"
     },
     {
       "part": "frame",
@@ -279,6 +282,18 @@
       "property_bindings": [
         "style.focus_ring.visible",
         "style.focus_ring.color"
+      ]
+    },
+    {
+      "state": "pressed",
+      "value_condition": {
+        "interaction.pressed": true
+      },
+      "inherits": "normal",
+      "property_bindings": [
+        "style.increment_button.fill_color.pressed",
+        "style.increment_button.symbol_color.pressed",
+        "style.increment_button.border_color.pressed"
       ]
     },
     {
@@ -363,6 +378,11 @@
       "target_operation": "set_visibility"
     },
     {
+      "member": "style.caption.*",
+      "target_part": "caption",
+      "target_operation": "apply_caption_style"
+    },
+    {
       "member": "style.frame.*",
       "target_part": "frame",
       "target_operation": "apply_frame_style"
@@ -381,6 +401,16 @@
       "member": "style.spinner.*",
       "target_part": "spinner",
       "target_operation": "apply_spinner_style"
+    },
+    {
+      "member": "style.increment_button.*",
+      "target_part": "increment_up",
+      "target_operation": "apply_increment_button_style"
+    },
+    {
+      "member": "style.increment_button.*",
+      "target_part": "increment_down",
+      "target_operation": "apply_increment_button_style"
     },
     {
       "member": "style.focus_ring.*",
