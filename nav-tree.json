@@ -172,6 +172,13 @@
               "children": []
             },
             {
+              "key": "examples/widget_validation_checklist.md",
+              "title": "widget validation checklist",
+              "path": "/Examples/widget_validation_checklist.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "examples/01_pure_addition/",
               "title": "01 pure addition",
               "path": "/Examples/01_pure_addition/Readme.md",
@@ -306,6 +313,28 @@
                   "key": "examples/07_string_value_roundtrip/ui/",
                   "title": "ui",
                   "path": "/Examples/07_string_value_roundtrip/ui/Readme.md",
+                  "kind": "category",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "key": "examples/08_enum_value_roundtrip/",
+              "title": "08 enum value roundtrip",
+              "path": "/Examples/08_enum_value_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/08_enum_value_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/08_enum_value_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "examples/08_enum_value_roundtrip/ui/",
+                  "title": "ui",
+                  "path": "/Examples/08_enum_value_roundtrip/ui/Readme.md",
                   "kind": "category",
                   "children": []
                 }
@@ -2873,6 +2902,13 @@
                       "children": []
                     },
                     {
+                      "key": "implementations/reference/deriver/tests/test_example08_fir_derivation.py",
+                      "title": "test_example08_fir_derivation.py",
+                      "path": "/Implementations/Reference/Deriver/tests/test_example08_fir_derivation.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
                       "key": "implementations/reference/deriver/tests/test_examples01_05_fir_derivation.py",
                       "title": "test_examples01_05_fir_derivation.py",
                       "path": "/Implementations/Reference/Deriver/tests/test_examples01_05_fir_derivation.py",
@@ -2999,6 +3035,13 @@
                       "key": "implementations/reference/llvm/tests/test_example07_llvm_emission.py",
                       "title": "test_example07_llvm_emission.py",
                       "path": "/Implementations/Reference/LLVM/tests/test_example07_llvm_emission.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/llvm/tests/test_example08_llvm_emission.py",
+                      "title": "test_example08_llvm_emission.py",
+                      "path": "/Implementations/Reference/LLVM/tests/test_example08_llvm_emission.py",
                       "kind": "code",
                       "children": []
                     },
@@ -3178,6 +3221,13 @@
                       "key": "implementations/reference/lowerer/tests/test_example07_lowering.py",
                       "title": "test_example07_lowering.py",
                       "path": "/Implementations/Reference/Lowerer/tests/test_example07_lowering.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/lowerer/tests/test_example08_lowering.py",
+                      "title": "test_example08_lowering.py",
+                      "path": "/Implementations/Reference/Lowerer/tests/test_example08_lowering.py",
                       "kind": "code",
                       "children": []
                     },
@@ -3499,6 +3549,13 @@
                           "path": "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice07.py",
                           "kind": "code",
                           "children": []
+                        },
+                        {
+                          "key": "implementations/reference/runtime/python/tests/test_runtime_ui_slice08.py",
+                          "title": "test_runtime_ui_slice08.py",
+                          "path": "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice08.py",
+                          "kind": "code",
+                          "children": []
                         }
                       ]
                     }
@@ -3773,6 +3830,7 @@
     "/Expression/Widget%20realization.md",
     "/Expression/Readme.md",
     "/Examples/widget_coverage_plan.md",
+    "/Examples/widget_validation_checklist.md",
     "/Examples/01_pure_addition/main.frog",
     "/Examples/01_pure_addition/Readme.md",
     "/Examples/02_ui_value_roundtrip/main.frog",
@@ -3792,6 +3850,9 @@
     "/Examples/07_string_value_roundtrip/main.frog",
     "/Examples/07_string_value_roundtrip/ui/Readme.md",
     "/Examples/07_string_value_roundtrip/Readme.md",
+    "/Examples/08_enum_value_roundtrip/main.frog",
+    "/Examples/08_enum_value_roundtrip/ui/Readme.md",
+    "/Examples/08_enum_value_roundtrip/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
@@ -4143,6 +4204,7 @@
     "/Implementations/Reference/Deriver/tests/test_example01_fir_derivation.py",
     "/Implementations/Reference/Deriver/tests/test_example05_fir_derivation.py",
     "/Implementations/Reference/Deriver/tests/test_example07_fir_derivation.py",
+    "/Implementations/Reference/Deriver/tests/test_example08_fir_derivation.py",
     "/Implementations/Reference/Deriver/tests/test_examples01_05_fir_derivation.py",
     "/Implementations/Reference/Deriver/tests/test_fir_deriver.py",
     "/Implementations/Reference/Deriver/Readme.md",
@@ -4158,6 +4220,7 @@
     "/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py",
     "/Implementations/Reference/LLVM/tests/test_example06_llvm_emission.py",
     "/Implementations/Reference/LLVM/tests/test_example07_llvm_emission.py",
+    "/Implementations/Reference/LLVM/tests/test_example08_llvm_emission.py",
     "/Implementations/Reference/LLVM/tests/test_examples01_04_llvm_modules.py",
     "/Implementations/Reference/LLVM/tests/test_generic_lowering_to_llvm.py",
     "/Implementations/Reference/LLVM/tests/test_llvm_lowering_emitter.py",
@@ -4181,6 +4244,7 @@
     "/Implementations/Reference/Lowerer/rules/Readme.md",
     "/Implementations/Reference/Lowerer/tests/test_example05_lowering.py",
     "/Implementations/Reference/Lowerer/tests/test_example07_lowering.py",
+    "/Implementations/Reference/Lowerer/tests/test_example08_lowering.py",
     "/Implementations/Reference/Lowerer/tests/test_examples01_05_lowering.py",
     "/Implementations/Reference/Lowerer/tests/test_fir_lowerer.py",
     "/Implementations/Reference/Lowerer/Readme.md",
@@ -4223,6 +4287,7 @@
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice05.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice06.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice07.py",
+    "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice08.py",
     "/Implementations/Reference/Runtime/python/Readme.md",
     "/Implementations/Reference/Runtime/rust/Readme.md",
     "/Implementations/Reference/Runtime/tests/test_contract_executor.py",
