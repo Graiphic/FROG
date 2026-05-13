@@ -365,7 +365,7 @@ def emit_reference_host_runtime_contract(
                 fir_ref.get("path"),
                 source_ref.get("path", "").replace("main.frog", "main.lowering.json"),
             ],
-            "ui_package_authority": "published_front_panel_package",
+            "ui_package_authority": "published_widget_realization_package",
             "ui_package_authority_refs": [ui_package_path_value],
             "contract_authority": "this_file",
             "notes": [

@@ -27,6 +27,7 @@ static_assert(sizeof(FrogBoolRunResult) == 4, "FrogBoolRunResult ABI layout must
 static_assert(alignof(FrogBoolRunResult) == 2, "FrogBoolRunResult ABI alignment must remain 2 bytes.");
 
 using FrogNativeKernelFunction = void (*)(std::uint16_t input_value, FrogRunResult* out_result);
+using FrogNativeEnumKernelFunction = void (*)(std::uint16_t mode_value, FrogRunResult* out_result);
 using FrogNativeBoolKernelFunction = void (*)(std::uint8_t input_value, FrogBoolRunResult* out_result);
 
 struct FrogStringRunResult {
@@ -75,6 +76,13 @@ struct NativeBoolKernelResult {
 struct NativeStringKernelResult {
     bool ok;
     std::string result;
+    std::uint16_t error_code;
+    std::string diagnostic;
+};
+
+struct NativeEnumKernelResult {
+    bool ok;
+    std::uint16_t result_numeric_value;
     std::uint16_t error_code;
     std::string diagnostic;
 };
@@ -128,5 +136,21 @@ private:
 NativeStringKernelBridge make_linked_native_string_kernel_bridge(
     const std::filesystem::path& manifest_path,
     FrogNativeStringKernelFunction entry_point);
+
+class NativeEnumKernelBridge {
+public:
+    NativeEnumKernelBridge(NativeKernelManifest manifest, FrogNativeEnumKernelFunction entry_point);
+
+    NativeEnumKernelResult run(std::uint16_t mode_value) const;
+    const NativeKernelManifest& manifest() const;
+
+private:
+    NativeKernelManifest manifest_;
+    FrogNativeEnumKernelFunction entry_point_;
+};
+
+NativeEnumKernelBridge make_linked_native_enum_kernel_bridge(
+    const std::filesystem::path& manifest_path,
+    FrogNativeEnumKernelFunction entry_point);
 
 } // namespace frog::runtime

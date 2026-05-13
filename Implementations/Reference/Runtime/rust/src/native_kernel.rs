@@ -31,6 +31,14 @@ pub struct FrogStringRunResult {
     pub result_buffer: [u8; 256],
 }
 
+#[repr(C)]
+#[derive(Debug, Default, Clone, Copy)]
+pub struct FrogEnumRunResult {
+    pub ok: u8,
+    pub result: u16,
+    pub error_code: u16,
+}
+
 impl Default for FrogStringRunResult {
     fn default() -> Self {
         Self {
@@ -45,6 +53,7 @@ impl Default for FrogStringRunResult {
 type FrogNativeKernelFunction = unsafe extern "C" fn(u16, *mut FrogRunResult);
 type FrogNativeBoolKernelFunction = unsafe extern "C" fn(u8, *mut FrogBoolRunResult);
 type FrogNativeStringKernelFunction = unsafe extern "C" fn(*const u8, u32, *mut FrogStringRunResult);
+type FrogNativeEnumKernelFunction = unsafe extern "C" fn(u16, *mut FrogEnumRunResult);
 
 #[derive(Debug, Clone)]
 pub struct NativeKernelManifest {
@@ -76,6 +85,13 @@ pub struct NativeStringKernelResult {
     pub error_code: u16,
 }
 
+#[derive(Debug, Clone, Copy)]
+pub struct NativeEnumKernelResult {
+    pub ok: bool,
+    pub result_numeric_value: u16,
+    pub error_code: u16,
+}
+
 pub struct NativeKernelBridge {
     manifest: NativeKernelManifest,
     library: DynamicLibrary,
@@ -92,6 +108,12 @@ pub struct NativeStringKernelBridge {
     manifest: NativeKernelManifest,
     library: DynamicLibrary,
     entry_point: FrogNativeStringKernelFunction,
+}
+
+pub struct NativeEnumKernelBridge {
+    manifest: NativeKernelManifest,
+    library: DynamicLibrary,
+    entry_point: FrogNativeEnumKernelFunction,
 }
 
 pub fn load_native_kernel_manifest(path: impl AsRef<Path>) -> Result<NativeKernelManifest> {
@@ -279,6 +301,48 @@ impl NativeStringKernelBridge {
         NativeStringKernelResult {
             ok: raw.ok != 0 && raw.error_code == 0 && raw.result_len <= 256,
             result: String::from_utf8_lossy(&raw.result_buffer[..length]).to_string(),
+            error_code: raw.error_code,
+        }
+    }
+}
+
+impl NativeEnumKernelBridge {
+    pub fn from_paths(manifest_path: impl AsRef<Path>, library_path: impl AsRef<Path>) -> Result<Self> {
+        ensure(
+            std::mem::size_of::<FrogEnumRunResult>() == 6,
+            "FrogEnumRunResult ABI layout must be 6 bytes",
+        )?;
+        let manifest = load_native_kernel_manifest(manifest_path)?;
+        ensure(
+            manifest.entry_symbol == "frog_example08_run",
+            "unexpected native enum kernel entry symbol",
+        )?;
+        ensure(
+            manifest.abi == "frog_enum_u16_to_result_status_outptr",
+            "NativeEnumKernelBridge requires frog_enum_u16_to_result_status_outptr",
+        )?;
+        let library = DynamicLibrary::open(library_path.as_ref())?;
+        let entry_point = unsafe { library.symbol::<FrogNativeEnumKernelFunction>(&manifest.entry_symbol)? };
+        Ok(Self {
+            manifest,
+            library,
+            entry_point,
+        })
+    }
+
+    pub fn manifest(&self) -> &NativeKernelManifest {
+        &self.manifest
+    }
+
+    pub fn run(&self, input_numeric_value: u16) -> NativeEnumKernelResult {
+        let _keep_alive = &self.library;
+        let mut raw = FrogEnumRunResult::default();
+        unsafe {
+            (self.entry_point)(input_numeric_value, &mut raw);
+        }
+        NativeEnumKernelResult {
+            ok: raw.ok != 0 && raw.error_code == 0,
+            result_numeric_value: raw.result,
             error_code: raw.error_code,
         }
     }

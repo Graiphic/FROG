@@ -1,0 +1,134 @@
+{
+  "artifact_kind": "frog_backend_contract",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "backend_family": "reference_host_runtime_ui_binding",
+  "example_id": "08_enum_value_roundtrip",
+  "artifact_refs": {
+    "source_path": "Examples/08_enum_value_roundtrip/main.frog",
+    "fir_path": "Examples/08_enum_value_roundtrip/main.fir.json",
+    "lowering_path": "Examples/08_enum_value_roundtrip/main.lowering.json",
+    "wfrog_path": "Examples/08_enum_value_roundtrip/ui/enum_panel.wfrog"
+  },
+  "producer": {
+    "implementation": "FROG Reference Example 08 bounded fixture",
+    "implementation_kind": "non_normative_reference_fixture",
+    "version_governance_ref": "Versioning/Readme.md"
+  },
+  "compatibility": "example_specific_bounded_fixture",
+  "source_ref": {
+    "example_id": "08_enum_value_roundtrip",
+    "path": "Examples/08_enum_value_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "derived_from": {
+    "fir_path": "Examples/08_enum_value_roundtrip/main.fir.json",
+    "lowering_path": "Examples/08_enum_value_roundtrip/main.lowering.json",
+    "ui_package_path": "Examples/08_enum_value_roundtrip/ui/enum_panel.wfrog"
+  },
+  "ownership_boundary": {
+    "semantic_authority": "canonical_source_and_execution_facing_artifacts",
+    "semantic_authority_refs": [
+      "Examples/08_enum_value_roundtrip/main.frog",
+      "Examples/08_enum_value_roundtrip/main.fir.json",
+      "Examples/08_enum_value_roundtrip/main.lowering.json"
+    ],
+    "ui_package_authority": "published_widget_realization_package",
+    "ui_package_authority_refs": [
+      "Examples/08_enum_value_roundtrip/ui/enum_panel.wfrog"
+    ],
+    "contract_authority": "this_file"
+  },
+  "assumptions": {
+    "runtime_family": {
+      "name": "reference_host_runtime_ui_binding",
+      "host_model": "single_process_host_runtime",
+      "ui_binding": {
+        "widget_value_binding": true
+      }
+    },
+    "execution_start": {
+      "input_binding_complete": true,
+      "ui_host_available": true
+    },
+    "enum_behavior": {
+      "value_domain": "enum_item_id",
+      "enum_domain": "example08.mode",
+      "operation": "copy",
+      "representation": "u16"
+    }
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "enum_value_roundtrip_ui_unit",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "mode_value",
+            "type": "enum_item_id",
+            "enum_domain": "example08.mode",
+            "binding_origin": "widget.mode_input.value"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result_mode",
+            "type": "enum_item_id",
+            "enum_domain": "example08.mode",
+            "binding_target": "widget.mode_result.value"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "package_refs": [
+          "Examples/08_enum_value_roundtrip/ui/enum_panel.wfrog"
+        ],
+        "widgets": [
+          {
+            "widget_id": "mode_input",
+            "widget_class": "frog.widgets.enum_control",
+            "value_type": "enum_item_id",
+            "role": "control",
+            "binding": {
+              "mode": "widget_value",
+              "public_input_id": "mode_value"
+            }
+          },
+          {
+            "widget_id": "mode_result",
+            "widget_class": "frog.widgets.enum_indicator",
+            "value_type": "enum_item_id",
+            "role": "indicator",
+            "binding": {
+              "mode": "widget_value",
+              "public_output_id": "result_mode"
+            }
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "copy",
+        "src": "mode_value",
+        "dst": "result_mode",
+        "type": "enum_item_id",
+        "enum_domain": "example08.mode",
+        "representation": "u16"
+      },
+      "effects": [],
+      "publications": [
+        {
+          "target": "public_output.result_mode",
+          "source": "mode_value"
+        },
+        {
+          "target": "widget.mode_result.value",
+          "source": "mode_value"
+        }
+      ]
+    }
+  ],
+  "unsupported": [],
+  "diagnostics": []
+}

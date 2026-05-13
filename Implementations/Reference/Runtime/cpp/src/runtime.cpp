@@ -60,6 +60,98 @@ Value make_array(std::initializer_list<Value> values) {
     return Value(Array(values));
 }
 
+std::filesystem::path resolve_repo_path(const std::filesystem::path& anchor, const std::string& path) {
+    const std::filesystem::path candidate(path);
+    if (candidate.is_absolute()) {
+        return candidate;
+    }
+    return find_repo_root(anchor) / candidate;
+}
+
+const Object& require_object_value(const Value& value, const std::string& label) {
+    require(value.is_object(), label + " must be an object.");
+    return value.as_object();
+}
+
+const Array& require_array_value(const Value& value, const std::string& label) {
+    require(value.is_array(), label + " must be an array.");
+    return value.as_array();
+}
+
+struct EnumItem {
+    std::string id;
+    std::string text;
+    std::uint16_t numeric_value = 0;
+    bool enabled = true;
+};
+
+std::uint16_t json_u16_value(const Value& value, const std::string& label) {
+    require(value.is_number(), label + " must be numeric.");
+    const auto raw = value.as_i64();
+    require(raw >= 0 && raw <= 65535, label + " must remain in the u16 domain.");
+    return static_cast<std::uint16_t>(raw);
+}
+
+std::vector<EnumItem> enum_items_from_properties(const Object& properties, const std::string& widget_id) {
+    const auto it = properties.find("items");
+    require(it != properties.end(), "Enum widget " + widget_id + " must define items in front-panel instance properties.");
+    const auto& items = require_array_value(it->second, "Enum widget " + widget_id + " items");
+
+    std::vector<EnumItem> result;
+    std::set<std::string> ids;
+    std::set<std::uint16_t> numeric_values;
+    for (std::size_t index = 0; index < items.size(); ++index) {
+        const auto& item_object = require_object_value(items[index], "Enum item");
+        const auto id = json_string(item_object, "id");
+        const auto text = json_string(item_object, "text");
+        require(!id.empty(), "Enum item id must not be empty.");
+        require(!text.empty(), "Enum item text must not be empty.");
+        const auto numeric_value_it = item_object.find("numeric_value");
+        require(numeric_value_it != item_object.end(), "Enum item numeric_value is required.");
+        const auto numeric_value = json_u16_value(numeric_value_it->second, "Enum item numeric_value");
+        const bool enabled = json_bool(item_object, "enabled", true);
+        require(ids.insert(id).second, "Duplicate enum item id: " + id);
+        require(numeric_values.insert(numeric_value).second, "Duplicate enum item numeric_value.");
+        result.push_back(EnumItem{id, text, numeric_value, enabled});
+    }
+    require(!result.empty(), "Enum widget " + widget_id + " must declare at least one item.");
+    return result;
+}
+
+const EnumItem& enum_item_by_id(const std::vector<EnumItem>& items, const std::string& id, const std::string& label) {
+    const auto it = std::find_if(items.begin(), items.end(), [&](const EnumItem& item) { return item.id == id; });
+    require(it != items.end(), label + " must resolve to a declared enum item.");
+    return *it;
+}
+
+const EnumItem& enum_item_by_numeric_value(const std::vector<EnumItem>& items, std::uint16_t numeric_value, const std::string& label) {
+    const auto it = std::find_if(items.begin(), items.end(), [&](const EnumItem& item) { return item.numeric_value == numeric_value; });
+    require(it != items.end(), label + " must resolve to a declared enum item.");
+    return *it;
+}
+
+void require_same_enum_vocabulary(const std::vector<EnumItem>& left, const std::vector<EnumItem>& right) {
+    require(left.size() == right.size(), "Enum control and indicator must publish the same item vocabulary.");
+    for (std::size_t index = 0; index < left.size(); ++index) {
+        require(left[index].id == right[index].id, "Enum item id mismatch between control and indicator.");
+        require(left[index].text == right[index].text, "Enum item text mismatch between control and indicator.");
+        require(left[index].numeric_value == right[index].numeric_value, "Enum item numeric value mismatch between control and indicator.");
+    }
+}
+
+Value enum_items_to_runtime_value(const std::vector<EnumItem>& items) {
+    Array out;
+    for (const auto& item : items) {
+        out.push_back(make_object({
+            {"id", Value(item.id)},
+            {"text", Value(item.text)},
+            {"numeric_value", Value(static_cast<std::int64_t>(item.numeric_value))},
+            {"enabled", Value(item.enabled)},
+        }));
+    }
+    return Value(out);
+}
+
 } // namespace
 
 Slice05RuntimeCore::Slice05RuntimeCore(std::filesystem::path contract_path_, std::filesystem::path wfrog_path_)
@@ -67,8 +159,8 @@ Slice05RuntimeCore::Slice05RuntimeCore(std::filesystem::path contract_path_, std
       wfrog_path(std::move(wfrog_path_)),
       contract(load_contract_from_path(contract_path)),
       package(load_wfrog_from_path(wfrog_path)),
-      unit(load_and_validate()),
-      panel(package.front_panels.at(0)) {
+      panel(load_front_panel_from_frog_source_path(resolve_repo_path(contract_path, contract.source_ref.path))),
+      unit(load_and_validate()) {
     for (const auto& asset : package.svg_assets) {
         asset_map.emplace(asset.asset_id, std::filesystem::absolute(wfrog_path.parent_path() / asset.path));
     }
@@ -101,8 +193,7 @@ ContractUnit Slice05RuntimeCore::load_and_validate() const {
     require(current_unit.execution_model.iteration_count == 5, "Slice 05 expects five iterations.");
     require(current_unit.state_model.carrier.initial_value == 0, "Slice 05 expects initial state 0.");
 
-    require(package.front_panels.size() == 1, "Expected exactly one front panel.");
-    const auto& current_panel = package.front_panels.front();
+    const auto& current_panel = panel;
     require(current_panel.host_binding_ref == "reference_host_default", "Expected host_binding_ref reference_host_default.");
 
     const auto host_it = std::find_if(
@@ -356,8 +447,8 @@ Slice06BooleanRuntimeCore::Slice06BooleanRuntimeCore(std::filesystem::path contr
       wfrog_path(std::move(wfrog_path_)),
       contract(load_contract_from_path(contract_path)),
       package(load_wfrog_from_path(wfrog_path)),
-      unit(load_and_validate()),
-      panel(package.front_panels.at(0)) {
+      panel(load_front_panel_from_frog_source_path(resolve_repo_path(contract_path, contract.source_ref.path))),
+      unit(load_and_validate()) {
     for (const auto& asset : package.svg_assets) {
         asset_map.emplace(asset.asset_id, std::filesystem::absolute(wfrog_path.parent_path() / asset.path));
     }
@@ -386,8 +477,7 @@ ContractUnit Slice06BooleanRuntimeCore::load_and_validate() const {
     require(current_unit.execution_model.body_rule.kind == "copy", "Slice 06 expects a copy body rule.");
     require(current_unit.property_writes.empty(), "Slice 06 does not use property writes.");
 
-    require(package.front_panels.size() == 1, "Expected exactly one front panel.");
-    const auto& current_panel = package.front_panels.front();
+    const auto& current_panel = panel;
     require(current_panel.host_binding_ref == "reference_host_default", "Expected host_binding_ref reference_host_default.");
 
     const auto host_it = std::find_if(
@@ -611,8 +701,8 @@ Slice07StringRuntimeCore::Slice07StringRuntimeCore(std::filesystem::path contrac
       wfrog_path(std::move(wfrog_path_)),
       contract(load_contract_from_path(contract_path)),
       package(load_wfrog_from_path(wfrog_path)),
-      unit(load_and_validate()),
-      panel(package.front_panels.at(0)) {
+      panel(load_front_panel_from_frog_source_path(resolve_repo_path(contract_path, contract.source_ref.path))),
+      unit(load_and_validate()) {
     for (const auto& asset : package.svg_assets) {
         asset_map.emplace(asset.asset_id, std::filesystem::absolute(wfrog_path.parent_path() / asset.path));
     }
@@ -641,8 +731,7 @@ ContractUnit Slice07StringRuntimeCore::load_and_validate() const {
     require(current_unit.execution_model.body_rule.kind == "copy", "Slice 07 expects a copy body rule.");
     require(current_unit.property_writes.empty(), "Slice 07 does not use property writes.");
 
-    require(package.front_panels.size() == 1, "Expected exactly one front panel.");
-    const auto& current_panel = package.front_panels.front();
+    const auto& current_panel = panel;
     require(current_panel.host_binding_ref == "reference_host_default", "Expected host_binding_ref reference_host_default.");
 
     const auto host_it = std::find_if(
@@ -831,6 +920,302 @@ Value Slice07StringRuntimeCore::execution_artifact() const {
             {"ui", make_object({
                 {"str_input", Value(control_value())},
                 {"str_result", Value(last_result)},
+            })},
+        })},
+        {"ui_runtime", make_object({
+            {"panel", make_object({
+                {"panel_id", Value(panel.panel_id)},
+                {"title", Value(panel.title)},
+                {"class_ref", Value(panel.class_ref)},
+                {"layout", panel.layout},
+            })},
+            {"widgets", Value(widget_entries)},
+        })},
+        {"diagnostics", Value(Array{})},
+    });
+}
+
+Slice08EnumRuntimeCore::Slice08EnumRuntimeCore(std::filesystem::path contract_path_, std::filesystem::path wfrog_path_)
+    : contract_path(std::move(contract_path_)),
+      wfrog_path(std::move(wfrog_path_)),
+      contract(load_contract_from_path(contract_path)),
+      package(load_wfrog_from_path(wfrog_path)),
+      panel(load_front_panel_from_frog_source_path(resolve_repo_path(contract_path, contract.source_ref.path))),
+      unit(load_and_validate()) {
+    for (const auto& asset : package.svg_assets) {
+        asset_map.emplace(asset.asset_id, std::filesystem::absolute(wfrog_path.parent_path() / asset.path));
+    }
+    widgets = build_widgets();
+    last_result = control_value();
+    widgets.at("mode_result").properties["value"] = Value(last_result);
+}
+
+ContractUnit Slice08EnumRuntimeCore::load_and_validate() const {
+    require(contract.backend_family == REFERENCE_BACKEND_FAMILY, "Unexpected backend family.");
+    require(contract.source_ref.example_id == "08_enum_value_roundtrip", "Slice 08 expects Example 08.");
+    require(contract.assumptions.runtime_family.name == REFERENCE_BACKEND_FAMILY, "Unexpected runtime-family assumption name.");
+    require(contract.assumptions.runtime_family.ui_binding.widget_value_binding, "Contract must require widget_value_binding.");
+    require(contract.units.size() == 1, "Expected exactly one contract unit.");
+
+    const ContractUnit& current_unit = contract.units.front();
+    require(current_unit.unit_id == "main", "Expected unit_id main.");
+    require(current_unit.kind == "enum_value_roundtrip_ui_unit", "Unexpected runtime unit kind.");
+    require(current_unit.public_interface.inputs.size() == 1, "Expected one public input.");
+    require(current_unit.public_interface.outputs.size() == 1, "Expected one public output.");
+    require(current_unit.public_interface.inputs.front().id == "mode_value", "Expected public input mode_value.");
+    require(current_unit.public_interface.inputs.front().port_type == "enum_item_id", "Expected enum_item_id public input.");
+    require(current_unit.public_interface.outputs.front().id == "result_mode", "Expected public output result_mode.");
+    require(current_unit.public_interface.outputs.front().port_type == "enum_item_id", "Expected enum_item_id public output.");
+    require(current_unit.execution_model.structure == "single_step", "Slice 08 expects a single-step copy execution model.");
+    require(current_unit.execution_model.body_rule.kind == "copy", "Slice 08 expects a copy body rule.");
+    require(current_unit.property_writes.empty(), "Slice 08 does not use property writes.");
+
+    const auto& current_panel = panel;
+    require(current_panel.host_binding_ref == "reference_host_default", "Expected host_binding_ref reference_host_default.");
+
+    const auto host_it = std::find_if(
+        package.host_bindings.begin(),
+        package.host_bindings.end(),
+        [&](const HostBinding& binding) { return binding.binding_id == "reference_host_default"; });
+    require(host_it != package.host_bindings.end(), "Missing reference_host_default host binding.");
+    const std::set<std::string> required(host_it->required_capabilities.begin(), host_it->required_capabilities.end());
+    require(required.count("window") == 1, "Missing host capability window.");
+    require(required.count("basic_widget_rendering") == 1, "Missing host capability basic_widget_rendering.");
+    require(required.count("widget_value_binding") == 1, "Missing host capability widget_value_binding.");
+
+    std::map<std::string, const PanelWidget*> panel_widgets;
+    for (const auto& widget : current_panel.widgets) {
+        panel_widgets.emplace(widget.instance_id, &widget);
+    }
+    require(panel_widgets.count("mode_input") == 1, "Missing panel widget mode_input.");
+    require(panel_widgets.count("mode_result") == 1, "Missing panel widget mode_result.");
+    require_same_enum_vocabulary(
+        enum_items_from_properties(panel_widgets.at("mode_input")->props, "mode_input"),
+        enum_items_from_properties(panel_widgets.at("mode_result")->props, "mode_result"));
+
+    for (const auto& binding : current_unit.ui_binding.widgets) {
+        const auto widget_it = panel_widgets.find(binding.widget_id);
+        require(widget_it != panel_widgets.end(), "Missing panel widget " + binding.widget_id + ".");
+        require(widget_it->second->class_ref == binding.widget_class, "Class mismatch for widget " + binding.widget_id + ".");
+        require(binding.value_type == "enum_item_id", "Slice 08 supports only enum_item_id widget values.");
+        require(
+            binding.widget_class == "frog.widgets.enum_control" || binding.widget_class == "frog.widgets.enum_indicator",
+            "Unsupported widget class " + binding.widget_class + ".");
+    }
+
+    return current_unit;
+}
+
+std::map<std::string, WidgetState> Slice08EnumRuntimeCore::build_widgets() const {
+    std::map<std::string, const PanelWidget*> panel_widgets;
+    for (const auto& widget : panel.widgets) {
+        panel_widgets.emplace(widget.instance_id, &widget);
+    }
+    std::map<std::string, const PanelWidget*> realization_default_widgets;
+    if (!package.front_panels.empty()) {
+        for (const auto& widget : package.front_panels.front().widgets) {
+            realization_default_widgets.emplace(widget.instance_id, &widget);
+        }
+    }
+
+    std::map<std::string, WidgetState> result;
+    for (const auto& binding : unit.ui_binding.widgets) {
+        const auto* panel_widget = panel_widgets.at(binding.widget_id);
+        const auto default_it = realization_default_widgets.find(binding.widget_id);
+        Object visual;
+        Object properties;
+        if (default_it != realization_default_widgets.end()) {
+            visual = default_it->second->visual;
+            properties = default_it->second->props;
+        }
+        for (const auto& entry : panel_widget->visual) {
+            visual[entry.first] = entry.second;
+        }
+        for (const auto& entry : panel_widget->props) {
+            properties[entry.first] = entry.second;
+        }
+        std::optional<std::string> asset_id;
+        std::filesystem::path asset_path;
+        if (const auto visual_it = visual.find("asset_ref"); visual_it != visual.end() && visual_it->second.is_string()) {
+            const std::string& asset_ref = visual_it->second.as_string();
+            if (asset_ref.rfind("asset:", 0) == 0) {
+                asset_id = asset_ref.substr(6);
+                const auto asset_it = asset_map.find(*asset_id);
+                if (asset_it != asset_map.end()) {
+                    asset_path = asset_it->second;
+                }
+            }
+        }
+        require(asset_id.has_value(), "Enum widget " + binding.widget_id + " must reference a .wfrog SVG asset.");
+        require(!asset_path.empty() && std::filesystem::exists(asset_path), "Enum widget " + binding.widget_id + " asset path must exist.");
+
+        enum_items_from_properties(properties, binding.widget_id);
+        properties.emplace("value", properties.count("value") ? properties.at("value") : Value("idle"));
+        properties.emplace("caption.text", properties.count("caption.text") ? properties.at("caption.text") : Value(binding.widget_id));
+        properties.emplace("interaction.enabled", properties.count("interaction.enabled") ? properties.at("interaction.enabled") : Value(binding.role == "control"));
+        properties.emplace("interaction.read_only", properties.count("interaction.read_only") ? properties.at("interaction.read_only") : Value(binding.role != "control"));
+        properties.emplace("realization.variant", properties.count("realization.variant") ? properties.at("realization.variant") : Value("rectangular_ring"));
+
+        result.emplace(
+            binding.widget_id,
+            WidgetState{
+                binding.widget_id,
+                binding.widget_class,
+                binding.role,
+                panel_widget->layout,
+                std::move(properties),
+                asset_id,
+                asset_path,
+                {},
+            });
+    }
+    return result;
+}
+
+void Slice08EnumRuntimeCore::set_control_value(const std::string& value) {
+    const auto items = enum_items_from_properties(widgets.at("mode_input").properties, "mode_input");
+    const auto& item = enum_item_by_id(items, value, "mode_value");
+    require(item.enabled, "mode_value must resolve to an enabled enum item.");
+    widgets.at("mode_input").properties["value"] = Value(value);
+}
+
+std::string Slice08EnumRuntimeCore::control_value() const {
+    return json_string(widgets.at("mode_input").properties, "value", "");
+}
+
+Value Slice08EnumRuntimeCore::execute(std::optional<std::string> control_value_override) {
+    if (control_value_override.has_value()) {
+        set_control_value(*control_value_override);
+    }
+    const auto control_items = enum_items_from_properties(widgets.at("mode_input").properties, "mode_input");
+    const auto& item = enum_item_by_id(control_items, control_value(), "mode_value");
+    require(item.enabled, "mode_value must resolve to an enabled enum item.");
+    last_result = item.id;
+    widgets.at("mode_result").properties["value"] = Value(last_result);
+    return execution_artifact();
+}
+
+Value Slice08EnumRuntimeCore::execute_with_native_kernel_bridge(
+    const NativeEnumKernelBridge& bridge,
+    std::optional<std::string> control_value_override) {
+    require(bridge.manifest().source_lowered_unit == "Examples/08_enum_value_roundtrip/main.lowering.json", "Unexpected native enum kernel source lowered unit.");
+    if (control_value_override.has_value()) {
+        set_control_value(*control_value_override);
+    }
+
+    const auto control_items = enum_items_from_properties(widgets.at("mode_input").properties, "mode_input");
+    const auto& input_item = enum_item_by_id(control_items, control_value(), "mode_value");
+    require(input_item.enabled, "mode_value must resolve to an enabled enum item.");
+    const auto result = bridge.run(input_item.numeric_value);
+    if (!result.ok) {
+        throw std::runtime_error(result.diagnostic.empty() ? "native enum kernel execution failed." : result.diagnostic);
+    }
+
+    const auto result_items = enum_items_from_properties(widgets.at("mode_result").properties, "mode_result");
+    const auto& output_item = enum_item_by_numeric_value(result_items, result.result_numeric_value, "result_mode");
+    last_result = output_item.id;
+    widgets.at("mode_result").properties["value"] = Value(last_result);
+    return execution_artifact();
+}
+
+Value Slice08EnumRuntimeCore::execution_artifact() const {
+    Array widget_entries;
+    for (const auto& entry : widgets) {
+        const auto& widget = entry.second;
+        const auto items = enum_items_from_properties(widget.properties, widget.widget_id);
+        const auto value = json_string(widget.properties, "value");
+        const auto& selected = enum_item_by_id(items, value, widget.widget_id + ".value");
+        Object runtime_fields{
+            {"value", Value(selected.id)},
+            {"selected.text", Value(selected.text)},
+            {"selected.numeric_value", Value(static_cast<std::int64_t>(selected.numeric_value))},
+            {"label.text", Value(json_string(widget.properties, "label.text"))},
+            {"caption.text", Value(json_string(widget.properties, "caption.text"))},
+            {"items", enum_items_to_runtime_value(items)},
+            {"asset_ref", widget.asset_id.has_value() ? Value("asset:" + *widget.asset_id) : Value(nullptr)},
+            {"realization.variant", Value(json_string(widget.properties, "realization.variant", "rectangular_ring"))},
+        };
+        const auto copy_property = [&](const std::string& key) {
+            const auto it = widget.properties.find(key);
+            if (it != widget.properties.end()) {
+                runtime_fields.emplace(key, it->second);
+            }
+        };
+        copy_property("enum.domain_id");
+        copy_property("caption.visible");
+        copy_property("caption.anchor.x");
+        copy_property("caption.anchor.y");
+        copy_property("caption.align.horizontal");
+        copy_property("caption.style.text_color");
+        copy_property("display.digital_display_visible");
+        copy_property("display.increment_buttons_visible");
+        copy_property("display.selector_visible");
+        copy_property("display.text_overflow_visible");
+        copy_property("style.frame.fill_color");
+        copy_property("style.frame.border_color");
+        copy_property("style.frame.border_width");
+        copy_property("style.value_face.fill_color");
+        copy_property("style.value_face.fill_color.hover");
+        copy_property("style.value_face.border_color");
+        copy_property("style.value_face.border_color.hover");
+        copy_property("style.value_face.border_width");
+        copy_property("style.value_display.color");
+        copy_property("style.value_display.font_size");
+        copy_property("style.value_display.font_weight");
+        copy_property("style.value_display.vertical_offset");
+        copy_property("style.selector_face.fill_color");
+        copy_property("style.selector_face.fill_color.hover");
+        copy_property("style.selector_face.border_color");
+        copy_property("style.selector_face.border_color.hover");
+        copy_property("style.selector_face.border_width");
+        copy_property("style.selector_face.symbol_color");
+        copy_property("style.selector_face.symbol_color.hover");
+        copy_property("interaction.enabled");
+        copy_property("interaction.read_only");
+
+        widget_entries.push_back(make_object({
+            {"widget_id", Value(widget.widget_id)},
+            {"class_ref", Value(widget.class_ref)},
+            {"role", Value(widget.role)},
+            {"layout", widget.layout},
+            {"runtime", Value(runtime_fields)},
+        }));
+    }
+
+    const auto control_items = enum_items_from_properties(widgets.at("mode_input").properties, "mode_input");
+    const auto result_items = enum_items_from_properties(widgets.at("mode_result").properties, "mode_result");
+    const auto& input_item = enum_item_by_id(control_items, control_value(), "mode_value");
+    const auto& output_item = enum_item_by_id(result_items, last_result, "result_mode");
+
+    return make_object({
+        {"artifact_kind", Value("frog_runtime_execution_result")},
+        {"artifact_governance_ref", make_object({{"path", Value("Versioning/Readme.md")}})},
+        {"status", Value("ok")},
+        {"contract_ref", make_object({
+            {"unit_ids", make_array({Value(unit.unit_id)})},
+            {"backend_family", Value(contract.backend_family)},
+            {"source_ref", make_object({
+                {"example_id", Value(contract.source_ref.example_id)},
+                {"path", Value(contract.source_ref.path)},
+                {"entry_unit", Value(contract.source_ref.entry_unit)},
+            })},
+        })},
+        {"execution_summary", make_object({
+            {"mode", Value("enum_value_roundtrip")},
+            {"executed_unit", Value(unit.unit_id)},
+            {"operation", Value("copy")},
+            {"input_mode", Value(input_item.id)},
+            {"input_text", Value(input_item.text)},
+            {"input_numeric_value", Value(static_cast<std::int64_t>(input_item.numeric_value))},
+            {"result_mode", Value(output_item.id)},
+            {"result_text", Value(output_item.text)},
+            {"result_numeric_value", Value(static_cast<std::int64_t>(output_item.numeric_value))},
+        })},
+        {"outputs", make_object({
+            {"public", make_object({{"result_mode", Value(output_item.id)}})},
+            {"ui", make_object({
+                {"mode_input", Value(input_item.id)},
+                {"mode_result", Value(output_item.id)},
             })},
         })},
         {"ui_runtime", make_object({

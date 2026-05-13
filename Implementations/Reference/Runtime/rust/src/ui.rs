@@ -8,10 +8,10 @@ use std::process::Command;
 
 use serde_json::{json, to_string_pretty, Map, Value};
 
-use crate::contract::{default_contract_path, default_wfrog_path};
+use crate::contract::{default_contract_path, default_wfrog_path, find_repo_root, load_front_panel_from_frog_source_path};
 use crate::diagnostics::{Result, RuntimeError};
 use crate::execute::execute_reference_contract_case;
-use crate::native_kernel::{NativeBoolKernelBridge, NativeKernelBridge, NativeStringKernelBridge};
+use crate::native_kernel::{NativeBoolKernelBridge, NativeEnumKernelBridge, NativeKernelBridge, NativeStringKernelBridge};
 use crate::runtime::{RuntimeCore, WidgetState};
 
 pub struct BrowserUiRuntime {
@@ -125,7 +125,7 @@ impl BrowserUiRuntime {
              }});\
              </script></head><body>\
              <h1>{title}</h1>\
-             <p class='meta'>Example 05 - .wfrog front panel + Rust runtime</p>\
+             <p class='meta'>Example 05 - .frog front panel + Default Numeric .wfrog realization assets + Rust runtime</p>\
              <dl class='runtime-facts' aria-label='Runtime facts'>\
              <div><dt>Runtime</dt><dd>Rust reference runtime</dd></div>\
              <div><dt>Execution</dt><dd>{execution_path}</dd></div>\
@@ -352,6 +352,26 @@ fn safe_css_font_weight(value: &str, fallback: &str) -> String {
     if value.len() == 3
         && value.as_bytes().iter().all(u8::is_ascii_digit)
         && value.parse::<u16>().is_ok_and(|weight| (100..=900).contains(&weight) && weight % 100 == 0)
+    {
+        value.to_string()
+    } else {
+        fallback.to_string()
+    }
+}
+
+fn safe_css_font_style(value: &str, fallback: &str) -> String {
+    if matches!(value, "normal" | "italic" | "oblique") {
+        value.to_string()
+    } else {
+        fallback.to_string()
+    }
+}
+
+fn safe_css_font_family(value: &str, fallback: &str) -> String {
+    if !value.is_empty()
+        && value
+            .chars()
+            .all(|ch| ch.is_ascii_alphanumeric() || matches!(ch, ' ' | ',' | '.' | '_' | '-'))
     {
         value.to_string()
     } else {
@@ -694,6 +714,7 @@ fn render_numeric_widget(widget: &WidgetState) -> String {
 pub struct BooleanBrowserUiRuntime {
     pub contract: Value,
     pub wfrog: Value,
+    pub panel: Value,
     pub asset_map: BTreeMap<String, PathBuf>,
     pub current_value: bool,
     pub last_result: bool,
@@ -711,8 +732,9 @@ impl BooleanBrowserUiRuntime {
         wfrog_path: PathBuf,
         native_kernel_bridge: Option<NativeBoolKernelBridge>,
     ) -> Result<Self> {
-        let contract: Value = serde_json::from_str(&fs::read_to_string(contract_path)?)?;
+        let contract: Value = serde_json::from_str(&fs::read_to_string(&contract_path)?)?;
         let wfrog: Value = serde_json::from_str(&fs::read_to_string(&wfrog_path)?)?;
+        let panel = source_front_panel_value(&contract_path, &contract)?;
         let mut asset_map = BTreeMap::new();
         if let Some(assets) = wfrog["svg_assets"].as_array() {
             for asset in assets {
@@ -721,7 +743,7 @@ impl BooleanBrowserUiRuntime {
                 }
             }
         }
-        let current_value = wfrog["front_panels"][0]["widgets"]
+        let current_value = panel["widgets"]
             .as_array()
             .and_then(|widgets| {
                 widgets.iter().find_map(|widget| {
@@ -737,6 +759,7 @@ impl BooleanBrowserUiRuntime {
         Ok(Self {
             contract,
             wfrog,
+            panel,
             asset_map,
             current_value,
             last_result: current_value,
@@ -851,7 +874,7 @@ impl BooleanBrowserUiRuntime {
              .diagnostic.error{{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}}\
              </style></head><body>\
              <h1>{title}</h1>\
-             <p class='meta'>Example 06 - .wfrog front panel + Default Boolean realization assets + Rust runtime</p>\
+             <p class='meta'>Example 06 - .frog front panel + Default Boolean .wfrog realization assets + Rust runtime</p>\
              <dl class='runtime-facts' aria-label='Runtime facts'>\
              <div><dt>Runtime</dt><dd>Rust reference runtime</dd></div>\
              <div><dt>Execution</dt><dd>{execution_path}</dd></div>\
@@ -969,6 +992,7 @@ impl BooleanBrowserUiRuntime {
 pub struct StringBrowserUiRuntime {
     pub contract: Value,
     pub wfrog: Value,
+    pub panel: Value,
     pub asset_map: BTreeMap<String, PathBuf>,
     pub current_text: String,
     pub last_result: String,
@@ -982,8 +1006,9 @@ impl StringBrowserUiRuntime {
         wfrog_path: PathBuf,
         native_kernel_bridge: Option<NativeStringKernelBridge>,
     ) -> Result<Self> {
-        let contract: Value = serde_json::from_str(&fs::read_to_string(contract_path)?)?;
+        let contract: Value = serde_json::from_str(&fs::read_to_string(&contract_path)?)?;
         let wfrog: Value = serde_json::from_str(&fs::read_to_string(&wfrog_path)?)?;
+        let panel = source_front_panel_value(&contract_path, &contract)?;
         let mut asset_map = BTreeMap::new();
         if let Some(assets) = wfrog["svg_assets"].as_array() {
             for asset in assets {
@@ -992,7 +1017,7 @@ impl StringBrowserUiRuntime {
                 }
             }
         }
-        let current_text = wfrog["front_panels"][0]["widgets"]
+        let current_text = panel["widgets"]
             .as_array()
             .and_then(|widgets| {
                 widgets.iter().find_map(|widget| {
@@ -1008,6 +1033,7 @@ impl StringBrowserUiRuntime {
         Ok(Self {
             contract,
             wfrog,
+            panel,
             asset_map,
             last_result: current_text.clone(),
             current_text,
@@ -1039,7 +1065,7 @@ impl StringBrowserUiRuntime {
     }
 
     pub fn execution_artifact(&self) -> Value {
-        let panel = &self.wfrog["front_panels"][0];
+        let panel = &self.panel;
         let widgets = panel["widgets"].as_array().cloned().unwrap_or_default();
         let widget_by_id = |id: &str| widgets.iter().find(|widget| widget["instance_id"].as_str() == Some(id)).cloned().unwrap_or(Value::Null);
         let make_runtime = |widget: &Value, value: &str| {
@@ -1153,7 +1179,7 @@ impl StringBrowserUiRuntime {
              .diagnostic.error{{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}}\
              </style></head><body>\
              <h1>{title}</h1>\
-             <p class='meta'>Example 07 - .wfrog front panel + Default String realization assets + Rust runtime</p>\
+             <p class='meta'>Example 07 - .frog front panel + Default String .wfrog realization assets + Rust runtime</p>\
              <dl class='runtime-facts' aria-label='Runtime facts'>\
              <div><dt>Runtime</dt><dd>Rust reference runtime</dd></div>\
              <div><dt>Execution</dt><dd>{execution_path}</dd></div>\
@@ -1215,6 +1241,418 @@ impl StringBrowserUiRuntime {
         if request.method == "POST" && request.path == "/run" {
             let body = String::from_utf8_lossy(&request.body);
             let value = parse_form_value(&body, "input_text").unwrap_or_else(|| "hello world".to_string());
+            if let Err(error) = self.run_once(value) {
+                self.last_error = Some(error.to_string());
+            }
+            return write_response(stream, "303 See Other", "text/plain; charset=utf-8", Vec::new(), Some(("Location", "/".to_string())));
+        }
+        write_response(stream, "404 Not Found", "text/plain; charset=utf-8", b"not found".to_vec(), None)
+    }
+}
+
+#[derive(Clone, Debug)]
+struct EnumUiItem {
+    id: String,
+    text: String,
+    numeric_value: u16,
+    enabled: bool,
+}
+
+fn enum_items_from_widget(widget: &Value) -> Result<Vec<EnumUiItem>> {
+    let widget_id = widget["instance_id"].as_str().or_else(|| widget["widget_id"].as_str()).unwrap_or("enum");
+    let props = &widget["props"];
+    let runtime = &widget["runtime"];
+    let items = props["items"]
+        .as_array()
+        .or_else(|| runtime["items"].as_array())
+        .ok_or_else(|| RuntimeError::Message(format!("Enum widget {widget_id} must define items in front-panel instance properties.")))?;
+    if items.is_empty() {
+        return Err(RuntimeError::Message(format!("Enum widget {widget_id} must define at least one item.")));
+    }
+    let mut result = Vec::new();
+    let mut seen_ids = std::collections::BTreeSet::new();
+    let mut seen_numbers = std::collections::BTreeSet::new();
+    for item in items {
+        let id = item["id"].as_str().unwrap_or("").to_string();
+        let text = item["text"].as_str().unwrap_or("").to_string();
+        let raw = item["numeric_value"].as_u64().ok_or_else(|| RuntimeError::Message("Enum item must publish numeric_value.".to_string()))?;
+        if id.is_empty() || text.is_empty() || raw > 65535 {
+            return Err(RuntimeError::Message("Enum item must publish id, text, and a u16 numeric_value.".to_string()));
+        }
+        if !seen_ids.insert(id.clone()) {
+            return Err(RuntimeError::Message(format!("Duplicate enum item id: {id}")));
+        }
+        if !seen_numbers.insert(raw as u16) {
+            return Err(RuntimeError::Message("Duplicate enum item numeric_value.".to_string()));
+        }
+        result.push(EnumUiItem {
+            id,
+            text,
+            numeric_value: raw as u16,
+            enabled: item["enabled"].as_bool().unwrap_or(true),
+        });
+    }
+    Ok(result)
+}
+
+fn enum_item_by_id(items: &[EnumUiItem], id: &str, label: &str) -> Result<EnumUiItem> {
+    items
+        .iter()
+        .find(|item| item.id == id)
+        .cloned()
+        .ok_or_else(|| RuntimeError::Message(format!("{label} must resolve to a declared enum item.")))
+}
+
+fn enum_item_by_numeric_value(items: &[EnumUiItem], numeric_value: u16, label: &str) -> Result<EnumUiItem> {
+    items
+        .iter()
+        .find(|item| item.numeric_value == numeric_value)
+        .cloned()
+        .ok_or_else(|| RuntimeError::Message(format!("{label} must resolve to a declared enum item.")))
+}
+
+pub struct EnumBrowserUiRuntime {
+    pub contract: Value,
+    pub wfrog: Value,
+    pub panel: Value,
+    pub asset_map: BTreeMap<String, PathBuf>,
+    pub current_mode: String,
+    pub last_result: String,
+    pub last_error: Option<String>,
+    pub native_kernel_bridge: Option<NativeEnumKernelBridge>,
+}
+
+impl EnumBrowserUiRuntime {
+    pub fn with_native_kernel_bridge(
+        contract_path: PathBuf,
+        wfrog_path: PathBuf,
+        native_kernel_bridge: Option<NativeEnumKernelBridge>,
+    ) -> Result<Self> {
+        let contract: Value = serde_json::from_str(&fs::read_to_string(&contract_path)?)?;
+        if contract["source_ref"]["example_id"].as_str() != Some("08_enum_value_roundtrip") {
+            return Err(RuntimeError::Message("EnumBrowserUiRuntime expects Example 08.".to_string()));
+        }
+        let wfrog: Value = serde_json::from_str(&fs::read_to_string(&wfrog_path)?)?;
+        let panel = source_front_panel_value(&contract_path, &contract)?;
+        let mut asset_map = BTreeMap::new();
+        if let Some(assets) = wfrog["svg_assets"].as_array() {
+            for asset in assets {
+                if let (Some(asset_id), Some(path)) = (asset["asset_id"].as_str(), asset["path"].as_str()) {
+                    asset_map.insert(asset_id.to_string(), wfrog_path.parent().unwrap_or_else(|| std::path::Path::new("")).join(path));
+                }
+            }
+        }
+        let input_widget = panel["widgets"]
+            .as_array()
+            .and_then(|widgets| widgets.iter().find(|widget| widget["instance_id"].as_str() == Some("mode_input")))
+            .ok_or_else(|| RuntimeError::Message("Example 08 panel must contain mode_input.".to_string()))?;
+        let items = enum_items_from_widget(input_widget)?;
+        let current_mode = input_widget["props"]["value"]
+            .as_str()
+            .unwrap_or(&items[0].id)
+            .to_string();
+        enum_item_by_id(&items, &current_mode, "mode_value")?;
+        Ok(Self {
+            contract,
+            wfrog,
+            panel,
+            asset_map,
+            last_result: current_mode.clone(),
+            current_mode,
+            last_error: None,
+            native_kernel_bridge,
+        })
+    }
+
+    pub fn run_once(&mut self, mode_value: String) -> Result<Value> {
+        self.current_mode = mode_value;
+        let input_widget = self.widget_by_id("mode_input")?;
+        let items = enum_items_from_widget(&input_widget)?;
+        let input_item = enum_item_by_id(&items, &self.current_mode, "mode_value")?;
+        if !input_item.enabled {
+            return Err(RuntimeError::Message("mode_value must resolve to an enabled enum item.".to_string()));
+        }
+        if let Some(bridge) = &self.native_kernel_bridge {
+            if bridge.manifest().source_lowered_unit != "Examples/08_enum_value_roundtrip/main.lowering.json" {
+                return Err(RuntimeError::Message("Unexpected native enum kernel source lowered unit.".to_string()));
+            }
+            let result = bridge.run(input_item.numeric_value);
+            if !result.ok {
+                let diagnostic = bridge.manifest().diagnostic(result.error_code);
+                self.last_error = Some(diagnostic.clone());
+                return Err(RuntimeError::Message(diagnostic));
+            }
+            let result_widget = self.widget_by_id("mode_result")?;
+            let result_items = enum_items_from_widget(&result_widget)?;
+            self.last_result = enum_item_by_numeric_value(&result_items, result.result_numeric_value, "result_mode")?.id;
+        } else {
+            self.last_result = input_item.id;
+        }
+        self.last_error = None;
+        Ok(self.execution_artifact())
+    }
+
+    fn widget_by_id(&self, id: &str) -> Result<Value> {
+        self.panel["widgets"]
+            .as_array()
+            .and_then(|widgets| widgets.iter().find(|widget| widget["instance_id"].as_str() == Some(id)))
+            .cloned()
+            .ok_or_else(|| RuntimeError::Message(format!("Example 08 panel must contain {id}.")))
+    }
+
+    fn runtime_for(&self, widget: &Value, value: &str) -> Value {
+        let props = &widget["props"];
+        let visual = &widget["visual"];
+        let items = enum_items_from_widget(widget).unwrap_or_default();
+        let selected = enum_item_by_id(&items, value, "enum.value").unwrap_or_else(|_| items[0].clone());
+        let mut runtime = json!({
+            "value": selected.id,
+            "selected.text": selected.text,
+            "selected.numeric_value": selected.numeric_value,
+            "label.text": props["label.text"].clone(),
+            "caption.text": props["caption.text"].clone(),
+            "items": items.iter().map(|item| json!({"id": item.id, "text": item.text, "numeric_value": item.numeric_value, "enabled": item.enabled})).collect::<Vec<Value>>(),
+            "asset_ref": visual["asset_ref"].clone(),
+            "realization.variant": props["realization.variant"].clone()
+        });
+        if let Some(runtime_object) = runtime.as_object_mut() {
+            for member in [
+                "enum.domain_id",
+                "caption.visible",
+                "caption.anchor.x",
+                "caption.anchor.y",
+                "caption.align.horizontal",
+                "caption.style.text_color",
+                "display.digital_display_visible",
+                "display.increment_buttons_visible",
+                "display.selector_visible",
+                "display.text_overflow_visible",
+                "style.scale.reference_width",
+                "style.scale.reference_height",
+                "style.frame.fill_color",
+                "style.frame.border_color",
+                "style.frame.border_width",
+                "style.value_face.fill_color",
+                "style.value_face.fill_color.hover",
+                "style.value_face.border_color",
+                "style.value_face.border_color.hover",
+                "style.value_face.border_width",
+                "style.value_display.color",
+                "style.value_display.font_size",
+                "style.value_display.font_size_mode",
+                "style.value_display.font_weight",
+                "style.value_display.vertical_offset",
+                "style.value_display.vertical_offset_mode",
+                "style.value_display.padding_inline",
+                "style.value_display.padding_inline_mode",
+                "style.selector_face.fill_color",
+                "style.selector_face.fill_color.hover",
+                "style.selector_face.border_color",
+                "style.selector_face.border_color.hover",
+                "style.selector_face.border_width",
+                "style.selector_face.border_width_mode",
+                "style.selector_face.border_radius",
+                "style.selector_face.border_radius_mode",
+                "style.selector_face.symbol_color",
+                "style.selector_face.symbol_color.hover",
+                "style.selector_face.symbol_width",
+                "style.selector_face.symbol_height",
+                "style.selector_face.symbol_size_mode",
+                "style.dropdown.fill_color",
+                "style.dropdown.border_color",
+                "style.dropdown.border_width",
+                "style.dropdown.border_width_mode",
+                "style.dropdown.option.fill_color",
+                "style.dropdown.option.text_color",
+                "style.dropdown.option.hover_fill_color",
+                "style.dropdown.option.hover_text_color",
+                "style.dropdown.option.selected_fill_color",
+                "style.dropdown.option.selected_text_color",
+                "style.dropdown.option.font_family",
+                "style.dropdown.option.font_size",
+                "style.dropdown.option.font_size_mode",
+                "style.dropdown.option.font_weight",
+                "style.dropdown.option.font_style",
+                "style.dropdown.option.padding_inline",
+                "style.dropdown.option.padding_inline_mode",
+                "style.dropdown.option.height",
+                "style.dropdown.option.height_mode",
+                "interaction.enabled",
+                "interaction.read_only",
+            ] {
+                if !props[member].is_null() {
+                    runtime_object.insert(member.to_string(), props[member].clone());
+                }
+            }
+        }
+        runtime
+    }
+
+    pub fn execution_artifact(&self) -> Value {
+        let input = self.widget_by_id("mode_input").unwrap_or(Value::Null);
+        let result = self.widget_by_id("mode_result").unwrap_or(Value::Null);
+        let input_items = enum_items_from_widget(&input).unwrap_or_default();
+        let result_items = enum_items_from_widget(&result).unwrap_or_default();
+        let input_item = enum_item_by_id(&input_items, &self.current_mode, "mode_value").unwrap_or_else(|_| input_items[0].clone());
+        let output_item = enum_item_by_id(&result_items, &self.last_result, "result_mode").unwrap_or_else(|_| result_items[0].clone());
+        json!({
+            "artifact_kind": "frog_runtime_execution_result",
+            "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+            "status": "ok",
+            "contract_ref": {"unit_ids": ["main"], "backend_family": self.contract["backend_family"].clone(), "source_ref": self.contract["source_ref"].clone()},
+            "execution_summary": {
+                "mode": "enum_value_roundtrip",
+                "executed_unit": "main",
+                "operation": "copy",
+                "input_mode": input_item.id,
+                "input_text": input_item.text,
+                "input_numeric_value": input_item.numeric_value,
+                "result_mode": output_item.id,
+                "result_text": output_item.text,
+                "result_numeric_value": output_item.numeric_value
+            },
+            "outputs": {"public": {"result_mode": output_item.id}, "ui": {"mode_input": input_item.id, "mode_result": output_item.id}},
+            "ui_runtime": {
+                "panel": {"panel_id": self.panel["panel_id"].clone(), "title": self.panel["title"].clone(), "class_ref": self.panel["class_ref"].clone(), "layout": self.panel["layout"].clone()},
+                "widgets": [
+                    {"widget_id": "mode_input", "class_ref": input["class_ref"].clone(), "role": "control", "layout": input["layout"].clone(), "runtime": self.runtime_for(&input, &input_item.id)},
+                    {"widget_id": "mode_result", "class_ref": result["class_ref"].clone(), "role": "indicator", "layout": result["layout"].clone(), "runtime": self.runtime_for(&result, &output_item.id)}
+                ]
+            },
+            "diagnostics": []
+        })
+    }
+
+    pub fn render_html(&self) -> String {
+        let snapshot = self.execution_artifact();
+        let panel = &snapshot["ui_runtime"]["panel"];
+        let widgets = snapshot["ui_runtime"]["widgets"].as_array().unwrap();
+        let panel_width = panel["layout"]["width"].as_i64().unwrap_or(620);
+        let panel_height = panel["layout"]["height"].as_i64().unwrap_or(180);
+        let uses_native_kernel = self.native_kernel_bridge.is_some();
+        let mut diagnostics = String::new();
+        if let Some(message) = &self.last_error {
+            let _ = write!(diagnostics, "<div class='diagnostic error'>{}</div>", escape_html(message));
+        }
+        let rendered_widgets = widgets
+            .iter()
+            .map(|widget| {
+                let asset_id = widget["runtime"]["asset_ref"]
+                    .as_str()
+                    .and_then(|value| value.strip_prefix("asset:"))
+                    .unwrap_or("");
+                render_enum_widget(widget, self.asset_map.get(asset_id))
+            })
+            .collect::<Vec<String>>()
+            .join("");
+        format!(
+            "<!doctype html><html lang='en'><head><meta charset='utf-8'><title>{title}</title>\
+             <style>\
+             body{{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}}\
+             h1{{font-size:24px;margin:0 0 12px 0;}}\
+             p.meta{{margin:0 0 20px 0;color:#52606d;}}\
+             .runtime-facts{{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 18px 0;}}\
+             .runtime-facts div{{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}}\
+             .runtime-facts dt{{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}}\
+             .runtime-facts dd{{margin:0;color:#1f2933;font-size:12px;font-weight:600;}}\
+             .front-panel{{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:visible;}}\
+             .frog-widget{{position:absolute;box-sizing:border-box;}}\
+             .enum-widget{{font-family:Segoe UI,Arial,sans-serif;overflow:visible;}}\
+             .enum-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;}}\
+             .enum-skin svg{{width:100%;height:100%;display:block;}}\
+             .enum-skin #label_text,.enum-skin #caption_text,.enum-skin #value_display{{display:none;}}\
+             .enum-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}}\
+             .enum-value-display-overlay{{position:absolute;box-sizing:border-box;display:flex;align-items:center;padding:0 var(--frog-enum-text-padding-inline);font-family:Segoe UI,Arial,sans-serif;line-height:normal;transform:translateY(var(--frog-enum-text-vertical-offset));z-index:3;}}\
+             .enum-widget .enum-display-button{{border:0;background:transparent;text-align:left;justify-content:flex-start;appearance:none;cursor:pointer;}}\
+             .enum-widget .enum-display-button:focus,.enum-widget .enum-display-button:focus-visible,.enum-widget .enum-display-button:active{{outline:0;box-shadow:none;}}\
+             .enum-select-state{{display:none;}}\
+             .enum-selector-overlay{{position:absolute;box-sizing:border-box;display:flex;align-items:center;justify-content:center;border-style:solid;border-width:var(--frog-enum-selector-stroke-width);border-radius:var(--frog-enum-selector-radius);}}\
+             .enum-selector-overlay::after{{content:'';width:0;height:0;border-left:calc(var(--frog-enum-selector-symbol-width) / 2) solid transparent;border-right:calc(var(--frog-enum-selector-symbol-width) / 2) solid transparent;border-top:var(--frog-enum-selector-symbol-height) solid currentColor;}}\
+             .enum-control:has(.enum-display-button:hover) .enum-skin #value_face,.enum-control:has(.enum-dropdown:not([hidden])) .enum-skin #value_face{{fill:var(--frog-enum-value-hover-fill) !important;}}\
+             .enum-indicator-value{{position:absolute;box-sizing:border-box;display:flex;align-items:center;padding:0 var(--frog-enum-text-padding-inline);pointer-events:none;line-height:normal;transform:translateY(var(--frog-enum-text-vertical-offset));}}\
+             .enum-dropdown{{position:absolute;box-sizing:border-box;z-index:30;background:var(--frog-enum-dropdown-fill);border:var(--frog-enum-dropdown-border-width) solid var(--frog-enum-dropdown-border);}}\
+             .enum-dropdown[hidden]{{display:none;}}\
+             .enum-dropdown-option{{width:100%;min-height:var(--frog-enum-dropdown-option-height);display:flex;align-items:center;justify-content:flex-start;padding:0 var(--frog-enum-dropdown-option-padding-inline);border:0;border-radius:0;background:var(--frog-enum-dropdown-option-fill);color:var(--frog-enum-dropdown-option-text);font-family:var(--frog-enum-dropdown-option-font-family);font-size:var(--frog-enum-dropdown-option-font-size);font-weight:var(--frog-enum-dropdown-option-font-weight);font-style:var(--frog-enum-dropdown-option-font-style);text-align:left;cursor:pointer;}}\
+             .enum-dropdown-option:hover,.enum-dropdown-option:focus{{background:var(--frog-enum-dropdown-option-hover-fill);color:var(--frog-enum-dropdown-option-hover-text);outline:0;}}\
+             .enum-dropdown-option[aria-selected='true']{{background:var(--frog-enum-dropdown-option-selected-fill);color:var(--frog-enum-dropdown-option-selected-text);}}\
+             .enum-widget .enum-selector-button{{padding:0;border-style:solid;border-width:var(--frog-enum-selector-stroke-width);border-radius:var(--frog-enum-selector-radius);font-weight:400;cursor:pointer;appearance:none;z-index:4;background:var(--frog-enum-selector-fill);border-color:var(--frog-enum-selector-stroke);color:var(--frog-enum-selector-symbol);}}\
+             .enum-widget .enum-selector-button:hover{{background:var(--frog-enum-selector-hover-fill);border-color:var(--frog-enum-selector-hover-stroke);color:var(--frog-enum-selector-hover-symbol);}}\
+             .enum-widget .enum-selector-button:focus,.enum-widget .enum-selector-button:focus-visible,.enum-widget .enum-selector-button:active{{outline:0;box-shadow:none;}}\
+             .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}\
+             button{{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}}\
+             .diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}\
+             .diagnostic.error{{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}}\
+             </style><script>\
+             function frogCloseEnumDropdown(menuId,displayId){{const menu=document.getElementById(menuId);const display=document.getElementById(displayId);if(menu){{menu.hidden=true;}}if(display){{display.setAttribute('aria-expanded','false');}}}}\
+             function frogCloseOtherEnumDropdowns(menuId){{document.querySelectorAll('.enum-dropdown').forEach(function(m){{if(m.id!==menuId){{m.hidden=true;}}}});document.querySelectorAll('.enum-display-button,.enum-selector-button').forEach(function(b){{if(b.getAttribute('aria-controls')!==menuId){{b.setAttribute('aria-expanded','false');}}}});}}\
+             function frogToggleEnumDropdown(menuId,displayId){{const menu=document.getElementById(menuId);const display=document.getElementById(displayId);if(!menu){{return;}}frogCloseOtherEnumDropdowns(menuId);menu.hidden=!menu.hidden;if(display){{display.setAttribute('aria-expanded',menu.hidden?'false':'true');}}}}\
+             function frogUpdateEnumDisplay(select,displayId){{const d=document.getElementById(displayId);if(!d){{return;}}const o=select.options[select.selectedIndex];if(o){{d.textContent=o.textContent;}}const menu=document.getElementById(select.id.replace('_value','_dropdown'));if(menu){{menu.querySelectorAll('.enum-dropdown-option').forEach(function(option){{option.setAttribute('aria-selected',option.getAttribute('data-enum-value')===select.value?'true':'false');}});}}}}\
+             function frogSelectEnumOption(option,selectId,displayId,menuId){{const s=document.getElementById(selectId);const d=document.getElementById(displayId);if(!s||!option){{return;}}const value=option.getAttribute('data-enum-value');s.value=value;if(d){{d.textContent=option.textContent;}}frogUpdateEnumDisplay(s,displayId);frogCloseEnumDropdown(menuId,displayId);s.dispatchEvent(new Event('input',{{bubbles:true}}));s.dispatchEvent(new Event('change',{{bubbles:true}}));}}\
+             document.addEventListener('click',function(event){{if(!event.target.closest('.enum-widget')){{document.querySelectorAll('.enum-dropdown').forEach(function(m){{m.hidden=true;}});document.querySelectorAll('.enum-display-button,.enum-selector-button').forEach(function(b){{b.setAttribute('aria-expanded','false');}});}}}});\
+             </script></head><body>\
+             <h1>{title}</h1>\
+             <p class='meta'>Example 08 - .frog front panel + Default Enum .wfrog realization assets + Rust runtime</p>\
+             <dl class='runtime-facts' aria-label='Runtime facts'>\
+             <div><dt>Runtime</dt><dd>Rust reference runtime</dd></div>\
+             <div><dt>Execution</dt><dd>{execution_path}</dd></div>\
+             <div><dt>Compiler backend</dt><dd>{compiler_backend}</dd></div>\
+             </dl>{diagnostics}\
+             <form method='post' action='/run'>\
+             <div class='front-panel' data-panel-id='{panel_id}' data-coordinate-space='panel_pixels' data-runtime-language='rust' data-compiler-backend='{compiler_backend_id}' data-execution-path='{execution_path_id}' style='width:{panel_width}px;height:{panel_height}px;'>\
+             {rendered_widgets}</div>\
+             <div class='actions'><button type='submit'>Run Example 08</button><a class='state-link' href='/state.json'>state.json</a></div></form>\
+             </body></html>",
+            title = escape_html(panel["title"].as_str().unwrap_or("FROG")),
+            diagnostics = diagnostics,
+            execution_path = if uses_native_kernel { "native kernel bridge" } else { "enum contract executor" },
+            compiler_backend = if uses_native_kernel { "LLVM native enum kernel artifact" } else { "none for Example 08" },
+            compiler_backend_id = if uses_native_kernel { "llvm" } else { "none" },
+            execution_path_id = if uses_native_kernel { "native_kernel_bridge" } else { "rust_enum_contract_executor" },
+            panel_id = escape_html(panel["panel_id"].as_str().unwrap_or("")),
+            panel_width = panel_width,
+            panel_height = panel_height,
+            rendered_widgets = rendered_widgets,
+        )
+    }
+
+    pub fn serve(mut self, host: &str, port: u16, open_browser: bool) -> Result<()> {
+        let listener = TcpListener::bind((host, port))?;
+        let address = listener.local_addr()?;
+        let url = format!("http://{}:{}/", address.ip(), address.port());
+        if open_browser {
+            let _ = open_in_browser(&url);
+        }
+        println!("{url}");
+        for stream in listener.incoming() {
+            let mut stream = stream?;
+            if let Err(error) = self.handle_connection(&mut stream) {
+                let _ = write_response(&mut stream, "500 Internal Server Error", "text/plain; charset=utf-8", format!("{error}").into_bytes(), None);
+            }
+        }
+        Ok(())
+    }
+
+    fn handle_connection(&mut self, stream: &mut TcpStream) -> Result<()> {
+        let request = read_request(stream)?;
+        if request.method == "GET" && request.path == "/" {
+            return write_response(stream, "200 OK", "text/html; charset=utf-8", self.render_html().into_bytes(), None);
+        }
+        if request.method == "GET" && request.path == "/state.json" {
+            let payload = to_string_pretty(&self.execution_artifact()).unwrap().into_bytes();
+            return write_response(stream, "200 OK", "application/json; charset=utf-8", payload, None);
+        }
+        if request.method == "GET" && request.path.starts_with("/asset/") {
+            let asset_id = request.path.trim_start_matches("/asset/");
+            if let Some(path) = self.asset_map.get(asset_id) {
+                if path.exists() {
+                    return write_response(stream, "200 OK", "image/svg+xml", fs::read(path)?, None);
+                }
+            }
+            return write_response(stream, "404 Not Found", "text/plain; charset=utf-8", b"missing asset".to_vec(), None);
+        }
+        if request.method == "POST" && request.path == "/run" {
+            let body = String::from_utf8_lossy(&request.body);
+            let value = parse_form_value(&body, "mode_value").unwrap_or_else(|| "run".to_string());
             if let Err(error) = self.run_once(value) {
                 self.last_error = Some(error.to_string());
             }
@@ -1350,6 +1788,286 @@ fn render_string_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
         string_skin,
         caption_overlay,
         value_overlay,
+    )
+}
+
+#[derive(Clone, Copy)]
+struct EnumSvgGeometry {
+    view_width: f64,
+    view_height: f64,
+    caption_x: f64,
+    caption_y: f64,
+    value_face_x: f64,
+    value_face_y: f64,
+    value_face_width: f64,
+    value_face_height: f64,
+    selector_face_x: f64,
+    selector_face_y: f64,
+    selector_face_width: f64,
+    selector_face_height: f64,
+}
+
+impl Default for EnumSvgGeometry {
+    fn default() -> Self {
+        Self {
+            view_width: 380.0,
+            view_height: 150.0,
+            caption_x: 16.0,
+            caption_y: 46.0,
+            value_face_x: 22.0,
+            value_face_y: 82.0,
+            value_face_width: 214.0,
+            value_face_height: 28.0,
+            selector_face_x: 246.0,
+            selector_face_y: 82.0,
+            selector_face_width: 24.0,
+            selector_face_height: 28.0,
+        }
+    }
+}
+
+fn enum_box_style(x: f64, y: f64, width: f64, height: f64, geometry: EnumSvgGeometry) -> String {
+    format!(
+        "left:{};top:{};width:{};height:{};",
+        css_percent(pct(x, geometry.view_width)),
+        css_percent(pct(y, geometry.view_height)),
+        css_percent(pct(width, geometry.view_width)),
+        css_percent(pct(height, geometry.view_height))
+    )
+}
+
+fn enum_dropdown_style(x: f64, y: f64, width: f64, height: f64, geometry: EnumSvgGeometry) -> String {
+    format!(
+        "left:{};top:{};width:{};",
+        css_percent(pct(x, geometry.view_width)),
+        css_percent(pct(y + height, geometry.view_height)),
+        css_percent(pct(width, geometry.view_width))
+    )
+}
+
+fn enum_caption_anchor_style(runtime: &Value, geometry: EnumSvgGeometry) -> String {
+    let x = runtime["caption.anchor.x"].as_f64().unwrap_or(geometry.caption_x);
+    let y = runtime["caption.anchor.y"].as_f64().unwrap_or(geometry.caption_y);
+    let align = runtime_string(runtime, "caption.align.horizontal", "left");
+    let mut style = format!(
+        "left:{};top:{};",
+        css_percent(pct(x, geometry.view_width)),
+        css_percent(pct(y, geometry.view_height))
+    );
+    let _ = write!(style, "transform:{};text-align:{};", caption_transform_for_align(&align), caption_text_align(&align));
+    if !runtime_bool(runtime, "caption.visible", true) {
+        style.push_str("display:none;");
+    }
+    style
+}
+
+fn load_enum_svg_geometry(asset_path: Option<&PathBuf>) -> EnumSvgGeometry {
+    let mut geometry = EnumSvgGeometry::default();
+    let Some(path) = asset_path else { return geometry; };
+    let Ok(svg) = fs::read_to_string(path) else { return geometry; };
+    if let Some(start) = svg.find("viewBox=\"") {
+        let value_start = start + "viewBox=\"".len();
+        if let Some(value_end) = svg[value_start..].find('"') {
+            let parts: Vec<&str> = svg[value_start..value_start + value_end].split_whitespace().collect();
+            if parts.len() == 4 {
+                if let (Ok(width), Ok(height)) = (parts[2].parse::<f64>(), parts[3].parse::<f64>()) {
+                    if width > 0.0 && height > 0.0 {
+                        geometry.view_width = width;
+                        geometry.view_height = height;
+                    }
+                }
+            }
+        }
+    }
+    geometry.caption_x = svg_attribute_f64(&svg, "caption_text", "x", geometry.caption_x);
+    geometry.caption_y = svg_attribute_f64(&svg, "caption_text", "y", geometry.caption_y);
+    geometry.value_face_x = svg_attribute_f64(&svg, "value_face", "x", geometry.value_face_x);
+    geometry.value_face_y = svg_attribute_f64(&svg, "value_face", "y", geometry.value_face_y);
+    geometry.value_face_width = svg_attribute_f64(&svg, "value_face", "width", geometry.value_face_width);
+    geometry.value_face_height = svg_attribute_f64(&svg, "value_face", "height", geometry.value_face_height);
+    geometry.selector_face_x = svg_attribute_f64(&svg, "selector_face", "x", geometry.selector_face_x);
+    geometry.selector_face_y = svg_attribute_f64(&svg, "selector_face", "y", geometry.selector_face_y);
+    geometry.selector_face_width = svg_attribute_f64(&svg, "selector_face", "width", geometry.selector_face_width);
+    geometry.selector_face_height = svg_attribute_f64(&svg, "selector_face", "height", geometry.selector_face_height);
+    geometry
+}
+
+fn render_enum_skin(asset_path: Option<&PathBuf>, runtime: &Value) -> String {
+    let Some(path) = asset_path else {
+        return "<div class='enum-skin missing-skin'></div>".to_string();
+    };
+    let Ok(svg) = fs::read_to_string(path) else {
+        return "<div class='enum-skin missing-skin'></div>".to_string();
+    };
+    let frame_stroke = safe_css_color(&runtime_string(runtime, "style.frame.border_color", "transparent"), "transparent");
+    let frame_stroke_width = safe_css_length(&runtime_string(runtime, "style.frame.border_width", "0px"), "0px");
+    let frame_visible = frame_stroke != "transparent" && frame_stroke_width != "0px";
+    format!(
+        "<div class='enum-skin' aria-hidden='true' style='--frog-enum-label-display:none;--frog-enum-caption-display:none;--frog-enum-value-display:none;--frog-enum-frame-display:{};--frog-enum-frame-fill:{};--frog-enum-frame-stroke:{};--frog-enum-frame-stroke-width:{};--frog-enum-value-face-fill:{};--frog-enum-value-face-stroke:{};--frog-enum-value-face-stroke-width:{};--frog-enum-selector-display:{};--frog-enum-selector-fill:{};--frog-enum-selector-stroke:{};--frog-enum-selector-stroke-width:{};--frog-enum-selector-symbol:{};--frog-enum-increment-display:none;--frog-enum-digital-display:none;--frog-enum-overflow-display:none;'>{}</div>",
+        if frame_visible { "inline" } else { "none" },
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.frame.fill_color", "transparent"), "transparent")),
+        escape_html(&frame_stroke),
+        escape_html(&frame_stroke_width),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.value_face.fill_color", "#ffffff"), "#ffffff")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.value_face.border_color", "#64748b"), "#64748b")),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.value_face.border_width", "2px"), "2px")),
+        if runtime_bool(runtime, "display.selector_visible", true) { "inline" } else { "none" },
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.selector_face.fill_color", "#f1f5f9"), "#f1f5f9")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.selector_face.border_color", "#64748b"), "#64748b")),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.selector_face.border_width", "1px"), "1px")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.selector_face.symbol_color", "#111827"), "#111827")),
+        svg
+    )
+}
+
+fn render_enum_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String {
+    let runtime = &widget["runtime"];
+    let layout = &widget["layout"];
+    let geometry = load_enum_svg_geometry(asset_path);
+    let items = enum_items_from_widget(widget).unwrap_or_default();
+    let selected_id = runtime_string(runtime, "value", "");
+    let selected = enum_item_by_id(&items, &selected_id, "enum.value").unwrap_or_else(|_| items[0].clone());
+    let is_control = widget["role"].as_str() == Some("control");
+    let selector_visible = runtime_bool(runtime, "display.selector_visible", is_control);
+    let value_style = enum_box_style(
+        geometry.value_face_x,
+        geometry.value_face_y,
+        geometry.value_face_width,
+        geometry.value_face_height,
+        geometry,
+    );
+    let selector_style = enum_box_style(
+        geometry.selector_face_x,
+        geometry.selector_face_y,
+        geometry.selector_face_width,
+        geometry.selector_face_height,
+        geometry,
+    );
+    let dropdown_style = enum_dropdown_style(
+        geometry.value_face_x,
+        geometry.value_face_y,
+        geometry.value_face_width,
+        geometry.value_face_height,
+        geometry,
+    );
+    let text_color = safe_css_color(&runtime_string(runtime, "style.value_display.color", "#111827"), "#111827");
+    let text_size = safe_css_length(&runtime_string(runtime, "style.value_display.font_size", "16px"), "16px");
+    let text_weight = safe_css_font_weight(&runtime_string(runtime, "style.value_display.font_weight", "400"), "400");
+    let text_offset = safe_css_length(&runtime_string(runtime, "style.value_display.vertical_offset", "0px"), "0px");
+    let text_padding = safe_css_length(&runtime_string(runtime, "style.value_display.padding_inline", "8px"), "8px");
+    let selector_fill = safe_css_color(&runtime_string(runtime, "style.selector_face.fill_color", "#f1f5f9"), "#f1f5f9");
+    let selector_stroke = safe_css_color(&runtime_string(runtime, "style.selector_face.border_color", "#64748b"), "#64748b");
+    let selector_symbol = safe_css_color(&runtime_string(runtime, "style.selector_face.symbol_color", "#111827"), "#111827");
+    let widget_id = widget["widget_id"].as_str().unwrap_or("mode_input");
+    let caption = runtime_string(runtime, "caption.text", widget_id);
+    let asset_route = runtime["asset_ref"]
+        .as_str()
+        .and_then(|value| value.strip_prefix("asset:"))
+        .map(|id| format!("/asset/{id}"))
+        .unwrap_or_default();
+    let mut body = String::new();
+    body.push_str(&render_enum_skin(asset_path, runtime));
+    let _ = write!(
+        body,
+        "<span class='enum-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}color:{};'>{}</span>",
+        enum_caption_anchor_style(runtime, geometry),
+        escape_html(&safe_css_color(&runtime_string(runtime, "caption.style.text_color", "#111827"), "#111827")),
+        escape_html(&caption)
+    );
+    if is_control {
+        let value_id = format!("{widget_id}_value");
+        let display_id = format!("{widget_id}_display");
+        let dropdown_id = format!("{widget_id}_dropdown");
+        let _ = write!(
+            body,
+            "<button id='{display_id}' type='button' class='enum-value-display-overlay enum-display-button' data-frog-part='value_display' data-svg-anchor='value_display.left_center' aria-haspopup='listbox' aria-expanded='false' aria-controls='{dropdown_id}' onclick=\"frogToggleEnumDropdown('{dropdown_id}','{display_id}')\" style='{value_style}color:{};font-size:{};font-weight:{};--frog-enum-text-vertical-offset:{};'>{}</button>",
+            escape_html(&text_color),
+            escape_html(&text_size),
+            escape_html(&text_weight),
+            escape_html(&text_offset),
+            escape_html(&selected.text)
+        );
+        if selector_visible {
+            let _ = write!(
+                body,
+                "<button type='button' class='enum-selector-overlay enum-selector-button' data-frog-part='selector_face' aria-label='Open {}' aria-haspopup='listbox' aria-expanded='false' aria-controls='{dropdown_id}' onclick=\"frogToggleEnumDropdown('{dropdown_id}','{display_id}')\" style='{selector_style}'></button>",
+                escape_html(&caption)
+            );
+        }
+        let _ = write!(body, "<select id='{value_id}' name='mode_value' class='enum-select-state' data-frog-part='value_state' aria-hidden='true' tabindex='-1' hidden>");
+        for item in &items {
+            let _ = write!(
+                body,
+                "<option value='{}'{}{}>{}</option>",
+                escape_html(&item.id),
+                if item.id == selected.id { " selected" } else { "" },
+                if item.enabled { "" } else { " disabled" },
+                escape_html(&item.text)
+            );
+        }
+        let _ = write!(body, "</select><div id='{dropdown_id}' class='enum-dropdown' data-frog-part='dropdown' role='listbox' aria-label='{} options' hidden style='{dropdown_style}'>", escape_html(&caption));
+        for item in &items {
+            let _ = write!(
+                body,
+                "<button type='button' class='enum-dropdown-option' role='option' data-enum-value='{}' aria-selected='{}' onclick=\"frogSelectEnumOption(this,'{value_id}','{display_id}','{dropdown_id}')\"{}>{}</button>",
+                escape_html(&item.id),
+                if item.id == selected.id { "true" } else { "false" },
+                if item.enabled { "" } else { " disabled" },
+                escape_html(&item.text)
+            );
+        }
+        body.push_str("</div>");
+    } else {
+        let _ = write!(
+            body,
+            "<output class='enum-value-overlay enum-indicator-value' data-frog-part='value_display' data-svg-anchor='value_display.left_center' style='{value_style}color:{};font-size:{};font-weight:{};--frog-enum-text-vertical-offset:{};'>{}</output>",
+            escape_html(&text_color),
+            escape_html(&text_size),
+            escape_html(&text_weight),
+            escape_html(&text_offset),
+            escape_html(&selected.text)
+        );
+    }
+    format!(
+        "<section class='frog-widget enum-widget {}' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-frog-visual-law='wfrog-realization-state-map' data-frog-selector-visible='{}' data-asset-route='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;--frog-enum-selector-fill:{};--frog-enum-selector-stroke:{};--frog-enum-selector-stroke-width:{};--frog-enum-selector-radius:{};--frog-enum-selector-symbol:{};--frog-enum-selector-symbol-width:{};--frog-enum-selector-symbol-height:{};--frog-enum-selector-hover-fill:{};--frog-enum-selector-hover-stroke:{};--frog-enum-selector-hover-symbol:{};--frog-enum-value-hover-fill:{};--frog-enum-text-padding-inline:{};--frog-enum-dropdown-fill:{};--frog-enum-dropdown-border:{};--frog-enum-dropdown-border-width:{};--frog-enum-dropdown-option-fill:{};--frog-enum-dropdown-option-text:{};--frog-enum-dropdown-option-hover-fill:{};--frog-enum-dropdown-option-hover-text:{};--frog-enum-dropdown-option-selected-fill:{};--frog-enum-dropdown-option-selected-text:{};--frog-enum-dropdown-option-font-family:{};--frog-enum-dropdown-option-font-size:{};--frog-enum-dropdown-option-font-weight:{};--frog-enum-dropdown-option-font-style:{};--frog-enum-dropdown-option-padding-inline:{};--frog-enum-dropdown-option-height:{};'>{}</section>",
+        if is_control { "enum-control" } else { "enum-indicator" },
+        escape_html(widget_id),
+        escape_html(widget["class_ref"].as_str().unwrap_or("")),
+        escape_html(widget["role"].as_str().unwrap_or("")),
+        if selector_visible { "true" } else { "false" },
+        escape_html(&asset_route),
+        layout["x"].as_i64().unwrap_or(0),
+        layout["y"].as_i64().unwrap_or(0),
+        layout["width"].as_i64().unwrap_or(260),
+        layout["height"].as_i64().unwrap_or(110),
+        escape_html(&selector_fill),
+        escape_html(&selector_stroke),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.selector_face.border_width", "1px"), "1px")),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.selector_face.border_radius", "1px"), "1px")),
+        escape_html(&selector_symbol),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.selector_face.symbol_width", "10px"), "10px")),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.selector_face.symbol_height", "7px"), "7px")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.selector_face.fill_color.hover", &selector_fill), &selector_fill)),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.selector_face.border_color.hover", &selector_stroke), &selector_stroke)),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.selector_face.symbol_color.hover", &selector_symbol), &selector_symbol)),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.value_face.fill_color.hover", "transparent"), "transparent")),
+        escape_html(&text_padding),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.dropdown.fill_color", "#ffffff"), "#ffffff")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.dropdown.border_color", "#64748b"), "#64748b")),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.dropdown.border_width", "1px"), "1px")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.dropdown.option.fill_color", "#ffffff"), "#ffffff")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.dropdown.option.text_color", "#111827"), "#111827")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.dropdown.option.hover_fill_color", "#2563eb"), "#2563eb")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.dropdown.option.hover_text_color", "#ffffff"), "#ffffff")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.dropdown.option.selected_fill_color", "#2563eb"), "#2563eb")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.dropdown.option.selected_text_color", "#ffffff"), "#ffffff")),
+        escape_html(&safe_css_font_family(&runtime_string(runtime, "style.dropdown.option.font_family", "Segoe UI,Arial,sans-serif"), "Segoe UI,Arial,sans-serif")),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.dropdown.option.font_size", &text_size), &text_size)),
+        escape_html(&safe_css_font_weight(&runtime_string(runtime, "style.dropdown.option.font_weight", "400"), "400")),
+        escape_html(&safe_css_font_style(&runtime_string(runtime, "style.dropdown.option.font_style", "normal"), "normal")),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.dropdown.option.padding_inline", &text_padding), &text_padding)),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.dropdown.option.height", "28px"), "28px")),
+        body
     )
 }
 
@@ -1596,6 +2314,20 @@ fn hex_value(byte: u8) -> u8 {
         b'A'..=b'F' => 10 + byte - b'A',
         _ => 0,
     }
+}
+
+fn source_front_panel_value(contract_path: &PathBuf, contract: &Value) -> Result<Value> {
+    let source_path = contract
+        .get("source_ref")
+        .and_then(Value::as_object)
+        .and_then(|source_ref| source_ref.get("path"))
+        .and_then(Value::as_str)
+        .ok_or_else(|| RuntimeError::Message("contract.source_ref.path is required.".to_string()))?;
+    let mut path = PathBuf::from(source_path);
+    if !path.is_absolute() {
+        path = find_repo_root(contract_path)?.join(path);
+    }
+    Ok(serde_json::to_value(load_front_panel_from_frog_source_path(&path)?)?)
 }
 
 fn escape_html(input: &str) -> String {

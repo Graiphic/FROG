@@ -312,6 +312,56 @@ def lower_string_value_roundtrip(fir: dict[str, Any], fir_rel: str) -> dict[str,
     ))
 
 
+def lower_enum_value_roundtrip(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    u = ensure_unit_kind(fir, "enum_value_roundtrip_ui_unit")
+    uid = unit_id(u)
+    bindings = ui_bindings(u)
+    expect_control = [{
+        "widget_id": "mode_input",
+        "mode": "widget_value",
+        "public_input_id": "mode_value",
+        "value_type": "enum_item_id",
+        "enum_domain": "example08.mode",
+    }]
+    expect_indicator = [{
+        "widget_id": "mode_result",
+        "mode": "widget_value",
+        "public_output_id": "result_mode",
+        "value_type": "enum_item_id",
+        "enum_domain": "example08.mode",
+    }]
+    if bindings.get("control_bindings") != expect_control or bindings.get("indicator_bindings") != expect_indicator:
+        raise LoweringError("enum_value_roundtrip_ui_unit bindings must map mode_input to mode_value and mode_result to result_mode")
+    out = base_lowering(
+        fir,
+        fir_rel,
+        uid,
+        "make the enum value roundtrip consumable by a bounded runtime/UI-binding check",
+        "reference_host_runtime_ui_binding",
+        ["llvm_native_kernel_bridge"],
+    )
+    return with_lowered_unit(out, single_lowered_unit(
+        uid,
+        "enum_value_roundtrip_kernel_with_ui_bindings",
+        public_io=public_interface(u),
+        ui_bindings=bindings,
+        execution_kernel={
+            "operation": "copy",
+            "dst": "result_mode",
+            "type": "enum_item_id",
+            "representation": "u16",
+            "src": "mode_value",
+            "enum_domain": "example08.mode",
+            "allowed_values": [
+                {"id": "idle", "numeric_value": 0},
+                {"id": "run", "numeric_value": 1},
+                {"id": "fault", "numeric_value": 2},
+            ],
+            "final_publication": u["publications"],
+        },
+    ))
+
+
 LOWERING_RULES = [
     LoweringRule("lower_pure_dataflow_arithmetic", "pure_dataflow_arithmetic_unit", "pure_addition_kernel", lower_pure_dataflow_arithmetic),
     LoweringRule("lower_ui_value_roundtrip", "ui_value_roundtrip_unit", "ui_value_roundtrip_kernel", lower_ui_value_roundtrip),
@@ -319,6 +369,7 @@ LOWERING_RULES = [
     LoweringRule("lower_stateful_feedback_delay", "stateful_feedback_delay_unit", "stateful_feedback_delay_kernel", lower_stateful_feedback_delay),
     LoweringRule("lower_bounded_stateful_ui", "bounded_stateful_ui_unit", "bounded_accumulator_kernel_with_ui_bindings", lower_bounded_stateful_ui),
     LoweringRule("lower_string_value_roundtrip", "string_value_roundtrip_ui_unit", "string_value_roundtrip_kernel_with_ui_bindings", lower_string_value_roundtrip),
+    LoweringRule("lower_enum_value_roundtrip", "enum_value_roundtrip_ui_unit", "enum_value_roundtrip_kernel_with_ui_bindings", lower_enum_value_roundtrip),
 ]
 
 

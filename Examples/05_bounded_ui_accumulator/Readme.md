@@ -15,7 +15,7 @@
 
 <p>
 This example is the primary applicative vertical slice of the current repository state.
-It combines standardized numeric widgets, a published front-panel package, natural <code>widget_value</code> binding, object-style <code>frog.ui.property_write</code> effects, bounded iteration, explicit accumulator state, backend-contract emission, runtime-family acceptance, and an LLVM-produced native-kernel bridge.
+It combines standardized numeric widgets, .frog-owned front-panel instances, natural <code>widget_value</code> binding, object-style <code>frog.ui.property_write</code> effects, bounded iteration, explicit accumulator state, backend-contract emission, runtime-family acceptance, and an LLVM-produced native-kernel bridge.
 </p>
 
 <p>
@@ -36,13 +36,13 @@ The Example 05 closure is intentionally bounded and explicit:
   -&gt; LLVM-oriented backend artifact kernel.ll
   -&gt; native kernel manifest
 
-.wfrog front panel
+.frog front panel
   -&gt; panel_pixels layout
   -&gt; Default Numeric realization SVG skin
   -&gt; caption_text / value_face / text_value / increment overlays
 
 C++ runtime
-  -&gt; loads contract and .wfrog
+  -&gt; loads contract, .frog front-panel instances, and .wfrog realization assets
   -&gt; loads native kernel manifest
   -&gt; binds ctrl_input.value to input_value
   -&gt; calls frog_example05_run(...)
@@ -61,7 +61,7 @@ It is not a claim of a generalized LabVIEW runtime, arbitrary diagram compiler, 
 
 <ul>
   <li>canonical <code>.frog</code> source with public input / output,</li>
-  <li>external front-panel package publication through <code>ui/accumulator_panel.wfrog</code>,</li>
+  <li><code>.frog</code>-owned numeric widget instances backed by <code>ui/accumulator_panel.wfrog</code> realization assets,</li>
   <li>standardized numeric widget class references,</li>
   <li>natural <code>widget_value</code> participation for input and output widgets,</li>
   <li>object-style <code>frog.ui.property_write</code> effects through widget references,</li>
@@ -74,7 +74,7 @@ It is not a claim of a generalized LabVIEW runtime, arbitrary diagram compiler, 
   <li>LLVM module emission from the lowering artifact,</li>
   <li>native-kernel manifest publication,</li>
   <li>C++ runtime bridge invocation through the manifest-declared ABI,</li>
-  <li>C++ browser-host consumption of the <code>.wfrog</code> panel layout and SVG widget skins.</li>
+  <li>C++ browser-host consumption of the <code>.frog</code> panel layout and <code>.wfrog</code> SVG widget skins.</li>
 </ul>
 
 <hr/>

@@ -2,8 +2,8 @@
   "spec_version": "0.1",
   "metadata": {
     "name": "05_bounded_ui_accumulator",
-    "summary": "Bounded front-panel accumulation example with explicit state, five-loop execution, minimal u16 widgets, object-style UI property writes, and final indicator/public output publication.",
-    "description": "Reads one u16 numeric control value from the front panel, exposes that value through the example public input surface, executes a bounded loop of exactly five iterations, carries explicit state through frog.core.delay initialized to 0, and writes the final accumulated value both to one public output and to one u16 numeric indicator. The canonical source remains the owner of program meaning and widget participation, while the peripheral .wfrog package owns widget-oriented panel realization, initial widget realization state, and visual resource references.",
+    "summary": "Bounded front-panel accumulation example with .frog-owned numeric widget instances and Default Numeric .wfrog realization assets.",
+    "description": "Reads one u16 numeric control value from the .frog front panel, exposes that value through the example public input surface, executes a bounded loop of exactly five iterations, carries explicit state through frog.core.delay initialized to 0, and writes the final accumulated value both to one public output and to one u16 numeric indicator. The .frog source owns program meaning, front-panel widget instances, layout, binding, and per-instance appearance. The .wfrog package owns the published Default Numeric widget realization, host requirements, and SVG asset references consumed by the runtimes.",
     "author": "Graiphic",
     "program_version": "0.1.0",
     "tags": [
@@ -20,7 +20,7 @@
       "property_write",
       "foreground_color",
       "wfrog",
-      "front_panel_package"
+      "widget_realization_package"
     ],
     "is_example": true,
     "license": "Apache-2.0"
@@ -310,12 +310,48 @@
           "height": 88
         },
         "props": {
-          "label": "Input"
+          "value": 3,
+          "label": "Input",
+          "caption.text": "Input",
+          "caption.visible": true,
+          "caption.anchor.x": 22,
+          "caption.anchor.y": 68,
+          "caption.align.horizontal": "left",
+          "representation.kind": "uint16",
+          "data_entry.minimum": 0,
+          "data_entry.maximum": 65535,
+          "data_entry.increment_step": 1,
+          "display.increment_buttons_visible": true,
+          "display.radix_visible": false,
+          "unit_label.visible": false,
+          "style.caption.font_weight": "400",
+          "style.frame.border_color": "transparent",
+          "style.increment_button.fill_color.normal": "#5B9BD5",
+          "style.increment_button.fill_color.pressed": "#2B4F7B",
+          "style.increment_button.border_color.normal": "#2B4F7B",
+          "style.increment_button.border_color.pressed": "#17324F",
+          "style.increment_button.symbol_color.normal": "#FFFFFF",
+          "style.increment_button.symbol_color.pressed": "#FFFFFF",
+          "label_color": "#111827",
+          "visible": true,
+          "enabled": true,
+          "foreground_color": "#D8D8D8"
         },
         "parts": {
           "root": {},
           "label": {},
           "value_display": {}
+        },
+        "visual": {
+          "asset_ref": "asset:numeric_rectangular_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "input_value",
+          "widget_reference": true,
+          "supported_members": [
+            "foreground_color"
+          ]
         }
       },
       {
@@ -331,14 +367,45 @@
           "height": 88
         },
         "props": {
-          "label": "Accumulated result"
+          "value": 0,
+          "label": "Accumulated result",
+          "caption.text": "Accumulated result",
+          "caption.visible": true,
+          "caption.anchor.x": 22,
+          "caption.anchor.y": 68,
+          "caption.align.horizontal": "left",
+          "representation.kind": "uint16",
+          "display.increment_buttons_visible": false,
+          "display.radix_visible": false,
+          "unit_label.visible": false,
+          "style.caption.font_weight": "400",
+          "style.frame.border_color": "transparent",
+          "label_color": "#111827",
+          "visible": true,
+          "enabled": true,
+          "foreground_color": "#D8D8D8"
         },
         "parts": {
           "root": {},
           "label": {},
           "value_display": {}
+        },
+        "visual": {
+          "asset_ref": "asset:numeric_rectangular_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "result",
+          "widget_reference": true,
+          "supported_members": [
+            "foreground_color"
+          ]
         }
       }
-    ]
+    ],
+    "panel_id": "main_panel",
+    "title": "Bounded UI Accumulator",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "reference_host_default"
   }
 }

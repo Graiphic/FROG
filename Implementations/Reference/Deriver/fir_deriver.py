@@ -163,7 +163,11 @@ def source_interface(source: dict[str, Any]) -> tuple[list[dict[str, str]], list
             port_id, port_type = obj.get("id"), obj.get("type")
             if not isinstance(port_id, str) or not isinstance(port_type, str):
                 raise DerivationError(f"source.interface.{key}[{index}] must contain string id and type")
-            out.append({"id": port_id, "type": port_type})
+            normalized = {"id": port_id, "type": port_type}
+            enum_domain = obj.get("enum_domain")
+            if isinstance(enum_domain, str):
+                normalized["enum_domain"] = enum_domain
+            out.append(normalized)
         return out
 
     return ports("inputs"), ports("outputs")
@@ -432,6 +436,57 @@ def derive_example07(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     }
 
 
+def derive_example08(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    context = "enum value roundtrip pattern"
+    metadata = source_metadata(source)
+    if metadata.get("name") != "08_enum_value_roundtrip":
+        raise DerivationError(f"{context} expects metadata.name=08_enum_value_roundtrip")
+    inputs, outputs = assert_interface(
+        source,
+        [{"id": "mode_value", "type": "enum_item_id", "enum_domain": "example08.mode"}],
+        [{"id": "result_mode", "type": "enum_item_id", "enum_domain": "example08.mode"}],
+        context,
+    )
+    graph = SourceGraph.from_source(source)
+    require_node(graph, "mode_input_value", context)
+    require_node(graph, "mode_result_value", context)
+    require_node(graph, "output_result_mode", context)
+    if graph.nodes["mode_input_value"].get("kind") != "widget_value" or graph.nodes["mode_input_value"].get("widget") != "mode_input":
+        raise DerivationError(f"{context} expects mode_input_value widget_value for mode_input")
+    if graph.nodes["mode_result_value"].get("kind") != "widget_value" or graph.nodes["mode_result_value"].get("widget") != "mode_result":
+        raise DerivationError(f"{context} expects mode_result_value widget_value for mode_result")
+    if graph.nodes["output_result_mode"].get("kind") != "interface_output" or graph.nodes["output_result_mode"].get("interface_port") != "result_mode":
+        raise DerivationError(f"{context} expects output_result_mode interface output result_mode")
+    outs = graph.outgoing_all("mode_input_value", "value")
+    if sorted(outs, key=lambda endpoint: endpoint.node) != [
+        EdgeEndpoint("mode_result_value", "value"),
+        EdgeEndpoint("output_result_mode", "value"),
+    ]:
+        raise DerivationError(f"{context} expects mode_input_value.value to feed result widget and public output")
+    return {
+        "artifact_kind": "frog_fir_unit",
+        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": {"example_id": "08_enum_value_roundtrip", "path": source_rel, "entry_unit": "main"},
+        "front_panel_ref": {"package_path": (Path(source_rel).parent / "ui/enum_panel.wfrog").as_posix(), "panel_id": "main_panel"},
+        "units": [{
+            "unit_id": "main",
+            "kind": "enum_value_roundtrip_ui_unit",
+            "public_interface": {"inputs": inputs, "outputs": outputs},
+            "ui_bindings": {
+                "control_bindings": [{"widget_id": "mode_input", "mode": "widget_value", "public_input_id": "mode_value", "value_type": "enum_item_id", "enum_domain": "example08.mode"}],
+                "indicator_bindings": [{"widget_id": "mode_result", "mode": "widget_value", "public_output_id": "result_mode", "value_type": "enum_item_id", "enum_domain": "example08.mode"}],
+            },
+            "execution_model": {"structure": "single_value_copy", "body_rule": {"kind": "copy_widget_value_to_output", "expression": "result_mode = mode_value"}},
+            "publications": [{"target": "public_output.result_mode", "source": "mode_value"}, {"target": "widget.mode_result.value", "source": "mode_value"}],
+            "notes": [
+                "This FIR is a bounded scalar widget pilot and remains downstream from canonical source.",
+                "The reference C++ closure consumes an LLVM-produced native enum kernel through an explicit manifest without making the runtime LLVM-only.",
+                "The enum item vocabulary remains a front-panel/widget instance definition and is consumed by the runtime from .frog.",
+            ],
+        }],
+    }
+
+
 # Artifact factories for source_rel injection.
 def artifacts_example01(source_rel: str) -> dict[str, Any]:
     return {
@@ -500,6 +555,7 @@ DERIVATION_RULES = [
     DerivationRule("stateful_feedback_delay", "04_stateful_feedback_delay", derive_example04),
     DerivationRule("bounded_ui_accumulator", "05_bounded_ui_accumulator", derive_example05),
     DerivationRule("string_value_roundtrip", "07_string_value_roundtrip", derive_example07),
+    DerivationRule("enum_value_roundtrip", "08_enum_value_roundtrip", derive_example08),
 ]
 
 

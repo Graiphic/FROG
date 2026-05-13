@@ -2,8 +2,8 @@
   "spec_version": "0.1",
   "metadata": {
     "name": "07_string_value_roundtrip",
-    "summary": "Hello-world string control-to-indicator value roundtrip using a published .wfrog front panel package.",
-    "description": "Reads the string value hello world from one string control, exposes that value through the public input surface, copies it to one public output, and publishes it to one string indicator. The reference C++ closure consumes the published .wfrog front panel and an LLVM-produced native string kernel through an explicit manifest.",
+    "summary": "Hello-world string control-to-indicator value roundtrip with .frog-owned String widget instances and Default String .wfrog realization assets.",
+    "description": "Reads the string value hello world from one .frog front-panel string control, exposes that value through the public input surface, copies it to one public output, and publishes it to one string indicator. The .frog source owns the String widget instances, layout, binding, text value, and per-instance appearance. The .wfrog package owns the published Default String widget realization, host requirements, and SVG asset references consumed by the runtimes.",
     "author": "Graiphic",
     "program_version": "0.1.0",
     "tags": [
@@ -14,7 +14,7 @@
       "hello_world",
       "roundtrip",
       "wfrog",
-      "front_panel_package"
+      "widget_realization_package"
     ],
     "is_example": true,
     "license": "Apache-2.0"
@@ -102,7 +102,36 @@
         "props": {
           "value": "hello world",
           "label.text": "Input",
-          "caption.text": "String input"
+          "caption.text": "String input",
+          "caption.visible": true,
+          "caption.anchor.x": 28,
+          "caption.anchor.y": 64,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.text_region.fill_color": "#ffffff",
+          "style.text_region.fill_color.hover": "#eef6ff",
+          "style.text_region.border_color": "#64748b",
+          "style.text_region.border_color.hover": "#2563eb",
+          "style.text_region.border_width": "2px",
+          "style.text_region.border_width.hover": "2px",
+          "style.text.color": "#111827",
+          "style.text.font_size": "16px",
+          "style.text.font_weight": "400",
+          "placeholder.text": "",
+          "placeholder.visible": false,
+          "interaction.enabled": true,
+          "interaction.read_only": false,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:string_rectangular_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "input_text"
         }
       },
       {
@@ -118,10 +147,39 @@
           "height": 110
         },
         "props": {
+          "value": "",
           "label.text": "Result",
-          "caption.text": "String result"
+          "caption.text": "String result",
+          "caption.visible": true,
+          "caption.anchor.x": 28,
+          "caption.anchor.y": 64,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.text_region.fill_color": "#f8fafc",
+          "style.text_region.border_color": "#64748b",
+          "style.text_region.border_width": "2px",
+          "style.text.color": "#111827",
+          "style.text.font_size": "16px",
+          "style.text.font_weight": "400",
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:string_rectangular_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "result_text"
         }
       }
-    ]
+    ],
+    "panel_id": "main_panel",
+    "title": "String Hello World Roundtrip",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "reference_host_default"
   }
 }

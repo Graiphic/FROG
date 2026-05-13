@@ -21,6 +21,8 @@ EXAMPLE_MANIFESTS = {
     "6": ROOT / "Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/native_kernel_manifest.json",
     "07": ROOT / "Implementations/Reference/LLVM/examples/07_string_value_roundtrip/native_kernel_manifest.json",
     "7": ROOT / "Implementations/Reference/LLVM/examples/07_string_value_roundtrip/native_kernel_manifest.json",
+    "08": ROOT / "Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/native_kernel_manifest.json",
+    "8": ROOT / "Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/native_kernel_manifest.json",
 }
 
 
@@ -33,7 +35,7 @@ def shared_library_suffix() -> str:
 
 
 def default_output_path(example: str) -> Path:
-    normalized = {"5": "05", "05": "05", "6": "06", "06": "06", "7": "07", "07": "07"}[example]
+    normalized = {"5": "05", "05": "05", "6": "06", "06": "06", "7": "07", "07": "07", "8": "08", "08": "08"}[example]
     return ROOT / "build" / "frog_native_kernels" / f"example{normalized}_kernel{shared_library_suffix()}"
 
 

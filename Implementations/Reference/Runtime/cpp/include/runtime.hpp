@@ -43,8 +43,8 @@ public:
     std::filesystem::path wfrog_path;
     BackendContract contract;
     WfrogPackage package;
-    ContractUnit unit;
     FrontPanel panel;
+    ContractUnit unit;
     std::map<std::string, WidgetState> widgets;
     std::map<std::string, std::filesystem::path> asset_map;
     std::vector<frog::json::Value> applied_widget_references;
@@ -73,8 +73,8 @@ public:
     std::filesystem::path wfrog_path;
     BackendContract contract;
     WfrogPackage package;
-    ContractUnit unit;
     FrontPanel panel;
+    ContractUnit unit;
     std::map<std::string, WidgetState> widgets;
     std::map<std::string, std::filesystem::path> asset_map;
     bool last_result = false;
@@ -100,8 +100,35 @@ public:
     std::filesystem::path wfrog_path;
     BackendContract contract;
     WfrogPackage package;
-    ContractUnit unit;
     FrontPanel panel;
+    ContractUnit unit;
+    std::map<std::string, WidgetState> widgets;
+    std::map<std::string, std::filesystem::path> asset_map;
+    std::string last_result;
+
+private:
+    ContractUnit load_and_validate() const;
+    std::map<std::string, WidgetState> build_widgets() const;
+};
+
+class Slice08EnumRuntimeCore {
+public:
+    Slice08EnumRuntimeCore(std::filesystem::path contract_path, std::filesystem::path wfrog_path);
+
+    void set_control_value(const std::string& value);
+    std::string control_value() const;
+    frog::json::Value execute(std::optional<std::string> control_value = std::nullopt);
+    frog::json::Value execute_with_native_kernel_bridge(
+        const NativeEnumKernelBridge& bridge,
+        std::optional<std::string> control_value = std::nullopt);
+    frog::json::Value execution_artifact() const;
+
+    std::filesystem::path contract_path;
+    std::filesystem::path wfrog_path;
+    BackendContract contract;
+    WfrogPackage package;
+    FrontPanel panel;
+    ContractUnit unit;
     std::map<std::string, WidgetState> widgets;
     std::map<std::string, std::filesystem::path> asset_map;
     std::string last_result;

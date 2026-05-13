@@ -1,10 +1,10 @@
 use std::collections::BTreeMap;
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use serde_json::{json, Map, Value};
 
-use crate::contract::{default_contract_path, default_wfrog_path};
+use crate::contract::{default_contract_path, default_wfrog_path, find_repo_root};
 use crate::diagnostics::{ensure, Result, RuntimeError};
 
 pub fn execute_contract(
@@ -103,17 +103,79 @@ fn source_ref(contract: &Value) -> Result<Value> {
     Ok(json!({"example_id": contract_example_id(contract)?}))
 }
 
-fn wfrog_panel(wfrog: Option<&Value>) -> Result<&Map<String, Value>> {
+fn normalize_source_front_panel(source: &Value) -> Result<Value> {
+    let root = object(source, "source")?;
+    let metadata = root.get("metadata").and_then(Value::as_object);
+    let panel = object(root.get("front_panel").ok_or_else(|| message("source.front_panel is required."))?, "source.front_panel")?;
+    let title = panel
+        .get("title")
+        .and_then(Value::as_str)
+        .or_else(|| metadata.and_then(|item| item.get("summary").or_else(|| item.get("name"))).and_then(Value::as_str))
+        .unwrap_or("FROG Front Panel");
+    let panel_id = panel
+        .get("panel_id")
+        .and_then(Value::as_str)
+        .map(ToString::to_string)
+        .or_else(|| metadata.and_then(|item| item.get("name")).and_then(Value::as_str).map(|name| format!("{name}_panel")))
+        .unwrap_or_else(|| "frog_panel".to_string());
+    let mut widgets = Vec::new();
+    for widget_value in array(panel.get("widgets").ok_or_else(|| message("source.front_panel.widgets is required."))?, "source.front_panel.widgets")? {
+        let widget = object(widget_value, "source front-panel widget")?;
+        let instance_id = widget
+            .get("instance_ref")
+            .or_else(|| widget.get("instance_id"))
+            .or_else(|| widget.get("id"))
+            .and_then(Value::as_str)
+            .ok_or_else(|| message("source front-panel widget must expose id/instance_ref."))?;
+        let mut entry = widget.clone();
+        entry.insert("instance_id".to_string(), Value::String(instance_id.to_string()));
+        entry.entry("layout".to_string()).or_insert_with(|| json!({}));
+        entry.entry("props".to_string()).or_insert_with(|| json!({}));
+        entry.entry("visual".to_string()).or_insert_with(|| json!({}));
+        widgets.push(Value::Object(entry));
+    }
+    Ok(json!({
+        "panel_id": panel_id,
+        "title": title,
+        "class_ref": panel.get("class_ref").and_then(Value::as_str).unwrap_or("frog.front_panel"),
+        "layout": panel.get("canvas").or_else(|| panel.get("layout")).cloned().unwrap_or_else(|| json!({})),
+        "widgets": widgets,
+        "host_binding_ref": panel.get("host_binding_ref").and_then(Value::as_str).unwrap_or("reference_host_default")
+    }))
+}
+
+fn source_panel(contract: &Value) -> Result<Value> {
+    let root = object(contract, "contract")?;
+    let source_ref = object(root.get("source_ref").ok_or_else(|| message("contract.source_ref is required."))?, "contract.source_ref")?;
+    let source_path = source_ref.get("path").and_then(Value::as_str).ok_or_else(|| message("contract.source_ref.path is required."))?;
+    let mut path = PathBuf::from(source_path);
+    if !path.is_absolute() {
+        path = find_repo_root(Path::new(env!("CARGO_MANIFEST_DIR")))?.join(path);
+    }
+    let source: Value = serde_json::from_str(&fs::read_to_string(path)?)?;
+    normalize_source_front_panel(&source)
+}
+
+fn wfrog_panel(wfrog: Option<&Value>) -> Result<Value> {
     let wfrog = wfrog.ok_or_else(|| message("runtime slice requires a .wfrog package."))?;
     let root = object(wfrog, "wfrog")?;
     ensure(root.get("format").and_then(Value::as_str) == Some("frog.wfrog"), "Expected frog.wfrog package.")?;
     let panels = array(
         root.get("front_panels")
-            .ok_or_else(|| message("wfrog.front_panels is required."))?,
+            .ok_or_else(|| message("wfrog.front_panels is not published by this realization package."))?,
         "wfrog.front_panels",
     )?;
     ensure(panels.len() == 1, "Expected exactly one front panel.")?;
-    object(&panels[0], "wfrog.front_panels[0]")
+    Ok(panels[0].clone())
+}
+
+fn runtime_panel(contract: &Value, wfrog: Option<&Value>) -> Result<Value> {
+    if let Some(wfrog_value) = wfrog {
+        if object(wfrog_value, "wfrog")?.get("front_panels").is_some() {
+            return wfrog_panel(Some(wfrog_value));
+        }
+    }
+    source_panel(contract)
 }
 
 fn widget_map(panel: &Map<String, Value>) -> Result<BTreeMap<String, Value>> {
@@ -224,7 +286,8 @@ fn execute_stateful_feedback_case(contract: &Value, unit: &Map<String, Value>, c
 }
 
 fn execute_bounded_ui_case(contract: &Value, unit: &Map<String, Value>, case_value: &Value, wfrog: Option<&Value>) -> Result<Value> {
-    let panel = wfrog_panel(wfrog)?;
+    let panel_value = runtime_panel(contract, wfrog)?;
+    let panel = object(&panel_value, "front_panel")?;
     let input_value = public_input(case_value, "input_value")?
         .as_u64()
         .ok_or_else(|| message("input_value must be a u16 integer."))?;
@@ -300,7 +363,8 @@ fn execute_bounded_ui_case(contract: &Value, unit: &Map<String, Value>, case_val
 }
 
 fn execute_boolean_case(contract: &Value, unit: &Map<String, Value>, case_value: &Value, wfrog: Option<&Value>) -> Result<Value> {
-    let panel = wfrog_panel(wfrog)?;
+    let panel_value = runtime_panel(contract, wfrog)?;
+    let panel = object(&panel_value, "front_panel")?;
     let widgets = widget_map(panel)?;
     let input_value = object(case_value, "case")?
         .get("input_value")

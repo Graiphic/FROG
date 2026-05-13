@@ -3,7 +3,7 @@
 
 Examples 01-04 use the generic reference contract executor.
 Example 05 delegates to the existing richer runtime-family acceptance checker.
-Example 06 uses the generic executor with its .wfrog front panel package.
+Example 06 uses the generic executor with .frog-owned front-panel instances and a .wfrog realization package.
 """
 
 from __future__ import annotations

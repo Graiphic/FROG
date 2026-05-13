@@ -14,13 +14,13 @@
 <h2>Current Scope</h2>
 
 <p>
-The Python runtime currently carries the specialized Examples 05, 06, and 07 runtime-family consumers.
+The Python runtime currently carries the specialized Examples 05, 06, 07, and 08 runtime-family consumers.
 It validates the backend contracts and <code>.wfrog</code> front-panel packages, executes the bounded accumulator, Boolean roundtrip, and String roundtrip paths, applies widget property effects, and produces the published runtime snapshots.
 </p>
 
 <p>
 The Python browser UI is aligned with the shared browser-host fidelity surface for the current published runtime examples.
-It consumes the <code>.wfrog</code> panel pixel layout, widget coordinates, Default Numeric/Boolean/String SVG realizations, and the published realization anchors and value/text surfaces instead of local duplicated widget SVGs.
+It consumes the <code>.frog</code> front-panel instance layout and widget coordinates, the <code>.wfrog</code> realization package, Default Numeric/Boolean/String/Enum SVG realizations, and the published realization anchors and value/text surfaces instead of local duplicated widget SVGs.
 </p>
 
 <hr/>
@@ -28,7 +28,7 @@ It consumes the <code>.wfrog</code> panel pixel layout, widget coordinates, Defa
 <h2>Normalized Contract Surface</h2>
 
 <p>
-The specialized runtime now consumes the normalized Example 05, Example 06, and Example 07 contract surfaces:
+The specialized runtime now consumes the normalized Example 05, Example 06, Example 07, and Example 08 contract surfaces:
 </p>
 
 <ul>
@@ -68,5 +68,5 @@ python Implementations/Reference/Runtime/check_python_native_kernel_bridge.py</c
 <p>
 This runtime is non-normative.
 It verifies repository-visible runtime closure for the current bounded example corridor.
-The Python HTTP UI remains a first-class parity surface for Examples 05, 06, and 07: it must consume <code>.wfrog</code> packages and Default realization assets with the same no-fallback discipline as the C++ and Rust browser hosts.
+The Python HTTP UI remains a first-class parity surface for Examples 05, 06, 07, and 08: it must consume <code>.frog</code> front-panel instances, <code>.wfrog</code> realization packages, and Default realization assets with the same no-fallback discipline as the C++ and Rust browser hosts.
 </p>

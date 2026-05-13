@@ -18,6 +18,7 @@ RUST_DIR = ROOT / "Implementations/Reference/Runtime/rust"
 EXAMPLE05_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json"
 EXAMPLE06_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/native_kernel_manifest.json"
 EXAMPLE07_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/07_string_value_roundtrip/native_kernel_manifest.json"
+EXAMPLE08_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/native_kernel_manifest.json"
 
 
 def require_tool(name: str) -> None:
@@ -52,6 +53,10 @@ def main() -> int:
         library07 = build_native_kernel_library(
             manifest_path=EXAMPLE07_MANIFEST,
             output_path=BUILD_DIR / f"example07_kernel{shared_library_suffix()}",
+        )
+        library08 = build_native_kernel_library(
+            manifest_path=EXAMPLE08_MANIFEST,
+            output_path=BUILD_DIR / f"example08_kernel{shared_library_suffix()}",
         )
 
         result05 = run([
@@ -105,6 +110,24 @@ def main() -> int:
         artifact07 = json.loads(result07.stdout)
         assert artifact07["outputs"]["public"]["result_text"] == "hello world"
         assert artifact07["outputs"]["ui"]["str_result"] == "hello world"
+
+        result08 = run([
+            "cargo",
+            "run",
+            "--offline",
+            "--",
+            "run",
+            "fault",
+            "--example",
+            "08",
+            "--native-kernel-manifest",
+            str(EXAMPLE08_MANIFEST),
+            "--native-kernel-library",
+            str(library08),
+        ], cwd=RUST_DIR)
+        artifact08 = json.loads(result08.stdout)
+        assert artifact08["outputs"]["public"]["result_mode"] == "fault"
+        assert artifact08["outputs"]["ui"]["mode_result"] == "fault"
 
         print("Rust dynamic native kernel bridge check: ok")
         return 0

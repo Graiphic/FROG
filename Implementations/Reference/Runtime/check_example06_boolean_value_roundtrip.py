@@ -174,7 +174,7 @@ def validate_wfrog_assets(
     default_manifest_resources: dict[str, Path],
 ) -> dict[str, Path]:
     require(wfrog.get("format") == "frog.wfrog", "Example 06 package must be .wfrog")
-    require(wfrog.get("kind") == "front_panel_package", "Example 06 package must be a front_panel_package")
+    require(wfrog.get("kind") == "widget_realization_package", "Example 06 package must be a widget_realization_package")
 
     expected_classes = {"frog.widgets.boolean_control", "frog.widgets.boolean_indicator"}
 
@@ -249,6 +249,33 @@ def validate_svg_template(svg_text: str, *, label: str, expected_class: str, exp
         require("#frame_shadow" in svg_text and "fill:transparent" in compact and "opacity:0" in compact, f"{label} template frame must be transparent by default")
 
 
+def normalize_source_front_panel(source: dict[str, Any]) -> dict[str, Any]:
+    metadata = source.get("metadata", {})
+    panel = source.get("front_panel")
+    require(isinstance(panel, dict), "source.front_panel must be an object")
+    normalized = {
+        "panel_id": panel.get("panel_id", f"{metadata.get('name', 'frog')}_panel"),
+        "title": panel.get("title", metadata.get("summary", metadata.get("name", "FROG Front Panel"))),
+        "class_ref": panel.get("class_ref", "frog.front_panel"),
+        "layout": panel.get("canvas", panel.get("layout", {})),
+        "widgets": [],
+        "host_binding_ref": panel.get("host_binding_ref", "reference_host_default"),
+    }
+    widgets = panel.get("widgets")
+    require(isinstance(widgets, list), "source.front_panel.widgets must be an array")
+    for widget in widgets:
+        require(isinstance(widget, dict), "source front-panel widget must be an object")
+        instance_id = widget.get("instance_ref") or widget.get("instance_id") or widget.get("id")
+        require(isinstance(instance_id, str) and instance_id, "source front-panel widget must expose id/instance_ref")
+        entry = dict(widget)
+        entry["instance_id"] = instance_id
+        entry.setdefault("layout", {})
+        entry.setdefault("props", {})
+        entry.setdefault("visual", {})
+        normalized["widgets"].append(entry)
+    return normalized
+
+
 def validate_layout(panel: dict[str, Any]) -> dict[str, dict[str, Any]]:
     layout = panel.get("layout")
     require(layout == {"width": 420, "height": 150, "coordinate_space": "panel_pixels"}, "unexpected Example 06 panel layout")
@@ -266,49 +293,48 @@ def validate_layout(panel: dict[str, Any]) -> dict[str, dict[str, Any]]:
     require(widgets["bool_result"]["visual"]["asset_ref"] == "asset:boolean_circular_svg", "bool_result asset_ref mismatch")
     input_props = widgets["bool_input"].get("props", {})
     result_props = widgets["bool_result"].get("props", {})
-    require(input_props.get("style.frame.visible") is False, "bool_input external frame must be disabled through .wfrog")
-    require(result_props.get("style.frame.visible") is False, "bool_result external frame must be disabled through .wfrog")
-    require(input_props.get("caption.align.horizontal") == "center", "bool_input caption must be centered through .wfrog")
-    require(result_props.get("caption.align.horizontal") == "center", "bool_result caption must be centered through .wfrog")
-    require(input_props.get("caption.anchor.x") == 80 and input_props.get("caption.anchor.y") == 16, "bool_input caption anchor must be declared through .wfrog")
-    require(result_props.get("caption.anchor.x") == 80 and result_props.get("caption.anchor.y") == 16, "bool_result caption anchor must be declared through .wfrog")
-    require(input_props.get("state_text.visible") is True, "bool_input state text must remain visible through .wfrog")
-    require(input_props.get("style.focus_ring.visible") is True, "bool_input focus ring visibility must be declared through .wfrog")
-    require(input_props.get("style.focus_ring.color") == "#2563eb", "bool_input focus ring color must be declared through .wfrog")
-    require(input_props.get("style.focus_ring.width") == "3px", "bool_input focus ring width must be declared through .wfrog")
-    require(result_props.get("state_text.visible") is False, "bool_result state text must be hidden through .wfrog")
-    require(result_props.get("style.inner.fill_color.false") == "#ef4444", "bool_result false state must be red through .wfrog")
-    require(result_props.get("style.inner.fill_color.true") == "#22c55e", "bool_result true state must be green through .wfrog")
-    require(result_props.get("style.inner.left") == "60px", "bool_result LED must be horizontally recentered through .wfrog")
-    require(result_props.get("style.inner.top") == "31px", "bool_result LED must be vertically recentered through .wfrog")
-    require(result_props.get("style.inner.width") == "40px", "bool_result LED width must be reduced through .wfrog")
-    require(result_props.get("style.inner.height") == "40px", "bool_result LED height must be reduced through .wfrog")
+    require(input_props.get("style.frame.visible") is False, "bool_input external frame must be disabled through the .frog front-panel instance")
+    require(result_props.get("style.frame.visible") is False, "bool_result external frame must be disabled through the .frog front-panel instance")
+    require(input_props.get("caption.align.horizontal") == "center", "bool_input caption must be centered through the .frog front-panel instance")
+    require(result_props.get("caption.align.horizontal") == "center", "bool_result caption must be centered through the .frog front-panel instance")
+    require(input_props.get("caption.anchor.x") == 80 and input_props.get("caption.anchor.y") == 16, "bool_input caption anchor must be declared through the .frog front-panel instance")
+    require(result_props.get("caption.anchor.x") == 80 and result_props.get("caption.anchor.y") == 16, "bool_result caption anchor must be declared through the .frog front-panel instance")
+    require(input_props.get("state_text.visible") is True, "bool_input state text must remain visible through the .frog front-panel instance")
+    require(input_props.get("style.focus_ring.visible") is True, "bool_input focus ring visibility must be declared through the .frog front-panel instance")
+    require(input_props.get("style.focus_ring.color") == "#2563eb", "bool_input focus ring color must be declared through the .frog front-panel instance")
+    require(input_props.get("style.focus_ring.width") == "3px", "bool_input focus ring width must be declared through the .frog front-panel instance")
+    require(result_props.get("state_text.visible") is False, "bool_result state text must be hidden through the .frog front-panel instance")
+    require(result_props.get("style.inner.fill_color.false") == "#ef4444", "bool_result false state must be red through the .frog front-panel instance")
+    require(result_props.get("style.inner.fill_color.true") == "#22c55e", "bool_result true state must be green through the .frog front-panel instance")
+    require(result_props.get("style.inner.left") == "60px", "bool_result LED must be horizontally recentered through the .frog front-panel instance")
+    require(result_props.get("style.inner.top") == "31px", "bool_result LED must be vertically recentered through the .frog front-panel instance")
+    require(result_props.get("style.inner.width") == "40px", "bool_result LED width must be reduced through the .frog front-panel instance")
+    require(result_props.get("style.inner.height") == "40px", "bool_result LED height must be reduced through the .frog front-panel instance")
     for props, widget_id in ((input_props, "bool_input"), (result_props, "bool_result")):
-        require("style.inner.fill_color.false" in props, f"{widget_id} must declare false fill color through .wfrog")
-        require("style.inner.fill_color.true" in props, f"{widget_id} must declare true fill color through .wfrog")
-        require("style.outer.border_color.false" in props, f"{widget_id} must declare false border color through .wfrog")
-        require("style.outer.border_color.true" in props, f"{widget_id} must declare true border color through .wfrog")
-        require(props["style.outer.border_color.false"] == "transparent", f"{widget_id} false border must be transparent through .wfrog")
-        require(props["style.outer.border_color.true"] == "transparent", f"{widget_id} true border must be transparent through .wfrog")
-        require(props.get("style.inner.border_color.false") == "transparent", f"{widget_id} false inner border must be transparent through .wfrog")
-        require(props.get("style.inner.border_color.true") == "transparent", f"{widget_id} true inner border must be transparent through .wfrog")
-        require("state_text.style.text_color.false" in props, f"{widget_id} must declare false state text color through .wfrog")
-        require("state_text.style.text_color.true" in props, f"{widget_id} must declare true state text color through .wfrog")
-        require("style.transition.duration_ms" in props, f"{widget_id} must declare transition timing through .wfrog")
-    require("style.pressed.inset" in input_props, "bool_input must declare pressed inset through .wfrog")
+        require("style.inner.fill_color.false" in props, f"{widget_id} must declare false fill color through the .frog front-panel instance")
+        require("style.inner.fill_color.true" in props, f"{widget_id} must declare true fill color through the .frog front-panel instance")
+        require("style.outer.border_color.false" in props, f"{widget_id} must declare false border color through the .frog front-panel instance")
+        require("style.outer.border_color.true" in props, f"{widget_id} must declare true border color through the .frog front-panel instance")
+        require(props["style.outer.border_color.false"] == "transparent", f"{widget_id} false border must be transparent through the .frog front-panel instance")
+        require(props["style.outer.border_color.true"] == "transparent", f"{widget_id} true border must be transparent through the .frog front-panel instance")
+        require(props.get("style.inner.border_color.false") == "transparent", f"{widget_id} false inner border must be transparent through the .frog front-panel instance")
+        require(props.get("style.inner.border_color.true") == "transparent", f"{widget_id} true inner border must be transparent through the .frog front-panel instance")
+        require("state_text.style.text_color.false" in props, f"{widget_id} must declare false state text color through the .frog front-panel instance")
+        require("state_text.style.text_color.true" in props, f"{widget_id} must declare true state text color through the .frog front-panel instance")
+        require("style.transition.duration_ms" in props, f"{widget_id} must declare transition timing through the .frog front-panel instance")
+    require("style.pressed.inset" in input_props, "bool_input must declare pressed inset through the .frog front-panel instance")
     for state in ("hover_false", "hover_true", "pressed_false", "pressed_true"):
-        require(f"style.inner.fill_color.{state}" in input_props, f"bool_input must declare {state} fill color through .wfrog")
+        require(f"style.inner.fill_color.{state}" in input_props, f"bool_input must declare {state} fill color through the .frog front-panel instance")
         for props, widget_id in ((input_props, "bool_input"), (result_props, "bool_result")):
-            require(f"style.outer.border_color.{state}" in props, f"{widget_id} must declare {state} border color through .wfrog")
-            require(props[f"style.outer.border_color.{state}"] == "transparent", f"{widget_id} {state} border must be transparent through .wfrog")
-            require(f"style.inner.border_color.{state}" in props, f"{widget_id} must declare {state} inner border color through .wfrog")
-            require(props[f"style.inner.border_color.{state}"] == "transparent", f"{widget_id} {state} inner border must be transparent through .wfrog")
+            require(f"style.outer.border_color.{state}" in props, f"{widget_id} must declare {state} border color through the .frog front-panel instance")
+            require(props[f"style.outer.border_color.{state}"] == "transparent", f"{widget_id} {state} border must be transparent through the .frog front-panel instance")
+            require(f"style.inner.border_color.{state}" in props, f"{widget_id} must declare {state} inner border color through the .frog front-panel instance")
+            require(props[f"style.inner.border_color.{state}"] == "transparent", f"{widget_id} {state} inner border must be transparent through the .frog front-panel instance")
     return widgets
 
 
-def execute_boolean_roundtrip(contract: dict[str, Any], wfrog: dict[str, Any], input_value: bool) -> dict[str, Any]:
+def execute_boolean_roundtrip(contract: dict[str, Any], panel: dict[str, Any], input_value: bool) -> dict[str, Any]:
     unit = single_unit(contract)
-    panel = wfrog["front_panels"][0]
     widgets_by_id = {widget["instance_id"]: widget for widget in panel["widgets"]}
 
     result = bool(input_value)
@@ -602,7 +628,7 @@ def render_front_panel(snapshot: dict[str, Any], *, default_manifest_path: str) 
         "</style>"
     )
     body.append("</head><body><h1>Boolean Value Roundtrip</h1>")
-    body.append("<p class='meta'>Example 06 — .wfrog front panel + Default Boolean realization assets</p>")
+    body.append("<p class='meta'>Example 06 — .frog front panel + Default Boolean .wfrog realization assets</p>")
     body.append("<form method='post' action='/run'>")
     body.append(
         f"<div class='front-panel' data-panel-id='{html.escape(panel['panel_id'])}' "
@@ -648,7 +674,7 @@ def validate_rendered_front_panel(rendered: str, *, expected_value: bool, widget
     require(rendered.count("data-frog-frame-visible='false' data-default-realization-manifest") == 2, "both Boolean widgets must expose transparent external frame state from .wfrog")
     require(rendered.count("data-svg-anchor='caption.anchor'") == 2, "both Boolean captions must expose the realization caption anchor")
     require(rendered.count("left:50%;top:20%;transform:translate(-50%,-50%);text-align:center;") == 2, "both Boolean caption positions must come from .wfrog anchor properties")
-    require("--boolean-inner-width:40px;" in rendered and "--boolean-inner-height:40px;" in rendered, "indicator LED size must be reduced through .wfrog")
+    require("--boolean-inner-width:40px;" in rendered and "--boolean-inner-height:40px;" in rendered, "indicator LED size must be reduced through the .frog front-panel instance")
     require("--boolean-inner-left:60px;" in rendered and "--boolean-inner-top:31px;" in rendered, "indicator LED position must remain centered after resizing")
     require("data-frog-state-text-visible='false'" in rendered, "bool_result must expose hidden state text from .wfrog")
     require("--boolean-fill:#22c55e;" in rendered or "--boolean-fill:#ef4444;" in rendered, "indicator color must come from .wfrog true/false fill properties")
@@ -766,7 +792,8 @@ def check_acceptance(acceptance_path: Path, *, print_json: bool = False) -> None
     default_resources = validate_default_manifest(default_manifest, default_manifest_path, expected_classes)
     assets = validate_wfrog_assets(wfrog, wfrog_path, default_resources)
 
-    panel = wfrog["front_panels"][0]
+    source = load_json(repo_path(refs["source_path"]))
+    panel = normalize_source_front_panel(source)
     widgets = validate_layout(panel)
 
     rectangular_svg = read_text(assets["boolean_rectangular_svg"])
@@ -810,7 +837,7 @@ def check_acceptance(acceptance_path: Path, *, print_json: bool = False) -> None
         require(isinstance(input_value, bool), f"{case_id}.input_value must be bool")
         require(isinstance(expected_result, bool), f"{case_id}.expected_result must be bool")
 
-        observed = execute_boolean_roundtrip(contract, wfrog, input_value)
+        observed = execute_boolean_roundtrip(contract, panel, input_value)
         require(observed["outputs"]["public"]["result"] is expected_result, f"{case_id} public result mismatch")
         require(observed["outputs"]["ui"]["bool_result"] is expected_result, f"{case_id} indicator result mismatch")
         observed_by_case[case_id] = observed
@@ -856,7 +883,7 @@ def main(argv: list[str] | None = None) -> int:
 
     print("Example 06 Boolean value roundtrip check: ok")
     print(f"acceptance: {acceptance_path.relative_to(ROOT)}")
-    print("rendering: .wfrog layout + Default Boolean realization assets")
+    print("rendering: .frog front panel + Default Boolean .wfrog realization assets")
     print("states: input_false and input_true checked")
     return 0
 

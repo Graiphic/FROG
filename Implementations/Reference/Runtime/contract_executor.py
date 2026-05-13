@@ -211,13 +211,69 @@ def checked_u16_add(left: int, right: int) -> int:
     return result
 
 
+def find_repo_root(start: Path) -> Path:
+    for candidate in [start.resolve(), *start.resolve().parents]:
+        if (candidate / "Examples").is_dir() and (candidate / "Implementations").is_dir():
+            return candidate
+    raise ContractExecutionError("unable to locate repository root")
+
+
+def normalize_source_front_panel(source: dict[str, Any]) -> dict[str, Any]:
+    metadata = require_object(source.get("metadata"), "source.metadata")
+    panel = require_object(source.get("front_panel"), "source.front_panel")
+    normalized = {
+        "panel_id": panel.get("panel_id", f"{metadata.get('name', 'frog')}_panel"),
+        "title": panel.get("title", metadata.get("summary", metadata.get("name", "FROG Front Panel"))),
+        "class_ref": panel.get("class_ref", "frog.front_panel"),
+        "layout": panel.get("canvas", panel.get("layout", {})),
+        "widgets": [],
+        "host_binding_ref": panel.get("host_binding_ref", "reference_host_default"),
+    }
+    for raw_widget in require_list(panel.get("widgets"), "source.front_panel.widgets"):
+        widget = require_object(raw_widget, "source.front_panel.widgets[]")
+        instance_id = widget.get("instance_ref") or widget.get("instance_id") or widget.get("id")
+        if not isinstance(instance_id, str) or not instance_id:
+            raise ContractExecutionError("source front-panel widget must expose id/instance_ref")
+        entry = dict(widget)
+        entry["instance_id"] = instance_id
+        entry.setdefault("layout", {})
+        entry.setdefault("props", {})
+        entry.setdefault("visual", {})
+        normalized["widgets"].append(entry)
+    return normalized
+
+
+def source_main_panel(contract: dict[str, Any]) -> dict[str, Any]:
+    source_ref = require_object(contract.get("source_ref"), "contract.source_ref")
+    source_path = source_ref.get("path")
+    if not isinstance(source_path, str):
+        raise ContractExecutionError("contract.source_ref.path is required")
+    path = Path(source_path)
+    if not path.is_absolute():
+        path = find_repo_root(Path(__file__)) / path
+    return normalize_source_front_panel(load_json(path))
+
+
 def wfrog_main_panel(wfrog: dict[str, Any]) -> dict[str, Any]:
-    if wfrog.get("format") != "frog.wfrog" or wfrog.get("kind") != "front_panel_package":
-        raise ContractExecutionError("Example 05 generic execution requires a frog.wfrog front_panel_package")
-    panels = require_list(wfrog.get("front_panels"), "wfrog.front_panels")
+    if wfrog.get("format") != "frog.wfrog":
+        raise ContractExecutionError("runtime execution requires a frog.wfrog package")
+    panels = wfrog.get("front_panels")
+    if panels is None:
+        raise ContractExecutionError("wfrog.front_panels is not published by this realization package")
+    panels = require_list(panels, "wfrog.front_panels")
     if len(panels) != 1:
-        raise ContractExecutionError("Example 05 generic execution expects exactly one front panel")
+        raise ContractExecutionError("runtime execution expects exactly one front panel")
     return require_object(panels[0], "wfrog.front_panels[0]")
+
+
+def support_main_panel(contract: dict[str, Any], support_artifacts: dict[str, Any]) -> dict[str, Any]:
+    panel = support_artifacts.get("front_panel")
+    if isinstance(panel, dict):
+        return panel
+    wfrog = support_artifacts.get("wfrog")
+    if isinstance(wfrog, dict) and wfrog.get("front_panels") is not None:
+        return wfrog_main_panel(wfrog)
+    return source_main_panel(contract)
 
 
 def property_write_value(effect: dict[str, Any]) -> Any:
@@ -269,7 +325,7 @@ def execute_bounded_executable_ui_unit(contract: dict[str, Any], unit: dict[str,
         state_current = checked_u16_add(state_current, input_value_raw)
     final_state = state_current
 
-    panel = wfrog_main_panel(wfrog)
+    panel = support_main_panel(contract, support_artifacts)
     effects = require_list(unit.get("effects"), "unit.effects")
     applied_widget_references: list[dict[str, Any]] = []
     property_map: dict[tuple[str, str], Any] = {}
@@ -350,7 +406,7 @@ def execute_boolean_value_roundtrip_ui_unit(contract: dict[str, Any], unit: dict
     if not isinstance(input_value, bool):
         raise ContractExecutionError("input_value must be a boolean")
 
-    panel = wfrog_main_panel(wfrog)
+    panel = support_main_panel(contract, support_artifacts)
     widgets_by_id: dict[str, dict[str, Any]] = {}
     for widget in require_list(panel.get("widgets"), "wfrog.front_panels[0].widgets"):
         obj = require_object(widget, "wfrog widget")

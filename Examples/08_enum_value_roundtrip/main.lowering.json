@@ -1,0 +1,96 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "08_enum_value_roundtrip",
+    "path": "Examples/08_enum_value_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/08_enum_value_roundtrip/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "purpose": "make the enum value roundtrip consumable by a bounded runtime/UI-binding check",
+    "backend_family_target": "reference_host_runtime_ui_binding",
+    "compiler_family_targets": [
+      "llvm_native_kernel_bridge"
+    ]
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "enum_value_roundtrip_kernel_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "mode_value",
+            "type": "enum_item_id",
+            "enum_domain": "example08.mode"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result_mode",
+            "type": "enum_item_id",
+            "enum_domain": "example08.mode"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "mode_input",
+            "mode": "widget_value",
+            "public_input_id": "mode_value",
+            "value_type": "enum_item_id",
+            "enum_domain": "example08.mode"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "mode_result",
+            "mode": "widget_value",
+            "public_output_id": "result_mode",
+            "value_type": "enum_item_id",
+            "enum_domain": "example08.mode"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "copy",
+        "dst": "result_mode",
+        "type": "enum_item_id",
+        "representation": "u16",
+        "src": "mode_value",
+        "enum_domain": "example08.mode",
+        "allowed_values": [
+          {
+            "id": "idle",
+            "numeric_value": 0
+          },
+          {
+            "id": "run",
+            "numeric_value": 1
+          },
+          {
+            "id": "fault",
+            "numeric_value": 2
+          }
+        ],
+        "final_publication": [
+          {
+            "target": "public_output.result_mode",
+            "source": "mode_value"
+          },
+          {
+            "target": "widget.mode_result.value",
+            "source": "mode_value"
+          }
+        ]
+      }
+    }
+  ]
+}

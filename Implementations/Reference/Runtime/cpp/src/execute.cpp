@@ -77,19 +77,60 @@ Value source_ref_object(const Value& contract) {
     return object({{"example_id", Value(contract_example_id(contract))}});
 }
 
-const Object& wfrog_panel(const Value* wfrog) {
+Value front_panel_to_value(const FrontPanel& panel) {
+    Array widgets;
+    for (const auto& widget : panel.widgets) {
+        widgets.push_back(object({
+            {"instance_id", Value(widget.instance_id)},
+            {"class_ref", Value(widget.class_ref)},
+            {"role", Value(widget.class_ref.find("_control") != std::string::npos ? "control" : "indicator")},
+            {"layout", widget.layout},
+            {"props", Value(widget.props)},
+            {"visual", Value(widget.visual)},
+        }));
+    }
+    return object({
+        {"panel_id", Value(panel.panel_id)},
+        {"title", Value(panel.title)},
+        {"class_ref", Value(panel.class_ref)},
+        {"layout", panel.layout},
+        {"widgets", Value(widgets)},
+        {"host_binding_ref", Value(panel.host_binding_ref)},
+    });
+}
+
+std::filesystem::path resolve_repo_path_for_contract(const Value& contract) {
+    const auto& source_ref = as_object(as_object(contract, "contract").at("source_ref"), "contract.source_ref");
+    const std::filesystem::path candidate(source_ref.at("path").as_string());
+    if (candidate.is_absolute()) {
+        return candidate;
+    }
+    return find_repo_root(std::filesystem::current_path()) / candidate;
+}
+
+Value wfrog_panel(const Value* wfrog) {
     require(wfrog != nullptr, "runtime slice requires a .wfrog package.");
     const auto& root = as_object(*wfrog, "wfrog");
     require(root.at("format").as_string() == "frog.wfrog", "Expected frog.wfrog package.");
     const auto& panels = as_array(root.at("front_panels"), "wfrog.front_panels");
     require(panels.size() == 1, "Expected exactly one front panel.");
-    return as_object(panels.front(), "wfrog.front_panels[0]");
+    return panels.front();
+}
+
+Value runtime_panel(const Value& contract, const Value* wfrog) {
+    if (wfrog != nullptr) {
+        const auto& root = as_object(*wfrog, "wfrog");
+        if (root.find("front_panels") != root.end()) {
+            return wfrog_panel(wfrog);
+        }
+    }
+    return front_panel_to_value(load_front_panel_from_frog_source_path(resolve_repo_path_for_contract(contract)));
 }
 
 Object widget_map(const Object& panel) {
     Object result;
-    for (const auto& widget : as_array(panel.at("widgets"), "wfrog.front_panels[0].widgets")) {
-        const auto& entry = as_object(widget, "wfrog widget");
+    for (const auto& widget : as_array(panel.at("widgets"), "front_panel.widgets")) {
+        const auto& entry = as_object(widget, "front panel widget");
         result.emplace(entry.at("instance_id").as_string(), widget);
     }
     return result;
@@ -173,7 +214,8 @@ Value execute_stateful_feedback_case(const Value& contract, const Object& unit, 
 }
 
 Value execute_bounded_ui_case(const Value& contract, const Object& unit, const Value& case_value, const Value* wfrog) {
-    const auto& panel = wfrog_panel(wfrog);
+    const auto panel_value = runtime_panel(contract, wfrog);
+    const auto& panel = as_object(panel_value, "front_panel");
     const auto input_value = public_input(case_value, "input_value").as_i64();
     require(input_value >= 0 && input_value <= 65535, "final_state must remain in the u16 domain.");
     const auto& kernel = as_object(unit.at("execution_kernel"), "unit.execution_kernel");
@@ -245,7 +287,8 @@ Value execute_bounded_ui_case(const Value& contract, const Object& unit, const V
 }
 
 Value execute_boolean_case(const Value& contract, const Object& unit, const Value& case_value, const Value* wfrog) {
-    const auto& panel = wfrog_panel(wfrog);
+    const auto panel_value = runtime_panel(contract, wfrog);
+    const auto& panel = as_object(panel_value, "front_panel");
     const auto widgets_by_id = widget_map(panel);
     const bool input_value = as_object(case_value, "case").at("input_value").as_bool();
 

@@ -1,8 +1,8 @@
 {
   "format": "frog.wfrog",
-  "kind": "front_panel_package",
+  "kind": "widget_realization_package",
   "package_id": "example05.accumulator_panel",
-  "title": "Bounded UI Accumulator",
+  "title": "Example 05 Default Numeric realization package",
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },
@@ -14,18 +14,17 @@
   },
   "ownership_boundary": {
     "owns": [
-      "example-local front-panel package identity",
-      "example-local widget realization references",
-      "example-local widget initial presentation properties",
-      "example-local SVG asset references"
+      "Default Numeric realization references",
+      "Default Numeric SVG asset references",
+      "reference host binding requirements"
     ],
     "does_not_own": [
       "canonical source semantics",
-      "FIR semantics",
-      "lowering semantics",
-      "backend contract semantics",
-      "runtime-private execution behavior",
-      "widget class law"
+      "front-panel widget instance layout",
+      "front-panel widget instance visual customization",
+      "front-panel widget values",
+      "FIR/lowering/runtime behavior",
+      "numeric widget law"
     ]
   },
   "widget_classes": [
@@ -71,114 +70,6 @@
       "target_classes": [
         "frog.widgets.numeric_control",
         "frog.widgets.numeric_indicator"
-      ]
-    }
-  ],
-  "front_panels": [
-    {
-      "panel_id": "main_panel",
-      "title": "Bounded UI Accumulator",
-      "class_ref": "frog.widgets.panel",
-      "host_binding_ref": "reference_host_default",
-      "layout": {
-        "width": 500,
-        "height": 170,
-        "coordinate_space": "panel_pixels"
-      },
-      "widgets": [
-        {
-          "instance_id": "ctrl_input",
-          "class_ref": "frog.widgets.numeric_control",
-          "role": "control",
-          "value_type": "u16",
-          "layout": {
-            "x": 20,
-            "y": 24,
-            "width": 220,
-            "height": 88
-          },
-          "props": {
-            "value": 3,
-            "label": "Input",
-            "caption.text": "Input",
-            "caption.visible": true,
-            "caption.anchor.x": 22,
-            "caption.anchor.y": 68,
-            "caption.align.horizontal": "left",
-            "representation.kind": "uint16",
-            "data_entry.minimum": 0,
-            "data_entry.maximum": 65535,
-            "data_entry.increment_step": 1,
-            "display.increment_buttons_visible": true,
-            "display.radix_visible": false,
-            "unit_label.visible": false,
-            "style.caption.font_weight": "400",
-            "style.frame.border_color": "transparent",
-            "style.increment_button.fill_color.normal": "#5B9BD5",
-            "style.increment_button.fill_color.pressed": "#2B4F7B",
-            "style.increment_button.border_color.normal": "#2B4F7B",
-            "style.increment_button.border_color.pressed": "#17324F",
-            "style.increment_button.symbol_color.normal": "#FFFFFF",
-            "style.increment_button.symbol_color.pressed": "#FFFFFF",
-            "label_color": "#111827",
-            "visible": true,
-            "enabled": true,
-            "foreground_color": "#D8D8D8"
-          },
-          "visual": {
-            "asset_ref": "asset:numeric_rectangular_svg"
-          },
-          "binding": {
-            "mode": "widget_value",
-            "public_input_id": "input_value",
-            "widget_reference": true,
-            "supported_members": [
-              "foreground_color"
-            ]
-          }
-        },
-        {
-          "instance_id": "ind_result",
-          "class_ref": "frog.widgets.numeric_indicator",
-          "role": "indicator",
-          "value_type": "u16",
-          "layout": {
-            "x": 260,
-            "y": 24,
-            "width": 220,
-            "height": 88
-          },
-          "props": {
-            "value": 0,
-            "label": "Accumulated result",
-            "caption.text": "Accumulated result",
-            "caption.visible": true,
-            "caption.anchor.x": 22,
-            "caption.anchor.y": 68,
-            "caption.align.horizontal": "left",
-            "representation.kind": "uint16",
-            "display.increment_buttons_visible": false,
-            "display.radix_visible": false,
-            "unit_label.visible": false,
-            "style.caption.font_weight": "400",
-            "style.frame.border_color": "transparent",
-            "label_color": "#111827",
-            "visible": true,
-            "enabled": true,
-            "foreground_color": "#D8D8D8"
-          },
-          "visual": {
-            "asset_ref": "asset:numeric_rectangular_svg"
-          },
-          "binding": {
-            "mode": "widget_value",
-            "public_output_id": "result",
-            "widget_reference": true,
-            "supported_members": [
-              "foreground_color"
-            ]
-          }
-        }
       ]
     }
   ]

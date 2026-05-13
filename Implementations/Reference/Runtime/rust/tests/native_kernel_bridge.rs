@@ -2,9 +2,11 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use frog_reference_runtime_rust::contract::{default_contract_path, default_wfrog_path, find_repo_root};
-use frog_reference_runtime_rust::native_kernel::{NativeBoolKernelBridge, NativeKernelBridge, NativeStringKernelBridge};
+use frog_reference_runtime_rust::native_kernel::{
+    NativeBoolKernelBridge, NativeEnumKernelBridge, NativeKernelBridge, NativeStringKernelBridge,
+};
 use frog_reference_runtime_rust::runtime::RuntimeCore;
-use frog_reference_runtime_rust::ui::{BooleanBrowserUiRuntime, BrowserUiRuntime, StringBrowserUiRuntime};
+use frog_reference_runtime_rust::ui::{BooleanBrowserUiRuntime, BrowserUiRuntime, EnumBrowserUiRuntime, StringBrowserUiRuntime};
 
 fn repo_root() -> PathBuf {
     find_repo_root(Path::new(env!("CARGO_MANIFEST_DIR"))).expect("repo root")
@@ -148,4 +150,34 @@ fn rust_dynamic_native_kernel_bridge_executes_example07() {
     assert!(!html.contains("Current runtime snapshot"));
     assert!(!html.contains("<pre>"));
     assert!(!html.contains("outline:2px solid #2563eb"));
+}
+
+#[test]
+fn rust_dynamic_native_kernel_bridge_executes_example08() {
+    let root = repo_root();
+    let manifest = root.join("Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/native_kernel_manifest.json");
+    let kernel_ll = root.join("Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/kernel.ll");
+    let contract = root.join(
+        "Implementations/Reference/ContractEmitter/examples/08_enum_value_roundtrip.reference_host_runtime_ui_binding.contract.json",
+    );
+    let wfrog = root.join("Examples/08_enum_value_roundtrip/ui/enum_panel.wfrog");
+    let Some(library) = build_native_library("08", &kernel_ll) else {
+        return;
+    };
+
+    let bridge = NativeEnumKernelBridge::from_paths(&manifest, &library).expect("load native enum bridge");
+    let result = bridge.run(2);
+    assert!(result.ok);
+    assert_eq!(result.result_numeric_value, 2);
+
+    let mut runtime = EnumBrowserUiRuntime::with_native_kernel_bridge(contract, wfrog, Some(bridge)).expect("runtime core");
+    let artifact = runtime.run_once("fault".to_string()).expect("execute native enum kernel");
+    assert_eq!(artifact["outputs"]["public"]["result_mode"].as_str(), Some("fault"));
+    assert_eq!(artifact["outputs"]["ui"]["mode_result"].as_str(), Some("fault"));
+    let html = runtime.render_html();
+    assert!(html.contains("native kernel bridge"));
+    assert!(html.contains("LLVM native enum kernel artifact"));
+    assert!(html.contains("data-compiler-backend='llvm'"));
+    assert!(html.contains("data-execution-path='native_kernel_bridge'"));
+    assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
 }

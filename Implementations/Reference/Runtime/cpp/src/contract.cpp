@@ -218,7 +218,13 @@ HostBinding parse_host_binding(const Value& value) {
 PanelWidget parse_panel_widget(const Value& value) {
     const auto& object = as_object(value, "Expected panel widget object.");
     PanelWidget widget;
-    widget.instance_id = get_string(object, "instance_id");
+    if (const auto instance_id = get_optional_string(object, "instance_id")) {
+        widget.instance_id = *instance_id;
+    } else if (const auto instance_ref = get_optional_string(object, "instance_ref")) {
+        widget.instance_id = *instance_ref;
+    } else {
+        widget.instance_id = get_string(object, "id");
+    }
     widget.class_ref = get_string(object, "class_ref");
     widget.layout = object.at("layout");
     if (const auto* props = optional_field(object, "props")) {
@@ -233,10 +239,14 @@ PanelWidget parse_panel_widget(const Value& value) {
 FrontPanel parse_front_panel(const Value& value) {
     const auto& object = as_object(value, "Expected front panel object.");
     FrontPanel panel;
-    panel.panel_id = get_string(object, "panel_id");
-    panel.title = get_string(object, "title");
-    panel.class_ref = get_string(object, "class_ref");
-    panel.layout = object.at("layout");
+    panel.panel_id = get_optional_string(object, "panel_id").value_or("main_panel");
+    panel.title = get_optional_string(object, "title").value_or("FROG Front Panel");
+    panel.class_ref = get_optional_string(object, "class_ref").value_or("frog.widgets.panel");
+    if (const auto* layout = optional_field(object, "layout")) {
+        panel.layout = *layout;
+    } else {
+        panel.layout = object.at("canvas");
+    }
     panel.host_binding_ref = get_optional_string(object, "host_binding_ref").value_or("reference_host_default");
     for (const auto& item : as_array(object.at("widgets"), "front_panel.widgets")) {
         panel.widgets.push_back(parse_panel_widget(item));
@@ -429,7 +439,9 @@ WfrogPackage load_wfrog_from_path(const std::filesystem::path& path) {
     package.format = get_string(root, "format");
     require(package.format == "frog.wfrog", "Unsupported .wfrog format.");
     package.kind = get_string(root, "kind");
-    require(package.kind == "front_panel_package", "Only front_panel_package is supported.");
+    require(
+        package.kind == "front_panel_package" || package.kind == "widget_realization_package",
+        "Only front_panel_package or widget_realization_package is supported.");
 
     if (const auto* widget_classes = optional_field(root, "widget_classes")) {
         for (const auto& item : as_array(*widget_classes, "widget_classes")) {
@@ -446,10 +458,26 @@ WfrogPackage load_wfrog_from_path(const std::filesystem::path& path) {
             package.host_bindings.push_back(parse_host_binding(item));
         }
     }
-    for (const auto& item : as_array(root.at("front_panels"), "front_panels")) {
-        package.front_panels.push_back(parse_front_panel(item));
+    if (const auto* front_panels = optional_field(root, "front_panels")) {
+        for (const auto& item : as_array(*front_panels, "front_panels")) {
+            package.front_panels.push_back(parse_front_panel(item));
+        }
     }
     return package;
+}
+
+FrontPanel load_front_panel_from_frog_source_path(const std::filesystem::path& path) {
+    const auto root = as_object(frog::json::parse_file(path), "Expected .frog JSON object.");
+    const auto& front_panel = as_object(root.at("front_panel"), "Expected source front_panel object.");
+    FrontPanel panel = parse_front_panel(Value(front_panel));
+    if (panel.title == "FROG Front Panel") {
+        if (const auto* metadata_value = optional_field(root, "metadata"); metadata_value != nullptr && metadata_value->is_object()) {
+            panel.title = get_optional_string(metadata_value->as_object(), "title")
+                              .value_or(get_optional_string(metadata_value->as_object(), "summary")
+                                            .value_or(get_optional_string(metadata_value->as_object(), "name").value_or(panel.title)));
+        }
+    }
+    return panel;
 }
 
 } // namespace frog::runtime

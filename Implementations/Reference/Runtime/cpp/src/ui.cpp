@@ -194,6 +194,85 @@ std::string safe_css_length(const std::string& value, const std::string& fallbac
     return saw_digit ? value : fallback;
 }
 
+std::string safe_css_signed_length(const std::string& value, const std::string& fallback) {
+    if (value.size() <= 2 || value.substr(value.size() - 2) != "px") {
+        return fallback;
+    }
+    const auto number = value.substr(0, value.size() - 2);
+    bool saw_digit = false;
+    bool saw_dot = false;
+    for (std::size_t index = 0; index < number.size(); ++index) {
+        const auto ch = number[index];
+        if (index == 0 && ch == '-') {
+            continue;
+        }
+        if (std::isdigit(static_cast<unsigned char>(ch)) != 0) {
+            saw_digit = true;
+            continue;
+        }
+        if (ch == '.' && !saw_dot) {
+            saw_dot = true;
+            continue;
+        }
+        return fallback;
+    }
+    return saw_digit ? value : fallback;
+}
+
+std::string format_css_px(double value) {
+    std::ostringstream out;
+    out << std::fixed << std::setprecision(3) << value;
+    auto text = out.str();
+    while (!text.empty() && text.back() == '0') {
+        text.pop_back();
+    }
+    if (!text.empty() && text.back() == '.') {
+        text.pop_back();
+    }
+    if (text == "-0") {
+        text = "0";
+    }
+    return text + "px";
+}
+
+std::string scale_css_px_length(const std::string& value, double scale) {
+    const auto number = value.substr(0, value.size() - 2);
+    return format_css_px(std::stod(number) * scale);
+}
+
+std::string maybe_scaled_css_length(
+    const Object& properties,
+    const std::string& key,
+    const std::string& mode_key,
+    const std::string& fallback,
+    double scale,
+    bool allow_signed = false) {
+    const auto safe_value = allow_signed
+        ? safe_css_signed_length(property_string(properties, key, fallback), fallback)
+        : safe_css_length(property_string(properties, key, fallback), fallback);
+    const auto mode = property_string(properties, mode_key, "fixed_css_px");
+    return mode == "scale_with_widget" ? scale_css_px_length(safe_value, scale) : safe_value;
+}
+
+std::string safe_css_font_style(const std::string& value, const std::string& fallback) {
+    return value == "normal" || value == "italic" || value == "oblique" ? value : fallback;
+}
+
+std::string safe_css_font_family(const std::string& value, const std::string& fallback) {
+    if (value.empty()) {
+        return fallback;
+    }
+    for (const auto ch : value) {
+        const bool allowed =
+            std::isalnum(static_cast<unsigned char>(ch)) != 0 ||
+            ch == ' ' || ch == ',' || ch == '-' || ch == '_' || ch == '\'' || ch == '"';
+        if (!allowed) {
+            return fallback;
+        }
+    }
+    return value;
+}
+
 std::string safe_css_font_weight(const std::string& value, const std::string& fallback) {
     if (value == "normal" || value == "bold" || value == "lighter" || value == "bolder") {
         return value;
@@ -216,13 +295,17 @@ struct SvgGeometry {
     double value_face_y = 82.0;
     double value_face_width = 214.0;
     double value_face_height = 28.0;
-    double increment_up_x = 246.0;
+    double selector_face_x = 246.0;
+    double selector_face_y = 82.0;
+    double selector_face_width = 24.0;
+    double selector_face_height = 28.0;
+    double increment_up_x = 278.0;
     double increment_up_y = 82.0;
-    double increment_up_width = 30.0;
+    double increment_up_width = 24.0;
     double increment_up_height = 13.0;
-    double increment_down_x = 246.0;
+    double increment_down_x = 278.0;
     double increment_down_y = 97.0;
-    double increment_down_width = 30.0;
+    double increment_down_width = 24.0;
     double increment_down_height = 13.0;
 };
 
@@ -415,6 +498,23 @@ std::string svg_box_style(double x, double y, double width, double height, const
     style << "width:" << css_percent(pct(width, geometry.view_width)) << ";";
     style << "height:" << css_percent(pct(height, geometry.view_height)) << ";";
     return style.str();
+}
+
+std::string svg_dropdown_style(double x, double y, double width, double height, const SvgGeometry& geometry) {
+    std::ostringstream style;
+    style << "left:" << css_percent(pct(x, geometry.view_width)) << ";";
+    style << "top:" << css_percent(pct(y + height, geometry.view_height)) << ";";
+    style << "width:" << css_percent(pct(width, geometry.view_width)) << ";";
+    return style.str();
+}
+
+double widget_style_scale(const Object& properties, std::int64_t width, std::int64_t height) {
+    const auto reference_width = property_number(properties, "style.scale.reference_width").value_or(static_cast<double>(width));
+    const auto reference_height = property_number(properties, "style.scale.reference_height").value_or(static_cast<double>(height));
+    if (reference_width <= 0.0 || reference_height <= 0.0) {
+        return 1.0;
+    }
+    return std::min(static_cast<double>(width) / reference_width, static_cast<double>(height) / reference_height);
 }
 
 std::string asset_route(const WidgetState& widget) {
@@ -673,6 +773,375 @@ std::string render_string_widget(const WidgetState& widget) {
         html << "<output class='string-value-overlay string-indicator-value' data-frog-part='text_value' data-svg-anchor='text_region.left_center'";
         html << " style='" << value_style << "color:" << html_escape(text_color) << ";font-size:" << html_escape(text_size)
              << ";font-weight:" << html_escape(text_weight) << ";'>" << html_escape(value) << "</output>";
+    }
+
+    html << "</section>";
+    return html.str();
+}
+
+SvgGeometry load_enum_svg_geometry(const WidgetState& widget) {
+    SvgGeometry geometry;
+    geometry.view_width = 380.0;
+    geometry.view_height = 150.0;
+    geometry.caption_x = 16.0;
+    geometry.caption_y = 46.0;
+    geometry.value_face_x = 22.0;
+    geometry.value_face_y = 82.0;
+    geometry.value_face_width = 214.0;
+    geometry.value_face_height = 28.0;
+    geometry.selector_face_x = 246.0;
+    geometry.selector_face_y = 82.0;
+    geometry.selector_face_width = 24.0;
+    geometry.selector_face_height = 28.0;
+    geometry.increment_up_x = 278.0;
+    geometry.increment_up_y = 82.0;
+    geometry.increment_up_width = 24.0;
+    geometry.increment_up_height = 13.0;
+    geometry.increment_down_x = 278.0;
+    geometry.increment_down_y = 97.0;
+    geometry.increment_down_width = 24.0;
+    geometry.increment_down_height = 13.0;
+    if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
+        return geometry;
+    }
+    const auto svg = read_text_file(widget.asset_path);
+    parse_viewbox(svg, geometry);
+    geometry.caption_x = svg_attribute_double(svg, "caption_text", "x", geometry.caption_x);
+    geometry.caption_y = svg_attribute_double(svg, "caption_text", "y", geometry.caption_y);
+    geometry.value_face_x = svg_attribute_double(svg, "value_face", "x", geometry.value_face_x);
+    geometry.value_face_y = svg_attribute_double(svg, "value_face", "y", geometry.value_face_y);
+    geometry.value_face_width = svg_attribute_double(svg, "value_face", "width", geometry.value_face_width);
+    geometry.value_face_height = svg_attribute_double(svg, "value_face", "height", geometry.value_face_height);
+    geometry.selector_face_x = svg_attribute_double(svg, "selector_face", "x", geometry.selector_face_x);
+    geometry.selector_face_y = svg_attribute_double(svg, "selector_face", "y", geometry.selector_face_y);
+    geometry.selector_face_width = svg_attribute_double(svg, "selector_face", "width", geometry.selector_face_width);
+    geometry.selector_face_height = svg_attribute_double(svg, "selector_face", "height", geometry.selector_face_height);
+    geometry.increment_up_x = svg_child_rect_attribute_double(svg, "increment_up", "x", geometry.increment_up_x);
+    geometry.increment_up_y = svg_child_rect_attribute_double(svg, "increment_up", "y", geometry.increment_up_y);
+    geometry.increment_up_width = svg_child_rect_attribute_double(svg, "increment_up", "width", geometry.increment_up_width);
+    geometry.increment_up_height = svg_child_rect_attribute_double(svg, "increment_up", "height", geometry.increment_up_height);
+    geometry.increment_down_x = svg_child_rect_attribute_double(svg, "increment_down", "x", geometry.increment_down_x);
+    geometry.increment_down_y = svg_child_rect_attribute_double(svg, "increment_down", "y", geometry.increment_down_y);
+    geometry.increment_down_width = svg_child_rect_attribute_double(svg, "increment_down", "width", geometry.increment_down_width);
+    geometry.increment_down_height = svg_child_rect_attribute_double(svg, "increment_down", "height", geometry.increment_down_height);
+    return geometry;
+}
+
+struct EnumUiItem {
+    std::string id;
+    std::string text;
+    std::uint16_t numeric_value = 0;
+    bool enabled = true;
+};
+
+std::vector<EnumUiItem> enum_ui_items(const WidgetState& widget) {
+    const auto it = widget.properties.find("items");
+    if (it == widget.properties.end() || !it->second.is_array()) {
+        throw std::runtime_error("Enum widget " + widget.widget_id + " must define items in front-panel instance properties.");
+    }
+    std::vector<EnumUiItem> items;
+    for (const auto& value : it->second.as_array()) {
+        if (!value.is_object()) {
+            throw std::runtime_error("Enum item must be an object.");
+        }
+        const auto& object = value.as_object();
+        const auto id = property_string(object, "id");
+        const auto text = property_string(object, "text");
+        const auto numeric_it = object.find("numeric_value");
+        if (id.empty() || text.empty() || numeric_it == object.end() || !numeric_it->second.is_number()) {
+            throw std::runtime_error("Enum item must publish id, text, and numeric_value.");
+        }
+        const auto raw = numeric_it->second.as_i64();
+        if (raw < 0 || raw > 65535) {
+            throw std::runtime_error("Enum item numeric_value must remain in the u16 domain.");
+        }
+        items.push_back(EnumUiItem{
+            id,
+            text,
+            static_cast<std::uint16_t>(raw),
+            property_bool(object, "enabled", true),
+        });
+    }
+    if (items.empty()) {
+        throw std::runtime_error("Enum widget " + widget.widget_id + " must define at least one item.");
+    }
+    return items;
+}
+
+const EnumUiItem& selected_enum_item(const std::vector<EnumUiItem>& items, const std::string& id) {
+    const auto it = std::find_if(items.begin(), items.end(), [&](const EnumUiItem& item) { return item.id == id; });
+    if (it == items.end()) {
+        throw std::runtime_error("Enum widget value must resolve to a declared item.");
+    }
+    return *it;
+}
+
+std::string render_enum_skin(const WidgetState& widget) {
+    if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
+        return "<div class='enum-skin missing-skin'></div>";
+    }
+    const auto frame_fill = safe_css_color(property_string(widget.properties, "style.frame.fill_color", "transparent"), "transparent");
+    const auto frame_stroke = safe_css_color(property_string(widget.properties, "style.frame.border_color", "transparent"), "transparent");
+    const auto frame_stroke_width = safe_css_length(property_string(widget.properties, "style.frame.border_width", "0px"), "0px");
+    const bool frame_visible = property_bool(widget.properties, "style.frame.visible", false) ||
+                               (frame_stroke != "transparent" && frame_stroke_width != "0" && frame_stroke_width != "0px");
+    const auto value_face_fill = safe_css_color(property_string(widget.properties, "style.value_face.fill_color", "#ffffff"), "#ffffff");
+    const auto value_face_stroke = safe_css_color(property_string(widget.properties, "style.value_face.border_color", "#64748b"), "#64748b");
+    const auto value_face_stroke_width = safe_css_length(property_string(widget.properties, "style.value_face.border_width", "2px"), "2px");
+    const bool selector_visible = property_bool(widget.properties, "display.selector_visible", widget.role == "control");
+    const bool increment_visible = property_bool(widget.properties, "display.increment_buttons_visible", false);
+    const bool digital_visible = property_bool(widget.properties, "display.digital_display_visible", false);
+    const bool overflow_visible = property_bool(widget.properties, "display.text_overflow_visible", false);
+    const auto selector_fill = safe_css_color(property_string(widget.properties, "style.selector_face.fill_color", "#f1f5f9"), "#f1f5f9");
+    const auto selector_stroke =
+        safe_css_color(property_string(widget.properties, "style.selector_face.border_color", "#64748b"), "#64748b");
+    const auto selector_stroke_width =
+        safe_css_length(property_string(widget.properties, "style.selector_face.border_width", "1px"), "1px");
+    const auto selector_symbol =
+        safe_css_color(property_string(widget.properties, "style.selector_face.symbol_color", "#111827"), "#111827");
+    std::ostringstream style;
+    style << "--frog-enum-label-display:none;";
+    style << "--frog-enum-caption-display:none;";
+    style << "--frog-enum-value-display:none;";
+    style << "--frog-enum-frame-display:" << (frame_visible ? "inline" : "none") << ";";
+    style << "--frog-enum-frame-fill:" << html_escape(frame_fill) << ";";
+    style << "--frog-enum-frame-stroke:" << html_escape(frame_stroke) << ";";
+    style << "--frog-enum-frame-stroke-width:" << html_escape(frame_stroke_width) << ";";
+    style << "--frog-enum-value-face-fill:" << html_escape(value_face_fill) << ";";
+    style << "--frog-enum-value-face-stroke:" << html_escape(value_face_stroke) << ";";
+    style << "--frog-enum-value-face-stroke-width:" << html_escape(value_face_stroke_width) << ";";
+    style << "--frog-enum-selector-display:" << (selector_visible ? "inline" : "none") << ";";
+    style << "--frog-enum-selector-fill:" << html_escape(selector_fill) << ";";
+    style << "--frog-enum-selector-stroke:" << html_escape(selector_stroke) << ";";
+    style << "--frog-enum-selector-stroke-width:" << html_escape(selector_stroke_width) << ";";
+    style << "--frog-enum-selector-symbol:" << html_escape(selector_symbol) << ";";
+    style << "--frog-enum-increment-display:" << (increment_visible ? "inline" : "none") << ";";
+    style << "--frog-enum-digital-display:" << (digital_visible ? "inline" : "none") << ";";
+    style << "--frog-enum-overflow-display:" << (overflow_visible ? "inline" : "none") << ";";
+
+    std::ostringstream html;
+    html << "<div class='enum-skin' aria-hidden='true' style='" << style.str() << "'>";
+    html << read_text_file(widget.asset_path);
+    html << "</div>";
+    return html.str();
+}
+
+std::string render_enum_widget(const WidgetState& widget) {
+    const bool is_control = widget.role == "control";
+    const auto geometry = load_enum_svg_geometry(widget);
+    const auto x = layout_i64(widget.layout, "x", 0);
+    const auto y = layout_i64(widget.layout, "y", 0);
+    const auto width = layout_i64(widget.layout, "width", 260);
+    const auto height = layout_i64(widget.layout, "height", 110);
+    const auto value = property_string(widget.properties, "value");
+    const auto items = enum_ui_items(widget);
+    const auto& selected = selected_enum_item(items, value);
+    const auto style_scale = widget_style_scale(widget.properties, width, height);
+    const auto label = property_string(widget.properties, "caption.text", widget.widget_id);
+    const auto label_color = safe_css_color(property_string(widget.properties, "caption.style.text_color", "#111827"), "#111827");
+    const auto text_color = safe_css_color(property_string(widget.properties, "style.value_display.color", "#111827"), "#111827");
+    const auto text_size = maybe_scaled_css_length(
+        widget.properties, "style.value_display.font_size", "style.value_display.font_size_mode", "16px", style_scale);
+    const auto text_weight = safe_css_font_weight(property_string(widget.properties, "style.value_display.font_weight", "400"), "400");
+    const auto text_vertical_offset = maybe_scaled_css_length(
+        widget.properties, "style.value_display.vertical_offset", "style.value_display.vertical_offset_mode", "0px", style_scale, true);
+    const auto text_padding_inline = maybe_scaled_css_length(
+        widget.properties, "style.value_display.padding_inline", "style.value_display.padding_inline_mode", "8px", style_scale);
+    const auto route = asset_route(widget);
+    const bool selector_visible = property_bool(widget.properties, "display.selector_visible", is_control);
+    const bool interaction_enabled = property_bool(widget.properties, "interaction.enabled", true);
+    const auto selector_fill =
+        safe_css_color(property_string(widget.properties, "style.selector_face.fill_color", "#f1f5f9"), "#f1f5f9");
+    const auto selector_hover_fill =
+        safe_css_color(property_string(widget.properties, "style.selector_face.fill_color.hover", selector_fill), selector_fill);
+    const auto selector_stroke =
+        safe_css_color(property_string(widget.properties, "style.selector_face.border_color", "#64748b"), "#64748b");
+    const auto selector_hover_stroke =
+        safe_css_color(property_string(widget.properties, "style.selector_face.border_color.hover", selector_stroke), selector_stroke);
+    const auto selector_stroke_width = maybe_scaled_css_length(
+        widget.properties, "style.selector_face.border_width", "style.selector_face.border_width_mode", "1px", style_scale);
+    const auto selector_radius = maybe_scaled_css_length(
+        widget.properties, "style.selector_face.border_radius", "style.selector_face.border_radius_mode", "1px", style_scale);
+    const auto selector_symbol =
+        safe_css_color(property_string(widget.properties, "style.selector_face.symbol_color", "#111827"), "#111827");
+    const auto selector_hover_symbol =
+        safe_css_color(property_string(widget.properties, "style.selector_face.symbol_color.hover", selector_symbol), selector_symbol);
+    const auto selector_symbol_width = maybe_scaled_css_length(
+        widget.properties, "style.selector_face.symbol_width", "style.selector_face.symbol_size_mode", "10px", style_scale);
+    const auto selector_symbol_height = maybe_scaled_css_length(
+        widget.properties, "style.selector_face.symbol_height", "style.selector_face.symbol_size_mode", "7px", style_scale);
+    const auto value_hover_fill =
+        safe_css_color(property_string(widget.properties, "style.value_face.fill_color.hover", "transparent"), "transparent");
+    const auto dropdown_fill =
+        safe_css_color(property_string(widget.properties, "style.dropdown.fill_color", "#ffffff"), "#ffffff");
+    const auto dropdown_border =
+        safe_css_color(property_string(widget.properties, "style.dropdown.border_color", "#64748b"), "#64748b");
+    const auto dropdown_border_width = maybe_scaled_css_length(
+        widget.properties, "style.dropdown.border_width", "style.dropdown.border_width_mode", "1px", style_scale);
+    const auto dropdown_option_fill =
+        safe_css_color(property_string(widget.properties, "style.dropdown.option.fill_color", "#ffffff"), "#ffffff");
+    const auto dropdown_option_text =
+        safe_css_color(property_string(widget.properties, "style.dropdown.option.text_color", text_color), text_color);
+    const auto dropdown_option_hover_fill = safe_css_color(
+        property_string(widget.properties, "style.dropdown.option.hover_fill_color", "#2563eb"), "#2563eb");
+    const auto dropdown_option_hover_text = safe_css_color(
+        property_string(widget.properties, "style.dropdown.option.hover_text_color", "#ffffff"), "#ffffff");
+    const auto dropdown_option_selected_fill = safe_css_color(
+        property_string(widget.properties, "style.dropdown.option.selected_fill_color", dropdown_option_hover_fill),
+        dropdown_option_hover_fill);
+    const auto dropdown_option_selected_text = safe_css_color(
+        property_string(widget.properties, "style.dropdown.option.selected_text_color", dropdown_option_hover_text),
+        dropdown_option_hover_text);
+    const auto dropdown_option_font_size = maybe_scaled_css_length(
+        widget.properties, "style.dropdown.option.font_size", "style.dropdown.option.font_size_mode", text_size, style_scale);
+    const auto dropdown_option_font_weight =
+        safe_css_font_weight(property_string(widget.properties, "style.dropdown.option.font_weight", text_weight), text_weight);
+    const auto dropdown_option_font_style =
+        safe_css_font_style(property_string(widget.properties, "style.dropdown.option.font_style", "normal"), "normal");
+    const auto dropdown_option_font_family = safe_css_font_family(
+        property_string(widget.properties, "style.dropdown.option.font_family", "Segoe UI,Arial,sans-serif"),
+        "Segoe UI,Arial,sans-serif");
+    const auto dropdown_option_padding_inline = maybe_scaled_css_length(
+        widget.properties, "style.dropdown.option.padding_inline", "style.dropdown.option.padding_inline_mode", text_padding_inline, style_scale);
+    const auto dropdown_option_height = maybe_scaled_css_length(
+        widget.properties, "style.dropdown.option.height", "style.dropdown.option.height_mode", "28px", style_scale);
+    const auto value_style = svg_box_style(
+        geometry.value_face_x,
+        geometry.value_face_y,
+        geometry.value_face_width,
+        geometry.value_face_height,
+        geometry);
+    const auto dropdown_style = svg_dropdown_style(
+        geometry.value_face_x,
+        geometry.value_face_y,
+        geometry.value_face_width,
+        geometry.value_face_height,
+        geometry);
+    const auto selector_style = svg_box_style(
+        geometry.selector_face_x,
+        geometry.selector_face_y,
+        geometry.selector_face_width,
+        geometry.selector_face_height,
+        geometry);
+    const bool digital_visible = property_bool(widget.properties, "display.digital_display_visible", false);
+    const bool increment_visible = property_bool(widget.properties, "display.increment_buttons_visible", false);
+    const bool overflow_visible = property_bool(widget.properties, "display.text_overflow_visible", false);
+
+    std::ostringstream html;
+    html << "<section class='frog-widget enum-widget " << (is_control ? "enum-control" : "enum-indicator") << "'";
+    html << " data-widget-id='" << html_escape(widget.widget_id) << "'";
+    html << " data-class-ref='" << html_escape(widget.class_ref) << "'";
+    html << " data-role='" << html_escape(widget.role) << "'";
+    html << " data-frog-visual-law='wfrog-realization-state-map'";
+    html << " data-frog-digital-display-visible='" << (digital_visible ? "true" : "false") << "'";
+    html << " data-frog-increment-buttons-visible='" << (increment_visible ? "true" : "false") << "'";
+    html << " data-frog-selector-visible='" << (selector_visible ? "true" : "false") << "'";
+    html << " data-frog-text-overflow-visible='" << (overflow_visible ? "true" : "false") << "'";
+    if (!route.empty()) {
+        html << " data-asset-route='" << html_escape(route) << "'";
+    }
+    html << " style='position:absolute;left:" << css_px(x) << ";top:" << css_px(y) << ";width:" << css_px(width)
+         << ";height:" << css_px(height) << ";--frog-enum-selector-fill:" << html_escape(selector_fill)
+         << ";--frog-enum-selector-stroke:" << html_escape(selector_stroke)
+         << ";--frog-enum-selector-stroke-width:" << html_escape(selector_stroke_width)
+         << ";--frog-enum-selector-radius:" << html_escape(selector_radius)
+         << ";--frog-enum-selector-symbol:" << html_escape(selector_symbol)
+         << ";--frog-enum-selector-symbol-width:" << html_escape(selector_symbol_width)
+         << ";--frog-enum-selector-symbol-height:" << html_escape(selector_symbol_height)
+         << ";--frog-enum-selector-hover-fill:" << html_escape(selector_hover_fill)
+         << ";--frog-enum-selector-hover-stroke:" << html_escape(selector_hover_stroke)
+         << ";--frog-enum-selector-hover-symbol:" << html_escape(selector_hover_symbol)
+         << ";--frog-enum-value-hover-fill:" << html_escape(value_hover_fill)
+         << ";--frog-enum-text-padding-inline:" << html_escape(text_padding_inline)
+         << ";--frog-enum-dropdown-fill:" << html_escape(dropdown_fill)
+         << ";--frog-enum-dropdown-border:" << html_escape(dropdown_border)
+         << ";--frog-enum-dropdown-border-width:" << html_escape(dropdown_border_width)
+         << ";--frog-enum-dropdown-option-fill:" << html_escape(dropdown_option_fill)
+         << ";--frog-enum-dropdown-option-text:" << html_escape(dropdown_option_text)
+         << ";--frog-enum-dropdown-option-hover-fill:" << html_escape(dropdown_option_hover_fill)
+         << ";--frog-enum-dropdown-option-hover-text:" << html_escape(dropdown_option_hover_text)
+         << ";--frog-enum-dropdown-option-selected-fill:" << html_escape(dropdown_option_selected_fill)
+         << ";--frog-enum-dropdown-option-selected-text:" << html_escape(dropdown_option_selected_text)
+         << ";--frog-enum-dropdown-option-font-family:" << html_escape(dropdown_option_font_family)
+         << ";--frog-enum-dropdown-option-font-size:" << html_escape(dropdown_option_font_size)
+         << ";--frog-enum-dropdown-option-font-weight:" << html_escape(dropdown_option_font_weight)
+         << ";--frog-enum-dropdown-option-font-style:" << html_escape(dropdown_option_font_style)
+         << ";--frog-enum-dropdown-option-padding-inline:" << html_escape(dropdown_option_padding_inline)
+         << ";--frog-enum-dropdown-option-height:" << html_escape(dropdown_option_height) << ";";
+    if (!property_bool(widget.properties, "visible", true)) {
+        html << "display:none;";
+    }
+    html << "'>";
+
+    html << render_enum_skin(widget);
+    html << "<span class='enum-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='"
+          << caption_anchor_style(widget.properties, geometry)
+          << "color:" << html_escape(label_color) << ";'>" << html_escape(label) << "</span>";
+
+    if (is_control) {
+        html << "<button id='" << html_escape(widget.widget_id) << "_display' type='button'";
+        html << " class='enum-value-display-overlay enum-display-button' data-frog-part='value_display' data-svg-anchor='value_display.left_center'";
+        html << " aria-haspopup='listbox' aria-expanded='false' aria-controls='" << html_escape(widget.widget_id) << "_dropdown'";
+        html << " onclick=\"frogToggleEnumDropdown('" << html_escape(widget.widget_id) << "_dropdown','" << html_escape(widget.widget_id) << "_display')\"";
+        html << " style='"
+             << value_style << "color:" << html_escape(text_color) << ";font-size:" << html_escape(text_size)
+             << ";font-weight:" << html_escape(text_weight) << ";--frog-enum-text-vertical-offset:"
+             << html_escape(text_vertical_offset) << ";'";
+        if (!interaction_enabled) {
+            html << " disabled";
+        }
+        html << ">" << html_escape(selected.text) << "</button>";
+        if (selector_visible) {
+            html << "<button type='button' class='enum-selector-overlay enum-selector-button' data-frog-part='selector_face'";
+            html << " aria-label='Open " << html_escape(label) << "'";
+            html << " aria-haspopup='listbox' aria-expanded='false' aria-controls='" << html_escape(widget.widget_id) << "_dropdown'";
+            html << " onclick=\"frogToggleEnumDropdown('" << html_escape(widget.widget_id) << "_dropdown','" << html_escape(widget.widget_id) << "_display')\"";
+            html << " style='" << selector_style << "'";
+            if (!interaction_enabled) {
+                html << " disabled";
+            }
+            html << "></button>";
+        }
+        html << "<select id='" << html_escape(widget.widget_id) << "_value' name='mode_value'";
+        html << " class='enum-select-state' data-frog-part='value_state' aria-hidden='true' tabindex='-1'";
+        html << " aria-label='" << html_escape(label) << "'";
+        html << " onchange=\"frogUpdateEnumDisplay(this,'" << html_escape(widget.widget_id) << "_display')\"";
+        html << " oninput=\"frogUpdateEnumDisplay(this,'" << html_escape(widget.widget_id) << "_display')\"";
+        html << " hidden";
+        if (!interaction_enabled) {
+            html << " disabled";
+        }
+        html << ">";
+        for (const auto& item : items) {
+            html << "<option value='" << html_escape(item.id) << "'";
+            if (item.id == selected.id) {
+                html << " selected";
+            }
+            if (!item.enabled) {
+                html << " disabled";
+            }
+            html << ">" << html_escape(item.text) << "</option>";
+        }
+        html << "</select>";
+        html << "<div id='" << html_escape(widget.widget_id) << "_dropdown' class='enum-dropdown' data-frog-part='dropdown'";
+        html << " role='listbox' aria-label='" << html_escape(label) << " options' hidden style='" << dropdown_style << "'>";
+        for (const auto& item : items) {
+            html << "<button type='button' class='enum-dropdown-option'";
+            html << " role='option' data-enum-value='" << html_escape(item.id) << "'";
+            html << " aria-selected='" << (item.id == selected.id ? "true" : "false") << "'";
+            html << " onclick=\"frogSelectEnumOption(this,'" << html_escape(widget.widget_id) << "_value','"
+                 << html_escape(widget.widget_id) << "_display','" << html_escape(widget.widget_id) << "_dropdown')\"";
+            if (!item.enabled || !interaction_enabled) {
+                html << " disabled";
+            }
+            html << ">" << html_escape(item.text) << "</button>";
+        }
+        html << "</div>";
+    } else {
+        html << "<output class='enum-value-overlay enum-indicator-value' data-frog-part='value_display' data-svg-anchor='value_display.left_center'";
+        html << " style='" << value_style << "color:" << html_escape(text_color) << ";font-size:" << html_escape(text_size)
+             << ";font-weight:" << html_escape(text_weight) << ";--frog-enum-text-vertical-offset:"
+             << html_escape(text_vertical_offset) << ";'>" << html_escape(selected.text) << "</output>";
     }
 
     html << "</section>";
@@ -1034,7 +1503,7 @@ std::string BrowserUiRuntime::render_html() const {
             "});"
             "</script></head><body>";
     html << "<h1>" << html_escape(core.panel.title) << "</h1>";
-    html << "<p class='meta'>Example 05 - .wfrog front panel + C++ runtime</p>";
+    html << "<p class='meta'>Example 05 - .frog front panel + Default Numeric .wfrog realization assets + C++ runtime</p>";
     html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
     html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
     html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : "contract executor") << "</dd></div>";
@@ -1210,7 +1679,7 @@ std::string BooleanBrowserUiRuntime::render_html() const {
             ".diagnostic.error{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}"
             "</style></head><body>";
     html << "<h1>" << html_escape(core.panel.title) << "</h1>";
-    html << "<p class='meta'>Example 06 - .wfrog front panel + Default Boolean realization assets + C++ runtime</p>";
+    html << "<p class='meta'>Example 06 - .frog front panel + Default Boolean .wfrog realization assets + C++ runtime</p>";
     html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
     html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
     html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : "boolean contract executor") << "</dd></div>";
@@ -1360,7 +1829,7 @@ std::string StringBrowserUiRuntime::render_html() const {
             ".runtime-facts div{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}"
             ".runtime-facts dt{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}"
             ".runtime-facts dd{margin:0;color:#1f2933;font-size:12px;font-weight:600;}"
-            ".front-panel{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}"
+            ".front-panel{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:visible;}"
             ".frog-widget{position:absolute;box-sizing:border-box;}"
             ".string-widget{font-family:Segoe UI,Arial,sans-serif;}"
             ".string-skin{position:absolute;inset:0;width:100%;height:100%;display:block;}"
@@ -1378,7 +1847,7 @@ std::string StringBrowserUiRuntime::render_html() const {
             ".diagnostic.error{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}"
             "</style></head><body>";
     html << "<h1>" << html_escape(core.panel.title) << "</h1>";
-    html << "<p class='meta'>Example 07 - .wfrog front panel + Default String realization assets + C++ runtime</p>";
+    html << "<p class='meta'>Example 07 - .frog front panel + Default String .wfrog realization assets + C++ runtime</p>";
     html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
     html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
     html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : "string contract executor") << "</dd></div>";
@@ -1468,6 +1937,193 @@ void StringBrowserUiRuntime::serve(const std::string& host, std::uint16_t port, 
             } else if (request.method == "POST" && request.path == "/run") {
                 try {
                     const auto form_value = parse_form_value(request.body, "input_text").value_or("hello world");
+                    run_once(form_value);
+                } catch (const std::exception& error) {
+                    last_error = error.what();
+                }
+                send_response(client, "303 See Other", "text/plain; charset=utf-8", "", std::make_pair(std::string("Location"), std::string("/")));
+            } else {
+                send_response(client, "404 Not Found", "text/plain; charset=utf-8", "not found");
+            }
+        } catch (const std::exception& error) {
+            try {
+                send_response(client, "500 Internal Server Error", "text/plain; charset=utf-8", error.what());
+            } catch (...) {
+            }
+        }
+        close_socket(client);
+    }
+}
+
+EnumBrowserUiRuntime::EnumBrowserUiRuntime(
+    std::filesystem::path contract_path,
+    std::filesystem::path wfrog_path,
+    std::shared_ptr<const NativeEnumKernelBridge> native_kernel_bridge_)
+    : core(std::move(contract_path), std::move(wfrog_path)),
+      native_kernel_bridge(std::move(native_kernel_bridge_)) {}
+
+frog::json::Value EnumBrowserUiRuntime::run_once(const std::string& input_value) {
+    try {
+        frog::json::Value artifact = native_kernel_bridge == nullptr
+            ? core.execute(input_value)
+            : core.execute_with_native_kernel_bridge(*native_kernel_bridge, input_value);
+        last_error.reset();
+        return artifact;
+    } catch (const std::exception& error) {
+        last_error = error.what();
+        throw;
+    }
+}
+
+std::string EnumBrowserUiRuntime::render_html() const {
+    const auto& ctrl = core.widgets.at("mode_input");
+    const auto& ind = core.widgets.at("mode_result");
+    const auto panel_width = layout_i64(core.panel.layout, "width", 620);
+    const auto panel_height = layout_i64(core.panel.layout, "height", 180);
+    const bool uses_native_kernel = native_kernel_bridge != nullptr;
+
+    std::string diagnostics;
+    if (last_error.has_value()) {
+        diagnostics = "<div class='diagnostic error'>" + html_escape(*last_error) + "</div>";
+    }
+
+    std::ostringstream html;
+    html << "<!doctype html><html lang='en'><head><meta charset='utf-8'><title>" << html_escape(core.panel.title) << "</title>";
+    html << "<style>"
+            "body{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}"
+            "h1{font-size:24px;margin:0 0 12px 0;}"
+            "p.meta{margin:0 0 20px 0;color:#52606d;}"
+            ".runtime-facts{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 18px 0;}"
+            ".runtime-facts div{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}"
+            ".runtime-facts dt{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}"
+            ".runtime-facts dd{margin:0;color:#1f2933;font-size:12px;font-weight:600;}"
+            ".front-panel{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}"
+            ".frog-widget{position:absolute;box-sizing:border-box;}"
+            ".enum-widget{font-family:Segoe UI,Arial,sans-serif;}"
+            ".enum-skin{position:absolute;inset:0;width:100%;height:100%;display:block;}"
+            ".enum-skin svg{width:100%;height:100%;display:block;}"
+            ".enum-skin #label_text,.enum-skin #caption_text,.enum-skin #value_display{display:none;}"
+            ".enum-caption-overlay{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}"
+            ".enum-value-overlay{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1.2;border:0;background:transparent;}"
+            ".enum-value-display-overlay{position:absolute;box-sizing:border-box;display:flex;align-items:center;padding:0 var(--frog-enum-text-padding-inline);font-family:Segoe UI,Arial,sans-serif;line-height:normal;transform:translateY(var(--frog-enum-text-vertical-offset));z-index:3;}"
+            ".enum-widget .enum-display-button{border:0;background:transparent;text-align:left;justify-content:flex-start;appearance:none;cursor:pointer;}"
+            ".enum-widget .enum-display-button:focus,.enum-widget .enum-display-button:focus-visible,.enum-widget .enum-display-button:active{outline:0;box-shadow:none;}"
+            ".enum-select-state{display:none;}"
+            ".enum-selector-overlay{position:absolute;box-sizing:border-box;display:flex;align-items:center;justify-content:center;border-style:solid;border-width:var(--frog-enum-selector-stroke-width);border-radius:var(--frog-enum-selector-radius);}"
+            ".enum-selector-overlay::after{content:'';width:0;height:0;border-left:calc(var(--frog-enum-selector-symbol-width) / 2) solid transparent;border-right:calc(var(--frog-enum-selector-symbol-width) / 2) solid transparent;border-top:var(--frog-enum-selector-symbol-height) solid currentColor;}"
+            ".enum-control:has(.enum-display-button:hover) .enum-skin #value_face,.enum-control:has(.enum-dropdown:not([hidden])) .enum-skin #value_face{fill:var(--frog-enum-value-hover-fill) !important;}"
+            ".enum-indicator-value{display:flex;align-items:center;padding:0 var(--frog-enum-text-padding-inline);pointer-events:none;line-height:normal;transform:translateY(var(--frog-enum-text-vertical-offset));}"
+            ".enum-dropdown{position:absolute;box-sizing:border-box;z-index:30;background:var(--frog-enum-dropdown-fill);border:var(--frog-enum-dropdown-border-width) solid var(--frog-enum-dropdown-border);}"
+            ".enum-dropdown[hidden]{display:none;}"
+            ".enum-dropdown-option{width:100%;min-height:var(--frog-enum-dropdown-option-height);display:flex;align-items:center;justify-content:flex-start;padding:0 var(--frog-enum-dropdown-option-padding-inline);border:0;border-radius:0;background:var(--frog-enum-dropdown-option-fill);color:var(--frog-enum-dropdown-option-text);font-family:var(--frog-enum-dropdown-option-font-family);font-size:var(--frog-enum-dropdown-option-font-size);font-weight:var(--frog-enum-dropdown-option-font-weight);font-style:var(--frog-enum-dropdown-option-font-style);text-align:left;cursor:pointer;}"
+            ".enum-dropdown-option:hover,.enum-dropdown-option:focus{background:var(--frog-enum-dropdown-option-hover-fill);color:var(--frog-enum-dropdown-option-hover-text);outline:0;}"
+            ".enum-dropdown-option[aria-selected='true']{background:var(--frog-enum-dropdown-option-selected-fill);color:var(--frog-enum-dropdown-option-selected-text);}"
+            ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
+            "button{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}"
+            ".enum-widget .enum-selector-button{padding:0;border-style:solid;border-width:var(--frog-enum-selector-stroke-width);border-radius:var(--frog-enum-selector-radius);font-weight:400;cursor:pointer;appearance:none;z-index:4;background:var(--frog-enum-selector-fill);border-color:var(--frog-enum-selector-stroke);color:var(--frog-enum-selector-symbol);}"
+            ".enum-widget .enum-selector-button:hover{background:var(--frog-enum-selector-hover-fill);border-color:var(--frog-enum-selector-hover-stroke);color:var(--frog-enum-selector-hover-symbol);}"
+            ".enum-widget .enum-selector-button:focus,.enum-widget .enum-selector-button:focus-visible,.enum-widget .enum-selector-button:active{outline:0;box-shadow:none;}"
+            ".diagnostic{margin:12px 0;padding:10px 12px;border-radius:6px;}"
+            ".diagnostic.error{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}"
+            "</style><script>"
+            "function frogCloseEnumDropdown(menuId,buttonId){const m=document.getElementById(menuId);if(m){m.hidden=true;}const b=document.getElementById(buttonId);if(b){b.setAttribute('aria-expanded','false');}}"
+            "function frogCloseOtherEnumDropdowns(menuId){document.querySelectorAll('.enum-dropdown').forEach(function(m){if(m.id!==menuId){m.hidden=true;}});document.querySelectorAll('.enum-display-button,.enum-selector-button').forEach(function(b){if(b.getAttribute('aria-controls')!==menuId){b.setAttribute('aria-expanded','false');}});}"
+            "function frogToggleEnumDropdown(menuId,buttonId){const m=document.getElementById(menuId);const b=document.getElementById(buttonId);if(!m){return;}const opening=m.hidden;frogCloseOtherEnumDropdowns(menuId);m.hidden=!opening;if(b){b.setAttribute('aria-expanded',opening?'true':'false');}}"
+            "function frogUpdateEnumDisplay(select,displayId){const d=document.getElementById(displayId);if(!d){return;}const o=select.options[select.selectedIndex];if(o){d.textContent=o.textContent;}const menu=document.getElementById(select.id.replace('_value','_dropdown'));if(menu){menu.querySelectorAll('.enum-dropdown-option').forEach(function(option){option.setAttribute('aria-selected',option.getAttribute('data-enum-value')===select.value?'true':'false');});}}"
+            "function frogSelectEnumOption(option,selectId,displayId,menuId){const s=document.getElementById(selectId);const d=document.getElementById(displayId);if(!s||!option){return;}const value=option.getAttribute('data-enum-value');s.value=value;if(d){d.textContent=option.textContent;}frogUpdateEnumDisplay(s,displayId);frogCloseEnumDropdown(menuId,displayId);s.dispatchEvent(new Event('input',{bubbles:true}));s.dispatchEvent(new Event('change',{bubbles:true}));}"
+            "document.addEventListener('click',function(event){if(!event.target.closest('.enum-widget')){document.querySelectorAll('.enum-dropdown').forEach(function(m){m.hidden=true;});document.querySelectorAll('.enum-display-button,.enum-selector-button').forEach(function(b){b.setAttribute('aria-expanded','false');});}});"
+            "</script></head><body>";
+    html << "<h1>" << html_escape(core.panel.title) << "</h1>";
+    html << "<p class='meta'>Example 08 - .frog front panel + Default Enum .wfrog realization assets + C++ runtime</p>";
+    html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
+    html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
+    html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : "enum contract executor") << "</dd></div>";
+    html << "<div><dt>Compiler backend</dt><dd>" << (uses_native_kernel ? "LLVM native enum kernel artifact" : "none for Example 08") << "</dd></div>";
+    html << "</dl>";
+    html << diagnostics;
+    html << "<form method='post' action='/run'>";
+    html << "<div class='front-panel' data-panel-id='" << html_escape(core.panel.panel_id)
+         << "' data-coordinate-space='panel_pixels' data-runtime-language='cpp'";
+    html << " data-compiler-backend='" << (uses_native_kernel ? "llvm" : "none") << "'";
+    html << " data-execution-path='" << (uses_native_kernel ? "native_kernel_bridge" : "cpp_enum_contract_executor") << "'";
+    html << " style='width:" << css_px(panel_width) << ";height:" << css_px(panel_height) << ";'>";
+    html << render_enum_widget(ctrl);
+    html << render_enum_widget(ind);
+    html << "</div><div class='actions'><button type='submit'>Run Example 08</button><a class='state-link' href='/state.json'>state.json</a></div></form></body></html>";
+    return html.str();
+}
+
+void EnumBrowserUiRuntime::serve(const std::string& host, std::uint16_t port, bool should_open_browser) {
+    NetworkBootstrap network_bootstrap;
+    (void)network_bootstrap;
+
+    socket_t server = ::socket(AF_INET, SOCK_STREAM, 0);
+    if (server == invalid_socket) {
+        throw std::runtime_error("Unable to create server socket.");
+    }
+
+#ifndef _WIN32
+    int opt = 1;
+    setsockopt(server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+#endif
+
+    sockaddr_in address{};
+    address.sin_family = AF_INET;
+    address.sin_port = htons(port);
+    if (inet_pton(AF_INET, host.c_str(), &address.sin_addr) != 1) {
+        close_socket(server);
+        throw std::runtime_error("Only numeric IPv4 host values are supported by this minimal runtime.");
+    }
+
+    if (bind(server, reinterpret_cast<sockaddr*>(&address), sizeof(address)) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to bind server socket.");
+    }
+    if (listen(server, 16) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to listen on server socket.");
+    }
+
+    sockaddr_in bound_address{};
+#ifdef _WIN32
+    int bound_length = sizeof(bound_address);
+#else
+    socklen_t bound_length = sizeof(bound_address);
+#endif
+    if (getsockname(server, reinterpret_cast<sockaddr*>(&bound_address), &bound_length) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to inspect bound server socket.");
+    }
+
+    const std::string url = "http://" + host + ":" + std::to_string(ntohs(bound_address.sin_port)) + "/";
+    std::cout << url << std::endl;
+    if (should_open_browser) {
+        open_in_browser(url);
+    }
+
+    while (true) {
+        socket_t client = accept(server, nullptr, nullptr);
+        if (client == invalid_socket) {
+            continue;
+        }
+        try {
+            const auto raw = receive_request(client);
+            const auto request = parse_request(raw);
+            if (request.method == "GET" && request.path == "/") {
+                send_response(client, "200 OK", "text/html; charset=utf-8", render_html());
+            } else if (request.method == "GET" && request.path == "/state.json") {
+                send_response(client, "200 OK", "application/json; charset=utf-8", frog::json::stringify(core.execution_artifact(), true, 2));
+            } else if (request.method == "GET" && request.path.rfind("/asset/", 0) == 0) {
+                const std::string asset_id = request.path.substr(std::string("/asset/").size());
+                const auto asset_it = core.asset_map.find(asset_id);
+                if (asset_it == core.asset_map.end() || !std::filesystem::exists(asset_it->second)) {
+                    send_response(client, "404 Not Found", "text/plain; charset=utf-8", "missing asset");
+                } else {
+                    send_response(client, "200 OK", "image/svg+xml", read_text_file(asset_it->second));
+                }
+            } else if (request.method == "POST" && request.path == "/run") {
+                try {
+                    const auto form_value = parse_form_value(request.body, "mode_value").value_or("run");
                     run_once(form_value);
                 } catch (const std::exception& error) {
                     last_error = error.what();

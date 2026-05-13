@@ -92,6 +92,11 @@ NativeKernelManifest load_native_kernel_manifest(const std::filesystem::path& ma
         require(manifest.input_id == "input_text" && manifest.input_type == "string", "Unexpected native string kernel input surface.");
         require(manifest.output_id == "result_text" && manifest.output_type == "string", "Unexpected native string kernel output surface.");
         require(manifest.overflow_model == "reject_execution_on_string_buffer_overflow", "Unexpected native string kernel overflow model.");
+    } else if (manifest.abi == "frog_enum_u16_to_result_status_outptr") {
+        require(manifest.entry_symbol == "frog_example08_run", "Unexpected native enum kernel entry symbol.");
+        require(manifest.input_id == "mode_value" && manifest.input_type == "enum_item_id", "Unexpected native enum kernel input surface.");
+        require(manifest.output_id == "result_mode" && manifest.output_type == "enum_item_id", "Unexpected native enum kernel output surface.");
+        require(manifest.overflow_model == "reject_execution_on_unknown_enum_numeric_value", "Unexpected native enum kernel overflow model.");
     } else {
         throw std::runtime_error("Unsupported native kernel ABI: " + manifest.abi);
     }
@@ -227,6 +232,42 @@ NativeStringKernelBridge make_linked_native_string_kernel_bridge(
     const std::filesystem::path& manifest_path,
     FrogNativeStringKernelFunction entry_point) {
     return NativeStringKernelBridge(load_native_kernel_manifest(manifest_path), entry_point);
+}
+
+NativeEnumKernelBridge::NativeEnumKernelBridge(NativeKernelManifest manifest, FrogNativeEnumKernelFunction entry_point)
+    : manifest_(std::move(manifest)), entry_point_(entry_point) {
+    require(entry_point_ != nullptr, "Native enum kernel bridge requires a non-null entry point.");
+    require(manifest_.abi == "frog_enum_u16_to_result_status_outptr", "NativeEnumKernelBridge requires the enum u16 result-status ABI.");
+}
+
+NativeEnumKernelResult NativeEnumKernelBridge::run(std::uint16_t mode_value) const {
+    FrogRunResult raw{0, 0, 0};
+    entry_point_(mode_value, &raw);
+
+    NativeEnumKernelResult result;
+    result.ok = raw.ok != 0;
+    result.result_numeric_value = raw.result;
+    result.error_code = raw.error_code;
+
+    if (!result.ok || result.error_code != 0) {
+        const auto diagnostic = manifest_.diagnostics_by_error_code.find(result.error_code);
+        result.diagnostic = diagnostic == manifest_.diagnostics_by_error_code.end()
+            ? "native enum kernel returned an unmapped error_code."
+            : diagnostic->second;
+        result.ok = false;
+    }
+
+    return result;
+}
+
+const NativeKernelManifest& NativeEnumKernelBridge::manifest() const {
+    return manifest_;
+}
+
+NativeEnumKernelBridge make_linked_native_enum_kernel_bridge(
+    const std::filesystem::path& manifest_path,
+    FrogNativeEnumKernelFunction entry_point) {
+    return NativeEnumKernelBridge(load_native_kernel_manifest(manifest_path), entry_point);
 }
 
 } // namespace frog::runtime

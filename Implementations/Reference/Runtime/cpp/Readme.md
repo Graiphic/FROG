@@ -50,7 +50,7 @@ Repository governance and publication state are centralized in
 <h2>Role</h2>
 
 <p>
-This directory contains the C/C++ consumer for the published Examples 05, 06, and 07 runtime slices.
+This directory contains the C/C++ consumer for the published Examples 05, 06, 07, and 08 runtime slices.
 It accepts emitted backend contracts, loads the published <code>.wfrog</code> packages, resolves the referenced SVG assets, exposes browser-host UIs, and can run either the default contract-executor path or the optional manifest-declared native-kernel bridge path.
 </p>
 
@@ -76,7 +76,7 @@ The standard executable supports:
 
 <p>
 It remains available without LLVM or <code>clang</code>.
-It executes the bounded Example 05, Example 06, and Example 07 backend contracts and produces the published runtime artifacts.
+It executes the bounded Example 05, Example 06, Example 07, and Example 08 backend contracts and produces the published runtime artifacts.
 </p>
 
 <pre><code>cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
@@ -96,11 +96,11 @@ build/frog_runtime_cpp/frog_reference_runtime_cpp ui --host 127.0.0.1 --port 808
 
 <p>
 The optional native-kernel executable is built when <code>FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE=ON</code>.
-CMake compiles the published Example 05, Example 06, and Example 07 <code>kernel.ll</code> artifacts with <code>clang</code>, links the resulting objects into the executable, and uses <code>native_kernel_manifest.json</code> to validate and call the selected ABI surface.
+CMake compiles the published Example 05, Example 06, Example 07, and Example 08 <code>kernel.ll</code> artifacts with <code>clang</code>, links the resulting objects into the executable, and uses <code>native_kernel_manifest.json</code> to validate and call the selected ABI surface.
 </p>
 
 <p>
-This executable is the bounded Example 05, Example 06, and Example 07 LabVIEW-like proof path:
+This executable is the bounded Example 05, Example 06, Example 07, and Example 08 LabVIEW-like proof path:
 </p>
 
 <pre><code>.frog source
@@ -109,8 +109,11 @@ This executable is the bounded Example 05, Example 06, and Example 07 LabVIEW-li
   -&gt; LLVM-produced kernel.ll
   -&gt; native kernel manifest
 
-.wfrog front panel
+.frog front panel
   -&gt; C++ browser-host renderer
+  -&gt; widget instance layout, style, and binding
+
+.wfrog realization package
   -&gt; SVG skins and anchor/value overlays
 
 runtime C++
@@ -143,7 +146,7 @@ It renders:
 <ul>
   <li>the front panel in <code>panel_pixels</code>,</li>
   <li>the widget <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> declarations,</li>
-  <li>the Default Numeric, Boolean, and String SVG skins as the widget bodies for Examples 05, 06, and 07,</li>
+  <li>the Default Numeric, Boolean, String, and Enum SVG skins as the widget bodies for Examples 05, 06, 07, and 08,</li>
   <li>published realization anchors including <code>caption.anchor</code>, value/text surfaces, and the Numeric <code>increment_up</code> / <code>increment_down</code> parts,</li>
   <li>dynamic widget values and labels,</li>
   <li>contract-driven <code>foreground_color</code> property writes.</li>

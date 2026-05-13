@@ -34,7 +34,7 @@
       "Examples/07_string_value_roundtrip/main.fir.json",
       "Examples/07_string_value_roundtrip/main.lowering.json"
     ],
-    "ui_package_authority": "published_front_panel_package",
+    "ui_package_authority": "published_widget_realization_package",
     "ui_package_authority_refs": [
       "Examples/07_string_value_roundtrip/ui/string_panel.wfrog"
     ],

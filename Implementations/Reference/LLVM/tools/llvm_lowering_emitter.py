@@ -15,6 +15,7 @@ Supported lowered unit kinds:
 - bounded_accumulator_kernel_with_ui_bindings
 - boolean_value_roundtrip_kernel_with_ui_bindings
 - string_value_roundtrip_kernel_with_ui_bindings
+- enum_value_roundtrip_kernel_with_ui_bindings
 """
 
 from __future__ import annotations
@@ -634,6 +635,72 @@ error_too_long:
 """
 
 
+def emit_enum_value_roundtrip(lowering: dict[str, Any]) -> str:
+    unit = single_lowered_unit(lowering)
+    kernel = execution_kernel(unit)
+    public_io = require_object(unit.get("public_io"), "unit.public_io")
+    inputs = require_list(public_io.get("inputs"), "unit.public_io.inputs")
+    outputs = require_list(public_io.get("outputs"), "unit.public_io.outputs")
+
+    expect_equal(kernel.get("operation"), "copy", "enum_value_roundtrip expects copy operation")
+    expect_equal(kernel.get("src"), "mode_value", "enum_value_roundtrip expects src mode_value")
+    expect_equal(kernel.get("dst"), "result_mode", "enum_value_roundtrip expects dst result_mode")
+    expect_equal(kernel.get("type"), "enum_item_id", "enum_value_roundtrip expects enum_item_id copy type")
+    expect_equal(kernel.get("representation"), "u16", "enum_value_roundtrip expects u16 representation")
+    expect_equal(kernel.get("enum_domain"), "example08.mode", "enum_value_roundtrip expects example08.mode domain")
+    expect_equal(
+        inputs,
+        [{"id": "mode_value", "type": "enum_item_id", "enum_domain": "example08.mode"}],
+        "enum_value_roundtrip expects one enum input",
+    )
+    expect_equal(
+        outputs,
+        [{"id": "result_mode", "type": "enum_item_id", "enum_domain": "example08.mode"}],
+        "enum_value_roundtrip expects one enum output",
+    )
+    expect_equal(
+        kernel.get("allowed_values"),
+        [{"id": "idle", "numeric_value": 0}, {"id": "run", "numeric_value": 1}, {"id": "fault", "numeric_value": 2}],
+        "enum_value_roundtrip expects the Example 08 Mode item vocabulary",
+    )
+
+    return """; FROG Example 08 - native Enum kernel ABI proof artifact
+; This module is intended for the compiler-agnostic runtime kernel bridge.
+; It exposes a manifest-declared C-compatible entry surface:
+;
+;   void frog_example08_run(uint16_t mode_value, FrogEnumRunResult* out_result)
+;
+; The runtime consumes this through the native kernel manifest. The runtime does
+; not depend on LLVM as its conceptual execution authority.
+
+%FrogEnumRunResult = type { i8, i16, i16 }
+
+define void @frog_example08_run(i16 %mode_value, ptr %out_result) {
+entry:
+  %valid = icmp ule i16 %mode_value, 2
+  br i1 %valid, label %ok, label %invalid_enum_value
+
+ok:
+  %ok_ptr = getelementptr inbounds %FrogEnumRunResult, ptr %out_result, i32 0, i32 0
+  store i8 1, ptr %ok_ptr, align 2
+  %result_ptr = getelementptr inbounds %FrogEnumRunResult, ptr %out_result, i32 0, i32 1
+  store i16 %mode_value, ptr %result_ptr, align 2
+  %error_ptr = getelementptr inbounds %FrogEnumRunResult, ptr %out_result, i32 0, i32 2
+  store i16 0, ptr %error_ptr, align 2
+  ret void
+
+invalid_enum_value:
+  %err_ok_ptr = getelementptr inbounds %FrogEnumRunResult, ptr %out_result, i32 0, i32 0
+  store i8 0, ptr %err_ok_ptr, align 2
+  %err_result_ptr = getelementptr inbounds %FrogEnumRunResult, ptr %out_result, i32 0, i32 1
+  store i16 0, ptr %err_result_ptr, align 2
+  %err_code_ptr = getelementptr inbounds %FrogEnumRunResult, ptr %out_result, i32 0, i32 2
+  store i16 1, ptr %err_code_ptr, align 2
+  ret void
+}
+"""
+
+
 EMITTERS_BY_KIND: dict[str, Callable[[dict[str, Any]], str]] = {
     "pure_addition_kernel": emit_pure_addition,
     "ui_value_roundtrip_kernel": emit_ui_value_roundtrip,
@@ -642,6 +709,7 @@ EMITTERS_BY_KIND: dict[str, Callable[[dict[str, Any]], str]] = {
     "bounded_accumulator_kernel_with_ui_bindings": emit_bounded_accumulator,
     "boolean_value_roundtrip_kernel_with_ui_bindings": emit_boolean_value_roundtrip,
     "string_value_roundtrip_kernel_with_ui_bindings": emit_string_value_roundtrip,
+    "enum_value_roundtrip_kernel_with_ui_bindings": emit_enum_value_roundtrip,
 }
 
 

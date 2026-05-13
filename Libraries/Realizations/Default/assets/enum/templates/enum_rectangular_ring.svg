@@ -46,22 +46,18 @@
           data-frog-part="frame"
           x="12"
           y="72"
-          width="282"
+          width="264"
           height="48"
-          fill="#ffffff"
-          stroke="#000000"
-          stroke-width="6"
+          style="display: var(--frog-enum-frame-display, none); fill: var(--frog-enum-frame-fill, transparent); stroke: var(--frog-enum-frame-stroke, transparent); stroke-width: var(--frog-enum-frame-stroke-width, 0);"
           data-frog-bind="style.frame.*" />
 
     <rect id="value_face"
           data-frog-part="value_face"
           x="22"
           y="82"
-          width="206"
+          width="214"
           height="28"
-          fill="#ffffff"
-          stroke="#94a3b8"
-          stroke-width="1"
+          style="fill: var(--frog-enum-value-face-fill, #ffffff); stroke: var(--frog-enum-value-face-stroke, #94a3b8); stroke-width: var(--frog-enum-value-face-stroke-width, 1px);"
           data-frog-bind="style.value_face.*" />
 
     <text id="value_display"
@@ -78,58 +74,66 @@
 
     <rect id="selector_face"
           data-frog-part="selector_face"
-          x="232"
+          x="246"
           y="82"
-          width="20"
+          width="24"
           height="28"
           rx="1"
-          fill="#e5e7eb"
-          stroke="#94a3b8"
-          stroke-width="1"
+          style="display: var(--frog-enum-selector-display, inline); fill: var(--frog-enum-selector-fill, #e5e7eb); stroke: var(--frog-enum-selector-stroke, #94a3b8); stroke-width: var(--frog-enum-selector-stroke-width, 1px);"
           data-frog-bind="interaction.opened style.selector_face.*" />
 
-    <path id="selector_arrow" d="M237 93 L247 93 L242 101 Z" fill="#111111" />
+    <path id="selector_arrow"
+          data-frog-part="selector_arrow"
+          d="M253 93 L263 93 L258 101 Z"
+          style="display: var(--frog-enum-selector-display, inline); fill: var(--frog-enum-selector-symbol, #111111);"
+          data-frog-bind="style.selector_face.symbol_color" />
 
-    <g id="increment_up" data-frog-part="increment_up" data-frog-bind="display.increment_buttons_visible">
-      <rect x="260" y="82" width="24" height="13" fill="#5b9bd5" />
-      <path d="M272 85 L278 92 L266 92 Z" fill="none" stroke="#ffffff" stroke-width="2" />
+    <g id="increment_up"
+       data-frog-part="increment_up"
+       style="display: var(--frog-enum-increment-display, none);"
+       data-frog-bind="display.increment_buttons_visible">
+      <rect x="278" y="82" width="24" height="13" fill="#5b9bd5" />
+      <path d="M290 85 L296 92 L284 92 Z" fill="none" stroke="#ffffff" stroke-width="2" />
     </g>
 
-    <g id="increment_down" data-frog-part="increment_down" data-frog-bind="display.increment_buttons_visible">
-      <rect x="260" y="97" width="24" height="13" fill="#5b9bd5" />
-      <path d="M266 100 L278 100 L272 107 Z" fill="none" stroke="#ffffff" stroke-width="2" />
+    <g id="increment_down"
+       data-frog-part="increment_down"
+       style="display: var(--frog-enum-increment-display, none);"
+       data-frog-bind="display.increment_buttons_visible">
+      <rect x="278" y="97" width="24" height="13" fill="#5b9bd5" />
+      <path d="M284 100 L296 100 L290 107 Z" fill="none" stroke="#ffffff" stroke-width="2" />
     </g>
 
     <rect id="digital_display"
           data-frog-part="digital_display"
-          x="304"
+          x="314"
           y="82"
           width="46"
           height="28"
           rx="1"
-          fill="#ffffff"
-          stroke="#94a3b8"
-          stroke-width="1"
+          style="display: var(--frog-enum-digital-display, none); fill: #ffffff; stroke: #94a3b8; stroke-width: 1px;"
           data-frog-bind="display.digital_display_visible selected.numeric_value" />
 
     <text id="digital_display_text"
-          x="327"
+          x="337"
           y="97"
           text-anchor="middle"
           dominant-baseline="middle"
           font-family="system-ui, Segoe UI, Arial, sans-serif"
           font-size="12"
+          style="display: var(--frog-enum-digital-display, none);"
           fill="#111111">0</text>
 
     <text id="text_overflow_marker"
           data-frog-part="text_overflow_marker"
           data-frog-bind="display.text_overflow_visible"
-          x="216"
+          x="226"
           y="97"
           text-anchor="middle"
           dominant-baseline="middle"
           font-family="system-ui, Segoe UI, Arial, sans-serif"
           font-size="12"
-          fill="#111111">…</text>
+          style="display: var(--frog-enum-overflow-display, none);"
+          fill="#111111">...</text>
   </g>
 </svg>

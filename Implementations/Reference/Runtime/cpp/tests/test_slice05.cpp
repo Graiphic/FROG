@@ -142,19 +142,18 @@ void test_native_kernel_bridge() {
     assert(rejected);
 }
 
-void test_wfrog_widget_geometry_matches_svg_skin_size() {
+void test_frog_widget_geometry_matches_svg_skin_size() {
     const auto& root = acceptance_root();
     const auto& refs = root.at("artifact_refs").as_object();
-    const auto wfrog_path = resolve_repo_path(refs.at("wfrog_path").as_string());
-    const auto wfrog = load_json(wfrog_path);
-    const auto& wfrog_object = wfrog.as_object();
-    const auto& panel = wfrog_object.at("front_panels").as_array().front().as_object();
-    const auto& panel_layout = panel.at("layout").as_object();
+    const auto contract_path = resolve_repo_path(refs.at("contract_path").as_string());
+    const auto contract = load_json(contract_path);
+    const auto& source_ref = contract.as_object().at("source_ref").as_object();
+    const auto source_path = resolve_repo_path(source_ref.at("path").as_string());
+    const auto panel = frog::runtime::load_front_panel_from_frog_source_path(source_path);
+    const auto& panel_layout = panel.layout.as_object();
     assert(object_i64(panel_layout, "width") == 500);
     assert(object_i64(panel_layout, "height") == 170);
-
-    const auto& widgets = panel.at("widgets").as_array();
-    assert(widgets.size() == 2);
+    assert(panel.widgets.size() == 2);
 
     const auto numeric_svg = read_text(
         repo_root() / "Libraries" / "Realizations" / "Default" / "assets" / "numeric" / "templates" / "numeric_rectangular.svg");
@@ -173,17 +172,17 @@ void test_wfrog_widget_geometry_matches_svg_skin_size() {
     assert_contains(numeric_svg, "id=\"radix_badge\"");
     assert(numeric_svg.find(">DBL<") == std::string::npos);
 
-    const auto& control = widgets.at(0).as_object();
-    const auto& control_layout = control.at("layout").as_object();
-    assert(control.at("instance_id").as_string() == "ctrl_input");
+    const auto& control = panel.widgets.at(0);
+    const auto& control_layout = control.layout.as_object();
+    assert(control.instance_id == "ctrl_input");
     assert(object_i64(control_layout, "x") == 20);
     assert(object_i64(control_layout, "y") == 24);
     assert(object_i64(control_layout, "width") == 220);
     assert(object_i64(control_layout, "height") == 88);
 
-    const auto& indicator = widgets.at(1).as_object();
-    const auto& indicator_layout = indicator.at("layout").as_object();
-    assert(indicator.at("instance_id").as_string() == "ind_result");
+    const auto& indicator = panel.widgets.at(1);
+    const auto& indicator_layout = indicator.layout.as_object();
+    assert(indicator.instance_id == "ind_result");
     assert(object_i64(indicator_layout, "x") == 260);
     assert(object_i64(indicator_layout, "y") == 24);
     assert(object_i64(indicator_layout, "width") == 220);
@@ -260,7 +259,7 @@ int main() {
     test_headless_snapshot();
     test_overflow_rejection();
     test_native_kernel_bridge();
-    test_wfrog_widget_geometry_matches_svg_skin_size();
+    test_frog_widget_geometry_matches_svg_skin_size();
     test_ui_surface();
     std::cout << "slice05 runtime acceptance passed" << std::endl;
     return 0;

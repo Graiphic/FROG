@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 use serde_json::{json, Map, Value};
 
 use crate::contract::{
-    load_contract_from_path, load_wfrog_from_path, BackendContract, ContractUnit, FrontPanel, HostBinding,
+    find_repo_root, load_contract_from_path, load_front_panel_from_frog_source_path, load_wfrog_from_path, BackendContract, ContractUnit, FrontPanel, HostBinding,
     PanelWidget, WfrogPackage, EXPECTED_OVERFLOW_BEHAVIOR, REFERENCE_BACKEND_FAMILY,
 };
 use crate::diagnostics::{ensure, Result, RuntimeError};
@@ -43,6 +43,15 @@ pub struct RuntimeCore {
     pub last_error: Option<String>,
 }
 
+fn resolve_repo_path(anchor: &Path, path: &str) -> Result<PathBuf> {
+    let candidate = PathBuf::from(path);
+    if candidate.is_absolute() {
+        Ok(candidate)
+    } else {
+        Ok(find_repo_root(anchor)?.join(candidate))
+    }
+}
+
 fn ensure_u16(value: u32, label: &str) -> Result<u16> {
     if value <= u16::MAX as u32 {
         Ok(value as u16)
@@ -57,8 +66,8 @@ impl RuntimeCore {
         let wfrog_path = wfrog_path.as_ref().to_path_buf();
         let contract = load_contract_from_path(&contract_path)?;
         let package = load_wfrog_from_path(&wfrog_path)?;
-        let unit = validate_contract_and_package(&contract, &package)?;
-        let panel = package.front_panels[0].clone();
+        let panel = load_front_panel_from_frog_source_path(&resolve_repo_path(&contract_path, &contract.source_ref.path)?)?;
+        let unit = validate_contract_and_package(&contract, &package, &panel)?;
         let asset_map: HashMap<String, PathBuf> = package
             .svg_assets
             .iter()
@@ -270,7 +279,7 @@ impl RuntimeCore {
     }
 }
 
-fn validate_contract_and_package(contract: &BackendContract, package: &WfrogPackage) -> Result<ContractUnit> {
+fn validate_contract_and_package(contract: &BackendContract, package: &WfrogPackage, panel: &FrontPanel) -> Result<ContractUnit> {
     ensure(contract.backend_family == REFERENCE_BACKEND_FAMILY, "Unexpected backend family.")?;
     ensure(
         contract.assumptions.runtime_family.name == REFERENCE_BACKEND_FAMILY,
@@ -306,8 +315,6 @@ fn validate_contract_and_package(contract: &BackendContract, package: &WfrogPack
     ensure(unit.execution_model.iteration_count == 5, "Slice 05 expects five iterations.")?;
     ensure(unit.state_model.carrier.initial_value == 0, "Slice 05 expects initial state 0.")?;
 
-    ensure(package.front_panels.len() == 1, "Expected exactly one front panel.")?;
-    let panel = &package.front_panels[0];
     ensure(panel.host_binding_ref == "reference_host_default", "Expected host_binding_ref reference_host_default.")?;
     let host_binding: &HostBinding = package
         .host_bindings

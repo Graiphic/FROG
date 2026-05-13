@@ -1,0 +1,79 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "08_enum_value_roundtrip",
+    "path": "Examples/08_enum_value_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/08_enum_value_roundtrip/ui/enum_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "enum_value_roundtrip_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "mode_value",
+            "type": "enum_item_id",
+            "enum_domain": "example08.mode"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result_mode",
+            "type": "enum_item_id",
+            "enum_domain": "example08.mode"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "mode_input",
+            "mode": "widget_value",
+            "public_input_id": "mode_value",
+            "value_type": "enum_item_id",
+            "enum_domain": "example08.mode"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "mode_result",
+            "mode": "widget_value",
+            "public_output_id": "result_mode",
+            "value_type": "enum_item_id",
+            "enum_domain": "example08.mode"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "single_value_copy",
+        "body_rule": {
+          "kind": "copy_widget_value_to_output",
+          "expression": "result_mode = mode_value"
+        }
+      },
+      "publications": [
+        {
+          "target": "public_output.result_mode",
+          "source": "mode_value"
+        },
+        {
+          "target": "widget.mode_result.value",
+          "source": "mode_value"
+        }
+      ],
+      "notes": [
+        "This FIR is a bounded scalar widget pilot and remains downstream from canonical source.",
+        "The reference C++ closure consumes an LLVM-produced native enum kernel through an explicit manifest without making the runtime LLVM-only.",
+        "The enum item vocabulary remains a front-panel/widget instance definition and is consumed by the runtime from .frog."
+      ]
+    }
+  ]
+}

@@ -19,6 +19,7 @@ CASES = [
     ("05", "Examples/05_bounded_ui_accumulator/main.lowering.json", "Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/module.ll"),
     ("06", "Examples/06_boolean_value_roundtrip/main.lowering.json", "Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/module.ll"),
     ("07", "Examples/07_string_value_roundtrip/main.lowering.json", "Implementations/Reference/LLVM/examples/07_string_value_roundtrip/module.ll"),
+    ("08", "Examples/08_enum_value_roundtrip/main.lowering.json", "Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/module.ll"),
 ]
 
 

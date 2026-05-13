@@ -192,6 +192,7 @@ pub struct WfrogPackage {
     pub svg_assets: Vec<SvgAsset>,
     #[serde(default)]
     pub host_bindings: Vec<HostBinding>,
+    #[serde(default)]
     pub front_panels: Vec<FrontPanel>,
 }
 
@@ -418,6 +419,71 @@ pub fn load_wfrog_from_path(path: &Path) -> Result<WfrogPackage> {
     let text = fs::read_to_string(path)?;
     let package: WfrogPackage = serde_json::from_str(&text)?;
     ensure(package.format == "frog.wfrog", "Unsupported .wfrog format.")?;
-    ensure(package.kind == "front_panel_package", "Only front_panel_package is supported.")?;
+    ensure(
+        package.kind == "front_panel_package" || package.kind == "widget_realization_package",
+        "Only front_panel_package or widget_realization_package is supported.",
+    )?;
     Ok(package)
+}
+
+pub fn load_front_panel_from_frog_source_path(path: &Path) -> Result<FrontPanel> {
+    let text = fs::read_to_string(path)?;
+    let source: Value = serde_json::from_str(&text)?;
+    let root = source
+        .as_object()
+        .ok_or_else(|| RuntimeError::Message("source must be an object.".to_string()))?;
+    let metadata = root.get("metadata").and_then(Value::as_object);
+    let panel = root
+        .get("front_panel")
+        .and_then(Value::as_object)
+        .ok_or_else(|| RuntimeError::Message("source.front_panel is required.".to_string()))?;
+    let title_fallback = metadata
+        .and_then(|item| item.get("summary").or_else(|| item.get("name")))
+        .and_then(Value::as_str)
+        .unwrap_or("FROG Front Panel");
+    let panel_id_fallback = metadata
+        .and_then(|item| item.get("name"))
+        .and_then(Value::as_str)
+        .map(|name| format!("{name}_panel"))
+        .unwrap_or_else(|| "frog_panel".to_string());
+    let layout = panel
+        .get("canvas")
+        .or_else(|| panel.get("layout"))
+        .cloned()
+        .unwrap_or_else(|| json!({}));
+    let widgets_value = panel
+        .get("widgets")
+        .and_then(Value::as_array)
+        .ok_or_else(|| RuntimeError::Message("source.front_panel.widgets is required.".to_string()))?;
+    let mut widgets = Vec::new();
+    for widget_value in widgets_value {
+        let widget = widget_value
+            .as_object()
+            .ok_or_else(|| RuntimeError::Message("source front-panel widget must be an object.".to_string()))?;
+        let instance_id = widget
+            .get("instance_ref")
+            .or_else(|| widget.get("instance_id"))
+            .or_else(|| widget.get("id"))
+            .and_then(Value::as_str)
+            .ok_or_else(|| RuntimeError::Message("source front-panel widget must expose id/instance_ref.".to_string()))?;
+        let class_ref = widget
+            .get("class_ref")
+            .and_then(Value::as_str)
+            .ok_or_else(|| RuntimeError::Message("source front-panel widget class_ref is required.".to_string()))?;
+        widgets.push(PanelWidget {
+            instance_id: instance_id.to_string(),
+            class_ref: class_ref.to_string(),
+            layout: widget.get("layout").cloned().unwrap_or_else(|| json!({})),
+            props: widget.get("props").and_then(Value::as_object).cloned().unwrap_or_default(),
+            visual: widget.get("visual").and_then(Value::as_object).cloned().unwrap_or_default(),
+        });
+    }
+    Ok(FrontPanel {
+        panel_id: panel.get("panel_id").and_then(Value::as_str).unwrap_or(&panel_id_fallback).to_string(),
+        title: panel.get("title").and_then(Value::as_str).unwrap_or(title_fallback).to_string(),
+        class_ref: panel.get("class_ref").and_then(Value::as_str).unwrap_or("frog.front_panel").to_string(),
+        layout,
+        widgets,
+        host_binding_ref: panel.get("host_binding_ref").and_then(Value::as_str).unwrap_or("reference_host_default").to_string(),
+    })
 }

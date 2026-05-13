@@ -1,8 +1,8 @@
 {
   "format": "frog.wfrog",
-  "kind": "front_panel_package",
+  "kind": "widget_realization_package",
   "package_id": "example07.string_panel",
-  "title": "String Hello World Roundtrip",
+  "title": "Example 07 Default String realization package",
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },
@@ -14,16 +14,17 @@
   },
   "ownership_boundary": {
     "owns": [
-      "example-local front-panel package identity",
-      "example-local String widget realization references",
-      "example-local String widget initial presentation properties"
+      "Default String realization references",
+      "Default String SVG asset references",
+      "reference host binding requirements"
     ],
     "does_not_own": [
       "canonical source semantics",
-      "FIR semantics",
-      "lowering semantics",
-      "runtime-private execution behavior",
-      "widget class law"
+      "front-panel widget instance layout",
+      "front-panel widget instance visual customization",
+      "front-panel widget text values",
+      "FIR/lowering/runtime behavior",
+      "string widget law"
     ]
   },
   "widget_classes": [
@@ -67,108 +68,6 @@
       "target_classes": [
         "frog.widgets.string_control",
         "frog.widgets.string_indicator"
-      ]
-    }
-  ],
-  "front_panels": [
-    {
-      "panel_id": "main_panel",
-      "title": "String Hello World Roundtrip",
-      "class_ref": "frog.widgets.panel",
-      "host_binding_ref": "reference_host_default",
-      "layout": {
-        "width": 560,
-        "height": 170,
-        "coordinate_space": "panel_pixels"
-      },
-      "widgets": [
-        {
-          "instance_id": "str_input",
-          "class_ref": "frog.widgets.string_control",
-          "role": "control",
-          "value_type": "string",
-          "layout": {
-            "x": 20,
-            "y": 30,
-            "width": 240,
-            "height": 110
-          },
-          "props": {
-            "value": "hello world",
-            "label.text": "Input",
-            "caption.text": "String input",
-            "caption.visible": true,
-            "caption.anchor.x": 28,
-            "caption.anchor.y": 64,
-            "caption.align.horizontal": "left",
-            "caption.style.text_color": "#111827",
-            "style.frame.fill_color": "transparent",
-            "style.frame.border_color": "transparent",
-            "style.frame.border_width": "0px",
-            "style.text_region.fill_color": "#ffffff",
-            "style.text_region.fill_color.hover": "#eef6ff",
-            "style.text_region.border_color": "#64748b",
-            "style.text_region.border_color.hover": "#2563eb",
-            "style.text_region.border_width": "2px",
-            "style.text_region.border_width.hover": "2px",
-            "style.text.color": "#111827",
-            "style.text.font_size": "16px",
-            "style.text.font_weight": "400",
-            "placeholder.text": "",
-            "placeholder.visible": false,
-            "interaction.enabled": true,
-            "interaction.read_only": false,
-            "realization.variant": "rectangular"
-          },
-          "visual": {
-            "asset_ref": "asset:string_rectangular_svg"
-          },
-          "binding": {
-            "mode": "widget_value",
-            "public_input_id": "input_text"
-          }
-        },
-        {
-          "instance_id": "str_result",
-          "class_ref": "frog.widgets.string_indicator",
-          "role": "indicator",
-          "value_type": "string",
-          "layout": {
-            "x": 300,
-            "y": 30,
-            "width": 240,
-            "height": 110
-          },
-          "props": {
-            "value": "",
-            "label.text": "Result",
-            "caption.text": "String result",
-            "caption.visible": true,
-            "caption.anchor.x": 28,
-            "caption.anchor.y": 64,
-            "caption.align.horizontal": "left",
-            "caption.style.text_color": "#111827",
-            "style.frame.fill_color": "transparent",
-            "style.frame.border_color": "transparent",
-            "style.frame.border_width": "0px",
-            "style.text_region.fill_color": "#f8fafc",
-            "style.text_region.border_color": "#64748b",
-            "style.text_region.border_width": "2px",
-            "style.text.color": "#111827",
-            "style.text.font_size": "16px",
-            "style.text.font_weight": "400",
-            "interaction.enabled": false,
-            "interaction.read_only": true,
-            "realization.variant": "rectangular"
-          },
-          "visual": {
-            "asset_ref": "asset:string_rectangular_svg"
-          },
-          "binding": {
-            "mode": "widget_value",
-            "public_output_id": "result_text"
-          }
-        }
       ]
     }
   ]

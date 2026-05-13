@@ -74,13 +74,13 @@ Implementations/Reference/Runtime/
 <h2>Front Panel</h2>
 
 <p>
-The front panel package is published at:
+The .frog source owns the front-panel widget instances. The Default Boolean realization package is published at:
 </p>
 
 <pre><code>Examples/06_boolean_value_roundtrip/ui/boolean_panel.wfrog</code></pre>
 
 <p>
-It contains exactly two widget instances:
+The .frog front panel contains exactly two widget instances:
 </p>
 
 <ul>
@@ -90,7 +90,7 @@ It contains exactly two widget instances:
 
 <p>
 The front panel uses <code>panel_pixels</code> as its layout coordinate space.
-The published runtime check treats the <code>.wfrog</code> package as layout authority and checks that the rendered front panel does not expose the runtime snapshot by default.
+The published runtime check treats the <code>.frog</code> front panel as layout and instance authority and checks that the rendered front panel does not expose the runtime snapshot by default.
 </p>
 
 <hr/>

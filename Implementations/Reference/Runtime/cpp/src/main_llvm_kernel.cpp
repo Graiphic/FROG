@@ -16,6 +16,7 @@
 extern "C" void frog_example05_run(std::uint16_t input_value, frog::runtime::FrogRunResult* out_result);
 extern "C" void frog_example06_run(std::uint8_t input_value, frog::runtime::FrogBoolRunResult* out_result);
 extern "C" void frog_example07_run(const std::uint8_t* input_ptr, std::uint32_t input_len, frog::runtime::FrogStringRunResult* out_result);
+extern "C" void frog_example08_run(std::uint16_t mode_value, frog::runtime::FrogRunResult* out_result);
 
 namespace {
 
@@ -46,6 +47,11 @@ std::filesystem::path default_example07_manifest_path() {
            "07_string_value_roundtrip" / "native_kernel_manifest.json";
 }
 
+std::filesystem::path default_example08_manifest_path() {
+    return repo_root() / "Implementations" / "Reference" / "LLVM" / "examples" /
+           "08_enum_value_roundtrip" / "native_kernel_manifest.json";
+}
+
 std::filesystem::path example06_contract_path() {
     return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
            "06_boolean_value_roundtrip.reference_host_runtime_ui_binding.contract.json";
@@ -56,6 +62,11 @@ std::filesystem::path example07_contract_path() {
            "07_string_value_roundtrip.reference_host_runtime_ui_binding.contract.json";
 }
 
+std::filesystem::path example08_contract_path() {
+    return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
+           "08_enum_value_roundtrip.reference_host_runtime_ui_binding.contract.json";
+}
+
 std::filesystem::path example06_wfrog_path() {
     return repo_root() / "Examples" / "06_boolean_value_roundtrip" / "ui" / "boolean_panel.wfrog";
 }
@@ -64,12 +75,20 @@ std::filesystem::path example07_wfrog_path() {
     return repo_root() / "Examples" / "07_string_value_roundtrip" / "ui" / "string_panel.wfrog";
 }
 
+std::filesystem::path example08_wfrog_path() {
+    return repo_root() / "Examples" / "08_enum_value_roundtrip" / "ui" / "enum_panel.wfrog";
+}
+
 bool wants_example06(const std::string& value) {
     return value == "06" || value == "6" || value == "example06" || value == "06_boolean_value_roundtrip";
 }
 
 bool wants_example07(const std::string& value) {
     return value == "07" || value == "7" || value == "example07" || value == "07_string_value_roundtrip";
+}
+
+bool wants_example08(const std::string& value) {
+    return value == "08" || value == "8" || value == "example08" || value == "08_enum_value_roundtrip";
 }
 
 bool parse_bool_input(std::string value) {
@@ -106,6 +125,11 @@ std::shared_ptr<const frog::runtime::NativeBoolKernelBridge> make_example06_brid
 std::shared_ptr<const frog::runtime::NativeStringKernelBridge> make_example07_bridge(const std::filesystem::path& manifest_path) {
     return std::make_shared<const frog::runtime::NativeStringKernelBridge>(
         frog::runtime::make_linked_native_string_kernel_bridge(manifest_path, &frog_example07_run));
+}
+
+std::shared_ptr<const frog::runtime::NativeEnumKernelBridge> make_example08_bridge(const std::filesystem::path& manifest_path) {
+    return std::make_shared<const frog::runtime::NativeEnumKernelBridge>(
+        frog::runtime::make_linked_native_enum_kernel_bridge(manifest_path, &frog_example08_run));
 }
 
 } // namespace
@@ -166,6 +190,15 @@ int main(int argc, char** argv) {
                 return 0;
             }
 
+            if (example.has_value() && wants_example08(*example)) {
+                frog::runtime::EnumBrowserUiRuntime runtime(
+                    contract_path.value_or(example08_contract_path()),
+                    wfrog_path.value_or(example08_wfrog_path()),
+                    make_example08_bridge(manifest_path.value_or(default_example08_manifest_path())));
+                runtime.serve(host, port, open_browser);
+                return 0;
+            }
+
             frog::runtime::BrowserUiRuntime runtime(
                 contract_path,
                 wfrog_path,
@@ -220,6 +253,17 @@ int main(int argc, char** argv) {
             const auto artifact = runtime.execute_with_native_kernel_bridge(
                 *make_example07_bridge(manifest_path.value_or(default_example07_manifest_path())),
                 input_value_text.value_or("hello world"));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+
+        if (example.has_value() && wants_example08(*example)) {
+            frog::runtime::Slice08EnumRuntimeCore runtime(
+                contract_path.value_or(example08_contract_path()),
+                wfrog_path.value_or(example08_wfrog_path()));
+            const auto artifact = runtime.execute_with_native_kernel_bridge(
+                *make_example08_bridge(manifest_path.value_or(default_example08_manifest_path())),
+                input_value_text.value_or("run"));
             std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
             return 0;
         }

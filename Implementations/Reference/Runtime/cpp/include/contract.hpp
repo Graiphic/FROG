@@ -203,5 +203,6 @@ std::filesystem::path default_wfrog_path();
 
 BackendContract load_contract_from_path(const std::filesystem::path& path);
 WfrogPackage load_wfrog_from_path(const std::filesystem::path& path);
+FrontPanel load_front_panel_from_frog_source_path(const std::filesystem::path& path);
 
 } // namespace frog::runtime

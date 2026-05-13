@@ -65,6 +65,47 @@ def load_json(path: Path | str) -> Dict[str, Any]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+def resolve_repo_path(anchor: Path, path: str) -> Path:
+    candidate = Path(path)
+    if candidate.is_absolute():
+        return candidate
+    try:
+        repo = find_repo_root(anchor)
+    except RuntimeValidationError:
+        repo = find_repo_root(Path(__file__).resolve())
+    return repo / candidate
+
+
+def normalize_source_front_panel(source: Dict[str, Any]) -> Dict[str, Any]:
+    metadata = require_object(source.get("metadata"), "source.metadata")
+    panel = require_object(source.get("front_panel"), "source.front_panel")
+    normalized: Dict[str, Any] = {
+        "panel_id": panel.get("panel_id", f"{metadata.get('name', 'frog')}_panel"),
+        "title": panel.get("title", metadata.get("summary", metadata.get("name", "FROG Front Panel"))),
+        "class_ref": panel.get("class_ref", "frog.front_panel"),
+        "layout": panel.get("canvas", panel.get("layout", {})),
+        "widgets": [],
+        "host_binding_ref": panel.get("host_binding_ref", "reference_host_default"),
+    }
+    for raw_widget in require_list(panel.get("widgets"), "source.front_panel.widgets"):
+        widget = require_object(raw_widget, "source.front_panel.widgets[]")
+        instance_id = widget.get("instance_ref") or widget.get("instance_id") or widget.get("id")
+        ensure(isinstance(instance_id, str) and instance_id, "source front-panel widget must expose id/instance_ref.")
+        entry = dict(widget)
+        entry["instance_id"] = instance_id
+        entry.setdefault("layout", {})
+        entry.setdefault("props", {})
+        entry.setdefault("visual", {})
+        normalized["widgets"].append(entry)
+    return normalized
+
+
+def load_source_front_panel_from_contract(contract: Dict[str, Any], contract_path: Path | str) -> Dict[str, Any]:
+    source_ref = require_object(contract.get("source_ref"), "contract.source_ref")
+    source_path = resolve_repo_path(Path(contract_path), str(source_ref.get("path", "")))
+    return normalize_source_front_panel(load_json(source_path))
+
+
 def ensure(condition: bool, message: str) -> None:
     if not condition:
         raise RuntimeValidationError(message)
@@ -107,6 +148,7 @@ class Slice05RuntimeCore:
 
         self.contract = load_json(self.contract_path)
         self.package = load_json(self.wfrog_path)
+        self.panel = load_source_front_panel_from_contract(self.contract, self.contract_path)
 
         self.unit = self._load_and_validate()
         self.public_io = require_object(self.unit.get("public_io"), "unit.public_io")
@@ -115,7 +157,6 @@ class Slice05RuntimeCore:
         self.effects = require_list(self.unit.get("effects"), "unit.effects")
         self.publications = require_list(self.unit.get("publications"), "unit.publications")
 
-        self.panel = dict(self.package["front_panels"][0])
         self.asset_map = {
             item["asset_id"]: (self.wfrog_path.parent / Path(item["path"])).resolve()
             for item in self.package.get("svg_assets", [])
@@ -178,9 +219,9 @@ class Slice05RuntimeCore:
         ensure(publications == execution_kernel.get("final_publication"), "unit.publications must match execution_kernel.final_publication.")
 
         ensure(self.package.get("format") == "frog.wfrog", "Unsupported .wfrog format.")
-        ensure(self.package.get("kind") == "front_panel_package", "Only front_panel_package is supported.")
-        front_panels = require_list(self.package.get("front_panels"), "wfrog.front_panels")
-        ensure(len(front_panels) == 1, "Expected exactly one front panel.")
+        ensure(self.package.get("kind") in {"front_panel_package", "widget_realization_package"}, "Only front_panel_package or widget_realization_package is supported.")
+        current_panel = require_object(self.panel, "source.front_panel")
+        ensure(current_panel.get("host_binding_ref") == "reference_host_default", "Expected host_binding_ref reference_host_default.")
 
         widget_classes = {entry["class_id"]: entry for entry in require_list(self.package.get("widget_classes"), "wfrog.widget_classes")}
         ensure("frog.widgets.numeric_control" in widget_classes, "Missing numeric_control class in .wfrog.")
@@ -191,7 +232,7 @@ class Slice05RuntimeCore:
         required_capabilities = set(host_bindings["reference_host_default"].get("required_capabilities", []))
         ensure({"window", "basic_widget_rendering", "property_write", "widget_value_binding", "widget_reference_binding"} <= required_capabilities, "Host binding is missing required capabilities.")
 
-        panel_widgets = {entry["instance_id"]: entry for entry in front_panels[0].get("widgets", [])}
+        panel_widgets = {entry["instance_id"]: entry for entry in current_panel.get("widgets", [])}
         widgets = require_list(ui_bindings.get("widgets"), "unit.ui_bindings.widgets")
         for contract_widget in widgets:
             widget_id = contract_widget["widget_id"]
