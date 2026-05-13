@@ -40,6 +40,9 @@
   - [06 boolean value roundtrip](/Examples/06_boolean_value_roundtrip/Readme.md)
     - [main.frog](/Examples/06_boolean_value_roundtrip/main.frog)
     - [ui](/Examples/06_boolean_value_roundtrip/ui/Readme.md)
+  - [07 string value roundtrip](/Examples/07_string_value_roundtrip/Readme.md)
+    - [main.frog](/Examples/07_string_value_roundtrip/main.frog)
+    - [ui](/Examples/07_string_value_roundtrip/ui/Readme.md)
   - [compiler](/Examples/compiler/Readme.md)
     - [01 pure arithmetic](/Examples/compiler/01_pure_arithmetic.md)
     - [02 structured control](/Examples/compiler/02_structured_control.md)
@@ -398,6 +401,7 @@
     - tests
       - [test_example01_fir_derivation.py](/Implementations/Reference/Deriver/tests/test_example01_fir_derivation.py)
       - [test_example05_fir_derivation.py](/Implementations/Reference/Deriver/tests/test_example05_fir_derivation.py)
+      - [test_example07_fir_derivation.py](/Implementations/Reference/Deriver/tests/test_example07_fir_derivation.py)
       - [test_examples01_05_fir_derivation.py](/Implementations/Reference/Deriver/tests/test_examples01_05_fir_derivation.py)
       - [test_fir_deriver.py](/Implementations/Reference/Deriver/tests/test_fir_deriver.py)
   - [LLVM](/Implementations/Reference/LLVM/Readme.md)
@@ -415,6 +419,7 @@
     - tests
       - [test_example05_llvm_emission.py](/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py)
       - [test_example06_llvm_emission.py](/Implementations/Reference/LLVM/tests/test_example06_llvm_emission.py)
+      - [test_example07_llvm_emission.py](/Implementations/Reference/LLVM/tests/test_example07_llvm_emission.py)
       - [test_examples01_04_llvm_modules.py](/Implementations/Reference/LLVM/tests/test_examples01_04_llvm_modules.py)
       - [test_generic_lowering_to_llvm.py](/Implementations/Reference/LLVM/tests/test_generic_lowering_to_llvm.py)
       - [test_llvm_lowering_emitter.py](/Implementations/Reference/LLVM/tests/test_llvm_lowering_emitter.py)
@@ -439,6 +444,7 @@
     - [rules](/Implementations/Reference/Lowerer/rules/Readme.md)
     - tests
       - [test_example05_lowering.py](/Implementations/Reference/Lowerer/tests/test_example05_lowering.py)
+      - [test_example07_lowering.py](/Implementations/Reference/Lowerer/tests/test_example07_lowering.py)
       - [test_examples01_05_lowering.py](/Implementations/Reference/Lowerer/tests/test_examples01_05_lowering.py)
       - [test_fir_lowerer.py](/Implementations/Reference/Lowerer/tests/test_fir_lowerer.py)
   - [Pipeline](/Implementations/Reference/Pipeline/Readme.md)
@@ -483,6 +489,7 @@
         - [test_runtime_slice05.py](/Implementations/Reference/Runtime/python/tests/test_runtime_slice05.py)
         - [test_runtime_ui_slice05.py](/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice05.py)
         - [test_runtime_ui_slice06.py](/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice06.py)
+        - [test_runtime_ui_slice07.py](/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice07.py)
     - [rust](/Implementations/Reference/Runtime/rust/Readme.md)
     - tests
       - [test_contract_executor.py](/Implementations/Reference/Runtime/tests/test_contract_executor.py)
