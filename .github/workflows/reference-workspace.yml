@@ -96,5 +96,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y clang cmake
 
-      - name: Run Example 05 native kernel bridge checks
+      - name: Prepare Rust runtime dependencies
+        run: cargo fetch --manifest-path Implementations/Reference/Runtime/rust/Cargo.toml
+
+      - name: Run native kernel bridge checks
         run: python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge
