@@ -297,6 +297,19 @@ fn css_percent(value: f64) -> String {
     format!("{value:.6}%")
 }
 
+fn css_percent_compact(value: f64) -> String {
+    let mut formatted = format!("{value:.6}");
+    if formatted.contains('.') {
+        while formatted.ends_with('0') {
+            formatted.pop();
+        }
+        if formatted.ends_with('.') {
+            formatted.pop();
+        }
+    }
+    format!("{formatted}%")
+}
+
 fn pct(value: f64, total: f64) -> f64 {
     if total <= 0.0 {
         0.0
@@ -500,6 +513,18 @@ fn runtime_caption_anchor_style(runtime: &Value, geometry: NumericSvgGeometry) -
         style.push_str("display:none;");
     }
     style
+}
+
+fn runtime_caption_anchor_vars(runtime: &Value, geometry: NumericSvgGeometry, prefix: &str) -> String {
+    let x = runtime["caption.anchor.x"].as_f64().unwrap_or(geometry.caption_x);
+    let y = runtime["caption.anchor.y"].as_f64().unwrap_or(geometry.caption_y);
+    format!(
+        "--{}-caption-left:{};--{}-caption-top:{};",
+        prefix,
+        css_percent_compact(pct(x, geometry.view_width)),
+        prefix,
+        css_percent_compact(pct(y, geometry.view_height))
+    )
 }
 
 fn svg_box_style(x: f64, y: f64, width: f64, height: f64, geometry: NumericSvgGeometry) -> String {
@@ -1382,7 +1407,7 @@ fn render_boolean_widget(widget: &Value) -> String {
          --boolean-border:{};--boolean-hover-border:{};--boolean-pressed-border:{};\
          --boolean-inner-border:{};--boolean-hover-inner-border:{};--boolean-pressed-inner-border:{};\
          --boolean-inner-left:{};--boolean-inner-top:{};--boolean-inner-width:{};--boolean-inner-height:{};\
-         --boolean-text:{};--boolean-focus-color:{};--boolean-focus-width:{};--boolean-transition:{}ms {};--boolean-pressed-inset:{};",
+         --boolean-text:{};--boolean-focus-color:{};--boolean-focus-width:{};--boolean-transition:{}ms {};--boolean-pressed-inset:{};{}",
         layout["x"].as_i64().unwrap_or(0),
         layout["y"].as_i64().unwrap_or(0),
         layout["width"].as_i64().unwrap_or(160),
@@ -1406,6 +1431,7 @@ fn render_boolean_widget(widget: &Value) -> String {
         transition_ms,
         transition_timing,
         pressed_inset,
+        runtime_caption_anchor_vars(runtime, caption_geometry, "boolean"),
     );
     let skin = format!(
         "<span class='boolean-state-face' data-frog-part='inner_face' aria-hidden='true'></span>\
