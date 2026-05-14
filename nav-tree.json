@@ -341,6 +341,28 @@
               ]
             },
             {
+              "key": "examples/09_path_value_roundtrip/",
+              "title": "09 path value roundtrip",
+              "path": "/Examples/09_path_value_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/09_path_value_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/09_path_value_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "examples/09_path_value_roundtrip/ui/",
+                  "title": "ui",
+                  "path": "/Examples/09_path_value_roundtrip/ui/Readme.md",
+                  "kind": "category",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -3853,6 +3875,9 @@
     "/Examples/08_enum_value_roundtrip/main.frog",
     "/Examples/08_enum_value_roundtrip/ui/Readme.md",
     "/Examples/08_enum_value_roundtrip/Readme.md",
+    "/Examples/09_path_value_roundtrip/main.frog",
+    "/Examples/09_path_value_roundtrip/ui/Readme.md",
+    "/Examples/09_path_value_roundtrip/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
