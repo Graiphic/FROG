@@ -1249,6 +1249,626 @@ impl StringBrowserUiRuntime {
     }
 }
 
+pub struct PathBrowserUiRuntime {
+    pub contract: Value,
+    pub wfrog: Value,
+    pub panel: Value,
+    pub asset_map: BTreeMap<String, PathBuf>,
+    pub values: BTreeMap<String, String>,
+    pub last_result: String,
+    pub last_error: Option<String>,
+    pub native_kernel_bridge: Option<NativeStringKernelBridge>,
+}
+
+impl PathBrowserUiRuntime {
+    pub fn with_native_kernel_bridge(
+        contract_path: PathBuf,
+        wfrog_path: PathBuf,
+        native_kernel_bridge: Option<NativeStringKernelBridge>,
+    ) -> Result<Self> {
+        let contract: Value = serde_json::from_str(&fs::read_to_string(&contract_path)?)?;
+        if contract["source_ref"]["example_id"].as_str() != Some("09_path_value_roundtrip") {
+            return Err(RuntimeError::Message("PathBrowserUiRuntime expects Example 09.".to_string()));
+        }
+        if contract["units"][0]["kind"].as_str() != Some("path_value_roundtrip_ui_unit") {
+            return Err(RuntimeError::Message("PathBrowserUiRuntime expects path_value_roundtrip_ui_unit.".to_string()));
+        }
+        let wfrog: Value = serde_json::from_str(&fs::read_to_string(&wfrog_path)?)?;
+        let panel = source_front_panel_value(&contract_path, &contract)?;
+        let mut asset_map = BTreeMap::new();
+        if let Some(assets) = wfrog["svg_assets"].as_array() {
+            for asset in assets {
+                if let (Some(asset_id), Some(path)) = (asset["asset_id"].as_str(), asset["path"].as_str()) {
+                    asset_map.insert(asset_id.to_string(), wfrog_path.parent().unwrap_or_else(|| std::path::Path::new("")).join(path));
+                }
+            }
+        }
+        let mut values = BTreeMap::new();
+        for widget in path_panel_widgets(&panel) {
+            let widget_id = widget["instance_id"].as_str().unwrap_or("").to_string();
+            if widget_id.is_empty() {
+                continue;
+            }
+            let asset_ref = widget["visual"]["asset_ref"].as_str().unwrap_or("");
+            let asset_id = asset_ref.strip_prefix("asset:").unwrap_or("");
+            if asset_id.is_empty() || !asset_map.get(asset_id).is_some_and(|path| path.exists()) {
+                return Err(RuntimeError::Message(format!("Path widget {widget_id} asset path must exist.")));
+            }
+            values.insert(widget_id, widget["props"]["value"].as_str().unwrap_or("").to_string());
+        }
+        if !values.contains_key("path_input") || !values.contains_key("path_result") {
+            return Err(RuntimeError::Message("Example 09 panel must contain path_input and path_result.".to_string()));
+        }
+        let mut runtime = Self {
+            contract,
+            wfrog,
+            panel,
+            asset_map,
+            values,
+            last_result: String::new(),
+            last_error: None,
+            native_kernel_bridge,
+        };
+        runtime.run_all(BTreeMap::new())?;
+        Ok(runtime)
+    }
+
+    pub fn run_once(&mut self, input_path: String) -> Result<Value> {
+        let mut values = BTreeMap::new();
+        values.insert("input_path".to_string(), input_path);
+        self.run_all(values)
+    }
+
+    pub fn run_all(&mut self, control_values: BTreeMap<String, String>) -> Result<Value> {
+        for (input_id, value) in control_values {
+            self.set_input_value(&input_id, &value)?;
+        }
+        for (input_id, output_id) in self.path_execution_pairs() {
+            let input = self.input_value(&input_id);
+            let result = if let Some(bridge) = &self.native_kernel_bridge {
+                if bridge.manifest().source_lowered_unit != "Examples/09_path_value_roundtrip/main.lowering.json" {
+                    return Err(RuntimeError::Message("Unexpected native path kernel source lowered unit.".to_string()));
+                }
+                let result = bridge.run(&input);
+                if !result.ok {
+                    let diagnostic = bridge.manifest().diagnostic(result.error_code);
+                    self.last_error = Some(diagnostic.clone());
+                    return Err(RuntimeError::Message(diagnostic));
+                }
+                result.result
+            } else {
+                if input.as_bytes().len() > 256 {
+                    return Err(RuntimeError::Message(format!("{input_id} must remain within 256 UTF-8 bytes.")));
+                }
+                input
+            };
+            self.publish_output(&output_id, &result);
+            if output_id == "result_path" {
+                self.last_result = result;
+            }
+        }
+        self.last_error = None;
+        Ok(self.execution_artifact())
+    }
+
+    fn set_input_value(&mut self, input_id: &str, value: &str) -> Result<()> {
+        if value.as_bytes().len() > 256 {
+            return Err(RuntimeError::Message(format!("{input_id} must remain within 256 UTF-8 bytes.")));
+        }
+        for widget in path_panel_widgets(&self.panel) {
+            let widget_id = widget["instance_id"].as_str().unwrap_or("");
+            if path_input_id(&self.contract, &widget) == input_id {
+                self.values.insert(widget_id.to_string(), value.to_string());
+            }
+        }
+        Ok(())
+    }
+
+    fn input_value(&self, input_id: &str) -> String {
+        for widget in path_panel_widgets(&self.panel) {
+            let widget_id = widget["instance_id"].as_str().unwrap_or("");
+            if path_input_id(&self.contract, &widget) == input_id {
+                return self.values.get(widget_id).cloned().unwrap_or_default();
+            }
+        }
+        String::new()
+    }
+
+    fn publish_output(&mut self, output_id: &str, value: &str) {
+        for widget in path_panel_widgets(&self.panel) {
+            let widget_id = widget["instance_id"].as_str().unwrap_or("");
+            if path_output_id(&self.contract, &widget) == output_id {
+                self.values.insert(widget_id.to_string(), value.to_string());
+            }
+        }
+    }
+
+    fn path_execution_pairs(&self) -> Vec<(String, String)> {
+        let mut pairs = Vec::new();
+        for widget in path_panel_widgets(&self.panel) {
+            if widget["class_ref"].as_str() != Some("frog.widgets.path_control") {
+                continue;
+            }
+            let input_id = path_input_id(&self.contract, &widget);
+            if input_id.is_empty() {
+                continue;
+            }
+            let output_id = widget["props"]["binding.output_id"]
+                .as_str()
+                .map(ToString::to_string)
+                .unwrap_or_else(|| if input_id == "input_path" { "result_path".to_string() } else { String::new() });
+            if !output_id.is_empty() {
+                pairs.push((input_id, output_id));
+            }
+        }
+        pairs
+    }
+
+    fn runtime_for(&self, widget: &Value) -> Value {
+        let props = &widget["props"];
+        let visual = &widget["visual"];
+        let widget_id = widget["instance_id"].as_str().unwrap_or("");
+        let mut runtime = json!({
+            "value": self.values.get(widget_id).cloned().unwrap_or_default(),
+            "path.display_value": self.values.get(widget_id).cloned().unwrap_or_default(),
+            "path.kind": props["path.kind"].clone(),
+            "path.validation_state": props["path.validation_state"].clone(),
+            "label.text": props["label.text"].clone(),
+            "caption.text": props["caption.text"].clone(),
+            "asset_ref": visual["asset_ref"].clone(),
+            "realization.variant": props["realization.variant"].clone(),
+        });
+        if let Some(runtime_object) = runtime.as_object_mut() {
+            let input_id = path_input_id(&self.contract, widget);
+            let output_id = path_output_id(&self.contract, widget);
+            if !input_id.is_empty() && widget["class_ref"].as_str() == Some("frog.widgets.path_control") {
+                runtime_object.insert("binding.public_input_id".to_string(), Value::String(input_id));
+            }
+            if !output_id.is_empty() && widget["class_ref"].as_str() == Some("frog.widgets.path_indicator") {
+                runtime_object.insert("binding.public_output_id".to_string(), Value::String(output_id));
+            }
+            for member in [
+                "caption.visible",
+                "caption.anchor.x",
+                "caption.anchor.y",
+                "caption.align.horizontal",
+                "caption.style.text_color",
+                "display.icon_visible",
+                "display.validation_marker_visible",
+                "display.text_overflow_visible",
+                "browse.enabled",
+                "browse.button_visible",
+                "style.frame.fill_color",
+                "style.frame.border_color",
+                "style.frame.border_width",
+                "style.path_face.fill_color",
+                "style.path_face.fill_color.hover",
+                "style.path_face.border_color",
+                "style.path_face.border_color.hover",
+                "style.path_face.border_width",
+                "style.path_display.color",
+                "style.path_display.font_size",
+                "style.path_display.font_weight",
+                "style.path_display.padding_inline",
+                "style.path_display.baseline_offset",
+                "style.path_display.line_height",
+                "style.path_icon.fill_color",
+                "style.path_icon.front_fill_color",
+                "style.path_icon.stroke_color",
+                "style.path_icon.highlight_color",
+                "style.browse_button.fill_color",
+                "style.browse_button.fill_color.hover",
+                "style.browse_button.border_color",
+                "style.browse_button.border_color.hover",
+                "style.browse_button.border_width",
+                "style.browse_button.text_color",
+                "style.browse_button.text_font_size",
+                "binding.preview_input_id",
+                "binding.preview_output_id",
+                "binding.input_id",
+                "binding.output_id",
+                "interaction.enabled",
+                "interaction.read_only",
+            ] {
+                if !props[member].is_null() {
+                    runtime_object.insert(member.to_string(), props[member].clone());
+                }
+            }
+        }
+        runtime
+    }
+
+    pub fn execution_artifact(&self) -> Value {
+        let mut widgets = Vec::new();
+        let mut ui_outputs = Map::new();
+        for widget in path_panel_widgets(&self.panel) {
+            let widget_id = widget["instance_id"].as_str().unwrap_or("");
+            let role = if widget["class_ref"].as_str() == Some("frog.widgets.path_control") { "control" } else { "indicator" };
+            ui_outputs.insert(widget_id.to_string(), Value::String(self.values.get(widget_id).cloned().unwrap_or_default()));
+            widgets.push(json!({
+                "widget_id": widget_id,
+                "class_ref": widget["class_ref"].clone(),
+                "role": role,
+                "layout": widget["layout"].clone(),
+                "runtime": self.runtime_for(&widget)
+            }));
+        }
+        json!({
+            "artifact_kind": "frog_runtime_execution_result",
+            "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+            "status": "ok",
+            "contract_ref": {"unit_ids": ["main"], "backend_family": self.contract["backend_family"].clone(), "source_ref": self.contract["source_ref"].clone()},
+            "execution_summary": {"mode": "path_value_roundtrip", "executed_unit": "main", "operation": "copy", "input_path": self.input_value("input_path"), "result_path": self.last_result},
+            "outputs": {"public": {"result_path": self.last_result}, "ui": Value::Object(ui_outputs)},
+            "ui_runtime": {
+                "panel": {"panel_id": self.panel["panel_id"].clone(), "title": self.panel["title"].clone(), "class_ref": self.panel["class_ref"].clone(), "layout": self.panel["layout"].clone()},
+                "widgets": widgets
+            },
+            "diagnostics": []
+        })
+    }
+
+    pub fn render_html(&self) -> String {
+        let snapshot = self.execution_artifact();
+        let panel = &snapshot["ui_runtime"]["panel"];
+        let widgets = snapshot["ui_runtime"]["widgets"].as_array().unwrap();
+        let panel_width = panel["layout"]["width"].as_i64().unwrap_or(700);
+        let panel_height = panel["layout"]["height"].as_i64().unwrap_or(300);
+        let uses_native_kernel = self.native_kernel_bridge.is_some();
+        let mut diagnostics = String::new();
+        if let Some(message) = &self.last_error {
+            let _ = write!(diagnostics, "<div class='diagnostic error'>{}</div>", escape_html(message));
+        }
+        let rendered_widgets = widgets
+            .iter()
+            .map(|widget| {
+                let asset_id = widget["runtime"]["asset_ref"]
+                    .as_str()
+                    .and_then(|value| value.strip_prefix("asset:"))
+                    .unwrap_or("");
+                render_path_widget(widget, self.asset_map.get(asset_id))
+            })
+            .collect::<Vec<String>>()
+            .join("");
+        format!(
+            "<!doctype html><html lang='en'><head><meta charset='utf-8'><title>{title}</title>\
+             <style>\
+             body{{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}}\
+             h1{{font-size:24px;margin:0 0 12px 0;}}\
+             p.meta{{margin:0 0 20px 0;color:#52606d;}}\
+             .runtime-facts{{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 18px 0;}}\
+             .runtime-facts div{{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}}\
+             .runtime-facts dt{{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}}\
+             .runtime-facts dd{{margin:0;color:#1f2933;font-size:12px;font-weight:600;}}\
+             .front-panel{{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}}\
+             .frog-widget{{position:absolute;box-sizing:border-box;}}\
+             .path-widget{{font-family:Segoe UI,Arial,sans-serif;}}\
+             .path-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;}}\
+             .path-skin svg{{width:100%;height:100%;display:block;}}\
+             .path-skin #label_text,.path-skin #caption_text,.path-skin #path_display{{display:none;}}\
+             .path-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}}\
+             .path-value-overlay{{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1;border:0;background:transparent;margin:0;}}\
+             .path-control-editor{{outline:0;appearance:none;-webkit-appearance:none;}}\
+             .path-control-editor:focus{{outline:0;}}\
+             .path-indicator-value{{display:flex;align-items:center;pointer-events:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}}\
+             .path-file-picker{{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}}\
+             .path-browse-overlay{{position:absolute;box-sizing:border-box;cursor:pointer;background:transparent;border:0;}}\
+             .path-control:hover .path-skin #path_face{{fill:var(--frog-path-face-fill-hover) !important;stroke:var(--frog-path-face-stroke-hover) !important;}}\
+             .path-control:hover .path-skin #browse_button{{fill:var(--frog-path-button-fill-hover) !important;}}\
+             .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}\
+             button{{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}}\
+             .diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}\
+             .diagnostic.error{{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}}\
+             </style><script>\
+             function frogPathPicked(input,targetId){{const target=document.getElementById(targetId);if(!target){{return;}}if(input.files&&input.files.length>0){{target.value=input.files[0].name;target.dispatchEvent(new Event('input',{{bubbles:true}}));target.dispatchEvent(new Event('change',{{bubbles:true}}));}}}}\
+             </script></head><body>\
+             <h1>{title}</h1>\
+             <p class='meta'>Example 09 - .frog front panel + Default Path .wfrog realization assets + Rust runtime</p>\
+             <dl class='runtime-facts' aria-label='Runtime facts'>\
+             <div><dt>Runtime</dt><dd>Rust reference runtime</dd></div>\
+             <div><dt>Execution</dt><dd>{execution_path}</dd></div>\
+             <div><dt>Compiler backend</dt><dd>{compiler_backend}</dd></div>\
+             </dl>{diagnostics}\
+             <form method='post' action='/run'>\
+             <div class='front-panel' data-panel-id='{panel_id}' data-coordinate-space='panel_pixels' data-runtime-language='rust' data-compiler-backend='{compiler_backend_id}' data-execution-path='{execution_path_id}' style='width:{panel_width}px;height:{panel_height}px;'>\
+             {rendered_widgets}</div>\
+             <div class='actions'><button type='submit'>Run Example 09</button><a class='state-link' href='/state.json'>state.json</a></div></form>\
+             </body></html>",
+            title = escape_html(panel["title"].as_str().unwrap_or("FROG")),
+            diagnostics = diagnostics,
+            execution_path = if uses_native_kernel { "native kernel bridge" } else { "path contract executor" },
+            compiler_backend = if uses_native_kernel { "LLVM native path kernel artifact" } else { "none for Example 09" },
+            compiler_backend_id = if uses_native_kernel { "llvm" } else { "none" },
+            execution_path_id = if uses_native_kernel { "native_kernel_bridge" } else { "rust_path_contract_executor" },
+            panel_id = escape_html(panel["panel_id"].as_str().unwrap_or("")),
+            panel_width = panel_width,
+            panel_height = panel_height,
+            rendered_widgets = rendered_widgets,
+        )
+    }
+
+    pub fn serve(mut self, host: &str, port: u16, open_browser: bool) -> Result<()> {
+        let listener = TcpListener::bind((host, port))?;
+        let address = listener.local_addr()?;
+        let url = format!("http://{}:{}/", address.ip(), address.port());
+        if open_browser {
+            let _ = open_in_browser(&url);
+        }
+        println!("{url}");
+        for stream in listener.incoming() {
+            let mut stream = stream?;
+            if let Err(error) = self.handle_connection(&mut stream) {
+                let _ = write_response(&mut stream, "500 Internal Server Error", "text/plain; charset=utf-8", format!("{error}").into_bytes(), None);
+            }
+        }
+        Ok(())
+    }
+
+    fn handle_connection(&mut self, stream: &mut TcpStream) -> Result<()> {
+        let request = read_request(stream)?;
+        if request.method == "GET" && request.path == "/" {
+            return write_response(stream, "200 OK", "text/html; charset=utf-8", self.render_html().into_bytes(), None);
+        }
+        if request.method == "GET" && request.path == "/state.json" {
+            let payload = to_string_pretty(&self.execution_artifact()).unwrap().into_bytes();
+            return write_response(stream, "200 OK", "application/json; charset=utf-8", payload, None);
+        }
+        if request.method == "GET" && request.path.starts_with("/asset/") {
+            let asset_id = request.path.trim_start_matches("/asset/");
+            if let Some(path) = self.asset_map.get(asset_id) {
+                if path.exists() {
+                    return write_response(stream, "200 OK", "image/svg+xml", fs::read(path)?, None);
+                }
+            }
+            return write_response(stream, "404 Not Found", "text/plain; charset=utf-8", b"missing asset".to_vec(), None);
+        }
+        if request.method == "POST" && request.path == "/run" {
+            let body = String::from_utf8_lossy(&request.body);
+            let values = parse_path_form_values(&body);
+            if let Err(error) = self.run_all(values) {
+                self.last_error = Some(error.to_string());
+            }
+            return write_response(stream, "303 See Other", "text/plain; charset=utf-8", Vec::new(), Some(("Location", "/".to_string())));
+        }
+        write_response(stream, "404 Not Found", "text/plain; charset=utf-8", b"not found".to_vec(), None)
+    }
+}
+
+fn path_panel_widgets(panel: &Value) -> Vec<Value> {
+    panel["widgets"]
+        .as_array()
+        .cloned()
+        .unwrap_or_default()
+        .into_iter()
+        .filter(|widget| matches!(widget["class_ref"].as_str(), Some("frog.widgets.path_control" | "frog.widgets.path_indicator")))
+        .collect()
+}
+
+fn path_contract_binding(contract: &Value, widget_id: &str, member: &str) -> Option<String> {
+    contract["units"][0]["ui_bindings"]["widgets"]
+        .as_array()
+        .and_then(|widgets| {
+            widgets.iter().find_map(|widget| {
+                if widget["widget_id"].as_str() == Some(widget_id) {
+                    widget["binding"][member].as_str().map(ToString::to_string)
+                } else {
+                    None
+                }
+            })
+        })
+}
+
+fn path_input_id(contract: &Value, widget: &Value) -> String {
+    let widget_id = widget["instance_id"].as_str().unwrap_or("");
+    path_contract_binding(contract, widget_id, "public_input_id")
+        .or_else(|| widget["props"]["binding.public_input_id"].as_str().map(ToString::to_string))
+        .or_else(|| widget["props"]["binding.preview_input_id"].as_str().map(ToString::to_string))
+        .unwrap_or_default()
+}
+
+fn path_output_id(contract: &Value, widget: &Value) -> String {
+    let widget_id = widget["instance_id"].as_str().unwrap_or("");
+    path_contract_binding(contract, widget_id, "public_output_id")
+        .or_else(|| widget["props"]["binding.public_output_id"].as_str().map(ToString::to_string))
+        .or_else(|| widget["props"]["binding.preview_output_id"].as_str().map(ToString::to_string))
+        .unwrap_or_default()
+}
+
+fn parse_path_form_values(body: &str) -> BTreeMap<String, String> {
+    let mut result = BTreeMap::new();
+    for key in ["input_path", "input_path_no_icon"] {
+        if let Some(value) = parse_form_value(body, key) {
+            result.insert(key.to_string(), value);
+        }
+    }
+    result
+}
+
+fn load_path_svg_geometry(asset_path: Option<&PathBuf>) -> NumericSvgGeometry {
+    let mut geometry = NumericSvgGeometry {
+        view_width: 520.0,
+        view_height: 150.0,
+        caption_x: 16.0,
+        caption_y: 46.0,
+        value_face_x: 22.0,
+        value_face_y: 78.0,
+        value_face_width: 390.0,
+        value_face_height: 36.0,
+        increment_up_x: 424.0,
+        increment_up_y: 78.0,
+        increment_up_width: 34.0,
+        increment_up_height: 36.0,
+        increment_down_x: 56.0,
+        increment_down_y: 96.0,
+        increment_down_width: 0.0,
+        increment_down_height: 0.0,
+    };
+    let Some(path) = asset_path else { return geometry; };
+    let Ok(svg) = fs::read_to_string(path) else { return geometry; };
+    if let Some(start) = svg.find("viewBox=\"") {
+        let value_start = start + "viewBox=\"".len();
+        if let Some(value_end) = svg[value_start..].find('"') {
+            let parts: Vec<&str> = svg[value_start..value_start + value_end].split_whitespace().collect();
+            if parts.len() == 4 {
+                if let (Ok(width), Ok(height)) = (parts[2].parse::<f64>(), parts[3].parse::<f64>()) {
+                    if width > 0.0 && height > 0.0 {
+                        geometry.view_width = width;
+                        geometry.view_height = height;
+                    }
+                }
+            }
+        }
+    }
+    geometry.caption_x = svg_attribute_f64(&svg, "caption_text", "x", geometry.caption_x);
+    geometry.caption_y = svg_attribute_f64(&svg, "caption_text", "y", geometry.caption_y);
+    geometry.value_face_x = svg_attribute_f64(&svg, "path_face", "x", geometry.value_face_x);
+    geometry.value_face_y = svg_attribute_f64(&svg, "path_face", "y", geometry.value_face_y);
+    geometry.value_face_width = svg_attribute_f64(&svg, "path_face", "width", geometry.value_face_width);
+    geometry.value_face_height = svg_attribute_f64(&svg, "path_face", "height", geometry.value_face_height);
+    geometry.increment_down_x = svg_attribute_f64(&svg, "path_display", "x", geometry.increment_down_x);
+    geometry.increment_down_y = svg_attribute_f64(&svg, "path_display", "y", geometry.increment_down_y);
+    geometry.increment_up_x = svg_attribute_f64(&svg, "browse_button", "x", geometry.increment_up_x);
+    geometry.increment_up_y = svg_attribute_f64(&svg, "browse_button", "y", geometry.increment_up_y);
+    geometry.increment_up_width = svg_attribute_f64(&svg, "browse_button", "width", geometry.increment_up_width);
+    geometry.increment_up_height = svg_attribute_f64(&svg, "browse_button", "height", geometry.increment_up_height);
+    geometry
+}
+
+fn render_path_skin(asset_path: Option<&PathBuf>, runtime: &Value) -> String {
+    let Some(path) = asset_path else {
+        return "<div class='path-skin missing-skin'></div>".to_string();
+    };
+    let Ok(svg) = fs::read_to_string(path) else {
+        return "<div class='path-skin missing-skin'></div>".to_string();
+    };
+    let face_fill = safe_css_color(&runtime_string(runtime, "style.path_face.fill_color", "#ffffff"), "#ffffff");
+    let face_stroke = safe_css_color(&runtime_string(runtime, "style.path_face.border_color", "#64748b"), "#64748b");
+    let button_fill = safe_css_color(&runtime_string(runtime, "style.browse_button.fill_color", "#f8fafc"), "#f8fafc");
+    let button_stroke = safe_css_color(&runtime_string(runtime, "style.browse_button.border_color", "#64748b"), "#64748b");
+    format!(
+        "<div class='path-skin' aria-hidden='true' style='--frog-path-label-display:none;--frog-path-caption-display:none;--frog-path-frame-fill:{};--frog-path-frame-stroke:{};--frog-path-frame-stroke-width:{};--frog-path-face-fill:{};--frog-path-face-stroke:{};--frog-path-face-stroke-width:{};--frog-path-face-fill-hover:{};--frog-path-face-stroke-hover:{};--frog-path-text-fill:{};--frog-path-text-font-size:{};--frog-path-text-font-weight:{};--frog-path-button-fill:{};--frog-path-button-fill-hover:{};--frog-path-button-stroke:{};--frog-path-button-stroke-hover:{};--frog-path-button-stroke-width:{};--frog-path-button-text-fill:{};--frog-path-button-text-font-size:{};--frog-path-icon-display:{};--frog-path-icon-fill:{};--frog-path-icon-front-fill:{};--frog-path-icon-stroke:{};--frog-path-icon-highlight:{};--frog-path-browse-display:{};--frog-path-validation-display:{};--frog-path-overflow-display:{};--frog-path-focus-display:none;'>{}</div>",
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.frame.fill_color", "transparent"), "transparent")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.frame.border_color", "transparent"), "transparent")),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.frame.border_width", "0px"), "0px")),
+        escape_html(&face_fill),
+        escape_html(&face_stroke),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.path_face.border_width", "2px"), "2px")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.path_face.fill_color.hover", &face_fill), &face_fill)),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.path_face.border_color.hover", &face_stroke), &face_stroke)),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.path_display.color", "#111827"), "#111827")),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.path_display.font_size", "15px"), "15px")),
+        escape_html(&safe_css_font_weight(&runtime_string(runtime, "style.path_display.font_weight", "400"), "400")),
+        escape_html(&button_fill),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.browse_button.fill_color.hover", &button_fill), &button_fill)),
+        escape_html(&button_stroke),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.browse_button.border_color.hover", &button_stroke), &button_stroke)),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.browse_button.border_width", "1px"), "1px")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.browse_button.text_color", "#111827"), "#111827")),
+        escape_html(&safe_css_length(&runtime_string(runtime, "style.browse_button.text_font_size", "13px"), "13px")),
+        if runtime_bool(runtime, "display.icon_visible", true) { "inline" } else { "none" },
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.path_icon.fill_color", "#facc15"), "#facc15")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.path_icon.front_fill_color", "#fde68a"), "#fde68a")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.path_icon.stroke_color", "#b45309"), "#b45309")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.path_icon.highlight_color", "#fff7cc"), "#fff7cc")),
+        if runtime_bool(runtime, "browse.button_visible", false) { "inline" } else { "none" },
+        if runtime_bool(runtime, "display.validation_marker_visible", false) { "inline" } else { "none" },
+        if runtime_bool(runtime, "display.text_overflow_visible", false) { "inline" } else { "none" },
+        svg
+    )
+}
+
+fn render_path_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String {
+    let runtime = &widget["runtime"];
+    let layout = &widget["layout"];
+    let geometry = load_path_svg_geometry(asset_path);
+    let is_control = widget["role"].as_str() == Some("control");
+    let widget_id = widget["widget_id"].as_str().unwrap_or("path_input");
+    let caption = runtime_string(runtime, "caption.text", widget_id);
+    let value = runtime_string(runtime, "value", "");
+    let asset_route = runtime["asset_ref"]
+        .as_str()
+        .and_then(|value| value.strip_prefix("asset:"))
+        .map(|id| format!("/asset/{id}"))
+        .unwrap_or_default();
+    let text_x = if runtime_bool(runtime, "display.icon_visible", true) { geometry.increment_down_x.max(geometry.value_face_x) } else { geometry.value_face_x };
+    let text_width = (geometry.value_face_width - (text_x - geometry.value_face_x)).max(0.0);
+    let value_style = svg_box_style(text_x, geometry.value_face_y, text_width, geometry.value_face_height, geometry);
+    let browse_style = svg_box_style(geometry.increment_up_x, geometry.increment_up_y, geometry.increment_up_width, geometry.increment_up_height, geometry);
+    let input_id = runtime_string(
+        runtime,
+        "binding.public_input_id",
+        &runtime_string(runtime, "binding.preview_input_id", &format!("{widget_id}_value")),
+    );
+    let text_line_height = runtime_string(
+        runtime,
+        "style.path_display.line_height",
+        &format!("{}px", ((geometry.value_face_height / geometry.view_height) * layout["height"].as_f64().unwrap_or(120.0)).round()),
+    );
+    let text_baseline = safe_css_length(&runtime_string(runtime, "style.path_display.baseline_offset", "0px"), "0px");
+    let mut body = String::new();
+    body.push_str(&render_path_skin(asset_path, runtime));
+    let _ = write!(
+        body,
+        "<span class='path-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}color:{};'>{}</span>",
+        runtime_caption_anchor_style(runtime, geometry),
+        escape_html(&safe_css_color(&runtime_string(runtime, "caption.style.text_color", "#111827"), "#111827")),
+        escape_html(&caption)
+    );
+    if is_control {
+        let _ = write!(
+            body,
+            "<input id='{widget_id}_value' name='{input_id}' type='text' class='path-value-overlay path-control-editor' data-frog-part='path_display' data-svg-anchor='path_display.left_center' data-frog-input-id='{input_id}' style='{value_style}color:{};font-size:{};font-weight:{};padding:0 {};line-height:{};transform:translateY({});' value='{}'{}>",
+            escape_html(&safe_css_color(&runtime_string(runtime, "style.path_display.color", "#111827"), "#111827")),
+            escape_html(&safe_css_length(&runtime_string(runtime, "style.path_display.font_size", "15px"), "15px")),
+            escape_html(&safe_css_font_weight(&runtime_string(runtime, "style.path_display.font_weight", "400"), "400")),
+            escape_html(&safe_css_length(&runtime_string(runtime, "style.path_display.padding_inline", "8px"), "8px")),
+            escape_html(&safe_css_length(&text_line_height, &text_line_height)),
+            escape_html(&text_baseline),
+            escape_html(&value),
+            if runtime_bool(runtime, "interaction.enabled", true) { "" } else { " disabled" }
+        );
+        let _ = write!(
+            body,
+            "<input id='{widget_id}_file_picker' type='file' class='path-file-picker' tabindex='-1' aria-hidden='true' onchange=\"frogPathPicked(this,'{widget_id}_value')\">"
+        );
+        if runtime_bool(runtime, "browse.button_visible", is_control) {
+            let _ = write!(
+                body,
+                "<label for='{widget_id}_file_picker' class='path-browse-overlay' data-frog-part='browse_button' aria-label='Browse {}' style='{browse_style}'></label>",
+                escape_html(&caption)
+            );
+        }
+    } else {
+        let _ = write!(
+            body,
+            "<output class='path-value-overlay path-indicator-value' data-frog-part='path_display' data-svg-anchor='path_display.left_center' style='{value_style}color:{};font-size:{};font-weight:{};padding:0 {};line-height:{};transform:translateY({});'>{}</output>",
+            escape_html(&safe_css_color(&runtime_string(runtime, "style.path_display.color", "#111827"), "#111827")),
+            escape_html(&safe_css_length(&runtime_string(runtime, "style.path_display.font_size", "15px"), "15px")),
+            escape_html(&safe_css_font_weight(&runtime_string(runtime, "style.path_display.font_weight", "400"), "400")),
+            escape_html(&safe_css_length(&runtime_string(runtime, "style.path_display.padding_inline", "8px"), "8px")),
+            escape_html(&safe_css_length(&text_line_height, &text_line_height)),
+            escape_html(&text_baseline),
+            escape_html(&value)
+        );
+    }
+    format!(
+        "<section class='frog-widget path-widget {}' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-frog-visual-law='wfrog-realization-state-map' data-frog-browse-visible='{}' data-asset-route='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;--frog-path-button-fill:{};--frog-path-button-fill-hover:{};'>{}</section>",
+        if is_control { "path-control" } else { "path-indicator" },
+        escape_html(widget_id),
+        escape_html(widget["class_ref"].as_str().unwrap_or("")),
+        escape_html(widget["role"].as_str().unwrap_or("")),
+        if runtime_bool(runtime, "browse.button_visible", is_control) { "true" } else { "false" },
+        escape_html(&asset_route),
+        layout["x"].as_i64().unwrap_or(0),
+        layout["y"].as_i64().unwrap_or(0),
+        layout["width"].as_i64().unwrap_or(300),
+        layout["height"].as_i64().unwrap_or(120),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.browse_button.fill_color", "#f8fafc"), "#f8fafc")),
+        escape_html(&safe_css_color(&runtime_string(runtime, "style.browse_button.fill_color.hover", "#e5eef9"), "#e5eef9")),
+        body
+    )
+}
+
 #[derive(Clone, Debug)]
 struct EnumUiItem {
     id: String,

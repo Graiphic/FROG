@@ -8,7 +8,7 @@ use crate::diagnostics::{Result, RuntimeError};
 use crate::execute::{execute_contract, execute_reference_contract_case};
 use crate::native_kernel::{NativeBoolKernelBridge, NativeEnumKernelBridge, NativeKernelBridge, NativeStringKernelBridge};
 use crate::runtime::RuntimeCore;
-use crate::ui::{BooleanBrowserUiRuntime, BrowserUiRuntime, EnumBrowserUiRuntime, StringBrowserUiRuntime};
+use crate::ui::{BooleanBrowserUiRuntime, BrowserUiRuntime, EnumBrowserUiRuntime, PathBrowserUiRuntime, StringBrowserUiRuntime};
 
 fn repo_root() -> Result<PathBuf> {
     find_repo_root(Path::new(env!("CARGO_MANIFEST_DIR")))
@@ -65,6 +65,23 @@ fn example08_wfrog_path() -> Result<PathBuf> {
         .join("enum_panel.wfrog"))
 }
 
+fn example09_contract_path() -> Result<PathBuf> {
+    Ok(repo_root()?
+        .join("Implementations")
+        .join("Reference")
+        .join("ContractEmitter")
+        .join("examples")
+        .join("09_path_value_roundtrip.reference_host_runtime_ui_binding.contract.json"))
+}
+
+fn example09_wfrog_path() -> Result<PathBuf> {
+    Ok(repo_root()?
+        .join("Examples")
+        .join("09_path_value_roundtrip")
+        .join("ui")
+        .join("path_panel.wfrog"))
+}
+
 fn wants_example06(value: &str) -> bool {
     matches!(value, "06" | "6" | "example06" | "06_boolean_value_roundtrip")
 }
@@ -75,6 +92,10 @@ fn wants_example07(value: &str) -> bool {
 
 fn wants_example08(value: &str) -> bool {
     matches!(value, "08" | "8" | "example08" | "08_enum_value_roundtrip")
+}
+
+fn wants_example09(value: &str) -> bool {
+    matches!(value, "09" | "9" | "example09" | "09_path_value_roundtrip")
 }
 
 fn parse_bool_input(value: &str) -> Result<bool> {
@@ -111,6 +132,14 @@ fn contract_is_example08(path: &Path) -> bool {
     };
     contract["source_ref"]["example_id"].as_str() == Some("08_enum_value_roundtrip")
         || contract["example_id"].as_str() == Some("08_enum_value_roundtrip")
+}
+
+fn contract_is_example09(path: &Path) -> bool {
+    let Ok(contract) = load_json(path) else {
+        return false;
+    };
+    contract["source_ref"]["example_id"].as_str() == Some("09_path_value_roundtrip")
+        || contract["example_id"].as_str() == Some("09_path_value_roundtrip")
 }
 
 pub fn run_cli() -> Result<()> {
@@ -238,6 +267,30 @@ pub fn run_cli() -> Result<()> {
             )?;
             return runtime.serve(&host, port, open_browser);
         }
+        if example.as_deref().is_some_and(wants_example09) {
+            let native_bridge = match (&native_kernel_manifest, &native_kernel_library) {
+                (Some(manifest), Some(library)) => Some(NativeStringKernelBridge::from_paths(manifest, library)?),
+                _ => None,
+            };
+            let runtime = PathBrowserUiRuntime::with_native_kernel_bridge(
+                contract_path.unwrap_or(example09_contract_path()?),
+                wfrog_path.unwrap_or(example09_wfrog_path()?),
+                native_bridge,
+            )?;
+            return runtime.serve(&host, port, open_browser);
+        }
+        if contract_path.as_deref().is_some_and(contract_is_example09) {
+            let native_bridge = match (&native_kernel_manifest, &native_kernel_library) {
+                (Some(manifest), Some(library)) => Some(NativeStringKernelBridge::from_paths(manifest, library)?),
+                _ => None,
+            };
+            let runtime = PathBrowserUiRuntime::with_native_kernel_bridge(
+                contract_path.unwrap(),
+                wfrog_path.unwrap_or(example09_wfrog_path()?),
+                native_bridge,
+            )?;
+            return runtime.serve(&host, port, open_browser);
+        }
 
         let native_bridge = match (&native_kernel_manifest, &native_kernel_library) {
             (Some(manifest), Some(library)) => Some(NativeKernelBridge::from_paths(manifest, library)?),
@@ -351,6 +404,24 @@ pub fn run_cli() -> Result<()> {
             EnumBrowserUiRuntime::with_native_kernel_bridge(contract_path, wfrog_path, Some(bridge))?
         } else {
             EnumBrowserUiRuntime::with_native_kernel_bridge(contract_path, wfrog_path, None)?
+        };
+        runtime.run_once(input_value_text)?
+    } else if example.as_deref().is_some_and(wants_example09) || contract_is_example09(&contract_path) {
+        let contract_path = if example.as_deref().is_some_and(wants_example09) && contract_path == default_contract_path()? {
+            example09_contract_path()?
+        } else {
+            contract_path
+        };
+        let wfrog_path = if example.as_deref().is_some_and(wants_example09) && wfrog_path == default_wfrog_path()? {
+            example09_wfrog_path()?
+        } else {
+            wfrog_path
+        };
+        let mut runtime = if let (Some(manifest), Some(library)) = (&native_kernel_manifest, &native_kernel_library) {
+            let bridge = NativeStringKernelBridge::from_paths(manifest, library)?;
+            PathBrowserUiRuntime::with_native_kernel_bridge(contract_path, wfrog_path, Some(bridge))?
+        } else {
+            PathBrowserUiRuntime::with_native_kernel_bridge(contract_path, wfrog_path, None)?
         };
         runtime.run_once(input_value_text)?
     } else if let (Some(manifest), Some(library)) = (&native_kernel_manifest, &native_kernel_library) {

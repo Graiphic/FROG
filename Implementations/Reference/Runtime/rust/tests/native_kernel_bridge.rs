@@ -6,7 +6,7 @@ use frog_reference_runtime_rust::native_kernel::{
     NativeBoolKernelBridge, NativeEnumKernelBridge, NativeKernelBridge, NativeStringKernelBridge,
 };
 use frog_reference_runtime_rust::runtime::RuntimeCore;
-use frog_reference_runtime_rust::ui::{BooleanBrowserUiRuntime, BrowserUiRuntime, EnumBrowserUiRuntime, StringBrowserUiRuntime};
+use frog_reference_runtime_rust::ui::{BooleanBrowserUiRuntime, BrowserUiRuntime, EnumBrowserUiRuntime, PathBrowserUiRuntime, StringBrowserUiRuntime};
 
 fn repo_root() -> PathBuf {
     find_repo_root(Path::new(env!("CARGO_MANIFEST_DIR"))).expect("repo root")
@@ -177,6 +177,36 @@ fn rust_dynamic_native_kernel_bridge_executes_example08() {
     let html = runtime.render_html();
     assert!(html.contains("native kernel bridge"));
     assert!(html.contains("LLVM native enum kernel artifact"));
+    assert!(html.contains("data-compiler-backend='llvm'"));
+    assert!(html.contains("data-execution-path='native_kernel_bridge'"));
+    assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
+}
+
+#[test]
+fn rust_dynamic_native_kernel_bridge_executes_example09() {
+    let root = repo_root();
+    let manifest = root.join("Implementations/Reference/LLVM/examples/09_path_value_roundtrip/native_kernel_manifest.json");
+    let kernel_ll = root.join("Implementations/Reference/LLVM/examples/09_path_value_roundtrip/kernel.ll");
+    let contract = root.join(
+        "Implementations/Reference/ContractEmitter/examples/09_path_value_roundtrip.reference_host_runtime_ui_binding.contract.json",
+    );
+    let wfrog = root.join("Examples/09_path_value_roundtrip/ui/path_panel.wfrog");
+    let Some(library) = build_native_library("09", &kernel_ll) else {
+        return;
+    };
+
+    let bridge = NativeStringKernelBridge::from_paths(&manifest, &library).expect("load native path bridge");
+    let result = bridge.run("C:/FROG/from_rust_native.txt");
+    assert!(result.ok);
+    assert_eq!(result.result, "C:/FROG/from_rust_native.txt");
+
+    let mut runtime = PathBrowserUiRuntime::with_native_kernel_bridge(contract, wfrog, Some(bridge)).expect("runtime core");
+    let artifact = runtime.run_once("C:/FROG/from_rust_native.txt".to_string()).expect("execute native path kernel");
+    assert_eq!(artifact["outputs"]["public"]["result_path"].as_str(), Some("C:/FROG/from_rust_native.txt"));
+    assert_eq!(artifact["outputs"]["ui"]["path_result"].as_str(), Some("C:/FROG/from_rust_native.txt"));
+    let html = runtime.render_html();
+    assert!(html.contains("native kernel bridge"));
+    assert!(html.contains("LLVM native path kernel artifact"));
     assert!(html.contains("data-compiler-backend='llvm'"));
     assert!(html.contains("data-execution-path='native_kernel_bridge'"));
     assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));

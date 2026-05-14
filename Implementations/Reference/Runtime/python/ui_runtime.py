@@ -58,6 +58,15 @@ def default_example08_wfrog_path() -> Path:
     return repo_root() / "Examples" / "08_enum_value_roundtrip" / "ui" / "enum_panel.wfrog"
 
 
+def default_example09_contract_path() -> Path:
+    root = repo_root()
+    return root / "Implementations" / "Reference" / "ContractEmitter" / "examples" / "09_path_value_roundtrip.reference_host_runtime_ui_binding.contract.json"
+
+
+def default_example09_wfrog_path() -> Path:
+    return repo_root() / "Examples" / "09_path_value_roundtrip" / "ui" / "path_panel.wfrog"
+
+
 def wants_example06(value: str | None) -> bool:
     return value in {"06", "6", "example06", "06_boolean_value_roundtrip"}
 
@@ -68,6 +77,10 @@ def wants_example07(value: str | None) -> bool:
 
 def wants_example08(value: str | None) -> bool:
     return value in {"08", "8", "example08", "08_enum_value_roundtrip"}
+
+
+def wants_example09(value: str | None) -> bool:
+    return value in {"09", "9", "example09", "09_path_value_roundtrip"}
 
 
 def parse_bool_input(value: str | bool | None) -> bool:
@@ -118,6 +131,15 @@ def is_example08_contract(path: str | Path | None) -> bool:
         return False
 
 
+def is_example09_contract(path: str | Path | None) -> bool:
+    if path is None:
+        return False
+    try:
+        return contract_example_id(load_contract_json(Path(path))) == "09_path_value_roundtrip"
+    except Exception:
+        return False
+
+
 def asset_url(asset_ref: object) -> str:
     if isinstance(asset_ref, str) and asset_ref.startswith("asset:"):
         return f"/asset/{asset_ref.split(':', 1)[1]}"
@@ -153,6 +175,13 @@ def safe_css_color(value: object, fallback: str) -> str:
 def safe_css_length(value: object, fallback: str) -> str:
     text = str(value if value is not None else "")
     if re.fullmatch(r"[0-9]+(\.[0-9]+)?px", text):
+        return text
+    return fallback
+
+
+def safe_css_signed_length(value: object, fallback: str) -> str:
+    text = str(value if value is not None else "")
+    if re.fullmatch(r"-?[0-9]+(\.[0-9]+)?px", text):
         return text
     return fallback
 
@@ -2207,6 +2236,625 @@ document.addEventListener('click',function(event){{if(!event.target.closest('.en
         return httpd, thread
 
 
+def path_widget_binding(widget: dict[str, Any]) -> dict[str, Any]:
+    binding = widget.get("binding")
+    return binding if isinstance(binding, dict) else {}
+
+
+def path_public_input_id(widget: dict[str, Any], contract_binding: dict[str, Any] | None = None) -> str:
+    props = widget.get("props", {})
+    binding = contract_binding or path_widget_binding(widget)
+    return str(
+        binding.get("public_input_id")
+        or props.get("binding.public_input_id")
+        or props.get("binding.preview_input_id")
+        or ""
+    )
+
+
+def path_public_output_id(widget: dict[str, Any], contract_binding: dict[str, Any] | None = None) -> str:
+    props = widget.get("props", {})
+    binding = contract_binding or path_widget_binding(widget)
+    return str(
+        binding.get("public_output_id")
+        or props.get("binding.public_output_id")
+        or props.get("binding.preview_output_id")
+        or ""
+    )
+
+
+class PathRuntimeCore:
+    def __init__(self, *, contract_path: str | Path | None = None, wfrog_path: str | Path | None = None) -> None:
+        self.contract_path = Path(contract_path or default_example09_contract_path()).resolve()
+        self.wfrog_path = Path(wfrog_path or default_example09_wfrog_path()).resolve()
+        self.contract = load_contract_json(self.contract_path)
+        if contract_example_id(self.contract) != "09_path_value_roundtrip":
+            raise RuntimeError("PathRuntimeCore expects Example 09.")
+        unit = self.contract.get("units", [{}])[0]
+        if unit.get("kind") != "path_value_roundtrip_ui_unit":
+            raise RuntimeError("PathRuntimeCore expects path_value_roundtrip_ui_unit.")
+        self.unit = unit
+        self.package = load_contract_json(self.wfrog_path)
+        self.panel = load_source_front_panel_from_contract(self.contract, self.contract_path)
+        self.asset_map = {
+            item["asset_id"]: (self.wfrog_path.parent / Path(item["path"])).resolve()
+            for item in self.package.get("svg_assets", [])
+        }
+        self.contract_bindings = {
+            item.get("widget_id"): item.get("binding", {})
+            for item in unit.get("ui_bindings", {}).get("widgets", [])
+            if isinstance(item, dict)
+        }
+        self.widgets = {
+            entry["instance_id"]: entry
+            for entry in self.panel.get("widgets", [])
+            if entry.get("class_ref") in {"frog.widgets.path_control", "frog.widgets.path_indicator"}
+        }
+        for widget_id in ("path_input", "path_result"):
+            if widget_id not in self.widgets:
+                raise RuntimeError(f"Example 09 panel must contain {widget_id}.")
+        for widget_id, widget in self.widgets.items():
+            asset_ref = str(widget.get("visual", {}).get("asset_ref", ""))
+            if not asset_ref.startswith("asset:"):
+                raise RuntimeError(f"Path widget {widget_id} must reference a .wfrog SVG asset.")
+            asset_id = asset_ref.split(":", 1)[1]
+            if asset_id not in self.asset_map or not self.asset_map[asset_id].exists():
+                raise RuntimeError(f"Path widget {widget_id} asset path must exist.")
+        self.values = {
+            widget_id: str(widget.get("props", {}).get("value", ""))
+            for widget_id, widget in self.widgets.items()
+        }
+        self.last_result = ""
+        self.execute_all({})
+
+    def _input_id(self, widget: dict[str, Any]) -> str:
+        return path_public_input_id(widget, self.contract_bindings.get(widget.get("instance_id")))
+
+    def _output_id(self, widget: dict[str, Any]) -> str:
+        return path_public_output_id(widget, self.contract_bindings.get(widget.get("instance_id")))
+
+    def _set_input_value(self, input_id: str, value: str) -> None:
+        if len(value.encode("utf-8")) > 256:
+            raise RuntimeError(f"{input_id} must remain within 256 UTF-8 bytes.")
+        for widget_id, widget in self.widgets.items():
+            if self._input_id(widget) == input_id:
+                self.values[widget_id] = value
+
+    def _input_value(self, input_id: str) -> str:
+        for widget_id, widget in self.widgets.items():
+            if self._input_id(widget) == input_id:
+                return self.values.get(widget_id, "")
+        return ""
+
+    def _publish_output(self, output_id: str, value: str) -> None:
+        for widget_id, widget in self.widgets.items():
+            if self._output_id(widget) == output_id:
+                self.values[widget_id] = value
+
+    def _execution_pairs(self) -> list[tuple[str, str]]:
+        public_io = self.unit.get("public_io", {})
+        inputs = public_io.get("inputs", [])
+        outputs = public_io.get("outputs", [])
+        default_input = inputs[0].get("id") if inputs else ""
+        default_output = outputs[0].get("id") if outputs else ""
+        pairs: list[tuple[str, str]] = []
+        for widget in self.widgets.values():
+            role = "control" if widget.get("class_ref") == "frog.widgets.path_control" else "indicator"
+            if role != "control":
+                continue
+            input_id = self._input_id(widget)
+            if not input_id:
+                continue
+            output_id = str(widget.get("props", {}).get("binding.output_id", ""))
+            if not output_id and input_id == default_input:
+                output_id = str(default_output)
+            if output_id:
+                pairs.append((input_id, output_id))
+        return pairs
+
+    def execute_all(self, control_values: dict[str, str]) -> dict[str, Any]:
+        for input_id, value in control_values.items():
+            self._set_input_value(input_id, value)
+        for input_id, output_id in self._execution_pairs():
+            result = self._input_value(input_id)
+            self._publish_output(output_id, result)
+            if output_id == self.unit.get("public_io", {}).get("outputs", [{}])[0].get("id"):
+                self.last_result = result
+        return self.execution_artifact()
+
+    def execute(self, control_value: str | None = None) -> dict[str, Any]:
+        values = {"input_path": str(control_value)} if control_value is not None else {}
+        return self.execute_all(values)
+
+    def execute_all_with_native_kernel_bridge(
+        self,
+        bridge: NativeStringKernelBridge,
+        control_values: dict[str, str],
+    ) -> dict[str, Any]:
+        if bridge.manifest.source_lowered_unit != "Examples/09_path_value_roundtrip/main.lowering.json":
+            raise RuntimeError("Unexpected native path kernel source lowered unit.")
+        for input_id, value in control_values.items():
+            self._set_input_value(input_id, value)
+        for input_id, output_id in self._execution_pairs():
+            result = bridge.run(self._input_value(input_id))
+            if not result.ok:
+                raise RuntimeError(result.diagnostic or "native path kernel execution failed.")
+            self._publish_output(output_id, result.result)
+            if output_id == self.unit.get("public_io", {}).get("outputs", [{}])[0].get("id"):
+                self.last_result = result.result
+        return self.execution_artifact()
+
+    def execute_with_native_kernel_bridge(
+        self,
+        bridge: NativeStringKernelBridge,
+        control_value: str | None = None,
+    ) -> dict[str, Any]:
+        values = {"input_path": str(control_value)} if control_value is not None else {}
+        return self.execute_all_with_native_kernel_bridge(bridge, values)
+
+    def _runtime_for(self, widget_id: str) -> dict[str, Any]:
+        widget = self.widgets[widget_id]
+        props = dict(widget.get("props", {}))
+        visual = dict(widget.get("visual", {}))
+        binding = self.contract_bindings.get(widget_id, {})
+        runtime = {
+            "value": self.values.get(widget_id, ""),
+            "path.display_value": self.values.get(widget_id, ""),
+            "path.kind": props.get("path.kind", "file"),
+            "path.validation_state": props.get("path.validation_state", "unknown"),
+            "label.text": props.get("label.text", ""),
+            "caption.text": props.get("caption.text", widget_id),
+            "asset_ref": visual.get("asset_ref"),
+            "realization.variant": props.get("realization.variant", "rectangular_field"),
+        }
+        if "public_input_id" in binding:
+            runtime["binding.public_input_id"] = binding["public_input_id"]
+        if "public_output_id" in binding:
+            runtime["binding.public_output_id"] = binding["public_output_id"]
+        for key in [
+            "caption.visible",
+            "caption.anchor.x",
+            "caption.anchor.y",
+            "caption.align.horizontal",
+            "caption.style.text_color",
+            "display.icon_visible",
+            "display.validation_marker_visible",
+            "display.text_overflow_visible",
+            "browse.enabled",
+            "browse.button_visible",
+            "style.frame.fill_color",
+            "style.frame.border_color",
+            "style.frame.border_width",
+            "style.path_face.fill_color",
+            "style.path_face.fill_color.hover",
+            "style.path_face.border_color",
+            "style.path_face.border_color.hover",
+            "style.path_face.border_width",
+            "style.path_display.color",
+            "style.path_display.font_size",
+            "style.path_display.font_weight",
+            "style.path_display.padding_inline",
+            "style.path_display.baseline_offset",
+            "style.path_display.line_height",
+            "style.path_icon.fill_color",
+            "style.path_icon.front_fill_color",
+            "style.path_icon.stroke_color",
+            "style.path_icon.highlight_color",
+            "style.browse_button.fill_color",
+            "style.browse_button.fill_color.hover",
+            "style.browse_button.border_color",
+            "style.browse_button.border_color.hover",
+            "style.browse_button.border_width",
+            "style.browse_button.text_color",
+            "style.browse_button.text_font_size",
+            "binding.preview_input_id",
+            "binding.preview_output_id",
+            "binding.input_id",
+            "binding.output_id",
+            "interaction.enabled",
+            "interaction.read_only",
+        ]:
+            if key in props:
+                runtime[key] = props[key]
+        return runtime
+
+    def execution_artifact(self) -> dict[str, Any]:
+        widgets = []
+        ui_outputs = {}
+        for widget_id, widget in self.widgets.items():
+            role = "control" if widget.get("class_ref") == "frog.widgets.path_control" else "indicator"
+            ui_outputs[widget_id] = self.values.get(widget_id, "")
+            widgets.append({
+                "widget_id": widget_id,
+                "class_ref": widget["class_ref"],
+                "role": role,
+                "layout": dict(widget["layout"]),
+                "runtime": self._runtime_for(widget_id),
+            })
+        return {
+            "artifact_kind": "frog_runtime_execution_result",
+            "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+            "status": "ok",
+            "contract_ref": {
+                "unit_ids": ["main"],
+                "backend_family": self.contract["backend_family"],
+                "source_ref": dict(self.contract["source_ref"]),
+            },
+            "execution_summary": {
+                "mode": "path_value_roundtrip",
+                "executed_unit": "main",
+                "operation": "copy",
+                "input_path": self._input_value("input_path"),
+                "result_path": self.last_result,
+            },
+            "outputs": {"public": {"result_path": self.last_result}, "ui": ui_outputs},
+            "ui_runtime": {
+                "panel": {
+                    "panel_id": self.panel["panel_id"],
+                    "title": self.panel["title"],
+                    "class_ref": self.panel["class_ref"],
+                    "layout": dict(self.panel["layout"]),
+                },
+                "widgets": widgets,
+            },
+            "diagnostics": [],
+        }
+
+
+def load_path_svg_geometry(asset_path: Path | None) -> dict[str, float]:
+    geometry = {
+        "view_width": 520.0,
+        "view_height": 150.0,
+        "caption_x": 16.0,
+        "caption_y": 46.0,
+        "path_face_x": 22.0,
+        "path_face_y": 78.0,
+        "path_face_width": 390.0,
+        "path_face_height": 36.0,
+        "path_text_x": 56.0,
+        "path_text_y": 96.0,
+        "browse_button_x": 424.0,
+        "browse_button_y": 78.0,
+        "browse_button_width": 34.0,
+        "browse_button_height": 36.0,
+    }
+    if asset_path is None or not asset_path.exists():
+        return geometry
+    svg = asset_path.read_text(encoding="utf-8")
+    viewbox = re.search(r"\bviewBox=[\"']([^\"']+)[\"']", svg)
+    if viewbox:
+        parts = viewbox.group(1).replace(",", " ").split()
+        if len(parts) == 4:
+            try:
+                width = float(parts[2])
+                height = float(parts[3])
+                if width > 0 and height > 0:
+                    geometry["view_width"] = width
+                    geometry["view_height"] = height
+            except ValueError:
+                pass
+    geometry["caption_x"] = svg_attribute_float(svg, "caption_text", "x", geometry["caption_x"])
+    geometry["caption_y"] = svg_attribute_float(svg, "caption_text", "y", geometry["caption_y"])
+    geometry["path_face_x"] = svg_attribute_float(svg, "path_face", "x", geometry["path_face_x"])
+    geometry["path_face_y"] = svg_attribute_float(svg, "path_face", "y", geometry["path_face_y"])
+    geometry["path_face_width"] = svg_attribute_float(svg, "path_face", "width", geometry["path_face_width"])
+    geometry["path_face_height"] = svg_attribute_float(svg, "path_face", "height", geometry["path_face_height"])
+    geometry["path_text_x"] = svg_attribute_float(svg, "path_display", "x", geometry["path_text_x"])
+    geometry["path_text_y"] = svg_attribute_float(svg, "path_display", "y", geometry["path_text_y"])
+    geometry["browse_button_x"] = svg_attribute_float(svg, "browse_button", "x", geometry["browse_button_x"])
+    geometry["browse_button_y"] = svg_attribute_float(svg, "browse_button", "y", geometry["browse_button_y"])
+    geometry["browse_button_width"] = svg_attribute_float(svg, "browse_button", "width", geometry["browse_button_width"])
+    geometry["browse_button_height"] = svg_attribute_float(svg, "browse_button", "height", geometry["browse_button_height"])
+    return geometry
+
+
+def render_path_skin(asset_path: Path | None, runtime: dict[str, Any]) -> str:
+    if asset_path is None or not asset_path.exists():
+        return "<div class='path-skin missing-skin'></div>"
+    icon_visible = runtime_bool(runtime, "display.icon_visible", True)
+    browse_visible = runtime_bool(runtime, "browse.button_visible", False)
+    validation_visible = runtime_bool(runtime, "display.validation_marker_visible", False)
+    overflow_visible = runtime_bool(runtime, "display.text_overflow_visible", False)
+    face_fill = safe_css_color(runtime.get("style.path_face.fill_color"), "#ffffff")
+    face_stroke = safe_css_color(runtime.get("style.path_face.border_color"), "#64748b")
+    button_fill = safe_css_color(runtime.get("style.browse_button.fill_color"), "#f8fafc")
+    button_stroke = safe_css_color(runtime.get("style.browse_button.border_color"), "#64748b")
+    style = (
+        "--frog-path-label-display:none;"
+        "--frog-path-caption-display:none;"
+        f"--frog-path-frame-fill:{html.escape(safe_css_color(runtime.get('style.frame.fill_color'), 'transparent'))};"
+        f"--frog-path-frame-stroke:{html.escape(safe_css_color(runtime.get('style.frame.border_color'), 'transparent'))};"
+        f"--frog-path-frame-stroke-width:{html.escape(safe_css_length(runtime.get('style.frame.border_width'), '0px'))};"
+        f"--frog-path-face-fill:{html.escape(face_fill)};"
+        f"--frog-path-face-stroke:{html.escape(face_stroke)};"
+        f"--frog-path-face-stroke-width:{html.escape(safe_css_length(runtime.get('style.path_face.border_width'), '2px'))};"
+        f"--frog-path-face-fill-hover:{html.escape(safe_css_color(runtime.get('style.path_face.fill_color.hover'), face_fill))};"
+        f"--frog-path-face-stroke-hover:{html.escape(safe_css_color(runtime.get('style.path_face.border_color.hover'), face_stroke))};"
+        f"--frog-path-text-fill:{html.escape(safe_css_color(runtime.get('style.path_display.color'), '#111827'))};"
+        f"--frog-path-text-font-size:{html.escape(safe_css_length(runtime.get('style.path_display.font_size'), '15px'))};"
+        f"--frog-path-text-font-weight:{html.escape(safe_css_font_weight(runtime.get('style.path_display.font_weight'), '400'))};"
+        f"--frog-path-button-fill:{html.escape(button_fill)};"
+        f"--frog-path-button-fill-hover:{html.escape(safe_css_color(runtime.get('style.browse_button.fill_color.hover'), button_fill))};"
+        f"--frog-path-button-stroke:{html.escape(button_stroke)};"
+        f"--frog-path-button-stroke-hover:{html.escape(safe_css_color(runtime.get('style.browse_button.border_color.hover'), button_stroke))};"
+        f"--frog-path-button-stroke-width:{html.escape(safe_css_length(runtime.get('style.browse_button.border_width'), '1px'))};"
+        f"--frog-path-button-text-fill:{html.escape(safe_css_color(runtime.get('style.browse_button.text_color'), '#111827'))};"
+        f"--frog-path-button-text-font-size:{html.escape(safe_css_length(runtime.get('style.browse_button.text_font_size'), '13px'))};"
+        f"--frog-path-icon-display:{'inline' if icon_visible else 'none'};"
+        f"--frog-path-icon-fill:{html.escape(safe_css_color(runtime.get('style.path_icon.fill_color'), '#facc15'))};"
+        f"--frog-path-icon-front-fill:{html.escape(safe_css_color(runtime.get('style.path_icon.front_fill_color'), '#fde68a'))};"
+        f"--frog-path-icon-stroke:{html.escape(safe_css_color(runtime.get('style.path_icon.stroke_color'), '#b45309'))};"
+        f"--frog-path-icon-highlight:{html.escape(safe_css_color(runtime.get('style.path_icon.highlight_color'), '#fff7cc'))};"
+        f"--frog-path-browse-display:{'inline' if browse_visible else 'none'};"
+        f"--frog-path-validation-display:{'inline' if validation_visible else 'none'};"
+        f"--frog-path-overflow-display:{'inline' if overflow_visible else 'none'};"
+        "--frog-path-focus-display:none;"
+    )
+    return f"<div class='path-skin' aria-hidden='true' style='{style}'>{asset_path.read_text(encoding='utf-8')}</div>"
+
+
+def render_path_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
+    layout = widget["layout"]
+    runtime = widget["runtime"]
+    is_control = widget["role"] == "control"
+    geometry = load_path_svg_geometry(asset_path)
+    asset_ref = str(runtime.get("asset_ref", ""))
+    asset_route = f"/asset/{asset_ref.split(':', 1)[1]}" if asset_ref.startswith("asset:") else ""
+    icon_visible = runtime_bool(runtime, "display.icon_visible", True)
+    text_x = max(geometry["path_face_x"], geometry["path_text_x"]) if icon_visible else geometry["path_face_x"]
+    text_width = max(0.0, geometry["path_face_width"] - (text_x - geometry["path_face_x"]))
+    value_style = svg_box_style(text_x, geometry["path_face_y"], text_width, geometry["path_face_height"], geometry)
+    browse_style = svg_box_style(
+        geometry["browse_button_x"],
+        geometry["browse_button_y"],
+        geometry["browse_button_width"],
+        geometry["browse_button_height"],
+        geometry,
+    )
+    browse_visible = runtime_bool(runtime, "browse.button_visible", is_control)
+    interaction_enabled = runtime_bool(runtime, "interaction.enabled", is_control)
+    input_id = str(
+        runtime.get("binding.public_input_id")
+        or runtime.get("binding.preview_input_id")
+        or f"{widget['widget_id']}_value"
+    )
+    value = html.escape(runtime_string(runtime, "value", ""))
+    caption = html.escape(runtime_string(runtime, "caption.text", widget["widget_id"]))
+    text_color = html.escape(safe_css_color(runtime.get("style.path_display.color"), "#111827"))
+    text_size = html.escape(safe_css_length(runtime.get("style.path_display.font_size"), "15px"))
+    text_weight = html.escape(safe_css_font_weight(runtime.get("style.path_display.font_weight"), "400"))
+    text_padding = html.escape(safe_css_length(runtime.get("style.path_display.padding_inline"), "8px"))
+    text_line_height = html.escape(
+        safe_css_length(
+            runtime.get("style.path_display.line_height"),
+            css_px((geometry["path_face_height"] / geometry["view_height"]) * layout_int(layout, "height", 120)),
+        )
+    )
+    text_baseline = html.escape(safe_css_signed_length(runtime.get("style.path_display.baseline_offset"), "0px"))
+    attrs = (
+        f" data-widget-id='{html.escape(widget['widget_id'])}'"
+        f" data-class-ref='{html.escape(widget['class_ref'])}'"
+        f" data-role='{html.escape(widget['role'])}'"
+        " data-frog-visual-law='wfrog-realization-state-map'"
+        f" data-frog-browse-visible='{'true' if browse_visible else 'false'}'"
+        f" data-asset-route='{html.escape(asset_route)}'"
+    )
+    style = (
+        f"position:absolute;left:{layout_int(layout, 'x', 0)}px;top:{layout_int(layout, 'y', 0)}px;"
+        f"width:{layout_int(layout, 'width', 300)}px;height:{layout_int(layout, 'height', 120)}px;"
+        f"--frog-path-button-fill:{html.escape(safe_css_color(runtime.get('style.browse_button.fill_color'), '#f8fafc'))};"
+        f"--frog-path-button-fill-hover:{html.escape(safe_css_color(runtime.get('style.browse_button.fill_color.hover'), '#e5eef9'))};"
+    )
+    caption_overlay = (
+        "<span class='path-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor'"
+        f" style='{caption_anchor_style(runtime, geometry)}color:{html.escape(safe_css_color(runtime.get('caption.style.text_color'), '#111827'))};'>{caption}</span>"
+    )
+    skin = render_path_skin(asset_path, runtime)
+    if is_control:
+        value_overlay = (
+            f"<input id='{html.escape(widget['widget_id'])}_value' name='{html.escape(input_id)}' type='text'"
+            " class='path-value-overlay path-control-editor' data-frog-part='path_display' data-svg-anchor='path_display.left_center'"
+            f" data-frog-input-id='{html.escape(input_id)}'"
+            f" style='{value_style}color:{text_color};font-size:{text_size};font-weight:{text_weight};padding:0 {text_padding};line-height:{text_line_height};transform:translateY({text_baseline});'"
+            f" value='{value}'{' disabled' if not interaction_enabled else ''}>"
+        )
+        value_overlay += (
+            f"<input id='{html.escape(widget['widget_id'])}_file_picker' type='file' class='path-file-picker' tabindex='-1' aria-hidden='true'"
+            f" onchange=\"frogPathPicked(this,'{html.escape(widget['widget_id'])}_value')\">"
+        )
+        if browse_visible:
+            value_overlay += (
+                f"<label for='{html.escape(widget['widget_id'])}_file_picker' class='path-browse-overlay' data-frog-part='browse_button'"
+                f" aria-label='Browse {caption}' style='{browse_style}'></label>"
+            )
+    else:
+        value_overlay = (
+            "<output class='path-value-overlay path-indicator-value' data-frog-part='path_display' data-svg-anchor='path_display.left_center'"
+            f" style='{value_style}color:{text_color};font-size:{text_size};font-weight:{text_weight};padding:0 {text_padding};line-height:{text_line_height};transform:translateY({text_baseline});'>{value}</output>"
+        )
+    return f"<section class='frog-widget path-widget {'path-control' if is_control else 'path-indicator'}'{attrs} style='{style}'>{skin}{caption_overlay}{value_overlay}</section>"
+
+
+class PathBrowserUiRuntime:
+    def __init__(
+        self,
+        *,
+        contract_path: str | Path | None = None,
+        wfrog_path: str | Path | None = None,
+        host: str = "127.0.0.1",
+        port: int = 0,
+        open_browser: bool = True,
+        native_kernel_bridge: NativeStringKernelBridge | None = None,
+    ) -> None:
+        self.runtime = PathRuntimeCore(contract_path=contract_path, wfrog_path=wfrog_path)
+        self.host = host
+        self.port = port
+        self.open_browser = open_browser
+        self.native_kernel_bridge = native_kernel_bridge
+        self.last_error: Optional[str] = None
+        self._httpd: Optional[ThreadingHTTPServer] = None
+
+    def build_server(self) -> ThreadingHTTPServer:
+        runtime = self
+
+        class Handler(BaseHTTPRequestHandler):
+            def do_GET(self) -> None:  # noqa: N802
+                runtime._handle_get(self)
+
+            def do_POST(self) -> None:  # noqa: N802
+                runtime._handle_post(self)
+
+            def log_message(self, format: str, *args: Any) -> None:  # noqa: A003
+                return
+
+        self._httpd = ThreadingHTTPServer((self.host, self.port), Handler)
+        return self._httpd
+
+    def run_once(self, input_value: str) -> dict[str, Any]:
+        if self.native_kernel_bridge is None:
+            return self.runtime.execute(input_value)
+        return self.runtime.execute_with_native_kernel_bridge(self.native_kernel_bridge, input_value)
+
+    def state_snapshot(self) -> dict[str, Any]:
+        return self.runtime.execution_artifact()
+
+    def render_html(self) -> str:
+        snapshot = self.state_snapshot()
+        panel = snapshot["ui_runtime"]["panel"]
+        widgets = snapshot["ui_runtime"]["widgets"]
+        panel_layout = panel["layout"]
+        error_block = ""
+        if self.last_error:
+            error_block = "<div class='diagnostic error'>" + html.escape(self.last_error) + "</div>"
+        uses_native_kernel = self.native_kernel_bridge is not None
+        rendered_widgets = "".join(
+            render_path_widget(widget, self.runtime.asset_map.get(str(widget["runtime"].get("asset_ref", "")).split(":", 1)[-1]))
+            for widget in widgets
+        )
+        return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{html.escape(panel['title'])}</title>
+<style>
+body{{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}}
+h1{{font-size:24px;margin:0 0 12px 0;}}
+p.meta{{margin:0 0 20px 0;color:#52606d;}}
+.runtime-facts{{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 18px 0;}}
+.runtime-facts div{{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}}
+.runtime-facts dt{{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}}
+.runtime-facts dd{{margin:0;color:#1f2933;font-size:12px;font-weight:600;}}
+.front-panel{{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}}
+.frog-widget{{position:absolute;box-sizing:border-box;}}
+.path-widget{{font-family:Segoe UI,Arial,sans-serif;}}
+.path-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;}}
+.path-skin svg{{width:100%;height:100%;display:block;}}
+.path-skin #label_text,.path-skin #caption_text,.path-skin #path_display{{display:none;}}
+.path-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}}
+.path-value-overlay{{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1;border:0;background:transparent;margin:0;}}
+.path-control-editor{{outline:0;appearance:none;-webkit-appearance:none;}}
+.path-control-editor:focus{{outline:0;}}
+.path-indicator-value{{display:flex;align-items:center;pointer-events:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}}
+.path-file-picker{{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}}
+.path-browse-overlay{{position:absolute;box-sizing:border-box;cursor:pointer;background:transparent;border:0;}}
+.path-control:hover .path-skin #path_face{{fill:var(--frog-path-face-fill-hover) !important;stroke:var(--frog-path-face-stroke-hover) !important;}}
+.path-control:hover .path-skin #browse_button{{fill:var(--frog-path-button-fill-hover) !important;}}
+.actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}
+button{{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}}
+.diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}
+.diagnostic.error{{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}}
+</style>
+<script>
+function frogPathPicked(input,targetId){{const target=document.getElementById(targetId);if(!target){{return;}}if(input.files&&input.files.length>0){{target.value=input.files[0].name;target.dispatchEvent(new Event('input',{{bubbles:true}}));target.dispatchEvent(new Event('change',{{bubbles:true}}));}}}}
+</script>
+</head>
+<body>
+<h1>{html.escape(panel['title'])}</h1>
+<p class="meta">Example 09 - .frog front panel + Default Path .wfrog realization assets + Python runtime</p>
+<dl class="runtime-facts" aria-label="Runtime facts">
+  <div><dt>Runtime</dt><dd>Python reference runtime</dd></div>
+  <div><dt>Execution</dt><dd>{'native kernel bridge' if uses_native_kernel else 'path contract executor'}</dd></div>
+  <div><dt>Compiler backend</dt><dd>{'LLVM native path kernel artifact' if uses_native_kernel else 'none for Example 09'}</dd></div>
+</dl>
+{error_block}
+<form method="post" action="/run">
+  <div class="front-panel" data-panel-id="{html.escape(panel['panel_id'])}" data-coordinate-space="panel_pixels" data-runtime-language="python" data-compiler-backend="{'llvm' if uses_native_kernel else 'none'}" data-execution-path="{'native_kernel_bridge' if uses_native_kernel else 'python_path_contract_executor'}" style="width:{panel_layout['width']}px;height:{panel_layout['height']}px;">
+    {rendered_widgets}
+  </div>
+  <div class="actions"><button type="submit">Run Example 09</button><a class="state-link" href="/state.json">state.json</a></div>
+</form>
+</body>
+</html>
+"""
+
+    def _serve_bytes(self, handler: BaseHTTPRequestHandler, body: bytes, content_type: str, status: int = 200) -> None:
+        handler.send_response(status)
+        handler.send_header("Content-Type", content_type)
+        handler.send_header("Content-Length", str(len(body)))
+        handler.end_headers()
+        handler.wfile.write(body)
+
+    def _redirect(self, handler: BaseHTTPRequestHandler, target: str) -> None:
+        handler.send_response(HTTPStatus.SEE_OTHER)
+        handler.send_header("Location", target)
+        handler.end_headers()
+
+    def _handle_get(self, handler: BaseHTTPRequestHandler) -> None:
+        parsed = urllib.parse.urlparse(handler.path)
+        path = parsed.path
+        if path == "/":
+            self._serve_bytes(handler, self.render_html().encode("utf-8"), "text/html; charset=utf-8")
+            return
+        if path == "/state.json":
+            self._serve_bytes(handler, json.dumps(self.state_snapshot(), indent=2).encode("utf-8"), "application/json; charset=utf-8")
+            return
+        if path.startswith("/asset/"):
+            asset_id = path.split("/", 2)[2]
+            asset_path = self.runtime.asset_map.get(asset_id)
+            if asset_path is None or not asset_path.exists():
+                self._serve_bytes(handler, b"missing asset", "text/plain; charset=utf-8", status=404)
+                return
+            self._serve_bytes(handler, asset_path.read_bytes(), "image/svg+xml")
+            return
+        self._serve_bytes(handler, b"not found", "text/plain; charset=utf-8", status=404)
+
+    def _handle_post(self, handler: BaseHTTPRequestHandler) -> None:
+        parsed = urllib.parse.urlparse(handler.path)
+        if parsed.path != "/run":
+            self._serve_bytes(handler, b"not found", "text/plain; charset=utf-8", status=404)
+            return
+        length = int(handler.headers.get("Content-Length", "0"))
+        body = handler.rfile.read(length).decode("utf-8")
+        form = urllib.parse.parse_qs(body, keep_blank_values=True)
+        control_values = {key: values[0] for key, values in form.items() if key.startswith("input_path")}
+        try:
+            if self.native_kernel_bridge is None:
+                self.runtime.execute_all(control_values)
+            else:
+                self.runtime.execute_all_with_native_kernel_bridge(self.native_kernel_bridge, control_values)
+            self.last_error = None
+        except Exception as exc:  # pragma: no cover
+            self.last_error = str(exc)
+        self._redirect(handler, "/")
+
+    def serve(self) -> None:
+        httpd = self.build_server()
+        address = f"http://{httpd.server_address[0]}:{httpd.server_address[1]}/"
+        if self.open_browser:
+            webbrowser.open(address)
+        print(address)
+        try:
+            httpd.serve_forever()
+        finally:
+            httpd.server_close()
+
+    def serve_in_thread(self) -> tuple[ThreadingHTTPServer, threading.Thread]:
+        httpd = self.build_server()
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        return httpd, thread
+
+
 def build_runtime(
     *,
     example: str | None = None,
@@ -2216,7 +2864,7 @@ def build_runtime(
     port: int = 0,
     open_browser: bool = True,
     native_kernel_bridge: NativeKernelBridge | NativeBoolKernelBridge | NativeStringKernelBridge | NativeEnumKernelBridge | None = None,
-) -> BrowserUiRuntime | BooleanBrowserUiRuntime | StringBrowserUiRuntime | EnumBrowserUiRuntime:
+) -> BrowserUiRuntime | BooleanBrowserUiRuntime | StringBrowserUiRuntime | EnumBrowserUiRuntime | PathBrowserUiRuntime:
     if wants_example06(example) or is_example06_contract(contract_path):
         return BooleanBrowserUiRuntime(
             contract_path=contract_path or default_example06_contract_path(),
@@ -2243,6 +2891,15 @@ def build_runtime(
             port=port,
             open_browser=open_browser,
             native_kernel_bridge=native_kernel_bridge if isinstance(native_kernel_bridge, NativeEnumKernelBridge) else None,
+        )
+    if wants_example09(example) or is_example09_contract(contract_path):
+        return PathBrowserUiRuntime(
+            contract_path=contract_path or default_example09_contract_path(),
+            wfrog_path=wfrog_path or default_example09_wfrog_path(),
+            host=host,
+            port=port,
+            open_browser=open_browser,
+            native_kernel_bridge=native_kernel_bridge if isinstance(native_kernel_bridge, NativeStringKernelBridge) else None,
         )
     return BrowserUiRuntime(
         contract_path=contract_path or default_contract_path(),

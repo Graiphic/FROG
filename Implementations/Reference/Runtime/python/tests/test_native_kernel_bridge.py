@@ -19,6 +19,8 @@ from Implementations.Reference.Runtime.python.ui_runtime import (
     BooleanRuntimeCore,
     EnumBrowserUiRuntime,
     EnumRuntimeCore,
+    PathBrowserUiRuntime,
+    PathRuntimeCore,
     StringBrowserUiRuntime,
     StringRuntimeCore,
     default_example06_contract_path,
@@ -27,6 +29,8 @@ from Implementations.Reference.Runtime.python.ui_runtime import (
     default_example07_wfrog_path,
     default_example08_contract_path,
     default_example08_wfrog_path,
+    default_example09_contract_path,
+    default_example09_wfrog_path,
 )
 
 
@@ -35,6 +39,7 @@ EXAMPLE05_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/05_bounded_
 EXAMPLE06_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/native_kernel_manifest.json"
 EXAMPLE07_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/07_string_value_roundtrip/native_kernel_manifest.json"
 EXAMPLE08_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/native_kernel_manifest.json"
+EXAMPLE09_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/09_path_value_roundtrip/native_kernel_manifest.json"
 
 
 def _build_library(tmp_path: Path, example: str, manifest: Path) -> Path:
@@ -140,6 +145,32 @@ def test_python_dynamic_native_kernel_bridge_executes_example08(tmp_path: Path) 
     html = ui.render_html()
     assert "native kernel bridge" in html
     assert "LLVM native enum kernel artifact" in html
+    assert 'data-compiler-backend="llvm"' in html
+    assert 'data-execution-path="native_kernel_bridge"' in html
+    assert "data-frog-visual-law='wfrog-realization-state-map'" in html
+
+
+def test_python_dynamic_native_kernel_bridge_executes_example09(tmp_path: Path) -> None:
+    library = _build_library(tmp_path, "09", EXAMPLE09_MANIFEST)
+    bridge = load_native_string_kernel_bridge(EXAMPLE09_MANIFEST, library)
+
+    assert bridge.run("C:/FROG/from_python_native.txt").result == "C:/FROG/from_python_native.txt"
+
+    core = PathRuntimeCore()
+    artifact = core.execute_with_native_kernel_bridge(bridge, "C:/FROG/from_python_native.txt")
+
+    assert artifact["outputs"]["public"]["result_path"] == "C:/FROG/from_python_native.txt"
+    assert artifact["outputs"]["ui"]["path_result"] == "C:/FROG/from_python_native.txt"
+
+    ui = PathBrowserUiRuntime(
+        contract_path=default_example09_contract_path(),
+        wfrog_path=default_example09_wfrog_path(),
+        native_kernel_bridge=bridge,
+        open_browser=False,
+    )
+    html = ui.render_html()
+    assert "native kernel bridge" in html
+    assert "LLVM native path kernel artifact" in html
     assert 'data-compiler-backend="llvm"' in html
     assert 'data-execution-path="native_kernel_bridge"' in html
     assert "data-frog-visual-law='wfrog-realization-state-map'" in html

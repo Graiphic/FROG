@@ -197,8 +197,8 @@ class NativeStringKernelBridge:
     def __init__(self, manifest: NativeKernelManifest, library_path: str | Path) -> None:
         if ctypes.sizeof(FrogStringRunResult) != 264:
             raise NativeKernelError("FrogStringRunResult ABI layout must be 264 bytes")
-        if manifest.entry_symbol != "frog_example07_run":
-            raise NativeKernelError("unexpected native string kernel entry symbol")
+        if manifest.entry_symbol not in {"frog_example07_run", "frog_example09_run"}:
+            raise NativeKernelError("unexpected native UTF-8 copy kernel entry symbol")
         if manifest.abi != "frog_string_utf8_256_to_result_status_outptr":
             raise NativeKernelError("NativeStringKernelBridge requires frog_string_utf8_256_to_result_status_outptr")
         self._manifest = manifest

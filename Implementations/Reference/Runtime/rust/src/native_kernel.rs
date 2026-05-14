@@ -263,8 +263,8 @@ impl NativeStringKernelBridge {
         )?;
         let manifest = load_native_kernel_manifest(manifest_path)?;
         ensure(
-            manifest.entry_symbol == "frog_example07_run",
-            "unexpected native string kernel entry symbol",
+            manifest.entry_symbol == "frog_example07_run" || manifest.entry_symbol == "frog_example09_run",
+            "unexpected native UTF-8 copy kernel entry symbol",
         )?;
         ensure(
             manifest.abi == "frog_string_utf8_256_to_result_status_outptr",
