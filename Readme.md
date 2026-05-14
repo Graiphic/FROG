@@ -367,6 +367,73 @@ Examples <code>01</code> through <code>05</code> carry the original source/FIR/l
 Examples <code>06</code> through <code>09</code> extend the front-panel widget runtime discipline across Boolean, String, Enum, and Path slices, with <code>.frog</code> front-panel instances, <code>.wfrog</code> Default realization packages, SVG public parts, runtime-family consumers, and native-kernel manifests where published.
 </p>
 
+<table>
+  <thead>
+    <tr>
+      <th>Example</th>
+      <th>Short purpose</th>
+      <th>Front-panel / widget surface</th>
+      <th>Current validation posture</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>01_pure_addition</code></td>
+      <td>Small pure arithmetic proof using public inputs and a public output.</td>
+      <td>None; pure dataflow slice.</td>
+      <td><code>.frog</code> &rarr; FIR &rarr; lowering &rarr; contract &rarr; runtime &rarr; LLVM module.</td>
+    </tr>
+    <tr>
+      <td><code>02_ui_value_roundtrip</code></td>
+      <td>First natural widget-value roundtrip from a UI value to a result.</td>
+      <td>Inline front-panel value participation.</td>
+      <td><code>.frog</code> &rarr; FIR &rarr; lowering &rarr; contract &rarr; runtime &rarr; LLVM module.</td>
+    </tr>
+    <tr>
+      <td><code>03_ui_property_write</code></td>
+      <td>Object-style widget reference plus <code>frog.ui.property_write</code>.</td>
+      <td>Inline front-panel property-write participation.</td>
+      <td><code>.frog</code> &rarr; FIR &rarr; lowering &rarr; contract &rarr; runtime &rarr; LLVM module.</td>
+    </tr>
+    <tr>
+      <td><code>04_stateful_feedback_delay</code></td>
+      <td>Explicit state and valid feedback through <code>frog.core.delay</code>.</td>
+      <td>None; stateful dataflow slice.</td>
+      <td><code>.frog</code> &rarr; FIR &rarr; lowering &rarr; contract &rarr; runtime &rarr; LLVM module.</td>
+    </tr>
+    <tr>
+      <td><code>05_bounded_ui_accumulator</code></td>
+      <td>Primary bounded LabVIEW-like accumulator corridor with state, UI binding, and native proof.</td>
+      <td>Numeric control and indicator through the Default Numeric realization.</td>
+      <td><code>.frog</code> &rarr; FIR &rarr; lowering &rarr; contract &rarr; LLVM kernel manifest &rarr; C++/Python/Rust runtime surfaces.</td>
+    </tr>
+    <tr>
+      <td><code>06_boolean_value_roundtrip</code></td>
+      <td>Boolean control-to-indicator roundtrip.</td>
+      <td>Boolean control and indicator through the Default Boolean realization.</td>
+      <td>Widget runtime slice with published FIR/lowering/contract, LLVM kernel manifest, and C++/Python/Rust runtime coverage.</td>
+    </tr>
+    <tr>
+      <td><code>07_string_value_roundtrip</code></td>
+      <td>Hello-world String control-to-indicator roundtrip.</td>
+      <td>String control and indicator through the Default String realization.</td>
+      <td>Widget runtime slice with published FIR/lowering/contract, LLVM kernel manifest, and C++/Python/Rust runtime coverage.</td>
+    </tr>
+    <tr>
+      <td><code>08_enum_value_roundtrip</code></td>
+      <td>Enum mode selection roundtrip.</td>
+      <td>Enum control and indicator through the Default Enum realization.</td>
+      <td>Widget runtime slice with published FIR/lowering/contract, LLVM kernel manifest, and C++/Python/Rust runtime coverage.</td>
+    </tr>
+    <tr>
+      <td><code>09_path_value_roundtrip</code></td>
+      <td>Path control-to-indicator roundtrip, including browse-button UI behavior.</td>
+      <td>Path control and indicator through the Default Path realization.</td>
+      <td>Widget runtime slice with published FIR/lowering/contract, LLVM kernel manifest, and C++/Python/Rust runtime coverage.</td>
+    </tr>
+  </tbody>
+</table>
+
 <p>
 The progression is intentionally staged:
 </p>
