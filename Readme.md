@@ -435,6 +435,14 @@ Examples <code>06</code> through <code>09</code> extend the front-panel widget r
 </table>
 
 <p>
+Widget examples are governed by the repository-visible
+<a href="./Examples/widget_validation_checklist.md">Widget Example Validation Checklist</a>.
+Treat that checklist as the quality gate before accepting a new or changed widget example:
+the visible front panel must be driven by <code>.frog</code> instance data,
+<code>.wfrog</code> realization packages, Default SVG public parts, and the manifest-declared runtime/kernel surface.
+</p>
+
+<p>
 The progression is intentionally staged:
 </p>
 
