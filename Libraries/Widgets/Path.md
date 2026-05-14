@@ -175,14 +175,12 @@ The logical widget name, visible caption, semantic path value, and shortened dis
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>path_face</code></li>
   <li><code>path_display</code></li>
   <li><code>browse_button</code> when present</li>
   <li><code>path_icon</code> when present</li>
   <li><code>validation_marker</code> when present</li>
   <li><code>text_overflow_marker</code> when present</li>
-  <li><code>focus_ring</code> when present</li>
 </ul>
 
 <hr/>
@@ -249,12 +247,10 @@ The logical widget name, visible caption, semantic path value, and shortened dis
 <h3>8.6 Style and realization</h3>
 
 <ul>
-  <li><code>style.frame.*</code></li>
   <li><code>style.path_face.*</code></li>
   <li><code>style.path_display.*</code></li>
   <li><code>style.browse_button.*</code></li>
   <li><code>style.validation_marker.*</code></li>
-  <li><code>style.focus_ring.*</code></li>
   <li><code>realization.family : string</code></li>
   <li><code>realization.variant : string</code></li>
   <li><code>realization.skin_id : string</code></li>

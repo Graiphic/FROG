@@ -62,6 +62,8 @@ void test_path_runtime_core_consumes_frog_instance_and_wfrog_assets() {
     assert_contains(path_svg, "data-frog-part=\"browse_button\"");
     assert_contains(path_svg, "data-frog-part=\"path_icon\"");
     assert_contains(path_svg, "data-frog-anchor=\"path_display.left_center\"");
+    assert_not_contains(path_svg, "data-frog-part=\"frame\"");
+    assert_not_contains(path_svg, "data-frog-part=\"focus_ring\"");
 }
 
 void test_headless_path_roundtrip() {
@@ -104,6 +106,11 @@ void test_path_browser_ui_surface() {
     assert_contains(html, "data-frog-part='browse_button'");
     assert_contains(html, "--frog-path-icon-display:none");
     assert_contains(html, "--frog-path-face-stroke-width:2px");
+    assert_contains(html, ".path-control:has(.path-control-editor:hover) .path-skin #path_face");
+    assert_contains(html, ".path-control:has(.path-browse-overlay:hover) .path-skin #browse_button");
+    assert_not_contains(html, ".path-control:hover .path-skin #path_face");
+    assert_not_contains(html, "--frog-path-frame-");
+    assert_not_contains(html, "--frog-path-focus-display");
     assert_contains(html, "name='input_path_no_icon' type='text'");
     assert_contains(html, "data-frog-input-id='input_path'");
     assert_contains(html, "data-frog-input-id='input_path_no_icon'");

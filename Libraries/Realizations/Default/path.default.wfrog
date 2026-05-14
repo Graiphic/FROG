@@ -87,15 +87,13 @@
         "root",
         "label",
         "caption",
-        "frame",
         "path_face",
         "path_display",
         "browse_button",
         "browse_button_text",
         "path_icon",
         "validation_marker",
-        "text_overflow_marker",
-        "focus_ring"
+        "text_overflow_marker"
       ],
       "supported_visual_states": [
         "normal",
@@ -126,13 +124,11 @@
         "root",
         "label",
         "caption",
-        "frame",
         "path_face",
         "path_display",
         "path_icon",
         "validation_marker",
-        "text_overflow_marker",
-        "focus_ring"
+        "text_overflow_marker"
       ],
       "supported_visual_states": [
         "normal",
@@ -210,12 +206,6 @@
       "semantic_member": "caption.text"
     },
     {
-      "part": "frame",
-      "binding_kind": "svg_shape",
-      "binding_selector": "[data-frog-part='frame']",
-      "style_binding_group": "style.frame"
-    },
-    {
       "part": "path_face",
       "binding_kind": "svg_shape",
       "binding_selector": "[data-frog-part='path_face']",
@@ -262,12 +252,6 @@
       "binding_kind": "svg_text_or_host_marker",
       "binding_selector": "[data-frog-part='text_overflow_marker']",
       "visibility_member": "display.text_overflow_visible"
-    },
-    {
-      "part": "focus_ring",
-      "binding_kind": "svg_shape",
-      "binding_selector": "[data-frog-part='focus_ring']",
-      "style_binding_group": "style.focus_ring"
     }
   ],
   "state_maps": [
@@ -394,11 +378,6 @@
       "target_operation": "set_visibility"
     },
     {
-      "member": "style.frame.*",
-      "target_part": "frame",
-      "target_operation": "apply_frame_style"
-    },
-    {
       "member": "style.path_face.*",
       "target_part": "path_face",
       "target_operation": "apply_path_face_style"
@@ -422,11 +401,6 @@
       "member": "style.browse_button.text.*",
       "target_part": "browse_button_text",
       "target_operation": "apply_text_style"
-    },
-    {
-      "member": "style.focus_ring.*",
-      "target_part": "focus_ring",
-      "target_operation": "apply_focus_ring_style"
     }
   ],
   "anchors": [

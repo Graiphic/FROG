@@ -1438,9 +1438,6 @@ impl PathBrowserUiRuntime {
                 "display.text_overflow_visible",
                 "browse.enabled",
                 "browse.button_visible",
-                "style.frame.fill_color",
-                "style.frame.border_color",
-                "style.frame.border_width",
                 "style.path_face.fill_color",
                 "style.path_face.fill_color.hover",
                 "style.path_face.border_color",
@@ -1553,8 +1550,8 @@ impl PathBrowserUiRuntime {
              .path-indicator-value{{display:flex;align-items:center;pointer-events:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}}\
              .path-file-picker{{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}}\
              .path-browse-overlay{{position:absolute;box-sizing:border-box;cursor:pointer;background:transparent;border:0;}}\
-             .path-control:hover .path-skin #path_face{{fill:var(--frog-path-face-fill-hover) !important;stroke:var(--frog-path-face-stroke-hover) !important;}}\
-             .path-control:hover .path-skin #browse_button{{fill:var(--frog-path-button-fill-hover) !important;}}\
+             .path-control:has(.path-control-editor:hover) .path-skin #path_face{{fill:var(--frog-path-face-fill-hover) !important;stroke:var(--frog-path-face-stroke-hover) !important;}}\
+             .path-control:has(.path-browse-overlay:hover) .path-skin #browse_button{{fill:var(--frog-path-button-fill-hover) !important;stroke:var(--frog-path-button-stroke-hover) !important;}}\
              .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}\
              button{{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}}\
              .diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}\
@@ -1746,10 +1743,7 @@ fn render_path_skin(asset_path: Option<&PathBuf>, runtime: &Value) -> String {
     let button_fill = safe_css_color(&runtime_string(runtime, "style.browse_button.fill_color", "#f8fafc"), "#f8fafc");
     let button_stroke = safe_css_color(&runtime_string(runtime, "style.browse_button.border_color", "#64748b"), "#64748b");
     format!(
-        "<div class='path-skin' aria-hidden='true' style='--frog-path-label-display:none;--frog-path-caption-display:none;--frog-path-frame-fill:{};--frog-path-frame-stroke:{};--frog-path-frame-stroke-width:{};--frog-path-face-fill:{};--frog-path-face-stroke:{};--frog-path-face-stroke-width:{};--frog-path-face-fill-hover:{};--frog-path-face-stroke-hover:{};--frog-path-text-fill:{};--frog-path-text-font-size:{};--frog-path-text-font-weight:{};--frog-path-button-fill:{};--frog-path-button-fill-hover:{};--frog-path-button-stroke:{};--frog-path-button-stroke-hover:{};--frog-path-button-stroke-width:{};--frog-path-button-text-fill:{};--frog-path-button-text-font-size:{};--frog-path-icon-display:{};--frog-path-icon-fill:{};--frog-path-icon-front-fill:{};--frog-path-icon-stroke:{};--frog-path-icon-highlight:{};--frog-path-browse-display:{};--frog-path-validation-display:{};--frog-path-overflow-display:{};--frog-path-focus-display:none;'>{}</div>",
-        escape_html(&safe_css_color(&runtime_string(runtime, "style.frame.fill_color", "transparent"), "transparent")),
-        escape_html(&safe_css_color(&runtime_string(runtime, "style.frame.border_color", "transparent"), "transparent")),
-        escape_html(&safe_css_length(&runtime_string(runtime, "style.frame.border_width", "0px"), "0px")),
+        "<div class='path-skin' aria-hidden='true' style='--frog-path-label-display:none;--frog-path-caption-display:none;--frog-path-face-fill:{};--frog-path-face-stroke:{};--frog-path-face-stroke-width:{};--frog-path-face-fill-hover:{};--frog-path-face-stroke-hover:{};--frog-path-text-fill:{};--frog-path-text-font-size:{};--frog-path-text-font-weight:{};--frog-path-button-fill:{};--frog-path-button-fill-hover:{};--frog-path-button-stroke:{};--frog-path-button-stroke-hover:{};--frog-path-button-stroke-width:{};--frog-path-button-text-fill:{};--frog-path-button-text-font-size:{};--frog-path-icon-display:{};--frog-path-icon-fill:{};--frog-path-icon-front-fill:{};--frog-path-icon-stroke:{};--frog-path-icon-highlight:{};--frog-path-browse-display:{};--frog-path-validation-display:{};--frog-path-overflow-display:{};'>{}</div>",
         escape_html(&face_fill),
         escape_html(&face_stroke),
         escape_html(&safe_css_length(&runtime_string(runtime, "style.path_face.border_width", "2px"), "2px")),

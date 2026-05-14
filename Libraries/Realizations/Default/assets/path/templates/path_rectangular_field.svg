@@ -16,9 +16,6 @@
       :root {
         --frog-path-label-display: none;
         --frog-path-caption-display: inline;
-        --frog-path-frame-fill: #ffffff;
-        --frog-path-frame-stroke: #000000;
-        --frog-path-frame-stroke-width: 6px;
         --frog-path-face-fill: #ffffff;
         --frog-path-face-stroke: #94a3b8;
         --frog-path-face-stroke-width: 1px;
@@ -40,12 +37,10 @@
         --frog-path-validation-display: none;
         --frog-path-overflow-display: none;
         --frog-path-browse-display: inline;
-        --frog-path-focus-display: none;
       }
 
       #label_text { display: var(--frog-path-label-display); fill: #6b7280; font-family: system-ui, Segoe UI, Arial, sans-serif; font-size: 12px; }
       #caption_text { display: var(--frog-path-caption-display); fill: #d00000; font-family: system-ui, Segoe UI, Arial, sans-serif; font-size: 18px; }
-      #frame { fill: var(--frog-path-frame-fill); stroke: var(--frog-path-frame-stroke); stroke-width: var(--frog-path-frame-stroke-width); }
       #path_face { fill: var(--frog-path-face-fill); stroke: var(--frog-path-face-stroke); stroke-width: var(--frog-path-face-stroke-width); }
       #path_display { fill: var(--frog-path-text-fill); font-family: system-ui, Segoe UI, Arial, sans-serif; font-size: var(--frog-path-text-font-size); font-weight: var(--frog-path-text-font-weight); }
       #browse_button { display: var(--frog-path-browse-display); fill: var(--frog-path-button-fill); stroke: var(--frog-path-button-stroke); stroke-width: var(--frog-path-button-stroke-width); }
@@ -56,7 +51,6 @@
       #path_icon .folder_highlight { fill: var(--frog-path-icon-highlight); opacity: 0.75; }
       #text_overflow_marker { display: var(--frog-path-overflow-display); }
       #validation_marker { display: var(--frog-path-validation-display); }
-      #focus_ring { display: var(--frog-path-focus-display); fill: none; stroke: #2f80ed; stroke-width: 3px; }
     </style>
   </defs>
 
@@ -74,24 +68,6 @@
           data-frog-anchor="caption.anchor"
           x="16"
           y="46">Path</text>
-
-    <rect id="focus_ring"
-          data-frog-part="focus_ring"
-          x="4"
-          y="60"
-          width="500"
-          height="62"
-          rx="6"
-          data-frog-bind="interaction.focused style.focus_ring.*" />
-
-    <rect id="frame"
-          data-frog-part="frame"
-          x="12"
-          y="68"
-          width="488"
-          height="52"
-          rx="0"
-          data-frog-bind="style.frame.*" />
 
     <rect id="path_face"
           data-frog-part="path_face"

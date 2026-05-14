@@ -2422,9 +2422,6 @@ class PathRuntimeCore:
             "display.text_overflow_visible",
             "browse.enabled",
             "browse.button_visible",
-            "style.frame.fill_color",
-            "style.frame.border_color",
-            "style.frame.border_width",
             "style.path_face.fill_color",
             "style.path_face.fill_color.hover",
             "style.path_face.border_color",
@@ -2562,9 +2559,6 @@ def render_path_skin(asset_path: Path | None, runtime: dict[str, Any]) -> str:
     style = (
         "--frog-path-label-display:none;"
         "--frog-path-caption-display:none;"
-        f"--frog-path-frame-fill:{html.escape(safe_css_color(runtime.get('style.frame.fill_color'), 'transparent'))};"
-        f"--frog-path-frame-stroke:{html.escape(safe_css_color(runtime.get('style.frame.border_color'), 'transparent'))};"
-        f"--frog-path-frame-stroke-width:{html.escape(safe_css_length(runtime.get('style.frame.border_width'), '0px'))};"
         f"--frog-path-face-fill:{html.escape(face_fill)};"
         f"--frog-path-face-stroke:{html.escape(face_stroke)};"
         f"--frog-path-face-stroke-width:{html.escape(safe_css_length(runtime.get('style.path_face.border_width'), '2px'))};"
@@ -2588,7 +2582,6 @@ def render_path_skin(asset_path: Path | None, runtime: dict[str, Any]) -> str:
         f"--frog-path-browse-display:{'inline' if browse_visible else 'none'};"
         f"--frog-path-validation-display:{'inline' if validation_visible else 'none'};"
         f"--frog-path-overflow-display:{'inline' if overflow_visible else 'none'};"
-        "--frog-path-focus-display:none;"
     )
     return f"<div class='path-skin' aria-hidden='true' style='{style}'>{asset_path.read_text(encoding='utf-8')}</div>"
 
@@ -2757,8 +2750,8 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 .path-indicator-value{{display:flex;align-items:center;pointer-events:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}}
 .path-file-picker{{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}}
 .path-browse-overlay{{position:absolute;box-sizing:border-box;cursor:pointer;background:transparent;border:0;}}
-.path-control:hover .path-skin #path_face{{fill:var(--frog-path-face-fill-hover) !important;stroke:var(--frog-path-face-stroke-hover) !important;}}
-.path-control:hover .path-skin #browse_button{{fill:var(--frog-path-button-fill-hover) !important;}}
+.path-control:has(.path-control-editor:hover) .path-skin #path_face{{fill:var(--frog-path-face-fill-hover) !important;stroke:var(--frog-path-face-stroke-hover) !important;}}
+.path-control:has(.path-browse-overlay:hover) .path-skin #browse_button{{fill:var(--frog-path-button-fill-hover) !important;stroke:var(--frog-path-button-stroke-hover) !important;}}
 .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}
 button{{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}}
 .diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}

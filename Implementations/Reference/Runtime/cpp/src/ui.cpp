@@ -819,9 +819,6 @@ std::string render_path_skin(const WidgetState& widget) {
     if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
         return "<div class='path-skin missing-skin'></div>";
     }
-    const auto frame_fill = safe_css_color(property_string(widget.properties, "style.frame.fill_color", "transparent"), "transparent");
-    const auto frame_stroke = safe_css_color(property_string(widget.properties, "style.frame.border_color", "transparent"), "transparent");
-    const auto frame_stroke_width = safe_css_length(property_string(widget.properties, "style.frame.border_width", "0px"), "0px");
     const auto face_fill = safe_css_color(property_string(widget.properties, "style.path_face.fill_color", "#ffffff"), "#ffffff");
     const auto face_stroke = safe_css_color(property_string(widget.properties, "style.path_face.border_color", "#64748b"), "#64748b");
     const auto face_stroke_width = safe_css_length(property_string(widget.properties, "style.path_face.border_width", "2px"), "2px");
@@ -849,9 +846,6 @@ std::string render_path_skin(const WidgetState& widget) {
     std::ostringstream style;
     style << "--frog-path-label-display:none;";
     style << "--frog-path-caption-display:none;";
-    style << "--frog-path-frame-fill:" << html_escape(frame_fill) << ";";
-    style << "--frog-path-frame-stroke:" << html_escape(frame_stroke) << ";";
-    style << "--frog-path-frame-stroke-width:" << html_escape(frame_stroke_width) << ";";
     style << "--frog-path-face-fill:" << html_escape(face_fill) << ";";
     style << "--frog-path-face-stroke:" << html_escape(face_stroke) << ";";
     style << "--frog-path-face-stroke-width:" << html_escape(face_stroke_width) << ";";
@@ -873,7 +867,6 @@ std::string render_path_skin(const WidgetState& widget) {
     style << "--frog-path-browse-display:" << (browse_visible ? "inline" : "none") << ";";
     style << "--frog-path-validation-display:" << (validation_visible ? "inline" : "none") << ";";
     style << "--frog-path-overflow-display:" << (overflow_visible ? "inline" : "none") << ";";
-    style << "--frog-path-focus-display:none;";
     style << "--frog-path-face-fill-hover:" << html_escape(face_hover_fill) << ";";
     style << "--frog-path-face-stroke-hover:" << html_escape(face_hover_stroke) << ";";
 
@@ -2398,8 +2391,8 @@ std::string PathBrowserUiRuntime::render_html() const {
             ".path-indicator-value{display:flex;align-items:center;pointer-events:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}"
             ".path-file-picker{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}"
             ".path-browse-overlay{position:absolute;box-sizing:border-box;cursor:pointer;background:transparent;border:0;}"
-            ".path-control:hover .path-skin #path_face{fill:var(--frog-path-face-fill-hover) !important;stroke:var(--frog-path-face-stroke-hover) !important;}"
-            ".path-control:hover .path-skin #browse_button{fill:var(--frog-path-button-fill-hover) !important;}"
+            ".path-control:has(.path-control-editor:hover) .path-skin #path_face{fill:var(--frog-path-face-fill-hover) !important;stroke:var(--frog-path-face-stroke-hover) !important;}"
+            ".path-control:has(.path-browse-overlay:hover) .path-skin #browse_button{fill:var(--frog-path-button-fill-hover) !important;stroke:var(--frog-path-button-stroke-hover) !important;}"
             ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
             "button{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}"
             ".diagnostic{margin:12px 0;padding:10px 12px;border-radius:6px;}"
