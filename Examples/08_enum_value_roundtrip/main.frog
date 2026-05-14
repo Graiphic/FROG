@@ -111,6 +111,9 @@
           "caption.anchor.y": 68,
           "caption.align.horizontal": "left",
           "caption.style.text_color": "#111827",
+          "caption.style.font_family": "system-ui, Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
           "items": [
             {
               "id": "idle",
@@ -219,6 +222,9 @@
           "caption.anchor.y": 68,
           "caption.align.horizontal": "left",
           "caption.style.text_color": "#111827",
+          "caption.style.font_family": "system-ui, Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
           "items": [
             {
               "id": "idle",

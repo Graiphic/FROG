@@ -29,7 +29,10 @@ fn slice07_ui_surface_consumes_frog_instance_and_wfrog_realization() {
     assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
     assert!(html.contains("--frog-string-text-region-fill-hover:#eef6ff;"));
     assert!(html.contains("--frog-string-text-region-stroke-hover:#2563eb;"));
+    assert!(html.contains("--frog-string-caption-font-size:14px;"));
+    assert!(html.contains("font-size:var(--frog-string-caption-font-size)"));
     assert!(html.contains(".string-control:hover .string-skin svg"));
+    assert!(!html.contains(".string-caption-overlay{position:absolute;transform:translateY(-50%);font-size:14px"));
     assert!(!html.contains("string-card"));
     assert!(!html.contains("Current runtime snapshot"));
     assert!(!html.contains("<pre>"));

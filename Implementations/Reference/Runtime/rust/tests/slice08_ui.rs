@@ -33,6 +33,9 @@ fn slice08_ui_surface_consumes_frog_instance_and_wfrog_realization() {
     assert!(html.contains("--frog-enum-selector-hover-fill:#60a5fa;"));
     assert!(html.contains("--frog-enum-dropdown-option-hover-fill:#2563eb;"));
     assert!(html.contains("--frog-enum-dropdown-option-selected-fill:#1d4ed8;"));
+    assert!(html.contains("--frog-enum-caption-font-size:14px;"));
+    assert!(html.contains("font-size:var(--frog-enum-caption-font-size)"));
+    assert!(!html.contains(".enum-caption-overlay{position:absolute;transform:translateY(-50%);font-size:14px"));
     assert!(!html.contains("enum-card"));
     assert!(!html.contains("Current runtime snapshot"));
 

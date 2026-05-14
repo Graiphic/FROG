@@ -5,6 +5,10 @@
 
 #include "runtime.hpp"
 
+#ifndef FROG_RUNTIME_CPP_SOURCE_DIR
+#define FROG_RUNTIME_CPP_SOURCE_DIR "."
+#endif
+
 namespace frog::runtime {
 
 namespace {
@@ -105,7 +109,7 @@ std::filesystem::path resolve_repo_path_for_contract(const Value& contract) {
     if (candidate.is_absolute()) {
         return candidate;
     }
-    return find_repo_root(std::filesystem::current_path()) / candidate;
+    return find_repo_root(std::filesystem::path(FROG_RUNTIME_CPP_SOURCE_DIR)) / candidate;
 }
 
 Value wfrog_panel(const Value* wfrog) {
@@ -258,19 +262,39 @@ Value execute_bounded_ui_case(const Value& contract, const Object& unit, const V
                 foreground = fg->second.as_string();
             }
         }
+        Object runtime{
+            {"value", Value(runtime_value)},
+            {"label", field_or_null(props, "label")},
+            {"visible", field_or_null(props, "visible")},
+            {"enabled", field_or_null(props, "enabled")},
+            {"foreground_color", Value(foreground)},
+            {"asset_ref", field_or_null(visual, "asset_ref")},
+        };
+        const auto copy_prop = [&](const std::string& key) {
+            const auto it = props.find(key);
+            if (it != props.end()) {
+                runtime.emplace(key, it->second);
+            }
+        };
+        copy_prop("caption.text");
+        copy_prop("caption.visible");
+        copy_prop("caption.anchor.x");
+        copy_prop("caption.anchor.y");
+        copy_prop("caption.align.horizontal");
+        copy_prop("style.caption.text_color");
+        copy_prop("style.caption.font_family");
+        copy_prop("style.caption.font_size");
+        copy_prop("style.caption.font_weight");
+        copy_prop("style.text_value.color");
+        copy_prop("style.text_value.font_family");
+        copy_prop("style.text_value.font_size");
+        copy_prop("style.text_value.font_weight");
         widgets.push_back(object({
             {"widget_id", Value(widget_id)},
             {"class_ref", widget.at("class_ref")},
             {"role", widget.at("role")},
             {"layout", widget.at("layout")},
-            {"runtime", object({
-                {"value", Value(runtime_value)},
-                {"label", field_or_null(props, "label")},
-                {"visible", field_or_null(props, "visible")},
-                {"enabled", field_or_null(props, "enabled")},
-                {"foreground_color", Value(foreground)},
-                {"asset_ref", field_or_null(visual, "asset_ref")},
-            })},
+            {"runtime", Value(runtime)},
         }));
     }
 
@@ -313,11 +337,17 @@ Value execute_boolean_case(const Value& contract, const Object& unit, const Valu
         };
         copy_prop("state_text.style.text_color.false");
         copy_prop("state_text.style.text_color.true");
+        copy_prop("state_text.style.font_size");
+        copy_prop("state_text.style.font_weight");
         copy_prop("state_text.visible");
         copy_prop("caption.visible");
         copy_prop("caption.anchor.x");
         copy_prop("caption.anchor.y");
         copy_prop("caption.align.horizontal");
+        copy_prop("caption.style.text_color");
+        copy_prop("caption.style.font_family");
+        copy_prop("caption.style.font_size");
+        copy_prop("caption.style.font_weight");
         copy_prop("style.frame.visible");
         copy_prop("style.outer.border_color.false");
         copy_prop("style.outer.border_color.true");

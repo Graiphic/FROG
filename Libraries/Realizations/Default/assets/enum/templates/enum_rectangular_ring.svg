@@ -23,11 +23,10 @@
           data-frog-part="caption"
           data-frog-member="caption.text"
           data-frog-anchor="caption.anchor"
+          data-frog-bind="caption.text caption.visible caption.anchor.* caption.align.horizontal caption.style.*"
           x="16"
           y="46"
-          font-family="system-ui, Segoe UI, Arial, sans-serif"
-          font-size="18"
-          fill="#d00000">Enum</text>
+          style="display: var(--frog-enum-caption-display, inline); fill: var(--frog-enum-caption-fill, #d00000); font-family: var(--frog-enum-caption-font-family, system-ui, Segoe UI, Arial, sans-serif); font-size: var(--frog-enum-caption-font-size, 18px); font-weight: var(--frog-enum-caption-font-weight, 400);">Enum</text>
 
     <rect id="focus_ring"
           data-frog-part="focus_ring"

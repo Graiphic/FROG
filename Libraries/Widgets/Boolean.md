@@ -99,6 +99,11 @@ A different shape does not automatically create a different boolean class.
 A rectangular boolean and a circular boolean remain <code>frog.widgets.boolean_control</code> or <code>frog.widgets.boolean_indicator</code> as long as their public contract remains the same.
 </p>
 
+<p>
+The rectangular Boolean realization is a Boolean value-control / value-indicator skin.
+It MUST NOT be treated as the standardized Button command widget; Button command behavior is defined separately by <code>frog.widgets.button</code>.
+</p>
+
 <hr/>
 
 <h2 id="label-caption-and-state-text-posture">4. Label, Caption, and State Text Posture</h2>

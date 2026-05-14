@@ -77,9 +77,12 @@ def test_slice05_ui_routes_and_state_match_shared_acceptance() -> None:
         assert "--frog-numeric-frame-stroke-width:2px" in html
         assert "--frog-numeric-step-fill:#5B9BD5" in html
         assert "--frog-numeric-step-fill-pressed:#2B4F7B" in html
-        assert "font-size: 12px;" in html
-        assert "font-weight:400;" in html
-        assert "color:#111827;" in html
+        assert "--frog-numeric-caption-font-size:12px;" in html
+        assert "--frog-numeric-caption-font-weight:400;" in html
+        assert "--frog-numeric-text-color:#111827;" in html
+        assert "--frog-numeric-text-font-size:11px;" in html
+        assert "font-size: var(--frog-numeric-caption-font-size)" in html
+        assert "font-size: 12px;\n  line-height: 1;\n  white-space: nowrap;" not in html
         assert "Current runtime snapshot" not in html
         assert "<pre>" not in html
         for route in acceptance["ui"]["expected_routes"]:

@@ -67,6 +67,15 @@ def default_example09_wfrog_path() -> Path:
     return repo_root() / "Examples" / "09_path_value_roundtrip" / "ui" / "path_panel.wfrog"
 
 
+def default_example10_contract_path() -> Path:
+    root = repo_root()
+    return root / "Implementations" / "Reference" / "ContractEmitter" / "examples" / "10_button_press_to_boolean.reference_host_runtime_ui_binding.contract.json"
+
+
+def default_example10_wfrog_path() -> Path:
+    return repo_root() / "Examples" / "10_button_press_to_boolean" / "ui" / "button_panel.wfrog"
+
+
 def wants_example06(value: str | None) -> bool:
     return value in {"06", "6", "example06", "06_boolean_value_roundtrip"}
 
@@ -81,6 +90,10 @@ def wants_example08(value: str | None) -> bool:
 
 def wants_example09(value: str | None) -> bool:
     return value in {"09", "9", "example09", "09_path_value_roundtrip"}
+
+
+def wants_example10(value: str | None) -> bool:
+    return value in {"10", "example10", "10_button_press_to_boolean"}
 
 
 def parse_bool_input(value: str | bool | None) -> bool:
@@ -136,6 +149,15 @@ def is_example09_contract(path: str | Path | None) -> bool:
         return False
     try:
         return contract_example_id(load_contract_json(Path(path))) == "09_path_value_roundtrip"
+    except Exception:
+        return False
+
+
+def is_example10_contract(path: str | Path | None) -> bool:
+    if path is None:
+        return False
+    try:
+        return contract_example_id(load_contract_json(Path(path))) == "10_button_press_to_boolean"
     except Exception:
         return False
 
@@ -439,8 +461,23 @@ def render_numeric_widget(entry: dict[str, Any], widget_state: Any) -> str:
     value = int(runtime.get("value", 0))
     label = str(widget_state.properties.get("caption.text", widget_state.properties.get("label", entry["widget_id"])))
     value_face_color = safe_css_color(widget_state.properties.get("foreground_color"), "#ffffff")
-    label_color = safe_css_color(widget_state.properties.get("label_color"), "#111827")
+    label_color = safe_css_color(
+        widget_state.properties.get("style.caption.text_color", widget_state.properties.get("label_color")),
+        "#111827",
+    )
+    label_size = safe_css_length(widget_state.properties.get("style.caption.font_size"), "12px")
     label_weight = safe_css_font_weight(widget_state.properties.get("style.caption.font_weight"), "400")
+    label_family = safe_css_font_family(
+        widget_state.properties.get("style.caption.font_family"),
+        "system-ui, Segoe UI, Arial, sans-serif",
+    )
+    text_color = safe_css_color(widget_state.properties.get("style.text_value.color"), "#111827")
+    text_size = safe_css_length(widget_state.properties.get("style.text_value.font_size"), "11px")
+    text_weight = safe_css_font_weight(widget_state.properties.get("style.text_value.font_weight"), "700")
+    text_family = safe_css_font_family(
+        widget_state.properties.get("style.text_value.font_family"),
+        "Consolas, Segoe UI Mono, monospace",
+    )
     visible = runtime_bool(runtime, "visible", True)
     enabled = runtime_bool(runtime, "enabled", True)
     minimum = runtime_int(widget_state.properties, "data_entry.minimum", 0)
@@ -450,6 +487,14 @@ def render_numeric_widget(entry: dict[str, Any], widget_state: Any) -> str:
     style = (
         f"position:absolute;left:{css_px(x)};top:{css_px(y)};"
         f"width:{css_px(width)};height:{css_px(height)};"
+        f"--frog-numeric-caption-color:{html.escape(label_color)};"
+        f"--frog-numeric-caption-font-size:{html.escape(label_size)};"
+        f"--frog-numeric-caption-font-weight:{html.escape(label_weight)};"
+        f"--frog-numeric-caption-font-family:{html.escape(label_family)};"
+        f"--frog-numeric-text-color:{html.escape(text_color)};"
+        f"--frog-numeric-text-font-size:{html.escape(text_size)};"
+        f"--frog-numeric-text-font-weight:{html.escape(text_weight)};"
+        f"--frog-numeric-text-font-family:{html.escape(text_family)};"
     )
     if not visible:
         style += "display:none;"
@@ -469,7 +514,7 @@ def render_numeric_widget(entry: dict[str, Any], widget_state: Any) -> str:
         value_part = (
             f"<input id='{html.escape(entry['widget_id'])}_value' name='input_value' type='number' min='{minimum}' max='{maximum}' step='{step}'"
             " class='numeric-value-overlay numeric-control-editor' data-frog-part='text_value' data-svg-anchor='text_value.center'"
-            f" style='{value_style}color:#111827;' value='{value}'"
+            f" style='{value_style}' value='{value}'"
             f"{' disabled' if not enabled else ''} />"
         )
         if bool(widget_state.properties.get("display.increment_buttons_visible", True)):
@@ -487,7 +532,7 @@ def render_numeric_widget(entry: dict[str, Any], widget_state: Any) -> str:
     else:
         value_part = (
             "<output class='numeric-value-overlay numeric-indicator-value' data-frog-part='text_value' data-svg-anchor='text_value.center'"
-            f" style='{value_style}color:#111827;'>{value}</output>"
+            f" style='{value_style}'>{value}</output>"
         )
 
     asset_attr = f" data-asset-route='{html.escape(asset_route)}'" if asset_route else ""
@@ -501,7 +546,7 @@ def render_numeric_widget(entry: dict[str, Any], widget_state: Any) -> str:
         f" style='{style}'>"
         f"{skin}"
         "<span class='numeric-label-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor'"
-        f" style='{label_style}color:{html.escape(label_color)};font-weight:{html.escape(label_weight)};'>{html.escape(label)}</span>"
+        f" style='{label_style}'>{html.escape(label)}</span>"
         f"{value_part}</section>"
     )
 
@@ -568,6 +613,310 @@ class BooleanRuntimeCore:
         return self._execution_artifact_from_values(self.current_value, self.last_result)
 
 
+class ButtonRuntimeCore:
+    def __init__(self, *, contract_path: str | Path | None = None, wfrog_path: str | Path | None = None) -> None:
+        self.contract_path = Path(contract_path or default_example10_contract_path()).resolve()
+        self.wfrog_path = Path(wfrog_path or default_example10_wfrog_path()).resolve()
+        self.contract = load_contract_json(self.contract_path)
+        self.package = load_contract_json(self.wfrog_path)
+        self.panel = load_source_front_panel_from_contract(self.contract, self.contract_path)
+        self.unit = self._load_and_validate()
+        self.asset_map = {
+            item["asset_id"]: (self.wfrog_path.parent / Path(item["path"])).resolve()
+            for item in self.package.get("svg_assets", [])
+        }
+        self.widgets = self._build_widgets()
+        self.last_trigger_pressed = False
+        self.last_result = False
+        self.execute(False)
+
+    def _load_and_validate(self) -> dict[str, Any]:
+        if self.contract.get("backend_family") != "reference_host_runtime_ui_binding":
+            raise RuntimeError("Unexpected backend family.")
+        if self.contract.get("example_id") != "10_button_press_to_boolean":
+            raise RuntimeError("Slice 10 expects Example 10.")
+
+        runtime_family = self.contract.get("assumptions", {}).get("runtime_family", {})
+        if runtime_family.get("name") != "reference_host_runtime_ui_binding":
+            raise RuntimeError("Unexpected runtime-family assumption name.")
+        if runtime_family.get("ui_binding", {}).get("widget_value_binding") is not True:
+            raise RuntimeError("Contract must require widget_value_binding.")
+
+        units = self.contract.get("units", [])
+        if len(units) != 1:
+            raise RuntimeError("Expected exactly one contract unit.")
+        unit = units[0]
+        if unit.get("unit_id") != "main":
+            raise RuntimeError("Expected unit_id main.")
+        if unit.get("kind") != "button_press_to_boolean_ui_unit":
+            raise RuntimeError("Unexpected runtime unit kind.")
+
+        public_io = unit.get("public_io", {})
+        inputs = public_io.get("inputs", [])
+        outputs = public_io.get("outputs", [])
+        if len(inputs) != 1 or inputs[0].get("id") != "trigger_pressed" or inputs[0].get("type") != "bool":
+            raise RuntimeError("Expected bool public input trigger_pressed.")
+        if len(outputs) != 1 or outputs[0].get("id") != "pressed" or outputs[0].get("type") != "bool":
+            raise RuntimeError("Expected bool public output pressed.")
+
+        execution_kernel = unit.get("execution_kernel", {})
+        if execution_kernel.get("operation") != "copy" or execution_kernel.get("src") != "trigger_pressed" or execution_kernel.get("dst") != "pressed":
+            raise RuntimeError("Slice 10 expects trigger_pressed -> pressed copy execution.")
+        if unit.get("effects", []) != []:
+            raise RuntimeError("Slice 10 does not use property writes.")
+
+        if self.panel.get("host_binding_ref") != "reference_host_default":
+            raise RuntimeError("Expected host_binding_ref reference_host_default.")
+        host_bindings = {entry.get("binding_id"): entry for entry in self.package.get("host_bindings", [])}
+        required = set(host_bindings.get("reference_host_default", {}).get("required_capabilities", []))
+        for capability in {
+            "window",
+            "basic_widget_rendering",
+            "widget_value_binding",
+            "button_press_binding",
+            "svg_part_overlay_alignment",
+        }:
+            if capability not in required:
+                raise RuntimeError(f"Missing host capability {capability}.")
+
+        panel_widgets = {entry["instance_id"]: entry for entry in self.panel.get("widgets", [])}
+        if "trigger_button" not in panel_widgets or "pressed_indicator" not in panel_widgets:
+            raise RuntimeError("Slice 10 requires trigger_button and pressed_indicator.")
+        for binding in unit.get("ui_bindings", {}).get("widgets", []):
+            widget_id = binding.get("widget_id")
+            panel_widget = panel_widgets.get(widget_id)
+            if panel_widget is None:
+                raise RuntimeError(f"Missing panel widget {widget_id}.")
+            if panel_widget.get("class_ref") != binding.get("widget_class"):
+                raise RuntimeError(f"Class mismatch for widget {widget_id}.")
+            if binding.get("value_type") != "bool":
+                raise RuntimeError("Slice 10 supports only bool widget values.")
+            if binding.get("widget_class") not in {"frog.widgets.button", "frog.widgets.boolean_indicator"}:
+                raise RuntimeError(f"Unsupported widget class {binding.get('widget_class')}.")
+        return unit
+
+    def _build_widgets(self) -> dict[str, dict[str, Any]]:
+        bindings_by_widget = {
+            binding["widget_id"]: binding
+            for binding in self.unit.get("ui_bindings", {}).get("widgets", [])
+        }
+        result: dict[str, dict[str, Any]] = {}
+        for panel_widget in self.panel.get("widgets", []):
+            class_ref = panel_widget.get("class_ref")
+            if class_ref not in {"frog.widgets.button", "frog.widgets.boolean_indicator"}:
+                continue
+            widget_id = panel_widget["instance_id"]
+            binding = bindings_by_widget.get(widget_id)
+            if binding is None:
+                raise RuntimeError(f"Slice 10 widget {widget_id} must have a contract binding.")
+
+            asset_ref = str(panel_widget.get("visual", {}).get("asset_ref", ""))
+            if not asset_ref.startswith("asset:"):
+                raise RuntimeError(f"Slice 10 widget {widget_id} must reference a .wfrog SVG asset.")
+            asset_id = asset_ref.split(":", 1)[1]
+            asset_path = self.asset_map.get(asset_id)
+            if asset_path is None or not asset_path.exists():
+                raise RuntimeError(f"Slice 10 widget {widget_id} asset path must exist.")
+
+            props = dict(panel_widget.get("props", {}))
+            is_button = class_ref == "frog.widgets.button"
+            props.setdefault("value", False)
+            props.setdefault("pressed", props.get("value", False))
+            props.setdefault("label.text", widget_id)
+            props.setdefault("caption.text", widget_id)
+            props.setdefault("interaction.enabled", is_button)
+            props.setdefault("interaction.read_only", not is_button)
+            props.setdefault("realization.variant", "rectangular" if is_button else "circular")
+            binding_data = binding.get("binding", {})
+            if "public_input_id" in binding_data:
+                props["binding.public_input_id"] = binding_data["public_input_id"]
+            if "public_output_id" in binding_data:
+                props["binding.public_output_id"] = binding_data["public_output_id"]
+
+            result[widget_id] = {
+                "widget_id": widget_id,
+                "class_ref": class_ref,
+                "role": binding.get("role", "control" if is_button else "indicator"),
+                "layout": dict(panel_widget.get("layout", {})),
+                "properties": props,
+                "asset_id": asset_id,
+                "asset_path": asset_path,
+            }
+        return result
+
+    def set_control_pressed(self, value: bool) -> None:
+        button = self.widgets["trigger_button"]
+        self.last_trigger_pressed = bool(value)
+        button["properties"]["pressed"] = bool(value)
+        button["properties"]["value"] = bool(value)
+
+    def control_pressed(self) -> bool:
+        props = self.widgets["trigger_button"]["properties"]
+        return bool(props.get("pressed", props.get("value", False)))
+
+    def execute(self, pressed_override: bool | None = None) -> dict[str, Any]:
+        if pressed_override is not None:
+            self.set_control_pressed(bool(pressed_override))
+        self.last_trigger_pressed = self.control_pressed()
+        self.last_result = self.last_trigger_pressed
+        self.widgets["pressed_indicator"]["properties"]["value"] = self.last_result
+        self.widgets["trigger_button"]["properties"]["pressed"] = False
+        self.widgets["trigger_button"]["properties"]["value"] = False
+        return self.execution_artifact()
+
+    def execute_with_native_kernel_bridge(
+        self,
+        bridge: NativeBoolKernelBridge,
+        pressed_override: bool | None = None,
+    ) -> dict[str, Any]:
+        if bridge.manifest.source_lowered_unit != "Examples/10_button_press_to_boolean/main.lowering.json":
+            raise RuntimeError("Unexpected native Button kernel source lowered unit.")
+        if pressed_override is not None:
+            self.set_control_pressed(bool(pressed_override))
+        self.last_trigger_pressed = self.control_pressed()
+        result = bridge.run(self.last_trigger_pressed)
+        if not result.ok:
+            raise RuntimeError(result.diagnostic or "native Button bool kernel execution failed.")
+        self.last_result = result.result
+        self.widgets["pressed_indicator"]["properties"]["value"] = self.last_result
+        self.widgets["trigger_button"]["properties"]["pressed"] = False
+        self.widgets["trigger_button"]["properties"]["value"] = False
+        return self.execution_artifact()
+
+    def _runtime_for(self, widget: dict[str, Any]) -> dict[str, Any]:
+        props = widget["properties"]
+        runtime: dict[str, Any] = {
+            "value": bool(props.get("value", False)),
+            "label.text": props.get("label.text", ""),
+            "caption.text": props.get("caption.text", widget["widget_id"]),
+            "asset_ref": f"asset:{widget['asset_id']}",
+            "realization.variant": props.get("realization.variant", ""),
+        }
+        if widget["widget_id"] == "trigger_button":
+            runtime["event.pressed"] = self.last_trigger_pressed
+        for key in [
+            "caption.visible",
+            "caption.anchor.x",
+            "caption.anchor.y",
+            "caption.align.horizontal",
+            "caption.style.text_color",
+            "caption.style.font_family",
+            "caption.style.font_size",
+            "caption.style.font_weight",
+            "label.visible",
+            "state_text.false_text",
+            "state_text.true_text",
+            "state_text.visible",
+            "state_text.anchor.x",
+            "state_text.anchor.y",
+            "state_text.style.text_color.false",
+            "state_text.style.text_color.true",
+            "state_text.style.font_size",
+            "state_text.style.font_weight",
+            "behavior.mechanical_action",
+            "behavior.latch_reset_policy",
+            "style.frame.fill_color",
+            "style.frame.border_color",
+            "style.frame.border_width",
+            "style.frame.visible",
+            "style.face.fill_color.false",
+            "style.face.fill_color.true",
+            "style.face.fill_color.hover_false",
+            "style.face.fill_color.hover_true",
+            "style.face.fill_color.pressed_false",
+            "style.face.fill_color.pressed_true",
+            "style.face.border_color.false",
+            "style.face.border_color.true",
+            "style.face.border_width",
+            "style.state_face.fill_color.false",
+            "style.state_face.fill_color.true",
+            "style.state_face.fill_color.hover_false",
+            "style.state_face.fill_color.hover_true",
+            "style.state_face.fill_color.pressed_false",
+            "style.state_face.fill_color.pressed_true",
+            "style.state_face.border_color.false",
+            "style.state_face.border_color.true",
+            "style.state_face.border_color.hover_false",
+            "style.state_face.border_color.hover_true",
+            "style.state_face.border_color.pressed_false",
+            "style.state_face.border_color.pressed_true",
+            "style.state_face.border_width",
+            "style.inner.left",
+            "style.inner.top",
+            "style.inner.width",
+            "style.inner.height",
+            "style.inner.fill_color.false",
+            "style.inner.fill_color.true",
+            "style.inner.border_color.false",
+            "style.inner.border_color.true",
+            "style.inner.border_width",
+            "style.focus_ring.visible",
+            "style.focus_ring.color",
+            "style.focus_ring.width",
+            "style.pressed.inset",
+            "style.transition.duration_ms",
+            "style.transition.timing",
+            "binding.public_input_id",
+            "binding.public_output_id",
+            "interaction.enabled",
+            "interaction.read_only",
+        ]:
+            if key in props:
+                runtime[key] = props[key]
+        return runtime
+
+    def execution_artifact(self) -> dict[str, Any]:
+        widgets = []
+        ui_outputs: dict[str, bool] = {}
+        for panel_widget in self.panel.get("widgets", []):
+            widget = self.widgets.get(panel_widget["instance_id"])
+            if widget is None:
+                continue
+            value = bool(widget["properties"].get("value", False))
+            ui_outputs[widget["widget_id"]] = value
+            widgets.append(
+                {
+                    "widget_id": widget["widget_id"],
+                    "class_ref": widget["class_ref"],
+                    "role": widget["role"],
+                    "layout": widget["layout"],
+                    "runtime": self._runtime_for(widget),
+                }
+            )
+
+        return {
+            "artifact_kind": "frog_runtime_execution_result",
+            "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+            "status": "ok",
+            "contract_ref": {
+                "unit_ids": [self.unit["unit_id"]],
+                "backend_family": self.contract["backend_family"],
+                "source_ref": self.contract["source_ref"],
+            },
+            "execution_summary": {
+                "mode": "button_press_to_boolean",
+                "executed_unit": self.unit["unit_id"],
+                "operation": "copy",
+                "trigger_pressed": self.last_trigger_pressed,
+                "pressed": self.last_result,
+            },
+            "outputs": {
+                "public": {"pressed": self.last_result},
+                "ui": ui_outputs,
+            },
+            "ui_runtime": {
+                "panel": {
+                    "panel_id": self.panel["panel_id"],
+                    "title": self.panel["title"],
+                    "class_ref": self.panel["class_ref"],
+                    "layout": self.panel["layout"],
+                },
+                "widgets": widgets,
+            },
+            "diagnostics": [],
+        }
+
+
 class StringRuntimeCore:
     def __init__(self, *, contract_path: str | Path | None = None, wfrog_path: str | Path | None = None) -> None:
         self.contract_path = Path(contract_path or default_example07_contract_path()).resolve()
@@ -623,6 +972,9 @@ class StringRuntimeCore:
             "caption.anchor.y",
             "caption.align.horizontal",
             "caption.style.text_color",
+            "caption.style.font_family",
+            "caption.style.font_size",
+            "caption.style.font_weight",
             "style.frame.fill_color",
             "style.frame.border_color",
             "style.frame.border_width",
@@ -817,6 +1169,9 @@ class EnumRuntimeCore:
             "caption.anchor.y",
             "caption.align.horizontal",
             "caption.style.text_color",
+            "caption.style.font_family",
+            "caption.style.font_size",
+            "caption.style.font_weight",
             "display.digital_display_visible",
             "display.increment_buttons_visible",
             "display.selector_visible",
@@ -1005,6 +1360,10 @@ def render_string_widget(widget: dict[str, Any], asset_path: Path | None) -> str
     style = (
         f"position:absolute;left:{layout['x']}px;top:{layout['y']}px;"
         f"width:{layout['width']}px;height:{layout['height']}px;"
+        f"--frog-string-caption-color:{html.escape(safe_css_color(runtime.get('caption.style.text_color'), '#111827'))};"
+        f"--frog-string-caption-font-size:{html.escape(safe_css_length(runtime.get('caption.style.font_size'), '14px'))};"
+        f"--frog-string-caption-font-weight:{html.escape(safe_css_font_weight(runtime.get('caption.style.font_weight'), '600'))};"
+        f"--frog-string-caption-font-family:{html.escape(safe_css_font_family(runtime.get('caption.style.font_family'), 'system-ui, Segoe UI, Arial, sans-serif'))};"
     )
     attrs = (
         f" data-widget-id='{html.escape(widget['widget_id'])}'"
@@ -1021,7 +1380,7 @@ def render_string_widget(widget: dict[str, Any], asset_path: Path | None) -> str
     skin = render_string_skin(asset_path, runtime)
     caption_overlay = (
         "<span class='string-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor'"
-        f" style='{label_style}color:{html.escape(safe_css_color(runtime.get('caption.style.text_color'), '#111827'))};'>{caption}</span>"
+        f" style='{label_style}'>{caption}</span>"
     )
     if is_control:
         value_overlay = (
@@ -1169,6 +1528,10 @@ def render_enum_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
     )
     style = (
         f"position:absolute;left:{layout['x']}px;top:{layout['y']}px;width:{layout['width']}px;height:{layout['height']}px;"
+        f"--frog-enum-caption-color:{html.escape(safe_css_color(runtime.get('caption.style.text_color'), '#111827'))};"
+        f"--frog-enum-caption-font-size:{html.escape(safe_css_length(runtime.get('caption.style.font_size'), '14px'))};"
+        f"--frog-enum-caption-font-weight:{html.escape(safe_css_font_weight(runtime.get('caption.style.font_weight'), '600'))};"
+        f"--frog-enum-caption-font-family:{html.escape(safe_css_font_family(runtime.get('caption.style.font_family'), 'system-ui, Segoe UI, Arial, sans-serif'))};"
         f"--frog-enum-selector-fill:{html.escape(selector_fill)};"
         f"--frog-enum-selector-stroke:{html.escape(selector_stroke)};"
         f"--frog-enum-selector-stroke-width:{html.escape(safe_css_length(runtime.get('style.selector_face.border_width'), '1px'))};"
@@ -1200,7 +1563,7 @@ def render_enum_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
     caption = html.escape(runtime_string(runtime, "caption.text", widget["widget_id"]))
     caption_overlay = (
         "<span class='enum-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor'"
-        f" style='{caption_anchor_style(runtime, geometry)}color:{html.escape(safe_css_color(runtime.get('caption.style.text_color'), '#111827'))};'>{caption}</span>"
+        f" style='{caption_anchor_style(runtime, geometry)}'>{caption}</span>"
     )
     skin = render_enum_skin(asset_path, runtime)
 
@@ -1267,21 +1630,41 @@ def render_boolean_widget(widget: dict[str, Any]) -> str:
     frame_visible = runtime_bool(runtime, "style.frame.visible", True)
     focus_visible = runtime_bool(runtime, "style.focus_ring.visible", False)
 
-    state_fill = state_property(runtime, "style.inner.fill_color", visual_state, "#8bd86f" if value else "#ffffff")
+    false_fill = state_property(runtime, "style.inner.fill_color", "false", "#ffffff")
+    true_fill = state_property(runtime, "style.inner.fill_color", "true", "#8bd86f")
+    state_fill = true_fill if value else false_fill
     hover_fill = state_property(runtime, "style.inner.fill_color", hover_state, "#9be884" if value else "#eef6ff")
     pressed_fill = state_property(runtime, "style.inner.fill_color", pressed_state, "#6fc657" if value else "#dbeafe")
-    state_border = state_property(runtime, "style.outer.border_color", visual_state, "#184a24" if value else "#111827")
+    false_border = state_property(runtime, "style.outer.border_color", "false", "#111827")
+    true_border = state_property(runtime, "style.outer.border_color", "true", "#184a24")
+    state_border = true_border if value else false_border
     hover_border = state_property(runtime, "style.outer.border_color", hover_state, "#166534" if value else "#2563eb")
     pressed_border = state_property(runtime, "style.outer.border_color", pressed_state, "#14532d" if value else "#1d4ed8")
-    state_inner_border = state_property(runtime, "style.inner.border_color", visual_state, state_border)
+    false_inner_border = state_property(runtime, "style.inner.border_color", "false", false_border)
+    true_inner_border = state_property(runtime, "style.inner.border_color", "true", true_border)
+    state_inner_border = true_inner_border if value else false_inner_border
     hover_inner_border = state_property(runtime, "style.inner.border_color", hover_state, hover_border)
     pressed_inner_border = state_property(runtime, "style.inner.border_color", pressed_state, pressed_border)
-    text_color = state_property(runtime, "state_text.style.text_color", visual_state, "#0b3d19" if value else "#111827")
+    false_text_color = state_property(runtime, "state_text.style.text_color", "false", "#111827")
+    true_text_color = state_property(runtime, "state_text.style.text_color", "true", "#0b3d19")
+    text_color = true_text_color if value else false_text_color
+    false_state_text = runtime_string(runtime, "state_text.false_text", "FALSE")
+    true_state_text = runtime_string(runtime, "state_text.true_text", "TRUE")
+    caption_color = safe_css_color(runtime.get("caption.style.text_color"), "#111827")
+    caption_size = safe_css_length(runtime.get("caption.style.font_size"), "18px")
+    caption_weight = safe_css_font_weight(runtime.get("caption.style.font_weight"), "600")
+    caption_family = safe_css_font_family(
+        runtime.get("caption.style.font_family"),
+        "system-ui, Segoe UI, Arial, sans-serif",
+    )
+    text_size = safe_css_length(runtime.get("state_text.style.font_size"), "18px")
+    text_weight = safe_css_font_weight(runtime.get("state_text.style.font_weight"), "700")
 
     inner_left = runtime_string(runtime, "style.inner.left", "52px" if variant == "circular" else "18px")
     inner_top = runtime_string(runtime, "style.inner.top", "23px" if variant == "circular" else "31px")
     inner_width = runtime_string(runtime, "style.inner.width", "56px" if variant == "circular" else "124px")
     inner_height = runtime_string(runtime, "style.inner.height", "56px" if variant == "circular" else "34px")
+    inner_border_width = safe_css_length(runtime.get("style.inner.border_width"), "2px")
     focus_color = safe_css_color(runtime.get("style.focus_ring.color"), "#2563eb")
     focus_width = safe_css_length(runtime.get("style.focus_ring.width"), "3px") if focus_visible else "0px"
     transition_ms = runtime_string(runtime, "style.transition.duration_ms", "120")
@@ -1295,6 +1678,14 @@ def render_boolean_widget(widget: dict[str, Any]) -> str:
         f" data-asset-ref='{html.escape(str(runtime.get('asset_ref', '')))}'"
         f" data-asset-route='{html.escape(asset_url(runtime.get('asset_ref')))}'"
         f" data-current-value='{'true' if value else 'false'}'"
+        f" data-frog-fill-false='{html.escape(false_fill)}'"
+        f" data-frog-fill-true='{html.escape(true_fill)}'"
+        f" data-frog-inner-border-false='{html.escape(false_inner_border)}'"
+        f" data-frog-inner-border-true='{html.escape(true_inner_border)}'"
+        f" data-frog-text-color-false='{html.escape(false_text_color)}'"
+        f" data-frog-text-color-true='{html.escape(true_text_color)}'"
+        f" data-frog-text-false='{html.escape(false_state_text)}'"
+        f" data-frog-text-true='{html.escape(true_state_text)}'"
         f" data-realization-variant='{html.escape(variant)}'"
         " data-frog-visual-law='wfrog-realization-state-map'"
         f" data-frog-visual-state='{visual_state}'"
@@ -1311,7 +1702,10 @@ def render_boolean_widget(widget: dict[str, Any]) -> str:
         f"--boolean-border:{state_border};--boolean-hover-border:{hover_border};--boolean-pressed-border:{pressed_border};"
         f"--boolean-inner-border:{state_inner_border};--boolean-hover-inner-border:{hover_inner_border};--boolean-pressed-inner-border:{pressed_inner_border};"
         f"--boolean-inner-left:{inner_left};--boolean-inner-top:{inner_top};--boolean-inner-width:{inner_width};--boolean-inner-height:{inner_height};"
-        f"--boolean-text:{text_color};--boolean-focus-color:{focus_color};--boolean-focus-width:{focus_width};"
+        f"--boolean-inner-border-width:{inner_border_width};"
+        f"--boolean-text:{text_color};--boolean-text-font-size:{text_size};--boolean-text-font-weight:{text_weight};"
+        f"--boolean-caption-color:{caption_color};--boolean-caption-font-size:{caption_size};--boolean-caption-font-weight:{caption_weight};--boolean-caption-font-family:{caption_family};"
+        f"--boolean-focus-color:{focus_color};--boolean-focus-width:{focus_width};"
         f"--boolean-transition:{transition_ms}ms {transition_timing};--boolean-pressed-inset:{pressed_inset};"
     )
     skin = (
@@ -1323,8 +1717,11 @@ def render_boolean_widget(widget: dict[str, Any]) -> str:
         f" style='{caption_anchor_style(runtime, geometry)}'>{html.escape(runtime_string(runtime, 'caption.text', widget['widget_id']))}</span>"
     )
     if state_text_visible:
-        text = runtime_string(runtime, "state_text.true_text" if value else "state_text.false_text", "TRUE" if value else "FALSE")
-        overlays += f"<span class='boolean-state-overlay' data-frog-part='state_text'>{html.escape(text)}</span>"
+        text = true_state_text if value else false_state_text
+        state_x = runtime_number(runtime, "state_text.anchor.x", 80.0)
+        state_y = runtime_number(runtime, "state_text.anchor.y", 50.0)
+        state_style = f"left:{css_percent(pct(state_x, geometry['view_width']))};top:{css_percent(pct(state_y, geometry['view_height']))};"
+        overlays += f"<span class='boolean-state-overlay' data-frog-part='state_text' data-svg-anchor='state_text.center' style='{state_style}'>{html.escape(text)}</span>"
 
     if is_control:
         return (
@@ -1332,6 +1729,313 @@ def render_boolean_widget(widget: dict[str, Any]) -> str:
             f" data-toggle-target='{next_value}' aria-pressed='{'true' if value else 'false'}'{attrs} style='{style}'>{skin}{overlays}</button>"
         )
     return f"<section class='frog-widget boolean-widget boolean-indicator' aria-readonly='true'{attrs} style='{style}'>{skin}{overlays}</section>"
+
+
+def load_button_svg_geometry(asset_path: Path | None) -> dict[str, float]:
+    geometry = {
+        "view_width": 340.0,
+        "view_height": 220.0,
+        "caption_x": 16.0,
+        "caption_y": 46.0,
+        "face_x": 26.0,
+        "face_y": 86.0,
+        "face_width": 288.0,
+        "face_height": 80.0,
+        "state_text_x": 170.0,
+        "state_text_y": 127.0,
+    }
+    if asset_path is None or not asset_path.exists():
+        return geometry
+    svg = asset_path.read_text(encoding="utf-8")
+    viewbox = re.search(r"\bviewBox=[\"']([^\"']+)[\"']", svg)
+    if viewbox:
+        parts = viewbox.group(1).replace(",", " ").split()
+        if len(parts) == 4:
+            try:
+                width = float(parts[2])
+                height = float(parts[3])
+                if width > 0 and height > 0:
+                    geometry["view_width"] = width
+                    geometry["view_height"] = height
+            except ValueError:
+                pass
+    geometry["caption_x"] = svg_attribute_float(svg, "caption_text", "x", geometry["caption_x"])
+    geometry["caption_y"] = svg_attribute_float(svg, "caption_text", "y", geometry["caption_y"])
+    geometry["face_x"] = svg_attribute_float(svg, "face", "x", geometry["face_x"])
+    geometry["face_y"] = svg_attribute_float(svg, "face", "y", geometry["face_y"])
+    geometry["face_width"] = svg_attribute_float(svg, "face", "width", geometry["face_width"])
+    geometry["face_height"] = svg_attribute_float(svg, "face", "height", geometry["face_height"])
+    geometry["state_text_x"] = svg_attribute_float(svg, "state_text", "x", geometry["state_text_x"])
+    geometry["state_text_y"] = svg_attribute_float(svg, "state_text", "y", geometry["state_text_y"])
+    return geometry
+
+
+def button_anchor_style(x: float, y: float, geometry: dict[str, float]) -> str:
+    return svg_anchor_style(x, y, geometry)
+
+
+def button_box_style(x: float, y: float, width: float, height: float, geometry: dict[str, float]) -> str:
+    return svg_box_style(x, y, width, height, geometry)
+
+
+def button_caption_anchor_style(runtime: dict[str, Any], geometry: dict[str, float]) -> str:
+    x = runtime_number(runtime, "caption.anchor.x", geometry["caption_x"])
+    y = runtime_number(runtime, "caption.anchor.y", geometry["caption_y"])
+    align = runtime_string(runtime, "caption.align.horizontal", "left")
+    style = button_anchor_style(x, y, geometry)
+    style += f"transform:{caption_transform_for_align(align)};"
+    style += f"text-align:{caption_text_align(align)};"
+    style += f"color:{html.escape(safe_css_color(runtime.get('caption.style.text_color'), '#111827'))};"
+    if not runtime_bool(runtime, "caption.visible", True):
+        style += "display:none;"
+    return style
+
+
+def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
+    runtime = widget["runtime"]
+    layout = widget["layout"]
+    geometry = load_button_svg_geometry(asset_path)
+    value = bool(runtime.get("pressed", runtime.get("value", False)))
+    visual_state = "true" if value else "false"
+    hover_state = "hover_true" if value else "hover_false"
+    pressed_state = "pressed_true" if value else "pressed_false"
+    transition_state = "transition_true_to_false" if value else "transition_false_to_true"
+    caption = runtime_string(runtime, "caption.text", widget["widget_id"])
+    false_state_text = runtime_string(runtime, "state_text.false_text", "OFF")
+    true_state_text = runtime_string(runtime, "state_text.true_text", "ON")
+    state_text = true_state_text if value else false_state_text
+    input_id = runtime_string(runtime, "binding.public_input_id", "trigger_pressed")
+    state_text_visible = runtime_bool(runtime, "state_text.visible", True)
+
+    frame_fill = safe_css_color(runtime.get("style.frame.fill_color"), "transparent")
+    frame_stroke = safe_css_color(runtime.get("style.frame.border_color"), "transparent")
+    frame_width = safe_css_length(runtime.get("style.frame.border_width"), "0px")
+    face_fill = safe_css_color(state_property(runtime, "style.face.fill_color", visual_state, "#e2e8f0"), "#e2e8f0")
+    face_hover_fill = safe_css_color(state_property(runtime, "style.face.fill_color", hover_state, face_fill), face_fill)
+    face_pressed_fill = safe_css_color(state_property(runtime, "style.face.fill_color", pressed_state, face_fill), face_fill)
+    face_stroke = safe_css_color(state_property(runtime, "style.face.border_color", visual_state, "#334155"), "#334155")
+    face_stroke_width = safe_css_length(runtime.get("style.face.border_width"), "4px")
+    state_face_fill = safe_css_color(state_property(runtime, "style.state_face.fill_color", visual_state, "transparent"), "transparent")
+    state_face_hover_fill = safe_css_color(state_property(runtime, "style.state_face.fill_color", hover_state, state_face_fill), state_face_fill)
+    state_face_pressed_fill = safe_css_color(state_property(runtime, "style.state_face.fill_color", pressed_state, state_face_fill), state_face_fill)
+    state_face_stroke = safe_css_color(state_property(runtime, "style.state_face.border_color", visual_state, "transparent"), "transparent")
+    state_face_hover_stroke = safe_css_color(state_property(runtime, "style.state_face.border_color", hover_state, state_face_stroke), state_face_stroke)
+    state_face_pressed_stroke = safe_css_color(state_property(runtime, "style.state_face.border_color", pressed_state, state_face_stroke), state_face_stroke)
+    state_face_stroke_width = safe_css_length(runtime.get("style.state_face.border_width"), "0px")
+    caption_size = safe_css_length(runtime.get("caption.style.font_size"), "18px")
+    caption_weight = safe_css_font_weight(runtime.get("caption.style.font_weight"), "600")
+    caption_family = safe_css_font_family(runtime.get("caption.style.font_family"), "system-ui, Segoe UI, Arial, sans-serif")
+    false_text_color = safe_css_color(state_property(runtime, "state_text.style.text_color", "false", "#111827"), "#111827")
+    true_text_color = safe_css_color(state_property(runtime, "state_text.style.text_color", "true", "#06381c"), "#06381c")
+    text_color = true_text_color if value else false_text_color
+    text_size = safe_css_length(runtime.get("state_text.style.font_size"), "20px")
+    text_weight = safe_css_font_weight(runtime.get("state_text.style.font_weight"), "700")
+    focus_color = safe_css_color(runtime.get("style.focus_ring.color"), "#2563eb")
+    focus_width = safe_css_length(runtime.get("style.focus_ring.width"), "3px") if runtime_bool(runtime, "style.focus_ring.visible", True) else "0px"
+    pressed_inset = safe_css_length(runtime.get("style.pressed.inset"), "2px")
+    transition_ms = runtime_string(runtime, "style.transition.duration_ms", "120")
+    transition_timing = runtime_string(runtime, "style.transition.timing", "ease-out")
+    asset_route = asset_url(runtime.get("asset_ref"))
+
+    style = (
+        f"position:absolute;left:{css_px(layout_int(layout, 'x', 0))};top:{css_px(layout_int(layout, 'y', 0))};"
+        f"width:{css_px(layout_int(layout, 'width', 220))};height:{css_px(layout_int(layout, 'height', 140))};"
+        f"--frog-button-frame-fill:{html.escape(frame_fill)};"
+        f"--frog-button-frame-stroke:{html.escape(frame_stroke)};"
+        f"--frog-button-frame-stroke-width:{html.escape(frame_width)};"
+        f"--frog-button-face-fill:{html.escape(face_fill)};"
+        f"--frog-button-face-hover-fill:{html.escape(face_hover_fill)};"
+        f"--frog-button-face-pressed-fill:{html.escape(face_pressed_fill)};"
+        f"--frog-button-face-stroke:{html.escape(face_stroke)};"
+        f"--frog-button-face-stroke-width:{html.escape(face_stroke_width)};"
+        f"--frog-button-state-face-fill:{html.escape(state_face_fill)};"
+        f"--frog-button-state-face-hover-fill:{html.escape(state_face_hover_fill)};"
+        f"--frog-button-state-face-pressed-fill:{html.escape(state_face_pressed_fill)};"
+        f"--frog-button-state-face-stroke:{html.escape(state_face_stroke)};"
+        f"--frog-button-state-face-hover-stroke:{html.escape(state_face_hover_stroke)};"
+        f"--frog-button-state-face-pressed-stroke:{html.escape(state_face_pressed_stroke)};"
+        f"--frog-button-state-face-stroke-width:{html.escape(state_face_stroke_width)};"
+        f"--frog-button-caption-font-size:{html.escape(caption_size)};"
+        f"--frog-button-caption-font-weight:{html.escape(caption_weight)};"
+        f"--frog-button-caption-font-family:{html.escape(caption_family)};"
+        f"--frog-button-state-text-fill:{html.escape(text_color)};"
+        f"--frog-button-state-text-font-size:{html.escape(text_size)};"
+        f"--frog-button-state-text-font-weight:{html.escape(text_weight)};"
+        f"--frog-button-focus-color:{html.escape(focus_color)};"
+        f"--frog-button-focus-width:{html.escape(focus_width)};"
+        f"--frog-button-pressed-inset:{html.escape(pressed_inset)};"
+        f"--frog-button-transition:{html.escape(transition_ms)}ms {html.escape(transition_timing)};"
+    )
+    if not runtime_bool(runtime, "visible", True):
+        style += "display:none;"
+
+    state_text_overlay = ""
+    if state_text_visible:
+        state_x = runtime_number(runtime, "state_text.anchor.x", geometry["state_text_x"])
+        state_y = runtime_number(runtime, "state_text.anchor.y", geometry["state_text_y"])
+        state_text_overlay = (
+            "<span class='button-state-overlay' data-frog-part='state_text' data-svg-anchor='state_text.center'"
+            f" style='{button_anchor_style(state_x, state_y, geometry)}'>{html.escape(state_text)}</span>"
+        )
+
+    return (
+        "<div class='frog-widget button-widget button-control'"
+        f" data-widget-id='{html.escape(widget['widget_id'])}'"
+        f" data-class-ref='{html.escape(widget['class_ref'])}'"
+        f" data-role='{html.escape(widget['role'])}'"
+        f" data-asset-ref='{html.escape(str(runtime.get('asset_ref', '')))}'"
+        f" data-asset-route='{html.escape(asset_route)}'"
+        f" data-current-value='{'true' if value else 'false'}'"
+        f" data-realization-variant='{html.escape(runtime_string(runtime, 'realization.variant', 'rectangular'))}'"
+        " data-frog-visual-law='wfrog-realization-state-map'"
+        f" data-frog-visual-state='{visual_state}'"
+        f" data-frog-hover-state='{hover_state}'"
+        f" data-frog-pressed-state='{pressed_state}'"
+        f" data-frog-transition-state='{transition_state}'"
+        f" data-frog-state-text-visible='{'true' if state_text_visible else 'false'}'"
+        f" data-frog-state-text-false='{html.escape(false_state_text)}'"
+        f" data-frog-state-text-true='{html.escape(true_state_text)}'"
+        f" data-frog-state-text-color-false='{html.escape(false_text_color)}'"
+        f" data-frog-state-text-color-true='{html.escape(true_text_color)}'"
+        f" style='{style}'>"
+        f"<div class='button-skin' data-frog-asset-consumed='true' aria-hidden='true'>{asset_path.read_text(encoding='utf-8')}</div>"
+        "<span class='button-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor'"
+        f" style='{button_caption_anchor_style(runtime, geometry)}'>{html.escape(caption)}</span>"
+        f"{state_text_overlay}"
+        "<button class='button-press-overlay' type='button'"
+        f" name='{html.escape(input_id)}' value='true'"
+        f" aria-label='{html.escape(caption)}' aria-pressed='{'true' if value else 'false'}'"
+        f" data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='{html.escape(input_id)}'"
+        " data-frog-host-overlay='input' data-frog-align-to-part='face'"
+        f" style='{button_box_style(geometry['face_x'], geometry['face_y'], geometry['face_width'], geometry['face_height'], geometry)}'>"
+        "</button></div>"
+    )
+
+
+def button_press_to_boolean_script() -> str:
+    return """<script>
+(() => {
+  const form = document.querySelector("form[action='/run']");
+  const buttonWidget = document.querySelector("[data-widget-id='trigger_button']");
+  const overlay = document.querySelector("[data-widget-id='trigger_button'] .button-press-overlay");
+  const indicator = document.querySelector("[data-widget-id='pressed_indicator']");
+  if (!form || !buttonWidget || !overlay || !indicator) {
+    return;
+  }
+
+  const buttonStateText = buttonWidget.querySelector(".button-state-overlay[data-frog-part='state_text']");
+  const stateText = indicator.querySelector("[data-frog-part='state_text']");
+  const inputId = overlay.dataset.frogPublicInputId || overlay.name || "trigger_pressed";
+  let pressed = false;
+  let eventQueue = Promise.resolve();
+
+  const buttonProperty = (base, value) => {
+    const suffix = value ? "True" : "False";
+    return buttonWidget.dataset[`${base}${suffix}`] || "";
+  };
+
+  const indicatorProperty = (base, value) => {
+    const suffix = value ? "True" : "False";
+    return indicator.dataset[`${base}${suffix}`] || "";
+  };
+
+  const applyIndicator = (value) => {
+    const state = value ? "true" : "false";
+    indicator.dataset.currentValue = state;
+    indicator.dataset.frogVisualState = state;
+    indicator.dataset.frogHoverState = value ? "hover_true" : "hover_false";
+    indicator.dataset.frogPressedState = value ? "pressed_true" : "pressed_false";
+    indicator.dataset.frogTransitionState = value ? "transition_false_to_true" : "transition_true_to_false";
+    indicator.style.setProperty("--boolean-fill", indicatorProperty("frogFill", value));
+    indicator.style.setProperty("--boolean-inner-border", indicatorProperty("frogInnerBorder", value));
+    indicator.style.setProperty("--boolean-text", indicatorProperty("frogTextColor", value));
+    if (stateText) {
+      stateText.textContent = indicatorProperty("frogText", value);
+    }
+  };
+
+  const publish = (value) => {
+    const body = new URLSearchParams();
+    body.set(inputId, value ? "true" : "false");
+    eventQueue = eventQueue
+      .catch(() => {})
+      .then(() => fetch("/event", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"},
+        body
+      }))
+      .catch(() => {});
+  };
+
+  const setPressed = (value) => {
+    if (pressed === value) {
+      return;
+    }
+    pressed = value;
+    overlay.setAttribute("aria-pressed", value ? "true" : "false");
+    buttonWidget.dataset.currentValue = value ? "true" : "false";
+    buttonWidget.dataset.frogVisualState = value ? "true" : "false";
+    buttonWidget.dataset.frogPressedState = value ? "pressed_true" : "pressed_false";
+    if (buttonStateText) {
+      buttonStateText.textContent = buttonProperty("frogStateText", value);
+      buttonStateText.style.color = buttonProperty("frogStateTextColor", value);
+    }
+    applyIndicator(value);
+    publish(value);
+  };
+
+  form.addEventListener("submit", (event) => event.preventDefault());
+  overlay.addEventListener("click", (event) => event.preventDefault());
+  const press = (event) => {
+    if (event && event.button !== undefined && event.button !== 0) {
+      return;
+    }
+    if (event) {
+      event.preventDefault();
+    }
+    setPressed(true);
+  };
+  overlay.addEventListener("pointerdown", (event) => {
+    if (overlay.setPointerCapture) {
+      overlay.setPointerCapture(event.pointerId);
+    }
+    press(event);
+  });
+  const release = (event) => {
+    if (!pressed) {
+      return;
+    }
+    if (event) {
+      event.preventDefault();
+    }
+    setPressed(false);
+  };
+  overlay.addEventListener("pointerup", release);
+  overlay.addEventListener("pointercancel", release);
+  overlay.addEventListener("lostpointercapture", release);
+  overlay.addEventListener("mousedown", press);
+  window.addEventListener("mouseup", release);
+  overlay.addEventListener("mouseleave", release);
+  overlay.addEventListener("touchstart", press, {passive: false});
+  overlay.addEventListener("touchend", release, {passive: false});
+  overlay.addEventListener("touchcancel", release, {passive: false});
+  overlay.addEventListener("blur", release);
+  overlay.addEventListener("keydown", (event) => {
+    if (event.key !== " " && event.key !== "Enter") {
+      return;
+    }
+    event.preventDefault();
+    setPressed(true);
+  });
+  overlay.addEventListener("keyup", (event) => {
+    if (event.key !== " " && event.key !== "Enter") {
+      return;
+    }
+    event.preventDefault();
+    setPressed(false);
+  });
+})();
+</script>"""
 
 
 class BrowserUiRuntime:
@@ -1466,7 +2170,10 @@ p.meta {{ margin: 0 0 20px 0; color: #52606d; }}
 .numeric-label-overlay {{
   position: absolute;
   transform: translateY(-50%);
-  font-size: 12px;
+  font-size: var(--frog-numeric-caption-font-size);
+  font-family: var(--frog-numeric-caption-font-family);
+  font-weight: var(--frog-numeric-caption-font-weight);
+  color: var(--frog-numeric-caption-color);
   line-height: 1;
   white-space: nowrap;
   pointer-events: none;
@@ -1474,9 +2181,10 @@ p.meta {{ margin: 0 0 20px 0; color: #52606d; }}
 .numeric-value-overlay {{
   position: absolute;
   box-sizing: border-box;
-  font-family: Consolas, Segoe UI Mono, monospace;
-  font-size: 11px;
-  font-weight: 700;
+  font-family: var(--frog-numeric-text-font-family);
+  font-size: var(--frog-numeric-text-font-size);
+  font-weight: var(--frog-numeric-text-font-weight);
+  color: var(--frog-numeric-text-color);
   line-height: 1;
   border: 0;
   background: transparent;
@@ -1771,8 +2479,8 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 .boolean-control{{cursor:pointer;}}
 .boolean-indicator{{pointer-events:none;}}
 .boolean-skin{{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}}
-.boolean-caption-overlay{{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}}
-.boolean-state-face{{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:2px solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}}
+.boolean-caption-overlay{{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--boolean-caption-font-size);font-weight:var(--boolean-caption-font-weight);font-family:var(--boolean-caption-font-family);line-height:1;color:var(--boolean-caption-color);white-space:nowrap;pointer-events:none;z-index:3;}}
+.boolean-state-face{{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:var(--boolean-inner-border-width) solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}}
 .boolean-widget[data-realization-variant='circular'] .boolean-state-face{{border-radius:50%;}}
 .boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{{box-shadow:none;}}
 .boolean-control:hover .boolean-state-face{{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-inner-border);box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 2px 5px rgba(15,23,42,.18);}}
@@ -1780,7 +2488,7 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 .boolean-control:active .boolean-state-face{{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-inner-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}}
 .boolean-control[data-frog-frame-visible='false']:active .boolean-state-face{{box-shadow:none;}}
 .boolean-control:focus-visible .boolean-state-face{{outline:var(--boolean-focus-width) solid var(--boolean-focus-color);}}
-.boolean-state-overlay{{position:absolute;left:0;right:0;top:49px;transform:translateY(-50%);text-align:center;font-size:18px;font-weight:700;line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;}}
+.boolean-state-overlay{{position:absolute;transform:translate(-50%,-50%);text-align:center;font-size:var(--boolean-text-font-size);font-weight:var(--boolean-text-font-weight);line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;white-space:nowrap;}}
 .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}
 .state-link{{font-size:16px;}}
 .diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}
@@ -1949,7 +2657,7 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 .string-skin svg{{width:100%;height:100%;display:block;--frog-string-label-display:inherit;--frog-string-caption-display:inherit;--frog-string-placeholder-display:inherit;--frog-string-frame-fill:inherit;--frog-string-frame-stroke:inherit;--frog-string-frame-stroke-width:inherit;--frog-string-text-region-fill:inherit;--frog-string-text-region-stroke:inherit;--frog-string-text-region-stroke-width:inherit;--frog-string-text-fill:inherit;--frog-string-text-font-size:inherit;--frog-string-text-font-weight:inherit;}}
 .string-skin #label_text,.string-skin #caption_text,.string-skin #placeholder,.string-skin #text_value{{display:none;}}
 .string-control:hover .string-skin svg{{--frog-string-text-region-fill:var(--frog-string-text-region-fill-hover);--frog-string-text-region-stroke:var(--frog-string-text-region-stroke-hover);--frog-string-text-region-stroke-width:var(--frog-string-text-region-stroke-width-hover);}}
-.string-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}}
+.string-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:var(--frog-string-caption-font-size);font-weight:var(--frog-string-caption-font-weight);font-family:var(--frog-string-caption-font-family);color:var(--frog-string-caption-color);line-height:1;white-space:nowrap;pointer-events:none;}}
 .string-value-overlay{{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1.2;border:0;background:transparent;}}
 .string-control-editor{{padding:0 8px;outline:0;}}
 .string-control-editor:focus{{outline:0;}}
@@ -2117,7 +2825,7 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 .enum-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;}}
 .enum-skin svg{{width:100%;height:100%;display:block;}}
 .enum-skin #label_text,.enum-skin #caption_text,.enum-skin #value_display{{display:none;}}
-.enum-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}}
+.enum-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:var(--frog-enum-caption-font-size);font-weight:var(--frog-enum-caption-font-weight);font-family:var(--frog-enum-caption-font-family);color:var(--frog-enum-caption-color);line-height:1;white-space:nowrap;pointer-events:none;}}
 .enum-value-overlay{{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:normal;border:0;background:transparent;}}
 .enum-value-display-overlay{{position:absolute;box-sizing:border-box;display:flex;align-items:center;padding:0 var(--frog-enum-text-padding-inline);font-family:Segoe UI,Arial,sans-serif;line-height:normal;transform:translateY(var(--frog-enum-text-vertical-offset));z-index:3;}}
 .enum-widget .enum-display-button{{border:0;background:transparent;text-align:left;justify-content:flex-start;appearance:none;cursor:pointer;}}
@@ -2417,6 +3125,9 @@ class PathRuntimeCore:
             "caption.anchor.y",
             "caption.align.horizontal",
             "caption.style.text_color",
+            "caption.style.font_family",
+            "caption.style.font_size",
+            "caption.style.font_weight",
             "display.icon_visible",
             "display.validation_marker_visible",
             "display.text_overflow_visible",
@@ -2635,12 +3346,16 @@ def render_path_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
     style = (
         f"position:absolute;left:{layout_int(layout, 'x', 0)}px;top:{layout_int(layout, 'y', 0)}px;"
         f"width:{layout_int(layout, 'width', 300)}px;height:{layout_int(layout, 'height', 120)}px;"
+        f"--frog-path-caption-color:{html.escape(safe_css_color(runtime.get('caption.style.text_color'), '#111827'))};"
+        f"--frog-path-caption-font-size:{html.escape(safe_css_length(runtime.get('caption.style.font_size'), '14px'))};"
+        f"--frog-path-caption-font-weight:{html.escape(safe_css_font_weight(runtime.get('caption.style.font_weight'), '600'))};"
+        f"--frog-path-caption-font-family:{html.escape(safe_css_font_family(runtime.get('caption.style.font_family'), 'system-ui, Segoe UI, Arial, sans-serif'))};"
         f"--frog-path-button-fill:{html.escape(safe_css_color(runtime.get('style.browse_button.fill_color'), '#f8fafc'))};"
         f"--frog-path-button-fill-hover:{html.escape(safe_css_color(runtime.get('style.browse_button.fill_color.hover'), '#e5eef9'))};"
     )
     caption_overlay = (
         "<span class='path-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor'"
-        f" style='{caption_anchor_style(runtime, geometry)}color:{html.escape(safe_css_color(runtime.get('caption.style.text_color'), '#111827'))};'>{caption}</span>"
+        f" style='{caption_anchor_style(runtime, geometry)}'>{caption}</span>"
     )
     skin = render_path_skin(asset_path, runtime)
     if is_control:
@@ -2743,7 +3458,7 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 .path-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;}}
 .path-skin svg{{width:100%;height:100%;display:block;}}
 .path-skin #label_text,.path-skin #caption_text,.path-skin #path_display{{display:none;}}
-.path-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}}
+.path-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:var(--frog-path-caption-font-size);font-weight:var(--frog-path-caption-font-weight);font-family:var(--frog-path-caption-font-family);color:var(--frog-path-caption-color);line-height:1;white-space:nowrap;pointer-events:none;}}
 .path-value-overlay{{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1;border:0;background:transparent;margin:0;}}
 .path-control-editor{{outline:0;appearance:none;-webkit-appearance:none;}}
 .path-control-editor:focus{{outline:0;}}
@@ -2848,6 +3563,201 @@ function frogPathPicked(input,targetId){{const target=document.getElementById(ta
         return httpd, thread
 
 
+class ButtonBrowserUiRuntime:
+    def __init__(
+        self,
+        *,
+        contract_path: str | Path | None = None,
+        wfrog_path: str | Path | None = None,
+        host: str = "127.0.0.1",
+        port: int = 0,
+        open_browser: bool = True,
+        native_kernel_bridge: NativeBoolKernelBridge | None = None,
+    ) -> None:
+        self.runtime = ButtonRuntimeCore(contract_path=contract_path, wfrog_path=wfrog_path)
+        self.host = host
+        self.port = port
+        self.open_browser = open_browser
+        self.native_kernel_bridge = native_kernel_bridge
+        self.last_error: Optional[str] = None
+        self._httpd: Optional[ThreadingHTTPServer] = None
+
+    def build_server(self) -> ThreadingHTTPServer:
+        runtime = self
+
+        class Handler(BaseHTTPRequestHandler):
+            def do_GET(self) -> None:  # noqa: N802
+                runtime._handle_get(self)
+
+            def do_POST(self) -> None:  # noqa: N802
+                runtime._handle_post(self)
+
+            def log_message(self, format: str, *args: Any) -> None:  # noqa: A003
+                return
+
+        self._httpd = ThreadingHTTPServer((self.host, self.port), Handler)
+        return self._httpd
+
+    def run_once(self, trigger_pressed: bool) -> dict[str, Any]:
+        if self.native_kernel_bridge is None:
+            artifact = self.runtime.execute(trigger_pressed)
+        else:
+            artifact = self.runtime.execute_with_native_kernel_bridge(self.native_kernel_bridge, trigger_pressed)
+        self.last_error = None
+        return artifact
+
+    def state_snapshot(self) -> dict[str, Any]:
+        return self.runtime.execution_artifact()
+
+    def render_html(self) -> str:
+        snapshot = self.state_snapshot()
+        panel = snapshot["ui_runtime"]["panel"]
+        widgets = {entry["widget_id"]: entry for entry in snapshot["ui_runtime"]["widgets"]}
+        panel_layout = panel["layout"]
+        panel_width = layout_int(panel_layout, "width", 520)
+        panel_height = layout_int(panel_layout, "height", 180)
+        error_block = ""
+        if self.last_error:
+            error_block = "<div class='diagnostic error'>" + html.escape(self.last_error) + "</div>"
+        uses_native_kernel = self.native_kernel_bridge is not None
+        button_html = render_button_widget(widgets["trigger_button"], self.runtime.widgets["trigger_button"]["asset_path"])
+        indicator_html = render_boolean_widget(widgets["pressed_indicator"])
+
+        return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{html.escape(panel['title'])}</title>
+<style>
+body{{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}}
+h1{{font-size:24px;margin:0 0 12px 0;}}
+p.meta{{margin:0 0 20px 0;color:#52606d;}}
+.runtime-facts{{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 18px 0;}}
+.runtime-facts div{{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}}
+.runtime-facts dt{{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}}
+.runtime-facts dd{{margin:0;color:#1f2933;font-size:12px;font-weight:600;}}
+.front-panel{{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}}
+.frog-widget{{position:absolute;box-sizing:border-box;}}
+.button-widget{{overflow:visible;}}
+.button-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;}}
+.button-skin svg{{width:100%;height:100%;display:block;}}
+.button-skin [data-frog-part='label'],.button-skin [data-frog-part='caption'],.button-skin [data-frog-part='state_text']{{display:none!important;}}
+.button-skin [data-frog-part='frame']{{fill:var(--frog-button-frame-fill)!important;stroke:var(--frog-button-frame-stroke)!important;stroke-width:var(--frog-button-frame-stroke-width)!important;}}
+.button-skin [data-frog-part='face']{{fill:var(--frog-button-face-fill)!important;stroke:var(--frog-button-face-stroke)!important;stroke-width:var(--frog-button-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}}
+.button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-fill)!important;stroke:var(--frog-button-state-face-stroke)!important;stroke-width:var(--frog-button-state-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}}
+.button-skin [data-frog-part='focus_ring']{{display:none!important;stroke:var(--frog-button-focus-color)!important;stroke-width:var(--frog-button-focus-width)!important;}}
+.button-widget:has(.button-press-overlay:hover) .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-hover-fill)!important;}}
+.button-widget:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-hover-fill)!important;stroke:var(--frog-button-state-face-hover-stroke)!important;}}
+.button-widget:has(.button-press-overlay:active) .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-pressed-fill)!important;transform:translateY(var(--frog-button-pressed-inset));}}
+.button-widget:has(.button-press-overlay:active) .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-pressed-fill)!important;stroke:var(--frog-button-state-face-pressed-stroke)!important;transform:translateY(var(--frog-button-pressed-inset));}}
+.button-widget:has(.button-press-overlay:focus-visible) .button-skin [data-frog-part='focus_ring']{{display:inline!important;}}
+.button-caption-overlay{{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--frog-button-caption-font-size);font-weight:var(--frog-button-caption-font-weight);font-family:var(--frog-button-caption-font-family);line-height:1;white-space:nowrap;pointer-events:none;z-index:3;}}
+.button-state-overlay{{position:absolute;transform:translate(-50%,-50%);font-size:var(--frog-button-state-text-font-size);font-weight:var(--frog-button-state-text-font-weight);line-height:1;color:var(--frog-button-state-text-fill);pointer-events:none;z-index:4;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}
+.button-press-overlay{{position:absolute;box-sizing:border-box;margin:0;padding:0;border:0;background:transparent;cursor:pointer;appearance:none;z-index:5;}}
+.button-press-overlay:focus,.button-press-overlay:focus-visible,.button-press-overlay:active{{outline:0;box-shadow:none;}}
+.boolean-widget{{border:0;padding:0;background:transparent;font:inherit;color:inherit;overflow:visible;}}
+.boolean-indicator{{pointer-events:none;}}
+.boolean-skin{{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}}
+.boolean-caption-overlay{{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--boolean-caption-font-size);font-weight:var(--boolean-caption-font-weight);font-family:var(--boolean-caption-font-family);line-height:1;color:var(--boolean-caption-color);white-space:nowrap;pointer-events:none;z-index:3;}}
+.boolean-state-face{{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:var(--boolean-inner-border-width) solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}}
+.boolean-widget[data-realization-variant='circular'] .boolean-state-face{{border-radius:50%;}}
+.boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{{box-shadow:none;}}
+.boolean-state-overlay{{position:absolute;transform:translate(-50%,-50%);text-align:center;font-size:var(--boolean-text-font-size);font-weight:var(--boolean-text-font-weight);line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;white-space:nowrap;}}
+.actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}
+.state-link{{font-size:16px;}}
+.diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}
+.diagnostic.error{{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}}
+</style>
+</head>
+<body>
+<h1>{html.escape(panel['title'])}</h1>
+<p class="meta">Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + Python runtime</p>
+<dl class="runtime-facts" aria-label="Runtime facts">
+  <div><dt>Runtime</dt><dd>Python reference runtime</dd></div>
+  <div><dt>Execution</dt><dd>{'native kernel bridge' if uses_native_kernel else 'button contract executor'}</dd></div>
+  <div><dt>Compiler backend</dt><dd>{'LLVM native Button bool kernel artifact' if uses_native_kernel else 'none for Example 10'}</dd></div>
+</dl>
+{error_block}
+<form method="post" action="/run">
+  <div class="front-panel" data-panel-id="{html.escape(panel['panel_id'])}" data-coordinate-space="panel_pixels" data-runtime-language="python" data-compiler-backend="{'llvm' if uses_native_kernel else 'none'}" data-execution-path="{'native_kernel_bridge' if uses_native_kernel else 'python_button_contract_executor'}" style="width:{panel_width}px;height:{panel_height}px;">
+    {button_html}
+    {indicator_html}
+  </div>
+  <div class="actions"><a class="state-link" href="/state.json">state.json</a></div>
+</form>
+{button_press_to_boolean_script()}
+</body>
+</html>
+"""
+
+    def _serve_bytes(self, handler: BaseHTTPRequestHandler, body: bytes, content_type: str, status: int = 200) -> None:
+        handler.send_response(status)
+        handler.send_header("Content-Type", content_type)
+        handler.send_header("Content-Length", str(len(body)))
+        handler.end_headers()
+        handler.wfile.write(body)
+
+    def _redirect(self, handler: BaseHTTPRequestHandler, target: str) -> None:
+        handler.send_response(HTTPStatus.SEE_OTHER)
+        handler.send_header("Location", target)
+        handler.end_headers()
+
+    def _handle_get(self, handler: BaseHTTPRequestHandler) -> None:
+        parsed = urllib.parse.urlparse(handler.path)
+        path = parsed.path
+        if path == "/":
+            self._serve_bytes(handler, self.render_html().encode("utf-8"), "text/html; charset=utf-8")
+            return
+        if path == "/state.json":
+            self._serve_bytes(handler, json.dumps(self.state_snapshot(), indent=2).encode("utf-8"), "application/json; charset=utf-8")
+            return
+        if path.startswith("/asset/"):
+            asset_id = path.split("/", 2)[2]
+            asset_path = self.runtime.asset_map.get(asset_id)
+            if asset_path is None or not asset_path.exists():
+                self._serve_bytes(handler, b"missing asset", "text/plain; charset=utf-8", status=404)
+                return
+            self._serve_bytes(handler, asset_path.read_bytes(), "image/svg+xml")
+            return
+        self._serve_bytes(handler, b"not found", "text/plain; charset=utf-8", status=404)
+
+    def _handle_post(self, handler: BaseHTTPRequestHandler) -> None:
+        parsed = urllib.parse.urlparse(handler.path)
+        if parsed.path not in {"/run", "/event"}:
+            self._serve_bytes(handler, b"not found", "text/plain; charset=utf-8", status=404)
+            return
+        length = int(handler.headers.get("Content-Length", "0"))
+        body = handler.rfile.read(length).decode("utf-8")
+        form = urllib.parse.parse_qs(body, keep_blank_values=True)
+        raw_value = form.get("trigger_pressed", ["false"])[0]
+        try:
+            artifact = self.run_once(parse_bool_input(raw_value))
+        except Exception as exc:  # pragma: no cover
+            self.last_error = str(exc)
+            artifact = self.state_snapshot()
+        if parsed.path == "/event":
+            self._serve_bytes(handler, json.dumps(artifact, indent=2).encode("utf-8"), "application/json; charset=utf-8", status=200 if self.last_error is None else 500)
+            return
+        self._redirect(handler, "/")
+
+    def serve(self) -> None:
+        httpd = self.build_server()
+        address = f"http://{httpd.server_address[0]}:{httpd.server_address[1]}/"
+        if self.open_browser:
+            webbrowser.open(address)
+        print(address)
+        try:
+            httpd.serve_forever()
+        finally:
+            httpd.server_close()
+
+    def serve_in_thread(self) -> tuple[ThreadingHTTPServer, threading.Thread]:
+        httpd = self.build_server()
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        return httpd, thread
+
+
 def build_runtime(
     *,
     example: str | None = None,
@@ -2857,7 +3767,7 @@ def build_runtime(
     port: int = 0,
     open_browser: bool = True,
     native_kernel_bridge: NativeKernelBridge | NativeBoolKernelBridge | NativeStringKernelBridge | NativeEnumKernelBridge | None = None,
-) -> BrowserUiRuntime | BooleanBrowserUiRuntime | StringBrowserUiRuntime | EnumBrowserUiRuntime | PathBrowserUiRuntime:
+) -> BrowserUiRuntime | BooleanBrowserUiRuntime | StringBrowserUiRuntime | EnumBrowserUiRuntime | PathBrowserUiRuntime | ButtonBrowserUiRuntime:
     if wants_example06(example) or is_example06_contract(contract_path):
         return BooleanBrowserUiRuntime(
             contract_path=contract_path or default_example06_contract_path(),
@@ -2893,6 +3803,15 @@ def build_runtime(
             port=port,
             open_browser=open_browser,
             native_kernel_bridge=native_kernel_bridge if isinstance(native_kernel_bridge, NativeStringKernelBridge) else None,
+        )
+    if wants_example10(example) or is_example10_contract(contract_path):
+        return ButtonBrowserUiRuntime(
+            contract_path=contract_path or default_example10_contract_path(),
+            wfrog_path=wfrog_path or default_example10_wfrog_path(),
+            host=host,
+            port=port,
+            open_browser=open_browser,
+            native_kernel_bridge=native_kernel_bridge if isinstance(native_kernel_bridge, NativeBoolKernelBridge) else None,
         )
     return BrowserUiRuntime(
         contract_path=contract_path or default_contract_path(),

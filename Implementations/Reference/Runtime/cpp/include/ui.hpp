@@ -91,4 +91,20 @@ public:
     std::optional<std::string> last_error;
 };
 
+class ButtonBrowserUiRuntime {
+public:
+    ButtonBrowserUiRuntime(
+        std::filesystem::path contract_path,
+        std::filesystem::path wfrog_path,
+        std::shared_ptr<const NativeBoolKernelBridge> native_kernel_bridge = nullptr);
+
+    frog::json::Value run_once(bool trigger_pressed);
+    std::string render_html() const;
+    void serve(const std::string& host = "127.0.0.1", std::uint16_t port = 0, bool open_browser = true);
+
+    Slice10ButtonRuntimeCore core;
+    std::shared_ptr<const NativeBoolKernelBridge> native_kernel_bridge;
+    std::optional<std::string> last_error;
+};
+
 } // namespace frog::runtime

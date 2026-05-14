@@ -169,4 +169,32 @@ private:
     std::map<std::string, WidgetState> build_widgets() const;
 };
 
+class Slice10ButtonRuntimeCore {
+public:
+    Slice10ButtonRuntimeCore(std::filesystem::path contract_path, std::filesystem::path wfrog_path);
+
+    void set_control_pressed(bool value);
+    bool control_pressed() const;
+    frog::json::Value execute(std::optional<bool> pressed_override = std::nullopt);
+    frog::json::Value execute_with_native_kernel_bridge(
+        const NativeBoolKernelBridge& bridge,
+        std::optional<bool> pressed_override = std::nullopt);
+    frog::json::Value execution_artifact() const;
+
+    std::filesystem::path contract_path;
+    std::filesystem::path wfrog_path;
+    BackendContract contract;
+    WfrogPackage package;
+    FrontPanel panel;
+    ContractUnit unit;
+    std::map<std::string, WidgetState> widgets;
+    std::map<std::string, std::filesystem::path> asset_map;
+    bool last_trigger_pressed = false;
+    bool last_result = false;
+
+private:
+    ContractUnit load_and_validate() const;
+    std::map<std::string, WidgetState> build_widgets() const;
+};
+
 } // namespace frog::runtime

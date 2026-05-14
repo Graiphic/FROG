@@ -81,6 +81,13 @@ Each page records the practical contract that must stay true while the examples 
       <td><code>Libraries/Realizations/Default/path.default.wfrog</code></td>
       <td><code>assets/path/templates/path_rectangular_field.svg</code></td>
     </tr>
+    <tr>
+      <td>Button</td>
+      <td><code>10_button_press_to_boolean</code></td>
+      <td><a href="./Button.md">Button.md</a></td>
+      <td><code>Libraries/Realizations/Default/button.default.wfrog</code></td>
+      <td><code>assets/button/templates/button_rectangular.svg</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -142,6 +149,14 @@ native-backed.
     <tr>
       <td><code>09</code></td>
       <td>Path</td>
+      <td>validated</td>
+      <td>validated</td>
+      <td>validated</td>
+      <td><code>LLVM native kernel manifest + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>10</code></td>
+      <td>Button</td>
       <td>validated</td>
       <td>validated</td>
       <td>validated</td>

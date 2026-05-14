@@ -1,0 +1,61 @@
+{
+  "artifact_kind": "frog_reference_runtime_acceptance",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "runtime_family": "reference_host_runtime_ui_binding",
+  "example_id": "10_button_press_to_boolean",
+  "artifact_refs": {
+    "source_path": "Examples/10_button_press_to_boolean/main.frog",
+    "fir_path": "Examples/10_button_press_to_boolean/main.fir.json",
+    "lowering_path": "Examples/10_button_press_to_boolean/main.lowering.json",
+    "contract_path": "Implementations/Reference/ContractEmitter/examples/10_button_press_to_boolean.reference_host_runtime_ui_binding.contract.json",
+    "wfrog_path": "Examples/10_button_press_to_boolean/ui/button_panel.wfrog",
+    "widget_class_law_path": "Libraries/Widgets/Button.md",
+    "default_button_realization_manifest_path": "Libraries/Realizations/Default/button.default.wfrog",
+    "default_boolean_realization_manifest_path": "Libraries/Realizations/Default/boolean.default.wfrog",
+    "llvm_module_path": "Implementations/Reference/LLVM/examples/10_button_press_to_boolean/module.ll",
+    "llvm_kernel_path": "Implementations/Reference/LLVM/examples/10_button_press_to_boolean/kernel.ll",
+    "native_kernel_manifest_path": "Implementations/Reference/LLVM/examples/10_button_press_to_boolean/native_kernel_manifest.json"
+  },
+  "headless": {
+    "trigger_pressed": true,
+    "expected_pressed": true,
+    "expected_button_visual_value_after_run": false
+  },
+  "cases": [
+    {
+      "id": "not_pressed",
+      "trigger_pressed": false,
+      "expected_pressed": false
+    },
+    {
+      "id": "pressed",
+      "trigger_pressed": true,
+      "expected_pressed": true
+    }
+  ],
+  "ui": {
+    "expected_routes": [
+      "/",
+      "/event",
+      "/state.json",
+      "/asset/button_rectangular_svg",
+      "/asset/boolean_circular_svg"
+    ],
+    "asset_routes_required": true,
+    "hardcoded_fallback_allowed": false,
+    "button_overlay_alignment": {
+      "host_overlay_part": "face",
+      "published_svg_part": "face"
+    }
+  },
+  "scope": {
+    "cpp_first_only": true,
+    "llvm_required": true,
+    "cpp_native_kernel_bridge": true,
+    "python_runtime_parity": false,
+    "rust_runtime_parity": false,
+    "broad_runtime_rewrite": false
+  }
+}

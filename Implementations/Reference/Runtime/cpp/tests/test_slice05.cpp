@@ -246,9 +246,15 @@ void test_ui_surface() {
     assert_contains(html, "--frog-numeric-frame-stroke-width:2px");
     assert_contains(html, "--frog-numeric-step-fill:#5B9BD5");
     assert_contains(html, "--frog-numeric-step-fill-pressed:#2B4F7B");
-    assert_contains(html, "font-size:12px;line-height:1;");
-    assert_contains(html, "font-weight:400;");
-    assert_contains(html, "color:#111827;");
+    assert_contains(html, "--frog-numeric-caption-color:#111827;");
+    assert_contains(html, "--frog-numeric-caption-font-size:12px;");
+    assert_contains(html, "--frog-numeric-caption-font-weight:400;");
+    assert_contains(html, "--frog-numeric-text-color:#111827;");
+    assert_contains(html, "--frog-numeric-text-font-size:11px;");
+    assert_contains(html, "--frog-numeric-text-font-weight:700;");
+    assert_contains(html, "font-size:var(--frog-numeric-caption-font-size)");
+    assert_contains(html, "color:var(--frog-numeric-text-color)");
+    assert_not_contains(html, "font-size:12px;line-height:1;");
     assert_not_contains(html, "Current runtime snapshot");
     assert_not_contains(html, "<pre>");
     assert_contains(html, "Input");

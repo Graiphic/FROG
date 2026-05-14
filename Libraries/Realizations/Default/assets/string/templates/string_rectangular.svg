@@ -100,6 +100,7 @@
           data-frog-part="caption"
           data-frog-member="caption.text"
           data-frog-anchor="caption.anchor"
+          data-frog-bind="caption.text caption.visible caption.anchor.* caption.align.horizontal caption.style.*"
           x="28"
           y="64">String</text>
 

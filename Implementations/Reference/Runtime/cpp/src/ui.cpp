@@ -297,6 +297,8 @@ struct SvgGeometry {
     double value_face_height = 28.0;
     double value_text_x = 22.0;
     double value_text_y = 96.0;
+    double state_text_x = 80.0;
+    double state_text_y = 48.0;
     double selector_face_x = 246.0;
     double selector_face_y = 82.0;
     double selector_face_width = 24.0;
@@ -347,6 +349,53 @@ std::optional<std::string> svg_attribute(const std::string& svg, const std::stri
 
 double svg_attribute_double(const std::string& svg, const std::string& element_id, const std::string& attribute, double fallback) {
     const auto value = svg_attribute(svg, element_id, attribute);
+    if (!value.has_value()) {
+        return fallback;
+    }
+    try {
+        return std::stod(*value);
+    } catch (const std::exception&) {
+        return fallback;
+    }
+}
+
+std::optional<std::size_t> find_svg_element_with_part(const std::string& svg, const std::string& part) {
+    const std::string marker = "data-frog-part=\"" + part + "\"";
+    const auto marker_pos = svg.find(marker);
+    if (marker_pos == std::string::npos) {
+        return std::nullopt;
+    }
+    const auto tag_start = svg.rfind('<', marker_pos);
+    const auto tag_end = svg.find('>', marker_pos);
+    if (tag_start == std::string::npos || tag_end == std::string::npos || tag_start > tag_end) {
+        return std::nullopt;
+    }
+    return tag_start;
+}
+
+std::optional<std::string> svg_part_attribute(const std::string& svg, const std::string& part, const std::string& attribute) {
+    const auto tag_start = find_svg_element_with_part(svg, part);
+    if (!tag_start.has_value()) {
+        return std::nullopt;
+    }
+    const auto tag_end = svg.find('>', *tag_start);
+    if (tag_end == std::string::npos) {
+        return std::nullopt;
+    }
+    const auto attr_pos = svg.find(attribute + "=\"", *tag_start);
+    if (attr_pos == std::string::npos || attr_pos > tag_end) {
+        return std::nullopt;
+    }
+    const auto value_start = attr_pos + attribute.size() + 2;
+    const auto value_end = svg.find('"', value_start);
+    if (value_end == std::string::npos || value_end > tag_end) {
+        return std::nullopt;
+    }
+    return svg.substr(value_start, value_end - value_start);
+}
+
+double svg_part_attribute_double(const std::string& svg, const std::string& part, const std::string& attribute, double fallback) {
+    const auto value = svg_part_attribute(svg, part, attribute);
     if (!value.has_value()) {
         return fallback;
     }
@@ -430,6 +479,8 @@ SvgGeometry load_svg_geometry(const WidgetState& widget) {
     parse_viewbox(svg, geometry);
     geometry.caption_x = svg_attribute_double(svg, "caption_text", "x", geometry.caption_x);
     geometry.caption_y = svg_attribute_double(svg, "caption_text", "y", geometry.caption_y);
+    geometry.state_text_x = svg_part_attribute_double(svg, "state_text", "x", geometry.state_text_x);
+    geometry.state_text_y = svg_part_attribute_double(svg, "state_text", "y", geometry.state_text_y);
     geometry.value_face_x = svg_attribute_double(svg, "value_face", "x", geometry.value_face_x);
     geometry.value_face_y = svg_attribute_double(svg, "value_face", "y", geometry.value_face_y);
     geometry.value_face_width = svg_attribute_double(svg, "value_face", "width", geometry.value_face_width);
@@ -491,6 +542,12 @@ std::string caption_anchor_style(const Object& properties, const SvgGeometry& ge
         style << "display:none;";
     }
     return style.str();
+}
+
+std::string state_text_anchor_style(const Object& properties, const SvgGeometry& geometry) {
+    const auto x = property_number(properties, "state_text.anchor.x").value_or(geometry.state_text_x);
+    const auto y = property_number(properties, "state_text.anchor.y").value_or(geometry.state_text_y);
+    return svg_anchor_style(x, y, geometry);
 }
 
 std::string svg_box_style(double x, double y, double width, double height, const SvgGeometry& geometry) {
@@ -589,8 +646,20 @@ std::string render_numeric_widget(const WidgetState& widget) {
     const auto value = property_u16(widget.properties, "value", 0);
     const auto label = property_string(widget.properties, "caption.text", property_string(widget.properties, "label", widget.widget_id));
     const auto color = safe_css_color(property_string(widget.properties, "foreground_color", "#ffffff"), "#ffffff");
-    const auto label_color = safe_css_color(property_string(widget.properties, "label_color", "#111827"), "#111827");
+    const auto label_color = safe_css_color(
+        property_string(widget.properties, "style.caption.text_color", property_string(widget.properties, "label_color", "#111827")),
+        "#111827");
+    const auto label_size = safe_css_length(property_string(widget.properties, "style.caption.font_size", "12px"), "12px");
     const auto label_weight = safe_css_font_weight(property_string(widget.properties, "style.caption.font_weight", "400"), "400");
+    const auto label_family = safe_css_font_family(
+        property_string(widget.properties, "style.caption.font_family", "system-ui, Segoe UI, Arial, sans-serif"),
+        "system-ui, Segoe UI, Arial, sans-serif");
+    const auto text_color = safe_css_color(property_string(widget.properties, "style.text_value.color", "#111827"), "#111827");
+    const auto text_size = safe_css_length(property_string(widget.properties, "style.text_value.font_size", "11px"), "11px");
+    const auto text_weight = safe_css_font_weight(property_string(widget.properties, "style.text_value.font_weight", "700"), "700");
+    const auto text_family = safe_css_font_family(
+        property_string(widget.properties, "style.text_value.font_family", "Consolas, Segoe UI Mono, monospace"),
+        "Consolas, Segoe UI Mono, monospace");
     const auto route = asset_route(widget);
     const auto minimum = property_u16(widget.properties, "data_entry.minimum", 0);
     const auto maximum = property_u16(widget.properties, "data_entry.maximum", 65535);
@@ -606,7 +675,15 @@ std::string render_numeric_widget(const WidgetState& widget) {
         html << " data-asset-route='" << html_escape(route) << "'";
     }
     html << " style='position:absolute;left:" << css_px(x) << ";top:" << css_px(y) << ";width:" << css_px(width)
-         << ";height:" << css_px(height) << ";";
+         << ";height:" << css_px(height) << ";"
+         << "--frog-numeric-caption-color:" << html_escape(label_color) << ";"
+         << "--frog-numeric-caption-font-size:" << html_escape(label_size) << ";"
+         << "--frog-numeric-caption-font-weight:" << html_escape(label_weight) << ";"
+         << "--frog-numeric-caption-font-family:" << html_escape(label_family) << ";"
+         << "--frog-numeric-text-color:" << html_escape(text_color) << ";"
+         << "--frog-numeric-text-font-size:" << html_escape(text_size) << ";"
+         << "--frog-numeric-text-font-weight:" << html_escape(text_weight) << ";"
+         << "--frog-numeric-text-font-family:" << html_escape(text_family) << ";";
     if (!property_bool(widget.properties, "visible", true)) {
         html << "display:none;";
     }
@@ -616,7 +693,7 @@ std::string render_numeric_widget(const WidgetState& widget) {
 
     html << "<span class='numeric-label-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='"
           << caption_anchor_style(widget.properties, geometry)
-          << "color:" << html_escape(label_color) << ";font-weight:" << html_escape(label_weight) << ";'>" << html_escape(label) << "</span>";
+          << "'>" << html_escape(label) << "</span>";
 
     const auto value_style = svg_box_style(
         geometry.value_face_x,
@@ -628,7 +705,7 @@ std::string render_numeric_widget(const WidgetState& widget) {
     if (is_control) {
         html << "<input id='" << html_escape(widget.widget_id) << "_value' name='input_value' type='number' min='" << minimum << "' max='" << maximum << "' step='" << step << "'";
         html << " class='numeric-value-overlay numeric-control-editor' data-frog-part='text_value' data-svg-anchor='text_value.center'";
-        html << " style='" << value_style << "color:#111827;'";
+        html << " style='" << value_style << "'";
         html << " value='" << value << "'";
         if (!property_bool(widget.properties, "enabled", true)) {
             html << " disabled";
@@ -647,7 +724,7 @@ std::string render_numeric_widget(const WidgetState& widget) {
         }
     } else {
         html << "<output class='numeric-value-overlay numeric-indicator-value' data-frog-part='text_value' data-svg-anchor='text_value.center'";
-        html << " style='" << value_style << "color:#111827;'>" << value << "</output>";
+        html << " style='" << value_style << "'>" << value << "</output>";
     }
 
     html << "</section>";
@@ -729,6 +806,11 @@ std::string render_string_widget(const WidgetState& widget) {
     const auto value = property_string(widget.properties, "value");
     const auto label = property_string(widget.properties, "caption.text", widget.widget_id);
     const auto label_color = safe_css_color(property_string(widget.properties, "caption.style.text_color", "#111827"), "#111827");
+    const auto label_size = safe_css_length(property_string(widget.properties, "caption.style.font_size", "14px"), "14px");
+    const auto label_weight = safe_css_font_weight(property_string(widget.properties, "caption.style.font_weight", "600"), "600");
+    const auto label_family = safe_css_font_family(
+        property_string(widget.properties, "caption.style.font_family", "system-ui, Segoe UI, Arial, sans-serif"),
+        "system-ui, Segoe UI, Arial, sans-serif");
     const auto text_color = safe_css_color(property_string(widget.properties, "style.text.color", "#111827"), "#111827");
     const auto text_size = safe_css_length(property_string(widget.properties, "style.text.font_size", "16px"), "16px");
     const auto text_weight = safe_css_font_weight(property_string(widget.properties, "style.text.font_weight", "400"), "400");
@@ -750,7 +832,11 @@ std::string render_string_widget(const WidgetState& widget) {
         html << " data-asset-route='" << html_escape(route) << "'";
     }
     html << " style='position:absolute;left:" << css_px(x) << ";top:" << css_px(y) << ";width:" << css_px(width)
-         << ";height:" << css_px(height) << ";";
+         << ";height:" << css_px(height) << ";"
+         << "--frog-string-caption-color:" << html_escape(label_color) << ";"
+         << "--frog-string-caption-font-size:" << html_escape(label_size) << ";"
+         << "--frog-string-caption-font-weight:" << html_escape(label_weight) << ";"
+         << "--frog-string-caption-font-family:" << html_escape(label_family) << ";";
     if (!property_bool(widget.properties, "visible", true)) {
         html << "display:none;";
     }
@@ -759,7 +845,7 @@ std::string render_string_widget(const WidgetState& widget) {
     html << render_string_skin(widget);
     html << "<span class='string-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='"
           << caption_anchor_style(widget.properties, geometry)
-          << "color:" << html_escape(label_color) << ";'>" << html_escape(label) << "</span>";
+          << "'>" << html_escape(label) << "</span>";
 
     if (is_control) {
         html << "<input id='" << html_escape(widget.widget_id) << "_value' name='input_text' type='text'";
@@ -887,6 +973,11 @@ std::string render_path_widget(const WidgetState& widget) {
     const auto value = property_string(widget.properties, "value");
     const auto label = property_string(widget.properties, "caption.text", widget.widget_id);
     const auto label_color = safe_css_color(property_string(widget.properties, "caption.style.text_color", "#111827"), "#111827");
+    const auto label_size = safe_css_length(property_string(widget.properties, "caption.style.font_size", "14px"), "14px");
+    const auto label_weight = safe_css_font_weight(property_string(widget.properties, "caption.style.font_weight", "600"), "600");
+    const auto label_family = safe_css_font_family(
+        property_string(widget.properties, "caption.style.font_family", "system-ui, Segoe UI, Arial, sans-serif"),
+        "system-ui, Segoe UI, Arial, sans-serif");
     const auto text_color = safe_css_color(property_string(widget.properties, "style.path_display.color", "#111827"), "#111827");
     const auto text_size = safe_css_length(property_string(widget.properties, "style.path_display.font_size", "15px"), "15px");
     const auto text_weight = safe_css_font_weight(property_string(widget.properties, "style.path_display.font_weight", "400"), "400");
@@ -930,7 +1021,12 @@ std::string render_path_widget(const WidgetState& widget) {
         html << " data-asset-route='" << html_escape(route) << "'";
     }
     html << " style='position:absolute;left:" << css_px(x) << ";top:" << css_px(y) << ";width:" << css_px(width)
-         << ";height:" << css_px(height) << ";--frog-path-button-fill:" << html_escape(button_fill)
+         << ";height:" << css_px(height)
+         << ";--frog-path-caption-color:" << html_escape(label_color)
+         << ";--frog-path-caption-font-size:" << html_escape(label_size)
+         << ";--frog-path-caption-font-weight:" << html_escape(label_weight)
+         << ";--frog-path-caption-font-family:" << html_escape(label_family)
+         << ";--frog-path-button-fill:" << html_escape(button_fill)
          << ";--frog-path-button-fill-hover:" << html_escape(button_hover_fill) << ";";
     if (!property_bool(widget.properties, "visible", true)) {
         html << "display:none;";
@@ -940,7 +1036,7 @@ std::string render_path_widget(const WidgetState& widget) {
     html << render_path_skin(widget);
     html << "<span class='path-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='"
           << caption_anchor_style(widget.properties, geometry)
-          << "color:" << html_escape(label_color) << ";'>" << html_escape(label) << "</span>";
+          << "'>" << html_escape(label) << "</span>";
 
     if (is_control) {
         html << "<input id='" << html_escape(widget.widget_id) << "_value' name='" << html_escape(public_input_id) << "' type='text'";
@@ -1133,6 +1229,11 @@ std::string render_enum_widget(const WidgetState& widget) {
     const auto style_scale = widget_style_scale(widget.properties, width, height);
     const auto label = property_string(widget.properties, "caption.text", widget.widget_id);
     const auto label_color = safe_css_color(property_string(widget.properties, "caption.style.text_color", "#111827"), "#111827");
+    const auto label_size = safe_css_length(property_string(widget.properties, "caption.style.font_size", "14px"), "14px");
+    const auto label_weight = safe_css_font_weight(property_string(widget.properties, "caption.style.font_weight", "600"), "600");
+    const auto label_family = safe_css_font_family(
+        property_string(widget.properties, "caption.style.font_family", "system-ui, Segoe UI, Arial, sans-serif"),
+        "system-ui, Segoe UI, Arial, sans-serif");
     const auto text_color = safe_css_color(property_string(widget.properties, "style.value_display.color", "#111827"), "#111827");
     const auto text_size = maybe_scaled_css_length(
         widget.properties, "style.value_display.font_size", "style.value_display.font_size_mode", "16px", style_scale);
@@ -1236,6 +1337,10 @@ std::string render_enum_widget(const WidgetState& widget) {
     }
     html << " style='position:absolute;left:" << css_px(x) << ";top:" << css_px(y) << ";width:" << css_px(width)
          << ";height:" << css_px(height) << ";--frog-enum-selector-fill:" << html_escape(selector_fill)
+         << ";--frog-enum-caption-color:" << html_escape(label_color)
+         << ";--frog-enum-caption-font-size:" << html_escape(label_size)
+         << ";--frog-enum-caption-font-weight:" << html_escape(label_weight)
+         << ";--frog-enum-caption-font-family:" << html_escape(label_family)
          << ";--frog-enum-selector-stroke:" << html_escape(selector_stroke)
          << ";--frog-enum-selector-stroke-width:" << html_escape(selector_stroke_width)
          << ";--frog-enum-selector-radius:" << html_escape(selector_radius)
@@ -1270,7 +1375,7 @@ std::string render_enum_widget(const WidgetState& widget) {
     html << render_enum_skin(widget);
     html << "<span class='enum-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='"
           << caption_anchor_style(widget.properties, geometry)
-          << "color:" << html_escape(label_color) << ";'>" << html_escape(label) << "</span>";
+          << "'>" << html_escape(label) << "</span>";
 
     if (is_control) {
         html << "<button id='" << html_escape(widget.widget_id) << "_display' type='button'";
@@ -1388,26 +1493,45 @@ std::string render_boolean_widget(const WidgetState& widget) {
     const std::string caption = property_string(widget.properties, "caption.text", widget.widget_id);
     const std::string route = asset_route(widget);
     const std::string next_value = value ? "false" : "true";
-    const std::string state_fill = state_property(widget.properties, "style.inner.fill_color", visual_state, value ? "#8bd86f" : "#ffffff");
+    const auto caption_color = safe_css_color(property_string(widget.properties, "caption.style.text_color", "#111827"), "#111827");
+    const auto caption_size = safe_css_length(property_string(widget.properties, "caption.style.font_size", "18px"), "18px");
+    const auto caption_weight = safe_css_font_weight(property_string(widget.properties, "caption.style.font_weight", "600"), "600");
+    const auto caption_family = safe_css_font_family(
+        property_string(widget.properties, "caption.style.font_family", "system-ui, Segoe UI, Arial, sans-serif"),
+        "system-ui, Segoe UI, Arial, sans-serif");
+    const std::string false_fill = state_property(widget.properties, "style.inner.fill_color", "false", "#ffffff");
+    const std::string true_fill = state_property(widget.properties, "style.inner.fill_color", "true", "#8bd86f");
+    const std::string state_fill = value ? true_fill : false_fill;
     const std::string hover_fill = state_property(widget.properties, "style.inner.fill_color", hover_state, value ? "#9be884" : "#eef6ff");
     const std::string pressed_fill = state_property(widget.properties, "style.inner.fill_color", pressed_state, value ? "#6fc657" : "#dbeafe");
-    const std::string state_border = state_property(widget.properties, "style.outer.border_color", visual_state, value ? "#184a24" : "#111827");
+    const std::string false_border = state_property(widget.properties, "style.outer.border_color", "false", "#111827");
+    const std::string true_border = state_property(widget.properties, "style.outer.border_color", "true", "#184a24");
+    const std::string state_border = value ? true_border : false_border;
     const std::string hover_border = state_property(widget.properties, "style.outer.border_color", hover_state, value ? "#166534" : "#2563eb");
     const std::string pressed_border = state_property(widget.properties, "style.outer.border_color", pressed_state, value ? "#14532d" : "#1d4ed8");
-    const std::string state_inner_border = state_property(widget.properties, "style.inner.border_color", visual_state, state_border);
+    const std::string false_inner_border = state_property(widget.properties, "style.inner.border_color", "false", false_border);
+    const std::string true_inner_border = state_property(widget.properties, "style.inner.border_color", "true", true_border);
+    const std::string state_inner_border = value ? true_inner_border : false_inner_border;
     const std::string hover_inner_border = state_property(widget.properties, "style.inner.border_color", hover_state, hover_border);
     const std::string pressed_inner_border = state_property(widget.properties, "style.inner.border_color", pressed_state, pressed_border);
-    const std::string text_color = state_property(widget.properties, "state_text.style.text_color", visual_state, value ? "#0b3d19" : "#111827");
+    const std::string false_text_color = state_property(widget.properties, "state_text.style.text_color", "false", "#111827");
+    const std::string true_text_color = state_property(widget.properties, "state_text.style.text_color", "true", "#0b3d19");
+    const std::string text_color = value ? true_text_color : false_text_color;
+    const std::string false_state_text = property_string(widget.properties, "state_text.false_text", "FALSE");
+    const std::string true_state_text = property_string(widget.properties, "state_text.true_text", "TRUE");
     const std::string transition_ms = property_string(widget.properties, "style.transition.duration_ms", "120");
     const std::string transition_timing = property_string(widget.properties, "style.transition.timing", "ease-out");
     const std::string pressed_inset = property_string(widget.properties, "style.pressed.inset", "1px");
     const bool state_text_visible = property_bool(widget.properties, "state_text.visible", true);
     const bool frame_visible = property_bool(widget.properties, "style.frame.visible", true);
     const bool focus_visible = property_bool(widget.properties, "style.focus_ring.visible", false);
+    const std::string text_size = safe_css_length(property_string(widget.properties, "state_text.style.font_size", "18px"), "18px");
+    const std::string text_weight = safe_css_font_weight(property_string(widget.properties, "state_text.style.font_weight", "700"), "700");
     const std::string inner_left = property_string(widget.properties, "style.inner.left", variant == "circular" ? "52px" : "18px");
     const std::string inner_top = property_string(widget.properties, "style.inner.top", variant == "circular" ? "23px" : "31px");
     const std::string inner_width = property_string(widget.properties, "style.inner.width", variant == "circular" ? "56px" : "124px");
     const std::string inner_height = property_string(widget.properties, "style.inner.height", variant == "circular" ? "56px" : "34px");
+    const std::string inner_border_width = safe_css_length(property_string(widget.properties, "style.inner.border_width", "2px"), "2px");
     const std::string focus_color = safe_css_color(property_string(widget.properties, "style.focus_ring.color", "#2563eb"), "#2563eb");
     const std::string focus_width = focus_visible
         ? safe_css_length(property_string(widget.properties, "style.focus_ring.width", "3px"), "3px")
@@ -1431,6 +1555,14 @@ std::string render_boolean_widget(const WidgetState& widget) {
         html << " data-asset-route='" << html_escape(route) << "'";
     }
     html << " data-current-value='" << (value ? "true" : "false") << "'";
+    html << " data-frog-fill-false='" << html_escape(false_fill) << "'";
+    html << " data-frog-fill-true='" << html_escape(true_fill) << "'";
+    html << " data-frog-inner-border-false='" << html_escape(false_inner_border) << "'";
+    html << " data-frog-inner-border-true='" << html_escape(true_inner_border) << "'";
+    html << " data-frog-text-color-false='" << html_escape(false_text_color) << "'";
+    html << " data-frog-text-color-true='" << html_escape(true_text_color) << "'";
+    html << " data-frog-text-false='" << html_escape(false_state_text) << "'";
+    html << " data-frog-text-true='" << html_escape(true_state_text) << "'";
     html << " data-realization-variant='" << html_escape(variant) << "'";
     html << " data-frog-visual-law='wfrog-realization-state-map'";
     html << " data-frog-visual-state='" << html_escape(visual_state) << "'";
@@ -1454,7 +1586,14 @@ std::string render_boolean_widget(const WidgetState& widget) {
          << "--boolean-inner-top:" << html_escape(inner_top) << ";"
          << "--boolean-inner-width:" << html_escape(inner_width) << ";"
          << "--boolean-inner-height:" << html_escape(inner_height) << ";"
+         << "--boolean-inner-border-width:" << html_escape(inner_border_width) << ";"
          << "--boolean-text:" << html_escape(text_color) << ";"
+         << "--boolean-text-font-size:" << html_escape(text_size) << ";"
+         << "--boolean-text-font-weight:" << html_escape(text_weight) << ";"
+         << "--boolean-caption-color:" << html_escape(caption_color) << ";"
+         << "--boolean-caption-font-size:" << html_escape(caption_size) << ";"
+         << "--boolean-caption-font-weight:" << html_escape(caption_weight) << ";"
+         << "--boolean-caption-font-family:" << html_escape(caption_family) << ";"
          << "--boolean-focus-color:" << html_escape(focus_color) << ";"
          << "--boolean-focus-width:" << html_escape(focus_width) << ";"
          << "--boolean-transition:" << html_escape(transition_ms) << "ms " << html_escape(transition_timing) << ";"
@@ -1473,10 +1612,339 @@ std::string render_boolean_widget(const WidgetState& widget) {
     html << "<span class='boolean-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='"
          << caption_anchor_style(widget.properties, geometry) << "'>" << html_escape(caption) << "</span>";
     if (state_text_visible) {
-        html << "<span class='boolean-state-overlay' data-frog-part='state_text'>" << html_escape(state_text) << "</span>";
+        html << "<span class='boolean-state-overlay' data-frog-part='state_text' data-svg-anchor='state_text.center' style='"
+             << state_text_anchor_style(widget.properties, geometry) << "'>" << html_escape(state_text) << "</span>";
     }
     html << (is_control ? "</button>" : "</section>");
     return html.str();
+}
+
+struct ButtonSvgGeometry {
+    double view_width = 340.0;
+    double view_height = 220.0;
+    double caption_x = 16.0;
+    double caption_y = 46.0;
+    double face_x = 26.0;
+    double face_y = 86.0;
+    double face_width = 288.0;
+    double face_height = 80.0;
+    double state_text_x = 170.0;
+    double state_text_y = 127.0;
+};
+
+void parse_button_viewbox(const std::string& svg, ButtonSvgGeometry& geometry) {
+    SvgGeometry viewbox_probe;
+    viewbox_probe.view_width = geometry.view_width;
+    viewbox_probe.view_height = geometry.view_height;
+    parse_viewbox(svg, viewbox_probe);
+    geometry.view_width = viewbox_probe.view_width;
+    geometry.view_height = viewbox_probe.view_height;
+}
+
+ButtonSvgGeometry load_button_svg_geometry(const WidgetState& widget) {
+    ButtonSvgGeometry geometry;
+    if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
+        return geometry;
+    }
+    const auto svg = read_text_file(widget.asset_path);
+    parse_button_viewbox(svg, geometry);
+    geometry.caption_x = svg_part_attribute_double(svg, "caption", "x", geometry.caption_x);
+    geometry.caption_y = svg_part_attribute_double(svg, "caption", "y", geometry.caption_y);
+    geometry.face_x = svg_part_attribute_double(svg, "face", "x", geometry.face_x);
+    geometry.face_y = svg_part_attribute_double(svg, "face", "y", geometry.face_y);
+    geometry.face_width = svg_part_attribute_double(svg, "face", "width", geometry.face_width);
+    geometry.face_height = svg_part_attribute_double(svg, "face", "height", geometry.face_height);
+    geometry.state_text_x = svg_part_attribute_double(svg, "state_text", "x", geometry.state_text_x);
+    geometry.state_text_y = svg_part_attribute_double(svg, "state_text", "y", geometry.state_text_y);
+    return geometry;
+}
+
+std::string button_anchor_style(double x, double y, const ButtonSvgGeometry& geometry) {
+    std::ostringstream style;
+    style << "left:" << css_percent(pct(x, geometry.view_width)) << ";";
+    style << "top:" << css_percent(pct(y, geometry.view_height)) << ";";
+    return style.str();
+}
+
+std::string button_box_style(double x, double y, double width, double height, const ButtonSvgGeometry& geometry) {
+    std::ostringstream style;
+    style << "left:" << css_percent(pct(x, geometry.view_width)) << ";";
+    style << "top:" << css_percent(pct(y, geometry.view_height)) << ";";
+    style << "width:" << css_percent(pct(width, geometry.view_width)) << ";";
+    style << "height:" << css_percent(pct(height, geometry.view_height)) << ";";
+    return style.str();
+}
+
+std::string button_caption_anchor_style(const Object& properties, const ButtonSvgGeometry& geometry) {
+    const auto x = property_number(properties, "caption.anchor.x").value_or(geometry.caption_x);
+    const auto y = property_number(properties, "caption.anchor.y").value_or(geometry.caption_y);
+    const auto align = property_string(properties, "caption.align.horizontal", "left");
+    std::ostringstream style;
+    style << button_anchor_style(x, y, geometry);
+    style << "transform:" << caption_transform_for_align(align) << ";";
+    style << "text-align:" << caption_text_align(align) << ";";
+    style << "color:" << html_escape(safe_css_color(property_string(properties, "caption.style.text_color", "#111827"), "#111827")) << ";";
+    if (!property_bool(properties, "caption.visible", true)) {
+        style << "display:none;";
+    }
+    return style.str();
+}
+
+std::string inline_svg_asset(const WidgetState& widget) {
+    if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
+        throw std::runtime_error("Button widget " + widget.widget_id + " requires an existing .wfrog SVG asset.");
+    }
+    return read_text_file(widget.asset_path);
+}
+
+std::string render_button_widget(const WidgetState& widget) {
+    const auto geometry = load_button_svg_geometry(widget);
+    const auto x = layout_i64(widget.layout, "x", 0);
+    const auto y = layout_i64(widget.layout, "y", 0);
+    const auto width = layout_i64(widget.layout, "width", 220);
+    const auto height = layout_i64(widget.layout, "height", 140);
+    const bool value = property_bool(widget.properties, "pressed", property_bool(widget.properties, "value", false));
+    const std::string visual_state = value ? "true" : "false";
+    const std::string hover_state = value ? "hover_true" : "hover_false";
+    const std::string pressed_state = value ? "pressed_true" : "pressed_false";
+    const std::string transition_state = value ? "transition_true_to_false" : "transition_false_to_true";
+    const std::string caption = property_string(widget.properties, "caption.text", widget.widget_id);
+    const std::string false_state_text = property_string(widget.properties, "state_text.false_text", "OFF");
+    const std::string true_state_text = property_string(widget.properties, "state_text.true_text", "ON");
+    const std::string state_text = value ? true_state_text : false_state_text;
+    const std::string route = asset_route(widget);
+    const auto input_id = property_string(widget.properties, "binding.public_input_id", "trigger_pressed");
+
+    const auto frame_fill = safe_css_color(property_string(widget.properties, "style.frame.fill_color", "transparent"), "transparent");
+    const auto frame_stroke = safe_css_color(property_string(widget.properties, "style.frame.border_color", "transparent"), "transparent");
+    const auto frame_width = safe_css_length(property_string(widget.properties, "style.frame.border_width", "0px"), "0px");
+    const auto face_fill = safe_css_color(state_property(widget.properties, "style.face.fill_color", visual_state, "#e2e8f0"), "#e2e8f0");
+    const auto face_hover_fill = safe_css_color(state_property(widget.properties, "style.face.fill_color", hover_state, face_fill), face_fill);
+    const auto face_pressed_fill = safe_css_color(state_property(widget.properties, "style.face.fill_color", pressed_state, face_fill), face_fill);
+    const auto face_stroke = safe_css_color(state_property(widget.properties, "style.face.border_color", visual_state, "#334155"), "#334155");
+    const auto face_stroke_width = safe_css_length(property_string(widget.properties, "style.face.border_width", "4px"), "4px");
+    const auto state_face_fill = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", visual_state, "transparent"), "transparent");
+    const auto state_face_hover_fill = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", hover_state, state_face_fill), state_face_fill);
+    const auto state_face_pressed_fill = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", pressed_state, state_face_fill), state_face_fill);
+    const auto state_face_stroke = safe_css_color(state_property(widget.properties, "style.state_face.border_color", visual_state, "transparent"), "transparent");
+    const auto state_face_hover_stroke = safe_css_color(state_property(widget.properties, "style.state_face.border_color", hover_state, state_face_stroke), state_face_stroke);
+    const auto state_face_pressed_stroke = safe_css_color(state_property(widget.properties, "style.state_face.border_color", pressed_state, state_face_stroke), state_face_stroke);
+    const auto state_face_stroke_width = safe_css_length(property_string(widget.properties, "style.state_face.border_width", "0px"), "0px");
+    const auto caption_size = safe_css_length(property_string(widget.properties, "caption.style.font_size", "18px"), "18px");
+    const auto caption_weight = safe_css_font_weight(property_string(widget.properties, "caption.style.font_weight", "600"), "600");
+    const auto caption_family = safe_css_font_family(
+        property_string(widget.properties, "caption.style.font_family", "system-ui, Segoe UI, Arial, sans-serif"),
+        "system-ui, Segoe UI, Arial, sans-serif");
+    const auto false_text_color = safe_css_color(state_property(widget.properties, "state_text.style.text_color", "false", "#111827"), "#111827");
+    const auto true_text_color = safe_css_color(state_property(widget.properties, "state_text.style.text_color", "true", "#06381c"), "#06381c");
+    const auto text_color = value ? true_text_color : false_text_color;
+    const auto text_size = safe_css_length(property_string(widget.properties, "state_text.style.font_size", "20px"), "20px");
+    const auto text_weight = safe_css_font_weight(property_string(widget.properties, "state_text.style.font_weight", "700"), "700");
+    const auto focus_color = safe_css_color(property_string(widget.properties, "style.focus_ring.color", "#2563eb"), "#2563eb");
+    const auto focus_width = property_bool(widget.properties, "style.focus_ring.visible", true)
+        ? safe_css_length(property_string(widget.properties, "style.focus_ring.width", "3px"), "3px")
+        : "0px";
+    const auto pressed_inset = safe_css_length(property_string(widget.properties, "style.pressed.inset", "2px"), "2px");
+    const auto transition_ms = property_string(widget.properties, "style.transition.duration_ms", "120");
+    const auto transition_timing = property_string(widget.properties, "style.transition.timing", "ease-out");
+    const bool state_text_visible = property_bool(widget.properties, "state_text.visible", true);
+
+    std::ostringstream html;
+    html << "<div class='frog-widget button-widget button-control'";
+    html << " data-widget-id='" << html_escape(widget.widget_id) << "'";
+    html << " data-class-ref='" << html_escape(widget.class_ref) << "'";
+    html << " data-role='" << html_escape(widget.role) << "'";
+    if (widget.asset_id.has_value()) {
+        html << " data-asset-ref='asset:" << html_escape(*widget.asset_id) << "'";
+    }
+    if (!route.empty()) {
+        html << " data-asset-route='" << html_escape(route) << "'";
+    }
+    html << " data-current-value='" << (value ? "true" : "false") << "'";
+    html << " data-realization-variant='" << html_escape(property_string(widget.properties, "realization.variant", "rectangular")) << "'";
+    html << " data-frog-visual-law='wfrog-realization-state-map'";
+    html << " data-frog-visual-state='" << html_escape(visual_state) << "'";
+    html << " data-frog-hover-state='" << html_escape(hover_state) << "'";
+    html << " data-frog-pressed-state='" << html_escape(pressed_state) << "'";
+    html << " data-frog-transition-state='" << html_escape(transition_state) << "'";
+    html << " data-frog-state-text-visible='" << (state_text_visible ? "true" : "false") << "'";
+    html << " data-frog-state-text-false='" << html_escape(false_state_text) << "'";
+    html << " data-frog-state-text-true='" << html_escape(true_state_text) << "'";
+    html << " data-frog-state-text-color-false='" << html_escape(false_text_color) << "'";
+    html << " data-frog-state-text-color-true='" << html_escape(true_text_color) << "'";
+    html << " style='position:absolute;left:" << css_px(x) << ";top:" << css_px(y)
+         << ";width:" << css_px(width) << ";height:" << css_px(height) << ";"
+         << "--frog-button-frame-fill:" << html_escape(frame_fill) << ";"
+         << "--frog-button-frame-stroke:" << html_escape(frame_stroke) << ";"
+         << "--frog-button-frame-stroke-width:" << html_escape(frame_width) << ";"
+         << "--frog-button-face-fill:" << html_escape(face_fill) << ";"
+         << "--frog-button-face-hover-fill:" << html_escape(face_hover_fill) << ";"
+         << "--frog-button-face-pressed-fill:" << html_escape(face_pressed_fill) << ";"
+         << "--frog-button-face-stroke:" << html_escape(face_stroke) << ";"
+         << "--frog-button-face-stroke-width:" << html_escape(face_stroke_width) << ";"
+         << "--frog-button-state-face-fill:" << html_escape(state_face_fill) << ";"
+         << "--frog-button-state-face-hover-fill:" << html_escape(state_face_hover_fill) << ";"
+         << "--frog-button-state-face-pressed-fill:" << html_escape(state_face_pressed_fill) << ";"
+         << "--frog-button-state-face-stroke:" << html_escape(state_face_stroke) << ";"
+         << "--frog-button-state-face-hover-stroke:" << html_escape(state_face_hover_stroke) << ";"
+         << "--frog-button-state-face-pressed-stroke:" << html_escape(state_face_pressed_stroke) << ";"
+         << "--frog-button-state-face-stroke-width:" << html_escape(state_face_stroke_width) << ";"
+         << "--frog-button-caption-font-size:" << html_escape(caption_size) << ";"
+         << "--frog-button-caption-font-weight:" << html_escape(caption_weight) << ";"
+         << "--frog-button-caption-font-family:" << html_escape(caption_family) << ";"
+         << "--frog-button-state-text-fill:" << html_escape(text_color) << ";"
+         << "--frog-button-state-text-font-size:" << html_escape(text_size) << ";"
+         << "--frog-button-state-text-font-weight:" << html_escape(text_weight) << ";"
+         << "--frog-button-focus-color:" << html_escape(focus_color) << ";"
+         << "--frog-button-focus-width:" << html_escape(focus_width) << ";"
+         << "--frog-button-pressed-inset:" << html_escape(pressed_inset) << ";"
+         << "--frog-button-transition:" << html_escape(transition_ms) << "ms " << html_escape(transition_timing) << ";";
+    if (!property_bool(widget.properties, "visible", true)) {
+        html << "display:none;";
+    }
+    html << "'>";
+    html << "<div class='button-skin' data-frog-asset-consumed='true' aria-hidden='true'>" << inline_svg_asset(widget) << "</div>";
+    html << "<span class='button-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='"
+         << button_caption_anchor_style(widget.properties, geometry) << "'>" << html_escape(caption) << "</span>";
+    if (state_text_visible) {
+        html << "<span class='button-state-overlay' data-frog-part='state_text' data-svg-anchor='state_text.center' style='"
+             << button_anchor_style(geometry.state_text_x, geometry.state_text_y, geometry) << "'>" << html_escape(state_text) << "</span>";
+    }
+    html << "<button class='button-press-overlay' type='button'";
+    html << " name='" << html_escape(input_id) << "' value='true'";
+    html << " aria-label='" << html_escape(caption) << "'";
+    html << " aria-pressed='" << (value ? "true" : "false") << "'";
+    html << " data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='" << html_escape(input_id) << "'";
+    html << " data-frog-host-overlay='input' data-frog-align-to-part='face'";
+    html << " style='" << button_box_style(geometry.face_x, geometry.face_y, geometry.face_width, geometry.face_height, geometry) << "'>";
+    html << "</button></div>";
+    return html.str();
+}
+
+std::string button_press_to_boolean_script() {
+    return R"FROGJS(<script>
+(() => {
+  const form = document.querySelector("form[action='/run']");
+  const buttonWidget = document.querySelector("[data-widget-id='trigger_button']");
+  const overlay = document.querySelector("[data-widget-id='trigger_button'] .button-press-overlay");
+  const indicator = document.querySelector("[data-widget-id='pressed_indicator']");
+  if (!form || !buttonWidget || !overlay || !indicator) {
+    return;
+  }
+
+  const buttonStateText = buttonWidget.querySelector(".button-state-overlay[data-frog-part='state_text']");
+  const stateText = indicator.querySelector("[data-frog-part='state_text']");
+  const inputId = overlay.dataset.frogPublicInputId || overlay.name || "trigger_pressed";
+  let pressed = false;
+  let eventQueue = Promise.resolve();
+
+  const buttonProperty = (base, value) => {
+    const suffix = value ? "True" : "False";
+    return buttonWidget.dataset[`${base}${suffix}`] || "";
+  };
+
+  const indicatorProperty = (base, value) => {
+    const suffix = value ? "True" : "False";
+    return indicator.dataset[`${base}${suffix}`] || "";
+  };
+
+  const applyIndicator = (value) => {
+    const state = value ? "true" : "false";
+    indicator.dataset.currentValue = state;
+    indicator.dataset.frogVisualState = state;
+    indicator.dataset.frogHoverState = value ? "hover_true" : "hover_false";
+    indicator.dataset.frogPressedState = value ? "pressed_true" : "pressed_false";
+    indicator.dataset.frogTransitionState = value ? "transition_false_to_true" : "transition_true_to_false";
+    indicator.style.setProperty("--boolean-fill", indicatorProperty("frogFill", value));
+    indicator.style.setProperty("--boolean-inner-border", indicatorProperty("frogInnerBorder", value));
+    indicator.style.setProperty("--boolean-text", indicatorProperty("frogTextColor", value));
+    if (stateText) {
+      stateText.textContent = indicatorProperty("frogText", value);
+    }
+  };
+
+  const publish = (value) => {
+    const body = new URLSearchParams();
+    body.set(inputId, value ? "true" : "false");
+    eventQueue = eventQueue
+      .catch(() => {})
+      .then(() => fetch("/event", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"},
+        body
+      }))
+      .catch(() => {});
+  };
+
+  const setPressed = (value) => {
+    if (pressed === value) {
+      return;
+    }
+    pressed = value;
+    overlay.setAttribute("aria-pressed", value ? "true" : "false");
+    buttonWidget.dataset.currentValue = value ? "true" : "false";
+    buttonWidget.dataset.frogVisualState = value ? "true" : "false";
+    buttonWidget.dataset.frogPressedState = value ? "pressed_true" : "pressed_false";
+    if (buttonStateText) {
+      buttonStateText.textContent = buttonProperty("frogStateText", value);
+      buttonStateText.style.color = buttonProperty("frogStateTextColor", value);
+    }
+    applyIndicator(value);
+    publish(value);
+  };
+
+  form.addEventListener("submit", (event) => event.preventDefault());
+  overlay.addEventListener("click", (event) => event.preventDefault());
+  const press = (event) => {
+    if (event && event.button !== undefined && event.button !== 0) {
+      return;
+    }
+    if (event) {
+      event.preventDefault();
+    }
+    setPressed(true);
+  };
+  overlay.addEventListener("pointerdown", (event) => {
+    if (overlay.setPointerCapture) {
+      overlay.setPointerCapture(event.pointerId);
+    }
+    press(event);
+  });
+  const release = (event) => {
+    if (!pressed) {
+      return;
+    }
+    if (event) {
+      event.preventDefault();
+    }
+    setPressed(false);
+  };
+  overlay.addEventListener("pointerup", release);
+  overlay.addEventListener("pointercancel", release);
+  overlay.addEventListener("lostpointercapture", release);
+  overlay.addEventListener("mousedown", press);
+  window.addEventListener("mouseup", release);
+  overlay.addEventListener("mouseleave", release);
+  overlay.addEventListener("touchstart", press, {passive: false});
+  overlay.addEventListener("touchend", release, {passive: false});
+  overlay.addEventListener("touchcancel", release, {passive: false});
+  overlay.addEventListener("blur", release);
+  overlay.addEventListener("keydown", (event) => {
+    if (event.key !== " " && event.key !== "Enter") {
+      return;
+    }
+    event.preventDefault();
+    setPressed(true);
+  });
+  overlay.addEventListener("keyup", (event) => {
+    if (event.key !== " " && event.key !== "Enter") {
+      return;
+    }
+    event.preventDefault();
+    setPressed(false);
+  });
+})();
+</script>)FROGJS";
 }
 
 struct Request {
@@ -1661,8 +2129,8 @@ std::string BrowserUiRuntime::render_html() const {
             ".numeric-skin{position:absolute;inset:0;width:100%;height:100%;display:block;}"
             ".numeric-skin svg{width:100%;height:100%;display:block;}"
             ".missing-skin{background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;}"
-            ".numeric-label-overlay{position:absolute;transform:translateY(-50%);font-size:12px;line-height:1;white-space:nowrap;pointer-events:none;}"
-            ".numeric-value-overlay{position:absolute;box-sizing:border-box;font-family:Consolas,Segoe UI Mono,monospace;font-size:11px;font-weight:700;line-height:1;border:0;background:transparent;}"
+            ".numeric-label-overlay{position:absolute;transform:translateY(-50%);font-size:var(--frog-numeric-caption-font-size);font-family:var(--frog-numeric-caption-font-family);font-weight:var(--frog-numeric-caption-font-weight);color:var(--frog-numeric-caption-color);line-height:1;white-space:nowrap;pointer-events:none;}"
+            ".numeric-value-overlay{position:absolute;box-sizing:border-box;font-family:var(--frog-numeric-text-font-family);font-size:var(--frog-numeric-text-font-size);font-weight:var(--frog-numeric-text-font-weight);color:var(--frog-numeric-text-color);line-height:1;border:0;background:transparent;}"
             ".numeric-control-editor{padding:0 4px;border-radius:0;outline:0;background:transparent;appearance:textfield;-moz-appearance:textfield;}"
             ".numeric-control-editor::-webkit-outer-spin-button,.numeric-control-editor::-webkit-inner-spin-button{appearance:none;margin:0;}"
             ".numeric-control-editor:focus{outline:0;background:transparent;}"
@@ -1857,8 +2325,8 @@ std::string BooleanBrowserUiRuntime::render_html() const {
             ".boolean-indicator{pointer-events:none;}"
             ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}"
             ".missing-skin{background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;}"
-            ".boolean-caption-overlay{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}"
-            ".boolean-state-face{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:2px solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
+            ".boolean-caption-overlay{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--boolean-caption-font-size);font-weight:var(--boolean-caption-font-weight);font-family:var(--boolean-caption-font-family);line-height:1;color:var(--boolean-caption-color);white-space:nowrap;pointer-events:none;z-index:3;}"
+            ".boolean-state-face{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:var(--boolean-inner-border-width) solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
             ".boolean-widget[data-realization-variant='circular'] .boolean-state-face{border-radius:50%;}"
             ".boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{box-shadow:none;}"
             ".boolean-control:hover .boolean-state-face{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-inner-border);box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 2px 5px rgba(15,23,42,.18);}"
@@ -1866,7 +2334,7 @@ std::string BooleanBrowserUiRuntime::render_html() const {
             ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-inner-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}"
             ".boolean-control[data-frog-frame-visible='false']:active .boolean-state-face{box-shadow:none;}"
             ".boolean-control:focus-visible .boolean-state-face{outline:var(--boolean-focus-width) solid var(--boolean-focus-color);}"
-            ".boolean-state-overlay{position:absolute;left:0;right:0;top:49px;transform:translateY(-50%);text-align:center;font-size:18px;font-weight:700;line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;}"
+            ".boolean-state-overlay{position:absolute;transform:translate(-50%,-50%);text-align:center;font-size:var(--boolean-text-font-size);font-weight:var(--boolean-text-font-weight);line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;white-space:nowrap;}"
             ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
             ".state-link{font-size:16px;}"
             ".diagnostic{margin:12px 0;padding:10px 12px;border-radius:6px;}"
@@ -2030,7 +2498,7 @@ std::string StringBrowserUiRuntime::render_html() const {
             ".string-skin svg{width:100%;height:100%;display:block;--frog-string-label-display:inherit;--frog-string-caption-display:inherit;--frog-string-placeholder-display:inherit;--frog-string-frame-fill:inherit;--frog-string-frame-stroke:inherit;--frog-string-frame-stroke-width:inherit;--frog-string-text-region-fill:inherit;--frog-string-text-region-stroke:inherit;--frog-string-text-region-stroke-width:inherit;--frog-string-text-fill:inherit;--frog-string-text-font-size:inherit;--frog-string-text-font-weight:inherit;}"
             ".string-skin #label_text,.string-skin #caption_text,.string-skin #placeholder,.string-skin #text_value{display:none;}"
             ".string-control:hover .string-skin svg{--frog-string-text-region-fill:var(--frog-string-text-region-fill-hover);--frog-string-text-region-stroke:var(--frog-string-text-region-stroke-hover);--frog-string-text-region-stroke-width:var(--frog-string-text-region-stroke-width-hover);}"
-            ".string-caption-overlay{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}"
+            ".string-caption-overlay{position:absolute;transform:translateY(-50%);font-size:var(--frog-string-caption-font-size);font-weight:var(--frog-string-caption-font-weight);font-family:var(--frog-string-caption-font-family);color:var(--frog-string-caption-color);line-height:1;white-space:nowrap;pointer-events:none;}"
             ".string-value-overlay{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1.2;border:0;background:transparent;}"
             ".string-control-editor{padding:0 8px;outline:0;}"
             ".string-control-editor:focus{outline:0;}"
@@ -2197,7 +2665,7 @@ std::string EnumBrowserUiRuntime::render_html() const {
             ".enum-skin{position:absolute;inset:0;width:100%;height:100%;display:block;}"
             ".enum-skin svg{width:100%;height:100%;display:block;}"
             ".enum-skin #label_text,.enum-skin #caption_text,.enum-skin #value_display{display:none;}"
-            ".enum-caption-overlay{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}"
+            ".enum-caption-overlay{position:absolute;transform:translateY(-50%);font-size:var(--frog-enum-caption-font-size);font-weight:var(--frog-enum-caption-font-weight);font-family:var(--frog-enum-caption-font-family);color:var(--frog-enum-caption-color);line-height:1;white-space:nowrap;pointer-events:none;}"
             ".enum-value-overlay{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1.2;border:0;background:transparent;}"
             ".enum-value-display-overlay{position:absolute;box-sizing:border-box;display:flex;align-items:center;padding:0 var(--frog-enum-text-padding-inline);font-family:Segoe UI,Arial,sans-serif;line-height:normal;transform:translateY(var(--frog-enum-text-vertical-offset));z-index:3;}"
             ".enum-widget .enum-display-button{border:0;background:transparent;text-align:left;justify-content:flex-start;appearance:none;cursor:pointer;}"
@@ -2384,7 +2852,7 @@ std::string PathBrowserUiRuntime::render_html() const {
             ".path-skin{position:absolute;inset:0;width:100%;height:100%;display:block;}"
             ".path-skin svg{width:100%;height:100%;display:block;}"
             ".path-skin #label_text,.path-skin #caption_text,.path-skin #path_display{display:none;}"
-            ".path-caption-overlay{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}"
+            ".path-caption-overlay{position:absolute;transform:translateY(-50%);font-size:var(--frog-path-caption-font-size);font-weight:var(--frog-path-caption-font-weight);font-family:var(--frog-path-caption-font-family);color:var(--frog-path-caption-color);line-height:1;white-space:nowrap;pointer-events:none;}"
             ".path-value-overlay{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1;border:0;background:transparent;margin:0;}"
             ".path-control-editor{outline:0;appearance:none;-webkit-appearance:none;}"
             ".path-control-editor:focus{outline:0;}"
@@ -2521,6 +2989,200 @@ void PathBrowserUiRuntime::serve(const std::string& host, std::uint16_t port, bo
                     last_error = error.what();
                 }
                 send_response(client, "303 See Other", "text/plain; charset=utf-8", "", std::make_pair(std::string("Location"), std::string("/")));
+            } else {
+                send_response(client, "404 Not Found", "text/plain; charset=utf-8", "not found");
+            }
+        } catch (const std::exception& error) {
+            try {
+                send_response(client, "500 Internal Server Error", "text/plain; charset=utf-8", error.what());
+            } catch (...) {
+            }
+        }
+        close_socket(client);
+    }
+}
+
+ButtonBrowserUiRuntime::ButtonBrowserUiRuntime(
+    std::filesystem::path contract_path,
+    std::filesystem::path wfrog_path,
+    std::shared_ptr<const NativeBoolKernelBridge> native_kernel_bridge_)
+    : core(std::move(contract_path), std::move(wfrog_path)),
+      native_kernel_bridge(std::move(native_kernel_bridge_)) {}
+
+frog::json::Value ButtonBrowserUiRuntime::run_once(bool trigger_pressed) {
+    try {
+        frog::json::Value artifact = native_kernel_bridge == nullptr
+            ? core.execute(trigger_pressed)
+            : core.execute_with_native_kernel_bridge(*native_kernel_bridge, trigger_pressed);
+        last_error.reset();
+        return artifact;
+    } catch (const std::exception& error) {
+        last_error = error.what();
+        throw;
+    }
+}
+
+std::string ButtonBrowserUiRuntime::render_html() const {
+    const auto& button = core.widgets.at("trigger_button");
+    const auto& indicator = core.widgets.at("pressed_indicator");
+    const auto panel_width = layout_i64(core.panel.layout, "width", 520);
+    const auto panel_height = layout_i64(core.panel.layout, "height", 180);
+    const bool uses_native_kernel = native_kernel_bridge != nullptr;
+
+    std::string diagnostics;
+    if (last_error.has_value()) {
+        diagnostics = "<div class='diagnostic error'>" + html_escape(*last_error) + "</div>";
+    }
+
+    std::ostringstream html;
+    html << "<!doctype html><html lang='en'><head><meta charset='utf-8'><title>" << html_escape(core.panel.title) << "</title>";
+    html << "<style>"
+            "body{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}"
+            "h1{font-size:24px;margin:0 0 12px 0;}"
+            "p.meta{margin:0 0 20px 0;color:#52606d;}"
+            ".runtime-facts{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 18px 0;}"
+            ".runtime-facts div{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}"
+            ".runtime-facts dt{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}"
+            ".runtime-facts dd{margin:0;color:#1f2933;font-size:12px;font-weight:600;}"
+            ".front-panel{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}"
+            ".frog-widget{position:absolute;box-sizing:border-box;}"
+            ".button-widget{overflow:visible;}"
+            ".button-skin{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;}"
+            ".button-skin svg{width:100%;height:100%;display:block;}"
+            ".button-skin [data-frog-part='label'],.button-skin [data-frog-part='caption'],.button-skin [data-frog-part='state_text']{display:none!important;}"
+            ".button-skin [data-frog-part='frame']{fill:var(--frog-button-frame-fill)!important;stroke:var(--frog-button-frame-stroke)!important;stroke-width:var(--frog-button-frame-stroke-width)!important;}"
+            ".button-skin [data-frog-part='face']{fill:var(--frog-button-face-fill)!important;stroke:var(--frog-button-face-stroke)!important;stroke-width:var(--frog-button-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}"
+            ".button-skin [data-frog-part='state_face']{fill:var(--frog-button-state-face-fill)!important;stroke:var(--frog-button-state-face-stroke)!important;stroke-width:var(--frog-button-state-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}"
+            ".button-skin [data-frog-part='focus_ring']{display:none!important;stroke:var(--frog-button-focus-color)!important;stroke-width:var(--frog-button-focus-width)!important;}"
+            ".button-widget:has(.button-press-overlay:hover) .button-skin [data-frog-part='face']{fill:var(--frog-button-face-hover-fill)!important;}"
+            ".button-widget:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face']{fill:var(--frog-button-state-face-hover-fill)!important;stroke:var(--frog-button-state-face-hover-stroke)!important;}"
+            ".button-widget:has(.button-press-overlay:active) .button-skin [data-frog-part='face']{fill:var(--frog-button-face-pressed-fill)!important;transform:translateY(var(--frog-button-pressed-inset));}"
+            ".button-widget:has(.button-press-overlay:active) .button-skin [data-frog-part='state_face']{fill:var(--frog-button-state-face-pressed-fill)!important;stroke:var(--frog-button-state-face-pressed-stroke)!important;transform:translateY(var(--frog-button-pressed-inset));}"
+            ".button-widget:has(.button-press-overlay:focus-visible) .button-skin [data-frog-part='focus_ring']{display:inline!important;}"
+            ".button-caption-overlay{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--frog-button-caption-font-size);font-weight:var(--frog-button-caption-font-weight);font-family:var(--frog-button-caption-font-family);line-height:1;white-space:nowrap;pointer-events:none;z-index:3;}"
+            ".button-state-overlay{position:absolute;transform:translate(-50%,-50%);font-size:var(--frog-button-state-text-font-size);font-weight:var(--frog-button-state-text-font-weight);line-height:1;color:var(--frog-button-state-text-fill);pointer-events:none;z-index:4;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}"
+            ".button-press-overlay{position:absolute;box-sizing:border-box;margin:0;padding:0;border:0;background:transparent;cursor:pointer;appearance:none;z-index:5;}"
+            ".button-press-overlay:focus,.button-press-overlay:focus-visible,.button-press-overlay:active{outline:0;box-shadow:none;}"
+            ".boolean-widget{border:0;padding:0;background:transparent;font:inherit;color:inherit;overflow:visible;}"
+            ".boolean-indicator{pointer-events:none;}"
+            ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}"
+            ".boolean-caption-overlay{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--boolean-caption-font-size);font-weight:var(--boolean-caption-font-weight);font-family:var(--boolean-caption-font-family);line-height:1;color:var(--boolean-caption-color);white-space:nowrap;pointer-events:none;z-index:3;}"
+            ".boolean-state-face{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:var(--boolean-inner-border-width) solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
+            ".boolean-widget[data-realization-variant='circular'] .boolean-state-face{border-radius:50%;}"
+            ".boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{box-shadow:none;}"
+            ".boolean-state-overlay{position:absolute;transform:translate(-50%,-50%);text-align:center;font-size:var(--boolean-text-font-size);font-weight:var(--boolean-text-font-weight);line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;white-space:nowrap;}"
+            ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
+            ".state-link{font-size:16px;}"
+            ".diagnostic{margin:12px 0;padding:10px 12px;border-radius:6px;}"
+            ".diagnostic.error{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}"
+            "</style></head><body>";
+    html << "<h1>" << html_escape(core.panel.title) << "</h1>";
+    html << "<p class='meta'>Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + C++ runtime</p>";
+    html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
+    html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
+    html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : "button contract executor") << "</dd></div>";
+    html << "<div><dt>Compiler backend</dt><dd>" << (uses_native_kernel ? "LLVM native Button bool kernel artifact" : "none for Example 10") << "</dd></div>";
+    html << "</dl>";
+    html << diagnostics;
+    html << "<form method='post' action='/run'>";
+    html << "<div class='front-panel' data-panel-id='" << html_escape(core.panel.panel_id)
+         << "' data-coordinate-space='panel_pixels' data-runtime-language='cpp'";
+    html << " data-compiler-backend='" << (uses_native_kernel ? "llvm" : "none") << "'";
+    html << " data-execution-path='" << (uses_native_kernel ? "native_kernel_bridge" : "cpp_button_contract_executor") << "'";
+    html << " style='width:" << css_px(panel_width) << ";height:" << css_px(panel_height) << ";'>";
+    html << render_button_widget(button);
+    html << render_boolean_widget(indicator);
+    html << "</div><div class='actions'><a class='state-link' href='/state.json'>state.json</a></div></form>";
+    html << button_press_to_boolean_script();
+    html << "</body></html>";
+    return html.str();
+}
+
+void ButtonBrowserUiRuntime::serve(const std::string& host, std::uint16_t port, bool should_open_browser) {
+    NetworkBootstrap network_bootstrap;
+    (void)network_bootstrap;
+
+    socket_t server = ::socket(AF_INET, SOCK_STREAM, 0);
+    if (server == invalid_socket) {
+        throw std::runtime_error("Unable to create server socket.");
+    }
+
+#ifndef _WIN32
+    int opt = 1;
+    setsockopt(server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+#endif
+
+    sockaddr_in address{};
+    address.sin_family = AF_INET;
+    address.sin_port = htons(port);
+    if (inet_pton(AF_INET, host.c_str(), &address.sin_addr) != 1) {
+        close_socket(server);
+        throw std::runtime_error("Only numeric IPv4 host values are supported by this minimal runtime.");
+    }
+
+    if (bind(server, reinterpret_cast<sockaddr*>(&address), sizeof(address)) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to bind server socket.");
+    }
+    if (listen(server, 16) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to listen on server socket.");
+    }
+
+    sockaddr_in bound_address{};
+#ifdef _WIN32
+    int bound_length = sizeof(bound_address);
+#else
+    socklen_t bound_length = sizeof(bound_address);
+#endif
+    if (getsockname(server, reinterpret_cast<sockaddr*>(&bound_address), &bound_length) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to inspect bound server socket.");
+    }
+
+    const std::string url = "http://" + host + ":" + std::to_string(ntohs(bound_address.sin_port)) + "/";
+    std::cout << url << std::endl;
+    if (should_open_browser) {
+        open_in_browser(url);
+    }
+
+    while (true) {
+        socket_t client = accept(server, nullptr, nullptr);
+        if (client == invalid_socket) {
+            continue;
+        }
+        try {
+            const auto raw = receive_request(client);
+            const auto request = parse_request(raw);
+            if (request.method == "GET" && request.path == "/") {
+                send_response(client, "200 OK", "text/html; charset=utf-8", render_html());
+            } else if (request.method == "GET" && request.path == "/state.json") {
+                send_response(client, "200 OK", "application/json; charset=utf-8", frog::json::stringify(core.execution_artifact(), true, 2));
+            } else if (request.method == "GET" && request.path.rfind("/asset/", 0) == 0) {
+                const std::string asset_id = request.path.substr(std::string("/asset/").size());
+                const auto asset_it = core.asset_map.find(asset_id);
+                if (asset_it == core.asset_map.end() || !std::filesystem::exists(asset_it->second)) {
+                    send_response(client, "404 Not Found", "text/plain; charset=utf-8", "missing asset");
+                } else {
+                    send_response(client, "200 OK", "image/svg+xml", read_text_file(asset_it->second));
+                }
+            } else if (request.method == "POST" && (request.path == "/run" || request.path == "/event")) {
+                try {
+                    const auto form_value = parse_form_value(request.body, "trigger_pressed").value_or("false");
+                    const auto artifact = run_once(parse_bool_form_value(form_value));
+                    if (request.path == "/event") {
+                        send_response(client, "200 OK", "application/json; charset=utf-8", frog::json::stringify(artifact, true, 2));
+                    } else {
+                        send_response(client, "303 See Other", "text/plain; charset=utf-8", "", std::make_pair(std::string("Location"), std::string("/")));
+                    }
+                } catch (const std::exception& error) {
+                    last_error = error.what();
+                    if (request.path == "/event") {
+                        send_response(client, "500 Internal Server Error", "application/json; charset=utf-8", frog::json::stringify(core.execution_artifact(), true, 2));
+                    } else {
+                        send_response(client, "303 See Other", "text/plain; charset=utf-8", "", std::make_pair(std::string("Location"), std::string("/")));
+                    }
+                }
             } else {
                 send_response(client, "404 Not Found", "text/plain; charset=utf-8", "not found");
             }

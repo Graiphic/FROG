@@ -124,6 +124,8 @@ void test_boolean_browser_ui_surface() {
     assert_contains(html, "data-class-ref='frog.widgets.boolean_indicator'");
     assert_contains(html, "data-asset-route='/asset/boolean_rectangular_svg'");
     assert_contains(html, "data-asset-route='/asset/boolean_circular_svg'");
+    assert_contains(html, ">Boolean value</span>");
+    assert_contains(html, ">Boolean indicator</span>");
     assert_contains(html, "class='boolean-skin'");
     assert_contains(html, "class='boolean-state-face'");
     assert_contains(html, "data-frog-visual-law='wfrog-realization-state-map'");
@@ -157,6 +159,9 @@ void test_boolean_browser_ui_surface() {
     assert_contains(html, "/state.json");
     assert_not_contains(html, "boolean-card");
     assert_not_contains(html, "boolean-face");
+    assert_not_contains(html, "data-class-ref='frog.widgets.button'");
+    assert_not_contains(html, "data-asset-route='/asset/button_rectangular_svg'");
+    assert_not_contains(html, "button_press_binding");
     assert_not_contains(html, "type='checkbox'");
     assert_not_contains(html, "Current runtime snapshot");
     assert_not_contains(html, "<pre>");

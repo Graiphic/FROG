@@ -375,20 +375,38 @@ class Slice05RuntimeCore:
     def execution_artifact(self) -> Dict[str, Any]:
         ui_widget_entries = []
         for widget in self.widgets.values():
+            runtime_fields = {
+                "value": widget.properties.get("value", 0),
+                "label": widget.properties.get("label", ""),
+                "visible": bool(widget.properties.get("visible", True)),
+                "enabled": bool(widget.properties.get("enabled", True)),
+                "foreground_color": str(widget.properties.get("foreground_color", "#D8D8D8")),
+                "asset_ref": f"asset:{widget.asset_id}" if widget.asset_id else None,
+            }
+            for key in [
+                "caption.text",
+                "caption.visible",
+                "caption.anchor.x",
+                "caption.anchor.y",
+                "caption.align.horizontal",
+                "style.caption.text_color",
+                "style.caption.font_family",
+                "style.caption.font_size",
+                "style.caption.font_weight",
+                "style.text_value.color",
+                "style.text_value.font_family",
+                "style.text_value.font_size",
+                "style.text_value.font_weight",
+            ]:
+                if key in widget.properties:
+                    runtime_fields[key] = widget.properties[key]
             ui_widget_entries.append(
                 {
                     "widget_id": widget.widget_id,
                     "class_ref": widget.class_ref,
                     "role": widget.role,
                     "layout": dict(widget.layout),
-                    "runtime": {
-                        "value": widget.properties.get("value", 0),
-                        "label": widget.properties.get("label", ""),
-                        "visible": bool(widget.properties.get("visible", True)),
-                        "enabled": bool(widget.properties.get("enabled", True)),
-                        "foreground_color": str(widget.properties.get("foreground_color", "#D8D8D8")),
-                        "asset_ref": f"asset:{widget.asset_id}" if widget.asset_id else None,
-                    },
+                    "runtime": runtime_fields,
                 }
             )
 

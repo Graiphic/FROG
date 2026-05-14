@@ -48,3 +48,9 @@
   <li><code>state_text</code></li>
   <li><code>focus_ring</code></li>
 </ul>
+
+<p>
+The rectangular template also publishes the placement anchors <code>label.anchor</code>, <code>caption.anchor</code>, <code>state_text.center</code>, and the host overlay alignment surface <code>face.bounds</code>.
+Its default visible skin is a single bordered rectangular <code>face</code>; <code>frame</code> and <code>state_face</code> remain published parts but are transparent by default.
+Button examples should consume these Default assets through a <code>.wfrog</code> package reference instead of copying local SVG skins.
+</p>

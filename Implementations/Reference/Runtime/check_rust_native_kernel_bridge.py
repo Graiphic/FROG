@@ -20,6 +20,7 @@ EXAMPLE06_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/06_boolean_
 EXAMPLE07_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/07_string_value_roundtrip/native_kernel_manifest.json"
 EXAMPLE08_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/native_kernel_manifest.json"
 EXAMPLE09_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/09_path_value_roundtrip/native_kernel_manifest.json"
+EXAMPLE10_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/10_button_press_to_boolean/native_kernel_manifest.json"
 
 
 def require_tool(name: str) -> None:
@@ -62,6 +63,10 @@ def main() -> int:
         library09 = build_native_kernel_library(
             manifest_path=EXAMPLE09_MANIFEST,
             output_path=BUILD_DIR / f"example09_kernel{shared_library_suffix()}",
+        )
+        library10 = build_native_kernel_library(
+            manifest_path=EXAMPLE10_MANIFEST,
+            output_path=BUILD_DIR / f"example10_kernel{shared_library_suffix()}",
         )
 
         result05 = run([
@@ -151,6 +156,25 @@ def main() -> int:
         artifact09 = json.loads(result09.stdout)
         assert artifact09["outputs"]["public"]["result_path"] == "C:/FROG/from_rust_bridge.txt"
         assert artifact09["outputs"]["ui"]["path_result"] == "C:/FROG/from_rust_bridge.txt"
+
+        result10 = run([
+            "cargo",
+            "run",
+            "--offline",
+            "--",
+            "run",
+            "true",
+            "--example",
+            "10",
+            "--native-kernel-manifest",
+            str(EXAMPLE10_MANIFEST),
+            "--native-kernel-library",
+            str(library10),
+        ], cwd=RUST_DIR)
+        artifact10 = json.loads(result10.stdout)
+        assert artifact10["outputs"]["public"]["pressed"] is True
+        assert artifact10["outputs"]["ui"]["trigger_button"] is False
+        assert artifact10["outputs"]["ui"]["pressed_indicator"] is True
 
         print("Rust dynamic native kernel bridge check: ok")
         return 0

@@ -223,19 +223,60 @@ impl RuntimeCore {
             .widgets
             .values()
             .map(|widget| {
+                let mut runtime_fields = Map::new();
+                runtime_fields.insert(
+                    "value".to_string(),
+                    widget.properties.get("value").cloned().unwrap_or_else(|| json!(0)),
+                );
+                runtime_fields.insert(
+                    "label".to_string(),
+                    widget.properties.get("label").cloned().unwrap_or_else(|| json!("")),
+                );
+                runtime_fields.insert(
+                    "visible".to_string(),
+                    widget.properties.get("visible").cloned().unwrap_or_else(|| json!(true)),
+                );
+                runtime_fields.insert(
+                    "enabled".to_string(),
+                    widget.properties.get("enabled").cloned().unwrap_or_else(|| json!(true)),
+                );
+                runtime_fields.insert(
+                    "foreground_color".to_string(),
+                    widget.properties.get("foreground_color").cloned().unwrap_or_else(|| json!("#D8D8D8")),
+                );
+                runtime_fields.insert(
+                    "asset_ref".to_string(),
+                    widget
+                        .asset_id
+                        .as_ref()
+                        .map(|id| json!(format!("asset:{id}")))
+                        .unwrap_or(Value::Null),
+                );
+                for key in [
+                    "caption.text",
+                    "caption.visible",
+                    "caption.anchor.x",
+                    "caption.anchor.y",
+                    "caption.align.horizontal",
+                    "style.caption.text_color",
+                    "style.caption.font_family",
+                    "style.caption.font_size",
+                    "style.caption.font_weight",
+                    "style.text_value.color",
+                    "style.text_value.font_family",
+                    "style.text_value.font_size",
+                    "style.text_value.font_weight",
+                ] {
+                    if let Some(value) = widget.properties.get(key) {
+                        runtime_fields.insert(key.to_string(), value.clone());
+                    }
+                }
                 json!({
                     "widget_id": widget.widget_id,
                     "class_ref": widget.class_ref,
                     "role": widget.role,
                     "layout": widget.layout,
-                    "runtime": {
-                        "value": widget.properties.get("value").cloned().unwrap_or_else(|| json!(0)),
-                        "label": widget.properties.get("label").cloned().unwrap_or_else(|| json!("")),
-                        "visible": widget.properties.get("visible").cloned().unwrap_or_else(|| json!(true)),
-                        "enabled": widget.properties.get("enabled").cloned().unwrap_or_else(|| json!(true)),
-                        "foreground_color": widget.properties.get("foreground_color").cloned().unwrap_or_else(|| json!("#D8D8D8")),
-                        "asset_ref": widget.asset_id.as_ref().map(|id| format!("asset:{id}")),
-                    }
+                    "runtime": Value::Object(runtime_fields)
                 })
             })
             .collect();

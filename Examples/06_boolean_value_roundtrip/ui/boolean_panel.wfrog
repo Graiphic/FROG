@@ -2,7 +2,7 @@
   "format": "frog.wfrog",
   "kind": "widget_realization_package",
   "package_id": "example06.boolean_panel",
-  "title": "Example 06 Default Boolean realization package",
+  "title": "Example 06 Default Boolean value realization package",
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },
@@ -24,7 +24,9 @@
       "front-panel widget instance visual customization",
       "front-panel widget values",
       "FIR/lowering/runtime behavior",
-      "boolean widget law"
+      "boolean widget law",
+      "button widget law",
+      "button command semantics"
     ]
   },
   "widget_classes": [

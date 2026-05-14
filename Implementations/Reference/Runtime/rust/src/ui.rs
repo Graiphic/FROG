@@ -89,8 +89,8 @@ impl BrowserUiRuntime {
              .numeric-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;}}\
              .numeric-skin svg{{width:100%;height:100%;display:block;}}\
              .missing-skin{{background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;}}\
-             .numeric-label-overlay{{position:absolute;transform:translateY(-50%);font-size:12px;line-height:1;white-space:nowrap;pointer-events:none;}}\
-             .numeric-value-overlay{{position:absolute;box-sizing:border-box;font-family:Consolas,Segoe UI Mono,monospace;font-size:11px;font-weight:700;line-height:1;border:0;background:transparent;}}\
+             .numeric-label-overlay{{position:absolute;transform:translateY(-50%);font-size:var(--frog-numeric-caption-font-size);font-family:var(--frog-numeric-caption-font-family);font-weight:var(--frog-numeric-caption-font-weight);color:var(--frog-numeric-caption-color);line-height:1;white-space:nowrap;pointer-events:none;}}\
+             .numeric-value-overlay{{position:absolute;box-sizing:border-box;font-family:var(--frog-numeric-text-font-family);font-size:var(--frog-numeric-text-font-size);font-weight:var(--frog-numeric-text-font-weight);color:var(--frog-numeric-text-color);line-height:1;border:0;background:transparent;}}\
              .numeric-control-editor{{padding:0 4px;border-radius:0;outline:0;background:transparent;appearance:textfield;-moz-appearance:textfield;}}\
              .numeric-control-editor::-webkit-outer-spin-button,.numeric-control-editor::-webkit-inner-spin-button{{appearance:none;margin:0;}}\
              .numeric-control-editor:focus{{outline:0;background:transparent;}}\
@@ -534,15 +534,16 @@ fn runtime_caption_anchor_style(runtime: &Value, geometry: NumericSvgGeometry) -
     style
 }
 
-fn runtime_caption_anchor_vars(runtime: &Value, geometry: NumericSvgGeometry, prefix: &str) -> String {
-    let x = runtime["caption.anchor.x"].as_f64().unwrap_or(geometry.caption_x);
-    let y = runtime["caption.anchor.y"].as_f64().unwrap_or(geometry.caption_y);
+fn runtime_caption_style_vars(runtime: &Value, prefix: &str) -> String {
     format!(
-        "--{}-caption-left:{};--{}-caption-top:{};",
-        prefix,
-        css_percent_compact(pct(x, geometry.view_width)),
-        prefix,
-        css_percent_compact(pct(y, geometry.view_height))
+        "--{prefix}-caption-color:{};--{prefix}-caption-font-size:{};--{prefix}-caption-font-weight:{};--{prefix}-caption-font-family:{};",
+        escape_html(&safe_css_color(&runtime_string(runtime, "caption.style.text_color", "#111827"), "#111827")),
+        escape_html(&safe_css_length(&runtime_string(runtime, "caption.style.font_size", "14px"), "14px")),
+        escape_html(&safe_css_font_weight(&runtime_string(runtime, "caption.style.font_weight", "600"), "600")),
+        escape_html(&safe_css_font_family(
+            &runtime_string(runtime, "caption.style.font_family", "system-ui, Segoe UI, Arial, sans-serif"),
+            "system-ui, Segoe UI, Arial, sans-serif",
+        )),
     )
 }
 
@@ -619,14 +620,45 @@ fn render_numeric_widget(widget: &WidgetState) -> String {
         &property_string(&widget.properties, "label", &widget.widget_id),
     );
     let value_face_color = safe_css_color(&property_string(&widget.properties, "foreground_color", "#ffffff"), "#ffffff");
-    let label_color = safe_css_color(&property_string(&widget.properties, "label_color", "#111827"), "#111827");
+    let label_color = safe_css_color(
+        &property_string(
+            &widget.properties,
+            "style.caption.text_color",
+            &property_string(&widget.properties, "label_color", "#111827"),
+        ),
+        "#111827",
+    );
+    let label_size = safe_css_length(&property_string(&widget.properties, "style.caption.font_size", "12px"), "12px");
     let label_weight = safe_css_font_weight(&property_string(&widget.properties, "style.caption.font_weight", "400"), "400");
+    let label_family = safe_css_font_family(
+        &property_string(&widget.properties, "style.caption.font_family", "system-ui, Segoe UI, Arial, sans-serif"),
+        "system-ui, Segoe UI, Arial, sans-serif",
+    );
+    let text_color = safe_css_color(&property_string(&widget.properties, "style.text_value.color", "#111827"), "#111827");
+    let text_size = safe_css_length(&property_string(&widget.properties, "style.text_value.font_size", "11px"), "11px");
+    let text_weight = safe_css_font_weight(&property_string(&widget.properties, "style.text_value.font_weight", "700"), "700");
+    let text_family = safe_css_font_family(
+        &property_string(&widget.properties, "style.text_value.font_family", "Consolas, Segoe UI Mono, monospace"),
+        "Consolas, Segoe UI Mono, monospace",
+    );
     let route = widget.asset_id.as_ref().map(|id| format!("/asset/{id}")).unwrap_or_default();
     let minimum = property_u16(&widget.properties, "data_entry.minimum", 0);
     let maximum = property_u16(&widget.properties, "data_entry.maximum", 65535);
     let step = property_step(&widget.properties, "data_entry.increment_step", 1);
 
-    let mut style = format!("position:absolute;left:{x}px;top:{y}px;width:{width}px;height:{height}px;");
+    let mut style = format!(
+        "position:absolute;left:{x}px;top:{y}px;width:{width}px;height:{height}px;\
+         --frog-numeric-caption-color:{};--frog-numeric-caption-font-size:{};--frog-numeric-caption-font-weight:{};--frog-numeric-caption-font-family:{};\
+         --frog-numeric-text-color:{};--frog-numeric-text-font-size:{};--frog-numeric-text-font-weight:{};--frog-numeric-text-font-family:{};",
+        escape_html(&label_color),
+        escape_html(&label_size),
+        escape_html(&label_weight),
+        escape_html(&label_family),
+        escape_html(&text_color),
+        escape_html(&text_size),
+        escape_html(&text_weight),
+        escape_html(&text_family)
+    );
     if !property_bool(&widget.properties, "visible", true) {
         style.push_str("display:none;");
     }
@@ -657,17 +689,15 @@ fn render_numeric_widget(widget: &WidgetState) -> String {
     );
     let _ = write!(
         html,
-        "<span class='numeric-label-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}color:{};font-weight:{};'>{}</span>",
+        "<span class='numeric-label-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}'>{}</span>",
         label_style,
-        escape_html(&label_color),
-        escape_html(&label_weight),
         escape_html(&label)
     );
 
     if is_control {
         let _ = write!(
             html,
-            "<input id='{}_value' name='input_value' type='number' min='{}' max='{}' step='{}' class='numeric-value-overlay numeric-control-editor' data-frog-part='text_value' data-svg-anchor='text_value.center' style='{}color:#111827;' value='{}'{} />",
+            "<input id='{}_value' name='input_value' type='number' min='{}' max='{}' step='{}' class='numeric-value-overlay numeric-control-editor' data-frog-part='text_value' data-svg-anchor='text_value.center' style='{}' value='{}'{} />",
             escape_html(&widget.widget_id),
             minimum,
             maximum,
@@ -700,7 +730,7 @@ fn render_numeric_widget(widget: &WidgetState) -> String {
     } else {
         let _ = write!(
             html,
-            "<output class='numeric-value-overlay numeric-indicator-value' data-frog-part='text_value' data-svg-anchor='text_value.center' style='{}color:#111827;'>{}</output>",
+            "<output class='numeric-value-overlay numeric-indicator-value' data-frog-part='text_value' data-svg-anchor='text_value.center' style='{}'>{}</output>",
             value_style,
             value
         );
@@ -857,8 +887,8 @@ impl BooleanBrowserUiRuntime {
              .boolean-control{{cursor:pointer;}}\
              .boolean-indicator{{pointer-events:none;}}\
              .boolean-skin{{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}}\
-             .boolean-caption-overlay{{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}}\
-             .boolean-state-face{{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:2px solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}}\
+             .boolean-caption-overlay{{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--boolean-caption-font-size);font-weight:var(--boolean-caption-font-weight);font-family:var(--boolean-caption-font-family);line-height:1;color:var(--boolean-caption-color);white-space:nowrap;pointer-events:none;z-index:3;}}\
+             .boolean-state-face{{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:var(--boolean-inner-border-width) solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}}\
              .boolean-widget[data-realization-variant='circular'] .boolean-state-face{{border-radius:50%;}}\
              .boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{{box-shadow:none;}}\
              .boolean-control:hover .boolean-state-face{{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-inner-border);box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 2px 5px rgba(15,23,42,.18);}}\
@@ -866,7 +896,7 @@ impl BooleanBrowserUiRuntime {
              .boolean-control:active .boolean-state-face{{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-inner-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}}\
              .boolean-control[data-frog-frame-visible='false']:active .boolean-state-face{{box-shadow:none;}}\
              .boolean-control:focus-visible .boolean-state-face{{outline:var(--boolean-focus-width) solid var(--boolean-focus-color);}}\
-             .boolean-state-overlay{{position:absolute;left:0;right:0;top:49px;transform:translateY(-50%);text-align:center;font-size:18px;font-weight:700;line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;}}\
+             .boolean-state-overlay{{position:absolute;transform:translate(-50%,-50%);text-align:center;font-size:var(--boolean-text-font-size);font-weight:var(--boolean-text-font-weight);line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;white-space:nowrap;}}\
              .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}\
              .state-link{{font-size:16px;}}\
              .diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}\
@@ -1084,6 +1114,9 @@ impl StringBrowserUiRuntime {
                     "caption.anchor.y",
                     "caption.align.horizontal",
                     "caption.style.text_color",
+                    "caption.style.font_family",
+                    "caption.style.font_size",
+                    "caption.style.font_weight",
                     "style.frame.fill_color",
                     "style.frame.border_color",
                     "style.frame.border_width",
@@ -1167,7 +1200,7 @@ impl StringBrowserUiRuntime {
              .string-skin svg{{width:100%;height:100%;display:block;--frog-string-label-display:inherit;--frog-string-caption-display:inherit;--frog-string-placeholder-display:inherit;--frog-string-frame-fill:inherit;--frog-string-frame-stroke:inherit;--frog-string-frame-stroke-width:inherit;--frog-string-text-region-fill:inherit;--frog-string-text-region-stroke:inherit;--frog-string-text-region-stroke-width:inherit;--frog-string-text-fill:inherit;--frog-string-text-font-size:inherit;--frog-string-text-font-weight:inherit;}}\
              .string-skin #label_text,.string-skin #caption_text,.string-skin #placeholder,.string-skin #text_value{{display:none;}}\
              .string-control:hover .string-skin svg{{--frog-string-text-region-fill:var(--frog-string-text-region-fill-hover);--frog-string-text-region-stroke:var(--frog-string-text-region-stroke-hover);--frog-string-text-region-stroke-width:var(--frog-string-text-region-stroke-width-hover);}}\
-             .string-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}}\
+             .string-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:var(--frog-string-caption-font-size);font-weight:var(--frog-string-caption-font-weight);font-family:var(--frog-string-caption-font-family);color:var(--frog-string-caption-color);line-height:1;white-space:nowrap;pointer-events:none;}}\
              .string-value-overlay{{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1.2;border:0;background:transparent;}}\
              .string-control-editor{{padding:0 8px;outline:0;}}\
              .string-control-editor:focus{{outline:0;}}\
@@ -1433,6 +1466,9 @@ impl PathBrowserUiRuntime {
                 "caption.anchor.y",
                 "caption.align.horizontal",
                 "caption.style.text_color",
+                "caption.style.font_family",
+                "caption.style.font_size",
+                "caption.style.font_weight",
                 "display.icon_visible",
                 "display.validation_marker_visible",
                 "display.text_overflow_visible",
@@ -1543,7 +1579,7 @@ impl PathBrowserUiRuntime {
              .path-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;}}\
              .path-skin svg{{width:100%;height:100%;display:block;}}\
              .path-skin #label_text,.path-skin #caption_text,.path-skin #path_display{{display:none;}}\
-             .path-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}}\
+             .path-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:var(--frog-path-caption-font-size);font-weight:var(--frog-path-caption-font-weight);font-family:var(--frog-path-caption-font-family);color:var(--frog-path-caption-color);line-height:1;white-space:nowrap;pointer-events:none;}}\
              .path-value-overlay{{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1;border:0;background:transparent;margin:0;}}\
              .path-control-editor{{outline:0;appearance:none;-webkit-appearance:none;}}\
              .path-control-editor:focus{{outline:0;}}\
@@ -1803,9 +1839,8 @@ fn render_path_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String {
     body.push_str(&render_path_skin(asset_path, runtime));
     let _ = write!(
         body,
-        "<span class='path-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}color:{};'>{}</span>",
+        "<span class='path-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}'>{}</span>",
         runtime_caption_anchor_style(runtime, geometry),
-        escape_html(&safe_css_color(&runtime_string(runtime, "caption.style.text_color", "#111827"), "#111827")),
         escape_html(&caption)
     );
     if is_control {
@@ -1846,7 +1881,7 @@ fn render_path_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String {
         );
     }
     format!(
-        "<section class='frog-widget path-widget {}' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-frog-visual-law='wfrog-realization-state-map' data-frog-browse-visible='{}' data-asset-route='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;--frog-path-button-fill:{};--frog-path-button-fill-hover:{};'>{}</section>",
+        "<section class='frog-widget path-widget {}' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-frog-visual-law='wfrog-realization-state-map' data-frog-browse-visible='{}' data-asset-route='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;--frog-path-button-fill:{};--frog-path-button-fill-hover:{};{}'>{}</section>",
         if is_control { "path-control" } else { "path-indicator" },
         escape_html(widget_id),
         escape_html(widget["class_ref"].as_str().unwrap_or("")),
@@ -1859,6 +1894,7 @@ fn render_path_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String {
         layout["height"].as_i64().unwrap_or(120),
         escape_html(&safe_css_color(&runtime_string(runtime, "style.browse_button.fill_color", "#f8fafc"), "#f8fafc")),
         escape_html(&safe_css_color(&runtime_string(runtime, "style.browse_button.fill_color.hover", "#e5eef9"), "#e5eef9")),
+        runtime_caption_style_vars(runtime, "frog-path"),
         body
     )
 }
@@ -1922,6 +1958,381 @@ fn enum_item_by_numeric_value(items: &[EnumUiItem], numeric_value: u16, label: &
         .find(|item| item.numeric_value == numeric_value)
         .cloned()
         .ok_or_else(|| RuntimeError::Message(format!("{label} must resolve to a declared enum item.")))
+}
+
+pub struct ButtonBrowserUiRuntime {
+    pub contract: Value,
+    pub wfrog: Value,
+    pub panel: Value,
+    pub asset_map: BTreeMap<String, PathBuf>,
+    pub last_trigger_pressed: bool,
+    pub last_result: bool,
+    pub last_error: Option<String>,
+    pub native_kernel_bridge: Option<NativeBoolKernelBridge>,
+}
+
+impl ButtonBrowserUiRuntime {
+    pub fn with_native_kernel_bridge(
+        contract_path: PathBuf,
+        wfrog_path: PathBuf,
+        native_kernel_bridge: Option<NativeBoolKernelBridge>,
+    ) -> Result<Self> {
+        let contract: Value = serde_json::from_str(&fs::read_to_string(&contract_path)?)?;
+        let wfrog: Value = serde_json::from_str(&fs::read_to_string(&wfrog_path)?)?;
+        if contract["example_id"].as_str() != Some("10_button_press_to_boolean")
+            && contract["source_ref"]["example_id"].as_str() != Some("10_button_press_to_boolean")
+        {
+            return Err(RuntimeError::Message("Slice 10 expects Example 10.".to_string()));
+        }
+        let panel = source_front_panel_value(&contract_path, &contract)?;
+        let mut asset_map = BTreeMap::new();
+        if let Some(assets) = wfrog["svg_assets"].as_array() {
+            for asset in assets {
+                if let (Some(asset_id), Some(path)) = (asset["asset_id"].as_str(), asset["path"].as_str()) {
+                    asset_map.insert(asset_id.to_string(), wfrog_path.parent().unwrap_or_else(|| std::path::Path::new("")).join(path));
+                }
+            }
+        }
+        let host_capabilities = wfrog["host_bindings"]
+            .as_array()
+            .and_then(|bindings| bindings.iter().find(|binding| binding["binding_id"].as_str() == Some("reference_host_default")))
+            .and_then(|binding| binding["required_capabilities"].as_array())
+            .cloned()
+            .unwrap_or_default();
+        for capability in [
+            "window",
+            "basic_widget_rendering",
+            "widget_value_binding",
+            "button_press_binding",
+            "svg_part_overlay_alignment",
+        ] {
+            if !host_capabilities.iter().any(|item| item.as_str() == Some(capability)) {
+                return Err(RuntimeError::Message(format!("Missing host capability {capability}.")));
+            }
+        }
+        let runtime = Self {
+            contract,
+            wfrog,
+            panel,
+            asset_map,
+            last_trigger_pressed: false,
+            last_result: false,
+            last_error: None,
+            native_kernel_bridge,
+        };
+        runtime.require_widget_asset("trigger_button")?;
+        runtime.require_widget_asset("pressed_indicator")?;
+        Ok(runtime)
+    }
+
+    fn require_widget_asset(&self, widget_id: &str) -> Result<()> {
+        let widget = self.widget_by_id(widget_id)?;
+        let asset_ref = widget["visual"]["asset_ref"]
+            .as_str()
+            .ok_or_else(|| RuntimeError::Message(format!("Slice 10 widget {widget_id} must reference a .wfrog SVG asset.")))?;
+        let asset_id = asset_ref
+            .strip_prefix("asset:")
+            .ok_or_else(|| RuntimeError::Message(format!("Slice 10 widget {widget_id} must reference a .wfrog SVG asset.")))?;
+        let asset_path = self
+            .asset_map
+            .get(asset_id)
+            .ok_or_else(|| RuntimeError::Message(format!("Slice 10 widget {widget_id} asset path must exist.")))?;
+        if !asset_path.exists() {
+            return Err(RuntimeError::Message(format!("Slice 10 widget {widget_id} asset path must exist.")));
+        }
+        Ok(())
+    }
+
+    fn widget_by_id(&self, id: &str) -> Result<Value> {
+        self.panel["widgets"]
+            .as_array()
+            .and_then(|widgets| widgets.iter().find(|widget| widget["instance_id"].as_str() == Some(id)))
+            .cloned()
+            .ok_or_else(|| RuntimeError::Message(format!("Example 10 panel must contain {id}.")))
+    }
+
+    fn runtime_for(&self, widget: &Value, value: bool) -> Value {
+        let props = &widget["props"];
+        let visual = &widget["visual"];
+        let widget_id = widget["instance_id"].as_str().unwrap_or("");
+        let mut runtime = json!({
+            "value": value,
+            "label.text": props["label.text"].clone(),
+            "caption.text": props["caption.text"].clone(),
+            "asset_ref": visual["asset_ref"].clone(),
+            "realization.variant": props["realization.variant"].clone(),
+        });
+        if let Some(runtime_object) = runtime.as_object_mut() {
+            if widget_id == "trigger_button" {
+                runtime_object.insert("event.pressed".to_string(), Value::Bool(self.last_trigger_pressed));
+            }
+            if let Some(binding) = widget["binding"].as_object() {
+                if let Some(value) = binding.get("public_input_id") {
+                    runtime_object.insert("binding.public_input_id".to_string(), value.clone());
+                }
+                if let Some(value) = binding.get("public_output_id") {
+                    runtime_object.insert("binding.public_output_id".to_string(), value.clone());
+                }
+            }
+            for member in [
+                "caption.visible",
+                "caption.anchor.x",
+                "caption.anchor.y",
+                "caption.align.horizontal",
+                "caption.style.text_color",
+                "caption.style.font_family",
+                "caption.style.font_size",
+                "caption.style.font_weight",
+                "label.visible",
+                "state_text.false_text",
+                "state_text.true_text",
+                "state_text.visible",
+                "state_text.anchor.x",
+                "state_text.anchor.y",
+                "state_text.style.text_color.false",
+                "state_text.style.text_color.true",
+                "state_text.style.font_size",
+                "state_text.style.font_weight",
+                "behavior.mechanical_action",
+                "behavior.latch_reset_policy",
+                "style.frame.fill_color",
+                "style.frame.border_color",
+                "style.frame.border_width",
+                "style.frame.visible",
+                "style.face.fill_color.false",
+                "style.face.fill_color.true",
+                "style.face.fill_color.hover_false",
+                "style.face.fill_color.hover_true",
+                "style.face.fill_color.pressed_false",
+                "style.face.fill_color.pressed_true",
+                "style.face.border_color.false",
+                "style.face.border_color.true",
+                "style.face.border_width",
+                "style.state_face.fill_color.false",
+                "style.state_face.fill_color.true",
+                "style.state_face.fill_color.hover_false",
+                "style.state_face.fill_color.hover_true",
+                "style.state_face.fill_color.pressed_false",
+                "style.state_face.fill_color.pressed_true",
+                "style.state_face.border_color.false",
+                "style.state_face.border_color.true",
+                "style.state_face.border_color.hover_false",
+                "style.state_face.border_color.hover_true",
+                "style.state_face.border_color.pressed_false",
+                "style.state_face.border_color.pressed_true",
+                "style.state_face.border_width",
+                "style.inner.left",
+                "style.inner.top",
+                "style.inner.width",
+                "style.inner.height",
+                "style.inner.fill_color.false",
+                "style.inner.fill_color.true",
+                "style.inner.border_color.false",
+                "style.inner.border_color.true",
+                "style.inner.border_width",
+                "style.focus_ring.visible",
+                "style.focus_ring.color",
+                "style.focus_ring.width",
+                "style.pressed.inset",
+                "style.transition.duration_ms",
+                "style.transition.timing",
+                "interaction.enabled",
+                "interaction.read_only",
+            ] {
+                if !props[member].is_null() {
+                    runtime_object.insert(member.to_string(), props[member].clone());
+                }
+            }
+        }
+        runtime
+    }
+
+    pub fn run_once(&mut self, trigger_pressed: bool) -> Result<Value> {
+        self.last_trigger_pressed = trigger_pressed;
+        if let Some(bridge) = &self.native_kernel_bridge {
+            if bridge.manifest().source_lowered_unit != "Examples/10_button_press_to_boolean/main.lowering.json" {
+                return Err(RuntimeError::Message("Unexpected native Button kernel source lowered unit.".to_string()));
+            }
+            let result = bridge.run(trigger_pressed);
+            if !result.ok {
+                let diagnostic = bridge.manifest().diagnostic(result.error_code);
+                self.last_error = Some(diagnostic.clone());
+                return Err(RuntimeError::Message(diagnostic));
+            }
+            self.last_result = result.result;
+        } else {
+            self.last_result = trigger_pressed;
+        }
+        self.last_error = None;
+        Ok(self.execution_artifact()?)
+    }
+
+    pub fn execution_artifact(&self) -> Result<Value> {
+        let button = self.widget_by_id("trigger_button")?;
+        let indicator = self.widget_by_id("pressed_indicator")?;
+        Ok(json!({
+            "artifact_kind": "frog_runtime_execution_result",
+            "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+            "status": "ok",
+            "contract_ref": {"unit_ids": ["main"], "backend_family": self.contract["backend_family"].clone(), "source_ref": self.contract["source_ref"].clone()},
+            "execution_summary": {"mode": "button_press_to_boolean", "executed_unit": "main", "operation": "copy", "trigger_pressed": self.last_trigger_pressed, "pressed": self.last_result},
+            "outputs": {"public": {"pressed": self.last_result}, "ui": {"trigger_button": false, "pressed_indicator": self.last_result}},
+            "ui_runtime": {
+                "panel": {"panel_id": self.panel["panel_id"].clone(), "title": self.panel["title"].clone(), "class_ref": self.panel["class_ref"].clone(), "layout": self.panel["layout"].clone()},
+                "widgets": [
+                    {"widget_id": "trigger_button", "class_ref": button["class_ref"].clone(), "role": "control", "layout": button["layout"].clone(), "runtime": self.runtime_for(&button, false)},
+                    {"widget_id": "pressed_indicator", "class_ref": indicator["class_ref"].clone(), "role": "indicator", "layout": indicator["layout"].clone(), "runtime": self.runtime_for(&indicator, self.last_result)}
+                ]
+            },
+            "diagnostics": []
+        }))
+    }
+
+    pub fn render_html(&self) -> String {
+        let snapshot = self.execution_artifact().unwrap();
+        let panel = &snapshot["ui_runtime"]["panel"];
+        let widgets = snapshot["ui_runtime"]["widgets"].as_array().unwrap();
+        let panel_width = panel["layout"]["width"].as_i64().unwrap_or(520);
+        let panel_height = panel["layout"]["height"].as_i64().unwrap_or(180);
+        let uses_native_kernel = self.native_kernel_bridge.is_some();
+        let mut diagnostics = String::new();
+        if let Some(message) = &self.last_error {
+            let _ = write!(diagnostics, "<div class='diagnostic error'>{}</div>", escape_html(message));
+        }
+        let button = widgets.iter().find(|widget| widget["widget_id"].as_str() == Some("trigger_button")).unwrap();
+        let indicator = widgets.iter().find(|widget| widget["widget_id"].as_str() == Some("pressed_indicator")).unwrap();
+        let button_asset_id = button["runtime"]["asset_ref"].as_str().and_then(|value| value.strip_prefix("asset:")).unwrap_or("");
+        let button_html = render_button_widget(button, self.asset_map.get(button_asset_id));
+        let indicator_html = render_boolean_widget(indicator);
+        format!(
+            "<!doctype html><html lang='en'><head><meta charset='utf-8'><title>{title}</title>\
+             <style>\
+             body{{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}}\
+             h1{{font-size:24px;margin:0 0 12px 0;}}\
+             p.meta{{margin:0 0 20px 0;color:#52606d;}}\
+             .runtime-facts{{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 18px 0;}}\
+             .runtime-facts div{{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}}\
+             .runtime-facts dt{{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}}\
+             .runtime-facts dd{{margin:0;color:#1f2933;font-size:12px;font-weight:600;}}\
+             .front-panel{{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}}\
+             .frog-widget{{position:absolute;box-sizing:border-box;}}\
+             .button-widget{{overflow:visible;}}\
+             .button-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;}}\
+             .button-skin svg{{width:100%;height:100%;display:block;}}\
+             .button-skin [data-frog-part='label'],.button-skin [data-frog-part='caption'],.button-skin [data-frog-part='state_text']{{display:none!important;}}\
+             .button-skin [data-frog-part='frame']{{fill:var(--frog-button-frame-fill)!important;stroke:var(--frog-button-frame-stroke)!important;stroke-width:var(--frog-button-frame-stroke-width)!important;}}\
+             .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-fill)!important;stroke:var(--frog-button-face-stroke)!important;stroke-width:var(--frog-button-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}}\
+             .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-fill)!important;stroke:var(--frog-button-state-face-stroke)!important;stroke-width:var(--frog-button-state-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}}\
+             .button-skin [data-frog-part='focus_ring']{{display:none!important;stroke:var(--frog-button-focus-color)!important;stroke-width:var(--frog-button-focus-width)!important;}}\
+             .button-widget:has(.button-press-overlay:hover) .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-hover-fill)!important;}}\
+             .button-widget:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-hover-fill)!important;stroke:var(--frog-button-state-face-hover-stroke)!important;}}\
+             .button-widget:has(.button-press-overlay:active) .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-pressed-fill)!important;transform:translateY(var(--frog-button-pressed-inset));}}\
+             .button-widget:has(.button-press-overlay:active) .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-pressed-fill)!important;stroke:var(--frog-button-state-face-pressed-stroke)!important;transform:translateY(var(--frog-button-pressed-inset));}}\
+             .button-widget:has(.button-press-overlay:focus-visible) .button-skin [data-frog-part='focus_ring']{{display:inline!important;}}\
+             .button-caption-overlay{{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--frog-button-caption-font-size);font-weight:var(--frog-button-caption-font-weight);font-family:var(--frog-button-caption-font-family);line-height:1;white-space:nowrap;pointer-events:none;z-index:3;}}\
+             .button-state-overlay{{position:absolute;transform:translate(-50%,-50%);font-size:var(--frog-button-state-text-font-size);font-weight:var(--frog-button-state-text-font-weight);line-height:1;color:var(--frog-button-state-text-fill);pointer-events:none;z-index:4;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}\
+             .button-press-overlay{{position:absolute;box-sizing:border-box;margin:0;padding:0;border:0;background:transparent;cursor:pointer;appearance:none;z-index:5;}}\
+             .button-press-overlay:focus,.button-press-overlay:focus-visible,.button-press-overlay:active{{outline:0;box-shadow:none;}}\
+             .boolean-widget{{border:0;padding:0;background:transparent;font:inherit;color:inherit;overflow:visible;}}\
+             .boolean-indicator{{pointer-events:none;}}\
+             .boolean-skin{{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}}\
+             .boolean-caption-overlay{{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--boolean-caption-font-size);font-weight:var(--boolean-caption-font-weight);font-family:var(--boolean-caption-font-family);line-height:1;color:var(--boolean-caption-color);white-space:nowrap;pointer-events:none;z-index:3;}}\
+             .boolean-state-face{{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:var(--boolean-inner-border-width) solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}}\
+             .boolean-widget[data-realization-variant='circular'] .boolean-state-face{{border-radius:50%;}}\
+             .boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{{box-shadow:none;}}\
+             .boolean-state-overlay{{position:absolute;transform:translate(-50%,-50%);text-align:center;font-size:var(--boolean-text-font-size);font-weight:var(--boolean-text-font-weight);line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;white-space:nowrap;}}\
+             .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}\
+             .state-link{{font-size:16px;}}\
+             .diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}\
+             .diagnostic.error{{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}}\
+             </style></head><body>\
+             <h1>{title}</h1>\
+             <p class='meta'>Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + Rust runtime</p>\
+             <dl class='runtime-facts' aria-label='Runtime facts'>\
+             <div><dt>Runtime</dt><dd>Rust reference runtime</dd></div>\
+             <div><dt>Execution</dt><dd>{execution_path}</dd></div>\
+             <div><dt>Compiler backend</dt><dd>{compiler_backend}</dd></div>\
+             </dl>{diagnostics}<form method='post' action='/run'>\
+             <div class='front-panel' data-panel-id='{panel_id}' data-coordinate-space='panel_pixels' data-runtime-language='rust' data-compiler-backend='{compiler_backend_id}' data-execution-path='{execution_path_id}' style='width:{panel_width}px;height:{panel_height}px;'>{button_html}{indicator_html}</div>\
+             <div class='actions'><a class='state-link' href='/state.json'>state.json</a></div></form>{script}</body></html>",
+            title = escape_html(panel["title"].as_str().unwrap_or("FROG")),
+            diagnostics = diagnostics,
+            execution_path = if uses_native_kernel { "native kernel bridge" } else { "button contract executor" },
+            compiler_backend = if uses_native_kernel { "LLVM native Button bool kernel artifact" } else { "none for Example 10" },
+            compiler_backend_id = if uses_native_kernel { "llvm" } else { "none" },
+            execution_path_id = if uses_native_kernel { "native_kernel_bridge" } else { "rust_button_contract_executor" },
+            panel_id = escape_html(panel["panel_id"].as_str().unwrap_or("main_panel")),
+            panel_width = panel_width,
+            panel_height = panel_height,
+            button_html = button_html,
+            indicator_html = indicator_html,
+            script = button_press_to_boolean_script(),
+        )
+    }
+
+    pub fn serve(mut self, host: &str, port: u16, open_browser: bool) -> Result<()> {
+        let listener = TcpListener::bind((host, port))?;
+        let address = listener.local_addr()?;
+        let url = format!("http://{}:{}/", address.ip(), address.port());
+        if open_browser {
+            let _ = open_in_browser(&url);
+        }
+        println!("{url}");
+        for stream in listener.incoming() {
+            let mut stream = stream?;
+            if let Err(error) = self.handle_connection(&mut stream) {
+                let _ = write_response(
+                    &mut stream,
+                    "500 Internal Server Error",
+                    "text/plain; charset=utf-8",
+                    format!("{error}").into_bytes(),
+                    None,
+                );
+            }
+        }
+        Ok(())
+    }
+
+    fn handle_connection(&mut self, stream: &mut TcpStream) -> Result<()> {
+        let request = read_request(stream)?;
+        if request.method == "GET" && request.path == "/" {
+            return write_response(stream, "200 OK", "text/html; charset=utf-8", self.render_html().into_bytes(), None);
+        }
+        if request.method == "GET" && request.path == "/state.json" {
+            let payload = to_string_pretty(&self.execution_artifact()?).unwrap().into_bytes();
+            return write_response(stream, "200 OK", "application/json; charset=utf-8", payload, None);
+        }
+        if request.method == "GET" && request.path.starts_with("/asset/") {
+            let asset_id = request.path.trim_start_matches("/asset/");
+            if let Some(path) = self.asset_map.get(asset_id) {
+                if path.exists() {
+                    return write_response(stream, "200 OK", "image/svg+xml", fs::read(path)?, None);
+                }
+            }
+            return write_response(stream, "404 Not Found", "text/plain; charset=utf-8", b"missing asset".to_vec(), None);
+        }
+        if request.method == "POST" && (request.path == "/run" || request.path == "/event") {
+            let body = String::from_utf8_lossy(&request.body);
+            let value = parse_form_value(&body, "trigger_pressed").unwrap_or_else(|| "false".to_string());
+            let status = match parse_bool_value(&value).and_then(|parsed| self.run_once(parsed)) {
+                Ok(artifact) => {
+                    if request.path == "/event" {
+                        return write_response(stream, "200 OK", "application/json; charset=utf-8", to_string_pretty(&artifact).unwrap().into_bytes(), None);
+                    }
+                    "303 See Other"
+                }
+                Err(error) => {
+                    self.last_error = Some(error.to_string());
+                    if request.path == "/event" {
+                        return write_response(stream, "500 Internal Server Error", "application/json; charset=utf-8", to_string_pretty(&self.execution_artifact()?).unwrap().into_bytes(), None);
+                    }
+                    "303 See Other"
+                }
+            };
+            return write_response(stream, status, "text/plain; charset=utf-8", Vec::new(), Some(("Location", "/".to_string())));
+        }
+        write_response(stream, "404 Not Found", "text/plain; charset=utf-8", b"not found".to_vec(), None)
+    }
 }
 
 pub struct EnumBrowserUiRuntime {
@@ -2036,6 +2447,9 @@ impl EnumBrowserUiRuntime {
                 "caption.anchor.y",
                 "caption.align.horizontal",
                 "caption.style.text_color",
+                "caption.style.font_family",
+                "caption.style.font_size",
+                "caption.style.font_weight",
                 "display.digital_display_visible",
                 "display.increment_buttons_visible",
                 "display.selector_visible",
@@ -2174,7 +2588,7 @@ impl EnumBrowserUiRuntime {
              .enum-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;}}\
              .enum-skin svg{{width:100%;height:100%;display:block;}}\
              .enum-skin #label_text,.enum-skin #caption_text,.enum-skin #value_display{{display:none;}}\
-             .enum-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}}\
+             .enum-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:var(--frog-enum-caption-font-size);font-weight:var(--frog-enum-caption-font-weight);font-family:var(--frog-enum-caption-font-family);color:var(--frog-enum-caption-color);line-height:1;white-space:nowrap;pointer-events:none;}}\
              .enum-value-display-overlay{{position:absolute;box-sizing:border-box;display:flex;align-items:center;padding:0 var(--frog-enum-text-padding-inline);font-family:Segoe UI,Arial,sans-serif;line-height:normal;transform:translateY(var(--frog-enum-text-vertical-offset));z-index:3;}}\
              .enum-widget .enum-display-button{{border:0;background:transparent;text-align:left;justify-content:flex-start;appearance:none;cursor:pointer;}}\
              .enum-widget .enum-display-button:focus,.enum-widget .enum-display-button:focus-visible,.enum-widget .enum-display-button:active{{outline:0;box-shadow:none;}}\
@@ -2362,9 +2776,8 @@ fn render_string_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
         geometry,
     );
     let caption_overlay = format!(
-        "<span class='string-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}color:{};'>{}</span>",
+        "<span class='string-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}'>{}</span>",
         runtime_caption_anchor_style(runtime, geometry),
-        escape_html(&safe_css_color(&runtime_string(runtime, "caption.style.text_color", "#111827"), "#111827")),
         escape_html(&caption)
     );
     let value_overlay = if is_control {
@@ -2388,7 +2801,7 @@ fn render_string_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
         )
     };
     format!(
-        "<section class='frog-widget string-widget {}' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-frog-visual-law='wfrog-realization-state-map' data-asset-route='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;'>{}{}{}</section>",
+        "<section class='frog-widget string-widget {}' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-frog-visual-law='wfrog-realization-state-map' data-asset-route='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;{}'>{}{}{}</section>",
         if is_control { "string-control" } else { "string-indicator" },
         escape_html(widget["widget_id"].as_str().unwrap_or("")),
         escape_html(widget["class_ref"].as_str().unwrap_or("")),
@@ -2398,6 +2811,7 @@ fn render_string_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
         layout["y"].as_i64().unwrap_or(0),
         layout["width"].as_i64().unwrap_or(240),
         layout["height"].as_i64().unwrap_or(110),
+        runtime_caption_style_vars(runtime, "frog-string"),
         string_skin,
         caption_overlay,
         value_overlay,
@@ -2582,9 +2996,8 @@ fn render_enum_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String {
     body.push_str(&render_enum_skin(asset_path, runtime));
     let _ = write!(
         body,
-        "<span class='enum-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}color:{};'>{}</span>",
+        "<span class='enum-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}'>{}</span>",
         enum_caption_anchor_style(runtime, geometry),
-        escape_html(&safe_css_color(&runtime_string(runtime, "caption.style.text_color", "#111827"), "#111827")),
         escape_html(&caption)
     );
     if is_control {
@@ -2642,7 +3055,7 @@ fn render_enum_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String {
         );
     }
     format!(
-        "<section class='frog-widget enum-widget {}' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-frog-visual-law='wfrog-realization-state-map' data-frog-selector-visible='{}' data-asset-route='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;--frog-enum-selector-fill:{};--frog-enum-selector-stroke:{};--frog-enum-selector-stroke-width:{};--frog-enum-selector-radius:{};--frog-enum-selector-symbol:{};--frog-enum-selector-symbol-width:{};--frog-enum-selector-symbol-height:{};--frog-enum-selector-hover-fill:{};--frog-enum-selector-hover-stroke:{};--frog-enum-selector-hover-symbol:{};--frog-enum-value-hover-fill:{};--frog-enum-text-padding-inline:{};--frog-enum-dropdown-fill:{};--frog-enum-dropdown-border:{};--frog-enum-dropdown-border-width:{};--frog-enum-dropdown-option-fill:{};--frog-enum-dropdown-option-text:{};--frog-enum-dropdown-option-hover-fill:{};--frog-enum-dropdown-option-hover-text:{};--frog-enum-dropdown-option-selected-fill:{};--frog-enum-dropdown-option-selected-text:{};--frog-enum-dropdown-option-font-family:{};--frog-enum-dropdown-option-font-size:{};--frog-enum-dropdown-option-font-weight:{};--frog-enum-dropdown-option-font-style:{};--frog-enum-dropdown-option-padding-inline:{};--frog-enum-dropdown-option-height:{};'>{}</section>",
+        "<section class='frog-widget enum-widget {}' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-frog-visual-law='wfrog-realization-state-map' data-frog-selector-visible='{}' data-asset-route='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;--frog-enum-selector-fill:{};--frog-enum-selector-stroke:{};--frog-enum-selector-stroke-width:{};--frog-enum-selector-radius:{};--frog-enum-selector-symbol:{};--frog-enum-selector-symbol-width:{};--frog-enum-selector-symbol-height:{};--frog-enum-selector-hover-fill:{};--frog-enum-selector-hover-stroke:{};--frog-enum-selector-hover-symbol:{};--frog-enum-value-hover-fill:{};--frog-enum-text-padding-inline:{};--frog-enum-dropdown-fill:{};--frog-enum-dropdown-border:{};--frog-enum-dropdown-border-width:{};--frog-enum-dropdown-option-fill:{};--frog-enum-dropdown-option-text:{};--frog-enum-dropdown-option-hover-fill:{};--frog-enum-dropdown-option-hover-text:{};--frog-enum-dropdown-option-selected-fill:{};--frog-enum-dropdown-option-selected-text:{};--frog-enum-dropdown-option-font-family:{};--frog-enum-dropdown-option-font-size:{};--frog-enum-dropdown-option-font-weight:{};--frog-enum-dropdown-option-font-style:{};--frog-enum-dropdown-option-padding-inline:{};--frog-enum-dropdown-option-height:{};{}'>{}</section>",
         if is_control { "enum-control" } else { "enum-indicator" },
         escape_html(widget_id),
         escape_html(widget["class_ref"].as_str().unwrap_or("")),
@@ -2680,8 +3093,342 @@ fn render_enum_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String {
         escape_html(&safe_css_font_style(&runtime_string(runtime, "style.dropdown.option.font_style", "normal"), "normal")),
         escape_html(&safe_css_length(&runtime_string(runtime, "style.dropdown.option.padding_inline", &text_padding), &text_padding)),
         escape_html(&safe_css_length(&runtime_string(runtime, "style.dropdown.option.height", "28px"), "28px")),
+        runtime_caption_style_vars(runtime, "frog-enum"),
         body
     )
+}
+
+#[derive(Clone, Copy)]
+struct ButtonSvgGeometry {
+    view_width: f64,
+    view_height: f64,
+    caption_x: f64,
+    caption_y: f64,
+    face_x: f64,
+    face_y: f64,
+    face_width: f64,
+    face_height: f64,
+    state_text_x: f64,
+    state_text_y: f64,
+}
+
+impl Default for ButtonSvgGeometry {
+    fn default() -> Self {
+        Self {
+            view_width: 340.0,
+            view_height: 220.0,
+            caption_x: 16.0,
+            caption_y: 46.0,
+            face_x: 26.0,
+            face_y: 86.0,
+            face_width: 288.0,
+            face_height: 80.0,
+            state_text_x: 170.0,
+            state_text_y: 127.0,
+        }
+    }
+}
+
+fn load_button_svg_geometry(asset_path: Option<&PathBuf>) -> ButtonSvgGeometry {
+    let mut geometry = ButtonSvgGeometry::default();
+    let Some(path) = asset_path else { return geometry; };
+    let Ok(svg) = fs::read_to_string(path) else { return geometry; };
+    if let Some(start) = svg.find("viewBox=\"") {
+        let value_start = start + "viewBox=\"".len();
+        if let Some(value_end) = svg[value_start..].find('"') {
+            let parts: Vec<&str> = svg[value_start..value_start + value_end].split_whitespace().collect();
+            if parts.len() == 4 {
+                if let (Ok(width), Ok(height)) = (parts[2].parse::<f64>(), parts[3].parse::<f64>()) {
+                    if width > 0.0 && height > 0.0 {
+                        geometry.view_width = width;
+                        geometry.view_height = height;
+                    }
+                }
+            }
+        }
+    }
+    geometry.caption_x = svg_attribute_f64(&svg, "caption_text", "x", geometry.caption_x);
+    geometry.caption_y = svg_attribute_f64(&svg, "caption_text", "y", geometry.caption_y);
+    geometry.face_x = svg_attribute_f64(&svg, "face", "x", geometry.face_x);
+    geometry.face_y = svg_attribute_f64(&svg, "face", "y", geometry.face_y);
+    geometry.face_width = svg_attribute_f64(&svg, "face", "width", geometry.face_width);
+    geometry.face_height = svg_attribute_f64(&svg, "face", "height", geometry.face_height);
+    geometry.state_text_x = svg_attribute_f64(&svg, "state_text", "x", geometry.state_text_x);
+    geometry.state_text_y = svg_attribute_f64(&svg, "state_text", "y", geometry.state_text_y);
+    geometry
+}
+
+fn button_anchor_style(x: f64, y: f64, geometry: ButtonSvgGeometry) -> String {
+    format!(
+        "left:{};top:{};",
+        css_percent(pct(x, geometry.view_width)),
+        css_percent(pct(y, geometry.view_height))
+    )
+}
+
+fn button_box_style(x: f64, y: f64, width: f64, height: f64, geometry: ButtonSvgGeometry) -> String {
+    format!(
+        "left:{};top:{};width:{};height:{};",
+        css_percent(pct(x, geometry.view_width)),
+        css_percent(pct(y, geometry.view_height)),
+        css_percent(pct(width, geometry.view_width)),
+        css_percent(pct(height, geometry.view_height))
+    )
+}
+
+fn button_caption_anchor_style(runtime: &Value, geometry: ButtonSvgGeometry) -> String {
+    let x = runtime["caption.anchor.x"].as_f64().unwrap_or(geometry.caption_x);
+    let y = runtime["caption.anchor.y"].as_f64().unwrap_or(geometry.caption_y);
+    let align = runtime_string(runtime, "caption.align.horizontal", "left");
+    let mut style = button_anchor_style(x, y, geometry);
+    let _ = write!(
+        style,
+        "transform:{};text-align:{};color:{};",
+        caption_transform_for_align(&align),
+        caption_text_align(&align),
+        escape_html(&safe_css_color(&runtime_string(runtime, "caption.style.text_color", "#111827"), "#111827"))
+    );
+    if !runtime_bool(runtime, "caption.visible", true) {
+        style.push_str("display:none;");
+    }
+    style
+}
+
+fn render_button_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String {
+    let runtime = &widget["runtime"];
+    let layout = &widget["layout"];
+    let geometry = load_button_svg_geometry(asset_path);
+    let value = runtime["pressed"].as_bool().or_else(|| runtime["value"].as_bool()).unwrap_or(false);
+    let visual_state = if value { "true" } else { "false" };
+    let hover_state = if value { "hover_true" } else { "hover_false" };
+    let pressed_state = if value { "pressed_true" } else { "pressed_false" };
+    let transition_state = if value { "transition_true_to_false" } else { "transition_false_to_true" };
+    let widget_id = widget["widget_id"].as_str().unwrap_or("trigger_button");
+    let caption = runtime_string(runtime, "caption.text", widget_id);
+    let false_state_text = runtime_string(runtime, "state_text.false_text", "OFF");
+    let true_state_text = runtime_string(runtime, "state_text.true_text", "ON");
+    let state_text = if value { &true_state_text } else { &false_state_text };
+    let input_id = runtime_string(runtime, "binding.public_input_id", "trigger_pressed");
+    let frame_fill = safe_css_color(&runtime_string(runtime, "style.frame.fill_color", "transparent"), "transparent");
+    let frame_stroke = safe_css_color(&runtime_string(runtime, "style.frame.border_color", "transparent"), "transparent");
+    let frame_width = safe_css_length(&runtime_string(runtime, "style.frame.border_width", "0px"), "0px");
+    let face_fill = safe_css_color(&state_property(runtime, "style.face.fill_color", visual_state, "#e2e8f0"), "#e2e8f0");
+    let face_hover_fill = safe_css_color(&state_property(runtime, "style.face.fill_color", hover_state, &face_fill), &face_fill);
+    let face_pressed_fill = safe_css_color(&state_property(runtime, "style.face.fill_color", pressed_state, &face_fill), &face_fill);
+    let face_stroke = safe_css_color(&state_property(runtime, "style.face.border_color", visual_state, "#334155"), "#334155");
+    let face_stroke_width = safe_css_length(&runtime_string(runtime, "style.face.border_width", "4px"), "4px");
+    let state_face_fill = safe_css_color(&state_property(runtime, "style.state_face.fill_color", visual_state, "transparent"), "transparent");
+    let state_face_hover_fill = safe_css_color(&state_property(runtime, "style.state_face.fill_color", hover_state, &state_face_fill), &state_face_fill);
+    let state_face_pressed_fill = safe_css_color(&state_property(runtime, "style.state_face.fill_color", pressed_state, &state_face_fill), &state_face_fill);
+    let state_face_stroke = safe_css_color(&state_property(runtime, "style.state_face.border_color", visual_state, "transparent"), "transparent");
+    let state_face_hover_stroke = safe_css_color(&state_property(runtime, "style.state_face.border_color", hover_state, &state_face_stroke), &state_face_stroke);
+    let state_face_pressed_stroke = safe_css_color(&state_property(runtime, "style.state_face.border_color", pressed_state, &state_face_stroke), &state_face_stroke);
+    let state_face_stroke_width = safe_css_length(&runtime_string(runtime, "style.state_face.border_width", "0px"), "0px");
+    let caption_size = safe_css_length(&runtime_string(runtime, "caption.style.font_size", "18px"), "18px");
+    let caption_weight = safe_css_font_weight(&runtime_string(runtime, "caption.style.font_weight", "600"), "600");
+    let caption_family = safe_css_font_family(
+        &runtime_string(runtime, "caption.style.font_family", "system-ui, Segoe UI, Arial, sans-serif"),
+        "system-ui, Segoe UI, Arial, sans-serif",
+    );
+    let false_text_color = safe_css_color(&state_property(runtime, "state_text.style.text_color", "false", "#111827"), "#111827");
+    let true_text_color = safe_css_color(&state_property(runtime, "state_text.style.text_color", "true", "#06381c"), "#06381c");
+    let text_color = if value { true_text_color.clone() } else { false_text_color.clone() };
+    let text_size = safe_css_length(&runtime_string(runtime, "state_text.style.font_size", "20px"), "20px");
+    let text_weight = safe_css_font_weight(&runtime_string(runtime, "state_text.style.font_weight", "700"), "700");
+    let focus_color = safe_css_color(&runtime_string(runtime, "style.focus_ring.color", "#2563eb"), "#2563eb");
+    let focus_width = if runtime_bool(runtime, "style.focus_ring.visible", true) {
+        safe_css_length(&runtime_string(runtime, "style.focus_ring.width", "3px"), "3px")
+    } else {
+        "0px".to_string()
+    };
+    let pressed_inset = safe_css_length(&runtime_string(runtime, "style.pressed.inset", "2px"), "2px");
+    let transition_ms = runtime_string(runtime, "style.transition.duration_ms", "120");
+    let transition_timing = runtime_string(runtime, "style.transition.timing", "ease-out");
+    let asset_ref = runtime["asset_ref"].as_str().unwrap_or("");
+    let asset_route = asset_ref.strip_prefix("asset:").map(|id| format!("/asset/{id}")).unwrap_or_default();
+    let svg = asset_path.and_then(|path| fs::read_to_string(path).ok()).unwrap_or_default();
+    let mut state_text_overlay = String::new();
+    if runtime_bool(runtime, "state_text.visible", true) {
+        let state_x = runtime["state_text.anchor.x"].as_f64().unwrap_or(geometry.state_text_x);
+        let state_y = runtime["state_text.anchor.y"].as_f64().unwrap_or(geometry.state_text_y);
+        let _ = write!(
+            state_text_overlay,
+            "<span class='button-state-overlay' data-frog-part='state_text' data-svg-anchor='state_text.center' style='{}'>{}</span>",
+            button_anchor_style(state_x, state_y, geometry),
+            escape_html(state_text)
+        );
+    }
+    format!(
+        "<div class='frog-widget button-widget button-control' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-asset-ref='{}' data-asset-route='{}' data-current-value='{}' data-realization-variant='{}' data-frog-visual-law='wfrog-realization-state-map' data-frog-visual-state='{}' data-frog-hover-state='{}' data-frog-pressed-state='{}' data-frog-transition-state='{}' data-frog-state-text-visible='{}' data-frog-state-text-false='{}' data-frog-state-text-true='{}' data-frog-state-text-color-false='{}' data-frog-state-text-color-true='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;--frog-button-frame-fill:{};--frog-button-frame-stroke:{};--frog-button-frame-stroke-width:{};--frog-button-face-fill:{};--frog-button-face-hover-fill:{};--frog-button-face-pressed-fill:{};--frog-button-face-stroke:{};--frog-button-face-stroke-width:{};--frog-button-state-face-fill:{};--frog-button-state-face-hover-fill:{};--frog-button-state-face-pressed-fill:{};--frog-button-state-face-stroke:{};--frog-button-state-face-hover-stroke:{};--frog-button-state-face-pressed-stroke:{};--frog-button-state-face-stroke-width:{};--frog-button-caption-font-size:{};--frog-button-caption-font-weight:{};--frog-button-caption-font-family:{};--frog-button-state-text-fill:{};--frog-button-state-text-font-size:{};--frog-button-state-text-font-weight:{};--frog-button-focus-color:{};--frog-button-focus-width:{};--frog-button-pressed-inset:{};--frog-button-transition:{}ms {};'>\
+         <div class='button-skin' data-frog-asset-consumed='true' aria-hidden='true'>{}</div>\
+         <span class='button-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}'>{}</span>{}\
+         <button class='button-press-overlay' type='button' name='{}' value='true' aria-label='{}' aria-pressed='{}' data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='{}' data-frog-host-overlay='input' data-frog-align-to-part='face' style='{}'></button></div>",
+        escape_html(widget_id),
+        escape_html(widget["class_ref"].as_str().unwrap_or("")),
+        escape_html(widget["role"].as_str().unwrap_or("")),
+        escape_html(asset_ref),
+        escape_html(&asset_route),
+        if value { "true" } else { "false" },
+        escape_html(&runtime_string(runtime, "realization.variant", "rectangular")),
+        visual_state,
+        hover_state,
+        pressed_state,
+        transition_state,
+        if runtime_bool(runtime, "state_text.visible", true) { "true" } else { "false" },
+        escape_html(&false_state_text),
+        escape_html(&true_state_text),
+        escape_html(&false_text_color),
+        escape_html(&true_text_color),
+        layout["x"].as_i64().unwrap_or(0),
+        layout["y"].as_i64().unwrap_or(0),
+        layout["width"].as_i64().unwrap_or(220),
+        layout["height"].as_i64().unwrap_or(140),
+        escape_html(&frame_fill),
+        escape_html(&frame_stroke),
+        escape_html(&frame_width),
+        escape_html(&face_fill),
+        escape_html(&face_hover_fill),
+        escape_html(&face_pressed_fill),
+        escape_html(&face_stroke),
+        escape_html(&face_stroke_width),
+        escape_html(&state_face_fill),
+        escape_html(&state_face_hover_fill),
+        escape_html(&state_face_pressed_fill),
+        escape_html(&state_face_stroke),
+        escape_html(&state_face_hover_stroke),
+        escape_html(&state_face_pressed_stroke),
+        escape_html(&state_face_stroke_width),
+        escape_html(&caption_size),
+        escape_html(&caption_weight),
+        escape_html(&caption_family),
+        escape_html(&text_color),
+        escape_html(&text_size),
+        escape_html(&text_weight),
+        escape_html(&focus_color),
+        escape_html(&focus_width),
+        escape_html(&pressed_inset),
+        escape_html(&transition_ms),
+        escape_html(&transition_timing),
+        svg,
+        button_caption_anchor_style(runtime, geometry),
+        escape_html(&caption),
+        state_text_overlay,
+        escape_html(&input_id),
+        escape_html(&caption),
+        if value { "true" } else { "false" },
+        escape_html(&input_id),
+        button_box_style(geometry.face_x, geometry.face_y, geometry.face_width, geometry.face_height, geometry),
+    )
+}
+
+fn button_press_to_boolean_script() -> &'static str {
+    r#"<script>
+(() => {
+  const form = document.querySelector("form[action='/run']");
+  const buttonWidget = document.querySelector("[data-widget-id='trigger_button']");
+  const overlay = document.querySelector("[data-widget-id='trigger_button'] .button-press-overlay");
+  const indicator = document.querySelector("[data-widget-id='pressed_indicator']");
+  if (!form || !buttonWidget || !overlay || !indicator) {
+    return;
+  }
+  const buttonStateText = buttonWidget.querySelector(".button-state-overlay[data-frog-part='state_text']");
+  const stateText = indicator.querySelector("[data-frog-part='state_text']");
+  const inputId = overlay.dataset.frogPublicInputId || overlay.name || "trigger_pressed";
+  let pressed = false;
+  let eventQueue = Promise.resolve();
+  const buttonProperty = (base, value) => buttonWidget.dataset[`${base}${value ? "True" : "False"}`] || "";
+  const indicatorProperty = (base, value) => indicator.dataset[`${base}${value ? "True" : "False"}`] || "";
+  const applyIndicator = (value) => {
+    const state = value ? "true" : "false";
+    indicator.dataset.currentValue = state;
+    indicator.dataset.frogVisualState = state;
+    indicator.dataset.frogHoverState = value ? "hover_true" : "hover_false";
+    indicator.dataset.frogPressedState = value ? "pressed_true" : "pressed_false";
+    indicator.dataset.frogTransitionState = value ? "transition_false_to_true" : "transition_true_to_false";
+    indicator.style.setProperty("--boolean-fill", indicatorProperty("frogFill", value));
+    indicator.style.setProperty("--boolean-inner-border", indicatorProperty("frogInnerBorder", value));
+    indicator.style.setProperty("--boolean-text", indicatorProperty("frogTextColor", value));
+    if (stateText) {
+      stateText.textContent = indicatorProperty("frogText", value);
+    }
+  };
+  const publish = (value) => {
+    const body = new URLSearchParams();
+    body.set(inputId, value ? "true" : "false");
+    eventQueue = eventQueue.catch(() => {}).then(() => fetch("/event", {
+      method: "POST",
+      headers: {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"},
+      body
+    })).catch(() => {});
+  };
+  const setPressed = (value) => {
+    if (pressed === value) {
+      return;
+    }
+    pressed = value;
+    overlay.setAttribute("aria-pressed", value ? "true" : "false");
+    buttonWidget.dataset.currentValue = value ? "true" : "false";
+    buttonWidget.dataset.frogVisualState = value ? "true" : "false";
+    buttonWidget.dataset.frogPressedState = value ? "pressed_true" : "pressed_false";
+    if (buttonStateText) {
+      buttonStateText.textContent = buttonProperty("frogStateText", value);
+      buttonStateText.style.color = buttonProperty("frogStateTextColor", value);
+    }
+    applyIndicator(value);
+    publish(value);
+  };
+  form.addEventListener("submit", (event) => event.preventDefault());
+  overlay.addEventListener("click", (event) => event.preventDefault());
+  const press = (event) => {
+    if (event && event.button !== undefined && event.button !== 0) {
+      return;
+    }
+    if (event) {
+      event.preventDefault();
+    }
+    setPressed(true);
+  };
+  overlay.addEventListener("pointerdown", (event) => {
+    if (overlay.setPointerCapture) {
+      overlay.setPointerCapture(event.pointerId);
+    }
+    press(event);
+  });
+  const release = (event) => {
+    if (!pressed) {
+      return;
+    }
+    if (event) {
+      event.preventDefault();
+    }
+    setPressed(false);
+  };
+  overlay.addEventListener("pointerup", release);
+  overlay.addEventListener("pointercancel", release);
+  overlay.addEventListener("lostpointercapture", release);
+  overlay.addEventListener("mousedown", press);
+  window.addEventListener("mouseup", release);
+  overlay.addEventListener("mouseleave", release);
+  overlay.addEventListener("touchstart", press, {passive: false});
+  overlay.addEventListener("touchend", release, {passive: false});
+  overlay.addEventListener("touchcancel", release, {passive: false});
+  overlay.addEventListener("blur", release);
+  overlay.addEventListener("keydown", (event) => {
+    if (event.key !== " " && event.key !== "Enter") {
+      return;
+    }
+    event.preventDefault();
+    setPressed(true);
+  });
+  overlay.addEventListener("keyup", (event) => {
+    if (event.key !== " " && event.key !== "Enter") {
+      return;
+    }
+    event.preventDefault();
+    setPressed(false);
+  });
+})();
+</script>"#
 }
 
 fn render_boolean_widget(widget: &Value) -> String {
@@ -2706,20 +3453,40 @@ fn render_boolean_widget(widget: &Value) -> String {
         ..NumericSvgGeometry::default()
     };
 
-    let state_fill = state_property(runtime, "style.inner.fill_color", visual_state, if value { "#8bd86f" } else { "#ffffff" });
+    let false_fill = state_property(runtime, "style.inner.fill_color", "false", "#ffffff");
+    let true_fill = state_property(runtime, "style.inner.fill_color", "true", "#8bd86f");
+    let state_fill = if value { true_fill.clone() } else { false_fill.clone() };
     let hover_fill = state_property(runtime, "style.inner.fill_color", hover_state, if value { "#9be884" } else { "#eef6ff" });
     let pressed_fill = state_property(runtime, "style.inner.fill_color", pressed_state, if value { "#6fc657" } else { "#dbeafe" });
-    let state_border = state_property(runtime, "style.outer.border_color", visual_state, if value { "#184a24" } else { "#111827" });
+    let false_border = state_property(runtime, "style.outer.border_color", "false", "#111827");
+    let true_border = state_property(runtime, "style.outer.border_color", "true", "#184a24");
+    let state_border = if value { true_border.clone() } else { false_border.clone() };
     let hover_border = state_property(runtime, "style.outer.border_color", hover_state, if value { "#166534" } else { "#2563eb" });
     let pressed_border = state_property(runtime, "style.outer.border_color", pressed_state, if value { "#14532d" } else { "#1d4ed8" });
-    let state_inner_border = state_property(runtime, "style.inner.border_color", visual_state, &state_border);
+    let false_inner_border = state_property(runtime, "style.inner.border_color", "false", &false_border);
+    let true_inner_border = state_property(runtime, "style.inner.border_color", "true", &true_border);
+    let state_inner_border = if value { true_inner_border.clone() } else { false_inner_border.clone() };
     let hover_inner_border = state_property(runtime, "style.inner.border_color", hover_state, &hover_border);
     let pressed_inner_border = state_property(runtime, "style.inner.border_color", pressed_state, &pressed_border);
-    let text_color = state_property(runtime, "state_text.style.text_color", visual_state, if value { "#0b3d19" } else { "#111827" });
+    let false_text_color = state_property(runtime, "state_text.style.text_color", "false", "#111827");
+    let true_text_color = state_property(runtime, "state_text.style.text_color", "true", "#0b3d19");
+    let text_color = if value { true_text_color.clone() } else { false_text_color.clone() };
+    let false_state_text = runtime_string(runtime, "state_text.false_text", "FALSE");
+    let true_state_text = runtime_string(runtime, "state_text.true_text", "TRUE");
+    let caption_color = safe_css_color(&runtime_string(runtime, "caption.style.text_color", "#111827"), "#111827");
+    let caption_size = safe_css_length(&runtime_string(runtime, "caption.style.font_size", "18px"), "18px");
+    let caption_weight = safe_css_font_weight(&runtime_string(runtime, "caption.style.font_weight", "600"), "600");
+    let caption_family = safe_css_font_family(
+        &runtime_string(runtime, "caption.style.font_family", "system-ui, Segoe UI, Arial, sans-serif"),
+        "system-ui, Segoe UI, Arial, sans-serif",
+    );
+    let text_size = safe_css_length(&runtime_string(runtime, "state_text.style.font_size", "18px"), "18px");
+    let text_weight = safe_css_font_weight(&runtime_string(runtime, "state_text.style.font_weight", "700"), "700");
     let inner_left = runtime_string(runtime, "style.inner.left", if variant == "circular" { "52px" } else { "18px" });
     let inner_top = runtime_string(runtime, "style.inner.top", if variant == "circular" { "23px" } else { "31px" });
     let inner_width = runtime_string(runtime, "style.inner.width", if variant == "circular" { "56px" } else { "124px" });
     let inner_height = runtime_string(runtime, "style.inner.height", if variant == "circular" { "56px" } else { "34px" });
+    let inner_border_width = safe_css_length(&runtime_string(runtime, "style.inner.border_width", "2px"), "2px");
     let focus_color = safe_css_color(&runtime_string(runtime, "style.focus_ring.color", "#2563eb"), "#2563eb");
     let focus_width = if focus_visible { safe_css_length(&runtime_string(runtime, "style.focus_ring.width", "3px"), "3px") } else { "0px".to_string() };
     let transition_ms = runtime_string(runtime, "style.transition.duration_ms", "120");
@@ -2738,7 +3505,9 @@ fn render_boolean_widget(widget: &Value) -> String {
          --boolean-border:{};--boolean-hover-border:{};--boolean-pressed-border:{};\
          --boolean-inner-border:{};--boolean-hover-inner-border:{};--boolean-pressed-inner-border:{};\
          --boolean-inner-left:{};--boolean-inner-top:{};--boolean-inner-width:{};--boolean-inner-height:{};\
-         --boolean-text:{};--boolean-focus-color:{};--boolean-focus-width:{};--boolean-transition:{}ms {};--boolean-pressed-inset:{};{}",
+         --boolean-inner-border-width:{};--boolean-text:{};--boolean-text-font-size:{};--boolean-text-font-weight:{};\
+         --boolean-caption-color:{};--boolean-caption-font-size:{};--boolean-caption-font-weight:{};--boolean-caption-font-family:{};\
+         --boolean-focus-color:{};--boolean-focus-width:{};--boolean-transition:{}ms {};--boolean-pressed-inset:{};",
         layout["x"].as_i64().unwrap_or(0),
         layout["y"].as_i64().unwrap_or(0),
         layout["width"].as_i64().unwrap_or(160),
@@ -2756,13 +3525,19 @@ fn render_boolean_widget(widget: &Value) -> String {
         inner_top,
         inner_width,
         inner_height,
+        inner_border_width,
         text_color,
+        text_size,
+        text_weight,
+        caption_color,
+        caption_size,
+        caption_weight,
+        caption_family,
         focus_color,
         focus_width,
         transition_ms,
         transition_timing,
         pressed_inset,
-        runtime_caption_anchor_vars(runtime, caption_geometry, "boolean"),
     );
     let skin = format!(
         "<span class='boolean-state-face' data-frog-part='inner_face' aria-hidden='true'></span>\
@@ -2775,16 +3550,20 @@ fn render_boolean_widget(widget: &Value) -> String {
         escape_html(&caption)
     );
     if state_text_visible {
-        let text = runtime_string(runtime, if value { "state_text.true_text" } else { "state_text.false_text" }, if value { "TRUE" } else { "FALSE" });
+        let text = if value { &true_state_text } else { &false_state_text };
+        let state_x = runtime["state_text.anchor.x"].as_f64().unwrap_or(80.0);
+        let state_y = runtime["state_text.anchor.y"].as_f64().unwrap_or(50.0);
         let _ = write!(
             overlays,
-            "<span class='boolean-state-overlay' data-frog-part='state_text'>{}</span>",
+            "<span class='boolean-state-overlay' data-frog-part='state_text' data-svg-anchor='state_text.center' style='left:{};top:{};'>{}</span>",
+            css_percent_compact(pct(state_x, caption_geometry.view_width)),
+            css_percent_compact(pct(state_y, caption_geometry.view_height)),
             escape_html(&text)
         );
     }
     let attrs = format!(
         " data-widget-id='{}' data-class-ref='{}' data-role='{}' data-asset-ref='{}' data-asset-route='{}'\
-         data-current-value='{}' data-realization-variant='{}' data-frog-visual-law='wfrog-realization-state-map'\
+         data-current-value='{}' data-frog-fill-false='{}' data-frog-fill-true='{}' data-frog-inner-border-false='{}' data-frog-inner-border-true='{}' data-frog-text-color-false='{}' data-frog-text-color-true='{}' data-frog-text-false='{}' data-frog-text-true='{}' data-realization-variant='{}' data-frog-visual-law='wfrog-realization-state-map'\
          data-frog-visual-state='{}' data-frog-hover-state='{}' data-frog-pressed-state='{}' data-frog-transition-state='{}'\
          data-frog-state-text-visible='{}' data-frog-frame-visible='{}'",
         escape_html(widget_id),
@@ -2793,6 +3572,14 @@ fn render_boolean_widget(widget: &Value) -> String {
         escape_html(asset_ref),
         escape_html(&asset_route),
         if value { "true" } else { "false" },
+        escape_html(&false_fill),
+        escape_html(&true_fill),
+        escape_html(&false_inner_border),
+        escape_html(&true_inner_border),
+        escape_html(&false_text_color),
+        escape_html(&true_text_color),
+        escape_html(&false_state_text),
+        escape_html(&true_state_text),
         escape_html(&variant),
         visual_state,
         hover_state,

@@ -19,6 +19,7 @@
       "button realization resource references",
       "button part bindings",
       "button state maps",
+      "button anchors and overlay alignment surfaces",
       "button mechanical-action realization posture",
       "button host hints",
       "button realization validation expectations"
@@ -125,7 +126,17 @@
       "id": "frog.realizations.default.button.rectangular",
       "variant": "rectangular",
       "target_class": "frog.widgets.button",
-      "resource_ref": "frog.realizations.default.button.assets.rectangular_template_svg"
+      "resource_ref": "frog.realizations.default.button.assets.rectangular_template_svg",
+      "geometry_posture": {
+        "shape_family": "rectangular_button",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "supports_caption": true,
+        "supports_state_text_centering": true,
+        "supports_host_input_overlay": true,
+        "host_input_overlay_alignment_part": "face"
+      },
+      "fallback": "host_button_only_when_svg_resource_is_missing"
     }
   ],
   "resources": [
@@ -134,7 +145,15 @@
       "kind": "svg",
       "path": "./assets/button/templates/button_rectangular.svg",
       "target_class": "frog.widgets.button",
-      "target_variant": "rectangular"
+      "target_variant": "rectangular",
+      "template_markers": {
+        "template": "frog.realizations.default.button.rectangular",
+        "variant": "rectangular",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
     },
     {
       "id": "frog.realizations.default.button.assets.state.false_svg",
@@ -193,51 +212,71 @@
     },
     {
       "part": "label",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "svg_text_or_metadata",
       "binding_selector": "[data-frog-part='label']",
-      "semantic_member": "label.text"
+      "semantic_member": "label.text",
+      "visibility_member": "label.visible",
+      "placement_role": "structural_label"
     },
     {
       "part": "caption",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "svg_text_or_host_text",
       "binding_selector": "[data-frog-part='caption']",
-      "semantic_member": "caption.text"
+      "semantic_member": "caption.text",
+      "visibility_member": "caption.visible",
+      "placement_role": "front_panel_caption"
     },
     {
       "part": "frame",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "svg_shape",
       "binding_selector": "[data-frog-part='frame']",
       "style_binding_group": "style.frame"
     },
     {
       "part": "face",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "svg_shape_or_host_input_overlay_alignment",
       "binding_selector": "[data-frog-part='face']",
-      "style_binding_group": "style.face"
+      "style_binding_group": "style.face",
+      "state_sensitive": true,
+      "host_overlay_role": "input_hit_area"
     },
     {
       "part": "state_face",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "svg_shape",
       "binding_selector": "[data-frog-part='state_face']",
-      "style_binding_group": "style.state_face"
+      "style_binding_group": "style.state_face",
+      "state_sensitive": true
     },
     {
       "part": "state_text",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "svg_text_or_host_text",
       "binding_selector": "[data-frog-part='state_text']",
       "semantic_members": [
         "state_text.false_text",
         "state_text.true_text"
-      ]
+      ],
+      "visibility_member": "state_text.visible",
+      "placement_role": "internal_state_text"
     },
     {
       "part": "focus_ring",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "svg_shape",
       "binding_selector": "[data-frog-part='focus_ring']",
-      "style_binding_group": "style.focus_ring"
+      "style_binding_group": "style.focus_ring",
+      "state_sensitive": true
     }
   ],
   "property_bindings": [
+    {
+      "member": "label.text",
+      "target_part": "label",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "label.visible",
+      "target_part": "label",
+      "target_operation": "set_visibility"
+    },
     {
       "member": "caption.text",
       "target_part": "caption",
@@ -264,14 +303,74 @@
       "target_operation": "set_text_anchor_alignment"
     },
     {
+      "member": "caption.style.text_color",
+      "target_part": "caption",
+      "target_operation": "set_text_fill"
+    },
+    {
+      "member": "caption.style.font_family",
+      "target_part": "caption",
+      "target_operation": "set_font_family"
+    },
+    {
+      "member": "caption.style.font_size",
+      "target_part": "caption",
+      "target_operation": "set_font_size"
+    },
+    {
+      "member": "caption.style.font_weight",
+      "target_part": "caption",
+      "target_operation": "set_font_weight"
+    },
+    {
       "member": "value",
       "target_part": "state_face",
       "target_operation": "resolve_button_state"
     },
     {
+      "member": "state_text.visible",
+      "target_part": "state_text",
+      "target_operation": "set_visibility"
+    },
+    {
       "member": "state_text.*",
       "target_part": "state_text",
       "target_operation": "render_state_text"
+    },
+    {
+      "member": "state_text.style.*",
+      "target_part": "state_text",
+      "target_operation": "apply_text_style"
+    },
+    {
+      "member": "style.frame.*",
+      "target_part": "frame",
+      "target_operation": "apply_frame_style"
+    },
+    {
+      "member": "style.face.*",
+      "target_part": "face",
+      "target_operation": "apply_face_style"
+    },
+    {
+      "member": "style.state_face.*",
+      "target_part": "state_face",
+      "target_operation": "apply_state_face_style"
+    },
+    {
+      "member": "style.focus_ring.*",
+      "target_part": "focus_ring",
+      "target_operation": "apply_focus_ring_style"
+    },
+    {
+      "member": "style.pressed.inset",
+      "target_part": "face",
+      "target_operation": "apply_pressed_transform"
+    },
+    {
+      "member": "style.transition.*",
+      "target_part": "root",
+      "target_operation": "apply_transition_timing"
     },
     {
       "member": "behavior.mechanical_action",
@@ -362,16 +461,50 @@
       "anchor_kind": "text_anchor",
       "default_horizontal_alignment": "start",
       "default_vertical_alignment": "baseline"
+    },
+    {
+      "id": "frog.realizations.default.button.state_text.center",
+      "target_part": "state_text",
+      "source_selector": "[data-frog-anchor='state_text.center']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "center",
+      "default_vertical_alignment": "middle"
+    },
+    {
+      "id": "frog.realizations.default.button.face.bounds",
+      "target_part": "face",
+      "source_selector": "[data-frog-anchor='face.bounds']",
+      "anchor_kind": "part_bounds",
+      "default_horizontal_alignment": "stretch",
+      "default_vertical_alignment": "stretch",
+      "host_overlay_alignment": true
+    },
+    {
+      "id": "frog.realizations.default.button.state_face.bounds",
+      "target_part": "state_face",
+      "source_selector": "[data-frog-anchor='state_face.bounds']",
+      "anchor_kind": "part_bounds",
+      "default_horizontal_alignment": "stretch",
+      "default_vertical_alignment": "stretch"
     }
   ],
   "host_hints": {
-    "preferred_host_kind": "svg_template_host_or_host_native_button",
+    "preferred_host_kind": "svg_template_host",
+    "resize_posture": "scale_template_to_front_panel_layout_rectangle",
+    "text_rendering_posture": "host_may_replace_template_text_content",
     "state_rendering_posture": "resolve_state_map_before_render",
     "style_application_posture": "apply_property_bindings_before_render",
+    "input_overlay_posture": {
+      "host_overlay_allowed": true,
+      "target_part": "face",
+      "alignment_anchor": "frog.realizations.default.button.face.bounds",
+      "overlay_must_not_replace_svg_visual": true
+    },
     "accessibility_posture": {
       "role": "button",
       "value_source": "value",
-      "label_source": "caption.text"
+      "label_source": "label.text",
+      "caption_source": "caption.text"
     }
   },
   "validation_expectations": [

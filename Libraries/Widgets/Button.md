@@ -143,6 +143,12 @@ A mere object-style property read of <code>value</code> SHOULD NOT by itself res
   <li><code>focus_ring</code></li>
 </ul>
 
+<p>
+Default SVG realizations SHOULD publish stable anchors for external text placement, internal state text placement, and host input overlays.
+The rectangular default realization publishes <code>label.anchor</code>, <code>caption.anchor</code>, <code>state_text.center</code>, and <code>face.bounds</code>.
+Host overlays for input handling MAY align to <code>face.bounds</code>, but they MUST NOT replace the SVG-owned visible button skin.
+</p>
+
 <hr/>
 
 <h2 id="standard-property-surface">7. Standard Property Surface</h2>
@@ -258,7 +264,12 @@ A mere object-style property read of <code>value</code> SHOULD NOT by itself res
 <h2 id="default-svg-realization-posture">9. Default SVG Realization Posture</h2>
 
 <p>
-The default realization SHOULD support a parameterized rectangular SVG template, state-dependent color application, caption and internal state-text rendering, configurable frame / face / state-face border widths, and focus ring display.
+The default realization SHOULD support a parameterized rectangular SVG template, state-dependent color application, caption and internal state-text rendering, a single visible rectangular face with configurable border, optional frame / state-face surfaces for advanced realizations, and focus ring display.
+</p>
+
+<p>
+The Default Button SVG template is the reusable visual grammar for examples and runtimes.
+Example sources may provide instance-level values, labels, layout, bindings, and style overrides, but they should reference the Default realization package and its published SVG assets instead of duplicating local button skins.
 </p>
 
 <pre><code>widget property

@@ -1,0 +1,78 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "10_button_press_to_boolean",
+    "path": "Examples/10_button_press_to_boolean/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/10_button_press_to_boolean/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "summary": "make the Button press-to-Boolean example consumable by a bounded C++ runtime/UI-binding check",
+    "backend_family_target": "reference_host_runtime_ui_binding",
+    "capability_targets": [
+      "llvm_native_kernel_bridge"
+    ]
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "button_press_to_boolean_kernel_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "trigger_pressed",
+            "type": "bool",
+            "binding_origin": "widget.trigger_button.pressed"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "pressed",
+            "type": "bool"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "trigger_button",
+            "mode": "widget_event_value",
+            "event": "pressed",
+            "public_input_id": "trigger_pressed",
+            "value_type": "bool"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "pressed_indicator",
+            "mode": "widget_value",
+            "public_output_id": "pressed",
+            "value_type": "bool"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "copy",
+        "dst": "pressed",
+        "type": "bool",
+        "src": "trigger_pressed",
+        "final_publication": [
+          {
+            "target": "public_output.pressed",
+            "source": "trigger_pressed"
+          },
+          {
+            "target": "widget.pressed_indicator.value",
+            "source": "trigger_pressed"
+          }
+        ]
+      }
+    }
+  ]
+}

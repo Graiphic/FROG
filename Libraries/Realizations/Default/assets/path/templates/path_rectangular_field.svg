@@ -16,6 +16,10 @@
       :root {
         --frog-path-label-display: none;
         --frog-path-caption-display: inline;
+        --frog-path-caption-fill: #d00000;
+        --frog-path-caption-font-family: system-ui, Segoe UI, Arial, sans-serif;
+        --frog-path-caption-font-size: 18px;
+        --frog-path-caption-font-weight: 400;
         --frog-path-face-fill: #ffffff;
         --frog-path-face-stroke: #94a3b8;
         --frog-path-face-stroke-width: 1px;
@@ -40,7 +44,7 @@
       }
 
       #label_text { display: var(--frog-path-label-display); fill: #6b7280; font-family: system-ui, Segoe UI, Arial, sans-serif; font-size: 12px; }
-      #caption_text { display: var(--frog-path-caption-display); fill: #d00000; font-family: system-ui, Segoe UI, Arial, sans-serif; font-size: 18px; }
+      #caption_text { display: var(--frog-path-caption-display); fill: var(--frog-path-caption-fill); font-family: var(--frog-path-caption-font-family); font-size: var(--frog-path-caption-font-size); font-weight: var(--frog-path-caption-font-weight); }
       #path_face { fill: var(--frog-path-face-fill); stroke: var(--frog-path-face-stroke); stroke-width: var(--frog-path-face-stroke-width); }
       #path_display { fill: var(--frog-path-text-fill); font-family: system-ui, Segoe UI, Arial, sans-serif; font-size: var(--frog-path-text-font-size); font-weight: var(--frog-path-text-font-weight); }
       #browse_button { display: var(--frog-path-browse-display); fill: var(--frog-path-button-fill); stroke: var(--frog-path-button-stroke); stroke-width: var(--frog-path-button-stroke-width); }
@@ -66,6 +70,7 @@
           data-frog-part="caption"
           data-frog-member="caption.text"
           data-frog-anchor="caption.anchor"
+          data-frog-bind="caption.text caption.visible caption.anchor.* caption.align.horizontal caption.style.*"
           x="16"
           y="46">Path</text>
 

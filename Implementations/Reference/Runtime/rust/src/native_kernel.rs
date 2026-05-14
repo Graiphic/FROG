@@ -221,7 +221,7 @@ impl NativeBoolKernelBridge {
         )?;
         let manifest = load_native_kernel_manifest(manifest_path)?;
         ensure(
-            manifest.entry_symbol == "frog_example06_run",
+            manifest.entry_symbol == "frog_example06_run" || manifest.entry_symbol == "frog_example10_run",
             "unexpected native bool kernel entry symbol",
         )?;
         ensure(

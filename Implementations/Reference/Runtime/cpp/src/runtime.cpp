@@ -383,19 +383,39 @@ Value Slice05RuntimeCore::execution_artifact() const {
     Array widget_entries;
     for (const auto& entry : widgets) {
         const auto& widget = entry.second;
+        Object runtime_fields{
+            {"value", widget.properties.count("value") ? widget.properties.at("value") : Value(0)},
+            {"label", Value(json_string(widget.properties, "label"))},
+            {"visible", Value(json_bool(widget.properties, "visible", true))},
+            {"enabled", Value(json_bool(widget.properties, "enabled", true))},
+            {"foreground_color", Value(json_string(widget.properties, "foreground_color", "#D8D8D8"))},
+            {"asset_ref", widget.asset_id.has_value() ? Value("asset:" + *widget.asset_id) : Value(nullptr)},
+        };
+        const auto copy_property = [&](const std::string& key) {
+            const auto it = widget.properties.find(key);
+            if (it != widget.properties.end()) {
+                runtime_fields.emplace(key, it->second);
+            }
+        };
+        copy_property("caption.text");
+        copy_property("caption.visible");
+        copy_property("caption.anchor.x");
+        copy_property("caption.anchor.y");
+        copy_property("caption.align.horizontal");
+        copy_property("style.caption.text_color");
+        copy_property("style.caption.font_family");
+        copy_property("style.caption.font_size");
+        copy_property("style.caption.font_weight");
+        copy_property("style.text_value.color");
+        copy_property("style.text_value.font_family");
+        copy_property("style.text_value.font_size");
+        copy_property("style.text_value.font_weight");
         widget_entries.push_back(make_object({
             {"widget_id", Value(widget.widget_id)},
             {"class_ref", Value(widget.class_ref)},
             {"role", Value(widget.role)},
             {"layout", widget.layout},
-            {"runtime", make_object({
-                {"value", widget.properties.count("value") ? widget.properties.at("value") : Value(0)},
-                {"label", Value(json_string(widget.properties, "label"))},
-                {"visible", Value(json_bool(widget.properties, "visible", true))},
-                {"enabled", Value(json_bool(widget.properties, "enabled", true))},
-                {"foreground_color", Value(json_string(widget.properties, "foreground_color", "#D8D8D8"))},
-                {"asset_ref", widget.asset_id.has_value() ? Value("asset:" + *widget.asset_id) : Value(nullptr)},
-            })},
+            {"runtime", Value(runtime_fields)},
         }));
     }
 
@@ -613,11 +633,19 @@ Value Slice06BooleanRuntimeCore::execution_artifact() const {
         };
         copy_property("state_text.style.text_color.false");
         copy_property("state_text.style.text_color.true");
+        copy_property("state_text.style.font_size");
+        copy_property("state_text.style.font_weight");
         copy_property("state_text.visible");
         copy_property("caption.visible");
         copy_property("caption.anchor.x");
         copy_property("caption.anchor.y");
         copy_property("caption.align.horizontal");
+        copy_property("caption.style.text_color");
+        copy_property("caption.style.font_family");
+        copy_property("caption.style.font_size");
+        copy_property("caption.style.font_weight");
+        copy_property("state_text.anchor.x");
+        copy_property("state_text.anchor.y");
         copy_property("style.frame.visible");
         copy_property("style.outer.border_color.false");
         copy_property("style.outer.border_color.true");
@@ -641,6 +669,7 @@ Value Slice06BooleanRuntimeCore::execution_artifact() const {
         copy_property("style.inner.top");
         copy_property("style.inner.width");
         copy_property("style.inner.height");
+        copy_property("style.inner.border_width");
         copy_property("style.focus_ring.visible");
         copy_property("style.focus_ring.color");
         copy_property("style.focus_ring.width");
@@ -869,6 +898,9 @@ Value Slice07StringRuntimeCore::execution_artifact() const {
         copy_property("caption.anchor.y");
         copy_property("caption.align.horizontal");
         copy_property("caption.style.text_color");
+        copy_property("caption.style.font_family");
+        copy_property("caption.style.font_size");
+        copy_property("caption.style.font_weight");
         copy_property("style.frame.fill_color");
         copy_property("style.frame.border_color");
         copy_property("style.frame.border_width");
@@ -1147,6 +1179,9 @@ Value Slice08EnumRuntimeCore::execution_artifact() const {
         copy_property("caption.anchor.y");
         copy_property("caption.align.horizontal");
         copy_property("caption.style.text_color");
+        copy_property("caption.style.font_family");
+        copy_property("caption.style.font_size");
+        copy_property("caption.style.font_weight");
         copy_property("display.digital_display_visible");
         copy_property("display.increment_buttons_visible");
         copy_property("display.selector_visible");
@@ -1161,15 +1196,44 @@ Value Slice08EnumRuntimeCore::execution_artifact() const {
         copy_property("style.value_face.border_width");
         copy_property("style.value_display.color");
         copy_property("style.value_display.font_size");
+        copy_property("style.value_display.font_size_mode");
         copy_property("style.value_display.font_weight");
         copy_property("style.value_display.vertical_offset");
+        copy_property("style.value_display.vertical_offset_mode");
+        copy_property("style.value_display.padding_inline");
+        copy_property("style.value_display.padding_inline_mode");
         copy_property("style.selector_face.fill_color");
         copy_property("style.selector_face.fill_color.hover");
         copy_property("style.selector_face.border_color");
         copy_property("style.selector_face.border_color.hover");
         copy_property("style.selector_face.border_width");
+        copy_property("style.selector_face.border_width_mode");
+        copy_property("style.selector_face.border_radius");
+        copy_property("style.selector_face.border_radius_mode");
         copy_property("style.selector_face.symbol_color");
         copy_property("style.selector_face.symbol_color.hover");
+        copy_property("style.selector_face.symbol_width");
+        copy_property("style.selector_face.symbol_height");
+        copy_property("style.selector_face.symbol_size_mode");
+        copy_property("style.dropdown.fill_color");
+        copy_property("style.dropdown.border_color");
+        copy_property("style.dropdown.border_width");
+        copy_property("style.dropdown.border_width_mode");
+        copy_property("style.dropdown.option.fill_color");
+        copy_property("style.dropdown.option.text_color");
+        copy_property("style.dropdown.option.hover_fill_color");
+        copy_property("style.dropdown.option.hover_text_color");
+        copy_property("style.dropdown.option.selected_fill_color");
+        copy_property("style.dropdown.option.selected_text_color");
+        copy_property("style.dropdown.option.font_family");
+        copy_property("style.dropdown.option.font_size");
+        copy_property("style.dropdown.option.font_size_mode");
+        copy_property("style.dropdown.option.font_weight");
+        copy_property("style.dropdown.option.font_style");
+        copy_property("style.dropdown.option.padding_inline");
+        copy_property("style.dropdown.option.padding_inline_mode");
+        copy_property("style.dropdown.option.height");
+        copy_property("style.dropdown.option.height_mode");
         copy_property("interaction.enabled");
         copy_property("interaction.read_only");
 
@@ -1528,6 +1592,9 @@ Value Slice09PathRuntimeCore::execution_artifact() const {
         copy_property("caption.anchor.y");
         copy_property("caption.align.horizontal");
         copy_property("caption.style.text_color");
+        copy_property("caption.style.font_family");
+        copy_property("caption.style.font_size");
+        copy_property("caption.style.font_weight");
         copy_property("display.icon_visible");
         copy_property("display.validation_marker_visible");
         copy_property("display.text_overflow_visible");
@@ -1598,6 +1665,318 @@ Value Slice09PathRuntimeCore::execution_artifact() const {
         })},
         {"outputs", make_object({
             {"public", make_object({{"result_path", Value(last_result)}})},
+            {"ui", Value(ui_outputs)},
+        })},
+        {"ui_runtime", make_object({
+            {"panel", make_object({
+                {"panel_id", Value(panel.panel_id)},
+                {"title", Value(panel.title)},
+                {"class_ref", Value(panel.class_ref)},
+                {"layout", panel.layout},
+            })},
+            {"widgets", Value(widget_entries)},
+        })},
+        {"diagnostics", Value(Array{})},
+    });
+}
+
+Slice10ButtonRuntimeCore::Slice10ButtonRuntimeCore(std::filesystem::path contract_path_, std::filesystem::path wfrog_path_)
+    : contract_path(std::move(contract_path_)),
+      wfrog_path(std::move(wfrog_path_)),
+      contract(load_contract_from_path(contract_path)),
+      package(load_wfrog_from_path(wfrog_path)),
+      panel(load_front_panel_from_frog_source_path(resolve_repo_path(contract_path, contract.source_ref.path))),
+      unit(load_and_validate()) {
+    for (const auto& asset : package.svg_assets) {
+        asset_map.emplace(asset.asset_id, std::filesystem::absolute(wfrog_path.parent_path() / asset.path));
+    }
+    widgets = build_widgets();
+    execute(false);
+}
+
+ContractUnit Slice10ButtonRuntimeCore::load_and_validate() const {
+    require(contract.backend_family == REFERENCE_BACKEND_FAMILY, "Unexpected backend family.");
+    require(contract.source_ref.example_id == "10_button_press_to_boolean", "Slice 10 expects Example 10.");
+    require(contract.assumptions.runtime_family.name == REFERENCE_BACKEND_FAMILY, "Unexpected runtime-family assumption name.");
+    require(contract.assumptions.runtime_family.ui_binding.widget_value_binding, "Contract must require widget_value_binding.");
+    require(contract.units.size() == 1, "Expected exactly one contract unit.");
+
+    const ContractUnit& current_unit = contract.units.front();
+    require(current_unit.unit_id == "main", "Expected unit_id main.");
+    require(current_unit.kind == "button_press_to_boolean_ui_unit", "Unexpected runtime unit kind.");
+    require(current_unit.public_interface.inputs.size() == 1, "Expected one public input.");
+    require(current_unit.public_interface.outputs.size() == 1, "Expected one public output.");
+    require(current_unit.public_interface.inputs.front().id == "trigger_pressed", "Expected public input trigger_pressed.");
+    require(current_unit.public_interface.inputs.front().port_type == "bool", "Expected bool public input.");
+    require(current_unit.public_interface.outputs.front().id == "pressed", "Expected public output pressed.");
+    require(current_unit.public_interface.outputs.front().port_type == "bool", "Expected bool public output.");
+    require(current_unit.execution_model.structure == "single_step", "Slice 10 expects a single-step copy execution model.");
+    require(current_unit.execution_model.body_rule.kind == "copy", "Slice 10 expects a copy body rule.");
+    require(current_unit.property_writes.empty(), "Slice 10 does not use property writes.");
+
+    require(panel.host_binding_ref == "reference_host_default", "Expected host_binding_ref reference_host_default.");
+    const auto host_it = std::find_if(
+        package.host_bindings.begin(),
+        package.host_bindings.end(),
+        [&](const HostBinding& binding) { return binding.binding_id == "reference_host_default"; });
+    require(host_it != package.host_bindings.end(), "Missing reference_host_default host binding.");
+    const std::set<std::string> required(host_it->required_capabilities.begin(), host_it->required_capabilities.end());
+    require(required.count("window") == 1, "Missing host capability window.");
+    require(required.count("basic_widget_rendering") == 1, "Missing host capability basic_widget_rendering.");
+    require(required.count("widget_value_binding") == 1, "Missing host capability widget_value_binding.");
+    require(required.count("button_press_binding") == 1, "Missing host capability button_press_binding.");
+    require(required.count("svg_part_overlay_alignment") == 1, "Missing host capability svg_part_overlay_alignment.");
+
+    std::map<std::string, const PanelWidget*> panel_widgets;
+    for (const auto& widget : panel.widgets) {
+        panel_widgets.emplace(widget.instance_id, &widget);
+    }
+    require(panel_widgets.count("trigger_button") == 1, "Missing panel widget trigger_button.");
+    require(panel_widgets.count("pressed_indicator") == 1, "Missing panel widget pressed_indicator.");
+
+    for (const auto& binding : current_unit.ui_binding.widgets) {
+        const auto widget_it = panel_widgets.find(binding.widget_id);
+        require(widget_it != panel_widgets.end(), "Missing panel widget " + binding.widget_id + ".");
+        require(widget_it->second->class_ref == binding.widget_class, "Class mismatch for widget " + binding.widget_id + ".");
+        require(binding.value_type == "bool", "Slice 10 supports only bool widget values.");
+        require(
+            binding.widget_class == "frog.widgets.button" || binding.widget_class == "frog.widgets.boolean_indicator",
+            "Unsupported widget class " + binding.widget_class + ".");
+    }
+
+    return current_unit;
+}
+
+std::map<std::string, WidgetState> Slice10ButtonRuntimeCore::build_widgets() const {
+    std::map<std::string, const WidgetBinding*> bindings_by_widget;
+    for (const auto& binding : unit.ui_binding.widgets) {
+        bindings_by_widget.emplace(binding.widget_id, &binding);
+    }
+
+    std::map<std::string, WidgetState> result;
+    for (const auto& panel_widget : panel.widgets) {
+        if (
+            panel_widget.class_ref != "frog.widgets.button" &&
+            panel_widget.class_ref != "frog.widgets.boolean_indicator") {
+            continue;
+        }
+        const auto binding_it = bindings_by_widget.find(panel_widget.instance_id);
+        require(binding_it != bindings_by_widget.end(), "Slice 10 widget " + panel_widget.instance_id + " must have a contract binding.");
+        const WidgetBinding* binding = binding_it->second;
+
+        std::optional<std::string> asset_id;
+        std::filesystem::path asset_path;
+        if (const auto visual_it = panel_widget.visual.find("asset_ref"); visual_it != panel_widget.visual.end() && visual_it->second.is_string()) {
+            const std::string& asset_ref = visual_it->second.as_string();
+            if (asset_ref.rfind("asset:", 0) == 0) {
+                asset_id = asset_ref.substr(6);
+                const auto asset_it = asset_map.find(*asset_id);
+                if (asset_it != asset_map.end()) {
+                    asset_path = asset_it->second;
+                }
+            }
+        }
+        require(asset_id.has_value(), "Slice 10 widget " + panel_widget.instance_id + " must reference a .wfrog SVG asset.");
+        require(!asset_path.empty() && std::filesystem::exists(asset_path), "Slice 10 widget " + panel_widget.instance_id + " asset path must exist.");
+
+        auto properties = panel_widget.props;
+        const bool is_button = panel_widget.class_ref == "frog.widgets.button";
+        properties.emplace("value", properties.count("value") ? properties.at("value") : Value(false));
+        properties.emplace("pressed", properties.count("pressed") ? properties.at("pressed") : properties.at("value"));
+        properties.emplace("label.text", properties.count("label.text") ? properties.at("label.text") : Value(panel_widget.instance_id));
+        properties.emplace("caption.text", properties.count("caption.text") ? properties.at("caption.text") : Value(panel_widget.instance_id));
+        properties.emplace("interaction.enabled", properties.count("interaction.enabled") ? properties.at("interaction.enabled") : Value(is_button));
+        properties.emplace("interaction.read_only", properties.count("interaction.read_only") ? properties.at("interaction.read_only") : Value(!is_button));
+        properties.emplace("realization.variant", properties.count("realization.variant") ? properties.at("realization.variant") : Value(is_button ? "rectangular" : "circular"));
+        if (binding->binding.public_input_id.has_value()) {
+            properties["binding.public_input_id"] = Value(*binding->binding.public_input_id);
+        }
+        if (binding->binding.public_output_id.has_value()) {
+            properties["binding.public_output_id"] = Value(*binding->binding.public_output_id);
+        }
+
+        result.emplace(
+            panel_widget.instance_id,
+            WidgetState{
+                panel_widget.instance_id,
+                panel_widget.class_ref,
+                binding->role,
+                panel_widget.layout,
+                std::move(properties),
+                asset_id,
+                asset_path,
+                {},
+            });
+    }
+    return result;
+}
+
+void Slice10ButtonRuntimeCore::set_control_pressed(bool value) {
+    auto& widget = widgets.at("trigger_button");
+    last_trigger_pressed = value;
+    widget.properties["pressed"] = Value(value);
+    widget.properties["value"] = Value(value);
+}
+
+bool Slice10ButtonRuntimeCore::control_pressed() const {
+    const auto& widget = widgets.at("trigger_button");
+    return json_bool(widget.properties, "pressed", json_bool(widget.properties, "value", false));
+}
+
+Value Slice10ButtonRuntimeCore::execute(std::optional<bool> pressed_override) {
+    if (pressed_override.has_value()) {
+        set_control_pressed(*pressed_override);
+    }
+    last_trigger_pressed = control_pressed();
+    last_result = last_trigger_pressed;
+    auto& indicator = widgets.at("pressed_indicator");
+    indicator.properties["value"] = Value(last_result);
+    auto& button = widgets.at("trigger_button");
+    button.properties["pressed"] = Value(false);
+    button.properties["value"] = Value(false);
+    return execution_artifact();
+}
+
+Value Slice10ButtonRuntimeCore::execute_with_native_kernel_bridge(
+    const NativeBoolKernelBridge& bridge,
+    std::optional<bool> pressed_override) {
+    require(bridge.manifest().source_lowered_unit == "Examples/10_button_press_to_boolean/main.lowering.json", "Unexpected native Button kernel source lowered unit.");
+    if (pressed_override.has_value()) {
+        set_control_pressed(*pressed_override);
+    }
+    last_trigger_pressed = control_pressed();
+    const auto result = bridge.run(last_trigger_pressed);
+    if (!result.ok) {
+        throw std::runtime_error(result.diagnostic.empty() ? "native Button bool kernel execution failed." : result.diagnostic);
+    }
+    last_result = result.result;
+    widgets.at("pressed_indicator").properties["value"] = Value(last_result);
+    auto& button = widgets.at("trigger_button");
+    button.properties["pressed"] = Value(false);
+    button.properties["value"] = Value(false);
+    return execution_artifact();
+}
+
+Value Slice10ButtonRuntimeCore::execution_artifact() const {
+    Array widget_entries;
+    Object ui_outputs;
+    for (const auto& entry : widgets) {
+        const auto& widget = entry.second;
+        const bool value = json_bool(widget.properties, "value", false);
+        ui_outputs[widget.widget_id] = Value(value);
+        Object runtime_fields{
+            {"value", Value(value)},
+            {"label.text", Value(json_string(widget.properties, "label.text"))},
+            {"caption.text", Value(json_string(widget.properties, "caption.text"))},
+            {"asset_ref", widget.asset_id.has_value() ? Value("asset:" + *widget.asset_id) : Value(nullptr)},
+            {"realization.variant", Value(json_string(widget.properties, "realization.variant"))},
+        };
+        if (widget.widget_id == "trigger_button") {
+            runtime_fields.emplace("event.pressed", Value(last_trigger_pressed));
+        }
+
+        const auto copy_property = [&](const std::string& key) {
+            const auto it = widget.properties.find(key);
+            if (it != widget.properties.end()) {
+                runtime_fields.emplace(key, it->second);
+            }
+        };
+        copy_property("caption.visible");
+        copy_property("caption.anchor.x");
+        copy_property("caption.anchor.y");
+        copy_property("caption.align.horizontal");
+        copy_property("caption.style.text_color");
+        copy_property("caption.style.font_family");
+        copy_property("caption.style.font_size");
+        copy_property("caption.style.font_weight");
+        copy_property("label.visible");
+        copy_property("state_text.false_text");
+        copy_property("state_text.true_text");
+        copy_property("state_text.visible");
+        copy_property("state_text.anchor.x");
+        copy_property("state_text.anchor.y");
+        copy_property("state_text.style.text_color.false");
+        copy_property("state_text.style.text_color.true");
+        copy_property("state_text.style.font_size");
+        copy_property("state_text.style.font_weight");
+        copy_property("behavior.mechanical_action");
+        copy_property("behavior.latch_reset_policy");
+        copy_property("style.frame.fill_color");
+        copy_property("style.frame.border_color");
+        copy_property("style.frame.border_width");
+        copy_property("style.frame.visible");
+        copy_property("style.face.fill_color.false");
+        copy_property("style.face.fill_color.true");
+        copy_property("style.face.fill_color.hover_false");
+        copy_property("style.face.fill_color.hover_true");
+        copy_property("style.face.fill_color.pressed_false");
+        copy_property("style.face.fill_color.pressed_true");
+        copy_property("style.face.border_color.false");
+        copy_property("style.face.border_color.true");
+        copy_property("style.state_face.fill_color.false");
+        copy_property("style.state_face.fill_color.true");
+        copy_property("style.state_face.fill_color.hover_false");
+        copy_property("style.state_face.fill_color.hover_true");
+        copy_property("style.state_face.fill_color.pressed_false");
+        copy_property("style.state_face.fill_color.pressed_true");
+        copy_property("style.state_face.border_color.false");
+        copy_property("style.state_face.border_color.true");
+        copy_property("style.state_face.border_color.hover_false");
+        copy_property("style.state_face.border_color.hover_true");
+        copy_property("style.state_face.border_color.pressed_false");
+        copy_property("style.state_face.border_color.pressed_true");
+        copy_property("style.state_face.border_width");
+        copy_property("style.inner.left");
+        copy_property("style.inner.top");
+        copy_property("style.inner.width");
+        copy_property("style.inner.height");
+        copy_property("style.inner.fill_color.false");
+        copy_property("style.inner.fill_color.true");
+        copy_property("style.inner.border_color.false");
+        copy_property("style.inner.border_color.true");
+        copy_property("style.inner.border_width");
+        copy_property("style.focus_ring.visible");
+        copy_property("style.focus_ring.color");
+        copy_property("style.focus_ring.width");
+        copy_property("style.pressed.inset");
+        copy_property("style.transition.duration_ms");
+        copy_property("style.transition.timing");
+        copy_property("binding.public_input_id");
+        copy_property("binding.public_output_id");
+        copy_property("interaction.enabled");
+        copy_property("interaction.read_only");
+
+        widget_entries.push_back(make_object({
+            {"widget_id", Value(widget.widget_id)},
+            {"class_ref", Value(widget.class_ref)},
+            {"role", Value(widget.role)},
+            {"layout", widget.layout},
+            {"runtime", Value(runtime_fields)},
+        }));
+    }
+
+    return make_object({
+        {"artifact_kind", Value("frog_runtime_execution_result")},
+        {"artifact_governance_ref", make_object({{"path", Value("Versioning/Readme.md")}})},
+        {"status", Value("ok")},
+        {"contract_ref", make_object({
+            {"unit_ids", make_array({Value(unit.unit_id)})},
+            {"backend_family", Value(contract.backend_family)},
+            {"source_ref", make_object({
+                {"example_id", Value(contract.source_ref.example_id)},
+                {"path", Value(contract.source_ref.path)},
+                {"entry_unit", Value(contract.source_ref.entry_unit)},
+            })},
+        })},
+        {"execution_summary", make_object({
+            {"mode", Value("button_press_to_boolean")},
+            {"executed_unit", Value(unit.unit_id)},
+            {"operation", Value("copy")},
+            {"trigger_pressed", Value(last_trigger_pressed)},
+            {"pressed", Value(last_result)},
+        })},
+        {"outputs", make_object({
+            {"public", make_object({{"pressed", Value(last_result)}})},
             {"ui", Value(ui_outputs)},
         })},
         {"ui_runtime", make_object({

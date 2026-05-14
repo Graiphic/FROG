@@ -73,9 +73,13 @@ fn slice05_ui_surface_matches_shared_acceptance() {
     assert!(html.contains("--frog-numeric-frame-stroke-width:2px"));
     assert!(html.contains("--frog-numeric-step-fill:#5B9BD5"));
     assert!(html.contains("--frog-numeric-step-fill-pressed:#2B4F7B"));
-    assert!(html.contains("font-size:12px;line-height:1;"));
-    assert!(html.contains("font-weight:400;"));
-    assert!(html.contains("color:#111827;"));
+    assert!(html.contains("--frog-numeric-caption-font-size:12px;"));
+    assert!(html.contains("--frog-numeric-caption-font-weight:400;"));
+    assert!(html.contains("--frog-numeric-text-color:#111827;"));
+    assert!(html.contains("--frog-numeric-text-font-size:11px;"));
+    assert!(html.contains("font-size:var(--frog-numeric-caption-font-size)"));
+    assert!(!html.contains("font-size:12px;line-height:1;"));
+    assert!(!html.contains("style='left:4.210526%;top:30.6667%;transform:translateY(-50%);text-align:left;color:#111827;"));
     assert!(!html.contains("Current runtime snapshot"));
     assert!(!html.contains("<pre>"));
     for route in routes {

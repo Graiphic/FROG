@@ -364,6 +364,23 @@ def execute_bounded_executable_ui_unit(contract: dict[str, Any], unit: dict[str,
             "foreground_color": property_map.get((widget_id, "foreground_color"), props.get("foreground_color")),
             "asset_ref": visual.get("asset_ref"),
         }
+        for member in (
+            "caption.text",
+            "caption.visible",
+            "caption.anchor.x",
+            "caption.anchor.y",
+            "caption.align.horizontal",
+            "style.caption.text_color",
+            "style.caption.font_family",
+            "style.caption.font_size",
+            "style.caption.font_weight",
+            "style.text_value.color",
+            "style.text_value.font_family",
+            "style.text_value.font_size",
+            "style.text_value.font_weight",
+        ):
+            if member in props:
+                runtime[member] = props[member]
         widgets.append({"widget_id": widget_id, "class_ref": obj.get("class_ref"), "role": obj.get("role"), "layout": obj.get("layout"), "runtime": runtime})
 
     return {
@@ -435,11 +452,17 @@ def execute_boolean_value_roundtrip_ui_unit(contract: dict[str, Any], unit: dict
         for member in (
             "state_text.style.text_color.false",
             "state_text.style.text_color.true",
+            "state_text.style.font_size",
+            "state_text.style.font_weight",
             "state_text.visible",
             "caption.visible",
             "caption.anchor.x",
             "caption.anchor.y",
             "caption.align.horizontal",
+            "caption.style.text_color",
+            "caption.style.font_family",
+            "caption.style.font_size",
+            "caption.style.font_weight",
             "style.frame.visible",
             "style.outer.border_color.false",
             "style.outer.border_color.true",

@@ -1,0 +1,78 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "10_button_press_to_boolean",
+    "path": "Examples/10_button_press_to_boolean/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/10_button_press_to_boolean/ui/button_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "button_press_to_boolean_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "trigger_pressed",
+            "type": "bool",
+            "binding_origin": "widget.trigger_button.pressed"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "pressed",
+            "type": "bool"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "trigger_button",
+            "mode": "widget_event_value",
+            "event": "pressed",
+            "public_input_id": "trigger_pressed",
+            "value_type": "bool"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "pressed_indicator",
+            "mode": "widget_value",
+            "public_output_id": "pressed",
+            "value_type": "bool"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "single_button_event_copy",
+        "body_rule": {
+          "kind": "copy_widget_event_to_output",
+          "expression": "pressed = trigger_pressed"
+        }
+      },
+      "publications": [
+        {
+          "target": "public_output.pressed",
+          "source": "trigger_pressed"
+        },
+        {
+          "target": "widget.pressed_indicator.value",
+          "source": "trigger_pressed"
+        }
+      ],
+      "notes": [
+        "This FIR is a C++-first Button widget pilot and remains downstream from canonical source.",
+        "The Button control is a command widget and is not the Default Boolean rectangular value-control realization.",
+        "The button visual grammar is provided by the Default Button SVG realization package; this FIR does not own SVG geometry.",
+        "The reference C++ closure consumes a native bool kernel through an explicit manifest without making the runtime LLVM-only."
+      ]
+    }
+  ]
+}

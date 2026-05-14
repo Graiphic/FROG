@@ -30,7 +30,7 @@ Version governance remains centralized in <code>Versioning/Readme.md</code> and 
 <h2>Current Status</h2>
 
 <p>
-Examples 05, 06, 07, 08, and 09 now have published native-kernel bridge surfaces.
+Examples 05, 06, 07, 08, 09, and 10 now have published native-kernel bridge surfaces.
 The LLVM-oriented backend path publishes <code>kernel.ll</code> and <code>native_kernel_manifest.json</code> for those slices.
 The C++ / Python / Rust runtime bridges load the manifest, validate the declared ABI, call linked or dynamically loaded ABI-compatible kernel entry points, map <code>error_code</code> to diagnostics where applicable, and project the result onto the existing runtime snapshot surface.
 </p>
@@ -41,7 +41,7 @@ The optional native-kernel runtime paths consume LLVM-produced kernel artifacts 
 </p>
 
 <p>
-The browser renderers are current bounded fidelity passes for Examples 05 through 09, not complete generalized faithful <code>.wfrog</code> renderers.
+The browser renderers are current bounded fidelity passes for Examples 05 through 10, not complete generalized faithful <code>.wfrog</code> renderers.
 </p>
 
 <hr/>
@@ -55,7 +55,7 @@ Explicit manifests and stable ABI surfaces connect both worlds.
 
 <hr/>
 
-<h2>Published Example 05-09 Bridge Artifacts</h2>
+<h2>Published Example 05-10 Bridge Artifacts</h2>
 
 <pre><code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json
 Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll
@@ -67,6 +67,8 @@ Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/native_kernel_ma
 Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/kernel.ll
 Implementations/Reference/LLVM/examples/09_path_value_roundtrip/native_kernel_manifest.json
 Implementations/Reference/LLVM/examples/09_path_value_roundtrip/kernel.ll
+Implementations/Reference/LLVM/examples/10_button_press_to_boolean/native_kernel_manifest.json
+Implementations/Reference/LLVM/examples/10_button_press_to_boolean/kernel.ll
 Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py
 Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
 Implementations/Reference/Runtime/check_example06_native_kernel_bridge.py
@@ -81,6 +83,7 @@ Implementations/Reference/Runtime/cpp/tests/test_slice06_llvm_kernel.cpp
 Implementations/Reference/Runtime/cpp/tests/test_slice07_llvm_kernel.cpp
 Implementations/Reference/Runtime/cpp/tests/test_slice08_llvm_kernel.cpp
 Implementations/Reference/Runtime/cpp/tests/test_slice09_llvm_kernel.cpp
+Implementations/Reference/Runtime/cpp/tests/test_slice10_llvm_kernel.cpp
 </code></pre>
 
 <p>
@@ -88,6 +91,7 @@ The Example 05 manifest declares <code>frog_example05_run</code> with ABI <code>
 The Example 06 manifest declares <code>frog_example06_run</code> with ABI <code>frog_bool_to_result_status_outptr</code>.
 The Example 07 and Example 09 manifests use UTF-8 copy surfaces.
 The Example 08 manifest uses the enum value surface.
+The Example 10 manifest declares <code>frog_example10_run</code> with ABI <code>frog_bool_to_result_status_outptr</code>.
 The ABI uses an explicit out-parameter carrier:
 </p>
 
@@ -95,7 +99,8 @@ The ABI uses an explicit out-parameter carrier:
 void frog_example06_run(uint8_t input_value, FrogBoolRunResult* out_result)
 void frog_example07_run(const uint8_t* input_ptr, uint32_t input_len, FrogStringRunResult* out_result)
 void frog_example08_run(uint16_t mode_value, FrogRunResult* out_result)
-void frog_example09_run(const uint8_t* input_ptr, uint32_t input_len, FrogStringRunResult* out_result)</code></pre>
+void frog_example09_run(const uint8_t* input_ptr, uint32_t input_len, FrogStringRunResult* out_result)
+void frog_example10_run(uint8_t trigger_pressed, FrogBoolRunResult* out_result)</code></pre>
 
 <p>
 The result-status payload contains <code>ok</code>, <code>result</code>, and <code>error_code</code> fields.
@@ -115,7 +120,7 @@ The optional native-kernel C++ runtime executable is:
 
 <p>
 It is built only when <code>FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE=ON</code>.
-That build compiles the published Example 05 through Example 09 <code>kernel.ll</code> artifacts with <code>clang</code>, links them into the executable, loads the selected manifest, and routes headless and browser UI execution through the native kernel bridge.
+That build compiles the published Example 05 through Example 10 <code>kernel.ll</code> artifacts with <code>clang</code>, links them into the executable, loads the selected manifest, and routes headless and browser UI execution through the native kernel bridge.
 </p>
 
 <pre><code>cmake -S Implementations/Reference/Runtime/cpp \
@@ -130,8 +135,9 @@ build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kern
 build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel run "hello world" --example 07
 build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel run fault --example 08
 build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel run "C:/FROG/hello_world.txt" --example 09
+build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel run true --example 10
 build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel ui --no-open-browser
-build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel ui --example 09 --no-open-browser
+build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kernel ui --example 10 --no-open-browser
 </code></pre>
 
 <hr/>
@@ -140,7 +146,7 @@ build/frog_runtime_cpp_native_kernel_bridge/frog_reference_runtime_cpp_llvm_kern
 
 <p>
 The first implementation target remains <code>Examples/05_bounded_ui_accumulator/</code>.
-Examples 06 through 09 extend that bridge discipline to current scalar widget slices.
+Examples 06 through 10 extend that bridge discipline to current scalar and Button widget slices.
 The native-kernel runtime path consumes manifest-declared kernel entry surfaces instead of owning the diagram algorithms internally.
 </p>
 
@@ -159,5 +165,5 @@ Overflow is reported with <code>error_code = 1</code> and mapped by the runtime 
   <li>This bridge does not claim a complete production runtime.</li>
   <li>This bridge does not make the current widget slices a complete widget-system implementation.</li>
   <li>The optional LLVM-produced bridge test does not make LLVM the conceptual runtime authority.</li>
-  <li>The bounded Example 05-09 <code>.wfrog</code> renderers do not claim to be a full general renderer.</li>
+  <li>The bounded Example 05-10 <code>.wfrog</code> renderers do not claim to be a full general renderer.</li>
 </ul>

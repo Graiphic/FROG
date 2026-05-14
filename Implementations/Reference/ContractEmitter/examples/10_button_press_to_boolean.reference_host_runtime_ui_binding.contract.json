@@ -1,0 +1,166 @@
+{
+  "artifact_kind": "frog_backend_contract",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "backend_family": "reference_host_runtime_ui_binding",
+  "example_id": "10_button_press_to_boolean",
+  "artifact_refs": {
+    "source_path": "Examples/10_button_press_to_boolean/main.frog",
+    "fir_path": "Examples/10_button_press_to_boolean/main.fir.json",
+    "lowering_path": "Examples/10_button_press_to_boolean/main.lowering.json",
+    "wfrog_path": "Examples/10_button_press_to_boolean/ui/button_panel.wfrog"
+  },
+  "producer": {
+    "implementation": "FROG Reference ContractEmitter",
+    "implementation_kind": "non_normative_reference_emitter",
+    "version_governance_ref": "Versioning/Readme.md"
+  },
+  "compatibility": "family_specific",
+  "source_ref": {
+    "example_id": "10_button_press_to_boolean",
+    "path": "Examples/10_button_press_to_boolean/main.frog",
+    "entry_unit": "main"
+  },
+  "derived_from": {
+    "fir_path": "Examples/10_button_press_to_boolean/main.fir.json",
+    "lowering_path": "Examples/10_button_press_to_boolean/main.lowering.json",
+    "ui_package_path": "Examples/10_button_press_to_boolean/ui/button_panel.wfrog"
+  },
+  "ownership_boundary": {
+    "semantic_authority": "canonical_source_and_execution_facing_artifacts",
+    "semantic_authority_refs": [
+      "Examples/10_button_press_to_boolean/main.frog",
+      "Examples/10_button_press_to_boolean/main.fir.json",
+      "Examples/10_button_press_to_boolean/main.lowering.json"
+    ],
+    "ui_package_authority": "published_widget_realization_package",
+    "ui_package_authority_refs": [
+      "Examples/10_button_press_to_boolean/ui/button_panel.wfrog"
+    ],
+    "contract_authority": "this_file",
+    "notes": [
+      "This contract is downstream from canonical source, FIR, lowering, and the published UI package.",
+      "This contract must not redefine source semantics.",
+      "If this file diverges from the canonical execution-facing artifacts, those upstream artifacts win."
+    ]
+  },
+  "assumptions": {
+    "runtime_family": {
+      "name": "reference_host_runtime_ui_binding",
+      "host_model": "single_process_host_runtime",
+      "ui_binding": {
+        "widget_value_binding": true,
+        "widget_reference_binding": false
+      }
+    },
+    "scheduling": {
+      "family_rule": "deterministic_step_execution",
+      "parallelism_claim": "none"
+    },
+    "execution_start": {
+      "input_binding_complete": true,
+      "ui_host_available": true,
+      "initial_state_materialized": true
+    },
+    "boolean_behavior": {
+      "value_domain": "bool",
+      "button_press_event": "trigger_button.pressed"
+    }
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "button_press_to_boolean_ui_unit",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "trigger_pressed",
+            "type": "bool",
+            "binding_origin": "widget.trigger_button.pressed"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "pressed",
+            "type": "bool",
+            "binding_target": "interface.pressed"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "package_refs": [
+          "Examples/10_button_press_to_boolean/ui/button_panel.wfrog"
+        ],
+        "widgets": [
+          {
+            "widget_id": "trigger_button",
+            "widget_class": "frog.widgets.button",
+            "value_type": "bool",
+            "role": "control",
+            "binding": {
+              "mode": "widget_event_value",
+              "public_input_id": "trigger_pressed"
+            }
+          },
+          {
+            "widget_id": "pressed_indicator",
+            "widget_class": "frog.widgets.boolean_indicator",
+            "value_type": "bool",
+            "role": "indicator",
+            "binding": {
+              "mode": "widget_value",
+              "public_output_id": "pressed"
+            }
+          }
+        ],
+        "control_bindings": [
+          {
+            "widget_id": "trigger_button",
+            "mode": "widget_event_value",
+            "event": "pressed",
+            "public_input_id": "trigger_pressed",
+            "value_type": "bool"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "pressed_indicator",
+            "mode": "widget_value",
+            "public_output_id": "pressed",
+            "value_type": "bool"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "copy",
+        "dst": "pressed",
+        "type": "bool",
+        "src": "trigger_pressed",
+        "final_publication": [
+          {
+            "target": "public_output.pressed",
+            "source": "trigger_pressed"
+          },
+          {
+            "target": "widget.pressed_indicator.value",
+            "source": "trigger_pressed"
+          }
+        ]
+      },
+      "effects": [],
+      "publications": [
+        {
+          "target": "public_output.pressed",
+          "source": "trigger_pressed"
+        },
+        {
+          "target": "widget.pressed_indicator.value",
+          "source": "trigger_pressed"
+        }
+      ]
+    }
+  ],
+  "unsupported": [],
+  "diagnostics": []
+}

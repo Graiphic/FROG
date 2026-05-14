@@ -106,6 +106,10 @@ void test_path_browser_ui_surface() {
     assert_contains(html, "data-frog-part='browse_button'");
     assert_contains(html, "--frog-path-icon-display:none");
     assert_contains(html, "--frog-path-face-stroke-width:2px");
+    assert_contains(html, "--frog-path-caption-color:#111827;");
+    assert_contains(html, "--frog-path-caption-font-size:14px;");
+    assert_contains(html, "--frog-path-caption-font-weight:600;");
+    assert_contains(html, "font-size:var(--frog-path-caption-font-size)");
     assert_contains(html, ".path-control:has(.path-control-editor:hover) .path-skin #path_face");
     assert_contains(html, ".path-control:has(.path-browse-overlay:hover) .path-skin #browse_button");
     assert_not_contains(html, ".path-control:hover .path-skin #path_face");
@@ -122,6 +126,7 @@ void test_path_browser_ui_surface() {
     assert_not_contains(html, "fallback");
     assert_not_contains(html, "Current runtime snapshot");
     assert_not_contains(html, "<pre>");
+    assert_not_contains(html, ".path-caption-overlay{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;");
 
     runtime.core.execute_all({
         {"input_path", "C:/FROG/from_cpp_top.txt"},

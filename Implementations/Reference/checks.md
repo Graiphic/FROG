@@ -139,7 +139,7 @@ ctest --test-dir build/frog_runtime_cpp --output-on-failure</code></pre>
 
 <p>
 The standard C++ checks do not require LLVM or <code>clang</code>.
-They validate the contract runtime path, the current Examples 05–09 browser-host UI rendering surfaces, <code>.wfrog</code> / SVG geometry coherence, and native-kernel bridge paths using ABI-compatible linked stubs.
+They validate the contract runtime path, the current Examples 05–10 browser-host UI rendering surfaces, <code>.wfrog</code> / SVG geometry coherence, and native-kernel bridge paths using ABI-compatible linked stubs.
 </p>
 
 <p>

@@ -83,9 +83,17 @@ NativeKernelManifest load_native_kernel_manifest(const std::filesystem::path& ma
         require(manifest.output_id == "result" && manifest.output_type == "u16", "Unexpected native kernel output surface.");
         require(manifest.overflow_model == "reject_execution_on_u16_overflow", "Unexpected native kernel overflow model.");
     } else if (manifest.abi == "frog_bool_to_result_status_outptr") {
-        require(manifest.entry_symbol == "frog_example06_run", "Unexpected native bool kernel entry symbol.");
-        require(manifest.input_id == "input_value" && manifest.input_type == "bool", "Unexpected native bool kernel input surface.");
-        require(manifest.output_id == "result" && manifest.output_type == "bool", "Unexpected native bool kernel output surface.");
+        const bool is_example06_boolean =
+            manifest.entry_symbol == "frog_example06_run" &&
+            manifest.input_id == "input_value" &&
+            manifest.output_id == "result";
+        const bool is_example10_button =
+            manifest.entry_symbol == "frog_example10_run" &&
+            manifest.input_id == "trigger_pressed" &&
+            manifest.output_id == "pressed";
+        require(is_example06_boolean || is_example10_button, "Unexpected native bool kernel surface.");
+        require(manifest.input_type == "bool", "Unexpected native bool kernel input type.");
+        require(manifest.output_type == "bool", "Unexpected native bool kernel output type.");
         require(manifest.overflow_model == "not_applicable", "Unexpected native bool kernel overflow model.");
     } else if (manifest.abi == "frog_string_utf8_256_to_result_status_outptr") {
         const bool is_example07_string =

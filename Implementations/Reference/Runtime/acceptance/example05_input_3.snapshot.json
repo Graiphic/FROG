@@ -1,27 +1,27 @@
 {
-  "artifact_kind": "frog_runtime_execution_result",
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },
-  "status": "ok",
+  "artifact_kind": "frog_runtime_execution_result",
   "contract_ref": {
-    "unit_ids": [
-      "main"
-    ],
     "backend_family": "reference_host_runtime_ui_binding",
     "source_ref": {
+      "entry_unit": "main",
       "example_id": "05_bounded_ui_accumulator",
-      "path": "Examples/05_bounded_ui_accumulator/main.frog",
-      "entry_unit": "main"
-    }
+      "path": "Examples/05_bounded_ui_accumulator/main.frog"
+    },
+    "unit_ids": [
+      "main"
+    ]
   },
+  "diagnostics": [],
   "execution_summary": {
-    "mode": "contract_and_wfrog",
     "executed_unit": "main",
-    "iterations": 5,
-    "state_initialized": true,
+    "final_state": 15,
     "initial_state": 0,
-    "final_state": 15
+    "iterations": 5,
+    "mode": "contract_and_wfrog",
+    "state_initialized": true
   },
   "outputs": {
     "public": {
@@ -32,69 +32,95 @@
       "ind_result": 15
     }
   },
+  "status": "ok",
   "ui_runtime": {
+    "applied_widget_references": [
+      {
+        "member": "foreground_color",
+        "value": "#5B9BD5",
+        "widget_id": "ctrl_input"
+      },
+      {
+        "member": "foreground_color",
+        "value": "#70AD47",
+        "widget_id": "ind_result"
+      }
+    ],
     "panel": {
-      "panel_id": "main_panel",
-      "title": "Bounded UI Accumulator",
       "class_ref": "frog.widgets.panel",
       "layout": {
-        "width": 500,
+        "coordinate_space": "panel_pixels",
         "height": 170,
-        "coordinate_space": "panel_pixels"
-      }
+        "width": 500
+      },
+      "panel_id": "main_panel",
+      "title": "Bounded UI Accumulator"
     },
     "widgets": [
       {
-        "widget_id": "ctrl_input",
         "class_ref": "frog.widgets.numeric_control",
-        "role": "control",
         "layout": {
-          "x": 20,
-          "y": 24,
+          "height": 88,
           "width": 220,
-          "height": 88
+          "x": 20,
+          "y": 24
         },
+        "role": "control",
         "runtime": {
-          "value": 3,
-          "label": "Input",
-          "visible": true,
+          "asset_ref": "asset:numeric_rectangular_svg",
+          "caption.align.horizontal": "left",
+          "caption.anchor.x": 22,
+          "caption.anchor.y": 68,
+          "caption.text": "Input",
+          "caption.visible": true,
           "enabled": true,
           "foreground_color": "#5B9BD5",
-          "asset_ref": "asset:numeric_rectangular_svg"
-        }
+          "label": "Input",
+          "style.caption.font_family": "system-ui, Segoe UI, Arial, sans-serif",
+          "style.caption.font_size": "12px",
+          "style.caption.font_weight": "400",
+          "style.caption.text_color": "#111827",
+          "style.text_value.color": "#111827",
+          "style.text_value.font_family": "Consolas, Segoe UI Mono, monospace",
+          "style.text_value.font_size": "11px",
+          "style.text_value.font_weight": "700",
+          "value": 3,
+          "visible": true
+        },
+        "widget_id": "ctrl_input"
       },
       {
-        "widget_id": "ind_result",
         "class_ref": "frog.widgets.numeric_indicator",
-        "role": "indicator",
         "layout": {
-          "x": 260,
-          "y": 24,
+          "height": 88,
           "width": 220,
-          "height": 88
+          "x": 260,
+          "y": 24
         },
+        "role": "indicator",
         "runtime": {
-          "value": 15,
-          "label": "Accumulated result",
-          "visible": true,
+          "asset_ref": "asset:numeric_rectangular_svg",
+          "caption.align.horizontal": "left",
+          "caption.anchor.x": 22,
+          "caption.anchor.y": 68,
+          "caption.text": "Accumulated result",
+          "caption.visible": true,
           "enabled": true,
           "foreground_color": "#70AD47",
-          "asset_ref": "asset:numeric_rectangular_svg"
-        }
-      }
-    ],
-    "applied_widget_references": [
-      {
-        "widget_id": "ctrl_input",
-        "member": "foreground_color",
-        "value": "#5B9BD5"
-      },
-      {
-        "widget_id": "ind_result",
-        "member": "foreground_color",
-        "value": "#70AD47"
+          "label": "Accumulated result",
+          "style.caption.font_family": "system-ui, Segoe UI, Arial, sans-serif",
+          "style.caption.font_size": "12px",
+          "style.caption.font_weight": "400",
+          "style.caption.text_color": "#111827",
+          "style.text_value.color": "#111827",
+          "style.text_value.font_family": "Consolas, Segoe UI Mono, monospace",
+          "style.text_value.font_size": "11px",
+          "style.text_value.font_weight": "700",
+          "value": 15,
+          "visible": true
+        },
+        "widget_id": "ind_result"
       }
     ]
-  },
-  "diagnostics": []
+  }
 }

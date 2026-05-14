@@ -102,6 +102,10 @@ void test_enum_browser_ui_surface() {
     assert_contains(html, "class='enum-select-state'");
     assert_contains(html, "class='enum-dropdown'");
     assert_contains(html, "class='enum-dropdown-option'");
+    assert_contains(html, "--frog-enum-caption-color:#111827;");
+    assert_contains(html, "--frog-enum-caption-font-size:14px;");
+    assert_contains(html, "--frog-enum-caption-font-weight:600;");
+    assert_contains(html, "font-size:var(--frog-enum-caption-font-size)");
     assert_contains(html, "--frog-enum-text-padding-inline:8px");
     assert_contains(html, "--frog-enum-selector-stroke-width:1px");
     assert_contains(html, "--frog-enum-selector-radius:1px");
@@ -131,6 +135,7 @@ void test_enum_browser_ui_surface() {
     assert_not_contains(html, "fallback");
     assert_not_contains(html, "Current runtime snapshot");
     assert_not_contains(html, "<pre>");
+    assert_not_contains(html, ".enum-caption-overlay{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;");
 
     runtime.run_once("idle");
     html = runtime.render_html();

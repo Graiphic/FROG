@@ -45,11 +45,14 @@ fn rust_example09_headless_and_browser_ui_consume_wfrog_realization() {
     assert!(html.contains("data-frog-input-id='input_path_no_icon'"));
     assert!(html.contains("--frog-path-icon-display:none"));
     assert!(html.contains("--frog-path-face-stroke-width:2px"));
+    assert!(html.contains("--frog-path-caption-font-size:14px;"));
+    assert!(html.contains("font-size:var(--frog-path-caption-font-size)"));
     assert!(html.contains(".path-control:has(.path-control-editor:hover) .path-skin #path_face"));
     assert!(html.contains(".path-control:has(.path-browse-overlay:hover) .path-skin #browse_button"));
     assert!(!html.contains(".path-control:hover .path-skin #path_face"));
     assert!(!html.contains("--frog-path-frame-"));
     assert!(!html.contains("--frog-path-focus-display"));
+    assert!(!html.contains(".path-caption-overlay{position:absolute;transform:translateY(-50%);font-size:14px"));
     assert!(html.contains("frogPathPicked"));
     assert!(!html.contains("path-card"));
     assert!(!html.contains("fallback"));

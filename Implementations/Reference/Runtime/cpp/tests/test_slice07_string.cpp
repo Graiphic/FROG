@@ -91,6 +91,10 @@ void test_string_browser_ui_surface() {
     assert_contains(html, "data-frog-visual-law='wfrog-realization-state-map'");
     assert_contains(html, "--frog-string-text-region-fill-hover:#eef6ff;");
     assert_contains(html, "--frog-string-text-region-stroke-hover:#2563eb;");
+    assert_contains(html, "--frog-string-caption-color:#111827;");
+    assert_contains(html, "--frog-string-caption-font-size:14px;");
+    assert_contains(html, "--frog-string-caption-font-weight:600;");
+    assert_contains(html, "font-size:var(--frog-string-caption-font-size)");
     assert_contains(html, ".string-control:hover .string-skin svg");
     assert_contains(html, "name='input_text' type='text'");
     assert_contains(html, "hello world");
@@ -101,6 +105,7 @@ void test_string_browser_ui_surface() {
     assert_not_contains(html, "Current runtime snapshot");
     assert_not_contains(html, "<pre>");
     assert_not_contains(html, "outline:2px solid #2563eb");
+    assert_not_contains(html, ".string-caption-overlay{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;");
 
     runtime.run_once("hello FROG");
     html = runtime.render_html();

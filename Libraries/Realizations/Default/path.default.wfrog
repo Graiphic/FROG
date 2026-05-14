@@ -333,6 +333,26 @@
       "target_operation": "set_text_anchor_alignment"
     },
     {
+      "member": "caption.style.text_color",
+      "target_part": "caption",
+      "target_operation": "set_text_fill"
+    },
+    {
+      "member": "caption.style.font_family",
+      "target_part": "caption",
+      "target_operation": "set_text_font_family"
+    },
+    {
+      "member": "caption.style.font_size",
+      "target_part": "caption",
+      "target_operation": "set_text_font_size"
+    },
+    {
+      "member": "caption.style.font_weight",
+      "target_part": "caption",
+      "target_operation": "set_text_font_weight"
+    },
+    {
       "member": "value",
       "target_part": "path_display",
       "target_operation": "render_path_value"

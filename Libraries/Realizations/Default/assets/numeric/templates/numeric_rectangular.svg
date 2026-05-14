@@ -145,6 +145,7 @@
           data-frog-part="caption"
           data-frog-member="caption.text"
           data-frog-anchor="caption.anchor"
+          data-frog-bind="caption.text caption.visible caption.anchor.* caption.align.horizontal style.caption.*"
           x="16"
           y="46">Numeric</text>
 
@@ -179,6 +180,7 @@
           data-frog-part="text_value"
           data-frog-member="value"
           data-frog-anchor="text_value.center"
+          data-frog-bind="value style.text_value.*"
           x="126"
           y="97"
           text-anchor="middle"

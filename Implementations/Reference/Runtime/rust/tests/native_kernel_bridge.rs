@@ -6,7 +6,9 @@ use frog_reference_runtime_rust::native_kernel::{
     NativeBoolKernelBridge, NativeEnumKernelBridge, NativeKernelBridge, NativeStringKernelBridge,
 };
 use frog_reference_runtime_rust::runtime::RuntimeCore;
-use frog_reference_runtime_rust::ui::{BooleanBrowserUiRuntime, BrowserUiRuntime, EnumBrowserUiRuntime, PathBrowserUiRuntime, StringBrowserUiRuntime};
+use frog_reference_runtime_rust::ui::{
+    BooleanBrowserUiRuntime, BrowserUiRuntime, ButtonBrowserUiRuntime, EnumBrowserUiRuntime, PathBrowserUiRuntime, StringBrowserUiRuntime,
+};
 
 fn repo_root() -> PathBuf {
     find_repo_root(Path::new(env!("CARGO_MANIFEST_DIR"))).expect("repo root")
@@ -210,4 +212,36 @@ fn rust_dynamic_native_kernel_bridge_executes_example09() {
     assert!(html.contains("data-compiler-backend='llvm'"));
     assert!(html.contains("data-execution-path='native_kernel_bridge'"));
     assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
+}
+
+#[test]
+fn rust_dynamic_native_kernel_bridge_executes_example10() {
+    let root = repo_root();
+    let manifest = root.join("Implementations/Reference/LLVM/examples/10_button_press_to_boolean/native_kernel_manifest.json");
+    let kernel_ll = root.join("Implementations/Reference/LLVM/examples/10_button_press_to_boolean/kernel.ll");
+    let contract = root.join(
+        "Implementations/Reference/ContractEmitter/examples/10_button_press_to_boolean.reference_host_runtime_ui_binding.contract.json",
+    );
+    let wfrog = root.join("Examples/10_button_press_to_boolean/ui/button_panel.wfrog");
+    let Some(library) = build_native_library("10", &kernel_ll) else {
+        return;
+    };
+
+    let bridge = NativeBoolKernelBridge::from_paths(&manifest, &library).expect("load native Button bool bridge");
+    assert!(bridge.run(true).result);
+    assert!(!bridge.run(false).result);
+
+    let mut runtime = ButtonBrowserUiRuntime::with_native_kernel_bridge(contract, wfrog, Some(bridge)).expect("runtime core");
+    let artifact = runtime.run_once(true).expect("execute native Button bool kernel");
+    assert_eq!(artifact["outputs"]["public"]["pressed"].as_bool(), Some(true));
+    assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(false));
+    assert_eq!(artifact["outputs"]["ui"]["pressed_indicator"].as_bool(), Some(true));
+    let html = runtime.render_html();
+    assert!(html.contains("native kernel bridge"));
+    assert!(html.contains("LLVM native Button bool kernel artifact"));
+    assert!(html.contains("data-compiler-backend='llvm'"));
+    assert!(html.contains("data-execution-path='native_kernel_bridge'"));
+    assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
+    assert!(html.contains("data-asset-route='/asset/button_rectangular_svg'"));
+    assert!(html.contains("class='button-press-overlay' type='button'"));
 }

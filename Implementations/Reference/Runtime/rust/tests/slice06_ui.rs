@@ -28,9 +28,17 @@ fn slice06_ui_surface_consumes_wfrog_realization() {
     assert!(html.contains("/asset/boolean_rectangular_svg"));
     assert!(html.contains("/asset/boolean_circular_svg"));
     assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
-    assert!(html.contains("--boolean-caption-left:50%;"));
+    assert!(html.contains("left:50.000000%;top:20.000000%;transform:translate(-50%,-50%);text-align:center;"));
+    assert!(html.contains("--boolean-caption-font-size:18px;"));
+    assert!(html.contains("--boolean-caption-font-weight:600;"));
+    assert!(html.contains("--boolean-text-font-size:18px;"));
+    assert!(html.contains("--boolean-text-font-weight:700;"));
+    assert!(html.contains("--boolean-inner-border-width:2px;"));
     assert!(html.contains("--boolean-inner-width:40px;"));
     assert!(html.contains("--boolean-inner-height:40px;"));
+    assert!(!html.contains("font-size:14px"));
+    assert!(!html.contains("top:49px"));
+    assert!(!html.contains("border:2px solid var(--boolean-inner-border)"));
     assert!(!html.contains("Current runtime snapshot"));
 
     runtime.run_once(false).expect("execute false");

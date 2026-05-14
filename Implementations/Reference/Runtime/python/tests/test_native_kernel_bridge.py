@@ -17,6 +17,8 @@ from Implementations.Reference.Runtime.python.ui_runtime import (
     BrowserUiRuntime,
     BooleanBrowserUiRuntime,
     BooleanRuntimeCore,
+    ButtonBrowserUiRuntime,
+    ButtonRuntimeCore,
     EnumBrowserUiRuntime,
     EnumRuntimeCore,
     PathBrowserUiRuntime,
@@ -31,6 +33,8 @@ from Implementations.Reference.Runtime.python.ui_runtime import (
     default_example08_wfrog_path,
     default_example09_contract_path,
     default_example09_wfrog_path,
+    default_example10_contract_path,
+    default_example10_wfrog_path,
 )
 
 
@@ -40,6 +44,7 @@ EXAMPLE06_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/06_boolean_
 EXAMPLE07_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/07_string_value_roundtrip/native_kernel_manifest.json"
 EXAMPLE08_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/native_kernel_manifest.json"
 EXAMPLE09_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/09_path_value_roundtrip/native_kernel_manifest.json"
+EXAMPLE10_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/10_button_press_to_boolean/native_kernel_manifest.json"
 
 
 def _build_library(tmp_path: Path, example: str, manifest: Path) -> Path:
@@ -174,3 +179,36 @@ def test_python_dynamic_native_kernel_bridge_executes_example09(tmp_path: Path) 
     assert 'data-compiler-backend="llvm"' in html
     assert 'data-execution-path="native_kernel_bridge"' in html
     assert "data-frog-visual-law='wfrog-realization-state-map'" in html
+
+
+def test_python_dynamic_native_kernel_bridge_executes_example10(tmp_path: Path) -> None:
+    library = _build_library(tmp_path, "10", EXAMPLE10_MANIFEST)
+    bridge = load_native_bool_kernel_bridge(EXAMPLE10_MANIFEST, library)
+
+    assert bridge.run(True).result is True
+    assert bridge.run(False).result is False
+
+    core = ButtonRuntimeCore(
+        contract_path=default_example10_contract_path(),
+        wfrog_path=default_example10_wfrog_path(),
+    )
+    artifact = core.execute_with_native_kernel_bridge(bridge, True)
+
+    assert artifact["outputs"]["public"]["pressed"] is True
+    assert artifact["outputs"]["ui"]["trigger_button"] is False
+    assert artifact["outputs"]["ui"]["pressed_indicator"] is True
+
+    ui = ButtonBrowserUiRuntime(
+        contract_path=default_example10_contract_path(),
+        wfrog_path=default_example10_wfrog_path(),
+        native_kernel_bridge=bridge,
+        open_browser=False,
+    )
+    html = ui.render_html()
+    assert "native kernel bridge" in html
+    assert "LLVM native Button bool kernel artifact" in html
+    assert 'data-compiler-backend="llvm"' in html
+    assert 'data-execution-path="native_kernel_bridge"' in html
+    assert "data-frog-visual-law='wfrog-realization-state-map'" in html
+    assert "data-asset-route='/asset/button_rectangular_svg'" in html
+    assert "class='button-press-overlay' type='button'" in html
