@@ -51,6 +51,12 @@ if(WIN32)
 endif()
 
 enable_testing()
+add_test(NAME frog_reference_runtime_cpp_cli_example05 COMMAND frog_reference_runtime_cpp run 3)
+add_test(NAME frog_reference_runtime_cpp_cli_example06 COMMAND frog_reference_runtime_cpp run true --example 06)
+add_test(NAME frog_reference_runtime_cpp_cli_example07 COMMAND frog_reference_runtime_cpp run "hello world" --example 07)
+add_test(NAME frog_reference_runtime_cpp_cli_example08 COMMAND frog_reference_runtime_cpp run fault --example 08)
+add_test(NAME frog_reference_runtime_cpp_cli_example09 COMMAND frog_reference_runtime_cpp run "C:/FROG/hello_world.txt" --example 09)
+
 add_executable(frog_reference_runtime_cpp_tests tests/test_slice05.cpp)
 target_link_libraries(frog_reference_runtime_cpp_tests PRIVATE frog_reference_runtime_cpp_lib)
 frog_copy_mingw_runtime_dlls(frog_reference_runtime_cpp_tests)
@@ -84,6 +90,11 @@ add_test(NAME frog_reference_runtime_cpp_reference_examples_tests COMMAND frog_r
 if(WIN32)
     get_filename_component(FROG_RUNTIME_CPP_COMPILER_BIN "${CMAKE_CXX_COMPILER}" DIRECTORY)
     set_tests_properties(
+        frog_reference_runtime_cpp_cli_example05
+        frog_reference_runtime_cpp_cli_example06
+        frog_reference_runtime_cpp_cli_example07
+        frog_reference_runtime_cpp_cli_example08
+        frog_reference_runtime_cpp_cli_example09
         frog_reference_runtime_cpp_tests
         frog_reference_runtime_cpp_slice06_tests
         frog_reference_runtime_cpp_slice07_tests

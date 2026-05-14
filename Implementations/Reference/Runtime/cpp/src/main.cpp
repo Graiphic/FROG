@@ -10,6 +10,7 @@
 #include "contract.hpp"
 #include "execute.hpp"
 #include "json.hpp"
+#include "runtime.hpp"
 #include "ui.hpp"
 
 #ifndef FROG_RUNTIME_CPP_SOURCE_DIR
@@ -35,12 +36,51 @@ std::filesystem::path example06_contract_path() {
            "06_boolean_value_roundtrip.reference_host_runtime_ui_binding.contract.json";
 }
 
+std::filesystem::path example07_contract_path() {
+    return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
+           "07_string_value_roundtrip.reference_host_runtime_ui_binding.contract.json";
+}
+
+std::filesystem::path example08_contract_path() {
+    return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
+           "08_enum_value_roundtrip.reference_host_runtime_ui_binding.contract.json";
+}
+
+std::filesystem::path example09_contract_path() {
+    return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
+           "09_path_value_roundtrip.reference_host_runtime_ui_binding.contract.json";
+}
+
 std::filesystem::path example06_wfrog_path() {
     return repo_root() / "Examples" / "06_boolean_value_roundtrip" / "ui" / "boolean_panel.wfrog";
 }
 
+std::filesystem::path example07_wfrog_path() {
+    return repo_root() / "Examples" / "07_string_value_roundtrip" / "ui" / "string_panel.wfrog";
+}
+
+std::filesystem::path example08_wfrog_path() {
+    return repo_root() / "Examples" / "08_enum_value_roundtrip" / "ui" / "enum_panel.wfrog";
+}
+
+std::filesystem::path example09_wfrog_path() {
+    return repo_root() / "Examples" / "09_path_value_roundtrip" / "ui" / "path_panel.wfrog";
+}
+
 bool wants_example06(const std::string& value) {
     return value == "06" || value == "6" || value == "example06" || value == "06_boolean_value_roundtrip";
+}
+
+bool wants_example07(const std::string& value) {
+    return value == "07" || value == "7" || value == "example07" || value == "07_string_value_roundtrip";
+}
+
+bool wants_example08(const std::string& value) {
+    return value == "08" || value == "8" || value == "example08" || value == "08_enum_value_roundtrip";
+}
+
+bool wants_example09(const std::string& value) {
+    return value == "09" || value == "9" || value == "example09" || value == "09_path_value_roundtrip";
 }
 
 bool parse_bool_input(std::string value) {
@@ -101,12 +141,51 @@ int main(int argc, char** argv) {
                 return 0;
             }
 
+            if (example.has_value() && wants_example07(*example)) {
+                frog::runtime::StringBrowserUiRuntime runtime(
+                    contract_path.value_or(example07_contract_path()),
+                    wfrog_path.value_or(example07_wfrog_path()));
+                runtime.serve(host, port, open_browser);
+                return 0;
+            }
+
+            if (example.has_value() && wants_example08(*example)) {
+                frog::runtime::EnumBrowserUiRuntime runtime(
+                    contract_path.value_or(example08_contract_path()),
+                    wfrog_path.value_or(example08_wfrog_path()));
+                runtime.serve(host, port, open_browser);
+                return 0;
+            }
+
+            if (example.has_value() && wants_example09(*example)) {
+                frog::runtime::PathBrowserUiRuntime runtime(
+                    contract_path.value_or(example09_contract_path()),
+                    wfrog_path.value_or(example09_wfrog_path()));
+                runtime.serve(host, port, open_browser);
+                return 0;
+            }
+
             const auto effective_contract = contract_path.value_or(frog::runtime::default_contract_path());
             const auto contract = frog::runtime::load_contract_from_path(effective_contract);
             if (contract.source_ref.example_id == "06_boolean_value_roundtrip") {
                 frog::runtime::BooleanBrowserUiRuntime runtime(
                     effective_contract,
                     wfrog_path.value_or(example06_wfrog_path()));
+                runtime.serve(host, port, open_browser);
+            } else if (contract.source_ref.example_id == "07_string_value_roundtrip") {
+                frog::runtime::StringBrowserUiRuntime runtime(
+                    effective_contract,
+                    wfrog_path.value_or(example07_wfrog_path()));
+                runtime.serve(host, port, open_browser);
+            } else if (contract.source_ref.example_id == "08_enum_value_roundtrip") {
+                frog::runtime::EnumBrowserUiRuntime runtime(
+                    effective_contract,
+                    wfrog_path.value_or(example08_wfrog_path()));
+                runtime.serve(host, port, open_browser);
+            } else if (contract.source_ref.example_id == "09_path_value_roundtrip") {
+                frog::runtime::PathBrowserUiRuntime runtime(
+                    effective_contract,
+                    wfrog_path.value_or(example09_wfrog_path()));
                 runtime.serve(host, port, open_browser);
             } else {
                 frog::runtime::BrowserUiRuntime runtime(effective_contract, wfrog_path);
@@ -149,6 +228,33 @@ int main(int argc, char** argv) {
             return 0;
         }
 
+        if (example.has_value() && wants_example07(*example)) {
+            frog::runtime::Slice07StringRuntimeCore runtime(
+                contract_path.value_or(example07_contract_path()),
+                wfrog_path.value_or(example07_wfrog_path()));
+            const auto artifact = runtime.execute(input_value_text.value_or("hello world"));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+
+        if (example.has_value() && wants_example08(*example)) {
+            frog::runtime::Slice08EnumRuntimeCore runtime(
+                contract_path.value_or(example08_contract_path()),
+                wfrog_path.value_or(example08_wfrog_path()));
+            const auto artifact = runtime.execute(input_value_text.value_or("run"));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+
+        if (example.has_value() && wants_example09(*example)) {
+            frog::runtime::Slice09PathRuntimeCore runtime(
+                contract_path.value_or(example09_contract_path()),
+                wfrog_path.value_or(example09_wfrog_path()));
+            const auto artifact = runtime.execute(input_value_text.value_or("C:/FROG/hello_world.txt"));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+
         const auto effective_contract = contract_path.value_or(frog::runtime::default_contract_path());
         const auto contract = frog::runtime::load_contract_from_path(effective_contract);
         if (contract.source_ref.example_id == "06_boolean_value_roundtrip") {
@@ -156,6 +262,30 @@ int main(int argc, char** argv) {
                 parse_bool_input(input_value_text.value_or("true")),
                 effective_contract,
                 wfrog_path.value_or(example06_wfrog_path()));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+        if (contract.source_ref.example_id == "07_string_value_roundtrip") {
+            frog::runtime::Slice07StringRuntimeCore runtime(
+                effective_contract,
+                wfrog_path.value_or(example07_wfrog_path()));
+            const auto artifact = runtime.execute(input_value_text.value_or("hello world"));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+        if (contract.source_ref.example_id == "08_enum_value_roundtrip") {
+            frog::runtime::Slice08EnumRuntimeCore runtime(
+                effective_contract,
+                wfrog_path.value_or(example08_wfrog_path()));
+            const auto artifact = runtime.execute(input_value_text.value_or("run"));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+        if (contract.source_ref.example_id == "09_path_value_roundtrip") {
+            frog::runtime::Slice09PathRuntimeCore runtime(
+                effective_contract,
+                wfrog_path.value_or(example09_wfrog_path()));
+            const auto artifact = runtime.execute(input_value_text.value_or("C:/FROG/hello_world.txt"));
             std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
             return 0;
         }
