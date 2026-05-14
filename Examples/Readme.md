@@ -249,6 +249,14 @@ no hardcoded widget fallback, no duplicated local SVG skin, and no accepted exam
 <code>.frog</code> instance data, <code>.wfrog</code> realization data, Default SVG public parts, and the runtime/kernel contract surface.
 </p>
 
+<p>
+The currently stabilized widget example surfaces are inventoried in
+<a href="./widget_reference/Readme.md">Widget Example Reference Notes</a>.
+Those notes document the proven Numeric, Boolean, String, Enum, and Path example surfaces,
+including which properties are owned by <code>.frog</code>, which realization packages and SVG assets are consumed through
+<code>.wfrog</code>, and which runtime checks protect against hardcoded widget fallbacks.
+</p>
+
 <hr/>
 
 <h2>Reference Checks</h2>
