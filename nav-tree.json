@@ -390,6 +390,49 @@
                   "children": []
                 }
               ]
+            },
+            {
+              "key": "examples/widget_reference/",
+              "title": "widget reference",
+              "path": "/Examples/widget_reference/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/widget_reference/boolean.md",
+                  "title": "Boolean",
+                  "path": "/Examples/widget_reference/Boolean.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
+                  "key": "examples/widget_reference/enum.md",
+                  "title": "Enum",
+                  "path": "/Examples/widget_reference/Enum.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
+                  "key": "examples/widget_reference/numeric.md",
+                  "title": "Numeric",
+                  "path": "/Examples/widget_reference/Numeric.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
+                  "key": "examples/widget_reference/path.md",
+                  "title": "Path",
+                  "path": "/Examples/widget_reference/Path.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
+                  "key": "examples/widget_reference/string.md",
+                  "title": "String",
+                  "path": "/Examples/widget_reference/String.md",
+                  "kind": "page",
+                  "children": []
+                }
+              ]
             }
           ]
         },
@@ -3889,6 +3932,12 @@
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
     "/Examples/compiler/Readme.md",
+    "/Examples/widget_reference/Boolean.md",
+    "/Examples/widget_reference/Enum.md",
+    "/Examples/widget_reference/Numeric.md",
+    "/Examples/widget_reference/Path.md",
+    "/Examples/widget_reference/String.md",
+    "/Examples/widget_reference/Readme.md",
     "/Examples/Readme.md",
     "/Language/Control%20structures.md",
     "/Language/Execution%20control%20and%20observation%20boundaries.md",
