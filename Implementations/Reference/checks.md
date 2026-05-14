@@ -11,6 +11,69 @@
 
 <hr/>
 
+<h2>Fresh Clone Prerequisites</h2>
+
+<p>
+The Git repository carries the reference sources, expected artifacts, runtime code, <code>.wfrog</code> realization packages, SVG assets, LLVM proof material, and validation scripts.
+A clean clone still needs local development tools before every check can run.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Tool</th>
+      <th>Required for</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>python</code> + <code>pip</code></td>
+      <td>Reference workspace checks and Python runtime tests</td>
+      <td>Install <code>pytest</code> with <code>python -m pip install pytest</code>.</td>
+    </tr>
+    <tr>
+      <td><code>cmake</code> + C++ toolchain</td>
+      <td>C++ runtime build and CTest surface</td>
+      <td>The standard C++ runtime build does not require LLVM.</td>
+    </tr>
+    <tr>
+      <td><code>cargo</code> / Rust toolchain</td>
+      <td>Rust runtime tests</td>
+      <td>Used to validate the Rust runtime-family consumer.</td>
+    </tr>
+    <tr>
+      <td><code>clang</code></td>
+      <td>LLVM native proof and native-kernel bridge checks</td>
+      <td>Optional for baseline checks; required for native LLVM-backed closure.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+Recommended clean-clone smoke sequence:
+</p>
+
+<pre><code>python -m pip install pytest
+python Implementations/Reference/check_reference_workspace.py --include-pytest
+
+cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
+cmake --build build/frog_runtime_cpp
+ctest --test-dir build/frog_runtime_cpp --output-on-failure
+
+cargo test --manifest-path Implementations/Reference/Runtime/rust/Cargo.toml
+</code></pre>
+
+<p>
+When <code>clang</code> is available, add the native checks:
+</p>
+
+<pre><code>python Implementations/Reference/check_reference_workspace.py --include-llvm-build
+python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge
+</code></pre>
+
+<hr/>
+
 <h2>Primary Command</h2>
 
 <pre><code>python Implementations/Reference/check_reference_workspace.py</code></pre>
@@ -28,7 +91,7 @@ Widget-layer validation is included by default through the pipeline.
 python Implementations/Reference/check_reference_workspace.py --include-pytest</code></pre>
 
 <p>
-This additionally runs the pytest suites for artifact checks, derivation, lowering, contract emission, generic runtime contract execution, LLVM, and pipeline coordination.
+This additionally runs the pytest suites for artifact checks, derivation, lowering, contract emission, generic runtime contract execution, Python runtime UI coverage for the current widget examples, LLVM, and pipeline coordination.
 </p>
 
 <hr/>
@@ -45,7 +108,7 @@ Widget-layer validation remains enabled unless explicitly skipped.
 
 <hr/>
 
-<h2>Example 05 Native-Kernel Runtime Bridge</h2>
+<h2>Native-Kernel Runtime Bridge</h2>
 
 <pre><code>python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge</code></pre>
 
@@ -59,9 +122,11 @@ It verifies:
   <li>the ABI declaration for <code>frog_example05_run</code>,</li>
   <li>the LLVM <code>kernel.ll</code> result-status out-parameter layout,</li>
   <li>the C++ <code>NativeKernelBridge</code> path,</li>
+  <li>the Example 06 native Boolean manifest and C++ LLVM-produced native bridge surface,</li>
+  <li>the Python and Rust dynamic native-kernel bridge surfaces for the current published widget examples,</li>
   <li>runtime snapshot preservation through the bridge,</li>
   <li>overflow diagnostic mapping,</li>
-  <li>the optional native-kernel runtime executable linked against the compiled LLVM artifact.</li>
+  <li>the optional native-kernel runtime executable linked against compiled LLVM artifacts.</li>
 </ul>
 
 <hr/>
@@ -74,14 +139,14 @@ ctest --test-dir build/frog_runtime_cpp --output-on-failure</code></pre>
 
 <p>
 The standard C++ checks do not require LLVM or <code>clang</code>.
-They validate the contract runtime path, Example 05 UI rendering surface, <code>.wfrog</code> / SVG geometry coherence, and a native-kernel bridge path using an ABI-compatible linked stub.
+They validate the contract runtime path, the current Examples 05–09 browser-host UI rendering surfaces, <code>.wfrog</code> / SVG geometry coherence, and native-kernel bridge paths using ABI-compatible linked stubs.
 </p>
 
 <p>
 The optional LLVM-produced native-kernel runtime closure is checked with:
 </p>
 
-<pre><code>python Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py</code></pre>
+<pre><code>python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge</code></pre>
 
 <hr/>
 

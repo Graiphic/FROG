@@ -15,7 +15,7 @@
 
 <p>
 This directory coordinates runtime-family checks in the non-normative reference implementation.
-The runtime consumes emitted backend contracts, validates repository-visible runtime acceptance snapshots, and, for Examples 05, 06, 07, and 08, also contains manifest-driven native-kernel bridge paths.
+The runtime consumes emitted backend contracts, validates repository-visible runtime acceptance snapshots, and, for Examples 05, 06, 07, 08, and 09, also contains manifest-driven native-kernel bridge paths.
 </p>
 
 <p>
@@ -38,14 +38,14 @@ That document records the compiler-agnostic runtime/backend boundary for the com
     -&gt; generic contract executor
     -&gt; runtime acceptance snapshot
 
-Examples 05-08 standard runtime slices
+Examples 05-09 standard runtime slices
   normalized backend contract + .frog front panel + .wfrog realization package
     -&gt; contract.units[0].kind
     -&gt; bounded contract executor
     -&gt; C++ / Python / Rust browser-host UI
     -&gt; runtime acceptance snapshot
 
-Examples 05-08 native-kernel runtime closure
+Examples 05-09 native-kernel runtime closure
   .frog source
     -&gt; FIR
     -&gt; lowering
@@ -58,7 +58,7 @@ Examples 05-08 native-kernel runtime closure
 
   runtime
     -&gt; language-specific NativeKernelBridge
-    -&gt; frog_example05_run(...) / frog_example06_run(...) / frog_example07_run(...) / frog_example08_run(...)
+    -&gt; frog_example05_run(...) / frog_example06_run(...) / frog_example07_run(...) / frog_example08_run(...) / frog_example09_run(...)
     -&gt; result / diagnostic
     -&gt; same runtime snapshot surface
 </code></pre>
@@ -84,15 +84,16 @@ Examples 05-08 native-kernel runtime closure
     <tr><td><code>boolean_value_roundtrip_ui_unit</code></td><td>Boolean value roundtrip executor with <code>.wfrog</code> support.</td><td><code>06_boolean_value_roundtrip</code></td></tr>
     <tr><td><code>string_value_roundtrip_ui_unit</code></td><td>String value roundtrip executor with <code>.wfrog</code> support.</td><td><code>07_string_value_roundtrip</code></td></tr>
     <tr><td><code>enum_value_roundtrip_ui_unit</code></td><td>Enum item value roundtrip executor with <code>.wfrog</code> support.</td><td><code>08_enum_value_roundtrip</code></td></tr>
+    <tr><td><code>path_value_roundtrip_ui_unit</code></td><td>Path value roundtrip executor with <code>.wfrog</code> support.</td><td><code>09_path_value_roundtrip</code></td></tr>
   </tbody>
 </table>
 
 <hr/>
 
-<h2>Examples 05-08 Native-Kernel Runtime Closure</h2>
+<h2>Examples 05-09 Native-Kernel Runtime Closure</h2>
 
 <p>
-Examples 05, 06, 07, and 08 now have intentionally distinct runtime paths:
+Examples 05, 06, 07, 08, and 09 now have intentionally distinct runtime paths:
 </p>
 
 <ul>
@@ -106,20 +107,20 @@ LLVM is a backend/native-kernel producer.
 The runtime consumes a manifest-declared ABI and a linked C-compatible entry point.
 </p>
 
-<pre><code>Implementations/Reference/LLVM/examples/{05,06,07,08}_*/kernel.ll
+<pre><code>Implementations/Reference/LLVM/examples/{05,06,07,08,09}_*/kernel.ll
   -&gt; clang
   -&gt; linked C++ object or Python/Rust dynamic library
 
-Implementations/Reference/LLVM/examples/{05,06,07,08}_*/native_kernel_manifest.json
+Implementations/Reference/LLVM/examples/{05,06,07,08,09}_*/native_kernel_manifest.json
   -&gt; NativeKernelManifest
   -&gt; NativeKernelBridge
   -&gt; example-specific ABI entry point
 
-Examples/{05,06,07,08}_*/main.frog
+Examples/{05,06,07,08,09}_*/main.frog
   -&gt; browser-host runtime
   -&gt; panel_pixels + widget instance properties
 
-Examples/{05,06,07,08}_*/ui/*.wfrog
+Examples/{05,06,07,08,09}_*/ui/*.wfrog
   -&gt; Default realization package
   -&gt; SVG skins + host requirements
 
@@ -136,7 +137,7 @@ Browser POST /run
 <h2>Normalized Runtime Contracts</h2>
 
 <p>
-The specialized Example 05, Example 06, Example 07, and Example 08 runtimes consume normalized backend-contract surfaces:
+The specialized Example 05, Example 06, Example 07, Example 08, and Example 09 runtimes consume normalized backend-contract surfaces:
 </p>
 
 <pre><code>public_io
@@ -175,5 +176,5 @@ It consumes emitted backend contracts and validates repository-visible runtime b
 
 <p>
 The native-kernel bridge preserves this boundary: the runtime hosts execution and UI; backends compile lowered units; explicit manifests and stable ABI surfaces connect both sides.
-The Example 05-08 native-kernel closures are bounded LabVIEW-like proof corridors, not a generalized production runtime.
+The Example 05-09 native-kernel closures are bounded LabVIEW-like proof corridors, not a generalized production runtime.
 </p>

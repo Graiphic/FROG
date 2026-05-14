@@ -26,7 +26,7 @@ The workspace protects a numbered progression of examples and the published widg
 Libraries/Realizations/Default/
   -&gt; WidgetValidator
 
-Examples 01–05
+Examples 01-05
   .frog
     -&gt; source-pattern FIR derivation
     -&gt; FIR unit.kind
@@ -36,11 +36,20 @@ Examples 01–05
     -&gt; runtime executor kind
     -&gt; runtime acceptance snapshot
     -&gt; LLVM proof
+
+Examples 06-09
+  .frog front-panel instances
+    -&gt; FIR / lowering / contract artifacts where published
+    -&gt; LLVM native kernel artifacts and manifests where published
+    -&gt; C++ / Python / Rust runtime-family consumers
+    -&gt; .wfrog Default realization packages
+    -&gt; SVG public parts and widget-facing browser-host UI
 </code></pre>
 
 <p>
 Example 05 remains the primary applicative UI/state/runtime/native corridor.
 Examples 01–04 provide smaller executable proof slices for pure arithmetic, widget values, UI property writes, and explicit feedback state.
+Examples 06–09 extend the runtime/widget discipline across the current Boolean, String, Enum, and Path front-panel slices.
 </p>
 
 <hr/>
@@ -143,13 +152,63 @@ lowered_unit.kind
 <pre><code>python Implementations/Reference/check_reference_workspace.py
 python Implementations/Reference/check_reference_workspace.py --widget-layer-only
 python Implementations/Reference/check_reference_workspace.py --include-pytest
+python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge
 python Implementations/Reference/check_reference_workspace.py --include-llvm-build
 </code></pre>
 
 <p>
 The default workspace command includes widget-layer validation through the Examples 01–05 pipeline.
 The <code>--widget-layer-only</code> command exists for fast validation when editing widget class-law documents, Default realization documents, manifests, or SVG resources.
-The <code>--include-pytest</code> command additionally protects source-pattern derivation, FIR-unit-kind lowering, lowered-unit-kind contract emission, contract-unit-kind runtime execution, lowered-unit-kind LLVM emission, and unsupported-pattern / unsupported-kind failure behavior.
+The <code>--include-pytest</code> command additionally protects source-pattern derivation, FIR-unit-kind lowering, lowered-unit-kind contract emission, contract-unit-kind runtime execution, lowered-unit-kind LLVM emission, Python runtime UI coverage for the current widget examples, and unsupported-pattern / unsupported-kind failure behavior.
+The <code>--include-native-kernel-bridge</code> command validates the published native-kernel bridge surface where the local native toolchain is available.
+</p>
+
+<hr/>
+
+<h2>Fresh Clone Environment</h2>
+
+<p>
+The repository contains the FROG source examples, published artifacts, reference runtimes, widget realization packages, SVG assets, LLVM-oriented proof material, and validation scripts.
+A clean clone can therefore reproduce the current reference workspace, provided the local machine supplies the required development tools.
+</p>
+
+<p>
+Minimum practical environment for the reference workspace:
+</p>
+
+<ul>
+  <li><code>python</code> with <code>pip</code>, used by the reference checks and Python runtime tests,</li>
+  <li><code>pytest</code>, installed with <code>python -m pip install pytest</code>,</li>
+  <li><code>cmake</code> and a C++ toolchain, used by the C++ runtime checks,</li>
+  <li><code>cargo</code> / Rust toolchain, used by the Rust runtime checks,</li>
+  <li><code>clang</code>, required only for LLVM native build and native-kernel bridge checks.</li>
+</ul>
+
+<p>
+Recommended validation sequence after a clean clone:
+</p>
+
+<pre><code>python -m pip install pytest
+python Implementations/Reference/check_reference_workspace.py --include-pytest
+
+cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
+cmake --build build/frog_runtime_cpp
+ctest --test-dir build/frog_runtime_cpp --output-on-failure
+
+cargo test --manifest-path Implementations/Reference/Runtime/rust/Cargo.toml
+</code></pre>
+
+<p>
+When <code>clang</code> is available, the native proof and native-kernel bridge checks can also be run:
+</p>
+
+<pre><code>python Implementations/Reference/check_reference_workspace.py --include-llvm-build
+python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge
+</code></pre>
+
+<p>
+The standard runtime checks must remain usable without making LLVM a mandatory runtime dependency.
+LLVM is a backend/native-kernel artifact producer; the runtimes consume manifest-declared ABI surfaces and the corresponding <code>.wfrog</code> front-panel realization packages.
 </p>
 
 <hr/>

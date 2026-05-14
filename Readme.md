@@ -362,8 +362,9 @@ The repository also contains repository-level support areas and repository-level
 </ul>
 
 <p>
-The published numbered example surface now exposes a repository-visible executable progression under <code>Examples/01_*</code> through <code>Examples/05_*</code>.
-Each numbered example has a canonical <code>.frog</code> source, a published FIR artifact, a published lowering artifact, a backend-contract path, runtime acceptance material, and an LLVM-oriented native proof surface.
+The published numbered example surface now exposes a repository-visible executable progression under <code>Examples/01_*</code> through <code>Examples/09_*</code>.
+Examples <code>01</code> through <code>05</code> carry the original source/FIR/lowering/backend-contract/runtime/LLVM corridor.
+Examples <code>06</code> through <code>09</code> extend the front-panel widget runtime discipline across Boolean, String, Enum, and Path slices, with <code>.frog</code> front-panel instances, <code>.wfrog</code> Default realization packages, SVG public parts, runtime-family consumers, and native-kernel manifests where published.
 </p>
 
 <p>
@@ -384,16 +385,29 @@ The progression is intentionally staged:
 
 05_bounded_ui_accumulator
   -> combined UI + property write + bounded loop + explicit state corridor
+
+06_boolean_value_roundtrip
+  -> Boolean widget value roundtrip
+
+07_string_value_roundtrip
+  -> String widget value roundtrip
+
+08_enum_value_roundtrip
+  -> Enum widget value roundtrip
+
+09_path_value_roundtrip
+  -> Path widget value roundtrip
 </code></pre>
 
 <p>
 <code>Examples/05_bounded_ui_accumulator/</code> remains the primary applicative vertical-slice anchor because it combines source, front-panel package, FIR, lowering, backend contract, runtime-family acceptance, Python/Rust/C/C++ reference-consumer posture, and an LLVM-oriented native proof path.
 Examples <code>01</code> through <code>04</code> are smaller executable proof slices used to keep individual concerns inspectable before they are combined in Example <code>05</code>.
+Examples <code>06</code> through <code>09</code> are current widget-focused runtime slices used to keep Boolean, String, Enum, and Path front-panel behavior honest across C++, Python, and Rust.
 </p>
 
 <p>
 The correct current statement is therefore:
-the repository materially exposes an executable Examples <code>01</code> through <code>05</code> corridor, while Example <code>05</code> remains the richest applicative UI/state/runtime/native reference corridor.
+the repository materially exposes an executable Examples <code>01</code> through <code>09</code> progression, while Example <code>05</code> remains the richest applicative UI/state/runtime/native reference corridor.
 This does not claim full generalized symmetry across all future examples, all runtime families, or rendered-native front-panel closure.
 </p>
 
@@ -401,9 +415,22 @@ This does not claim full generalized symmetry across all future examples, all ru
 The current reference checks are intentionally repository-visible:
 </p>
 
-<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py
-python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-widget-validator
-python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-widget-validator --include-llvm-build
+<pre><code>python -m pip install pytest
+python Implementations/Reference/check_reference_workspace.py --include-pytest
+
+cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
+cmake --build build/frog_runtime_cpp
+ctest --test-dir build/frog_runtime_cpp --output-on-failure
+
+cargo test --manifest-path Implementations/Reference/Runtime/rust/Cargo.toml
+</code></pre>
+
+<p>
+Optional native LLVM checks require <code>clang</code>:
+</p>
+
+<pre><code>python Implementations/Reference/check_reference_workspace.py --include-llvm-build
+python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge
 </code></pre>
 
 <hr/>
@@ -1073,6 +1100,7 @@ runtime acceptance            native proof
 <p>
 For Examples <code>01</code> through <code>04</code>, the runtime acceptance and LLVM proofs are intentionally narrow reference proofs.
 For Example <code>05</code>, the repository carries the richer applicative path involving a front-panel package, widget values, widget references, UI property writes, explicit state, bounded iteration, runtime-family acceptance, and LLVM native proof material.
+Examples <code>06</code> through <code>09</code> currently exercise the widget-front-panel runtime discipline for Boolean, String, Enum, and Path across the C++, Python, and Rust reference runtimes.
 </p>
 
 <p>
@@ -1081,8 +1109,8 @@ The current repository-visible execution checks are:
 
 <ul>
   <li><code>ArtifactChecks/</code> — verifies that the executable corridor artifacts are present and coherent at a high level,</li>
-  <li><code>Deriver/</code> — checks <code>.frog -> FIR</code> for Examples <code>01</code> through <code>05</code>,</li>
-  <li><code>Lowerer/</code> — checks <code>FIR -> lowering</code> for Examples <code>01</code> through <code>05</code>,</li>
+  <li><code>Deriver/</code> — checks <code>.frog -> FIR</code> for the published source-pattern families, including the current widget examples where supported,</li>
+  <li><code>Lowerer/</code> — checks <code>FIR -> lowering</code> for the published FIR-unit families, including the current widget examples where supported,</li>
   <li><code>ContractEmitter/</code> — checks <code>lowering -> backend contract</code>,</li>
   <li><code>Runtime/</code> — checks <code>contract -> runtime acceptance snapshot</code>,</li>
   <li><code>LLVM/</code> — checks <code>lowering -> LLVM module</code> and, where requested, native build proof.</li>
@@ -1129,7 +1157,7 @@ The map below summarizes the intended role of the major Markdown documents in th
 │       ├── checks.md
 │       │   -> repository-visible check commands
 │       ├── ArtifactChecks/
-│       │   -> preflight checks for Examples 01–05 artifacts
+│       │   -> preflight checks for published reference artifacts
 │       ├── Deriver/
 │       │   -> supported .frog -> FIR reference derivation
 │       ├── Lowerer/
@@ -1141,7 +1169,7 @@ The map below summarizes the intended role of the major Markdown documents in th
 │       ├── LLVM/
 │       │   -> lowering -> LLVM-oriented native proof modules
 │       └── Pipeline/
-│           -> coordinated Examples 01–05 check pipeline
+│           -> coordinated reference check pipeline
 │
 ├── Expression/
 │   -> canonical source representation
@@ -1212,7 +1240,7 @@ Implementations/Reference/Readme.md
 Implementations/Reference/checks.md
    |
    v
-Implementations/Reference/Pipeline/check_examples01_05_full.py
+Implementations/Reference/check_reference_workspace.py
 </pre>
 
 <p>
@@ -1223,6 +1251,7 @@ That second path answers a staged set of questions:
   <li><strong><code>Examples/</code></strong> — which executable slices are being used,</li>
   <li><strong><code>Examples/01_*</code> through <code>Examples/04_*</code></strong> — which isolated concerns are covered before the full corridor,</li>
   <li><strong><code>Examples/05_bounded_ui_accumulator/</code></strong> — which combined applicative corridor is currently the primary anchor,</li>
+  <li><strong><code>Examples/06_*</code> through <code>Examples/09_*</code></strong> — which widget-front-panel runtime slices are currently covered,</li>
   <li><strong><code>Implementations/Reference/</code></strong> — how the non-normative reference pipeline processes them,</li>
   <li><strong><code>Runtime/</code></strong> — how backend contracts are checked through acceptance snapshots,</li>
   <li><strong><code>LLVM/</code></strong> — how lowered units are checked through native proof modules.</li>
@@ -1653,11 +1682,13 @@ The repository already contains substantial material across canonical source rep
 <p>
 At the current published state, the repository has reached a stronger closure milestone:
 Examples <code>01</code> through <code>05</code> materially expose a repository-visible executable corridor across source, FIR, lowering, backend contracts, runtime acceptance, and LLVM-oriented proof material.
+Examples <code>06</code> through <code>09</code> extend the current reference workspace with validated widget-front-panel runtime slices for Boolean, String, Enum, and Path.
 </p>
 
 <p>
 The Example <code>05_bounded_ui_accumulator</code> slice remains the primary applicative vertical-slice anchor because it combines front-panel package participation, widget values, widget references, UI property writes, bounded iteration, explicit state, public output, runtime-family acceptance, and LLVM-native proof posture.
 Examples <code>01</code> through <code>04</code> provide smaller executable anchors for isolated concerns.
+Examples <code>06</code> through <code>09</code> provide bounded runtime/widget anchors for the current Default realization coverage and remain subject to the no-fallback <code>.frog</code> / <code>.wfrog</code> / SVG discipline.
 </p>
 
 <p>
@@ -1665,10 +1696,10 @@ At the same time, the repository has not yet reached:
 </p>
 
 <ul>
-  <li>full generalized multi-runtime symmetry across all serious examples,</li>
+  <li>full generalized multi-runtime symmetry across all future serious examples,</li>
   <li>a generic contract executor that removes all example-specific runtime acceptance logic,</li>
   <li>a generic LLVM backend driven by lowered-unit kind rather than bounded example patterns,</li>
-  <li>full native rendered front-panel closure,</li>
+  <li>full native non-browser rendered front-panel closure,</li>
   <li>or final depth across all observability, debugging, and IDE-facing surfaces.</li>
 </ul>
 
@@ -1677,7 +1708,7 @@ The current direction is therefore:
 </p>
 
 <ul>
-  <li><strong>keep the Examples 01–05 executable corridor green,</strong></li>
+  <li><strong>keep the Examples 01–09 executable and widget-runtime surfaces green,</strong></li>
   <li><strong>convert the reference runtime and LLVM proofs from example-specific code toward generic pattern-driven engines,</strong></li>
   <li><strong>then resume qualitative deepening of complex widget families and front-panel runtime behavior.</strong></li>
 </ul>

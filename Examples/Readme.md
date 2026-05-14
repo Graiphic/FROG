@@ -75,6 +75,18 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
       <td><code>main.frog</code> + <code>ui/string_panel.wfrog</code></td>
       <td><code>FIR → lowering → contract → LLVM native manifest → C++/Python/Rust runtime bridge → Default String realization</code></td>
     </tr>
+    <tr>
+      <td><code>08_enum_value_roundtrip</code></td>
+      <td>Enum control/indicator mode roundtrip</td>
+      <td><code>main.frog</code> + <code>ui/enum_panel.wfrog</code></td>
+      <td><code>FIR → lowering → contract → LLVM native manifest → C++/Python/Rust runtime bridge → Default Enum realization</code></td>
+    </tr>
+    <tr>
+      <td><code>09_path_value_roundtrip</code></td>
+      <td>Path control/indicator value roundtrip</td>
+      <td><code>main.frog</code> + <code>ui/path_panel.wfrog</code></td>
+      <td><code>FIR → lowering → contract → LLVM native manifest → C++/Python/Rust runtime bridge → Default Path realization</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -101,6 +113,12 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
     |
     v
 07  String .wfrog realization and native-kernel runtime bridge
+    |
+    v
+08  Enum .wfrog realization and native-kernel runtime bridge
+    |
+    v
+09  Path .wfrog realization and native-kernel runtime bridge
 </code></pre>
 
 <hr/>
@@ -143,13 +161,27 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
 │   ├── main.lowering.json
 │   └── ui/
 │       └── boolean_panel.wfrog
-└── 07_string_value_roundtrip/
+├── 07_string_value_roundtrip/
+│   ├── Readme.md
+│   ├── main.frog
+│   ├── main.fir.json
+│   ├── main.lowering.json
+│   └── ui/
+│       └── string_panel.wfrog
+├── 08_enum_value_roundtrip/
+│   ├── Readme.md
+│   ├── main.frog
+│   ├── main.fir.json
+│   ├── main.lowering.json
+│   └── ui/
+│       └── enum_panel.wfrog
+└── 09_path_value_roundtrip/
     ├── Readme.md
     ├── main.frog
     ├── main.fir.json
     ├── main.lowering.json
     └── ui/
-        └── string_panel.wfrog
+        └── path_panel.wfrog
 </code></pre>
 
 <hr/>
