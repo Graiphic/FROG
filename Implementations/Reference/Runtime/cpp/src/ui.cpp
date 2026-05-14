@@ -295,6 +295,8 @@ struct SvgGeometry {
     double value_face_y = 82.0;
     double value_face_width = 214.0;
     double value_face_height = 28.0;
+    double value_text_x = 22.0;
+    double value_text_y = 96.0;
     double selector_face_x = 246.0;
     double selector_face_y = 82.0;
     double selector_face_width = 24.0;
@@ -773,6 +775,205 @@ std::string render_string_widget(const WidgetState& widget) {
         html << "<output class='string-value-overlay string-indicator-value' data-frog-part='text_value' data-svg-anchor='text_region.left_center'";
         html << " style='" << value_style << "color:" << html_escape(text_color) << ";font-size:" << html_escape(text_size)
              << ";font-weight:" << html_escape(text_weight) << ";'>" << html_escape(value) << "</output>";
+    }
+
+    html << "</section>";
+    return html.str();
+}
+
+SvgGeometry load_path_svg_geometry(const WidgetState& widget) {
+    SvgGeometry geometry;
+    geometry.view_width = 520.0;
+    geometry.view_height = 150.0;
+    geometry.caption_x = 16.0;
+    geometry.caption_y = 46.0;
+    geometry.value_face_x = 22.0;
+    geometry.value_face_y = 82.0;
+    geometry.value_face_width = 390.0;
+    geometry.value_face_height = 28.0;
+    geometry.selector_face_x = 424.0;
+    geometry.selector_face_y = 82.0;
+    geometry.selector_face_width = 34.0;
+    geometry.selector_face_height = 28.0;
+    if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
+        return geometry;
+    }
+    const auto svg = read_text_file(widget.asset_path);
+    parse_viewbox(svg, geometry);
+    geometry.caption_x = svg_attribute_double(svg, "caption_text", "x", geometry.caption_x);
+    geometry.caption_y = svg_attribute_double(svg, "caption_text", "y", geometry.caption_y);
+    geometry.value_face_x = svg_attribute_double(svg, "path_face", "x", geometry.value_face_x);
+    geometry.value_face_y = svg_attribute_double(svg, "path_face", "y", geometry.value_face_y);
+    geometry.value_face_width = svg_attribute_double(svg, "path_face", "width", geometry.value_face_width);
+    geometry.value_face_height = svg_attribute_double(svg, "path_face", "height", geometry.value_face_height);
+    geometry.value_text_x = svg_attribute_double(svg, "path_display", "x", geometry.value_face_x);
+    geometry.value_text_y = svg_attribute_double(svg, "path_display", "y", geometry.value_face_y + (geometry.value_face_height / 2.0));
+    geometry.selector_face_x = svg_attribute_double(svg, "browse_button", "x", geometry.selector_face_x);
+    geometry.selector_face_y = svg_attribute_double(svg, "browse_button", "y", geometry.selector_face_y);
+    geometry.selector_face_width = svg_attribute_double(svg, "browse_button", "width", geometry.selector_face_width);
+    geometry.selector_face_height = svg_attribute_double(svg, "browse_button", "height", geometry.selector_face_height);
+    return geometry;
+}
+
+std::string render_path_skin(const WidgetState& widget) {
+    if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
+        return "<div class='path-skin missing-skin'></div>";
+    }
+    const auto frame_fill = safe_css_color(property_string(widget.properties, "style.frame.fill_color", "transparent"), "transparent");
+    const auto frame_stroke = safe_css_color(property_string(widget.properties, "style.frame.border_color", "transparent"), "transparent");
+    const auto frame_stroke_width = safe_css_length(property_string(widget.properties, "style.frame.border_width", "0px"), "0px");
+    const auto face_fill = safe_css_color(property_string(widget.properties, "style.path_face.fill_color", "#ffffff"), "#ffffff");
+    const auto face_stroke = safe_css_color(property_string(widget.properties, "style.path_face.border_color", "#64748b"), "#64748b");
+    const auto face_stroke_width = safe_css_length(property_string(widget.properties, "style.path_face.border_width", "2px"), "2px");
+    const auto face_hover_fill = safe_css_color(property_string(widget.properties, "style.path_face.fill_color.hover", face_fill), face_fill);
+    const auto face_hover_stroke = safe_css_color(property_string(widget.properties, "style.path_face.border_color.hover", face_stroke), face_stroke);
+    const auto text_fill = safe_css_color(property_string(widget.properties, "style.path_display.color", "#111827"), "#111827");
+    const auto text_size = safe_css_length(property_string(widget.properties, "style.path_display.font_size", "15px"), "15px");
+    const auto text_weight = safe_css_font_weight(property_string(widget.properties, "style.path_display.font_weight", "400"), "400");
+    const auto button_fill = safe_css_color(property_string(widget.properties, "style.browse_button.fill_color", "#f8fafc"), "#f8fafc");
+    const auto button_hover_fill = safe_css_color(property_string(widget.properties, "style.browse_button.fill_color.hover", button_fill), button_fill);
+    const auto button_stroke = safe_css_color(property_string(widget.properties, "style.browse_button.border_color", "#64748b"), "#64748b");
+    const auto button_hover_stroke = safe_css_color(property_string(widget.properties, "style.browse_button.border_color.hover", button_stroke), button_stroke);
+    const auto button_stroke_width = safe_css_length(property_string(widget.properties, "style.browse_button.border_width", "1px"), "1px");
+    const auto button_text_fill = safe_css_color(property_string(widget.properties, "style.browse_button.text_color", "#111827"), "#111827");
+    const auto button_text_size = safe_css_length(property_string(widget.properties, "style.browse_button.text_font_size", "13px"), "13px");
+    const auto icon_fill = safe_css_color(property_string(widget.properties, "style.path_icon.fill_color", "#facc15"), "#facc15");
+    const auto icon_front_fill = safe_css_color(property_string(widget.properties, "style.path_icon.front_fill_color", "#fde68a"), "#fde68a");
+    const auto icon_stroke = safe_css_color(property_string(widget.properties, "style.path_icon.stroke_color", "#b45309"), "#b45309");
+    const auto icon_highlight = safe_css_color(property_string(widget.properties, "style.path_icon.highlight_color", "#fff7cc"), "#fff7cc");
+    const bool icon_visible = property_bool(widget.properties, "display.icon_visible", true);
+    const bool browse_visible = property_bool(widget.properties, "browse.button_visible", widget.role == "control");
+    const bool validation_visible = property_bool(widget.properties, "display.validation_marker_visible", false);
+    const bool overflow_visible = property_bool(widget.properties, "display.text_overflow_visible", false);
+
+    std::ostringstream style;
+    style << "--frog-path-label-display:none;";
+    style << "--frog-path-caption-display:none;";
+    style << "--frog-path-frame-fill:" << html_escape(frame_fill) << ";";
+    style << "--frog-path-frame-stroke:" << html_escape(frame_stroke) << ";";
+    style << "--frog-path-frame-stroke-width:" << html_escape(frame_stroke_width) << ";";
+    style << "--frog-path-face-fill:" << html_escape(face_fill) << ";";
+    style << "--frog-path-face-stroke:" << html_escape(face_stroke) << ";";
+    style << "--frog-path-face-stroke-width:" << html_escape(face_stroke_width) << ";";
+    style << "--frog-path-text-fill:" << html_escape(text_fill) << ";";
+    style << "--frog-path-text-font-size:" << html_escape(text_size) << ";";
+    style << "--frog-path-text-font-weight:" << html_escape(text_weight) << ";";
+    style << "--frog-path-button-fill:" << html_escape(button_fill) << ";";
+    style << "--frog-path-button-fill-hover:" << html_escape(button_hover_fill) << ";";
+    style << "--frog-path-button-stroke:" << html_escape(button_stroke) << ";";
+    style << "--frog-path-button-stroke-hover:" << html_escape(button_hover_stroke) << ";";
+    style << "--frog-path-button-stroke-width:" << html_escape(button_stroke_width) << ";";
+    style << "--frog-path-button-text-fill:" << html_escape(button_text_fill) << ";";
+    style << "--frog-path-button-text-font-size:" << html_escape(button_text_size) << ";";
+    style << "--frog-path-icon-display:" << (icon_visible ? "inline" : "none") << ";";
+    style << "--frog-path-icon-fill:" << html_escape(icon_fill) << ";";
+    style << "--frog-path-icon-front-fill:" << html_escape(icon_front_fill) << ";";
+    style << "--frog-path-icon-stroke:" << html_escape(icon_stroke) << ";";
+    style << "--frog-path-icon-highlight:" << html_escape(icon_highlight) << ";";
+    style << "--frog-path-browse-display:" << (browse_visible ? "inline" : "none") << ";";
+    style << "--frog-path-validation-display:" << (validation_visible ? "inline" : "none") << ";";
+    style << "--frog-path-overflow-display:" << (overflow_visible ? "inline" : "none") << ";";
+    style << "--frog-path-focus-display:none;";
+    style << "--frog-path-face-fill-hover:" << html_escape(face_hover_fill) << ";";
+    style << "--frog-path-face-stroke-hover:" << html_escape(face_hover_stroke) << ";";
+
+    std::ostringstream html;
+    html << "<div class='path-skin' aria-hidden='true' style='" << style.str() << "'>";
+    html << read_text_file(widget.asset_path);
+    html << "</div>";
+    return html.str();
+}
+
+std::string render_path_widget(const WidgetState& widget) {
+    const bool is_control = widget.role == "control";
+    const auto geometry = load_path_svg_geometry(widget);
+    const auto x = layout_i64(widget.layout, "x", 0);
+    const auto y = layout_i64(widget.layout, "y", 0);
+    const auto width = layout_i64(widget.layout, "width", 300);
+    const auto height = layout_i64(widget.layout, "height", 120);
+    const auto value = property_string(widget.properties, "value");
+    const auto label = property_string(widget.properties, "caption.text", widget.widget_id);
+    const auto label_color = safe_css_color(property_string(widget.properties, "caption.style.text_color", "#111827"), "#111827");
+    const auto text_color = safe_css_color(property_string(widget.properties, "style.path_display.color", "#111827"), "#111827");
+    const auto text_size = safe_css_length(property_string(widget.properties, "style.path_display.font_size", "15px"), "15px");
+    const auto text_weight = safe_css_font_weight(property_string(widget.properties, "style.path_display.font_weight", "400"), "400");
+    const auto text_padding = safe_css_length(property_string(widget.properties, "style.path_display.padding_inline", "8px"), "8px");
+    const auto text_baseline_offset = safe_css_signed_length(property_string(widget.properties, "style.path_display.baseline_offset", "0px"), "0px");
+    const auto computed_line_height = css_px((geometry.value_face_height / geometry.view_height) * static_cast<double>(height));
+    const auto text_line_height = safe_css_length(property_string(widget.properties, "style.path_display.line_height", computed_line_height), computed_line_height);
+    const auto button_fill = safe_css_color(property_string(widget.properties, "style.browse_button.fill_color", "#f8fafc"), "#f8fafc");
+    const auto button_hover_fill = safe_css_color(property_string(widget.properties, "style.browse_button.fill_color.hover", button_fill), button_fill);
+    const auto public_input_id = property_string(
+        widget.properties,
+        "binding.public_input_id",
+        property_string(widget.properties, "binding.preview_input_id", widget.widget_id + "_value"));
+    const auto route = asset_route(widget);
+    const bool icon_visible = property_bool(widget.properties, "display.icon_visible", true);
+    const auto value_text_x = icon_visible ? std::max(geometry.value_face_x, geometry.value_text_x) : geometry.value_face_x;
+    const auto value_text_width = std::max(0.0, geometry.value_face_width - (value_text_x - geometry.value_face_x));
+    const auto value_style = svg_box_style(
+        value_text_x,
+        geometry.value_face_y,
+        value_text_width,
+        geometry.value_face_height,
+        geometry);
+    const auto browse_style = svg_box_style(
+        geometry.selector_face_x,
+        geometry.selector_face_y,
+        geometry.selector_face_width,
+        geometry.selector_face_height,
+        geometry);
+    const bool browse_visible = property_bool(widget.properties, "browse.button_visible", is_control);
+    const bool interaction_enabled = property_bool(widget.properties, "interaction.enabled", true);
+
+    std::ostringstream html;
+    html << "<section class='frog-widget path-widget " << (is_control ? "path-control" : "path-indicator") << "'";
+    html << " data-widget-id='" << html_escape(widget.widget_id) << "'";
+    html << " data-class-ref='" << html_escape(widget.class_ref) << "'";
+    html << " data-role='" << html_escape(widget.role) << "'";
+    html << " data-frog-visual-law='wfrog-realization-state-map'";
+    html << " data-frog-browse-visible='" << (browse_visible ? "true" : "false") << "'";
+    if (!route.empty()) {
+        html << " data-asset-route='" << html_escape(route) << "'";
+    }
+    html << " style='position:absolute;left:" << css_px(x) << ";top:" << css_px(y) << ";width:" << css_px(width)
+         << ";height:" << css_px(height) << ";--frog-path-button-fill:" << html_escape(button_fill)
+         << ";--frog-path-button-fill-hover:" << html_escape(button_hover_fill) << ";";
+    if (!property_bool(widget.properties, "visible", true)) {
+        html << "display:none;";
+    }
+    html << "'>";
+
+    html << render_path_skin(widget);
+    html << "<span class='path-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='"
+          << caption_anchor_style(widget.properties, geometry)
+          << "color:" << html_escape(label_color) << ";'>" << html_escape(label) << "</span>";
+
+    if (is_control) {
+        html << "<input id='" << html_escape(widget.widget_id) << "_value' name='" << html_escape(public_input_id) << "' type='text'";
+        html << " class='path-value-overlay path-control-editor' data-frog-part='path_display' data-svg-anchor='path_display.left_center'";
+        html << " data-frog-input-id='" << html_escape(public_input_id) << "'";
+        html << " style='" << value_style << "color:" << html_escape(text_color) << ";font-size:" << html_escape(text_size)
+             << ";font-weight:" << html_escape(text_weight) << ";padding:0 " << html_escape(text_padding)
+             << ";line-height:" << html_escape(text_line_height)
+             << ";transform:translateY(" << html_escape(text_baseline_offset) << ");'";
+        html << " value='" << html_escape(value) << "'";
+        if (!interaction_enabled) {
+            html << " disabled";
+        }
+        html << " />";
+        html << "<input id='" << html_escape(widget.widget_id) << "_file_picker' type='file' class='path-file-picker' tabindex='-1' aria-hidden='true'";
+        html << " onchange=\"frogPathPicked(this,'" << html_escape(widget.widget_id) << "_value')\" />";
+        if (browse_visible) {
+            html << "<label for='" << html_escape(widget.widget_id) << "_file_picker' class='path-browse-overlay' data-frog-part='browse_button'";
+            html << " aria-label='Browse " << html_escape(label) << "' style='" << browse_style << "'></label>";
+        }
+    } else {
+        html << "<output class='path-value-overlay path-indicator-value' data-frog-part='path_display' data-svg-anchor='path_display.left_center'";
+        html << " style='" << value_style << "color:" << html_escape(text_color) << ";font-size:" << html_escape(text_size)
+             << ";font-weight:" << html_escape(text_weight) << ";padding:0 " << html_escape(text_padding)
+             << ";line-height:" << html_escape(text_line_height)
+             << ";transform:translateY(" << html_escape(text_baseline_offset) << ");'>" << html_escape(value) << "</output>";
     }
 
     html << "</section>";
@@ -1520,7 +1721,7 @@ std::string BrowserUiRuntime::render_html() const {
     html << render_numeric_widget(ind);
     html << "</div>";
     html << "<div class='actions'><button type='submit'>Run Example 05</button><a href='/state.json'>state.json</a></div>";
-    html << "</form><details><summary>Current runtime snapshot</summary><pre>" << html_escape(snapshot) << "</pre></details>";
+    html << "</form>";
     html << "</body></html>";
     return html.str();
 }
@@ -2125,6 +2326,204 @@ void EnumBrowserUiRuntime::serve(const std::string& host, std::uint16_t port, bo
                 try {
                     const auto form_value = parse_form_value(request.body, "mode_value").value_or("run");
                     run_once(form_value);
+                } catch (const std::exception& error) {
+                    last_error = error.what();
+                }
+                send_response(client, "303 See Other", "text/plain; charset=utf-8", "", std::make_pair(std::string("Location"), std::string("/")));
+            } else {
+                send_response(client, "404 Not Found", "text/plain; charset=utf-8", "not found");
+            }
+        } catch (const std::exception& error) {
+            try {
+                send_response(client, "500 Internal Server Error", "text/plain; charset=utf-8", error.what());
+            } catch (...) {
+            }
+        }
+        close_socket(client);
+    }
+}
+
+PathBrowserUiRuntime::PathBrowserUiRuntime(
+    std::filesystem::path contract_path,
+    std::filesystem::path wfrog_path,
+    std::shared_ptr<const NativeStringKernelBridge> native_kernel_bridge_)
+    : core(std::move(contract_path), std::move(wfrog_path)),
+      native_kernel_bridge(std::move(native_kernel_bridge_)) {}
+
+frog::json::Value PathBrowserUiRuntime::run_once(const std::string& input_value) {
+    try {
+        frog::json::Value artifact = native_kernel_bridge == nullptr
+            ? core.execute(input_value)
+            : core.execute_with_native_kernel_bridge(*native_kernel_bridge, input_value);
+        last_error.reset();
+        return artifact;
+    } catch (const std::exception& error) {
+        last_error = error.what();
+        throw;
+    }
+}
+
+std::string PathBrowserUiRuntime::render_html() const {
+    const auto& ctrl = core.widgets.at("path_input");
+    const auto& ind = core.widgets.at("path_result");
+    const auto panel_width = layout_i64(core.panel.layout, "width", 700);
+    const auto panel_height = layout_i64(core.panel.layout, "height", 180);
+    const bool uses_native_kernel = native_kernel_bridge != nullptr;
+
+    std::string diagnostics;
+    if (last_error.has_value()) {
+        diagnostics = "<div class='diagnostic error'>" + html_escape(*last_error) + "</div>";
+    }
+
+    std::ostringstream html;
+    html << "<!doctype html><html lang='en'><head><meta charset='utf-8'><title>" << html_escape(core.panel.title) << "</title>";
+    html << "<style>"
+            "body{font-family:Segoe UI,Arial,sans-serif;margin:24px;background:#f3f6f8;color:#1f2933;}"
+            "h1{font-size:24px;margin:0 0 12px 0;}"
+            "p.meta{margin:0 0 20px 0;color:#52606d;}"
+            ".runtime-facts{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 18px 0;}"
+            ".runtime-facts div{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}"
+            ".runtime-facts dt{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}"
+            ".runtime-facts dd{margin:0;color:#1f2933;font-size:12px;font-weight:600;}"
+            ".front-panel{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}"
+            ".frog-widget{position:absolute;box-sizing:border-box;}"
+            ".path-widget{font-family:Segoe UI,Arial,sans-serif;}"
+            ".path-skin{position:absolute;inset:0;width:100%;height:100%;display:block;}"
+            ".path-skin svg{width:100%;height:100%;display:block;}"
+            ".path-skin #label_text,.path-skin #caption_text,.path-skin #path_display{display:none;}"
+            ".path-caption-overlay{position:absolute;transform:translateY(-50%);font-size:14px;font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;}"
+            ".path-value-overlay{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1;border:0;background:transparent;margin:0;}"
+            ".path-control-editor{outline:0;appearance:none;-webkit-appearance:none;}"
+            ".path-control-editor:focus{outline:0;}"
+            ".path-indicator-value{display:flex;align-items:center;pointer-events:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}"
+            ".path-file-picker{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}"
+            ".path-browse-overlay{position:absolute;box-sizing:border-box;cursor:pointer;background:transparent;border:0;}"
+            ".path-control:hover .path-skin #path_face{fill:var(--frog-path-face-fill-hover) !important;stroke:var(--frog-path-face-stroke-hover) !important;}"
+            ".path-control:hover .path-skin #browse_button{fill:var(--frog-path-button-fill-hover) !important;}"
+            ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
+            "button{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}"
+            ".diagnostic{margin:12px 0;padding:10px 12px;border-radius:6px;}"
+            ".diagnostic.error{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}"
+            "</style><script>"
+            "function frogPathPicked(input,targetId){const target=document.getElementById(targetId);if(!target){return;}if(input.files&&input.files.length>0){target.value=input.files[0].name;target.dispatchEvent(new Event('input',{bubbles:true}));target.dispatchEvent(new Event('change',{bubbles:true}));}}"
+            "</script></head><body>";
+    html << "<h1>" << html_escape(core.panel.title) << "</h1>";
+    html << "<p class='meta'>Example 09 - .frog front panel + Default Path .wfrog realization assets + C++ runtime</p>";
+    html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
+    html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
+    html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : "path contract executor") << "</dd></div>";
+    html << "<div><dt>Compiler backend</dt><dd>" << (uses_native_kernel ? "LLVM native path kernel artifact" : "none for Example 09") << "</dd></div>";
+    html << "</dl>";
+    html << diagnostics;
+    html << "<form method='post' action='/run'>";
+    html << "<div class='front-panel' data-panel-id='" << html_escape(core.panel.panel_id)
+         << "' data-coordinate-space='panel_pixels' data-runtime-language='cpp'";
+    html << " data-compiler-backend='" << (uses_native_kernel ? "llvm" : "none") << "'";
+    html << " data-execution-path='" << (uses_native_kernel ? "native_kernel_bridge" : "cpp_path_contract_executor") << "'";
+    html << " style='width:" << css_px(panel_width) << ";height:" << css_px(panel_height) << ";'>";
+    for (const auto& widget_ref : core.panel.widgets) {
+        const auto widget_it = core.widgets.find(widget_ref.instance_id);
+        if (widget_it != core.widgets.end()) {
+            html << render_path_widget(widget_it->second);
+        }
+    }
+    html << "</div><div class='actions'><button type='submit'>Run Example 09</button><a class='state-link' href='/state.json'>state.json</a></div></form></body></html>";
+    return html.str();
+}
+
+void PathBrowserUiRuntime::serve(const std::string& host, std::uint16_t port, bool should_open_browser) {
+    NetworkBootstrap network_bootstrap;
+    (void)network_bootstrap;
+
+    socket_t server = ::socket(AF_INET, SOCK_STREAM, 0);
+    if (server == invalid_socket) {
+        throw std::runtime_error("Unable to create server socket.");
+    }
+
+#ifndef _WIN32
+    int opt = 1;
+    setsockopt(server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+#endif
+
+    sockaddr_in address{};
+    address.sin_family = AF_INET;
+    address.sin_port = htons(port);
+    if (inet_pton(AF_INET, host.c_str(), &address.sin_addr) != 1) {
+        close_socket(server);
+        throw std::runtime_error("Only numeric IPv4 host values are supported by this minimal runtime.");
+    }
+
+    if (bind(server, reinterpret_cast<sockaddr*>(&address), sizeof(address)) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to bind server socket.");
+    }
+    if (listen(server, 16) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to listen on server socket.");
+    }
+
+    sockaddr_in bound_address{};
+#ifdef _WIN32
+    int bound_length = sizeof(bound_address);
+#else
+    socklen_t bound_length = sizeof(bound_address);
+#endif
+    if (getsockname(server, reinterpret_cast<sockaddr*>(&bound_address), &bound_length) != 0) {
+        close_socket(server);
+        throw std::runtime_error("Unable to inspect bound server socket.");
+    }
+
+    const std::string url = "http://" + host + ":" + std::to_string(ntohs(bound_address.sin_port)) + "/";
+    std::cout << url << std::endl;
+    if (should_open_browser) {
+        open_in_browser(url);
+    }
+
+    while (true) {
+        socket_t client = accept(server, nullptr, nullptr);
+        if (client == invalid_socket) {
+            continue;
+        }
+        try {
+            const auto raw = receive_request(client);
+            const auto request = parse_request(raw);
+            if (request.method == "GET" && request.path == "/") {
+                send_response(client, "200 OK", "text/html; charset=utf-8", render_html());
+            } else if (request.method == "GET" && request.path == "/state.json") {
+                send_response(client, "200 OK", "application/json; charset=utf-8", frog::json::stringify(core.execution_artifact(), true, 2));
+            } else if (request.method == "GET" && request.path.rfind("/asset/", 0) == 0) {
+                const std::string asset_id = request.path.substr(std::string("/asset/").size());
+                const auto asset_it = core.asset_map.find(asset_id);
+                if (asset_it == core.asset_map.end() || !std::filesystem::exists(asset_it->second)) {
+                    send_response(client, "404 Not Found", "text/plain; charset=utf-8", "missing asset");
+                } else {
+                    send_response(client, "200 OK", "image/svg+xml", read_text_file(asset_it->second));
+                }
+            } else if (request.method == "POST" && request.path == "/run") {
+                try {
+                    std::map<std::string, std::string> form_values;
+                    for (const auto& widget_ref : core.panel.widgets) {
+                        const auto widget_it = core.widgets.find(widget_ref.instance_id);
+                        if (widget_it == core.widgets.end() || widget_it->second.role != "control") {
+                            continue;
+                        }
+                        const auto public_input_id = property_string(
+                            widget_it->second.properties,
+                            "binding.public_input_id",
+                            property_string(widget_it->second.properties, "binding.preview_input_id"));
+                        if (public_input_id.empty()) {
+                            continue;
+                        }
+                        const auto form_value = parse_form_value(request.body, public_input_id);
+                        if (form_value.has_value()) {
+                            form_values[public_input_id] = *form_value;
+                        }
+                    }
+                    if (native_kernel_bridge == nullptr) {
+                        core.execute_all(form_values);
+                    } else {
+                        core.execute_all_with_native_kernel_bridge(*native_kernel_bridge, form_values);
+                    }
                 } catch (const std::exception& error) {
                     last_error = error.what();
                 }

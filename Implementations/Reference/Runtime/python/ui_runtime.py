@@ -1592,15 +1592,11 @@ document.addEventListener('click', function(event) {{
     {ctrl_html}
     {ind_html}
   </div>
-    <div class="actions">
+  <div class="actions">
       <button type="submit">Run Example 05</button>
       <a href="/state.json">state.json</a>
     </div>
   </form>
-  <details>
-    <summary>Current runtime snapshot</summary>
-    <pre>{html.escape(json.dumps(snapshot, indent=2))}</pre>
-  </details>
 </body>
 </html>
 """

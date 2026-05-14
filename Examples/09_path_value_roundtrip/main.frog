@@ -1,0 +1,347 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "09_path_value_roundtrip",
+    "summary": "Path control-to-indicator value roundtrip using a .frog front-panel instance and Default Path .wfrog realization assets.",
+    "description": "Reads one path value from a .frog-owned Path control, exposes that value through the public input surface, copies it to one public output, and publishes it to one Path indicator. The first reference closure is C++ and consumes the .frog front-panel instance, Default Path .wfrog realization assets, and an LLVM-produced native path kernel through an explicit manifest.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "widget_value",
+      "path",
+      "roundtrip",
+      "wfrog",
+      "widget_realization_package"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "input_path",
+        "type": "path",
+        "binding_origin": "widget.path_input.value"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "result_path",
+        "type": "path"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "path_input_value",
+        "kind": "widget_value",
+        "widget": "path_input"
+      },
+      {
+        "id": "path_result_value",
+        "kind": "widget_value",
+        "widget": "path_result"
+      },
+      {
+        "id": "output_result_path",
+        "kind": "interface_output",
+        "interface_port": "result_path"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "path_input_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "path_result_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "path_input_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_result_path",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 700,
+      "height": 300,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/path_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "path_input",
+        "role": "control",
+        "class_ref": "frog.widgets.path_control",
+        "instance_ref": "path_input",
+        "value_type": "path",
+        "layout": {
+          "x": 20,
+          "y": 20,
+          "width": 300,
+          "height": 120
+        },
+        "props": {
+          "value": "C:/FROG/hello_world.txt",
+          "path.kind": "file",
+          "path.display_value": "C:/FROG/hello_world.txt",
+          "path.validation_state": "unknown",
+          "label.text": "Path",
+          "caption.text": "Path input",
+          "caption.visible": true,
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 54,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "display.icon_visible": true,
+          "display.validation_marker_visible": false,
+          "display.text_overflow_visible": false,
+          "browse.enabled": true,
+          "browse.button_visible": true,
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.path_face.fill_color": "#ffffff",
+          "style.path_face.fill_color.hover": "#eef6ff",
+          "style.path_face.border_color": "#64748b",
+          "style.path_face.border_color.hover": "#64748b",
+          "style.path_face.border_width": "2px",
+          "style.path_display.color": "#111827",
+          "style.path_display.font_size": "16px",
+          "style.path_display.font_weight": "400",
+          "style.path_display.padding_inline": "4px",
+          "style.path_display.baseline_offset": "-5px",
+          "style.path_icon.fill_color": "#facc15",
+          "style.path_icon.front_fill_color": "#fde68a",
+          "style.path_icon.stroke_color": "#b45309",
+          "style.path_icon.highlight_color": "#fff7cc",
+          "style.browse_button.fill_color": "#f8fafc",
+          "style.browse_button.fill_color.hover": "#e5eef9",
+          "style.browse_button.border_color": "#64748b",
+          "style.browse_button.border_color.hover": "#64748b",
+          "style.browse_button.border_width": "1px",
+          "style.browse_button.text_color": "#111827",
+          "style.browse_button.text_font_size": "22px",
+          "binding.output_id": "result_path",
+          "interaction.enabled": true,
+          "interaction.read_only": false,
+          "realization.variant": "rectangular_field"
+        },
+        "visual": {
+          "asset_ref": "asset:path_rectangular_field_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "input_path"
+        }
+      },
+      {
+        "id": "path_result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.path_indicator",
+        "instance_ref": "path_result",
+        "value_type": "path",
+        "layout": {
+          "x": 360,
+          "y": 20,
+          "width": 300,
+          "height": 120
+        },
+        "props": {
+          "value": "",
+          "path.kind": "file",
+          "path.display_value": "",
+          "path.validation_state": "unknown",
+          "label.text": "Path result",
+          "caption.text": "Path result",
+          "caption.visible": true,
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 54,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "display.icon_visible": true,
+          "display.validation_marker_visible": false,
+          "display.text_overflow_visible": false,
+          "browse.enabled": false,
+          "browse.button_visible": false,
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.path_face.fill_color": "#f8fafc",
+          "style.path_face.border_color": "#64748b",
+          "style.path_face.border_width": "2px",
+          "style.path_display.color": "#111827",
+          "style.path_display.font_size": "16px",
+          "style.path_display.font_weight": "400",
+          "style.path_display.padding_inline": "4px",
+          "style.path_display.baseline_offset": "-5px",
+          "style.path_icon.fill_color": "#facc15",
+          "style.path_icon.front_fill_color": "#fde68a",
+          "style.path_icon.stroke_color": "#b45309",
+          "style.path_icon.highlight_color": "#fff7cc",
+          "style.browse_button.fill_color": "transparent",
+          "style.browse_button.border_color": "transparent",
+          "style.browse_button.border_width": "0px",
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular_field"
+        },
+        "visual": {
+          "asset_ref": "asset:path_rectangular_field_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "result_path"
+        }
+      },
+      {
+        "id": "path_input_no_icon",
+        "role": "control",
+        "class_ref": "frog.widgets.path_control",
+        "instance_ref": "path_input_no_icon",
+        "value_type": "path",
+        "layout": {
+          "x": 20,
+          "y": 150,
+          "width": 300,
+          "height": 120
+        },
+        "props": {
+          "value": "C:/FROG/hello_world.txt",
+          "path.kind": "file",
+          "path.display_value": "C:/FROG/hello_world.txt",
+          "path.validation_state": "unknown",
+          "label.text": "Path",
+          "caption.text": "Path input no icon",
+          "caption.visible": true,
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 54,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "display.icon_visible": false,
+          "display.validation_marker_visible": false,
+          "display.text_overflow_visible": false,
+          "browse.enabled": true,
+          "browse.button_visible": true,
+          "binding.preview_input_id": "input_path_no_icon",
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.path_face.fill_color": "#ffffff",
+          "style.path_face.fill_color.hover": "#eef6ff",
+          "style.path_face.border_color": "#64748b",
+          "style.path_face.border_color.hover": "#64748b",
+          "style.path_face.border_width": "2px",
+          "style.path_display.color": "#111827",
+          "style.path_display.font_size": "16px",
+          "style.path_display.font_weight": "400",
+          "style.path_display.padding_inline": "4px",
+          "style.path_display.baseline_offset": "-5px",
+          "style.path_icon.fill_color": "#facc15",
+          "style.path_icon.front_fill_color": "#fde68a",
+          "style.path_icon.stroke_color": "#b45309",
+          "style.path_icon.highlight_color": "#fff7cc",
+          "style.browse_button.fill_color": "#f8fafc",
+          "style.browse_button.fill_color.hover": "#e5eef9",
+          "style.browse_button.border_color": "#64748b",
+          "style.browse_button.border_color.hover": "#64748b",
+          "style.browse_button.border_width": "1px",
+          "style.browse_button.text_color": "#111827",
+          "style.browse_button.text_font_size": "22px",
+          "binding.output_id": "result_path_no_icon",
+          "interaction.enabled": true,
+          "interaction.read_only": false,
+          "realization.variant": "rectangular_field"
+        },
+        "visual": {
+          "asset_ref": "asset:path_rectangular_field_svg"
+        },
+        "binding": {
+          "mode": "visual_preview",
+          "preview_input_id": "input_path_no_icon"
+        }
+      },
+      {
+        "id": "path_result_no_icon",
+        "role": "indicator",
+        "class_ref": "frog.widgets.path_indicator",
+        "instance_ref": "path_result_no_icon",
+        "value_type": "path",
+        "layout": {
+          "x": 360,
+          "y": 150,
+          "width": 300,
+          "height": 120
+        },
+        "props": {
+          "value": "",
+          "path.kind": "file",
+          "path.display_value": "",
+          "path.validation_state": "unknown",
+          "label.text": "Path result",
+          "caption.text": "Path result no icon",
+          "caption.visible": true,
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 54,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "display.icon_visible": false,
+          "display.validation_marker_visible": false,
+          "display.text_overflow_visible": false,
+          "browse.enabled": false,
+          "browse.button_visible": false,
+          "binding.preview_output_id": "result_path_no_icon",
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.path_face.fill_color": "#f8fafc",
+          "style.path_face.border_color": "#64748b",
+          "style.path_face.border_width": "2px",
+          "style.path_display.color": "#111827",
+          "style.path_display.font_size": "16px",
+          "style.path_display.font_weight": "400",
+          "style.path_display.padding_inline": "4px",
+          "style.path_display.baseline_offset": "-5px",
+          "style.path_icon.fill_color": "#facc15",
+          "style.path_icon.front_fill_color": "#fde68a",
+          "style.path_icon.stroke_color": "#b45309",
+          "style.path_icon.highlight_color": "#fff7cc",
+          "style.browse_button.fill_color": "transparent",
+          "style.browse_button.border_color": "transparent",
+          "style.browse_button.border_width": "0px",
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular_field"
+        },
+        "visual": {
+          "asset_ref": "asset:path_rectangular_field_svg"
+        },
+        "binding": {
+          "mode": "visual_preview",
+          "preview_output_id": "result_path_no_icon"
+        }
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Path Value Roundtrip",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "reference_host_default"
+  }
+}

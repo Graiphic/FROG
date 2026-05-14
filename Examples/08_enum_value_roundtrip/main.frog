@@ -174,7 +174,7 @@
           "style.dropdown.option.text_color": "#111827",
           "style.dropdown.option.hover_fill_color": "#2563eb",
           "style.dropdown.option.hover_text_color": "#ffffff",
-          "style.dropdown.option.selected_fill_color": "#2563eb",
+          "style.dropdown.option.selected_fill_color": "#1d4ed8",
           "style.dropdown.option.selected_text_color": "#ffffff",
           "style.dropdown.option.font_family": "Segoe UI,Arial,sans-serif",
           "style.dropdown.option.font_size": "16px",

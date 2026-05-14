@@ -1,0 +1,78 @@
+{
+  "artifact_kind": "frog_native_kernel_manifest",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "kernel": {
+    "id": "example09_path_roundtrip_kernel",
+    "source_lowered_unit": "Examples/09_path_value_roundtrip/main.lowering.json",
+    "backend": {
+      "family": "llvm",
+      "artifact_kind": "native_object_or_library",
+      "source_artifact": "Implementations/Reference/LLVM/examples/09_path_value_roundtrip/kernel.ll"
+    },
+    "entry": {
+      "symbol": "frog_example09_run",
+      "abi": "frog_string_utf8_256_to_result_status_outptr"
+    },
+    "io": {
+      "inputs": [
+        {
+          "id": "input_path",
+          "type": "path",
+          "encoding": "utf8",
+          "max_bytes": 256
+        }
+      ],
+      "outputs": [
+        {
+          "id": "result_path",
+          "type": "path",
+          "encoding": "utf8",
+          "max_bytes": 256
+        }
+      ]
+    },
+    "result_status_layout": {
+      "carrier": "out_parameter",
+      "c_signature": "void frog_example09_run(const uint8_t* input_ptr, uint32_t input_len, FrogStringRunResult* out_result)",
+      "fields": [
+        {
+          "id": "ok",
+          "type": "u8"
+        },
+        {
+          "id": "error_code",
+          "type": "u16"
+        },
+        {
+          "id": "result_len",
+          "type": "u32"
+        },
+        {
+          "id": "result_buffer",
+          "type": "u8[256]",
+          "logical_type": "utf8_path"
+        }
+      ]
+    },
+    "error_model": {
+      "overflow": "reject_execution_on_string_buffer_overflow",
+      "error_codes": [
+        {
+          "code": 0,
+          "meaning": "no_error"
+        },
+        {
+          "code": 1,
+          "meaning": "string_buffer_overflow",
+          "diagnostic": "result_path must remain within 256 UTF-8 bytes."
+        }
+      ]
+    }
+  },
+  "runtime_boundary": {
+    "reference": "Implementations/Reference/Runtime/KernelBridge.md",
+    "runtime_dependency_posture": "runtime_consumes_manifest_declared_kernel_not_llvm"
+  }
+}

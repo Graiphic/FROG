@@ -91,6 +91,7 @@
         "path_face",
         "path_display",
         "browse_button",
+        "browse_button_text",
         "path_icon",
         "validation_marker",
         "text_overflow_marker",
@@ -237,10 +238,18 @@
       "method_member": "browse()"
     },
     {
+      "part": "browse_button_text",
+      "binding_kind": "svg_text",
+      "binding_selector": "[data-frog-part='browse_button_text']",
+      "semantic_member": "display.browse_label",
+      "style_binding_group": "style.browse_button.text"
+    },
+    {
       "part": "path_icon",
       "binding_kind": "svg_group_or_host_icon",
       "binding_selector": "[data-frog-part='path_icon']",
-      "semantic_member": "path.kind"
+      "semantic_member": "path.kind",
+      "style_binding_group": "style.path_icon"
     },
     {
       "part": "validation_marker",
@@ -365,6 +374,11 @@
       "target_operation": "set_visibility"
     },
     {
+      "member": "display.browse_label",
+      "target_part": "browse_button_text",
+      "target_operation": "set_text_content"
+    },
+    {
       "member": "display.icon_visible",
       "target_part": "path_icon",
       "target_operation": "set_visibility"
@@ -395,9 +409,19 @@
       "target_operation": "apply_text_style"
     },
     {
+      "member": "style.path_icon.*",
+      "target_part": "path_icon",
+      "target_operation": "apply_icon_style"
+    },
+    {
       "member": "style.browse_button.*",
       "target_part": "browse_button",
       "target_operation": "apply_browse_button_style"
+    },
+    {
+      "member": "style.browse_button.text.*",
+      "target_part": "browse_button_text",
+      "target_operation": "apply_text_style"
     },
     {
       "member": "style.focus_ring.*",

@@ -59,6 +59,10 @@ void assert_contains(const std::string& haystack, const std::string& needle) {
     assert(haystack.find(needle) != std::string::npos);
 }
 
+void assert_not_contains(const std::string& haystack, const std::string& needle) {
+    assert(haystack.find(needle) == std::string::npos);
+}
+
 std::int64_t object_i64(const frog::json::Object& object, const std::string& key) {
     const auto it = object.find(key);
     assert(it != object.end());
@@ -245,6 +249,8 @@ void test_ui_surface() {
     assert_contains(html, "font-size:12px;line-height:1;");
     assert_contains(html, "font-weight:400;");
     assert_contains(html, "color:#111827;");
+    assert_not_contains(html, "Current runtime snapshot");
+    assert_not_contains(html, "<pre>");
     assert_contains(html, "Input");
     assert_contains(html, "Accumulated result");
 

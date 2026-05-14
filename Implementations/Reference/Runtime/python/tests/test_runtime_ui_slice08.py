@@ -38,6 +38,7 @@ def test_python_example08_browser_ui_consumes_frog_instance_and_wfrog_realizatio
     assert "class='enum-dropdown'" in html
     assert "--frog-enum-selector-hover-fill:#60a5fa;" in html
     assert "--frog-enum-dropdown-option-hover-fill:#2563eb;" in html
+    assert "--frog-enum-dropdown-option-selected-fill:#1d4ed8;" in html
     assert "enum-card" not in html
     assert "Current runtime snapshot" not in html
     assert "<pre>" not in html

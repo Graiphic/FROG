@@ -138,4 +138,35 @@ private:
     std::map<std::string, WidgetState> build_widgets() const;
 };
 
+class Slice09PathRuntimeCore {
+public:
+    Slice09PathRuntimeCore(std::filesystem::path contract_path, std::filesystem::path wfrog_path);
+
+    void set_control_value(const std::string& value);
+    std::string control_value() const;
+    frog::json::Value execute(std::optional<std::string> control_value = std::nullopt);
+    frog::json::Value execute_all(const std::map<std::string, std::string>& control_values);
+    frog::json::Value execute_with_native_kernel_bridge(
+        const NativeStringKernelBridge& bridge,
+        std::optional<std::string> control_value = std::nullopt);
+    frog::json::Value execute_all_with_native_kernel_bridge(
+        const NativeStringKernelBridge& bridge,
+        const std::map<std::string, std::string>& control_values);
+    frog::json::Value execution_artifact() const;
+
+    std::filesystem::path contract_path;
+    std::filesystem::path wfrog_path;
+    BackendContract contract;
+    WfrogPackage package;
+    FrontPanel panel;
+    ContractUnit unit;
+    std::map<std::string, WidgetState> widgets;
+    std::map<std::string, std::filesystem::path> asset_map;
+    std::string last_result;
+
+private:
+    ContractUnit load_and_validate() const;
+    std::map<std::string, WidgetState> build_widgets() const;
+};
+
 } // namespace frog::runtime

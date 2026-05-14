@@ -1,0 +1,78 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "09_path_value_roundtrip",
+    "path": "Examples/09_path_value_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/09_path_value_roundtrip/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "purpose": "make the path value roundtrip consumable by a bounded runtime/UI-binding check",
+    "backend_family_target": "reference_host_runtime_ui_binding",
+    "compiler_family_targets": [
+      "llvm_native_kernel_bridge"
+    ]
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "path_value_roundtrip_kernel_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "input_path",
+            "type": "path"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result_path",
+            "type": "path"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "path_input",
+            "mode": "widget_value",
+            "public_input_id": "input_path",
+            "value_type": "path"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "path_result",
+            "mode": "widget_value",
+            "public_output_id": "result_path",
+            "value_type": "path"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "copy",
+        "dst": "result_path",
+        "type": "path",
+        "src": "input_path",
+        "encoding": "utf8",
+        "max_utf8_bytes": 256,
+        "final_publication": [
+          {
+            "target": "public_output.result_path",
+            "source": "input_path"
+          },
+          {
+            "target": "widget.path_result.value",
+            "source": "input_path"
+          }
+        ]
+      }
+    }
+  ]
+}

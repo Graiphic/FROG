@@ -1231,4 +1231,386 @@ Value Slice08EnumRuntimeCore::execution_artifact() const {
     });
 }
 
+Slice09PathRuntimeCore::Slice09PathRuntimeCore(std::filesystem::path contract_path_, std::filesystem::path wfrog_path_)
+    : contract_path(std::move(contract_path_)),
+      wfrog_path(std::move(wfrog_path_)),
+      contract(load_contract_from_path(contract_path)),
+      package(load_wfrog_from_path(wfrog_path)),
+      panel(load_front_panel_from_frog_source_path(resolve_repo_path(contract_path, contract.source_ref.path))),
+      unit(load_and_validate()) {
+    for (const auto& asset : package.svg_assets) {
+        asset_map.emplace(asset.asset_id, std::filesystem::absolute(wfrog_path.parent_path() / asset.path));
+    }
+    widgets = build_widgets();
+    execute_all({});
+}
+
+ContractUnit Slice09PathRuntimeCore::load_and_validate() const {
+    require(contract.backend_family == REFERENCE_BACKEND_FAMILY, "Unexpected backend family.");
+    require(contract.source_ref.example_id == "09_path_value_roundtrip", "Slice 09 expects Example 09.");
+    require(contract.assumptions.runtime_family.name == REFERENCE_BACKEND_FAMILY, "Unexpected runtime-family assumption name.");
+    require(contract.assumptions.runtime_family.ui_binding.widget_value_binding, "Contract must require widget_value_binding.");
+    require(contract.units.size() == 1, "Expected exactly one contract unit.");
+
+    const ContractUnit& current_unit = contract.units.front();
+    require(current_unit.unit_id == "main", "Expected unit_id main.");
+    require(current_unit.kind == "path_value_roundtrip_ui_unit", "Unexpected runtime unit kind.");
+    require(current_unit.public_interface.inputs.size() == 1, "Expected one public input.");
+    require(current_unit.public_interface.outputs.size() == 1, "Expected one public output.");
+    require(current_unit.public_interface.inputs.front().id == "input_path", "Expected public input input_path.");
+    require(current_unit.public_interface.inputs.front().port_type == "path", "Expected path public input.");
+    require(current_unit.public_interface.outputs.front().id == "result_path", "Expected public output result_path.");
+    require(current_unit.public_interface.outputs.front().port_type == "path", "Expected path public output.");
+    require(current_unit.execution_model.structure == "single_step", "Slice 09 expects a single-step copy execution model.");
+    require(current_unit.execution_model.body_rule.kind == "copy", "Slice 09 expects a copy body rule.");
+    require(current_unit.property_writes.empty(), "Slice 09 does not use property writes.");
+
+    require(panel.host_binding_ref == "reference_host_default", "Expected host_binding_ref reference_host_default.");
+    const auto host_it = std::find_if(
+        package.host_bindings.begin(),
+        package.host_bindings.end(),
+        [&](const HostBinding& binding) { return binding.binding_id == "reference_host_default"; });
+    require(host_it != package.host_bindings.end(), "Missing reference_host_default host binding.");
+    const std::set<std::string> required(host_it->required_capabilities.begin(), host_it->required_capabilities.end());
+    require(required.count("window") == 1, "Missing host capability window.");
+    require(required.count("basic_widget_rendering") == 1, "Missing host capability basic_widget_rendering.");
+    require(required.count("widget_value_binding") == 1, "Missing host capability widget_value_binding.");
+
+    std::map<std::string, const PanelWidget*> panel_widgets;
+    for (const auto& widget : panel.widgets) {
+        panel_widgets.emplace(widget.instance_id, &widget);
+    }
+    require(panel_widgets.count("path_input") == 1, "Missing panel widget path_input.");
+    require(panel_widgets.count("path_result") == 1, "Missing panel widget path_result.");
+
+    for (const auto& binding : current_unit.ui_binding.widgets) {
+        const auto widget_it = panel_widgets.find(binding.widget_id);
+        require(widget_it != panel_widgets.end(), "Missing panel widget " + binding.widget_id + ".");
+        require(widget_it->second->class_ref == binding.widget_class, "Class mismatch for widget " + binding.widget_id + ".");
+        require(binding.value_type == "path", "Slice 09 supports only path widget values.");
+        require(
+            binding.widget_class == "frog.widgets.path_control" || binding.widget_class == "frog.widgets.path_indicator",
+            "Unsupported widget class " + binding.widget_class + ".");
+    }
+
+    return current_unit;
+}
+
+std::map<std::string, WidgetState> Slice09PathRuntimeCore::build_widgets() const {
+    std::map<std::string, const WidgetBinding*> bindings_by_widget;
+    for (const auto& binding : unit.ui_binding.widgets) {
+        bindings_by_widget.emplace(binding.widget_id, &binding);
+    }
+    std::map<std::string, WidgetState> result;
+    for (const auto& panel_widget : panel.widgets) {
+        if (
+            panel_widget.class_ref != "frog.widgets.path_control" &&
+            panel_widget.class_ref != "frog.widgets.path_indicator") {
+            continue;
+        }
+        const auto binding_it = bindings_by_widget.find(panel_widget.instance_id);
+        const WidgetBinding* binding = binding_it == bindings_by_widget.end() ? nullptr : binding_it->second;
+        const std::string role = binding != nullptr
+            ? binding->role
+            : (panel_widget.class_ref == "frog.widgets.path_control" ? "control" : "indicator");
+
+        std::optional<std::string> asset_id;
+        std::filesystem::path asset_path;
+        if (const auto visual_it = panel_widget.visual.find("asset_ref"); visual_it != panel_widget.visual.end() && visual_it->second.is_string()) {
+            const std::string& asset_ref = visual_it->second.as_string();
+            if (asset_ref.rfind("asset:", 0) == 0) {
+                asset_id = asset_ref.substr(6);
+                const auto asset_it = asset_map.find(*asset_id);
+                if (asset_it != asset_map.end()) {
+                    asset_path = asset_it->second;
+                }
+            }
+        }
+        require(asset_id.has_value(), "Path widget " + panel_widget.instance_id + " must reference a .wfrog SVG asset.");
+        require(!asset_path.empty() && std::filesystem::exists(asset_path), "Path widget " + panel_widget.instance_id + " asset path must exist.");
+
+        auto properties = panel_widget.props;
+        properties.emplace("value", properties.count("value") ? properties.at("value") : Value(""));
+        properties.emplace("path.display_value", properties.count("path.display_value") ? properties.at("path.display_value") : properties.at("value"));
+        properties.emplace("path.kind", properties.count("path.kind") ? properties.at("path.kind") : Value("file"));
+        properties.emplace("path.validation_state", properties.count("path.validation_state") ? properties.at("path.validation_state") : Value("unknown"));
+        properties.emplace("caption.text", properties.count("caption.text") ? properties.at("caption.text") : Value(panel_widget.instance_id));
+        properties.emplace("display.icon_visible", properties.count("display.icon_visible") ? properties.at("display.icon_visible") : Value(true));
+        properties.emplace("display.validation_marker_visible", properties.count("display.validation_marker_visible") ? properties.at("display.validation_marker_visible") : Value(false));
+        properties.emplace("display.text_overflow_visible", properties.count("display.text_overflow_visible") ? properties.at("display.text_overflow_visible") : Value(false));
+        properties.emplace("browse.enabled", properties.count("browse.enabled") ? properties.at("browse.enabled") : Value(role == "control"));
+        properties.emplace("browse.button_visible", properties.count("browse.button_visible") ? properties.at("browse.button_visible") : Value(role == "control"));
+        properties.emplace("interaction.enabled", properties.count("interaction.enabled") ? properties.at("interaction.enabled") : Value(role == "control"));
+        properties.emplace("interaction.read_only", properties.count("interaction.read_only") ? properties.at("interaction.read_only") : Value(role != "control"));
+        properties.emplace("realization.variant", properties.count("realization.variant") ? properties.at("realization.variant") : Value("rectangular_field"));
+        if (binding != nullptr && binding->binding.public_input_id.has_value()) {
+            properties["binding.public_input_id"] = Value(*binding->binding.public_input_id);
+        }
+        if (binding != nullptr && binding->binding.public_output_id.has_value()) {
+            properties["binding.public_output_id"] = Value(*binding->binding.public_output_id);
+        }
+
+        result.emplace(
+            panel_widget.instance_id,
+            WidgetState{
+                panel_widget.instance_id,
+                panel_widget.class_ref,
+                role,
+                panel_widget.layout,
+                std::move(properties),
+                asset_id,
+                asset_path,
+                {},
+            });
+    }
+    return result;
+}
+
+namespace {
+
+std::string path_input_binding_id(const WidgetState& widget) {
+    const auto public_input_id = json_string(widget.properties, "binding.public_input_id");
+    return public_input_id.empty() ? json_string(widget.properties, "binding.preview_input_id") : public_input_id;
+}
+
+std::string path_output_binding_id(const WidgetState& widget) {
+    const auto public_output_id = json_string(widget.properties, "binding.public_output_id");
+    return public_output_id.empty() ? json_string(widget.properties, "binding.preview_output_id") : public_output_id;
+}
+
+void set_path_input_value(
+    std::map<std::string, WidgetState>& widgets,
+    const std::string& input_id,
+    const std::string& value) {
+    require(value.size() <= 256, input_id + " must remain within 256 UTF-8 bytes.");
+    for (auto& entry : widgets) {
+        auto& widget = entry.second;
+        if (path_input_binding_id(widget) == input_id) {
+            widget.properties["value"] = Value(value);
+            widget.properties["path.display_value"] = Value(value);
+        }
+    }
+}
+
+std::string path_input_value(
+    const std::map<std::string, WidgetState>& widgets,
+    const std::string& input_id) {
+    for (const auto& entry : widgets) {
+        const auto& widget = entry.second;
+        if (path_input_binding_id(widget) == input_id) {
+            return json_string(widget.properties, "value", "");
+        }
+    }
+    return "";
+}
+
+void publish_path_result_to_widgets(std::map<std::string, WidgetState>& widgets, const std::string& output_id, const std::string& value) {
+    for (auto& entry : widgets) {
+        auto& widget = entry.second;
+        if (path_output_binding_id(widget) == output_id) {
+            widget.properties["value"] = Value(value);
+            widget.properties["path.display_value"] = Value(value);
+        }
+    }
+}
+
+std::vector<std::pair<std::string, std::string>> path_execution_pairs(
+    const std::map<std::string, WidgetState>& widgets,
+    const ContractUnit& unit) {
+    std::vector<std::pair<std::string, std::string>> pairs;
+    for (const auto& entry : widgets) {
+        const auto& widget = entry.second;
+        if (widget.role != "control") {
+            continue;
+        }
+        const auto input_id = path_input_binding_id(widget);
+        if (input_id.empty()) {
+            continue;
+        }
+        auto output_id = json_string(widget.properties, "binding.output_id");
+        if (output_id.empty() && !unit.public_interface.inputs.empty() && !unit.public_interface.outputs.empty() &&
+            input_id == unit.public_interface.inputs.front().id) {
+            output_id = unit.public_interface.outputs.front().id;
+        }
+        if (!output_id.empty()) {
+            pairs.emplace_back(input_id, output_id);
+        }
+    }
+    return pairs;
+}
+
+} // namespace
+
+void Slice09PathRuntimeCore::set_control_value(const std::string& value) {
+    set_path_input_value(widgets, "input_path", value);
+}
+
+std::string Slice09PathRuntimeCore::control_value() const {
+    return path_input_value(widgets, "input_path");
+}
+
+Value Slice09PathRuntimeCore::execute(std::optional<std::string> control_value_override) {
+    std::map<std::string, std::string> overrides;
+    if (control_value_override.has_value()) {
+        overrides.emplace("input_path", *control_value_override);
+    }
+    return execute_all(overrides);
+}
+
+Value Slice09PathRuntimeCore::execute_all(const std::map<std::string, std::string>& control_values) {
+    for (const auto& entry : control_values) {
+        set_path_input_value(widgets, entry.first, entry.second);
+    }
+    for (const auto& pair : path_execution_pairs(widgets, unit)) {
+        const auto result = path_input_value(widgets, pair.first);
+        publish_path_result_to_widgets(widgets, pair.second, result);
+        if (!unit.public_interface.outputs.empty() && pair.second == unit.public_interface.outputs.front().id) {
+            last_result = result;
+        }
+    }
+    return execution_artifact();
+}
+
+Value Slice09PathRuntimeCore::execute_with_native_kernel_bridge(
+    const NativeStringKernelBridge& bridge,
+    std::optional<std::string> control_value_override) {
+    std::map<std::string, std::string> overrides;
+    if (control_value_override.has_value()) {
+        overrides.emplace("input_path", *control_value_override);
+    }
+    return execute_all_with_native_kernel_bridge(bridge, overrides);
+}
+
+Value Slice09PathRuntimeCore::execute_all_with_native_kernel_bridge(
+    const NativeStringKernelBridge& bridge,
+    const std::map<std::string, std::string>& control_values) {
+    require(bridge.manifest().source_lowered_unit == "Examples/09_path_value_roundtrip/main.lowering.json", "Unexpected native path kernel source lowered unit.");
+    for (const auto& entry : control_values) {
+        set_path_input_value(widgets, entry.first, entry.second);
+    }
+    for (const auto& pair : path_execution_pairs(widgets, unit)) {
+        const auto result = bridge.run(path_input_value(widgets, pair.first));
+        if (!result.ok) {
+            throw std::runtime_error(result.diagnostic.empty() ? "native path kernel execution failed." : result.diagnostic);
+        }
+        publish_path_result_to_widgets(widgets, pair.second, result.result);
+        if (!unit.public_interface.outputs.empty() && pair.second == unit.public_interface.outputs.front().id) {
+            last_result = result.result;
+        }
+    }
+    return execution_artifact();
+}
+
+Value Slice09PathRuntimeCore::execution_artifact() const {
+    Array widget_entries;
+    Object ui_outputs;
+    for (const auto& entry : widgets) {
+        const auto& widget = entry.second;
+        ui_outputs[widget.widget_id] = Value(json_string(widget.properties, "value"));
+        Object runtime_fields{
+            {"value", Value(json_string(widget.properties, "value"))},
+            {"path.display_value", Value(json_string(widget.properties, "path.display_value"))},
+            {"path.kind", Value(json_string(widget.properties, "path.kind"))},
+            {"path.validation_state", Value(json_string(widget.properties, "path.validation_state"))},
+            {"label.text", Value(json_string(widget.properties, "label.text"))},
+            {"caption.text", Value(json_string(widget.properties, "caption.text"))},
+            {"asset_ref", widget.asset_id.has_value() ? Value("asset:" + *widget.asset_id) : Value(nullptr)},
+            {"realization.variant", Value(json_string(widget.properties, "realization.variant", "rectangular_field"))},
+        };
+        const auto copy_property = [&](const std::string& key) {
+            const auto it = widget.properties.find(key);
+            if (it != widget.properties.end()) {
+                runtime_fields.emplace(key, it->second);
+            }
+        };
+        copy_property("caption.visible");
+        copy_property("caption.anchor.x");
+        copy_property("caption.anchor.y");
+        copy_property("caption.align.horizontal");
+        copy_property("caption.style.text_color");
+        copy_property("display.icon_visible");
+        copy_property("display.validation_marker_visible");
+        copy_property("display.text_overflow_visible");
+        copy_property("browse.enabled");
+        copy_property("browse.button_visible");
+        copy_property("style.frame.fill_color");
+        copy_property("style.frame.border_color");
+        copy_property("style.frame.border_width");
+        copy_property("style.path_face.fill_color");
+        copy_property("style.path_face.fill_color.hover");
+        copy_property("style.path_face.border_color");
+        copy_property("style.path_face.border_color.hover");
+        copy_property("style.path_face.border_width");
+        copy_property("style.path_display.color");
+        copy_property("style.path_display.font_size");
+        copy_property("style.path_display.font_weight");
+        copy_property("style.path_display.padding_inline");
+        copy_property("style.path_display.baseline_offset");
+        copy_property("style.path_display.line_height");
+        copy_property("style.path_icon.fill_color");
+        copy_property("style.path_icon.front_fill_color");
+        copy_property("style.path_icon.stroke_color");
+        copy_property("style.path_icon.highlight_color");
+        copy_property("style.browse_button.fill_color");
+        copy_property("style.browse_button.fill_color.hover");
+        copy_property("style.browse_button.border_color");
+        copy_property("style.browse_button.border_color.hover");
+        copy_property("style.browse_button.border_width");
+        copy_property("style.browse_button.text_color");
+        copy_property("style.browse_button.text_font_size");
+        copy_property("binding.public_input_id");
+        copy_property("binding.public_output_id");
+        copy_property("binding.preview_input_id");
+        copy_property("binding.preview_output_id");
+        copy_property("binding.input_id");
+        copy_property("binding.output_id");
+        copy_property("interaction.enabled");
+        copy_property("interaction.read_only");
+
+        widget_entries.push_back(make_object({
+            {"widget_id", Value(widget.widget_id)},
+            {"class_ref", Value(widget.class_ref)},
+            {"role", Value(widget.role)},
+            {"layout", widget.layout},
+            {"runtime", Value(runtime_fields)},
+        }));
+    }
+
+    return make_object({
+        {"artifact_kind", Value("frog_runtime_execution_result")},
+        {"artifact_governance_ref", make_object({{"path", Value("Versioning/Readme.md")}})},
+        {"status", Value("ok")},
+        {"contract_ref", make_object({
+            {"unit_ids", make_array({Value(unit.unit_id)})},
+            {"backend_family", Value(contract.backend_family)},
+            {"source_ref", make_object({
+                {"example_id", Value(contract.source_ref.example_id)},
+                {"path", Value(contract.source_ref.path)},
+                {"entry_unit", Value(contract.source_ref.entry_unit)},
+            })},
+        })},
+        {"execution_summary", make_object({
+            {"mode", Value("path_value_roundtrip")},
+            {"executed_unit", Value(unit.unit_id)},
+            {"operation", Value("copy")},
+            {"input_path", Value(control_value())},
+            {"result_path", Value(last_result)},
+        })},
+        {"outputs", make_object({
+            {"public", make_object({{"result_path", Value(last_result)}})},
+            {"ui", Value(ui_outputs)},
+        })},
+        {"ui_runtime", make_object({
+            {"panel", make_object({
+                {"panel_id", Value(panel.panel_id)},
+                {"title", Value(panel.title)},
+                {"class_ref", Value(panel.class_ref)},
+                {"layout", panel.layout},
+            })},
+            {"widgets", Value(widget_entries)},
+        })},
+        {"diagnostics", Value(Array{})},
+    });
+}
+
 } // namespace frog::runtime

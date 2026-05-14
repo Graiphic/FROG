@@ -76,6 +76,8 @@ fn slice05_ui_surface_matches_shared_acceptance() {
     assert!(html.contains("font-size:12px;line-height:1;"));
     assert!(html.contains("font-weight:400;"));
     assert!(html.contains("color:#111827;"));
+    assert!(!html.contains("Current runtime snapshot"));
+    assert!(!html.contains("<pre>"));
     for route in routes {
         let route = route.as_str().unwrap();
         if route == "/" {

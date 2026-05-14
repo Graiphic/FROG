@@ -32,6 +32,7 @@ fn slice08_ui_surface_consumes_frog_instance_and_wfrog_realization() {
     assert!(html.contains("class='enum-dropdown'"));
     assert!(html.contains("--frog-enum-selector-hover-fill:#60a5fa;"));
     assert!(html.contains("--frog-enum-dropdown-option-hover-fill:#2563eb;"));
+    assert!(html.contains("--frog-enum-dropdown-option-selected-fill:#1d4ed8;"));
     assert!(!html.contains("enum-card"));
     assert!(!html.contains("Current runtime snapshot"));
 

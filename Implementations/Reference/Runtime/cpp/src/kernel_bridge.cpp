@@ -88,9 +88,19 @@ NativeKernelManifest load_native_kernel_manifest(const std::filesystem::path& ma
         require(manifest.output_id == "result" && manifest.output_type == "bool", "Unexpected native bool kernel output surface.");
         require(manifest.overflow_model == "not_applicable", "Unexpected native bool kernel overflow model.");
     } else if (manifest.abi == "frog_string_utf8_256_to_result_status_outptr") {
-        require(manifest.entry_symbol == "frog_example07_run", "Unexpected native string kernel entry symbol.");
-        require(manifest.input_id == "input_text" && manifest.input_type == "string", "Unexpected native string kernel input surface.");
-        require(manifest.output_id == "result_text" && manifest.output_type == "string", "Unexpected native string kernel output surface.");
+        const bool is_example07_string =
+            manifest.entry_symbol == "frog_example07_run" &&
+            manifest.input_id == "input_text" &&
+            manifest.input_type == "string" &&
+            manifest.output_id == "result_text" &&
+            manifest.output_type == "string";
+        const bool is_example09_path =
+            manifest.entry_symbol == "frog_example09_run" &&
+            manifest.input_id == "input_path" &&
+            manifest.input_type == "path" &&
+            manifest.output_id == "result_path" &&
+            manifest.output_type == "path";
+        require(is_example07_string || is_example09_path, "Unexpected native UTF-8 copy kernel surface.");
         require(manifest.overflow_model == "reject_execution_on_string_buffer_overflow", "Unexpected native string kernel overflow model.");
     } else if (manifest.abi == "frog_enum_u16_to_result_status_outptr") {
         require(manifest.entry_symbol == "frog_example08_run", "Unexpected native enum kernel entry symbol.");
@@ -193,7 +203,7 @@ NativeStringKernelBridge::NativeStringKernelBridge(NativeKernelManifest manifest
 }
 
 NativeStringKernelResult NativeStringKernelBridge::run(const std::string& input_value) const {
-    require(input_value.size() <= 256, "input_text must remain within 256 UTF-8 bytes.");
+    require(input_value.size() <= 256, manifest_.input_id + " must remain within 256 UTF-8 bytes.");
 
     FrogStringRunResult raw{};
     entry_point_(

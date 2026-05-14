@@ -1,0 +1,7 @@
+<h1>Example 09 UI</h1>
+
+<p>
+The UI package for Example 09 references the Default Path realization and its canonical
+SVG asset. The <code>.frog</code> source owns the widget instances, layout, value,
+caption placement, and per-instance style values.
+</p>

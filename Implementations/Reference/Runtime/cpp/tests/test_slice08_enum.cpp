@@ -110,6 +110,7 @@ void test_enum_browser_ui_surface() {
     assert_contains(html, "--frog-enum-dropdown-fill:#ffffff");
     assert_contains(html, "--frog-enum-dropdown-border:#64748b");
     assert_contains(html, "--frog-enum-dropdown-option-hover-fill:#2563eb");
+    assert_contains(html, "--frog-enum-dropdown-option-selected-fill:#1d4ed8");
     assert_contains(html, "--frog-enum-dropdown-option-font-style:normal");
     assert_contains(html, "border-width:var(--frog-enum-selector-stroke-width)");
     assert_contains(html, "padding:0 var(--frog-enum-text-padding-inline)");

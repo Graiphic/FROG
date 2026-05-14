@@ -80,6 +80,8 @@ def test_slice05_ui_routes_and_state_match_shared_acceptance() -> None:
         assert "font-size: 12px;" in html
         assert "font-weight:400;" in html
         assert "color:#111827;" in html
+        assert "Current runtime snapshot" not in html
+        assert "<pre>" not in html
         for route in acceptance["ui"]["expected_routes"]:
             if route in {"/", "/run"}:
                 continue

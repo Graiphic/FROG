@@ -1,0 +1,74 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "09_path_value_roundtrip",
+    "path": "Examples/09_path_value_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/09_path_value_roundtrip/ui/path_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "path_value_roundtrip_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "input_path",
+            "type": "path"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result_path",
+            "type": "path"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "path_input",
+            "mode": "widget_value",
+            "public_input_id": "input_path",
+            "value_type": "path"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "path_result",
+            "mode": "widget_value",
+            "public_output_id": "result_path",
+            "value_type": "path"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "single_value_copy",
+        "body_rule": {
+          "kind": "copy_widget_value_to_output",
+          "expression": "result_path = input_path"
+        }
+      },
+      "publications": [
+        {
+          "target": "public_output.result_path",
+          "source": "input_path"
+        },
+        {
+          "target": "widget.path_result.value",
+          "source": "input_path"
+        }
+      ],
+      "notes": [
+        "This FIR is a bounded scalar Path widget pilot and remains downstream from canonical source.",
+        "The reference C++ closure consumes an LLVM-produced native path kernel through an explicit manifest without making the runtime LLVM-only."
+      ]
+    }
+  ]
+}

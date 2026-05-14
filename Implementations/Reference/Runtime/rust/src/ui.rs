@@ -136,7 +136,7 @@ impl BrowserUiRuntime {
              <div class='front-panel' data-panel-id='{panel_id}' data-coordinate-space='panel_pixels' data-runtime-language='rust' data-compiler-backend='{compiler_backend_id}' data-execution-path='{execution_path_id}' style='width:{panel_width}px;height:{panel_height}px;'>\
              {ctrl_html}{ind_html}</div>\
              <div class='actions'><button type='submit'>Run Example 05</button><a href='/state.json'>state.json</a></div>\
-             </form><details><summary>Current runtime snapshot</summary><pre>{snapshot_pretty}</pre></details>\
+             </form>\
              </body></html>",
             title = escape_html(snapshot["ui_runtime"]["panel"]["title"].as_str().unwrap_or("FROG")),
             diagnostics = diagnostics,
@@ -149,7 +149,6 @@ impl BrowserUiRuntime {
             panel_height = panel_height,
             ctrl_html = ctrl_html,
             ind_html = ind_html,
-            snapshot_pretty = escape_html(&to_string_pretty(&snapshot).unwrap()),
         )
     }
 
