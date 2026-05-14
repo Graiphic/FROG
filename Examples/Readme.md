@@ -186,6 +186,71 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
 
 <hr/>
 
+<h2>Minimum Local Setup</h2>
+
+<p>
+Run example validation commands from the repository root.
+A fresh clone needs the following local tools before the numbered example corridor can be fully checked:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Tool</th>
+      <th>Required for</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Python</code> + <code>pip</code></td>
+      <td>Reference workspace checks, FIR derivation, lowering, contracts, LLVM emission checks, and Python runtime tests.</td>
+    </tr>
+    <tr>
+      <td><code>pytest</code></td>
+      <td>Full reference test surface.</td>
+    </tr>
+    <tr>
+      <td><code>CMake</code> + a C++ toolchain</td>
+      <td>C++ runtime-family validation for the current widget examples.</td>
+    </tr>
+    <tr>
+      <td><code>Cargo</code> / Rust toolchain</td>
+      <td>Rust runtime-family validation for the current widget examples.</td>
+    </tr>
+    <tr>
+      <td><code>clang</code></td>
+      <td>Optional LLVM native build and native-kernel bridge checks.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+Minimal setup for the Python-backed reference checks:
+</p>
+
+<pre><code>python -m pip install pytest
+python Implementations/Reference/check_reference_workspace.py --include-pytest</code></pre>
+
+<p>
+Runtime-family validation adds the current C++ and Rust surfaces:
+</p>
+
+<pre><code>cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
+cmake --build build/frog_runtime_cpp
+ctest --test-dir build/frog_runtime_cpp --output-on-failure
+
+cargo test --manifest-path Implementations/Reference/Runtime/rust/Cargo.toml</code></pre>
+
+<p>
+Widget examples must also satisfy the
+<a href="./widget_validation_checklist.md">Widget Example Validation Checklist</a>.
+That checklist is the quality gate for visible front-panel fidelity:
+no hardcoded widget fallback, no duplicated local SVG skin, and no accepted example unless the visible UI is driven by
+<code>.frog</code> instance data, <code>.wfrog</code> realization data, Default SVG public parts, and the runtime/kernel contract surface.
+</p>
+
+<hr/>
+
 <h2>Reference Checks</h2>
 
 <p>
