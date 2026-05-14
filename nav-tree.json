@@ -3578,6 +3578,13 @@
                           "path": "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice08.py",
                           "kind": "code",
                           "children": []
+                        },
+                        {
+                          "key": "implementations/reference/runtime/python/tests/test_runtime_ui_slice09.py",
+                          "title": "test_runtime_ui_slice09.py",
+                          "path": "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice09.py",
+                          "kind": "code",
+                          "children": []
                         }
                       ]
                     }
@@ -4313,6 +4320,7 @@
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice06.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice07.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice08.py",
+    "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice09.py",
     "/Implementations/Reference/Runtime/python/Readme.md",
     "/Implementations/Reference/Runtime/rust/Readme.md",
     "/Implementations/Reference/Runtime/tests/test_contract_executor.py",
