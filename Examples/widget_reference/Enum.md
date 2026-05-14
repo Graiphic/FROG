@@ -57,6 +57,60 @@ Current instance-level properties proven by the example include:
 
 <hr/>
 
+<h2>Published Parts And Configurable Properties</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Surface</th>
+      <th>Current source properties</th>
+      <th>Runtime obligation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Caption</td>
+      <td><code>caption.text</code>, <code>caption.anchor.x/y</code>, <code>caption.align.horizontal</code></td>
+      <td>Place labels from the source instance and keep them aligned with the enum field.</td>
+    </tr>
+    <tr>
+      <td>Enum domain</td>
+      <td><code>items[].id</code>, <code>items[].text</code>, <code>items[].numeric_value</code>, <code>items[].enabled</code></td>
+      <td>Preserve item order, selected value, enabled state, and public id/numeric mapping.</td>
+    </tr>
+    <tr>
+      <td>Value field</td>
+      <td><code>style.value_face.*</code>, <code>style.value_display.*</code></td>
+      <td>Keep the selected text vertically centered and scaled from the declared reference geometry.</td>
+    </tr>
+    <tr>
+      <td>Selector button</td>
+      <td><code>display.selector_visible</code>, <code>style.selector_face.*</code></td>
+      <td>Render the button as a published SVG selector part, with normal and hover states from source properties.</td>
+    </tr>
+    <tr>
+      <td>Dropdown</td>
+      <td><code>style.dropdown.*</code>, <code>style.dropdown.option.*</code></td>
+      <td>Use the declared colors, borders, fonts, option height, hover color, and selected color; dropdown width follows the value field.</td>
+    </tr>
+    <tr>
+      <td>Scalable sizing</td>
+      <td><code>style.scale.reference_width</code>, <code>style.scale.reference_height</code>, <code>*_mode = scale_with_widget</code></td>
+      <td>Scale offsets, padding, borders, and selector symbol dimensions predictably when the IDE resizes the widget.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+The Default Enum SVG currently exposes these public parts:
+<code>caption</code>, <code>digital_display</code>, <code>focus_ring</code>, <code>frame</code>,
+<code>increment_down</code>, <code>increment_up</code>, <code>label</code>, <code>root</code>,
+<code>selector_arrow</code>, <code>selector_face</code>, <code>text_overflow_marker</code>,
+<code>value_display</code>, and <code>value_face</code>.
+</p>
+
+<hr/>
+
 <h2>WFROG-Owned Realization Data</h2>
 
 <p>

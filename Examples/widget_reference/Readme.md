@@ -86,6 +86,118 @@ Each page records the practical contract that must stay true while the examples 
 
 <hr/>
 
+<h2>Runtime Parity Snapshot</h2>
+
+<p>
+The stabilized widget examples are expected to run through the same reference-runtime family in every implemented
+language. The runtime may be written in C++, Python, or Rust, but it must consume the same source-owned front-panel
+instance data, the same <code>.wfrog</code> realization package, and the same native manifest truth when the slice is
+native-backed.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Example</th>
+      <th>Widget family</th>
+      <th>C++</th>
+      <th>Python</th>
+      <th>Rust</th>
+      <th>Execution posture</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>05</code></td>
+      <td>Numeric</td>
+      <td>validated</td>
+      <td>validated</td>
+      <td>validated</td>
+      <td><code>LLVM native kernel manifest + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>06</code></td>
+      <td>Boolean</td>
+      <td>validated</td>
+      <td>validated</td>
+      <td>validated</td>
+      <td><code>LLVM native kernel manifest + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>07</code></td>
+      <td>String</td>
+      <td>validated</td>
+      <td>validated</td>
+      <td>validated</td>
+      <td><code>LLVM native kernel manifest + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>08</code></td>
+      <td>Enum</td>
+      <td>validated</td>
+      <td>validated</td>
+      <td>validated</td>
+      <td><code>LLVM native kernel manifest + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>09</code></td>
+      <td>Path</td>
+      <td>validated</td>
+      <td>validated</td>
+      <td>validated</td>
+      <td><code>LLVM native kernel manifest + .frog/.wfrog UI</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<h2>Ownership Boundary</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Concern</th>
+      <th>Owner</th>
+      <th>Validation expectation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Diagram algorithm</td>
+      <td><code>.frog</code></td>
+      <td>Derives to FIR, lowers, emits native kernel, and produces the expected runtime output.</td>
+    </tr>
+    <tr>
+      <td>Front-panel widget instances</td>
+      <td><code>.frog</code></td>
+      <td>Owns widget id, class, role, layout, binding, initial value, label/caption placement, and instance style.</td>
+    </tr>
+    <tr>
+      <td>Published widget realization</td>
+      <td><code>.wfrog</code></td>
+      <td>Points to the Default realization package and declares which SVG asset ids the runtime must resolve.</td>
+    </tr>
+    <tr>
+      <td>Visual geometry hooks</td>
+      <td>Default SVG asset</td>
+      <td>Exposes stable <code>data-frog-part</code>, <code>data-frog-anchor</code>, and <code>data-frog-bind</code> surfaces.</td>
+    </tr>
+    <tr>
+      <td>Execution bridge</td>
+      <td>Runtime + native manifest</td>
+      <td>The runtime loads a manifest-declared ABI artifact and does not become LLVM-only.</td>
+    </tr>
+    <tr>
+      <td>Visible UI host overlays</td>
+      <td>Runtime</td>
+      <td>May provide host input overlays, but must align them to published SVG parts and source-owned instance data.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr/>
+
 <h2>Validation Gate</h2>
 
 <p>

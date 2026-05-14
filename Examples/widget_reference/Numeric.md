@@ -62,6 +62,54 @@ Current instance-level properties proven by the example include:
 
 <hr/>
 
+<h2>Published Parts And Configurable Properties</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Surface</th>
+      <th>Current source properties</th>
+      <th>Runtime obligation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Caption</td>
+      <td><code>caption.text</code>, <code>caption.anchor.x/y</code>, <code>caption.align.horizontal</code>, <code>style.caption.font_weight</code></td>
+      <td>Place the visible caption from instance data, not from runtime constants.</td>
+    </tr>
+    <tr>
+      <td>Value field</td>
+      <td><code>representation.kind</code>, <code>value</code>, <code>foreground_color</code></td>
+      <td>Bind the editable control and read-only indicator to the SVG value face/text parts.</td>
+    </tr>
+    <tr>
+      <td>Increment buttons</td>
+      <td><code>display.increment_buttons_visible</code>, <code>data_entry.increment_step</code>, <code>style.increment_button.*</code></td>
+      <td>Use the published increment parts and expose normal/pressed states without recoding a separate widget shell.</td>
+    </tr>
+    <tr>
+      <td>Frame</td>
+      <td><code>style.frame.border_color</code></td>
+      <td>Respect transparent frame requests so invisible frames do not create unwanted hover or layout behavior.</td>
+    </tr>
+    <tr>
+      <td>Data limits</td>
+      <td><code>data_entry.minimum</code>, <code>data_entry.maximum</code></td>
+      <td>Keep runtime input inside the declared <code>u16</code> domain and surface overflow diagnostics.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+The Default Numeric SVG currently exposes these public parts:
+<code>caption</code>, <code>focus_ring</code>, <code>frame</code>, <code>increment_down</code>,
+<code>increment_up</code>, <code>label</code>, <code>radix_badge</code>, <code>root</code>,
+<code>spinner</code>, <code>text_value</code>, <code>unit_label</code>, and <code>value_face</code>.
+</p>
+
+<hr/>
+
 <h2>WFROG-Owned Realization Data</h2>
 
 <p>

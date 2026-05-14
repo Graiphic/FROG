@@ -60,6 +60,53 @@ Current instance-level properties proven by the example include:
 
 <hr/>
 
+<h2>Published Parts And Configurable Properties</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Surface</th>
+      <th>Current source properties</th>
+      <th>Runtime obligation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Caption</td>
+      <td><code>caption.text</code>, <code>caption.anchor.x/y</code>, <code>caption.align.horizontal</code></td>
+      <td>Align labels from the instance anchors and keep them visually centered over their widgets.</td>
+    </tr>
+    <tr>
+      <td>Boolean face</td>
+      <td><code>style.outer.*</code>, <code>style.inner.*</code>, <code>style.frame.visible</code></td>
+      <td>Apply false/true visual states through the SVG parts rather than through a hardcoded HTML switch.</td>
+    </tr>
+    <tr>
+      <td>State text</td>
+      <td><code>state_text.true_text</code>, <code>state_text.false_text</code>, <code>state_text.visible</code>, <code>state_text.style.*</code></td>
+      <td>Show or hide state text according to instance data; the indicator may hide text while the LED color carries state.</td>
+    </tr>
+    <tr>
+      <td>Interaction states</td>
+      <td><code>hover_*</code>, <code>pressed_*</code>, <code>style.pressed.inset</code>, <code>style.transition.*</code></td>
+      <td>Expose normal, hover, and pressed states without widening the hit target beyond the widget body.</td>
+    </tr>
+    <tr>
+      <td>Indicator geometry</td>
+      <td><code>style.inner.left/top/width/height</code></td>
+      <td>Size the circular LED from instance properties so the IDE can later resize it predictably.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+The Default Boolean SVGs currently expose these public parts:
+<code>caption</code>, <code>focus_ring</code>, <code>frame</code>, <code>inner_face</code>,
+<code>label</code>, <code>outer_face</code>, <code>root</code>, and <code>state_text</code>.
+</p>
+
+<hr/>
+
 <h2>WFROG-Owned Realization Data</h2>
 
 <p>

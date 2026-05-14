@@ -51,6 +51,53 @@ Current instance-level properties proven by the example include:
 
 <hr/>
 
+<h2>Published Parts And Configurable Properties</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Surface</th>
+      <th>Current source properties</th>
+      <th>Runtime obligation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Caption</td>
+      <td><code>caption.text</code>, <code>caption.anchor.x/y</code>, <code>caption.align.horizontal</code></td>
+      <td>Position labels from instance anchors and keep them close enough to read as widget captions.</td>
+    </tr>
+    <tr>
+      <td>Text region</td>
+      <td><code>style.text_region.fill_color</code>, <code>fill_color.hover</code>, <code>border_color</code>, <code>border_color.hover</code>, <code>border_width</code></td>
+      <td>Map the host input or output overlay to the SVG text region and keep hover styling instance-driven.</td>
+    </tr>
+    <tr>
+      <td>Text glyphs</td>
+      <td><code>style.text.color</code>, <code>style.text.font_size</code>, <code>style.text.font_weight</code></td>
+      <td>Keep visible text aligned, legible, and inside the region for both control and indicator.</td>
+    </tr>
+    <tr>
+      <td>Frame/focus posture</td>
+      <td><code>style.frame.*</code></td>
+      <td>Respect the accepted no-external-focus-ring posture for this example.</td>
+    </tr>
+    <tr>
+      <td>Role behavior</td>
+      <td><code>interaction.enabled</code>, <code>interaction.read_only</code></td>
+      <td>Allow editing only on the control and keep the indicator read-only.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+The Default String SVG currently exposes these public parts:
+<code>caption</code>, <code>focus_ring</code>, <code>frame</code>, <code>label</code>,
+<code>placeholder</code>, <code>root</code>, <code>text_region</code>, and <code>text_value</code>.
+</p>
+
+<hr/>
+
 <h2>WFROG-Owned Realization Data</h2>
 
 <p>
