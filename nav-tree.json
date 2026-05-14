@@ -363,6 +363,28 @@
               ]
             },
             {
+              "key": "examples/10_button_press_to_boolean/",
+              "title": "10 button press to boolean",
+              "path": "/Examples/10_button_press_to_boolean/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/10_button_press_to_boolean/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/10_button_press_to_boolean/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "examples/10_button_press_to_boolean/ui/",
+                  "title": "ui",
+                  "path": "/Examples/10_button_press_to_boolean/ui/Readme.md",
+                  "kind": "category",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -401,6 +423,13 @@
                   "key": "examples/widget_reference/boolean.md",
                   "title": "Boolean",
                   "path": "/Examples/widget_reference/Boolean.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
+                  "key": "examples/widget_reference/button.md",
+                  "title": "Button",
+                  "path": "/Examples/widget_reference/Button.md",
                   "kind": "page",
                   "children": []
                 },
@@ -3628,6 +3657,13 @@
                           "path": "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice09.py",
                           "kind": "code",
                           "children": []
+                        },
+                        {
+                          "key": "implementations/reference/runtime/python/tests/test_runtime_ui_slice10.py",
+                          "title": "test_runtime_ui_slice10.py",
+                          "path": "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice10.py",
+                          "kind": "code",
+                          "children": []
                         }
                       ]
                     }
@@ -3928,11 +3964,15 @@
     "/Examples/09_path_value_roundtrip/main.frog",
     "/Examples/09_path_value_roundtrip/ui/Readme.md",
     "/Examples/09_path_value_roundtrip/Readme.md",
+    "/Examples/10_button_press_to_boolean/main.frog",
+    "/Examples/10_button_press_to_boolean/ui/Readme.md",
+    "/Examples/10_button_press_to_boolean/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
     "/Examples/compiler/Readme.md",
     "/Examples/widget_reference/Boolean.md",
+    "/Examples/widget_reference/Button.md",
     "/Examples/widget_reference/Enum.md",
     "/Examples/widget_reference/Numeric.md",
     "/Examples/widget_reference/Path.md",
@@ -4370,6 +4410,7 @@
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice07.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice08.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice09.py",
+    "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice10.py",
     "/Implementations/Reference/Runtime/python/Readme.md",
     "/Implementations/Reference/Runtime/rust/Readme.md",
     "/Implementations/Reference/Runtime/tests/test_contract_executor.py",
