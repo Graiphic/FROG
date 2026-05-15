@@ -23,6 +23,7 @@ CASES = [
     ("09", "Examples/09_path_value_roundtrip/main.lowering.json", "Implementations/Reference/LLVM/examples/09_path_value_roundtrip/module.ll"),
     ("10", "Examples/10_button_press_to_boolean/main.lowering.json", "Implementations/Reference/LLVM/examples/10_button_press_to_boolean/module.ll"),
     ("11", "Examples/11_button_switch_when_pressed/main.lowering.json", "Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/module.ll"),
+    ("12", "Examples/12_button_switch_when_released/main.lowering.json", "Implementations/Reference/LLVM/examples/12_button_switch_when_released/module.ll"),
 ]
 
 

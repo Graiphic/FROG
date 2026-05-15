@@ -1,0 +1,65 @@
+{
+  "artifact_kind": "frog_native_kernel_manifest",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "kernel": {
+    "id": "example12_button_switch_when_released_kernel",
+    "source_lowered_unit": "Examples/12_button_switch_when_released/main.lowering.json",
+    "backend": {
+      "family": "llvm",
+      "artifact_kind": "native_object_or_library",
+      "source_artifact": "Implementations/Reference/LLVM/examples/12_button_switch_when_released/kernel.ll"
+    },
+    "entry": {
+      "symbol": "frog_example12_run",
+      "abi": "frog_bool_to_result_status_outptr"
+    },
+    "io": {
+      "inputs": [
+        {
+          "id": "trigger_value",
+          "type": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "switched",
+          "type": "bool"
+        }
+      ]
+    },
+    "result_status_layout": {
+      "carrier": "out_parameter",
+      "c_signature": "void frog_example12_run(uint8_t trigger_value, FrogBoolRunResult* out_result)",
+      "fields": [
+        {
+          "id": "ok",
+          "type": "u8"
+        },
+        {
+          "id": "switched",
+          "type": "u8",
+          "logical_type": "bool"
+        },
+        {
+          "id": "error_code",
+          "type": "u16"
+        }
+      ]
+    },
+    "error_model": {
+      "overflow": "not_applicable",
+      "error_codes": [
+        {
+          "code": 0,
+          "meaning": "no_error"
+        }
+      ]
+    }
+  },
+  "runtime_boundary": {
+    "reference": "Implementations/Reference/Runtime/KernelBridge.md",
+    "runtime_dependency_posture": "runtime_consumes_manifest_declared_kernel_not_llvm"
+  }
+}

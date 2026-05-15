@@ -61,6 +61,11 @@ std::filesystem::path example11_contract_path() {
            "11_button_switch_when_pressed.reference_host_runtime_ui_binding.contract.json";
 }
 
+std::filesystem::path example12_contract_path() {
+    return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
+           "12_button_switch_when_released.reference_host_runtime_ui_binding.contract.json";
+}
+
 std::filesystem::path example06_wfrog_path() {
     return repo_root() / "Examples" / "06_boolean_value_roundtrip" / "ui" / "boolean_panel.wfrog";
 }
@@ -85,6 +90,10 @@ std::filesystem::path example11_wfrog_path() {
     return repo_root() / "Examples" / "11_button_switch_when_pressed" / "ui" / "button_panel.wfrog";
 }
 
+std::filesystem::path example12_wfrog_path() {
+    return repo_root() / "Examples" / "12_button_switch_when_released" / "ui" / "button_panel.wfrog";
+}
+
 bool wants_example06(const std::string& value) {
     return value == "06" || value == "6" || value == "example06" || value == "06_boolean_value_roundtrip";
 }
@@ -107,6 +116,10 @@ bool wants_example10(const std::string& value) {
 
 bool wants_example11(const std::string& value) {
     return value == "11" || value == "example11" || value == "11_button_switch_when_pressed";
+}
+
+bool wants_example12(const std::string& value) {
+    return value == "12" || value == "example12" || value == "12_button_switch_when_released";
 }
 
 bool parse_bool_input(std::string value) {
@@ -207,6 +220,14 @@ int main(int argc, char** argv) {
                 return 0;
             }
 
+            if (example.has_value() && wants_example12(*example)) {
+                frog::runtime::ButtonBrowserUiRuntime runtime(
+                    contract_path.value_or(example12_contract_path()),
+                    wfrog_path.value_or(example12_wfrog_path()));
+                runtime.serve(host, port, open_browser);
+                return 0;
+            }
+
             const auto effective_contract = contract_path.value_or(frog::runtime::default_contract_path());
             const auto contract = frog::runtime::load_contract_from_path(effective_contract);
             if (contract.source_ref.example_id == "06_boolean_value_roundtrip") {
@@ -238,6 +259,11 @@ int main(int argc, char** argv) {
                 frog::runtime::ButtonBrowserUiRuntime runtime(
                     effective_contract,
                     wfrog_path.value_or(example11_wfrog_path()));
+                runtime.serve(host, port, open_browser);
+            } else if (contract.source_ref.example_id == "12_button_switch_when_released") {
+                frog::runtime::ButtonBrowserUiRuntime runtime(
+                    effective_contract,
+                    wfrog_path.value_or(example12_wfrog_path()));
                 runtime.serve(host, port, open_browser);
             } else {
                 frog::runtime::BrowserUiRuntime runtime(effective_contract, wfrog_path);
@@ -325,6 +351,15 @@ int main(int argc, char** argv) {
             return 0;
         }
 
+        if (example.has_value() && wants_example12(*example)) {
+            frog::runtime::Slice10ButtonRuntimeCore runtime(
+                contract_path.value_or(example12_contract_path()),
+                wfrog_path.value_or(example12_wfrog_path()));
+            const auto artifact = runtime.execute(parse_bool_input(input_value_text.value_or("true")));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+
         const auto effective_contract = contract_path.value_or(frog::runtime::default_contract_path());
         const auto contract = frog::runtime::load_contract_from_path(effective_contract);
         if (contract.source_ref.example_id == "06_boolean_value_roundtrip") {
@@ -371,6 +406,14 @@ int main(int argc, char** argv) {
             frog::runtime::Slice10ButtonRuntimeCore runtime(
                 effective_contract,
                 wfrog_path.value_or(example11_wfrog_path()));
+            const auto artifact = runtime.execute(parse_bool_input(input_value_text.value_or("true")));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+        if (contract.source_ref.example_id == "12_button_switch_when_released") {
+            frog::runtime::Slice10ButtonRuntimeCore runtime(
+                effective_contract,
+                wfrog_path.value_or(example12_wfrog_path()));
             const auto artifact = runtime.execute(parse_bool_input(input_value_text.value_or("true")));
             std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
             return 0;

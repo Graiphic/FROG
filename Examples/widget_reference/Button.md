@@ -5,7 +5,7 @@
 <h1 align="center">Button Widget Example Reference</h1>
 
 <p align="center">
-  <strong>Current Example 10 Button command and Boolean indicator proof surface</strong><br/>
+  <strong>Current Button command and Boolean indicator proof surfaces</strong><br/>
   <em>FROG - Free Open Graphical Language</em>
 </p>
 
@@ -14,21 +14,28 @@
 <h2>Scope</h2>
 
 <p>
-The stabilized Button slice is <code>Examples/10_button_press_to_boolean</code>.
-It proves one <code>frog.widgets.button</code> command control driving one
-<code>frog.widgets.boolean_indicator</code>.
+The stabilized Button slices begin with
+<code>Examples/10_button_press_to_boolean</code>,
+<code>Examples/11_button_switch_when_pressed</code>, and
+<code>Examples/12_button_switch_when_released</code>. They prove one
+<code>frog.widgets.button</code> command control driving one read-only
+<code>frog.widgets.boolean_indicator</code> without duplicating local SVG
+skins under <code>Examples</code>. Example 12 remains C++-first until Python
+and Rust parity are explicitly aligned and validated.
 </p>
 
-<pre><code>trigger_button.pressed
-  -&gt; pressed_indicator.value
-  -&gt; public pressed
-</code></pre>
+<pre><code>Example 10:
+trigger_button.pressed -&gt; pressed_indicator.value -&gt; public pressed
+
+Examples 11-12:
+trigger_button.value -&gt; switched_indicator.value -&gt; public switched</code></pre>
 
 <p>
-The example is intentionally small: the Button publishes a momentary pressed value, the
-diagram copies that value, and the Boolean indicator displays the current pressed state.
-This corridor was accepted on 2026-05-15 after browser-host visual inspection
-of the Default Button rectangular SVG asset and the Default Boolean circular indicator.
+Each example is intentionally small: the Button publishes one source-owned
+boolean value for the selected mechanical action, the diagram copies that
+value, and the Boolean indicator displays the current result. The accepted
+Button corridors use the Default Button rectangular SVG asset and the Default
+Boolean circular indicator.
 </p>
 
 <hr/>
@@ -41,9 +48,11 @@ The <code>.frog</code> source owns the diagram and the front-panel instance data
 
 <ul>
   <li><code>Examples/10_button_press_to_boolean/main.frog</code></li>
-  <li>front panel canvas: <code>420 x 170</code> panel pixels</li>
+  <li><code>Examples/11_button_switch_when_pressed/main.frog</code></li>
+  <li><code>Examples/12_button_switch_when_released/main.frog</code></li>
+  <li>front panel canvas: source-owned panel pixels in each <code>.frog</code></li>
   <li>button control: <code>trigger_button</code>, <code>frog.widgets.button</code>, rectangular variant</li>
-  <li>Boolean indicator: <code>pressed_indicator</code>, <code>frog.widgets.boolean_indicator</code>, circular variant</li>
+  <li>Boolean indicator: <code>pressed_indicator</code> or <code>switched_indicator</code>, <code>frog.widgets.boolean_indicator</code>, circular variant</li>
   <li>widget layout, caption placement, initial values, state text, mechanical action, and per-instance visual states live in the <code>.frog</code> widget instances</li>
 </ul>
 
@@ -115,7 +124,9 @@ The Default Button SVG template exposes these public parts:
 The example package is:
 </p>
 
-<pre><code>Examples/10_button_press_to_boolean/ui/button_panel.wfrog</code></pre>
+<pre><code>Examples/10_button_press_to_boolean/ui/button_panel.wfrog
+Examples/11_button_switch_when_pressed/ui/button_panel.wfrog
+Examples/12_button_switch_when_released/ui/button_panel.wfrog</code></pre>
 
 <p>
 It owns only the realization references, SVG asset references, and host requirements.
@@ -135,8 +146,12 @@ It owns only the realization references, SVG asset references, and host requirem
 
 <ul>
   <li>Example 10 validates only <code>behavior.mechanical_action=switch_until_released</code>.</li>
-  <li>The Button control must publish a momentary pressed value while the host pointer is down.</li>
-  <li>The Boolean indicator is read-only and must return to false when the Button is released.</li>
+  <li>Example 11 validates <code>behavior.mechanical_action=switch_when_pressed</code> across the accepted runtime parity level.</li>
+  <li>Example 12 introduces <code>behavior.mechanical_action=switch_when_released</code> as a C++-first validation corridor; Python and Rust parity must follow only after the C++ behavior is accepted.</li>
+  <li>Example 10 must publish a momentary pressed value while the host pointer is down.</li>
+  <li>Example 11 must toggle the stored Button value on the press edge and keep that value after release.</li>
+  <li>Example 12 must toggle the stored Button value on the release edge and keep that value after release.</li>
+  <li>The Boolean indicator is read-only and must reflect the source-owned Button result for the selected mechanical action.</li>
   <li>Normal, hover, pressed, text, border, and indicator colors are instance-configurable.</li>
   <li>The visible skins must come from Default Button and Boolean SVG assets, not from a hardcoded HTML card.</li>
   <li>The runtime must reject fallback markers that replace the Button or Boolean bodies with local HTML/CSS widgets.</li>
@@ -149,9 +164,10 @@ It owns only the realization references, SVG asset references, and host requirem
 
 <ul>
   <li>native manifest: <code>Implementations/Reference/LLVM/examples/10_button_press_to_boolean/native_kernel_manifest.json</code></li>
-  <li>LLVM kernel: <code>Implementations/Reference/LLVM/examples/10_button_press_to_boolean/kernel.ll</code></li>
-  <li>native ABI entry: <code>frog_example10_run</code></li>
-  <li>runtime languages validated: C++, Python, Rust</li>
+  <li>native manifest: <code>Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/native_kernel_manifest.json</code></li>
+  <li>native manifest: <code>Implementations/Reference/LLVM/examples/12_button_switch_when_released/native_kernel_manifest.json</code></li>
+  <li>native ABI entries are example-specific and consumed through manifests by the runtime.</li>
+  <li>Examples 10-11 have the accepted runtime parity level; Example 12 is currently C++-first.</li>
 </ul>
 
 <hr/>
@@ -163,5 +179,5 @@ It owns only the realization references, SVG asset references, and host requirem
   <li>The visible UI must expose the expected asset routes for the Button and Boolean indicator.</li>
   <li>Button state text must switch between <code>OFF</code> and <code>ON</code> according to the pressed state.</li>
   <li>There must be no local duplicated Button SVG under the example directory.</li>
-  <li>The accepted scope is bounded to Example 10 and must not be used to claim generalized runtime completeness.</li>
+  <li>The accepted scope is bounded to the examples above and must not be used to claim generalized runtime completeness.</li>
 </ul>

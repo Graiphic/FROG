@@ -18,6 +18,8 @@ UI_PACKAGE_BY_EXAMPLE = {
     "08_enum_value_roundtrip": "enum_panel.wfrog",
     "09_path_value_roundtrip": "path_panel.wfrog",
     "10_button_press_to_boolean": "button_panel.wfrog",
+    "11_button_switch_when_pressed": "button_panel.wfrog",
+    "12_button_switch_when_released": "button_panel.wfrog",
 }
 
 SCALAR_COPY_CONTRACT_SPECS: dict[str, dict[str, Any]] = {
@@ -78,6 +80,38 @@ SCALAR_COPY_CONTRACT_SPECS: dict[str, dict[str, Any]] = {
         "widgets": [
             ("trigger_button", "frog.widgets.button", "bool", "control", {"mode": "widget_event_value", "public_input_id": "trigger_pressed"}),
             ("pressed_indicator", "frog.widgets.boolean_indicator", "bool", "indicator", {"mode": "widget_value", "public_output_id": "pressed"}),
+        ],
+        "kernel_keys": ["operation", "dst", "type", "src", "final_publication"],
+    },
+    "button_switch_when_pressed_kernel_with_ui_bindings": {
+        "contract_kind": "button_switch_when_pressed_ui_unit",
+        "behavior_key": "boolean_behavior",
+        "behavior": {
+            "value_domain": "bool",
+            "button_value": "trigger_button.value",
+            "mechanical_action": "switch_when_pressed",
+        },
+        "input_binding_origin": "widget.trigger_button.value",
+        "output_binding_target": "interface.switched",
+        "widgets": [
+            ("trigger_button", "frog.widgets.button", "bool", "control", {"mode": "widget_value", "public_input_id": "trigger_value"}),
+            ("switched_indicator", "frog.widgets.boolean_indicator", "bool", "indicator", {"mode": "widget_value", "public_output_id": "switched"}),
+        ],
+        "kernel_keys": ["operation", "dst", "type", "src", "final_publication"],
+    },
+    "button_switch_when_released_kernel_with_ui_bindings": {
+        "contract_kind": "button_switch_when_released_ui_unit",
+        "behavior_key": "boolean_behavior",
+        "behavior": {
+            "value_domain": "bool",
+            "button_value": "trigger_button.value",
+            "mechanical_action": "switch_when_released",
+        },
+        "input_binding_origin": "widget.trigger_button.value",
+        "output_binding_target": "interface.switched",
+        "widgets": [
+            ("trigger_button", "frog.widgets.button", "bool", "control", {"mode": "widget_value", "public_input_id": "trigger_value"}),
+            ("switched_indicator", "frog.widgets.boolean_indicator", "bool", "indicator", {"mode": "widget_value", "public_output_id": "switched"}),
         ],
         "kernel_keys": ["operation", "dst", "type", "src", "final_publication"],
     },

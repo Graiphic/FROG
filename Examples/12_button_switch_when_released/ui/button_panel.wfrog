@@ -1,0 +1,88 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_package",
+  "package_id": "example12.button_panel",
+  "title": "Example 12 Default Button switch-when-released and Boolean realization package",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "12_button_switch_when_released",
+    "source_path": "Examples/12_button_switch_when_released/main.frog",
+    "fir_path": "Examples/12_button_switch_when_released/main.fir.json",
+    "lowering_path": "Examples/12_button_switch_when_released/main.lowering.json"
+  },
+  "ownership_boundary": {
+    "owns": [
+      "Default Button realization references",
+      "Default Boolean realization references",
+      "Default SVG asset references",
+      "reference host binding requirements"
+    ],
+    "does_not_own": [
+      "canonical source semantics",
+      "front-panel widget instance layout",
+      "front-panel widget instance visual customization",
+      "front-panel widget values",
+      "FIR/lowering/runtime behavior",
+      "button widget law",
+      "boolean widget law",
+      "Default Boolean rectangular value-control realization"
+    ]
+  },
+  "widget_classes": [
+    {
+      "class_id": "frog.widgets.button",
+      "role": "control",
+      "value_type": "bool"
+    },
+    {
+      "class_id": "frog.widgets.boolean_indicator",
+      "role": "indicator",
+      "value_type": "bool"
+    }
+  ],
+  "host_bindings": [
+    {
+      "binding_id": "reference_host_default",
+      "host_family": "reference_browser_host",
+      "target": "reference_browser_host",
+      "required_capabilities": [
+        "window",
+        "basic_widget_rendering",
+        "widget_value_binding",
+        "button_press_binding",
+        "button_release_binding",
+        "svg_part_overlay_alignment"
+      ]
+    }
+  ],
+  "realization_refs": [
+    {
+      "package_ref": "Libraries/Realizations/Default/button.default.wfrog",
+      "target_classes": [
+        "frog.widgets.button"
+      ]
+    },
+    {
+      "package_ref": "Libraries/Realizations/Default/boolean.default.wfrog",
+      "target_classes": [
+        "frog.widgets.boolean_indicator"
+      ]
+    }
+  ],
+  "svg_assets": [
+    {
+      "asset_id": "button_rectangular_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/button/templates/button_rectangular.svg",
+      "target_class": "frog.widgets.button"
+    },
+    {
+      "asset_id": "boolean_circular_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg",
+      "target_class": "frog.widgets.boolean_indicator"
+    }
+  ]
+}

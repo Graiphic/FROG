@@ -93,6 +93,8 @@ def test_example05_contract_emission_rejects_unsupported_lowered_unit_kind() -> 
         ("08_enum_value_roundtrip", "enum_value_roundtrip_ui_unit"),
         ("09_path_value_roundtrip", "path_value_roundtrip_ui_unit"),
         ("10_button_press_to_boolean", "button_press_to_boolean_ui_unit"),
+        ("11_button_switch_when_pressed", "button_switch_when_pressed_ui_unit"),
+        ("12_button_switch_when_released", "button_switch_when_released_ui_unit"),
     ],
 )
 def test_scalar_widget_contract_emission_matches_published_contract(example_rel: str, expected_kind: str) -> None:

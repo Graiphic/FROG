@@ -84,11 +84,12 @@ They do not redefine button semantics.
 
 <p>
 The rectangular Button template is accepted for the bounded
-<code>Examples/10_button_press_to_boolean</code> corridor as of 2026-05-15.
-That acceptance covers the SVG-published public parts, configurable face and
-state-text styling, hover and pressed state visuals, and host overlay alignment
-to the published <code>face</code> part. It remains a Default realization
-asset acceptance, not a runtime-defined HTML/CSS skin.
+<code>Examples/10_button_press_to_boolean</code> corridor as of 2026-05-15 and
+is reused by the bounded switch corridors. That acceptance covers the
+SVG-published public parts, configurable face and state-text styling, hover and
+pressed state visuals, and host overlay alignment to the published
+<code>face</code> part. It remains a Default realization asset acceptance, not
+a runtime-defined HTML/CSS skin.
 </p>
 
 <hr/>
@@ -107,6 +108,9 @@ The manifest publishes the canonical action vocabulary
 <code>latch_when_released</code>, and <code>latch_until_released</code>,
 including the realization posture needed by host overlays.
 Runtime families must still validate each action before accepting it as
-executable behavior. The current Example 10 corridor validates only
-<code>switch_until_released</code>.
+executable behavior. The current accepted corridors validate
+<code>switch_until_released</code> in Example 10 and
+<code>switch_when_pressed</code> in Example 11. Example 12 introduces a C++
+first <code>switch_when_released</code> corridor; Python and Rust parity must
+not be claimed until those runtimes are explicitly aligned and validated.
 </p>

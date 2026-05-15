@@ -83,7 +83,7 @@ The standard executable supports:
 
 <p>
 It remains available without LLVM or <code>clang</code>.
-It executes the bounded Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, and Example 11 backend contracts and produces the published runtime artifacts.
+It executes the bounded Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, Example 11, and C++-first Example 12 backend contracts and produces the published runtime artifacts.
 </p>
 
 <pre><code>cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
@@ -107,11 +107,11 @@ build/frog_runtime_cpp/frog_reference_runtime_cpp ui --host 127.0.0.1 --port 808
 
 <p>
 The optional native-kernel executable is built when <code>FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE=ON</code>.
-CMake compiles the published Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, and Example 11 <code>kernel.ll</code> artifacts with <code>clang</code>, links the resulting objects into the executable, and uses <code>native_kernel_manifest.json</code> to validate and call the selected ABI surface.
+CMake compiles the published Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, Example 11, and Example 12 <code>kernel.ll</code> artifacts with <code>clang</code>, links the resulting objects into the executable, and uses <code>native_kernel_manifest.json</code> to validate and call the selected ABI surface.
 </p>
 
 <p>
-This executable is the bounded Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, and Example 11 LabVIEW-like proof path:
+This executable is the bounded Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, Example 11, and Example 12 LabVIEW-like proof path:
 </p>
 
 <pre><code>.frog source
@@ -172,7 +172,7 @@ It renders:
 </ul>
 
 <p>
-The Example 05 panel uses the shared Default Numeric realization. Example 06 uses the shared Default Boolean realization. Example 07 uses the shared Default String realization without a published String focus-ring part. Example 08 uses the shared Default Enum realization. Example 09 uses the shared Default Path realization without an invisible outer frame or focus-ring hover target. Example 10 uses the shared Default Button realization for the momentary command and the shared Default Boolean realization for the read-only indicator. Example 11 uses the same Default Button and Boolean assets for the bounded <code>switch_when_pressed</code> Button value path.
+The Example 05 panel uses the shared Default Numeric realization. Example 06 uses the shared Default Boolean realization. Example 07 uses the shared Default String realization without a published String focus-ring part. Example 08 uses the shared Default Enum realization. Example 09 uses the shared Default Path realization without an invisible outer frame or focus-ring hover target. Example 10 uses the shared Default Button realization for the momentary command and the shared Default Boolean realization for the read-only indicator. Example 11 uses the same Default Button and Boolean assets for the bounded <code>switch_when_pressed</code> Button value path. Example 12 reuses those Default assets for the C++-first bounded <code>switch_when_released</code> value path.
 This is a bounded fidelity pass for the current published examples, not a complete generalized <code>.wfrog</code> renderer.
 </p>
 
@@ -204,7 +204,7 @@ The fact that the first published backend artifact is LLVM-oriented remains mani
   <li>overflow rejection behavior,</li>
   <li>native-kernel bridge behavior with an ABI-compatible stub,</li>
   <li>browser-host HTML rendering with both SVG asset routes,</li>
-  <li><code>.wfrog</code> / SVG geometry coherence for Example 05 Numeric widgets, Example 06 Boolean widgets, Example 07 String widgets, Example 08 Enum widgets, Example 09 Path widgets, and Example 10/11 Button plus Boolean widgets.</li>
+  <li><code>.wfrog</code> / SVG geometry coherence for Example 05 Numeric widgets, Example 06 Boolean widgets, Example 07 String widgets, Example 08 Enum widgets, Example 09 Path widgets, and Example 10/11/12 Button plus Boolean widgets.</li>
 </ul>
 
 <p>The optional LLVM-produced native-kernel bridge target checks:</p>

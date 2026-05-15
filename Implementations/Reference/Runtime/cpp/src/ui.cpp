@@ -1840,7 +1840,7 @@ std::string button_widget_script() {
   const stateText = indicator.querySelector("[data-frog-part='state_text']");
   const inputId = overlay.dataset.frogPublicInputId || overlay.name || "";
   const mechanicalAction = buttonWidget.dataset.frogMechanicalAction || "";
-  if (!inputId || (mechanicalAction !== "switch_until_released" && mechanicalAction !== "switch_when_pressed")) {
+  if (!inputId || (mechanicalAction !== "switch_until_released" && mechanicalAction !== "switch_when_pressed" && mechanicalAction !== "switch_when_released")) {
     return;
   }
   let pressed = buttonWidget.dataset.currentValue === "true";
@@ -1919,6 +1919,63 @@ std::string button_widget_script() {
         return;
       }
       toggle(event);
+    });
+    return;
+  }
+  if (mechanicalAction === "switch_when_released") {
+    let armed = false;
+    const arm = (event) => {
+      if (event && event.button !== undefined && event.button !== 0) {
+        return;
+      }
+      if (event) {
+        event.preventDefault();
+      }
+      armed = true;
+    };
+    const releaseToggle = (event) => {
+      if (!armed) {
+        return;
+      }
+      if (event) {
+        event.preventDefault();
+      }
+      armed = false;
+      setPressed(!(buttonWidget.dataset.currentValue === "true"));
+    };
+    const disarm = (event) => {
+      if (event) {
+        event.preventDefault();
+      }
+      armed = false;
+    };
+    overlay.addEventListener("pointerdown", (event) => {
+      if (overlay.setPointerCapture) {
+        overlay.setPointerCapture(event.pointerId);
+      }
+      arm(event);
+    });
+    overlay.addEventListener("pointerup", releaseToggle);
+    overlay.addEventListener("pointercancel", disarm);
+    overlay.addEventListener("lostpointercapture", disarm);
+    overlay.addEventListener("mousedown", arm);
+    window.addEventListener("mouseup", releaseToggle);
+    overlay.addEventListener("mouseleave", disarm);
+    overlay.addEventListener("touchstart", arm, {passive: false});
+    overlay.addEventListener("touchend", releaseToggle, {passive: false});
+    overlay.addEventListener("touchcancel", disarm, {passive: false});
+    overlay.addEventListener("blur", disarm);
+    overlay.addEventListener("keydown", (event) => {
+      if ((event.key !== " " && event.key !== "Enter") || event.repeat) {
+        return;
+      }
+      arm(event);
+    });
+    overlay.addEventListener("keyup", (event) => {
+      if (event.key !== " " && event.key !== "Enter") {
+        return;
+      }
+      releaseToggle(event);
     });
     return;
   }
@@ -3051,7 +3108,9 @@ frog::json::Value ButtonBrowserUiRuntime::run_once(bool trigger_pressed) {
 
 std::string ButtonBrowserUiRuntime::render_html() const {
     const auto& button = core.widgets.at(core.control_widget_id);
-    const bool switch_when_pressed = property_string(button.properties, "behavior.mechanical_action", "") == "switch_when_pressed";
+    const auto mechanical_action = property_string(button.properties, "behavior.mechanical_action", "");
+    const bool switch_when_pressed = mechanical_action == "switch_when_pressed";
+    const bool switch_when_released = mechanical_action == "switch_when_released";
     const auto& indicator = core.widgets.at(core.indicator_widget_id);
     const auto panel_width = layout_i64(core.panel.layout, "width", 520);
     const auto panel_height = layout_i64(core.panel.layout, "height", 180);
@@ -3105,20 +3164,22 @@ std::string ButtonBrowserUiRuntime::render_html() const {
             ".diagnostic.error{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}"
             "</style></head><body>";
     html << "<h1>" << html_escape(core.panel.title) << "</h1>";
-    html << "<p class='meta'>" << (switch_when_pressed
-        ? "Example 11 - .frog switch_when_pressed Button value + Default Button/Boolean .wfrog realization assets + C++ runtime"
-        : "Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + C++ runtime") << "</p>";
+    html << "<p class='meta'>" << (switch_when_released
+        ? "Example 12 - .frog switch_when_released Button value + Default Button/Boolean .wfrog realization assets + C++ runtime"
+        : (switch_when_pressed
+            ? "Example 11 - .frog switch_when_pressed Button value + Default Button/Boolean .wfrog realization assets + C++ runtime"
+            : "Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + C++ runtime")) << "</p>";
     html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
     html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
-    html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : (switch_when_pressed ? "button switch contract executor" : "button contract executor")) << "</dd></div>";
-    html << "<div><dt>Compiler backend</dt><dd>" << (uses_native_kernel ? "LLVM native Button bool kernel artifact" : (switch_when_pressed ? "none for Example 11" : "none for Example 10")) << "</dd></div>";
+    html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : ((switch_when_pressed || switch_when_released) ? "button switch contract executor" : "button contract executor")) << "</dd></div>";
+    html << "<div><dt>Compiler backend</dt><dd>" << (uses_native_kernel ? "LLVM native Button bool kernel artifact" : (switch_when_released ? "none for Example 12" : (switch_when_pressed ? "none for Example 11" : "none for Example 10"))) << "</dd></div>";
     html << "</dl>";
     html << diagnostics;
     html << "<form method='post' action='/run'>";
     html << "<div class='front-panel' data-panel-id='" << html_escape(core.panel.panel_id)
          << "' data-coordinate-space='panel_pixels' data-runtime-language='cpp'";
     html << " data-compiler-backend='" << (uses_native_kernel ? "llvm" : "none") << "'";
-    html << " data-execution-path='" << (uses_native_kernel ? "native_kernel_bridge" : (switch_when_pressed ? "cpp_button_switch_when_pressed_contract_executor" : "cpp_button_contract_executor")) << "'";
+    html << " data-execution-path='" << (uses_native_kernel ? "native_kernel_bridge" : (switch_when_released ? "cpp_button_switch_when_released_contract_executor" : (switch_when_pressed ? "cpp_button_switch_when_pressed_contract_executor" : "cpp_button_contract_executor"))) << "'";
     html << " style='width:" << css_px(panel_width) << ";height:" << css_px(panel_height) << ";'>";
     html << render_button_widget(button);
     html << render_boolean_widget(indicator);

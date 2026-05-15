@@ -46,16 +46,24 @@ bool is_button_switch_when_pressed_example(const std::string& example_id) {
     return example_id == "11_button_switch_when_pressed";
 }
 
+bool is_button_switch_when_released_example(const std::string& example_id) {
+    return example_id == "12_button_switch_when_released";
+}
+
 bool is_button_press_to_boolean_example(const std::string& example_id) {
     return example_id == "10_button_press_to_boolean";
 }
 
 bool is_button_slice_example(const std::string& example_id) {
-    return is_button_press_to_boolean_example(example_id) || is_button_switch_when_pressed_example(example_id);
+    return is_button_press_to_boolean_example(example_id) ||
+        is_button_switch_when_pressed_example(example_id) ||
+        is_button_switch_when_released_example(example_id);
 }
 
 bool is_button_unit_kind(const std::string& kind) {
-    return kind == "button_press_to_boolean_ui_unit" || kind == "button_switch_when_pressed_ui_unit";
+    return kind == "button_press_to_boolean_ui_unit" ||
+        kind == "button_switch_when_pressed_ui_unit" ||
+        kind == "button_switch_when_released_ui_unit";
 }
 
 std::string expected_button_source_lowered_unit(const SourceRef& source_ref) {
@@ -104,6 +112,25 @@ bool is_switch_when_pressed_action(const Object& properties) {
     return json_string(properties, "behavior.mechanical_action") == "switch_when_pressed";
 }
 
+bool is_switch_when_released_action(const Object& properties) {
+    return json_string(properties, "behavior.mechanical_action") == "switch_when_released";
+}
+
+bool is_stored_switch_action(const Object& properties) {
+    return is_switch_when_pressed_action(properties) || is_switch_when_released_action(properties);
+}
+
+std::string button_execution_mode(const Object& properties) {
+    const auto action = json_string(properties, "behavior.mechanical_action");
+    if (action == "switch_when_pressed") {
+        return "button_switch_when_pressed";
+    }
+    if (action == "switch_when_released") {
+        return "button_switch_when_released";
+    }
+    return "button_press_to_boolean";
+}
+
 void require_validated_button_mechanical_action(const Object& properties) {
     const auto action_it = properties.find("behavior.mechanical_action");
     require(
@@ -111,8 +138,8 @@ void require_validated_button_mechanical_action(const Object& properties) {
         "Button slice requires source-owned behavior.mechanical_action.");
     const auto& action = action_it->second.as_string();
     require(
-        action == "switch_until_released" || action == "switch_when_pressed",
-        "Button slice validates only source-declared switch_until_released or switch_when_pressed mechanical actions.");
+        action == "switch_until_released" || action == "switch_when_pressed" || action == "switch_when_released",
+        "Button slice validates only source-declared switch_until_released, switch_when_pressed, or switch_when_released mechanical actions.");
 }
 
 std::uint16_t json_u16(const Object& object, const std::string& key, std::uint16_t fallback = 0) {
@@ -1912,7 +1939,7 @@ bool Slice10ButtonRuntimeCore::control_pressed() const {
 
 Value Slice10ButtonRuntimeCore::execute(std::optional<bool> pressed_override) {
     auto& button = widgets.at(control_widget_id);
-    if (is_switch_when_pressed_action(button.properties)) {
+    if (is_stored_switch_action(button.properties)) {
         if (pressed_override.has_value()) {
             last_trigger_pressed = true;
             button.properties["pressed"] = Value(true);
@@ -1945,8 +1972,8 @@ Value Slice10ButtonRuntimeCore::execute_with_native_kernel_bridge(
     require(bridge.manifest().source_lowered_unit == expected_source, "Unexpected native Button kernel source lowered unit.");
     auto& button = widgets.at(control_widget_id);
     bool native_input = false;
-    const bool switch_when_pressed = is_switch_when_pressed_action(button.properties);
-    if (switch_when_pressed) {
+    const bool stored_switch = is_stored_switch_action(button.properties);
+    if (stored_switch) {
         if (pressed_override.has_value()) {
             last_trigger_pressed = true;
             button.properties["pressed"] = Value(true);
@@ -1969,7 +1996,7 @@ Value Slice10ButtonRuntimeCore::execute_with_native_kernel_bridge(
     last_result = result.result;
     widgets.at(indicator_widget_id).properties["value"] = Value(last_result);
     button.properties["pressed"] = Value(false);
-    button.properties["value"] = Value(switch_when_pressed ? last_result : false);
+    button.properties["value"] = Value(stored_switch ? last_result : false);
     return execution_artifact();
 }
 
@@ -1977,9 +2004,7 @@ Value Slice10ButtonRuntimeCore::execution_artifact() const {
     Array widget_entries;
     Object ui_outputs;
     const auto& button = widgets.at(control_widget_id);
-    const auto execution_mode = is_switch_when_pressed_action(button.properties)
-        ? "button_switch_when_pressed"
-        : "button_press_to_boolean";
+    const auto execution_mode = button_execution_mode(button.properties);
     for (const auto& entry : widgets) {
         const auto& widget = entry.second;
         const bool value = json_bool(widget.properties, "value", false);
@@ -2093,6 +2118,7 @@ Value Slice10ButtonRuntimeCore::execution_artifact() const {
             {"mode", Value(execution_mode)},
             {"executed_unit", Value(unit.unit_id)},
             {"operation", Value("copy")},
+            {"mechanical_action", Value(json_string(button.properties, "behavior.mechanical_action"))},
             {"trigger_pressed", Value(last_trigger_pressed)},
             {public_output_id, Value(last_result)},
         })},
