@@ -38,16 +38,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install LLVM toolchain
+      - name: Install native build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang
+          sudo apt-get install -y clang cmake
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Check all LLVM native examples
+      - name: Prepare Rust runtime dependencies
+        run: cargo fetch --manifest-path Implementations/Reference/Runtime/rust/Cargo.toml
+
+      - name: Check manifest-backed native kernel bridge
         run: |
-          python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-llvm-build
+          python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge
