@@ -1,7 +1,7 @@
 """Generic-by-kind LLVM emitter for the non-normative FROG reference workspace.
 
 This module is intentionally narrow and non-normative. It does not implement a
-general production LLVM backend. It consolidates the current Examples 01-10
+general production LLVM backend. It consolidates the current Examples 01-11
 native proof emitters around one dispatch key:
 
     lowered_units[0].kind
@@ -832,6 +832,84 @@ run:
 """
 
 
+def emit_button_switch_when_pressed_to_boolean(lowering: dict[str, Any]) -> str:
+    unit = single_lowered_unit(lowering)
+    kernel = execution_kernel(unit)
+    public_io = require_object(unit.get("public_io"), "unit.public_io")
+    inputs = require_list(public_io.get("inputs"), "unit.public_io.inputs")
+    outputs = require_list(public_io.get("outputs"), "unit.public_io.outputs")
+
+    expect_equal(kernel.get("operation"), "copy", "button_switch_when_pressed expects copy operation")
+    expect_equal(kernel.get("src"), "trigger_value", "button_switch_when_pressed expects src trigger_value")
+    expect_equal(kernel.get("dst"), "switched", "button_switch_when_pressed expects dst switched")
+    expect_equal(kernel.get("type"), "bool", "button_switch_when_pressed expects bool copy type")
+    expect_equal(inputs, [{"id": "trigger_value", "type": "bool", "binding_origin": "widget.trigger_button.value"}], "button_switch_when_pressed expects one Button value input")
+    expect_equal(outputs, [{"id": "switched", "type": "bool"}], "button_switch_when_pressed expects one bool output")
+
+    fmt_input = "trigger_value=%s\n"
+    fmt_output = "public_switched=%s\n"
+    fmt_status_ok = "status=ok\n"
+
+    return f"""; FROG example 11 - LLVM Button switch_when_pressed Boolean proof
+; Emitted from the published Example 11 lowered Button value copy kernel.
+;
+; Lowered kernel shape:
+;   trigger_value : bool
+;   switched      : bool
+;   operation     : copy trigger_value -> switched
+
+{c_const("text_true", "true")}
+{c_const("text_false", "false")}
+{c_const("fmt_input", fmt_input)}
+{c_const("fmt_output", fmt_output)}
+{c_const("fmt_status_ok", fmt_status_ok)}
+
+declare i32 @printf(ptr, ...)
+declare i32 @atoi(ptr)
+
+define i1 @frog_example11_copy_button_value(i1 %trigger_value) {{
+entry:
+  ret i1 %trigger_value
+}}
+
+define i32 @main(i32 %argc, ptr %argv) {{
+entry:
+  %true_ptr = getelementptr inbounds [5 x i8], ptr @text_true, i64 0, i64 0
+  %false_ptr = getelementptr inbounds [6 x i8], ptr @text_false, i64 0, i64 0
+  %has_arg = icmp sgt i32 %argc, 1
+  br i1 %has_arg, label %parse_arg, label %use_default
+
+parse_arg:
+  %argv1ptr = getelementptr inbounds ptr, ptr %argv, i64 1
+  %argv1 = load ptr, ptr %argv1ptr, align 8
+  %parsed = call i32 @atoi(ptr %argv1)
+  %parsed_bool = icmp ne i32 %parsed, 0
+  br label %run
+
+use_default:
+  br label %run
+
+run:
+  %trigger_value = phi i1 [ %parsed_bool, %parse_arg ], [ false, %use_default ]
+  %switched = call i1 @frog_example11_copy_button_value(i1 %trigger_value)
+
+  %input_text = select i1 %trigger_value, ptr %true_ptr, ptr %false_ptr
+  %result_text = select i1 %switched, ptr %true_ptr, ptr %false_ptr
+
+  %fmt_input_ptr = getelementptr inbounds [{c_len(fmt_input)} x i8], ptr @fmt_input, i64 0, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt_input_ptr, ptr %input_text)
+
+  %fmt_output_ptr = getelementptr inbounds [{c_len(fmt_output)} x i8], ptr @fmt_output, i64 0, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt_output_ptr, ptr %result_text)
+
+  %fmt_status_ok_ptr = getelementptr inbounds [{c_len(fmt_status_ok)} x i8], ptr @fmt_status_ok, i64 0, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt_status_ok_ptr)
+
+  ret i32 0
+}}
+"""
+
+
 EMITTERS_BY_KIND: dict[str, Callable[[dict[str, Any]], str]] = {
     "pure_addition_kernel": emit_pure_addition,
     "ui_value_roundtrip_kernel": emit_ui_value_roundtrip,
@@ -843,6 +921,7 @@ EMITTERS_BY_KIND: dict[str, Callable[[dict[str, Any]], str]] = {
     "enum_value_roundtrip_kernel_with_ui_bindings": emit_enum_value_roundtrip,
     "path_value_roundtrip_kernel_with_ui_bindings": emit_path_value_roundtrip,
     "button_press_to_boolean_kernel_with_ui_bindings": emit_button_press_to_boolean,
+    "button_switch_when_pressed_kernel_with_ui_bindings": emit_button_switch_when_pressed_to_boolean,
 }
 
 

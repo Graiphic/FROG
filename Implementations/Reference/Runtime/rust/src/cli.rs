@@ -99,6 +99,23 @@ fn example10_wfrog_path() -> Result<PathBuf> {
         .join("button_panel.wfrog"))
 }
 
+fn example11_contract_path() -> Result<PathBuf> {
+    Ok(repo_root()?
+        .join("Implementations")
+        .join("Reference")
+        .join("ContractEmitter")
+        .join("examples")
+        .join("11_button_switch_when_pressed.reference_host_runtime_ui_binding.contract.json"))
+}
+
+fn example11_wfrog_path() -> Result<PathBuf> {
+    Ok(repo_root()?
+        .join("Examples")
+        .join("11_button_switch_when_pressed")
+        .join("ui")
+        .join("button_panel.wfrog"))
+}
+
 fn wants_example06(value: &str) -> bool {
     matches!(value, "06" | "6" | "example06" | "06_boolean_value_roundtrip")
 }
@@ -117,6 +134,10 @@ fn wants_example09(value: &str) -> bool {
 
 fn wants_example10(value: &str) -> bool {
     matches!(value, "10" | "example10" | "10_button_press_to_boolean")
+}
+
+fn wants_example11(value: &str) -> bool {
+    matches!(value, "11" | "example11" | "11_button_switch_when_pressed")
 }
 
 fn parse_bool_input(value: &str) -> Result<bool> {
@@ -169,6 +190,14 @@ fn contract_is_example10(path: &Path) -> bool {
     };
     contract["source_ref"]["example_id"].as_str() == Some("10_button_press_to_boolean")
         || contract["example_id"].as_str() == Some("10_button_press_to_boolean")
+}
+
+fn contract_is_example11(path: &Path) -> bool {
+    let Ok(contract) = load_json(path) else {
+        return false;
+    };
+    contract["source_ref"]["example_id"].as_str() == Some("11_button_switch_when_pressed")
+        || contract["example_id"].as_str() == Some("11_button_switch_when_pressed")
 }
 
 pub fn run_cli() -> Result<()> {
@@ -344,6 +373,30 @@ pub fn run_cli() -> Result<()> {
             )?;
             return runtime.serve(&host, port, open_browser);
         }
+        if example.as_deref().is_some_and(wants_example11) {
+            let native_bridge = match (&native_kernel_manifest, &native_kernel_library) {
+                (Some(manifest), Some(library)) => Some(NativeBoolKernelBridge::from_paths(manifest, library)?),
+                _ => None,
+            };
+            let runtime = ButtonBrowserUiRuntime::with_native_kernel_bridge(
+                contract_path.unwrap_or(example11_contract_path()?),
+                wfrog_path.unwrap_or(example11_wfrog_path()?),
+                native_bridge,
+            )?;
+            return runtime.serve(&host, port, open_browser);
+        }
+        if contract_path.as_deref().is_some_and(contract_is_example11) {
+            let native_bridge = match (&native_kernel_manifest, &native_kernel_library) {
+                (Some(manifest), Some(library)) => Some(NativeBoolKernelBridge::from_paths(manifest, library)?),
+                _ => None,
+            };
+            let runtime = ButtonBrowserUiRuntime::with_native_kernel_bridge(
+                contract_path.unwrap(),
+                wfrog_path.unwrap_or(example11_wfrog_path()?),
+                native_bridge,
+            )?;
+            return runtime.serve(&host, port, open_browser);
+        }
 
         let native_bridge = match (&native_kernel_manifest, &native_kernel_library) {
             (Some(manifest), Some(library)) => Some(NativeKernelBridge::from_paths(manifest, library)?),
@@ -485,6 +538,24 @@ pub fn run_cli() -> Result<()> {
         };
         let wfrog_path = if example.as_deref().is_some_and(wants_example10) && wfrog_path == default_wfrog_path()? {
             example10_wfrog_path()?
+        } else {
+            wfrog_path
+        };
+        let mut runtime = if let (Some(manifest), Some(library)) = (&native_kernel_manifest, &native_kernel_library) {
+            let bridge = NativeBoolKernelBridge::from_paths(manifest, library)?;
+            ButtonBrowserUiRuntime::with_native_kernel_bridge(contract_path, wfrog_path, Some(bridge))?
+        } else {
+            ButtonBrowserUiRuntime::with_native_kernel_bridge(contract_path, wfrog_path, None)?
+        };
+        runtime.run_once(parse_bool_input(&input_value_text)?)?
+    } else if example.as_deref().is_some_and(wants_example11) || contract_is_example11(&contract_path) {
+        let contract_path = if example.as_deref().is_some_and(wants_example11) && contract_path == default_contract_path()? {
+            example11_contract_path()?
+        } else {
+            contract_path
+        };
+        let wfrog_path = if example.as_deref().is_some_and(wants_example11) && wfrog_path == default_wfrog_path()? {
+            example11_wfrog_path()?
         } else {
             wfrog_path
         };

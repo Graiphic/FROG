@@ -26,6 +26,7 @@ EXAMPLE_MANIFESTS = {
     "09": ROOT / "Implementations/Reference/LLVM/examples/09_path_value_roundtrip/native_kernel_manifest.json",
     "9": ROOT / "Implementations/Reference/LLVM/examples/09_path_value_roundtrip/native_kernel_manifest.json",
     "10": ROOT / "Implementations/Reference/LLVM/examples/10_button_press_to_boolean/native_kernel_manifest.json",
+    "11": ROOT / "Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/native_kernel_manifest.json",
 }
 
 
@@ -50,6 +51,7 @@ def default_output_path(example: str) -> Path:
         "9": "09",
         "09": "09",
         "10": "10",
+        "11": "11",
     }[example]
     return ROOT / "build" / "frog_native_kernels" / f"example{normalized}_kernel{shared_library_suffix()}"
 

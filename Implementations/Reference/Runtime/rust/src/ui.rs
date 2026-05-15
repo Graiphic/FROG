@@ -1965,10 +1965,71 @@ pub struct ButtonBrowserUiRuntime {
     pub wfrog: Value,
     pub panel: Value,
     pub asset_map: BTreeMap<String, PathBuf>,
+    pub control_widget_id: String,
+    pub indicator_widget_id: String,
+    pub public_input_id: String,
+    pub public_output_id: String,
     pub last_trigger_pressed: bool,
     pub last_result: bool,
     pub last_error: Option<String>,
     pub native_kernel_bridge: Option<NativeBoolKernelBridge>,
+}
+
+fn is_button_switch_when_pressed_example(example_id: &str) -> bool {
+    example_id == "11_button_switch_when_pressed"
+}
+
+fn is_button_press_to_boolean_example(example_id: &str) -> bool {
+    example_id == "10_button_press_to_boolean"
+}
+
+fn button_control_binding(unit: &Value) -> Result<Value> {
+    let widgets = unit["ui_bindings"]["widgets"]
+        .as_array()
+        .ok_or_else(|| RuntimeError::Message("Button slice must publish UI widget bindings.".to_string()))?;
+    let matches: Vec<Value> = widgets
+        .iter()
+        .filter(|binding| {
+            binding["role"].as_str() == Some("control")
+                && binding["widget_class"].as_str() == Some("frog.widgets.button")
+                && binding["value_type"].as_str() == Some("bool")
+                && binding["binding"]["public_input_id"].as_str().is_some()
+        })
+        .cloned()
+        .collect();
+    if matches.len() != 1 {
+        return Err(RuntimeError::Message("Button slice expects one Button control binding.".to_string()));
+    }
+    Ok(matches[0].clone())
+}
+
+fn button_indicator_binding(unit: &Value) -> Result<Value> {
+    let widgets = unit["ui_bindings"]["widgets"]
+        .as_array()
+        .ok_or_else(|| RuntimeError::Message("Button slice must publish UI widget bindings.".to_string()))?;
+    let matches: Vec<Value> = widgets
+        .iter()
+        .filter(|binding| {
+            binding["role"].as_str() == Some("indicator")
+                && binding["widget_class"].as_str() == Some("frog.widgets.boolean_indicator")
+                && binding["value_type"].as_str() == Some("bool")
+                && binding["binding"]["public_output_id"].as_str().is_some()
+        })
+        .cloned()
+        .collect();
+    if matches.len() != 1 {
+        return Err(RuntimeError::Message("Button slice expects one Boolean indicator binding.".to_string()));
+    }
+    Ok(matches[0].clone())
+}
+
+fn expected_button_source_lowered_unit(contract: &Value) -> String {
+    let source_path = contract["source_ref"]["path"].as_str().unwrap_or("");
+    if let Some(prefix) = source_path.strip_suffix("/main.frog") {
+        return format!("{prefix}/main.lowering.json");
+    }
+    let example_id = contract["source_ref"]["example_id"].as_str().or_else(|| contract["example_id"].as_str()).unwrap_or("");
+    format!("Examples/{example_id}/main.lowering.json")
 }
 
 impl ButtonBrowserUiRuntime {
@@ -1979,10 +2040,58 @@ impl ButtonBrowserUiRuntime {
     ) -> Result<Self> {
         let contract: Value = serde_json::from_str(&fs::read_to_string(&contract_path)?)?;
         let wfrog: Value = serde_json::from_str(&fs::read_to_string(&wfrog_path)?)?;
-        if contract["example_id"].as_str() != Some("10_button_press_to_boolean")
-            && contract["source_ref"]["example_id"].as_str() != Some("10_button_press_to_boolean")
-        {
-            return Err(RuntimeError::Message("Slice 10 expects Example 10.".to_string()));
+        let example_id = contract["source_ref"]["example_id"]
+            .as_str()
+            .or_else(|| contract["example_id"].as_str())
+            .ok_or_else(|| RuntimeError::Message("Button slice contract must publish an example id.".to_string()))?;
+        if !is_button_press_to_boolean_example(example_id) && !is_button_switch_when_pressed_example(example_id) {
+            return Err(RuntimeError::Message("Button slice expects Example 10 or Example 11.".to_string()));
+        }
+        let unit = contract["units"]
+            .as_array()
+            .and_then(|units| units.first())
+            .ok_or_else(|| RuntimeError::Message("Button slice expects exactly one contract unit.".to_string()))?;
+        if !matches!(
+            unit["kind"].as_str(),
+            Some("button_press_to_boolean_ui_unit") | Some("button_switch_when_pressed_ui_unit")
+        ) {
+            return Err(RuntimeError::Message("Unexpected runtime unit kind.".to_string()));
+        }
+        let control_binding = button_control_binding(unit)?;
+        let indicator_binding = button_indicator_binding(unit)?;
+        let public_input_id = control_binding["binding"]["public_input_id"]
+            .as_str()
+            .ok_or_else(|| RuntimeError::Message("Button control binding must publish public_input_id.".to_string()))?
+            .to_string();
+        let public_output_id = indicator_binding["binding"]["public_output_id"]
+            .as_str()
+            .ok_or_else(|| RuntimeError::Message("Boolean indicator binding must publish public_output_id.".to_string()))?
+            .to_string();
+        let control_widget_id = control_binding["widget_id"]
+            .as_str()
+            .ok_or_else(|| RuntimeError::Message("Button control binding must publish widget_id.".to_string()))?
+            .to_string();
+        let indicator_widget_id = indicator_binding["widget_id"]
+            .as_str()
+            .ok_or_else(|| RuntimeError::Message("Boolean indicator binding must publish widget_id.".to_string()))?
+            .to_string();
+        let inputs = unit["public_io"]["inputs"]
+            .as_array()
+            .ok_or_else(|| RuntimeError::Message("Button slice must publish public inputs.".to_string()))?;
+        let outputs = unit["public_io"]["outputs"]
+            .as_array()
+            .ok_or_else(|| RuntimeError::Message("Button slice must publish public outputs.".to_string()))?;
+        if inputs.len() != 1 || inputs[0]["type"].as_str() != Some("bool") {
+            return Err(RuntimeError::Message("Expected one bool public input.".to_string()));
+        }
+        if outputs.len() != 1 || outputs[0]["type"].as_str() != Some("bool") {
+            return Err(RuntimeError::Message("Expected one bool public output.".to_string()));
+        }
+        if inputs[0]["id"].as_str() != Some(public_input_id.as_str()) {
+            return Err(RuntimeError::Message("Button control binding must target the unit public input.".to_string()));
+        }
+        if outputs[0]["id"].as_str() != Some(public_output_id.as_str()) {
+            return Err(RuntimeError::Message("Boolean indicator binding must target the unit public output.".to_string()));
         }
         let panel = source_front_panel_value(&contract_path, &contract)?;
         let mut asset_map = BTreeMap::new();
@@ -2015,13 +2124,17 @@ impl ButtonBrowserUiRuntime {
             wfrog,
             panel,
             asset_map,
+            control_widget_id,
+            indicator_widget_id,
+            public_input_id,
+            public_output_id,
             last_trigger_pressed: false,
             last_result: false,
             last_error: None,
             native_kernel_bridge,
         };
-        runtime.require_widget_asset("trigger_button")?;
-        runtime.require_widget_asset("pressed_indicator")?;
+        runtime.require_widget_asset(&runtime.control_widget_id)?;
+        runtime.require_widget_asset(&runtime.indicator_widget_id)?;
         runtime.require_button_mechanical_action()?;
         Ok(runtime)
     }
@@ -2030,28 +2143,28 @@ impl ButtonBrowserUiRuntime {
         let widget = self.widget_by_id(widget_id)?;
         let asset_ref = widget["visual"]["asset_ref"]
             .as_str()
-            .ok_or_else(|| RuntimeError::Message(format!("Slice 10 widget {widget_id} must reference a .wfrog SVG asset.")))?;
+            .ok_or_else(|| RuntimeError::Message(format!("Button slice widget {widget_id} must reference a .wfrog SVG asset.")))?;
         let asset_id = asset_ref
             .strip_prefix("asset:")
-            .ok_or_else(|| RuntimeError::Message(format!("Slice 10 widget {widget_id} must reference a .wfrog SVG asset.")))?;
+            .ok_or_else(|| RuntimeError::Message(format!("Button slice widget {widget_id} must reference a .wfrog SVG asset.")))?;
         let asset_path = self
             .asset_map
             .get(asset_id)
-            .ok_or_else(|| RuntimeError::Message(format!("Slice 10 widget {widget_id} asset path must exist.")))?;
+            .ok_or_else(|| RuntimeError::Message(format!("Button slice widget {widget_id} asset path must exist.")))?;
         if !asset_path.exists() {
-            return Err(RuntimeError::Message(format!("Slice 10 widget {widget_id} asset path must exist.")));
+            return Err(RuntimeError::Message(format!("Button slice widget {widget_id} asset path must exist.")));
         }
         Ok(())
     }
 
     fn require_button_mechanical_action(&self) -> Result<()> {
-        let button = self.widget_by_id("trigger_button")?;
+        let button = self.widget_by_id(&self.control_widget_id)?;
         let action = button["props"]["behavior.mechanical_action"]
             .as_str()
-            .ok_or_else(|| RuntimeError::Message("Slice 10 Button requires source-owned behavior.mechanical_action.".to_string()))?;
-        if action != "switch_until_released" {
+            .ok_or_else(|| RuntimeError::Message("Button slice requires source-owned behavior.mechanical_action.".to_string()))?;
+        if action != "switch_until_released" && action != "switch_when_pressed" {
             return Err(RuntimeError::Message(
-                "Slice 10 validates only behavior.mechanical_action=switch_until_released.".to_string(),
+                "Button slice validates only source-declared switch_until_released or switch_when_pressed mechanical actions.".to_string(),
             ));
         }
         Ok(())
@@ -2062,7 +2175,18 @@ impl ButtonBrowserUiRuntime {
             .as_array()
             .and_then(|widgets| widgets.iter().find(|widget| widget["instance_id"].as_str() == Some(id)))
             .cloned()
-            .ok_or_else(|| RuntimeError::Message(format!("Example 10 panel must contain {id}.")))
+            .ok_or_else(|| RuntimeError::Message(format!("Button panel must contain {id}.")))
+    }
+
+    fn contract_binding(&self, widget_id: &str, member: &str) -> Option<String> {
+        self.contract["units"][0]["ui_bindings"]["widgets"]
+            .as_array()
+            .and_then(|widgets| {
+                widgets
+                    .iter()
+                    .find(|widget| widget["widget_id"].as_str() == Some(widget_id))
+                    .and_then(|widget| widget["binding"][member].as_str().map(ToString::to_string))
+            })
     }
 
     fn runtime_for(&self, widget: &Value, value: bool) -> Value {
@@ -2077,16 +2201,14 @@ impl ButtonBrowserUiRuntime {
             "realization.variant": props["realization.variant"].clone(),
         });
         if let Some(runtime_object) = runtime.as_object_mut() {
-            if widget_id == "trigger_button" {
+            if widget_id == self.control_widget_id.as_str() {
                 runtime_object.insert("event.pressed".to_string(), Value::Bool(self.last_trigger_pressed));
             }
-            if let Some(binding) = widget["binding"].as_object() {
-                if let Some(value) = binding.get("public_input_id") {
-                    runtime_object.insert("binding.public_input_id".to_string(), value.clone());
-                }
-                if let Some(value) = binding.get("public_output_id") {
-                    runtime_object.insert("binding.public_output_id".to_string(), value.clone());
-                }
+            if let Some(value) = self.contract_binding(widget_id, "public_input_id") {
+                runtime_object.insert("binding.public_input_id".to_string(), Value::String(value));
+            }
+            if let Some(value) = self.contract_binding(widget_id, "public_output_id") {
+                runtime_object.insert("binding.public_output_id".to_string(), Value::String(value));
             }
             for member in [
                 "caption.visible",
@@ -2161,10 +2283,32 @@ impl ButtonBrowserUiRuntime {
         runtime
     }
 
+    fn button_mechanical_action(&self) -> Result<String> {
+        let button = self.widget_by_id(&self.control_widget_id)?;
+        Ok(button["props"]["behavior.mechanical_action"].as_str().unwrap_or("").to_string())
+    }
+
     pub fn run_once(&mut self, trigger_pressed: bool) -> Result<Value> {
-        self.last_trigger_pressed = trigger_pressed;
-        if let Some(bridge) = &self.native_kernel_bridge {
-            if bridge.manifest().source_lowered_unit != "Examples/10_button_press_to_boolean/main.lowering.json" {
+        let action = self.button_mechanical_action()?;
+        if action == "switch_when_pressed" {
+            self.last_trigger_pressed = true;
+            if let Some(bridge) = &self.native_kernel_bridge {
+                if bridge.manifest().source_lowered_unit != expected_button_source_lowered_unit(&self.contract) {
+                    return Err(RuntimeError::Message("Unexpected native Button kernel source lowered unit.".to_string()));
+                }
+                let result = bridge.run(trigger_pressed);
+                if !result.ok {
+                    let diagnostic = bridge.manifest().diagnostic(result.error_code);
+                    self.last_error = Some(diagnostic.clone());
+                    return Err(RuntimeError::Message(diagnostic));
+                }
+                self.last_result = result.result;
+            } else {
+                self.last_result = trigger_pressed;
+            }
+        } else if let Some(bridge) = &self.native_kernel_bridge {
+            self.last_trigger_pressed = trigger_pressed;
+            if bridge.manifest().source_lowered_unit != expected_button_source_lowered_unit(&self.contract) {
                 return Err(RuntimeError::Message("Unexpected native Button kernel source lowered unit.".to_string()));
             }
             let result = bridge.run(trigger_pressed);
@@ -2175,6 +2319,7 @@ impl ButtonBrowserUiRuntime {
             }
             self.last_result = result.result;
         } else {
+            self.last_trigger_pressed = trigger_pressed;
             self.last_result = trigger_pressed;
         }
         self.last_error = None;
@@ -2182,20 +2327,42 @@ impl ButtonBrowserUiRuntime {
     }
 
     pub fn execution_artifact(&self) -> Result<Value> {
-        let button = self.widget_by_id("trigger_button")?;
-        let indicator = self.widget_by_id("pressed_indicator")?;
+        let switch_when_pressed = self.button_mechanical_action()? == "switch_when_pressed";
+        let execution_mode = if switch_when_pressed {
+            "button_switch_when_pressed"
+        } else {
+            "button_press_to_boolean"
+        };
+        let button_value = if switch_when_pressed { self.last_result } else { false };
+        let button = self.widget_by_id(&self.control_widget_id)?;
+        let indicator = self.widget_by_id(&self.indicator_widget_id)?;
+        let mut execution_summary = json!({
+            "mode": execution_mode,
+            "executed_unit": "main",
+            "operation": "copy",
+            "trigger_pressed": self.last_trigger_pressed
+        });
+        execution_summary
+            .as_object_mut()
+            .unwrap()
+            .insert(self.public_output_id.clone(), Value::Bool(self.last_result));
+        let mut public_outputs = serde_json::Map::new();
+        public_outputs.insert(self.public_output_id.clone(), Value::Bool(self.last_result));
+        let mut ui_outputs = serde_json::Map::new();
+        ui_outputs.insert(self.control_widget_id.clone(), Value::Bool(button_value));
+        ui_outputs.insert(self.indicator_widget_id.clone(), Value::Bool(self.last_result));
         Ok(json!({
             "artifact_kind": "frog_runtime_execution_result",
             "artifact_governance_ref": {"path": "Versioning/Readme.md"},
             "status": "ok",
             "contract_ref": {"unit_ids": ["main"], "backend_family": self.contract["backend_family"].clone(), "source_ref": self.contract["source_ref"].clone()},
-            "execution_summary": {"mode": "button_press_to_boolean", "executed_unit": "main", "operation": "copy", "trigger_pressed": self.last_trigger_pressed, "pressed": self.last_result},
-            "outputs": {"public": {"pressed": self.last_result}, "ui": {"trigger_button": false, "pressed_indicator": self.last_result}},
+            "execution_summary": execution_summary,
+            "outputs": {"public": Value::Object(public_outputs), "ui": Value::Object(ui_outputs)},
             "ui_runtime": {
                 "panel": {"panel_id": self.panel["panel_id"].clone(), "title": self.panel["title"].clone(), "class_ref": self.panel["class_ref"].clone(), "layout": self.panel["layout"].clone()},
                 "widgets": [
-                    {"widget_id": "trigger_button", "class_ref": button["class_ref"].clone(), "role": "control", "layout": button["layout"].clone(), "runtime": self.runtime_for(&button, false)},
-                    {"widget_id": "pressed_indicator", "class_ref": indicator["class_ref"].clone(), "role": "indicator", "layout": indicator["layout"].clone(), "runtime": self.runtime_for(&indicator, self.last_result)}
+                    {"widget_id": self.control_widget_id.clone(), "class_ref": button["class_ref"].clone(), "role": "control", "layout": button["layout"].clone(), "runtime": self.runtime_for(&button, button_value)},
+                    {"widget_id": self.indicator_widget_id.clone(), "class_ref": indicator["class_ref"].clone(), "role": "indicator", "layout": indicator["layout"].clone(), "runtime": self.runtime_for(&indicator, self.last_result)}
                 ]
             },
             "diagnostics": []
@@ -2209,15 +2376,48 @@ impl ButtonBrowserUiRuntime {
         let panel_width = panel["layout"]["width"].as_i64().unwrap_or(520);
         let panel_height = panel["layout"]["height"].as_i64().unwrap_or(180);
         let uses_native_kernel = self.native_kernel_bridge.is_some();
+        let switch_when_pressed = self.button_mechanical_action().unwrap_or_default() == "switch_when_pressed";
         let mut diagnostics = String::new();
         if let Some(message) = &self.last_error {
             let _ = write!(diagnostics, "<div class='diagnostic error'>{}</div>", escape_html(message));
         }
-        let button = widgets.iter().find(|widget| widget["widget_id"].as_str() == Some("trigger_button")).unwrap();
-        let indicator = widgets.iter().find(|widget| widget["widget_id"].as_str() == Some("pressed_indicator")).unwrap();
+        let button = widgets
+            .iter()
+            .find(|widget| widget["widget_id"].as_str() == Some(self.control_widget_id.as_str()))
+            .unwrap();
+        let indicator = widgets
+            .iter()
+            .find(|widget| widget["widget_id"].as_str() == Some(self.indicator_widget_id.as_str()))
+            .unwrap();
         let button_asset_id = button["runtime"]["asset_ref"].as_str().and_then(|value| value.strip_prefix("asset:")).unwrap_or("");
         let button_html = render_button_widget(button, self.asset_map.get(button_asset_id));
         let indicator_html = render_boolean_widget(indicator);
+        let meta = if switch_when_pressed {
+            "Example 11 - .frog switch_when_pressed Button value + Default Button/Boolean .wfrog realization assets + Rust runtime"
+        } else {
+            "Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + Rust runtime"
+        };
+        let execution_path = if uses_native_kernel {
+            "native kernel bridge"
+        } else if switch_when_pressed {
+            "button switch contract executor"
+        } else {
+            "button contract executor"
+        };
+        let compiler_backend = if uses_native_kernel {
+            "LLVM native Button bool kernel artifact"
+        } else if switch_when_pressed {
+            "none for Example 11"
+        } else {
+            "none for Example 10"
+        };
+        let execution_path_id = if uses_native_kernel {
+            "native_kernel_bridge"
+        } else if switch_when_pressed {
+            "rust_button_switch_when_pressed_contract_executor"
+        } else {
+            "rust_button_contract_executor"
+        };
         format!(
             "<!doctype html><html lang='en'><head><meta charset='utf-8'><title>{title}</title>\
              <style>\
@@ -2261,7 +2461,7 @@ impl ButtonBrowserUiRuntime {
              .diagnostic.error{{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}}\
              </style></head><body>\
              <h1>{title}</h1>\
-             <p class='meta'>Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + Rust runtime</p>\
+             <p class='meta'>{meta}</p>\
              <dl class='runtime-facts' aria-label='Runtime facts'>\
              <div><dt>Runtime</dt><dd>Rust reference runtime</dd></div>\
              <div><dt>Execution</dt><dd>{execution_path}</dd></div>\
@@ -2270,17 +2470,18 @@ impl ButtonBrowserUiRuntime {
              <div class='front-panel' data-panel-id='{panel_id}' data-coordinate-space='panel_pixels' data-runtime-language='rust' data-compiler-backend='{compiler_backend_id}' data-execution-path='{execution_path_id}' style='width:{panel_width}px;height:{panel_height}px;'>{button_html}{indicator_html}</div>\
              <div class='actions'><a class='state-link' href='/state.json'>state.json</a></div></form>{script}</body></html>",
             title = escape_html(panel["title"].as_str().unwrap_or("FROG")),
+            meta = escape_html(meta),
             diagnostics = diagnostics,
-            execution_path = if uses_native_kernel { "native kernel bridge" } else { "button contract executor" },
-            compiler_backend = if uses_native_kernel { "LLVM native Button bool kernel artifact" } else { "none for Example 10" },
+            execution_path = escape_html(execution_path),
+            compiler_backend = escape_html(compiler_backend),
             compiler_backend_id = if uses_native_kernel { "llvm" } else { "none" },
-            execution_path_id = if uses_native_kernel { "native_kernel_bridge" } else { "rust_button_contract_executor" },
+            execution_path_id = execution_path_id,
             panel_id = escape_html(panel["panel_id"].as_str().unwrap_or("main_panel")),
             panel_width = panel_width,
             panel_height = panel_height,
             button_html = button_html,
             indicator_html = indicator_html,
-            script = button_press_to_boolean_script(),
+            script = button_widget_script(),
         )
     }
 
@@ -2327,7 +2528,8 @@ impl ButtonBrowserUiRuntime {
         }
         if request.method == "POST" && (request.path == "/run" || request.path == "/event") {
             let body = String::from_utf8_lossy(&request.body);
-            let value = parse_form_value(&body, "trigger_pressed").unwrap_or_else(|| "false".to_string());
+            let input_id = self.public_input_id.as_str();
+            let value = parse_form_value(&body, input_id).unwrap_or_else(|| "false".to_string());
             let status = match parse_bool_value(&value).and_then(|parsed| self.run_once(parsed)) {
                 Ok(artifact) => {
                     if request.path == "/event" {
@@ -3212,18 +3414,22 @@ fn render_button_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
     let runtime = &widget["runtime"];
     let layout = &widget["layout"];
     let geometry = load_button_svg_geometry(asset_path);
-    let value = runtime["pressed"].as_bool().or_else(|| runtime["value"].as_bool()).unwrap_or(false);
+    let mechanical_action = runtime_string(runtime, "behavior.mechanical_action", "");
+    let value = if mechanical_action == "switch_until_released" {
+        runtime["pressed"].as_bool().or_else(|| runtime["value"].as_bool()).unwrap_or(false)
+    } else {
+        runtime["value"].as_bool().or_else(|| runtime["pressed"].as_bool()).unwrap_or(false)
+    };
     let visual_state = if value { "true" } else { "false" };
     let hover_state = if value { "hover_true" } else { "hover_false" };
     let pressed_state = if value { "pressed_true" } else { "pressed_false" };
     let transition_state = if value { "transition_true_to_false" } else { "transition_false_to_true" };
-    let widget_id = widget["widget_id"].as_str().unwrap_or("trigger_button");
+    let widget_id = widget["widget_id"].as_str().unwrap_or("");
     let caption = runtime_string(runtime, "caption.text", widget_id);
     let false_state_text = runtime_string(runtime, "state_text.false_text", "OFF");
     let true_state_text = runtime_string(runtime, "state_text.true_text", "ON");
     let state_text = if value { &true_state_text } else { &false_state_text };
-    let input_id = runtime_string(runtime, "binding.public_input_id", "trigger_pressed");
-    let mechanical_action = runtime_string(runtime, "behavior.mechanical_action", "");
+    let input_id = runtime_string(runtime, "binding.public_input_id", "");
     let frame_fill = safe_css_color(&runtime_string(runtime, "style.frame.fill_color", "transparent"), "transparent");
     let frame_stroke = safe_css_color(&runtime_string(runtime, "style.frame.border_color", "transparent"), "transparent");
     let frame_width = safe_css_length(&runtime_string(runtime, "style.frame.border_width", "0px"), "0px");
@@ -3231,7 +3437,7 @@ fn render_button_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
     let face_hover_fill = safe_css_color(&state_property(runtime, "style.face.fill_color", hover_state, &face_fill), &face_fill);
     let face_pressed_fill = safe_css_color(&state_property(runtime, "style.face.fill_color", pressed_state, &face_fill), &face_fill);
     let face_stroke = safe_css_color(&state_property(runtime, "style.face.border_color", visual_state, "#334155"), "#334155");
-    let face_stroke_width = safe_css_length(&runtime_string(runtime, "style.face.border_width", "4px"), "4px");
+    let face_stroke_width = safe_css_length(&runtime_string(runtime, "style.face.border_width", "1px"), "1px");
     let state_face_fill = safe_css_color(&state_property(runtime, "style.state_face.fill_color", visual_state, "transparent"), "transparent");
     let state_face_hover_fill = safe_css_color(&state_property(runtime, "style.state_face.fill_color", hover_state, &state_face_fill), &state_face_fill);
     let state_face_pressed_fill = safe_css_color(&state_property(runtime, "style.state_face.fill_color", pressed_state, &state_face_fill), &state_face_fill);
@@ -3249,7 +3455,7 @@ fn render_button_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
     let true_text_color = safe_css_color(&state_property(runtime, "state_text.style.text_color", "true", "#06381c"), "#06381c");
     let text_color = if value { true_text_color.clone() } else { false_text_color.clone() };
     let text_size = safe_css_length(&runtime_string(runtime, "state_text.style.font_size", "20px"), "20px");
-    let text_weight = safe_css_font_weight(&runtime_string(runtime, "state_text.style.font_weight", "700"), "700");
+    let text_weight = safe_css_font_weight(&runtime_string(runtime, "state_text.style.font_weight", "400"), "400");
     let focus_color = safe_css_color(&runtime_string(runtime, "style.focus_ring.color", "#2563eb"), "#2563eb");
     let focus_width = if runtime_bool(runtime, "style.focus_ring.visible", true) {
         safe_css_length(&runtime_string(runtime, "style.focus_ring.width", "3px"), "3px")
@@ -3337,24 +3543,24 @@ fn render_button_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
     )
 }
 
-fn button_press_to_boolean_script() -> &'static str {
+fn button_widget_script() -> &'static str {
     r#"<script>
 (() => {
   const form = document.querySelector("form[action='/run']");
-  const buttonWidget = document.querySelector("[data-widget-id='trigger_button']");
-  const overlay = document.querySelector("[data-widget-id='trigger_button'] .button-press-overlay");
-  const indicator = document.querySelector("[data-widget-id='pressed_indicator']");
+  const overlay = document.querySelector(".button-press-overlay[data-frog-part='face'][data-frog-host-overlay='input']");
+  const buttonWidget = overlay ? overlay.closest(".button-widget[data-class-ref='frog.widgets.button']") : null;
+  const indicator = document.querySelector(".boolean-indicator[data-class-ref='frog.widgets.boolean_indicator']");
   if (!form || !buttonWidget || !overlay || !indicator) {
     return;
   }
   const buttonStateText = buttonWidget.querySelector(".button-state-overlay[data-frog-part='state_text']");
   const stateText = indicator.querySelector("[data-frog-part='state_text']");
-  const inputId = overlay.dataset.frogPublicInputId || overlay.name || "trigger_pressed";
+  const inputId = overlay.dataset.frogPublicInputId || overlay.name || "";
   const mechanicalAction = buttonWidget.dataset.frogMechanicalAction || "";
-  if (mechanicalAction !== "switch_until_released") {
+  if (!inputId || (mechanicalAction !== "switch_until_released" && mechanicalAction !== "switch_when_pressed")) {
     return;
   }
-  let pressed = false;
+  let pressed = buttonWidget.dataset.currentValue === "true";
   let eventQueue = Promise.resolve();
   const buttonProperty = (base, value) => buttonWidget.dataset[`${base}${value ? "True" : "False"}`] || "";
   const indicatorProperty = (base, value) => indicator.dataset[`${base}${value ? "True" : "False"}`] || "";
@@ -3399,6 +3605,25 @@ fn button_press_to_boolean_script() -> &'static str {
   };
   form.addEventListener("submit", (event) => event.preventDefault());
   overlay.addEventListener("click", (event) => event.preventDefault());
+  if (mechanicalAction === "switch_when_pressed") {
+    const toggle = (event) => {
+      if (event && event.button !== undefined && event.button !== 0) {
+        return;
+      }
+      if (event) {
+        event.preventDefault();
+      }
+      setPressed(!(buttonWidget.dataset.currentValue === "true"));
+    };
+    overlay.addEventListener("pointerdown", toggle);
+    overlay.addEventListener("keydown", (event) => {
+      if ((event.key !== " " && event.key !== "Enter") || event.repeat) {
+        return;
+      }
+      toggle(event);
+    });
+    return;
+  }
   const press = (event) => {
     if (event && event.button !== undefined && event.button !== 0) {
       return;
@@ -3501,7 +3726,7 @@ fn render_boolean_widget(widget: &Value) -> String {
         "system-ui, Segoe UI, Arial, sans-serif",
     );
     let text_size = safe_css_length(&runtime_string(runtime, "state_text.style.font_size", "18px"), "18px");
-    let text_weight = safe_css_font_weight(&runtime_string(runtime, "state_text.style.font_weight", "700"), "700");
+    let text_weight = safe_css_font_weight(&runtime_string(runtime, "state_text.style.font_weight", "400"), "400");
     let inner_left = runtime_string(runtime, "style.inner.left", if variant == "circular" { "52px" } else { "18px" });
     let inner_top = runtime_string(runtime, "style.inner.top", if variant == "circular" { "23px" } else { "31px" });
     let inner_width = runtime_string(runtime, "style.inner.width", if variant == "circular" { "56px" } else { "124px" });

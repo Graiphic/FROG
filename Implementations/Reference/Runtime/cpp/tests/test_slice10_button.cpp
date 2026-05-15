@@ -88,7 +88,8 @@ void test_button_runtime_core_consumes_frog_instance_and_wfrog_assets() {
     assert_contains(button_svg, "data-frog-bind=\"style.face.*\"");
     assert_contains(button_svg, "data-frog-bind=\"style.state_face.*\"");
     assert_contains(button_svg, "--frog-button-caption-font-weight");
-    assert_contains(button_svg, "--frog-button-face-stroke-width");
+    assert_contains(button_svg, "--frog-button-face-stroke-width: 1px;");
+    assert_contains(button_svg, "--frog-button-state-text-font-weight: 400;");
     assert_contains(button_svg, "--frog-button-state-face-stroke");
 
     const auto default_button_wfrog = read_text(default_button_wfrog_path());
@@ -219,7 +220,9 @@ void test_button_browser_ui_surface() {
     assert_contains(html, "touchstart");
     assert_contains(html, "buttonWidget.querySelector(\".button-state-overlay[data-frog-part='state_text']\")");
     assert_contains(html, "buttonStateText.textContent = buttonProperty(\"frogStateText\", value);");
-    assert_contains(html, "mechanicalAction !== \"switch_until_released\"");
+    assert_contains(html, "mechanicalAction !== \"switch_until_released\" && mechanicalAction !== \"switch_when_pressed\"");
+    assert_contains(html, ".boolean-indicator[data-class-ref='frog.widgets.boolean_indicator']");
+    assert_not_contains(html, "[data-widget-id='pressed_indicator'];");
     assert_not_contains(html, "font-size:14px");
     assert_not_contains(html, "top:49px");
     assert_contains(html, "setPressed(false)");

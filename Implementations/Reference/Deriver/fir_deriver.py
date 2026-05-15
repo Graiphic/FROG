@@ -668,7 +668,7 @@ def derive_example10(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
             "execution_model": {"structure": "single_button_event_copy", "body_rule": {"kind": "copy_widget_event_to_output", "expression": "pressed = trigger_pressed"}},
             "publications": [{"target": "public_output.pressed", "source": "trigger_pressed"}, {"target": "widget.pressed_indicator.value", "source": "trigger_pressed"}],
             "notes": [
-                "This FIR is a C++-first Button widget pilot and remains downstream from canonical source.",
+                "This FIR is a bounded Button widget pilot and remains downstream from canonical source.",
                 "The Button control is a command widget and is not the Default Boolean rectangular value-control realization.",
                 "The button visual grammar is provided by the Default Button SVG realization package; this FIR does not own SVG geometry.",
                 "The reference C++ closure consumes a native bool kernel through an explicit manifest without making the runtime LLVM-only.",

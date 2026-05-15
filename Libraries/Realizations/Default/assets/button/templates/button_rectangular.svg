@@ -23,14 +23,14 @@
         --frog-button-frame-stroke-width: 0px;
         --frog-button-face-fill: #e2e8f0;
         --frog-button-face-stroke: #334155;
-        --frog-button-face-stroke-width: 4px;
+        --frog-button-face-stroke-width: 1px;
         --frog-button-state-face-fill: transparent;
         --frog-button-state-face-stroke: transparent;
         --frog-button-state-face-stroke-width: 0px;
         --frog-button-state-text-fill: #111111;
         --frog-button-state-text-font-family: system-ui, Segoe UI, Arial, sans-serif;
         --frog-button-state-text-font-size: 20px;
-        --frog-button-state-text-font-weight: 700;
+        --frog-button-state-text-font-weight: 400;
         --frog-button-focus-display: none;
         --frog-button-focus-stroke: #2f80ed;
         --frog-button-focus-stroke-width: 3px;

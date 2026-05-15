@@ -74,7 +74,7 @@ fn rust_example10_browser_ui_consumes_default_svg_and_source_styles() {
     assert!(html.contains("--boolean-text-font-weight:400;"));
     assert!(html.contains("--boolean-inner-border-width:0px;"));
     assert!(html.contains("fetch(\"/event\""));
-    assert!(html.contains("mechanicalAction !== \"switch_until_released\""));
+    assert!(html.contains("mechanicalAction !== \"switch_until_released\" && mechanicalAction !== \"switch_when_pressed\""));
     assert!(html.contains("pointerdown"));
     assert!(html.contains("pointerup"));
     assert!(html.contains(">OFF</span>"));

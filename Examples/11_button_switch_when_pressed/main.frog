@@ -1,18 +1,19 @@
 {
   "spec_version": "0.1",
   "metadata": {
-    "name": "10_button_press_to_boolean",
-    "summary": "Button command press to Boolean indicator roundtrip with .frog-owned Button and Boolean widget instances and Default SVG realization assets.",
-    "description": "Reads the pressed state from one .frog front-panel Button command control, exposes that event-derived bool through the public input surface, copies it to one public output, and publishes it to one Boolean indicator. This example intentionally validates the Button widget and its Default Button SVG realization, not the rectangular Boolean value-control realization from Example 06. The .frog source owns the widget instances, layout, bindings, initial values, labels, mechanical-action posture, and per-instance appearance. The .wfrog package owns Default realization references, host requirements, and SVG asset references consumed by the C++, Python, and Rust reference runtimes.",
+    "name": "11_button_switch_when_pressed",
+    "summary": "Button switch-when-pressed value to Boolean indicator roundtrip with .frog-owned Button and Boolean widget instances and Default SVG realization assets.",
+    "description": "Reads the stored value from one .frog front-panel Button control using switch_when_pressed mechanical action, exposes that bool through the public input surface, copies it to one public output, and publishes it to one read-only Boolean indicator. This example validates one bounded Button mechanical action and does not generalize every Button behavior. The .frog source owns the widget instances, layout, bindings, initial values, labels, mechanical-action posture, and per-instance appearance. The .wfrog package owns Default realization references, host requirements, and SVG asset references consumed by the C++, Python, and Rust reference runtimes.",
     "author": "Graiphic",
     "program_version": "0.1.0",
     "tags": [
       "example",
       "ui",
       "widget_value",
-      "button_command",
+      "button_control",
       "button",
       "boolean",
+      "switch_when_pressed",
       "roundtrip",
       "wfrog",
       "widget_realization_package",
@@ -24,14 +25,14 @@
   "interface": {
     "inputs": [
       {
-        "id": "trigger_pressed",
+        "id": "trigger_value",
         "type": "bool",
-        "binding_origin": "widget.trigger_button.pressed"
+        "binding_origin": "widget.trigger_button.value"
       }
     ],
     "outputs": [
       {
-        "id": "pressed",
+        "id": "switched",
         "type": "bool"
       }
     ]
@@ -39,43 +40,42 @@
   "diagram": {
     "nodes": [
       {
-        "id": "trigger_button_pressed",
-        "kind": "widget_event_value",
+        "id": "trigger_button_value",
+        "kind": "widget_value",
         "widget": "trigger_button",
-        "event": "pressed",
         "value_type": "bool"
       },
       {
-        "id": "pressed_indicator_value",
+        "id": "switched_indicator_value",
         "kind": "widget_value",
-        "widget": "pressed_indicator"
+        "widget": "switched_indicator"
       },
       {
-        "id": "output_pressed",
+        "id": "output_switched",
         "kind": "interface_output",
-        "interface_port": "pressed"
+        "interface_port": "switched"
       }
     ],
     "edges": [
       {
         "id": "e1",
         "from": {
-          "node": "trigger_button_pressed",
+          "node": "trigger_button_value",
           "port": "value"
         },
         "to": {
-          "node": "pressed_indicator_value",
+          "node": "switched_indicator_value",
           "port": "value"
         }
       },
       {
         "id": "e2",
         "from": {
-          "node": "trigger_button_pressed",
+          "node": "trigger_button_value",
           "port": "value"
         },
         "to": {
-          "node": "output_pressed",
+          "node": "output_switched",
           "port": "value"
         }
       }
@@ -124,7 +124,7 @@
           "state_text.style.text_color.true": "#111827",
           "state_text.style.font_size": "18px",
           "state_text.style.font_weight": "400",
-          "behavior.mechanical_action": "switch_until_released",
+          "behavior.mechanical_action": "switch_when_pressed",
           "style.frame.fill_color": "transparent",
           "style.frame.border_color": "transparent",
           "style.frame.border_width": "0px",
@@ -164,16 +164,15 @@
           "asset_ref": "asset:button_rectangular_svg"
         },
         "binding": {
-          "mode": "widget_event_value",
-          "event": "pressed",
-          "public_input_id": "trigger_pressed"
+          "mode": "widget_value",
+          "public_input_id": "trigger_value"
         }
       },
       {
-        "id": "pressed_indicator",
+        "id": "switched_indicator",
         "role": "indicator",
         "class_ref": "frog.widgets.boolean_indicator",
-        "instance_ref": "pressed_indicator",
+        "instance_ref": "switched_indicator",
         "value_type": "bool",
         "layout": {
           "x": 240,
@@ -183,8 +182,8 @@
         },
         "props": {
           "value": false,
-          "label.text": "Pressed",
-          "caption.text": "Pressed",
+          "label.text": "Switched",
+          "caption.text": "Switched",
           "caption.align.horizontal": "center",
           "caption.anchor.x": 80,
           "caption.anchor.y": 16,
@@ -223,12 +222,12 @@
         },
         "binding": {
           "mode": "widget_value",
-          "public_output_id": "pressed"
+          "public_output_id": "switched"
         }
       }
     ],
     "panel_id": "main_panel",
-    "title": "Button Press to Boolean",
+    "title": "Button Switch When Pressed",
     "class_ref": "frog.widgets.panel",
     "host_binding_ref": "reference_host_default"
   }

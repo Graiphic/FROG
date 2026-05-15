@@ -21,6 +21,7 @@ EXAMPLE07_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/07_string_v
 EXAMPLE08_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/native_kernel_manifest.json"
 EXAMPLE09_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/09_path_value_roundtrip/native_kernel_manifest.json"
 EXAMPLE10_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/10_button_press_to_boolean/native_kernel_manifest.json"
+EXAMPLE11_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/native_kernel_manifest.json"
 
 
 def require_tool(name: str) -> None:
@@ -67,6 +68,10 @@ def main() -> int:
         library10 = build_native_kernel_library(
             manifest_path=EXAMPLE10_MANIFEST,
             output_path=BUILD_DIR / f"example10_kernel{shared_library_suffix()}",
+        )
+        library11 = build_native_kernel_library(
+            manifest_path=EXAMPLE11_MANIFEST,
+            output_path=BUILD_DIR / f"example11_kernel{shared_library_suffix()}",
         )
 
         result05 = run([
@@ -175,6 +180,25 @@ def main() -> int:
         assert artifact10["outputs"]["public"]["pressed"] is True
         assert artifact10["outputs"]["ui"]["trigger_button"] is False
         assert artifact10["outputs"]["ui"]["pressed_indicator"] is True
+
+        result11 = run([
+            "cargo",
+            "run",
+            "--offline",
+            "--",
+            "run",
+            "true",
+            "--example",
+            "11",
+            "--native-kernel-manifest",
+            str(EXAMPLE11_MANIFEST),
+            "--native-kernel-library",
+            str(library11),
+        ], cwd=RUST_DIR)
+        artifact11 = json.loads(result11.stdout)
+        assert artifact11["outputs"]["public"]["switched"] is True
+        assert artifact11["outputs"]["ui"]["trigger_button"] is True
+        assert artifact11["outputs"]["ui"]["switched_indicator"] is True
 
         print("Rust dynamic native kernel bridge check: ok")
         return 0

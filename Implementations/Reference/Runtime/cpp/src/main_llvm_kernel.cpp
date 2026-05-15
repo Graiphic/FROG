@@ -19,6 +19,7 @@ extern "C" void frog_example07_run(const std::uint8_t* input_ptr, std::uint32_t 
 extern "C" void frog_example08_run(std::uint16_t mode_value, frog::runtime::FrogRunResult* out_result);
 extern "C" void frog_example09_run(const std::uint8_t* input_ptr, std::uint32_t input_len, frog::runtime::FrogStringRunResult* out_result);
 extern "C" void frog_example10_run(std::uint8_t trigger_pressed, frog::runtime::FrogBoolRunResult* out_result);
+extern "C" void frog_example11_run(std::uint8_t trigger_value, frog::runtime::FrogBoolRunResult* out_result);
 
 namespace {
 
@@ -64,6 +65,11 @@ std::filesystem::path default_example10_manifest_path() {
            "10_button_press_to_boolean" / "native_kernel_manifest.json";
 }
 
+std::filesystem::path default_example11_manifest_path() {
+    return repo_root() / "Implementations" / "Reference" / "LLVM" / "examples" /
+           "11_button_switch_when_pressed" / "native_kernel_manifest.json";
+}
+
 std::filesystem::path example06_contract_path() {
     return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
            "06_boolean_value_roundtrip.reference_host_runtime_ui_binding.contract.json";
@@ -89,6 +95,11 @@ std::filesystem::path example10_contract_path() {
            "10_button_press_to_boolean.reference_host_runtime_ui_binding.contract.json";
 }
 
+std::filesystem::path example11_contract_path() {
+    return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
+           "11_button_switch_when_pressed.reference_host_runtime_ui_binding.contract.json";
+}
+
 std::filesystem::path example06_wfrog_path() {
     return repo_root() / "Examples" / "06_boolean_value_roundtrip" / "ui" / "boolean_panel.wfrog";
 }
@@ -109,6 +120,10 @@ std::filesystem::path example10_wfrog_path() {
     return repo_root() / "Examples" / "10_button_press_to_boolean" / "ui" / "button_panel.wfrog";
 }
 
+std::filesystem::path example11_wfrog_path() {
+    return repo_root() / "Examples" / "11_button_switch_when_pressed" / "ui" / "button_panel.wfrog";
+}
+
 bool wants_example06(const std::string& value) {
     return value == "06" || value == "6" || value == "example06" || value == "06_boolean_value_roundtrip";
 }
@@ -127,6 +142,10 @@ bool wants_example09(const std::string& value) {
 
 bool wants_example10(const std::string& value) {
     return value == "10" || value == "example10" || value == "10_button_press_to_boolean";
+}
+
+bool wants_example11(const std::string& value) {
+    return value == "11" || value == "example11" || value == "11_button_switch_when_pressed";
 }
 
 bool parse_bool_input(std::string value) {
@@ -178,6 +197,11 @@ std::shared_ptr<const frog::runtime::NativeStringKernelBridge> make_example09_br
 std::shared_ptr<const frog::runtime::NativeBoolKernelBridge> make_example10_bridge(const std::filesystem::path& manifest_path) {
     return std::make_shared<const frog::runtime::NativeBoolKernelBridge>(
         frog::runtime::make_linked_native_bool_kernel_bridge(manifest_path, &frog_example10_run));
+}
+
+std::shared_ptr<const frog::runtime::NativeBoolKernelBridge> make_example11_bridge(const std::filesystem::path& manifest_path) {
+    return std::make_shared<const frog::runtime::NativeBoolKernelBridge>(
+        frog::runtime::make_linked_native_bool_kernel_bridge(manifest_path, &frog_example11_run));
 }
 
 } // namespace
@@ -261,6 +285,15 @@ int main(int argc, char** argv) {
                     contract_path.value_or(example10_contract_path()),
                     wfrog_path.value_or(example10_wfrog_path()),
                     make_example10_bridge(manifest_path.value_or(default_example10_manifest_path())));
+                runtime.serve(host, port, open_browser);
+                return 0;
+            }
+
+            if (example.has_value() && wants_example11(*example)) {
+                frog::runtime::ButtonBrowserUiRuntime runtime(
+                    contract_path.value_or(example11_contract_path()),
+                    wfrog_path.value_or(example11_wfrog_path()),
+                    make_example11_bridge(manifest_path.value_or(default_example11_manifest_path())));
                 runtime.serve(host, port, open_browser);
                 return 0;
             }
@@ -351,6 +384,17 @@ int main(int argc, char** argv) {
                 wfrog_path.value_or(example10_wfrog_path()));
             const auto artifact = runtime.execute_with_native_kernel_bridge(
                 *make_example10_bridge(manifest_path.value_or(default_example10_manifest_path())),
+                parse_bool_input(input_value_text.value_or("true")));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+
+        if (example.has_value() && wants_example11(*example)) {
+            frog::runtime::Slice10ButtonRuntimeCore runtime(
+                contract_path.value_or(example11_contract_path()),
+                wfrog_path.value_or(example11_wfrog_path()));
+            const auto artifact = runtime.execute_with_native_kernel_bridge(
+                *make_example11_bridge(manifest_path.value_or(default_example11_manifest_path())),
                 parse_bool_input(input_value_text.value_or("true")));
             std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
             return 0;

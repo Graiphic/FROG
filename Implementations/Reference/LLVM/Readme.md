@@ -179,7 +179,7 @@ These wrappers are kept for continuity, but both now delegate to the generic low
 
 <p>
 The native build path requires <code>clang</code>.
-It verifies the published native proof dossiers for Examples 01-10 when the toolchain is available.
+It verifies the published native proof dossiers for Examples 01-11 when the toolchain is available.
 </p>
 
 <p>

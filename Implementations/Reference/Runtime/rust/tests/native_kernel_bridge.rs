@@ -245,3 +245,36 @@ fn rust_dynamic_native_kernel_bridge_executes_example10() {
     assert!(html.contains("data-asset-route='/asset/button_rectangular_svg'"));
     assert!(html.contains("class='button-press-overlay' type='button'"));
 }
+
+#[test]
+fn rust_dynamic_native_kernel_bridge_executes_example11() {
+    let root = repo_root();
+    let manifest = root.join("Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/native_kernel_manifest.json");
+    let kernel_ll = root.join("Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/kernel.ll");
+    let contract = root.join(
+        "Implementations/Reference/ContractEmitter/examples/11_button_switch_when_pressed.reference_host_runtime_ui_binding.contract.json",
+    );
+    let wfrog = root.join("Examples/11_button_switch_when_pressed/ui/button_panel.wfrog");
+    let Some(library) = build_native_library("11", &kernel_ll) else {
+        return;
+    };
+
+    let bridge = NativeBoolKernelBridge::from_paths(&manifest, &library).expect("load native Button switch bool bridge");
+    assert!(bridge.run(true).result);
+    assert!(!bridge.run(false).result);
+
+    let mut runtime = ButtonBrowserUiRuntime::with_native_kernel_bridge(contract, wfrog, Some(bridge)).expect("runtime core");
+    let artifact = runtime.run_once(true).expect("execute native Button switch bool kernel");
+    assert_eq!(artifact["outputs"]["public"]["switched"].as_bool(), Some(true));
+    assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(true));
+    assert_eq!(artifact["outputs"]["ui"]["switched_indicator"].as_bool(), Some(true));
+    let html = runtime.render_html();
+    assert!(html.contains("native kernel bridge"));
+    assert!(html.contains("LLVM native Button bool kernel artifact"));
+    assert!(html.contains("data-compiler-backend='llvm'"));
+    assert!(html.contains("data-execution-path='native_kernel_bridge'"));
+    assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
+    assert!(html.contains("data-asset-route='/asset/button_rectangular_svg'"));
+    assert!(html.contains("data-frog-public-input-id='trigger_value'"));
+    assert!(html.contains("switch_when_pressed"));
+}

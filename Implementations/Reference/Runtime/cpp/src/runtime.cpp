@@ -42,14 +42,77 @@ bool json_bool(const Object& object, const std::string& key, bool fallback = fal
     return it->second.as_bool();
 }
 
-void require_slice10_button_mechanical_action(const Object& properties) {
+bool is_button_switch_when_pressed_example(const std::string& example_id) {
+    return example_id == "11_button_switch_when_pressed";
+}
+
+bool is_button_press_to_boolean_example(const std::string& example_id) {
+    return example_id == "10_button_press_to_boolean";
+}
+
+bool is_button_slice_example(const std::string& example_id) {
+    return is_button_press_to_boolean_example(example_id) || is_button_switch_when_pressed_example(example_id);
+}
+
+bool is_button_unit_kind(const std::string& kind) {
+    return kind == "button_press_to_boolean_ui_unit" || kind == "button_switch_when_pressed_ui_unit";
+}
+
+std::string expected_button_source_lowered_unit(const SourceRef& source_ref) {
+    const std::string suffix = "/main.frog";
+    if (
+        source_ref.path.size() >= suffix.size() &&
+        source_ref.path.compare(source_ref.path.size() - suffix.size(), suffix.size(), suffix) == 0) {
+        return source_ref.path.substr(0, source_ref.path.size() - suffix.size()) + "/main.lowering.json";
+    }
+    return "Examples/" + source_ref.example_id + "/main.lowering.json";
+}
+
+const WidgetBinding* button_control_binding(const ContractUnit& unit) {
+    const WidgetBinding* found = nullptr;
+    for (const auto& binding : unit.ui_binding.widgets) {
+        if (
+            binding.role == "control" &&
+            binding.widget_class == "frog.widgets.button" &&
+            binding.value_type == "bool" &&
+            binding.binding.public_input_id.has_value()) {
+            require(found == nullptr, "Button slice expects one Button control binding.");
+            found = &binding;
+        }
+    }
+    require(found != nullptr, "Button slice expects one Button control binding.");
+    return found;
+}
+
+const WidgetBinding* button_indicator_binding(const ContractUnit& unit) {
+    const WidgetBinding* found = nullptr;
+    for (const auto& binding : unit.ui_binding.widgets) {
+        if (
+            binding.role == "indicator" &&
+            binding.widget_class == "frog.widgets.boolean_indicator" &&
+            binding.value_type == "bool" &&
+            binding.binding.public_output_id.has_value()) {
+            require(found == nullptr, "Button slice expects one Boolean indicator binding.");
+            found = &binding;
+        }
+    }
+    require(found != nullptr, "Button slice expects one Boolean indicator binding.");
+    return found;
+}
+
+bool is_switch_when_pressed_action(const Object& properties) {
+    return json_string(properties, "behavior.mechanical_action") == "switch_when_pressed";
+}
+
+void require_validated_button_mechanical_action(const Object& properties) {
     const auto action_it = properties.find("behavior.mechanical_action");
     require(
         action_it != properties.end() && action_it->second.is_string(),
-        "Slice 10 Button requires source-owned behavior.mechanical_action.");
+        "Button slice requires source-owned behavior.mechanical_action.");
+    const auto& action = action_it->second.as_string();
     require(
-        action_it->second.as_string() == "switch_until_released",
-        "Slice 10 validates only behavior.mechanical_action=switch_until_released.");
+        action == "switch_until_released" || action == "switch_when_pressed",
+        "Button slice validates only source-declared switch_until_released or switch_when_pressed mechanical actions.");
 }
 
 std::uint16_t json_u16(const Object& object, const std::string& key, std::uint16_t fallback = 0) {
@@ -1700,29 +1763,35 @@ Slice10ButtonRuntimeCore::Slice10ButtonRuntimeCore(std::filesystem::path contrac
     for (const auto& asset : package.svg_assets) {
         asset_map.emplace(asset.asset_id, std::filesystem::absolute(wfrog_path.parent_path() / asset.path));
     }
+    const auto* control = button_control_binding(unit);
+    const auto* indicator = button_indicator_binding(unit);
+    control_widget_id = control->widget_id;
+    indicator_widget_id = indicator->widget_id;
+    public_input_id = *control->binding.public_input_id;
+    public_output_id = *indicator->binding.public_output_id;
     widgets = build_widgets();
-    execute(false);
+    execute(std::nullopt);
 }
 
 ContractUnit Slice10ButtonRuntimeCore::load_and_validate() const {
     require(contract.backend_family == REFERENCE_BACKEND_FAMILY, "Unexpected backend family.");
-    require(contract.source_ref.example_id == "10_button_press_to_boolean", "Slice 10 expects Example 10.");
+    require(
+        is_button_slice_example(contract.source_ref.example_id),
+        "Button slice expects Example 10 or Example 11.");
     require(contract.assumptions.runtime_family.name == REFERENCE_BACKEND_FAMILY, "Unexpected runtime-family assumption name.");
     require(contract.assumptions.runtime_family.ui_binding.widget_value_binding, "Contract must require widget_value_binding.");
     require(contract.units.size() == 1, "Expected exactly one contract unit.");
 
     const ContractUnit& current_unit = contract.units.front();
     require(current_unit.unit_id == "main", "Expected unit_id main.");
-    require(current_unit.kind == "button_press_to_boolean_ui_unit", "Unexpected runtime unit kind.");
+    require(is_button_unit_kind(current_unit.kind), "Unexpected runtime unit kind.");
     require(current_unit.public_interface.inputs.size() == 1, "Expected one public input.");
     require(current_unit.public_interface.outputs.size() == 1, "Expected one public output.");
-    require(current_unit.public_interface.inputs.front().id == "trigger_pressed", "Expected public input trigger_pressed.");
     require(current_unit.public_interface.inputs.front().port_type == "bool", "Expected bool public input.");
-    require(current_unit.public_interface.outputs.front().id == "pressed", "Expected public output pressed.");
     require(current_unit.public_interface.outputs.front().port_type == "bool", "Expected bool public output.");
-    require(current_unit.execution_model.structure == "single_step", "Slice 10 expects a single-step copy execution model.");
-    require(current_unit.execution_model.body_rule.kind == "copy", "Slice 10 expects a copy body rule.");
-    require(current_unit.property_writes.empty(), "Slice 10 does not use property writes.");
+    require(current_unit.execution_model.structure == "single_step", "Button slice expects a single-step copy execution model.");
+    require(current_unit.execution_model.body_rule.kind == "copy", "Button slice expects a copy body rule.");
+    require(current_unit.property_writes.empty(), "Button slice does not use property writes.");
 
     require(panel.host_binding_ref == "reference_host_default", "Expected host_binding_ref reference_host_default.");
     const auto host_it = std::find_if(
@@ -1741,14 +1810,19 @@ ContractUnit Slice10ButtonRuntimeCore::load_and_validate() const {
     for (const auto& widget : panel.widgets) {
         panel_widgets.emplace(widget.instance_id, &widget);
     }
-    require(panel_widgets.count("trigger_button") == 1, "Missing panel widget trigger_button.");
-    require(panel_widgets.count("pressed_indicator") == 1, "Missing panel widget pressed_indicator.");
+
+    const auto* control = button_control_binding(current_unit);
+    const auto* indicator = button_indicator_binding(current_unit);
+    require(*control->binding.public_input_id == current_unit.public_interface.inputs.front().id, "Button control binding must target the unit public input.");
+    require(*indicator->binding.public_output_id == current_unit.public_interface.outputs.front().id, "Boolean indicator binding must target the unit public output.");
+    require(panel_widgets.count(control->widget_id) == 1, "Missing panel widget " + control->widget_id + ".");
+    require(panel_widgets.count(indicator->widget_id) == 1, "Missing panel widget " + indicator->widget_id + ".");
 
     for (const auto& binding : current_unit.ui_binding.widgets) {
         const auto widget_it = panel_widgets.find(binding.widget_id);
         require(widget_it != panel_widgets.end(), "Missing panel widget " + binding.widget_id + ".");
         require(widget_it->second->class_ref == binding.widget_class, "Class mismatch for widget " + binding.widget_id + ".");
-        require(binding.value_type == "bool", "Slice 10 supports only bool widget values.");
+        require(binding.value_type == "bool", "Button slice supports only bool widget values.");
         require(
             binding.widget_class == "frog.widgets.button" || binding.widget_class == "frog.widgets.boolean_indicator",
             "Unsupported widget class " + binding.widget_class + ".");
@@ -1771,7 +1845,7 @@ std::map<std::string, WidgetState> Slice10ButtonRuntimeCore::build_widgets() con
             continue;
         }
         const auto binding_it = bindings_by_widget.find(panel_widget.instance_id);
-        require(binding_it != bindings_by_widget.end(), "Slice 10 widget " + panel_widget.instance_id + " must have a contract binding.");
+        require(binding_it != bindings_by_widget.end(), "Button slice widget " + panel_widget.instance_id + " must have a contract binding.");
         const WidgetBinding* binding = binding_it->second;
 
         std::optional<std::string> asset_id;
@@ -1786,8 +1860,8 @@ std::map<std::string, WidgetState> Slice10ButtonRuntimeCore::build_widgets() con
                 }
             }
         }
-        require(asset_id.has_value(), "Slice 10 widget " + panel_widget.instance_id + " must reference a .wfrog SVG asset.");
-        require(!asset_path.empty() && std::filesystem::exists(asset_path), "Slice 10 widget " + panel_widget.instance_id + " asset path must exist.");
+        require(asset_id.has_value(), "Button slice widget " + panel_widget.instance_id + " must reference a .wfrog SVG asset.");
+        require(!asset_path.empty() && std::filesystem::exists(asset_path), "Button slice widget " + panel_widget.instance_id + " asset path must exist.");
 
         auto properties = panel_widget.props;
         const bool is_button = panel_widget.class_ref == "frog.widgets.button";
@@ -1799,7 +1873,7 @@ std::map<std::string, WidgetState> Slice10ButtonRuntimeCore::build_widgets() con
         properties.emplace("interaction.read_only", properties.count("interaction.read_only") ? properties.at("interaction.read_only") : Value(!is_button));
         properties.emplace("realization.variant", properties.count("realization.variant") ? properties.at("realization.variant") : Value(is_button ? "rectangular" : "circular"));
         if (is_button) {
-            require_slice10_button_mechanical_action(properties);
+            require_validated_button_mechanical_action(properties);
         }
         if (binding->binding.public_input_id.has_value()) {
             properties["binding.public_input_id"] = Value(*binding->binding.public_input_id);
@@ -1825,54 +1899,87 @@ std::map<std::string, WidgetState> Slice10ButtonRuntimeCore::build_widgets() con
 }
 
 void Slice10ButtonRuntimeCore::set_control_pressed(bool value) {
-    auto& widget = widgets.at("trigger_button");
+    auto& widget = widgets.at(control_widget_id);
     last_trigger_pressed = value;
     widget.properties["pressed"] = Value(value);
     widget.properties["value"] = Value(value);
 }
 
 bool Slice10ButtonRuntimeCore::control_pressed() const {
-    const auto& widget = widgets.at("trigger_button");
+    const auto& widget = widgets.at(control_widget_id);
     return json_bool(widget.properties, "pressed", json_bool(widget.properties, "value", false));
 }
 
 Value Slice10ButtonRuntimeCore::execute(std::optional<bool> pressed_override) {
-    if (pressed_override.has_value()) {
-        set_control_pressed(*pressed_override);
+    auto& button = widgets.at(control_widget_id);
+    if (is_switch_when_pressed_action(button.properties)) {
+        if (pressed_override.has_value()) {
+            last_trigger_pressed = true;
+            button.properties["pressed"] = Value(true);
+            button.properties["value"] = Value(*pressed_override);
+        } else {
+            last_trigger_pressed = false;
+        }
+        last_result = json_bool(button.properties, "value", false);
+        auto& indicator = widgets.at(indicator_widget_id);
+        indicator.properties["value"] = Value(last_result);
+        button.properties["pressed"] = Value(false);
+    } else {
+        if (pressed_override.has_value()) {
+            set_control_pressed(*pressed_override);
+        }
+        last_trigger_pressed = control_pressed();
+        last_result = last_trigger_pressed;
+        auto& indicator = widgets.at(indicator_widget_id);
+        indicator.properties["value"] = Value(last_result);
+        button.properties["pressed"] = Value(false);
+        button.properties["value"] = Value(false);
     }
-    last_trigger_pressed = control_pressed();
-    last_result = last_trigger_pressed;
-    auto& indicator = widgets.at("pressed_indicator");
-    indicator.properties["value"] = Value(last_result);
-    auto& button = widgets.at("trigger_button");
-    button.properties["pressed"] = Value(false);
-    button.properties["value"] = Value(false);
     return execution_artifact();
 }
 
 Value Slice10ButtonRuntimeCore::execute_with_native_kernel_bridge(
     const NativeBoolKernelBridge& bridge,
     std::optional<bool> pressed_override) {
-    require(bridge.manifest().source_lowered_unit == "Examples/10_button_press_to_boolean/main.lowering.json", "Unexpected native Button kernel source lowered unit.");
-    if (pressed_override.has_value()) {
-        set_control_pressed(*pressed_override);
+    const auto expected_source = expected_button_source_lowered_unit(contract.source_ref);
+    require(bridge.manifest().source_lowered_unit == expected_source, "Unexpected native Button kernel source lowered unit.");
+    auto& button = widgets.at(control_widget_id);
+    bool native_input = false;
+    const bool switch_when_pressed = is_switch_when_pressed_action(button.properties);
+    if (switch_when_pressed) {
+        if (pressed_override.has_value()) {
+            last_trigger_pressed = true;
+            button.properties["pressed"] = Value(true);
+            button.properties["value"] = Value(*pressed_override);
+        } else {
+            last_trigger_pressed = false;
+        }
+        native_input = json_bool(button.properties, "value", false);
+    } else {
+        if (pressed_override.has_value()) {
+            set_control_pressed(*pressed_override);
+        }
+        last_trigger_pressed = control_pressed();
+        native_input = last_trigger_pressed;
     }
-    last_trigger_pressed = control_pressed();
-    const auto result = bridge.run(last_trigger_pressed);
+    const auto result = bridge.run(native_input);
     if (!result.ok) {
         throw std::runtime_error(result.diagnostic.empty() ? "native Button bool kernel execution failed." : result.diagnostic);
     }
     last_result = result.result;
-    widgets.at("pressed_indicator").properties["value"] = Value(last_result);
-    auto& button = widgets.at("trigger_button");
+    widgets.at(indicator_widget_id).properties["value"] = Value(last_result);
     button.properties["pressed"] = Value(false);
-    button.properties["value"] = Value(false);
+    button.properties["value"] = Value(switch_when_pressed ? last_result : false);
     return execution_artifact();
 }
 
 Value Slice10ButtonRuntimeCore::execution_artifact() const {
     Array widget_entries;
     Object ui_outputs;
+    const auto& button = widgets.at(control_widget_id);
+    const auto execution_mode = is_switch_when_pressed_action(button.properties)
+        ? "button_switch_when_pressed"
+        : "button_press_to_boolean";
     for (const auto& entry : widgets) {
         const auto& widget = entry.second;
         const bool value = json_bool(widget.properties, "value", false);
@@ -1884,7 +1991,7 @@ Value Slice10ButtonRuntimeCore::execution_artifact() const {
             {"asset_ref", widget.asset_id.has_value() ? Value("asset:" + *widget.asset_id) : Value(nullptr)},
             {"realization.variant", Value(json_string(widget.properties, "realization.variant"))},
         };
-        if (widget.widget_id == "trigger_button") {
+        if (widget.widget_id == control_widget_id) {
             runtime_fields.emplace("event.pressed", Value(last_trigger_pressed));
         }
 
@@ -1926,6 +2033,7 @@ Value Slice10ButtonRuntimeCore::execution_artifact() const {
         copy_property("style.face.fill_color.pressed_true");
         copy_property("style.face.border_color.false");
         copy_property("style.face.border_color.true");
+        copy_property("style.face.border_width");
         copy_property("style.state_face.fill_color.false");
         copy_property("style.state_face.fill_color.true");
         copy_property("style.state_face.fill_color.hover_false");
@@ -1982,14 +2090,14 @@ Value Slice10ButtonRuntimeCore::execution_artifact() const {
             })},
         })},
         {"execution_summary", make_object({
-            {"mode", Value("button_press_to_boolean")},
+            {"mode", Value(execution_mode)},
             {"executed_unit", Value(unit.unit_id)},
             {"operation", Value("copy")},
             {"trigger_pressed", Value(last_trigger_pressed)},
-            {"pressed", Value(last_result)},
+            {public_output_id, Value(last_result)},
         })},
         {"outputs", make_object({
-            {"public", make_object({{"pressed", Value(last_result)}})},
+            {"public", make_object({{public_output_id, Value(last_result)}})},
             {"ui", Value(ui_outputs)},
         })},
         {"ui_runtime", make_object({

@@ -161,7 +161,7 @@ class NativeBoolKernelBridge:
     def __init__(self, manifest: NativeKernelManifest, library_path: str | Path) -> None:
         if ctypes.sizeof(FrogBoolRunResult) != 4:
             raise NativeKernelError("FrogBoolRunResult ABI layout must be 4 bytes")
-        if manifest.entry_symbol not in {"frog_example06_run", "frog_example10_run"}:
+        if manifest.entry_symbol not in {"frog_example06_run", "frog_example10_run", "frog_example11_run"}:
             raise NativeKernelError("unexpected native bool kernel entry symbol")
         if manifest.abi != "frog_bool_to_result_status_outptr":
             raise NativeKernelError("NativeBoolKernelBridge requires frog_bool_to_result_status_outptr")

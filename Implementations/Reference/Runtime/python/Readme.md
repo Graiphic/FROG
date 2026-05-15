@@ -14,8 +14,8 @@
 <h2>Current Scope</h2>
 
 <p>
-The Python runtime currently carries the specialized Examples 05, 06, 07, 08, 09, and 10 runtime-family consumers.
-It validates the backend contracts and <code>.wfrog</code> front-panel packages, executes the bounded accumulator, Boolean roundtrip, String roundtrip, Enum roundtrip, Path roundtrip, and Button press-to-Boolean paths, applies widget property effects, and produces the published runtime snapshots.
+The Python runtime currently carries the specialized Examples 05, 06, 07, 08, 09, 10, and 11 runtime-family consumers.
+It validates the backend contracts and <code>.wfrog</code> front-panel packages, executes the bounded accumulator, Boolean roundtrip, String roundtrip, Enum roundtrip, Path roundtrip, Button press-to-Boolean, and Button switch-when-pressed paths, applies widget property effects, and produces the published runtime snapshots.
 </p>
 
 <p>
@@ -28,7 +28,7 @@ It consumes the <code>.frog</code> front-panel instance layout and widget coordi
 <h2>Normalized Contract Surface</h2>
 
 <p>
-The specialized runtime now consumes the normalized Example 05, Example 06, Example 07, Example 08, Example 09, and Example 10 contract surfaces:
+The specialized runtime now consumes the normalized Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, and Example 11 contract surfaces:
 </p>
 
 <ul>
@@ -62,6 +62,7 @@ python Implementations/Reference/Runtime/python/cli.py run "hello world" --examp
 python Implementations/Reference/Runtime/python/cli.py run fault --example 08
 python Implementations/Reference/Runtime/python/cli.py run "C:/FROG/hello_world.txt" --example 09
 python Implementations/Reference/Runtime/python/cli.py run true --example 10
+python Implementations/Reference/Runtime/python/cli.py run true --example 11
 python Implementations/Reference/Runtime/check_python_native_kernel_bridge.py</code></pre>
 
 <hr/>
@@ -71,5 +72,5 @@ python Implementations/Reference/Runtime/check_python_native_kernel_bridge.py</c
 <p>
 This runtime is non-normative.
 It verifies repository-visible runtime closure for the current bounded example corridor.
-The Python HTTP UI remains a first-class parity surface for Examples 05, 06, 07, 08, 09, and 10: it must consume <code>.frog</code> front-panel instances, <code>.wfrog</code> realization packages, and Default realization assets with the same no-fallback discipline as the C++ and Rust browser hosts.
+The Python HTTP UI remains a first-class parity surface for Examples 05, 06, 07, 08, 09, 10, and 11: it must consume <code>.frog</code> front-panel instances, <code>.wfrog</code> realization packages, and Default realization assets with the same no-fallback discipline as the C++ and Rust browser hosts.
 </p>

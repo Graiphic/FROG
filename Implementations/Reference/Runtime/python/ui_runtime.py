@@ -76,6 +76,15 @@ def default_example10_wfrog_path() -> Path:
     return repo_root() / "Examples" / "10_button_press_to_boolean" / "ui" / "button_panel.wfrog"
 
 
+def default_example11_contract_path() -> Path:
+    root = repo_root()
+    return root / "Implementations" / "Reference" / "ContractEmitter" / "examples" / "11_button_switch_when_pressed.reference_host_runtime_ui_binding.contract.json"
+
+
+def default_example11_wfrog_path() -> Path:
+    return repo_root() / "Examples" / "11_button_switch_when_pressed" / "ui" / "button_panel.wfrog"
+
+
 def wants_example06(value: str | None) -> bool:
     return value in {"06", "6", "example06", "06_boolean_value_roundtrip"}
 
@@ -94,6 +103,10 @@ def wants_example09(value: str | None) -> bool:
 
 def wants_example10(value: str | None) -> bool:
     return value in {"10", "example10", "10_button_press_to_boolean"}
+
+
+def wants_example11(value: str | None) -> bool:
+    return value in {"11", "example11", "11_button_switch_when_pressed"}
 
 
 def parse_bool_input(value: str | bool | None) -> bool:
@@ -158,6 +171,15 @@ def is_example10_contract(path: str | Path | None) -> bool:
         return False
     try:
         return contract_example_id(load_contract_json(Path(path))) == "10_button_press_to_boolean"
+    except Exception:
+        return False
+
+
+def is_example11_contract(path: str | Path | None) -> bool:
+    if path is None:
+        return False
+    try:
+        return contract_example_id(load_contract_json(Path(path))) == "11_button_switch_when_pressed"
     except Exception:
         return False
 
@@ -613,14 +635,57 @@ class BooleanRuntimeCore:
         return self._execution_artifact_from_values(self.current_value, self.last_result)
 
 
+def _button_control_binding(unit: dict[str, Any]) -> dict[str, Any]:
+    matches = [
+        binding
+        for binding in unit.get("ui_bindings", {}).get("widgets", [])
+        if binding.get("role") == "control"
+        and binding.get("widget_class") == "frog.widgets.button"
+        and binding.get("value_type") == "bool"
+        and binding.get("binding", {}).get("public_input_id")
+    ]
+    if len(matches) != 1:
+        raise RuntimeError("Button slice expects one Button control binding.")
+    return matches[0]
+
+
+def _button_indicator_binding(unit: dict[str, Any]) -> dict[str, Any]:
+    matches = [
+        binding
+        for binding in unit.get("ui_bindings", {}).get("widgets", [])
+        if binding.get("role") == "indicator"
+        and binding.get("widget_class") == "frog.widgets.boolean_indicator"
+        and binding.get("value_type") == "bool"
+        and binding.get("binding", {}).get("public_output_id")
+    ]
+    if len(matches) != 1:
+        raise RuntimeError("Button slice expects one Boolean indicator binding.")
+    return matches[0]
+
+
+def _button_source_lowered_unit(contract: dict[str, Any]) -> str:
+    source_path = str(contract.get("source_ref", {}).get("path", ""))
+    if source_path.endswith("/main.frog"):
+        return source_path.removesuffix("/main.frog") + "/main.lowering.json"
+    return f"Examples/{contract_example_id(contract)}/main.lowering.json"
+
+
 class ButtonRuntimeCore:
     def __init__(self, *, contract_path: str | Path | None = None, wfrog_path: str | Path | None = None) -> None:
         self.contract_path = Path(contract_path or default_example10_contract_path()).resolve()
         self.wfrog_path = Path(wfrog_path or default_example10_wfrog_path()).resolve()
         self.contract = load_contract_json(self.contract_path)
         self.package = load_contract_json(self.wfrog_path)
+        self.example_id = contract_example_id(self.contract)
+        self.config = self._button_config()
         self.panel = load_source_front_panel_from_contract(self.contract, self.contract_path)
         self.unit = self._load_and_validate()
+        self.control_binding = _button_control_binding(self.unit)
+        self.indicator_binding = _button_indicator_binding(self.unit)
+        self.control_widget_id = self.control_binding["widget_id"]
+        self.indicator_widget_id = self.indicator_binding["widget_id"]
+        self.public_input_id = self.control_binding["binding"]["public_input_id"]
+        self.public_output_id = self.indicator_binding["binding"]["public_output_id"]
         self.asset_map = {
             item["asset_id"]: (self.wfrog_path.parent / Path(item["path"])).resolve()
             for item in self.package.get("svg_assets", [])
@@ -628,13 +693,30 @@ class ButtonRuntimeCore:
         self.widgets = self._build_widgets()
         self.last_trigger_pressed = False
         self.last_result = False
-        self.execute(False)
+        self.execute(None)
+
+    def _button_config(self) -> dict[str, str]:
+        if self.example_id == "10_button_press_to_boolean":
+            return {
+                "example_number": "10",
+                "execution_path": "button contract executor",
+                "execution_path_id": "python_button_contract_executor",
+                "compiler_backend": "none for Example 10",
+                "meta": "Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + Python runtime",
+            }
+        if self.example_id == "11_button_switch_when_pressed":
+            return {
+                "example_number": "11",
+                "execution_path": "button switch contract executor",
+                "execution_path_id": "python_button_switch_when_pressed_contract_executor",
+                "compiler_backend": "none for Example 11",
+                "meta": "Example 11 - .frog switch_when_pressed Button value + Default Button/Boolean .wfrog realization assets + Python runtime",
+            }
+        raise RuntimeError("Button slice expects Example 10 or Example 11.")
 
     def _load_and_validate(self) -> dict[str, Any]:
         if self.contract.get("backend_family") != "reference_host_runtime_ui_binding":
             raise RuntimeError("Unexpected backend family.")
-        if self.contract.get("example_id") != "10_button_press_to_boolean":
-            raise RuntimeError("Slice 10 expects Example 10.")
 
         runtime_family = self.contract.get("assumptions", {}).get("runtime_family", {})
         if runtime_family.get("name") != "reference_host_runtime_ui_binding":
@@ -648,22 +730,34 @@ class ButtonRuntimeCore:
         unit = units[0]
         if unit.get("unit_id") != "main":
             raise RuntimeError("Expected unit_id main.")
-        if unit.get("kind") != "button_press_to_boolean_ui_unit":
+        if unit.get("kind") not in {"button_press_to_boolean_ui_unit", "button_switch_when_pressed_ui_unit"}:
             raise RuntimeError("Unexpected runtime unit kind.")
 
         public_io = unit.get("public_io", {})
         inputs = public_io.get("inputs", [])
         outputs = public_io.get("outputs", [])
-        if len(inputs) != 1 or inputs[0].get("id") != "trigger_pressed" or inputs[0].get("type") != "bool":
-            raise RuntimeError("Expected bool public input trigger_pressed.")
-        if len(outputs) != 1 or outputs[0].get("id") != "pressed" or outputs[0].get("type") != "bool":
-            raise RuntimeError("Expected bool public output pressed.")
+        if len(inputs) != 1 or inputs[0].get("type") != "bool":
+            raise RuntimeError("Expected one bool public input.")
+        if len(outputs) != 1 or outputs[0].get("type") != "bool":
+            raise RuntimeError("Expected one bool public output.")
+        control_binding = _button_control_binding(unit)
+        indicator_binding = _button_indicator_binding(unit)
+        public_input_id = control_binding["binding"]["public_input_id"]
+        public_output_id = indicator_binding["binding"]["public_output_id"]
+        if public_input_id != inputs[0].get("id"):
+            raise RuntimeError("Button control binding must target the unit public input.")
+        if public_output_id != outputs[0].get("id"):
+            raise RuntimeError("Boolean indicator binding must target the unit public output.")
 
         execution_kernel = unit.get("execution_kernel", {})
-        if execution_kernel.get("operation") != "copy" or execution_kernel.get("src") != "trigger_pressed" or execution_kernel.get("dst") != "pressed":
-            raise RuntimeError("Slice 10 expects trigger_pressed -> pressed copy execution.")
+        if (
+            execution_kernel.get("operation") != "copy"
+            or execution_kernel.get("src") != public_input_id
+            or execution_kernel.get("dst") != public_output_id
+        ):
+            raise RuntimeError("Button slice expects public input -> public output copy execution.")
         if unit.get("effects", []) != []:
-            raise RuntimeError("Slice 10 does not use property writes.")
+            raise RuntimeError("Button slice does not use property writes.")
 
         if self.panel.get("host_binding_ref") != "reference_host_default":
             raise RuntimeError("Expected host_binding_ref reference_host_default.")
@@ -680,8 +774,8 @@ class ButtonRuntimeCore:
                 raise RuntimeError(f"Missing host capability {capability}.")
 
         panel_widgets = {entry["instance_id"]: entry for entry in self.panel.get("widgets", [])}
-        if "trigger_button" not in panel_widgets or "pressed_indicator" not in panel_widgets:
-            raise RuntimeError("Slice 10 requires trigger_button and pressed_indicator.")
+        if control_binding["widget_id"] not in panel_widgets or indicator_binding["widget_id"] not in panel_widgets:
+            raise RuntimeError("Button slice requires the contract-bound Button control and Boolean indicator widgets.")
         for binding in unit.get("ui_bindings", {}).get("widgets", []):
             widget_id = binding.get("widget_id")
             panel_widget = panel_widgets.get(widget_id)
@@ -690,7 +784,7 @@ class ButtonRuntimeCore:
             if panel_widget.get("class_ref") != binding.get("widget_class"):
                 raise RuntimeError(f"Class mismatch for widget {widget_id}.")
             if binding.get("value_type") != "bool":
-                raise RuntimeError("Slice 10 supports only bool widget values.")
+                raise RuntimeError("Button slice supports only bool widget values.")
             if binding.get("widget_class") not in {"frog.widgets.button", "frog.widgets.boolean_indicator"}:
                 raise RuntimeError(f"Unsupported widget class {binding.get('widget_class')}.")
         return unit
@@ -708,15 +802,15 @@ class ButtonRuntimeCore:
             widget_id = panel_widget["instance_id"]
             binding = bindings_by_widget.get(widget_id)
             if binding is None:
-                raise RuntimeError(f"Slice 10 widget {widget_id} must have a contract binding.")
+                raise RuntimeError(f"Button slice widget {widget_id} must have a contract binding.")
 
             asset_ref = str(panel_widget.get("visual", {}).get("asset_ref", ""))
             if not asset_ref.startswith("asset:"):
-                raise RuntimeError(f"Slice 10 widget {widget_id} must reference a .wfrog SVG asset.")
+                raise RuntimeError(f"Button slice widget {widget_id} must reference a .wfrog SVG asset.")
             asset_id = asset_ref.split(":", 1)[1]
             asset_path = self.asset_map.get(asset_id)
             if asset_path is None or not asset_path.exists():
-                raise RuntimeError(f"Slice 10 widget {widget_id} asset path must exist.")
+                raise RuntimeError(f"Button slice widget {widget_id} asset path must exist.")
 
             props = dict(panel_widget.get("props", {}))
             is_button = class_ref == "frog.widgets.button"
@@ -730,9 +824,9 @@ class ButtonRuntimeCore:
             if is_button:
                 action = props.get("behavior.mechanical_action")
                 if not isinstance(action, str):
-                    raise RuntimeError("Slice 10 Button requires source-owned behavior.mechanical_action.")
-                if action != "switch_until_released":
-                    raise RuntimeError("Slice 10 validates only behavior.mechanical_action=switch_until_released.")
+                    raise RuntimeError("Button slice requires source-owned behavior.mechanical_action.")
+                if action not in {"switch_until_released", "switch_when_pressed"}:
+                    raise RuntimeError("Button slice validates only source-declared switch_until_released or switch_when_pressed mechanical actions.")
             binding_data = binding.get("binding", {})
             if "public_input_id" in binding_data:
                 props["binding.public_input_id"] = binding_data["public_input_id"]
@@ -751,23 +845,42 @@ class ButtonRuntimeCore:
         return result
 
     def set_control_pressed(self, value: bool) -> None:
-        button = self.widgets["trigger_button"]
+        button = self.widgets[self.control_widget_id]
         self.last_trigger_pressed = bool(value)
         button["properties"]["pressed"] = bool(value)
         button["properties"]["value"] = bool(value)
 
     def control_pressed(self) -> bool:
-        props = self.widgets["trigger_button"]["properties"]
+        props = self.widgets[self.control_widget_id]["properties"]
         return bool(props.get("pressed", props.get("value", False)))
 
+    def _button_action(self) -> str:
+        return str(self.widgets[self.control_widget_id]["properties"].get("behavior.mechanical_action", ""))
+
+    def _execution_mode(self) -> str:
+        return "button_switch_when_pressed" if self._button_action() == "switch_when_pressed" else "button_press_to_boolean"
+
     def execute(self, pressed_override: bool | None = None) -> dict[str, Any]:
-        if pressed_override is not None:
-            self.set_control_pressed(bool(pressed_override))
-        self.last_trigger_pressed = self.control_pressed()
-        self.last_result = self.last_trigger_pressed
-        self.widgets["pressed_indicator"]["properties"]["value"] = self.last_result
-        self.widgets["trigger_button"]["properties"]["pressed"] = False
-        self.widgets["trigger_button"]["properties"]["value"] = False
+        button = self.widgets[self.control_widget_id]
+        indicator = self.widgets[self.indicator_widget_id]
+        if self._button_action() == "switch_when_pressed":
+            if pressed_override is not None:
+                self.last_trigger_pressed = True
+                button["properties"]["pressed"] = True
+                button["properties"]["value"] = bool(pressed_override)
+            else:
+                self.last_trigger_pressed = False
+            self.last_result = bool(button["properties"].get("value", False))
+            indicator["properties"]["value"] = self.last_result
+            button["properties"]["pressed"] = False
+        else:
+            if pressed_override is not None:
+                self.set_control_pressed(bool(pressed_override))
+            self.last_trigger_pressed = self.control_pressed()
+            self.last_result = self.last_trigger_pressed
+            indicator["properties"]["value"] = self.last_result
+            button["properties"]["pressed"] = False
+            button["properties"]["value"] = False
         return self.execution_artifact()
 
     def execute_with_native_kernel_bridge(
@@ -775,18 +888,30 @@ class ButtonRuntimeCore:
         bridge: NativeBoolKernelBridge,
         pressed_override: bool | None = None,
     ) -> dict[str, Any]:
-        if bridge.manifest.source_lowered_unit != "Examples/10_button_press_to_boolean/main.lowering.json":
+        if bridge.manifest.source_lowered_unit != _button_source_lowered_unit(self.contract):
             raise RuntimeError("Unexpected native Button kernel source lowered unit.")
-        if pressed_override is not None:
-            self.set_control_pressed(bool(pressed_override))
-        self.last_trigger_pressed = self.control_pressed()
-        result = bridge.run(self.last_trigger_pressed)
+        button = self.widgets[self.control_widget_id]
+        switch_when_pressed = self._button_action() == "switch_when_pressed"
+        if switch_when_pressed:
+            if pressed_override is not None:
+                self.last_trigger_pressed = True
+                button["properties"]["pressed"] = True
+                button["properties"]["value"] = bool(pressed_override)
+            else:
+                self.last_trigger_pressed = False
+            native_input = bool(button["properties"].get("value", False))
+        else:
+            if pressed_override is not None:
+                self.set_control_pressed(bool(pressed_override))
+            self.last_trigger_pressed = self.control_pressed()
+            native_input = self.last_trigger_pressed
+        result = bridge.run(native_input)
         if not result.ok:
             raise RuntimeError(result.diagnostic or "native Button bool kernel execution failed.")
         self.last_result = result.result
-        self.widgets["pressed_indicator"]["properties"]["value"] = self.last_result
-        self.widgets["trigger_button"]["properties"]["pressed"] = False
-        self.widgets["trigger_button"]["properties"]["value"] = False
+        self.widgets[self.indicator_widget_id]["properties"]["value"] = self.last_result
+        button["properties"]["pressed"] = False
+        button["properties"]["value"] = self.last_result if switch_when_pressed else False
         return self.execution_artifact()
 
     def _runtime_for(self, widget: dict[str, Any]) -> dict[str, Any]:
@@ -798,7 +923,7 @@ class ButtonRuntimeCore:
             "asset_ref": f"asset:{widget['asset_id']}",
             "realization.variant": props.get("realization.variant", ""),
         }
-        if widget["widget_id"] == "trigger_button":
+        if widget["widget_id"] == self.control_widget_id:
             runtime["event.pressed"] = self.last_trigger_pressed
         for key in [
             "caption.visible",
@@ -900,14 +1025,14 @@ class ButtonRuntimeCore:
                 "source_ref": self.contract["source_ref"],
             },
             "execution_summary": {
-                "mode": "button_press_to_boolean",
+                "mode": self._execution_mode(),
                 "executed_unit": self.unit["unit_id"],
                 "operation": "copy",
                 "trigger_pressed": self.last_trigger_pressed,
-                "pressed": self.last_result,
+                self.public_output_id: self.last_result,
             },
             "outputs": {
-                "public": {"pressed": self.last_result},
+                "public": {self.public_output_id: self.last_result},
                 "ui": ui_outputs,
             },
             "ui_runtime": {
@@ -1664,7 +1789,7 @@ def render_boolean_widget(widget: dict[str, Any]) -> str:
         "system-ui, Segoe UI, Arial, sans-serif",
     )
     text_size = safe_css_length(runtime.get("state_text.style.font_size"), "18px")
-    text_weight = safe_css_font_weight(runtime.get("state_text.style.font_weight"), "700")
+    text_weight = safe_css_font_weight(runtime.get("state_text.style.font_weight"), "400")
 
     inner_left = runtime_string(runtime, "style.inner.left", "52px" if variant == "circular" else "18px")
     inner_top = runtime_string(runtime, "style.inner.top", "23px" if variant == "circular" else "31px")
@@ -1801,7 +1926,11 @@ def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
     runtime = widget["runtime"]
     layout = widget["layout"]
     geometry = load_button_svg_geometry(asset_path)
-    value = bool(runtime.get("pressed", runtime.get("value", False)))
+    mechanical_action = runtime_string(runtime, "behavior.mechanical_action", "")
+    if mechanical_action == "switch_until_released":
+        value = bool(runtime.get("pressed", runtime.get("value", False)))
+    else:
+        value = bool(runtime.get("value", runtime.get("pressed", False)))
     visual_state = "true" if value else "false"
     hover_state = "hover_true" if value else "hover_false"
     pressed_state = "pressed_true" if value else "pressed_false"
@@ -1810,8 +1939,7 @@ def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
     false_state_text = runtime_string(runtime, "state_text.false_text", "OFF")
     true_state_text = runtime_string(runtime, "state_text.true_text", "ON")
     state_text = true_state_text if value else false_state_text
-    input_id = runtime_string(runtime, "binding.public_input_id", "trigger_pressed")
-    mechanical_action = runtime_string(runtime, "behavior.mechanical_action", "")
+    input_id = runtime_string(runtime, "binding.public_input_id", "")
     state_text_visible = runtime_bool(runtime, "state_text.visible", True)
 
     frame_fill = safe_css_color(runtime.get("style.frame.fill_color"), "transparent")
@@ -1821,7 +1949,7 @@ def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
     face_hover_fill = safe_css_color(state_property(runtime, "style.face.fill_color", hover_state, face_fill), face_fill)
     face_pressed_fill = safe_css_color(state_property(runtime, "style.face.fill_color", pressed_state, face_fill), face_fill)
     face_stroke = safe_css_color(state_property(runtime, "style.face.border_color", visual_state, "#334155"), "#334155")
-    face_stroke_width = safe_css_length(runtime.get("style.face.border_width"), "4px")
+    face_stroke_width = safe_css_length(runtime.get("style.face.border_width"), "1px")
     state_face_fill = safe_css_color(state_property(runtime, "style.state_face.fill_color", visual_state, "transparent"), "transparent")
     state_face_hover_fill = safe_css_color(state_property(runtime, "style.state_face.fill_color", hover_state, state_face_fill), state_face_fill)
     state_face_pressed_fill = safe_css_color(state_property(runtime, "style.state_face.fill_color", pressed_state, state_face_fill), state_face_fill)
@@ -1836,7 +1964,7 @@ def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
     true_text_color = safe_css_color(state_property(runtime, "state_text.style.text_color", "true", "#06381c"), "#06381c")
     text_color = true_text_color if value else false_text_color
     text_size = safe_css_length(runtime.get("state_text.style.font_size"), "20px")
-    text_weight = safe_css_font_weight(runtime.get("state_text.style.font_weight"), "700")
+    text_weight = safe_css_font_weight(runtime.get("state_text.style.font_weight"), "400")
     focus_color = safe_css_color(runtime.get("style.focus_ring.color"), "#2563eb")
     focus_width = safe_css_length(runtime.get("style.focus_ring.width"), "3px") if runtime_bool(runtime, "style.focus_ring.visible", True) else "0px"
     pressed_inset = safe_css_length(runtime.get("style.pressed.inset"), "2px")
@@ -1920,25 +2048,25 @@ def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
     )
 
 
-def button_press_to_boolean_script() -> str:
+def button_widget_script() -> str:
     return """<script>
 (() => {
   const form = document.querySelector("form[action='/run']");
-  const buttonWidget = document.querySelector("[data-widget-id='trigger_button']");
-  const overlay = document.querySelector("[data-widget-id='trigger_button'] .button-press-overlay");
-  const indicator = document.querySelector("[data-widget-id='pressed_indicator']");
+  const overlay = document.querySelector(".button-press-overlay[data-frog-part='face'][data-frog-host-overlay='input']");
+  const buttonWidget = overlay ? overlay.closest(".button-widget[data-class-ref='frog.widgets.button']") : null;
+  const indicator = document.querySelector(".boolean-indicator[data-class-ref='frog.widgets.boolean_indicator']");
   if (!form || !buttonWidget || !overlay || !indicator) {
     return;
   }
 
   const buttonStateText = buttonWidget.querySelector(".button-state-overlay[data-frog-part='state_text']");
   const stateText = indicator.querySelector("[data-frog-part='state_text']");
-  const inputId = overlay.dataset.frogPublicInputId || overlay.name || "trigger_pressed";
+  const inputId = overlay.dataset.frogPublicInputId || overlay.name || "";
   const mechanicalAction = buttonWidget.dataset.frogMechanicalAction || "";
-  if (mechanicalAction !== "switch_until_released") {
+  if (!inputId || (mechanicalAction !== "switch_until_released" && mechanicalAction !== "switch_when_pressed")) {
     return;
   }
-  let pressed = false;
+  let pressed = buttonWidget.dataset.currentValue === "true";
   let eventQueue = Promise.resolve();
 
   const buttonProperty = (base, value) => {
@@ -1998,6 +2126,25 @@ def button_press_to_boolean_script() -> str:
 
   form.addEventListener("submit", (event) => event.preventDefault());
   overlay.addEventListener("click", (event) => event.preventDefault());
+  if (mechanicalAction === "switch_when_pressed") {
+    const toggle = (event) => {
+      if (event && event.button !== undefined && event.button !== 0) {
+        return;
+      }
+      if (event) {
+        event.preventDefault();
+      }
+      setPressed(!(buttonWidget.dataset.currentValue === "true"));
+    };
+    overlay.addEventListener("pointerdown", toggle);
+    overlay.addEventListener("keydown", (event) => {
+      if ((event.key !== " " && event.key !== "Enter") || event.repeat) {
+        return;
+      }
+      toggle(event);
+    });
+    return;
+  }
   const press = (event) => {
     if (event && event.button !== undefined && event.button !== 0) {
       return;
@@ -3632,8 +3779,14 @@ class ButtonBrowserUiRuntime:
         if self.last_error:
             error_block = "<div class='diagnostic error'>" + html.escape(self.last_error) + "</div>"
         uses_native_kernel = self.native_kernel_bridge is not None
-        button_html = render_button_widget(widgets["trigger_button"], self.runtime.widgets["trigger_button"]["asset_path"])
-        indicator_html = render_boolean_widget(widgets["pressed_indicator"])
+        control_id = self.runtime.control_widget_id
+        indicator_id = self.runtime.indicator_widget_id
+        button_html = render_button_widget(widgets[control_id], self.runtime.widgets[control_id]["asset_path"])
+        indicator_html = render_boolean_widget(widgets[indicator_id])
+        execution_text = "native kernel bridge" if uses_native_kernel else self.runtime.config["execution_path"]
+        compiler_backend = "LLVM native Button bool kernel artifact" if uses_native_kernel else self.runtime.config["compiler_backend"]
+        compiler_backend_id = "llvm" if uses_native_kernel else "none"
+        execution_path_id = "native_kernel_bridge" if uses_native_kernel else self.runtime.config["execution_path_id"]
 
         return f"""<!doctype html>
 <html lang="en">
@@ -3683,21 +3836,21 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 </head>
 <body>
 <h1>{html.escape(panel['title'])}</h1>
-<p class="meta">Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + Python runtime</p>
+<p class="meta">{html.escape(self.runtime.config['meta'])}</p>
 <dl class="runtime-facts" aria-label="Runtime facts">
   <div><dt>Runtime</dt><dd>Python reference runtime</dd></div>
-  <div><dt>Execution</dt><dd>{'native kernel bridge' if uses_native_kernel else 'button contract executor'}</dd></div>
-  <div><dt>Compiler backend</dt><dd>{'LLVM native Button bool kernel artifact' if uses_native_kernel else 'none for Example 10'}</dd></div>
+  <div><dt>Execution</dt><dd>{html.escape(execution_text)}</dd></div>
+  <div><dt>Compiler backend</dt><dd>{html.escape(compiler_backend)}</dd></div>
 </dl>
 {error_block}
 <form method="post" action="/run">
-  <div class="front-panel" data-panel-id="{html.escape(panel['panel_id'])}" data-coordinate-space="panel_pixels" data-runtime-language="python" data-compiler-backend="{'llvm' if uses_native_kernel else 'none'}" data-execution-path="{'native_kernel_bridge' if uses_native_kernel else 'python_button_contract_executor'}" style="width:{panel_width}px;height:{panel_height}px;">
+  <div class="front-panel" data-panel-id="{html.escape(panel['panel_id'])}" data-coordinate-space="panel_pixels" data-runtime-language="python" data-compiler-backend="{compiler_backend_id}" data-execution-path="{execution_path_id}" style="width:{panel_width}px;height:{panel_height}px;">
     {button_html}
     {indicator_html}
   </div>
   <div class="actions"><a class="state-link" href="/state.json">state.json</a></div>
 </form>
-{button_press_to_boolean_script()}
+{button_widget_script()}
 </body>
 </html>
 """
@@ -3741,7 +3894,7 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
         length = int(handler.headers.get("Content-Length", "0"))
         body = handler.rfile.read(length).decode("utf-8")
         form = urllib.parse.parse_qs(body, keep_blank_values=True)
-        raw_value = form.get("trigger_pressed", ["false"])[0]
+        raw_value = form.get(self.runtime.public_input_id, ["false"])[0]
         try:
             artifact = self.run_once(parse_bool_input(raw_value))
         except Exception as exc:  # pragma: no cover
@@ -3820,6 +3973,15 @@ def build_runtime(
         return ButtonBrowserUiRuntime(
             contract_path=contract_path or default_example10_contract_path(),
             wfrog_path=wfrog_path or default_example10_wfrog_path(),
+            host=host,
+            port=port,
+            open_browser=open_browser,
+            native_kernel_bridge=native_kernel_bridge if isinstance(native_kernel_bridge, NativeBoolKernelBridge) else None,
+        )
+    if wants_example11(example) or is_example11_contract(contract_path):
+        return ButtonBrowserUiRuntime(
+            contract_path=contract_path or default_example11_contract_path(),
+            wfrog_path=wfrog_path or default_example11_wfrog_path(),
             host=host,
             port=port,
             open_browser=open_browser,

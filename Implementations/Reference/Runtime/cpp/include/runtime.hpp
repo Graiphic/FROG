@@ -189,6 +189,10 @@ public:
     ContractUnit unit;
     std::map<std::string, WidgetState> widgets;
     std::map<std::string, std::filesystem::path> asset_map;
+    std::string control_widget_id;
+    std::string indicator_widget_id;
+    std::string public_input_id;
+    std::string public_output_id;
     bool last_trigger_pressed = false;
     bool last_result = false;
 

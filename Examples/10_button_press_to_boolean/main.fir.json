@@ -68,7 +68,7 @@
         }
       ],
       "notes": [
-        "This FIR is a C++-first Button widget pilot and remains downstream from canonical source.",
+        "This FIR is a bounded Button widget pilot and remains downstream from canonical source.",
         "The Button control is a command widget and is not the Default Boolean rectangular value-control realization.",
         "The button visual grammar is provided by the Default Button SVG realization package; this FIR does not own SVG geometry.",
         "The reference C++ closure consumes a native bool kernel through an explicit manifest without making the runtime LLVM-only."

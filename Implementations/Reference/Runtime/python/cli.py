@@ -18,6 +18,8 @@ try:
         StringRuntimeCore,
         default_example10_contract_path,
         default_example10_wfrog_path,
+        default_example11_contract_path,
+        default_example11_wfrog_path,
         default_example06_contract_path,
         default_example06_wfrog_path,
         default_example07_contract_path,
@@ -31,12 +33,14 @@ try:
         is_example08_contract,
         is_example09_contract,
         is_example10_contract,
+        is_example11_contract,
         parse_bool_input,
         wants_example06,
         wants_example07,
         wants_example08,
         wants_example09,
         wants_example10,
+        wants_example11,
     )
 except ImportError:  # pragma: no cover
     import sys
@@ -55,6 +59,8 @@ except ImportError:  # pragma: no cover
         StringRuntimeCore,
         default_example10_contract_path,
         default_example10_wfrog_path,
+        default_example11_contract_path,
+        default_example11_wfrog_path,
         default_example06_contract_path,
         default_example06_wfrog_path,
         default_example07_contract_path,
@@ -68,12 +74,14 @@ except ImportError:  # pragma: no cover
         is_example08_contract,
         is_example09_contract,
         is_example10_contract,
+        is_example11_contract,
         parse_bool_input,
         wants_example06,
         wants_example07,
         wants_example08,
         wants_example09,
         wants_example10,
+        wants_example11,
     )
 
 
@@ -178,6 +186,25 @@ def execute_example10_contract(
     return runtime.execute(pressed)
 
 
+def execute_example11_contract(
+    input_value: str | bool | None = None,
+    *,
+    contract_path: Path | None = None,
+    wfrog_path: Path | None = None,
+    native_kernel_manifest: Path | None = None,
+    native_kernel_library: Path | None = None,
+) -> dict[str, object]:
+    runtime = ButtonRuntimeCore(
+        contract_path=contract_path or default_example11_contract_path(),
+        wfrog_path=wfrog_path or default_example11_wfrog_path(),
+    )
+    value = parse_bool_input(input_value)
+    if native_kernel_manifest is not None and native_kernel_library is not None:
+        bridge = load_native_bool_kernel_bridge(native_kernel_manifest, native_kernel_library)
+        return runtime.execute_with_native_kernel_bridge(bridge, value)
+    return runtime.execute(value)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Python reference runtime family for published FROG examples.")
     subparsers = parser.add_subparsers(dest="command", required=False)
@@ -243,6 +270,14 @@ def main() -> int:
                 native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
                 native_kernel_library=getattr(args, "native_kernel_library", None),
             )
+        elif wants_example11(getattr(args, "example", None)) or is_example11_contract(getattr(args, "contract", None)):
+            artifact = execute_example11_contract(
+                getattr(args, "input_value", None),
+                contract_path=getattr(args, "contract", None),
+                wfrog_path=getattr(args, "wfrog", None),
+                native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
+                native_kernel_library=getattr(args, "native_kernel_library", None),
+            )
         elif args.native_kernel_manifest is not None and args.native_kernel_library is not None:
             bridge = load_native_kernel_bridge(args.native_kernel_manifest, args.native_kernel_library)
             runtime = Slice05RuntimeCore(
@@ -273,6 +308,8 @@ def main() -> int:
         elif wants_example09(args.example) or is_example09_contract(args.contract):
             native_bridge = load_native_string_kernel_bridge(args.native_kernel_manifest, args.native_kernel_library)
         elif wants_example10(args.example) or is_example10_contract(args.contract):
+            native_bridge = load_native_bool_kernel_bridge(args.native_kernel_manifest, args.native_kernel_library)
+        elif wants_example11(args.example) or is_example11_contract(args.contract):
             native_bridge = load_native_bool_kernel_bridge(args.native_kernel_manifest, args.native_kernel_library)
         else:
             native_bridge = load_native_kernel_bridge(args.native_kernel_manifest, args.native_kernel_library)

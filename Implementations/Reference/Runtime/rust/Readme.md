@@ -34,12 +34,13 @@
     ├── slice07_ui.rs
     ├── slice08_ui.rs
     ├── slice09_ui.rs
-    └── slice10_ui.rs</code></pre>
+    ├── slice10_ui.rs
+    └── slice11_ui.rs</code></pre>
 
 <h2>Role</h2>
 
 <p>
-This directory contains the Rust consumer for the published Examples 05, 06, 07, 08, 09, and 10 runtime slices.
+This directory contains the Rust consumer for the published Examples 05, 06, 07, 08, 09, 10, and 11 runtime slices.
 It accepts emitted backend contracts, loads published <code>.wfrog</code> packages,
 resolves the referenced SVG assets, executes the bounded kernels, and can expose the panels through a minimal browser-host UI.
 </p>
@@ -78,7 +79,7 @@ cargo run -- ui --host 127.0.0.1 --port 8080 --no-open-browser</code></pre>
 <p>
 These files hold the bounded runtime core and the headless execution path.
 The current runtime validates the contract family, package shape, host-binding requirements,
-widget classes, property writes, and the Example 05/06/07/08/09/10 execution models before producing runtime result artifacts.
+widget classes, property writes, and the Example 05/06/07/08/09/10/11 execution models before producing runtime result artifacts.
 </p>
 
 <h3><code>src/ui.rs</code></h3>
@@ -97,7 +98,7 @@ widget captions, SVG asset routes, and state JSON surfaces while consuming the p
   <li>one public output <code>result : u16</code>,</li>
   <li>one explicit state carrier based on <code>frog.core.delay</code>,</li>
   <li>exactly five loop iterations,</li>
-  <li>Example 05 Numeric control/indicator classes, Example 06 Boolean control/indicator classes, Example 07 String control/indicator classes, Example 08 Enum control/indicator classes, Example 09 Path control/indicator classes, and Example 10 Button plus Boolean indicator classes,</li>
+  <li>Example 05 Numeric control/indicator classes, Example 06 Boolean control/indicator classes, Example 07 String control/indicator classes, Example 08 Enum control/indicator classes, Example 09 Path control/indicator classes, and Example 10/11 Button plus Boolean indicator classes,</li>
   <li>bounded widget properties required by the published <code>.wfrog</code> packages and runtime contracts.</li>
 </ul>
 
@@ -114,7 +115,7 @@ The Rust runtime reads those requirements from the emitted contract and the acce
 
 <ul>
   <li>The emitted contract artifact under <code>Implementations/Reference/ContractEmitter/examples/</code>.</li>
-  <li>The Example 05, Example 06, Example 07, Example 08, Example 09, and Example 10 <code>.wfrog</code> packages.</li>
+  <li>The Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, and Example 11 <code>.wfrog</code> packages.</li>
   <li>The SVG assets referenced by those packages.</li>
   <li>The shared acceptance reading posture under <code>Implementations/Reference/Runtime/acceptance/</code>.</li>
 </ul>
@@ -124,11 +125,11 @@ The Rust runtime reads those requirements from the emitted contract and the acce
 <ul>
   <li>A headless runtime result artifact.</li>
   <li>A browser-host page driven by the same runtime core.</li>
-  <li>A runtime snapshot JSON surface for the accepted Example 05, Example 06, Example 07, Example 08, Example 09, and Example 10 slices.</li>
+  <li>A runtime snapshot JSON surface for the accepted Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, and Example 11 slices.</li>
 </ul>
 
 <p>
-The browser-host path exists to close the first common runtime-family slice with a real visible UI. It does not claim native compiled UI closure.
+The browser-host path exists to close the first common runtime-family slice with a real visible UI. For native-backed checks, it consumes manifest-declared kernel artifacts; it does not claim native compiled UI closure.
 </p>
 
 <h2>Acceptance-driven tests</h2>
@@ -145,8 +146,8 @@ The published Rust tests are acceptance-driven and should remain aligned with
 <ul>
   <li><code>slice05_runtime.rs</code> checks headless acceptance for the bounded accumulator corridor.</li>
   <li><code>slice05_ui.rs</code> checks browser-host HTML rendering and snapshot acceptance for the numeric corridor.</li>
-  <li><code>slice06_ui.rs</code>, <code>slice07_ui.rs</code>, <code>slice08_ui.rs</code>, <code>slice09_ui.rs</code>, and <code>slice10_ui.rs</code> check the Boolean, String, Enum, Path, and Button browser-host surfaces against the <code>.frog</code> instance plus <code>.wfrog</code> realization discipline.</li>
-  <li><code>native_kernel_bridge.rs</code> checks dynamic native-kernel bridge parity for the published Example 05, Example 06, Example 07, Example 08, Example 09, and Example 10 surfaces when the local toolchain is available.</li>
+  <li><code>slice06_ui.rs</code>, <code>slice07_ui.rs</code>, <code>slice08_ui.rs</code>, <code>slice09_ui.rs</code>, <code>slice10_ui.rs</code>, and <code>slice11_ui.rs</code> check the Boolean, String, Enum, Path, and Button browser-host surfaces against the <code>.frog</code> instance plus <code>.wfrog</code> realization discipline.</li>
+  <li><code>native_kernel_bridge.rs</code> checks dynamic native-kernel bridge parity for the published Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, and Example 11 surfaces when the local toolchain is available.</li>
 </ul>
 
 <h2>Relationship to the other runtime consumers</h2>
@@ -158,9 +159,9 @@ This directory should remain aligned with the Python and C/C++ consumers on:
 <ul>
   <li>contract acceptance,</li>
   <li>package acceptance,</li>
-  <li>execution semantics for the bounded accumulator, Boolean roundtrip, String roundtrip, Enum roundtrip, Path roundtrip, and Button press-to-Boolean slices,</li>
+  <li>execution semantics for the bounded accumulator, Boolean roundtrip, String roundtrip, Enum roundtrip, Path roundtrip, Button press-to-Boolean, and Button switch-when-pressed slices,</li>
   <li>the minimal widget-property surfaces,</li>
-  <li>the browser-host UI shapes for Examples 05, 06, 07, 08, 09, and 10,</li>
+  <li>the browser-host UI shapes for Examples 05, 06, 07, 08, 09, 10, and 11,</li>
   <li>the shared acceptance artifacts for the runtime family.</li>
 </ul>
 

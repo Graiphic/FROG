@@ -3,7 +3,7 @@ project(frog_reference_runtime_cpp LANGUAGES CXX)
 
 option(
     FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE
-    "Build the optional Example 05/06/07/08/09/10 LLVM-produced native kernel bridge tests and runtime executable."
+    "Build the optional Example 05/06/07/08/09/10/11 LLVM-produced native kernel bridge tests and runtime executable."
     OFF
 )
 
@@ -57,6 +57,7 @@ add_test(NAME frog_reference_runtime_cpp_cli_example07 COMMAND frog_reference_ru
 add_test(NAME frog_reference_runtime_cpp_cli_example08 COMMAND frog_reference_runtime_cpp run fault --example 08)
 add_test(NAME frog_reference_runtime_cpp_cli_example09 COMMAND frog_reference_runtime_cpp run "C:/FROG/hello_world.txt" --example 09)
 add_test(NAME frog_reference_runtime_cpp_cli_example10 COMMAND frog_reference_runtime_cpp run true --example 10)
+add_test(NAME frog_reference_runtime_cpp_cli_example11 COMMAND frog_reference_runtime_cpp run true --example 11)
 
 add_executable(frog_reference_runtime_cpp_tests tests/test_slice05.cpp)
 target_link_libraries(frog_reference_runtime_cpp_tests PRIVATE frog_reference_runtime_cpp_lib)
@@ -88,6 +89,11 @@ target_link_libraries(frog_reference_runtime_cpp_slice10_tests PRIVATE frog_refe
 frog_copy_mingw_runtime_dlls(frog_reference_runtime_cpp_slice10_tests)
 add_test(NAME frog_reference_runtime_cpp_slice10_tests COMMAND frog_reference_runtime_cpp_slice10_tests)
 
+add_executable(frog_reference_runtime_cpp_slice11_tests tests/test_slice11_button_switch.cpp)
+target_link_libraries(frog_reference_runtime_cpp_slice11_tests PRIVATE frog_reference_runtime_cpp_lib)
+frog_copy_mingw_runtime_dlls(frog_reference_runtime_cpp_slice11_tests)
+add_test(NAME frog_reference_runtime_cpp_slice11_tests COMMAND frog_reference_runtime_cpp_slice11_tests)
+
 add_executable(frog_reference_runtime_cpp_reference_examples_tests tests/test_reference_examples.cpp)
 target_link_libraries(frog_reference_runtime_cpp_reference_examples_tests PRIVATE frog_reference_runtime_cpp_lib)
 frog_copy_mingw_runtime_dlls(frog_reference_runtime_cpp_reference_examples_tests)
@@ -102,12 +108,14 @@ if(WIN32)
         frog_reference_runtime_cpp_cli_example08
         frog_reference_runtime_cpp_cli_example09
         frog_reference_runtime_cpp_cli_example10
+        frog_reference_runtime_cpp_cli_example11
         frog_reference_runtime_cpp_tests
         frog_reference_runtime_cpp_slice06_tests
         frog_reference_runtime_cpp_slice07_tests
         frog_reference_runtime_cpp_slice08_tests
         frog_reference_runtime_cpp_slice09_tests
         frog_reference_runtime_cpp_slice10_tests
+        frog_reference_runtime_cpp_slice11_tests
         frog_reference_runtime_cpp_reference_examples_tests
         PROPERTIES ENVIRONMENT "PATH=${FROG_RUNTIME_CPP_COMPILER_BIN}\\;$ENV{PATH}"
     )
@@ -150,6 +158,12 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
     )
     set(FROG_EXAMPLE10_KERNEL_OBJECT
         "${CMAKE_CURRENT_BINARY_DIR}/example10_kernel${CMAKE_CXX_OUTPUT_EXTENSION}"
+    )
+    set(FROG_EXAMPLE11_KERNEL_LL
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../LLVM/examples/11_button_switch_when_pressed/kernel.ll"
+    )
+    set(FROG_EXAMPLE11_KERNEL_OBJECT
+        "${CMAKE_CURRENT_BINARY_DIR}/example11_kernel${CMAKE_CXX_OUTPUT_EXTENSION}"
     )
 
     add_custom_command(
@@ -211,6 +225,16 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
     )
 
     add_custom_target(frog_example10_llvm_kernel_object DEPENDS "${FROG_EXAMPLE10_KERNEL_OBJECT}")
+
+    add_custom_command(
+        OUTPUT "${FROG_EXAMPLE11_KERNEL_OBJECT}"
+        COMMAND "${CLANG_EXECUTABLE}" -c "${FROG_EXAMPLE11_KERNEL_LL}" -o "${FROG_EXAMPLE11_KERNEL_OBJECT}"
+        DEPENDS "${FROG_EXAMPLE11_KERNEL_LL}"
+        COMMENT "Compiling Example 11 LLVM native Button switch bool kernel artifact"
+        VERBATIM
+    )
+
+    add_custom_target(frog_example11_llvm_kernel_object DEPENDS "${FROG_EXAMPLE11_KERNEL_OBJECT}")
 
     add_executable(
         frog_reference_runtime_cpp_llvm_kernel_tests
@@ -327,6 +351,25 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
     endif()
 
     add_executable(
+        frog_reference_runtime_cpp_llvm_button_switch_kernel_tests
+        tests/test_slice11_llvm_kernel.cpp
+        "${FROG_EXAMPLE11_KERNEL_OBJECT}"
+    )
+    add_dependencies(frog_reference_runtime_cpp_llvm_button_switch_kernel_tests frog_example11_llvm_kernel_object)
+    target_link_libraries(frog_reference_runtime_cpp_llvm_button_switch_kernel_tests PRIVATE frog_reference_runtime_cpp_lib)
+    frog_copy_mingw_runtime_dlls(frog_reference_runtime_cpp_llvm_button_switch_kernel_tests)
+    add_test(
+        NAME frog_reference_runtime_cpp_llvm_button_switch_kernel_tests
+        COMMAND frog_reference_runtime_cpp_llvm_button_switch_kernel_tests
+    )
+    if(WIN32)
+        set_tests_properties(
+            frog_reference_runtime_cpp_llvm_button_switch_kernel_tests
+            PROPERTIES ENVIRONMENT "PATH=${FROG_RUNTIME_CPP_COMPILER_BIN}\\;$ENV{PATH}"
+        )
+    endif()
+
+    add_executable(
         frog_reference_runtime_cpp_llvm_kernel
         src/main_llvm_kernel.cpp
         "${FROG_EXAMPLE05_KERNEL_OBJECT}"
@@ -335,8 +378,9 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
         "${FROG_EXAMPLE08_KERNEL_OBJECT}"
         "${FROG_EXAMPLE09_KERNEL_OBJECT}"
         "${FROG_EXAMPLE10_KERNEL_OBJECT}"
+        "${FROG_EXAMPLE11_KERNEL_OBJECT}"
     )
-    add_dependencies(frog_reference_runtime_cpp_llvm_kernel frog_example05_llvm_kernel_object frog_example06_llvm_kernel_object frog_example07_llvm_kernel_object frog_example08_llvm_kernel_object frog_example09_llvm_kernel_object frog_example10_llvm_kernel_object)
+    add_dependencies(frog_reference_runtime_cpp_llvm_kernel frog_example05_llvm_kernel_object frog_example06_llvm_kernel_object frog_example07_llvm_kernel_object frog_example08_llvm_kernel_object frog_example09_llvm_kernel_object frog_example10_llvm_kernel_object frog_example11_llvm_kernel_object)
     target_link_libraries(frog_reference_runtime_cpp_llvm_kernel PRIVATE frog_reference_runtime_cpp_lib)
     frog_copy_mingw_runtime_dlls(frog_reference_runtime_cpp_llvm_kernel)
 endif()

@@ -1526,7 +1526,7 @@ std::string render_boolean_widget(const WidgetState& widget) {
     const bool frame_visible = property_bool(widget.properties, "style.frame.visible", true);
     const bool focus_visible = property_bool(widget.properties, "style.focus_ring.visible", false);
     const std::string text_size = safe_css_length(property_string(widget.properties, "state_text.style.font_size", "18px"), "18px");
-    const std::string text_weight = safe_css_font_weight(property_string(widget.properties, "state_text.style.font_weight", "700"), "700");
+    const std::string text_weight = safe_css_font_weight(property_string(widget.properties, "state_text.style.font_weight", "400"), "400");
     const std::string inner_left = property_string(widget.properties, "style.inner.left", variant == "circular" ? "52px" : "18px");
     const std::string inner_top = property_string(widget.properties, "style.inner.top", variant == "circular" ? "23px" : "31px");
     const std::string inner_width = property_string(widget.properties, "style.inner.width", variant == "circular" ? "56px" : "124px");
@@ -1703,7 +1703,10 @@ std::string render_button_widget(const WidgetState& widget) {
     const auto y = layout_i64(widget.layout, "y", 0);
     const auto width = layout_i64(widget.layout, "width", 220);
     const auto height = layout_i64(widget.layout, "height", 140);
-    const bool value = property_bool(widget.properties, "pressed", property_bool(widget.properties, "value", false));
+    const auto mechanical_action = property_string(widget.properties, "behavior.mechanical_action", "");
+    const bool value = mechanical_action == "switch_until_released"
+        ? property_bool(widget.properties, "pressed", property_bool(widget.properties, "value", false))
+        : property_bool(widget.properties, "value", property_bool(widget.properties, "pressed", false));
     const std::string visual_state = value ? "true" : "false";
     const std::string hover_state = value ? "hover_true" : "hover_false";
     const std::string pressed_state = value ? "pressed_true" : "pressed_false";
@@ -1713,8 +1716,7 @@ std::string render_button_widget(const WidgetState& widget) {
     const std::string true_state_text = property_string(widget.properties, "state_text.true_text", "ON");
     const std::string state_text = value ? true_state_text : false_state_text;
     const std::string route = asset_route(widget);
-    const auto input_id = property_string(widget.properties, "binding.public_input_id", "trigger_pressed");
-    const auto mechanical_action = property_string(widget.properties, "behavior.mechanical_action", "");
+    const auto input_id = property_string(widget.properties, "binding.public_input_id", "");
 
     const auto frame_fill = safe_css_color(property_string(widget.properties, "style.frame.fill_color", "transparent"), "transparent");
     const auto frame_stroke = safe_css_color(property_string(widget.properties, "style.frame.border_color", "transparent"), "transparent");
@@ -1723,7 +1725,7 @@ std::string render_button_widget(const WidgetState& widget) {
     const auto face_hover_fill = safe_css_color(state_property(widget.properties, "style.face.fill_color", hover_state, face_fill), face_fill);
     const auto face_pressed_fill = safe_css_color(state_property(widget.properties, "style.face.fill_color", pressed_state, face_fill), face_fill);
     const auto face_stroke = safe_css_color(state_property(widget.properties, "style.face.border_color", visual_state, "#334155"), "#334155");
-    const auto face_stroke_width = safe_css_length(property_string(widget.properties, "style.face.border_width", "4px"), "4px");
+    const auto face_stroke_width = safe_css_length(property_string(widget.properties, "style.face.border_width", "1px"), "1px");
     const auto state_face_fill = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", visual_state, "transparent"), "transparent");
     const auto state_face_hover_fill = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", hover_state, state_face_fill), state_face_fill);
     const auto state_face_pressed_fill = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", pressed_state, state_face_fill), state_face_fill);
@@ -1740,7 +1742,7 @@ std::string render_button_widget(const WidgetState& widget) {
     const auto true_text_color = safe_css_color(state_property(widget.properties, "state_text.style.text_color", "true", "#06381c"), "#06381c");
     const auto text_color = value ? true_text_color : false_text_color;
     const auto text_size = safe_css_length(property_string(widget.properties, "state_text.style.font_size", "20px"), "20px");
-    const auto text_weight = safe_css_font_weight(property_string(widget.properties, "state_text.style.font_weight", "700"), "700");
+    const auto text_weight = safe_css_font_weight(property_string(widget.properties, "state_text.style.font_weight", "400"), "400");
     const auto focus_color = safe_css_color(property_string(widget.properties, "style.focus_ring.color", "#2563eb"), "#2563eb");
     const auto focus_width = property_bool(widget.properties, "style.focus_ring.visible", true)
         ? safe_css_length(property_string(widget.properties, "style.focus_ring.width", "3px"), "3px")
@@ -1823,25 +1825,25 @@ std::string render_button_widget(const WidgetState& widget) {
     return html.str();
 }
 
-std::string button_press_to_boolean_script() {
+std::string button_widget_script() {
     return R"FROGJS(<script>
 (() => {
   const form = document.querySelector("form[action='/run']");
-  const buttonWidget = document.querySelector("[data-widget-id='trigger_button']");
-  const overlay = document.querySelector("[data-widget-id='trigger_button'] .button-press-overlay");
-  const indicator = document.querySelector("[data-widget-id='pressed_indicator']");
+  const overlay = document.querySelector(".button-press-overlay[data-frog-part='face'][data-frog-host-overlay='input']");
+  const buttonWidget = overlay ? overlay.closest(".button-widget[data-class-ref='frog.widgets.button']") : null;
+  const indicator = document.querySelector(".boolean-indicator[data-class-ref='frog.widgets.boolean_indicator']");
   if (!form || !buttonWidget || !overlay || !indicator) {
     return;
   }
 
   const buttonStateText = buttonWidget.querySelector(".button-state-overlay[data-frog-part='state_text']");
   const stateText = indicator.querySelector("[data-frog-part='state_text']");
-  const inputId = overlay.dataset.frogPublicInputId || overlay.name || "trigger_pressed";
+  const inputId = overlay.dataset.frogPublicInputId || overlay.name || "";
   const mechanicalAction = buttonWidget.dataset.frogMechanicalAction || "";
-  if (mechanicalAction !== "switch_until_released") {
+  if (!inputId || (mechanicalAction !== "switch_until_released" && mechanicalAction !== "switch_when_pressed")) {
     return;
   }
-  let pressed = false;
+  let pressed = buttonWidget.dataset.currentValue === "true";
   let eventQueue = Promise.resolve();
 
   const buttonProperty = (base, value) => {
@@ -1901,6 +1903,25 @@ std::string button_press_to_boolean_script() {
 
   form.addEventListener("submit", (event) => event.preventDefault());
   overlay.addEventListener("click", (event) => event.preventDefault());
+  if (mechanicalAction === "switch_when_pressed") {
+    const toggle = (event) => {
+      if (event && event.button !== undefined && event.button !== 0) {
+        return;
+      }
+      if (event) {
+        event.preventDefault();
+      }
+      setPressed(!(buttonWidget.dataset.currentValue === "true"));
+    };
+    overlay.addEventListener("pointerdown", toggle);
+    overlay.addEventListener("keydown", (event) => {
+      if ((event.key !== " " && event.key !== "Enter") || event.repeat) {
+        return;
+      }
+      toggle(event);
+    });
+    return;
+  }
   const press = (event) => {
     if (event && event.button !== undefined && event.button !== 0) {
       return;
@@ -3029,8 +3050,9 @@ frog::json::Value ButtonBrowserUiRuntime::run_once(bool trigger_pressed) {
 }
 
 std::string ButtonBrowserUiRuntime::render_html() const {
-    const auto& button = core.widgets.at("trigger_button");
-    const auto& indicator = core.widgets.at("pressed_indicator");
+    const auto& button = core.widgets.at(core.control_widget_id);
+    const bool switch_when_pressed = property_string(button.properties, "behavior.mechanical_action", "") == "switch_when_pressed";
+    const auto& indicator = core.widgets.at(core.indicator_widget_id);
     const auto panel_width = layout_i64(core.panel.layout, "width", 520);
     const auto panel_height = layout_i64(core.panel.layout, "height", 180);
     const bool uses_native_kernel = native_kernel_bridge != nullptr;
@@ -3083,23 +3105,25 @@ std::string ButtonBrowserUiRuntime::render_html() const {
             ".diagnostic.error{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}"
             "</style></head><body>";
     html << "<h1>" << html_escape(core.panel.title) << "</h1>";
-    html << "<p class='meta'>Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + C++ runtime</p>";
+    html << "<p class='meta'>" << (switch_when_pressed
+        ? "Example 11 - .frog switch_when_pressed Button value + Default Button/Boolean .wfrog realization assets + C++ runtime"
+        : "Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + C++ runtime") << "</p>";
     html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
     html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
-    html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : "button contract executor") << "</dd></div>";
-    html << "<div><dt>Compiler backend</dt><dd>" << (uses_native_kernel ? "LLVM native Button bool kernel artifact" : "none for Example 10") << "</dd></div>";
+    html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : (switch_when_pressed ? "button switch contract executor" : "button contract executor")) << "</dd></div>";
+    html << "<div><dt>Compiler backend</dt><dd>" << (uses_native_kernel ? "LLVM native Button bool kernel artifact" : (switch_when_pressed ? "none for Example 11" : "none for Example 10")) << "</dd></div>";
     html << "</dl>";
     html << diagnostics;
     html << "<form method='post' action='/run'>";
     html << "<div class='front-panel' data-panel-id='" << html_escape(core.panel.panel_id)
          << "' data-coordinate-space='panel_pixels' data-runtime-language='cpp'";
     html << " data-compiler-backend='" << (uses_native_kernel ? "llvm" : "none") << "'";
-    html << " data-execution-path='" << (uses_native_kernel ? "native_kernel_bridge" : "cpp_button_contract_executor") << "'";
+    html << " data-execution-path='" << (uses_native_kernel ? "native_kernel_bridge" : (switch_when_pressed ? "cpp_button_switch_when_pressed_contract_executor" : "cpp_button_contract_executor")) << "'";
     html << " style='width:" << css_px(panel_width) << ";height:" << css_px(panel_height) << ";'>";
     html << render_button_widget(button);
     html << render_boolean_widget(indicator);
     html << "</div><div class='actions'><a class='state-link' href='/state.json'>state.json</a></div></form>";
-    html << button_press_to_boolean_script();
+    html << button_widget_script();
     html << "</body></html>";
     return html.str();
 }
@@ -3174,7 +3198,7 @@ void ButtonBrowserUiRuntime::serve(const std::string& host, std::uint16_t port, 
                 }
             } else if (request.method == "POST" && (request.path == "/run" || request.path == "/event")) {
                 try {
-                    const auto form_value = parse_form_value(request.body, "trigger_pressed").value_or("false");
+                    const auto form_value = parse_form_value(request.body, core.public_input_id).value_or("false");
                     const auto artifact = run_once(parse_bool_form_value(form_value));
                     if (request.path == "/event") {
                         send_response(client, "200 OK", "application/json; charset=utf-8", frog::json::stringify(artifact, true, 2));

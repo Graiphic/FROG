@@ -1,0 +1,77 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "11_button_switch_when_pressed",
+    "path": "Examples/11_button_switch_when_pressed/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/11_button_switch_when_pressed/ui/button_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "button_switch_when_pressed_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "trigger_value",
+            "type": "bool",
+            "binding_origin": "widget.trigger_button.value"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "switched",
+            "type": "bool"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "trigger_button",
+            "mode": "widget_value",
+            "public_input_id": "trigger_value",
+            "value_type": "bool"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "switched_indicator",
+            "mode": "widget_value",
+            "public_output_id": "switched",
+            "value_type": "bool"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "single_button_value_copy",
+        "body_rule": {
+          "kind": "copy_widget_value_to_output",
+          "expression": "switched = trigger_value"
+        }
+      },
+      "publications": [
+        {
+          "target": "public_output.switched",
+          "source": "trigger_value"
+        },
+        {
+          "target": "widget.switched_indicator.value",
+          "source": "trigger_value"
+        }
+      ],
+      "notes": [
+        "This FIR is a bounded Button widget pilot and remains downstream from canonical source.",
+        "Only the switch_when_pressed Button mechanical action is accepted by this example.",
+        "The Button visual grammar is provided by the Default Button SVG realization package; this FIR does not own SVG geometry.",
+        "This example is not native-kernel-backed yet; C++, Python, and Rust consume the same bounded reference host contract behavior."
+      ]
+    }
+  ]
+}
