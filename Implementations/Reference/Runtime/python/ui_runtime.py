@@ -727,6 +727,12 @@ class ButtonRuntimeCore:
             props.setdefault("interaction.enabled", is_button)
             props.setdefault("interaction.read_only", not is_button)
             props.setdefault("realization.variant", "rectangular" if is_button else "circular")
+            if is_button:
+                action = props.get("behavior.mechanical_action")
+                if not isinstance(action, str):
+                    raise RuntimeError("Slice 10 Button requires source-owned behavior.mechanical_action.")
+                if action != "switch_until_released":
+                    raise RuntimeError("Slice 10 validates only behavior.mechanical_action=switch_until_released.")
             binding_data = binding.get("binding", {})
             if "public_input_id" in binding_data:
                 props["binding.public_input_id"] = binding_data["public_input_id"]
@@ -1805,6 +1811,7 @@ def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
     true_state_text = runtime_string(runtime, "state_text.true_text", "ON")
     state_text = true_state_text if value else false_state_text
     input_id = runtime_string(runtime, "binding.public_input_id", "trigger_pressed")
+    mechanical_action = runtime_string(runtime, "behavior.mechanical_action", "")
     state_text_visible = runtime_bool(runtime, "state_text.visible", True)
 
     frame_fill = safe_css_color(runtime.get("style.frame.fill_color"), "transparent")
@@ -1886,6 +1893,7 @@ def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
         f" data-asset-ref='{html.escape(str(runtime.get('asset_ref', '')))}'"
         f" data-asset-route='{html.escape(asset_route)}'"
         f" data-current-value='{'true' if value else 'false'}'"
+        f" data-frog-mechanical-action='{html.escape(mechanical_action)}'"
         f" data-realization-variant='{html.escape(runtime_string(runtime, 'realization.variant', 'rectangular'))}'"
         " data-frog-visual-law='wfrog-realization-state-map'"
         f" data-frog-visual-state='{visual_state}'"
@@ -1926,6 +1934,10 @@ def button_press_to_boolean_script() -> str:
   const buttonStateText = buttonWidget.querySelector(".button-state-overlay[data-frog-part='state_text']");
   const stateText = indicator.querySelector("[data-frog-part='state_text']");
   const inputId = overlay.dataset.frogPublicInputId || overlay.name || "trigger_pressed";
+  const mechanicalAction = buttonWidget.dataset.frogMechanicalAction || "";
+  if (mechanicalAction !== "switch_until_released") {
+    return;
+  }
   let pressed = false;
   let eventQueue = Promise.resolve();
 

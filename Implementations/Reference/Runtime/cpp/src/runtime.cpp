@@ -42,6 +42,16 @@ bool json_bool(const Object& object, const std::string& key, bool fallback = fal
     return it->second.as_bool();
 }
 
+void require_slice10_button_mechanical_action(const Object& properties) {
+    const auto action_it = properties.find("behavior.mechanical_action");
+    require(
+        action_it != properties.end() && action_it->second.is_string(),
+        "Slice 10 Button requires source-owned behavior.mechanical_action.");
+    require(
+        action_it->second.as_string() == "switch_until_released",
+        "Slice 10 validates only behavior.mechanical_action=switch_until_released.");
+}
+
 std::uint16_t json_u16(const Object& object, const std::string& key, std::uint16_t fallback = 0) {
     const auto it = object.find(key);
     if (it == object.end() || !it->second.is_number()) {
@@ -1788,6 +1798,9 @@ std::map<std::string, WidgetState> Slice10ButtonRuntimeCore::build_widgets() con
         properties.emplace("interaction.enabled", properties.count("interaction.enabled") ? properties.at("interaction.enabled") : Value(is_button));
         properties.emplace("interaction.read_only", properties.count("interaction.read_only") ? properties.at("interaction.read_only") : Value(!is_button));
         properties.emplace("realization.variant", properties.count("realization.variant") ? properties.at("realization.variant") : Value(is_button ? "rectangular" : "circular"));
+        if (is_button) {
+            require_slice10_button_mechanical_action(properties);
+        }
         if (binding->binding.public_input_id.has_value()) {
             properties["binding.public_input_id"] = Value(*binding->binding.public_input_id);
         }

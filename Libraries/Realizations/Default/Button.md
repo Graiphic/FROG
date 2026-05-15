@@ -99,3 +99,14 @@ asset acceptance, not a runtime-defined HTML/CSS skin.
 The default realization visualizes the state produced by the class-owned mechanical-action model.
 It does not define the mechanical-action semantics itself.
 </p>
+
+<p>
+The manifest publishes the canonical action vocabulary
+<code>switch_when_pressed</code>, <code>switch_when_released</code>,
+<code>switch_until_released</code>, <code>latch_when_pressed</code>,
+<code>latch_when_released</code>, and <code>latch_until_released</code>,
+including the realization posture needed by host overlays.
+Runtime families must still validate each action before accepting it as
+executable behavior. The current Example 10 corridor validates only
+<code>switch_until_released</code>.
+</p>

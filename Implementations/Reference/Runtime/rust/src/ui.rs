@@ -2022,6 +2022,7 @@ impl ButtonBrowserUiRuntime {
         };
         runtime.require_widget_asset("trigger_button")?;
         runtime.require_widget_asset("pressed_indicator")?;
+        runtime.require_button_mechanical_action()?;
         Ok(runtime)
     }
 
@@ -2039,6 +2040,19 @@ impl ButtonBrowserUiRuntime {
             .ok_or_else(|| RuntimeError::Message(format!("Slice 10 widget {widget_id} asset path must exist.")))?;
         if !asset_path.exists() {
             return Err(RuntimeError::Message(format!("Slice 10 widget {widget_id} asset path must exist.")));
+        }
+        Ok(())
+    }
+
+    fn require_button_mechanical_action(&self) -> Result<()> {
+        let button = self.widget_by_id("trigger_button")?;
+        let action = button["props"]["behavior.mechanical_action"]
+            .as_str()
+            .ok_or_else(|| RuntimeError::Message("Slice 10 Button requires source-owned behavior.mechanical_action.".to_string()))?;
+        if action != "switch_until_released" {
+            return Err(RuntimeError::Message(
+                "Slice 10 validates only behavior.mechanical_action=switch_until_released.".to_string(),
+            ));
         }
         Ok(())
     }
@@ -3209,6 +3223,7 @@ fn render_button_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
     let true_state_text = runtime_string(runtime, "state_text.true_text", "ON");
     let state_text = if value { &true_state_text } else { &false_state_text };
     let input_id = runtime_string(runtime, "binding.public_input_id", "trigger_pressed");
+    let mechanical_action = runtime_string(runtime, "behavior.mechanical_action", "");
     let frame_fill = safe_css_color(&runtime_string(runtime, "style.frame.fill_color", "transparent"), "transparent");
     let frame_stroke = safe_css_color(&runtime_string(runtime, "style.frame.border_color", "transparent"), "transparent");
     let frame_width = safe_css_length(&runtime_string(runtime, "style.frame.border_width", "0px"), "0px");
@@ -3259,7 +3274,7 @@ fn render_button_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
         );
     }
     format!(
-        "<div class='frog-widget button-widget button-control' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-asset-ref='{}' data-asset-route='{}' data-current-value='{}' data-realization-variant='{}' data-frog-visual-law='wfrog-realization-state-map' data-frog-visual-state='{}' data-frog-hover-state='{}' data-frog-pressed-state='{}' data-frog-transition-state='{}' data-frog-state-text-visible='{}' data-frog-state-text-false='{}' data-frog-state-text-true='{}' data-frog-state-text-color-false='{}' data-frog-state-text-color-true='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;--frog-button-frame-fill:{};--frog-button-frame-stroke:{};--frog-button-frame-stroke-width:{};--frog-button-face-fill:{};--frog-button-face-hover-fill:{};--frog-button-face-pressed-fill:{};--frog-button-face-stroke:{};--frog-button-face-stroke-width:{};--frog-button-state-face-fill:{};--frog-button-state-face-hover-fill:{};--frog-button-state-face-pressed-fill:{};--frog-button-state-face-stroke:{};--frog-button-state-face-hover-stroke:{};--frog-button-state-face-pressed-stroke:{};--frog-button-state-face-stroke-width:{};--frog-button-caption-font-size:{};--frog-button-caption-font-weight:{};--frog-button-caption-font-family:{};--frog-button-state-text-fill:{};--frog-button-state-text-font-size:{};--frog-button-state-text-font-weight:{};--frog-button-focus-color:{};--frog-button-focus-width:{};--frog-button-pressed-inset:{};--frog-button-transition:{}ms {};'>\
+        "<div class='frog-widget button-widget button-control' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-asset-ref='{}' data-asset-route='{}' data-current-value='{}' data-frog-mechanical-action='{}' data-realization-variant='{}' data-frog-visual-law='wfrog-realization-state-map' data-frog-visual-state='{}' data-frog-hover-state='{}' data-frog-pressed-state='{}' data-frog-transition-state='{}' data-frog-state-text-visible='{}' data-frog-state-text-false='{}' data-frog-state-text-true='{}' data-frog-state-text-color-false='{}' data-frog-state-text-color-true='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;--frog-button-frame-fill:{};--frog-button-frame-stroke:{};--frog-button-frame-stroke-width:{};--frog-button-face-fill:{};--frog-button-face-hover-fill:{};--frog-button-face-pressed-fill:{};--frog-button-face-stroke:{};--frog-button-face-stroke-width:{};--frog-button-state-face-fill:{};--frog-button-state-face-hover-fill:{};--frog-button-state-face-pressed-fill:{};--frog-button-state-face-stroke:{};--frog-button-state-face-hover-stroke:{};--frog-button-state-face-pressed-stroke:{};--frog-button-state-face-stroke-width:{};--frog-button-caption-font-size:{};--frog-button-caption-font-weight:{};--frog-button-caption-font-family:{};--frog-button-state-text-fill:{};--frog-button-state-text-font-size:{};--frog-button-state-text-font-weight:{};--frog-button-focus-color:{};--frog-button-focus-width:{};--frog-button-pressed-inset:{};--frog-button-transition:{}ms {};'>\
          <div class='button-skin' data-frog-asset-consumed='true' aria-hidden='true'>{}</div>\
          <span class='button-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}'>{}</span>{}\
          <button class='button-press-overlay' type='button' name='{}' value='true' aria-label='{}' aria-pressed='{}' data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='{}' data-frog-host-overlay='input' data-frog-align-to-part='face' style='{}'></button></div>",
@@ -3269,6 +3284,7 @@ fn render_button_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
         escape_html(asset_ref),
         escape_html(&asset_route),
         if value { "true" } else { "false" },
+        escape_html(&mechanical_action),
         escape_html(&runtime_string(runtime, "realization.variant", "rectangular")),
         visual_state,
         hover_state,
@@ -3334,6 +3350,10 @@ fn button_press_to_boolean_script() -> &'static str {
   const buttonStateText = buttonWidget.querySelector(".button-state-overlay[data-frog-part='state_text']");
   const stateText = indicator.querySelector("[data-frog-part='state_text']");
   const inputId = overlay.dataset.frogPublicInputId || overlay.name || "trigger_pressed";
+  const mechanicalAction = buttonWidget.dataset.frogMechanicalAction || "";
+  if (mechanicalAction !== "switch_until_released") {
+    return;
+  }
   let pressed = false;
   let eventQueue = Promise.resolve();
   const buttonProperty = (base, value) => buttonWidget.dataset[`${base}${value ? "True" : "False"}`] || "";

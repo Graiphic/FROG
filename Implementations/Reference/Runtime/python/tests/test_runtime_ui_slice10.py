@@ -65,6 +65,7 @@ def test_python_example10_browser_ui_consumes_default_svg_and_source_styles() ->
     assert "data-frog-template=\"frog.realizations.default.button.rectangular\"" in html
     assert "class='button-skin'" in html
     assert "data-frog-asset-consumed='true'" in html
+    assert "data-frog-mechanical-action='switch_until_released'" in html
     assert "data-frog-part='caption' data-svg-anchor='caption.anchor'" in html
     assert "data-frog-part='state_text' data-svg-anchor='state_text.center'" in html
     assert "class='button-press-overlay' type='button'" in html
@@ -79,6 +80,7 @@ def test_python_example10_browser_ui_consumes_default_svg_and_source_styles() ->
     assert "--boolean-text-font-weight:400;" in html
     assert "--boolean-inner-border-width:0px;" in html
     assert "fetch(\"/event\"" in html
+    assert 'mechanicalAction !== "switch_until_released"' in html
     assert "pointerdown" in html
     assert "pointerup" in html
     assert ">OFF</span>" in html

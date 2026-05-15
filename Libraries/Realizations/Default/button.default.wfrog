@@ -440,6 +440,44 @@
       "latch_when_released",
       "latch_until_released"
     ],
+    "actions": [
+      {
+        "value": "switch_when_pressed",
+        "value_event": "toggle_on_press_edge",
+        "release_result": "stored_value_remains",
+        "latch_reset": "not_applicable"
+      },
+      {
+        "value": "switch_when_released",
+        "value_event": "toggle_on_release_edge",
+        "release_result": "stored_value_remains",
+        "latch_reset": "not_applicable"
+      },
+      {
+        "value": "switch_until_released",
+        "value_event": "true_while_pressed_false_on_release",
+        "release_result": "false",
+        "latch_reset": "not_applicable"
+      },
+      {
+        "value": "latch_when_pressed",
+        "value_event": "true_on_press_edge",
+        "release_result": "latched_until_consumed",
+        "latch_reset": "reset_on_natural_value_consumption"
+      },
+      {
+        "value": "latch_when_released",
+        "value_event": "true_on_release_edge",
+        "release_result": "latched_until_consumed",
+        "latch_reset": "reset_on_natural_value_consumption"
+      },
+      {
+        "value": "latch_until_released",
+        "value_event": "pressed_visual_while_held_true_on_release_edge",
+        "release_result": "latched_until_consumed",
+        "latch_reset": "reset_on_natural_value_consumption"
+      }
+    ],
     "latch_reset_policy": {
       "default": "reset_on_natural_value_consumption",
       "property_read_resets_latch": false

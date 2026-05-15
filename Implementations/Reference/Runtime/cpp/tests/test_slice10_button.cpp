@@ -28,6 +28,10 @@ std::filesystem::path default_button_wfrog_path() {
     return repo_root() / "Libraries" / "Realizations" / "Default" / "button.default.wfrog";
 }
 
+std::filesystem::path button_widget_law_path() {
+    return repo_root() / "Libraries" / "Widgets" / "Button.md";
+}
+
 std::string read_text(const std::filesystem::path& path) {
     std::ifstream input(path, std::ios::binary);
     assert(input);
@@ -94,6 +98,19 @@ void test_button_runtime_core_consumes_frog_instance_and_wfrog_assets() {
     assert_contains(default_button_wfrog, "\"host_overlay_alignment\": true");
     assert_contains(default_button_wfrog, "\"style.face.*\"");
     assert_contains(default_button_wfrog, "\"caption.style.font_weight\"");
+    assert_contains(default_button_wfrog, "\"switch_when_pressed\"");
+    assert_contains(default_button_wfrog, "\"switch_when_released\"");
+    assert_contains(default_button_wfrog, "\"switch_until_released\"");
+    assert_contains(default_button_wfrog, "\"latch_when_pressed\"");
+    assert_contains(default_button_wfrog, "\"latch_when_released\"");
+    assert_contains(default_button_wfrog, "\"latch_until_released\"");
+    assert_contains(default_button_wfrog, "\"value_event\": \"toggle_on_press_edge\"");
+    assert_contains(default_button_wfrog, "\"latch_reset\": \"reset_on_natural_value_consumption\"");
+
+    const auto button_widget_law = read_text(button_widget_law_path());
+    assert_contains(button_widget_law, "<td><code>switch_when_pressed</code></td>");
+    assert_contains(button_widget_law, "<td><code>latch_until_released</code></td>");
+    assert_contains(button_widget_law, "Runtimes MUST NOT accept a mechanical action unless");
 }
 
 void test_headless_button_roundtrip() {
@@ -151,6 +168,7 @@ void test_button_browser_ui_surface() {
     assert_contains(html, "data-frog-visual-law='wfrog-realization-state-map'");
     assert_contains(html, "data-realization-variant='rectangular'");
     assert_contains(html, "data-frog-visual-state='false'");
+    assert_contains(html, "data-frog-mechanical-action='switch_until_released'");
     assert_contains(html, "data-frog-hover-state='hover_false'");
     assert_contains(html, "data-frog-pressed-state='pressed_false'");
     assert_contains(html, "data-frog-transition-state='transition_false_to_true'");
@@ -201,6 +219,7 @@ void test_button_browser_ui_surface() {
     assert_contains(html, "touchstart");
     assert_contains(html, "buttonWidget.querySelector(\".button-state-overlay[data-frog-part='state_text']\")");
     assert_contains(html, "buttonStateText.textContent = buttonProperty(\"frogStateText\", value);");
+    assert_contains(html, "mechanicalAction !== \"switch_until_released\"");
     assert_not_contains(html, "font-size:14px");
     assert_not_contains(html, "top:49px");
     assert_contains(html, "setPressed(false)");

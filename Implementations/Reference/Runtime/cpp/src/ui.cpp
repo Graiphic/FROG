@@ -1714,6 +1714,7 @@ std::string render_button_widget(const WidgetState& widget) {
     const std::string state_text = value ? true_state_text : false_state_text;
     const std::string route = asset_route(widget);
     const auto input_id = property_string(widget.properties, "binding.public_input_id", "trigger_pressed");
+    const auto mechanical_action = property_string(widget.properties, "behavior.mechanical_action", "");
 
     const auto frame_fill = safe_css_color(property_string(widget.properties, "style.frame.fill_color", "transparent"), "transparent");
     const auto frame_stroke = safe_css_color(property_string(widget.properties, "style.frame.border_color", "transparent"), "transparent");
@@ -1761,6 +1762,7 @@ std::string render_button_widget(const WidgetState& widget) {
         html << " data-asset-route='" << html_escape(route) << "'";
     }
     html << " data-current-value='" << (value ? "true" : "false") << "'";
+    html << " data-frog-mechanical-action='" << html_escape(mechanical_action) << "'";
     html << " data-realization-variant='" << html_escape(property_string(widget.properties, "realization.variant", "rectangular")) << "'";
     html << " data-frog-visual-law='wfrog-realization-state-map'";
     html << " data-frog-visual-state='" << html_escape(visual_state) << "'";
@@ -1835,6 +1837,10 @@ std::string button_press_to_boolean_script() {
   const buttonStateText = buttonWidget.querySelector(".button-state-overlay[data-frog-part='state_text']");
   const stateText = indicator.querySelector("[data-frog-part='state_text']");
   const inputId = overlay.dataset.frogPublicInputId || overlay.name || "trigger_pressed";
+  const mechanicalAction = buttonWidget.dataset.frogMechanicalAction || "";
+  if (mechanicalAction !== "switch_until_released") {
+    return;
+  }
   let pressed = false;
   let eventQueue = Promise.resolve();
 

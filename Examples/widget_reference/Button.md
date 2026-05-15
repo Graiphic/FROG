@@ -90,7 +90,7 @@ Current instance-level properties proven by the example include:
     </tr>
     <tr>
       <td>Host input overlay</td>
-      <td><code>interaction.enabled</code>, <code>mechanical_action</code></td>
+      <td><code>interaction.enabled</code>, <code>behavior.mechanical_action</code></td>
       <td>Align the browser input overlay to the SVG-published Button face bounds and drive a momentary pressed value.</td>
     </tr>
     <tr>
@@ -134,11 +134,13 @@ It owns only the realization references, SVG asset references, and host requirem
 <h2>Runtime Expectations</h2>
 
 <ul>
+  <li>Example 10 validates only <code>behavior.mechanical_action=switch_until_released</code>.</li>
   <li>The Button control must publish a momentary pressed value while the host pointer is down.</li>
   <li>The Boolean indicator is read-only and must return to false when the Button is released.</li>
   <li>Normal, hover, pressed, text, border, and indicator colors are instance-configurable.</li>
   <li>The visible skins must come from Default Button and Boolean SVG assets, not from a hardcoded HTML card.</li>
   <li>The runtime must reject fallback markers that replace the Button or Boolean bodies with local HTML/CSS widgets.</li>
+  <li>The other Button mechanical actions are class-law vocabulary until each one has its own bounded runtime acceptance.</li>
 </ul>
 
 <hr/>

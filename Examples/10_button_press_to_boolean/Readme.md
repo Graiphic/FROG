@@ -29,6 +29,14 @@ Button-to-Boolean behavior. The acceptance is narrow: it freezes the Default
 Button rectangular SVG realization as consumed by this example, including
 instance-owned labels, ON/OFF state text, face border styling, hover/pressed
 state properties, host overlay alignment to the published <code>face</code>
-part, and the read-only Boolean circular indicator. It does not claim broad
-runtime completeness beyond the validated Example 10 corridor.
+part, <code>behavior.mechanical_action=switch_until_released</code>, and the
+read-only Boolean circular indicator. It does not claim broad runtime
+completeness beyond the validated Example 10 corridor.
+</p>
+
+<p>
+The Button class law names the six LabVIEW-style mechanical actions, but this
+example accepts only the momentary <code>switch_until_released</code> behavior.
+The other five actions require their own bounded examples before a runtime may
+claim support for them.
 </p>

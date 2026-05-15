@@ -59,6 +59,7 @@ fn rust_example10_browser_ui_consumes_default_svg_and_source_styles() {
     assert!(html.contains("data-frog-template=\"frog.realizations.default.button.rectangular\""));
     assert!(html.contains("class='button-skin'"));
     assert!(html.contains("data-frog-asset-consumed='true'"));
+    assert!(html.contains("data-frog-mechanical-action='switch_until_released'"));
     assert!(html.contains("data-frog-part='caption' data-svg-anchor='caption.anchor'"));
     assert!(html.contains("data-frog-part='state_text' data-svg-anchor='state_text.center'"));
     assert!(html.contains("class='button-press-overlay' type='button'"));
@@ -73,6 +74,7 @@ fn rust_example10_browser_ui_consumes_default_svg_and_source_styles() {
     assert!(html.contains("--boolean-text-font-weight:400;"));
     assert!(html.contains("--boolean-inner-border-width:0px;"));
     assert!(html.contains("fetch(\"/event\""));
+    assert!(html.contains("mechanicalAction !== \"switch_until_released\""));
     assert!(html.contains("pointerdown"));
     assert!(html.contains("pointerup"));
     assert!(html.contains(">OFF</span>"));

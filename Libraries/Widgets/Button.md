@@ -122,10 +122,60 @@ The standard values are:
   <li><code>latch_until_released</code></li>
 </ul>
 
+<table>
+  <thead>
+    <tr>
+      <th>Mechanical action</th>
+      <th>Value event</th>
+      <th>Button value after user release</th>
+      <th>Latch reset rule</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>switch_when_pressed</code></td>
+      <td>Toggle the stored boolean value on the press edge.</td>
+      <td>The toggled value remains stored.</td>
+      <td>Not applicable.</td>
+    </tr>
+    <tr>
+      <td><code>switch_when_released</code></td>
+      <td>Toggle the stored boolean value on the release edge.</td>
+      <td>The toggled value remains stored.</td>
+      <td>Not applicable.</td>
+    </tr>
+    <tr>
+      <td><code>switch_until_released</code></td>
+      <td>Publish <code>true</code> while pressed and <code>false</code> on release.</td>
+      <td><code>false</code>.</td>
+      <td>Not applicable.</td>
+    </tr>
+    <tr>
+      <td><code>latch_when_pressed</code></td>
+      <td>Publish <code>true</code> on the press edge.</td>
+      <td>Latched until natural value consumption resets it.</td>
+      <td>Reset after the executable diagram consumes the natural value path.</td>
+    </tr>
+    <tr>
+      <td><code>latch_when_released</code></td>
+      <td>Publish <code>true</code> on the release edge.</td>
+      <td>Latched until natural value consumption resets it.</td>
+      <td>Reset after the executable diagram consumes the natural value path.</td>
+    </tr>
+    <tr>
+      <td><code>latch_until_released</code></td>
+      <td>Show the pressed state while held, then publish <code>true</code> on release.</td>
+      <td>Latched until natural value consumption resets it.</td>
+      <td>Reset after the executable diagram consumes the natural value path.</td>
+    </tr>
+  </tbody>
+</table>
+
 <p>
 For latch modes, the reset condition MUST be explicit.
 The portable baseline defines the reset trigger as consumption through the natural button value path when that path is present in the executable diagram.
 A mere object-style property read of <code>value</code> SHOULD NOT by itself reset the latch unless a later profile or runtime-family contract explicitly publishes that behavior.
+Runtimes MUST NOT accept a mechanical action unless the corresponding event timing, stored value behavior, UI snapshot behavior, and reset behavior are implemented and validated for that runtime family.
 </p>
 
 <hr/>
