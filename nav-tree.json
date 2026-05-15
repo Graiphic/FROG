@@ -2689,15 +2689,22 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/artifactchecks/check_examples01_10_artifacts.py",
+                  "title": "check_examples01_10_artifacts.py",
+                  "path": "/Implementations/Reference/ArtifactChecks/check_examples01_10_artifacts.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/artifactchecks/tests/",
                   "title": "tests",
                   "path": null,
                   "kind": "category",
                   "children": [
                     {
-                      "key": "implementations/reference/artifactchecks/tests/test_examples01_05_artifacts.py",
-                      "title": "test_examples01_05_artifacts.py",
-                      "path": "/Implementations/Reference/ArtifactChecks/tests/test_examples01_05_artifacts.py",
+                      "key": "implementations/reference/artifactchecks/tests/test_examples01_10_artifacts.py",
+                      "title": "test_examples01_10_artifacts.py",
+                      "path": "/Implementations/Reference/ArtifactChecks/tests/test_examples01_10_artifacts.py",
                       "kind": "code",
                       "children": []
                     }
@@ -3003,9 +3010,9 @@
                       "children": []
                     },
                     {
-                      "key": "implementations/reference/deriver/tests/test_examples01_05_fir_derivation.py",
-                      "title": "test_examples01_05_fir_derivation.py",
-                      "path": "/Implementations/Reference/Deriver/tests/test_examples01_05_fir_derivation.py",
+                      "key": "implementations/reference/deriver/tests/test_examples01_10_fir_derivation.py",
+                      "title": "test_examples01_10_fir_derivation.py",
+                      "path": "/Implementations/Reference/Deriver/tests/test_examples01_10_fir_derivation.py",
                       "kind": "code",
                       "children": []
                     },
@@ -3326,9 +3333,9 @@
                       "children": []
                     },
                     {
-                      "key": "implementations/reference/lowerer/tests/test_examples01_05_lowering.py",
-                      "title": "test_examples01_05_lowering.py",
-                      "path": "/Implementations/Reference/Lowerer/tests/test_examples01_05_lowering.py",
+                      "key": "implementations/reference/lowerer/tests/test_examples01_10_lowering.py",
+                      "title": "test_examples01_10_lowering.py",
+                      "path": "/Implementations/Reference/Lowerer/tests/test_examples01_10_lowering.py",
                       "kind": "code",
                       "children": []
                     },
@@ -3364,6 +3371,13 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/pipeline/check_examples01_10_full.py",
+                  "title": "check_examples01_10_full.py",
+                  "path": "/Implementations/Reference/Pipeline/check_examples01_10_full.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/pipeline/tests/",
                   "title": "tests",
                   "path": null,
@@ -3377,9 +3391,9 @@
                       "children": []
                     },
                     {
-                      "key": "implementations/reference/pipeline/tests/test_examples01_05_full_pipeline.py",
-                      "title": "test_examples01_05_full_pipeline.py",
-                      "path": "/Implementations/Reference/Pipeline/tests/test_examples01_05_full_pipeline.py",
+                      "key": "implementations/reference/pipeline/tests/test_examples01_10_full_pipeline.py",
+                      "title": "test_examples01_10_full_pipeline.py",
+                      "path": "/Implementations/Reference/Pipeline/tests/test_examples01_10_full_pipeline.py",
                       "kind": "code",
                       "children": []
                     }
@@ -3397,6 +3411,13 @@
                   "key": "implementations/reference/repositorymaintenance/enrich_root_readme_examples01_05.py",
                   "title": "enrich_root_readme_examples01_05.py",
                   "path": "/Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_05.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "implementations/reference/repositorymaintenance/enrich_root_readme_examples01_10.py",
+                  "title": "enrich_root_readme_examples01_10.py",
+                  "path": "/Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_10.py",
                   "kind": "code",
                   "children": []
                 }
@@ -3482,6 +3503,13 @@
                   "key": "implementations/reference/runtime/check_examples01_05_runtime_acceptance.py",
                   "title": "check_examples01_05_runtime_acceptance.py",
                   "path": "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "implementations/reference/runtime/check_examples01_10_runtime_acceptance.py",
+                  "title": "check_examples01_10_runtime_acceptance.py",
+                  "path": "/Implementations/Reference/Runtime/check_examples01_10_runtime_acceptance.py",
                   "kind": "code",
                   "children": []
                 },
@@ -3704,9 +3732,9 @@
                       "children": []
                     },
                     {
-                      "key": "implementations/reference/runtime/tests/test_examples01_05_runtime_acceptance.py",
-                      "title": "test_examples01_05_runtime_acceptance.py",
-                      "path": "/Implementations/Reference/Runtime/tests/test_examples01_05_runtime_acceptance.py",
+                      "key": "implementations/reference/runtime/tests/test_examples01_10_runtime_acceptance.py",
+                      "title": "test_examples01_10_runtime_acceptance.py",
+                      "path": "/Implementations/Reference/Runtime/tests/test_examples01_10_runtime_acceptance.py",
                       "kind": "code",
                       "children": []
                     },
@@ -4286,7 +4314,8 @@
     "/Implementations/Reference/check_reference_workspace.py",
     "/Implementations/Reference/common.py",
     "/Implementations/Reference/ArtifactChecks/check_examples01_05_artifacts.py",
-    "/Implementations/Reference/ArtifactChecks/tests/test_examples01_05_artifacts.py",
+    "/Implementations/Reference/ArtifactChecks/check_examples01_10_artifacts.py",
+    "/Implementations/Reference/ArtifactChecks/tests/test_examples01_10_artifacts.py",
     "/Implementations/Reference/ArtifactChecks/Readme.md",
     "/Implementations/Reference/CLI/frogc.md",
     "/Implementations/Reference/CLI/frog_demo_pipeline.py",
@@ -4326,7 +4355,7 @@
     "/Implementations/Reference/Deriver/tests/test_example05_fir_derivation.py",
     "/Implementations/Reference/Deriver/tests/test_example07_fir_derivation.py",
     "/Implementations/Reference/Deriver/tests/test_example08_fir_derivation.py",
-    "/Implementations/Reference/Deriver/tests/test_examples01_05_fir_derivation.py",
+    "/Implementations/Reference/Deriver/tests/test_examples01_10_fir_derivation.py",
     "/Implementations/Reference/Deriver/tests/test_fir_deriver.py",
     "/Implementations/Reference/Deriver/Readme.md",
     "/Implementations/Reference/LLVM/bridge/fir_to_lowering.md",
@@ -4366,15 +4395,17 @@
     "/Implementations/Reference/Lowerer/tests/test_example05_lowering.py",
     "/Implementations/Reference/Lowerer/tests/test_example07_lowering.py",
     "/Implementations/Reference/Lowerer/tests/test_example08_lowering.py",
-    "/Implementations/Reference/Lowerer/tests/test_examples01_05_lowering.py",
+    "/Implementations/Reference/Lowerer/tests/test_examples01_10_lowering.py",
     "/Implementations/Reference/Lowerer/tests/test_fir_lowerer.py",
     "/Implementations/Reference/Lowerer/Readme.md",
     "/Implementations/Reference/Pipeline/check_example05_pipeline.py",
     "/Implementations/Reference/Pipeline/check_examples01_05_full.py",
+    "/Implementations/Reference/Pipeline/check_examples01_10_full.py",
     "/Implementations/Reference/Pipeline/tests/test_example05_pipeline_check.py",
-    "/Implementations/Reference/Pipeline/tests/test_examples01_05_full_pipeline.py",
+    "/Implementations/Reference/Pipeline/tests/test_examples01_10_full_pipeline.py",
     "/Implementations/Reference/Pipeline/Readme.md",
     "/Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_05.py",
+    "/Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_10.py",
     "/Implementations/Reference/RepositoryMaintenance/Readme.md",
     "/Implementations/Reference/Runtime/accept_contract_and_execute.md",
     "/Implementations/Reference/Runtime/KernelBridge.md",
@@ -4387,6 +4418,7 @@
     "/Implementations/Reference/Runtime/check_example06_cpp_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_example06_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",
+    "/Implementations/Reference/Runtime/check_examples01_10_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/check_python_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_rust_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/contract_executor.py",
@@ -4416,7 +4448,7 @@
     "/Implementations/Reference/Runtime/tests/test_contract_executor.py",
     "/Implementations/Reference/Runtime/tests/test_example05_normalized_contract.py",
     "/Implementations/Reference/Runtime/tests/test_example05_runtime_acceptance.py",
-    "/Implementations/Reference/Runtime/tests/test_examples01_05_runtime_acceptance.py",
+    "/Implementations/Reference/Runtime/tests/test_examples01_10_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/tests/test_runtime_executor_by_kind.py",
     "/Implementations/Reference/Runtime/Readme.md",
     "/Implementations/Reference/UIHost/responsibilities.md",
