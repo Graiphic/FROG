@@ -1,7 +1,6 @@
 """Rule-oriented lowering helpers for the non-normative reference workspace.
 
-This module supports the published Examples 01 through 05 plus bounded widget
-pilots through explicit
+This module supports the published Examples 01 through 10 through explicit
 FIR-unit-kind recognition and FIR-to-lowering projection rules.
 
 It is intentionally narrow and does not claim general FROG compiler
@@ -280,6 +279,37 @@ def lower_bounded_stateful_ui(fir: dict[str, Any], fir_rel: str) -> dict[str, An
     ))
 
 
+def lower_boolean_value_roundtrip(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    u = ensure_unit_kind(fir, "boolean_value_roundtrip_ui_unit")
+    uid = unit_id(u)
+    bindings = ui_bindings(u)
+    expect_control = [{"widget_id": "bool_input", "mode": "widget_value", "public_input_id": "input_value", "value_type": "bool"}]
+    expect_indicator = [{"widget_id": "bool_result", "mode": "widget_value", "public_output_id": "result", "value_type": "bool"}]
+    if bindings.get("control_bindings") != expect_control or bindings.get("indicator_bindings") != expect_indicator:
+        raise LoweringError("boolean_value_roundtrip_ui_unit bindings must map bool_input to input_value and bool_result to result")
+    out = base_lowering(
+        fir,
+        fir_rel,
+        uid,
+        "make the Boolean value roundtrip consumable by a bounded runtime/UI-binding check",
+        "reference_host_runtime_ui_binding",
+        ["llvm_native_kernel_bridge"],
+    )
+    return with_lowered_unit(out, single_lowered_unit(
+        uid,
+        "boolean_value_roundtrip_kernel_with_ui_bindings",
+        public_io=public_interface(u),
+        ui_bindings=bindings,
+        execution_kernel={
+            "operation": "copy",
+            "dst": "result",
+            "type": "bool",
+            "src": "input_value",
+            "final_publication": u["publications"],
+        },
+    ))
+
+
 def lower_string_value_roundtrip(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     u = ensure_unit_kind(fir, "string_value_roundtrip_ui_unit")
     uid = unit_id(u)
@@ -362,14 +392,90 @@ def lower_enum_value_roundtrip(fir: dict[str, Any], fir_rel: str) -> dict[str, A
     ))
 
 
+def lower_path_value_roundtrip(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    u = ensure_unit_kind(fir, "path_value_roundtrip_ui_unit")
+    uid = unit_id(u)
+    bindings = ui_bindings(u)
+    expect_control = [{"widget_id": "path_input", "mode": "widget_value", "public_input_id": "input_path", "value_type": "path"}]
+    expect_indicator = [{"widget_id": "path_result", "mode": "widget_value", "public_output_id": "result_path", "value_type": "path"}]
+    if bindings.get("control_bindings") != expect_control or bindings.get("indicator_bindings") != expect_indicator:
+        raise LoweringError("path_value_roundtrip_ui_unit bindings must map path_input to input_path and path_result to result_path")
+    out = base_lowering(
+        fir,
+        fir_rel,
+        uid,
+        "make the path value roundtrip consumable by a bounded runtime/UI-binding check",
+        "reference_host_runtime_ui_binding",
+        ["llvm_native_kernel_bridge"],
+    )
+    return with_lowered_unit(out, single_lowered_unit(
+        uid,
+        "path_value_roundtrip_kernel_with_ui_bindings",
+        public_io=public_interface(u),
+        ui_bindings=bindings,
+        execution_kernel={
+            "operation": "copy",
+            "dst": "result_path",
+            "type": "path",
+            "src": "input_path",
+            "encoding": "utf8",
+            "max_utf8_bytes": 256,
+            "final_publication": u["publications"],
+        },
+    ))
+
+
+def lower_button_press_to_boolean(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    u = ensure_unit_kind(fir, "button_press_to_boolean_ui_unit")
+    uid = unit_id(u)
+    bindings = ui_bindings(u)
+    expect_control = [{
+        "widget_id": "trigger_button",
+        "mode": "widget_event_value",
+        "event": "pressed",
+        "public_input_id": "trigger_pressed",
+        "value_type": "bool",
+    }]
+    expect_indicator = [{"widget_id": "pressed_indicator", "mode": "widget_value", "public_output_id": "pressed", "value_type": "bool"}]
+    if bindings.get("control_bindings") != expect_control or bindings.get("indicator_bindings") != expect_indicator:
+        raise LoweringError("button_press_to_boolean_ui_unit bindings must map trigger_button.pressed to pressed_indicator")
+    return {
+        "artifact_kind": "frog_lowered_unit",
+        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": source_ref(fir),
+        "fir_ref": {"path": fir_rel, "unit_id": uid},
+        "lowering_intent": {
+            "summary": "make the Button press-to-Boolean example consumable by a bounded C++ runtime/UI-binding check",
+            "backend_family_target": "reference_host_runtime_ui_binding",
+            "capability_targets": ["llvm_native_kernel_bridge"],
+        },
+        "lowered_units": [single_lowered_unit(
+            uid,
+            "button_press_to_boolean_kernel_with_ui_bindings",
+            public_io=public_interface(u),
+            ui_bindings=bindings,
+            execution_kernel={
+                "operation": "copy",
+                "dst": "pressed",
+                "type": "bool",
+                "src": "trigger_pressed",
+                "final_publication": u["publications"],
+            },
+        )],
+    }
+
+
 LOWERING_RULES = [
     LoweringRule("lower_pure_dataflow_arithmetic", "pure_dataflow_arithmetic_unit", "pure_addition_kernel", lower_pure_dataflow_arithmetic),
     LoweringRule("lower_ui_value_roundtrip", "ui_value_roundtrip_unit", "ui_value_roundtrip_kernel", lower_ui_value_roundtrip),
     LoweringRule("lower_ui_property_write", "ui_property_write_unit", "ui_property_write_effect_unit", lower_ui_property_write),
     LoweringRule("lower_stateful_feedback_delay", "stateful_feedback_delay_unit", "stateful_feedback_delay_kernel", lower_stateful_feedback_delay),
     LoweringRule("lower_bounded_stateful_ui", "bounded_stateful_ui_unit", "bounded_accumulator_kernel_with_ui_bindings", lower_bounded_stateful_ui),
+    LoweringRule("lower_boolean_value_roundtrip", "boolean_value_roundtrip_ui_unit", "boolean_value_roundtrip_kernel_with_ui_bindings", lower_boolean_value_roundtrip),
     LoweringRule("lower_string_value_roundtrip", "string_value_roundtrip_ui_unit", "string_value_roundtrip_kernel_with_ui_bindings", lower_string_value_roundtrip),
     LoweringRule("lower_enum_value_roundtrip", "enum_value_roundtrip_ui_unit", "enum_value_roundtrip_kernel_with_ui_bindings", lower_enum_value_roundtrip),
+    LoweringRule("lower_path_value_roundtrip", "path_value_roundtrip_ui_unit", "path_value_roundtrip_kernel_with_ui_bindings", lower_path_value_roundtrip),
+    LoweringRule("lower_button_press_to_boolean", "button_press_to_boolean_ui_unit", "button_press_to_boolean_kernel_with_ui_bindings", lower_button_press_to_boolean),
 ]
 
 

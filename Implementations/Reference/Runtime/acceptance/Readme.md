@@ -5,7 +5,7 @@
 <h1 align="center">Reference Runtime Acceptance Artifacts</h1>
 
 <p align="center">
-  <strong>Shared non-normative acceptance material for Examples 01–05 runtime closure</strong><br/>
+  <strong>Shared non-normative acceptance material for Examples 01-10 runtime closure</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -44,7 +44,7 @@ Example <code>05</code> remains on the richer specialized runtime-family checker
 
 <h2>Check</h2>
 
-<pre><code>python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py</code></pre>
+<pre><code>python Implementations/Reference/Runtime/check_examples01_10_runtime_acceptance.py</code></pre>
 
 <p>
 These checks are non-normative repository-quality checks.

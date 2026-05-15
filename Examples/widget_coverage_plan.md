@@ -14,13 +14,13 @@
 <h2>Purpose</h2>
 
 <p>
-This document records the conservative plan for adding small widget-focused examples after the current Examples 01–05 corridor.
+This document records the conservative plan for adding small widget-focused examples after the current Examples 01-10 corridor.
 It is intentionally a sequencing plan, not a broad runtime or compiler generalization claim.
 </p>
 
 <p>
 The current primary LabVIEW-like proof remains Example 05, where the source diagram can be lowered toward an LLVM-produced native kernel and consumed by a compiler-agnostic runtime bridge.
-Examples 06 and 07 extend that discipline to simple scalar widgets while keeping the runtime/compiler boundary explicit: LLVM produces kernel artifacts and manifests; the runtimes consume manifests, ABI surfaces, <code>.wfrog</code> packages, and Default realization assets.
+Examples 06 through 10 extend that discipline to bounded scalar widgets while keeping the runtime/compiler boundary explicit: LLVM produces kernel artifacts and manifests; the runtimes consume manifests, ABI surfaces, <code>.wfrog</code> packages, and Default realization assets.
 </p>
 
 <hr/>
@@ -28,10 +28,10 @@ Examples 06 and 07 extend that discipline to simple scalar widgets while keeping
 <h2>Current Boundary</h2>
 
 <ul>
-  <li>Do not create Examples 08–10 before the Boolean and String pilots are validated.</li>
+  <li>Do not create the next widget wave before Examples 06-10 remain green across the shared validation surface.</li>
   <li>Do not generalize the Deriver, Lowerer, or ContractEmitter broadly in this wave.</li>
   <li>Do not make the runtime LLVM-only; scalar native-kernel coverage must stay behind explicit manifests.</li>
-  <li>Do not weaken Examples 01–05 or Example 05 native-kernel bridge coverage.</li>
+  <li>Do not weaken Examples 01-10 or the Examples 05-10 native-kernel bridge coverage.</li>
   <li>Keep each new example bounded, explicit, and independently checkable.</li>
 </ul>
 
@@ -88,22 +88,22 @@ The visible front panel must be derived from the published <code>.wfrog</code> l
       <td><code>08_enum_value_roundtrip</code></td>
       <td><code>frog.widgets.enum_control</code> → <code>frog.widgets.enum_indicator</code></td>
       <td>copy selected enum value</td>
-      <td>future runtime/UI-binding only</td>
-      <td>planned</td>
+      <td>runtime/UI-binding plus manifest-driven native-kernel bridge</td>
+      <td>published pilot</td>
     </tr>
     <tr>
       <td><code>09_path_value_roundtrip</code></td>
       <td><code>frog.widgets.path_control</code> → <code>frog.widgets.path_indicator</code></td>
       <td>copy path value</td>
-      <td>future runtime/UI-binding only</td>
-      <td>planned</td>
+      <td>runtime/UI-binding plus manifest-driven native-kernel bridge</td>
+      <td>published pilot</td>
     </tr>
     <tr>
-      <td><code>10_button_event_to_boolean</code></td>
+      <td><code>10_button_press_to_boolean</code></td>
       <td><code>frog.widgets.button</code> → <code>frog.widgets.boolean_indicator</code></td>
-      <td>surface a button event/state as a boolean value</td>
-      <td>future runtime/UI-binding only</td>
-      <td>planned</td>
+      <td>surface momentary button pressed state as a Boolean value</td>
+      <td>runtime/UI-binding plus manifest-driven native-kernel bridge</td>
+      <td>published pilot</td>
     </tr>
   </tbody>
 </table>
@@ -157,8 +157,8 @@ LLVM remains a backend artifact producer; the runtimes consume explicit manifest
 <h2>Future Work</h2>
 
 <ul>
-  <li>Keep Examples 06 and 07 in the shared validation posture once their dedicated checks are stable.</li>
-  <li>Add Enum, Path, and Button examples one at a time.</li>
-  <li>Only then consider a narrow scalar widget runtime abstraction.</li>
+  <li>Keep Examples 06-10 in the shared validation posture as the current scalar widget wave.</li>
+  <li>Add the next widget examples one at a time.</li>
+  <li>Only then consider further narrow scalar widget runtime abstractions.</li>
   <li>Keep Array, Cluster, Table, Tree, Tab, Listbox, Picture, Chart, Splitter, Panel/SubPanel, Frame, Label, and Decorations for later waves.</li>
 </ul>

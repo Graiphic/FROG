@@ -42,12 +42,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.widget_layer_only:
         stages.append(("Widget layer validation", [py, "Implementations/Reference/WidgetValidator/validate_widget_layer.py"]))
     else:
-        pipeline = [py, "Implementations/Reference/Pipeline/check_examples01_05_full.py"]
+        pipeline = [py, "Implementations/Reference/Pipeline/check_examples01_10_full.py"]
         if args.skip_widget_validator:
             pipeline.append("--skip-widget-validator")
         if args.include_llvm_build:
             pipeline.append("--include-llvm-build")
-        stages.append(("Examples 01-05 full pipeline", pipeline))
+        stages.append(("Examples 01-10 full pipeline", pipeline))
 
         if args.include_native_kernel_bridge:
             stages.extend([

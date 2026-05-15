@@ -1,7 +1,6 @@
 """Rule-oriented FIR derivation helpers for the non-normative reference workspace.
 
-This module supports the published examples 01 through 05 plus bounded widget
-pilots through explicit
+This module supports the published examples 01 through 10 through explicit
 source-pattern recognition and source-to-FIR derivation rules.
 
 It is intentionally narrow and does not claim general FROG compiler
@@ -265,6 +264,22 @@ def widget_value_type(source: dict[str, Any], widget_id: str) -> str:
     raise DerivationError(f"widget not found: {widget_id}")
 
 
+def front_panel_widget(source: dict[str, Any], widget_id: str) -> dict[str, Any]:
+    widgets = require_list(require_object(source.get("front_panel"), "source.front_panel").get("widgets"), "source.front_panel.widgets")
+    for widget in widgets:
+        obj = require_object(widget, "source.front_panel.widgets[]")
+        if obj.get("id") == widget_id:
+            return obj
+    raise DerivationError(f"widget not found: {widget_id}")
+
+
+def require_widget_class(source: dict[str, Any], widget_id: str, class_ref: str, context: str) -> dict[str, Any]:
+    widget = front_panel_widget(source, widget_id)
+    if widget.get("class_ref") != class_ref:
+        raise DerivationError(f"{context} expected widget {widget_id} class_ref {class_ref}")
+    return widget
+
+
 def derive_example01(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     context = "pure addition pattern"
     graph = SourceGraph.from_source(source)
@@ -386,6 +401,58 @@ def derive_example05(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     }
 
 
+def derive_example06(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    context = "Boolean value roundtrip pattern"
+    metadata = source_metadata(source)
+    if metadata.get("name") != "06_boolean_value_roundtrip":
+        raise DerivationError(f"{context} expects metadata.name=06_boolean_value_roundtrip")
+    inputs, outputs = assert_interface(
+        source,
+        [{"id": "input_value", "type": "bool"}],
+        [{"id": "result", "type": "bool"}],
+        context,
+    )
+    require_widget_class(source, "bool_input", "frog.widgets.boolean_control", context)
+    require_widget_class(source, "bool_result", "frog.widgets.boolean_indicator", context)
+    graph = SourceGraph.from_source(source)
+    require_node(graph, "bool_input_value", context)
+    require_node(graph, "bool_result_value", context)
+    require_node(graph, "output_result", context)
+    if graph.nodes["bool_input_value"].get("kind") != "widget_value" or graph.nodes["bool_input_value"].get("widget") != "bool_input":
+        raise DerivationError(f"{context} expects bool_input_value widget_value for bool_input")
+    if graph.nodes["bool_result_value"].get("kind") != "widget_value" or graph.nodes["bool_result_value"].get("widget") != "bool_result":
+        raise DerivationError(f"{context} expects bool_result_value widget_value for bool_result")
+    if graph.nodes["output_result"].get("kind") != "interface_output" or graph.nodes["output_result"].get("interface_port") != "result":
+        raise DerivationError(f"{context} expects output_result interface output result")
+    outs = graph.outgoing_all("bool_input_value", "value")
+    if sorted(outs, key=lambda endpoint: endpoint.node) != [
+        EdgeEndpoint("bool_result_value", "value"),
+        EdgeEndpoint("output_result", "value"),
+    ]:
+        raise DerivationError(f"{context} expects bool_input_value.value to feed result widget and public output")
+    return {
+        "artifact_kind": "frog_fir_unit",
+        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": {"example_id": "06_boolean_value_roundtrip", "path": source_rel, "entry_unit": "main"},
+        "front_panel_ref": {"package_path": (Path(source_rel).parent / "ui/boolean_panel.wfrog").as_posix(), "panel_id": "main_panel"},
+        "units": [{
+            "unit_id": "main",
+            "kind": "boolean_value_roundtrip_ui_unit",
+            "public_interface": {"inputs": inputs, "outputs": outputs},
+            "ui_bindings": {
+                "control_bindings": [{"widget_id": "bool_input", "mode": "widget_value", "public_input_id": "input_value", "value_type": "bool"}],
+                "indicator_bindings": [{"widget_id": "bool_result", "mode": "widget_value", "public_output_id": "result", "value_type": "bool"}],
+            },
+            "execution_model": {"structure": "single_value_copy", "body_rule": {"kind": "copy_widget_value_to_output", "expression": "result = input_value"}},
+            "publications": [{"target": "public_output.result", "source": "input_value"}, {"target": "widget.bool_result.value", "source": "input_value"}],
+            "notes": [
+                "This FIR is a bounded scalar widget pilot and remains downstream from canonical source.",
+                "The reference C++ closure may consume an LLVM-produced native bool kernel through an explicit manifest without making the runtime LLVM-only.",
+            ],
+        }],
+    }
+
+
 def derive_example07(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     context = "string value roundtrip pattern"
     metadata = source_metadata(source)
@@ -487,6 +554,129 @@ def derive_example08(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     }
 
 
+def derive_example09(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    context = "path value roundtrip pattern"
+    metadata = source_metadata(source)
+    if metadata.get("name") != "09_path_value_roundtrip":
+        raise DerivationError(f"{context} expects metadata.name=09_path_value_roundtrip")
+    inputs, outputs = assert_interface(
+        source,
+        [{"id": "input_path", "type": "path"}],
+        [{"id": "result_path", "type": "path"}],
+        context,
+    )
+    require_widget_class(source, "path_input", "frog.widgets.path_control", context)
+    require_widget_class(source, "path_result", "frog.widgets.path_indicator", context)
+    graph = SourceGraph.from_source(source)
+    require_node(graph, "path_input_value", context)
+    require_node(graph, "path_result_value", context)
+    require_node(graph, "output_result_path", context)
+    if graph.nodes["path_input_value"].get("kind") != "widget_value" or graph.nodes["path_input_value"].get("widget") != "path_input":
+        raise DerivationError(f"{context} expects path_input_value widget_value for path_input")
+    if graph.nodes["path_result_value"].get("kind") != "widget_value" or graph.nodes["path_result_value"].get("widget") != "path_result":
+        raise DerivationError(f"{context} expects path_result_value widget_value for path_result")
+    if graph.nodes["output_result_path"].get("kind") != "interface_output" or graph.nodes["output_result_path"].get("interface_port") != "result_path":
+        raise DerivationError(f"{context} expects output_result_path interface output result_path")
+    outs = graph.outgoing_all("path_input_value", "value")
+    if sorted(outs, key=lambda endpoint: endpoint.node) != [
+        EdgeEndpoint("output_result_path", "value"),
+        EdgeEndpoint("path_result_value", "value"),
+    ]:
+        raise DerivationError(f"{context} expects path_input_value.value to feed result widget and public output")
+    return {
+        "artifact_kind": "frog_fir_unit",
+        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": {"example_id": "09_path_value_roundtrip", "path": source_rel, "entry_unit": "main"},
+        "front_panel_ref": {"package_path": (Path(source_rel).parent / "ui/path_panel.wfrog").as_posix(), "panel_id": "main_panel"},
+        "units": [{
+            "unit_id": "main",
+            "kind": "path_value_roundtrip_ui_unit",
+            "public_interface": {"inputs": inputs, "outputs": outputs},
+            "ui_bindings": {
+                "control_bindings": [{"widget_id": "path_input", "mode": "widget_value", "public_input_id": "input_path", "value_type": "path"}],
+                "indicator_bindings": [{"widget_id": "path_result", "mode": "widget_value", "public_output_id": "result_path", "value_type": "path"}],
+            },
+            "execution_model": {"structure": "single_value_copy", "body_rule": {"kind": "copy_widget_value_to_output", "expression": "result_path = input_path"}},
+            "publications": [{"target": "public_output.result_path", "source": "input_path"}, {"target": "widget.path_result.value", "source": "input_path"}],
+            "notes": [
+                "This FIR is a bounded scalar Path widget pilot and remains downstream from canonical source.",
+                "The reference C++ closure consumes an LLVM-produced native path kernel through an explicit manifest without making the runtime LLVM-only.",
+            ],
+        }],
+    }
+
+
+def derive_example10(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    context = "Button press to Boolean pattern"
+    metadata = source_metadata(source)
+    if metadata.get("name") != "10_button_press_to_boolean":
+        raise DerivationError(f"{context} expects metadata.name=10_button_press_to_boolean")
+    assert_interface(
+        source,
+        [{"id": "trigger_pressed", "type": "bool"}],
+        [{"id": "pressed", "type": "bool"}],
+        context,
+    )
+    button = require_widget_class(source, "trigger_button", "frog.widgets.button", context)
+    indicator = require_widget_class(source, "pressed_indicator", "frog.widgets.boolean_indicator", context)
+    if require_object(button.get("binding"), "trigger_button.binding").get("mode") != "widget_event_value":
+        raise DerivationError(f"{context} expects trigger_button widget_event_value binding")
+    if require_object(button.get("binding"), "trigger_button.binding").get("event") != "pressed":
+        raise DerivationError(f"{context} expects trigger_button pressed event binding")
+    if require_object(indicator.get("binding"), "pressed_indicator.binding").get("mode") != "widget_value":
+        raise DerivationError(f"{context} expects pressed_indicator widget_value binding")
+
+    graph = SourceGraph.from_source(source)
+    require_node(graph, "trigger_button_pressed", context)
+    require_node(graph, "pressed_indicator_value", context)
+    require_node(graph, "output_pressed", context)
+    trigger_node = graph.nodes["trigger_button_pressed"]
+    if (
+        trigger_node.get("kind") != "widget_event_value"
+        or trigger_node.get("widget") != "trigger_button"
+        or trigger_node.get("event") != "pressed"
+        or trigger_node.get("value_type") != "bool"
+    ):
+        raise DerivationError(f"{context} expects trigger_button_pressed to publish trigger_button.pressed bool")
+    if graph.nodes["pressed_indicator_value"].get("kind") != "widget_value" or graph.nodes["pressed_indicator_value"].get("widget") != "pressed_indicator":
+        raise DerivationError(f"{context} expects pressed_indicator_value widget_value for pressed_indicator")
+    if graph.nodes["output_pressed"].get("kind") != "interface_output" or graph.nodes["output_pressed"].get("interface_port") != "pressed":
+        raise DerivationError(f"{context} expects output_pressed interface output pressed")
+    outs = graph.outgoing_all("trigger_button_pressed", "value")
+    if sorted(outs, key=lambda endpoint: endpoint.node) != [
+        EdgeEndpoint("output_pressed", "value"),
+        EdgeEndpoint("pressed_indicator_value", "value"),
+    ]:
+        raise DerivationError(f"{context} expects trigger_button_pressed.value to feed indicator and public output")
+
+    return {
+        "artifact_kind": "frog_fir_unit",
+        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": {"example_id": "10_button_press_to_boolean", "path": source_rel, "entry_unit": "main"},
+        "front_panel_ref": {"package_path": (Path(source_rel).parent / "ui/button_panel.wfrog").as_posix(), "panel_id": "main_panel"},
+        "units": [{
+            "unit_id": "main",
+            "kind": "button_press_to_boolean_ui_unit",
+            "public_interface": {
+                "inputs": [{"id": "trigger_pressed", "type": "bool", "binding_origin": "widget.trigger_button.pressed"}],
+                "outputs": [{"id": "pressed", "type": "bool"}],
+            },
+            "ui_bindings": {
+                "control_bindings": [{"widget_id": "trigger_button", "mode": "widget_event_value", "event": "pressed", "public_input_id": "trigger_pressed", "value_type": "bool"}],
+                "indicator_bindings": [{"widget_id": "pressed_indicator", "mode": "widget_value", "public_output_id": "pressed", "value_type": "bool"}],
+            },
+            "execution_model": {"structure": "single_button_event_copy", "body_rule": {"kind": "copy_widget_event_to_output", "expression": "pressed = trigger_pressed"}},
+            "publications": [{"target": "public_output.pressed", "source": "trigger_pressed"}, {"target": "widget.pressed_indicator.value", "source": "trigger_pressed"}],
+            "notes": [
+                "This FIR is a C++-first Button widget pilot and remains downstream from canonical source.",
+                "The Button control is a command widget and is not the Default Boolean rectangular value-control realization.",
+                "The button visual grammar is provided by the Default Button SVG realization package; this FIR does not own SVG geometry.",
+                "The reference C++ closure consumes a native bool kernel through an explicit manifest without making the runtime LLVM-only.",
+            ],
+        }],
+    }
+
+
 # Artifact factories for source_rel injection.
 def artifacts_example01(source_rel: str) -> dict[str, Any]:
     return {
@@ -554,8 +744,11 @@ DERIVATION_RULES = [
     DerivationRule("ui_property_write", "03_ui_property_write", derive_example03),
     DerivationRule("stateful_feedback_delay", "04_stateful_feedback_delay", derive_example04),
     DerivationRule("bounded_ui_accumulator", "05_bounded_ui_accumulator", derive_example05),
+    DerivationRule("boolean_value_roundtrip", "06_boolean_value_roundtrip", derive_example06),
     DerivationRule("string_value_roundtrip", "07_string_value_roundtrip", derive_example07),
     DerivationRule("enum_value_roundtrip", "08_enum_value_roundtrip", derive_example08),
+    DerivationRule("path_value_roundtrip", "09_path_value_roundtrip", derive_example09),
+    DerivationRule("button_press_to_boolean", "10_button_press_to_boolean", derive_example10),
 ]
 
 

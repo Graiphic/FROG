@@ -2,11 +2,11 @@
   <img src="../../../FROG logo.svg" alt="FROG logo" width="140" />
 </p>
 
-<h1 align="center">Default Realization — Button Widget</h1>
+<h1 align="center">Default Realization - Button Widget</h1>
 
 <p align="center">
   <strong>Default realization posture for the standardized button widget</strong><br/>
-  <em>FROG — Free Open Graphical Language</em>
+  <em>FROG - Free Open Graphical Language</em>
 </p>
 
 <hr/>
@@ -80,6 +80,15 @@ This document describes how the default realization family can embody that law t
 <p>
 The state-specific files are optional realization overrides.
 They do not redefine button semantics.
+</p>
+
+<p>
+The rectangular Button template is accepted for the bounded
+<code>Examples/10_button_press_to_boolean</code> corridor as of 2026-05-15.
+That acceptance covers the SVG-published public parts, configurable face and
+state-text styling, hover and pressed state visuals, and host overlay alignment
+to the published <code>face</code> part. It remains a Default realization
+asset acceptance, not a runtime-defined HTML/CSS skin.
 </p>
 
 <hr/>

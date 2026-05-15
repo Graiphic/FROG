@@ -2,7 +2,7 @@
   <img src="../../FROG logo.svg" alt="FROG logo" width="140" />
 </p>
 
-<h1 align="center">Root README Examples 01–05 Enrichment</h1>
+<h1 align="center">Root README Examples 01-10 Enrichment</h1>
 
 <p align="center">
   <strong>Maintenance note for enriching the existing repository root README without replacing the strategic content</strong><br/>
@@ -13,7 +13,12 @@
 
 <h2>Command</h2>
 
-<pre><code>python Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_05.py</code></pre>
+<pre><code>python Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_10.py</code></pre>
+
+<p>
+The historical <code>enrich_root_readme_examples01_05.py</code> path remains as a
+compatibility wrapper and delegates to the current Examples 01-10 enricher.
+</p>
 
 <hr/>
 

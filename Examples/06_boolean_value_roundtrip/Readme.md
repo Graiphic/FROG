@@ -14,7 +14,7 @@
 <h2>Overview</h2>
 
 <p>
-Example 06 is the first conservative scalar-widget pilot after the Examples 01–05 executable corridor.
+Example 06 is the first conservative scalar-widget pilot in the Examples 06-10 runtime/widget wave.
 It publishes one boolean control on the left side of the front panel and one boolean indicator on the right side.
 The runtime behavior is intentionally minimal: <code>bool_input.value</code> is copied to <code>bool_result.value</code> and to the public output <code>result</code>.
 </p>

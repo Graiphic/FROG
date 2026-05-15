@@ -333,19 +333,41 @@ fn execute_bounded_ui_case(contract: &Value, unit: &Map<String, Value>, case_val
                 .cloned()
                 .or_else(|| props.get("foreground_color").cloned())
                 .unwrap_or(Value::Null);
+            let mut runtime = json!({
+                "value": value,
+                "label": props.get("label").cloned().unwrap_or(Value::Null),
+                "visible": props.get("visible").cloned().unwrap_or(Value::Null),
+                "enabled": props.get("enabled").cloned().unwrap_or(Value::Null),
+                "foreground_color": foreground,
+                "asset_ref": visual.get("asset_ref").cloned().unwrap_or(Value::Null)
+            });
+            if let Some(runtime_object) = runtime.as_object_mut() {
+                for member in [
+                    "caption.text",
+                    "caption.visible",
+                    "caption.anchor.x",
+                    "caption.anchor.y",
+                    "caption.align.horizontal",
+                    "style.caption.text_color",
+                    "style.caption.font_family",
+                    "style.caption.font_size",
+                    "style.caption.font_weight",
+                    "style.text_value.color",
+                    "style.text_value.font_family",
+                    "style.text_value.font_size",
+                    "style.text_value.font_weight",
+                ] {
+                    if let Some(value) = props.get(member) {
+                        runtime_object.insert(member.to_string(), value.clone());
+                    }
+                }
+            }
             Ok(json!({
                 "widget_id": id,
                 "class_ref": widget.get("class_ref").cloned().unwrap_or(Value::Null),
                 "role": widget.get("role").cloned().unwrap_or(Value::Null),
                 "layout": widget.get("layout").cloned().unwrap_or(Value::Null),
-                "runtime": {
-                    "value": value,
-                    "label": props.get("label").cloned().unwrap_or(Value::Null),
-                    "visible": props.get("visible").cloned().unwrap_or(Value::Null),
-                    "enabled": props.get("enabled").cloned().unwrap_or(Value::Null),
-                    "foreground_color": foreground,
-                    "asset_ref": visual.get("asset_ref").cloned().unwrap_or(Value::Null)
-                }
+                "runtime": runtime
             }))
         })
         .collect::<Result<Vec<Value>>>()?;
@@ -387,11 +409,17 @@ fn execute_boolean_case(contract: &Value, unit: &Map<String, Value>, case_value:
             for member in [
                 "state_text.style.text_color.false",
                 "state_text.style.text_color.true",
+                "state_text.style.font_size",
+                "state_text.style.font_weight",
                 "state_text.visible",
                 "caption.visible",
                 "caption.anchor.x",
                 "caption.anchor.y",
                 "caption.align.horizontal",
+                "caption.style.text_color",
+                "caption.style.font_family",
+                "caption.style.font_size",
+                "caption.style.font_weight",
                 "style.frame.visible",
                 "style.outer.border_color.false",
                 "style.outer.border_color.true",

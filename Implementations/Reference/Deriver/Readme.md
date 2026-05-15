@@ -15,11 +15,11 @@
 
 <p>
 This directory contains the current non-normative reference deriver for the FROG implementation workspace.
-It exists to make the published source-to-FIR corridor executable and checkable for the bounded Examples 01–05 surface without claiming general compiler completeness.
+It exists to make the published source-to-FIR corridor executable and checkable for the bounded Examples 01-10 surface without claiming general compiler completeness.
 </p>
 
 <p>
-The supported source-to-FIR targets cover the published numbered examples from <code>01</code> through <code>05</code>.
+The supported source-to-FIR targets cover the published numbered examples from <code>01</code> through <code>10</code>.
 Rule selection is based on explicit source-pattern recognition rather than trusting <code>metadata.name</code> as semantic authority.
 </p>
 
@@ -92,7 +92,7 @@ future posture:
 
 <p>
 The legacy helper remains available for focused Example 05 debugging.
-The generic <code>derive_fir.py</code> entry point is the preferred path for Examples 01–05.
+The generic <code>derive_fir.py</code> entry point is the preferred path for Examples 01-10.
 </p>
 
 <hr/>
@@ -106,6 +106,7 @@ The generic <code>derive_fir.py</code> entry point is the preferred path for Exa
   <li><a href="./rules/example03_fir_derivation.md">Example 03 FIR derivation rules</a></li>
   <li><a href="./rules/example04_fir_derivation.md">Example 04 FIR derivation rules</a></li>
   <li><a href="./rules/example05_fir_derivation.md">Example 05 FIR derivation rules</a></li>
+  <li>Examples 06-10 are covered by the current bounded scalar widget derivation rules in <code>fir_deriver.py</code>.</li>
 </ul>
 
 <hr/>

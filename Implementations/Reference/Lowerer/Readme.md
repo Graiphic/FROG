@@ -15,7 +15,7 @@
 
 <p>
 This directory contains the current non-normative reference lowerer for the FROG implementation workspace.
-It exists to make the published <code>FIR -&gt; lowering</code> corridor executable and checkable for the bounded Examples 01–05 surface without claiming general lowering completeness.
+It exists to make the published <code>FIR -&gt; lowering</code> corridor executable and checkable for the bounded Examples 01-10 surface without claiming general lowering completeness.
 </p>
 
 <p>
@@ -51,6 +51,11 @@ The <code>source_ref</code> remains preserved for traceability, but it is not th
   <li><code>Examples/03_ui_property_write/main.fir.json -&gt; main.lowering.json</code></li>
   <li><code>Examples/04_stateful_feedback_delay/main.fir.json -&gt; main.lowering.json</code></li>
   <li><code>Examples/05_bounded_ui_accumulator/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/06_boolean_value_roundtrip/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/07_string_value_roundtrip/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/08_enum_value_roundtrip/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/09_path_value_roundtrip/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/10_button_press_to_boolean/main.fir.json -&gt; main.lowering.json</code></li>
 </ul>
 
 <hr/>
@@ -71,7 +76,7 @@ The <code>source_ref</code> remains preserved for traceability, but it is not th
 
 <p>
 The legacy helper remains available for focused Example 05 debugging.
-The generic <code>lower_fir.py</code> entry point is the preferred path for Examples 01–05.
+The generic <code>lower_fir.py</code> entry point is the preferred path for Examples 01-10.
 </p>
 
 <hr/>

@@ -12,11 +12,11 @@
     "wfrog_path": "Examples/08_enum_value_roundtrip/ui/enum_panel.wfrog"
   },
   "producer": {
-    "implementation": "FROG Reference Example 08 bounded fixture",
-    "implementation_kind": "non_normative_reference_fixture",
+    "implementation": "FROG Reference ContractEmitter",
+    "implementation_kind": "non_normative_reference_emitter",
     "version_governance_ref": "Versioning/Readme.md"
   },
-  "compatibility": "example_specific_bounded_fixture",
+  "compatibility": "family_specific",
   "source_ref": {
     "example_id": "08_enum_value_roundtrip",
     "path": "Examples/08_enum_value_roundtrip/main.frog",
@@ -38,19 +38,30 @@
     "ui_package_authority_refs": [
       "Examples/08_enum_value_roundtrip/ui/enum_panel.wfrog"
     ],
-    "contract_authority": "this_file"
+    "contract_authority": "this_file",
+    "notes": [
+      "This contract is downstream from canonical source, FIR, lowering, and the published UI package.",
+      "This contract must not redefine source semantics.",
+      "If this file diverges from the canonical execution-facing artifacts, those upstream artifacts win."
+    ]
   },
   "assumptions": {
     "runtime_family": {
       "name": "reference_host_runtime_ui_binding",
       "host_model": "single_process_host_runtime",
       "ui_binding": {
-        "widget_value_binding": true
+        "widget_value_binding": true,
+        "widget_reference_binding": false
       }
+    },
+    "scheduling": {
+      "family_rule": "deterministic_step_execution",
+      "parallelism_claim": "none"
     },
     "execution_start": {
       "input_binding_complete": true,
-      "ui_host_available": true
+      "ui_host_available": true,
+      "initial_state_materialized": true
     },
     "enum_behavior": {
       "value_domain": "enum_item_id",
@@ -105,6 +116,24 @@
               "mode": "widget_value",
               "public_output_id": "result_mode"
             }
+          }
+        ],
+        "control_bindings": [
+          {
+            "widget_id": "mode_input",
+            "mode": "widget_value",
+            "public_input_id": "mode_value",
+            "value_type": "enum_item_id",
+            "enum_domain": "example08.mode"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "mode_result",
+            "mode": "widget_value",
+            "public_output_id": "result_mode",
+            "value_type": "enum_item_id",
+            "enum_domain": "example08.mode"
           }
         ]
       },

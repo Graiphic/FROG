@@ -12,11 +12,11 @@
     "wfrog_path": "Examples/06_boolean_value_roundtrip/ui/boolean_panel.wfrog"
   },
   "producer": {
-    "implementation": "FROG Reference Example 06 bounded fixture",
-    "implementation_kind": "non_normative_reference_fixture",
+    "implementation": "FROG Reference ContractEmitter",
+    "implementation_kind": "non_normative_reference_emitter",
     "version_governance_ref": "Versioning/Readme.md"
   },
-  "compatibility": "example_specific_bounded_fixture",
+  "compatibility": "family_specific",
   "source_ref": {
     "example_id": "06_boolean_value_roundtrip",
     "path": "Examples/06_boolean_value_roundtrip/main.frog",
@@ -38,19 +38,30 @@
     "ui_package_authority_refs": [
       "Examples/06_boolean_value_roundtrip/ui/boolean_panel.wfrog"
     ],
-    "contract_authority": "this_file"
+    "contract_authority": "this_file",
+    "notes": [
+      "This contract is downstream from canonical source, FIR, lowering, and the published UI package.",
+      "This contract must not redefine source semantics.",
+      "If this file diverges from the canonical execution-facing artifacts, those upstream artifacts win."
+    ]
   },
   "assumptions": {
     "runtime_family": {
       "name": "reference_host_runtime_ui_binding",
       "host_model": "single_process_host_runtime",
       "ui_binding": {
-        "widget_value_binding": true
+        "widget_value_binding": true,
+        "widget_reference_binding": false
       }
+    },
+    "scheduling": {
+      "family_rule": "deterministic_step_execution",
+      "parallelism_claim": "none"
     },
     "execution_start": {
       "input_binding_complete": true,
-      "ui_host_available": true
+      "ui_host_available": true,
+      "initial_state_materialized": true
     },
     "boolean_behavior": {
       "value_domain": "bool",
@@ -101,6 +112,22 @@
               "mode": "widget_value",
               "public_output_id": "result"
             }
+          }
+        ],
+        "control_bindings": [
+          {
+            "widget_id": "bool_input",
+            "mode": "widget_value",
+            "public_input_id": "input_value",
+            "value_type": "bool"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "bool_result",
+            "mode": "widget_value",
+            "public_output_id": "result",
+            "value_type": "bool"
           }
         ]
       },

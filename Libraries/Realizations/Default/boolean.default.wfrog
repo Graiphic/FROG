@@ -8,6 +8,8 @@
     "name": "FROG Default Boolean Realization",
     "namespace": "frog.realizations.default.boolean",
     "family": "default",
+    "category": "value",
+    "role_posture": "control_indicator",
     "summary": "Machine-readable default realization manifest for standardized boolean widgets."
   },
   "ownership_boundary": {

@@ -8,6 +8,8 @@
     "name": "FROG Default Array Realization",
     "namespace": "frog.realizations.default.array",
     "family": "default",
+    "category": "structured",
+    "role_posture": "container",
     "summary": "Machine-readable default realization manifest for the standardized array widget."
   },
   "ownership_boundary": {

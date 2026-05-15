@@ -8,6 +8,8 @@
     "name": "FROG Default String Realization",
     "namespace": "frog.realizations.default.string",
     "family": "default",
+    "category": "value",
+    "role_posture": "control_indicator",
     "summary": "Machine-readable default realization manifest for standardized string widgets."
   },
   "ownership_boundary": {

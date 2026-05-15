@@ -5,7 +5,7 @@
 <h1 align="center">Reference Pipeline Checks</h1>
 
 <p align="center">
-  <strong>Repository-visible checks for the bounded Examples 01–05 reference pipeline</strong><br/>
+  <strong>Repository-visible checks for the bounded Examples 01-10 reference pipeline</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -30,7 +30,7 @@
 <h2>Purpose</h2>
 
 <p>
-This directory coordinates the current reproducibility checks for the published Examples 01–05 corridor.
+This directory coordinates the current reproducibility checks for the published Examples 01-10 corridor.
 The default repository-quality posture is to validate the widget layer before checking source derivation, lowering, backend contracts, runtime acceptance, and LLVM proof artifacts.
 </p>
 
@@ -47,7 +47,7 @@ The default repository-quality posture is to validate the widget layer before ch
 
 <h2>Primary Command</h2>
 
-<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py</code></pre>
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_10_full.py</code></pre>
 
 <p>
 This command includes widget-layer validation by default.

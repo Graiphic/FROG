@@ -8,6 +8,8 @@
     "name": "FROG Default Frame Realization",
     "namespace": "frog.realizations.default.frame",
     "family": "default",
+    "category": "layout",
+    "role_posture": "container",
     "summary": "Machine-readable default realization manifest for the standardized standalone frame widget."
   },
   "ownership_boundary": {

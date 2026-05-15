@@ -8,6 +8,8 @@
     "name": "FROG Default Label Realization",
     "namespace": "frog.realizations.default.label",
     "family": "default",
+    "category": "annotation",
+    "role_posture": "display",
     "summary": "Machine-readable default realization manifest for the standardized standalone label widget."
   },
   "ownership_boundary": {

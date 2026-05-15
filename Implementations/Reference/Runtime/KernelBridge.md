@@ -55,7 +55,7 @@ Explicit manifests and stable ABI surfaces connect both worlds.
 
 <hr/>
 
-<h2>Published Example 05-10 Bridge Artifacts</h2>
+<h2>Published Examples 05-10 Bridge Artifacts</h2>
 
 <pre><code>Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json
 Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/kernel.ll
@@ -165,5 +165,5 @@ Overflow is reported with <code>error_code = 1</code> and mapped by the runtime 
   <li>This bridge does not claim a complete production runtime.</li>
   <li>This bridge does not make the current widget slices a complete widget-system implementation.</li>
   <li>The optional LLVM-produced bridge test does not make LLVM the conceptual runtime authority.</li>
-  <li>The bounded Example 05-10 <code>.wfrog</code> renderers do not claim to be a full general renderer.</li>
+  <li>The bounded Examples 05-10 <code>.wfrog</code> renderers do not claim to be a full general renderer.</li>
 </ul>

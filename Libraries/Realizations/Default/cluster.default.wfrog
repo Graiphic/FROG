@@ -8,6 +8,8 @@
     "name": "FROG Default Cluster Realization",
     "namespace": "frog.realizations.default.cluster",
     "family": "default",
+    "category": "structured",
+    "role_posture": "container",
     "summary": "Machine-readable default realization manifest for the standardized cluster widget."
   },
   "ownership_boundary": {

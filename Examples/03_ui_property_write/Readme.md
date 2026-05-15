@@ -90,7 +90,7 @@ widget_reference(ctrl_gain) -- ref -/
 
 <h3>Full repository-visible corridor</h3>
 
-<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py</code></pre>
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_10_full.py</code></pre>
 
 <h3>Source to FIR</h3>
 
@@ -117,7 +117,7 @@ widget_reference(ctrl_gain) -- ref -/
 
 <h3>Runtime acceptance</h3>
 
-<pre><code>python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py</code></pre>
+<pre><code>python Implementations/Reference/Runtime/check_examples01_10_runtime_acceptance.py</code></pre>
 
 <h3>LLVM module</h3>
 

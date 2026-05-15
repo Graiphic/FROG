@@ -178,6 +178,7 @@ The logical widget name, visible caption, semantic path value, and shortened dis
   <li><code>path_face</code></li>
   <li><code>path_display</code></li>
   <li><code>browse_button</code> when present</li>
+  <li><code>browse_button_text</code> when present</li>
   <li><code>path_icon</code> when present</li>
   <li><code>validation_marker</code> when present</li>
   <li><code>text_overflow_marker</code> when present</li>

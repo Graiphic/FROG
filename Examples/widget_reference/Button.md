@@ -27,6 +27,8 @@ It proves one <code>frog.widgets.button</code> command control driving one
 <p>
 The example is intentionally small: the Button publishes a momentary pressed value, the
 diagram copies that value, and the Boolean indicator displays the current pressed state.
+This corridor was accepted on 2026-05-15 after browser-host visual inspection
+of the Default Button rectangular SVG asset and the Default Boolean circular indicator.
 </p>
 
 <hr/>
@@ -159,4 +161,5 @@ It owns only the realization references, SVG asset references, and host requirem
   <li>The visible UI must expose the expected asset routes for the Button and Boolean indicator.</li>
   <li>Button state text must switch between <code>OFF</code> and <code>ON</code> according to the pressed state.</li>
   <li>There must be no local duplicated Button SVG under the example directory.</li>
+  <li>The accepted scope is bounded to Example 10 and must not be used to claim generalized runtime completeness.</li>
 </ul>

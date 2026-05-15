@@ -8,6 +8,8 @@
     "name": "FROG Default Path Realization",
     "namespace": "frog.realizations.default.path",
     "family": "default",
+    "category": "value",
+    "role_posture": "control_indicator",
     "summary": "Machine-readable default realization manifest for standardized path widgets."
   },
   "ownership_boundary": {

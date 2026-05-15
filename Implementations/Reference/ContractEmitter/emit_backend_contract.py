@@ -11,6 +11,78 @@ EXPECTED_OVERFLOW_BEHAVIOR = "reject_execution_on_u16_overflow"
 SUPPORTED_LOWERED_UNIT_KIND = "bounded_accumulator_kernel_with_ui_bindings"
 CONTRACT_UNIT_KIND = "bounded_executable_ui_unit"
 
+UI_PACKAGE_BY_EXAMPLE = {
+    "05_bounded_ui_accumulator": "accumulator_panel.wfrog",
+    "06_boolean_value_roundtrip": "boolean_panel.wfrog",
+    "07_string_value_roundtrip": "string_panel.wfrog",
+    "08_enum_value_roundtrip": "enum_panel.wfrog",
+    "09_path_value_roundtrip": "path_panel.wfrog",
+    "10_button_press_to_boolean": "button_panel.wfrog",
+}
+
+SCALAR_COPY_CONTRACT_SPECS: dict[str, dict[str, Any]] = {
+    "boolean_value_roundtrip_kernel_with_ui_bindings": {
+        "contract_kind": "boolean_value_roundtrip_ui_unit",
+        "behavior_key": "boolean_behavior",
+        "behavior": {"value_domain": "bool", "operation": "copy"},
+        "input_binding_origin": "widget.bool_input.value",
+        "output_binding_target": "widget.bool_result.value",
+        "widgets": [
+            ("bool_input", "frog.widgets.boolean_control", "bool", "control", {"mode": "widget_value", "public_input_id": "input_value"}),
+            ("bool_result", "frog.widgets.boolean_indicator", "bool", "indicator", {"mode": "widget_value", "public_output_id": "result"}),
+        ],
+        "kernel_keys": ["operation", "src", "dst", "type"],
+    },
+    "string_value_roundtrip_kernel_with_ui_bindings": {
+        "contract_kind": "string_value_roundtrip_ui_unit",
+        "behavior_key": "string_behavior",
+        "behavior": {"value_domain": "utf8_string", "operation": "copy", "max_utf8_bytes": 256},
+        "input_binding_origin": "widget.str_input.value",
+        "output_binding_target": "widget.str_result.value",
+        "widgets": [
+            ("str_input", "frog.widgets.string_control", "string", "control", {"mode": "widget_value", "public_input_id": "input_text"}),
+            ("str_result", "frog.widgets.string_indicator", "string", "indicator", {"mode": "widget_value", "public_output_id": "result_text"}),
+        ],
+        "kernel_keys": ["operation", "src", "dst", "type", "max_utf8_bytes"],
+    },
+    "enum_value_roundtrip_kernel_with_ui_bindings": {
+        "contract_kind": "enum_value_roundtrip_ui_unit",
+        "behavior_key": "enum_behavior",
+        "behavior": {"value_domain": "enum_item_id", "enum_domain": "example08.mode", "operation": "copy", "representation": "u16"},
+        "input_binding_origin": "widget.mode_input.value",
+        "output_binding_target": "widget.mode_result.value",
+        "widgets": [
+            ("mode_input", "frog.widgets.enum_control", "enum_item_id", "control", {"mode": "widget_value", "public_input_id": "mode_value"}),
+            ("mode_result", "frog.widgets.enum_indicator", "enum_item_id", "indicator", {"mode": "widget_value", "public_output_id": "result_mode"}),
+        ],
+        "kernel_keys": ["operation", "src", "dst", "type", "enum_domain", "representation"],
+    },
+    "path_value_roundtrip_kernel_with_ui_bindings": {
+        "contract_kind": "path_value_roundtrip_ui_unit",
+        "behavior_key": "path_behavior",
+        "behavior": {"value_domain": "utf8_path_string", "operation": "copy", "max_utf8_bytes": 256},
+        "input_binding_origin": "widget.path_input.value",
+        "output_binding_target": "widget.path_result.value",
+        "widgets": [
+            ("path_input", "frog.widgets.path_control", "path", "control", {"mode": "widget_value", "public_input_id": "input_path"}),
+            ("path_result", "frog.widgets.path_indicator", "path", "indicator", {"mode": "widget_value", "public_output_id": "result_path"}),
+        ],
+        "kernel_keys": ["operation", "src", "dst", "type", "encoding", "max_utf8_bytes"],
+    },
+    "button_press_to_boolean_kernel_with_ui_bindings": {
+        "contract_kind": "button_press_to_boolean_ui_unit",
+        "behavior_key": "boolean_behavior",
+        "behavior": {"value_domain": "bool", "button_press_event": "trigger_button.pressed"},
+        "input_binding_origin": "widget.trigger_button.pressed",
+        "output_binding_target": "interface.pressed",
+        "widgets": [
+            ("trigger_button", "frog.widgets.button", "bool", "control", {"mode": "widget_event_value", "public_input_id": "trigger_pressed"}),
+            ("pressed_indicator", "frog.widgets.boolean_indicator", "bool", "indicator", {"mode": "widget_value", "public_output_id": "pressed"}),
+        ],
+        "kernel_keys": ["operation", "dst", "type", "src", "final_publication"],
+    },
+}
+
 
 class ContractEmissionError(RuntimeError):
     """Raised when the published lowering cannot be emitted as the reference runtime-family contract."""
@@ -98,6 +170,10 @@ def _infer_ui_package_path(lowering: Dict[str, Any], explicit_ui_package_path: O
     _ensure(isinstance(source_path, str) and source_path.endswith("main.frog"), "Unable to infer UI package path from source_ref.path.")
     source_path = source_path.replace("\\", "/")
     example_dir = source_path.rsplit("/", 1)[0]
+    example_id = source_ref.get("example_id")
+    panel_file = UI_PACKAGE_BY_EXAMPLE.get(str(example_id))
+    if panel_file:
+        return f"{example_dir}/ui/{panel_file}"
     return f"{example_dir}/{DEFAULT_UI_PACKAGE_SUFFIX}"
 
 
@@ -285,6 +361,187 @@ def _build_normalized_widget_bindings(ui_bindings: Dict[str, Any], public_io: Di
     }
 
 
+def _load_and_validate_scalar_fir(
+    lowering: Dict[str, Any],
+    *,
+    lowering_path: Path | str,
+    ui_package_path: str,
+    expected_fir_kind: str,
+) -> Dict[str, Any]:
+    fir_ref = lowering.get("fir_ref")
+    _ensure(isinstance(fir_ref, dict), "Missing fir_ref.")
+    fir_path_text = fir_ref.get("path")
+    _ensure(isinstance(fir_path_text, str) and fir_path_text.endswith("main.fir.json"), "Invalid fir_ref.path.")
+
+    repo_root = find_repo_root(Path(lowering_path).resolve())
+    fir_path = _resolve_repo_relative_path(repo_root, fir_path_text)
+    _ensure(fir_path.is_file(), f"Missing FIR artifact: {fir_path_text}")
+    fir = load_json_from_path(fir_path)
+
+    _ensure(fir.get("artifact_kind") == "frog_fir_unit", "Expected artifact_kind == frog_fir_unit.")
+    fir_source_ref = fir.get("source_ref")
+    lowering_source_ref = lowering.get("source_ref")
+    _ensure(isinstance(fir_source_ref, dict), "Missing FIR source_ref.")
+    _ensure(isinstance(lowering_source_ref, dict), "Missing lowering source_ref.")
+    for key in ("example_id", "path", "entry_unit"):
+        _ensure(fir_source_ref.get(key) == lowering_source_ref.get(key), f"FIR source_ref.{key} must match lowering source_ref.{key}.")
+
+    front_panel_ref = fir.get("front_panel_ref")
+    _ensure(isinstance(front_panel_ref, dict), "Missing front_panel_ref in FIR.")
+    _ensure(front_panel_ref.get("package_path") == ui_package_path, "FIR front_panel_ref.package_path must match the published UI package path.")
+    _ensure(front_panel_ref.get("panel_id") == "main_panel", "FIR front_panel_ref.panel_id must be main_panel.")
+
+    fir_unit = _expect_single_fir_unit(fir)
+    lowering_unit = _expect_single_lowered_unit(lowering)
+    _ensure(fir_unit.get("kind") == expected_fir_kind, f"Expected FIR unit kind {expected_fir_kind}.")
+    _ensure(fir_unit.get("unit_id") == lowering_unit.get("unit_id"), "FIR unit_id must match lowering unit_id.")
+    _ensure(fir_unit.get("public_interface") == lowering_unit.get("public_io"), "FIR public_interface must match lowering public_io.")
+    _ensure(fir_unit.get("ui_bindings") == lowering_unit.get("ui_bindings"), "FIR ui_bindings must match lowering ui_bindings.")
+    kernel = _expect_single_lowered_unit(lowering).get("execution_kernel")
+    _ensure(isinstance(kernel, dict), "Missing execution_kernel.")
+    _ensure(fir_unit.get("publications") == kernel.get("final_publication"), "FIR publications must match lowering final_publication.")
+    return fir
+
+
+def _normalized_scalar_public_io(public_io: Dict[str, Any], spec: dict[str, Any]) -> Dict[str, Any]:
+    inputs = public_io["inputs"]
+    outputs = public_io["outputs"]
+    _ensure(isinstance(inputs, list) and len(inputs) == 1, "Scalar copy contract expects exactly one public input.")
+    _ensure(isinstance(outputs, list) and len(outputs) == 1, "Scalar copy contract expects exactly one public output.")
+    public_input = dict(inputs[0])
+    public_output = dict(outputs[0])
+    public_input["binding_origin"] = spec["input_binding_origin"]
+    public_output["binding_target"] = spec["output_binding_target"]
+    return {"inputs": [public_input], "outputs": [public_output]}
+
+
+def _normalized_scalar_widgets(spec: dict[str, Any]) -> list[dict[str, Any]]:
+    widgets = []
+    for widget_id, widget_class, value_type, role, binding in spec["widgets"]:
+        widgets.append({
+            "widget_id": widget_id,
+            "widget_class": widget_class,
+            "value_type": value_type,
+            "role": role,
+            "binding": binding,
+        })
+    return widgets
+
+
+def _scalar_execution_kernel(kernel: Dict[str, Any], spec: dict[str, Any]) -> Dict[str, Any]:
+    out = {}
+    for key in spec["kernel_keys"]:
+        if key in kernel:
+            out[key] = kernel[key]
+    return out
+
+
+def _emit_scalar_copy_contract(
+    lowering: Dict[str, Any],
+    unit: Dict[str, Any],
+    *,
+    ui_package_path: Optional[str] = None,
+    lowering_path: Path | str | None = None,
+) -> Dict[str, Any]:
+    lowered_kind = unit.get("kind")
+    spec = SCALAR_COPY_CONTRACT_SPECS.get(str(lowered_kind))
+    _ensure(spec is not None, f"Unsupported lowered unit kind {lowered_kind!r}.")
+
+    public_io = _expect_public_io(unit)
+    ui_bindings = unit.get("ui_bindings")
+    _ensure(isinstance(ui_bindings, dict), "Missing ui_bindings section.")
+    execution_kernel = unit.get("execution_kernel")
+    _ensure(isinstance(execution_kernel, dict), "Missing execution_kernel section.")
+
+    ui_package_path_value = _infer_ui_package_path(lowering, ui_package_path)
+    if lowering_path is not None:
+        _load_and_validate_scalar_fir(
+            lowering,
+            lowering_path=lowering_path,
+            ui_package_path=ui_package_path_value,
+            expected_fir_kind=str(spec["contract_kind"]),
+        )
+
+    normalized_public_io = _normalized_scalar_public_io(public_io, spec)
+    unit_contract = {
+        "unit_id": "main",
+        "kind": spec["contract_kind"],
+        "public_io": normalized_public_io,
+        "ui_bindings": {
+            "package_refs": [ui_package_path_value],
+            "widgets": _normalized_scalar_widgets(spec),
+            "control_bindings": ui_bindings.get("control_bindings", []),
+            "indicator_bindings": ui_bindings.get("indicator_bindings", []),
+        },
+        "execution_kernel": _scalar_execution_kernel(execution_kernel, spec),
+        "effects": [],
+        "publications": execution_kernel.get("final_publication", []),
+    }
+
+    source_ref = lowering.get("source_ref")
+    fir_ref = lowering.get("fir_ref")
+    _ensure(isinstance(source_ref, dict), "Missing source_ref.")
+    _ensure(isinstance(fir_ref, dict), "Missing fir_ref.")
+
+    return {
+        "artifact_kind": "frog_backend_contract",
+        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "backend_family": REFERENCE_BACKEND_FAMILY,
+        "example_id": source_ref.get("example_id"),
+        "artifact_refs": {
+            "source_path": source_ref.get("path"),
+            "fir_path": fir_ref.get("path"),
+            "lowering_path": source_ref.get("path", "").replace("main.frog", "main.lowering.json"),
+            "wfrog_path": ui_package_path_value,
+        },
+        "producer": {
+            "implementation": "FROG Reference ContractEmitter",
+            "implementation_kind": "non_normative_reference_emitter",
+            "version_governance_ref": "Versioning/Readme.md",
+        },
+        "compatibility": "family_specific",
+        "source_ref": {
+            "example_id": source_ref.get("example_id"),
+            "path": source_ref.get("path"),
+            "entry_unit": source_ref.get("entry_unit"),
+        },
+        "derived_from": {
+            "fir_path": fir_ref.get("path"),
+            "lowering_path": source_ref.get("path", "").replace("main.frog", "main.lowering.json"),
+            "ui_package_path": ui_package_path_value,
+        },
+        "ownership_boundary": {
+            "semantic_authority": "canonical_source_and_execution_facing_artifacts",
+            "semantic_authority_refs": [
+                source_ref.get("path"),
+                fir_ref.get("path"),
+                source_ref.get("path", "").replace("main.frog", "main.lowering.json"),
+            ],
+            "ui_package_authority": "published_widget_realization_package",
+            "ui_package_authority_refs": [ui_package_path_value],
+            "contract_authority": "this_file",
+            "notes": [
+                "This contract is downstream from canonical source, FIR, lowering, and the published UI package.",
+                "This contract must not redefine source semantics.",
+                "If this file diverges from the canonical execution-facing artifacts, those upstream artifacts win.",
+            ],
+        },
+        "assumptions": {
+            "runtime_family": {
+                "name": REFERENCE_BACKEND_FAMILY,
+                "host_model": "single_process_host_runtime",
+                "ui_binding": {"widget_value_binding": True, "widget_reference_binding": False},
+            },
+            "scheduling": {"family_rule": "deterministic_step_execution", "parallelism_claim": "none"},
+            "execution_start": {"input_binding_complete": True, "ui_host_available": True, "initial_state_materialized": True},
+            spec["behavior_key"]: spec["behavior"],
+        },
+        "units": [unit_contract],
+        "unsupported": [],
+        "diagnostics": [],
+    }
+
+
 def emit_reference_host_runtime_contract(
     lowering: Dict[str, Any],
     *,
@@ -307,7 +564,13 @@ def emit_reference_host_runtime_contract(
 
     unit = _expect_single_lowered_unit(lowering)
     _ensure(unit.get("unit_id") == "main", "Expected lowered unit main.")
-    _ensure(unit.get("kind") == SUPPORTED_LOWERED_UNIT_KIND, f"Expected lowered unit kind {SUPPORTED_LOWERED_UNIT_KIND}.")
+    if unit.get("kind") != SUPPORTED_LOWERED_UNIT_KIND:
+        return _emit_scalar_copy_contract(
+            lowering,
+            unit,
+            ui_package_path=ui_package_path,
+            lowering_path=lowering_path,
+        )
 
     public_io = _expect_public_io(unit)
     ui_bindings = _expect_ui_bindings(unit)

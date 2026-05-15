@@ -2,9 +2,10 @@
 """Execute or check a reference backend contract acceptance.
 
 This is the CLI wrapper around Runtime/contract_executor.py.
-It supports the current Examples 01-05 acceptance surface. When an acceptance
-artifact declares artifact_refs.wfrog_path, the referenced .wfrog package is
-loaded and provided to the generic contract executor as support_artifacts['wfrog'].
+It supports the generic contract acceptance surface used by the current
+workspace checks. When an acceptance artifact declares artifact_refs.wfrog_path,
+the referenced .wfrog package is loaded and provided to the generic contract
+executor as support_artifacts['wfrog'].
 """
 
 from __future__ import annotations

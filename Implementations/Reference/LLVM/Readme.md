@@ -175,11 +175,11 @@ These wrappers are kept for continuity, but both now delegate to the generic low
 
 <h2>Native Build</h2>
 
-<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-llvm-build</code></pre>
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_10_full.py --include-llvm-build</code></pre>
 
 <p>
 The native build path requires <code>clang</code>.
-It verifies the published native proof dossiers for Examples 01–05 when the toolchain is available.
+It verifies the published native proof dossiers for Examples 01-10 when the toolchain is available.
 </p>
 
 <p>

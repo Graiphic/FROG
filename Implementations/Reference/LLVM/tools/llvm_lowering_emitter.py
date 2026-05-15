@@ -1,7 +1,7 @@
 """Generic-by-kind LLVM emitter for the non-normative FROG reference workspace.
 
 This module is intentionally narrow and non-normative. It does not implement a
-general production LLVM backend. It consolidates the current Examples 01-07
+general production LLVM backend. It consolidates the current Examples 01-10
 native proof emitters around one dispatch key:
 
     lowered_units[0].kind
@@ -16,6 +16,8 @@ Supported lowered unit kinds:
 - boolean_value_roundtrip_kernel_with_ui_bindings
 - string_value_roundtrip_kernel_with_ui_bindings
 - enum_value_roundtrip_kernel_with_ui_bindings
+- path_value_roundtrip_kernel_with_ui_bindings
+- button_press_to_boolean_kernel_with_ui_bindings
 """
 
 from __future__ import annotations
@@ -701,6 +703,135 @@ invalid_enum_value:
 """
 
 
+def emit_path_value_roundtrip(lowering: dict[str, Any]) -> str:
+    unit = single_lowered_unit(lowering)
+    kernel = execution_kernel(unit)
+    expect_equal(kernel.get("operation"), "copy", "path_value_roundtrip expects copy operation")
+    expect_equal(kernel.get("src"), "input_path", "path_value_roundtrip expects src input_path")
+    expect_equal(kernel.get("dst"), "result_path", "path_value_roundtrip expects dst result_path")
+    expect_equal(kernel.get("type"), "path", "path_value_roundtrip expects path copy type")
+    expect_equal(kernel.get("encoding"), "utf8", "path_value_roundtrip expects utf8 encoding")
+    expect_equal(kernel.get("max_utf8_bytes"), 256, "path_value_roundtrip expects max_utf8_bytes = 256")
+
+    return """%FrogStringRunResult = type { i8, i16, i32, [256 x i8] }
+
+define void @frog_example09_run(ptr %input_ptr, i32 %input_len, ptr %out_result) {
+entry:
+  %too_long = icmp ugt i32 %input_len, 256
+  br i1 %too_long, label %error_too_long, label %copy_check
+
+copy_check:
+  %i = phi i32 [ 0, %entry ], [ %next, %copy_body ]
+  %done = icmp uge i32 %i, %input_len
+  br i1 %done, label %ok, label %copy_body
+
+copy_body:
+  %source_byte_ptr = getelementptr inbounds i8, ptr %input_ptr, i32 %i
+  %source_byte = load i8, ptr %source_byte_ptr, align 1
+  %target_byte_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 3, i32 %i
+  store i8 %source_byte, ptr %target_byte_ptr, align 1
+  %next = add i32 %i, 1
+  br label %copy_check
+
+ok:
+  %ok_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 0
+  store i8 1, ptr %ok_ptr, align 4
+  %error_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 1
+  store i16 0, ptr %error_ptr, align 2
+  %len_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 2
+  store i32 %input_len, ptr %len_ptr, align 4
+  ret void
+
+error_too_long:
+  %err_ok_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 0
+  store i8 0, ptr %err_ok_ptr, align 4
+  %err_code_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 1
+  store i16 1, ptr %err_code_ptr, align 2
+  %err_len_ptr = getelementptr inbounds %FrogStringRunResult, ptr %out_result, i32 0, i32 2
+  store i32 0, ptr %err_len_ptr, align 4
+  ret void
+}
+"""
+
+
+def emit_button_press_to_boolean(lowering: dict[str, Any]) -> str:
+    unit = single_lowered_unit(lowering)
+    kernel = execution_kernel(unit)
+    public_io = require_object(unit.get("public_io"), "unit.public_io")
+    inputs = require_list(public_io.get("inputs"), "unit.public_io.inputs")
+    outputs = require_list(public_io.get("outputs"), "unit.public_io.outputs")
+
+    expect_equal(kernel.get("operation"), "copy", "button_press_to_boolean expects copy operation")
+    expect_equal(kernel.get("src"), "trigger_pressed", "button_press_to_boolean expects src trigger_pressed")
+    expect_equal(kernel.get("dst"), "pressed", "button_press_to_boolean expects dst pressed")
+    expect_equal(kernel.get("type"), "bool", "button_press_to_boolean expects bool copy type")
+    expect_equal(inputs, [{"id": "trigger_pressed", "type": "bool", "binding_origin": "widget.trigger_button.pressed"}], "button_press_to_boolean expects one Button pressed input")
+    expect_equal(outputs, [{"id": "pressed", "type": "bool"}], "button_press_to_boolean expects one bool output")
+
+    fmt_input = "trigger_pressed=%s\n"
+    fmt_output = "public_pressed=%s\n"
+    fmt_status_ok = "status=ok\n"
+
+    return f"""; FROG example 10 - LLVM Button press to Boolean proof
+; Emitted from the published Example 10 lowered Button press copy kernel.
+;
+; Lowered kernel shape:
+;   trigger_pressed : bool
+;   pressed         : bool
+;   operation       : copy trigger_pressed -> pressed
+
+{c_const("text_true", "true")}
+{c_const("text_false", "false")}
+{c_const("fmt_input", fmt_input)}
+{c_const("fmt_output", fmt_output)}
+{c_const("fmt_status_ok", fmt_status_ok)}
+
+declare i32 @printf(ptr, ...)
+declare i32 @atoi(ptr)
+
+define i1 @frog_example10_copy_button_pressed(i1 %trigger_pressed) {{
+entry:
+  ret i1 %trigger_pressed
+}}
+
+define i32 @main(i32 %argc, ptr %argv) {{
+entry:
+  %true_ptr = getelementptr inbounds [5 x i8], ptr @text_true, i64 0, i64 0
+  %false_ptr = getelementptr inbounds [6 x i8], ptr @text_false, i64 0, i64 0
+  %has_arg = icmp sgt i32 %argc, 1
+  br i1 %has_arg, label %parse_arg, label %use_default
+
+parse_arg:
+  %argv1ptr = getelementptr inbounds ptr, ptr %argv, i64 1
+  %argv1 = load ptr, ptr %argv1ptr, align 8
+  %parsed = call i32 @atoi(ptr %argv1)
+  %parsed_bool = icmp ne i32 %parsed, 0
+  br label %run
+
+use_default:
+  br label %run
+
+run:
+  %trigger_pressed = phi i1 [ %parsed_bool, %parse_arg ], [ false, %use_default ]
+  %pressed = call i1 @frog_example10_copy_button_pressed(i1 %trigger_pressed)
+
+  %input_text = select i1 %trigger_pressed, ptr %true_ptr, ptr %false_ptr
+  %result_text = select i1 %pressed, ptr %true_ptr, ptr %false_ptr
+
+  %fmt_input_ptr = getelementptr inbounds [{c_len(fmt_input)} x i8], ptr @fmt_input, i64 0, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt_input_ptr, ptr %input_text)
+
+  %fmt_output_ptr = getelementptr inbounds [{c_len(fmt_output)} x i8], ptr @fmt_output, i64 0, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt_output_ptr, ptr %result_text)
+
+  %fmt_status_ok_ptr = getelementptr inbounds [{c_len(fmt_status_ok)} x i8], ptr @fmt_status_ok, i64 0, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt_status_ok_ptr)
+
+  ret i32 0
+}}
+"""
+
+
 EMITTERS_BY_KIND: dict[str, Callable[[dict[str, Any]], str]] = {
     "pure_addition_kernel": emit_pure_addition,
     "ui_value_roundtrip_kernel": emit_ui_value_roundtrip,
@@ -710,6 +841,8 @@ EMITTERS_BY_KIND: dict[str, Callable[[dict[str, Any]], str]] = {
     "boolean_value_roundtrip_kernel_with_ui_bindings": emit_boolean_value_roundtrip,
     "string_value_roundtrip_kernel_with_ui_bindings": emit_string_value_roundtrip,
     "enum_value_roundtrip_kernel_with_ui_bindings": emit_enum_value_roundtrip,
+    "path_value_roundtrip_kernel_with_ui_bindings": emit_path_value_roundtrip,
+    "button_press_to_boolean_kernel_with_ui_bindings": emit_button_press_to_boolean,
 }
 
 

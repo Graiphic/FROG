@@ -26,7 +26,7 @@ The workspace protects a numbered progression of examples and the published widg
 Libraries/Realizations/Default/
   -&gt; WidgetValidator
 
-Examples 01-05
+Examples 01-10
   .frog
     -&gt; source-pattern FIR derivation
     -&gt; FIR unit.kind
@@ -48,8 +48,8 @@ Examples 06-09
 
 <p>
 Example 05 remains the primary applicative UI/state/runtime/native corridor.
-Examples 01–04 provide smaller executable proof slices for pure arithmetic, widget values, UI property writes, and explicit feedback state.
-Examples 06–09 extend the runtime/widget discipline across the current Boolean, String, Enum, and Path front-panel slices.
+Examples 01-04 provide smaller executable proof slices for pure arithmetic, widget values, UI property writes, and explicit feedback state.
+Examples 06-09 extend the runtime/widget discipline across the current Boolean, String, Enum, and Path front-panel slices.
 </p>
 
 <hr/>
@@ -157,7 +157,7 @@ python Implementations/Reference/check_reference_workspace.py --include-llvm-bui
 </code></pre>
 
 <p>
-The default workspace command includes widget-layer validation through the Examples 01–05 pipeline.
+The default workspace command includes widget-layer validation through the Examples 01-10 pipeline.
 The <code>--widget-layer-only</code> command exists for fast validation when editing widget class-law documents, Default realization documents, manifests, or SVG resources.
 The <code>--include-pytest</code> command additionally protects source-pattern derivation, FIR-unit-kind lowering, lowered-unit-kind contract emission, contract-unit-kind runtime execution, lowered-unit-kind LLVM emission, Python runtime UI coverage for the current widget examples, and unsupported-pattern / unsupported-kind failure behavior.
 The <code>--include-native-kernel-bridge</code> command validates the published native-kernel bridge surface where the local native toolchain is available.

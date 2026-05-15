@@ -81,5 +81,24 @@ def test_example05_contract_emission_rejects_unsupported_lowered_unit_kind() -> 
     mutated = copy.deepcopy(lowering)
     mutated["lowered_units"][0]["kind"] = "unsupported_lowered_unit_kind"
 
-    with pytest.raises(Example05ContractEmissionError, match="Expected lowered unit kind"):
+    with pytest.raises(Example05ContractEmissionError, match="Unsupported lowered unit kind"):
         emit_reference_host_runtime_contract(mutated)
+
+
+@pytest.mark.parametrize(
+    "example_rel,expected_kind",
+    [
+        ("06_boolean_value_roundtrip", "boolean_value_roundtrip_ui_unit"),
+        ("07_string_value_roundtrip", "string_value_roundtrip_ui_unit"),
+        ("08_enum_value_roundtrip", "enum_value_roundtrip_ui_unit"),
+        ("09_path_value_roundtrip", "path_value_roundtrip_ui_unit"),
+        ("10_button_press_to_boolean", "button_press_to_boolean_ui_unit"),
+    ],
+)
+def test_scalar_widget_contract_emission_matches_published_contract(example_rel: str, expected_kind: str) -> None:
+    lowering = load_json(f"Examples/{example_rel}/main.lowering.json")
+    contract = emit_reference_host_runtime_contract(lowering, lowering_path=ROOT / f"Examples/{example_rel}/main.lowering.json")
+    expected = load_json(f"Implementations/Reference/ContractEmitter/examples/{example_rel}.reference_host_runtime_ui_binding.contract.json")
+
+    assert contract == expected
+    assert contract["units"][0]["kind"] == expected_kind

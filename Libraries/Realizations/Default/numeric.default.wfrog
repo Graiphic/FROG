@@ -8,6 +8,8 @@
     "name": "FROG Default Numeric Realization",
     "namespace": "frog.realizations.default.numeric",
     "family": "default",
+    "category": "value",
+    "role_posture": "control_indicator",
     "summary": "Machine-readable default realization manifest for standardized numeric widgets."
   },
   "ownership_boundary": {

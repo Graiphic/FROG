@@ -51,11 +51,22 @@
     }
   },
   "scope": {
-    "cpp_first_only": true,
+    "cpp_first_only": false,
     "llvm_required": true,
     "cpp_native_kernel_bridge": true,
-    "python_runtime_parity": false,
-    "rust_runtime_parity": false,
+    "python_runtime_parity": true,
+    "rust_runtime_parity": true,
     "broad_runtime_rewrite": false
+  },
+  "visual_acceptance": {
+    "status": "accepted_for_bounded_example",
+    "accepted_on": "2026-05-15",
+    "accepted_surface": "Default Button rectangular SVG realization with Boolean circular indicator in Example 10",
+    "notes": [
+      "Button renders from .frog instance data, .wfrog realization references, and Default Button SVG assets.",
+      "Pressed text switches between OFF and ON through instance-owned state_text values.",
+      "Pressed result displays through the read-only Default Boolean circular indicator.",
+      "This acceptance is bounded to the Example 10 Button press-to-Boolean corridor and does not claim generalized runtime completeness."
+    ]
   }
 }

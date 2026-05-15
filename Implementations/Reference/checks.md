@@ -79,7 +79,7 @@ python Implementations/Reference/check_reference_workspace.py --include-native-k
 <pre><code>python Implementations/Reference/check_reference_workspace.py</code></pre>
 
 <p>
-This command runs the Examples 01–05 full pipeline.
+This command runs the Examples 01-10 full pipeline.
 Widget-layer validation is included by default through the pipeline.
 </p>
 
@@ -102,7 +102,7 @@ This additionally runs the pytest suites for artifact checks, derivation, loweri
 
 <p>
 This requires <code>clang</code>.
-It verifies the native LLVM proof dossiers for Examples 01–05.
+It verifies the native LLVM proof dossiers for Examples 01-10.
 Widget-layer validation remains enabled unless explicitly skipped.
 </p>
 
@@ -139,7 +139,7 @@ ctest --test-dir build/frog_runtime_cpp --output-on-failure</code></pre>
 
 <p>
 The standard C++ checks do not require LLVM or <code>clang</code>.
-They validate the contract runtime path, the current Examples 05–10 browser-host UI rendering surfaces, <code>.wfrog</code> / SVG geometry coherence, and native-kernel bridge paths using ABI-compatible linked stubs.
+They validate the contract runtime path, the current Examples 05-10 browser-host UI rendering surfaces, <code>.wfrog</code> / SVG geometry coherence, and native-kernel bridge paths using ABI-compatible linked stubs.
 </p>
 
 <p>
@@ -152,7 +152,7 @@ The optional LLVM-produced native-kernel runtime closure is checked with:
 
 <h2>Runtime Contract Executor Check</h2>
 
-<pre><code>python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py
+<pre><code>python Implementations/Reference/Runtime/check_examples01_10_runtime_acceptance.py
 python Implementations/Reference/Runtime/execute_reference_contract.py \
   --acceptance Implementations/Reference/Runtime/acceptance/example01_pure_addition.acceptance.json \
   --check
@@ -189,7 +189,7 @@ The workflow runs:
 </p>
 
 <ul>
-  <li><code>Reference workspace</code> — primary Examples 01–05 workspace check.</li>
+  <li><code>Reference workspace</code> — primary Examples 01-10 workspace check.</li>
   <li><code>Reference pytest</code> — installs <code>pytest</code> and runs <code>check_reference_workspace.py --include-pytest</code>.</li>
   <li><code>Widget layer only</code> — runs the widget-layer validator directly.</li>
   <li><code>Reference native kernel bridge</code> — installs native build tooling and runs <code>check_reference_workspace.py --include-native-kernel-bridge</code>.</li>
@@ -202,7 +202,7 @@ The workflow runs:
 <pre><code>python Implementations/Reference/check_reference_workspace.py --skip-widget-validator</code></pre>
 
 <p>
-This skips widget-layer validation inside the Examples 01–05 pipeline.
+This skips widget-layer validation inside the Examples 01-10 pipeline.
 It should be used only for narrow debugging of unrelated pipeline stages.
 The default repository-quality posture is to keep widget validation enabled.
 </p>

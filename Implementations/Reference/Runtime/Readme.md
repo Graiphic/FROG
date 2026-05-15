@@ -156,7 +156,7 @@ The legacy compatibility fields have been removed from the published Example 05 
 
 <h2>Commands</h2>
 
-<pre><code>python Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py
+<pre><code>python Implementations/Reference/Runtime/check_examples01_10_runtime_acceptance.py
 python Implementations/Reference/Runtime/python/execute_contract.py 3
 
 python Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py
@@ -177,5 +177,5 @@ It consumes emitted backend contracts and validates repository-visible runtime b
 
 <p>
 The native-kernel bridge preserves this boundary: the runtime hosts execution and UI; backends compile lowered units; explicit manifests and stable ABI surfaces connect both sides.
-The Example 05-10 native-kernel closures are bounded LabVIEW-like proof corridors, not a generalized production runtime.
+The Examples 05-10 native-kernel closures are bounded LabVIEW-like proof corridors, not a generalized production runtime.
 </p>

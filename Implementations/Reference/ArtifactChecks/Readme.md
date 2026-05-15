@@ -5,7 +5,7 @@
 <h1 align="center">Reference Artifact Checks</h1>
 
 <p align="center">
-  <strong>Repository-quality preflight checks for the published Examples 01–05 executable corridor</strong><br/>
+  <strong>Repository-quality preflight checks for the published Examples 01-10 executable corridor</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -22,7 +22,7 @@ They verify that the artifacts announced by the examples and reference pipeline 
 
 <h2>Command</h2>
 
-<pre><code>python Implementations/Reference/ArtifactChecks/check_examples01_05_artifacts.py</code></pre>
+<pre><code>python Implementations/Reference/ArtifactChecks/check_examples01_10_artifacts.py</code></pre>
 
 <hr/>
 

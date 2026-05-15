@@ -5,7 +5,7 @@
 <h1 align="center">Reference Pipeline</h1>
 
 <p align="center">
-  <strong>Executable reference pipeline for the current Examples 01–05 FROG corridor</strong><br/>
+  <strong>Executable reference pipeline for the current Examples 01-10 FROG corridor</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -13,7 +13,7 @@
 
 <h2>Current Pipeline</h2>
 
-<pre><code>Examples 01–05
+<pre><code>Examples 01-10
   widget layer validation
     -&gt; .frog
     -&gt; FIR
@@ -24,20 +24,20 @@
 </code></pre>
 
 <p>
-The widget-layer validator is included by default because the current Examples 01–05 corridor depends on a stable published UI/widget layer, especially through <code>widget_value</code>, <code>widget_reference</code>, <code>frog.ui.property_write</code>, and the Example 05 front-panel package.
+The widget-layer validator is included by default because the current Examples 01-10 corridor depends on a stable published UI/widget layer, especially through <code>widget_value</code>, <code>widget_reference</code>, <code>frog.ui.property_write</code>, the Example 05 front-panel package, and the Example 06-10 Default realization packages.
 </p>
 
 <hr/>
 
 <h2>Command</h2>
 
-<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py</code></pre>
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_10_full.py</code></pre>
 
 <p>
 With native LLVM builds:
 </p>
 
-<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py --include-llvm-build</code></pre>
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_10_full.py --include-llvm-build</code></pre>
 
 <p>
 To validate only the widget layer through the workspace entry point:
@@ -49,21 +49,21 @@ To validate only the widget layer through the workspace entry point:
 To skip widget validation for narrow debugging of unrelated stages:
 </p>
 
-<pre><code>python Implementations/Reference/Pipeline/check_examples01_05_full.py --skip-widget-validator</code></pre>
+<pre><code>python Implementations/Reference/Pipeline/check_examples01_10_full.py --skip-widget-validator</code></pre>
 
 <hr/>
 
 <h2>Stage Order</h2>
 
 <ol>
-  <li>Artifact preflight for Examples 01–05.</li>
+  <li>Artifact preflight for Examples 01-10.</li>
   <li>Widget-layer validation.</li>
-  <li><code>.frog -&gt; FIR</code> for Examples 01–05.</li>
-  <li><code>FIR -&gt; lowering</code> for Examples 01–05.</li>
-  <li><code>lowering -&gt; backend contract</code> for Examples 01–04 through the shared contract emitter.</li>
+  <li><code>.frog -&gt; FIR</code> for Examples 01-10.</li>
+  <li><code>FIR -&gt; lowering</code> for Examples 01-10.</li>
+  <li><code>lowering -&gt; backend contract</code> for Examples 01-04 through the shared contract emitter.</li>
   <li><code>lowering -&gt; backend contract</code> for Example 05 through the host-runtime UI-binding contract emitter.</li>
-  <li><code>contract -&gt; runtime acceptance</code> for Examples 01–05.</li>
-  <li><code>lowering -&gt; LLVM module</code> for Examples 01–05.</li>
+  <li><code>contract -&gt; runtime acceptance</code> for Examples 01-10.</li>
+  <li><code>lowering -&gt; LLVM module</code> for Examples 01-10.</li>
   <li>Optional native LLVM build proof.</li>
 </ol>
 
