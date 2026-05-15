@@ -385,6 +385,28 @@
               ]
             },
             {
+              "key": "examples/11_button_switch_when_pressed/",
+              "title": "11 button switch when pressed",
+              "path": "/Examples/11_button_switch_when_pressed/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/11_button_switch_when_pressed/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/11_button_switch_when_pressed/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "examples/11_button_switch_when_pressed/ui/",
+                  "title": "ui",
+                  "path": "/Examples/11_button_switch_when_pressed/ui/Readme.md",
+                  "kind": "category",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -3500,6 +3522,13 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/runtime/check_example11_cpp_native_kernel_bridge.py",
+                  "title": "check_example11_cpp_native_kernel_bridge.py",
+                  "path": "/Implementations/Reference/Runtime/check_example11_cpp_native_kernel_bridge.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/runtime/check_examples01_05_runtime_acceptance.py",
                   "title": "check_examples01_05_runtime_acceptance.py",
                   "path": "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",
@@ -3690,6 +3719,13 @@
                           "key": "implementations/reference/runtime/python/tests/test_runtime_ui_slice10.py",
                           "title": "test_runtime_ui_slice10.py",
                           "path": "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice10.py",
+                          "kind": "code",
+                          "children": []
+                        },
+                        {
+                          "key": "implementations/reference/runtime/python/tests/test_runtime_ui_slice11.py",
+                          "title": "test_runtime_ui_slice11.py",
+                          "path": "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice11.py",
                           "kind": "code",
                           "children": []
                         }
@@ -3995,6 +4031,9 @@
     "/Examples/10_button_press_to_boolean/main.frog",
     "/Examples/10_button_press_to_boolean/ui/Readme.md",
     "/Examples/10_button_press_to_boolean/Readme.md",
+    "/Examples/11_button_switch_when_pressed/main.frog",
+    "/Examples/11_button_switch_when_pressed/ui/Readme.md",
+    "/Examples/11_button_switch_when_pressed/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
@@ -4417,6 +4456,7 @@
     "/Implementations/Reference/Runtime/check_example06_boolean_value_roundtrip.py",
     "/Implementations/Reference/Runtime/check_example06_cpp_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_example06_native_kernel_bridge.py",
+    "/Implementations/Reference/Runtime/check_example11_cpp_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_examples01_05_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/check_examples01_10_runtime_acceptance.py",
     "/Implementations/Reference/Runtime/check_python_native_kernel_bridge.py",
@@ -4443,6 +4483,7 @@
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice08.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice09.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice10.py",
+    "/Implementations/Reference/Runtime/python/tests/test_runtime_ui_slice11.py",
     "/Implementations/Reference/Runtime/python/Readme.md",
     "/Implementations/Reference/Runtime/rust/Readme.md",
     "/Implementations/Reference/Runtime/tests/test_contract_executor.py",
