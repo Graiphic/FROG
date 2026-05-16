@@ -27,9 +27,9 @@ and must not define a fallback Button visual.
 </p>
 
 <p>
-This example starts in the C++ runtime only. Python and Rust should be aligned
-only after the C++ visual and functional behavior is accepted. The C++ reference
-runtime can execute the Button value copy through the manifest-declared native
+The C++ behavior was accepted first, then the Python and Rust reference runtime
+source surfaces were aligned to the same Button event contract. The reference
+runtimes can execute the Button value copy through the manifest-declared native
 bool kernel artifact while still consuming the <code>.wfrog</code> package and
 Default SVG realizations. LLVM remains a backend producer of the native
 artifact; it is not the runtime identity.

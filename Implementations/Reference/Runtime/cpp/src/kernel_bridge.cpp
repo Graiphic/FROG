@@ -99,7 +99,13 @@ NativeKernelManifest load_native_kernel_manifest(const std::filesystem::path& ma
             manifest.entry_symbol == "frog_example12_run" &&
             manifest.input_id == "trigger_value" &&
             manifest.output_id == "switched";
-        require(is_example06_boolean || is_example10_button || is_example11_button || is_example12_button, "Unexpected native bool kernel surface.");
+        const bool is_latch_button =
+            (manifest.entry_symbol == "frog_example13_run" ||
+             manifest.entry_symbol == "frog_example14_run" ||
+             manifest.entry_symbol == "frog_example15_run") &&
+            manifest.input_id == "trigger_value" &&
+            manifest.output_id == "latched";
+        require(is_example06_boolean || is_example10_button || is_example11_button || is_example12_button || is_latch_button, "Unexpected native bool kernel surface.");
         require(manifest.input_type == "bool", "Unexpected native bool kernel input type.");
         require(manifest.output_type == "bool", "Unexpected native bool kernel output type.");
         require(manifest.overflow_model == "not_applicable", "Unexpected native bool kernel overflow model.");

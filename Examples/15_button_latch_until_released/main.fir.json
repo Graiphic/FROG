@@ -1,0 +1,78 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "15_button_latch_until_released",
+    "path": "Examples/15_button_latch_until_released/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/15_button_latch_until_released/ui/button_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "button_latch_until_released_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "trigger_value",
+            "type": "bool",
+            "binding_origin": "widget.trigger_button.value"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "latched",
+            "type": "bool"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "trigger_button",
+            "mode": "widget_value",
+            "public_input_id": "trigger_value",
+            "value_type": "bool"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "latched_indicator",
+            "mode": "widget_value",
+            "public_output_id": "latched",
+            "value_type": "bool"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "single_button_value_copy",
+        "body_rule": {
+          "kind": "copy_widget_value_to_output",
+          "expression": "latched = trigger_value"
+        }
+      },
+      "publications": [
+        {
+          "target": "public_output.latched",
+          "source": "trigger_value"
+        },
+        {
+          "target": "widget.latched_indicator.value",
+          "source": "trigger_value"
+        }
+      ],
+      "notes": [
+        "This FIR is a bounded Button widget pilot and remains downstream from canonical source.",
+        "Only the latch_until_released Button mechanical action is accepted by this example.",
+        "The Button visual grammar is provided by the Default Button SVG realization package; this FIR does not own SVG geometry.",
+        "This example is validated across the C++, Python, and Rust reference runtime source surfaces."
+      ]
+    }
+  ]
+}
+

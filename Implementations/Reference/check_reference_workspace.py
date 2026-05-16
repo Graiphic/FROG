@@ -76,6 +76,10 @@ def main(argv: list[str] | None = None) -> int:
                     [py, "Implementations/Reference/Runtime/check_example12_cpp_native_kernel_bridge.py"],
                 ),
                 (
+                    "Example 13-15 C++ LLVM-produced native Button latch kernel bridge",
+                    [py, "Implementations/Reference/Runtime/check_example13_15_cpp_native_kernel_bridge.py"],
+                ),
+                (
                     "Python dynamic LLVM-produced native kernel bridge",
                     [py, "Implementations/Reference/Runtime/check_python_native_kernel_bridge.py"],
                 ),

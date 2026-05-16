@@ -1,7 +1,7 @@
 """Generic-by-kind LLVM emitter for the non-normative FROG reference workspace.
 
 This module is intentionally narrow and non-normative. It does not implement a
-general production LLVM backend. It consolidates the current Examples 01-11
+general production LLVM backend. It consolidates the current Examples 01-15
 native proof emitters around one dispatch key:
 
     lowered_units[0].kind
@@ -20,6 +20,9 @@ Supported lowered unit kinds:
 - button_press_to_boolean_kernel_with_ui_bindings
 - button_switch_when_pressed_kernel_with_ui_bindings
 - button_switch_when_released_kernel_with_ui_bindings
+- button_latch_when_pressed_kernel_with_ui_bindings
+- button_latch_when_released_kernel_with_ui_bindings
+- button_latch_until_released_kernel_with_ui_bindings
 """
 
 from __future__ import annotations
@@ -990,6 +993,97 @@ run:
 """
 
 
+def emit_button_latch_to_boolean(lowering: dict[str, Any], *, example_number: str, action: str) -> str:
+    unit = single_lowered_unit(lowering)
+    kernel = execution_kernel(unit)
+    public_io = require_object(unit.get("public_io"), "unit.public_io")
+    inputs = require_list(public_io.get("inputs"), "unit.public_io.inputs")
+    outputs = require_list(public_io.get("outputs"), "unit.public_io.outputs")
+
+    kind = f"button_{action}"
+    expect_equal(kernel.get("operation"), "copy", f"{kind} expects copy operation")
+    expect_equal(kernel.get("src"), "trigger_value", f"{kind} expects src trigger_value")
+    expect_equal(kernel.get("dst"), "latched", f"{kind} expects dst latched")
+    expect_equal(kernel.get("type"), "bool", f"{kind} expects bool copy type")
+    expect_equal(inputs, [{"id": "trigger_value", "type": "bool", "binding_origin": "widget.trigger_button.value"}], f"{kind} expects one Button value input")
+    expect_equal(outputs, [{"id": "latched", "type": "bool"}], f"{kind} expects one bool output")
+
+    fmt_input = "trigger_value=%s\n"
+    fmt_output = "public_latched=%s\n"
+    fmt_status_ok = "status=ok\n"
+
+    return f"""; FROG example {example_number} - LLVM Button {action} Boolean proof
+; Emitted from the published Example {example_number} lowered Button value copy kernel.
+;
+; Lowered kernel shape:
+;   trigger_value : bool
+;   latched       : bool
+;   operation     : copy trigger_value -> latched
+
+{c_const("text_true", "true")}
+{c_const("text_false", "false")}
+{c_const("fmt_input", fmt_input)}
+{c_const("fmt_output", fmt_output)}
+{c_const("fmt_status_ok", fmt_status_ok)}
+
+declare i32 @printf(ptr, ...)
+declare i32 @atoi(ptr)
+
+define i1 @frog_example{example_number}_copy_button_value(i1 %trigger_value) {{
+entry:
+  ret i1 %trigger_value
+}}
+
+define i32 @main(i32 %argc, ptr %argv) {{
+entry:
+  %true_ptr = getelementptr inbounds [5 x i8], ptr @text_true, i64 0, i64 0
+  %false_ptr = getelementptr inbounds [6 x i8], ptr @text_false, i64 0, i64 0
+  %has_arg = icmp sgt i32 %argc, 1
+  br i1 %has_arg, label %parse_arg, label %use_default
+
+parse_arg:
+  %argv1ptr = getelementptr inbounds ptr, ptr %argv, i64 1
+  %argv1 = load ptr, ptr %argv1ptr, align 8
+  %parsed = call i32 @atoi(ptr %argv1)
+  %parsed_bool = icmp ne i32 %parsed, 0
+  br label %run
+
+use_default:
+  br label %run
+
+run:
+  %trigger_value = phi i1 [ %parsed_bool, %parse_arg ], [ false, %use_default ]
+  %latched = call i1 @frog_example{example_number}_copy_button_value(i1 %trigger_value)
+
+  %input_text = select i1 %trigger_value, ptr %true_ptr, ptr %false_ptr
+  %result_text = select i1 %latched, ptr %true_ptr, ptr %false_ptr
+
+  %fmt_input_ptr = getelementptr inbounds [{c_len(fmt_input)} x i8], ptr @fmt_input, i64 0, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt_input_ptr, ptr %input_text)
+
+  %fmt_output_ptr = getelementptr inbounds [{c_len(fmt_output)} x i8], ptr @fmt_output, i64 0, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt_output_ptr, ptr %result_text)
+
+  %fmt_status_ok_ptr = getelementptr inbounds [{c_len(fmt_status_ok)} x i8], ptr @fmt_status_ok, i64 0, i64 0
+  call i32 (ptr, ...) @printf(ptr %fmt_status_ok_ptr)
+
+  ret i32 0
+}}
+"""
+
+
+def emit_button_latch_when_pressed_to_boolean(lowering: dict[str, Any]) -> str:
+    return emit_button_latch_to_boolean(lowering, example_number="13", action="latch_when_pressed")
+
+
+def emit_button_latch_when_released_to_boolean(lowering: dict[str, Any]) -> str:
+    return emit_button_latch_to_boolean(lowering, example_number="14", action="latch_when_released")
+
+
+def emit_button_latch_until_released_to_boolean(lowering: dict[str, Any]) -> str:
+    return emit_button_latch_to_boolean(lowering, example_number="15", action="latch_until_released")
+
+
 EMITTERS_BY_KIND: dict[str, Callable[[dict[str, Any]], str]] = {
     "pure_addition_kernel": emit_pure_addition,
     "ui_value_roundtrip_kernel": emit_ui_value_roundtrip,
@@ -1003,6 +1097,9 @@ EMITTERS_BY_KIND: dict[str, Callable[[dict[str, Any]], str]] = {
     "button_press_to_boolean_kernel_with_ui_bindings": emit_button_press_to_boolean,
     "button_switch_when_pressed_kernel_with_ui_bindings": emit_button_switch_when_pressed_to_boolean,
     "button_switch_when_released_kernel_with_ui_bindings": emit_button_switch_when_released_to_boolean,
+    "button_latch_when_pressed_kernel_with_ui_bindings": emit_button_latch_when_pressed_to_boolean,
+    "button_latch_when_released_kernel_with_ui_bindings": emit_button_latch_when_released_to_boolean,
+    "button_latch_until_released_kernel_with_ui_bindings": emit_button_latch_until_released_to_boolean,
 }
 
 

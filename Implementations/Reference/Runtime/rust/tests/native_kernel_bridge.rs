@@ -234,7 +234,7 @@ fn rust_dynamic_native_kernel_bridge_executes_example10() {
     let mut runtime = ButtonBrowserUiRuntime::with_native_kernel_bridge(contract, wfrog, Some(bridge)).expect("runtime core");
     let artifact = runtime.run_once(true).expect("execute native Button bool kernel");
     assert_eq!(artifact["outputs"]["public"]["pressed"].as_bool(), Some(true));
-    assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(false));
+    assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(true));
     assert_eq!(artifact["outputs"]["ui"]["pressed_indicator"].as_bool(), Some(true));
     let html = runtime.render_html();
     assert!(html.contains("native kernel bridge"));
@@ -277,4 +277,147 @@ fn rust_dynamic_native_kernel_bridge_executes_example11() {
     assert!(html.contains("data-asset-route='/asset/button_rectangular_svg'"));
     assert!(html.contains("data-frog-public-input-id='trigger_value'"));
     assert!(html.contains("switch_when_pressed"));
+}
+
+#[test]
+fn rust_dynamic_native_kernel_bridge_executes_example12() {
+    let root = repo_root();
+    let manifest = root.join("Implementations/Reference/LLVM/examples/12_button_switch_when_released/native_kernel_manifest.json");
+    let kernel_ll = root.join("Implementations/Reference/LLVM/examples/12_button_switch_when_released/kernel.ll");
+    let contract = root.join(
+        "Implementations/Reference/ContractEmitter/examples/12_button_switch_when_released.reference_host_runtime_ui_binding.contract.json",
+    );
+    let wfrog = root.join("Examples/12_button_switch_when_released/ui/button_panel.wfrog");
+    let Some(library) = build_native_library("12", &kernel_ll) else {
+        return;
+    };
+
+    let bridge = NativeBoolKernelBridge::from_paths(&manifest, &library).expect("load native Button switch-release bool bridge");
+    assert!(bridge.run(true).result);
+    assert!(!bridge.run(false).result);
+
+    let mut runtime = ButtonBrowserUiRuntime::with_native_kernel_bridge(contract, wfrog, Some(bridge)).expect("runtime core");
+    let artifact = runtime.run_once(true).expect("execute native Button switch-release bool kernel");
+    assert_eq!(artifact["outputs"]["public"]["switched"].as_bool(), Some(false));
+    assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(false));
+    assert_eq!(artifact["outputs"]["ui"]["switched_indicator"].as_bool(), Some(false));
+    let artifact = runtime.run_once(false).expect("execute native Button switch-release bool kernel release");
+    assert_eq!(artifact["outputs"]["public"]["switched"].as_bool(), Some(true));
+    assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(true));
+    assert_eq!(artifact["outputs"]["ui"]["switched_indicator"].as_bool(), Some(true));
+    let html = runtime.render_html();
+    assert!(html.contains("native kernel bridge"));
+    assert!(html.contains("LLVM native Button bool kernel artifact"));
+    assert!(html.contains("data-compiler-backend='llvm'"));
+    assert!(html.contains("data-execution-path='native_kernel_bridge'"));
+    assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
+    assert!(html.contains("data-asset-route='/asset/button_rectangular_svg'"));
+    assert!(html.contains("data-frog-public-input-id='trigger_value'"));
+    assert!(html.contains("switch_when_released"));
+}
+
+#[test]
+fn rust_dynamic_native_kernel_bridge_executes_example13() {
+    let root = repo_root();
+    let manifest = root.join("Implementations/Reference/LLVM/examples/13_button_latch_when_pressed/native_kernel_manifest.json");
+    let kernel_ll = root.join("Implementations/Reference/LLVM/examples/13_button_latch_when_pressed/kernel.ll");
+    let contract = root.join(
+        "Implementations/Reference/ContractEmitter/examples/13_button_latch_when_pressed.reference_host_runtime_ui_binding.contract.json",
+    );
+    let wfrog = root.join("Examples/13_button_latch_when_pressed/ui/button_panel.wfrog");
+    let Some(library) = build_native_library("13", &kernel_ll) else {
+        return;
+    };
+
+    let bridge = NativeBoolKernelBridge::from_paths(&manifest, &library).expect("load native Button latch-press bool bridge");
+    assert!(bridge.run(true).result);
+    assert!(!bridge.run(false).result);
+
+    let mut runtime = ButtonBrowserUiRuntime::with_native_kernel_bridge(contract, wfrog, Some(bridge)).expect("runtime core");
+    let artifact = runtime.run_once(true).expect("execute native Button latch-press bool kernel");
+    assert_eq!(artifact["outputs"]["public"]["latched"].as_bool(), Some(true));
+    assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(false));
+    assert_eq!(artifact["outputs"]["ui"]["latched_indicator"].as_bool(), Some(true));
+    assert_eq!(artifact["execution_summary"]["button_stored_value"].as_bool(), Some(false));
+    assert_eq!(artifact["execution_summary"]["program_read_value"].as_bool(), Some(true));
+    let html = runtime.render_html();
+    assert!(html.contains("native kernel bridge"));
+    assert!(html.contains("LLVM native Button bool kernel artifact"));
+    assert!(html.contains("data-compiler-backend='llvm'"));
+    assert!(html.contains("data-execution-path='native_kernel_bridge'"));
+    assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
+    assert!(html.contains("data-asset-route='/asset/button_rectangular_svg'"));
+    assert!(html.contains("data-frog-public-input-id='trigger_value'"));
+    assert!(html.contains("latch_when_pressed"));
+}
+
+#[test]
+fn rust_dynamic_native_kernel_bridge_executes_example14() {
+    let root = repo_root();
+    let manifest = root.join("Implementations/Reference/LLVM/examples/14_button_latch_when_released/native_kernel_manifest.json");
+    let kernel_ll = root.join("Implementations/Reference/LLVM/examples/14_button_latch_when_released/kernel.ll");
+    let contract = root.join(
+        "Implementations/Reference/ContractEmitter/examples/14_button_latch_when_released.reference_host_runtime_ui_binding.contract.json",
+    );
+    let wfrog = root.join("Examples/14_button_latch_when_released/ui/button_panel.wfrog");
+    let Some(library) = build_native_library("14", &kernel_ll) else {
+        return;
+    };
+
+    let bridge = NativeBoolKernelBridge::from_paths(&manifest, &library).expect("load native Button latch-release bool bridge");
+    assert!(bridge.run(true).result);
+    assert!(!bridge.run(false).result);
+
+    let mut runtime = ButtonBrowserUiRuntime::with_native_kernel_bridge(contract, wfrog, Some(bridge)).expect("runtime core");
+    let artifact = runtime.run_once(false).expect("execute native Button latch-release bool kernel");
+    assert_eq!(artifact["outputs"]["public"]["latched"].as_bool(), Some(true));
+    assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(false));
+    assert_eq!(artifact["outputs"]["ui"]["latched_indicator"].as_bool(), Some(true));
+    assert_eq!(artifact["execution_summary"]["button_stored_value"].as_bool(), Some(false));
+    assert_eq!(artifact["execution_summary"]["program_read_value"].as_bool(), Some(true));
+    let html = runtime.render_html();
+    assert!(html.contains("native kernel bridge"));
+    assert!(html.contains("LLVM native Button bool kernel artifact"));
+    assert!(html.contains("data-compiler-backend='llvm'"));
+    assert!(html.contains("data-execution-path='native_kernel_bridge'"));
+    assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
+    assert!(html.contains("data-asset-route='/asset/button_rectangular_svg'"));
+    assert!(html.contains("data-frog-public-input-id='trigger_value'"));
+    assert!(html.contains("latch_when_released"));
+}
+
+#[test]
+fn rust_dynamic_native_kernel_bridge_executes_example15() {
+    let root = repo_root();
+    let manifest = root.join("Implementations/Reference/LLVM/examples/15_button_latch_until_released/native_kernel_manifest.json");
+    let kernel_ll = root.join("Implementations/Reference/LLVM/examples/15_button_latch_until_released/kernel.ll");
+    let contract = root.join(
+        "Implementations/Reference/ContractEmitter/examples/15_button_latch_until_released.reference_host_runtime_ui_binding.contract.json",
+    );
+    let wfrog = root.join("Examples/15_button_latch_until_released/ui/button_panel.wfrog");
+    let Some(library) = build_native_library("15", &kernel_ll) else {
+        return;
+    };
+
+    let bridge = NativeBoolKernelBridge::from_paths(&manifest, &library).expect("load native Button latch-until-release bool bridge");
+    assert!(bridge.run(true).result);
+    assert!(!bridge.run(false).result);
+
+    let mut runtime = ButtonBrowserUiRuntime::with_native_kernel_bridge(contract, wfrog, Some(bridge)).expect("runtime core");
+    let artifact = runtime.run_once(true).expect("execute native Button latch-until-release bool kernel");
+    assert_eq!(artifact["outputs"]["public"]["latched"].as_bool(), Some(true));
+    assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(true));
+    assert_eq!(artifact["outputs"]["ui"]["latched_indicator"].as_bool(), Some(true));
+    assert_eq!(artifact["execution_summary"]["button_stored_value"].as_bool(), Some(true));
+    assert_eq!(artifact["execution_summary"]["button_physical_pressed"].as_bool(), Some(true));
+    assert_eq!(artifact["execution_summary"]["program_read_value"].as_bool(), Some(true));
+    let html = runtime.render_html();
+    assert!(html.contains("native kernel bridge"));
+    assert!(html.contains("LLVM native Button bool kernel artifact"));
+    assert!(html.contains("data-compiler-backend='llvm'"));
+    assert!(html.contains("data-execution-path='native_kernel_bridge'"));
+    assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
+    assert!(html.contains("data-asset-route='/asset/button_rectangular_svg'"));
+    assert!(html.contains("data-frog-public-input-id='trigger_value'"));
+    assert!(html.contains("latch_until_released"));
 }

@@ -34,7 +34,13 @@ fn rust_example11_headless_button_switch_when_pressed() {
     assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(true));
     assert_eq!(artifact["outputs"]["ui"]["switched_indicator"].as_bool(), Some(true));
 
-    let artifact = runtime.run_once(false).expect("switch false");
+    let artifact = runtime.run_once(false).expect("release");
+    assert_eq!(artifact["execution_summary"]["trigger_pressed"].as_bool(), Some(false));
+    assert_eq!(artifact["outputs"]["public"]["switched"].as_bool(), Some(true));
+    assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(true));
+    assert_eq!(artifact["outputs"]["ui"]["switched_indicator"].as_bool(), Some(true));
+
+    let artifact = runtime.run_once(true).expect("switch false");
     assert_eq!(artifact["execution_summary"]["trigger_pressed"].as_bool(), Some(true));
     assert_eq!(artifact["outputs"]["public"]["switched"].as_bool(), Some(false));
     assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(false));
@@ -62,14 +68,22 @@ fn rust_example11_browser_ui_consumes_default_svg_and_source_styles() {
     assert!(html.contains("data-frog-asset-consumed='true'"));
     assert!(html.contains("data-frog-visual-law='wfrog-realization-state-map'"));
     assert!(html.contains("data-frog-mechanical-action='switch_when_pressed'"));
+    assert!(html.contains("data-frog-pressed-applies-when-value-true='true'"));
+    assert!(html.contains("data-frog-pressed-applies-while-active='false'"));
+    assert!(html.contains("data-frog-hover-applies-when-value-false-only='false'"));
     assert!(html.contains("data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='trigger_value'"));
     assert!(html.contains("name='trigger_value' value='true'"));
+    assert!(html.contains("--frog-button-face-fill:#e2e8f0;"));
+    assert!(html.contains("--frog-button-face-hover-fill:#f1f5f9;"));
+    assert!(html.contains("--frog-button-face-pressed-fill:#e2e8f0;"));
     assert!(html.contains("--frog-button-face-stroke-width:1px;"));
+    assert!(html.contains("--frog-button-pressed-inset:0px;"));
     assert!(html.contains("--frog-button-state-text-font-weight:400;"));
     assert!(html.contains("--boolean-text-font-weight:400;"));
     assert!(html.contains(".boolean-indicator[data-class-ref='frog.widgets.boolean_indicator']"));
-    assert!(html.contains("mechanicalAction === \"switch_when_pressed\""));
-    assert!(html.contains("setPressed(!(buttonWidget.dataset.currentValue === \"true\"));"));
+    assert!(html.contains("mechanicalAction !== \"switch_when_pressed\""));
+    assert!(html.contains("publishEvent(\"press\")"));
+    assert!(html.contains("publishEvent(\"release\")"));
     assert!(html.contains("fetch(\"/event\""));
     assert!(html.contains("pointerdown"));
     assert!(html.contains(">OFF</span>"));

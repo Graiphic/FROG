@@ -126,14 +126,22 @@ def executable_path(build_dir: Path, name: str) -> Path:
 
 def check_native_runtime_headless(build_dir: Path) -> None:
     executable = executable_path(build_dir, "frog_reference_runtime_cpp_llvm_kernel")
-    result = run([str(executable.relative_to(ROOT)), "run", "true", "--example", "12"])
-    artifact = json.loads(result.stdout)
-    assert artifact["status"] == "ok"
-    assert artifact["execution_summary"]["trigger_pressed"] is True
-    assert artifact["outputs"]["public"]["switched"] is True
-    assert artifact["outputs"]["ui"]["trigger_button"] is True
-    assert artifact["outputs"]["ui"]["switched_indicator"] is True
-    assert artifact["ui_runtime"]["panel"]["layout"]["width"] == 420
+    press_result = run([str(executable.relative_to(ROOT)), "run", "true", "--example", "12"])
+    press_artifact = json.loads(press_result.stdout)
+    assert press_artifact["status"] == "ok"
+    assert press_artifact["execution_summary"]["trigger_pressed"] is True
+    assert press_artifact["outputs"]["public"]["switched"] is False
+    assert press_artifact["outputs"]["ui"]["trigger_button"] is False
+    assert press_artifact["outputs"]["ui"]["switched_indicator"] is False
+    assert press_artifact["ui_runtime"]["panel"]["layout"]["width"] == 420
+
+    release_result = run([str(executable.relative_to(ROOT)), "run", "false", "--example", "12"])
+    release_artifact = json.loads(release_result.stdout)
+    assert release_artifact["status"] == "ok"
+    assert release_artifact["execution_summary"]["trigger_pressed"] is False
+    assert release_artifact["outputs"]["public"]["switched"] is True
+    assert release_artifact["outputs"]["ui"]["trigger_button"] is True
+    assert release_artifact["outputs"]["ui"]["switched_indicator"] is True
 
 
 def main() -> int:

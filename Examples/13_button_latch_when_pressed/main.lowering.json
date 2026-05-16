@@ -1,0 +1,79 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "13_button_latch_when_pressed",
+    "path": "Examples/13_button_latch_when_pressed/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/13_button_latch_when_pressed/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "summary": "make one bounded Button latch_when_pressed value example consumable by C++/Python/Rust reference runtime UI-binding checks",
+    "backend_family_target": "reference_host_runtime_ui_binding",
+    "capability_targets": [
+      "cpp_contract_executor",
+      "cpp_native_kernel_bridge"
+    ]
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "button_latch_when_pressed_kernel_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "trigger_value",
+            "type": "bool",
+            "binding_origin": "widget.trigger_button.value"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "latched",
+            "type": "bool"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "trigger_button",
+            "mode": "widget_value",
+            "public_input_id": "trigger_value",
+            "value_type": "bool"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "latched_indicator",
+            "mode": "widget_value",
+            "public_output_id": "latched",
+            "value_type": "bool"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "copy",
+        "dst": "latched",
+        "type": "bool",
+        "src": "trigger_value",
+        "final_publication": [
+          {
+            "target": "public_output.latched",
+            "source": "trigger_value"
+          },
+          {
+            "target": "widget.latched_indicator.value",
+            "source": "trigger_value"
+          }
+        ]
+      }
+    }
+  ]
+}
+

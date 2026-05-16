@@ -62,14 +62,28 @@ void test_direct_llvm_button_switch_release_kernel_bridge_call() {
 
 void test_runtime_uses_llvm_button_switch_release_kernel_bridge() {
     frog::runtime::Slice10ButtonRuntimeCore runtime(contract_path(), wfrog_path());
+    const auto bridge = make_bridge();
 
-    auto artifact = runtime.execute_with_native_kernel_bridge(*make_bridge(), false);
+    auto artifact = runtime.execution_artifact();
     assert(!artifact.as_object().at("outputs").as_object().at("public").as_object().at("switched").as_bool());
     assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("switched_indicator").as_bool());
     assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
 
-    artifact = runtime.execute_with_native_kernel_bridge(*make_bridge(), true);
+    artifact = runtime.press_control();
     assert(artifact.as_object().at("execution_summary").as_object().at("trigger_pressed").as_bool());
+    assert(!artifact.as_object().at("outputs").as_object().at("public").as_object().at("switched").as_bool());
+    assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
+    assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("switched_indicator").as_bool());
+
+    artifact = runtime.read_program_value_with_native_kernel_bridge(*bridge);
+    assert(artifact.as_object().at("execution_summary").as_object().at("program_read_performed").as_bool());
+    assert(!artifact.as_object().at("execution_summary").as_object().at("program_read_value").as_bool());
+    assert(!artifact.as_object().at("outputs").as_object().at("public").as_object().at("switched").as_bool());
+
+    artifact = runtime.execute_with_native_kernel_bridge(*bridge, false);
+    assert(!artifact.as_object().at("execution_summary").as_object().at("trigger_pressed").as_bool());
+    assert(artifact.as_object().at("execution_summary").as_object().at("program_read_performed").as_bool());
+    assert(artifact.as_object().at("execution_summary").as_object().at("program_read_value").as_bool());
     assert(artifact.as_object().at("outputs").as_object().at("public").as_object().at("switched").as_bool());
     assert(artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
     assert(artifact.as_object().at("outputs").as_object().at("ui").as_object().at("switched_indicator").as_bool());
@@ -77,7 +91,8 @@ void test_runtime_uses_llvm_button_switch_release_kernel_bridge() {
 
 void test_browser_ui_runtime_uses_llvm_button_switch_release_kernel_bridge() {
     frog::runtime::ButtonBrowserUiRuntime runtime(contract_path(), wfrog_path(), make_bridge());
-    const auto artifact = runtime.run_once(true);
+    runtime.run_once(true);
+    const auto artifact = runtime.run_once(false);
     assert(artifact.as_object().at("outputs").as_object().at("public").as_object().at("switched").as_bool());
 
     const auto html = runtime.render_html();

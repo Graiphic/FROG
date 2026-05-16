@@ -375,6 +375,9 @@ Value execute_boolean_case(const Value& contract, const Object& unit, const Valu
         copy_prop("style.focus_ring.color");
         copy_prop("style.focus_ring.width");
         copy_prop("style.pressed.inset");
+        copy_prop("style.pressed.apply_when_value_true");
+        copy_prop("style.pressed.apply_while_active");
+        copy_prop("style.hover.apply_when_value_false_only");
         copy_prop("style.transition.duration_ms");
         copy_prop("style.transition.timing");
         return Value(runtime);

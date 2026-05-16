@@ -29,12 +29,12 @@ def test_python_example10_headless_button_press_to_boolean() -> None:
     artifact = runtime.execute(True)
     assert artifact["execution_summary"]["trigger_pressed"] is True
     assert artifact["outputs"]["public"]["pressed"] is True
-    assert artifact["outputs"]["ui"]["trigger_button"] is False
+    assert artifact["outputs"]["ui"]["trigger_button"] is True
     assert artifact["outputs"]["ui"]["pressed_indicator"] is True
     button = next(widget for widget in artifact["ui_runtime"]["widgets"] if widget["widget_id"] == "trigger_button")
     assert button["class_ref"] == "frog.widgets.button"
     assert button["runtime"]["event.pressed"] is True
-    assert button["runtime"]["value"] is False
+    assert button["runtime"]["value"] is True
 
 
 def test_python_example10_cli_contract_entrypoint() -> None:
@@ -42,7 +42,7 @@ def test_python_example10_cli_contract_entrypoint() -> None:
 
     assert artifact["outputs"]["public"]["pressed"] is True
     assert artifact["outputs"]["ui"]["pressed_indicator"] is True
-    assert artifact["outputs"]["ui"]["trigger_button"] is False
+    assert artifact["outputs"]["ui"]["trigger_button"] is True
 
 
 def test_python_example10_browser_ui_consumes_default_svg_and_source_styles() -> None:
@@ -53,7 +53,7 @@ def test_python_example10_browser_ui_consumes_default_svg_and_source_styles() ->
     )
     html = runtime.render_html()
 
-    assert "Button Press to Boolean" in html
+    assert "Button Switch Until Released" in html
     assert "Python reference runtime" in html
     assert "button contract executor" in html
     assert 'data-runtime-language="python"' in html
@@ -66,12 +66,19 @@ def test_python_example10_browser_ui_consumes_default_svg_and_source_styles() ->
     assert "class='button-skin'" in html
     assert "data-frog-asset-consumed='true'" in html
     assert "data-frog-mechanical-action='switch_until_released'" in html
+    assert "data-frog-pressed-applies-when-value-true='true'" in html
+    assert "data-frog-pressed-applies-while-active='false'" in html
+    assert "data-frog-hover-applies-when-value-false-only='false'" in html
     assert "data-frog-part='caption' data-svg-anchor='caption.anchor'" in html
     assert "data-frog-part='state_text' data-svg-anchor='state_text.center'" in html
     assert "class='button-press-overlay' type='button'" in html
     assert "data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='trigger_pressed'" in html
     assert "data-frog-host-overlay='input' data-frog-align-to-part='face'" in html
+    assert "--frog-button-face-fill:#e2e8f0;" in html
+    assert "--frog-button-face-hover-fill:#f1f5f9;" in html
+    assert "--frog-button-face-pressed-fill:#e2e8f0;" in html
     assert "--frog-button-face-stroke-width:1px;" in html
+    assert "--frog-button-pressed-inset:0px;" in html
     assert "--frog-button-state-text-font-weight:400;" in html
     assert "--frog-button-caption-font-size:18px;" in html
     assert "--frog-button-caption-font-weight:600;" in html
@@ -80,7 +87,10 @@ def test_python_example10_browser_ui_consumes_default_svg_and_source_styles() ->
     assert "--boolean-text-font-weight:400;" in html
     assert "--boolean-inner-border-width:0px;" in html
     assert "fetch(\"/event\"" in html
-    assert 'mechanicalAction !== "switch_until_released" && mechanicalAction !== "switch_when_pressed"' in html
+    assert 'mechanicalAction !== "switch_until_released"' in html
+    assert 'mechanicalAction !== "latch_until_released"' in html
+    assert 'publishEvent("press")' in html
+    assert 'publishEvent("release")' in html
     assert "pointerdown" in html
     assert "pointerup" in html
     assert ">OFF</span>" in html
@@ -95,8 +105,8 @@ def test_python_example10_browser_ui_consumes_default_svg_and_source_styles() ->
 
     runtime.run_once(True)
     html = runtime.render_html()
-    assert "data-frog-visual-state='false'" in html
-    assert ">OFF</span>" in html
+    assert "data-frog-visual-state='true'" in html
+    assert ">ON</span>" in html
     assert ">TRUE</span>" in html
 
 
@@ -109,7 +119,7 @@ def test_python_example10_event_endpoint_is_momentary() -> None:
     httpd, thread = runtime.serve_in_thread()
     host, port = httpd.server_address
     try:
-        body = urllib.parse.urlencode({"trigger_pressed": "true"}).encode("utf-8")
+        body = urllib.parse.urlencode({"frog_event": "press", "trigger_pressed": "false"}).encode("utf-8")
         request = urllib.request.Request(
             f"http://{host}:{port}/event",
             data=body,
@@ -119,10 +129,10 @@ def test_python_example10_event_endpoint_is_momentary() -> None:
         with urllib.request.urlopen(request, timeout=5) as response:
             artifact = json.loads(response.read().decode("utf-8"))
         assert artifact["outputs"]["public"]["pressed"] is True
-        assert artifact["outputs"]["ui"]["trigger_button"] is False
+        assert artifact["outputs"]["ui"]["trigger_button"] is True
         assert artifact["outputs"]["ui"]["pressed_indicator"] is True
 
-        body = urllib.parse.urlencode({"trigger_pressed": "false"}).encode("utf-8")
+        body = urllib.parse.urlencode({"frog_event": "release", "trigger_pressed": "true"}).encode("utf-8")
         request = urllib.request.Request(
             f"http://{host}:{port}/event",
             data=body,

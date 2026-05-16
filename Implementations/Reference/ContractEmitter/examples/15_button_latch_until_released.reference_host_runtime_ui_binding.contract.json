@@ -1,0 +1,168 @@
+{
+  "artifact_kind": "frog_backend_contract",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "backend_family": "reference_host_runtime_ui_binding",
+  "example_id": "15_button_latch_until_released",
+  "artifact_refs": {
+    "source_path": "Examples/15_button_latch_until_released/main.frog",
+    "fir_path": "Examples/15_button_latch_until_released/main.fir.json",
+    "lowering_path": "Examples/15_button_latch_until_released/main.lowering.json",
+    "wfrog_path": "Examples/15_button_latch_until_released/ui/button_panel.wfrog"
+  },
+  "producer": {
+    "implementation": "FROG Reference ContractEmitter",
+    "implementation_kind": "non_normative_reference_emitter",
+    "version_governance_ref": "Versioning/Readme.md"
+  },
+  "compatibility": "family_specific",
+  "source_ref": {
+    "example_id": "15_button_latch_until_released",
+    "path": "Examples/15_button_latch_until_released/main.frog",
+    "entry_unit": "main"
+  },
+  "derived_from": {
+    "fir_path": "Examples/15_button_latch_until_released/main.fir.json",
+    "lowering_path": "Examples/15_button_latch_until_released/main.lowering.json",
+    "ui_package_path": "Examples/15_button_latch_until_released/ui/button_panel.wfrog"
+  },
+  "ownership_boundary": {
+    "semantic_authority": "canonical_source_and_execution_facing_artifacts",
+    "semantic_authority_refs": [
+      "Examples/15_button_latch_until_released/main.frog",
+      "Examples/15_button_latch_until_released/main.fir.json",
+      "Examples/15_button_latch_until_released/main.lowering.json"
+    ],
+    "ui_package_authority": "published_widget_realization_package",
+    "ui_package_authority_refs": [
+      "Examples/15_button_latch_until_released/ui/button_panel.wfrog"
+    ],
+    "contract_authority": "this_file",
+    "notes": [
+      "This contract is downstream from canonical source, FIR, lowering, and the published UI package.",
+      "This contract must not redefine source semantics.",
+      "If this file diverges from the canonical execution-facing artifacts, those upstream artifacts win."
+    ]
+  },
+  "assumptions": {
+    "runtime_family": {
+      "name": "reference_host_runtime_ui_binding",
+      "host_model": "single_process_host_runtime",
+      "ui_binding": {
+        "widget_value_binding": true,
+        "widget_reference_binding": false
+      }
+    },
+    "scheduling": {
+      "family_rule": "deterministic_step_execution",
+      "parallelism_claim": "none"
+    },
+    "execution_start": {
+      "input_binding_complete": true,
+      "ui_host_available": true,
+      "initial_state_materialized": true
+    },
+    "boolean_behavior": {
+      "value_domain": "bool",
+      "button_value": "trigger_button.value",
+      "mechanical_action": "latch_until_released",
+      "latch_reset_policy": "reset_on_natural_value_consumption"
+    }
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "button_latch_until_released_ui_unit",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "trigger_value",
+            "type": "bool",
+            "binding_origin": "widget.trigger_button.value"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "latched",
+            "type": "bool",
+            "binding_target": "interface.latched"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "package_refs": [
+          "Examples/15_button_latch_until_released/ui/button_panel.wfrog"
+        ],
+        "widgets": [
+          {
+            "widget_id": "trigger_button",
+            "widget_class": "frog.widgets.button",
+            "value_type": "bool",
+            "role": "control",
+            "binding": {
+              "mode": "widget_value",
+              "public_input_id": "trigger_value"
+            }
+          },
+          {
+            "widget_id": "latched_indicator",
+            "widget_class": "frog.widgets.boolean_indicator",
+            "value_type": "bool",
+            "role": "indicator",
+            "binding": {
+              "mode": "widget_value",
+              "public_output_id": "latched"
+            }
+          }
+        ],
+        "control_bindings": [
+          {
+            "widget_id": "trigger_button",
+            "mode": "widget_value",
+            "public_input_id": "trigger_value",
+            "value_type": "bool"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "latched_indicator",
+            "mode": "widget_value",
+            "public_output_id": "latched",
+            "value_type": "bool"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "copy",
+        "dst": "latched",
+        "type": "bool",
+        "src": "trigger_value",
+        "final_publication": [
+          {
+            "target": "public_output.latched",
+            "source": "trigger_value"
+          },
+          {
+            "target": "widget.latched_indicator.value",
+            "source": "trigger_value"
+          }
+        ]
+      },
+      "effects": [],
+      "publications": [
+        {
+          "target": "public_output.latched",
+          "source": "trigger_value"
+        },
+        {
+          "target": "widget.latched_indicator.value",
+          "source": "trigger_value"
+        }
+      ]
+    }
+  ],
+  "unsupported": [],
+  "diagnostics": []
+}
+

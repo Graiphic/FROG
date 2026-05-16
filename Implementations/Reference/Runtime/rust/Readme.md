@@ -40,7 +40,7 @@
 <h2>Role</h2>
 
 <p>
-This directory contains the Rust consumer for the published Examples 05, 06, 07, 08, 09, 10, and 11 runtime slices.
+This directory contains the Rust consumer for the published Examples 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, and 15 runtime slices.
 It accepts emitted backend contracts, loads published <code>.wfrog</code> packages,
 resolves the referenced SVG assets, executes the bounded kernels, and can expose the panels through a minimal browser-host UI.
 </p>
@@ -161,7 +161,7 @@ This directory should remain aligned with the Python and C/C++ consumers on:
   <li>package acceptance,</li>
   <li>execution semantics for the bounded accumulator, Boolean roundtrip, String roundtrip, Enum roundtrip, Path roundtrip, Button press-to-Boolean, and Button switch-when-pressed slices,</li>
   <li>the minimal widget-property surfaces,</li>
-  <li>the browser-host UI shapes for Examples 05, 06, 07, 08, 09, 10, and 11,</li>
+  <li>the browser-host UI shapes for Examples 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, and 15,</li>
   <li>the shared acceptance artifacts for the runtime family.</li>
 </ul>
 

@@ -63,7 +63,15 @@ void test_switch_button_runtime_core_consumes_source_and_default_assets() {
     assert(runtime.widgets.at("trigger_button").properties.at("state_text.false_text").as_string() == "OFF");
     assert(runtime.widgets.at("trigger_button").properties.at("state_text.true_text").as_string() == "ON");
     assert(runtime.widgets.at("trigger_button").properties.at("state_text.style.font_weight").as_string() == "400");
+    assert(runtime.widgets.at("trigger_button").properties.at("style.face.fill_color.false").as_string() == "#e2e8f0");
+    assert(runtime.widgets.at("trigger_button").properties.at("style.face.fill_color.true").as_string() == "#cbd5e1");
+    assert(runtime.widgets.at("trigger_button").properties.at("style.face.fill_color.hover_false").as_string() == "#f1f5f9");
+    assert(runtime.widgets.at("trigger_button").properties.at("style.face.fill_color.hover_true").as_string() == "#dbeafe");
     assert(runtime.widgets.at("trigger_button").properties.at("style.face.border_width").as_string() == "1px");
+    assert(runtime.widgets.at("trigger_button").properties.at("style.pressed.inset").as_string() == "0px");
+    assert(runtime.widgets.at("trigger_button").properties.at("style.pressed.apply_when_value_true").as_bool());
+    assert(!runtime.widgets.at("trigger_button").properties.at("style.pressed.apply_while_active").as_bool());
+    assert(!runtime.widgets.at("trigger_button").properties.at("style.hover.apply_when_value_false_only").as_bool());
     assert(runtime.widgets.at("switched_indicator").properties.at("interaction.read_only").as_bool());
     assert(runtime.widgets.at("switched_indicator").properties.at("state_text.style.font_weight").as_string() == "400");
     assert(std::filesystem::exists(runtime.asset_map.at("button_rectangular_svg")));
@@ -101,23 +109,31 @@ void test_headless_switch_when_pressed_roundtrip() {
     assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("switched_indicator").as_bool());
     assert(artifact.as_object().at("execution_summary").as_object().at("mode").as_string() == "button_switch_when_pressed");
 
-    artifact = runtime.execute(true);
+    artifact = runtime.press_control();
     assert(artifact.as_object().at("execution_summary").as_object().at("trigger_pressed").as_bool());
     assert(artifact.as_object().at("outputs").as_object().at("public").as_object().at("switched").as_bool());
     assert(artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
     assert(artifact.as_object().at("outputs").as_object().at("ui").as_object().at("switched_indicator").as_bool());
 
-    artifact = runtime.execute(std::nullopt);
+    artifact = runtime.release_control();
     assert(!artifact.as_object().at("execution_summary").as_object().at("trigger_pressed").as_bool());
     assert(artifact.as_object().at("outputs").as_object().at("public").as_object().at("switched").as_bool());
     assert(artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
     assert(artifact.as_object().at("outputs").as_object().at("ui").as_object().at("switched_indicator").as_bool());
 
-    artifact = runtime.execute(false);
+    artifact = runtime.read_program_value();
+    assert(artifact.as_object().at("execution_summary").as_object().at("program_read_value").as_bool());
+    assert(artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
+
+    artifact = runtime.press_control();
     assert(artifact.as_object().at("execution_summary").as_object().at("trigger_pressed").as_bool());
     assert(!artifact.as_object().at("outputs").as_object().at("public").as_object().at("switched").as_bool());
     assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
     assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("switched_indicator").as_bool());
+
+    artifact = runtime.release_control();
+    assert(!artifact.as_object().at("outputs").as_object().at("public").as_object().at("switched").as_bool());
+    assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
 }
 
 void test_switch_button_browser_ui_surface() {
@@ -140,6 +156,10 @@ void test_switch_button_browser_ui_surface() {
     assert_contains(html, "data-frog-asset-consumed='true'");
     assert_contains(html, "data-frog-visual-law='wfrog-realization-state-map'");
     assert_contains(html, "data-frog-mechanical-action='switch_when_pressed'");
+    assert_contains(html, "data-frog-physical-pressed='false'");
+    assert_contains(html, "data-frog-pressed-applies-when-value-true='true'");
+    assert_contains(html, "data-frog-pressed-applies-while-active='false'");
+    assert_contains(html, "data-frog-hover-applies-when-value-false-only='false'");
     assert_contains(html, "data-frog-state-text-false='OFF'");
     assert_contains(html, "data-frog-state-text-true='ON'");
     assert_contains(html, "data-frog-part='state_text' data-svg-anchor='state_text.center'");
@@ -150,11 +170,19 @@ void test_switch_button_browser_ui_surface() {
     assert_contains(html, "data-frog-fill-false='#ef4444'");
     assert_contains(html, "data-frog-fill-true='#22c55e'");
     assert_contains(html, "--frog-button-face-stroke-width:1px;");
+    assert_contains(html, "--frog-button-face-fill:#e2e8f0;");
+    assert_contains(html, "--frog-button-face-hover-fill:#f1f5f9;");
+    assert_contains(html, "--frog-button-face-pressed-fill:#e2e8f0;");
+    assert_contains(html, "--frog-button-pressed-inset:0px;");
     assert_contains(html, "--frog-button-state-text-font-weight:400;");
     assert_contains(html, "--boolean-text-font-weight:400;");
     assert_contains(html, ".boolean-indicator[data-class-ref='frog.widgets.boolean_indicator']");
-    assert_contains(html, "mechanicalAction === \"switch_when_pressed\"");
-    assert_contains(html, "setPressed(!(buttonWidget.dataset.currentValue === \"true\"));");
+    assert_contains(html, "mechanicalAction !== \"switch_when_pressed\"");
+    assert_contains(html, "publishEvent(\"press\")");
+    assert_contains(html, "publishEvent(\"release\")");
+    assert_contains(html, "publishEvent(\"read\")");
+    assert_contains(html, "Switch when pressed");
+    assert_contains(html, "program-read-action");
     assert_contains(html, "fetch(\"/event\"");
     assert_contains(html, "pointerdown");
     assert_contains(html, ">OFF</span>");
@@ -165,16 +193,23 @@ void test_switch_button_browser_ui_surface() {
     assert_not_contains(html, "Current runtime snapshot");
     assert_not_contains(html, "<pre>");
 
-    runtime.run_once(true);
+    runtime.core.press_control();
+    runtime.core.release_control();
     html = runtime.render_html();
     assert_contains(html, "data-frog-visual-state='true'");
-    assert_contains(html, "aria-pressed='true'");
+    assert_contains(html, "data-frog-physical-pressed='false'");
+    assert_contains(html, "aria-pressed='false'");
+    assert_contains(html, "--frog-button-face-fill:#cbd5e1;");
+    assert_contains(html, "--frog-button-face-hover-fill:#dbeafe;");
+    assert_contains(html, "--frog-button-face-pressed-fill:#cbd5e1;");
     assert_contains(html, ">ON</span>");
     assert_contains(html, ">TRUE</span>");
 
-    runtime.run_once(false);
+    runtime.core.press_control();
+    runtime.core.release_control();
     html = runtime.render_html();
     assert_contains(html, "data-frog-visual-state='false'");
+    assert_contains(html, "data-frog-physical-pressed='false'");
     assert_contains(html, "aria-pressed='false'");
     assert_contains(html, ">OFF</span>");
     assert_contains(html, ">FALSE</span>");

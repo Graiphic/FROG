@@ -14,21 +14,23 @@
 <h2>Scope</h2>
 
 <p>
-The stabilized Button slices begin with
-<code>Examples/10_button_press_to_boolean</code>,
-<code>Examples/11_button_switch_when_pressed</code>, and
-<code>Examples/12_button_switch_when_released</code>. They prove one
+The stabilized Button slices now cover
+<code>Examples/10_button_press_to_boolean</code> through
+<code>Examples/15_button_latch_until_released</code>. They prove one
 <code>frog.widgets.button</code> command control driving one read-only
 <code>frog.widgets.boolean_indicator</code> without duplicating local SVG
-skins under <code>Examples</code>. Example 12 remains C++-first until Python
-and Rust parity are explicitly aligned and validated.
+skins under <code>Examples</code>. The six slices correspond to the six
+LabVIEW-like mechanical actions accepted for the Default Button realization.
 </p>
 
 <pre><code>Example 10:
 trigger_button.pressed -&gt; pressed_indicator.value -&gt; public pressed
 
 Examples 11-12:
-trigger_button.value -&gt; switched_indicator.value -&gt; public switched</code></pre>
+trigger_button.value -&gt; switched_indicator.value -&gt; public switched
+
+Examples 13-15:
+trigger_button.value -&gt; latched_indicator.value -&gt; public latched</code></pre>
 
 <p>
 Each example is intentionally small: the Button publishes one source-owned
@@ -50,6 +52,9 @@ The <code>.frog</code> source owns the diagram and the front-panel instance data
   <li><code>Examples/10_button_press_to_boolean/main.frog</code></li>
   <li><code>Examples/11_button_switch_when_pressed/main.frog</code></li>
   <li><code>Examples/12_button_switch_when_released/main.frog</code></li>
+  <li><code>Examples/13_button_latch_when_pressed/main.frog</code></li>
+  <li><code>Examples/14_button_latch_when_released/main.frog</code></li>
+  <li><code>Examples/15_button_latch_until_released/main.frog</code></li>
   <li>front panel canvas: source-owned panel pixels in each <code>.frog</code></li>
   <li>button control: <code>trigger_button</code>, <code>frog.widgets.button</code>, rectangular variant</li>
   <li>Boolean indicator: <code>pressed_indicator</code> or <code>switched_indicator</code>, <code>frog.widgets.boolean_indicator</code>, circular variant</li>
@@ -126,7 +131,10 @@ The example package is:
 
 <pre><code>Examples/10_button_press_to_boolean/ui/button_panel.wfrog
 Examples/11_button_switch_when_pressed/ui/button_panel.wfrog
-Examples/12_button_switch_when_released/ui/button_panel.wfrog</code></pre>
+Examples/12_button_switch_when_released/ui/button_panel.wfrog
+Examples/13_button_latch_when_pressed/ui/button_panel.wfrog
+Examples/14_button_latch_when_released/ui/button_panel.wfrog
+Examples/15_button_latch_until_released/ui/button_panel.wfrog</code></pre>
 
 <p>
 It owns only the realization references, SVG asset references, and host requirements.
@@ -145,17 +153,22 @@ It owns only the realization references, SVG asset references, and host requirem
 <h2>Runtime Expectations</h2>
 
 <ul>
-  <li>Example 10 validates only <code>behavior.mechanical_action=switch_until_released</code>.</li>
-  <li>Example 11 validates <code>behavior.mechanical_action=switch_when_pressed</code> across the accepted runtime parity level.</li>
-  <li>Example 12 introduces <code>behavior.mechanical_action=switch_when_released</code> as a C++-first validation corridor; Python and Rust parity must follow only after the C++ behavior is accepted.</li>
+  <li>Example 10 validates <code>behavior.mechanical_action=switch_until_released</code>.</li>
+  <li>Example 11 validates <code>behavior.mechanical_action=switch_when_pressed</code>.</li>
+  <li>Example 12 validates <code>behavior.mechanical_action=switch_when_released</code>.</li>
+  <li>Example 13 validates <code>behavior.mechanical_action=latch_when_pressed</code>.</li>
+  <li>Example 14 validates <code>behavior.mechanical_action=latch_when_released</code>.</li>
+  <li>Example 15 validates <code>behavior.mechanical_action=latch_until_released</code>.</li>
   <li>Example 10 must publish a momentary pressed value while the host pointer is down.</li>
   <li>Example 11 must toggle the stored Button value on the press edge and keep that value after release.</li>
   <li>Example 12 must toggle the stored Button value on the release edge and keep that value after release.</li>
+  <li>Example 13 must latch ON on press, report TRUE once to the program, and reset the stored value on read.</li>
+  <li>Example 14 must latch ON on release, report TRUE once to the program, and reset the stored value on read.</li>
+  <li>Example 15 must latch ON on press and reset only after release and program read have both occurred.</li>
   <li>The Boolean indicator is read-only and must reflect the source-owned Button result for the selected mechanical action.</li>
   <li>Normal, hover, pressed, text, border, and indicator colors are instance-configurable.</li>
   <li>The visible skins must come from Default Button and Boolean SVG assets, not from a hardcoded HTML card.</li>
   <li>The runtime must reject fallback markers that replace the Button or Boolean bodies with local HTML/CSS widgets.</li>
-  <li>The other Button mechanical actions are class-law vocabulary until each one has its own bounded runtime acceptance.</li>
 </ul>
 
 <hr/>
@@ -166,8 +179,11 @@ It owns only the realization references, SVG asset references, and host requirem
   <li>native manifest: <code>Implementations/Reference/LLVM/examples/10_button_press_to_boolean/native_kernel_manifest.json</code></li>
   <li>native manifest: <code>Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/native_kernel_manifest.json</code></li>
   <li>native manifest: <code>Implementations/Reference/LLVM/examples/12_button_switch_when_released/native_kernel_manifest.json</code></li>
+  <li>native manifest: <code>Implementations/Reference/LLVM/examples/13_button_latch_when_pressed/native_kernel_manifest.json</code></li>
+  <li>native manifest: <code>Implementations/Reference/LLVM/examples/14_button_latch_when_released/native_kernel_manifest.json</code></li>
+  <li>native manifest: <code>Implementations/Reference/LLVM/examples/15_button_latch_until_released/native_kernel_manifest.json</code></li>
   <li>native ABI entries are example-specific and consumed through manifests by the runtime.</li>
-  <li>Examples 10-11 have the accepted runtime parity level; Example 12 is currently C++-first.</li>
+  <li>Examples 10-15 are accepted at the same C++/Python/Rust reference-runtime source level; local direct Python/Rust execution still depends on those toolchains being available.</li>
 </ul>
 
 <hr/>

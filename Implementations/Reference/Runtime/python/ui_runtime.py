@@ -85,6 +85,42 @@ def default_example11_wfrog_path() -> Path:
     return repo_root() / "Examples" / "11_button_switch_when_pressed" / "ui" / "button_panel.wfrog"
 
 
+def default_example12_contract_path() -> Path:
+    root = repo_root()
+    return root / "Implementations" / "Reference" / "ContractEmitter" / "examples" / "12_button_switch_when_released.reference_host_runtime_ui_binding.contract.json"
+
+
+def default_example12_wfrog_path() -> Path:
+    return repo_root() / "Examples" / "12_button_switch_when_released" / "ui" / "button_panel.wfrog"
+
+
+def default_example13_contract_path() -> Path:
+    root = repo_root()
+    return root / "Implementations" / "Reference" / "ContractEmitter" / "examples" / "13_button_latch_when_pressed.reference_host_runtime_ui_binding.contract.json"
+
+
+def default_example13_wfrog_path() -> Path:
+    return repo_root() / "Examples" / "13_button_latch_when_pressed" / "ui" / "button_panel.wfrog"
+
+
+def default_example14_contract_path() -> Path:
+    root = repo_root()
+    return root / "Implementations" / "Reference" / "ContractEmitter" / "examples" / "14_button_latch_when_released.reference_host_runtime_ui_binding.contract.json"
+
+
+def default_example14_wfrog_path() -> Path:
+    return repo_root() / "Examples" / "14_button_latch_when_released" / "ui" / "button_panel.wfrog"
+
+
+def default_example15_contract_path() -> Path:
+    root = repo_root()
+    return root / "Implementations" / "Reference" / "ContractEmitter" / "examples" / "15_button_latch_until_released.reference_host_runtime_ui_binding.contract.json"
+
+
+def default_example15_wfrog_path() -> Path:
+    return repo_root() / "Examples" / "15_button_latch_until_released" / "ui" / "button_panel.wfrog"
+
+
 def wants_example06(value: str | None) -> bool:
     return value in {"06", "6", "example06", "06_boolean_value_roundtrip"}
 
@@ -107,6 +143,22 @@ def wants_example10(value: str | None) -> bool:
 
 def wants_example11(value: str | None) -> bool:
     return value in {"11", "example11", "11_button_switch_when_pressed"}
+
+
+def wants_example12(value: str | None) -> bool:
+    return value in {"12", "example12", "12_button_switch_when_released"}
+
+
+def wants_example13(value: str | None) -> bool:
+    return value in {"13", "example13", "13_button_latch_when_pressed"}
+
+
+def wants_example14(value: str | None) -> bool:
+    return value in {"14", "example14", "14_button_latch_when_released"}
+
+
+def wants_example15(value: str | None) -> bool:
+    return value in {"15", "example15", "15_button_latch_until_released"}
 
 
 def parse_bool_input(value: str | bool | None) -> bool:
@@ -180,6 +232,42 @@ def is_example11_contract(path: str | Path | None) -> bool:
         return False
     try:
         return contract_example_id(load_contract_json(Path(path))) == "11_button_switch_when_pressed"
+    except Exception:
+        return False
+
+
+def is_example12_contract(path: str | Path | None) -> bool:
+    if path is None:
+        return False
+    try:
+        return contract_example_id(load_contract_json(Path(path))) == "12_button_switch_when_released"
+    except Exception:
+        return False
+
+
+def is_example13_contract(path: str | Path | None) -> bool:
+    if path is None:
+        return False
+    try:
+        return contract_example_id(load_contract_json(Path(path))) == "13_button_latch_when_pressed"
+    except Exception:
+        return False
+
+
+def is_example14_contract(path: str | Path | None) -> bool:
+    if path is None:
+        return False
+    try:
+        return contract_example_id(load_contract_json(Path(path))) == "14_button_latch_when_released"
+    except Exception:
+        return False
+
+
+def is_example15_contract(path: str | Path | None) -> bool:
+    if path is None:
+        return False
+    try:
+        return contract_example_id(load_contract_json(Path(path))) == "15_button_latch_until_released"
     except Exception:
         return False
 
@@ -691,8 +779,13 @@ class ButtonRuntimeCore:
             for item in self.package.get("svg_assets", [])
         }
         self.widgets = self._build_widgets()
+        self.last_button_event = "initial"
+        self.physical_pressed = False
         self.last_trigger_pressed = False
         self.last_result = False
+        self.last_program_read_performed = False
+        self.last_program_read_value = False
+        self.latch_until_read_since_activation = False
         self.execute(None)
 
     def _button_config(self) -> dict[str, str]:
@@ -712,7 +805,39 @@ class ButtonRuntimeCore:
                 "compiler_backend": "none for Example 11",
                 "meta": "Example 11 - .frog switch_when_pressed Button value + Default Button/Boolean .wfrog realization assets + Python runtime",
             }
-        raise RuntimeError("Button slice expects Example 10 or Example 11.")
+        if self.example_id == "12_button_switch_when_released":
+            return {
+                "example_number": "12",
+                "execution_path": "button switch contract executor",
+                "execution_path_id": "python_button_switch_when_released_contract_executor",
+                "compiler_backend": "none for Example 12",
+                "meta": "Example 12 - .frog switch_when_released Button value + Default Button/Boolean .wfrog realization assets + Python runtime",
+            }
+        if self.example_id == "13_button_latch_when_pressed":
+            return {
+                "example_number": "13",
+                "execution_path": "button latch contract executor",
+                "execution_path_id": "python_button_latch_when_pressed_contract_executor",
+                "compiler_backend": "none for Example 13",
+                "meta": "Example 13 - .frog latch_when_pressed Button value + Default Button/Boolean .wfrog realization assets + Python runtime",
+            }
+        if self.example_id == "14_button_latch_when_released":
+            return {
+                "example_number": "14",
+                "execution_path": "button latch contract executor",
+                "execution_path_id": "python_button_latch_when_released_contract_executor",
+                "compiler_backend": "none for Example 14",
+                "meta": "Example 14 - .frog latch_when_released Button value + Default Button/Boolean .wfrog realization assets + Python runtime",
+            }
+        if self.example_id == "15_button_latch_until_released":
+            return {
+                "example_number": "15",
+                "execution_path": "button latch contract executor",
+                "execution_path_id": "python_button_latch_until_released_contract_executor",
+                "compiler_backend": "none for Example 15",
+                "meta": "Example 15 - .frog latch_until_released Button value + Default Button/Boolean .wfrog realization assets + Python runtime",
+            }
+        raise RuntimeError("Button slice expects Example 10, 11, 12, 13, 14, or 15.")
 
     def _load_and_validate(self) -> dict[str, Any]:
         if self.contract.get("backend_family") != "reference_host_runtime_ui_binding":
@@ -730,7 +855,14 @@ class ButtonRuntimeCore:
         unit = units[0]
         if unit.get("unit_id") != "main":
             raise RuntimeError("Expected unit_id main.")
-        if unit.get("kind") not in {"button_press_to_boolean_ui_unit", "button_switch_when_pressed_ui_unit"}:
+        if unit.get("kind") not in {
+            "button_press_to_boolean_ui_unit",
+            "button_switch_when_pressed_ui_unit",
+            "button_switch_when_released_ui_unit",
+            "button_latch_when_pressed_ui_unit",
+            "button_latch_when_released_ui_unit",
+            "button_latch_until_released_ui_unit",
+        }:
             raise RuntimeError("Unexpected runtime unit kind.")
 
         public_io = unit.get("public_io", {})
@@ -776,6 +908,12 @@ class ButtonRuntimeCore:
         panel_widgets = {entry["instance_id"]: entry for entry in self.panel.get("widgets", [])}
         if control_binding["widget_id"] not in panel_widgets or indicator_binding["widget_id"] not in panel_widgets:
             raise RuntimeError("Button slice requires the contract-bound Button control and Boolean indicator widgets.")
+        control_props = panel_widgets[control_binding["widget_id"]].get("props", {})
+        action = str(control_props.get("behavior.mechanical_action", ""))
+        if action in {"switch_when_released", "latch_when_released", "latch_until_released"} and "button_release_binding" not in required:
+            raise RuntimeError("Missing host capability button_release_binding.")
+        if action in {"latch_when_pressed", "latch_when_released", "latch_until_released"} and "button_latch_reset_on_value_consumption" not in required:
+            raise RuntimeError("Missing host capability button_latch_reset_on_value_consumption.")
         for binding in unit.get("ui_bindings", {}).get("widgets", []):
             widget_id = binding.get("widget_id")
             panel_widget = panel_widgets.get(widget_id)
@@ -825,8 +963,21 @@ class ButtonRuntimeCore:
                 action = props.get("behavior.mechanical_action")
                 if not isinstance(action, str):
                     raise RuntimeError("Button slice requires source-owned behavior.mechanical_action.")
-                if action not in {"switch_until_released", "switch_when_pressed"}:
-                    raise RuntimeError("Button slice validates only source-declared switch_until_released or switch_when_pressed mechanical actions.")
+                if action not in {
+                    "switch_until_released",
+                    "switch_when_pressed",
+                    "switch_when_released",
+                    "latch_when_pressed",
+                    "latch_when_released",
+                    "latch_until_released",
+                }:
+                    raise RuntimeError("Button slice validates only source-declared switch/latch Button mechanical actions.")
+                if action in {"latch_when_pressed", "latch_when_released", "latch_until_released"}:
+                    if props.get("behavior.latch_reset_policy") != "reset_on_natural_value_consumption":
+                        raise RuntimeError("Latch Button slices require source-owned reset_on_natural_value_consumption policy.")
+                    pulse_duration = props.get("behavior.output_pulse.duration_ms")
+                    if not isinstance(pulse_duration, (int, float)) or pulse_duration <= 0 or pulse_duration > 5000:
+                        raise RuntimeError("Latch Button slices require source-owned behavior.output_pulse.duration_ms in the 1..5000 ms domain.")
             binding_data = binding.get("binding", {})
             if "public_input_id" in binding_data:
                 props["binding.public_input_id"] = binding_data["public_input_id"]
@@ -846,9 +997,14 @@ class ButtonRuntimeCore:
 
     def set_control_pressed(self, value: bool) -> None:
         button = self.widgets[self.control_widget_id]
+        self.physical_pressed = bool(value)
         self.last_trigger_pressed = bool(value)
+        self.last_button_event = "press" if value else "release"
+        self.last_program_read_performed = False
         button["properties"]["pressed"] = bool(value)
         button["properties"]["value"] = bool(value)
+        self.widgets[self.indicator_widget_id]["properties"]["value"] = bool(value)
+        self.last_result = bool(value)
 
     def control_pressed(self) -> bool:
         props = self.widgets[self.control_widget_id]["properties"]
@@ -858,29 +1014,129 @@ class ButtonRuntimeCore:
         return str(self.widgets[self.control_widget_id]["properties"].get("behavior.mechanical_action", ""))
 
     def _execution_mode(self) -> str:
-        return "button_switch_when_pressed" if self._button_action() == "switch_when_pressed" else "button_press_to_boolean"
+        action = self._button_action()
+        if action == "switch_when_pressed":
+            return "button_switch_when_pressed"
+        if action == "switch_when_released":
+            return "button_switch_when_released"
+        if action == "latch_when_pressed":
+            return "button_latch_when_pressed"
+        if action == "latch_when_released":
+            return "button_latch_when_released"
+        if action == "latch_until_released":
+            return "button_latch_until_released"
+        return "button_press_to_boolean"
+
+    def press_control(self) -> dict[str, Any]:
+        button = self.widgets[self.control_widget_id]
+        action = self._button_action()
+        stored_value = bool(button["properties"].get("value", False))
+
+        self.physical_pressed = True
+        self.last_trigger_pressed = True
+        self.last_button_event = "press"
+        self.last_program_read_performed = False
+        button["properties"]["pressed"] = True
+
+        next_value = stored_value
+        if action == "switch_when_pressed":
+            next_value = not stored_value
+        elif action in {"switch_until_released", "latch_when_pressed", "latch_until_released"}:
+            next_value = True
+        if action == "latch_until_released":
+            self.latch_until_read_since_activation = False
+
+        button["properties"]["value"] = next_value
+        self.widgets[self.indicator_widget_id]["properties"]["value"] = next_value
+        self.last_result = next_value
+        return self.execution_artifact()
+
+    def release_control(self) -> dict[str, Any]:
+        button = self.widgets[self.control_widget_id]
+        action = self._button_action()
+        stored_value = bool(button["properties"].get("value", False))
+
+        self.physical_pressed = False
+        self.last_trigger_pressed = False
+        self.last_button_event = "release"
+        self.last_program_read_performed = False
+        button["properties"]["pressed"] = False
+
+        next_value = stored_value
+        if action == "switch_when_released":
+            next_value = not stored_value
+        elif action == "switch_until_released":
+            next_value = False
+        elif action == "latch_when_released":
+            next_value = True
+        elif action == "latch_until_released" and self.latch_until_read_since_activation:
+            next_value = False
+            self.latch_until_read_since_activation = False
+
+        button["properties"]["value"] = next_value
+        self.widgets[self.indicator_widget_id]["properties"]["value"] = next_value
+        self.last_result = next_value
+        return self.execution_artifact()
+
+    def read_program_value(self) -> dict[str, Any]:
+        button = self.widgets[self.control_widget_id]
+        action = self._button_action()
+        read_value = bool(button["properties"].get("value", False))
+
+        self.last_button_event = "read"
+        self.last_program_read_performed = True
+        self.last_program_read_value = read_value
+
+        next_value = read_value
+        if action in {"latch_when_pressed", "latch_when_released"}:
+            next_value = False
+        elif action == "latch_until_released":
+            self.latch_until_read_since_activation = read_value
+            if not self.physical_pressed:
+                next_value = False
+                self.latch_until_read_since_activation = False
+
+        button["properties"]["pressed"] = self.physical_pressed
+        button["properties"]["value"] = next_value
+        self.widgets[self.indicator_widget_id]["properties"]["value"] = read_value
+        self.last_trigger_pressed = self.physical_pressed
+        self.last_result = read_value
+        return self.execution_artifact()
 
     def execute(self, pressed_override: bool | None = None) -> dict[str, Any]:
+        if pressed_override is None:
+            return self.read_program_value()
+        return self.press_control() if pressed_override else self.release_control()
+
+    def read_program_value_with_native_kernel_bridge(self, bridge: NativeBoolKernelBridge) -> dict[str, Any]:
+        if bridge.manifest.source_lowered_unit != _button_source_lowered_unit(self.contract):
+            raise RuntimeError("Unexpected native Button kernel source lowered unit.")
+
         button = self.widgets[self.control_widget_id]
-        indicator = self.widgets[self.indicator_widget_id]
-        if self._button_action() == "switch_when_pressed":
-            if pressed_override is not None:
-                self.last_trigger_pressed = True
-                button["properties"]["pressed"] = True
-                button["properties"]["value"] = bool(pressed_override)
-            else:
-                self.last_trigger_pressed = False
-            self.last_result = bool(button["properties"].get("value", False))
-            indicator["properties"]["value"] = self.last_result
-            button["properties"]["pressed"] = False
-        else:
-            if pressed_override is not None:
-                self.set_control_pressed(bool(pressed_override))
-            self.last_trigger_pressed = self.control_pressed()
-            self.last_result = self.last_trigger_pressed
-            indicator["properties"]["value"] = self.last_result
-            button["properties"]["pressed"] = False
-            button["properties"]["value"] = False
+        action = self._button_action()
+        read_value = bool(button["properties"].get("value", False))
+        result = bridge.run(read_value)
+        if not result.ok:
+            raise RuntimeError(result.diagnostic or "native Button bool kernel execution failed.")
+
+        self.last_button_event = "read"
+        self.last_program_read_performed = True
+        self.last_program_read_value = bool(result.result)
+
+        next_value = read_value
+        if action in {"latch_when_pressed", "latch_when_released"}:
+            next_value = False
+        elif action == "latch_until_released":
+            self.latch_until_read_since_activation = read_value
+            if not self.physical_pressed:
+                next_value = False
+                self.latch_until_read_since_activation = False
+
+        button["properties"]["pressed"] = self.physical_pressed
+        button["properties"]["value"] = next_value
+        self.widgets[self.indicator_widget_id]["properties"]["value"] = bool(result.result)
+        self.last_trigger_pressed = self.physical_pressed
+        self.last_result = bool(result.result)
         return self.execution_artifact()
 
     def execute_with_native_kernel_bridge(
@@ -888,36 +1144,15 @@ class ButtonRuntimeCore:
         bridge: NativeBoolKernelBridge,
         pressed_override: bool | None = None,
     ) -> dict[str, Any]:
-        if bridge.manifest.source_lowered_unit != _button_source_lowered_unit(self.contract):
-            raise RuntimeError("Unexpected native Button kernel source lowered unit.")
-        button = self.widgets[self.control_widget_id]
-        switch_when_pressed = self._button_action() == "switch_when_pressed"
-        if switch_when_pressed:
-            if pressed_override is not None:
-                self.last_trigger_pressed = True
-                button["properties"]["pressed"] = True
-                button["properties"]["value"] = bool(pressed_override)
-            else:
-                self.last_trigger_pressed = False
-            native_input = bool(button["properties"].get("value", False))
-        else:
-            if pressed_override is not None:
-                self.set_control_pressed(bool(pressed_override))
-            self.last_trigger_pressed = self.control_pressed()
-            native_input = self.last_trigger_pressed
-        result = bridge.run(native_input)
-        if not result.ok:
-            raise RuntimeError(result.diagnostic or "native Button bool kernel execution failed.")
-        self.last_result = result.result
-        self.widgets[self.indicator_widget_id]["properties"]["value"] = self.last_result
-        button["properties"]["pressed"] = False
-        button["properties"]["value"] = self.last_result if switch_when_pressed else False
-        return self.execution_artifact()
+        if pressed_override is not None:
+            self.press_control() if pressed_override else self.release_control()
+        return self.read_program_value_with_native_kernel_bridge(bridge)
 
     def _runtime_for(self, widget: dict[str, Any]) -> dict[str, Any]:
         props = widget["properties"]
         runtime: dict[str, Any] = {
             "value": bool(props.get("value", False)),
+            "pressed": bool(props.get("pressed", False)),
             "label.text": props.get("label.text", ""),
             "caption.text": props.get("caption.text", widget["widget_id"]),
             "asset_ref": f"asset:{widget['asset_id']}",
@@ -946,6 +1181,7 @@ class ButtonRuntimeCore:
             "state_text.style.font_weight",
             "behavior.mechanical_action",
             "behavior.latch_reset_policy",
+            "behavior.output_pulse.duration_ms",
             "style.frame.fill_color",
             "style.frame.border_color",
             "style.frame.border_width",
@@ -985,6 +1221,9 @@ class ButtonRuntimeCore:
             "style.focus_ring.color",
             "style.focus_ring.width",
             "style.pressed.inset",
+            "style.pressed.apply_when_value_true",
+            "style.pressed.apply_while_active",
+            "style.hover.apply_when_value_false_only",
             "style.transition.duration_ms",
             "style.transition.timing",
             "binding.public_input_id",
@@ -1028,7 +1267,13 @@ class ButtonRuntimeCore:
                 "mode": self._execution_mode(),
                 "executed_unit": self.unit["unit_id"],
                 "operation": "copy",
+                "mechanical_action": self._button_action(),
+                "button_event": self.last_button_event,
+                "button_stored_value": bool(self.widgets[self.control_widget_id]["properties"].get("value", False)),
+                "button_physical_pressed": self.physical_pressed,
                 "trigger_pressed": self.last_trigger_pressed,
+                "program_read_performed": self.last_program_read_performed,
+                "program_read_value": self.last_program_read_value,
                 self.public_output_id: self.last_result,
             },
             "outputs": {
@@ -1945,17 +2190,35 @@ def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
     frame_fill = safe_css_color(runtime.get("style.frame.fill_color"), "transparent")
     frame_stroke = safe_css_color(runtime.get("style.frame.border_color"), "transparent")
     frame_width = safe_css_length(runtime.get("style.frame.border_width"), "0px")
-    face_fill = safe_css_color(state_property(runtime, "style.face.fill_color", visual_state, "#e2e8f0"), "#e2e8f0")
-    face_hover_fill = safe_css_color(state_property(runtime, "style.face.fill_color", hover_state, face_fill), face_fill)
-    face_pressed_fill = safe_css_color(state_property(runtime, "style.face.fill_color", pressed_state, face_fill), face_fill)
+    face_fill_false = safe_css_color(state_property(runtime, "style.face.fill_color", "false", "#e2e8f0"), "#e2e8f0")
+    face_fill_true = safe_css_color(state_property(runtime, "style.face.fill_color", "true", face_fill_false), face_fill_false)
+    face_fill = face_fill_true if value else face_fill_false
+    face_hover_fill_false = safe_css_color(state_property(runtime, "style.face.fill_color", "hover_false", face_fill_false), face_fill_false)
+    face_hover_fill_true = safe_css_color(state_property(runtime, "style.face.fill_color", "hover_true", face_fill_true), face_fill_true)
+    face_hover_fill = face_hover_fill_true if value else face_hover_fill_false
+    face_pressed_fill_false = safe_css_color(state_property(runtime, "style.face.fill_color", "pressed_false", face_fill_false), face_fill_false)
+    face_pressed_fill_true = safe_css_color(state_property(runtime, "style.face.fill_color", "pressed_true", face_fill_true), face_fill_true)
+    face_pressed_fill = face_pressed_fill_true if value else face_pressed_fill_false
     face_stroke = safe_css_color(state_property(runtime, "style.face.border_color", visual_state, "#334155"), "#334155")
     face_stroke_width = safe_css_length(runtime.get("style.face.border_width"), "1px")
-    state_face_fill = safe_css_color(state_property(runtime, "style.state_face.fill_color", visual_state, "transparent"), "transparent")
-    state_face_hover_fill = safe_css_color(state_property(runtime, "style.state_face.fill_color", hover_state, state_face_fill), state_face_fill)
-    state_face_pressed_fill = safe_css_color(state_property(runtime, "style.state_face.fill_color", pressed_state, state_face_fill), state_face_fill)
-    state_face_stroke = safe_css_color(state_property(runtime, "style.state_face.border_color", visual_state, "transparent"), "transparent")
-    state_face_hover_stroke = safe_css_color(state_property(runtime, "style.state_face.border_color", hover_state, state_face_stroke), state_face_stroke)
-    state_face_pressed_stroke = safe_css_color(state_property(runtime, "style.state_face.border_color", pressed_state, state_face_stroke), state_face_stroke)
+    state_face_fill_false = safe_css_color(state_property(runtime, "style.state_face.fill_color", "false", "transparent"), "transparent")
+    state_face_fill_true = safe_css_color(state_property(runtime, "style.state_face.fill_color", "true", state_face_fill_false), state_face_fill_false)
+    state_face_fill = state_face_fill_true if value else state_face_fill_false
+    state_face_hover_fill_false = safe_css_color(state_property(runtime, "style.state_face.fill_color", "hover_false", state_face_fill_false), state_face_fill_false)
+    state_face_hover_fill_true = safe_css_color(state_property(runtime, "style.state_face.fill_color", "hover_true", state_face_fill_true), state_face_fill_true)
+    state_face_hover_fill = state_face_hover_fill_true if value else state_face_hover_fill_false
+    state_face_pressed_fill_false = safe_css_color(state_property(runtime, "style.state_face.fill_color", "pressed_false", state_face_fill_false), state_face_fill_false)
+    state_face_pressed_fill_true = safe_css_color(state_property(runtime, "style.state_face.fill_color", "pressed_true", state_face_fill_true), state_face_fill_true)
+    state_face_pressed_fill = state_face_pressed_fill_true if value else state_face_pressed_fill_false
+    state_face_stroke_false = safe_css_color(state_property(runtime, "style.state_face.border_color", "false", "transparent"), "transparent")
+    state_face_stroke_true = safe_css_color(state_property(runtime, "style.state_face.border_color", "true", state_face_stroke_false), state_face_stroke_false)
+    state_face_stroke = state_face_stroke_true if value else state_face_stroke_false
+    state_face_hover_stroke_false = safe_css_color(state_property(runtime, "style.state_face.border_color", "hover_false", state_face_stroke_false), state_face_stroke_false)
+    state_face_hover_stroke_true = safe_css_color(state_property(runtime, "style.state_face.border_color", "hover_true", state_face_stroke_true), state_face_stroke_true)
+    state_face_hover_stroke = state_face_hover_stroke_true if value else state_face_hover_stroke_false
+    state_face_pressed_stroke_false = safe_css_color(state_property(runtime, "style.state_face.border_color", "pressed_false", state_face_stroke_false), state_face_stroke_false)
+    state_face_pressed_stroke_true = safe_css_color(state_property(runtime, "style.state_face.border_color", "pressed_true", state_face_stroke_true), state_face_stroke_true)
+    state_face_pressed_stroke = state_face_pressed_stroke_true if value else state_face_pressed_stroke_false
     state_face_stroke_width = safe_css_length(runtime.get("style.state_face.border_width"), "0px")
     caption_size = safe_css_length(runtime.get("caption.style.font_size"), "18px")
     caption_weight = safe_css_font_weight(runtime.get("caption.style.font_weight"), "600")
@@ -1968,8 +2231,16 @@ def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
     focus_color = safe_css_color(runtime.get("style.focus_ring.color"), "#2563eb")
     focus_width = safe_css_length(runtime.get("style.focus_ring.width"), "3px") if runtime_bool(runtime, "style.focus_ring.visible", True) else "0px"
     pressed_inset = safe_css_length(runtime.get("style.pressed.inset"), "2px")
+    pressed_applies_when_value_true = runtime_bool(runtime, "style.pressed.apply_when_value_true", False)
+    pressed_applies_while_active = runtime_bool(runtime, "style.pressed.apply_while_active", True)
+    hover_applies_when_value_false_only = runtime_bool(runtime, "style.hover.apply_when_value_false_only", False)
     transition_ms = runtime_string(runtime, "style.transition.duration_ms", "120")
     transition_timing = runtime_string(runtime, "style.transition.timing", "ease-out")
+    physical_pressed = runtime_bool(runtime, "pressed", False)
+    try:
+        output_pulse_duration_ms = max(0, min(5000, int(runtime_number(runtime, "behavior.output_pulse.duration_ms", 0))))
+    except (TypeError, ValueError):
+        output_pulse_duration_ms = 0
     asset_route = asset_url(runtime.get("asset_ref"))
 
     style = (
@@ -2021,18 +2292,41 @@ def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
         f" data-asset-ref='{html.escape(str(runtime.get('asset_ref', '')))}'"
         f" data-asset-route='{html.escape(asset_route)}'"
         f" data-current-value='{'true' if value else 'false'}'"
+        f" data-frog-physical-pressed='{'true' if physical_pressed else 'false'}'"
         f" data-frog-mechanical-action='{html.escape(mechanical_action)}'"
+        f" data-frog-output-pulse-duration-ms='{output_pulse_duration_ms}'"
         f" data-realization-variant='{html.escape(runtime_string(runtime, 'realization.variant', 'rectangular'))}'"
         " data-frog-visual-law='wfrog-realization-state-map'"
         f" data-frog-visual-state='{visual_state}'"
         f" data-frog-hover-state='{hover_state}'"
         f" data-frog-pressed-state='{pressed_state}'"
         f" data-frog-transition-state='{transition_state}'"
+        f" data-frog-pressed-applies-when-value-true='{'true' if pressed_applies_when_value_true else 'false'}'"
+        f" data-frog-pressed-applies-while-active='{'true' if pressed_applies_while_active else 'false'}'"
+        f" data-frog-hover-applies-when-value-false-only='{'true' if hover_applies_when_value_false_only else 'false'}'"
         f" data-frog-state-text-visible='{'true' if state_text_visible else 'false'}'"
         f" data-frog-state-text-false='{html.escape(false_state_text)}'"
         f" data-frog-state-text-true='{html.escape(true_state_text)}'"
         f" data-frog-state-text-color-false='{html.escape(false_text_color)}'"
         f" data-frog-state-text-color-true='{html.escape(true_text_color)}'"
+        f" data-frog-button-face-fill-false='{html.escape(face_fill_false)}'"
+        f" data-frog-button-face-fill-true='{html.escape(face_fill_true)}'"
+        f" data-frog-button-face-hover-fill-false='{html.escape(face_hover_fill_false)}'"
+        f" data-frog-button-face-hover-fill-true='{html.escape(face_hover_fill_true)}'"
+        f" data-frog-button-face-pressed-fill-false='{html.escape(face_pressed_fill_false)}'"
+        f" data-frog-button-face-pressed-fill-true='{html.escape(face_pressed_fill_true)}'"
+        f" data-frog-button-state-face-fill-false='{html.escape(state_face_fill_false)}'"
+        f" data-frog-button-state-face-fill-true='{html.escape(state_face_fill_true)}'"
+        f" data-frog-button-state-face-hover-fill-false='{html.escape(state_face_hover_fill_false)}'"
+        f" data-frog-button-state-face-hover-fill-true='{html.escape(state_face_hover_fill_true)}'"
+        f" data-frog-button-state-face-pressed-fill-false='{html.escape(state_face_pressed_fill_false)}'"
+        f" data-frog-button-state-face-pressed-fill-true='{html.escape(state_face_pressed_fill_true)}'"
+        f" data-frog-button-state-face-stroke-false='{html.escape(state_face_stroke_false)}'"
+        f" data-frog-button-state-face-stroke-true='{html.escape(state_face_stroke_true)}'"
+        f" data-frog-button-state-face-hover-stroke-false='{html.escape(state_face_hover_stroke_false)}'"
+        f" data-frog-button-state-face-hover-stroke-true='{html.escape(state_face_hover_stroke_true)}'"
+        f" data-frog-button-state-face-pressed-stroke-false='{html.escape(state_face_pressed_stroke_false)}'"
+        f" data-frog-button-state-face-pressed-stroke-true='{html.escape(state_face_pressed_stroke_true)}'"
         f" style='{style}'>"
         f"<div class='button-skin' data-frog-asset-consumed='true' aria-hidden='true'>{asset_path.read_text(encoding='utf-8')}</div>"
         "<span class='button-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor'"
@@ -2040,7 +2334,7 @@ def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
         f"{state_text_overlay}"
         "<button class='button-press-overlay' type='button'"
         f" name='{html.escape(input_id)}' value='true'"
-        f" aria-label='{html.escape(caption)}' aria-pressed='{'true' if value else 'false'}'"
+        f" aria-label='{html.escape(caption)}' aria-pressed='{'true' if physical_pressed else 'false'}'"
         f" data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='{html.escape(input_id)}'"
         " data-frog-host-overlay='input' data-frog-align-to-part='face'"
         f" style='{button_box_style(geometry['face_x'], geometry['face_y'], geometry['face_width'], geometry['face_height'], geometry)}'>"
@@ -2055,6 +2349,8 @@ def button_widget_script() -> str:
   const overlay = document.querySelector(".button-press-overlay[data-frog-part='face'][data-frog-host-overlay='input']");
   const buttonWidget = overlay ? overlay.closest(".button-widget[data-class-ref='frog.widgets.button']") : null;
   const indicator = document.querySelector(".boolean-indicator[data-class-ref='frog.widgets.boolean_indicator']");
+  const readButton = document.querySelector(".program-read-action[data-frog-event='read']");
+  const readStatus = document.querySelector(".program-read-status");
   if (!form || !buttonWidget || !overlay || !indicator) {
     return;
   }
@@ -2063,11 +2359,21 @@ def button_widget_script() -> str:
   const stateText = indicator.querySelector("[data-frog-part='state_text']");
   const inputId = overlay.dataset.frogPublicInputId || overlay.name || "";
   const mechanicalAction = buttonWidget.dataset.frogMechanicalAction || "";
-  if (!inputId || (mechanicalAction !== "switch_until_released" && mechanicalAction !== "switch_when_pressed")) {
+  const latchAction = mechanicalAction === "latch_when_pressed" ||
+    mechanicalAction === "latch_when_released" ||
+    mechanicalAction === "latch_until_released";
+  const pulseDurationMs = Math.max(0, Math.min(5000, Number.parseInt(buttonWidget.dataset.frogOutputPulseDurationMs || "0", 10) || 0));
+  if (!inputId || (
+      mechanicalAction !== "switch_until_released" &&
+      mechanicalAction !== "switch_when_pressed" &&
+      mechanicalAction !== "switch_when_released" &&
+      mechanicalAction !== "latch_when_pressed" &&
+      mechanicalAction !== "latch_when_released" &&
+      mechanicalAction !== "latch_until_released")) {
     return;
   }
-  let pressed = buttonWidget.dataset.currentValue === "true";
   let eventQueue = Promise.resolve();
+  let pulseResetTimer = 0;
 
   const buttonProperty = (base, value) => {
     const suffix = value ? "True" : "False";
@@ -2094,9 +2400,56 @@ def button_widget_script() -> str:
     }
   };
 
-  const publish = (value) => {
+  const applyButton = (value, physicalPressed) => {
+    overlay.setAttribute("aria-pressed", physicalPressed ? "true" : "false");
+    buttonWidget.dataset.frogPhysicalPressed = physicalPressed ? "true" : "false";
+    buttonWidget.dataset.currentValue = value ? "true" : "false";
+    buttonWidget.dataset.frogVisualState = value ? "true" : "false";
+    buttonWidget.dataset.frogHoverState = value ? "hover_true" : "hover_false";
+    buttonWidget.dataset.frogPressedState = value ? "pressed_true" : "pressed_false";
+    buttonWidget.style.setProperty("--frog-button-face-fill", buttonProperty("frogButtonFaceFill", value));
+    buttonWidget.style.setProperty("--frog-button-face-hover-fill", buttonProperty("frogButtonFaceHoverFill", value));
+    buttonWidget.style.setProperty("--frog-button-face-pressed-fill", buttonProperty("frogButtonFacePressedFill", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-fill", buttonProperty("frogButtonStateFaceFill", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-hover-fill", buttonProperty("frogButtonStateFaceHoverFill", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-pressed-fill", buttonProperty("frogButtonStateFacePressedFill", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-stroke", buttonProperty("frogButtonStateFaceStroke", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-hover-stroke", buttonProperty("frogButtonStateFaceHoverStroke", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-pressed-stroke", buttonProperty("frogButtonStateFacePressedStroke", value));
+    buttonWidget.style.setProperty("--frog-button-state-text-fill", buttonProperty("frogStateTextColor", value));
+    if (buttonStateText) {
+      buttonStateText.textContent = buttonProperty("frogStateText", value);
+      buttonStateText.style.color = buttonProperty("frogStateTextColor", value);
+    }
+  };
+
+  const applyArtifact = (artifact) => {
+    const ui = artifact && artifact.outputs && artifact.outputs.ui ? artifact.outputs.ui : {};
+    const summary = artifact && artifact.execution_summary ? artifact.execution_summary : {};
+    const buttonValue = Boolean(ui[buttonWidget.dataset.widgetId]);
+    const indicatorValue = Boolean(ui[indicator.dataset.widgetId]);
+    const latchPulseVisible = latchAction &&
+      pulseDurationMs > 0 &&
+      summary.program_read_performed &&
+      summary.program_read_value;
+    applyButton(latchPulseVisible ? true : buttonValue, Boolean(summary.button_physical_pressed));
+    applyIndicator(indicatorValue);
+    if (readStatus && summary.program_read_performed) {
+      readStatus.textContent = `Last read: ${summary.program_read_value ? "TRUE" : "FALSE"}`;
+      readStatus.dataset.frogLastRead = summary.program_read_value ? "true" : "false";
+    }
+    const shouldResetLatchPulse = latchPulseVisible &&
+      (mechanicalAction === "latch_when_pressed" || !summary.button_physical_pressed);
+    if (shouldResetLatchPulse) {
+      window.clearTimeout(pulseResetTimer);
+      pulseResetTimer = window.setTimeout(() => publishEvent("read"), pulseDurationMs);
+    }
+  };
+
+  const publishEvent = (eventName) => {
     const body = new URLSearchParams();
-    body.set(inputId, value ? "true" : "false");
+    body.set("frog_event", eventName);
+    body.set(inputId, buttonWidget.dataset.currentValue === "true" ? "true" : "false");
     eventQueue = eventQueue
       .catch(() => {})
       .then(() => fetch("/event", {
@@ -2104,47 +2457,15 @@ def button_widget_script() -> str:
         headers: {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"},
         body
       }))
+      .then((response) => response.ok ? response.json() : null)
+      .then((artifact) => {
+        if (artifact) {
+          applyArtifact(artifact);
+        }
+      })
       .catch(() => {});
   };
 
-  const setPressed = (value) => {
-    if (pressed === value) {
-      return;
-    }
-    pressed = value;
-    overlay.setAttribute("aria-pressed", value ? "true" : "false");
-    buttonWidget.dataset.currentValue = value ? "true" : "false";
-    buttonWidget.dataset.frogVisualState = value ? "true" : "false";
-    buttonWidget.dataset.frogPressedState = value ? "pressed_true" : "pressed_false";
-    if (buttonStateText) {
-      buttonStateText.textContent = buttonProperty("frogStateText", value);
-      buttonStateText.style.color = buttonProperty("frogStateTextColor", value);
-    }
-    applyIndicator(value);
-    publish(value);
-  };
-
-  form.addEventListener("submit", (event) => event.preventDefault());
-  overlay.addEventListener("click", (event) => event.preventDefault());
-  if (mechanicalAction === "switch_when_pressed") {
-    const toggle = (event) => {
-      if (event && event.button !== undefined && event.button !== 0) {
-        return;
-      }
-      if (event) {
-        event.preventDefault();
-      }
-      setPressed(!(buttonWidget.dataset.currentValue === "true"));
-    };
-    overlay.addEventListener("pointerdown", toggle);
-    overlay.addEventListener("keydown", (event) => {
-      if ((event.key !== " " && event.key !== "Enter") || event.repeat) {
-        return;
-      }
-      toggle(event);
-    });
-    return;
-  }
   const press = (event) => {
     if (event && event.button !== undefined && event.button !== 0) {
       return;
@@ -2152,47 +2473,75 @@ def button_widget_script() -> str:
     if (event) {
       event.preventDefault();
     }
-    setPressed(true);
+    publishEvent("press");
   };
-  overlay.addEventListener("pointerdown", (event) => {
-    if (overlay.setPointerCapture) {
-      overlay.setPointerCapture(event.pointerId);
-    }
-    press(event);
-  });
+
   const release = (event) => {
-    if (!pressed) {
-      return;
-    }
     if (event) {
       event.preventDefault();
     }
-    setPressed(false);
+    publishEvent("release");
   };
-  overlay.addEventListener("pointerup", release);
-  overlay.addEventListener("pointercancel", release);
-  overlay.addEventListener("lostpointercapture", release);
-  overlay.addEventListener("mousedown", press);
-  window.addEventListener("mouseup", release);
-  overlay.addEventListener("mouseleave", release);
-  overlay.addEventListener("touchstart", press, {passive: false});
-  overlay.addEventListener("touchend", release, {passive: false});
-  overlay.addEventListener("touchcancel", release, {passive: false});
-  overlay.addEventListener("blur", release);
-  overlay.addEventListener("keydown", (event) => {
-    if (event.key !== " " && event.key !== "Enter") {
+
+  form.addEventListener("submit", (event) => event.preventDefault());
+  overlay.addEventListener("click", (event) => event.preventDefault());
+
+  let armed = false;
+  const arm = (event) => {
+    armed = true;
+    press(event);
+  };
+  const releaseIfArmed = (event) => {
+    if (!armed) {
       return;
     }
-    event.preventDefault();
-    setPressed(true);
+    armed = false;
+    release(event);
+  };
+  const cancel = (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+    armed = false;
+  };
+
+  if (window.PointerEvent) {
+    overlay.addEventListener("pointerdown", (event) => {
+      if (overlay.setPointerCapture) {
+        overlay.setPointerCapture(event.pointerId);
+      }
+      arm(event);
+    });
+    overlay.addEventListener("pointerup", releaseIfArmed);
+    overlay.addEventListener("pointercancel", cancel);
+    overlay.addEventListener("lostpointercapture", cancel);
+  } else {
+    overlay.addEventListener("mousedown", arm);
+    window.addEventListener("mouseup", releaseIfArmed);
+    overlay.addEventListener("touchstart", arm, {passive: false});
+    overlay.addEventListener("touchend", releaseIfArmed, {passive: false});
+    overlay.addEventListener("touchcancel", cancel, {passive: false});
+  }
+  overlay.addEventListener("blur", cancel);
+  overlay.addEventListener("keydown", (event) => {
+    if ((event.key !== " " && event.key !== "Enter") || event.repeat) {
+      return;
+    }
+    armed = true;
+    press(event);
   });
   overlay.addEventListener("keyup", (event) => {
     if (event.key !== " " && event.key !== "Enter") {
       return;
     }
-    event.preventDefault();
-    setPressed(false);
+    releaseIfArmed(event);
   });
+  if (readButton) {
+    readButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      publishEvent("read");
+    });
+  }
 })();
 </script>"""
 
@@ -3765,6 +4114,30 @@ class ButtonBrowserUiRuntime:
         self.last_error = None
         return artifact
 
+    def read_once(self) -> dict[str, Any]:
+        if self.native_kernel_bridge is None:
+            artifact = self.runtime.read_program_value()
+        else:
+            artifact = self.runtime.read_program_value_with_native_kernel_bridge(self.native_kernel_bridge)
+        self.last_error = None
+        return artifact
+
+    def apply_event(self, event_name: str) -> dict[str, Any]:
+        action = self.runtime._button_action()
+        latch_action = action in {"latch_when_pressed", "latch_when_released", "latch_until_released"}
+        if event_name == "press":
+            artifact = self.runtime.press_control()
+        elif event_name == "release":
+            artifact = self.runtime.release_control()
+        elif event_name == "read":
+            artifact = self.read_once()
+        else:
+            raise RuntimeError(f"Unknown Button runtime event: {event_name}")
+        if latch_action and event_name in {"press", "release"}:
+            artifact = self.read_once()
+        self.last_error = None
+        return artifact
+
     def state_snapshot(self) -> dict[str, Any]:
         return self.runtime.execution_artifact()
 
@@ -3811,13 +4184,14 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-fill)!important;stroke:var(--frog-button-face-stroke)!important;stroke-width:var(--frog-button-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}}
 .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-fill)!important;stroke:var(--frog-button-state-face-stroke)!important;stroke-width:var(--frog-button-state-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}}
 .button-skin [data-frog-part='focus_ring']{{display:none!important;stroke:var(--frog-button-focus-color)!important;stroke-width:var(--frog-button-focus-width)!important;}}
-.button-widget:has(.button-press-overlay:hover) .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-hover-fill)!important;}}
-.button-widget:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-hover-fill)!important;stroke:var(--frog-button-state-face-hover-stroke)!important;}}
-.button-widget:has(.button-press-overlay:active) .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-pressed-fill)!important;transform:translateY(var(--frog-button-pressed-inset));}}
-.button-widget:has(.button-press-overlay:active) .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-pressed-fill)!important;stroke:var(--frog-button-state-face-pressed-stroke)!important;transform:translateY(var(--frog-button-pressed-inset));}}
+.button-widget[data-frog-hover-applies-when-value-false-only='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='face'],.button-widget[data-frog-hover-applies-when-value-false-only='true'][data-current-value='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-hover-fill)!important;}}
+.button-widget[data-frog-hover-applies-when-value-false-only='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face'],.button-widget[data-frog-hover-applies-when-value-false-only='true'][data-current-value='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-hover-fill)!important;stroke:var(--frog-button-state-face-hover-stroke)!important;}}
+.button-widget[data-frog-pressed-applies-while-active='true']:has(.button-press-overlay:active) .button-skin [data-frog-part='face'],.button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-pressed-fill)!important;transform:translateY(var(--frog-button-pressed-inset));}}
+.button-widget[data-frog-pressed-applies-while-active='true']:has(.button-press-overlay:active) .button-skin [data-frog-part='state_face'],.button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-pressed-fill)!important;stroke:var(--frog-button-state-face-pressed-stroke)!important;transform:translateY(var(--frog-button-pressed-inset));}}
+.button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-state-overlay{{transform:translate(-50%,calc(-50% + var(--frog-button-pressed-inset)));}}
 .button-widget:has(.button-press-overlay:focus-visible) .button-skin [data-frog-part='focus_ring']{{display:inline!important;}}
 .button-caption-overlay{{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--frog-button-caption-font-size);font-weight:var(--frog-button-caption-font-weight);font-family:var(--frog-button-caption-font-family);line-height:1;white-space:nowrap;pointer-events:none;z-index:3;}}
-.button-state-overlay{{position:absolute;transform:translate(-50%,-50%);font-size:var(--frog-button-state-text-font-size);font-weight:var(--frog-button-state-text-font-weight);line-height:1;color:var(--frog-button-state-text-fill);pointer-events:none;z-index:4;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}
+.button-state-overlay{{position:absolute;transform:translate(-50%,-50%);font-size:var(--frog-button-state-text-font-size);font-weight:var(--frog-button-state-text-font-weight);line-height:1;color:var(--frog-button-state-text-fill);pointer-events:none;z-index:6;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}
 .button-press-overlay{{position:absolute;box-sizing:border-box;margin:0;padding:0;border:0;background:transparent;cursor:pointer;appearance:none;z-index:5;}}
 .button-press-overlay:focus,.button-press-overlay:focus-visible,.button-press-overlay:active{{outline:0;box-shadow:none;}}
 .boolean-widget{{border:0;padding:0;background:transparent;font:inherit;color:inherit;overflow:visible;}}
@@ -3829,6 +4203,9 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 .boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{{box-shadow:none;}}
 .boolean-state-overlay{{position:absolute;transform:translate(-50%,-50%);text-align:center;font-size:var(--boolean-text-font-size);font-weight:var(--boolean-text-font-weight);line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;white-space:nowrap;}}
 .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}
+.program-read-action{{padding:6px 10px;border:1px solid #94a3b8;border-radius:4px;background:#ffffff;color:#111827;font:inherit;cursor:pointer;}}
+.program-read-action:hover{{background:#f8fafc;}}
+.program-read-status{{font-size:13px;color:#374151;min-width:112px;}}
 .state-link{{font-size:16px;}}
 .diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}
 .diagnostic.error{{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}}
@@ -3848,7 +4225,7 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
     {button_html}
     {indicator_html}
   </div>
-  <div class="actions"><a class="state-link" href="/state.json">state.json</a></div>
+  <div class="actions"><button class="program-read-action" type="button" data-frog-event="read">Read</button><span class="program-read-status" data-frog-last-read="none">Last read: none</span><a class="state-link" href="/state.json">state.json</a></div>
 </form>
 {button_widget_script()}
 </body>
@@ -3896,7 +4273,11 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
         form = urllib.parse.parse_qs(body, keep_blank_values=True)
         raw_value = form.get(self.runtime.public_input_id, ["false"])[0]
         try:
-            artifact = self.run_once(parse_bool_input(raw_value))
+            event_name = form.get("frog_event", [None])[0]
+            if parsed.path == "/event" and event_name:
+                artifact = self.apply_event(event_name)
+            else:
+                artifact = self.run_once(parse_bool_input(raw_value))
         except Exception as exc:  # pragma: no cover
             self.last_error = str(exc)
             artifact = self.state_snapshot()
@@ -3982,6 +4363,42 @@ def build_runtime(
         return ButtonBrowserUiRuntime(
             contract_path=contract_path or default_example11_contract_path(),
             wfrog_path=wfrog_path or default_example11_wfrog_path(),
+            host=host,
+            port=port,
+            open_browser=open_browser,
+            native_kernel_bridge=native_kernel_bridge if isinstance(native_kernel_bridge, NativeBoolKernelBridge) else None,
+        )
+    if wants_example12(example) or is_example12_contract(contract_path):
+        return ButtonBrowserUiRuntime(
+            contract_path=contract_path or default_example12_contract_path(),
+            wfrog_path=wfrog_path or default_example12_wfrog_path(),
+            host=host,
+            port=port,
+            open_browser=open_browser,
+            native_kernel_bridge=native_kernel_bridge if isinstance(native_kernel_bridge, NativeBoolKernelBridge) else None,
+        )
+    if wants_example13(example) or is_example13_contract(contract_path):
+        return ButtonBrowserUiRuntime(
+            contract_path=contract_path or default_example13_contract_path(),
+            wfrog_path=wfrog_path or default_example13_wfrog_path(),
+            host=host,
+            port=port,
+            open_browser=open_browser,
+            native_kernel_bridge=native_kernel_bridge if isinstance(native_kernel_bridge, NativeBoolKernelBridge) else None,
+        )
+    if wants_example14(example) or is_example14_contract(contract_path):
+        return ButtonBrowserUiRuntime(
+            contract_path=contract_path or default_example14_contract_path(),
+            wfrog_path=wfrog_path or default_example14_wfrog_path(),
+            host=host,
+            port=port,
+            open_browser=open_browser,
+            native_kernel_bridge=native_kernel_bridge if isinstance(native_kernel_bridge, NativeBoolKernelBridge) else None,
+        )
+    if wants_example15(example) or is_example15_contract(contract_path):
+        return ButtonBrowserUiRuntime(
+            contract_path=contract_path or default_example15_contract_path(),
+            wfrog_path=wfrog_path or default_example15_wfrog_path(),
             host=host,
             port=port,
             open_browser=open_browser,

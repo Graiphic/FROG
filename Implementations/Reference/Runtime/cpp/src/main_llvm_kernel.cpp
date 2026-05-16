@@ -21,6 +21,9 @@ extern "C" void frog_example09_run(const std::uint8_t* input_ptr, std::uint32_t 
 extern "C" void frog_example10_run(std::uint8_t trigger_pressed, frog::runtime::FrogBoolRunResult* out_result);
 extern "C" void frog_example11_run(std::uint8_t trigger_value, frog::runtime::FrogBoolRunResult* out_result);
 extern "C" void frog_example12_run(std::uint8_t trigger_value, frog::runtime::FrogBoolRunResult* out_result);
+extern "C" void frog_example13_run(std::uint8_t trigger_value, frog::runtime::FrogBoolRunResult* out_result);
+extern "C" void frog_example14_run(std::uint8_t trigger_value, frog::runtime::FrogBoolRunResult* out_result);
+extern "C" void frog_example15_run(std::uint8_t trigger_value, frog::runtime::FrogBoolRunResult* out_result);
 
 namespace {
 
@@ -76,6 +79,21 @@ std::filesystem::path default_example12_manifest_path() {
            "12_button_switch_when_released" / "native_kernel_manifest.json";
 }
 
+std::filesystem::path default_example13_manifest_path() {
+    return repo_root() / "Implementations" / "Reference" / "LLVM" / "examples" /
+           "13_button_latch_when_pressed" / "native_kernel_manifest.json";
+}
+
+std::filesystem::path default_example14_manifest_path() {
+    return repo_root() / "Implementations" / "Reference" / "LLVM" / "examples" /
+           "14_button_latch_when_released" / "native_kernel_manifest.json";
+}
+
+std::filesystem::path default_example15_manifest_path() {
+    return repo_root() / "Implementations" / "Reference" / "LLVM" / "examples" /
+           "15_button_latch_until_released" / "native_kernel_manifest.json";
+}
+
 std::filesystem::path example06_contract_path() {
     return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
            "06_boolean_value_roundtrip.reference_host_runtime_ui_binding.contract.json";
@@ -111,6 +129,21 @@ std::filesystem::path example12_contract_path() {
            "12_button_switch_when_released.reference_host_runtime_ui_binding.contract.json";
 }
 
+std::filesystem::path example13_contract_path() {
+    return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
+           "13_button_latch_when_pressed.reference_host_runtime_ui_binding.contract.json";
+}
+
+std::filesystem::path example14_contract_path() {
+    return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
+           "14_button_latch_when_released.reference_host_runtime_ui_binding.contract.json";
+}
+
+std::filesystem::path example15_contract_path() {
+    return repo_root() / "Implementations" / "Reference" / "ContractEmitter" / "examples" /
+           "15_button_latch_until_released.reference_host_runtime_ui_binding.contract.json";
+}
+
 std::filesystem::path example06_wfrog_path() {
     return repo_root() / "Examples" / "06_boolean_value_roundtrip" / "ui" / "boolean_panel.wfrog";
 }
@@ -139,6 +172,18 @@ std::filesystem::path example12_wfrog_path() {
     return repo_root() / "Examples" / "12_button_switch_when_released" / "ui" / "button_panel.wfrog";
 }
 
+std::filesystem::path example13_wfrog_path() {
+    return repo_root() / "Examples" / "13_button_latch_when_pressed" / "ui" / "button_panel.wfrog";
+}
+
+std::filesystem::path example14_wfrog_path() {
+    return repo_root() / "Examples" / "14_button_latch_when_released" / "ui" / "button_panel.wfrog";
+}
+
+std::filesystem::path example15_wfrog_path() {
+    return repo_root() / "Examples" / "15_button_latch_until_released" / "ui" / "button_panel.wfrog";
+}
+
 bool wants_example06(const std::string& value) {
     return value == "06" || value == "6" || value == "example06" || value == "06_boolean_value_roundtrip";
 }
@@ -165,6 +210,18 @@ bool wants_example11(const std::string& value) {
 
 bool wants_example12(const std::string& value) {
     return value == "12" || value == "example12" || value == "12_button_switch_when_released";
+}
+
+bool wants_example13(const std::string& value) {
+    return value == "13" || value == "example13" || value == "13_button_latch_when_pressed";
+}
+
+bool wants_example14(const std::string& value) {
+    return value == "14" || value == "example14" || value == "14_button_latch_when_released";
+}
+
+bool wants_example15(const std::string& value) {
+    return value == "15" || value == "example15" || value == "15_button_latch_until_released";
 }
 
 bool parse_bool_input(std::string value) {
@@ -226,6 +283,21 @@ std::shared_ptr<const frog::runtime::NativeBoolKernelBridge> make_example11_brid
 std::shared_ptr<const frog::runtime::NativeBoolKernelBridge> make_example12_bridge(const std::filesystem::path& manifest_path) {
     return std::make_shared<const frog::runtime::NativeBoolKernelBridge>(
         frog::runtime::make_linked_native_bool_kernel_bridge(manifest_path, &frog_example12_run));
+}
+
+std::shared_ptr<const frog::runtime::NativeBoolKernelBridge> make_example13_bridge(const std::filesystem::path& manifest_path) {
+    return std::make_shared<const frog::runtime::NativeBoolKernelBridge>(
+        frog::runtime::make_linked_native_bool_kernel_bridge(manifest_path, &frog_example13_run));
+}
+
+std::shared_ptr<const frog::runtime::NativeBoolKernelBridge> make_example14_bridge(const std::filesystem::path& manifest_path) {
+    return std::make_shared<const frog::runtime::NativeBoolKernelBridge>(
+        frog::runtime::make_linked_native_bool_kernel_bridge(manifest_path, &frog_example14_run));
+}
+
+std::shared_ptr<const frog::runtime::NativeBoolKernelBridge> make_example15_bridge(const std::filesystem::path& manifest_path) {
+    return std::make_shared<const frog::runtime::NativeBoolKernelBridge>(
+        frog::runtime::make_linked_native_bool_kernel_bridge(manifest_path, &frog_example15_run));
 }
 
 } // namespace
@@ -327,6 +399,33 @@ int main(int argc, char** argv) {
                     contract_path.value_or(example12_contract_path()),
                     wfrog_path.value_or(example12_wfrog_path()),
                     make_example12_bridge(manifest_path.value_or(default_example12_manifest_path())));
+                runtime.serve(host, port, open_browser);
+                return 0;
+            }
+
+            if (example.has_value() && wants_example13(*example)) {
+                frog::runtime::ButtonBrowserUiRuntime runtime(
+                    contract_path.value_or(example13_contract_path()),
+                    wfrog_path.value_or(example13_wfrog_path()),
+                    make_example13_bridge(manifest_path.value_or(default_example13_manifest_path())));
+                runtime.serve(host, port, open_browser);
+                return 0;
+            }
+
+            if (example.has_value() && wants_example14(*example)) {
+                frog::runtime::ButtonBrowserUiRuntime runtime(
+                    contract_path.value_or(example14_contract_path()),
+                    wfrog_path.value_or(example14_wfrog_path()),
+                    make_example14_bridge(manifest_path.value_or(default_example14_manifest_path())));
+                runtime.serve(host, port, open_browser);
+                return 0;
+            }
+
+            if (example.has_value() && wants_example15(*example)) {
+                frog::runtime::ButtonBrowserUiRuntime runtime(
+                    contract_path.value_or(example15_contract_path()),
+                    wfrog_path.value_or(example15_wfrog_path()),
+                    make_example15_bridge(manifest_path.value_or(default_example15_manifest_path())));
                 runtime.serve(host, port, open_browser);
                 return 0;
             }
@@ -439,6 +538,39 @@ int main(int argc, char** argv) {
                 wfrog_path.value_or(example12_wfrog_path()));
             const auto artifact = runtime.execute_with_native_kernel_bridge(
                 *make_example12_bridge(manifest_path.value_or(default_example12_manifest_path())),
+                parse_bool_input(input_value_text.value_or("true")));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+
+        if (example.has_value() && wants_example13(*example)) {
+            frog::runtime::Slice10ButtonRuntimeCore runtime(
+                contract_path.value_or(example13_contract_path()),
+                wfrog_path.value_or(example13_wfrog_path()));
+            const auto artifact = runtime.execute_with_native_kernel_bridge(
+                *make_example13_bridge(manifest_path.value_or(default_example13_manifest_path())),
+                parse_bool_input(input_value_text.value_or("true")));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+
+        if (example.has_value() && wants_example14(*example)) {
+            frog::runtime::Slice10ButtonRuntimeCore runtime(
+                contract_path.value_or(example14_contract_path()),
+                wfrog_path.value_or(example14_wfrog_path()));
+            const auto artifact = runtime.execute_with_native_kernel_bridge(
+                *make_example14_bridge(manifest_path.value_or(default_example14_manifest_path())),
+                parse_bool_input(input_value_text.value_or("true")));
+            std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
+            return 0;
+        }
+
+        if (example.has_value() && wants_example15(*example)) {
+            frog::runtime::Slice10ButtonRuntimeCore runtime(
+                contract_path.value_or(example15_contract_path()),
+                wfrog_path.value_or(example15_wfrog_path()));
+            const auto artifact = runtime.execute_with_native_kernel_bridge(
+                *make_example15_bridge(manifest_path.value_or(default_example15_manifest_path())),
                 parse_bool_input(input_value_text.value_or("true")));
             std::cout << frog::json::stringify(artifact, true, 2) << std::endl;
             return 0;

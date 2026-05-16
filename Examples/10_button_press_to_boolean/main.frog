@@ -2,8 +2,8 @@
   "spec_version": "0.1",
   "metadata": {
     "name": "10_button_press_to_boolean",
-    "summary": "Button command press to Boolean indicator roundtrip with .frog-owned Button and Boolean widget instances and Default SVG realization assets.",
-    "description": "Reads the pressed state from one .frog front-panel Button command control, exposes that event-derived bool through the public input surface, copies it to one public output, and publishes it to one Boolean indicator. This example intentionally validates the Button widget and its Default Button SVG realization, not the rectangular Boolean value-control realization from Example 06. The .frog source owns the widget instances, layout, bindings, initial values, labels, mechanical-action posture, and per-instance appearance. The .wfrog package owns Default realization references, host requirements, and SVG asset references consumed by the C++, Python, and Rust reference runtimes.",
+    "summary": "Button switch-until-released action to Boolean indicator roundtrip with .frog-owned Button and Boolean widget instances and Default SVG realization assets.",
+    "description": "Reads the switch_until_released state from one .frog front-panel Button command control, exposes that event-derived bool through the public input surface, copies it to one public output, and publishes it to one Boolean indicator. This example intentionally validates the Button widget and its Default Button SVG realization, not the rectangular Boolean value-control realization from Example 06. The .frog source owns the widget instances, layout, bindings, initial values, labels, mechanical-action posture, and per-instance appearance. The .wfrog package owns Default realization references, host requirements, and SVG asset references consumed by the C++, Python, and Rust reference runtimes.",
     "author": "Graiphic",
     "program_version": "0.1.0",
     "tags": [
@@ -129,11 +129,11 @@
           "style.frame.border_color": "transparent",
           "style.frame.border_width": "0px",
           "style.face.fill_color.false": "#e2e8f0",
-          "style.face.fill_color.true": "#e2e8f0",
-          "style.face.fill_color.hover_false": "#dbeafe",
+          "style.face.fill_color.true": "#cbd5e1",
+          "style.face.fill_color.hover_false": "#f1f5f9",
           "style.face.fill_color.hover_true": "#dbeafe",
-          "style.face.fill_color.pressed_false": "#bfdbfe",
-          "style.face.fill_color.pressed_true": "#bfdbfe",
+          "style.face.fill_color.pressed_false": "#e2e8f0",
+          "style.face.fill_color.pressed_true": "#cbd5e1",
           "style.face.border_color.false": "#334155",
           "style.face.border_color.true": "#334155",
           "style.face.border_width": "1px",
@@ -153,7 +153,10 @@
           "style.focus_ring.visible": true,
           "style.focus_ring.color": "#2563eb",
           "style.focus_ring.width": "3px",
-          "style.pressed.inset": "2px",
+          "style.pressed.inset": "0px",
+          "style.pressed.apply_when_value_true": true,
+          "style.pressed.apply_while_active": false,
+          "style.hover.apply_when_value_false_only": false,
           "style.transition.duration_ms": 120,
           "style.transition.timing": "ease-out",
           "interaction.enabled": true,
@@ -228,7 +231,7 @@
       }
     ],
     "panel_id": "main_panel",
-    "title": "Button Press to Boolean",
+    "title": "Button Switch Until Released",
     "class_ref": "frog.widgets.panel",
     "host_binding_ref": "reference_host_default"
   }

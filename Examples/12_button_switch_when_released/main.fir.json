@@ -70,7 +70,7 @@
         "This FIR is a bounded Button widget pilot and remains downstream from canonical source.",
         "Only the switch_when_released Button mechanical action is accepted by this example.",
         "The Button visual grammar is provided by the Default Button SVG realization package; this FIR does not own SVG geometry.",
-        "This example starts at the C++ reference runtime level before Python and Rust parity."
+        "This example is validated across the C++, Python, and Rust reference runtime source surfaces."
       ]
     }
   ]

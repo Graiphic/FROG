@@ -21,7 +21,8 @@
   "headless": {
     "trigger_pressed": true,
     "expected_pressed": true,
-    "expected_button_visual_value_after_run": false
+    "expected_button_visual_value_after_run": true,
+    "expected_button_visual_value_after_release": false
   },
   "cases": [
     {

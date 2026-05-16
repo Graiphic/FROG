@@ -13,7 +13,7 @@
     "unit_id": "main"
   },
   "lowering_intent": {
-    "summary": "make one bounded Button switch_when_released value example consumable by C++ reference runtime UI-binding checks",
+    "summary": "make one bounded Button switch_when_released value example consumable by C++/Python/Rust reference runtime UI-binding checks",
     "backend_family_target": "reference_host_runtime_ui_binding",
     "capability_targets": [
       "cpp_contract_executor",

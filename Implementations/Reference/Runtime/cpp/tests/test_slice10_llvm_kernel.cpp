@@ -69,8 +69,10 @@ void test_runtime_uses_llvm_button_kernel_bridge() {
 
     artifact = runtime.execute_with_native_kernel_bridge(*make_bridge(), true);
     assert(artifact.as_object().at("execution_summary").as_object().at("trigger_pressed").as_bool());
+    assert(artifact.as_object().at("execution_summary").as_object().at("program_read_performed").as_bool());
+    assert(artifact.as_object().at("execution_summary").as_object().at("program_read_value").as_bool());
     assert(artifact.as_object().at("outputs").as_object().at("public").as_object().at("pressed").as_bool());
-    assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
+    assert(artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
     assert(artifact.as_object().at("outputs").as_object().at("ui").as_object().at("pressed_indicator").as_bool());
 }
 
@@ -83,7 +85,7 @@ void test_browser_ui_runtime_uses_llvm_button_kernel_bridge() {
     assert_contains(html, "data-execution-path='native_kernel_bridge'");
     assert_contains(html, "data-runtime-language='cpp'");
     assert_contains(html, "data-compiler-backend='llvm'");
-    assert_contains(html, "data-frog-visual-state='false'");
+    assert_contains(html, "data-frog-visual-state='true'");
     assert_contains(html, "Example 10");
     assert_contains(html, "C++ reference runtime");
     assert_contains(html, "native kernel bridge");

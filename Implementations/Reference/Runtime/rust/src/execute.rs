@@ -447,6 +447,9 @@ fn execute_boolean_case(contract: &Value, unit: &Map<String, Value>, case_value:
                 "style.focus_ring.color",
                 "style.focus_ring.width",
                 "style.pressed.inset",
+                "style.pressed.apply_when_value_true",
+                "style.pressed.apply_while_active",
+                "style.hover.apply_when_value_false_only",
                 "style.transition.duration_ms",
                 "style.transition.timing",
             ] {

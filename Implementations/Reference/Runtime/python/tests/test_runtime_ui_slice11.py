@@ -33,13 +33,13 @@ def test_python_example11_headless_button_switch_when_pressed() -> None:
     assert artifact["outputs"]["ui"]["trigger_button"] is True
     assert artifact["outputs"]["ui"]["switched_indicator"] is True
 
-    artifact = runtime.execute(None)
+    artifact = runtime.execute(False)
     assert artifact["execution_summary"]["trigger_pressed"] is False
     assert artifact["outputs"]["public"]["switched"] is True
     assert artifact["outputs"]["ui"]["trigger_button"] is True
     assert artifact["outputs"]["ui"]["switched_indicator"] is True
 
-    artifact = runtime.execute(False)
+    artifact = runtime.execute(True)
     assert artifact["execution_summary"]["trigger_pressed"] is True
     assert artifact["outputs"]["public"]["switched"] is False
     assert artifact["outputs"]["ui"]["trigger_button"] is False
@@ -78,14 +78,22 @@ def test_python_example11_browser_ui_consumes_default_svg_and_source_styles() ->
     assert "data-frog-asset-consumed='true'" in html
     assert "data-frog-visual-law='wfrog-realization-state-map'" in html
     assert "data-frog-mechanical-action='switch_when_pressed'" in html
+    assert "data-frog-pressed-applies-when-value-true='true'" in html
+    assert "data-frog-pressed-applies-while-active='false'" in html
+    assert "data-frog-hover-applies-when-value-false-only='false'" in html
     assert "data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='trigger_value'" in html
     assert "name='trigger_value' value='true'" in html
+    assert "--frog-button-face-fill:#e2e8f0;" in html
+    assert "--frog-button-face-hover-fill:#f1f5f9;" in html
+    assert "--frog-button-face-pressed-fill:#e2e8f0;" in html
     assert "--frog-button-face-stroke-width:1px;" in html
+    assert "--frog-button-pressed-inset:0px;" in html
     assert "--frog-button-state-text-font-weight:400;" in html
     assert "--boolean-text-font-weight:400;" in html
     assert ".boolean-indicator[data-class-ref='frog.widgets.boolean_indicator']" in html
-    assert 'mechanicalAction === "switch_when_pressed"' in html
-    assert 'setPressed(!(buttonWidget.dataset.currentValue === "true"));' in html
+    assert 'mechanicalAction !== "switch_when_pressed"' in html
+    assert 'publishEvent("press")' in html
+    assert 'publishEvent("release")' in html
     assert "fetch(\"/event\"" in html
     assert "pointerdown" in html
     assert ">OFF</span>" in html
@@ -113,7 +121,7 @@ def test_python_example11_event_endpoint_toggles_stored_value() -> None:
     httpd, thread = runtime.serve_in_thread()
     host, port = httpd.server_address
     try:
-        body = urllib.parse.urlencode({"trigger_value": "true"}).encode("utf-8")
+        body = urllib.parse.urlencode({"frog_event": "press", "trigger_value": "false"}).encode("utf-8")
         request = urllib.request.Request(
             f"http://{host}:{port}/event",
             data=body,
@@ -126,7 +134,7 @@ def test_python_example11_event_endpoint_toggles_stored_value() -> None:
         assert artifact["outputs"]["ui"]["trigger_button"] is True
         assert artifact["outputs"]["ui"]["switched_indicator"] is True
 
-        body = urllib.parse.urlencode({"trigger_value": "false"}).encode("utf-8")
+        body = urllib.parse.urlencode({"frog_event": "press", "trigger_value": "true"}).encode("utf-8")
         request = urllib.request.Request(
             f"http://{host}:{port}/event",
             data=body,

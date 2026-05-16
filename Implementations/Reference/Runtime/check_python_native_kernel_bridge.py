@@ -20,6 +20,10 @@ EXAMPLE08_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/08_enum_val
 EXAMPLE09_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/09_path_value_roundtrip/native_kernel_manifest.json"
 EXAMPLE10_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/10_button_press_to_boolean/native_kernel_manifest.json"
 EXAMPLE11_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/native_kernel_manifest.json"
+EXAMPLE12_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/12_button_switch_when_released/native_kernel_manifest.json"
+EXAMPLE13_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/13_button_latch_when_pressed/native_kernel_manifest.json"
+EXAMPLE14_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/14_button_latch_when_released/native_kernel_manifest.json"
+EXAMPLE15_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/15_button_latch_until_released/native_kernel_manifest.json"
 
 
 def run(command: list[str]) -> subprocess.CompletedProcess[str]:
@@ -63,6 +67,22 @@ def main() -> int:
         library11 = build_native_kernel_library(
             manifest_path=EXAMPLE11_MANIFEST,
             output_path=BUILD_DIR / f"example11_kernel{shared_library_suffix()}",
+        )
+        library12 = build_native_kernel_library(
+            manifest_path=EXAMPLE12_MANIFEST,
+            output_path=BUILD_DIR / f"example12_kernel{shared_library_suffix()}",
+        )
+        library13 = build_native_kernel_library(
+            manifest_path=EXAMPLE13_MANIFEST,
+            output_path=BUILD_DIR / f"example13_kernel{shared_library_suffix()}",
+        )
+        library14 = build_native_kernel_library(
+            manifest_path=EXAMPLE14_MANIFEST,
+            output_path=BUILD_DIR / f"example14_kernel{shared_library_suffix()}",
+        )
+        library15 = build_native_kernel_library(
+            manifest_path=EXAMPLE15_MANIFEST,
+            output_path=BUILD_DIR / f"example15_kernel{shared_library_suffix()}",
         )
 
         result05 = run([
@@ -157,7 +177,7 @@ def main() -> int:
         ])
         artifact10 = json.loads(result10.stdout)
         assert artifact10["outputs"]["public"]["pressed"] is True
-        assert artifact10["outputs"]["ui"]["trigger_button"] is False
+        assert artifact10["outputs"]["ui"]["trigger_button"] is True
         assert artifact10["outputs"]["ui"]["pressed_indicator"] is True
 
         result11 = run([
@@ -176,6 +196,97 @@ def main() -> int:
         assert artifact11["outputs"]["public"]["switched"] is True
         assert artifact11["outputs"]["ui"]["trigger_button"] is True
         assert artifact11["outputs"]["ui"]["switched_indicator"] is True
+
+        result12 = run([
+            sys.executable,
+            "Implementations/Reference/Runtime/python/cli.py",
+            "run",
+            "true",
+            "--example",
+            "12",
+            "--native-kernel-manifest",
+            str(EXAMPLE12_MANIFEST),
+            "--native-kernel-library",
+            str(library12),
+        ])
+        artifact12 = json.loads(result12.stdout)
+        assert artifact12["outputs"]["public"]["switched"] is False
+        assert artifact12["outputs"]["ui"]["trigger_button"] is False
+        assert artifact12["outputs"]["ui"]["switched_indicator"] is False
+
+        result12_release = run([
+            sys.executable,
+            "Implementations/Reference/Runtime/python/cli.py",
+            "run",
+            "false",
+            "--example",
+            "12",
+            "--native-kernel-manifest",
+            str(EXAMPLE12_MANIFEST),
+            "--native-kernel-library",
+            str(library12),
+        ])
+        artifact12_release = json.loads(result12_release.stdout)
+        assert artifact12_release["outputs"]["public"]["switched"] is True
+        assert artifact12_release["outputs"]["ui"]["trigger_button"] is True
+        assert artifact12_release["outputs"]["ui"]["switched_indicator"] is True
+
+        result13 = run([
+            sys.executable,
+            "Implementations/Reference/Runtime/python/cli.py",
+            "run",
+            "true",
+            "--example",
+            "13",
+            "--native-kernel-manifest",
+            str(EXAMPLE13_MANIFEST),
+            "--native-kernel-library",
+            str(library13),
+        ])
+        artifact13 = json.loads(result13.stdout)
+        assert artifact13["outputs"]["public"]["latched"] is True
+        assert artifact13["outputs"]["ui"]["trigger_button"] is False
+        assert artifact13["outputs"]["ui"]["latched_indicator"] is True
+        assert artifact13["execution_summary"]["button_stored_value"] is False
+        assert artifact13["execution_summary"]["program_read_value"] is True
+
+        result14 = run([
+            sys.executable,
+            "Implementations/Reference/Runtime/python/cli.py",
+            "run",
+            "false",
+            "--example",
+            "14",
+            "--native-kernel-manifest",
+            str(EXAMPLE14_MANIFEST),
+            "--native-kernel-library",
+            str(library14),
+        ])
+        artifact14 = json.loads(result14.stdout)
+        assert artifact14["outputs"]["public"]["latched"] is True
+        assert artifact14["outputs"]["ui"]["trigger_button"] is False
+        assert artifact14["outputs"]["ui"]["latched_indicator"] is True
+        assert artifact14["execution_summary"]["button_stored_value"] is False
+        assert artifact14["execution_summary"]["program_read_value"] is True
+
+        result15 = run([
+            sys.executable,
+            "Implementations/Reference/Runtime/python/cli.py",
+            "run",
+            "true",
+            "--example",
+            "15",
+            "--native-kernel-manifest",
+            str(EXAMPLE15_MANIFEST),
+            "--native-kernel-library",
+            str(library15),
+        ])
+        artifact15 = json.loads(result15.stdout)
+        assert artifact15["outputs"]["public"]["latched"] is True
+        assert artifact15["outputs"]["ui"]["trigger_button"] is True
+        assert artifact15["outputs"]["ui"]["latched_indicator"] is True
+        assert artifact15["execution_summary"]["button_stored_value"] is True
+        assert artifact15["execution_summary"]["button_physical_pressed"] is True
 
         print("Python dynamic native kernel bridge check: ok")
         return 0

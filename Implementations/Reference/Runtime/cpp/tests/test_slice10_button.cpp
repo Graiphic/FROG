@@ -117,16 +117,31 @@ void test_button_runtime_core_consumes_frog_instance_and_wfrog_assets() {
 void test_headless_button_roundtrip() {
     frog::runtime::Slice10ButtonRuntimeCore runtime(contract_path(), wfrog_path());
 
-    auto artifact = runtime.execute(false);
+    auto artifact = runtime.execution_artifact();
     assert(!artifact.as_object().at("outputs").as_object().at("public").as_object().at("pressed").as_bool());
     assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
     assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("pressed_indicator").as_bool());
 
-    artifact = runtime.execute(true);
+    artifact = runtime.press_control();
+    assert(artifact.as_object().at("execution_summary").as_object().at("button_event").as_string() == "press");
     assert(artifact.as_object().at("execution_summary").as_object().at("trigger_pressed").as_bool());
+    assert(artifact.as_object().at("execution_summary").as_object().at("button_stored_value").as_bool());
     assert(artifact.as_object().at("outputs").as_object().at("public").as_object().at("pressed").as_bool());
-    assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
+    assert(artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
     assert(artifact.as_object().at("outputs").as_object().at("ui").as_object().at("pressed_indicator").as_bool());
+
+    artifact = runtime.read_program_value();
+    assert(artifact.as_object().at("execution_summary").as_object().at("program_read_performed").as_bool());
+    assert(artifact.as_object().at("execution_summary").as_object().at("program_read_value").as_bool());
+    assert(artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
+
+    artifact = runtime.release_control();
+    assert(artifact.as_object().at("execution_summary").as_object().at("button_event").as_string() == "release");
+    assert(!artifact.as_object().at("execution_summary").as_object().at("button_stored_value").as_bool());
+    assert(!artifact.as_object().at("outputs").as_object().at("public").as_object().at("pressed").as_bool());
+    assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("trigger_button").as_bool());
+    assert(!artifact.as_object().at("outputs").as_object().at("ui").as_object().at("pressed_indicator").as_bool());
+
     const auto& widgets = artifact.as_object().at("ui_runtime").as_object().at("widgets").as_array();
     bool saw_button_event = false;
     for (const auto& widget_value : widgets) {
@@ -134,7 +149,7 @@ void test_headless_button_roundtrip() {
         if (widget.at("widget_id").as_string() == "trigger_button") {
             const auto& runtime_fields = widget.at("runtime").as_object();
             assert(!runtime_fields.at("value").as_bool());
-            assert(runtime_fields.at("event.pressed").as_bool());
+            assert(!runtime_fields.at("event.pressed").as_bool());
             saw_button_event = true;
         }
     }
@@ -145,7 +160,7 @@ void test_button_browser_ui_surface() {
     frog::runtime::ButtonBrowserUiRuntime runtime(contract_path(), wfrog_path());
     std::string html = runtime.render_html();
 
-    assert_contains(html, "Button Press to Boolean");
+    assert_contains(html, "Button Switch Until Released");
     assert_contains(html, "class='front-panel'");
     assert_contains(html, "style='width:420px;height:150px;'");
     assert_contains(html, "data-panel-id='main_panel'");
@@ -170,9 +185,13 @@ void test_button_browser_ui_surface() {
     assert_contains(html, "data-realization-variant='rectangular'");
     assert_contains(html, "data-frog-visual-state='false'");
     assert_contains(html, "data-frog-mechanical-action='switch_until_released'");
+    assert_contains(html, "data-frog-physical-pressed='false'");
     assert_contains(html, "data-frog-hover-state='hover_false'");
     assert_contains(html, "data-frog-pressed-state='pressed_false'");
     assert_contains(html, "data-frog-transition-state='transition_false_to_true'");
+    assert_contains(html, "data-frog-pressed-applies-when-value-true='true'");
+    assert_contains(html, "data-frog-pressed-applies-while-active='false'");
+    assert_contains(html, "data-frog-hover-applies-when-value-false-only='false'");
     assert_contains(html, "data-frog-state-text-false='OFF'");
     assert_contains(html, "data-frog-state-text-true='ON'");
     assert_contains(html, "data-frog-part='caption' data-svg-anchor='caption.anchor'");
@@ -187,8 +206,8 @@ void test_button_browser_ui_surface() {
     assert_contains(html, "data-frog-text-false='FALSE'");
     assert_contains(html, "data-frog-text-true='TRUE'");
     assert_contains(html, "--frog-button-face-fill:#e2e8f0;");
-    assert_contains(html, "--frog-button-face-hover-fill:#dbeafe;");
-    assert_contains(html, "--frog-button-face-pressed-fill:#bfdbfe;");
+    assert_contains(html, "--frog-button-face-hover-fill:#f1f5f9;");
+    assert_contains(html, "--frog-button-face-pressed-fill:#e2e8f0;");
     assert_contains(html, "--frog-button-face-stroke:#334155;");
     assert_contains(html, "--frog-button-face-stroke-width:1px;");
     assert_contains(html, "--frog-button-state-face-fill:transparent;");
@@ -197,7 +216,7 @@ void test_button_browser_ui_surface() {
     assert_contains(html, "--frog-button-state-face-stroke-width:0px;");
     assert_contains(html, "--frog-button-focus-color:#2563eb;");
     assert_contains(html, "--frog-button-focus-width:3px;");
-    assert_contains(html, "--frog-button-pressed-inset:2px;");
+    assert_contains(html, "--frog-button-pressed-inset:0px;");
     assert_contains(html, "--frog-button-caption-font-size:18px;");
     assert_contains(html, "--frog-button-caption-font-weight:600;");
     assert_contains(html, "--frog-button-caption-font-family:system-ui, Segoe UI, Arial, sans-serif;");
@@ -211,21 +230,28 @@ void test_button_browser_ui_surface() {
     assert_contains(html, "data-frog-part='state_text' data-svg-anchor='state_text.center' style='left:50.00%;top:62.50%;'");
     assert_contains(html, "font-size:var(--boolean-caption-font-size)");
     assert_contains(html, "border:var(--boolean-inner-border-width) solid var(--boolean-inner-border)");
-    assert_contains(html, ".button-widget:has(.button-press-overlay:hover) .button-skin [data-frog-part='face']");
-    assert_contains(html, ".button-widget:has(.button-press-overlay:active) .button-skin [data-frog-part='state_face']");
+    assert_contains(html, ".button-widget[data-frog-hover-applies-when-value-false-only='false']:has(.button-press-overlay:hover)");
+    assert_contains(html, ".button-widget[data-frog-pressed-applies-while-active='true']:has(.button-press-overlay:active)");
     assert_contains(html, "fetch(\"/event\"");
     assert_contains(html, "pointerdown");
     assert_contains(html, "pointerup");
-    assert_contains(html, "mousedown");
-    assert_contains(html, "touchstart");
+    assert_contains(html, "publishEvent(\"press\")");
+    assert_contains(html, "publishEvent(\"release\")");
+    assert_contains(html, "publishEvent(\"read\")");
+    assert_contains(html, "program-read-action");
+    assert_contains(html, "Switch until released");
     assert_contains(html, "buttonWidget.querySelector(\".button-state-overlay[data-frog-part='state_text']\")");
     assert_contains(html, "buttonStateText.textContent = buttonProperty(\"frogStateText\", value);");
-    assert_contains(html, "mechanicalAction !== \"switch_until_released\" && mechanicalAction !== \"switch_when_pressed\"");
+    assert_contains(html, "mechanicalAction !== \"switch_until_released\"");
+    assert_contains(html, "mechanicalAction !== \"switch_when_pressed\"");
+    assert_contains(html, "mechanicalAction !== \"switch_when_released\"");
+    assert_contains(html, "mechanicalAction !== \"latch_when_pressed\"");
+    assert_contains(html, "mechanicalAction !== \"latch_when_released\"");
+    assert_contains(html, "mechanicalAction !== \"latch_until_released\"");
     assert_contains(html, ".boolean-indicator[data-class-ref='frog.widgets.boolean_indicator']");
     assert_not_contains(html, "[data-widget-id='pressed_indicator'];");
     assert_not_contains(html, "font-size:14px");
     assert_not_contains(html, "top:49px");
-    assert_contains(html, "setPressed(false)");
     assert_contains(html, ">OFF</span>");
     assert_contains(html, "aria-readonly='true'");
     assert_contains(html, "/state.json");
@@ -236,21 +262,22 @@ void test_button_browser_ui_surface() {
     assert_not_contains(html, "Current runtime snapshot");
     assert_not_contains(html, "<pre>");
 
-    runtime.run_once(true);
+    runtime.core.press_control();
     html = runtime.render_html();
     assert_contains(html, "data-frog-visual-state='true'");
+    assert_contains(html, "data-frog-physical-pressed='true'");
     assert_contains(html, "data-frog-hover-state='hover_true'");
     assert_contains(html, "data-frog-pressed-state='pressed_true'");
-    assert_contains(html, "data-frog-transition-state='transition_false_to_true'");
-    assert_contains(html, "aria-pressed='false'");
-    assert_contains(html, "--frog-button-face-fill:#e2e8f0;");
+    assert_contains(html, "data-frog-transition-state='transition_true_to_false'");
+    assert_contains(html, "aria-pressed='true'");
+    assert_contains(html, "--frog-button-face-fill:#cbd5e1;");
     assert_contains(html, "--frog-button-face-hover-fill:#dbeafe;");
-    assert_contains(html, "--frog-button-face-pressed-fill:#bfdbfe;");
+    assert_contains(html, "--frog-button-face-pressed-fill:#cbd5e1;");
     assert_contains(html, "--frog-button-face-stroke:#334155;");
     assert_contains(html, "--frog-button-state-face-fill:transparent;");
     assert_contains(html, "--frog-button-state-face-hover-fill:transparent;");
     assert_contains(html, "--frog-button-state-face-pressed-fill:transparent;");
-    assert_contains(html, ">OFF</span>");
+    assert_contains(html, ">ON</span>");
     assert_contains(html, ">TRUE</span>");
 }
 

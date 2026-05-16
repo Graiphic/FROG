@@ -175,7 +175,11 @@ public:
 
     void set_control_pressed(bool value);
     bool control_pressed() const;
+    frog::json::Value press_control();
+    frog::json::Value release_control();
+    frog::json::Value read_program_value();
     frog::json::Value execute(std::optional<bool> pressed_override = std::nullopt);
+    frog::json::Value read_program_value_with_native_kernel_bridge(const NativeBoolKernelBridge& bridge);
     frog::json::Value execute_with_native_kernel_bridge(
         const NativeBoolKernelBridge& bridge,
         std::optional<bool> pressed_override = std::nullopt);
@@ -193,8 +197,13 @@ public:
     std::string indicator_widget_id;
     std::string public_input_id;
     std::string public_output_id;
+    std::string last_button_event = "initial";
+    bool physical_pressed = false;
     bool last_trigger_pressed = false;
     bool last_result = false;
+    bool last_program_read_performed = false;
+    bool last_program_read_value = false;
+    bool latch_until_read_since_activation = false;
 
 private:
     ContractUnit load_and_validate() const;

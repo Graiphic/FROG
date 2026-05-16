@@ -24,6 +24,9 @@ CASES = [
     ("10", "Examples/10_button_press_to_boolean/main.lowering.json", "Implementations/Reference/LLVM/examples/10_button_press_to_boolean/module.ll"),
     ("11", "Examples/11_button_switch_when_pressed/main.lowering.json", "Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/module.ll"),
     ("12", "Examples/12_button_switch_when_released/main.lowering.json", "Implementations/Reference/LLVM/examples/12_button_switch_when_released/module.ll"),
+    ("13", "Examples/13_button_latch_when_pressed/main.lowering.json", "Implementations/Reference/LLVM/examples/13_button_latch_when_pressed/module.ll"),
+    ("14", "Examples/14_button_latch_when_released/main.lowering.json", "Implementations/Reference/LLVM/examples/14_button_latch_when_released/module.ll"),
+    ("15", "Examples/15_button_latch_until_released/main.lowering.json", "Implementations/Reference/LLVM/examples/15_button_latch_until_released/module.ll"),
 ]
 
 

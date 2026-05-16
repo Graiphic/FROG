@@ -99,6 +99,8 @@ public:
         std::shared_ptr<const NativeBoolKernelBridge> native_kernel_bridge = nullptr);
 
     frog::json::Value run_once(bool trigger_pressed);
+    frog::json::Value apply_event(const std::string& event_name);
+    frog::json::Value read_once();
     std::string render_html() const;
     void serve(const std::string& host = "127.0.0.1", std::uint16_t port = 0, bool open_browser = true);
 

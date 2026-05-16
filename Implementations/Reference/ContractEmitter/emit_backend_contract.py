@@ -20,6 +20,9 @@ UI_PACKAGE_BY_EXAMPLE = {
     "10_button_press_to_boolean": "button_panel.wfrog",
     "11_button_switch_when_pressed": "button_panel.wfrog",
     "12_button_switch_when_released": "button_panel.wfrog",
+    "13_button_latch_when_pressed": "button_panel.wfrog",
+    "14_button_latch_when_released": "button_panel.wfrog",
+    "15_button_latch_until_released": "button_panel.wfrog",
 }
 
 SCALAR_COPY_CONTRACT_SPECS: dict[str, dict[str, Any]] = {
@@ -112,6 +115,57 @@ SCALAR_COPY_CONTRACT_SPECS: dict[str, dict[str, Any]] = {
         "widgets": [
             ("trigger_button", "frog.widgets.button", "bool", "control", {"mode": "widget_value", "public_input_id": "trigger_value"}),
             ("switched_indicator", "frog.widgets.boolean_indicator", "bool", "indicator", {"mode": "widget_value", "public_output_id": "switched"}),
+        ],
+        "kernel_keys": ["operation", "dst", "type", "src", "final_publication"],
+    },
+    "button_latch_when_pressed_kernel_with_ui_bindings": {
+        "contract_kind": "button_latch_when_pressed_ui_unit",
+        "behavior_key": "boolean_behavior",
+        "behavior": {
+            "value_domain": "bool",
+            "button_value": "trigger_button.value",
+            "mechanical_action": "latch_when_pressed",
+            "latch_reset_policy": "reset_on_natural_value_consumption",
+        },
+        "input_binding_origin": "widget.trigger_button.value",
+        "output_binding_target": "interface.latched",
+        "widgets": [
+            ("trigger_button", "frog.widgets.button", "bool", "control", {"mode": "widget_value", "public_input_id": "trigger_value"}),
+            ("latched_indicator", "frog.widgets.boolean_indicator", "bool", "indicator", {"mode": "widget_value", "public_output_id": "latched"}),
+        ],
+        "kernel_keys": ["operation", "dst", "type", "src", "final_publication"],
+    },
+    "button_latch_when_released_kernel_with_ui_bindings": {
+        "contract_kind": "button_latch_when_released_ui_unit",
+        "behavior_key": "boolean_behavior",
+        "behavior": {
+            "value_domain": "bool",
+            "button_value": "trigger_button.value",
+            "mechanical_action": "latch_when_released",
+            "latch_reset_policy": "reset_on_natural_value_consumption",
+        },
+        "input_binding_origin": "widget.trigger_button.value",
+        "output_binding_target": "interface.latched",
+        "widgets": [
+            ("trigger_button", "frog.widgets.button", "bool", "control", {"mode": "widget_value", "public_input_id": "trigger_value"}),
+            ("latched_indicator", "frog.widgets.boolean_indicator", "bool", "indicator", {"mode": "widget_value", "public_output_id": "latched"}),
+        ],
+        "kernel_keys": ["operation", "dst", "type", "src", "final_publication"],
+    },
+    "button_latch_until_released_kernel_with_ui_bindings": {
+        "contract_kind": "button_latch_until_released_ui_unit",
+        "behavior_key": "boolean_behavior",
+        "behavior": {
+            "value_domain": "bool",
+            "button_value": "trigger_button.value",
+            "mechanical_action": "latch_until_released",
+            "latch_reset_policy": "reset_on_natural_value_consumption",
+        },
+        "input_binding_origin": "widget.trigger_button.value",
+        "output_binding_target": "interface.latched",
+        "widgets": [
+            ("trigger_button", "frog.widgets.button", "bool", "control", {"mode": "widget_value", "public_input_id": "trigger_value"}),
+            ("latched_indicator", "frog.widgets.boolean_indicator", "bool", "indicator", {"mode": "widget_value", "public_output_id": "latched"}),
         ],
         "kernel_keys": ["operation", "dst", "type", "src", "final_publication"],
     },

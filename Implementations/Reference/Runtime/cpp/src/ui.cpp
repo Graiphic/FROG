@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "json.hpp"
 
@@ -1704,8 +1705,9 @@ std::string render_button_widget(const WidgetState& widget) {
     const auto width = layout_i64(widget.layout, "width", 220);
     const auto height = layout_i64(widget.layout, "height", 140);
     const auto mechanical_action = property_string(widget.properties, "behavior.mechanical_action", "");
+    const bool physical_pressed = property_bool(widget.properties, "pressed", false);
     const bool value = mechanical_action == "switch_until_released"
-        ? property_bool(widget.properties, "pressed", property_bool(widget.properties, "value", false))
+        ? physical_pressed
         : property_bool(widget.properties, "value", property_bool(widget.properties, "pressed", false));
     const std::string visual_state = value ? "true" : "false";
     const std::string hover_state = value ? "hover_true" : "hover_false";
@@ -1721,17 +1723,35 @@ std::string render_button_widget(const WidgetState& widget) {
     const auto frame_fill = safe_css_color(property_string(widget.properties, "style.frame.fill_color", "transparent"), "transparent");
     const auto frame_stroke = safe_css_color(property_string(widget.properties, "style.frame.border_color", "transparent"), "transparent");
     const auto frame_width = safe_css_length(property_string(widget.properties, "style.frame.border_width", "0px"), "0px");
-    const auto face_fill = safe_css_color(state_property(widget.properties, "style.face.fill_color", visual_state, "#e2e8f0"), "#e2e8f0");
-    const auto face_hover_fill = safe_css_color(state_property(widget.properties, "style.face.fill_color", hover_state, face_fill), face_fill);
-    const auto face_pressed_fill = safe_css_color(state_property(widget.properties, "style.face.fill_color", pressed_state, face_fill), face_fill);
+    const auto face_fill_false = safe_css_color(state_property(widget.properties, "style.face.fill_color", "false", "#e2e8f0"), "#e2e8f0");
+    const auto face_fill_true = safe_css_color(state_property(widget.properties, "style.face.fill_color", "true", face_fill_false), face_fill_false);
+    const auto face_fill = value ? face_fill_true : face_fill_false;
+    const auto face_hover_fill_false = safe_css_color(state_property(widget.properties, "style.face.fill_color", "hover_false", face_fill_false), face_fill_false);
+    const auto face_hover_fill_true = safe_css_color(state_property(widget.properties, "style.face.fill_color", "hover_true", face_fill_true), face_fill_true);
+    const auto face_hover_fill = value ? face_hover_fill_true : face_hover_fill_false;
+    const auto face_pressed_fill_false = safe_css_color(state_property(widget.properties, "style.face.fill_color", "pressed_false", face_fill_false), face_fill_false);
+    const auto face_pressed_fill_true = safe_css_color(state_property(widget.properties, "style.face.fill_color", "pressed_true", face_fill_true), face_fill_true);
+    const auto face_pressed_fill = value ? face_pressed_fill_true : face_pressed_fill_false;
     const auto face_stroke = safe_css_color(state_property(widget.properties, "style.face.border_color", visual_state, "#334155"), "#334155");
     const auto face_stroke_width = safe_css_length(property_string(widget.properties, "style.face.border_width", "1px"), "1px");
-    const auto state_face_fill = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", visual_state, "transparent"), "transparent");
-    const auto state_face_hover_fill = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", hover_state, state_face_fill), state_face_fill);
-    const auto state_face_pressed_fill = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", pressed_state, state_face_fill), state_face_fill);
-    const auto state_face_stroke = safe_css_color(state_property(widget.properties, "style.state_face.border_color", visual_state, "transparent"), "transparent");
-    const auto state_face_hover_stroke = safe_css_color(state_property(widget.properties, "style.state_face.border_color", hover_state, state_face_stroke), state_face_stroke);
-    const auto state_face_pressed_stroke = safe_css_color(state_property(widget.properties, "style.state_face.border_color", pressed_state, state_face_stroke), state_face_stroke);
+    const auto state_face_fill_false = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", "false", "transparent"), "transparent");
+    const auto state_face_fill_true = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", "true", state_face_fill_false), state_face_fill_false);
+    const auto state_face_fill = value ? state_face_fill_true : state_face_fill_false;
+    const auto state_face_hover_fill_false = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", "hover_false", state_face_fill_false), state_face_fill_false);
+    const auto state_face_hover_fill_true = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", "hover_true", state_face_fill_true), state_face_fill_true);
+    const auto state_face_hover_fill = value ? state_face_hover_fill_true : state_face_hover_fill_false;
+    const auto state_face_pressed_fill_false = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", "pressed_false", state_face_fill_false), state_face_fill_false);
+    const auto state_face_pressed_fill_true = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", "pressed_true", state_face_fill_true), state_face_fill_true);
+    const auto state_face_pressed_fill = value ? state_face_pressed_fill_true : state_face_pressed_fill_false;
+    const auto state_face_stroke_false = safe_css_color(state_property(widget.properties, "style.state_face.border_color", "false", "transparent"), "transparent");
+    const auto state_face_stroke_true = safe_css_color(state_property(widget.properties, "style.state_face.border_color", "true", state_face_stroke_false), state_face_stroke_false);
+    const auto state_face_stroke = value ? state_face_stroke_true : state_face_stroke_false;
+    const auto state_face_hover_stroke_false = safe_css_color(state_property(widget.properties, "style.state_face.border_color", "hover_false", state_face_stroke_false), state_face_stroke_false);
+    const auto state_face_hover_stroke_true = safe_css_color(state_property(widget.properties, "style.state_face.border_color", "hover_true", state_face_stroke_true), state_face_stroke_true);
+    const auto state_face_hover_stroke = value ? state_face_hover_stroke_true : state_face_hover_stroke_false;
+    const auto state_face_pressed_stroke_false = safe_css_color(state_property(widget.properties, "style.state_face.border_color", "pressed_false", state_face_stroke_false), state_face_stroke_false);
+    const auto state_face_pressed_stroke_true = safe_css_color(state_property(widget.properties, "style.state_face.border_color", "pressed_true", state_face_stroke_true), state_face_stroke_true);
+    const auto state_face_pressed_stroke = value ? state_face_pressed_stroke_true : state_face_pressed_stroke_false;
     const auto state_face_stroke_width = safe_css_length(property_string(widget.properties, "style.state_face.border_width", "0px"), "0px");
     const auto caption_size = safe_css_length(property_string(widget.properties, "caption.style.font_size", "18px"), "18px");
     const auto caption_weight = safe_css_font_weight(property_string(widget.properties, "caption.style.font_weight", "600"), "600");
@@ -1748,9 +1768,16 @@ std::string render_button_widget(const WidgetState& widget) {
         ? safe_css_length(property_string(widget.properties, "style.focus_ring.width", "3px"), "3px")
         : "0px";
     const auto pressed_inset = safe_css_length(property_string(widget.properties, "style.pressed.inset", "2px"), "2px");
+    const bool pressed_applies_when_value_true = property_bool(widget.properties, "style.pressed.apply_when_value_true", false);
+    const bool pressed_applies_while_active = property_bool(widget.properties, "style.pressed.apply_while_active", true);
+    const bool hover_applies_when_value_false_only = property_bool(widget.properties, "style.hover.apply_when_value_false_only", false);
     const auto transition_ms = property_string(widget.properties, "style.transition.duration_ms", "120");
     const auto transition_timing = property_string(widget.properties, "style.transition.timing", "ease-out");
     const bool state_text_visible = property_bool(widget.properties, "state_text.visible", true);
+    int output_pulse_duration_ms = 0;
+    if (const auto source_duration = property_number(widget.properties, "behavior.output_pulse.duration_ms")) {
+        output_pulse_duration_ms = std::clamp(static_cast<int>(*source_duration), 0, 5000);
+    }
 
     std::ostringstream html;
     html << "<div class='frog-widget button-widget button-control'";
@@ -1764,18 +1791,41 @@ std::string render_button_widget(const WidgetState& widget) {
         html << " data-asset-route='" << html_escape(route) << "'";
     }
     html << " data-current-value='" << (value ? "true" : "false") << "'";
+    html << " data-frog-physical-pressed='" << (physical_pressed ? "true" : "false") << "'";
     html << " data-frog-mechanical-action='" << html_escape(mechanical_action) << "'";
+    html << " data-frog-output-pulse-duration-ms='" << output_pulse_duration_ms << "'";
     html << " data-realization-variant='" << html_escape(property_string(widget.properties, "realization.variant", "rectangular")) << "'";
     html << " data-frog-visual-law='wfrog-realization-state-map'";
     html << " data-frog-visual-state='" << html_escape(visual_state) << "'";
     html << " data-frog-hover-state='" << html_escape(hover_state) << "'";
     html << " data-frog-pressed-state='" << html_escape(pressed_state) << "'";
     html << " data-frog-transition-state='" << html_escape(transition_state) << "'";
+    html << " data-frog-pressed-applies-when-value-true='" << (pressed_applies_when_value_true ? "true" : "false") << "'";
+    html << " data-frog-pressed-applies-while-active='" << (pressed_applies_while_active ? "true" : "false") << "'";
+    html << " data-frog-hover-applies-when-value-false-only='" << (hover_applies_when_value_false_only ? "true" : "false") << "'";
     html << " data-frog-state-text-visible='" << (state_text_visible ? "true" : "false") << "'";
     html << " data-frog-state-text-false='" << html_escape(false_state_text) << "'";
     html << " data-frog-state-text-true='" << html_escape(true_state_text) << "'";
     html << " data-frog-state-text-color-false='" << html_escape(false_text_color) << "'";
     html << " data-frog-state-text-color-true='" << html_escape(true_text_color) << "'";
+    html << " data-frog-button-face-fill-false='" << html_escape(face_fill_false) << "'";
+    html << " data-frog-button-face-fill-true='" << html_escape(face_fill_true) << "'";
+    html << " data-frog-button-face-hover-fill-false='" << html_escape(face_hover_fill_false) << "'";
+    html << " data-frog-button-face-hover-fill-true='" << html_escape(face_hover_fill_true) << "'";
+    html << " data-frog-button-face-pressed-fill-false='" << html_escape(face_pressed_fill_false) << "'";
+    html << " data-frog-button-face-pressed-fill-true='" << html_escape(face_pressed_fill_true) << "'";
+    html << " data-frog-button-state-face-fill-false='" << html_escape(state_face_fill_false) << "'";
+    html << " data-frog-button-state-face-fill-true='" << html_escape(state_face_fill_true) << "'";
+    html << " data-frog-button-state-face-hover-fill-false='" << html_escape(state_face_hover_fill_false) << "'";
+    html << " data-frog-button-state-face-hover-fill-true='" << html_escape(state_face_hover_fill_true) << "'";
+    html << " data-frog-button-state-face-pressed-fill-false='" << html_escape(state_face_pressed_fill_false) << "'";
+    html << " data-frog-button-state-face-pressed-fill-true='" << html_escape(state_face_pressed_fill_true) << "'";
+    html << " data-frog-button-state-face-stroke-false='" << html_escape(state_face_stroke_false) << "'";
+    html << " data-frog-button-state-face-stroke-true='" << html_escape(state_face_stroke_true) << "'";
+    html << " data-frog-button-state-face-hover-stroke-false='" << html_escape(state_face_hover_stroke_false) << "'";
+    html << " data-frog-button-state-face-hover-stroke-true='" << html_escape(state_face_hover_stroke_true) << "'";
+    html << " data-frog-button-state-face-pressed-stroke-false='" << html_escape(state_face_pressed_stroke_false) << "'";
+    html << " data-frog-button-state-face-pressed-stroke-true='" << html_escape(state_face_pressed_stroke_true) << "'";
     html << " style='position:absolute;left:" << css_px(x) << ";top:" << css_px(y)
          << ";width:" << css_px(width) << ";height:" << css_px(height) << ";"
          << "--frog-button-frame-fill:" << html_escape(frame_fill) << ";"
@@ -1817,7 +1867,7 @@ std::string render_button_widget(const WidgetState& widget) {
     html << "<button class='button-press-overlay' type='button'";
     html << " name='" << html_escape(input_id) << "' value='true'";
     html << " aria-label='" << html_escape(caption) << "'";
-    html << " aria-pressed='" << (value ? "true" : "false") << "'";
+    html << " aria-pressed='" << (physical_pressed ? "true" : "false") << "'";
     html << " data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='" << html_escape(input_id) << "'";
     html << " data-frog-host-overlay='input' data-frog-align-to-part='face'";
     html << " style='" << button_box_style(geometry.face_x, geometry.face_y, geometry.face_width, geometry.face_height, geometry) << "'>";
@@ -1832,6 +1882,8 @@ std::string button_widget_script() {
   const overlay = document.querySelector(".button-press-overlay[data-frog-part='face'][data-frog-host-overlay='input']");
   const buttonWidget = overlay ? overlay.closest(".button-widget[data-class-ref='frog.widgets.button']") : null;
   const indicator = document.querySelector(".boolean-indicator[data-class-ref='frog.widgets.boolean_indicator']");
+  const readButton = document.querySelector(".program-read-action[data-frog-event='read']");
+  const readStatus = document.querySelector(".program-read-status");
   if (!form || !buttonWidget || !overlay || !indicator) {
     return;
   }
@@ -1840,11 +1892,21 @@ std::string button_widget_script() {
   const stateText = indicator.querySelector("[data-frog-part='state_text']");
   const inputId = overlay.dataset.frogPublicInputId || overlay.name || "";
   const mechanicalAction = buttonWidget.dataset.frogMechanicalAction || "";
-  if (!inputId || (mechanicalAction !== "switch_until_released" && mechanicalAction !== "switch_when_pressed" && mechanicalAction !== "switch_when_released")) {
+  const latchAction = mechanicalAction === "latch_when_pressed" ||
+    mechanicalAction === "latch_when_released" ||
+    mechanicalAction === "latch_until_released";
+  const pulseDurationMs = Math.max(0, Math.min(5000, Number.parseInt(buttonWidget.dataset.frogOutputPulseDurationMs || "0", 10) || 0));
+  if (!inputId || (
+      mechanicalAction !== "switch_until_released" &&
+      mechanicalAction !== "switch_when_pressed" &&
+      mechanicalAction !== "switch_when_released" &&
+      mechanicalAction !== "latch_when_pressed" &&
+      mechanicalAction !== "latch_when_released" &&
+      mechanicalAction !== "latch_until_released")) {
     return;
   }
-  let pressed = buttonWidget.dataset.currentValue === "true";
   let eventQueue = Promise.resolve();
+  let pulseResetTimer = 0;
 
   const buttonProperty = (base, value) => {
     const suffix = value ? "True" : "False";
@@ -1871,9 +1933,56 @@ std::string button_widget_script() {
     }
   };
 
-  const publish = (value) => {
+  const applyButton = (value, physicalPressed) => {
+    overlay.setAttribute("aria-pressed", physicalPressed ? "true" : "false");
+    buttonWidget.dataset.frogPhysicalPressed = physicalPressed ? "true" : "false";
+    buttonWidget.dataset.currentValue = value ? "true" : "false";
+    buttonWidget.dataset.frogVisualState = value ? "true" : "false";
+    buttonWidget.dataset.frogHoverState = value ? "hover_true" : "hover_false";
+    buttonWidget.dataset.frogPressedState = value ? "pressed_true" : "pressed_false";
+    buttonWidget.style.setProperty("--frog-button-face-fill", buttonProperty("frogButtonFaceFill", value));
+    buttonWidget.style.setProperty("--frog-button-face-hover-fill", buttonProperty("frogButtonFaceHoverFill", value));
+    buttonWidget.style.setProperty("--frog-button-face-pressed-fill", buttonProperty("frogButtonFacePressedFill", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-fill", buttonProperty("frogButtonStateFaceFill", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-hover-fill", buttonProperty("frogButtonStateFaceHoverFill", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-pressed-fill", buttonProperty("frogButtonStateFacePressedFill", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-stroke", buttonProperty("frogButtonStateFaceStroke", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-hover-stroke", buttonProperty("frogButtonStateFaceHoverStroke", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-pressed-stroke", buttonProperty("frogButtonStateFacePressedStroke", value));
+    buttonWidget.style.setProperty("--frog-button-state-text-fill", buttonProperty("frogStateTextColor", value));
+    if (buttonStateText) {
+      buttonStateText.textContent = buttonProperty("frogStateText", value);
+      buttonStateText.style.color = buttonProperty("frogStateTextColor", value);
+    }
+  };
+
+  const applyArtifact = (artifact) => {
+    const ui = artifact && artifact.outputs && artifact.outputs.ui ? artifact.outputs.ui : {};
+    const summary = artifact && artifact.execution_summary ? artifact.execution_summary : {};
+    const buttonValue = Boolean(ui[buttonWidget.dataset.widgetId]);
+    const indicatorValue = Boolean(ui[indicator.dataset.widgetId]);
+    const latchPulseVisible = latchAction &&
+      pulseDurationMs > 0 &&
+      summary.program_read_performed &&
+      summary.program_read_value;
+    applyButton(latchPulseVisible ? true : buttonValue, Boolean(summary.button_physical_pressed));
+    applyIndicator(indicatorValue);
+    if (readStatus && summary.program_read_performed) {
+      readStatus.textContent = `Last read: ${summary.program_read_value ? "TRUE" : "FALSE"}`;
+      readStatus.dataset.frogLastRead = summary.program_read_value ? "true" : "false";
+    }
+    const shouldResetLatchPulse = latchPulseVisible &&
+      (mechanicalAction === "latch_when_pressed" || !summary.button_physical_pressed);
+    if (shouldResetLatchPulse) {
+      window.clearTimeout(pulseResetTimer);
+      pulseResetTimer = window.setTimeout(() => publishEvent("read"), pulseDurationMs);
+    }
+  };
+
+  const publishEvent = (eventName) => {
     const body = new URLSearchParams();
-    body.set(inputId, value ? "true" : "false");
+    body.set("frog_event", eventName);
+    body.set(inputId, buttonWidget.dataset.currentValue === "true" ? "true" : "false");
     eventQueue = eventQueue
       .catch(() => {})
       .then(() => fetch("/event", {
@@ -1881,104 +1990,15 @@ std::string button_widget_script() {
         headers: {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"},
         body
       }))
+      .then((response) => response.ok ? response.json() : null)
+      .then((artifact) => {
+        if (artifact) {
+          applyArtifact(artifact);
+        }
+      })
       .catch(() => {});
   };
 
-  const setPressed = (value) => {
-    if (pressed === value) {
-      return;
-    }
-    pressed = value;
-    overlay.setAttribute("aria-pressed", value ? "true" : "false");
-    buttonWidget.dataset.currentValue = value ? "true" : "false";
-    buttonWidget.dataset.frogVisualState = value ? "true" : "false";
-    buttonWidget.dataset.frogPressedState = value ? "pressed_true" : "pressed_false";
-    if (buttonStateText) {
-      buttonStateText.textContent = buttonProperty("frogStateText", value);
-      buttonStateText.style.color = buttonProperty("frogStateTextColor", value);
-    }
-    applyIndicator(value);
-    publish(value);
-  };
-
-  form.addEventListener("submit", (event) => event.preventDefault());
-  overlay.addEventListener("click", (event) => event.preventDefault());
-  if (mechanicalAction === "switch_when_pressed") {
-    const toggle = (event) => {
-      if (event && event.button !== undefined && event.button !== 0) {
-        return;
-      }
-      if (event) {
-        event.preventDefault();
-      }
-      setPressed(!(buttonWidget.dataset.currentValue === "true"));
-    };
-    overlay.addEventListener("pointerdown", toggle);
-    overlay.addEventListener("keydown", (event) => {
-      if ((event.key !== " " && event.key !== "Enter") || event.repeat) {
-        return;
-      }
-      toggle(event);
-    });
-    return;
-  }
-  if (mechanicalAction === "switch_when_released") {
-    let armed = false;
-    const arm = (event) => {
-      if (event && event.button !== undefined && event.button !== 0) {
-        return;
-      }
-      if (event) {
-        event.preventDefault();
-      }
-      armed = true;
-    };
-    const releaseToggle = (event) => {
-      if (!armed) {
-        return;
-      }
-      if (event) {
-        event.preventDefault();
-      }
-      armed = false;
-      setPressed(!(buttonWidget.dataset.currentValue === "true"));
-    };
-    const disarm = (event) => {
-      if (event) {
-        event.preventDefault();
-      }
-      armed = false;
-    };
-    overlay.addEventListener("pointerdown", (event) => {
-      if (overlay.setPointerCapture) {
-        overlay.setPointerCapture(event.pointerId);
-      }
-      arm(event);
-    });
-    overlay.addEventListener("pointerup", releaseToggle);
-    overlay.addEventListener("pointercancel", disarm);
-    overlay.addEventListener("lostpointercapture", disarm);
-    overlay.addEventListener("mousedown", arm);
-    window.addEventListener("mouseup", releaseToggle);
-    overlay.addEventListener("mouseleave", disarm);
-    overlay.addEventListener("touchstart", arm, {passive: false});
-    overlay.addEventListener("touchend", releaseToggle, {passive: false});
-    overlay.addEventListener("touchcancel", disarm, {passive: false});
-    overlay.addEventListener("blur", disarm);
-    overlay.addEventListener("keydown", (event) => {
-      if ((event.key !== " " && event.key !== "Enter") || event.repeat) {
-        return;
-      }
-      arm(event);
-    });
-    overlay.addEventListener("keyup", (event) => {
-      if (event.key !== " " && event.key !== "Enter") {
-        return;
-      }
-      releaseToggle(event);
-    });
-    return;
-  }
   const press = (event) => {
     if (event && event.button !== undefined && event.button !== 0) {
       return;
@@ -1986,47 +2006,75 @@ std::string button_widget_script() {
     if (event) {
       event.preventDefault();
     }
-    setPressed(true);
+    publishEvent("press");
   };
-  overlay.addEventListener("pointerdown", (event) => {
-    if (overlay.setPointerCapture) {
-      overlay.setPointerCapture(event.pointerId);
-    }
-    press(event);
-  });
+
   const release = (event) => {
-    if (!pressed) {
-      return;
-    }
     if (event) {
       event.preventDefault();
     }
-    setPressed(false);
+    publishEvent("release");
   };
-  overlay.addEventListener("pointerup", release);
-  overlay.addEventListener("pointercancel", release);
-  overlay.addEventListener("lostpointercapture", release);
-  overlay.addEventListener("mousedown", press);
-  window.addEventListener("mouseup", release);
-  overlay.addEventListener("mouseleave", release);
-  overlay.addEventListener("touchstart", press, {passive: false});
-  overlay.addEventListener("touchend", release, {passive: false});
-  overlay.addEventListener("touchcancel", release, {passive: false});
-  overlay.addEventListener("blur", release);
-  overlay.addEventListener("keydown", (event) => {
-    if (event.key !== " " && event.key !== "Enter") {
+
+  form.addEventListener("submit", (event) => event.preventDefault());
+  overlay.addEventListener("click", (event) => event.preventDefault());
+
+  let armed = false;
+  const arm = (event) => {
+    armed = true;
+    press(event);
+  };
+  const releaseIfArmed = (event) => {
+    if (!armed) {
       return;
     }
-    event.preventDefault();
-    setPressed(true);
+    armed = false;
+    release(event);
+  };
+  const cancel = (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+    armed = false;
+  };
+
+  if (window.PointerEvent) {
+    overlay.addEventListener("pointerdown", (event) => {
+      if (overlay.setPointerCapture) {
+        overlay.setPointerCapture(event.pointerId);
+      }
+      arm(event);
+    });
+    overlay.addEventListener("pointerup", releaseIfArmed);
+    overlay.addEventListener("pointercancel", cancel);
+    overlay.addEventListener("lostpointercapture", cancel);
+  } else {
+    overlay.addEventListener("mousedown", arm);
+    window.addEventListener("mouseup", releaseIfArmed);
+    overlay.addEventListener("touchstart", arm, {passive: false});
+    overlay.addEventListener("touchend", releaseIfArmed, {passive: false});
+    overlay.addEventListener("touchcancel", cancel, {passive: false});
+  }
+  overlay.addEventListener("blur", cancel);
+  overlay.addEventListener("keydown", (event) => {
+    if ((event.key !== " " && event.key !== "Enter") || event.repeat) {
+      return;
+    }
+    armed = true;
+    press(event);
   });
   overlay.addEventListener("keyup", (event) => {
     if (event.key !== " " && event.key !== "Enter") {
       return;
     }
-    event.preventDefault();
-    setPressed(false);
+    releaseIfArmed(event);
   });
+  if (readButton) {
+    readButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      publishEvent("read");
+    });
+  }
 })();
 </script>)FROGJS";
 }
@@ -3093,6 +3141,147 @@ ButtonBrowserUiRuntime::ButtonBrowserUiRuntime(
     : core(std::move(contract_path), std::move(wfrog_path)),
       native_kernel_bridge(std::move(native_kernel_bridge_)) {}
 
+namespace {
+
+struct ButtonMechanicalDiagramSpec {
+    std::string title;
+    std::vector<std::pair<int, std::string>> events;
+    std::vector<std::pair<int, int>> wave_points;
+    std::string note;
+};
+
+ButtonMechanicalDiagramSpec button_mechanical_diagram_spec(const std::string& action) {
+    constexpr int output_off_y = 252;
+    constexpr int output_on_y = 198;
+    if (action == "switch_when_pressed") {
+        return {
+            "Switch when pressed",
+            {{130, "Press"}, {250, "Release"}, {370, "Press again"}},
+            {{70, output_off_y}, {130, output_off_y}, {130, output_on_y}, {370, output_on_y}, {370, output_off_y}, {450, output_off_y}},
+            "Toggles when pressed. Release has no effect. Program read does not reset the value.",
+        };
+    }
+    if (action == "switch_when_released") {
+        return {
+            "Switch when released",
+            {{130, "Press"}, {250, "Release"}, {370, "Release again"}},
+            {{70, output_off_y}, {250, output_off_y}, {250, output_on_y}, {370, output_on_y}, {370, output_off_y}, {450, output_off_y}},
+            "Toggles when released. Press alone has no effect. Program read does not reset the value.",
+        };
+    }
+    if (action == "switch_until_released") {
+        return {
+            "Switch until released",
+            {{150, "Press"}, {330, "Release"}},
+            {{70, output_off_y}, {150, output_off_y}, {150, output_on_y}, {330, output_on_y}, {330, output_off_y}, {450, output_off_y}},
+            "ON while pressed. OFF when released. Program read does not reset the value.",
+        };
+    }
+    if (action == "latch_when_released") {
+        return {
+            "Latch when released",
+            {{130, "Press"}, {250, "Release"}, {330, "Read"}},
+            {{70, output_off_y}, {250, output_off_y}, {250, output_on_y}, {330, output_on_y}, {330, output_off_y}, {450, output_off_y}},
+            "Release latches TRUE. The program read emits one TRUE pulse, then the stored value resets to FALSE.",
+        };
+    }
+    if (action == "latch_until_released") {
+        return {
+            "Latch until released",
+            {{130, "Press"}, {230, "Read"}, {330, "Release"}},
+            {{70, output_off_y}, {130, output_off_y}, {130, output_on_y}, {330, output_on_y}, {330, output_off_y}, {450, output_off_y}},
+            "TRUE while pressed when read continuously. It resets after release once the program has read it.",
+        };
+    }
+    return {
+        "Latch when pressed",
+        {{130, "Press"}, {210, "Read"}, {330, "Release"}},
+        {{70, output_off_y}, {130, output_off_y}, {130, output_on_y}, {210, output_on_y}, {210, output_off_y}, {450, output_off_y}},
+        "Press latches TRUE. The program read emits one TRUE pulse, then the stored value resets to FALSE.",
+    };
+}
+
+std::vector<std::string> wrap_diagram_note(const std::string& text) {
+    std::vector<std::string> lines;
+    std::istringstream words(text);
+    std::string word;
+    std::string line;
+    while (words >> word) {
+        if (!line.empty() && line.size() + 1 + word.size() > 66) {
+            lines.push_back(line);
+            line.clear();
+        }
+        if (!line.empty()) {
+            line += " ";
+        }
+        line += word;
+    }
+    if (!line.empty()) {
+        lines.push_back(line);
+    }
+    return lines;
+}
+
+std::string render_button_mechanical_action_diagram(const std::string& action) {
+    constexpr int output_label_y = 174;
+    constexpr int output_on_label_y = 207;
+    constexpr int output_off_label_y = 260;
+    constexpr int output_marker_top_y = 192;
+    constexpr int output_marker_bottom_y = 262;
+    constexpr int description_label_y = 294;
+    constexpr int description_first_line_y = 318;
+    const auto spec = button_mechanical_diagram_spec(action);
+    const auto note_lines = wrap_diagram_note(spec.note);
+    std::ostringstream points;
+    for (const auto& point : spec.wave_points) {
+        if (points.tellp() > 0) {
+            points << " ";
+        }
+        points << point.first << "," << point.second;
+    }
+
+    std::ostringstream svg;
+    svg << "<section class='mechanical-diagram-card' aria-label='" << html_escape(spec.title) << " behavior diagram'>";
+    svg << "<svg class='mechanical-diagram' viewBox='0 0 520 360' role='img' aria-labelledby='mechanical-title mechanical-desc'>";
+    svg << "<title id='mechanical-title'>" << html_escape(spec.title) << "</title>";
+    svg << "<desc id='mechanical-desc'>" << html_escape(spec.note) << "</desc>";
+    svg << "<rect x='1' y='1' width='518' height='358' rx='8' fill='#ffffff' stroke='#d1d5db'/>";
+    svg << "<text x='24' y='36' font-size='24' font-weight='700' fill='#111827'>" << html_escape(spec.title) << "</text>";
+    svg << "<text x='24' y='76' font-size='14' fill='#374151'>Events</text>";
+    svg << "<line x1='70' y1='112' x2='455' y2='112' stroke='#111827' stroke-width='2'/>";
+    svg << "<path d='M455 112 l-14 -7 v14 z' fill='#111827'/>";
+    svg << "<text x='430' y='136' font-size='12' fill='#374151'>Time</text>";
+    for (const auto& event : spec.events) {
+        const bool read = event.second == "Read";
+        const bool active = event.second.find("Press") != std::string::npos || read;
+        const char* color = read ? "#15803d" : (active ? "#1d4ed8" : "#111827");
+        svg << "<line x1='" << event.first << "' y1='84' x2='" << event.first << "' y2='112' stroke='" << color << "' stroke-width='2'/>";
+        svg << "<circle cx='" << event.first << "' cy='112' r='5' fill='#ffffff' stroke='" << color << "' stroke-width='2'/>";
+        svg << "<text x='" << event.first << "' y='68' text-anchor='middle' font-size='13' fill='" << color << "'>" << html_escape(event.second) << "</text>";
+    }
+    svg << "<line x1='24' y1='150' x2='496' y2='150' stroke='#e5e7eb'/>";
+    svg << "<text x='24' y='" << output_label_y << "' font-size='14' fill='#374151'>Output</text>";
+    svg << "<text x='24' y='" << output_on_label_y << "' font-size='13' fill='#1d4ed8'>ON</text>";
+    svg << "<text x='24' y='" << output_off_label_y << "' font-size='13' fill='#111827'>OFF</text>";
+    svg << "<polyline points='" << points.str() << "' fill='none' stroke='#111827' stroke-width='3' stroke-linejoin='miter'/>";
+    svg << "<polyline points='" << points.str() << "' fill='none' stroke='#1d4ed8' stroke-width='2' stroke-linejoin='miter' stroke-dasharray='0 1000'/>";
+    for (const auto& event : spec.events) {
+        const bool read = event.second == "Read";
+        const char* color = read ? "#15803d" : "#111827";
+        svg << "<line x1='" << event.first << "' y1='" << output_marker_top_y << "' x2='" << event.first << "' y2='" << output_marker_bottom_y << "' stroke='" << color << "' stroke-width='1.5' stroke-dasharray='5 5'/>";
+    }
+    svg << "<text x='24' y='" << description_label_y << "' font-size='12' fill='#6b7280'>Description</text>";
+    int note_y = description_first_line_y;
+    for (const auto& line : note_lines) {
+        svg << "<text x='260' y='" << note_y << "' text-anchor='middle' font-size='13' fill='#374151'>" << html_escape(line) << "</text>";
+        note_y += 18;
+    }
+    svg << "</svg></section>";
+    return svg.str();
+}
+
+} // namespace
+
 frog::json::Value ButtonBrowserUiRuntime::run_once(bool trigger_pressed) {
     try {
         frog::json::Value artifact = native_kernel_bridge == nullptr
@@ -3106,11 +3295,55 @@ frog::json::Value ButtonBrowserUiRuntime::run_once(bool trigger_pressed) {
     }
 }
 
+frog::json::Value ButtonBrowserUiRuntime::apply_event(const std::string& event_name) {
+    try {
+        frog::json::Value artifact;
+        const auto action = property_string(core.widgets.at(core.control_widget_id).properties, "behavior.mechanical_action", "");
+        const bool latch_action = action == "latch_when_pressed" ||
+            action == "latch_when_released" ||
+            action == "latch_until_released";
+        if (event_name == "press") {
+            artifact = core.press_control();
+        } else if (event_name == "release") {
+            artifact = core.release_control();
+        } else if (event_name == "read") {
+            artifact = read_once();
+        } else {
+            throw std::runtime_error("Unknown Button runtime event: " + event_name);
+        }
+        if (latch_action && (event_name == "press" || event_name == "release")) {
+            artifact = read_once();
+        }
+        last_error.reset();
+        return artifact;
+    } catch (const std::exception& error) {
+        last_error = error.what();
+        throw;
+    }
+}
+
+frog::json::Value ButtonBrowserUiRuntime::read_once() {
+    try {
+        frog::json::Value artifact = native_kernel_bridge == nullptr
+            ? core.read_program_value()
+            : core.read_program_value_with_native_kernel_bridge(*native_kernel_bridge);
+        last_error.reset();
+        return artifact;
+    } catch (const std::exception& error) {
+        last_error = error.what();
+        throw;
+    }
+}
+
 std::string ButtonBrowserUiRuntime::render_html() const {
     const auto& button = core.widgets.at(core.control_widget_id);
     const auto mechanical_action = property_string(button.properties, "behavior.mechanical_action", "");
     const bool switch_when_pressed = mechanical_action == "switch_when_pressed";
     const bool switch_when_released = mechanical_action == "switch_when_released";
+    const bool latch_when_pressed = mechanical_action == "latch_when_pressed";
+    const bool latch_when_released = mechanical_action == "latch_when_released";
+    const bool latch_until_released = mechanical_action == "latch_until_released";
+    const bool latch_action = latch_when_pressed || latch_when_released || latch_until_released;
     const auto& indicator = core.widgets.at(core.indicator_widget_id);
     const auto panel_width = layout_i64(core.panel.layout, "width", 520);
     const auto panel_height = layout_i64(core.panel.layout, "height", 180);
@@ -3131,6 +3364,8 @@ std::string ButtonBrowserUiRuntime::render_html() const {
             ".runtime-facts div{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}"
             ".runtime-facts dt{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}"
             ".runtime-facts dd{margin:0;color:#1f2933;font-size:12px;font-weight:600;}"
+            ".mechanical-diagram-card{width:520px;max-width:100%;margin:0 0 18px 0;}"
+            ".mechanical-diagram{display:block;width:100%;height:auto;}"
             ".front-panel{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}"
             ".frog-widget{position:absolute;box-sizing:border-box;}"
             ".button-widget{overflow:visible;}"
@@ -3141,13 +3376,14 @@ std::string ButtonBrowserUiRuntime::render_html() const {
             ".button-skin [data-frog-part='face']{fill:var(--frog-button-face-fill)!important;stroke:var(--frog-button-face-stroke)!important;stroke-width:var(--frog-button-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}"
             ".button-skin [data-frog-part='state_face']{fill:var(--frog-button-state-face-fill)!important;stroke:var(--frog-button-state-face-stroke)!important;stroke-width:var(--frog-button-state-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}"
             ".button-skin [data-frog-part='focus_ring']{display:none!important;stroke:var(--frog-button-focus-color)!important;stroke-width:var(--frog-button-focus-width)!important;}"
-            ".button-widget:has(.button-press-overlay:hover) .button-skin [data-frog-part='face']{fill:var(--frog-button-face-hover-fill)!important;}"
-            ".button-widget:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face']{fill:var(--frog-button-state-face-hover-fill)!important;stroke:var(--frog-button-state-face-hover-stroke)!important;}"
-            ".button-widget:has(.button-press-overlay:active) .button-skin [data-frog-part='face']{fill:var(--frog-button-face-pressed-fill)!important;transform:translateY(var(--frog-button-pressed-inset));}"
-            ".button-widget:has(.button-press-overlay:active) .button-skin [data-frog-part='state_face']{fill:var(--frog-button-state-face-pressed-fill)!important;stroke:var(--frog-button-state-face-pressed-stroke)!important;transform:translateY(var(--frog-button-pressed-inset));}"
+            ".button-widget[data-frog-hover-applies-when-value-false-only='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='face'],.button-widget[data-frog-hover-applies-when-value-false-only='true'][data-current-value='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='face']{fill:var(--frog-button-face-hover-fill)!important;}"
+            ".button-widget[data-frog-hover-applies-when-value-false-only='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face'],.button-widget[data-frog-hover-applies-when-value-false-only='true'][data-current-value='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face']{fill:var(--frog-button-state-face-hover-fill)!important;stroke:var(--frog-button-state-face-hover-stroke)!important;}"
+            ".button-widget[data-frog-pressed-applies-while-active='true']:has(.button-press-overlay:active) .button-skin [data-frog-part='face'],.button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-skin [data-frog-part='face']{fill:var(--frog-button-face-pressed-fill)!important;transform:translateY(var(--frog-button-pressed-inset));}"
+            ".button-widget[data-frog-pressed-applies-while-active='true']:has(.button-press-overlay:active) .button-skin [data-frog-part='state_face'],.button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-skin [data-frog-part='state_face']{fill:var(--frog-button-state-face-pressed-fill)!important;stroke:var(--frog-button-state-face-pressed-stroke)!important;transform:translateY(var(--frog-button-pressed-inset));}"
+            ".button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-state-overlay{transform:translate(-50%,calc(-50% + var(--frog-button-pressed-inset)));}"
             ".button-widget:has(.button-press-overlay:focus-visible) .button-skin [data-frog-part='focus_ring']{display:inline!important;}"
             ".button-caption-overlay{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--frog-button-caption-font-size);font-weight:var(--frog-button-caption-font-weight);font-family:var(--frog-button-caption-font-family);line-height:1;white-space:nowrap;pointer-events:none;z-index:3;}"
-            ".button-state-overlay{position:absolute;transform:translate(-50%,-50%);font-size:var(--frog-button-state-text-font-size);font-weight:var(--frog-button-state-text-font-weight);line-height:1;color:var(--frog-button-state-text-fill);pointer-events:none;z-index:4;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}"
+            ".button-state-overlay{position:absolute;transform:translate(-50%,-50%);font-size:var(--frog-button-state-text-font-size);font-weight:var(--frog-button-state-text-font-weight);line-height:1;color:var(--frog-button-state-text-fill);pointer-events:none;z-index:6;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}"
             ".button-press-overlay{position:absolute;box-sizing:border-box;margin:0;padding:0;border:0;background:transparent;cursor:pointer;appearance:none;z-index:5;}"
             ".button-press-overlay:focus,.button-press-overlay:focus-visible,.button-press-overlay:active{outline:0;box-shadow:none;}"
             ".boolean-widget{border:0;padding:0;background:transparent;font:inherit;color:inherit;overflow:visible;}"
@@ -3159,31 +3395,83 @@ std::string ButtonBrowserUiRuntime::render_html() const {
             ".boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{box-shadow:none;}"
             ".boolean-state-overlay{position:absolute;transform:translate(-50%,-50%);text-align:center;font-size:var(--boolean-text-font-size);font-weight:var(--boolean-text-font-weight);line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;white-space:nowrap;}"
             ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
+            ".program-read-action{padding:6px 10px;border:1px solid #94a3b8;border-radius:4px;background:#ffffff;color:#111827;font:inherit;cursor:pointer;}"
+            ".program-read-action:hover{background:#f8fafc;}"
+            ".program-read-status{font-size:13px;color:#374151;min-width:112px;}"
             ".state-link{font-size:16px;}"
             ".diagnostic{margin:12px 0;padding:10px 12px;border-radius:6px;}"
             ".diagnostic.error{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}"
             "</style></head><body>";
     html << "<h1>" << html_escape(core.panel.title) << "</h1>";
-    html << "<p class='meta'>" << (switch_when_released
-        ? "Example 12 - .frog switch_when_released Button value + Default Button/Boolean .wfrog realization assets + C++ runtime"
-        : (switch_when_pressed
-            ? "Example 11 - .frog switch_when_pressed Button value + Default Button/Boolean .wfrog realization assets + C++ runtime"
-            : "Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + C++ runtime")) << "</p>";
+    html << "<p class='meta'>";
+    if (latch_until_released) {
+        html << "Example 15 - .frog latch_until_released Button value + Default Button/Boolean .wfrog realization assets + C++ runtime";
+    } else if (latch_when_released) {
+        html << "Example 14 - .frog latch_when_released Button value + Default Button/Boolean .wfrog realization assets + C++ runtime";
+    } else if (latch_when_pressed) {
+        html << "Example 13 - .frog latch_when_pressed Button value + Default Button/Boolean .wfrog realization assets + C++ runtime";
+    } else if (switch_when_released) {
+        html << "Example 12 - .frog switch_when_released Button value + Default Button/Boolean .wfrog realization assets + C++ runtime";
+    } else if (switch_when_pressed) {
+        html << "Example 11 - .frog switch_when_pressed Button value + Default Button/Boolean .wfrog realization assets + C++ runtime";
+    } else {
+        html << "Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + C++ runtime";
+    }
+    html << "</p>";
     html << "<dl class='runtime-facts' aria-label='Runtime facts'>";
     html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
-    html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : ((switch_when_pressed || switch_when_released) ? "button switch contract executor" : "button contract executor")) << "</dd></div>";
-    html << "<div><dt>Compiler backend</dt><dd>" << (uses_native_kernel ? "LLVM native Button bool kernel artifact" : (switch_when_released ? "none for Example 12" : (switch_when_pressed ? "none for Example 11" : "none for Example 10"))) << "</dd></div>";
+    html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel
+        ? "native kernel bridge"
+        : ((switch_when_pressed || switch_when_released)
+            ? "button switch contract executor"
+            : (latch_action ? "button latch contract executor" : "button contract executor"))) << "</dd></div>";
+    html << "<div><dt>Compiler backend</dt><dd>";
+    if (uses_native_kernel) {
+        html << "LLVM native Button bool kernel artifact";
+    } else if (latch_until_released) {
+        html << "none for Example 15";
+    } else if (latch_when_released) {
+        html << "none for Example 14";
+    } else if (latch_when_pressed) {
+        html << "none for Example 13";
+    } else if (switch_when_released) {
+        html << "none for Example 12";
+    } else if (switch_when_pressed) {
+        html << "none for Example 11";
+    } else {
+        html << "none for Example 10";
+    }
+    html << "</dd></div>";
     html << "</dl>";
     html << diagnostics;
+    html << render_button_mechanical_action_diagram(mechanical_action);
     html << "<form method='post' action='/run'>";
     html << "<div class='front-panel' data-panel-id='" << html_escape(core.panel.panel_id)
          << "' data-coordinate-space='panel_pixels' data-runtime-language='cpp'";
     html << " data-compiler-backend='" << (uses_native_kernel ? "llvm" : "none") << "'";
-    html << " data-execution-path='" << (uses_native_kernel ? "native_kernel_bridge" : (switch_when_released ? "cpp_button_switch_when_released_contract_executor" : (switch_when_pressed ? "cpp_button_switch_when_pressed_contract_executor" : "cpp_button_contract_executor"))) << "'";
+    html << " data-execution-path='";
+    if (uses_native_kernel) {
+        html << "native_kernel_bridge";
+    } else if (latch_until_released) {
+        html << "cpp_button_latch_until_released_contract_executor";
+    } else if (latch_when_released) {
+        html << "cpp_button_latch_when_released_contract_executor";
+    } else if (latch_when_pressed) {
+        html << "cpp_button_latch_when_pressed_contract_executor";
+    } else if (switch_when_released) {
+        html << "cpp_button_switch_when_released_contract_executor";
+    } else if (switch_when_pressed) {
+        html << "cpp_button_switch_when_pressed_contract_executor";
+    } else {
+        html << "cpp_button_contract_executor";
+    }
+    html << "'";
     html << " style='width:" << css_px(panel_width) << ";height:" << css_px(panel_height) << ";'>";
     html << render_button_widget(button);
     html << render_boolean_widget(indicator);
-    html << "</div><div class='actions'><a class='state-link' href='/state.json'>state.json</a></div></form>";
+    html << "</div><div class='actions'><button class='program-read-action' type='button' data-frog-event='read'>Read</button>"
+         << "<span class='program-read-status' data-frog-last-read='none'>Last read: none</span>"
+         << "<a class='state-link' href='/state.json'>state.json</a></div></form>";
     html << button_widget_script();
     html << "</body></html>";
     return html.str();
@@ -3259,8 +3547,14 @@ void ButtonBrowserUiRuntime::serve(const std::string& host, std::uint16_t port, 
                 }
             } else if (request.method == "POST" && (request.path == "/run" || request.path == "/event")) {
                 try {
-                    const auto form_value = parse_form_value(request.body, core.public_input_id).value_or("false");
-                    const auto artifact = run_once(parse_bool_form_value(form_value));
+                    frog::json::Value artifact(nullptr);
+                    const auto event_name = parse_form_value(request.body, "frog_event");
+                    if (request.path == "/event" && event_name.has_value()) {
+                        artifact = apply_event(*event_name);
+                    } else {
+                        const auto form_value = parse_form_value(request.body, core.public_input_id).value_or("false");
+                        artifact = run_once(parse_bool_form_value(form_value));
+                    }
                     if (request.path == "/event") {
                         send_response(client, "200 OK", "application/json; charset=utf-8", frog::json::stringify(artifact, true, 2));
                     } else {

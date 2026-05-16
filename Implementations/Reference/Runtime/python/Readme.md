@@ -14,7 +14,7 @@
 <h2>Current Scope</h2>
 
 <p>
-The Python runtime currently carries the specialized Examples 05, 06, 07, 08, 09, 10, and 11 runtime-family consumers.
+The Python runtime currently carries the specialized Examples 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, and 15 runtime-family consumers.
 It validates the backend contracts and <code>.wfrog</code> front-panel packages, executes the bounded accumulator, Boolean roundtrip, String roundtrip, Enum roundtrip, Path roundtrip, Button press-to-Boolean, and Button switch-when-pressed paths, applies widget property effects, and produces the published runtime snapshots.
 </p>
 
@@ -72,5 +72,5 @@ python Implementations/Reference/Runtime/check_python_native_kernel_bridge.py</c
 <p>
 This runtime is non-normative.
 It verifies repository-visible runtime closure for the current bounded example corridor.
-The Python HTTP UI remains a first-class parity surface for Examples 05, 06, 07, 08, 09, 10, and 11: it must consume <code>.frog</code> front-panel instances, <code>.wfrog</code> realization packages, and Default realization assets with the same no-fallback discipline as the C++ and Rust browser hosts.
+The Python HTTP UI remains a first-class parity surface for Examples 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, and 15: it must consume <code>.frog</code> front-panel instances, <code>.wfrog</code> realization packages, and Default realization assets with the same no-fallback discipline as the C++ and Rust browser hosts.
 </p>

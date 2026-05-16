@@ -57,7 +57,7 @@ Repository governance and publication state are centralized in
 <h2>Role</h2>
 
 <p>
-This directory contains the C/C++ consumer for the published Examples 05, 06, 07, 08, 09, 10, and 11 runtime slices.
+This directory contains the C/C++ consumer for the published Examples 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, and 15 runtime slices.
 It accepts emitted backend contracts, loads the published <code>.wfrog</code> packages, resolves the referenced SVG assets, exposes browser-host UIs, and can run either the default contract-executor path or the optional manifest-declared native-kernel bridge path.
 </p>
 
@@ -83,7 +83,7 @@ The standard executable supports:
 
 <p>
 It remains available without LLVM or <code>clang</code>.
-It executes the bounded Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, Example 11, and C++-first Example 12 backend contracts and produces the published runtime artifacts.
+It executes the bounded Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, Example 11, Example 12, Example 13, Example 14, and Example 15 backend contracts and produces the published runtime artifacts.
 </p>
 
 <pre><code>cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
@@ -107,11 +107,11 @@ build/frog_runtime_cpp/frog_reference_runtime_cpp ui --host 127.0.0.1 --port 808
 
 <p>
 The optional native-kernel executable is built when <code>FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE=ON</code>.
-CMake compiles the published Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, Example 11, and Example 12 <code>kernel.ll</code> artifacts with <code>clang</code>, links the resulting objects into the executable, and uses <code>native_kernel_manifest.json</code> to validate and call the selected ABI surface.
+CMake compiles the published Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, Example 11, Example 12, Example 13, Example 14, and Example 15 <code>kernel.ll</code> artifacts with <code>clang</code>, links the resulting objects into the executable, and uses <code>native_kernel_manifest.json</code> to validate and call the selected ABI surface.
 </p>
 
 <p>
-This executable is the bounded Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, Example 11, and Example 12 LabVIEW-like proof path:
+This executable is the bounded Example 05, Example 06, Example 07, Example 08, Example 09, Example 10, Example 11, Example 12, Example 13, Example 14, and Example 15 LabVIEW-like proof path:
 </p>
 
 <pre><code>.frog source
@@ -136,6 +136,10 @@ runtime C++
   -&gt; or frog_example09_run(input_path, out_result)
   -&gt; or frog_example10_run(trigger_pressed, out_result)
   -&gt; or frog_example11_run(trigger_value, out_result)
+  -&gt; or frog_example12_run(trigger_value, out_result)
+  -&gt; or frog_example13_run(trigger_value, out_result)
+  -&gt; or frog_example14_run(trigger_value, out_result)
+  -&gt; or frog_example15_run(trigger_value, out_result)
   -&gt; public result
   -&gt; matching indicator value
   -&gt; runtime snapshot / state.json
@@ -165,14 +169,14 @@ It renders:
 <ul>
   <li>the front panel in <code>panel_pixels</code>,</li>
   <li>the widget <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code> declarations,</li>
-  <li>the Default Numeric, Boolean, String, Enum, Path, and Button SVG skins as the widget bodies for Examples 05, 06, 07, 08, 09, 10, and 11,</li>
+  <li>the Default Numeric, Boolean, String, Enum, Path, and Button SVG skins as the widget bodies for Examples 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, and 15,</li>
   <li>published realization anchors including <code>caption.anchor</code>, value/text surfaces, and the Numeric <code>increment_up</code> / <code>increment_down</code> parts,</li>
   <li>dynamic widget values and labels,</li>
   <li>contract-driven <code>foreground_color</code> property writes.</li>
 </ul>
 
 <p>
-The Example 05 panel uses the shared Default Numeric realization. Example 06 uses the shared Default Boolean realization. Example 07 uses the shared Default String realization without a published String focus-ring part. Example 08 uses the shared Default Enum realization. Example 09 uses the shared Default Path realization without an invisible outer frame or focus-ring hover target. Example 10 uses the shared Default Button realization for the momentary command and the shared Default Boolean realization for the read-only indicator. Example 11 uses the same Default Button and Boolean assets for the bounded <code>switch_when_pressed</code> Button value path. Example 12 reuses those Default assets for the C++-first bounded <code>switch_when_released</code> value path.
+The Example 05 panel uses the shared Default Numeric realization. Example 06 uses the shared Default Boolean realization. Example 07 uses the shared Default String realization without a published String focus-ring part. Example 08 uses the shared Default Enum realization. Example 09 uses the shared Default Path realization without an invisible outer frame or focus-ring hover target. Examples 10 through 15 use the shared Default Button realization for the command and the shared Default Boolean realization for the read-only indicator while covering the six published Button mechanical actions.
 This is a bounded fidelity pass for the current published examples, not a complete generalized <code>.wfrog</code> renderer.
 </p>
 
@@ -204,7 +208,7 @@ The fact that the first published backend artifact is LLVM-oriented remains mani
   <li>overflow rejection behavior,</li>
   <li>native-kernel bridge behavior with an ABI-compatible stub,</li>
   <li>browser-host HTML rendering with both SVG asset routes,</li>
-  <li><code>.wfrog</code> / SVG geometry coherence for Example 05 Numeric widgets, Example 06 Boolean widgets, Example 07 String widgets, Example 08 Enum widgets, Example 09 Path widgets, and Example 10/11/12 Button plus Boolean widgets.</li>
+  <li><code>.wfrog</code> / SVG geometry coherence for Example 05 Numeric widgets, Example 06 Boolean widgets, Example 07 String widgets, Example 08 Enum widgets, Example 09 Path widgets, and Example 10/11/12/13/14/15 Button plus Boolean widgets.</li>
 </ul>
 
 <p>The optional LLVM-produced native-kernel bridge target checks:</p>

@@ -87,6 +87,42 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
       <td><code>main.frog</code> + <code>ui/path_panel.wfrog</code></td>
       <td><code>FIR → lowering → contract → LLVM native manifest → C++/Python/Rust runtime bridge → Default Path realization</code></td>
     </tr>
+    <tr>
+      <td><code>10_button_press_to_boolean</code></td>
+      <td>Button <code>switch_until_released</code> mechanical action</td>
+      <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
+      <td><code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
+    </tr>
+    <tr>
+      <td><code>11_button_switch_when_pressed</code></td>
+      <td>Button <code>switch_when_pressed</code> mechanical action</td>
+      <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
+      <td><code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
+    </tr>
+    <tr>
+      <td><code>12_button_switch_when_released</code></td>
+      <td>Button <code>switch_when_released</code> mechanical action</td>
+      <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
+      <td><code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
+    </tr>
+    <tr>
+      <td><code>13_button_latch_when_pressed</code></td>
+      <td>Button <code>latch_when_pressed</code> mechanical action</td>
+      <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
+      <td><code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
+    </tr>
+    <tr>
+      <td><code>14_button_latch_when_released</code></td>
+      <td>Button <code>latch_when_released</code> mechanical action</td>
+      <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
+      <td><code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
+    </tr>
+    <tr>
+      <td><code>15_button_latch_until_released</code></td>
+      <td>Button <code>latch_until_released</code> mechanical action</td>
+      <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
+      <td><code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -119,6 +155,9 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
     |
     v
 09  Path .wfrog realization and native-kernel runtime bridge
+    |
+    v
+10-15  Button mechanical actions with Default Button/Boolean realization
 </code></pre>
 
 <hr/>
@@ -183,6 +222,14 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
     └── ui/
         └── path_panel.wfrog
 </code></pre>
+
+<p>
+Examples <code>10</code> through <code>15</code> use the same published shape:
+each Button mechanical-action slice contains <code>Readme.md</code>,
+<code>main.frog</code>, FIR/lowering artifacts, and
+<code>ui/button_panel.wfrog</code> referencing the Default Button and Boolean
+realization assets.
+</p>
 
 <hr/>
 
@@ -252,7 +299,7 @@ no hardcoded widget fallback, no duplicated local SVG skin, and no accepted exam
 <p>
 The currently stabilized widget example surfaces are inventoried in
 <a href="./widget_reference/Readme.md">Widget Example Reference Notes</a>.
-Those notes document the proven Numeric, Boolean, String, Enum, and Path example surfaces,
+Those notes document the proven Numeric, Boolean, String, Enum, Path, and Button example surfaces,
 including which properties are owned by <code>.frog</code>, which realization packages and SVG assets are consumed through
 <code>.wfrog</code>, and which runtime checks protect against hardcoded widget fallbacks.
 </p>

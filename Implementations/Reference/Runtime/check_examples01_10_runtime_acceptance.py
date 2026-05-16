@@ -21,6 +21,11 @@ from Implementations.Reference.Runtime.python.cli import (  # noqa: E402
     execute_example09_contract,
     execute_example10_contract,
 )
+from Implementations.Reference.Runtime.python.ui_runtime import (  # noqa: E402
+    ButtonRuntimeCore,
+    default_example10_contract_path,
+    default_example10_wfrog_path,
+)
 
 SNAPSHOT_ACCEPTANCE_FILES = [
     "Implementations/Reference/Runtime/acceptance/example01_pure_addition.acceptance.json",
@@ -104,8 +109,21 @@ def check_examples07_to_10() -> None:
         raise RuntimeAcceptanceError("Example 10 released Button state must remain momentary false")
     artifact10_true = execute_example10_contract(True)
     require_output(artifact10_true, "pressed", "pressed_indicator", True)
-    if artifact10_true["outputs"]["ui"]["trigger_button"] is not False:
-        raise RuntimeAcceptanceError("Example 10 Button control value must reset after a momentary press")
+    if artifact10_true["outputs"]["ui"]["trigger_button"] is not True:
+        raise RuntimeAcceptanceError("Example 10 Button control must show ON while pressed")
+
+    example10_runtime = ButtonRuntimeCore(
+        contract_path=default_example10_contract_path(),
+        wfrog_path=default_example10_wfrog_path(),
+    )
+    pressed = example10_runtime.press_control()
+    require_output(pressed, "pressed", "pressed_indicator", True)
+    if pressed["outputs"]["ui"]["trigger_button"] is not True:
+        raise RuntimeAcceptanceError("Example 10 Button press event must make the command visibly ON")
+    released = example10_runtime.release_control()
+    require_output(released, "pressed", "pressed_indicator", False)
+    if released["outputs"]["ui"]["trigger_button"] is not False:
+        raise RuntimeAcceptanceError("Example 10 Button release event must restore the command to OFF")
     print("Runtime acceptance ok: 10_button_press_to_boolean")
 
 

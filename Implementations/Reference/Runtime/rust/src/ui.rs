@@ -1969,14 +1969,36 @@ pub struct ButtonBrowserUiRuntime {
     pub indicator_widget_id: String,
     pub public_input_id: String,
     pub public_output_id: String,
+    pub last_button_event: String,
+    pub physical_pressed: bool,
+    pub button_stored_value: bool,
     pub last_trigger_pressed: bool,
     pub last_result: bool,
+    pub last_program_read_performed: bool,
+    pub last_program_read_value: bool,
+    pub latch_until_read_since_activation: bool,
     pub last_error: Option<String>,
     pub native_kernel_bridge: Option<NativeBoolKernelBridge>,
 }
 
 fn is_button_switch_when_pressed_example(example_id: &str) -> bool {
     example_id == "11_button_switch_when_pressed"
+}
+
+fn is_button_switch_when_released_example(example_id: &str) -> bool {
+    example_id == "12_button_switch_when_released"
+}
+
+fn is_button_latch_when_pressed_example(example_id: &str) -> bool {
+    example_id == "13_button_latch_when_pressed"
+}
+
+fn is_button_latch_when_released_example(example_id: &str) -> bool {
+    example_id == "14_button_latch_when_released"
+}
+
+fn is_button_latch_until_released_example(example_id: &str) -> bool {
+    example_id == "15_button_latch_until_released"
 }
 
 fn is_button_press_to_boolean_example(example_id: &str) -> bool {
@@ -2044,8 +2066,14 @@ impl ButtonBrowserUiRuntime {
             .as_str()
             .or_else(|| contract["example_id"].as_str())
             .ok_or_else(|| RuntimeError::Message("Button slice contract must publish an example id.".to_string()))?;
-        if !is_button_press_to_boolean_example(example_id) && !is_button_switch_when_pressed_example(example_id) {
-            return Err(RuntimeError::Message("Button slice expects Example 10 or Example 11.".to_string()));
+        if !is_button_press_to_boolean_example(example_id)
+            && !is_button_switch_when_pressed_example(example_id)
+            && !is_button_switch_when_released_example(example_id)
+            && !is_button_latch_when_pressed_example(example_id)
+            && !is_button_latch_when_released_example(example_id)
+            && !is_button_latch_until_released_example(example_id)
+        {
+            return Err(RuntimeError::Message("Button slice expects Example 10, 11, 12, 13, 14, or 15.".to_string()));
         }
         let unit = contract["units"]
             .as_array()
@@ -2053,7 +2081,12 @@ impl ButtonBrowserUiRuntime {
             .ok_or_else(|| RuntimeError::Message("Button slice expects exactly one contract unit.".to_string()))?;
         if !matches!(
             unit["kind"].as_str(),
-            Some("button_press_to_boolean_ui_unit") | Some("button_switch_when_pressed_ui_unit")
+            Some("button_press_to_boolean_ui_unit")
+                | Some("button_switch_when_pressed_ui_unit")
+                | Some("button_switch_when_released_ui_unit")
+                | Some("button_latch_when_pressed_ui_unit")
+                | Some("button_latch_when_released_ui_unit")
+                | Some("button_latch_until_released_ui_unit")
         ) {
             return Err(RuntimeError::Message("Unexpected runtime unit kind.".to_string()));
         }
@@ -2119,6 +2152,22 @@ impl ButtonBrowserUiRuntime {
                 return Err(RuntimeError::Message(format!("Missing host capability {capability}.")));
             }
         }
+        let control_widget = panel["widgets"]
+            .as_array()
+            .and_then(|widgets| widgets.iter().find(|widget| widget["instance_id"].as_str() == Some(control_widget_id.as_str())))
+            .cloned()
+            .unwrap_or(Value::Null);
+        let action = control_widget["props"]["behavior.mechanical_action"].as_str().unwrap_or("");
+        if matches!(action, "switch_when_released" | "latch_when_released" | "latch_until_released")
+            && !host_capabilities.iter().any(|item| item.as_str() == Some("button_release_binding"))
+        {
+            return Err(RuntimeError::Message("Missing host capability button_release_binding.".to_string()));
+        }
+        if matches!(action, "latch_when_pressed" | "latch_when_released" | "latch_until_released")
+            && !host_capabilities.iter().any(|item| item.as_str() == Some("button_latch_reset_on_value_consumption"))
+        {
+            return Err(RuntimeError::Message("Missing host capability button_latch_reset_on_value_consumption.".to_string()));
+        }
         let runtime = Self {
             contract,
             wfrog,
@@ -2128,8 +2177,14 @@ impl ButtonBrowserUiRuntime {
             indicator_widget_id,
             public_input_id,
             public_output_id,
+            last_button_event: "initial".to_string(),
+            physical_pressed: false,
+            button_stored_value: false,
             last_trigger_pressed: false,
             last_result: false,
+            last_program_read_performed: false,
+            last_program_read_value: false,
+            latch_until_read_since_activation: false,
             last_error: None,
             native_kernel_bridge,
         };
@@ -2162,10 +2217,35 @@ impl ButtonBrowserUiRuntime {
         let action = button["props"]["behavior.mechanical_action"]
             .as_str()
             .ok_or_else(|| RuntimeError::Message("Button slice requires source-owned behavior.mechanical_action.".to_string()))?;
-        if action != "switch_until_released" && action != "switch_when_pressed" {
+        if !matches!(
+            action,
+            "switch_until_released"
+                | "switch_when_pressed"
+                | "switch_when_released"
+                | "latch_when_pressed"
+                | "latch_when_released"
+                | "latch_until_released"
+        ) {
             return Err(RuntimeError::Message(
-                "Button slice validates only source-declared switch_until_released or switch_when_pressed mechanical actions.".to_string(),
+                "Button slice validates only source-declared switch/latch Button mechanical actions.".to_string(),
             ));
+        }
+        if matches!(action, "latch_when_pressed" | "latch_when_released" | "latch_until_released") {
+            if button["props"]["behavior.latch_reset_policy"].as_str() != Some("reset_on_natural_value_consumption") {
+                return Err(RuntimeError::Message(
+                    "Latch Button slices require source-owned reset_on_natural_value_consumption policy.".to_string(),
+                ));
+            }
+            let Some(pulse_duration) = button["props"]["behavior.output_pulse.duration_ms"].as_i64() else {
+                return Err(RuntimeError::Message(
+                    "Latch Button slices require source-owned behavior.output_pulse.duration_ms in the 1..5000 ms domain.".to_string(),
+                ));
+            };
+            if pulse_duration <= 0 || pulse_duration > 5000 {
+                return Err(RuntimeError::Message(
+                    "Latch Button slices require source-owned behavior.output_pulse.duration_ms in the 1..5000 ms domain.".to_string(),
+                ));
+            }
         }
         Ok(())
     }
@@ -2195,6 +2275,7 @@ impl ButtonBrowserUiRuntime {
         let widget_id = widget["instance_id"].as_str().unwrap_or("");
         let mut runtime = json!({
             "value": value,
+            "pressed": self.physical_pressed,
             "label.text": props["label.text"].clone(),
             "caption.text": props["caption.text"].clone(),
             "asset_ref": visual["asset_ref"].clone(),
@@ -2231,6 +2312,7 @@ impl ButtonBrowserUiRuntime {
                 "state_text.style.font_weight",
                 "behavior.mechanical_action",
                 "behavior.latch_reset_policy",
+                "behavior.output_pulse.duration_ms",
                 "style.frame.fill_color",
                 "style.frame.border_color",
                 "style.frame.border_width",
@@ -2270,6 +2352,9 @@ impl ButtonBrowserUiRuntime {
                 "style.focus_ring.color",
                 "style.focus_ring.width",
                 "style.pressed.inset",
+                "style.pressed.apply_when_value_true",
+                "style.pressed.apply_while_active",
+                "style.hover.apply_when_value_false_only",
                 "style.transition.duration_ms",
                 "style.transition.timing",
                 "interaction.enabled",
@@ -2288,58 +2373,179 @@ impl ButtonBrowserUiRuntime {
         Ok(button["props"]["behavior.mechanical_action"].as_str().unwrap_or("").to_string())
     }
 
-    pub fn run_once(&mut self, trigger_pressed: bool) -> Result<Value> {
+    pub fn press_control(&mut self) -> Result<Value> {
         let action = self.button_mechanical_action()?;
+        let stored_value = self.button_stored_value;
+        self.physical_pressed = true;
+        self.last_trigger_pressed = true;
+        self.last_button_event = "press".to_string();
+        self.last_program_read_performed = false;
+
+        let mut next_value = stored_value;
         if action == "switch_when_pressed" {
-            self.last_trigger_pressed = true;
-            if let Some(bridge) = &self.native_kernel_bridge {
-                if bridge.manifest().source_lowered_unit != expected_button_source_lowered_unit(&self.contract) {
-                    return Err(RuntimeError::Message("Unexpected native Button kernel source lowered unit.".to_string()));
-                }
-                let result = bridge.run(trigger_pressed);
-                if !result.ok {
-                    let diagnostic = bridge.manifest().diagnostic(result.error_code);
-                    self.last_error = Some(diagnostic.clone());
-                    return Err(RuntimeError::Message(diagnostic));
-                }
-                self.last_result = result.result;
-            } else {
-                self.last_result = trigger_pressed;
+            next_value = !stored_value;
+        } else if matches!(action.as_str(), "switch_until_released" | "latch_when_pressed" | "latch_until_released") {
+            next_value = true;
+        }
+        if action == "latch_until_released" {
+            self.latch_until_read_since_activation = false;
+        }
+        self.button_stored_value = next_value;
+        self.last_result = next_value;
+        self.execution_artifact()
+    }
+
+    pub fn release_control(&mut self) -> Result<Value> {
+        let action = self.button_mechanical_action()?;
+        let stored_value = self.button_stored_value;
+        self.physical_pressed = false;
+        self.last_trigger_pressed = false;
+        self.last_button_event = "release".to_string();
+        self.last_program_read_performed = false;
+
+        let mut next_value = stored_value;
+        if action == "switch_when_released" {
+            next_value = !stored_value;
+        } else if action == "switch_until_released" {
+            next_value = false;
+        } else if action == "latch_when_released" {
+            next_value = true;
+        } else if action == "latch_until_released" && self.latch_until_read_since_activation {
+            next_value = false;
+            self.latch_until_read_since_activation = false;
+        }
+        self.button_stored_value = next_value;
+        self.last_result = next_value;
+        self.execution_artifact()
+    }
+
+    pub fn read_program_value(&mut self) -> Result<Value> {
+        let action = self.button_mechanical_action()?;
+        let read_value = self.button_stored_value;
+        self.last_button_event = "read".to_string();
+        self.last_program_read_performed = true;
+        self.last_program_read_value = read_value;
+
+        let mut next_value = read_value;
+        if action == "latch_when_pressed" || action == "latch_when_released" {
+            next_value = false;
+        } else if action == "latch_until_released" {
+            self.latch_until_read_since_activation = read_value;
+            if !self.physical_pressed {
+                next_value = false;
+                self.latch_until_read_since_activation = false;
             }
-        } else if let Some(bridge) = &self.native_kernel_bridge {
-            self.last_trigger_pressed = trigger_pressed;
-            if bridge.manifest().source_lowered_unit != expected_button_source_lowered_unit(&self.contract) {
-                return Err(RuntimeError::Message("Unexpected native Button kernel source lowered unit.".to_string()));
+        }
+        self.button_stored_value = next_value;
+        self.last_trigger_pressed = self.physical_pressed;
+        self.last_result = read_value;
+        self.execution_artifact()
+    }
+
+    pub fn read_program_value_with_native_kernel_bridge(&mut self) -> Result<Value> {
+        let Some(bridge) = &self.native_kernel_bridge else {
+            return self.read_program_value();
+        };
+        if bridge.manifest().source_lowered_unit != expected_button_source_lowered_unit(&self.contract) {
+            return Err(RuntimeError::Message("Unexpected native Button kernel source lowered unit.".to_string()));
+        }
+        let action = self.button_mechanical_action()?;
+        let read_value = self.button_stored_value;
+        let result = bridge.run(read_value);
+        if !result.ok {
+            let diagnostic = bridge.manifest().diagnostic(result.error_code);
+            self.last_error = Some(diagnostic.clone());
+            return Err(RuntimeError::Message(diagnostic));
+        }
+
+        self.last_button_event = "read".to_string();
+        self.last_program_read_performed = true;
+        self.last_program_read_value = result.result;
+
+        let mut next_value = read_value;
+        if action == "latch_when_pressed" || action == "latch_when_released" {
+            next_value = false;
+        } else if action == "latch_until_released" {
+            self.latch_until_read_since_activation = read_value;
+            if !self.physical_pressed {
+                next_value = false;
+                self.latch_until_read_since_activation = false;
             }
-            let result = bridge.run(trigger_pressed);
-            if !result.ok {
-                let diagnostic = bridge.manifest().diagnostic(result.error_code);
-                self.last_error = Some(diagnostic.clone());
-                return Err(RuntimeError::Message(diagnostic));
-            }
-            self.last_result = result.result;
+        }
+        self.button_stored_value = next_value;
+        self.last_trigger_pressed = self.physical_pressed;
+        self.last_result = result.result;
+        self.last_error = None;
+        self.execution_artifact()
+    }
+
+    pub fn run_once(&mut self, trigger_pressed: bool) -> Result<Value> {
+        if trigger_pressed {
+            self.press_control()?;
         } else {
-            self.last_trigger_pressed = trigger_pressed;
-            self.last_result = trigger_pressed;
+            self.release_control()?;
+        }
+        if self.native_kernel_bridge.is_some() {
+            return self.read_program_value_with_native_kernel_bridge();
         }
         self.last_error = None;
-        Ok(self.execution_artifact()?)
+        self.execution_artifact()
+    }
+
+    pub fn apply_event(&mut self, event_name: &str) -> Result<Value> {
+        let action = self.button_mechanical_action()?;
+        let latch_action = matches!(action.as_str(), "latch_when_pressed" | "latch_when_released" | "latch_until_released");
+        let mut artifact = match event_name {
+            "press" => self.press_control()?,
+            "release" => self.release_control()?,
+            "read" => {
+                if self.native_kernel_bridge.is_some() {
+                    self.read_program_value_with_native_kernel_bridge()?
+                } else {
+                    self.read_program_value()?
+                }
+            }
+            _ => return Err(RuntimeError::Message(format!("Unknown Button runtime event: {event_name}"))),
+        };
+        if latch_action && (event_name == "press" || event_name == "release") {
+            artifact = if self.native_kernel_bridge.is_some() {
+                self.read_program_value_with_native_kernel_bridge()?
+            } else {
+                self.read_program_value()?
+            };
+        }
+        self.last_error = None;
+        Ok(artifact)
     }
 
     pub fn execution_artifact(&self) -> Result<Value> {
-        let switch_when_pressed = self.button_mechanical_action()? == "switch_when_pressed";
-        let execution_mode = if switch_when_pressed {
+        let action = self.button_mechanical_action()?;
+        let execution_mode = if action == "switch_when_pressed" {
             "button_switch_when_pressed"
+        } else if action == "switch_when_released" {
+            "button_switch_when_released"
+        } else if action == "latch_when_pressed" {
+            "button_latch_when_pressed"
+        } else if action == "latch_when_released" {
+            "button_latch_when_released"
+        } else if action == "latch_until_released" {
+            "button_latch_until_released"
         } else {
             "button_press_to_boolean"
         };
-        let button_value = if switch_when_pressed { self.last_result } else { false };
+        let button_value = self.button_stored_value;
         let button = self.widget_by_id(&self.control_widget_id)?;
         let indicator = self.widget_by_id(&self.indicator_widget_id)?;
         let mut execution_summary = json!({
             "mode": execution_mode,
             "executed_unit": "main",
             "operation": "copy",
+            "mechanical_action": action,
+            "button_event": self.last_button_event,
+            "button_stored_value": self.button_stored_value,
+            "button_physical_pressed": self.physical_pressed,
+            "program_read_performed": self.last_program_read_performed,
+            "program_read_value": self.last_program_read_value,
             "trigger_pressed": self.last_trigger_pressed
         });
         execution_summary
@@ -2376,7 +2582,13 @@ impl ButtonBrowserUiRuntime {
         let panel_width = panel["layout"]["width"].as_i64().unwrap_or(520);
         let panel_height = panel["layout"]["height"].as_i64().unwrap_or(180);
         let uses_native_kernel = self.native_kernel_bridge.is_some();
-        let switch_when_pressed = self.button_mechanical_action().unwrap_or_default() == "switch_when_pressed";
+        let mechanical_action = self.button_mechanical_action().unwrap_or_default();
+        let switch_when_pressed = mechanical_action == "switch_when_pressed";
+        let switch_when_released = mechanical_action == "switch_when_released";
+        let latch_when_pressed = mechanical_action == "latch_when_pressed";
+        let latch_when_released = mechanical_action == "latch_when_released";
+        let latch_until_released = mechanical_action == "latch_until_released";
+        let latch_action = latch_when_pressed || latch_when_released || latch_until_released;
         let mut diagnostics = String::new();
         if let Some(message) = &self.last_error {
             let _ = write!(diagnostics, "<div class='diagnostic error'>{}</div>", escape_html(message));
@@ -2394,6 +2606,14 @@ impl ButtonBrowserUiRuntime {
         let indicator_html = render_boolean_widget(indicator);
         let meta = if switch_when_pressed {
             "Example 11 - .frog switch_when_pressed Button value + Default Button/Boolean .wfrog realization assets + Rust runtime"
+        } else if switch_when_released {
+            "Example 12 - .frog switch_when_released Button value + Default Button/Boolean .wfrog realization assets + Rust runtime"
+        } else if latch_when_pressed {
+            "Example 13 - .frog latch_when_pressed Button value + Default Button/Boolean .wfrog realization assets + Rust runtime"
+        } else if latch_when_released {
+            "Example 14 - .frog latch_when_released Button value + Default Button/Boolean .wfrog realization assets + Rust runtime"
+        } else if latch_until_released {
+            "Example 15 - .frog latch_until_released Button value + Default Button/Boolean .wfrog realization assets + Rust runtime"
         } else {
             "Example 10 - .frog front panel + Default Button/Boolean .wfrog realization assets + Rust runtime"
         };
@@ -2401,6 +2621,10 @@ impl ButtonBrowserUiRuntime {
             "native kernel bridge"
         } else if switch_when_pressed {
             "button switch contract executor"
+        } else if switch_when_released {
+            "button switch contract executor"
+        } else if latch_action {
+            "button latch contract executor"
         } else {
             "button contract executor"
         };
@@ -2408,6 +2632,14 @@ impl ButtonBrowserUiRuntime {
             "LLVM native Button bool kernel artifact"
         } else if switch_when_pressed {
             "none for Example 11"
+        } else if switch_when_released {
+            "none for Example 12"
+        } else if latch_when_pressed {
+            "none for Example 13"
+        } else if latch_when_released {
+            "none for Example 14"
+        } else if latch_until_released {
+            "none for Example 15"
         } else {
             "none for Example 10"
         };
@@ -2415,6 +2647,14 @@ impl ButtonBrowserUiRuntime {
             "native_kernel_bridge"
         } else if switch_when_pressed {
             "rust_button_switch_when_pressed_contract_executor"
+        } else if switch_when_released {
+            "rust_button_switch_when_released_contract_executor"
+        } else if latch_when_pressed {
+            "rust_button_latch_when_pressed_contract_executor"
+        } else if latch_when_released {
+            "rust_button_latch_when_released_contract_executor"
+        } else if latch_until_released {
+            "rust_button_latch_until_released_contract_executor"
         } else {
             "rust_button_contract_executor"
         };
@@ -2438,13 +2678,14 @@ impl ButtonBrowserUiRuntime {
              .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-fill)!important;stroke:var(--frog-button-face-stroke)!important;stroke-width:var(--frog-button-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}}\
              .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-fill)!important;stroke:var(--frog-button-state-face-stroke)!important;stroke-width:var(--frog-button-state-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}}\
              .button-skin [data-frog-part='focus_ring']{{display:none!important;stroke:var(--frog-button-focus-color)!important;stroke-width:var(--frog-button-focus-width)!important;}}\
-             .button-widget:has(.button-press-overlay:hover) .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-hover-fill)!important;}}\
-             .button-widget:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-hover-fill)!important;stroke:var(--frog-button-state-face-hover-stroke)!important;}}\
-             .button-widget:has(.button-press-overlay:active) .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-pressed-fill)!important;transform:translateY(var(--frog-button-pressed-inset));}}\
-             .button-widget:has(.button-press-overlay:active) .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-pressed-fill)!important;stroke:var(--frog-button-state-face-pressed-stroke)!important;transform:translateY(var(--frog-button-pressed-inset));}}\
+             .button-widget[data-frog-hover-applies-when-value-false-only='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='face'],.button-widget[data-frog-hover-applies-when-value-false-only='true'][data-current-value='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-hover-fill)!important;}}\
+             .button-widget[data-frog-hover-applies-when-value-false-only='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face'],.button-widget[data-frog-hover-applies-when-value-false-only='true'][data-current-value='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-hover-fill)!important;stroke:var(--frog-button-state-face-hover-stroke)!important;}}\
+             .button-widget[data-frog-pressed-applies-while-active='true']:has(.button-press-overlay:active) .button-skin [data-frog-part='face'],.button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-pressed-fill)!important;transform:translateY(var(--frog-button-pressed-inset));}}\
+             .button-widget[data-frog-pressed-applies-while-active='true']:has(.button-press-overlay:active) .button-skin [data-frog-part='state_face'],.button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-pressed-fill)!important;stroke:var(--frog-button-state-face-pressed-stroke)!important;transform:translateY(var(--frog-button-pressed-inset));}}\
+             .button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-state-overlay{{transform:translate(-50%,calc(-50% + var(--frog-button-pressed-inset)));}}\
              .button-widget:has(.button-press-overlay:focus-visible) .button-skin [data-frog-part='focus_ring']{{display:inline!important;}}\
              .button-caption-overlay{{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--frog-button-caption-font-size);font-weight:var(--frog-button-caption-font-weight);font-family:var(--frog-button-caption-font-family);line-height:1;white-space:nowrap;pointer-events:none;z-index:3;}}\
-             .button-state-overlay{{position:absolute;transform:translate(-50%,-50%);font-size:var(--frog-button-state-text-font-size);font-weight:var(--frog-button-state-text-font-weight);line-height:1;color:var(--frog-button-state-text-fill);pointer-events:none;z-index:4;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}\
+             .button-state-overlay{{position:absolute;transform:translate(-50%,-50%);font-size:var(--frog-button-state-text-font-size);font-weight:var(--frog-button-state-text-font-weight);line-height:1;color:var(--frog-button-state-text-fill);pointer-events:none;z-index:6;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}\
              .button-press-overlay{{position:absolute;box-sizing:border-box;margin:0;padding:0;border:0;background:transparent;cursor:pointer;appearance:none;z-index:5;}}\
              .button-press-overlay:focus,.button-press-overlay:focus-visible,.button-press-overlay:active{{outline:0;box-shadow:none;}}\
              .boolean-widget{{border:0;padding:0;background:transparent;font:inherit;color:inherit;overflow:visible;}}\
@@ -2456,6 +2697,9 @@ impl ButtonBrowserUiRuntime {
              .boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{{box-shadow:none;}}\
              .boolean-state-overlay{{position:absolute;transform:translate(-50%,-50%);text-align:center;font-size:var(--boolean-text-font-size);font-weight:var(--boolean-text-font-weight);line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;white-space:nowrap;}}\
              .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}\
+             .program-read-action{{padding:6px 10px;border:1px solid #94a3b8;border-radius:4px;background:#ffffff;color:#111827;font:inherit;cursor:pointer;}}\
+             .program-read-action:hover{{background:#f8fafc;}}\
+             .program-read-status{{font-size:13px;color:#374151;min-width:112px;}}\
              .state-link{{font-size:16px;}}\
              .diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}\
              .diagnostic.error{{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}}\
@@ -2468,7 +2712,7 @@ impl ButtonBrowserUiRuntime {
              <div><dt>Compiler backend</dt><dd>{compiler_backend}</dd></div>\
              </dl>{diagnostics}<form method='post' action='/run'>\
              <div class='front-panel' data-panel-id='{panel_id}' data-coordinate-space='panel_pixels' data-runtime-language='rust' data-compiler-backend='{compiler_backend_id}' data-execution-path='{execution_path_id}' style='width:{panel_width}px;height:{panel_height}px;'>{button_html}{indicator_html}</div>\
-             <div class='actions'><a class='state-link' href='/state.json'>state.json</a></div></form>{script}</body></html>",
+             <div class='actions'><button class='program-read-action' type='button' data-frog-event='read'>Read</button><span class='program-read-status' data-frog-last-read='none'>Last read: none</span><a class='state-link' href='/state.json'>state.json</a></div></form>{script}</body></html>",
             title = escape_html(panel["title"].as_str().unwrap_or("FROG")),
             meta = escape_html(meta),
             diagnostics = diagnostics,
@@ -2529,8 +2773,18 @@ impl ButtonBrowserUiRuntime {
         if request.method == "POST" && (request.path == "/run" || request.path == "/event") {
             let body = String::from_utf8_lossy(&request.body);
             let input_id = self.public_input_id.as_str();
+            let event_name = parse_form_value(&body, "frog_event");
             let value = parse_form_value(&body, input_id).unwrap_or_else(|| "false".to_string());
-            let status = match parse_bool_value(&value).and_then(|parsed| self.run_once(parsed)) {
+            let result = if request.path == "/event" {
+                if let Some(event_name) = event_name {
+                    self.apply_event(&event_name)
+                } else {
+                    parse_bool_value(&value).and_then(|parsed| self.run_once(parsed))
+                }
+            } else {
+                parse_bool_value(&value).and_then(|parsed| self.run_once(parsed))
+            };
+            let status = match result {
                 Ok(artifact) => {
                     if request.path == "/event" {
                         return write_response(stream, "200 OK", "application/json; charset=utf-8", to_string_pretty(&artifact).unwrap().into_bytes(), None);
@@ -3433,17 +3687,35 @@ fn render_button_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
     let frame_fill = safe_css_color(&runtime_string(runtime, "style.frame.fill_color", "transparent"), "transparent");
     let frame_stroke = safe_css_color(&runtime_string(runtime, "style.frame.border_color", "transparent"), "transparent");
     let frame_width = safe_css_length(&runtime_string(runtime, "style.frame.border_width", "0px"), "0px");
-    let face_fill = safe_css_color(&state_property(runtime, "style.face.fill_color", visual_state, "#e2e8f0"), "#e2e8f0");
-    let face_hover_fill = safe_css_color(&state_property(runtime, "style.face.fill_color", hover_state, &face_fill), &face_fill);
-    let face_pressed_fill = safe_css_color(&state_property(runtime, "style.face.fill_color", pressed_state, &face_fill), &face_fill);
+    let face_fill_false = safe_css_color(&state_property(runtime, "style.face.fill_color", "false", "#e2e8f0"), "#e2e8f0");
+    let face_fill_true = safe_css_color(&state_property(runtime, "style.face.fill_color", "true", &face_fill_false), &face_fill_false);
+    let face_fill = if value { face_fill_true.clone() } else { face_fill_false.clone() };
+    let face_hover_fill_false = safe_css_color(&state_property(runtime, "style.face.fill_color", "hover_false", &face_fill_false), &face_fill_false);
+    let face_hover_fill_true = safe_css_color(&state_property(runtime, "style.face.fill_color", "hover_true", &face_fill_true), &face_fill_true);
+    let face_hover_fill = if value { face_hover_fill_true.clone() } else { face_hover_fill_false.clone() };
+    let face_pressed_fill_false = safe_css_color(&state_property(runtime, "style.face.fill_color", "pressed_false", &face_fill_false), &face_fill_false);
+    let face_pressed_fill_true = safe_css_color(&state_property(runtime, "style.face.fill_color", "pressed_true", &face_fill_true), &face_fill_true);
+    let face_pressed_fill = if value { face_pressed_fill_true.clone() } else { face_pressed_fill_false.clone() };
     let face_stroke = safe_css_color(&state_property(runtime, "style.face.border_color", visual_state, "#334155"), "#334155");
     let face_stroke_width = safe_css_length(&runtime_string(runtime, "style.face.border_width", "1px"), "1px");
-    let state_face_fill = safe_css_color(&state_property(runtime, "style.state_face.fill_color", visual_state, "transparent"), "transparent");
-    let state_face_hover_fill = safe_css_color(&state_property(runtime, "style.state_face.fill_color", hover_state, &state_face_fill), &state_face_fill);
-    let state_face_pressed_fill = safe_css_color(&state_property(runtime, "style.state_face.fill_color", pressed_state, &state_face_fill), &state_face_fill);
-    let state_face_stroke = safe_css_color(&state_property(runtime, "style.state_face.border_color", visual_state, "transparent"), "transparent");
-    let state_face_hover_stroke = safe_css_color(&state_property(runtime, "style.state_face.border_color", hover_state, &state_face_stroke), &state_face_stroke);
-    let state_face_pressed_stroke = safe_css_color(&state_property(runtime, "style.state_face.border_color", pressed_state, &state_face_stroke), &state_face_stroke);
+    let state_face_fill_false = safe_css_color(&state_property(runtime, "style.state_face.fill_color", "false", "transparent"), "transparent");
+    let state_face_fill_true = safe_css_color(&state_property(runtime, "style.state_face.fill_color", "true", &state_face_fill_false), &state_face_fill_false);
+    let state_face_fill = if value { state_face_fill_true.clone() } else { state_face_fill_false.clone() };
+    let state_face_hover_fill_false = safe_css_color(&state_property(runtime, "style.state_face.fill_color", "hover_false", &state_face_fill_false), &state_face_fill_false);
+    let state_face_hover_fill_true = safe_css_color(&state_property(runtime, "style.state_face.fill_color", "hover_true", &state_face_fill_true), &state_face_fill_true);
+    let state_face_hover_fill = if value { state_face_hover_fill_true.clone() } else { state_face_hover_fill_false.clone() };
+    let state_face_pressed_fill_false = safe_css_color(&state_property(runtime, "style.state_face.fill_color", "pressed_false", &state_face_fill_false), &state_face_fill_false);
+    let state_face_pressed_fill_true = safe_css_color(&state_property(runtime, "style.state_face.fill_color", "pressed_true", &state_face_fill_true), &state_face_fill_true);
+    let state_face_pressed_fill = if value { state_face_pressed_fill_true.clone() } else { state_face_pressed_fill_false.clone() };
+    let state_face_stroke_false = safe_css_color(&state_property(runtime, "style.state_face.border_color", "false", "transparent"), "transparent");
+    let state_face_stroke_true = safe_css_color(&state_property(runtime, "style.state_face.border_color", "true", &state_face_stroke_false), &state_face_stroke_false);
+    let state_face_stroke = if value { state_face_stroke_true.clone() } else { state_face_stroke_false.clone() };
+    let state_face_hover_stroke_false = safe_css_color(&state_property(runtime, "style.state_face.border_color", "hover_false", &state_face_stroke_false), &state_face_stroke_false);
+    let state_face_hover_stroke_true = safe_css_color(&state_property(runtime, "style.state_face.border_color", "hover_true", &state_face_stroke_true), &state_face_stroke_true);
+    let state_face_hover_stroke = if value { state_face_hover_stroke_true.clone() } else { state_face_hover_stroke_false.clone() };
+    let state_face_pressed_stroke_false = safe_css_color(&state_property(runtime, "style.state_face.border_color", "pressed_false", &state_face_stroke_false), &state_face_stroke_false);
+    let state_face_pressed_stroke_true = safe_css_color(&state_property(runtime, "style.state_face.border_color", "pressed_true", &state_face_stroke_true), &state_face_stroke_true);
+    let state_face_pressed_stroke = if value { state_face_pressed_stroke_true.clone() } else { state_face_pressed_stroke_false.clone() };
     let state_face_stroke_width = safe_css_length(&runtime_string(runtime, "style.state_face.border_width", "0px"), "0px");
     let caption_size = safe_css_length(&runtime_string(runtime, "caption.style.font_size", "18px"), "18px");
     let caption_weight = safe_css_font_weight(&runtime_string(runtime, "caption.style.font_weight", "600"), "600");
@@ -3463,8 +3735,16 @@ fn render_button_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
         "0px".to_string()
     };
     let pressed_inset = safe_css_length(&runtime_string(runtime, "style.pressed.inset", "2px"), "2px");
+    let pressed_applies_when_value_true = runtime_bool(runtime, "style.pressed.apply_when_value_true", false);
+    let pressed_applies_while_active = runtime_bool(runtime, "style.pressed.apply_while_active", true);
+    let hover_applies_when_value_false_only = runtime_bool(runtime, "style.hover.apply_when_value_false_only", false);
     let transition_ms = runtime_string(runtime, "style.transition.duration_ms", "120");
     let transition_timing = runtime_string(runtime, "style.transition.timing", "ease-out");
+    let physical_pressed = runtime["pressed"].as_bool().unwrap_or(false);
+    let output_pulse_duration_ms = runtime["behavior.output_pulse.duration_ms"]
+        .as_i64()
+        .unwrap_or(0)
+        .clamp(0, 5000);
     let asset_ref = runtime["asset_ref"].as_str().unwrap_or("");
     let asset_route = asset_ref.strip_prefix("asset:").map(|id| format!("/asset/{id}")).unwrap_or_default();
     let svg = asset_path.and_then(|path| fs::read_to_string(path).ok()).unwrap_or_default();
@@ -3480,7 +3760,7 @@ fn render_button_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
         );
     }
     format!(
-        "<div class='frog-widget button-widget button-control' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-asset-ref='{}' data-asset-route='{}' data-current-value='{}' data-frog-mechanical-action='{}' data-realization-variant='{}' data-frog-visual-law='wfrog-realization-state-map' data-frog-visual-state='{}' data-frog-hover-state='{}' data-frog-pressed-state='{}' data-frog-transition-state='{}' data-frog-state-text-visible='{}' data-frog-state-text-false='{}' data-frog-state-text-true='{}' data-frog-state-text-color-false='{}' data-frog-state-text-color-true='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;--frog-button-frame-fill:{};--frog-button-frame-stroke:{};--frog-button-frame-stroke-width:{};--frog-button-face-fill:{};--frog-button-face-hover-fill:{};--frog-button-face-pressed-fill:{};--frog-button-face-stroke:{};--frog-button-face-stroke-width:{};--frog-button-state-face-fill:{};--frog-button-state-face-hover-fill:{};--frog-button-state-face-pressed-fill:{};--frog-button-state-face-stroke:{};--frog-button-state-face-hover-stroke:{};--frog-button-state-face-pressed-stroke:{};--frog-button-state-face-stroke-width:{};--frog-button-caption-font-size:{};--frog-button-caption-font-weight:{};--frog-button-caption-font-family:{};--frog-button-state-text-fill:{};--frog-button-state-text-font-size:{};--frog-button-state-text-font-weight:{};--frog-button-focus-color:{};--frog-button-focus-width:{};--frog-button-pressed-inset:{};--frog-button-transition:{}ms {};'>\
+        "<div class='frog-widget button-widget button-control' data-widget-id='{}' data-class-ref='{}' data-role='{}' data-asset-ref='{}' data-asset-route='{}' data-current-value='{}' data-frog-physical-pressed='{}' data-frog-mechanical-action='{}' data-frog-output-pulse-duration-ms='{}' data-realization-variant='{}' data-frog-visual-law='wfrog-realization-state-map' data-frog-visual-state='{}' data-frog-hover-state='{}' data-frog-pressed-state='{}' data-frog-transition-state='{}' data-frog-pressed-applies-when-value-true='{}' data-frog-pressed-applies-while-active='{}' data-frog-hover-applies-when-value-false-only='{}' data-frog-state-text-visible='{}' data-frog-state-text-false='{}' data-frog-state-text-true='{}' data-frog-state-text-color-false='{}' data-frog-state-text-color-true='{}' data-frog-button-face-fill-false='{}' data-frog-button-face-fill-true='{}' data-frog-button-face-hover-fill-false='{}' data-frog-button-face-hover-fill-true='{}' data-frog-button-face-pressed-fill-false='{}' data-frog-button-face-pressed-fill-true='{}' data-frog-button-state-face-fill-false='{}' data-frog-button-state-face-fill-true='{}' data-frog-button-state-face-hover-fill-false='{}' data-frog-button-state-face-hover-fill-true='{}' data-frog-button-state-face-pressed-fill-false='{}' data-frog-button-state-face-pressed-fill-true='{}' data-frog-button-state-face-stroke-false='{}' data-frog-button-state-face-stroke-true='{}' data-frog-button-state-face-hover-stroke-false='{}' data-frog-button-state-face-hover-stroke-true='{}' data-frog-button-state-face-pressed-stroke-false='{}' data-frog-button-state-face-pressed-stroke-true='{}' style='position:absolute;left:{}px;top:{}px;width:{}px;height:{}px;--frog-button-frame-fill:{};--frog-button-frame-stroke:{};--frog-button-frame-stroke-width:{};--frog-button-face-fill:{};--frog-button-face-hover-fill:{};--frog-button-face-pressed-fill:{};--frog-button-face-stroke:{};--frog-button-face-stroke-width:{};--frog-button-state-face-fill:{};--frog-button-state-face-hover-fill:{};--frog-button-state-face-pressed-fill:{};--frog-button-state-face-stroke:{};--frog-button-state-face-hover-stroke:{};--frog-button-state-face-pressed-stroke:{};--frog-button-state-face-stroke-width:{};--frog-button-caption-font-size:{};--frog-button-caption-font-weight:{};--frog-button-caption-font-family:{};--frog-button-state-text-fill:{};--frog-button-state-text-font-size:{};--frog-button-state-text-font-weight:{};--frog-button-focus-color:{};--frog-button-focus-width:{};--frog-button-pressed-inset:{};--frog-button-transition:{}ms {};'>\
          <div class='button-skin' data-frog-asset-consumed='true' aria-hidden='true'>{}</div>\
          <span class='button-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor' style='{}'>{}</span>{}\
          <button class='button-press-overlay' type='button' name='{}' value='true' aria-label='{}' aria-pressed='{}' data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='{}' data-frog-host-overlay='input' data-frog-align-to-part='face' style='{}'></button></div>",
@@ -3490,17 +3770,40 @@ fn render_button_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
         escape_html(asset_ref),
         escape_html(&asset_route),
         if value { "true" } else { "false" },
+        if physical_pressed { "true" } else { "false" },
         escape_html(&mechanical_action),
+        output_pulse_duration_ms,
         escape_html(&runtime_string(runtime, "realization.variant", "rectangular")),
         visual_state,
         hover_state,
         pressed_state,
         transition_state,
+        if pressed_applies_when_value_true { "true" } else { "false" },
+        if pressed_applies_while_active { "true" } else { "false" },
+        if hover_applies_when_value_false_only { "true" } else { "false" },
         if runtime_bool(runtime, "state_text.visible", true) { "true" } else { "false" },
         escape_html(&false_state_text),
         escape_html(&true_state_text),
         escape_html(&false_text_color),
         escape_html(&true_text_color),
+        escape_html(&face_fill_false),
+        escape_html(&face_fill_true),
+        escape_html(&face_hover_fill_false),
+        escape_html(&face_hover_fill_true),
+        escape_html(&face_pressed_fill_false),
+        escape_html(&face_pressed_fill_true),
+        escape_html(&state_face_fill_false),
+        escape_html(&state_face_fill_true),
+        escape_html(&state_face_hover_fill_false),
+        escape_html(&state_face_hover_fill_true),
+        escape_html(&state_face_pressed_fill_false),
+        escape_html(&state_face_pressed_fill_true),
+        escape_html(&state_face_stroke_false),
+        escape_html(&state_face_stroke_true),
+        escape_html(&state_face_hover_stroke_false),
+        escape_html(&state_face_hover_stroke_true),
+        escape_html(&state_face_pressed_stroke_false),
+        escape_html(&state_face_pressed_stroke_true),
         layout["x"].as_i64().unwrap_or(0),
         layout["y"].as_i64().unwrap_or(0),
         layout["width"].as_i64().unwrap_or(220),
@@ -3537,7 +3840,7 @@ fn render_button_widget(widget: &Value, asset_path: Option<&PathBuf>) -> String 
         state_text_overlay,
         escape_html(&input_id),
         escape_html(&caption),
-        if value { "true" } else { "false" },
+        if physical_pressed { "true" } else { "false" },
         escape_html(&input_id),
         button_box_style(geometry.face_x, geometry.face_y, geometry.face_width, geometry.face_height, geometry),
     )
@@ -3550,6 +3853,8 @@ fn button_widget_script() -> &'static str {
   const overlay = document.querySelector(".button-press-overlay[data-frog-part='face'][data-frog-host-overlay='input']");
   const buttonWidget = overlay ? overlay.closest(".button-widget[data-class-ref='frog.widgets.button']") : null;
   const indicator = document.querySelector(".boolean-indicator[data-class-ref='frog.widgets.boolean_indicator']");
+  const readButton = document.querySelector(".program-read-action[data-frog-event='read']");
+  const readStatus = document.querySelector(".program-read-status");
   if (!form || !buttonWidget || !overlay || !indicator) {
     return;
   }
@@ -3557,11 +3862,21 @@ fn button_widget_script() -> &'static str {
   const stateText = indicator.querySelector("[data-frog-part='state_text']");
   const inputId = overlay.dataset.frogPublicInputId || overlay.name || "";
   const mechanicalAction = buttonWidget.dataset.frogMechanicalAction || "";
-  if (!inputId || (mechanicalAction !== "switch_until_released" && mechanicalAction !== "switch_when_pressed")) {
+  const latchAction = mechanicalAction === "latch_when_pressed" ||
+    mechanicalAction === "latch_when_released" ||
+    mechanicalAction === "latch_until_released";
+  const pulseDurationMs = Math.max(0, Math.min(5000, Number.parseInt(buttonWidget.dataset.frogOutputPulseDurationMs || "0", 10) || 0));
+  if (!inputId || (
+      mechanicalAction !== "switch_until_released" &&
+      mechanicalAction !== "switch_when_pressed" &&
+      mechanicalAction !== "switch_when_released" &&
+      mechanicalAction !== "latch_when_pressed" &&
+      mechanicalAction !== "latch_when_released" &&
+      mechanicalAction !== "latch_until_released")) {
     return;
   }
-  let pressed = buttonWidget.dataset.currentValue === "true";
   let eventQueue = Promise.resolve();
+  let pulseResetTimer = 0;
   const buttonProperty = (base, value) => buttonWidget.dataset[`${base}${value ? "True" : "False"}`] || "";
   const indicatorProperty = (base, value) => indicator.dataset[`${base}${value ? "True" : "False"}`] || "";
   const applyIndicator = (value) => {
@@ -3578,52 +3893,64 @@ fn button_widget_script() -> &'static str {
       stateText.textContent = indicatorProperty("frogText", value);
     }
   };
-  const publish = (value) => {
-    const body = new URLSearchParams();
-    body.set(inputId, value ? "true" : "false");
-    eventQueue = eventQueue.catch(() => {}).then(() => fetch("/event", {
-      method: "POST",
-      headers: {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"},
-      body
-    })).catch(() => {});
-  };
-  const setPressed = (value) => {
-    if (pressed === value) {
-      return;
-    }
-    pressed = value;
-    overlay.setAttribute("aria-pressed", value ? "true" : "false");
+  const applyButton = (value, physicalPressed) => {
+    overlay.setAttribute("aria-pressed", physicalPressed ? "true" : "false");
+    buttonWidget.dataset.frogPhysicalPressed = physicalPressed ? "true" : "false";
     buttonWidget.dataset.currentValue = value ? "true" : "false";
     buttonWidget.dataset.frogVisualState = value ? "true" : "false";
+    buttonWidget.dataset.frogHoverState = value ? "hover_true" : "hover_false";
     buttonWidget.dataset.frogPressedState = value ? "pressed_true" : "pressed_false";
+    buttonWidget.style.setProperty("--frog-button-face-fill", buttonProperty("frogButtonFaceFill", value));
+    buttonWidget.style.setProperty("--frog-button-face-hover-fill", buttonProperty("frogButtonFaceHoverFill", value));
+    buttonWidget.style.setProperty("--frog-button-face-pressed-fill", buttonProperty("frogButtonFacePressedFill", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-fill", buttonProperty("frogButtonStateFaceFill", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-hover-fill", buttonProperty("frogButtonStateFaceHoverFill", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-pressed-fill", buttonProperty("frogButtonStateFacePressedFill", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-stroke", buttonProperty("frogButtonStateFaceStroke", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-hover-stroke", buttonProperty("frogButtonStateFaceHoverStroke", value));
+    buttonWidget.style.setProperty("--frog-button-state-face-pressed-stroke", buttonProperty("frogButtonStateFacePressedStroke", value));
+    buttonWidget.style.setProperty("--frog-button-state-text-fill", buttonProperty("frogStateTextColor", value));
     if (buttonStateText) {
       buttonStateText.textContent = buttonProperty("frogStateText", value);
       buttonStateText.style.color = buttonProperty("frogStateTextColor", value);
     }
-    applyIndicator(value);
-    publish(value);
   };
-  form.addEventListener("submit", (event) => event.preventDefault());
-  overlay.addEventListener("click", (event) => event.preventDefault());
-  if (mechanicalAction === "switch_when_pressed") {
-    const toggle = (event) => {
-      if (event && event.button !== undefined && event.button !== 0) {
-        return;
+  const applyArtifact = (artifact) => {
+    const ui = artifact && artifact.outputs && artifact.outputs.ui ? artifact.outputs.ui : {};
+    const summary = artifact && artifact.execution_summary ? artifact.execution_summary : {};
+    const buttonValue = Boolean(ui[buttonWidget.dataset.widgetId]);
+    const indicatorValue = Boolean(ui[indicator.dataset.widgetId]);
+    const latchPulseVisible = latchAction &&
+      pulseDurationMs > 0 &&
+      summary.program_read_performed &&
+      summary.program_read_value;
+    applyButton(latchPulseVisible ? true : buttonValue, Boolean(summary.button_physical_pressed));
+    applyIndicator(indicatorValue);
+    if (readStatus && summary.program_read_performed) {
+      readStatus.textContent = `Last read: ${summary.program_read_value ? "TRUE" : "FALSE"}`;
+      readStatus.dataset.frogLastRead = summary.program_read_value ? "true" : "false";
+    }
+    const shouldResetLatchPulse = latchPulseVisible &&
+      (mechanicalAction === "latch_when_pressed" || !summary.button_physical_pressed);
+    if (shouldResetLatchPulse) {
+      window.clearTimeout(pulseResetTimer);
+      pulseResetTimer = window.setTimeout(() => publishEvent("read"), pulseDurationMs);
+    }
+  };
+  const publishEvent = (eventName) => {
+    const body = new URLSearchParams();
+    body.set("frog_event", eventName);
+    body.set(inputId, buttonWidget.dataset.currentValue === "true" ? "true" : "false");
+    eventQueue = eventQueue.catch(() => {}).then(() => fetch("/event", {
+      method: "POST",
+      headers: {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"},
+      body
+    })).then((response) => response.ok ? response.json() : null).then((artifact) => {
+      if (artifact) {
+        applyArtifact(artifact);
       }
-      if (event) {
-        event.preventDefault();
-      }
-      setPressed(!(buttonWidget.dataset.currentValue === "true"));
-    };
-    overlay.addEventListener("pointerdown", toggle);
-    overlay.addEventListener("keydown", (event) => {
-      if ((event.key !== " " && event.key !== "Enter") || event.repeat) {
-        return;
-      }
-      toggle(event);
-    });
-    return;
-  }
+    }).catch(() => {});
+  };
   const press = (event) => {
     if (event && event.button !== undefined && event.button !== 0) {
       return;
@@ -3631,47 +3958,71 @@ fn button_widget_script() -> &'static str {
     if (event) {
       event.preventDefault();
     }
-    setPressed(true);
+    publishEvent("press");
   };
-  overlay.addEventListener("pointerdown", (event) => {
-    if (overlay.setPointerCapture) {
-      overlay.setPointerCapture(event.pointerId);
-    }
-    press(event);
-  });
   const release = (event) => {
-    if (!pressed) {
-      return;
-    }
     if (event) {
       event.preventDefault();
     }
-    setPressed(false);
+    publishEvent("release");
   };
-  overlay.addEventListener("pointerup", release);
-  overlay.addEventListener("pointercancel", release);
-  overlay.addEventListener("lostpointercapture", release);
-  overlay.addEventListener("mousedown", press);
-  window.addEventListener("mouseup", release);
-  overlay.addEventListener("mouseleave", release);
-  overlay.addEventListener("touchstart", press, {passive: false});
-  overlay.addEventListener("touchend", release, {passive: false});
-  overlay.addEventListener("touchcancel", release, {passive: false});
-  overlay.addEventListener("blur", release);
-  overlay.addEventListener("keydown", (event) => {
-    if (event.key !== " " && event.key !== "Enter") {
+  form.addEventListener("submit", (event) => event.preventDefault());
+  overlay.addEventListener("click", (event) => event.preventDefault());
+  let armed = false;
+  const arm = (event) => {
+    armed = true;
+    press(event);
+  };
+  const releaseIfArmed = (event) => {
+    if (!armed) {
       return;
     }
-    event.preventDefault();
-    setPressed(true);
+    armed = false;
+    release(event);
+  };
+  const cancel = (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+    armed = false;
+  };
+  if (window.PointerEvent) {
+    overlay.addEventListener("pointerdown", (event) => {
+      if (overlay.setPointerCapture) {
+        overlay.setPointerCapture(event.pointerId);
+      }
+      arm(event);
+    });
+    overlay.addEventListener("pointerup", releaseIfArmed);
+    overlay.addEventListener("pointercancel", cancel);
+    overlay.addEventListener("lostpointercapture", cancel);
+  } else {
+    overlay.addEventListener("mousedown", arm);
+    window.addEventListener("mouseup", releaseIfArmed);
+    overlay.addEventListener("touchstart", arm, {passive: false});
+    overlay.addEventListener("touchend", releaseIfArmed, {passive: false});
+    overlay.addEventListener("touchcancel", cancel, {passive: false});
+  }
+  overlay.addEventListener("blur", cancel);
+  overlay.addEventListener("keydown", (event) => {
+    if ((event.key !== " " && event.key !== "Enter") || event.repeat) {
+      return;
+    }
+    armed = true;
+    press(event);
   });
   overlay.addEventListener("keyup", (event) => {
     if (event.key !== " " && event.key !== "Enter") {
       return;
     }
-    event.preventDefault();
-    setPressed(false);
+    releaseIfArmed(event);
   });
+  if (readButton) {
+    readButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      publishEvent("read");
+    });
+  }
 })();
 </script>"#
 }

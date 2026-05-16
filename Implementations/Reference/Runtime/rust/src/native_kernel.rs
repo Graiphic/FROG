@@ -223,7 +223,11 @@ impl NativeBoolKernelBridge {
         ensure(
             manifest.entry_symbol == "frog_example06_run"
                 || manifest.entry_symbol == "frog_example10_run"
-                || manifest.entry_symbol == "frog_example11_run",
+                || manifest.entry_symbol == "frog_example11_run"
+                || manifest.entry_symbol == "frog_example12_run"
+                || manifest.entry_symbol == "frog_example13_run"
+                || manifest.entry_symbol == "frog_example14_run"
+                || manifest.entry_symbol == "frog_example15_run",
             "unexpected native bool kernel entry symbol",
         )?;
         ensure(

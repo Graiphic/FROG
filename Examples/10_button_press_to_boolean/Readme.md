@@ -1,8 +1,9 @@
-<h1>Example 10 - Button Press To Boolean</h1>
+<h1>Example 10 - Button Switch Until Released</h1>
 
 <p>
-Example 10 is the bounded Button widget acceptance slice. It keeps the behavior
-intentionally small: one Button control publishes its momentary pressed value,
+Example 10 is the bounded Button widget acceptance slice for the
+<code>switch_until_released</code> mechanical action. It keeps the behavior
+intentionally small: one Button control is ON while pressed, OFF when released,
 the diagram copies that value, and one Boolean indicator displays the result.
 </p>
 

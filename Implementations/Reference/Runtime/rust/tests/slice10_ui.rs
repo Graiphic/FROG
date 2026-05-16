@@ -30,7 +30,7 @@ fn rust_example10_headless_button_press_to_boolean() {
     let artifact = runtime.run_once(true).expect("run true");
     assert_eq!(artifact["execution_summary"]["trigger_pressed"].as_bool(), Some(true));
     assert_eq!(artifact["outputs"]["public"]["pressed"].as_bool(), Some(true));
-    assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(false));
+    assert_eq!(artifact["outputs"]["ui"]["trigger_button"].as_bool(), Some(true));
     assert_eq!(artifact["outputs"]["ui"]["pressed_indicator"].as_bool(), Some(true));
     let widgets = artifact["ui_runtime"]["widgets"].as_array().expect("widgets");
     let button = widgets
@@ -39,7 +39,7 @@ fn rust_example10_headless_button_press_to_boolean() {
         .expect("button widget");
     assert_eq!(button["class_ref"].as_str(), Some("frog.widgets.button"));
     assert_eq!(button["runtime"]["event.pressed"].as_bool(), Some(true));
-    assert_eq!(button["runtime"]["value"].as_bool(), Some(false));
+    assert_eq!(button["runtime"]["value"].as_bool(), Some(true));
 }
 
 #[test]
@@ -60,12 +60,19 @@ fn rust_example10_browser_ui_consumes_default_svg_and_source_styles() {
     assert!(html.contains("class='button-skin'"));
     assert!(html.contains("data-frog-asset-consumed='true'"));
     assert!(html.contains("data-frog-mechanical-action='switch_until_released'"));
+    assert!(html.contains("data-frog-pressed-applies-when-value-true='true'"));
+    assert!(html.contains("data-frog-pressed-applies-while-active='false'"));
+    assert!(html.contains("data-frog-hover-applies-when-value-false-only='false'"));
     assert!(html.contains("data-frog-part='caption' data-svg-anchor='caption.anchor'"));
     assert!(html.contains("data-frog-part='state_text' data-svg-anchor='state_text.center'"));
     assert!(html.contains("class='button-press-overlay' type='button'"));
     assert!(html.contains("data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='trigger_pressed'"));
     assert!(html.contains("data-frog-host-overlay='input' data-frog-align-to-part='face'"));
+    assert!(html.contains("--frog-button-face-fill:#e2e8f0;"));
+    assert!(html.contains("--frog-button-face-hover-fill:#f1f5f9;"));
+    assert!(html.contains("--frog-button-face-pressed-fill:#e2e8f0;"));
     assert!(html.contains("--frog-button-face-stroke-width:1px;"));
+    assert!(html.contains("--frog-button-pressed-inset:0px;"));
     assert!(html.contains("--frog-button-state-text-font-weight:400;"));
     assert!(html.contains("--frog-button-caption-font-size:18px;"));
     assert!(html.contains("--frog-button-caption-font-weight:600;"));
@@ -74,7 +81,10 @@ fn rust_example10_browser_ui_consumes_default_svg_and_source_styles() {
     assert!(html.contains("--boolean-text-font-weight:400;"));
     assert!(html.contains("--boolean-inner-border-width:0px;"));
     assert!(html.contains("fetch(\"/event\""));
-    assert!(html.contains("mechanicalAction !== \"switch_until_released\" && mechanicalAction !== \"switch_when_pressed\""));
+    assert!(html.contains("mechanicalAction !== \"switch_until_released\""));
+    assert!(html.contains("mechanicalAction !== \"latch_until_released\""));
+    assert!(html.contains("publishEvent(\"press\")"));
+    assert!(html.contains("publishEvent(\"release\")"));
     assert!(html.contains("pointerdown"));
     assert!(html.contains("pointerup"));
     assert!(html.contains(">OFF</span>"));
@@ -89,7 +99,7 @@ fn rust_example10_browser_ui_consumes_default_svg_and_source_styles() {
 
     runtime.run_once(true).expect("run true");
     let html = runtime.render_html();
-    assert!(html.contains("data-frog-visual-state='false'"));
-    assert!(html.contains(">OFF</span>"));
+    assert!(html.contains("data-frog-visual-state='true'"));
+    assert!(html.contains(">ON</span>"));
     assert!(html.contains(">TRUE</span>"));
 }
