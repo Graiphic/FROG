@@ -539,6 +539,19 @@ Such implementations do not redefine the specification merely by existing.
 The specification remains governed by the normative repository documents.
 </p>
 
+<p>
+The public FROG repository and Graiphic proprietary implementations have distinct roles.
+The public repository governs the open specification and its bounded public reference material.
+Graiphic proprietary repositories may contain production-grade IDE, runtime, deployment, integration, certification, and enterprise product code.
+</p>
+
+<p>
+The existence of a Graiphic proprietary runtime or IDE does not change the public specification.
+Conversely, the presence of a public reference runtime in this repository does not require Graiphic to publish its production runtime implementation.
+The public reference runtime is a conformance-oriented proof surface.
+It is not the mandatory runtime architecture for all implementations and it is not Graiphic's production runtime.
+</p>
+
 <pre>
 Open spec
    does not forbid

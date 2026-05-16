@@ -19,6 +19,12 @@ It exists to make selected repository-visible corridors executable and inspectab
 </p>
 
 <p>
+This workspace is public reference material.
+It exists to exercise the specification and published examples, not to define Graiphic's production runtime, IDE, compiler, or product architecture.
+Production-grade Graiphic implementations may continue in private repositories while preserving the public contracts required for independent implementations.
+</p>
+
+<p>
 The workspace protects a numbered progression of examples and the published widget / Default realization layer:
 </p>
 
@@ -37,7 +43,7 @@ Examples 01-10
     -&gt; runtime acceptance snapshot
     -&gt; LLVM proof
 
-Examples 06-09
+Examples 06-10
   .frog front-panel instances
     -&gt; FIR / lowering / contract artifacts where published
     -&gt; LLVM native kernel artifacts and manifests where published
@@ -49,7 +55,7 @@ Examples 06-09
 <p>
 Example 05 remains the primary applicative UI/state/runtime/native corridor.
 Examples 01-04 provide smaller executable proof slices for pure arithmetic, widget values, UI property writes, and explicit feedback state.
-Examples 06-09 extend the runtime/widget discipline across the current Boolean, String, Enum, and Path front-panel slices.
+Examples 06-10 extend the public reference runtime/widget discipline across the current Boolean, String, Enum, Path, and Button front-panel slices.
 </p>
 
 <hr/>
@@ -232,6 +238,7 @@ The workflow runs the full reference workspace check, the reference pytest suite
 <p>
 This workspace consumes the published specification layers.
 It does not define FROG source law, semantic law, FIR law, widget law, realization law, runtime law, backend contract law, or LLVM backend law.
+It also does not define Graiphic's production implementation space.
 </p>
 
 <pre><code>reference implementation

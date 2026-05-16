@@ -19,6 +19,11 @@ It does not define document-specific versions.
 Version governance remains centralized in this directory and in the repository history.
 </p>
 
+<p>
+The public reference runtime closure is currently bounded to Examples <code>01</code> through <code>10</code>.
+Graiphic production runtime and IDE development may continue in proprietary repositories without redefining the public specification.
+</p>
+
 <hr/>
 
 <h2>Executable Example Closure Matrix</h2>

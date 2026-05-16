@@ -21,6 +21,23 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
 
 <hr/>
 
+<h2>Public Runtime Boundary</h2>
+
+<p>
+Examples <code>01</code> through <code>10</code> define the current public reference runtime closure.
+</p>
+
+<p>
+Examples beyond this boundary may remain repository-visible as specification-facing, widget-facing, conformance-facing, or design-progression examples.
+They should not be interpreted as a commitment to publish Graiphic's production runtime implementation for those examples.
+</p>
+
+<p>
+Production-grade runtime development for future FROG execution surfaces may continue in Graiphic proprietary repositories while preserving the public contracts required for independent implementations.
+</p>
+
+<hr/>
+
 <h2>Current Example Progression</h2>
 
 <table>
@@ -29,7 +46,7 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
       <th>Example</th>
       <th>Focus</th>
       <th>Starts at</th>
-      <th>Current published closure</th>
+      <th>Current repository status</th>
     </tr>
   </thead>
   <tbody>
@@ -91,37 +108,37 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
       <td><code>10_button_press_to_boolean</code></td>
       <td>Button <code>switch_until_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
-      <td><code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
+      <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
     </tr>
     <tr>
       <td><code>11_button_switch_when_pressed</code></td>
       <td>Button <code>switch_when_pressed</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
-      <td><code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
+      <td>Repository-visible Button progression outside the current public reference runtime closure</td>
     </tr>
     <tr>
       <td><code>12_button_switch_when_released</code></td>
       <td>Button <code>switch_when_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
-      <td><code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
+      <td>Repository-visible Button progression outside the current public reference runtime closure</td>
     </tr>
     <tr>
       <td><code>13_button_latch_when_pressed</code></td>
       <td>Button <code>latch_when_pressed</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
-      <td><code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
+      <td>Repository-visible Button progression outside the current public reference runtime closure</td>
     </tr>
     <tr>
       <td><code>14_button_latch_when_released</code></td>
       <td>Button <code>latch_when_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
-      <td><code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
+      <td>Repository-visible Button progression outside the current public reference runtime closure</td>
     </tr>
     <tr>
       <td><code>15_button_latch_until_released</code></td>
       <td>Button <code>latch_until_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
-      <td><code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
+      <td>Repository-visible Button progression outside the current public reference runtime closure</td>
     </tr>
   </tbody>
 </table>
@@ -157,7 +174,10 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
 09  Path .wfrog realization and native-kernel runtime bridge
     |
     v
-10-15  Button mechanical actions with Default Button/Boolean realization
+10  Button switch_until_released action in the public reference runtime closure
+    |
+    v
+11-15  Button mechanical-action progression outside the current public reference runtime closure
 </code></pre>
 
 <hr/>

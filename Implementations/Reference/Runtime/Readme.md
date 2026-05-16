@@ -30,6 +30,27 @@ That document records the compiler-agnostic runtime/backend boundary for the com
 
 <hr/>
 
+<h2>Public Reference Runtime Boundary</h2>
+
+<p>
+This directory contains the public reference runtime surface for the FROG specification repository.
+It is intentionally non-production and conformance-oriented.
+Its role is to exercise repository-visible examples, emitted backend contracts, native-kernel manifests, widget bindings, runtime acceptance snapshots, and public execution corridors in a transparent way.
+</p>
+
+<p>
+The current public reference runtime is bounded to the published Examples <code>01</code> through <code>10</code> closure.
+This boundary does not prevent other runtimes from implementing FROG.
+It also does not define the architecture of Graiphic's production runtimes.
+</p>
+
+<p>
+Graiphic may continue production-grade runtime development in proprietary repositories.
+Such runtimes are implementations of the public FROG specification; they do not redefine the language specification by existing.
+</p>
+
+<hr/>
+
 <h2>Current Runtime Surface</h2>
 
 <pre><code>Examples 01-04
@@ -177,5 +198,5 @@ It consumes emitted backend contracts and validates repository-visible runtime b
 
 <p>
 The native-kernel bridge preserves this boundary: the runtime hosts execution and UI; backends compile lowered units; explicit manifests and stable ABI surfaces connect both sides.
-The Examples 05-10 native-kernel closures are bounded LabVIEW-like proof corridors, not a generalized production runtime.
+The Examples 05-10 native-kernel closures are bounded LabVIEW-like proof corridors within the current public reference runtime closure, not a generalized production runtime.
 </p>

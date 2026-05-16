@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="../FROG logo.svg" alt="FROG logo" width="200" />
+  <img src="../FROG logo.svg" alt="FROG logo" width="140" />
 </p>
 
 <h1 align="center">FROG Roadmap</h1>
@@ -151,8 +151,14 @@ It helps ensure that strategic ambition does not outrun technical closure, and t
   <li>not a place where implementation convenience becomes language law,</li>
   <li>not a place where strategy prose silently replaces technical closure,</li>
   <li>not a place where current corpus-version truth is declared,</li>
+  <li>not Graiphic's proprietary product implementation plan,</li>
   <li>not a claim that all future phases are already stabilized.</li>
 </ul>
+
+<p>
+References to runtime, deployment, IDE, or ecosystem maturity in this roadmap describe public specification, conformance, and bounded reference-corridor sequencing.
+They do not require Graiphic production runtime or FROG Studio implementation work to be developed inside this public repository.
+</p>
 
 <hr/>
 
