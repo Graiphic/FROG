@@ -140,6 +140,12 @@ Production-grade runtime development for future FROG execution surfaces continue
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
       <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
     </tr>
+    <tr>
+      <td><code>16_picture_logo_jpeg</code></td>
+      <td>Picture indicator displaying the FROG logo as a JPEG payload</td>
+      <td><code>main.frog</code> + <code>ui/picture_panel.wfrog</code> + <code>assets/frog_logo.jpg</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
   </tbody>
 </table>
 
@@ -177,7 +183,10 @@ Production-grade runtime development for future FROG execution surfaces continue
 10-15  Button mechanical actions in the public reference runtime closure
     |
     v
-16+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
+16   Picture logo JPEG display as a post-boundary widget progression example
+    |
+    v
+17+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
 </code></pre>
 
 <hr/>
@@ -234,13 +243,39 @@ Production-grade runtime development for future FROG execution surfaces continue
 │   ├── main.lowering.json
 │   └── ui/
 │       └── enum_panel.wfrog
-└── 09_path_value_roundtrip/
+├── 09_path_value_roundtrip/
+│   ├── Readme.md
+│   ├── main.frog
+│   ├── main.fir.json
+│   ├── main.lowering.json
+│   └── ui/
+│       └── path_panel.wfrog
+├── 10_button_press_to_boolean/
+│   ├── Readme.md
+│   ├── main.frog
+│   ├── main.fir.json
+│   ├── main.lowering.json
+│   └── ui/
+│       └── button_panel.wfrog
+├── 11_button_switch_when_pressed/
+│   └── same Button example shape
+├── 12_button_switch_when_released/
+│   └── same Button example shape
+├── 13_button_latch_when_pressed/
+│   └── same Button example shape
+├── 14_button_latch_when_released/
+│   └── same Button example shape
+├── 15_button_latch_until_released/
+│   └── same Button example shape
+└── 16_picture_logo_jpeg/
     ├── Readme.md
     ├── main.frog
     ├── main.fir.json
     ├── main.lowering.json
+    ├── assets/
+    │   └── frog_logo.jpg
     └── ui/
-        └── path_panel.wfrog
+        └── picture_panel.wfrog
 </code></pre>
 
 <p>
@@ -249,6 +284,14 @@ each Button mechanical-action slice contains <code>Readme.md</code>,
 <code>main.frog</code>, FIR/lowering artifacts, and
 <code>ui/button_panel.wfrog</code> referencing the Default Button and Boolean
 realization assets.
+</p>
+
+<p>
+Example <code>16</code> starts the repository-visible post-boundary widget
+progression. It contains public source, FIR/lowering shape, a
+<code>.wfrog</code> package referencing the Default Picture realization, and a
+source-owned JPEG payload displayed by a Picture indicator. It does not add
+public runtime source beyond the Example 15 closure.
 </p>
 
 <hr/>

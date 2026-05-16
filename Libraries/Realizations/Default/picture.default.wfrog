@@ -69,7 +69,11 @@
         "caption",
         "frame",
         "picture_region",
+        "image_surface",
         "overlay_region",
+        "roi_layer",
+        "crosshair_layer",
+        "cursor_readout",
         "focus_ring"
       ],
       "fallbacks": {
@@ -116,9 +120,29 @@
       "binding_selector": "[data-frog-part='picture_region']"
     },
     {
+      "part": "image_surface",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='image_surface']"
+    },
+    {
       "part": "overlay_region",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='overlay_region']"
+    },
+    {
+      "part": "roi_layer",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='roi_layer']"
+    },
+    {
+      "part": "crosshair_layer",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='crosshair_layer']"
+    },
+    {
+      "part": "cursor_readout",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='cursor_readout']"
     },
     {
       "part": "focus_ring",
@@ -159,7 +183,7 @@
     },
     {
       "member": "image.*",
-      "target_part": "picture_region",
+      "target_part": "image_surface",
       "target_operation": "render_image_payload"
     },
     {

@@ -76,7 +76,11 @@ The Picture family defines standardized image and drawable-surface widgets for F
   <li><code>caption</code></li>
   <li><code>frame</code></li>
   <li><code>picture_region</code></li>
+  <li><code>image_surface</code></li>
   <li><code>overlay_region</code></li>
+  <li><code>roi_layer</code></li>
+  <li><code>crosshair_layer</code></li>
+  <li><code>cursor_readout</code></li>
   <li><code>focus_ring</code></li>
 </ul>
 

@@ -1,0 +1,64 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "16_picture_logo_jpeg",
+    "path": "Examples/16_picture_logo_jpeg/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/16_picture_logo_jpeg/ui/picture_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "picture_logo_jpeg_display_ui_unit",
+      "public_interface": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "logo_picture",
+            "type": "picture"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [],
+        "indicator_bindings": [
+          {
+            "widget_id": "logo_picture",
+            "mode": "literal_picture_value",
+            "public_output_id": "logo_picture",
+            "value_type": "picture"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "single_picture_literal_publication",
+        "body_rule": {
+          "kind": "publish_literal_picture_value",
+          "expression": "logo_picture = frog_logo_jpeg_literal"
+        }
+      },
+      "publications": [
+        {
+          "target": "public_output.logo_picture",
+          "source": "constant.frog_logo_jpeg_literal"
+        },
+        {
+          "target": "widget.logo_picture.value",
+          "source": "constant.frog_logo_jpeg_literal"
+        }
+      ],
+      "notes": [
+        "This FIR is a repository-visible Picture widget progression slice beyond the current public reference runtime closure.",
+        "The picture payload is source-owned .frog data and is not a widget realization asset.",
+        "The Picture visual grammar is provided by the Default Picture SVG realization package; this FIR does not own SVG geometry.",
+        "Runtime implementation for this example continues in Graiphic/FROG-Runtime unless explicitly promoted later."
+      ]
+    }
+  ]
+}

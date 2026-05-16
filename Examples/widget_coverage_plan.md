@@ -14,13 +14,14 @@
 <h2>Purpose</h2>
 
 <p>
-This document records the conservative plan for adding small widget-focused examples after the current Examples 01-10 corridor.
+This document records the conservative plan for adding small widget-focused examples after the current Examples 01-15 public reference runtime closure.
 It is intentionally a sequencing plan, not a broad runtime or compiler generalization claim.
 </p>
 
 <p>
 The current primary LabVIEW-like proof remains Example 05, where the source diagram can be lowered toward an LLVM-produced native kernel and consumed by a compiler-agnostic runtime bridge.
-Examples 06 through 10 extend that discipline to bounded scalar widgets while keeping the runtime/compiler boundary explicit: LLVM produces kernel artifacts and manifests; the runtimes consume manifests, ABI surfaces, <code>.wfrog</code> packages, and Default realization assets.
+Examples 06 through 15 extend that discipline to bounded scalar and Button widgets while keeping the runtime/compiler boundary explicit: LLVM produces kernel artifacts and manifests; the runtimes consume manifests, ABI surfaces, <code>.wfrog</code> packages, and Default realization assets.
+Examples 16 and beyond may continue as repository-visible widget/specification progression material while production runtime implementation continues in Graiphic's proprietary <code>Graiphic/FROG-Runtime</code> repository unless explicitly promoted later.
 </p>
 
 <hr/>
@@ -28,10 +29,10 @@ Examples 06 through 10 extend that discipline to bounded scalar widgets while ke
 <h2>Current Boundary</h2>
 
 <ul>
-  <li>Do not create the next widget wave before Examples 06-10 remain green across the shared validation surface.</li>
+  <li>Do not create the next widget wave before Examples 06-15 remain green across the shared validation surface.</li>
   <li>Do not generalize the Deriver, Lowerer, or ContractEmitter broadly in this wave.</li>
   <li>Do not make the runtime LLVM-only; scalar native-kernel coverage must stay behind explicit manifests.</li>
-  <li>Do not weaken Examples 01-10 or the Examples 05-10 native-kernel bridge coverage.</li>
+  <li>Do not weaken Examples 01-15 or the Examples 05-15 native-kernel bridge coverage.</li>
   <li>Keep each new example bounded, explicit, and independently checkable.</li>
 </ul>
 
@@ -101,9 +102,23 @@ The visible front panel must be derived from the published <code>.wfrog</code> l
     <tr>
       <td><code>10_button_press_to_boolean</code></td>
       <td><code>frog.widgets.button</code> → <code>frog.widgets.boolean_indicator</code></td>
-      <td>surface momentary button pressed state as a Boolean value</td>
+      <td>surface the <code>switch_until_released</code> Button state as a Boolean value</td>
       <td>runtime/UI-binding plus manifest-driven native-kernel bridge</td>
-      <td>published pilot</td>
+      <td>published public runtime closure</td>
+    </tr>
+    <tr>
+      <td><code>11-15_button_mechanical_actions</code></td>
+      <td><code>frog.widgets.button</code> -> <code>frog.widgets.boolean_indicator</code></td>
+      <td>cover the six bounded Button mechanical-action examples through Example 15</td>
+      <td>runtime/UI-binding plus manifest-driven native-kernel bridge</td>
+      <td>published public runtime closure</td>
+    </tr>
+    <tr>
+      <td><code>16_picture_logo_jpeg</code></td>
+      <td><code>frog.widgets.picture_indicator</code></td>
+      <td>display a source-owned JPEG logo payload inside the Default Picture realization</td>
+      <td>post-boundary public example material; runtime implementation continues privately unless promoted</td>
+      <td>started</td>
     </tr>
   </tbody>
 </table>
@@ -157,8 +172,8 @@ LLVM remains a backend artifact producer; the runtimes consume explicit manifest
 <h2>Future Work</h2>
 
 <ul>
-  <li>Keep Examples 06-10 in the shared validation posture as the current scalar widget wave.</li>
+  <li>Keep Examples 06-15 in the shared validation posture as the current public reference runtime closure.</li>
   <li>Add the next widget examples one at a time.</li>
   <li>Only then consider further narrow scalar widget runtime abstractions.</li>
-  <li>Keep Array, Cluster, Table, Tree, Tab, Listbox, Picture, Chart, Splitter, Panel/SubPanel, Frame, Label, and Decorations for later waves.</li>
+  <li>Keep Array, Cluster, Table, Tree, Tab, Listbox, Chart, Splitter, Panel/SubPanel, Frame, Label, and Decorations for later waves.</li>
 </ul>

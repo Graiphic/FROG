@@ -1,0 +1,176 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "16_picture_logo_jpeg",
+    "summary": "Picture indicator display of the FROG logo as a .frog-owned JPEG picture payload using the Default Picture .wfrog realization asset.",
+    "description": "Publishes one encoded JPEG picture value from the .frog source to a read-only Picture indicator and to the public output surface. This example is repository-visible as a Picture widget specification and design-progression slice beyond the current public reference runtime closure. Runtime implementation for this example is expected to continue in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "widget_value",
+      "picture",
+      "picture_indicator",
+      "jpeg",
+      "logo",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": [
+      {
+        "id": "logo_picture",
+        "type": "picture"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "frog_logo_jpeg_literal",
+        "kind": "constant",
+        "type": "frog.picture.encoded_image",
+        "value": {
+          "kind": "encoded_image",
+          "media_type": "image/jpeg",
+          "source_path": "./assets/frog_logo.jpg",
+          "width": 700,
+          "height": 724,
+          "pixel_format": "rgb8",
+          "color_space": "srgb",
+          "origin": "top_left"
+        }
+      },
+      {
+        "id": "logo_picture_value",
+        "kind": "widget_value",
+        "widget": "logo_picture"
+      },
+      {
+        "id": "output_logo_picture",
+        "kind": "interface_output",
+        "interface_port": "logo_picture"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "frog_logo_jpeg_literal",
+          "port": "value"
+        },
+        "to": {
+          "node": "logo_picture_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "frog_logo_jpeg_literal",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_logo_picture",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 640,
+      "height": 460,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/picture_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "logo_picture",
+        "role": "indicator",
+        "class_ref": "frog.widgets.picture_indicator",
+        "instance_ref": "logo_picture",
+        "value_type": "picture",
+        "layout": {
+          "x": 40,
+          "y": 32,
+          "width": 560,
+          "height": 380
+        },
+        "props": {
+          "value": {
+            "kind": "encoded_image",
+            "media_type": "image/jpeg",
+            "source_path": "./assets/frog_logo.jpg",
+            "width": 700,
+            "height": 724,
+            "pixel_format": "rgb8",
+            "color_space": "srgb",
+            "origin": "top_left"
+          },
+          "image.source_path": "./assets/frog_logo.jpg",
+          "image.media_type": "image/jpeg",
+          "image.width": 700,
+          "image.height": 724,
+          "image.pixel_format": "rgb8",
+          "image.color_space": "srgb",
+          "image.origin": "top_left",
+          "label.text": "FROG logo",
+          "label.visible": false,
+          "caption.text": "FROG logo",
+          "caption.visible": true,
+          "caption.anchor.x": 280,
+          "caption.anchor.y": 28,
+          "caption.align.horizontal": "center",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "system-ui, Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "18px",
+          "caption.style.font_weight": "600",
+          "viewport.origin.x": 0,
+          "viewport.origin.y": 0,
+          "viewport.scale": 1,
+          "viewport.fit_mode": "fit",
+          "display.preserve_aspect_ratio": true,
+          "display.interpolation": "linear",
+          "display.background_color": "#ffffff",
+          "display.empty_state_visible": false,
+          "overlay.visible": false,
+          "roi.visible": false,
+          "crosshair.visible": false,
+          "cursor_readout.visible": false,
+          "style.frame.fill_color": "#f8fafc",
+          "style.frame.border_color": "#111827",
+          "style.frame.border_width": "1px",
+          "style.picture_region.fill_color": "#ffffff",
+          "style.picture_region.border_color": "#cbd5e1",
+          "style.picture_region.border_width": "1px",
+          "style.focus_ring.visible": true,
+          "style.focus_ring.color": "#2563eb",
+          "style.focus_ring.width": "3px",
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:picture_rectangular_svg"
+        },
+        "binding": {
+          "mode": "literal_picture_value",
+          "public_output_id": "logo_picture"
+        }
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Picture Logo JPEG Display",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "picture_runtime_host_default"
+  }
+}

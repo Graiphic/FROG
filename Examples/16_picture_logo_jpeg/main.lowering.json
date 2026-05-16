@@ -1,0 +1,67 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "16_picture_logo_jpeg",
+    "path": "Examples/16_picture_logo_jpeg/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/16_picture_logo_jpeg/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "summary": "make one Picture logo JPEG display example consumable by C++/Python/Rust runtime UI-binding checks outside the public reference runtime closure",
+    "backend_family_target": "post_public_closure_host_runtime_ui_binding",
+    "capability_targets": [
+      "cpp_runtime_picture_binding",
+      "python_runtime_picture_binding",
+      "rust_runtime_picture_binding"
+    ],
+    "public_reference_runtime_source_added": false
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "picture_logo_jpeg_display_with_ui_bindings",
+      "public_io": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "logo_picture",
+            "type": "picture"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [],
+        "indicator_bindings": [
+          {
+            "widget_id": "logo_picture",
+            "mode": "literal_picture_value",
+            "public_output_id": "logo_picture",
+            "value_type": "picture"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "publish_literal_picture",
+        "dst": "logo_picture",
+        "type": "picture",
+        "src": "constant.frog_logo_jpeg_literal",
+        "final_publication": [
+          {
+            "target": "public_output.logo_picture",
+            "source": "constant.frog_logo_jpeg_literal"
+          },
+          {
+            "target": "widget.logo_picture.value",
+            "source": "constant.frog_logo_jpeg_literal"
+          }
+        ]
+      }
+    }
+  ]
+}
