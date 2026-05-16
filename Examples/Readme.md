@@ -24,7 +24,7 @@ They are published slices used to inspect how source, FIR, lowering, contracts, 
 <h2>Public Runtime Boundary</h2>
 
 <p>
-Examples <code>01</code> through <code>10</code> define the current public reference runtime closure.
+Examples <code>01</code> through <code>15</code> define the current public reference runtime closure.
 </p>
 
 <p>
@@ -33,7 +33,7 @@ They should not be interpreted as a commitment to publish Graiphic's production 
 </p>
 
 <p>
-Production-grade runtime development for future FROG execution surfaces may continue in Graiphic proprietary repositories while preserving the public contracts required for independent implementations.
+Production-grade runtime development for future FROG execution surfaces continues in Graiphic proprietary repositories, including <code>Graiphic/FROG-Runtime</code>, while preserving the public contracts required for independent implementations.
 </p>
 
 <hr/>
@@ -114,31 +114,31 @@ Production-grade runtime development for future FROG execution surfaces may cont
       <td><code>11_button_switch_when_pressed</code></td>
       <td>Button <code>switch_when_pressed</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
-      <td>Repository-visible Button progression outside the current public reference runtime closure</td>
+      <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
     </tr>
     <tr>
       <td><code>12_button_switch_when_released</code></td>
       <td>Button <code>switch_when_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
-      <td>Repository-visible Button progression outside the current public reference runtime closure</td>
+      <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
     </tr>
     <tr>
       <td><code>13_button_latch_when_pressed</code></td>
       <td>Button <code>latch_when_pressed</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
-      <td>Repository-visible Button progression outside the current public reference runtime closure</td>
+      <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
     </tr>
     <tr>
       <td><code>14_button_latch_when_released</code></td>
       <td>Button <code>latch_when_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
-      <td>Repository-visible Button progression outside the current public reference runtime closure</td>
+      <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
     </tr>
     <tr>
       <td><code>15_button_latch_until_released</code></td>
       <td>Button <code>latch_until_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
-      <td>Repository-visible Button progression outside the current public reference runtime closure</td>
+      <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
     </tr>
   </tbody>
 </table>
@@ -174,10 +174,10 @@ Production-grade runtime development for future FROG execution surfaces may cont
 09  Path .wfrog realization and native-kernel runtime bridge
     |
     v
-10  Button switch_until_released action in the public reference runtime closure
+10-15  Button mechanical actions in the public reference runtime closure
     |
     v
-11-15  Button mechanical-action progression outside the current public reference runtime closure
+16+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
 </code></pre>
 
 <hr/>

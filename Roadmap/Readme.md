@@ -158,6 +158,7 @@ It helps ensure that strategic ambition does not outrun technical closure, and t
 <p>
 References to runtime, deployment, IDE, or ecosystem maturity in this roadmap describe public specification, conformance, and bounded reference-corridor sequencing.
 They do not require Graiphic production runtime or FROG Studio implementation work to be developed inside this public repository.
+The public reference runtime material in this repository currently stops at Example <code>15</code>; runtime development for later examples continues in Graiphic's proprietary <code>Graiphic/FROG-Runtime</code> repository unless explicitly promoted later.
 </p>
 
 <hr/>

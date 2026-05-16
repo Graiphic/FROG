@@ -22,6 +22,7 @@ It exists to make selected repository-visible corridors executable and inspectab
 This workspace is public reference material.
 It exists to exercise the specification and published examples, not to define Graiphic's production runtime, IDE, compiler, or product architecture.
 Production-grade Graiphic implementations may continue in private repositories while preserving the public contracts required for independent implementations.
+The public reference runtime material in this repository is bounded to Examples <code>01</code> through <code>15</code>; runtime development for later examples continues in Graiphic's proprietary <code>Graiphic/FROG-Runtime</code> repository unless a later public reference surface is explicitly promoted.
 </p>
 
 <p>
@@ -32,7 +33,7 @@ The workspace protects a numbered progression of examples and the published widg
 Libraries/Realizations/Default/
   -&gt; WidgetValidator
 
-Examples 01-10
+Examples 01-15
   .frog
     -&gt; source-pattern FIR derivation
     -&gt; FIR unit.kind
@@ -43,7 +44,7 @@ Examples 01-10
     -&gt; runtime acceptance snapshot
     -&gt; LLVM proof
 
-Examples 06-10
+Examples 06-15
   .frog front-panel instances
     -&gt; FIR / lowering / contract artifacts where published
     -&gt; LLVM native kernel artifacts and manifests where published
@@ -55,7 +56,7 @@ Examples 06-10
 <p>
 Example 05 remains the primary applicative UI/state/runtime/native corridor.
 Examples 01-04 provide smaller executable proof slices for pure arithmetic, widget values, UI property writes, and explicit feedback state.
-Examples 06-10 extend the public reference runtime/widget discipline across the current Boolean, String, Enum, Path, and Button front-panel slices.
+Examples 06-15 extend the public reference runtime/widget discipline across the current Boolean, String, Enum, Path, and Button front-panel slices.
 </p>
 
 <hr/>
@@ -163,7 +164,7 @@ python Implementations/Reference/check_reference_workspace.py --include-llvm-bui
 </code></pre>
 
 <p>
-The default workspace command includes widget-layer validation through the Examples 01-10 pipeline.
+The default workspace command includes the base historical Examples 01-10 pipeline and the current widget-layer validation surface.
 The <code>--widget-layer-only</code> command exists for fast validation when editing widget class-law documents, Default realization documents, manifests, or SVG resources.
 The <code>--include-pytest</code> command additionally protects source-pattern derivation, FIR-unit-kind lowering, lowered-unit-kind contract emission, contract-unit-kind runtime execution, lowered-unit-kind LLVM emission, Python runtime UI coverage for the current widget examples, and unsupported-pattern / unsupported-kind failure behavior.
 The <code>--include-native-kernel-bridge</code> command validates the published native-kernel bridge surface where the local native toolchain is available.

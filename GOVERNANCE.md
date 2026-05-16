@@ -550,6 +550,8 @@ The existence of a Graiphic proprietary runtime or IDE does not change the publi
 Conversely, the presence of a public reference runtime in this repository does not require Graiphic to publish its production runtime implementation.
 The public reference runtime is a conformance-oriented proof surface.
 It is not the mandatory runtime architecture for all implementations and it is not Graiphic's production runtime.
+In this public repository, that reference runtime surface is currently bounded to Examples <code>01</code> through <code>15</code>.
+Runtime development for later examples continues in Graiphic's proprietary <code>Graiphic/FROG-Runtime</code> repository unless a later public reference surface is explicitly promoted.
 </p>
 
 <pre>

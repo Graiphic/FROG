@@ -39,7 +39,7 @@ Its role is to exercise repository-visible examples, emitted backend contracts, 
 </p>
 
 <p>
-The current public reference runtime is bounded to the published Examples <code>01</code> through <code>10</code> closure.
+The current public reference runtime is bounded to the published Examples <code>01</code> through <code>15</code> closure.
 This boundary does not prevent other runtimes from implementing FROG.
 It also does not define the architecture of Graiphic's production runtimes.
 </p>
@@ -47,6 +47,7 @@ It also does not define the architecture of Graiphic's production runtimes.
 <p>
 Graiphic may continue production-grade runtime development in proprietary repositories.
 Such runtimes are implementations of the public FROG specification; they do not redefine the language specification by existing.
+Runtime development for examples beyond Example <code>15</code> continues in Graiphic's proprietary <code>Graiphic/FROG-Runtime</code> repository unless a later public reference surface is explicitly promoted.
 </p>
 
 <hr/>
@@ -59,14 +60,14 @@ Such runtimes are implementations of the public FROG specification; they do not 
     -&gt; generic contract executor
     -&gt; runtime acceptance snapshot
 
-Examples 05-10 standard runtime slices
+Examples 05-15 standard runtime slices
   normalized backend contract + .frog front panel + .wfrog realization package
     -&gt; contract.units[0].kind
     -&gt; bounded contract executor
     -&gt; C++ / Python / Rust browser-host UI
     -&gt; runtime acceptance snapshot
 
-Examples 05-10 native-kernel runtime closure
+Examples 05-15 native-kernel runtime closure
   .frog source
     -&gt; FIR
     -&gt; lowering
@@ -79,7 +80,7 @@ Examples 05-10 native-kernel runtime closure
 
   runtime
     -&gt; language-specific NativeKernelBridge
-    -&gt; frog_example05_run(...) / frog_example06_run(...) / frog_example07_run(...) / frog_example08_run(...) / frog_example09_run(...) / frog_example10_run(...)
+    -&gt; frog_example05_run(...) through frog_example15_run(...)
     -&gt; result / diagnostic
     -&gt; same runtime snapshot surface
 </code></pre>
@@ -107,15 +108,20 @@ Examples 05-10 native-kernel runtime closure
     <tr><td><code>enum_value_roundtrip_ui_unit</code></td><td>Enum item value roundtrip executor with <code>.wfrog</code> support.</td><td><code>08_enum_value_roundtrip</code></td></tr>
     <tr><td><code>path_value_roundtrip_ui_unit</code></td><td>Path value roundtrip executor with <code>.wfrog</code> support.</td><td><code>09_path_value_roundtrip</code></td></tr>
     <tr><td><code>button_press_to_boolean_ui_unit</code></td><td>Button press to Boolean executor with <code>.wfrog</code> support.</td><td><code>10_button_press_to_boolean</code></td></tr>
+    <tr><td><code>button_switch_when_pressed_ui_unit</code></td><td>Button switch-when-pressed executor with <code>.wfrog</code> support.</td><td><code>11_button_switch_when_pressed</code></td></tr>
+    <tr><td><code>button_switch_when_released_ui_unit</code></td><td>Button switch-when-released executor with <code>.wfrog</code> support.</td><td><code>12_button_switch_when_released</code></td></tr>
+    <tr><td><code>button_latch_when_pressed_ui_unit</code></td><td>Button latch-when-pressed executor with <code>.wfrog</code> support.</td><td><code>13_button_latch_when_pressed</code></td></tr>
+    <tr><td><code>button_latch_when_released_ui_unit</code></td><td>Button latch-when-released executor with <code>.wfrog</code> support.</td><td><code>14_button_latch_when_released</code></td></tr>
+    <tr><td><code>button_latch_until_released_ui_unit</code></td><td>Button latch-until-released executor with <code>.wfrog</code> support.</td><td><code>15_button_latch_until_released</code></td></tr>
   </tbody>
 </table>
 
 <hr/>
 
-<h2>Examples 05-10 Native-Kernel Runtime Closure</h2>
+<h2>Examples 05-15 Native-Kernel Runtime Closure</h2>
 
 <p>
-Examples 05, 06, 07, 08, 09, and 10 now have intentionally distinct runtime paths:
+Examples 05 through 15 now have intentionally distinct runtime paths:
 </p>
 
 <ul>
@@ -129,20 +135,20 @@ LLVM is a backend/native-kernel producer.
 The runtime consumes a manifest-declared ABI and a linked C-compatible entry point.
 </p>
 
-<pre><code>Implementations/Reference/LLVM/examples/{05,06,07,08,09,10}_*/kernel.ll
+<pre><code>Implementations/Reference/LLVM/examples/{05..15}_*/kernel.ll
   -&gt; clang
   -&gt; linked C++ object or Python/Rust dynamic library
 
-Implementations/Reference/LLVM/examples/{05,06,07,08,09,10}_*/native_kernel_manifest.json
+Implementations/Reference/LLVM/examples/{05..15}_*/native_kernel_manifest.json
   -&gt; NativeKernelManifest
   -&gt; NativeKernelBridge
   -&gt; example-specific ABI entry point
 
-Examples/{05,06,07,08,09,10}_*/main.frog
+Examples/{05..15}_*/main.frog
   -&gt; browser-host runtime
   -&gt; panel_pixels + widget instance properties
 
-Examples/{05,06,07,08,09,10}_*/ui/*.wfrog
+Examples/{05..15}_*/ui/*.wfrog
   -&gt; Default realization package
   -&gt; SVG skins + host requirements
 
@@ -159,7 +165,7 @@ Browser POST /run
 <h2>Normalized Runtime Contracts</h2>
 
 <p>
-The specialized Example 05, Example 06, Example 07, Example 08, Example 09, and Example 10 runtimes consume normalized backend-contract surfaces:
+The specialized Example 05 through Example 15 runtimes consume normalized backend-contract surfaces:
 </p>
 
 <pre><code>public_io
@@ -198,5 +204,5 @@ It consumes emitted backend contracts and validates repository-visible runtime b
 
 <p>
 The native-kernel bridge preserves this boundary: the runtime hosts execution and UI; backends compile lowered units; explicit manifests and stable ABI surfaces connect both sides.
-The Examples 05-10 native-kernel closures are bounded LabVIEW-like proof corridors within the current public reference runtime closure, not a generalized production runtime.
+The Examples 05-15 native-kernel closures are bounded LabVIEW-like proof corridors within the current public reference runtime closure, not a generalized production runtime.
 </p>

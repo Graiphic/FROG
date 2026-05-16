@@ -325,13 +325,14 @@ This repository defines the public FROG specification, including the canonical s
 <p>
 The public reference runtime exists to keep the published specification executable, inspectable, and testable.
 It is intentionally bounded, non-production, and conformance-oriented.
-The current public reference runtime closure is Examples <code>01</code> through <code>10</code>.
+The current public reference runtime closure is Examples <code>01</code> through <code>15</code>.
 </p>
 
 <p>
 Graiphic may develop proprietary production implementations of FROG, including FROG Studio, production runtimes, deployment systems, enterprise integrations, certification tooling, and commercial support services.
 Those implementations are products built on top of the public specification.
 They do not redefine the FROG language specification and they do not make the public reference runtime mandatory.
+Runtime development for examples beyond Example <code>15</code> continues in Graiphic's proprietary <code>Graiphic/FROG-Runtime</code> repository unless a later public reference surface is explicitly promoted.
 </p>
 
 <hr/>
@@ -384,8 +385,8 @@ The repository also contains repository-level support areas and repository-level
 
 <p>
 The published numbered example surface now exposes a repository-visible progression under <code>Examples/01_*</code> through <code>Examples/15_*</code>.
-Examples <code>01</code> through <code>10</code> define the current public reference runtime closure.
-Examples <code>11</code> and later may remain repository-visible as specification-facing, widget-facing, conformance-facing, or design-progression examples, but they are not part of the current public reference runtime closure unless explicitly promoted later.
+Examples <code>01</code> through <code>15</code> define the current public reference runtime closure.
+Examples beyond this boundary may remain repository-visible as specification-facing, widget-facing, conformance-facing, or design-progression examples, while Graiphic production runtime work for those later examples continues in the proprietary <code>Graiphic/FROG-Runtime</code> repository unless explicitly promoted later.
 </p>
 
 <table>
@@ -462,31 +463,31 @@ Examples <code>11</code> and later may remain repository-visible as specificatio
       <td><code>11_button_switch_when_pressed</code></td>
       <td>Button <code>switch_when_pressed</code> mechanical action.</td>
       <td>Button control and Boolean indicator through the Default Button and Boolean realizations.</td>
-      <td>Repository-visible Button mechanical-action progression outside the current public reference runtime closure.</td>
+      <td>Current public reference runtime closure with published FIR/lowering/contract, LLVM kernel manifest, and C++/Python/Rust runtime coverage.</td>
     </tr>
     <tr>
       <td><code>12_button_switch_when_released</code></td>
       <td>Button <code>switch_when_released</code> mechanical action.</td>
       <td>Button control and Boolean indicator through the Default Button and Boolean realizations.</td>
-      <td>Repository-visible Button mechanical-action progression outside the current public reference runtime closure.</td>
+      <td>Current public reference runtime closure with published FIR/lowering/contract, LLVM kernel manifest, and C++/Python/Rust runtime coverage.</td>
     </tr>
     <tr>
       <td><code>13_button_latch_when_pressed</code></td>
       <td>Button <code>latch_when_pressed</code> mechanical action.</td>
       <td>Button control and Boolean indicator through the Default Button and Boolean realizations.</td>
-      <td>Repository-visible Button mechanical-action progression outside the current public reference runtime closure.</td>
+      <td>Current public reference runtime closure with published FIR/lowering/contract, LLVM kernel manifest, and C++/Python/Rust runtime coverage.</td>
     </tr>
     <tr>
       <td><code>14_button_latch_when_released</code></td>
       <td>Button <code>latch_when_released</code> mechanical action.</td>
       <td>Button control and Boolean indicator through the Default Button and Boolean realizations.</td>
-      <td>Repository-visible Button mechanical-action progression outside the current public reference runtime closure.</td>
+      <td>Current public reference runtime closure with published FIR/lowering/contract, LLVM kernel manifest, and C++/Python/Rust runtime coverage.</td>
     </tr>
     <tr>
       <td><code>15_button_latch_until_released</code></td>
       <td>Button <code>latch_until_released</code> mechanical action.</td>
       <td>Button control and Boolean indicator through the Default Button and Boolean realizations.</td>
-      <td>Repository-visible Button mechanical-action progression outside the current public reference runtime closure.</td>
+      <td>Current public reference runtime closure with published FIR/lowering/contract, LLVM kernel manifest, and C++/Python/Rust runtime coverage.</td>
     </tr>
   </tbody>
 </table>
@@ -552,13 +553,13 @@ The progression is intentionally staged:
 <p>
 <code>Examples/05_bounded_ui_accumulator/</code> remains the primary applicative vertical-slice anchor because it combines source, front-panel package, FIR, lowering, backend contract, runtime-family acceptance, Python/Rust/C/C++ reference-consumer posture, and an LLVM-oriented native proof path.
 Examples <code>01</code> through <code>04</code> are smaller executable proof slices used to keep individual concerns inspectable before they are combined in Example <code>05</code>.
-Examples <code>06</code> through <code>10</code> are current widget-focused public reference runtime slices used to keep Boolean, String, Enum, Path, and Button front-panel behavior honest across C++, Python, and Rust.
-Examples <code>11</code> through <code>15</code> remain repository-visible Button mechanical-action progression material outside the current public reference runtime closure.
+Examples <code>06</code> through <code>15</code> are current widget-focused public reference runtime slices used to keep Boolean, String, Enum, Path, and Button front-panel behavior honest across C++, Python, and Rust.
+Runtime development for examples beyond Example <code>15</code> continues in Graiphic's proprietary runtime repository unless explicitly promoted later as public reference material.
 </p>
 
 <p>
 The correct current statement is therefore:
-the repository materially exposes an executable Examples <code>01</code> through <code>15</code> progression, while Example <code>05</code> remains the richest applicative UI/state/runtime/native reference corridor and Examples <code>06</code> through <code>10</code> define the current bounded public widget-runtime wave.
+the repository materially exposes an executable Examples <code>01</code> through <code>15</code> progression, while Example <code>05</code> remains the richest applicative UI/state/runtime/native reference corridor and Examples <code>06</code> through <code>15</code> define the current bounded public widget-runtime wave.
 This does not claim full generalized symmetry across all future examples, all runtime families, or rendered-native front-panel closure.
 </p>
 
@@ -1251,8 +1252,8 @@ runtime acceptance            native proof
 <p>
 For Examples <code>01</code> through <code>04</code>, the runtime acceptance and LLVM proofs are intentionally narrow reference proofs.
 For Example <code>05</code>, the repository carries the richer applicative path involving a front-panel package, widget values, widget references, UI property writes, explicit state, bounded iteration, runtime-family acceptance, and LLVM native proof material.
-Examples <code>06</code> through <code>10</code> currently exercise the public widget-front-panel runtime discipline for Boolean, String, Enum, Path, and Button across the C++, Python, and Rust reference runtimes.
-Examples <code>11</code> through <code>15</code> remain repository-visible Button mechanical-action progression material outside the current public reference runtime closure.
+Examples <code>06</code> through <code>15</code> currently exercise the public widget-front-panel runtime discipline for Boolean, String, Enum, Path, and Button across the C++, Python, and Rust reference runtimes.
+Runtime development for examples beyond Example <code>15</code> belongs to Graiphic's proprietary runtime work unless explicitly promoted later as public reference material.
 </p>
 
 <p>
@@ -1834,14 +1835,14 @@ The repository already contains substantial material across canonical source rep
 <p>
 At the current published state, the repository has reached a stronger closure milestone:
 Examples <code>01</code> through <code>15</code> materially expose repository-visible source, FIR, lowering, backend-contract, widget, and LLVM-oriented proof material.
-Examples <code>06</code> through <code>10</code> extend the current public reference workspace with validated widget-front-panel runtime slices for Boolean, String, Enum, Path, and Button.
+Examples <code>06</code> through <code>15</code> extend the current public reference workspace with validated widget-front-panel runtime slices for Boolean, String, Enum, Path, and Button.
 </p>
 
 <p>
 The Example <code>05_bounded_ui_accumulator</code> slice remains the primary applicative vertical-slice anchor because it combines front-panel package participation, widget values, widget references, UI property writes, bounded iteration, explicit state, public output, runtime-family acceptance, and LLVM-native proof posture.
 Examples <code>01</code> through <code>04</code> provide smaller executable anchors for isolated concerns.
-Examples <code>11</code> through <code>15</code> remain visible as Button mechanical-action progression material and are still subject to the no-fallback <code>.frog</code> / <code>.wfrog</code> / SVG discipline when used as widget-facing examples.
-They do not, by presence alone, expand the current public reference runtime closure.
+Examples beyond Example <code>15</code> may remain visible as specification-facing, widget-facing, conformance-facing, or design-progression material.
+They do not, by presence alone, expand the public runtime implementation maintained in this repository.
 </p>
 
 <p>
@@ -1861,10 +1862,10 @@ The current direction is therefore:
 </p>
 
 <ul>
-  <li><strong>keep the Examples 01-10 executable and widget-runtime surfaces green,</strong></li>
+  <li><strong>keep the Examples 01-15 executable and widget-runtime surfaces green as the bounded public reference runtime snapshot,</strong></li>
   <li><strong>keep the public reference runtime bounded, non-production, and conformance-oriented,</strong></li>
-  <li><strong>promote later examples into the public reference runtime only deliberately,</strong></li>
-  <li><strong>and allow Graiphic production runtime and IDE development to continue in proprietary repositories without redefining the public specification.</strong></li>
+  <li><strong>continue runtime development for later examples in Graiphic's proprietary <code>Graiphic/FROG-Runtime</code> repository unless explicitly promoted,</strong></li>
+  <li><strong>and allow Graiphic production runtime and IDE development to continue privately without redefining the public specification.</strong></li>
 </ul>
 
 <p>

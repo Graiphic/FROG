@@ -20,7 +20,8 @@ Version governance remains centralized in this directory and in the repository h
 </p>
 
 <p>
-The public reference runtime closure is currently bounded to Examples <code>01</code> through <code>10</code>.
+The public reference runtime closure is currently bounded to Examples <code>01</code> through <code>15</code>.
+Runtime development for later examples continues in Graiphic's proprietary <code>Graiphic/FROG-Runtime</code> repository unless a later public reference surface is explicitly promoted.
 Graiphic production runtime and IDE development may continue in proprietary repositories without redefining the public specification.
 </p>
 
