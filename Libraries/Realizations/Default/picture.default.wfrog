@@ -102,27 +102,37 @@
     {
       "part": "label",
       "binding_kind": "svg_or_host_surface",
-      "binding_selector": "[data-frog-part='label']"
+      "binding_selector": "[data-frog-part='label']",
+      "semantic_member": "label.text",
+      "visibility_member": "label.visible",
+      "placement_role": "structural_label"
     },
     {
       "part": "caption",
       "binding_kind": "svg_or_host_surface",
-      "binding_selector": "[data-frog-part='caption']"
+      "binding_selector": "[data-frog-part='caption']",
+      "semantic_member": "caption.text",
+      "visibility_member": "caption.visible",
+      "placement_role": "front_panel_caption"
     },
     {
       "part": "frame",
       "binding_kind": "svg_or_host_surface",
-      "binding_selector": "[data-frog-part='frame']"
+      "binding_selector": "[data-frog-part='frame']",
+      "style_binding_group": "style.frame"
     },
     {
       "part": "picture_region",
       "binding_kind": "svg_or_host_surface",
-      "binding_selector": "[data-frog-part='picture_region']"
+      "binding_selector": "[data-frog-part='picture_region']",
+      "style_binding_group": "style.picture_region"
     },
     {
       "part": "image_surface",
       "binding_kind": "svg_or_host_surface",
-      "binding_selector": "[data-frog-part='image_surface']"
+      "binding_selector": "[data-frog-part='image_surface']",
+      "semantic_member": "image.*",
+      "style_binding_group": "display"
     },
     {
       "part": "overlay_region",
@@ -147,10 +157,21 @@
     {
       "part": "focus_ring",
       "binding_kind": "svg_or_host_surface",
-      "binding_selector": "[data-frog-part='focus_ring']"
+      "binding_selector": "[data-frog-part='focus_ring']",
+      "style_binding_group": "style.focus_ring"
     }
   ],
   "property_bindings": [
+    {
+      "member": "label.text",
+      "target_part": "label",
+      "target_operation": "set_text_content"
+    },
+    {
+      "member": "label.visible",
+      "target_part": "label",
+      "target_operation": "set_visibility"
+    },
     {
       "member": "caption.text",
       "target_part": "caption",
@@ -177,6 +198,26 @@
       "target_operation": "set_text_anchor_alignment"
     },
     {
+      "member": "caption.style.text_color",
+      "target_part": "caption",
+      "target_operation": "set_text_fill"
+    },
+    {
+      "member": "caption.style.font_family",
+      "target_part": "caption",
+      "target_operation": "set_font_family"
+    },
+    {
+      "member": "caption.style.font_size",
+      "target_part": "caption",
+      "target_operation": "set_font_size"
+    },
+    {
+      "member": "caption.style.font_weight",
+      "target_part": "caption",
+      "target_operation": "set_font_weight"
+    },
+    {
       "member": "value",
       "target_part": "picture_region",
       "target_operation": "render_picture_value"
@@ -190,6 +231,46 @@
       "member": "viewport.*",
       "target_part": "picture_region",
       "target_operation": "apply_viewport"
+    },
+    {
+      "member": "display.background_color",
+      "target_part": "image_surface",
+      "target_operation": "set_background_fill"
+    },
+    {
+      "member": "style.frame.*",
+      "target_part": "frame",
+      "target_operation": "apply_frame_style"
+    },
+    {
+      "member": "style.picture_region.*",
+      "target_part": "picture_region",
+      "target_operation": "apply_picture_region_style"
+    },
+    {
+      "member": "style.focus_ring.*",
+      "target_part": "focus_ring",
+      "target_operation": "apply_focus_ring_style"
+    },
+    {
+      "member": "overlay.visible",
+      "target_part": "overlay_region",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "roi.visible",
+      "target_part": "roi_layer",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "crosshair.visible",
+      "target_part": "crosshair_layer",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "cursor_readout.visible",
+      "target_part": "cursor_readout",
+      "target_operation": "set_visibility"
     },
     {
       "member": "pointer.position",

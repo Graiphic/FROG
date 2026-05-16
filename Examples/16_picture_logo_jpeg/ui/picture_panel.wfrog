@@ -49,7 +49,8 @@
         "widget_value_binding",
         "encoded_image_payload_loading",
         "picture_viewport_fit",
-        "svg_part_overlay_alignment"
+        "svg_part_overlay_alignment",
+        "svg_style_property_binding"
       ]
     }
   ],
