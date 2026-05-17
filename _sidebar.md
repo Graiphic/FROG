@@ -453,6 +453,7 @@
       - [03 ui property write](/Implementations/Reference/LLVM/examples/03_ui_property_write/Readme.md)
       - [04 stateful feedback delay](/Implementations/Reference/LLVM/examples/04_stateful_feedback_delay/Readme.md)
       - [05 bounded ui accumulator](/Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/Readme.md)
+      - [16 picture logo jpeg](/Implementations/Reference/LLVM/examples/16_picture_logo_jpeg/Readme.md)
     - [rules](/Implementations/Reference/LLVM/rules/Readme.md)
     - tests
       - [test_example05_llvm_emission.py](/Implementations/Reference/LLVM/tests/test_example05_llvm_emission.py)
