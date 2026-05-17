@@ -165,16 +165,16 @@
           "kind": "category",
           "children": [
             {
-              "key": "examples/widget_coverage_plan.md",
-              "title": "widget coverage plan",
-              "path": "/Examples/widget_coverage_plan.md",
+              "key": "examples/widget_public_boundary.md",
+              "title": "widget public boundary",
+              "path": "/Examples/widget_public_boundary.md",
               "kind": "page",
               "children": []
             },
             {
-              "key": "examples/widget_validation_checklist.md",
-              "title": "widget validation checklist",
-              "path": "/Examples/widget_validation_checklist.md",
+              "key": "examples/widget_public_progression.md",
+              "title": "widget public progression",
+              "path": "/Examples/widget_public_progression.md",
               "kind": "page",
               "children": []
             },
@@ -4139,8 +4139,8 @@
     "/Expression/Widget%20package%20%28.wfrog%29.md",
     "/Expression/Widget%20realization.md",
     "/Expression/Readme.md",
-    "/Examples/widget_coverage_plan.md",
-    "/Examples/widget_validation_checklist.md",
+    "/Examples/widget_public_boundary.md",
+    "/Examples/widget_public_progression.md",
     "/Examples/01_pure_addition/main.frog",
     "/Examples/01_pure_addition/Readme.md",
     "/Examples/02_ui_value_roundtrip/main.frog",
