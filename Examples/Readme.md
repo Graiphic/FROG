@@ -352,11 +352,11 @@ ctest --test-dir build/frog_runtime_cpp --output-on-failure
 cargo test --manifest-path Implementations/Reference/Runtime/rust/Cargo.toml</code></pre>
 
 <p>
-Widget examples must also satisfy the
-<a href="./widget_validation_checklist.md">Widget Example Validation Checklist</a>.
-That checklist is the quality gate for visible front-panel fidelity:
-no hardcoded widget fallback, no duplicated local SVG skin, and no accepted example unless the visible UI is driven by
-<code>.frog</code> instance data, <code>.wfrog</code> realization data, Default SVG public parts, and the runtime/kernel contract surface.
+Widget examples are framed by the
+<a href="./widget_public_boundary.md">Widget Example Public Boundary</a>.
+That document records the public source / realization / runtime-consumer
+ownership split without publishing Graiphic's internal widget acceptance recipe,
+manual visual QA procedure, or private runtime roadmap.
 </p>
 
 <p>
@@ -364,7 +364,7 @@ The currently stabilized widget example surfaces are inventoried in
 <a href="./widget_reference/Readme.md">Widget Example Reference Notes</a>.
 Those notes document the proven Numeric, Boolean, String, Enum, Path, and Button example surfaces,
 including which properties are owned by <code>.frog</code>, which realization packages and SVG assets are consumed through
-<code>.wfrog</code>, and which runtime checks protect against hardcoded widget fallbacks.
+<code>.wfrog</code>, and which public runtime checks support the published example evidence.
 </p>
 
 <hr/>

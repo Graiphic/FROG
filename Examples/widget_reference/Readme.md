@@ -213,12 +213,12 @@ native-backed.
 
 <hr/>
 
-<h2>Validation Gate</h2>
+<h2>Public Boundary</h2>
 
 <p>
-Every widget example in this directory must continue to satisfy
-<a href="../widget_validation_checklist.md">the widget validation checklist</a>.
-The important acceptance rule is:
+Widget examples in this directory remain framed by
+<a href="../widget_public_boundary.md">the public widget example boundary</a>.
+The public evidence corridor is:
 </p>
 
 <pre><code>.frog diagram + front-panel instances
@@ -232,6 +232,7 @@ The important acceptance rule is:
 </code></pre>
 
 <p>
-If the visible UI is approximated by a runtime-private widget shell instead of the published <code>.frog</code> /
-<code>.wfrog</code> / SVG surfaces, the example is not accepted.
+The public repository documents this ownership split and its repository-visible
+evidence. Graiphic internal acceptance recipes and manual review procedures are
+not published as part of these reference notes.
 </p>

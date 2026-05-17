@@ -493,11 +493,12 @@ Examples beyond this boundary may remain repository-visible as specification-fac
 </table>
 
 <p>
-Widget examples are governed by the repository-visible
-<a href="./Examples/widget_validation_checklist.md">Widget Example Validation Checklist</a>.
-Treat that checklist as the quality gate before accepting a new or changed widget example:
-the visible front panel must be driven by <code>.frog</code> instance data,
-<code>.wfrog</code> realization packages, Default SVG public parts, and the manifest-declared runtime/kernel surface.
+Widget examples are framed by the repository-visible
+<a href="./Examples/widget_public_boundary.md">Widget Example Public Boundary</a>.
+That public boundary keeps the <code>.frog</code> / <code>.wfrog</code> /
+Default SVG / runtime-consumer split inspectable without publishing Graiphic's
+internal widget acceptance recipe, visual QA procedure, or private runtime
+roadmap.
 </p>
 
 <p>
