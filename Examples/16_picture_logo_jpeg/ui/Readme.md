@@ -15,6 +15,15 @@ primitive, and render the decoded image buffer inside the Default Picture
 </p>
 
 <p>
+The optional file-picker capability is a host overlay for choosing a path. In a
+native host this may be the selected absolute path. In a browser-style host this
+may be a host-imported temporary path because browsers do not portably reveal
+the user's original local filesystem path. In both cases the source-level
+program remains path-driven and the Picture indicator still consumes only the
+decoded image buffer.
+</p>
+
+<p>
 The <code>.wfrog</code> file does not own the image codec implementation and does
 not turn the Picture widget into an implicit file reader. Runtime work for this
 post-boundary example remains private unless the example is explicitly promoted

@@ -44,6 +44,17 @@ semantic owner of the FROG program.
 </p>
 
 <p>
+For browser-style hosts, a file picker cannot portably expose the user's
+absolute local filesystem path. Such hosts may therefore import the selected
+file into a host-accessible temporary path, update the Path control value to
+that imported path, and then execute the same diagram contract:
+<code>Path -&gt; frog.image.decode_file_rgba8 -&gt; Picture</code>. The host import
+step is a front-panel convenience for path selection; it does not turn Picture
+into a decoder and it does not replace the explicit <code>frog.image</code>
+primitive.
+</p>
+
+<p>
 This example is not part of the public reference runtime closure. Public
 runtime source in this repository remains bounded through Example 15. Runtime
 implementation and parity validation for Example 16 continue in Graiphic's
