@@ -493,6 +493,7 @@ The following transformation classes are allowed when they preserve the required
   <li>introducing placement or partition annotations for later backend-family consumption,</li>
   <li>materializing effect boundaries more explicitly,</li>
   <li>materializing selected dependency and capability boundaries for later deployment preparation,</li>
+  <li>selecting only the standard-library modules, external libraries, host services, and runtime services required by the validated program dependency closure,</li>
   <li>specializing data representation and layout choices,</li>
   <li>specializing calling conventions at the backend-facing side when still downstream from canonical open IR.</li>
 </ul>

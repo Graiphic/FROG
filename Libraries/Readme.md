@@ -69,6 +69,20 @@ it standardizes primitive families that are fundamental, portable, and intrinsic
 </p>
 
 <p>
+FROG distinguishes the minimal core primitive set, lightweight standard
+library families, and optional external capability families. Lightweight
+standard libraries are part of the base FROG language distribution when
+published here, but they remain explicit diagram primitives rather than
+hidden runtime features.
+</p>
+
+<pre><code>frog.core.*       -&gt; foundational operators and execution building blocks
+frog.image.*      -&gt; lightweight standard library primitives
+Profiles/ or
+external packages -&gt; optional or environment-specific capability families
+</code></pre>
+
+<p>
 For the widget corridor, this layer also becomes the normative home of the intrinsic executable interaction vocabulary, while widget instances, widget class law, widget behavior, widget realization, and widget-oriented packaging remain owned elsewhere.
 </p>
 
@@ -210,6 +224,7 @@ This separation matters because the same primitive identity may be:
   <li>interpreted locally through <code>Libraries/</code>,</li>
   <li>executed under broader constraints described by <code>Language/</code>,</li>
   <li>represented later in execution-facing form by <code>IR/</code>,</li>
+  <li>lowered or packaged as part of an explicit standard-library dependency closure,</li>
   <li>surfaced to users by <code>IDE/Palette.md</code>,</li>
   <li>constrained by optional capability contracts defined in <code>Profiles/</code>.</li>
 </ul>
@@ -444,6 +459,7 @@ Examples:
 
 <ul>
   <li><code>frog.core.add</code> belongs naturally to <code>Libraries/</code>.</li>
+  <li><code>frog.image.decode_file_rgba8</code> belongs to <code>Libraries/</code> when treated as a small, portable, base-distribution image primitive.</li>
   <li><code>frog.ui.property_read</code> belongs to <code>Libraries/</code> because it is part of the intrinsic executable UI interaction surface of the language model.</li>
   <li><code>frog.connectivity.*</code> does <strong>not</strong> belong to the intrinsic library core because it represents an optional interoperability capability surface and is normatively owned by the Interop profile.</li>
 </ul>
@@ -694,6 +710,7 @@ Therefore:
 
 <ul>
   <li>a lowered or backend-facing form MUST NOT redefine what <code>frog.core.add</code> or <code>frog.ui.property_write</code> intrinsically are,</li>
+  <li>a compiler, launcher, or runtime MAY realize only the standard-library primitives actually used by a validated program, but that optimization MUST preserve the published primitive contracts,</li>
   <li>a backend-family-specific consumption model MUST NOT become the normative source of primitive truth,</li>
   <li>a runtime-private realization of a primitive MUST NOT replace the published primitive-local contract.</li>
 </ul>
@@ -742,6 +759,14 @@ Additional intrinsic library families MAY be added later where they remain:
   <li>intrinsic to the language surface,</li>
   <li>not dependent on one specific foreign runtime, managed platform, database stack, host ABI, protocol family, target-profile family, deployment-mode family, backend-family consumption model, or vendor technology.</li>
 </ul>
+
+<p>
+A lightweight standard library family MAY be shipped with a base FROG
+distribution while still remaining explicit in source, FIR, lowering, backend
+contracts, and deployment packaging. The fact that a base distribution provides
+an implementation does not turn the capability into widget behavior, runtime
+magic, or vendor-owned semantics.
+</p>
 
 <p>
 Capability areas that are useful but environment-dependent SHOULD be specified as profiles or as implementation-specific extensions rather than being folded into the intrinsic library core.

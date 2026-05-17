@@ -22,6 +22,13 @@ buffer value shape and one path-based decode primitive suitable for basic
 FROG programs and base IDE distributions.
 </p>
 
+<p>
+This is a lightweight standard library family. A base FROG distribution MAY
+ship an implementation for it, but programs still call it explicitly, FIR still
+preserves the primitive identity, and downstream lowering or packaging still
+decides which implementation modules and dependencies are required.
+</p>
+
 <hr/>
 
 <h2>Layering Rule</h2>
@@ -183,6 +190,13 @@ This separation keeps the dependency replaceable:
 
 <pre><code>FROG program contract: frog.image.decode_file_rgba8
 Implementation choice: stb_image, libpng/libspng, libjpeg-turbo, or another codec stack</code></pre>
+
+<p>
+The implementation dependency belongs to the selected runtime, launcher, IDE
+distribution, or compiled deployment closure. It does not change the FROG
+primitive contract and it does not make image decoding a hidden responsibility
+of the Picture widget.
+</p>
 
 <hr/>
 

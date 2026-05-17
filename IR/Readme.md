@@ -509,6 +509,14 @@ For widget-object interaction, this means:
 <code>Libraries/</code> owns intrinsic primitive vocabularies. <code>Profiles/</code> owns optional standardized capability families. The IR layer does not re-own either catalog.
 </p>
 
+<p>
+At the execution-facing level, uses of core primitives, lightweight standard
+library primitives, and optional profile-owned capabilities remain explicit.
+For example, a validated use of <code>frog.image.decode_file_rgba8</code> should
+remain visible as a standard-library primitive reference in IR rather than
+being hidden as Picture-widget behavior or runtime-private image magic.
+</p>
+
 <ul>
   <li>primitive identity remains owned by the relevant library layer,</li>
   <li>optional capability identity remains owned by the relevant profile layer,</li>

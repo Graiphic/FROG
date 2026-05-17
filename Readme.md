@@ -1123,6 +1123,15 @@ A compiler-oriented deployment may instead emit a specialized launcher or self-c
 In that posture, the deployed artifact does not need to install or embed an entire general-purpose runtime when a smaller declared dependency closure is sufficient.
 </p>
 
+<p>
+This also applies to the primitive surface. FROG distinguishes foundational
+core operators, lightweight standard library families, and optional external
+capability libraries. Standard libraries such as <code>frog.image.*</code> may be
+provided by a base FROG distribution, but they remain explicit nodes in the
+program, explicit references in FIR, and explicit items in the lowered
+dependency closure.
+</p>
+
 <pre><code>IDE / debug posture
   .frog
     -&gt; FIR
@@ -1140,7 +1149,9 @@ Deployment posture
 
 <p>
 External functions remain explicit dependencies rather than hidden runtime features.
-For example, an image-decoding function may be supplied by a declared native library, static library, or other backend-consumable artifact.
+For example, an image-decoding function may be supplied by a base standard
+library module, declared native library, static library, or other
+backend-consumable artifact.
 The runtime or launcher resolves and orchestrates the declared call boundary; it does not become the semantic owner of image decoding.
 </p>
 
@@ -1896,8 +1907,10 @@ They do not, by presence alone, expand the public runtime implementation maintai
 <p>
 The first such post-boundary example is <code>16_picture_logo_jpeg</code>, which
 uses a Path control, the standard <code>frog.image.decode_file_rgba8</code>
-primitive contract, and a Picture indicator. Runtime support for this example
-continues in <code>Graiphic/FROG-Runtime</code> unless deliberately promoted later.
+primitive contract, and a Picture indicator. It models the first lightweight
+standard image-library corridor without making image decoding a hidden widget
+or runtime behavior. Runtime support for this example continues in
+<code>Graiphic/FROG-Runtime</code> unless deliberately promoted later.
 </p>
 
 <p>
