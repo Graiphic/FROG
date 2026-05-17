@@ -84,7 +84,7 @@ def build_native_kernel_library(
     kernel_ll = kernel_source_path(manifest)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    command = [clang, "-shared", "-o", str(output_path), str(kernel_ll)]
+    command = [clang, "-shared", "-Wno-override-module", "-o", str(output_path), str(kernel_ll)]
     if sys.platform == "win32":
         command.insert(2, "-Wl,--export-all-symbols")
 

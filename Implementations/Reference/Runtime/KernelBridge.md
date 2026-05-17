@@ -32,6 +32,7 @@ Version governance remains centralized in <code>Versioning/Readme.md</code> and 
 <p>
 Examples 05 through 15 now have published native-kernel bridge surfaces.
 The LLVM-oriented backend path publishes <code>kernel.ll</code> and <code>native_kernel_manifest.json</code> for those slices.
+The manifests also carry platform-specific <code>artifact_library</code> names so dynamic consumers can resolve native libraries without treating LLVM as the runtime identity.
 The C++ / Python / Rust runtime bridges load the manifest, validate the declared ABI, call linked or dynamically loaded ABI-compatible kernel entry points, map <code>error_code</code> to diagnostics where applicable, and project the result onto the existing runtime snapshot surface.
 </p>
 

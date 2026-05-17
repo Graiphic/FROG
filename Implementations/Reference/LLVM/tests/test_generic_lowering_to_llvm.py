@@ -22,11 +22,11 @@ CASES = [
     ("08", "Examples/08_enum_value_roundtrip/main.lowering.json", "Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/module.ll"),
     ("09", "Examples/09_path_value_roundtrip/main.lowering.json", "Implementations/Reference/LLVM/examples/09_path_value_roundtrip/module.ll"),
     ("10", "Examples/10_button_press_to_boolean/main.lowering.json", "Implementations/Reference/LLVM/examples/10_button_press_to_boolean/module.ll"),
-    ("11", "Examples/11_button_switch_when_pressed/main.lowering.json", "Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/module.ll"),
-    ("12", "Examples/12_button_switch_when_released/main.lowering.json", "Implementations/Reference/LLVM/examples/12_button_switch_when_released/module.ll"),
-    ("13", "Examples/13_button_latch_when_pressed/main.lowering.json", "Implementations/Reference/LLVM/examples/13_button_latch_when_pressed/module.ll"),
-    ("14", "Examples/14_button_latch_when_released/main.lowering.json", "Implementations/Reference/LLVM/examples/14_button_latch_when_released/module.ll"),
-    ("15", "Examples/15_button_latch_until_released/main.lowering.json", "Implementations/Reference/LLVM/examples/15_button_latch_until_released/module.ll"),
+    ("11", "Examples/11_button_switch_when_pressed/main.lowering.json", "Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/kernel.ll"),
+    ("12", "Examples/12_button_switch_when_released/main.lowering.json", "Implementations/Reference/LLVM/examples/12_button_switch_when_released/kernel.ll"),
+    ("13", "Examples/13_button_latch_when_pressed/main.lowering.json", "Implementations/Reference/LLVM/examples/13_button_latch_when_pressed/kernel.ll"),
+    ("14", "Examples/14_button_latch_when_released/main.lowering.json", "Implementations/Reference/LLVM/examples/14_button_latch_when_released/kernel.ll"),
+    ("15", "Examples/15_button_latch_until_released/main.lowering.json", "Implementations/Reference/LLVM/examples/15_button_latch_until_released/kernel.ll"),
     ("16", "Examples/16_picture_logo_jpeg/main.lowering.json", "Implementations/Reference/LLVM/examples/16_picture_logo_jpeg/kernel.ll"),
 ]
 

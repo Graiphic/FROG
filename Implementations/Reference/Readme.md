@@ -164,7 +164,7 @@ python Implementations/Reference/check_reference_workspace.py --include-llvm-bui
 </code></pre>
 
 <p>
-The default workspace command includes the base historical Examples 01-10 pipeline and the current widget-layer validation surface.
+The default workspace command includes the Examples 01-15 public reference pipeline and the current widget-layer validation surface.
 The <code>--widget-layer-only</code> command exists for fast validation when editing widget class-law documents, Default realization documents, manifests, or SVG resources.
 The <code>--include-pytest</code> command additionally protects source-pattern derivation, FIR-unit-kind lowering, lowered-unit-kind contract emission, contract-unit-kind runtime execution, lowered-unit-kind LLVM emission, Python runtime UI coverage for the current widget examples, and unsupported-pattern / unsupported-kind failure behavior.
 The <code>--include-native-kernel-bridge</code> command validates the published native-kernel bridge surface where the local native toolchain is available.

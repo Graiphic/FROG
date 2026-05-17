@@ -5,7 +5,7 @@
 <h1 align="center">Reference Pipeline Checks</h1>
 
 <p align="center">
-  <strong>Repository-visible checks for the bounded Examples 01-10 base pipeline</strong><br/>
+  <strong>Repository-visible checks for the bounded Examples 01-15 reference pipeline</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -30,16 +30,18 @@
 <h2>Purpose</h2>
 
 <p>
-This directory coordinates the current reproducibility checks for the published Examples 01-10 corridor.
+This directory coordinates the current reproducibility checks for the published Examples 01-15 public reference runtime closure.
 The default repository-quality posture is to validate the widget layer before checking source derivation, lowering, backend contracts, runtime acceptance, and LLVM proof artifacts.
 </p>
 
 <p>
-The Examples 01-10 pipeline is the base source/FIR/lowering/contract/runtime
-pipeline. It should not be read as the current public reference runtime
-boundary. The public reference runtime closure extends through Example
-<code>15</code>, with Examples <code>11</code> through <code>15</code>
-validated through runtime-family tests and native-kernel bridge checks.
+The compatibility entry point still carries its historical
+<code>check_examples01_10_full.py</code> file name, but the source/FIR/lowering,
+backend-contract, and LLVM checks now cover Examples <code>01</code> through
+<code>15</code>. The historical runtime acceptance stage still covers Examples
+<code>01</code> through <code>10</code>; Examples <code>11</code> through
+<code>15</code> are additionally validated through runtime-family tests and
+native-kernel bridge checks.
 </p>
 
 <pre><code>widget layer validation

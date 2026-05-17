@@ -22,4 +22,3 @@ entry:
   store i16 0, ptr %error_ptr, align 2
   ret void
 }
-

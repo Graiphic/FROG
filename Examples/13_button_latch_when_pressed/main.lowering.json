@@ -17,7 +17,9 @@
     "backend_family_target": "reference_host_runtime_ui_binding",
     "capability_targets": [
       "cpp_contract_executor",
-      "cpp_native_kernel_bridge"
+      "python_contract_executor",
+      "rust_contract_executor",
+      "llvm_native_kernel_bridge"
     ]
   },
   "lowered_units": [
@@ -76,4 +78,3 @@
     }
   ]
 }
-

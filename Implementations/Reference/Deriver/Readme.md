@@ -15,11 +15,11 @@
 
 <p>
 This directory contains the current non-normative reference deriver for the FROG implementation workspace.
-It exists to make the published source-to-FIR corridor executable and checkable for the bounded Examples 01-10 surface and the post-boundary Example 16 Picture source slice without claiming general compiler completeness.
+It exists to make the published source-to-FIR corridor executable and checkable for the bounded Examples 01-15 public reference runtime closure and the post-boundary Example 16 Picture source slice without claiming general compiler completeness.
 </p>
 
 <p>
-The supported source-to-FIR targets cover the published numbered examples from <code>01</code> through <code>10</code>, plus the public Example <code>16_picture_logo_jpeg</code> source/FIR contract.
+The supported source-to-FIR targets cover the published numbered examples from <code>01</code> through <code>15</code>, plus the public Example <code>16_picture_logo_jpeg</code> source/FIR contract.
 Rule selection is based on explicit source-pattern recognition rather than trusting <code>metadata.name</code> as semantic authority.
 </p>
 

@@ -47,7 +47,7 @@ def main(argv: list[str] | None = None) -> int:
             pipeline.append("--skip-widget-validator")
         if args.include_llvm_build:
             pipeline.append("--include-llvm-build")
-        stages.append(("Examples 01-10 full pipeline", pipeline))
+        stages.append(("Examples 01-15 full pipeline", pipeline))
 
         if args.include_native_kernel_bridge:
             stages.extend([

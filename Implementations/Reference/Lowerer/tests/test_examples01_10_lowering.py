@@ -24,6 +24,11 @@ CASES = [
     ("08_enum_value_roundtrip", "Examples/08_enum_value_roundtrip/main.fir.json", "Examples/08_enum_value_roundtrip/main.lowering.json"),
     ("09_path_value_roundtrip", "Examples/09_path_value_roundtrip/main.fir.json", "Examples/09_path_value_roundtrip/main.lowering.json"),
     ("10_button_press_to_boolean", "Examples/10_button_press_to_boolean/main.fir.json", "Examples/10_button_press_to_boolean/main.lowering.json"),
+    ("11_button_switch_when_pressed", "Examples/11_button_switch_when_pressed/main.fir.json", "Examples/11_button_switch_when_pressed/main.lowering.json"),
+    ("12_button_switch_when_released", "Examples/12_button_switch_when_released/main.fir.json", "Examples/12_button_switch_when_released/main.lowering.json"),
+    ("13_button_latch_when_pressed", "Examples/13_button_latch_when_pressed/main.fir.json", "Examples/13_button_latch_when_pressed/main.lowering.json"),
+    ("14_button_latch_when_released", "Examples/14_button_latch_when_released/main.fir.json", "Examples/14_button_latch_when_released/main.lowering.json"),
+    ("15_button_latch_until_released", "Examples/15_button_latch_until_released/main.fir.json", "Examples/15_button_latch_until_released/main.lowering.json"),
     ("16_picture_logo_jpeg", "Examples/16_picture_logo_jpeg/main.fir.json", "Examples/16_picture_logo_jpeg/main.lowering.json"),
 ]
 

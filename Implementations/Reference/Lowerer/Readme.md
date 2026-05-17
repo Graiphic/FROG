@@ -15,7 +15,7 @@
 
 <p>
 This directory contains the current non-normative reference lowerer for the FROG implementation workspace.
-It exists to make the published <code>FIR -&gt; lowering</code> corridor executable and checkable for the bounded Examples 01-10 surface and the post-boundary Example 16 Picture lowering slice without claiming general lowering completeness.
+It exists to make the published <code>FIR -&gt; lowering</code> corridor executable and checkable for the bounded Examples 01-15 public reference runtime closure and the post-boundary Example 16 Picture lowering slice without claiming general lowering completeness.
 </p>
 
 <p>
@@ -56,6 +56,11 @@ The <code>source_ref</code> remains preserved for traceability, but it is not th
   <li><code>Examples/08_enum_value_roundtrip/main.fir.json -&gt; main.lowering.json</code></li>
   <li><code>Examples/09_path_value_roundtrip/main.fir.json -&gt; main.lowering.json</code></li>
   <li><code>Examples/10_button_press_to_boolean/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/11_button_switch_when_pressed/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/12_button_switch_when_released/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/13_button_latch_when_pressed/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/14_button_latch_when_released/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/15_button_latch_until_released/main.fir.json -&gt; main.lowering.json</code></li>
   <li><code>Examples/16_picture_logo_jpeg/main.fir.json -&gt; main.lowering.json</code></li>
 </ul>
 

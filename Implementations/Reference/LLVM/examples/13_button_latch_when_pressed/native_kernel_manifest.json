@@ -9,7 +9,12 @@
     "backend": {
       "family": "llvm",
       "artifact_kind": "native_object_or_library",
-      "source_artifact": "Implementations/Reference/LLVM/examples/13_button_latch_when_pressed/kernel.ll"
+      "source_artifact": "Implementations/Reference/LLVM/examples/13_button_latch_when_pressed/kernel.ll",
+      "artifact_library": {
+        "windows": "frog_example13_kernel.dll",
+        "linux": "libfrog_example13_kernel.so",
+        "macos": "libfrog_example13_kernel.dylib"
+      }
     },
     "entry": {
       "symbol": "frog_example13_run",
@@ -63,4 +68,3 @@
     "runtime_dependency_posture": "runtime_consumes_manifest_declared_kernel_not_llvm"
   }
 }
-

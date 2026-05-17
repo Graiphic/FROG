@@ -79,12 +79,12 @@ python Implementations/Reference/check_reference_workspace.py --include-native-k
 <pre><code>python Implementations/Reference/check_reference_workspace.py</code></pre>
 
 <p>
-This command runs the historical Examples 01-10 full
-source/FIR/lowering/contract/runtime/LLVM pipeline.
+This command runs the Examples 01-15 public reference
+source/FIR/lowering/contract/LLVM pipeline.
 Widget-layer validation is included by default through the pipeline.
-Examples 11-15 are part of the current public reference runtime closure, but
-they are exercised through runtime-family UI tests, C++ tests, and native-kernel
-bridge checks rather than through this base pipeline command.
+The historical runtime acceptance stage inside that pipeline still covers
+Examples 01-10; Examples 11-15 are exercised through runtime-family UI tests,
+C++ tests, and native-kernel bridge checks.
 </p>
 
 <hr/>
@@ -109,7 +109,7 @@ pipeline coordination.
 
 <p>
 This requires <code>clang</code>.
-It verifies the native LLVM proof dossiers for the base Examples 01-10
+It verifies the native LLVM proof dossiers for the Examples 01-15
 pipeline.
 Widget-layer validation remains enabled unless explicitly skipped.
 </p>
@@ -199,7 +199,7 @@ The workflow runs:
 </p>
 
 <ul>
-  <li><code>Reference workspace</code> — base Examples 01-10 workspace check.</li>
+  <li><code>Reference workspace</code> — Examples 01-15 public reference workspace check.</li>
   <li><code>Reference pytest</code> — installs <code>pytest</code> and runs <code>check_reference_workspace.py --include-pytest</code>.</li>
   <li><code>Widget layer only</code> — runs the widget-layer validator directly.</li>
   <li><code>Reference native kernel bridge</code> — installs native build tooling and runs <code>check_reference_workspace.py --include-native-kernel-bridge</code>.</li>
@@ -212,7 +212,7 @@ The workflow runs:
 <pre><code>python Implementations/Reference/check_reference_workspace.py --skip-widget-validator</code></pre>
 
 <p>
-This skips widget-layer validation inside the base Examples 01-10 pipeline.
+This skips widget-layer validation inside the Examples 01-15 reference pipeline.
 It should be used only for narrow debugging of unrelated pipeline stages.
 The default repository-quality posture is to keep widget validation enabled.
 </p>

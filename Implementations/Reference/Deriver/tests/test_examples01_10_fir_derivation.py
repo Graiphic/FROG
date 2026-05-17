@@ -24,6 +24,11 @@ CASES = [
     ("08_enum_value_roundtrip", "Examples/08_enum_value_roundtrip/main.frog", "Examples/08_enum_value_roundtrip/main.fir.json"),
     ("09_path_value_roundtrip", "Examples/09_path_value_roundtrip/main.frog", "Examples/09_path_value_roundtrip/main.fir.json"),
     ("10_button_press_to_boolean", "Examples/10_button_press_to_boolean/main.frog", "Examples/10_button_press_to_boolean/main.fir.json"),
+    ("11_button_switch_when_pressed", "Examples/11_button_switch_when_pressed/main.frog", "Examples/11_button_switch_when_pressed/main.fir.json"),
+    ("12_button_switch_when_released", "Examples/12_button_switch_when_released/main.frog", "Examples/12_button_switch_when_released/main.fir.json"),
+    ("13_button_latch_when_pressed", "Examples/13_button_latch_when_pressed/main.frog", "Examples/13_button_latch_when_pressed/main.fir.json"),
+    ("14_button_latch_when_released", "Examples/14_button_latch_when_released/main.frog", "Examples/14_button_latch_when_released/main.fir.json"),
+    ("15_button_latch_until_released", "Examples/15_button_latch_until_released/main.frog", "Examples/15_button_latch_until_released/main.fir.json"),
     ("16_picture_logo_jpeg", "Examples/16_picture_logo_jpeg/main.frog", "Examples/16_picture_logo_jpeg/main.fir.json"),
 ]
 

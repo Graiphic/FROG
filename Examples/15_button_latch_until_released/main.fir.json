@@ -70,9 +70,8 @@
         "This FIR is a bounded Button widget pilot and remains downstream from canonical source.",
         "Only the latch_until_released Button mechanical action is accepted by this example.",
         "The Button visual grammar is provided by the Default Button SVG realization package; this FIR does not own SVG geometry.",
-        "This example is validated across the C++, Python, and Rust reference runtime source surfaces."
+        "This example is validated through published FIR/lowering/native artifacts and the C++, Python, and Rust runtime surfaces."
       ]
     }
   ]
 }
-

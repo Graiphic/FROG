@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Check Examples 01-10 through their current published executable depth."""
+"""Check Examples 01-15 through their current published executable depth.
+
+The file name is retained as a compatibility entry point for older automation.
+"""
 
 from __future__ import annotations
 
@@ -41,6 +44,11 @@ EXAMPLES = [
     Example("08", "Examples/08_enum_value_roundtrip/main.frog", "Examples/08_enum_value_roundtrip/main.fir.json", "Examples/08_enum_value_roundtrip/main.lowering.json", "Implementations/Reference/ContractEmitter/examples/08_enum_value_roundtrip.reference_host_runtime_ui_binding.contract.json", "Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/module.ll", "Implementations/Reference/LLVM/examples/08_enum_value_roundtrip"),
     Example("09", "Examples/09_path_value_roundtrip/main.frog", "Examples/09_path_value_roundtrip/main.fir.json", "Examples/09_path_value_roundtrip/main.lowering.json", "Implementations/Reference/ContractEmitter/examples/09_path_value_roundtrip.reference_host_runtime_ui_binding.contract.json", "Implementations/Reference/LLVM/examples/09_path_value_roundtrip/module.ll", "Implementations/Reference/LLVM/examples/09_path_value_roundtrip"),
     Example("10", "Examples/10_button_press_to_boolean/main.frog", "Examples/10_button_press_to_boolean/main.fir.json", "Examples/10_button_press_to_boolean/main.lowering.json", "Implementations/Reference/ContractEmitter/examples/10_button_press_to_boolean.reference_host_runtime_ui_binding.contract.json", "Implementations/Reference/LLVM/examples/10_button_press_to_boolean/module.ll", "Implementations/Reference/LLVM/examples/10_button_press_to_boolean"),
+    Example("11", "Examples/11_button_switch_when_pressed/main.frog", "Examples/11_button_switch_when_pressed/main.fir.json", "Examples/11_button_switch_when_pressed/main.lowering.json", "Implementations/Reference/ContractEmitter/examples/11_button_switch_when_pressed.reference_host_runtime_ui_binding.contract.json", "Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/kernel.ll", "Implementations/Reference/LLVM/examples/11_button_switch_when_pressed"),
+    Example("12", "Examples/12_button_switch_when_released/main.frog", "Examples/12_button_switch_when_released/main.fir.json", "Examples/12_button_switch_when_released/main.lowering.json", "Implementations/Reference/ContractEmitter/examples/12_button_switch_when_released.reference_host_runtime_ui_binding.contract.json", "Implementations/Reference/LLVM/examples/12_button_switch_when_released/kernel.ll", "Implementations/Reference/LLVM/examples/12_button_switch_when_released"),
+    Example("13", "Examples/13_button_latch_when_pressed/main.frog", "Examples/13_button_latch_when_pressed/main.fir.json", "Examples/13_button_latch_when_pressed/main.lowering.json", "Implementations/Reference/ContractEmitter/examples/13_button_latch_when_pressed.reference_host_runtime_ui_binding.contract.json", "Implementations/Reference/LLVM/examples/13_button_latch_when_pressed/kernel.ll", "Implementations/Reference/LLVM/examples/13_button_latch_when_pressed"),
+    Example("14", "Examples/14_button_latch_when_released/main.frog", "Examples/14_button_latch_when_released/main.fir.json", "Examples/14_button_latch_when_released/main.lowering.json", "Implementations/Reference/ContractEmitter/examples/14_button_latch_when_released.reference_host_runtime_ui_binding.contract.json", "Implementations/Reference/LLVM/examples/14_button_latch_when_released/kernel.ll", "Implementations/Reference/LLVM/examples/14_button_latch_when_released"),
+    Example("15", "Examples/15_button_latch_until_released/main.frog", "Examples/15_button_latch_until_released/main.fir.json", "Examples/15_button_latch_until_released/main.lowering.json", "Implementations/Reference/ContractEmitter/examples/15_button_latch_until_released.reference_host_runtime_ui_binding.contract.json", "Implementations/Reference/LLVM/examples/15_button_latch_until_released/kernel.ll", "Implementations/Reference/LLVM/examples/15_button_latch_until_released"),
 ]
 
 
@@ -82,7 +90,7 @@ def stages(include_widget_validator: bool, include_llvm_build: bool, skip_artifa
             [py, "-m", "Implementations.Reference.ContractEmitter.reference_contract_emitter", "--lowering", example.lowering, "--expected", example.contract, "--check"],
         ))
 
-    out.append(Stage("Examples 01-10 runtime acceptance", [py, "Implementations/Reference/Runtime/check_examples01_10_runtime_acceptance.py"]))
+    out.append(Stage("Examples 01-10 historical runtime acceptance", [py, "Implementations/Reference/Runtime/check_examples01_10_runtime_acceptance.py"]))
 
     for example in EXAMPLES:
         out.append(Stage(
@@ -121,7 +129,7 @@ def main() -> int:
         if code != 0:
             return code
 
-    print("\nExamples 01-10 full status: ok")
+    print("\nExamples 01-15 full status: ok")
     return 0
 
 

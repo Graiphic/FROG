@@ -853,68 +853,7 @@ def emit_button_switch_when_pressed_to_boolean(lowering: dict[str, Any]) -> str:
     expect_equal(inputs, [{"id": "trigger_value", "type": "bool", "binding_origin": "widget.trigger_button.value"}], "button_switch_when_pressed expects one Button value input")
     expect_equal(outputs, [{"id": "switched", "type": "bool"}], "button_switch_when_pressed expects one bool output")
 
-    fmt_input = "trigger_value=%s\n"
-    fmt_output = "public_switched=%s\n"
-    fmt_status_ok = "status=ok\n"
-
-    return f"""; FROG example 11 - LLVM Button switch_when_pressed Boolean proof
-; Emitted from the published Example 11 lowered Button value copy kernel.
-;
-; Lowered kernel shape:
-;   trigger_value : bool
-;   switched      : bool
-;   operation     : copy trigger_value -> switched
-
-{c_const("text_true", "true")}
-{c_const("text_false", "false")}
-{c_const("fmt_input", fmt_input)}
-{c_const("fmt_output", fmt_output)}
-{c_const("fmt_status_ok", fmt_status_ok)}
-
-declare i32 @printf(ptr, ...)
-declare i32 @atoi(ptr)
-
-define i1 @frog_example11_copy_button_value(i1 %trigger_value) {{
-entry:
-  ret i1 %trigger_value
-}}
-
-define i32 @main(i32 %argc, ptr %argv) {{
-entry:
-  %true_ptr = getelementptr inbounds [5 x i8], ptr @text_true, i64 0, i64 0
-  %false_ptr = getelementptr inbounds [6 x i8], ptr @text_false, i64 0, i64 0
-  %has_arg = icmp sgt i32 %argc, 1
-  br i1 %has_arg, label %parse_arg, label %use_default
-
-parse_arg:
-  %argv1ptr = getelementptr inbounds ptr, ptr %argv, i64 1
-  %argv1 = load ptr, ptr %argv1ptr, align 8
-  %parsed = call i32 @atoi(ptr %argv1)
-  %parsed_bool = icmp ne i32 %parsed, 0
-  br label %run
-
-use_default:
-  br label %run
-
-run:
-  %trigger_value = phi i1 [ %parsed_bool, %parse_arg ], [ false, %use_default ]
-  %switched = call i1 @frog_example11_copy_button_value(i1 %trigger_value)
-
-  %input_text = select i1 %trigger_value, ptr %true_ptr, ptr %false_ptr
-  %result_text = select i1 %switched, ptr %true_ptr, ptr %false_ptr
-
-  %fmt_input_ptr = getelementptr inbounds [{c_len(fmt_input)} x i8], ptr @fmt_input, i64 0, i64 0
-  call i32 (ptr, ...) @printf(ptr %fmt_input_ptr, ptr %input_text)
-
-  %fmt_output_ptr = getelementptr inbounds [{c_len(fmt_output)} x i8], ptr @fmt_output, i64 0, i64 0
-  call i32 (ptr, ...) @printf(ptr %fmt_output_ptr, ptr %result_text)
-
-  %fmt_status_ok_ptr = getelementptr inbounds [{c_len(fmt_status_ok)} x i8], ptr @fmt_status_ok, i64 0, i64 0
-  call i32 (ptr, ...) @printf(ptr %fmt_status_ok_ptr)
-
-  ret i32 0
-}}
-"""
+    return emit_button_bool_kernel_abi(example_number="11", action="switch_when_pressed", result_name="switched")
 
 
 def emit_button_switch_when_released_to_boolean(lowering: dict[str, Any]) -> str:
@@ -931,67 +870,37 @@ def emit_button_switch_when_released_to_boolean(lowering: dict[str, Any]) -> str
     expect_equal(inputs, [{"id": "trigger_value", "type": "bool", "binding_origin": "widget.trigger_button.value"}], "button_switch_when_released expects one Button value input")
     expect_equal(outputs, [{"id": "switched", "type": "bool"}], "button_switch_when_released expects one bool output")
 
-    fmt_input = "trigger_value=%s\n"
-    fmt_output = "public_switched=%s\n"
-    fmt_status_ok = "status=ok\n"
+    return emit_button_bool_kernel_abi(example_number="12", action="switch_when_released", result_name="switched")
 
-    return f"""; FROG example 12 - LLVM Button switch_when_released Boolean proof
-; Emitted from the published Example 12 lowered Button value copy kernel.
+
+def emit_button_bool_kernel_abi(*, example_number: str, action: str, result_name: str) -> str:
+    title_action = action
+    value_name = f"is_{result_name}"
+    return f"""; FROG Example {example_number} - native Button {title_action} Boolean kernel ABI proof artifact
+; This module is intended for the compiler-agnostic runtime kernel bridge.
+; It exposes a manifest-declared C-compatible entry surface:
 ;
-; Lowered kernel shape:
-;   trigger_value : bool
-;   switched      : bool
-;   operation     : copy trigger_value -> switched
+;   void frog_example{example_number}_run(uint8_t trigger_value, FrogBoolRunResult* out_result)
+;
+; The runtime consumes this through the native kernel manifest. The runtime does
+; not depend on LLVM as its conceptual execution authority.
 
-{c_const("text_true", "true")}
-{c_const("text_false", "false")}
-{c_const("fmt_input", fmt_input)}
-{c_const("fmt_output", fmt_output)}
-{c_const("fmt_status_ok", fmt_status_ok)}
+%FrogBoolRunResult = type {{ i8, i8, i16 }}
 
-declare i32 @printf(ptr, ...)
-declare i32 @atoi(ptr)
-
-define i1 @frog_example12_copy_button_value(i1 %trigger_value) {{
+define void @frog_example{example_number}_run(i8 %trigger_value, ptr %out_result) {{
 entry:
-  ret i1 %trigger_value
+  %{value_name} = icmp ne i8 %trigger_value, 0
+  %result = zext i1 %{value_name} to i8
+
+  %ok_ptr = getelementptr inbounds %FrogBoolRunResult, ptr %out_result, i32 0, i32 0
+  store i8 1, ptr %ok_ptr, align 2
+  %result_ptr = getelementptr inbounds %FrogBoolRunResult, ptr %out_result, i32 0, i32 1
+  store i8 %result, ptr %result_ptr, align 1
+  %error_ptr = getelementptr inbounds %FrogBoolRunResult, ptr %out_result, i32 0, i32 2
+  store i16 0, ptr %error_ptr, align 2
+  ret void
 }}
 
-define i32 @main(i32 %argc, ptr %argv) {{
-entry:
-  %true_ptr = getelementptr inbounds [5 x i8], ptr @text_true, i64 0, i64 0
-  %false_ptr = getelementptr inbounds [6 x i8], ptr @text_false, i64 0, i64 0
-  %has_arg = icmp sgt i32 %argc, 1
-  br i1 %has_arg, label %parse_arg, label %use_default
-
-parse_arg:
-  %argv1ptr = getelementptr inbounds ptr, ptr %argv, i64 1
-  %argv1 = load ptr, ptr %argv1ptr, align 8
-  %parsed = call i32 @atoi(ptr %argv1)
-  %parsed_bool = icmp ne i32 %parsed, 0
-  br label %run
-
-use_default:
-  br label %run
-
-run:
-  %trigger_value = phi i1 [ %parsed_bool, %parse_arg ], [ false, %use_default ]
-  %switched = call i1 @frog_example12_copy_button_value(i1 %trigger_value)
-
-  %input_text = select i1 %trigger_value, ptr %true_ptr, ptr %false_ptr
-  %result_text = select i1 %switched, ptr %true_ptr, ptr %false_ptr
-
-  %fmt_input_ptr = getelementptr inbounds [{c_len(fmt_input)} x i8], ptr @fmt_input, i64 0, i64 0
-  call i32 (ptr, ...) @printf(ptr %fmt_input_ptr, ptr %input_text)
-
-  %fmt_output_ptr = getelementptr inbounds [{c_len(fmt_output)} x i8], ptr @fmt_output, i64 0, i64 0
-  call i32 (ptr, ...) @printf(ptr %fmt_output_ptr, ptr %result_text)
-
-  %fmt_status_ok_ptr = getelementptr inbounds [{c_len(fmt_status_ok)} x i8], ptr @fmt_status_ok, i64 0, i64 0
-  call i32 (ptr, ...) @printf(ptr %fmt_status_ok_ptr)
-
-  ret i32 0
-}}
 """
 
 
@@ -1010,68 +919,7 @@ def emit_button_latch_to_boolean(lowering: dict[str, Any], *, example_number: st
     expect_equal(inputs, [{"id": "trigger_value", "type": "bool", "binding_origin": "widget.trigger_button.value"}], f"{kind} expects one Button value input")
     expect_equal(outputs, [{"id": "latched", "type": "bool"}], f"{kind} expects one bool output")
 
-    fmt_input = "trigger_value=%s\n"
-    fmt_output = "public_latched=%s\n"
-    fmt_status_ok = "status=ok\n"
-
-    return f"""; FROG example {example_number} - LLVM Button {action} Boolean proof
-; Emitted from the published Example {example_number} lowered Button value copy kernel.
-;
-; Lowered kernel shape:
-;   trigger_value : bool
-;   latched       : bool
-;   operation     : copy trigger_value -> latched
-
-{c_const("text_true", "true")}
-{c_const("text_false", "false")}
-{c_const("fmt_input", fmt_input)}
-{c_const("fmt_output", fmt_output)}
-{c_const("fmt_status_ok", fmt_status_ok)}
-
-declare i32 @printf(ptr, ...)
-declare i32 @atoi(ptr)
-
-define i1 @frog_example{example_number}_copy_button_value(i1 %trigger_value) {{
-entry:
-  ret i1 %trigger_value
-}}
-
-define i32 @main(i32 %argc, ptr %argv) {{
-entry:
-  %true_ptr = getelementptr inbounds [5 x i8], ptr @text_true, i64 0, i64 0
-  %false_ptr = getelementptr inbounds [6 x i8], ptr @text_false, i64 0, i64 0
-  %has_arg = icmp sgt i32 %argc, 1
-  br i1 %has_arg, label %parse_arg, label %use_default
-
-parse_arg:
-  %argv1ptr = getelementptr inbounds ptr, ptr %argv, i64 1
-  %argv1 = load ptr, ptr %argv1ptr, align 8
-  %parsed = call i32 @atoi(ptr %argv1)
-  %parsed_bool = icmp ne i32 %parsed, 0
-  br label %run
-
-use_default:
-  br label %run
-
-run:
-  %trigger_value = phi i1 [ %parsed_bool, %parse_arg ], [ false, %use_default ]
-  %latched = call i1 @frog_example{example_number}_copy_button_value(i1 %trigger_value)
-
-  %input_text = select i1 %trigger_value, ptr %true_ptr, ptr %false_ptr
-  %result_text = select i1 %latched, ptr %true_ptr, ptr %false_ptr
-
-  %fmt_input_ptr = getelementptr inbounds [{c_len(fmt_input)} x i8], ptr @fmt_input, i64 0, i64 0
-  call i32 (ptr, ...) @printf(ptr %fmt_input_ptr, ptr %input_text)
-
-  %fmt_output_ptr = getelementptr inbounds [{c_len(fmt_output)} x i8], ptr @fmt_output, i64 0, i64 0
-  call i32 (ptr, ...) @printf(ptr %fmt_output_ptr, ptr %result_text)
-
-  %fmt_status_ok_ptr = getelementptr inbounds [{c_len(fmt_status_ok)} x i8], ptr @fmt_status_ok, i64 0, i64 0
-  call i32 (ptr, ...) @printf(ptr %fmt_status_ok_ptr)
-
-  ret i32 0
-}}
-"""
+    return emit_button_bool_kernel_abi(example_number=example_number, action=action, result_name="latched")
 
 
 def emit_button_latch_when_pressed_to_boolean(lowering: dict[str, Any]) -> str:

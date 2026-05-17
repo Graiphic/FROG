@@ -9,7 +9,12 @@
     "backend": {
       "family": "llvm",
       "artifact_kind": "native_object_or_library",
-      "source_artifact": "Implementations/Reference/LLVM/examples/07_string_value_roundtrip/kernel.ll"
+      "source_artifact": "Implementations/Reference/LLVM/examples/07_string_value_roundtrip/kernel.ll",
+      "artifact_library": {
+        "windows": "frog_example07_kernel.dll",
+        "linux": "libfrog_example07_kernel.so",
+        "macos": "libfrog_example07_kernel.dylib"
+      }
     },
     "entry": {
       "symbol": "frog_example07_run",

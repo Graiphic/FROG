@@ -212,7 +212,7 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
 
     add_custom_command(
         OUTPUT "${FROG_EXAMPLE05_KERNEL_OBJECT}"
-        COMMAND "${CLANG_EXECUTABLE}" -c "${FROG_EXAMPLE05_KERNEL_LL}" -o "${FROG_EXAMPLE05_KERNEL_OBJECT}"
+        COMMAND "${CLANG_EXECUTABLE}" -Wno-override-module -c "${FROG_EXAMPLE05_KERNEL_LL}" -o "${FROG_EXAMPLE05_KERNEL_OBJECT}"
         DEPENDS "${FROG_EXAMPLE05_KERNEL_LL}"
         COMMENT "Compiling Example 05 LLVM native kernel artifact"
         VERBATIM
@@ -222,7 +222,7 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
 
     add_custom_command(
         OUTPUT "${FROG_EXAMPLE06_KERNEL_OBJECT}"
-        COMMAND "${CLANG_EXECUTABLE}" -c "${FROG_EXAMPLE06_KERNEL_LL}" -o "${FROG_EXAMPLE06_KERNEL_OBJECT}"
+        COMMAND "${CLANG_EXECUTABLE}" -Wno-override-module -c "${FROG_EXAMPLE06_KERNEL_LL}" -o "${FROG_EXAMPLE06_KERNEL_OBJECT}"
         DEPENDS "${FROG_EXAMPLE06_KERNEL_LL}"
         COMMENT "Compiling Example 06 LLVM native bool kernel artifact"
         VERBATIM
@@ -232,7 +232,7 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
 
     add_custom_command(
         OUTPUT "${FROG_EXAMPLE07_KERNEL_OBJECT}"
-        COMMAND "${CLANG_EXECUTABLE}" -c "${FROG_EXAMPLE07_KERNEL_LL}" -o "${FROG_EXAMPLE07_KERNEL_OBJECT}"
+        COMMAND "${CLANG_EXECUTABLE}" -Wno-override-module -c "${FROG_EXAMPLE07_KERNEL_LL}" -o "${FROG_EXAMPLE07_KERNEL_OBJECT}"
         DEPENDS "${FROG_EXAMPLE07_KERNEL_LL}"
         COMMENT "Compiling Example 07 LLVM native string kernel artifact"
         VERBATIM
@@ -242,7 +242,7 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
 
     add_custom_command(
         OUTPUT "${FROG_EXAMPLE08_KERNEL_OBJECT}"
-        COMMAND "${CLANG_EXECUTABLE}" -c "${FROG_EXAMPLE08_KERNEL_LL}" -o "${FROG_EXAMPLE08_KERNEL_OBJECT}"
+        COMMAND "${CLANG_EXECUTABLE}" -Wno-override-module -c "${FROG_EXAMPLE08_KERNEL_LL}" -o "${FROG_EXAMPLE08_KERNEL_OBJECT}"
         DEPENDS "${FROG_EXAMPLE08_KERNEL_LL}"
         COMMENT "Compiling Example 08 LLVM native enum kernel artifact"
         VERBATIM
@@ -252,7 +252,7 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
 
     add_custom_command(
         OUTPUT "${FROG_EXAMPLE09_KERNEL_OBJECT}"
-        COMMAND "${CLANG_EXECUTABLE}" -c "${FROG_EXAMPLE09_KERNEL_LL}" -o "${FROG_EXAMPLE09_KERNEL_OBJECT}"
+        COMMAND "${CLANG_EXECUTABLE}" -Wno-override-module -c "${FROG_EXAMPLE09_KERNEL_LL}" -o "${FROG_EXAMPLE09_KERNEL_OBJECT}"
         DEPENDS "${FROG_EXAMPLE09_KERNEL_LL}"
         COMMENT "Compiling Example 09 LLVM native path kernel artifact"
         VERBATIM
@@ -262,7 +262,7 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
 
     add_custom_command(
         OUTPUT "${FROG_EXAMPLE10_KERNEL_OBJECT}"
-        COMMAND "${CLANG_EXECUTABLE}" -c "${FROG_EXAMPLE10_KERNEL_LL}" -o "${FROG_EXAMPLE10_KERNEL_OBJECT}"
+        COMMAND "${CLANG_EXECUTABLE}" -Wno-override-module -c "${FROG_EXAMPLE10_KERNEL_LL}" -o "${FROG_EXAMPLE10_KERNEL_OBJECT}"
         DEPENDS "${FROG_EXAMPLE10_KERNEL_LL}"
         COMMENT "Compiling Example 10 LLVM native Button bool kernel artifact"
         VERBATIM
@@ -272,7 +272,7 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
 
     add_custom_command(
         OUTPUT "${FROG_EXAMPLE11_KERNEL_OBJECT}"
-        COMMAND "${CLANG_EXECUTABLE}" -c "${FROG_EXAMPLE11_KERNEL_LL}" -o "${FROG_EXAMPLE11_KERNEL_OBJECT}"
+        COMMAND "${CLANG_EXECUTABLE}" -Wno-override-module -c "${FROG_EXAMPLE11_KERNEL_LL}" -o "${FROG_EXAMPLE11_KERNEL_OBJECT}"
         DEPENDS "${FROG_EXAMPLE11_KERNEL_LL}"
         COMMENT "Compiling Example 11 LLVM native Button switch bool kernel artifact"
         VERBATIM
@@ -282,7 +282,7 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
 
     add_custom_command(
         OUTPUT "${FROG_EXAMPLE12_KERNEL_OBJECT}"
-        COMMAND "${CLANG_EXECUTABLE}" -c "${FROG_EXAMPLE12_KERNEL_LL}" -o "${FROG_EXAMPLE12_KERNEL_OBJECT}"
+        COMMAND "${CLANG_EXECUTABLE}" -Wno-override-module -c "${FROG_EXAMPLE12_KERNEL_LL}" -o "${FROG_EXAMPLE12_KERNEL_OBJECT}"
         DEPENDS "${FROG_EXAMPLE12_KERNEL_LL}"
         COMMENT "Compiling Example 12 LLVM native Button switch-when-released bool kernel artifact"
         VERBATIM
@@ -292,7 +292,7 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
 
     add_custom_command(
         OUTPUT "${FROG_EXAMPLE13_KERNEL_OBJECT}"
-        COMMAND "${CLANG_EXECUTABLE}" -c "${FROG_EXAMPLE13_KERNEL_LL}" -o "${FROG_EXAMPLE13_KERNEL_OBJECT}"
+        COMMAND "${CLANG_EXECUTABLE}" -Wno-override-module -c "${FROG_EXAMPLE13_KERNEL_LL}" -o "${FROG_EXAMPLE13_KERNEL_OBJECT}"
         DEPENDS "${FROG_EXAMPLE13_KERNEL_LL}"
         COMMENT "Compiling Example 13 LLVM native Button latch-when-pressed bool kernel artifact"
         VERBATIM
@@ -302,7 +302,7 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
 
     add_custom_command(
         OUTPUT "${FROG_EXAMPLE14_KERNEL_OBJECT}"
-        COMMAND "${CLANG_EXECUTABLE}" -c "${FROG_EXAMPLE14_KERNEL_LL}" -o "${FROG_EXAMPLE14_KERNEL_OBJECT}"
+        COMMAND "${CLANG_EXECUTABLE}" -Wno-override-module -c "${FROG_EXAMPLE14_KERNEL_LL}" -o "${FROG_EXAMPLE14_KERNEL_OBJECT}"
         DEPENDS "${FROG_EXAMPLE14_KERNEL_LL}"
         COMMENT "Compiling Example 14 LLVM native Button latch-when-released bool kernel artifact"
         VERBATIM
@@ -312,7 +312,7 @@ if(FROG_RUNTIME_CPP_ENABLE_LLVM_KERNEL_BRIDGE)
 
     add_custom_command(
         OUTPUT "${FROG_EXAMPLE15_KERNEL_OBJECT}"
-        COMMAND "${CLANG_EXECUTABLE}" -c "${FROG_EXAMPLE15_KERNEL_LL}" -o "${FROG_EXAMPLE15_KERNEL_OBJECT}"
+        COMMAND "${CLANG_EXECUTABLE}" -Wno-override-module -c "${FROG_EXAMPLE15_KERNEL_LL}" -o "${FROG_EXAMPLE15_KERNEL_OBJECT}"
         DEPENDS "${FROG_EXAMPLE15_KERNEL_LL}"
         COMMENT "Compiling Example 15 LLVM native Button latch-until-released bool kernel artifact"
         VERBATIM

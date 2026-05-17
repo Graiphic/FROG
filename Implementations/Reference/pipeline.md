@@ -5,7 +5,7 @@
 <h1 align="center">Reference Pipeline</h1>
 
 <p align="center">
-  <strong>Executable base pipeline for the historical Examples 01-10 FROG corridor</strong><br/>
+  <strong>Executable pipeline for the Examples 01-15 public reference runtime closure</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -13,7 +13,7 @@
 
 <h2>Current Pipeline</h2>
 
-<pre><code>Examples 01-10
+<pre><code>Examples 01-15
   widget layer validation
     -&gt; .frog
     -&gt; FIR
@@ -24,15 +24,16 @@
 </code></pre>
 
 <p>
-The widget-layer validator is included by default because the current Examples 01-10 corridor depends on a stable published UI/widget layer, especially through <code>widget_value</code>, <code>widget_reference</code>, <code>frog.ui.property_write</code>, the Example 05 front-panel package, and the Example 06-10 Default realization packages.
+The widget-layer validator is included by default because the current Examples 01-15 corridor depends on a stable published UI/widget layer, especially through <code>widget_value</code>, <code>widget_reference</code>, <code>frog.ui.property_write</code>, the Example 05 front-panel package, and the Example 06-15 Default realization packages.
 </p>
 
 <p>
-This named pipeline is the base reproducibility corridor, not the full public
-reference runtime boundary. The current public reference runtime closure extends
-through Example <code>15</code>; Examples <code>11</code> through
-<code>15</code> are covered by runtime-family tests and native-kernel bridge
-checks documented under <code>Implementations/Reference/Runtime/</code>.
+This named pipeline keeps the public reference runtime closure reproducible at
+the source/FIR/lowering/contract/LLVM boundary. The historical runtime
+acceptance stage still covers Examples <code>01</code> through <code>10</code>;
+Examples <code>11</code> through <code>15</code> are additionally covered by
+runtime-family tests and native-kernel bridge checks documented under
+<code>Implementations/Reference/Runtime/</code>.
 </p>
 
 <hr/>
@@ -66,12 +67,12 @@ To skip widget validation for narrow debugging of unrelated stages:
 <ol>
   <li>Artifact preflight for Examples 01-10.</li>
   <li>Widget-layer validation.</li>
-  <li><code>.frog -&gt; FIR</code> for Examples 01-10.</li>
-  <li><code>FIR -&gt; lowering</code> for Examples 01-10.</li>
+  <li><code>.frog -&gt; FIR</code> for Examples 01-15.</li>
+  <li><code>FIR -&gt; lowering</code> for Examples 01-15.</li>
   <li><code>lowering -&gt; backend contract</code> for Examples 01-04 through the shared contract emitter.</li>
-  <li><code>lowering -&gt; backend contract</code> for Example 05 through the host-runtime UI-binding contract emitter.</li>
-  <li><code>contract -&gt; runtime acceptance</code> for Examples 01-10.</li>
-  <li><code>lowering -&gt; LLVM module</code> for Examples 01-10.</li>
+  <li><code>lowering -&gt; backend contract</code> for Examples 05-15 through the host-runtime UI-binding contract emitter.</li>
+  <li><code>contract -&gt; runtime acceptance</code> for the historical Examples 01-10 acceptance surface.</li>
+  <li><code>lowering -&gt; LLVM module</code> for Examples 01-15.</li>
   <li>Optional native LLVM build proof.</li>
 </ol>
 

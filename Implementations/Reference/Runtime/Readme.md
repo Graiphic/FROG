@@ -147,7 +147,7 @@ The runtime consumes a manifest-declared ABI and a linked C-compatible entry poi
 
 <pre><code>Implementations/Reference/LLVM/examples/{05..15}_*/kernel.ll
   -&gt; clang
-  -&gt; linked C++ object or Python/Rust dynamic library
+  -&gt; linked C++ object or manifest-declared dynamic library
 
 Implementations/Reference/LLVM/examples/{05..15}_*/native_kernel_manifest.json
   -&gt; NativeKernelManifest

@@ -466,6 +466,105 @@ def lower_button_press_to_boolean(fir: dict[str, Any], fir_rel: str) -> dict[str
     }
 
 
+BUTTON_MECHANICAL_LOWERING: dict[str, dict[str, str]] = {
+    "button_switch_when_pressed_ui_unit": {
+        "lowered_kind": "button_switch_when_pressed_kernel_with_ui_bindings",
+        "action": "switch_when_pressed",
+        "dst": "switched",
+        "indicator_id": "switched_indicator",
+    },
+    "button_switch_when_released_ui_unit": {
+        "lowered_kind": "button_switch_when_released_kernel_with_ui_bindings",
+        "action": "switch_when_released",
+        "dst": "switched",
+        "indicator_id": "switched_indicator",
+    },
+    "button_latch_when_pressed_ui_unit": {
+        "lowered_kind": "button_latch_when_pressed_kernel_with_ui_bindings",
+        "action": "latch_when_pressed",
+        "dst": "latched",
+        "indicator_id": "latched_indicator",
+    },
+    "button_latch_when_released_ui_unit": {
+        "lowered_kind": "button_latch_when_released_kernel_with_ui_bindings",
+        "action": "latch_when_released",
+        "dst": "latched",
+        "indicator_id": "latched_indicator",
+    },
+    "button_latch_until_released_ui_unit": {
+        "lowered_kind": "button_latch_until_released_kernel_with_ui_bindings",
+        "action": "latch_until_released",
+        "dst": "latched",
+        "indicator_id": "latched_indicator",
+    },
+}
+
+
+def lower_button_mechanical_value(fir: dict[str, Any], fir_rel: str, fir_kind: str) -> dict[str, Any]:
+    spec = BUTTON_MECHANICAL_LOWERING[fir_kind]
+    u = ensure_unit_kind(fir, fir_kind)
+    uid = unit_id(u)
+    bindings = ui_bindings(u)
+    dst = spec["dst"]
+    expect_control = [{"widget_id": "trigger_button", "mode": "widget_value", "public_input_id": "trigger_value", "value_type": "bool"}]
+    expect_indicator = [{"widget_id": spec["indicator_id"], "mode": "widget_value", "public_output_id": dst, "value_type": "bool"}]
+    if bindings.get("control_bindings") != expect_control or bindings.get("indicator_bindings") != expect_indicator:
+        raise LoweringError(f"{fir_kind} bindings must map trigger_button.value to {spec['indicator_id']}")
+    model = execution_model(u)
+    body_rule = require_object(model.get("body_rule"), f"{fir_kind}.execution_model.body_rule")
+    if body_rule.get("kind") != "copy_widget_value_to_output" or body_rule.get("expression") != f"{dst} = trigger_value":
+        raise LoweringError(f"{fir_kind} must copy trigger_value to {dst}")
+    return {
+        "artifact_kind": "frog_lowered_unit",
+        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": source_ref(fir),
+        "fir_ref": {"path": fir_rel, "unit_id": uid},
+        "lowering_intent": {
+            "summary": f"make one bounded Button {spec['action']} value example consumable by C++/Python/Rust reference runtime UI-binding checks",
+            "backend_family_target": "reference_host_runtime_ui_binding",
+            "capability_targets": [
+                "cpp_contract_executor",
+                "python_contract_executor",
+                "rust_contract_executor",
+                "llvm_native_kernel_bridge",
+            ],
+        },
+        "lowered_units": [single_lowered_unit(
+            uid,
+            spec["lowered_kind"],
+            public_io=public_interface(u),
+            ui_bindings=bindings,
+            execution_kernel={
+                "operation": "copy",
+                "dst": dst,
+                "type": "bool",
+                "src": "trigger_value",
+                "final_publication": u["publications"],
+            },
+        )],
+    }
+
+
+def lower_button_switch_when_pressed(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    return lower_button_mechanical_value(fir, fir_rel, "button_switch_when_pressed_ui_unit")
+
+
+def lower_button_switch_when_released(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    return lower_button_mechanical_value(fir, fir_rel, "button_switch_when_released_ui_unit")
+
+
+def lower_button_latch_when_pressed(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    return lower_button_mechanical_value(fir, fir_rel, "button_latch_when_pressed_ui_unit")
+
+
+def lower_button_latch_when_released(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    return lower_button_mechanical_value(fir, fir_rel, "button_latch_when_released_ui_unit")
+
+
+def lower_button_latch_until_released(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    return lower_button_mechanical_value(fir, fir_rel, "button_latch_until_released_ui_unit")
+
+
 def lower_picture_path_to_image(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
     u = ensure_unit_kind(fir, "picture_path_to_image_ui_unit")
     uid = unit_id(u)
@@ -528,6 +627,11 @@ LOWERING_RULES = [
     LoweringRule("lower_enum_value_roundtrip", "enum_value_roundtrip_ui_unit", "enum_value_roundtrip_kernel_with_ui_bindings", lower_enum_value_roundtrip),
     LoweringRule("lower_path_value_roundtrip", "path_value_roundtrip_ui_unit", "path_value_roundtrip_kernel_with_ui_bindings", lower_path_value_roundtrip),
     LoweringRule("lower_button_press_to_boolean", "button_press_to_boolean_ui_unit", "button_press_to_boolean_kernel_with_ui_bindings", lower_button_press_to_boolean),
+    LoweringRule("lower_button_switch_when_pressed", "button_switch_when_pressed_ui_unit", "button_switch_when_pressed_kernel_with_ui_bindings", lower_button_switch_when_pressed),
+    LoweringRule("lower_button_switch_when_released", "button_switch_when_released_ui_unit", "button_switch_when_released_kernel_with_ui_bindings", lower_button_switch_when_released),
+    LoweringRule("lower_button_latch_when_pressed", "button_latch_when_pressed_ui_unit", "button_latch_when_pressed_kernel_with_ui_bindings", lower_button_latch_when_pressed),
+    LoweringRule("lower_button_latch_when_released", "button_latch_when_released_ui_unit", "button_latch_when_released_kernel_with_ui_bindings", lower_button_latch_when_released),
+    LoweringRule("lower_button_latch_until_released", "button_latch_until_released_ui_unit", "button_latch_until_released_kernel_with_ui_bindings", lower_button_latch_until_released),
     LoweringRule("lower_picture_path_to_image", "picture_path_to_image_ui_unit", "picture_path_to_image_with_ui_bindings", lower_picture_path_to_image),
 ]
 

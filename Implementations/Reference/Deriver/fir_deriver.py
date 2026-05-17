@@ -678,6 +678,145 @@ def derive_example10(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     }
 
 
+BUTTON_MECHANICAL_EXAMPLES: dict[str, dict[str, str]] = {
+    "11_button_switch_when_pressed": {
+        "unit_kind": "button_switch_when_pressed_ui_unit",
+        "action": "switch_when_pressed",
+        "output_id": "switched",
+        "indicator_id": "switched_indicator",
+        "indicator_node": "switched_indicator_value",
+        "output_node": "output_switched",
+    },
+    "12_button_switch_when_released": {
+        "unit_kind": "button_switch_when_released_ui_unit",
+        "action": "switch_when_released",
+        "output_id": "switched",
+        "indicator_id": "switched_indicator",
+        "indicator_node": "switched_indicator_value",
+        "output_node": "output_switched",
+    },
+    "13_button_latch_when_pressed": {
+        "unit_kind": "button_latch_when_pressed_ui_unit",
+        "action": "latch_when_pressed",
+        "output_id": "latched",
+        "indicator_id": "latched_indicator",
+        "indicator_node": "latched_indicator_value",
+        "output_node": "output_latched",
+    },
+    "14_button_latch_when_released": {
+        "unit_kind": "button_latch_when_released_ui_unit",
+        "action": "latch_when_released",
+        "output_id": "latched",
+        "indicator_id": "latched_indicator",
+        "indicator_node": "latched_indicator_value",
+        "output_node": "output_latched",
+    },
+    "15_button_latch_until_released": {
+        "unit_kind": "button_latch_until_released_ui_unit",
+        "action": "latch_until_released",
+        "output_id": "latched",
+        "indicator_id": "latched_indicator",
+        "indicator_node": "latched_indicator_value",
+        "output_node": "output_latched",
+    },
+}
+
+
+def derive_button_mechanical_value(source: dict[str, Any], source_rel: str, example_id: str) -> dict[str, Any]:
+    spec = BUTTON_MECHANICAL_EXAMPLES[example_id]
+    context = f"Button {spec['action']} value pattern"
+    metadata = source_metadata(source)
+    if metadata.get("name") != example_id:
+        raise DerivationError(f"{context} expects metadata.name={example_id}")
+    output_id = spec["output_id"]
+    indicator_id = spec["indicator_id"]
+    assert_interface(
+        source,
+        [{"id": "trigger_value", "type": "bool"}],
+        [{"id": output_id, "type": "bool"}],
+        context,
+    )
+    button = require_widget_class(source, "trigger_button", "frog.widgets.button", context)
+    indicator = require_widget_class(source, indicator_id, "frog.widgets.boolean_indicator", context)
+    button_binding = require_object(button.get("binding"), "trigger_button.binding")
+    indicator_binding = require_object(indicator.get("binding"), f"{indicator_id}.binding")
+    if button_binding.get("mode") != "widget_value" or button_binding.get("public_input_id") != "trigger_value":
+        raise DerivationError(f"{context} expects trigger_button widget_value binding to trigger_value")
+    if indicator_binding.get("mode") != "widget_value" or indicator_binding.get("public_output_id") != output_id:
+        raise DerivationError(f"{context} expects {indicator_id} widget_value binding to {output_id}")
+    button_props = require_object(button.get("props"), "trigger_button.props")
+    if button_props.get("behavior.mechanical_action") != spec["action"]:
+        raise DerivationError(f"{context} expects trigger_button behavior.mechanical_action={spec['action']}")
+
+    graph = SourceGraph.from_source(source)
+    require_node(graph, "trigger_button_value", context)
+    require_node(graph, spec["indicator_node"], context)
+    require_node(graph, spec["output_node"], context)
+    trigger_node = graph.nodes["trigger_button_value"]
+    if trigger_node.get("kind") != "widget_value" or trigger_node.get("widget") != "trigger_button" or trigger_node.get("value_type") != "bool":
+        raise DerivationError(f"{context} expects trigger_button_value to publish trigger_button.value bool")
+    indicator_node = graph.nodes[spec["indicator_node"]]
+    if indicator_node.get("kind") != "widget_value" or indicator_node.get("widget") != indicator_id:
+        raise DerivationError(f"{context} expects {spec['indicator_node']} widget_value for {indicator_id}")
+    output_node = graph.nodes[spec["output_node"]]
+    if output_node.get("kind") != "interface_output" or output_node.get("interface_port") != output_id:
+        raise DerivationError(f"{context} expects {spec['output_node']} interface output {output_id}")
+    outs = graph.outgoing_all("trigger_button_value", "value")
+    expected_outs = [
+        EdgeEndpoint(spec["indicator_node"], "value"),
+        EdgeEndpoint(spec["output_node"], "value"),
+    ]
+    if sorted(outs, key=lambda endpoint: endpoint.node) != sorted(expected_outs, key=lambda endpoint: endpoint.node):
+        raise DerivationError(f"{context} expects trigger_button_value.value to feed indicator and public output")
+
+    return {
+        "artifact_kind": "frog_fir_unit",
+        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": {"example_id": example_id, "path": source_rel, "entry_unit": "main"},
+        "front_panel_ref": {"package_path": (Path(source_rel).parent / "ui/button_panel.wfrog").as_posix(), "panel_id": "main_panel"},
+        "units": [{
+            "unit_id": "main",
+            "kind": spec["unit_kind"],
+            "public_interface": {
+                "inputs": [{"id": "trigger_value", "type": "bool", "binding_origin": "widget.trigger_button.value"}],
+                "outputs": [{"id": output_id, "type": "bool"}],
+            },
+            "ui_bindings": {
+                "control_bindings": [{"widget_id": "trigger_button", "mode": "widget_value", "public_input_id": "trigger_value", "value_type": "bool"}],
+                "indicator_bindings": [{"widget_id": indicator_id, "mode": "widget_value", "public_output_id": output_id, "value_type": "bool"}],
+            },
+            "execution_model": {"structure": "single_button_value_copy", "body_rule": {"kind": "copy_widget_value_to_output", "expression": f"{output_id} = trigger_value"}},
+            "publications": [{"target": f"public_output.{output_id}", "source": "trigger_value"}, {"target": f"widget.{indicator_id}.value", "source": "trigger_value"}],
+            "notes": [
+                "This FIR is a bounded Button widget pilot and remains downstream from canonical source.",
+                f"Only the {spec['action']} Button mechanical action is accepted by this example.",
+                "The Button visual grammar is provided by the Default Button SVG realization package; this FIR does not own SVG geometry.",
+                "This example is validated through published FIR/lowering/native artifacts and the C++, Python, and Rust runtime surfaces.",
+            ],
+        }],
+    }
+
+
+def derive_example11(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    return derive_button_mechanical_value(source, source_rel, "11_button_switch_when_pressed")
+
+
+def derive_example12(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    return derive_button_mechanical_value(source, source_rel, "12_button_switch_when_released")
+
+
+def derive_example13(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    return derive_button_mechanical_value(source, source_rel, "13_button_latch_when_pressed")
+
+
+def derive_example14(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    return derive_button_mechanical_value(source, source_rel, "14_button_latch_when_released")
+
+
+def derive_example15(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    return derive_button_mechanical_value(source, source_rel, "15_button_latch_until_released")
+
+
 def derive_example16(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     context = "Picture path-to-image pattern"
     metadata = source_metadata(source)
@@ -845,6 +984,11 @@ DERIVATION_RULES = [
     DerivationRule("enum_value_roundtrip", "08_enum_value_roundtrip", derive_example08),
     DerivationRule("path_value_roundtrip", "09_path_value_roundtrip", derive_example09),
     DerivationRule("button_press_to_boolean", "10_button_press_to_boolean", derive_example10),
+    DerivationRule("button_switch_when_pressed", "11_button_switch_when_pressed", derive_example11),
+    DerivationRule("button_switch_when_released", "12_button_switch_when_released", derive_example12),
+    DerivationRule("button_latch_when_pressed", "13_button_latch_when_pressed", derive_example13),
+    DerivationRule("button_latch_when_released", "14_button_latch_when_released", derive_example14),
+    DerivationRule("button_latch_until_released", "15_button_latch_until_released", derive_example15),
     DerivationRule("picture_path_to_image", "16_picture_logo_jpeg", derive_example16),
 ]
 

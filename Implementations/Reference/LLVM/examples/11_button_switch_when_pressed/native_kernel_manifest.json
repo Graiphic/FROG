@@ -9,7 +9,12 @@
     "backend": {
       "family": "llvm",
       "artifact_kind": "native_object_or_library",
-      "source_artifact": "Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/kernel.ll"
+      "source_artifact": "Implementations/Reference/LLVM/examples/11_button_switch_when_pressed/kernel.ll",
+      "artifact_library": {
+        "windows": "frog_example11_kernel.dll",
+        "linux": "libfrog_example11_kernel.so",
+        "macos": "libfrog_example11_kernel.dylib"
+      }
     },
     "entry": {
       "symbol": "frog_example11_run",
