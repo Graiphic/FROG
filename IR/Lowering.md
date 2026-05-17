@@ -492,6 +492,7 @@ The following transformation classes are allowed when they preserve the required
   <li>preparing explicit memory cells, frames, or state carriers for downstream consumption,</li>
   <li>introducing placement or partition annotations for later backend-family consumption,</li>
   <li>materializing effect boundaries more explicitly,</li>
+  <li>materializing selected dependency and capability boundaries for later deployment preparation,</li>
   <li>specializing data representation and layout choices,</li>
   <li>specializing calling conventions at the backend-facing side when still downstream from canonical open IR.</li>
 </ul>
@@ -701,6 +702,7 @@ Examples include:
 
 <ul>
   <li>partitioning pure subgraphs and effectful subgraphs,</li>
+  <li>separating compilable program cores from runtime-hosted, UI-hosted, or external-call support surfaces,</li>
   <li>marking host/device or core/accelerator boundaries,</li>
   <li>preparing CPU-oriented or runtime-oriented scheduling surfaces,</li>
   <li>introducing region-level execution partitions,</li>
@@ -843,7 +845,8 @@ Examples of legitimate lowered products include:
   <li>a partitioned lowered graph,</li>
   <li>a backend-facing lowered module,</li>
   <li>a contract-oriented lowered call surface,</li>
-  <li>a pure-core / effect-surface split representation.</li>
+  <li>a pure-core / effect-surface split representation,</li>
+  <li>a deployment-preparation descriptor for a selected launcher, host-service, or dependency closure.</li>
 </ul>
 
 <p>

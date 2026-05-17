@@ -370,6 +370,18 @@ A backend contract MAY mention all four.
 It MUST NOT collapse them into one ambiguous target label.
 </p>
 
+<p>
+Deployment mode is especially important for the runtime boundary.
+A contract may support a full-runtime-hosted deployment, a generated launcher, a self-contained executable, a dynamically linked package, a statically linked package, or another explicit deployment posture.
+Those postures are deployment choices, not language semantics.
+</p>
+
+<p>
+When a deployment does not require a complete general-purpose runtime, the contract SHOULD make the selected capability closure explicit:
+which compiled program scope is present, which runtime or host services are required, which external libraries or symbols are required, which UI/widget host capabilities are required, and which assets must travel with the artifact.
+This allows a downstream consumer to produce a program-specific launcher or executable without smuggling hidden runtime assumptions into the language.
+</p>
+
 <hr/>
 
 <h2 id="contract-identity-and-backend-family">9. Contract Identity and Backend Family</h2>
@@ -502,6 +514,8 @@ In base v0.1, that required content SHOULD include, as applicable:
   <li>backend family declaration,</li>
   <li>lowered executable scope,</li>
   <li>capability requirements,</li>
+  <li>selected runtime or host-service requirements where execution depends on them,</li>
+  <li>external dependency declarations such as native libraries, shared libraries, static libraries, symbols, or equivalent callable artifacts,</li>
   <li>type or representation commitments already fixed,</li>
   <li>storage or memory commitments already fixed,</li>
   <li>effect / call / service boundary commitments already fixed,</li>
@@ -642,6 +656,12 @@ The contract MUST NOT collapse:
 
 <p>
 A consumer must never be forced to infer these categories only from opaque lowered shapes if the contract still depends on them.
+</p>
+
+<p>
+Likewise, a consumer must not be forced to infer dependency closure from implementation convention.
+If a lowered program needs an external callable surface, a native ABI entry point, a file or image capability, a widget host service, or another support module, that requirement belongs in the contract or in an explicitly referenced profile/execution contract.
+The downstream realization may then decide whether to satisfy it through a full runtime host, a shared library, a static link, a generated launcher module, or another declared mechanism.
 </p>
 
 <hr/>
@@ -810,6 +830,7 @@ A conforming consumer SHOULD reject explicitly when:
 
 <ul>
   <li>required capabilities are unsupported,</li>
+  <li>required dependency or host-service declarations cannot be resolved,</li>
   <li>backend family is mismatched,</li>
   <li>preserved category requirements cannot be honored,</li>
   <li>contract version semantics are unsupported,</li>

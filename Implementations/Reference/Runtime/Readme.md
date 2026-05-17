@@ -50,6 +50,16 @@ Such runtimes are implementations of the public FROG specification; they do not 
 Runtime development for examples beyond Example <code>15</code> continues in Graiphic's proprietary <code>Graiphic/FROG-Runtime</code> repository unless a later public reference surface is explicitly promoted.
 </p>
 
+<p>
+The presence of this reference runtime also does not mean that every deployed FROG program must depend on a complete installed runtime.
+FROG's downstream architecture allows a full runtime host for IDE/debug/live-front-panel work and also allows compiler-oriented deployments to use generated launchers or self-contained executables when the selected program scope, required host services, external dependencies, manifests, widgets, and assets are explicit.
+</p>
+
+<p>
+This public reference runtime exercises the bounded repository-visible corridor.
+It is not a universal deployment packager, not a production runtime, and not the mandatory shape of future generated launchers or self-contained artifacts.
+</p>
+
 <hr/>
 
 <h2>Current Runtime Surface</h2>

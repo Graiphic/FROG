@@ -238,6 +238,7 @@ This roadmap may refer to those files, but it must not duplicate their role.
   <li>Do not let reference implementation convenience become hidden language law.</li>
   <li>Do not collapse open FROG IR into one backend-specific or runtime-private form.</li>
   <li>Do not confuse backend family, target profile, deployment mode, and runtime-private realization.</li>
+  <li>Keep full runtime hosting and deployment-specialized launcher/executable packaging as distinct valid deployment postures.</li>
   <li>Do not confuse roadmap planning with normative ownership.</li>
   <li>Do not confuse roadmap planning with current corpus-version reporting.</li>
   <li>Keep the path from canonical <code>.frog</code> source to deployable execution explicit and inspectable.</li>

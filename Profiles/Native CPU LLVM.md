@@ -604,6 +604,11 @@ Interop support under this profile is therefore:
   <li>not a license for arbitrary foreign-runtime dependency surfaces.</li>
 </ul>
 
+<p>
+When an accepted program uses an external callable capability, the dependency must remain explicit enough for lowering, backend contract emission, and deployment preparation.
+For example, a native image-decoding capability may be represented as a declared external call surface or library dependency; it must not appear as an implicit feature of the runtime simply because one implementation can provide it.
+</p>
+
 <hr/>
 
 <h2 id="lowering-expectations">18. Lowering Expectations</h2>
@@ -787,8 +792,14 @@ Such a consumer MAY:
   <li>optimize through LLVM-oriented passes,</li>
   <li>produce native object or executable artifacts,</li>
   <li>participate in JIT or AOT flows,</li>
-  <li>delegate some support needs to a runtime surface declared by the contract.</li>
+  <li>delegate some support needs to a runtime surface declared by the contract,</li>
+  <li>produce a generated launcher or self-contained executable when the accepted program scope and its selected dependencies are explicit enough.</li>
 </ul>
+
+<p>
+The generated-launcher or self-contained posture is not a promise that all FROG programs can avoid every runtime service.
+It means that, for an accepted compiled subset, the consumer may package only the program-specific code, selected support modules, declared external libraries, required host services, and required assets instead of depending on a complete installed runtime host.
+</p>
 
 <p>
 Such a consumer MUST NOT:

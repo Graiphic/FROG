@@ -1103,6 +1103,38 @@ The language stays upstream.
 The deployment strategy stays modular.
 </p>
 
+<p>
+That modularity also applies to the runtime boundary.
+A full runtime host is valuable for IDE execution, debugging, probes, watches, live front panels, diagnostics, dynamic loading, and rich observability.
+It is not, however, required to be the permanent shape of every deployed FROG artifact.
+</p>
+
+<p>
+A compiler-oriented deployment may instead emit a specialized launcher or self-contained executable that carries only the accepted program scope, its selected capability modules, its declared external dependencies, its required host services, and the UI/assets that the deployment actually uses.
+In that posture, the deployed artifact does not need to install or embed an entire general-purpose runtime when a smaller declared dependency closure is sufficient.
+</p>
+
+<pre><code>IDE / debug posture
+  .frog
+    -&gt; FIR
+    -&gt; lowering / backend contract
+    -&gt; full runtime host
+    -&gt; probes, watches, live UI, diagnostics
+
+Deployment posture
+  .frog
+    -&gt; FIR
+    -&gt; lowering / backend contract
+    -&gt; compiled artifact + selected capability closure
+    -&gt; generated launcher or self-contained executable
+</code></pre>
+
+<p>
+External functions remain explicit dependencies rather than hidden runtime features.
+For example, an image-decoding function may be supplied by a declared native library, static library, or other backend-consumable artifact.
+The runtime or launcher resolves and orchestrates the declared call boundary; it does not become the semantic owner of image decoding.
+</p>
+
 <hr/>
 
 <h2 id="open-fir-bridges-and-deployment-modularity">Open FIR bridges and deployment modularity</h2>
@@ -1121,6 +1153,7 @@ Because FIR remains open:
   <li>bridges can be built from FIR toward compiler families,</li>
   <li>bridges can be built from FIR toward runtime families,</li>
   <li>bridges can be built toward existing operational hardware stacks,</li>
+  <li>deployment preparation can compute a selected dependency and capability closure,</li>
   <li>and the same upstream program can support multiple deployment combinations without redefining the language itself.</li>
 </ul>
 
@@ -1157,6 +1190,12 @@ reference runtimes             vendor compiler chains       runtime + compiled f
 <p>
 That modularity does not mean all downstream bridges already exist.
 It means the architecture is deliberately shaped so they can exist without changing the language truth.
+</p>
+
+<p>
+This distinction is strategically important:
+FROG should support complete runtime-hosted execution where that is the right engineering answer, and it should also support deployment-specialized artifacts where only the program-specific runtime services, libraries, widgets, manifests, and assets are carried forward.
+The open specification defines the source, FIR, contracts, profiles, and public boundaries; individual implementations decide how to realize full hosts, generated launchers, static links, dynamic links, or other deployment packages without redefining the language.
 </p>
 
 <hr/>

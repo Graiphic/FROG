@@ -602,6 +602,13 @@ Host services MAY include, for example:
 A program scope MUST be rejected under this contract if execution start depends on an undeclared host-service assumption.
 </p>
 
+<p>
+Those host services may be satisfied by different deployment postures.
+A full runtime host is one possible answer.
+A generated launcher, statically linked support module, dynamically linked library, or self-contained executable may also be a valid answer when the required services, external dependencies, and callable boundaries are explicit.
+The execution contract requires explicitness; it does not require every accepted deployment to carry an entire general-purpose runtime.
+</p>
+
 <hr/>
 
 <h2 id="data-representation-and-call-boundary-posture">18. Data Representation and Call-Boundary Posture</h2>
@@ -743,6 +750,7 @@ A consumer MAY still choose:
   <li>its ABI strategy,</li>
   <li>its AOT or JIT realization strategy,</li>
   <li>its deployment packaging,</li>
+  <li>its choice between a full runtime host, a generated launcher, static linkage, dynamic linkage, or another explicit support-module arrangement,</li>
 </ul>
 
 <p>

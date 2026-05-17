@@ -255,6 +255,12 @@ It is not the same thing as:
   <li>backend family identity.</li>
 </ul>
 
+<p>
+Examples of deployment-facing classes may include full-runtime-hosted execution, generated-launcher execution, self-contained executable packaging, statically linked native packaging, dynamically linked native packaging, or embedded-host packaging.
+These classes describe delivery and start posture.
+They do not, by themselves, decide what the source means or require every deployed program to carry a complete general-purpose runtime.
+</p>
+
 <h3>5.4 Backend families</h3>
 
 <p>

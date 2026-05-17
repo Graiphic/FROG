@@ -218,6 +218,12 @@ The standard runtime checks must remain usable without making LLVM a mandatory r
 LLVM is a backend/native-kernel artifact producer; the runtimes consume manifest-declared ABI surfaces and the corresponding <code>.wfrog</code> front-panel realization packages.
 </p>
 
+<p>
+The reference workspace also does not require FROG deployment to mean "ship the entire reference runtime."
+The public reference path keeps the current bounded examples inspectable.
+Future production or independent implementations may compile accepted scopes into generated launchers, self-contained executables, or other selected dependency closures when the backend contract and applicable profiles make the required services and dependencies explicit.
+</p>
+
 <hr/>
 
 <h2>Continuous Integration</h2>
