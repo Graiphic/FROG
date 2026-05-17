@@ -5,13 +5,13 @@
 <h1 align="center">Reference Runtime Acceptance Artifacts</h1>
 
 <p align="center">
-  <strong>Shared non-normative acceptance material for Examples 01-10 runtime closure</strong><br/>
+  <strong>Shared non-normative acceptance material for the base Examples 01-10 runtime checks</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
 <hr/>
 
-<h2>Current Acceptance Surface</h2>
+<h2>Published Snapshot Acceptance Files</h2>
 
 <ul>
   <li><code>example01_pure_addition.acceptance.json</code></li>
@@ -19,7 +19,17 @@
   <li><code>example03_ui_property_write.acceptance.json</code></li>
   <li><code>example04_stateful_feedback_delay.acceptance.json</code></li>
   <li><code>example05_runtime_family.acceptance.json</code></li>
+  <li><code>example06_boolean_value_roundtrip.acceptance.json</code></li>
+  <li><code>example10_button_press_to_boolean.acceptance.json</code></li>
 </ul>
+
+<p>
+Examples 07, 08, and 09 are covered by procedural runtime acceptance inside
+<code>check_examples01_10_runtime_acceptance.py</code>. Examples 11 through
+15 belong to the current public reference runtime closure, but their runtime
+family coverage lives in the C++ / Python / Rust UI tests and native-kernel
+bridge checks rather than in this base acceptance-artifact directory.
+</p>
 
 <hr/>
 
@@ -38,6 +48,8 @@ Examples <code>01</code> through <code>04</code> are checked through the generic
 
 <p>
 Example <code>05</code> remains on the richer specialized runtime-family checker because it also covers front-panel package loading, UI bindings, and bounded <code>u16</code> overflow rejection.
+Examples <code>06</code> through <code>10</code> extend the base runtime
+acceptance surface to the first scalar and Button widget slices.
 </p>
 
 <hr/>

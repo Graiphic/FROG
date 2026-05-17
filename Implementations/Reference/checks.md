@@ -79,8 +79,12 @@ python Implementations/Reference/check_reference_workspace.py --include-native-k
 <pre><code>python Implementations/Reference/check_reference_workspace.py</code></pre>
 
 <p>
-This command runs the Examples 01-10 full pipeline.
+This command runs the historical Examples 01-10 full
+source/FIR/lowering/contract/runtime/LLVM pipeline.
 Widget-layer validation is included by default through the pipeline.
+Examples 11-15 are part of the current public reference runtime closure, but
+they are exercised through runtime-family UI tests, C++ tests, and native-kernel
+bridge checks rather than through this base pipeline command.
 </p>
 
 <hr/>
@@ -91,7 +95,10 @@ Widget-layer validation is included by default through the pipeline.
 python Implementations/Reference/check_reference_workspace.py --include-pytest</code></pre>
 
 <p>
-This additionally runs the pytest suites for artifact checks, derivation, lowering, contract emission, generic runtime contract execution, Python runtime UI coverage for the current widget examples, LLVM, and pipeline coordination.
+This additionally runs the pytest suites for artifact checks, derivation,
+lowering, contract emission, generic runtime contract execution, Python runtime
+UI coverage for the current widget examples through Example 15, LLVM, and
+pipeline coordination.
 </p>
 
 <hr/>
@@ -102,7 +109,8 @@ This additionally runs the pytest suites for artifact checks, derivation, loweri
 
 <p>
 This requires <code>clang</code>.
-It verifies the native LLVM proof dossiers for Examples 01-10.
+It verifies the native LLVM proof dossiers for the base Examples 01-10
+pipeline.
 Widget-layer validation remains enabled unless explicitly skipped.
 </p>
 
@@ -122,8 +130,8 @@ It verifies:
   <li>the ABI declaration for <code>frog_example05_run</code>,</li>
   <li>the LLVM <code>kernel.ll</code> result-status out-parameter layout,</li>
   <li>the C++ <code>NativeKernelBridge</code> path,</li>
-  <li>the Example 06 native Boolean manifest and C++ LLVM-produced native bridge surface,</li>
-  <li>the Python and Rust dynamic native-kernel bridge surfaces for the current published widget examples,</li>
+  <li>the Example 06 through Example 15 native manifest and C++ LLVM-produced native bridge surfaces,</li>
+  <li>the Python and Rust dynamic native-kernel bridge surfaces for the current published widget examples through Example 15,</li>
   <li>runtime snapshot preservation through the bridge,</li>
   <li>overflow diagnostic mapping,</li>
   <li>the optional native-kernel runtime executable linked against compiled LLVM artifacts.</li>
@@ -139,7 +147,9 @@ ctest --test-dir build/frog_runtime_cpp --output-on-failure</code></pre>
 
 <p>
 The standard C++ checks do not require LLVM or <code>clang</code>.
-They validate the contract runtime path, the current Examples 05-10 browser-host UI rendering surfaces, <code>.wfrog</code> / SVG geometry coherence, and native-kernel bridge paths using ABI-compatible linked stubs.
+They validate the contract runtime path, the current Examples 05-15
+browser-host UI rendering surfaces, <code>.wfrog</code> / SVG geometry
+coherence, and native-kernel bridge paths using ABI-compatible linked stubs.
 </p>
 
 <p>
@@ -189,7 +199,7 @@ The workflow runs:
 </p>
 
 <ul>
-  <li><code>Reference workspace</code> — primary Examples 01-10 workspace check.</li>
+  <li><code>Reference workspace</code> — base Examples 01-10 workspace check.</li>
   <li><code>Reference pytest</code> — installs <code>pytest</code> and runs <code>check_reference_workspace.py --include-pytest</code>.</li>
   <li><code>Widget layer only</code> — runs the widget-layer validator directly.</li>
   <li><code>Reference native kernel bridge</code> — installs native build tooling and runs <code>check_reference_workspace.py --include-native-kernel-bridge</code>.</li>
@@ -202,7 +212,7 @@ The workflow runs:
 <pre><code>python Implementations/Reference/check_reference_workspace.py --skip-widget-validator</code></pre>
 
 <p>
-This skips widget-layer validation inside the Examples 01-10 pipeline.
+This skips widget-layer validation inside the base Examples 01-10 pipeline.
 It should be used only for narrow debugging of unrelated pipeline stages.
 The default repository-quality posture is to keep widget validation enabled.
 </p>

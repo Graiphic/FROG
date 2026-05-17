@@ -5,7 +5,7 @@
 <h1 align="center">Reference Pipeline</h1>
 
 <p align="center">
-  <strong>Executable reference pipeline for the current Examples 01-10 FROG corridor</strong><br/>
+  <strong>Executable base pipeline for the historical Examples 01-10 FROG corridor</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -25,6 +25,14 @@
 
 <p>
 The widget-layer validator is included by default because the current Examples 01-10 corridor depends on a stable published UI/widget layer, especially through <code>widget_value</code>, <code>widget_reference</code>, <code>frog.ui.property_write</code>, the Example 05 front-panel package, and the Example 06-10 Default realization packages.
+</p>
+
+<p>
+This named pipeline is the base reproducibility corridor, not the full public
+reference runtime boundary. The current public reference runtime closure extends
+through Example <code>15</code>; Examples <code>11</code> through
+<code>15</code> are covered by runtime-family tests and native-kernel bridge
+checks documented under <code>Implementations/Reference/Runtime/</code>.
 </p>
 
 <hr/>

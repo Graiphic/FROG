@@ -2,7 +2,7 @@
   <img src="../../FROG logo.svg" alt="FROG logo" width="140" />
 </p>
 
-<h1 align="center">Root README Examples 01-10 Enrichment</h1>
+<h1 align="center">Historical Root README Enrichment Helpers</h1>
 
 <p align="center">
   <strong>Maintenance note for enriching the existing repository root README without replacing the strategic content</strong><br/>
@@ -14,6 +14,14 @@
 <h2>Command</h2>
 
 <pre><code>python Implementations/Reference/RepositoryMaintenance/enrich_root_readme_examples01_10.py</code></pre>
+
+<p>
+This helper is historical. It was written for the earlier Examples
+<code>01</code> through <code>10</code> public executable corridor and should
+not be used to rewrite the current root README without first updating it for the
+Examples <code>01</code> through <code>15</code> public reference runtime
+closure and the post-boundary Example <code>16</code> policy.
+</p>
 
 <p>
 The historical <code>enrich_root_readme_examples01_05.py</code> path remains as a
