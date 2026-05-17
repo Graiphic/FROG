@@ -236,6 +236,36 @@ primitive contract and it does not make image decoding a hidden responsibility
 of the Picture widget.
 </p>
 
+<h2>Standard Provider and Deployment Closure</h2>
+
+<p>
+An implementation MAY realize <code>frog.image.decode_file_rgba8</code> through
+a shared library, static library, compiled object, built-in provider, generated
+backend artifact, or another equivalent provider mechanism.
+</p>
+
+<p>
+The public requirement is that the provider satisfies the
+<code>frog.image.decode_file_rgba8</code> contract and that the dependency remains
+declared in the relevant FIR, lowering, manifest, package, profile, or deployment
+closure. The public FROG specification does not require one mandatory runtime
+loading mechanism.
+</p>
+
+<p>
+This keeps deployment modular. A program that does not use
+<code>frog.image</code> does not need an image provider. A compiled launcher or
+self-contained executable that does use <code>frog.image.decode_file_rgba8</code>
+may carry only the image provider needed by that program, together with the
+program's other selected dependencies and assets.
+</p>
+
+<p>
+Implementations MAY keep their provider source code, optimization strategy,
+packaging layout, and runtime-loader architecture private, provided the public
+primitive contract and declared dependency boundary remain intact.
+</p>
+
 <hr/>
 
 <h2>Out of Scope for the Initial Image Library</h2>

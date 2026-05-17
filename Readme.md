@@ -1132,6 +1132,14 @@ program, explicit references in FIR, and explicit items in the lowered
 dependency closure.
 </p>
 
+<p>
+Such dependency closure may be realized through implementation-selected
+providers, including dynamic libraries, static libraries, compiled objects,
+generated backend artifacts, or equivalent package mechanisms. The public
+specification defines the primitive contract and dependency boundary; it does
+not require one mandatory runtime-loader architecture.
+</p>
+
 <pre><code>IDE / debug posture
   .frog
     -&gt; FIR

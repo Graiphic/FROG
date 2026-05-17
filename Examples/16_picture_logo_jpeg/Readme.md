@@ -38,9 +38,9 @@ Picture realization.
 <p>
 The Picture widget is not an image decoder. Image file decoding is an explicit
 diagram primitive supplied by the <code>frog.image</code> standard library contract.
-A private Graiphic runtime implementation may use a small codec dependency such
-as <code>stb_image</code> behind that contract, but that dependency is not the public
-semantic owner of the FROG program.
+A conforming implementation may realize that primitive through a dynamic
+provider, static link, compiled object, or equivalent deployment dependency,
+but that provider is not the public semantic owner of the FROG program.
 </p>
 
 <p>
@@ -52,6 +52,14 @@ that imported path, and then execute the same diagram contract:
 step is a front-panel convenience for path selection; it does not turn Picture
 into a decoder and it does not replace the explicit <code>frog.image</code>
 primitive.
+</p>
+
+<p>
+This example therefore also exercises the desired dependency posture for later
+deployment work: the program declares that it needs
+<code>frog.image.decode_file_rgba8</code>, and a runtime, launcher, or compiled
+deployment may satisfy that need by carrying only the selected provider required
+by the program.
 </p>
 
 <p>
