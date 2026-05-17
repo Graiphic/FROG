@@ -559,6 +559,14 @@ Runtime development for examples beyond Example <code>15</code> continues in Gra
 </p>
 
 <p>
+Example <code>16_picture_logo_jpeg</code> is the first post-boundary Picture
+progression example. It remains public as source, library, widget, and
+realization material, and models <code>Path -&gt; frog.image.decode_file_rgba8
+-&gt; Picture</code> without adding public runtime implementation beyond the
+Example <code>15</code> closure.
+</p>
+
+<p>
 The correct current statement is therefore:
 the repository materially exposes an executable Examples <code>01</code> through <code>15</code> progression, while Example <code>05</code> remains the richest applicative UI/state/runtime/native reference corridor and Examples <code>06</code> through <code>15</code> define the current bounded public widget-runtime wave.
 This does not claim full generalized symmetry across all future examples, all runtime families, or rendered-native front-panel closure.
@@ -1883,6 +1891,13 @@ The Example <code>05_bounded_ui_accumulator</code> slice remains the primary app
 Examples <code>01</code> through <code>04</code> provide smaller executable anchors for isolated concerns.
 Examples beyond Example <code>15</code> may remain visible as specification-facing, widget-facing, conformance-facing, or design-progression material.
 They do not, by presence alone, expand the public runtime implementation maintained in this repository.
+</p>
+
+<p>
+The first such post-boundary example is <code>16_picture_logo_jpeg</code>, which
+uses a Path control, the standard <code>frog.image.decode_file_rgba8</code>
+primitive contract, and a Picture indicator. Runtime support for this example
+continues in <code>Graiphic/FROG-Runtime</code> unless deliberately promoted later.
 </p>
 
 <p>

@@ -2,7 +2,7 @@
   "format": "frog.wfrog",
   "kind": "widget_realization_package",
   "package_id": "example16.picture_panel",
-  "title": "Example 16 Default Picture realization package",
+  "title": "Example 16 Default Path/Picture realization package",
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },
@@ -14,40 +14,50 @@
   },
   "ownership_boundary": {
     "owns": [
+      "Default Path realization references",
       "Default Picture realization references",
+      "Default Path SVG asset references",
       "Default Picture SVG asset references",
-      "host binding requirements for Picture runtime validation"
+      "host binding requirements for path selection, image decoding, and Picture runtime validation"
     ],
     "does_not_own": [
       "canonical source semantics",
       "front-panel widget instance layout",
       "front-panel widget instance visual customization",
-      "Picture value payload",
-      "JPEG source image path",
+      "Path value",
+      "decoded image value",
+      "image codec implementation",
       "FIR semantics",
       "lowering semantics",
       "runtime-private execution behavior",
       "widget class law",
+      "Default Path SVG geometry",
       "Default Picture SVG geometry"
     ]
   },
   "widget_classes": [
     {
+      "class_id": "frog.widgets.path_control",
+      "role": "control",
+      "value_type": "path"
+    },
+    {
       "class_id": "frog.widgets.picture_indicator",
       "role": "indicator",
-      "value_type": "picture"
+      "value_type": "frog.image.buffer_rgba8"
     }
   ],
   "host_bindings": [
     {
-      "binding_id": "picture_runtime_host_default",
+      "binding_id": "picture_path_runtime_host_default",
       "host_family": "frog_conforming_picture_runtime_host",
       "target": "frog_conforming_picture_runtime_host",
       "required_capabilities": [
         "window",
         "basic_widget_rendering",
         "widget_value_binding",
-        "encoded_image_payload_loading",
+        "optional_file_picker",
+        "standard_library:frog.image.decode_file_rgba8",
         "picture_viewport_fit",
         "svg_part_overlay_alignment",
         "svg_style_property_binding"
@@ -56,6 +66,12 @@
   ],
   "realization_refs": [
     {
+      "package_ref": "Libraries/Realizations/Default/path.default.wfrog",
+      "target_classes": [
+        "frog.widgets.path_control"
+      ]
+    },
+    {
       "package_ref": "Libraries/Realizations/Default/picture.default.wfrog",
       "target_classes": [
         "frog.widgets.picture_indicator"
@@ -63,6 +79,14 @@
     }
   ],
   "svg_assets": [
+    {
+      "asset_id": "path_rectangular_field_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/path/templates/path_rectangular_field.svg",
+      "target_classes": [
+        "frog.widgets.path_control"
+      ]
+    },
     {
       "asset_id": "picture_rectangular_svg",
       "kind": "svg",

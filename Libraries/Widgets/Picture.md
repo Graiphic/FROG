@@ -40,6 +40,27 @@ The Picture family defines standardized image and drawable-surface widgets for F
 
 <hr/>
 
+<h2>Relation with <code>frog.image</code></h2>
+
+<p>
+Picture widgets display image values. They do not read files, select codecs, or
+own image-decoding behavior. A diagram that wants to display a PNG or JPEG from
+a path should use an explicit image-library primitive, such as
+<code>frog.image.decode_file_rgba8</code>, and wire the resulting image buffer into
+the Picture value.
+</p>
+
+<pre><code>Path control
+  -&gt; frog.image.decode_file_rgba8
+  -&gt; Picture indicator</code></pre>
+
+<p>
+This keeps file selection, image decoding, and image display as inspectable
+program objects instead of hiding decoding inside the widget or the runtime.
+</p>
+
+<hr/>
+
 <h2>Picture Data Model</h2>
 
 <ul>

@@ -66,9 +66,11 @@ runtime closure.
 
 <p>
 Example <code>16_picture_logo_jpeg</code> starts the repository-visible
-post-boundary widget progression. It may publish source and realization material
-without expanding the public runtime implementation beyond the Example
-<code>15</code> closure.
+post-boundary widget progression. It publishes a Path control, the standard
+<code>frog.image.decode_file_rgba8</code> library contract, and a Picture
+indicator backed by Default Path/Picture realizations. It may publish source,
+library, FIR/lowering, and realization material without expanding the public
+runtime implementation beyond the Example <code>15</code> closure.
 </p>
 
 <p>

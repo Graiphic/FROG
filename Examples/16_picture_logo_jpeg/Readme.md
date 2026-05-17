@@ -1,31 +1,46 @@
-<h1>Example 16 - Picture Logo JPEG Display</h1>
+<h1>Example 16 - Picture Path Image Preview</h1>
 
 <p>
 Example 16 is a post-public-runtime-boundary Picture widget slice.
-It displays a JPEG rendering of the repository FROG logo through one read-only
-Picture indicator.
+It starts with the repository FROG logo as the default path value, then lets a
+conforming host choose another local PNG or JPEG image through a Path control.
+The selected path is decoded by the standard <code>frog.image.decode_file_rgba8</code>
+primitive and displayed by one read-only Picture indicator.
 </p>
 
 <p>
-The example exists to validate the public source and realization shape for the
-standard Picture widget before any production runtime implementation is
-accepted. The <code>.frog</code> source owns the picture value, widget instance,
-layout, caption placement, viewport posture, and instance-level visual
-properties. The <code>.wfrog</code> package owns only the Default Picture
-realization reference, Default SVG asset reference, and host capability
+The example exists to validate the public source, library, and realization
+shape for basic image display before any production runtime implementation is
+accepted. The <code>.frog</code> source owns the Path control, Picture indicator,
+layout, labels, initial path value, diagram wiring, and instance-level visual
+properties. The <code>.wfrog</code> package owns only the Default Path/Picture
+realization references, Default SVG asset references, and host capability
 requirements.
 </p>
 
-<pre><code>frog_logo_jpeg_literal -&gt; logo_picture.value
-frog_logo_jpeg_literal -&gt; public output logo_picture</code></pre>
+<pre><code>image_path.value
+  -&gt; frog.image.decode_file_rgba8
+  -&gt; preview_picture.value
+
+frog.image.decode_file_rgba8.image       -&gt; public output preview_image
+frog.image.decode_file_rgba8.success     -&gt; public output decode_success
+frog.image.decode_file_rgba8.error_code  -&gt; public output decode_error_code</code></pre>
 
 <p>
-The visible Picture widget must consume the Default Picture SVG realization
-asset through <code>visual.asset_ref</code> and render the JPEG payload from the
-source-owned picture value inside the published <code>image_surface</code>
-part within the <code>picture_region</code> surface. The JPEG payload is data
-displayed by the widget; it is not a widget skin and does not replace the
-Default Picture realization.
+The visible Path and Picture widgets must consume their Default SVG realization
+assets through <code>visual.asset_ref</code>. The Picture widget renders the decoded
+RGBA8 image buffer inside the published <code>image_surface</code> part within the
+<code>picture_region</code> surface. The image file is user data selected through
+the Path value; it is not a widget skin and it does not replace the Default
+Picture realization.
+</p>
+
+<p>
+The Picture widget is not an image decoder. Image file decoding is an explicit
+diagram primitive supplied by the <code>frog.image</code> standard library contract.
+A private Graiphic runtime implementation may use a small codec dependency such
+as <code>stb_image</code> behind that contract, but that dependency is not the public
+semantic owner of the FROG program.
 </p>
 
 <p>

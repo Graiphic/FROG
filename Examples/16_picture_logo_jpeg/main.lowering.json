@@ -13,52 +13,86 @@
     "unit_id": "main"
   },
   "lowering_intent": {
-    "summary": "make one Picture logo JPEG display example consumable by C++/Python/Rust runtime UI-binding checks outside the public reference runtime closure",
-    "backend_family_target": "post_public_closure_host_runtime_ui_binding",
+    "summary": "make one post-boundary Picture path-to-image example consumable by private runtime UI-binding and standard-library decode work",
+    "backend_family_target": "post_public_closure_private_host_runtime_ui_binding",
     "capability_targets": [
-      "cpp_runtime_picture_binding",
-      "python_runtime_picture_binding",
-      "rust_runtime_picture_binding"
+      "standard_library:frog.image.decode_file_rgba8",
+      "private_runtime_path_widget_binding",
+      "private_runtime_picture_binding"
     ],
     "public_reference_runtime_source_added": false
   },
   "lowered_units": [
     {
       "unit_id": "main",
-      "kind": "picture_logo_jpeg_display_with_ui_bindings",
+      "kind": "picture_path_to_image_with_ui_bindings",
       "public_io": {
-        "inputs": [],
+        "inputs": [
+          {
+            "id": "image_path",
+            "type": "path"
+          }
+        ],
         "outputs": [
           {
-            "id": "logo_picture",
-            "type": "picture"
+            "id": "preview_image",
+            "type": "frog.image.buffer_rgba8"
+          },
+          {
+            "id": "decode_success",
+            "type": "bool"
+          },
+          {
+            "id": "decode_error_code",
+            "type": "string"
           }
         ]
       },
       "ui_bindings": {
-        "control_bindings": [],
+        "control_bindings": [
+          {
+            "widget_id": "image_path",
+            "mode": "widget_value",
+            "public_input_id": "image_path",
+            "value_type": "path"
+          }
+        ],
         "indicator_bindings": [
           {
-            "widget_id": "logo_picture",
-            "mode": "literal_picture_value",
-            "public_output_id": "logo_picture",
-            "value_type": "picture"
+            "widget_id": "preview_picture",
+            "mode": "decoded_image_value",
+            "public_output_id": "preview_image",
+            "value_type": "frog.image.buffer_rgba8"
           }
         ]
       },
       "execution_kernel": {
-        "operation": "publish_literal_picture",
-        "dst": "logo_picture",
-        "type": "picture",
-        "src": "constant.frog_logo_jpeg_literal",
+        "operation": "call_standard_primitive",
+        "primitive": "frog.image.decode_file_rgba8",
+        "inputs": {
+          "path": "widget.image_path.value"
+        },
+        "outputs": {
+          "image": "preview_image",
+          "success": "decode_success",
+          "error_code": "decode_error_code"
+        },
         "final_publication": [
           {
-            "target": "public_output.logo_picture",
-            "source": "constant.frog_logo_jpeg_literal"
+            "target": "public_output.preview_image",
+            "source": "primitive.decode_image.image"
           },
           {
-            "target": "widget.logo_picture.value",
-            "source": "constant.frog_logo_jpeg_literal"
+            "target": "public_output.decode_success",
+            "source": "primitive.decode_image.success"
+          },
+          {
+            "target": "public_output.decode_error_code",
+            "source": "primitive.decode_image.error_code"
+          },
+          {
+            "target": "widget.preview_picture.value",
+            "source": "primitive.decode_image.image"
           }
         ]
       }

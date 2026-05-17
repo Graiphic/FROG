@@ -45,3 +45,10 @@
 <p>
 This realization is downstream from widget class law. It publishes default embodiment assets, part bindings, resource references, host hints, and validation expectations. It does not redefine widget semantics.
 </p>
+
+<p>
+The Default Picture realization is not an image codec and does not read image
+files. It provides the SVG-backed display grammar and public parts that a host
+uses after a program has produced an image value, for example through
+<code>frog.image.decode_file_rgba8</code>.
+</p>

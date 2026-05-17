@@ -145,7 +145,7 @@
             {
               "key": "expression/widget-package--.wfrog-.md",
               "title": "Widget package (.wfrog)",
-              "path": "/Expression/Widget%20package%20%28.wfrog%29.md",
+              "path": "/Expression/Widget%20package%20(.wfrog).md",
               "kind": "page",
               "children": []
             },
@@ -732,6 +732,13 @@
               "children": []
             },
             {
+              "key": "libraries/image.md",
+              "title": "Image",
+              "path": "/Libraries/Image.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "libraries/io.md",
               "title": "IO",
               "path": "/Libraries/IO.md",
@@ -1083,13 +1090,13 @@
                     {
                       "key": "libraries/realizations/default/assets/",
                       "title": "Assets",
-                      "path": "/Libraries/Realizations/Default/Assets/Readme.md",
+                      "path": "/Libraries/Realizations/Default/assets/Readme.md",
                       "kind": "category",
                       "children": [
                         {
                           "key": "libraries/realizations/default/assets/naming.md",
                           "title": "Naming",
-                          "path": "/Libraries/Realizations/Default/Assets/Naming.md",
+                          "path": "/Libraries/Realizations/Default/assets/Naming.md",
                           "kind": "page",
                           "children": []
                         }
@@ -4136,7 +4143,7 @@
     "/Expression/Source%20provenance.md",
     "/Expression/Widget%20behavior.md",
     "/Expression/Widget%20class%20contract.md",
-    "/Expression/Widget%20package%20%28.wfrog%29.md",
+    "/Expression/Widget%20package%20(.wfrog).md",
     "/Expression/Widget%20realization.md",
     "/Expression/Readme.md",
     "/Examples/widget_public_boundary.md",
@@ -4217,6 +4224,7 @@
     "/Libraries/Collections.md",
     "/Libraries/Connectivity.md",
     "/Libraries/Core.md",
+    "/Libraries/Image.md",
     "/Libraries/IO.md",
     "/Libraries/Math.md",
     "/Libraries/Signal.md",
@@ -4264,8 +4272,8 @@
     "/Libraries/Realizations/Default/assets/tab/Readme.md",
     "/Libraries/Realizations/Default/assets/table/Readme.md",
     "/Libraries/Realizations/Default/assets/tree/Readme.md",
-    "/Libraries/Realizations/Default/Assets/Naming.md",
-    "/Libraries/Realizations/Default/Assets/Readme.md",
+    "/Libraries/Realizations/Default/assets/Naming.md",
+    "/Libraries/Realizations/Default/assets/Readme.md",
     "/Libraries/Realizations/Default/Examples/Button%20default%20realization.wfrog.md",
     "/Libraries/Realizations/Default/Examples/Button%20package%20and%20assets%20example.md",
     "/Libraries/Realizations/Default/Examples/Numeric%20control%20default%20realization.wfrog.md",

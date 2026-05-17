@@ -15,47 +15,77 @@
   "units": [
     {
       "unit_id": "main",
-      "kind": "picture_logo_jpeg_display_ui_unit",
+      "kind": "picture_path_to_image_ui_unit",
       "public_interface": {
-        "inputs": [],
+        "inputs": [
+          {
+            "id": "image_path",
+            "type": "path"
+          }
+        ],
         "outputs": [
           {
-            "id": "logo_picture",
-            "type": "picture"
+            "id": "preview_image",
+            "type": "frog.image.buffer_rgba8"
+          },
+          {
+            "id": "decode_success",
+            "type": "bool"
+          },
+          {
+            "id": "decode_error_code",
+            "type": "string"
           }
         ]
       },
       "ui_bindings": {
-        "control_bindings": [],
+        "control_bindings": [
+          {
+            "widget_id": "image_path",
+            "mode": "widget_value",
+            "public_input_id": "image_path",
+            "value_type": "path"
+          }
+        ],
         "indicator_bindings": [
           {
-            "widget_id": "logo_picture",
-            "mode": "literal_picture_value",
-            "public_output_id": "logo_picture",
-            "value_type": "picture"
+            "widget_id": "preview_picture",
+            "mode": "decoded_image_value",
+            "public_output_id": "preview_image",
+            "value_type": "frog.image.buffer_rgba8"
           }
         ]
       },
       "execution_model": {
-        "structure": "single_picture_literal_publication",
+        "structure": "path_decode_to_picture_publication",
         "body_rule": {
-          "kind": "publish_literal_picture_value",
-          "expression": "logo_picture = frog_logo_jpeg_literal"
+          "kind": "call_standard_primitive",
+          "primitive": "frog.image.decode_file_rgba8",
+          "expression": "preview_image, decode_success, decode_error_code = frog.image.decode_file_rgba8(image_path)"
         }
       },
       "publications": [
         {
-          "target": "public_output.logo_picture",
-          "source": "constant.frog_logo_jpeg_literal"
+          "target": "public_output.preview_image",
+          "source": "primitive.decode_image.image"
         },
         {
-          "target": "widget.logo_picture.value",
-          "source": "constant.frog_logo_jpeg_literal"
+          "target": "public_output.decode_success",
+          "source": "primitive.decode_image.success"
+        },
+        {
+          "target": "public_output.decode_error_code",
+          "source": "primitive.decode_image.error_code"
+        },
+        {
+          "target": "widget.preview_picture.value",
+          "source": "primitive.decode_image.image"
         }
       ],
       "notes": [
         "This FIR is a repository-visible Picture widget progression slice beyond the current public reference runtime closure.",
-        "The picture payload is source-owned .frog data and is not a widget realization asset.",
+        "The Picture widget consumes an image buffer produced by a standard frog.image primitive; it does not decode files itself.",
+        "The initial .frog Path control value points to ./assets/frog_logo.jpg.",
         "The Picture visual grammar is provided by the Default Picture SVG realization package; this FIR does not own SVG geometry.",
         "Runtime implementation for this example continues in Graiphic/FROG-Runtime unless explicitly promoted later."
       ]

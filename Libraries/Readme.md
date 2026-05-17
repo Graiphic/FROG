@@ -317,6 +317,7 @@ This directory currently contains the following documents:
   <li><code>Collections.md</code> — standard <code>frog.collections</code> primitives.</li>
   <li><code>Text.md</code> — standard <code>frog.text</code> primitives.</li>
   <li><code>IO.md</code> — standard <code>frog.io</code> primitives.</li>
+  <li><code>Image.md</code> — standard <code>frog.image</code> primitives and portable image-buffer contract.</li>
   <li><code>Signal.md</code> — standard <code>frog.signal</code> primitives.</li>
   <li><code>UI.md</code> — standard <code>frog.ui</code> executable widget interaction primitives.</li>
   <li><code>Connectivity.md</code> — transition note indicating that <code>frog.connectivity.*</code> is no longer normatively owned by the intrinsic library layer and is now owned by the Interop profile.</li>
@@ -354,6 +355,7 @@ At the current repository stage, the intrinsic standardized primitive taxonomy i
   <li><strong><code>frog.collections.*</code></strong> — collection primitives</li>
   <li><strong><code>frog.text.*</code></strong> — text-processing primitives</li>
   <li><strong><code>frog.io.*</code></strong> — file, path, resource, and byte-oriented I/O primitives</li>
+  <li><strong><code>frog.image.*</code></strong> — basic image-data decoding and portable image-buffer primitives</li>
   <li><strong><code>frog.signal.*</code></strong> — signal-processing primitives</li>
   <li><strong><code>frog.ui.*</code></strong> — executable widget interaction primitives</li>
 </ul>
@@ -367,6 +369,7 @@ frog.math.*         -&gt; scalar numeric operations
 frog.collections.*  -&gt; collection manipulation
 frog.text.*         -&gt; text processing
 frog.io.*           -&gt; file/path/resource/byte I/O
+frog.image.*        -&gt; image decoding and image-buffer values
 frog.signal.*       -&gt; signal-oriented operations
 frog.ui.*           -&gt; object-style widget interaction in execution
 </code></pre>
@@ -477,6 +480,7 @@ Examples:
   <li><code>frog.collections.length</code></li>
   <li><code>frog.text.concat</code></li>
   <li><code>frog.io.read_text</code></li>
+  <li><code>frog.image.decode_file_rgba8</code></li>
   <li><code>frog.signal.moving_average</code></li>
   <li><code>frog.ui.property_read</code></li>
 </ul>
@@ -532,6 +536,7 @@ The intrinsic standardized library families in this directory are intentionally 
   <li><strong><code>frog.collections.*</code></strong> owns collection manipulation primitives.</li>
   <li><strong><code>frog.text.*</code></strong> owns text-processing primitives.</li>
   <li><strong><code>frog.io.*</code></strong> owns file, path, resource, and byte-oriented I/O primitives.</li>
+  <li><strong><code>frog.image.*</code></strong> owns portable image-data primitives such as decode-to-buffer operations.</li>
   <li><strong><code>frog.signal.*</code></strong> owns signal-processing primitives.</li>
   <li><strong><code>frog.ui.*</code></strong> owns executable widget interaction primitives only.</li>
 </ul>
@@ -545,6 +550,7 @@ frog.math.*         -&gt; math only
 frog.collections.*  -&gt; collections only
 frog.text.*         -&gt; text only
 frog.io.*           -&gt; I/O only
+frog.image.*        -&gt; image data only
 frog.signal.*       -&gt; signal only
 frog.ui.*           -&gt; executable UI interaction only
 </code></pre>
@@ -556,6 +562,7 @@ Therefore:
 <ul>
   <li><code>frog.core.*</code> MUST NOT become a generic bucket for unrelated future functionality.</li>
   <li><code>frog.io.*</code> MUST remain distinct from foreign-runtime interoperability, deployment, database access, and broader external integration concerns unless those are explicitly standardized as intrinsic libraries.</li>
+  <li><code>frog.image.*</code> MUST remain distinct from Picture widget realization, camera acquisition, advanced computer vision, and implementation-specific codec stacks.</li>
   <li><code>frog.ui.*</code> MUST remain distinct from front-panel serialization, widget catalog definition, broader IDE UI editing concerns, target-profile classes, deployment-mode classes, and backend-family-specific UI binding contracts.</li>
   <li><code>frog.text.*</code> MUST remain distinct from file, path, and external-service semantics.</li>
   <li><code>frog.collections.*</code> MUST remain distinct from future specialized families unless those are explicitly standardized.</li>

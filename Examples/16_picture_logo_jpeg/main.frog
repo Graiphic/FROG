@@ -2,18 +2,21 @@
   "spec_version": "0.1",
   "metadata": {
     "name": "16_picture_logo_jpeg",
-    "summary": "Picture indicator display of the FROG logo as a .frog-owned JPEG picture payload using the Default Picture .wfrog realization asset.",
-    "description": "Publishes one encoded JPEG picture value from the .frog source to a read-only Picture indicator and to the public output surface. This example is repository-visible as a Picture widget specification and design-progression slice beyond the current public reference runtime closure. Runtime implementation for this example is expected to continue in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "summary": "Picture indicator display driven by a Path control, the standard frog.image.decode_file_rgba8 primitive, and the Default Path/Picture .wfrog realization assets.",
+    "description": "Reads an image path from a .frog-owned Path control, decodes the selected PNG/JPEG image through the standard frog.image.decode_file_rgba8 primitive, publishes the decoded RGBA8 image buffer to a read-only Picture indicator, and exposes decode status through public outputs. The initial path points to the FROG logo asset. This example remains repository-visible public specification and widget material beyond the current public reference runtime closure; runtime implementation continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
     "author": "Graiphic",
     "program_version": "0.1.0",
     "tags": [
       "example",
       "ui",
       "widget_value",
+      "path",
       "picture",
       "picture_indicator",
+      "image",
       "jpeg",
-      "logo",
+      "png",
+      "frog.image",
       "wfrog",
       "widget_realization_package",
       "post_public_runtime_boundary"
@@ -22,62 +25,114 @@
     "license": "Apache-2.0"
   },
   "interface": {
-    "inputs": [],
+    "inputs": [
+      {
+        "id": "image_path",
+        "type": "path",
+        "binding_origin": "widget.image_path.value"
+      }
+    ],
     "outputs": [
       {
-        "id": "logo_picture",
-        "type": "picture"
+        "id": "preview_image",
+        "type": "frog.image.buffer_rgba8"
+      },
+      {
+        "id": "decode_success",
+        "type": "bool"
+      },
+      {
+        "id": "decode_error_code",
+        "type": "string"
       }
     ]
   },
   "diagram": {
     "nodes": [
       {
-        "id": "frog_logo_jpeg_literal",
-        "kind": "constant",
-        "type": "frog.picture.encoded_image",
-        "value": {
-          "kind": "encoded_image",
-          "media_type": "image/jpeg",
-          "source_path": "./assets/frog_logo.jpg",
-          "width": 700,
-          "height": 724,
-          "pixel_format": "rgb8",
-          "color_space": "srgb",
-          "origin": "top_left"
-        }
-      },
-      {
-        "id": "logo_picture_value",
+        "id": "image_path_value",
         "kind": "widget_value",
-        "widget": "logo_picture"
+        "widget": "image_path"
       },
       {
-        "id": "output_logo_picture",
+        "id": "decode_image",
+        "kind": "primitive",
+        "type": "frog.image.decode_file_rgba8"
+      },
+      {
+        "id": "preview_picture_value",
+        "kind": "widget_value",
+        "widget": "preview_picture"
+      },
+      {
+        "id": "output_preview_image",
         "kind": "interface_output",
-        "interface_port": "logo_picture"
+        "interface_port": "preview_image"
+      },
+      {
+        "id": "output_decode_success",
+        "kind": "interface_output",
+        "interface_port": "decode_success"
+      },
+      {
+        "id": "output_decode_error_code",
+        "kind": "interface_output",
+        "interface_port": "decode_error_code"
       }
     ],
     "edges": [
       {
         "id": "e1",
         "from": {
-          "node": "frog_logo_jpeg_literal",
+          "node": "image_path_value",
           "port": "value"
         },
         "to": {
-          "node": "logo_picture_value",
-          "port": "value"
+          "node": "decode_image",
+          "port": "path"
         }
       },
       {
         "id": "e2",
         "from": {
-          "node": "frog_logo_jpeg_literal",
-          "port": "value"
+          "node": "decode_image",
+          "port": "image"
         },
         "to": {
-          "node": "output_logo_picture",
+          "node": "preview_picture_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e3",
+        "from": {
+          "node": "decode_image",
+          "port": "image"
+        },
+        "to": {
+          "node": "output_preview_image",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e4",
+        "from": {
+          "node": "decode_image",
+          "port": "success"
+        },
+        "to": {
+          "node": "output_decode_success",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e5",
+        "from": {
+          "node": "decode_image",
+          "port": "error_code"
+        },
+        "to": {
+          "node": "output_decode_error_code",
           "port": "value"
         }
       }
@@ -85,8 +140,8 @@
   },
   "front_panel": {
     "canvas": {
-      "width": 640,
-      "height": 460,
+      "width": 900,
+      "height": 560,
       "coordinate_space": "panel_pixels"
     },
     "package_refs": [
@@ -94,40 +149,107 @@
     ],
     "widgets": [
       {
-        "id": "logo_picture",
-        "role": "indicator",
-        "class_ref": "frog.widgets.picture_indicator",
-        "instance_ref": "logo_picture",
-        "value_type": "picture",
+        "id": "image_path",
+        "role": "control",
+        "class_ref": "frog.widgets.path_control",
+        "instance_ref": "image_path",
+        "value_type": "path",
         "layout": {
           "x": 40,
-          "y": 32,
-          "width": 560,
-          "height": 380
+          "y": 24,
+          "width": 820,
+          "height": 116
+        },
+        "props": {
+          "value": "./assets/frog_logo.jpg",
+          "path.kind": "file",
+          "path.display_value": "./assets/frog_logo.jpg",
+          "path.validation_state": "unknown",
+          "path.accepted_media_types": [
+            "image/png",
+            "image/jpeg"
+          ],
+          "label.text": "Image path",
+          "caption.text": "Image path",
+          "caption.visible": true,
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 54,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "system-ui, Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
+          "display.icon_visible": true,
+          "display.validation_marker_visible": false,
+          "display.text_overflow_visible": false,
+          "browse.enabled": true,
+          "browse.button_visible": true,
+          "browse.accept": ".png,.jpg,.jpeg,image/png,image/jpeg",
+          "style.path_face.fill_color": "#ffffff",
+          "style.path_face.fill_color.hover": "#eef6ff",
+          "style.path_face.border_color": "#64748b",
+          "style.path_face.border_color.hover": "#64748b",
+          "style.path_face.border_width": "1px",
+          "style.path_display.color": "#111827",
+          "style.path_display.font_size": "15px",
+          "style.path_display.font_weight": "400",
+          "style.path_display.padding_inline": "4px",
+          "style.path_display.baseline_offset": "-5px",
+          "style.path_icon.fill_color": "#facc15",
+          "style.path_icon.front_fill_color": "#fde68a",
+          "style.path_icon.stroke_color": "#b45309",
+          "style.path_icon.highlight_color": "#fff7cc",
+          "style.browse_button.fill_color": "#f8fafc",
+          "style.browse_button.fill_color.hover": "#e5eef9",
+          "style.browse_button.border_color": "#64748b",
+          "style.browse_button.border_color.hover": "#64748b",
+          "style.browse_button.border_width": "1px",
+          "style.browse_button.text_color": "#111827",
+          "style.browse_button.text_font_size": "22px",
+          "interaction.enabled": true,
+          "interaction.read_only": false,
+          "realization.variant": "rectangular_field"
+        },
+        "visual": {
+          "asset_ref": "asset:path_rectangular_field_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "image_path"
+        }
+      },
+      {
+        "id": "preview_picture",
+        "role": "indicator",
+        "class_ref": "frog.widgets.picture_indicator",
+        "instance_ref": "preview_picture",
+        "value_type": "frog.image.buffer_rgba8",
+        "layout": {
+          "x": 40,
+          "y": 156,
+          "width": 820,
+          "height": 360
         },
         "props": {
           "value": {
-            "kind": "encoded_image",
-            "media_type": "image/jpeg",
-            "source_path": "./assets/frog_logo.jpg",
-            "width": 700,
-            "height": 724,
-            "pixel_format": "rgb8",
+            "kind": "image_buffer",
+            "pixel_format": "rgba8",
+            "width": 0,
+            "height": 0,
+            "stride_bytes": 0,
+            "pixels": [],
             "color_space": "srgb",
             "origin": "top_left"
           },
           "image.source_path": "./assets/frog_logo.jpg",
-          "image.media_type": "image/jpeg",
-          "image.width": 700,
-          "image.height": 724,
-          "image.pixel_format": "rgb8",
+          "image.pixel_format": "rgba8",
           "image.color_space": "srgb",
           "image.origin": "top_left",
-          "label.text": "FROG logo",
+          "label.text": "Preview",
           "label.visible": false,
-          "caption.text": "FROG logo",
+          "caption.text": "Preview",
           "caption.visible": true,
-          "caption.anchor.x": 280,
+          "caption.anchor.x": 410,
           "caption.anchor.y": 28,
           "caption.align.horizontal": "center",
           "caption.style.text_color": "#111827",
@@ -141,7 +263,7 @@
           "display.preserve_aspect_ratio": true,
           "display.interpolation": "linear",
           "display.background_color": "#ffffff",
-          "display.empty_state_visible": false,
+          "display.empty_state_visible": true,
           "overlay.visible": false,
           "roi.visible": false,
           "crosshair.visible": false,
@@ -163,14 +285,15 @@
           "asset_ref": "asset:picture_rectangular_svg"
         },
         "binding": {
-          "mode": "literal_picture_value",
-          "public_output_id": "logo_picture"
+          "mode": "decoded_image_value",
+          "source_primitive_id": "decode_image",
+          "public_output_id": "preview_image"
         }
       }
     ],
     "panel_id": "main_panel",
-    "title": "Picture Logo JPEG Display",
+    "title": "Picture Path Image Preview",
     "class_ref": "frog.widgets.panel",
-    "host_binding_ref": "picture_runtime_host_default"
+    "host_binding_ref": "picture_path_runtime_host_default"
   }
 }

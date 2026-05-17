@@ -142,7 +142,7 @@ Production-grade runtime development for future FROG execution surfaces continue
     </tr>
     <tr>
       <td><code>16_picture_logo_jpeg</code></td>
-      <td>Picture indicator displaying the FROG logo as a JPEG payload</td>
+      <td>Path-selected PNG/JPEG decoded by <code>frog.image.decode_file_rgba8</code> and displayed by a Picture indicator</td>
       <td><code>main.frog</code> + <code>ui/picture_panel.wfrog</code> + <code>assets/frog_logo.jpg</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
@@ -183,7 +183,7 @@ Production-grade runtime development for future FROG execution surfaces continue
 10-15  Button mechanical actions in the public reference runtime closure
     |
     v
-16   Picture logo JPEG display as a post-boundary widget progression example
+16   Path -> frog.image.decode_file_rgba8 -> Picture as a post-boundary widget progression example
     |
     v
 17+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
@@ -289,9 +289,10 @@ realization assets.
 <p>
 Example <code>16</code> starts the repository-visible post-boundary widget
 progression. It contains public source, FIR/lowering shape, a
-<code>.wfrog</code> package referencing the Default Picture realization, and a
-source-owned JPEG payload displayed by a Picture indicator. It does not add
-public runtime source beyond the Example 15 closure.
+<code>.wfrog</code> package referencing the Default Path and Default Picture
+realizations, and a default FROG logo image path decoded through the
+<code>frog.image.decode_file_rgba8</code> standard library contract. It does not
+add public runtime source beyond the Example 15 closure.
 </p>
 
 <hr/>
