@@ -74,6 +74,44 @@ standardized later.
 
 <hr/>
 
+<h2>Available Function Surface</h2>
+
+<p>
+The current published <code>frog.image</code> function surface is deliberately
+minimal:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Primitive</th>
+      <th>Inputs</th>
+      <th>Outputs</th>
+      <th>Required baseline formats</th>
+      <th>Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>frog.image.decode_file_rgba8</code></td>
+      <td><code>path</code></td>
+      <td><code>image</code>, <code>success</code>, <code>error_code</code></td>
+      <td><code>image/png</code>, <code>image/jpeg</code></td>
+      <td>Decode a path-selected image file into a portable <code>frog.image.buffer_rgba8</code> value.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+No other <code>frog.image</code> primitive is currently published by this
+specification. Additional image operations, encoders, camera acquisition,
+advanced processing, and OpenCV-like functions remain outside the current
+standard lightweight image-library surface unless they are explicitly
+standardized later.
+</p>
+
+<hr/>
+
 <h2>Image Buffer Type</h2>
 
 <p>

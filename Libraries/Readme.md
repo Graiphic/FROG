@@ -332,7 +332,7 @@ This directory currently contains the following documents:
   <li><code>Collections.md</code> — standard <code>frog.collections</code> primitives.</li>
   <li><code>Text.md</code> — standard <code>frog.text</code> primitives.</li>
   <li><code>IO.md</code> — standard <code>frog.io</code> primitives.</li>
-  <li><code>Image.md</code> — standard <code>frog.image</code> primitives and portable image-buffer contract.</li>
+  <li><code>Image.md</code> — standard <code>frog.image</code> primitives, currently publishing <code>frog.image.decode_file_rgba8</code> and the portable <code>frog.image.buffer_rgba8</code> contract.</li>
   <li><code>Signal.md</code> — standard <code>frog.signal</code> primitives.</li>
   <li><code>UI.md</code> — standard <code>frog.ui</code> executable widget interaction primitives.</li>
   <li><code>Connectivity.md</code> — transition note indicating that <code>frog.connectivity.*</code> is no longer normatively owned by the intrinsic library layer and is now owned by the Interop profile.</li>
@@ -370,7 +370,7 @@ At the current repository stage, the intrinsic standardized primitive taxonomy i
   <li><strong><code>frog.collections.*</code></strong> — collection primitives</li>
   <li><strong><code>frog.text.*</code></strong> — text-processing primitives</li>
   <li><strong><code>frog.io.*</code></strong> — file, path, resource, and byte-oriented I/O primitives</li>
-  <li><strong><code>frog.image.*</code></strong> — basic image-data decoding and portable image-buffer primitives</li>
+  <li><strong><code>frog.image.*</code></strong> — basic image-data decoding and portable image-buffer primitives; current published primitive: <code>frog.image.decode_file_rgba8</code></li>
   <li><strong><code>frog.signal.*</code></strong> — signal-processing primitives</li>
   <li><strong><code>frog.ui.*</code></strong> — executable widget interaction primitives</li>
 </ul>
