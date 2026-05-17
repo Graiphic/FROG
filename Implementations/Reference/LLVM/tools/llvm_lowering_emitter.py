@@ -2,7 +2,8 @@
 
 This module is intentionally narrow and non-normative. It does not implement a
 general production LLVM backend. It consolidates the current Examples 01-15
-native proof emitters around one dispatch key:
+native proof emitters and the post-boundary Example 16 provider-boundary proof
+around one dispatch key:
 
     lowered_units[0].kind
 
@@ -23,6 +24,7 @@ Supported lowered unit kinds:
 - button_latch_when_pressed_kernel_with_ui_bindings
 - button_latch_when_released_kernel_with_ui_bindings
 - button_latch_until_released_kernel_with_ui_bindings
+- picture_path_to_image_with_ui_bindings
 """
 
 from __future__ import annotations
@@ -1084,6 +1086,59 @@ def emit_button_latch_until_released_to_boolean(lowering: dict[str, Any]) -> str
     return emit_button_latch_to_boolean(lowering, example_number="15", action="latch_until_released")
 
 
+def emit_picture_path_to_image(lowering: dict[str, Any]) -> str:
+    unit = single_lowered_unit(lowering)
+    kernel = execution_kernel(unit)
+    public_io = require_object(unit.get("public_io"), "unit.public_io")
+    inputs = require_list(public_io.get("inputs"), "unit.public_io.inputs")
+    outputs = require_list(public_io.get("outputs"), "unit.public_io.outputs")
+
+    expect_equal(kernel.get("operation"), "call_manifest_declared_standard_primitive", "picture_path_to_image expects a manifest-declared standard primitive call")
+    expect_equal(kernel.get("primitive"), "frog.image.decode_file_rgba8", "picture_path_to_image expects frog.image.decode_file_rgba8")
+    expect_equal(kernel.get("native_manifest"), "Implementations/Reference/LLVM/examples/16_picture_logo_jpeg/native_kernel_manifest.json", "picture_path_to_image expects the Example 16 native manifest")
+    expect_equal(kernel.get("inputs"), {"path": "widget.image_path.value"}, "picture_path_to_image expects image_path widget value input")
+    expect_equal(
+        kernel.get("outputs"),
+        {"image": "preview_image", "success": "decode_success", "error_code": "decode_error_code"},
+        "picture_path_to_image expects image/success/error outputs",
+    )
+    expect_equal(inputs, [{"id": "image_path", "type": "path"}], "picture_path_to_image expects one path input")
+    expect_equal(
+        outputs,
+        [
+            {"id": "preview_image", "type": "frog.image.buffer_rgba8"},
+            {"id": "decode_success", "type": "bool"},
+            {"id": "decode_error_code", "type": "string"},
+        ],
+        "picture_path_to_image expects image/success/error public outputs",
+    )
+
+    return """; Example 16 Picture path-to-image kernel boundary.
+;
+; This LLVM IR is the public native-artifact contract for the lowered FROG unit.
+; It does not make the Picture widget an image decoder. The diagram calls the
+; manifest-declared frog.image provider primitive, then publishes the resulting
+; RGBA8 image buffer to the Picture indicator.
+
+%FrogImageDecodeFileRgba8Result = type opaque
+
+declare i32 @frog_image_decode_file_rgba8(ptr, ptr)
+declare void @frog_image_free_decode_file_rgba8_result(ptr)
+
+define i32 @frog_example16_run(ptr %path_utf8_z, ptr %out_result) {
+entry:
+  %status = call i32 @frog_image_decode_file_rgba8(ptr %path_utf8_z, ptr %out_result)
+  ret i32 %status
+}
+
+define void @frog_example16_free_decode_file_rgba8_result(ptr %result) {
+entry:
+  call void @frog_image_free_decode_file_rgba8_result(ptr %result)
+  ret void
+}
+"""
+
+
 EMITTERS_BY_KIND: dict[str, Callable[[dict[str, Any]], str]] = {
     "pure_addition_kernel": emit_pure_addition,
     "ui_value_roundtrip_kernel": emit_ui_value_roundtrip,
@@ -1100,6 +1155,7 @@ EMITTERS_BY_KIND: dict[str, Callable[[dict[str, Any]], str]] = {
     "button_latch_when_pressed_kernel_with_ui_bindings": emit_button_latch_when_pressed_to_boolean,
     "button_latch_when_released_kernel_with_ui_bindings": emit_button_latch_when_released_to_boolean,
     "button_latch_until_released_kernel_with_ui_bindings": emit_button_latch_until_released_to_boolean,
+    "picture_path_to_image_with_ui_bindings": emit_picture_path_to_image,
 }
 
 

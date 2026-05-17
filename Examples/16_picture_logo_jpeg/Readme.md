@@ -18,6 +18,18 @@ realization references, Default SVG asset references, and host capability
 requirements.
 </p>
 
+<p>
+The lowered unit is backed by the native manifest at
+<code>Implementations/Reference/LLVM/examples/16_picture_logo_jpeg/native_kernel_manifest.json</code>
+and the LLVM IR boundary at
+<code>Implementations/Reference/LLVM/examples/16_picture_logo_jpeg/kernel.ll</code>.
+That manifest declares the <code>frog.image</code> provider dependency consumed by
+the runtime.
+In the native execution corridor, the runtime invokes the manifest-declared
+<code>frog_example16_run</code> entry point and that native artifact calls the
+<code>frog.image</code> provider.
+</p>
+
 <pre><code>image_path.value
   -&gt; frog.image.decode_file_rgba8
   -&gt; preview_picture.value
@@ -64,8 +76,10 @@ by the program.
 
 <p>
 This example is not part of the public reference runtime closure. Public
-runtime source in this repository remains bounded through Example 15. Runtime
-implementation and parity validation for Example 16 continue in Graiphic's
-proprietary <code>Graiphic/FROG-Runtime</code> repository unless this example is
-explicitly promoted later as public reference material.
+runtime source in this repository remains bounded through Example 15. The
+repository-visible source, FIR, lowering, LLVM/native boundary, manifest,
+<code>.wfrog</code>, and Default SVG realization material remain public.
+Runtime implementation and parity validation for Example 16 continue in
+Graiphic's proprietary <code>Graiphic/FROG-Runtime</code> repository unless this
+example is explicitly promoted later as public reference material.
 </p>

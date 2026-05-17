@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      viewBox="0 0 520 150"
+     preserveAspectRatio="none"
      role="img"
      aria-label="FROG default path rectangular field realization template"
      data-frog-template="frog.realizations.default.path.rectangular_field"

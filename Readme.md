@@ -403,25 +403,25 @@ Examples beyond this boundary may remain repository-visible as specification-fac
       <td><code>01_pure_addition</code></td>
       <td>Small pure arithmetic proof using public inputs and a public output.</td>
       <td>None; pure dataflow slice.</td>
-      <td><code>.frog</code> &rarr; FIR &rarr; lowering &rarr; contract &rarr; runtime &rarr; LLVM module.</td>
+      <td><code>.frog</code> &rarr; FIR &rarr; lowering &rarr; contract, with separate runtime and LLVM proof consumers.</td>
     </tr>
     <tr>
       <td><code>02_ui_value_roundtrip</code></td>
       <td>First natural widget-value roundtrip from a UI value to a result.</td>
       <td>Inline front-panel value participation.</td>
-      <td><code>.frog</code> &rarr; FIR &rarr; lowering &rarr; contract &rarr; runtime &rarr; LLVM module.</td>
+      <td><code>.frog</code> &rarr; FIR &rarr; lowering &rarr; contract, with separate runtime and LLVM proof consumers.</td>
     </tr>
     <tr>
       <td><code>03_ui_property_write</code></td>
       <td>Object-style widget reference plus <code>frog.ui.property_write</code>.</td>
       <td>Inline front-panel property-write participation.</td>
-      <td><code>.frog</code> &rarr; FIR &rarr; lowering &rarr; contract &rarr; runtime &rarr; LLVM module.</td>
+      <td><code>.frog</code> &rarr; FIR &rarr; lowering &rarr; contract, with separate runtime and LLVM proof consumers.</td>
     </tr>
     <tr>
       <td><code>04_stateful_feedback_delay</code></td>
       <td>Explicit state and valid feedback through <code>frog.core.delay</code>.</td>
       <td>None; stateful dataflow slice.</td>
-      <td><code>.frog</code> &rarr; FIR &rarr; lowering &rarr; contract &rarr; runtime &rarr; LLVM module.</td>
+      <td><code>.frog</code> &rarr; FIR &rarr; lowering &rarr; contract, with separate runtime and LLVM proof consumers.</td>
     </tr>
     <tr>
       <td><code>05_bounded_ui_accumulator</code></td>

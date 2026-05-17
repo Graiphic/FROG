@@ -15,11 +15,11 @@
 
 <p>
 This directory contains the current non-normative reference deriver for the FROG implementation workspace.
-It exists to make the published source-to-FIR corridor executable and checkable for the bounded Examples 01-10 surface without claiming general compiler completeness.
+It exists to make the published source-to-FIR corridor executable and checkable for the bounded Examples 01-10 surface and the post-boundary Example 16 Picture source slice without claiming general compiler completeness.
 </p>
 
 <p>
-The supported source-to-FIR targets cover the published numbered examples from <code>01</code> through <code>10</code>.
+The supported source-to-FIR targets cover the published numbered examples from <code>01</code> through <code>10</code>, plus the public Example <code>16_picture_logo_jpeg</code> source/FIR contract.
 Rule selection is based on explicit source-pattern recognition rather than trusting <code>metadata.name</code> as semantic authority.
 </p>
 
@@ -92,7 +92,7 @@ future posture:
 
 <p>
 The legacy helper remains available for focused Example 05 debugging.
-The generic <code>derive_fir.py</code> entry point is the preferred path for Examples 01-10.
+The generic <code>derive_fir.py</code> entry point is the preferred path for supported examples.
 </p>
 
 <hr/>
@@ -107,6 +107,7 @@ The generic <code>derive_fir.py</code> entry point is the preferred path for Exa
   <li><a href="./rules/example04_fir_derivation.md">Example 04 FIR derivation rules</a></li>
   <li><a href="./rules/example05_fir_derivation.md">Example 05 FIR derivation rules</a></li>
   <li>Examples 06-10 are covered by the current bounded scalar widget derivation rules in <code>fir_deriver.py</code>.</li>
+  <li>Example 16 is covered by the bounded Picture path-to-image derivation rule in <code>fir_deriver.py</code>.</li>
 </ul>
 
 <hr/>
@@ -119,6 +120,12 @@ The generic <code>derive_fir.py</code> entry point is the preferred path for Exa
   <li><code>ui_property_write</code></li>
   <li><code>stateful_feedback_delay</code></li>
   <li><code>bounded_ui_accumulator</code></li>
+  <li><code>boolean_value_roundtrip</code></li>
+  <li><code>string_value_roundtrip</code></li>
+  <li><code>enum_value_roundtrip</code></li>
+  <li><code>path_value_roundtrip</code></li>
+  <li><code>button_press_to_boolean</code></li>
+  <li><code>picture_path_to_image</code></li>
 </ul>
 
 <hr/>
@@ -139,6 +146,12 @@ The generic <code>derive_fir.py</code> entry point is the preferred path for Exa
     <tr><td><code>ui_property_write</code></td><td>Object-style UI property effect</td><td><code>ui_property_write_unit</code></td></tr>
     <tr><td><code>stateful_feedback_delay</code></td><td>Explicit delay-backed state</td><td><code>stateful_feedback_delay_unit</code></td></tr>
     <tr><td><code>bounded_ui_accumulator</code></td><td>Bounded UI accumulator</td><td><code>bounded_stateful_ui_unit</code></td></tr>
+    <tr><td><code>boolean_value_roundtrip</code></td><td>Boolean widget value roundtrip</td><td><code>boolean_value_roundtrip_ui_unit</code></td></tr>
+    <tr><td><code>string_value_roundtrip</code></td><td>String widget value roundtrip</td><td><code>string_value_roundtrip_ui_unit</code></td></tr>
+    <tr><td><code>enum_value_roundtrip</code></td><td>Enum widget value roundtrip</td><td><code>enum_value_roundtrip_ui_unit</code></td></tr>
+    <tr><td><code>path_value_roundtrip</code></td><td>Path widget value roundtrip</td><td><code>path_value_roundtrip_ui_unit</code></td></tr>
+    <tr><td><code>button_press_to_boolean</code></td><td>Button press-to-Boolean publication</td><td><code>button_press_to_boolean_ui_unit</code></td></tr>
+    <tr><td><code>picture_path_to_image</code></td><td>Path to <code>frog.image.decode_file_rgba8</code> to Picture publication</td><td><code>picture_path_to_image_ui_unit</code></td></tr>
   </tbody>
 </table>
 

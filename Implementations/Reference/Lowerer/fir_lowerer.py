@@ -1,7 +1,8 @@
 """Rule-oriented lowering helpers for the non-normative reference workspace.
 
-This module supports the published Examples 01 through 10 through explicit
-FIR-unit-kind recognition and FIR-to-lowering projection rules.
+This module supports the published Examples 01 through 10 and the
+post-boundary Example 16 Picture slice through explicit FIR-unit-kind
+recognition and FIR-to-lowering projection rules.
 
 It is intentionally narrow and does not claim general FROG compiler
 completeness. The important boundary is that lowering rule selection is based
@@ -465,6 +466,57 @@ def lower_button_press_to_boolean(fir: dict[str, Any], fir_rel: str) -> dict[str
     }
 
 
+def lower_picture_path_to_image(fir: dict[str, Any], fir_rel: str) -> dict[str, Any]:
+    u = ensure_unit_kind(fir, "picture_path_to_image_ui_unit")
+    uid = unit_id(u)
+    bindings = ui_bindings(u)
+    expect_control = [{"widget_id": "image_path", "mode": "widget_value", "public_input_id": "image_path", "value_type": "path"}]
+    expect_indicator = [{"widget_id": "preview_picture", "mode": "decoded_image_value", "public_output_id": "preview_image", "value_type": "frog.image.buffer_rgba8"}]
+    if bindings.get("control_bindings") != expect_control or bindings.get("indicator_bindings") != expect_indicator:
+        raise LoweringError("picture_path_to_image_ui_unit bindings must map image_path to preview_picture through preview_image")
+    model = execution_model(u)
+    body_rule = require_object(model.get("body_rule"), "picture_path_to_image_ui_unit.execution_model.body_rule")
+    if body_rule.get("kind") != "call_standard_primitive" or body_rule.get("primitive") != "frog.image.decode_file_rgba8":
+        raise LoweringError("picture_path_to_image_ui_unit must call frog.image.decode_file_rgba8")
+    return {
+        "artifact_kind": "frog_lowered_unit",
+        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": source_ref(fir),
+        "fir_ref": {"path": fir_rel, "unit_id": uid},
+        "lowering_intent": {
+            "summary": "make one post-boundary Picture path-to-image example consumable through a manifest-declared LLVM/native kernel boundary and standard-library image provider",
+            "backend_family_target": "llvm_native_kernel_with_standard_provider",
+            "capability_targets": [
+                "standard_library:frog.image.decode_file_rgba8",
+                "native_kernel_manifest",
+                "standard_provider_dependency:frog.image",
+                "private_runtime_path_widget_binding",
+                "private_runtime_picture_binding",
+            ],
+            "native_artifact_ref": {
+                "manifest": "Implementations/Reference/LLVM/examples/16_picture_logo_jpeg/native_kernel_manifest.json",
+                "llvm_ir": "Implementations/Reference/LLVM/examples/16_picture_logo_jpeg/kernel.ll",
+                "provider_dependency": "frog.image",
+            },
+            "public_reference_runtime_source_added": False,
+        },
+        "lowered_units": [single_lowered_unit(
+            uid,
+            "picture_path_to_image_with_ui_bindings",
+            public_io=public_interface(u),
+            ui_bindings=bindings,
+            execution_kernel={
+                "operation": "call_manifest_declared_standard_primitive",
+                "primitive": "frog.image.decode_file_rgba8",
+                "native_manifest": "Implementations/Reference/LLVM/examples/16_picture_logo_jpeg/native_kernel_manifest.json",
+                "inputs": {"path": "widget.image_path.value"},
+                "outputs": {"image": "preview_image", "success": "decode_success", "error_code": "decode_error_code"},
+                "final_publication": u["publications"],
+            },
+        )],
+    }
+
+
 LOWERING_RULES = [
     LoweringRule("lower_pure_dataflow_arithmetic", "pure_dataflow_arithmetic_unit", "pure_addition_kernel", lower_pure_dataflow_arithmetic),
     LoweringRule("lower_ui_value_roundtrip", "ui_value_roundtrip_unit", "ui_value_roundtrip_kernel", lower_ui_value_roundtrip),
@@ -476,6 +528,7 @@ LOWERING_RULES = [
     LoweringRule("lower_enum_value_roundtrip", "enum_value_roundtrip_ui_unit", "enum_value_roundtrip_kernel_with_ui_bindings", lower_enum_value_roundtrip),
     LoweringRule("lower_path_value_roundtrip", "path_value_roundtrip_ui_unit", "path_value_roundtrip_kernel_with_ui_bindings", lower_path_value_roundtrip),
     LoweringRule("lower_button_press_to_boolean", "button_press_to_boolean_ui_unit", "button_press_to_boolean_kernel_with_ui_bindings", lower_button_press_to_boolean),
+    LoweringRule("lower_picture_path_to_image", "picture_path_to_image_ui_unit", "picture_path_to_image_with_ui_bindings", lower_picture_path_to_image),
 ]
 
 

@@ -15,7 +15,7 @@
 
 <p>
 This directory contains the current non-normative reference lowerer for the FROG implementation workspace.
-It exists to make the published <code>FIR -&gt; lowering</code> corridor executable and checkable for the bounded Examples 01-10 surface without claiming general lowering completeness.
+It exists to make the published <code>FIR -&gt; lowering</code> corridor executable and checkable for the bounded Examples 01-10 surface and the post-boundary Example 16 Picture lowering slice without claiming general lowering completeness.
 </p>
 
 <p>
@@ -56,6 +56,7 @@ The <code>source_ref</code> remains preserved for traceability, but it is not th
   <li><code>Examples/08_enum_value_roundtrip/main.fir.json -&gt; main.lowering.json</code></li>
   <li><code>Examples/09_path_value_roundtrip/main.fir.json -&gt; main.lowering.json</code></li>
   <li><code>Examples/10_button_press_to_boolean/main.fir.json -&gt; main.lowering.json</code></li>
+  <li><code>Examples/16_picture_logo_jpeg/main.fir.json -&gt; main.lowering.json</code></li>
 </ul>
 
 <hr/>
@@ -76,7 +77,7 @@ The <code>source_ref</code> remains preserved for traceability, but it is not th
 
 <p>
 The legacy helper remains available for focused Example 05 debugging.
-The generic <code>lower_fir.py</code> entry point is the preferred path for Examples 01-10.
+The generic <code>lower_fir.py</code> entry point is the preferred path for supported examples.
 </p>
 
 <hr/>
@@ -106,6 +107,12 @@ The generic <code>lower_fir.py</code> entry point is the preferred path for Exam
     <tr><td><code>ui_property_write_unit</code></td><td><code>ui_property_write_effect_unit</code></td><td><code>reference_ui_property_write</code></td><td>None currently declared</td></tr>
     <tr><td><code>stateful_feedback_delay_unit</code></td><td><code>stateful_feedback_delay_kernel</code></td><td><code>reference_stateful_feedback_delay</code></td><td><code>llvm_oriented_native_path</code></td></tr>
     <tr><td><code>bounded_stateful_ui_unit</code></td><td><code>bounded_accumulator_kernel_with_ui_bindings</code></td><td><code>reference_host_runtime_ui_binding</code></td><td><code>llvm_oriented_native_path</code></td></tr>
+    <tr><td><code>boolean_value_roundtrip_ui_unit</code></td><td><code>boolean_value_roundtrip_kernel_with_ui_bindings</code></td><td><code>reference_host_runtime_ui_binding</code></td><td><code>llvm_native_kernel_bridge</code></td></tr>
+    <tr><td><code>string_value_roundtrip_ui_unit</code></td><td><code>string_value_roundtrip_kernel_with_ui_bindings</code></td><td><code>reference_host_runtime_ui_binding</code></td><td><code>llvm_native_kernel_bridge</code></td></tr>
+    <tr><td><code>enum_value_roundtrip_ui_unit</code></td><td><code>enum_value_roundtrip_kernel_with_ui_bindings</code></td><td><code>reference_host_runtime_ui_binding</code></td><td><code>llvm_native_kernel_bridge</code></td></tr>
+    <tr><td><code>path_value_roundtrip_ui_unit</code></td><td><code>path_value_roundtrip_kernel_with_ui_bindings</code></td><td><code>reference_host_runtime_ui_binding</code></td><td><code>llvm_native_kernel_bridge</code></td></tr>
+    <tr><td><code>button_press_to_boolean_ui_unit</code></td><td><code>button_press_to_boolean_kernel_with_ui_bindings</code></td><td><code>reference_host_runtime_ui_binding</code></td><td><code>llvm_native_kernel_bridge</code></td></tr>
+    <tr><td><code>picture_path_to_image_ui_unit</code></td><td><code>picture_path_to_image_with_ui_bindings</code></td><td><code>llvm_native_kernel_with_standard_provider</code></td><td><code>manifest-declared standard provider</code></td></tr>
   </tbody>
 </table>
 

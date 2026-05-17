@@ -1,0 +1,102 @@
+{
+  "artifact_kind": "frog_native_kernel_manifest",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "kernel": {
+    "id": "example16_picture_decode_kernel",
+    "source_lowered_unit": "Examples/16_picture_logo_jpeg/main.lowering.json",
+    "backend": {
+      "family": "llvm",
+      "artifact_kind": "native_dynamic_library_with_standard_provider",
+      "source_artifact": "Implementations/Reference/LLVM/examples/16_picture_logo_jpeg/kernel.ll",
+      "artifact_library": {
+        "windows": "frog_example16_picture_kernel.dll",
+        "linux": "libfrog_example16_picture_kernel.so",
+        "macos": "libfrog_example16_picture_kernel.dylib"
+      }
+    },
+    "entry": {
+      "symbol": "frog_example16_run",
+      "abi": "frog_image_path_z_to_rgba8_provider_result",
+      "result_release_symbol": "frog_example16_free_decode_file_rgba8_result"
+    },
+    "io": {
+      "inputs": [
+        {
+          "id": "image_path",
+          "type": "path",
+          "encoding": "utf8_z"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "preview_image",
+          "type": "frog.image.buffer_rgba8",
+          "pixel_format": "rgba8",
+          "color_space": "srgb",
+          "origin": "top_left"
+        }
+      ]
+    },
+    "standard_library_dependencies": [
+      {
+        "library": "frog.image",
+        "primitive": "frog.image.decode_file_rgba8",
+        "provider_abi": "frog_image_provider_v1",
+        "provider_symbols": [
+          "frog_image_provider_abi_version",
+          "frog_image_decode_file_rgba8",
+          "frog_image_free_decode_file_rgba8_result"
+        ],
+        "published_outputs": [
+          "preview_image",
+          "decode_success",
+          "decode_error_code"
+        ]
+      }
+    ],
+    "result_status_layout": {
+      "carrier": "provider_result",
+      "c_signature": "int frog_example16_run(const char* path_utf8_z, FrogImageDecodeFileRgba8Result* out_result)",
+      "release_signature": "void frog_example16_free_decode_file_rgba8_result(FrogImageDecodeFileRgba8Result* result)",
+      "fields": [
+        {
+          "id": "status",
+          "type": "i32"
+        },
+        {
+          "id": "image",
+          "type": "frog.image.buffer_rgba8"
+        },
+        {
+          "id": "error_code",
+          "type": "utf8_string"
+        }
+      ]
+    },
+    "error_model": {
+      "overflow": "not_applicable",
+      "error_codes": [
+        {
+          "code": 0,
+          "meaning": "no_error"
+        },
+        {
+          "code": 1,
+          "meaning": "provider_unavailable",
+          "diagnostic": "frog.image provider could not be resolved."
+        },
+        {
+          "code": 2,
+          "meaning": "decode_failed",
+          "diagnostic": "frog.image provider could not decode the selected path."
+        }
+      ]
+    }
+  },
+  "runtime_boundary": {
+    "reference": "Implementations/Reference/Runtime/KernelBridge.md",
+    "runtime_dependency_posture": "runtime_consumes_manifest_declared_kernel_and_provider_not_llvm"
+  }
+}

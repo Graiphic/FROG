@@ -24,6 +24,7 @@ CASES = [
     ("08_enum_value_roundtrip", "Examples/08_enum_value_roundtrip/main.fir.json", "Examples/08_enum_value_roundtrip/main.lowering.json"),
     ("09_path_value_roundtrip", "Examples/09_path_value_roundtrip/main.fir.json", "Examples/09_path_value_roundtrip/main.lowering.json"),
     ("10_button_press_to_boolean", "Examples/10_button_press_to_boolean/main.fir.json", "Examples/10_button_press_to_boolean/main.lowering.json"),
+    ("16_picture_logo_jpeg", "Examples/16_picture_logo_jpeg/main.fir.json", "Examples/16_picture_logo_jpeg/main.lowering.json"),
 ]
 
 

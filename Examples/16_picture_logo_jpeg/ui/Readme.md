@@ -15,6 +15,14 @@ primitive, and render the decoded image buffer inside the Default Picture
 </p>
 
 <p>
+Execution is accepted only when the runtime consumes the
+<code>Examples/16_picture_logo_jpeg</code> lowered unit through its declared
+LLVM/native manifest and <code>frog.image</code> provider dependency. The UI
+package remains a front-panel realization package; it is not a compiler
+artifact and it is not the image codec owner.
+</p>
+
+<p>
 The optional file-picker capability is a host overlay for choosing a path. In a
 native host this may be the selected absolute path. In a browser-style host this
 may be a host-imported temporary path because browsers do not portably reveal

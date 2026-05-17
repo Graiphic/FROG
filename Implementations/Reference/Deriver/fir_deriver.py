@@ -1,7 +1,8 @@
 """Rule-oriented FIR derivation helpers for the non-normative reference workspace.
 
-This module supports the published examples 01 through 10 through explicit
-source-pattern recognition and source-to-FIR derivation rules.
+This module supports the published Examples 01 through 10 and the
+post-boundary Example 16 Picture slice through explicit source-pattern
+recognition and source-to-FIR derivation rules.
 
 It is intentionally narrow and does not claim general FROG compiler
 completeness. The important boundary is that rule selection is based on the
@@ -677,6 +678,101 @@ def derive_example10(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
     }
 
 
+def derive_example16(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    context = "Picture path-to-image pattern"
+    metadata = source_metadata(source)
+    if metadata.get("name") != "16_picture_logo_jpeg":
+        raise DerivationError(f"{context} expects metadata.name=16_picture_logo_jpeg")
+    inputs, outputs = assert_interface(
+        source,
+        [{"id": "image_path", "type": "path"}],
+        [
+            {"id": "preview_image", "type": "frog.image.buffer_rgba8"},
+            {"id": "decode_success", "type": "bool"},
+            {"id": "decode_error_code", "type": "string"},
+        ],
+        context,
+    )
+    path_widget = require_widget_class(source, "image_path", "frog.widgets.path_control", context)
+    picture_widget = require_widget_class(source, "preview_picture", "frog.widgets.picture_indicator", context)
+    if require_object(path_widget.get("binding"), "image_path.binding").get("mode") != "widget_value":
+        raise DerivationError(f"{context} expects image_path widget_value binding")
+    if require_object(picture_widget.get("binding"), "preview_picture.binding").get("mode") != "decoded_image_value":
+        raise DerivationError(f"{context} expects preview_picture decoded_image_value binding")
+
+    graph = SourceGraph.from_source(source)
+    require_primitive(graph, "decode_image", "frog.image.decode_file_rgba8", context)
+    for node_id in [
+        "image_path_value",
+        "preview_picture_value",
+        "output_preview_image",
+        "output_decode_success",
+        "output_decode_error_code",
+    ]:
+        require_node(graph, node_id, context)
+    if graph.nodes["image_path_value"].get("kind") != "widget_value" or graph.nodes["image_path_value"].get("widget") != "image_path":
+        raise DerivationError(f"{context} expects image_path_value widget_value for image_path")
+    if graph.nodes["preview_picture_value"].get("kind") != "widget_value" or graph.nodes["preview_picture_value"].get("widget") != "preview_picture":
+        raise DerivationError(f"{context} expects preview_picture_value widget_value for preview_picture")
+    expected_outputs = {
+        "output_preview_image": "preview_image",
+        "output_decode_success": "decode_success",
+        "output_decode_error_code": "decode_error_code",
+    }
+    for node_id, interface_port in expected_outputs.items():
+        node = graph.nodes[node_id]
+        if node.get("kind") != "interface_output" or node.get("interface_port") != interface_port:
+            raise DerivationError(f"{context} expects {node_id} interface output {interface_port}")
+    if graph.incoming("decode_image", "path") != EdgeEndpoint("image_path_value", "value"):
+        raise DerivationError(f"{context} expects image_path_value.value to feed decode_image.path")
+    if sorted(graph.outgoing_all("decode_image", "image"), key=lambda endpoint: endpoint.node) != [
+        EdgeEndpoint("output_preview_image", "value"),
+        EdgeEndpoint("preview_picture_value", "value"),
+    ]:
+        raise DerivationError(f"{context} expects decode_image.image to feed Picture and public output")
+    if graph.outgoing("decode_image", "success") != EdgeEndpoint("output_decode_success", "value"):
+        raise DerivationError(f"{context} expects decode_image.success to feed decode_success")
+    if graph.outgoing("decode_image", "error_code") != EdgeEndpoint("output_decode_error_code", "value"):
+        raise DerivationError(f"{context} expects decode_image.error_code to feed decode_error_code")
+
+    return {
+        "artifact_kind": "frog_fir_unit",
+        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
+        "source_ref": {"example_id": "16_picture_logo_jpeg", "path": source_rel, "entry_unit": "main"},
+        "front_panel_ref": {"package_path": (Path(source_rel).parent / "ui/picture_panel.wfrog").as_posix(), "panel_id": "main_panel"},
+        "units": [{
+            "unit_id": "main",
+            "kind": "picture_path_to_image_ui_unit",
+            "public_interface": {"inputs": inputs, "outputs": outputs},
+            "ui_bindings": {
+                "control_bindings": [{"widget_id": "image_path", "mode": "widget_value", "public_input_id": "image_path", "value_type": "path"}],
+                "indicator_bindings": [{"widget_id": "preview_picture", "mode": "decoded_image_value", "public_output_id": "preview_image", "value_type": "frog.image.buffer_rgba8"}],
+            },
+            "execution_model": {
+                "structure": "path_decode_to_picture_publication",
+                "body_rule": {
+                    "kind": "call_standard_primitive",
+                    "primitive": "frog.image.decode_file_rgba8",
+                    "expression": "preview_image, decode_success, decode_error_code = frog.image.decode_file_rgba8(image_path)",
+                },
+            },
+            "publications": [
+                {"target": "public_output.preview_image", "source": "primitive.decode_image.image"},
+                {"target": "public_output.decode_success", "source": "primitive.decode_image.success"},
+                {"target": "public_output.decode_error_code", "source": "primitive.decode_image.error_code"},
+                {"target": "widget.preview_picture.value", "source": "primitive.decode_image.image"},
+            ],
+            "notes": [
+                "This FIR is a repository-visible Picture widget progression slice beyond the current public reference runtime closure.",
+                "The Picture widget consumes an image buffer produced by a standard frog.image primitive; it does not decode files itself.",
+                "The initial .frog Path control value points to ./assets/frog_logo.jpg.",
+                "The Picture visual grammar is provided by the Default Picture SVG realization package; this FIR does not own SVG geometry.",
+                "Runtime implementation for this example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+            ],
+        }],
+    }
+
+
 # Artifact factories for source_rel injection.
 def artifacts_example01(source_rel: str) -> dict[str, Any]:
     return {
@@ -749,6 +845,7 @@ DERIVATION_RULES = [
     DerivationRule("enum_value_roundtrip", "08_enum_value_roundtrip", derive_example08),
     DerivationRule("path_value_roundtrip", "09_path_value_roundtrip", derive_example09),
     DerivationRule("button_press_to_boolean", "10_button_press_to_boolean", derive_example10),
+    DerivationRule("picture_path_to_image", "16_picture_logo_jpeg", derive_example16),
 ]
 
 

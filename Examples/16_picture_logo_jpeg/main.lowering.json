@@ -13,13 +13,20 @@
     "unit_id": "main"
   },
   "lowering_intent": {
-    "summary": "make one post-boundary Picture path-to-image example consumable by private runtime UI-binding and standard-library decode work",
-    "backend_family_target": "post_public_closure_private_host_runtime_ui_binding",
+    "summary": "make one post-boundary Picture path-to-image example consumable through a manifest-declared LLVM/native kernel boundary and standard-library image provider",
+    "backend_family_target": "llvm_native_kernel_with_standard_provider",
     "capability_targets": [
       "standard_library:frog.image.decode_file_rgba8",
+      "native_kernel_manifest",
+      "standard_provider_dependency:frog.image",
       "private_runtime_path_widget_binding",
       "private_runtime_picture_binding"
     ],
+    "native_artifact_ref": {
+      "manifest": "Implementations/Reference/LLVM/examples/16_picture_logo_jpeg/native_kernel_manifest.json",
+      "llvm_ir": "Implementations/Reference/LLVM/examples/16_picture_logo_jpeg/kernel.ll",
+      "provider_dependency": "frog.image"
+    },
     "public_reference_runtime_source_added": false
   },
   "lowered_units": [
@@ -67,8 +74,9 @@
         ]
       },
       "execution_kernel": {
-        "operation": "call_standard_primitive",
+        "operation": "call_manifest_declared_standard_primitive",
         "primitive": "frog.image.decode_file_rgba8",
+        "native_manifest": "Implementations/Reference/LLVM/examples/16_picture_logo_jpeg/native_kernel_manifest.json",
         "inputs": {
           "path": "widget.image_path.value"
         },

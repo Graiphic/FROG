@@ -140,8 +140,8 @@
   },
   "front_panel": {
     "canvas": {
-      "width": 900,
-      "height": 560,
+      "width": 560,
+      "height": 520,
       "coordinate_space": "panel_pixels"
     },
     "package_refs": [
@@ -155,10 +155,10 @@
         "instance_ref": "image_path",
         "value_type": "path",
         "layout": {
-          "x": 40,
-          "y": 24,
-          "width": 820,
-          "height": 116
+          "x": 20,
+          "y": 20,
+          "width": 520,
+          "height": 120
         },
         "props": {
           "value": "./assets/frog_logo.jpg",
@@ -189,9 +189,9 @@
           "style.path_face.fill_color.hover": "#eef6ff",
           "style.path_face.border_color": "#64748b",
           "style.path_face.border_color.hover": "#64748b",
-          "style.path_face.border_width": "1px",
+          "style.path_face.border_width": "2px",
           "style.path_display.color": "#111827",
-          "style.path_display.font_size": "15px",
+          "style.path_display.font_size": "16px",
           "style.path_display.font_weight": "400",
           "style.path_display.padding_inline": "4px",
           "style.path_display.baseline_offset": "-5px",
@@ -225,10 +225,10 @@
         "instance_ref": "preview_picture",
         "value_type": "frog.image.buffer_rgba8",
         "layout": {
-          "x": 40,
-          "y": 156,
-          "width": 820,
-          "height": 360
+          "x": 20,
+          "y": 150,
+          "width": 520,
+          "height": 330
         },
         "props": {
           "value": {
@@ -249,12 +249,12 @@
           "label.visible": false,
           "caption.text": "Preview",
           "caption.visible": true,
-          "caption.anchor.x": 410,
+          "caption.anchor.x": 260,
           "caption.anchor.y": 28,
           "caption.align.horizontal": "center",
           "caption.style.text_color": "#111827",
           "caption.style.font_family": "system-ui, Segoe UI, Arial, sans-serif",
-          "caption.style.font_size": "18px",
+          "caption.style.font_size": "16px",
           "caption.style.font_weight": "600",
           "viewport.origin.x": 0,
           "viewport.origin.y": 0,
@@ -262,16 +262,16 @@
           "viewport.fit_mode": "fit",
           "display.preserve_aspect_ratio": true,
           "display.interpolation": "linear",
-          "display.background_color": "#ffffff",
+          "display.background_color": "#f8fafc",
           "display.empty_state_visible": true,
           "overlay.visible": false,
           "roi.visible": false,
           "crosshair.visible": false,
           "cursor_readout.visible": false,
-          "style.frame.fill_color": "#f8fafc",
-          "style.frame.border_color": "#111827",
-          "style.frame.border_width": "1px",
-          "style.picture_region.fill_color": "#ffffff",
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.picture_region.fill_color": "#f8fafc",
           "style.picture_region.border_color": "#cbd5e1",
           "style.picture_region.border_width": "1px",
           "style.focus_ring.visible": true,

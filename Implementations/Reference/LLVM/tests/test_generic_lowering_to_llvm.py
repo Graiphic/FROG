@@ -27,6 +27,7 @@ CASES = [
     ("13", "Examples/13_button_latch_when_pressed/main.lowering.json", "Implementations/Reference/LLVM/examples/13_button_latch_when_pressed/module.ll"),
     ("14", "Examples/14_button_latch_when_released/main.lowering.json", "Implementations/Reference/LLVM/examples/14_button_latch_when_released/module.ll"),
     ("15", "Examples/15_button_latch_until_released/main.lowering.json", "Implementations/Reference/LLVM/examples/15_button_latch_until_released/module.ll"),
+    ("16", "Examples/16_picture_logo_jpeg/main.lowering.json", "Implementations/Reference/LLVM/examples/16_picture_logo_jpeg/kernel.ll"),
 ]
 
 
