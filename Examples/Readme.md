@@ -142,7 +142,7 @@ Production-grade runtime development for future FROG execution surfaces continue
     </tr>
     <tr>
       <td><code>16_picture_logo_jpeg</code></td>
-      <td>Path-selected PNG/JPEG decoded by <code>frog.image.decode_file_rgba8</code> and displayed by a Picture indicator</td>
+      <td>Path-selected PNG/JPEG/BMP decoded by <code>frog.image.decode_file_rgba8</code> and displayed by a Picture indicator</td>
       <td><code>main.frog</code> + <code>ui/picture_panel.wfrog</code> + <code>assets/frog_logo.jpg</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>

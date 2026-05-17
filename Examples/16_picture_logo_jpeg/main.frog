@@ -3,7 +3,7 @@
   "metadata": {
     "name": "16_picture_logo_jpeg",
     "summary": "Picture indicator display driven by a Path control, the standard frog.image.decode_file_rgba8 primitive, and the Default Path/Picture .wfrog realization assets.",
-    "description": "Reads an image path from a .frog-owned Path control, decodes the selected PNG/JPEG image through the standard frog.image.decode_file_rgba8 primitive, publishes the decoded RGBA8 image buffer to a read-only Picture indicator, and exposes decode status through public outputs. The initial path points to the FROG logo asset. This example remains repository-visible public specification and widget material beyond the current public reference runtime closure; runtime implementation continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "description": "Reads an image path from a .frog-owned Path control, decodes the selected PNG/JPEG/BMP image through the standard frog.image.decode_file_rgba8 primitive, publishes the decoded RGBA8 image buffer to a read-only Picture indicator, and exposes decode status through public outputs. The initial path points to the FROG logo asset. This example remains repository-visible public specification and widget material beyond the current public reference runtime closure; runtime implementation continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
     "author": "Graiphic",
     "program_version": "0.1.0",
     "tags": [
@@ -167,7 +167,8 @@
           "path.validation_state": "unknown",
           "path.accepted_media_types": [
             "image/png",
-            "image/jpeg"
+            "image/jpeg",
+            "image/bmp"
           ],
           "label.text": "Image path",
           "caption.text": "Image path",
@@ -184,7 +185,7 @@
           "display.text_overflow_visible": false,
           "browse.enabled": true,
           "browse.button_visible": true,
-          "browse.accept": ".png,.jpg,.jpeg,image/png,image/jpeg",
+          "browse.accept": ".png,.jpg,.jpeg,.bmp,image/png,image/jpeg,image/bmp",
           "style.path_face.fill_color": "#ffffff",
           "style.path_face.fill_color.hover": "#eef6ff",
           "style.path_face.border_color": "#64748b",

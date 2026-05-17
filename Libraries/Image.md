@@ -19,9 +19,10 @@ file reading or codec behavior.
 
 <p>
 The initial published library is intentionally small. It standardizes a
-portable image buffer value shape and one path-based decode primitive suitable
-for basic FROG programs and base IDE distributions. Additional base functions
-are listed below as candidates, not as already accepted primitives.
+portable image buffer value shape, one path-based decode primitive suitable
+for basic FROG programs and base IDE distributions, and three format-specific
+read primitives for PNG, JPEG, and BMP files. Additional base functions are
+listed below as candidates, not as already accepted primitives.
 </p>
 
 <p>
@@ -64,7 +65,10 @@ separate program objects.
 FROG image primitives use the <code>frog.image.*</code> namespace.
 </p>
 
-<pre><code>frog.image.decode_file_rgba8</code></pre>
+<pre><code>frog.image.decode_file_rgba8
+frog.image.read_png_file
+frog.image.read_jpeg_file
+frog.image.read_bmp_file</code></pre>
 
 <p>
 The namespace owns generic image value construction, decoding, and simple image
@@ -98,8 +102,29 @@ minimal:
       <td><code>frog.image.decode_file_rgba8</code></td>
       <td><code>path</code></td>
       <td><code>image</code>, <code>success</code>, <code>error_code</code></td>
-      <td><code>image/png</code>, <code>image/jpeg</code></td>
-      <td>Decode a path-selected image file into a portable <code>frog.image.buffer_rgba8</code> value.</td>
+      <td><code>image/png</code>, <code>image/jpeg</code>, <code>image/bmp</code></td>
+      <td>Decode a path-selected baseline image file into a portable <code>frog.image.buffer_rgba8</code> value.</td>
+    </tr>
+    <tr>
+      <td><code>frog.image.read_png_file</code></td>
+      <td><code>path</code></td>
+      <td><code>image</code>, <code>success</code>, <code>error_code</code></td>
+      <td><code>image/png</code></td>
+      <td>Read a PNG file into a portable <code>frog.image.buffer_rgba8</code> value.</td>
+    </tr>
+    <tr>
+      <td><code>frog.image.read_jpeg_file</code></td>
+      <td><code>path</code></td>
+      <td><code>image</code>, <code>success</code>, <code>error_code</code></td>
+      <td><code>image/jpeg</code></td>
+      <td>Read a JPEG file into a portable <code>frog.image.buffer_rgba8</code> value.</td>
+    </tr>
+    <tr>
+      <td><code>frog.image.read_bmp_file</code></td>
+      <td><code>path</code></td>
+      <td><code>image</code>, <code>success</code>, <code>error_code</code></td>
+      <td><code>image/bmp</code></td>
+      <td>Read a BMP file into a portable <code>frog.image.buffer_rgba8</code> value.</td>
     </tr>
   </tbody>
 </table>
@@ -133,7 +158,7 @@ standard surface, FROG separates three related standard-library families:
     <tr>
       <td><code>frog.image</code></td>
       <td>Image buffers, basic graphics file formats, simple metadata, and pixel-buffer utilities.</td>
-      <td><code>decode_file_rgba8</code> is published; the remaining base functions are candidates.</td>
+      <td><code>decode_file_rgba8</code>, <code>read_png_file</code>, <code>read_jpeg_file</code>, and <code>read_bmp_file</code> are published; the remaining base functions are candidates.</td>
     </tr>
     <tr>
       <td><code>frog.picture</code></td>
@@ -179,29 +204,14 @@ implementation/conformance validation.
   </thead>
   <tbody>
     <tr>
-      <td><code>frog.image.read_png_file(path)</code></td>
-      <td>Read a PNG file into <code>frog.image.buffer_rgba8</code>.</td>
-      <td>Can share the same decode backend as <code>decode_file_rgba8</code>.</td>
-    </tr>
-    <tr>
       <td><code>frog.image.write_png_file(path, image)</code></td>
       <td>Write a <code>frog.image.buffer_rgba8</code> value as PNG.</td>
       <td>Requires an image-writing provider, not only an image decoder.</td>
     </tr>
     <tr>
-      <td><code>frog.image.read_jpeg_file(path)</code></td>
-      <td>Read a JPEG file into <code>frog.image.buffer_rgba8</code>.</td>
-      <td>Can share the same decode backend as <code>decode_file_rgba8</code>.</td>
-    </tr>
-    <tr>
       <td><code>frog.image.write_jpeg_file(path, image, quality)</code></td>
       <td>Write a <code>frog.image.buffer_rgba8</code> value as JPEG.</td>
       <td>Requires an image-writing provider and an explicit quality contract.</td>
-    </tr>
-    <tr>
-      <td><code>frog.image.read_bmp_file(path)</code></td>
-      <td>Read a BMP file into <code>frog.image.buffer_rgba8</code>.</td>
-      <td>Candidate baseline graphics-format reader.</td>
     </tr>
     <tr>
       <td><code>frog.image.write_bmp_file(path, image)</code></td>
@@ -344,6 +354,7 @@ The first standardized format set is:
 <ul>
   <li><code>image/png</code></li>
   <li><code>image/jpeg</code></li>
+  <li><code>image/bmp</code></li>
 </ul>
 
 <p>
@@ -378,6 +389,57 @@ Initial error codes:
 
 <hr/>
 
+<h2>Primitive: <code>frog.image.read_png_file</code></h2>
+
+<p>
+Reads a PNG file identified by a path into a portable RGBA8 image buffer.
+The result shape, failure behavior, and error codes are the same as
+<code>frog.image.decode_file_rgba8</code>. If the selected path is not a PNG
+file, the primitive returns <code>unsupported_format</code>.
+</p>
+
+<ul>
+  <li>input port: <code>path</code></li>
+  <li>output ports: <code>image</code>, <code>success</code>, <code>error_code</code></li>
+  <li>required format: <code>image/png</code></li>
+</ul>
+
+<hr/>
+
+<h2>Primitive: <code>frog.image.read_jpeg_file</code></h2>
+
+<p>
+Reads a JPEG file identified by a path into a portable RGBA8 image buffer.
+The result shape, failure behavior, and error codes are the same as
+<code>frog.image.decode_file_rgba8</code>. If the selected path is not a JPEG
+file, the primitive returns <code>unsupported_format</code>.
+</p>
+
+<ul>
+  <li>input port: <code>path</code></li>
+  <li>output ports: <code>image</code>, <code>success</code>, <code>error_code</code></li>
+  <li>required format: <code>image/jpeg</code></li>
+</ul>
+
+<hr/>
+
+<h2>Primitive: <code>frog.image.read_bmp_file</code></h2>
+
+<p>
+Reads a BMP file identified by a path into a portable RGBA8 image buffer.
+The result shape, failure behavior, and error codes are the same as
+<code>frog.image.decode_file_rgba8</code>. If the selected path is not a BMP
+file, the primitive returns <code>unsupported_format</code>.
+</p>
+
+<ul>
+  <li>input port: <code>path</code></li>
+  <li>output ports: <code>image</code>, <code>success</code>, <code>error_code</code></li>
+  <li>required format: <code>image/bmp</code></li>
+</ul>
+
+<hr/>
+
 <h2>Implementation Dependency Posture</h2>
 
 <p>
@@ -387,7 +449,8 @@ contract. It does not require a specific codec implementation.
 
 <p>
 A base IDE or runtime distribution MAY implement
-<code>frog.image.decode_file_rgba8</code> with a small dependency such as
+<code>frog.image.decode_file_rgba8</code> and the format-specific read
+primitives with a small dependency such as
 <code>stb_image</code>, and MAY later replace or complement that implementation
 with codec-specific libraries such as PNG or JPEG libraries. Such choices are
 implementation details as long as the public FROG contract remains satisfied.
@@ -397,7 +460,7 @@ implementation details as long as the public FROG contract remains satisfied.
 This separation keeps the dependency replaceable:
 </p>
 
-<pre><code>FROG program contract: frog.image.decode_file_rgba8
+<pre><code>FROG program contract: frog.image.decode_file_rgba8 / read_png_file / read_jpeg_file / read_bmp_file
 Implementation choice: stb_image, libpng/libspng, libjpeg-turbo, or another codec stack</code></pre>
 
 <p>
@@ -410,15 +473,15 @@ of the Picture widget.
 <h2>Standard Provider and Deployment Closure</h2>
 
 <p>
-An implementation MAY realize <code>frog.image.decode_file_rgba8</code> through
-a shared library, static library, compiled object, built-in provider, generated
-backend artifact, or another equivalent provider mechanism.
+An implementation MAY realize the published <code>frog.image</code> read
+primitives through a shared library, static library, compiled object, built-in
+provider, generated backend artifact, or another equivalent provider mechanism.
 </p>
 
 <p>
-The public requirement is that the provider satisfies the
-<code>frog.image.decode_file_rgba8</code> contract and that the dependency remains
-declared in the relevant FIR, lowering, manifest, package, profile, or deployment
+The public requirement is that the provider satisfies the called
+<code>frog.image</code> primitive contract and that the dependency remains declared
+in the relevant FIR, lowering, manifest, package, profile, or deployment
 closure. The public FROG specification does not require one mandatory runtime
 loading mechanism.
 </p>
@@ -426,9 +489,9 @@ loading mechanism.
 <p>
 This keeps deployment modular. A program that does not use
 <code>frog.image</code> does not need an image provider. A compiled launcher or
-self-contained executable that does use <code>frog.image.decode_file_rgba8</code>
-may carry only the image provider needed by that program, together with the
-program's other selected dependencies and assets.
+self-contained executable that does use a published <code>frog.image</code> read
+primitive may carry only the image provider needed by that program, together
+with the program's other selected dependencies and assets.
 </p>
 
 <p>
