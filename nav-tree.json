@@ -517,6 +517,21 @@
               ]
             },
             {
+              "key": "examples/17_label_typography_board/",
+              "title": "17 label typography board",
+              "path": "/Examples/17_label_typography_board/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/17_label_typography_board/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/17_label_typography_board/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -4201,6 +4216,8 @@
     "/Examples/16_picture_logo_jpeg/main.frog",
     "/Examples/16_picture_logo_jpeg/ui/Readme.md",
     "/Examples/16_picture_logo_jpeg/Readme.md",
+    "/Examples/17_label_typography_board/main.frog",
+    "/Examples/17_label_typography_board/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
