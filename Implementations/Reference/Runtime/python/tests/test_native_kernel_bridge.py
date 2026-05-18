@@ -250,7 +250,9 @@ def test_python_dynamic_native_kernel_bridge_executes_example11(tmp_path: Path) 
         contract_path=default_example12_contract_path(),
         wfrog_path=default_example12_wfrog_path(),
     )
-    release_artifact = release_core.execute_with_native_kernel_bridge(bridge, False)
+    release_library = _build_library(tmp_path, "12", EXAMPLE12_MANIFEST)
+    release_bridge = load_native_bool_kernel_bridge(EXAMPLE12_MANIFEST, release_library)
+    release_artifact = release_core.execute_with_native_kernel_bridge(release_bridge, False)
     assert release_artifact["outputs"]["public"]["switched"] is True
     assert release_artifact["outputs"]["ui"]["trigger_button"] is True
     assert release_artifact["outputs"]["ui"]["switched_indicator"] is True
