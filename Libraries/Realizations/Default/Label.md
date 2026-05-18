@@ -73,6 +73,17 @@ The SVG template provides geometry and anchors for the text surface.
 It does not own <code>text.value</code>.
 It uses square default corners and <code>preserveAspectRatio="none"</code> so
 the rectangular background and frame scale to the source-owned front-panel
-layout rectangle. Stroke-carrying parts use non-scaling strokes so border
-thickness remains consistent across horizontal and vertical scaling.
+layout rectangle. The published <code>background</code>, <code>frame</code>,
+and <code>focus_ring</code> parts span the full template viewBox so the frame
+is the external Label border. Stroke-carrying parts use non-scaling strokes so
+border thickness remains consistent across horizontal and vertical scaling.
+</p>
+
+<p>
+The visible external Label frame must be homogeneous: one source-owned
+<code>style.frame.border_width</code> value applies equally to the top, right,
+bottom, and left edges after any resize. Runtimes may use a host overlay for
+the visible frame only when that overlay is aligned to the published
+<code>frame</code> part and remains driven by the source-owned frame
+properties.
 </p>

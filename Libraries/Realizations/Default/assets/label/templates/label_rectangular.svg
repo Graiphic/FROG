@@ -10,9 +10,9 @@
   <desc>Semantic SVG template for standalone FROG label widgets.</desc>
 
   <g id="root" data-frog-part="root">
-    <rect id="background" data-frog-part="background" x="4" y="4" width="352" height="88" rx="0" fill="#ffffff" opacity="0" data-frog-bind="style.background.*" />
-    <rect id="frame" data-frog-part="frame" x="4" y="4" width="352" height="88" rx="0" fill="none" stroke="#94a3b8" stroke-width="1" vector-effect="non-scaling-stroke" opacity="0" data-frog-bind="style.frame.*" />
+    <rect id="background" data-frog-part="background" x="0" y="0" width="360" height="96" rx="0" fill="#ffffff" opacity="0" data-frog-bind="style.background.*" />
+    <rect id="frame" data-frog-part="frame" x="0" y="0" width="360" height="96" rx="0" fill="none" stroke="#94a3b8" stroke-width="1" vector-effect="non-scaling-stroke" opacity="0" data-frog-bind="style.frame.*" />
     <text id="text_surface" data-frog-part="text_surface" data-frog-member="text.value" data-frog-anchor="text_surface.left_center" x="16" y="50" dominant-baseline="middle" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="16" fill="#111111" data-frog-bind="text.value style.text.*">Label text</text>
-    <rect id="focus_ring" data-frog-part="focus_ring" x="2" y="2" width="356" height="92" rx="0" fill="none" stroke="#2f80ed" stroke-width="2" vector-effect="non-scaling-stroke" opacity="0" data-frog-bind="interaction.focused style.focus_ring.*" />
+    <rect id="focus_ring" data-frog-part="focus_ring" x="0" y="0" width="360" height="96" rx="0" fill="none" stroke="#2f80ed" stroke-width="2" vector-effect="non-scaling-stroke" opacity="0" data-frog-bind="interaction.focused style.focus_ring.*" />
   </g>
 </svg>

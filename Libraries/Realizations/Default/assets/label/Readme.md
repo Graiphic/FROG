@@ -35,9 +35,19 @@ The published rectangular template uses square default corners and scales to
 the source-owned front-panel layout rectangle with
 <code>preserveAspectRatio="none"</code>. This keeps background and frame parts
 aligned to the Label instance bounds while the semantic text remains owned by
-<code>.frog</code> <code>text.value</code>. Stroke-carrying parts use
-non-scaling strokes so border thickness remains consistent across horizontal
-and vertical scaling.
+<code>.frog</code> <code>text.value</code>. The published
+<code>background</code>, <code>frame</code>, and <code>focus_ring</code> parts
+span the full template viewBox so the frame is the external Label border.
+Stroke-carrying parts use non-scaling strokes so border thickness remains
+consistent across horizontal and vertical scaling.
+</p>
+
+<p>
+The external Label frame has a strict uniform-border rule. A resized Label
+must still show the same visible border thickness on every edge. If a runtime
+uses a host-rendered frame for pixel fidelity, it must align that frame to the
+published <code>data-frog-part="frame"</code> geometry and source it from the
+same <code>style.frame.*</code> properties.
 </p>
 
 <hr/>
