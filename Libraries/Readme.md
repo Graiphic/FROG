@@ -390,6 +390,186 @@ frog.ui.*           -&gt; object-style widget interaction in execution
 </code></pre>
 
 <p>
+The first lightweight-standard taxonomy also classifies each family by its
+current publication status and by the kind of implementation boundary it
+implies:
+</p>
+
+<ul>
+  <li><strong>value-only</strong>: ordinary deterministic value transforms with no host resource dependency,</li>
+  <li><strong>provider-backed</strong>: explicit primitives whose implementation may come from a standard-library provider or packaged dependency,</li>
+  <li><strong>runtime-hosted</strong>: explicit primitives that need host/runtime services such as UI objects, scheduling, time sources, or managed resources,</li>
+  <li><strong>OS-dependent</strong>: explicit primitives whose result depends on platform, filesystem, process, or environment capabilities,</li>
+  <li><strong>profile-owned</strong>: standardized optional capability families that are not intrinsic lightweight libraries.</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Family</th>
+      <th>Status</th>
+      <th>Purpose</th>
+      <th>Initial scope</th>
+      <th>Out of scope / boundary</th>
+      <th>Implementation posture</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>frog.core</code></td>
+      <td>published core</td>
+      <td>Minimal foundational operators and execution building blocks.</td>
+      <td>Arithmetic, comparison, boolean logic, value selection, and explicit local memory through <code>frog.core.delay</code>.</td>
+      <td>Broader math, arrays, text, I/O, UI interaction, profiles, and runtime services.</td>
+      <td>Mostly value-only; <code>delay</code> is explicit local memory governed with the language execution model.</td>
+    </tr>
+    <tr>
+      <td><code>frog.math</code></td>
+      <td>published lightweight standard library</td>
+      <td>Portable scalar mathematics beyond the minimal core.</td>
+      <td>Utility, rounding, powers, roots, logarithms, trigonometric, and hyperbolic scalar functions.</td>
+      <td>Linear algebra, statistics, tensors, symbolic math, optimization, and signal processing.</td>
+      <td>Value-only, with numeric edge behavior constrained by the active execution profile.</td>
+    </tr>
+    <tr>
+      <td><code>frog.collections</code></td>
+      <td>published lightweight standard library</td>
+      <td>Portable collection manipulation.</td>
+      <td>Array length, empty check, element get/set, append, concat, and slice.</td>
+      <td>Maps, sets, dictionaries, higher-order collection functions, advanced reshaping, and streaming collections.</td>
+      <td>Value-only. The earlier <code>frog.array</code> candidate is represented by this broader namespace in the current public surface.</td>
+    </tr>
+    <tr>
+      <td><code>frog.text</code></td>
+      <td>published lightweight standard library</td>
+      <td>Portable text processing over ordinary string values.</td>
+      <td>Concat, length, substring, contains, prefix/suffix predicates, first find, split, and join.</td>
+      <td>Locale collation, regular expressions, rich formatting, parsing, encodings, JSON/XML/HTML, and file/network text I/O.</td>
+      <td>Value-only. The earlier <code>frog.string</code> candidate is represented by <code>frog.text</code> in the current public surface.</td>
+    </tr>
+    <tr>
+      <td><code>frog.io</code></td>
+      <td>published lightweight standard library</td>
+      <td>Foundational file, path, resource, and byte-oriented access.</td>
+      <td>Path joining/normalization/parent/name, filesystem existence and kind queries, directory listing, whole text reads, and whole byte reads.</td>
+      <td>File mutation, streams, partial reads, networking, hardware I/O, foreign runtime calls, database access, and structured error objects.</td>
+      <td>OS-dependent and runtime-hosted. The earlier <code>frog.path</code> and <code>frog.file</code> candidates are represented by this namespace for v0.1.</td>
+    </tr>
+    <tr>
+      <td><code>frog.image</code></td>
+      <td>published lightweight standard library</td>
+      <td>Portable image-data values and baseline graphics file decoding.</td>
+      <td><code>decode_file_rgba8</code>, PNG/JPEG/BMP reads, and the <code>frog.image.buffer_rgba8</code> value contract.</td>
+      <td>Picture widget realization, camera acquisition, GPU surfaces, advanced computer vision, and non-promoted write/drawing functions.</td>
+      <td>Provider-backed. Codec choice and packaging are implementation details behind the public primitive contract.</td>
+    </tr>
+    <tr>
+      <td><code>frog.signal</code></td>
+      <td>published lightweight standard library</td>
+      <td>Portable one-dimensional sampled-signal transforms.</td>
+      <td>Basic analysis, deterministic filtering, decimation, and simple resampling over numeric sample arrays.</td>
+      <td>Waveform records, hardware acquisition, streaming, FFT/spectral analysis, adaptive filters, and multi-channel containers.</td>
+      <td>Value-only for the published v0.1 surface.</td>
+    </tr>
+    <tr>
+      <td><code>frog.ui</code></td>
+      <td>published intrinsic interaction library</td>
+      <td>Executable widget interaction through object-style and event-oriented primitives.</td>
+      <td>Property read/write, method invoke, event observe, widget-reference consumption, and optional UI sequencing ports.</td>
+      <td>Widget class catalog, front-panel serialization, <code>.wfrog</code> package content, rendering, host realization, and a general async event framework.</td>
+      <td>Runtime-hosted and UI-host mediated, while primitive identity remains public and portable.</td>
+    </tr>
+    <tr>
+      <td><code>frog.time</code></td>
+      <td>candidate lightweight standard library</td>
+      <td>Portable time values and timing primitives.</td>
+      <td>Wall-clock time, monotonic time, elapsed-time helpers, waits/delays, time arithmetic, formatting/parsing, and profiling hooks.</td>
+      <td>Hard real-time guarantees, scheduler internals, private runtime timing loops, and OS-specific clock APIs as public law.</td>
+      <td>Runtime-hosted and partly OS-dependent. Wait/delay behavior must be coordinated with execution semantics before publication.</td>
+    </tr>
+    <tr>
+      <td><code>frog.waveform</code></td>
+      <td>candidate lightweight standard library</td>
+      <td>Portable waveform value helpers around sampled data with timing metadata.</td>
+      <td>Build/unbundle waveform values, access samples, access or update <code>t0</code> and <code>dt</code>, and append compatible waveforms.</td>
+      <td>Hardware acquisition, streaming buffers, chart history widgets, and device timing.</td>
+      <td>Value-only if limited to waveform records; provider/runtime dependencies start only when acquisition or streaming is introduced.</td>
+    </tr>
+    <tr>
+      <td><code>frog.table</code></td>
+      <td>candidate lightweight standard library</td>
+      <td>Portable tabular value construction and access.</td>
+      <td>Build table values, row/column counts, cell access, row/column extraction, and simple table formatting.</td>
+      <td>Database connectivity, spreadsheet automation, table widgets, and external data-frame engines.</td>
+      <td>Value-only for data-shape helpers; provider-backed only if later formatting/import/export contracts require it.</td>
+    </tr>
+    <tr>
+      <td><code>frog.picture</code></td>
+      <td>candidate lightweight standard library</td>
+      <td>Picture-value construction and simple 2D drawing.</td>
+      <td>Empty picture, points, lines, rectangles, ovals, arcs, text, pixmap composition, and rasterization candidates.</td>
+      <td>Picture widget realization, advanced graphics engines, GPU drawing, font-engine mandates, and computer vision.</td>
+      <td>Provider-backed where rasterization, text shaping, or image composition needs an implementation module.</td>
+    </tr>
+    <tr>
+      <td><code>frog.plot</code></td>
+      <td>candidate lightweight standard library</td>
+      <td>Simple plot rendering helpers that produce picture-like values.</td>
+      <td>Waveform, XY, multi-XY, and legend rendering candidates.</td>
+      <td>Chart widgets, live chart history, acquisition, advanced signal analysis, and plotting backends as mandatory dependencies.</td>
+      <td>Provider-backed or value-to-picture depending on the accepted picture model.</td>
+    </tr>
+    <tr>
+      <td><code>frog.boolean</code></td>
+      <td>deferred candidate</td>
+      <td>Boolean helpers not already covered by <code>frog.core</code>.</td>
+      <td>Possible edge detection, selection helpers, and latch candidates.</td>
+      <td>Core boolean logic already belongs to <code>frog.core</code>; stateful latch behavior must not bypass explicit state and execution semantics.</td>
+      <td>Value-only for stateless helpers; runtime/semantic review required for edge or latch behavior.</td>
+    </tr>
+    <tr>
+      <td><code>frog.sync</code></td>
+      <td>deferred candidate</td>
+      <td>Communication and synchronization primitives.</td>
+      <td>Queues, notifiers, semaphores, occurrences, and related coordination primitives after execution semantics are settled.</td>
+      <td>Private scheduler internals, unsafe handles, unbounded shared mutable state, and implementation-specific thread APIs.</td>
+      <td>Runtime-hosted and capability-managed; not a value-only library.</td>
+    </tr>
+    <tr>
+      <td><code>frog.ref</code></td>
+      <td>deferred high-risk candidate</td>
+      <td>Reference-like or protected-value capabilities if accepted later.</td>
+      <td>DVR-like protected values and carefully bounded reference semantics.</td>
+      <td>Raw pointers, arbitrary process memory, hidden aliasing, and unsafe implementation handles as public values.</td>
+      <td>Runtime-hosted and capability-managed; requires source, FIR, lowering, and safety guardrails before publication.</td>
+    </tr>
+    <tr>
+      <td><code>frog.os</code> or <code>frog.system</code></td>
+      <td>candidate OS-dependent library</td>
+      <td>Portable system and process introspection where possible.</td>
+      <td>Platform identifier, architecture, CPU count, memory totals, process id, executable path, current directory, and environment reads as candidates.</td>
+      <td>Making OS introspection mandatory for minimal embedded profiles, leaking private host policy, and exposing platform APIs without capability boundaries.</td>
+      <td>OS-dependent and runtime-hosted; unavailable data must have explicit fallback or status behavior.</td>
+    </tr>
+    <tr>
+      <td><code>frog.process</code>, <code>frog.ffi</code>, <code>frog.net</code>, <code>frog.http</code>, <code>frog.db</code>, <code>frog.registry</code>, <code>frog.com</code>, <code>frog.dotnet</code></td>
+      <td>profile-owned or future-profile candidates</td>
+      <td>External integration with commands, shared libraries, network services, databases, registries, COM, ActiveX, .NET, and similar ecosystems.</td>
+      <td>Only the surfaces explicitly published by a profile, such as the current Interop profile's <code>frog.connectivity.*</code> family.</td>
+      <td>Intrinsic lightweight-library core. These capabilities depend on host policy, foreign runtimes, external protocols, platform APIs, or security-sensitive boundaries.</td>
+      <td>Profile-owned, OS-dependent, provider-backed, or implementation-specific unless a future public profile standardizes them.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+This table is a taxonomy and routing rule. A candidate row does not by itself
+publish a primitive. A family becomes part of the public standard surface only
+when its corresponding specification defines concrete primitive identifiers,
+ports, typing, validation rules, and downstream representation posture.
+</p>
+
+<p>
 Additional intrinsic library families MAY be standardized later, but they are not part of the intrinsic standardized surface unless a corresponding specification exists in this directory and is published as such.
 </p>
 
