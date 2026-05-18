@@ -71,4 +71,8 @@ This realization defines how the Default family can embody the label through SVG
 <p>
 The SVG template provides geometry and anchors for the text surface.
 It does not own <code>text.value</code>.
+It uses square default corners and <code>preserveAspectRatio="none"</code> so
+the rectangular background and frame scale to the source-owned front-panel
+layout rectangle. Stroke-carrying parts use non-scaling strokes so border
+thickness remains consistent across horizontal and vertical scaling.
 </p>

@@ -30,6 +30,18 @@
 
 <hr/>
 
+<p>
+The published rectangular template uses square default corners and scales to
+the source-owned front-panel layout rectangle with
+<code>preserveAspectRatio="none"</code>. This keeps background and frame parts
+aligned to the Label instance bounds while the semantic text remains owned by
+<code>.frog</code> <code>text.value</code>. Stroke-carrying parts use
+non-scaling strokes so border thickness remains consistent across horizontal
+and vertical scaling.
+</p>
+
+<hr/>
+
 <h2>2. Required Template Markers</h2>
 
 <ul>

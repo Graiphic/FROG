@@ -146,6 +146,12 @@ Production-grade runtime development for future FROG execution surfaces continue
       <td><code>main.frog</code> + <code>ui/picture_panel.wfrog</code> + <code>assets/frog_logo.jpg</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
+    <tr>
+      <td><code>17_label_typography_board</code></td>
+      <td>Standalone Label support widgets with source-owned typography, frames, backgrounds, and annotation text</td>
+      <td><code>main.frog</code> + <code>ui/label_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
   </tbody>
 </table>
 
@@ -186,7 +192,10 @@ Production-grade runtime development for future FROG execution surfaces continue
 16   Path -> frog.image.decode_file_rgba8 -> Picture as a post-boundary widget progression example
     |
     v
-17+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
+17   standalone Label support text as a post-boundary widget progression example
+    |
+    v
+18+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
 </code></pre>
 
 <hr/>
@@ -267,7 +276,7 @@ Production-grade runtime development for future FROG execution surfaces continue
 │   └── same Button example shape
 ├── 15_button_latch_until_released/
 │   └── same Button example shape
-└── 16_picture_logo_jpeg/
+├── 16_picture_logo_jpeg/
     ├── Readme.md
     ├── main.frog
     ├── main.fir.json
@@ -276,6 +285,13 @@ Production-grade runtime development for future FROG execution surfaces continue
     │   └── frog_logo.jpg
     └── ui/
         └── picture_panel.wfrog
+└── 17_label_typography_board/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── label_panel.wfrog
 </code></pre>
 
 <p>
@@ -293,6 +309,14 @@ progression. It contains public source, FIR/lowering shape, a
 realizations, and a default FROG logo image path decoded through the
 <code>frog.image.decode_file_rgba8</code> standard library contract. It does not
 add public runtime source beyond the Example 15 closure.
+</p>
+
+<p>
+Example <code>17</code> continues the repository-visible post-boundary widget
+progression with standalone Label support text. It contains public source,
+FIR/lowering shape, a <code>.wfrog</code> package referencing the Default Label
+realization, and a small native manifest proof output. It does not add public
+runtime source beyond the Example 15 closure.
 </p>
 
 <hr/>

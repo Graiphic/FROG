@@ -1,0 +1,73 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_package",
+  "package_id": "example17.label_panel",
+  "title": "Example 17 Default Label realization package",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "17_label_typography_board",
+    "source_path": "Examples/17_label_typography_board/main.frog",
+    "fir_path": "Examples/17_label_typography_board/main.fir.json",
+    "lowering_path": "Examples/17_label_typography_board/main.lowering.json"
+  },
+  "ownership_boundary": {
+    "owns": [
+      "Default Label realization references",
+      "Default Label SVG asset references",
+      "host binding requirements for support-text rendering and Label runtime validation"
+    ],
+    "does_not_own": [
+      "canonical source semantics",
+      "front-panel widget instance layout",
+      "front-panel widget instance text",
+      "front-panel widget instance visual customization",
+      "FIR semantics",
+      "lowering semantics",
+      "runtime-private execution behavior",
+      "widget class law",
+      "Default Label SVG geometry"
+    ]
+  },
+  "widget_classes": [
+    {
+      "class_id": "frog.widgets.label",
+      "role": "support",
+      "value_type": null
+    }
+  ],
+  "host_bindings": [
+    {
+      "binding_id": "label_runtime_host_default",
+      "host_family": "frog_conforming_label_runtime_host",
+      "target": "frog_conforming_label_runtime_host",
+      "required_capabilities": [
+        "window",
+        "basic_widget_rendering",
+        "support_text_rendering",
+        "svg_part_overlay_alignment",
+        "svg_style_property_binding",
+        "native_kernel_manifest"
+      ]
+    }
+  ],
+  "realization_refs": [
+    {
+      "package_ref": "Libraries/Realizations/Default/label.default.wfrog",
+      "target_classes": [
+        "frog.widgets.label"
+      ]
+    }
+  ],
+  "svg_assets": [
+    {
+      "asset_id": "label_rectangular_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/label/templates/label_rectangular.svg",
+      "target_classes": [
+        "frog.widgets.label"
+      ]
+    }
+  ]
+}

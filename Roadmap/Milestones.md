@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="../FROG logo.svg" alt="FROG logo" width="200" />
+  <img src="../FROG logo.svg" alt="FROG logo" width="140" />
 </p>
 
 <h1 align="center">FROG Milestones</h1>
@@ -39,6 +39,12 @@ Its purpose is to give a concise view of the main closure milestones that organi
 <p>
 This file is intentionally shorter and more operational than <code>Roadmap/Readme.md</code>.
 It is a navigation surface for closure progress, not a replacement for the architectural roadmap narrative.
+</p>
+
+<p>
+This file is public specification and ecosystem milestone tracking. It is not
+Graiphic's internal task board, private runtime plan, or FROG Studio product
+execution plan.
 </p>
 
 <hr/>

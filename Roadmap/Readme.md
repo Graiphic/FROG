@@ -161,6 +161,14 @@ They do not require Graiphic production runtime or FROG Studio implementation wo
 The public reference runtime material in this repository currently stops at Example <code>15</code>; runtime development for later examples continues in Graiphic's proprietary <code>Graiphic/FROG-Runtime</code> repository unless explicitly promoted later.
 </p>
 
+<p>
+Graiphic internal task planning, runtime implementation sequencing, IDE product
+planning, validation recipes, and agent coordination are maintained outside this
+public repository. Public roadmap entries should therefore be read as
+specification and ecosystem closure guidance, not as Graiphic's internal
+execution board.
+</p>
+
 <hr/>
 
 <h2 id="relationship-with-versioning">4. Relationship with Versioning</h2>

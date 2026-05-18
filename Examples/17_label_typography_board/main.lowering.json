@@ -1,0 +1,76 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "17_label_typography_board",
+    "path": "Examples/17_label_typography_board/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/17_label_typography_board/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "summary": "make one post-boundary Label support-widget example consumable through a manifest-declared LLVM/native bool proof boundary and Default Label realization",
+    "backend_family_target": "llvm_native_kernel",
+    "capability_targets": [
+      "native_kernel_manifest",
+      "private_runtime_label_support_text_binding",
+      "svg_part_overlay_alignment",
+      "svg_style_property_binding"
+    ],
+    "native_artifact_ref": {
+      "manifest": "Implementations/Reference/LLVM/examples/17_label_typography_board/native_kernel_manifest.json",
+      "llvm_ir": "Implementations/Reference/LLVM/examples/17_label_typography_board/kernel.ll"
+    },
+    "public_reference_runtime_source_added": false
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "label_typography_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "scene_ready_request",
+            "type": "bool"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "scene_ready",
+            "type": "bool"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "support_bindings": [
+          {
+            "widget_class": "frog.widgets.label",
+            "mode": "support_text",
+            "semantic_text_member": "text.value",
+            "realization_asset_ref": "asset:label_rectangular_svg"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "identity_bool",
+        "native_manifest": "Implementations/Reference/LLVM/examples/17_label_typography_board/native_kernel_manifest.json",
+        "inputs": {
+          "scene_ready_request": "runtime.host_scene_request"
+        },
+        "outputs": {
+          "scene_ready": "scene_ready"
+        },
+        "final_publication": [
+          {
+            "target": "public_output.scene_ready",
+            "source": "native_kernel.scene_ready"
+          }
+        ]
+      }
+    }
+  ]
+}

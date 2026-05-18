@@ -1,0 +1,442 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "17_label_typography_board",
+    "summary": "Standalone Label support widgets rendered from .frog instance typography and Default Label .wfrog realization assets.",
+    "description": "Places several standalone Label widgets on the front panel as title text, section text, LabVIEW-like explanation rectangles, and small annotations. Label text, position, colors, frames, font choices, wrapping, and alignment are source-owned by .frog instances. The .wfrog package references the Default Label realization and SVG asset. Runtime implementation for this post-boundary example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "label",
+      "support_widget",
+      "typography",
+      "annotation",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "scene_ready_request",
+        "type": "bool",
+        "default": true,
+        "binding_origin": "runtime.host_scene_request"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "scene_ready",
+        "type": "bool"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "scene_ready_request",
+        "kind": "interface_input",
+        "interface_port": "scene_ready_request"
+      },
+      {
+        "id": "output_scene_ready",
+        "kind": "interface_output",
+        "interface_port": "scene_ready"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "scene_ready_request",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_scene_ready",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 760,
+      "height": 470,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/label_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "board_title",
+        "role": "support",
+        "class_ref": "frog.widgets.label",
+        "instance_ref": "board_title",
+        "layout": {
+          "x": 24,
+          "y": 18,
+          "width": 600,
+          "height": 54
+        },
+        "props": {
+          "label.text": "Board title",
+          "text.value": "FROG Label Typography Board",
+          "text.visible": true,
+          "text.multiline": false,
+          "text.wrap_enabled": false,
+          "text.horizontal_alignment": "left",
+          "text.vertical_alignment": "middle",
+          "text.padding": "0px",
+          "text.clip_overflow": true,
+          "style.text.color": "#111827",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "28px",
+          "style.text.font_weight": "700",
+          "style.text.font_style": "normal",
+          "style.text.text_decoration": "none",
+          "style.background.visible": false,
+          "style.background.fill_color": "transparent",
+          "style.frame.visible": false,
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.frame.corner_radius": "0px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:label_rectangular_svg"
+        },
+        "binding": {
+          "mode": "support_text"
+        }
+      },
+      {
+        "id": "board_subtitle",
+        "role": "support",
+        "class_ref": "frog.widgets.label",
+        "instance_ref": "board_subtitle",
+        "layout": {
+          "x": 26,
+          "y": 68,
+          "width": 710,
+          "height": 34
+        },
+        "props": {
+          "label.text": "Board subtitle",
+          "text.value": "Example 17 - .frog-owned Label text + Default Label .wfrog realization asset + C++ private runtime",
+          "text.visible": true,
+          "text.multiline": false,
+          "text.wrap_enabled": false,
+          "text.horizontal_alignment": "left",
+          "text.vertical_alignment": "middle",
+          "text.padding": "0px",
+          "text.clip_overflow": true,
+          "style.text.color": "#475569",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "14px",
+          "style.text.font_weight": "400",
+          "style.text.font_style": "normal",
+          "style.text.text_decoration": "none",
+          "style.background.visible": false,
+          "style.background.fill_color": "transparent",
+          "style.frame.visible": false,
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.frame.corner_radius": "0px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:label_rectangular_svg"
+        },
+        "binding": {
+          "mode": "support_text"
+        }
+      },
+      {
+        "id": "behavior_explanation",
+        "role": "support",
+        "class_ref": "frog.widgets.label",
+        "instance_ref": "behavior_explanation",
+        "layout": {
+          "x": 24,
+          "y": 126,
+          "width": 430,
+          "height": 170
+        },
+        "props": {
+          "label.text": "Behavior explanation",
+          "text.value": "Behavior Explanation\nA Label is front-panel support text. Its visible content is text.value, while position and styling live on the .frog widget instance.\n\nThe Default Label SVG publishes background, frame, text_surface, and focus_ring parts.",
+          "text.visible": true,
+          "text.multiline": true,
+          "text.wrap_enabled": true,
+          "text.horizontal_alignment": "left",
+          "text.vertical_alignment": "top",
+          "text.padding": "14px",
+          "text.clip_overflow": true,
+          "style.text.color": "#1f2937",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "15px",
+          "style.text.font_weight": "400",
+          "style.text.font_style": "normal",
+          "style.text.text_decoration": "none",
+          "style.background.visible": true,
+          "style.background.fill_color": "#f8fafc",
+          "style.frame.visible": true,
+          "style.frame.border_color": "#cbd5e1",
+          "style.frame.border_width": "1px",
+          "style.frame.corner_radius": "0px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:label_rectangular_svg"
+        },
+        "binding": {
+          "mode": "support_text"
+        }
+      },
+      {
+        "id": "labview_like_note",
+        "role": "support",
+        "class_ref": "frog.widgets.label",
+        "instance_ref": "labview_like_note",
+        "layout": {
+          "x": 482,
+          "y": 126,
+          "width": 240,
+          "height": 170
+        },
+        "props": {
+          "label.text": "LabVIEW-like note",
+          "text.value": "Front panel note\n\nUse labels for local explanations, warnings, unit hints, captions, and grouped text blocks.\n\nThey are widgets, not baked SVG text.",
+          "text.visible": true,
+          "text.multiline": true,
+          "text.wrap_enabled": true,
+          "text.horizontal_alignment": "left",
+          "text.vertical_alignment": "top",
+          "text.padding": "14px",
+          "text.clip_overflow": true,
+          "style.text.color": "#7c2d12",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "14px",
+          "style.text.font_weight": "400",
+          "style.text.font_style": "normal",
+          "style.text.text_decoration": "none",
+          "style.background.visible": true,
+          "style.background.fill_color": "#fff7ed",
+          "style.frame.visible": true,
+          "style.frame.border_color": "#fdba74",
+          "style.frame.border_width": "1px",
+          "style.frame.corner_radius": "0px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:label_rectangular_svg"
+        },
+        "binding": {
+          "mode": "support_text"
+        }
+      },
+      {
+        "id": "small_caption",
+        "role": "support",
+        "class_ref": "frog.widgets.label",
+        "instance_ref": "small_caption",
+        "layout": {
+          "x": 38,
+          "y": 330,
+          "width": 190,
+          "height": 34
+        },
+        "props": {
+          "label.text": "Small caption",
+          "text.value": "Small caption, 12 px",
+          "text.visible": true,
+          "text.multiline": false,
+          "text.wrap_enabled": false,
+          "text.horizontal_alignment": "left",
+          "text.vertical_alignment": "middle",
+          "text.padding": "0px",
+          "text.clip_overflow": true,
+          "style.text.color": "#334155",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "12px",
+          "style.text.font_weight": "400",
+          "style.text.font_style": "normal",
+          "style.text.text_decoration": "none",
+          "style.background.visible": false,
+          "style.background.fill_color": "transparent",
+          "style.frame.visible": false,
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.frame.corner_radius": "0px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:label_rectangular_svg"
+        },
+        "binding": {
+          "mode": "support_text"
+        }
+      },
+      {
+        "id": "monospace_annotation",
+        "role": "support",
+        "class_ref": "frog.widgets.label",
+        "instance_ref": "monospace_annotation",
+        "layout": {
+          "x": 250,
+          "y": 322,
+          "width": 230,
+          "height": 48
+        },
+        "props": {
+          "label.text": "Monospace annotation",
+          "text.value": "data-frog-part=\"text_surface\"",
+          "text.visible": true,
+          "text.multiline": false,
+          "text.wrap_enabled": false,
+          "text.horizontal_alignment": "center",
+          "text.vertical_alignment": "middle",
+          "text.padding": "8px",
+          "text.clip_overflow": true,
+          "style.text.color": "#0f172a",
+          "style.text.font_family": "Consolas, 'Courier New', monospace",
+          "style.text.font_size": "13px",
+          "style.text.font_weight": "400",
+          "style.text.font_style": "normal",
+          "style.text.text_decoration": "none",
+          "style.background.visible": true,
+          "style.background.fill_color": "#f1f5f9",
+          "style.frame.visible": true,
+          "style.frame.border_color": "#94a3b8",
+          "style.frame.border_width": "1px",
+          "style.frame.corner_radius": "0px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:label_rectangular_svg"
+        },
+        "binding": {
+          "mode": "support_text"
+        }
+      },
+      {
+        "id": "accent_annotation",
+        "role": "support",
+        "class_ref": "frog.widgets.label",
+        "instance_ref": "accent_annotation",
+        "layout": {
+          "x": 510,
+          "y": 320,
+          "width": 190,
+          "height": 52
+        },
+        "props": {
+          "label.text": "Accent annotation",
+          "text.value": "Italic accent label",
+          "text.visible": true,
+          "text.multiline": false,
+          "text.wrap_enabled": false,
+          "text.horizontal_alignment": "center",
+          "text.vertical_alignment": "middle",
+          "text.padding": "8px",
+          "text.clip_overflow": true,
+          "style.text.color": "#065f46",
+          "style.text.font_family": "Georgia, 'Times New Roman', serif",
+          "style.text.font_size": "18px",
+          "style.text.font_weight": "400",
+          "style.text.font_style": "italic",
+          "style.text.text_decoration": "none",
+          "style.background.visible": true,
+          "style.background.fill_color": "#ecfdf5",
+          "style.frame.visible": true,
+          "style.frame.border_color": "#a7f3d0",
+          "style.frame.border_width": "1px",
+          "style.frame.corner_radius": "0px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:label_rectangular_svg"
+        },
+        "binding": {
+          "mode": "support_text"
+        }
+      },
+      {
+        "id": "footer_hint",
+        "role": "support",
+        "class_ref": "frog.widgets.label",
+        "instance_ref": "footer_hint",
+        "layout": {
+          "x": 24,
+          "y": 400,
+          "width": 700,
+          "height": 50
+        },
+        "props": {
+          "label.text": "Footer hint",
+          "text.value": "All visible text and visual overrides above are source-owned instance properties. The runtime consumes the published Default Label SVG parts.",
+          "text.visible": true,
+          "text.multiline": true,
+          "text.wrap_enabled": true,
+          "text.horizontal_alignment": "left",
+          "text.vertical_alignment": "middle",
+          "text.padding": "0px",
+          "text.clip_overflow": true,
+          "style.text.color": "#64748b",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "12px",
+          "style.text.font_weight": "400",
+          "style.text.font_style": "normal",
+          "style.text.text_decoration": "none",
+          "style.background.visible": false,
+          "style.background.fill_color": "transparent",
+          "style.frame.visible": false,
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.frame.corner_radius": "0px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:label_rectangular_svg"
+        },
+        "binding": {
+          "mode": "support_text"
+        }
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Label Typography Board",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "label_runtime_host_default"
+  }
+}
