@@ -5,7 +5,7 @@
 <h1 align="center">Example 17 - Label Typography Board</h1>
 
 <p align="center">
-  <strong>.frog standalone Label support text + Default Label .wfrog realization asset + C++ private runtime</strong><br/>
+  <strong>.frog standalone Label support text + Default Label .wfrog realization asset + Graiphic private runtime</strong><br/>
   <em>FROG - Free Open Graphical Language</em>
 </p>
 

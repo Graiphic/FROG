@@ -131,7 +131,7 @@
         },
         "props": {
           "label.text": "Board subtitle",
-          "text.value": "Example 17 - .frog-owned Label text + Default Label .wfrog realization asset + C++ private runtime",
+          "text.value": "Example 17 - .frog-owned Label text + Default Label .wfrog realization asset + private runtime",
           "text.visible": true,
           "text.multiline": false,
           "text.wrap_enabled": false,
