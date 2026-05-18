@@ -242,9 +242,9 @@ def test_python_dynamic_native_kernel_bridge_executes_example11(tmp_path: Path) 
     )
     artifact = core.execute_with_native_kernel_bridge(bridge, True)
 
-    assert artifact["outputs"]["public"]["switched"] is False
-    assert artifact["outputs"]["ui"]["trigger_button"] is False
-    assert artifact["outputs"]["ui"]["switched_indicator"] is False
+    assert artifact["outputs"]["public"]["switched"] is True
+    assert artifact["outputs"]["ui"]["trigger_button"] is True
+    assert artifact["outputs"]["ui"]["switched_indicator"] is True
 
     release_core = ButtonRuntimeCore(
         contract_path=default_example12_contract_path(),
@@ -285,9 +285,9 @@ def test_python_dynamic_native_kernel_bridge_executes_example12(tmp_path: Path) 
     )
     artifact = core.execute_with_native_kernel_bridge(bridge, True)
 
-    assert artifact["outputs"]["public"]["switched"] is True
-    assert artifact["outputs"]["ui"]["trigger_button"] is True
-    assert artifact["outputs"]["ui"]["switched_indicator"] is True
+    assert artifact["outputs"]["public"]["switched"] is False
+    assert artifact["outputs"]["ui"]["trigger_button"] is False
+    assert artifact["outputs"]["ui"]["switched_indicator"] is False
 
     ui = ButtonBrowserUiRuntime(
         contract_path=default_example12_contract_path(),
