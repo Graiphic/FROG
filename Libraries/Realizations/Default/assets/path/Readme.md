@@ -36,12 +36,18 @@
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>path_face</code></li>
   <li><code>path_display</code></li>
   <li><code>browse_button</code></li>
+  <li><code>browse_button_text</code></li>
   <li><code>path_icon</code></li>
   <li><code>validation_marker</code></li>
   <li><code>text_overflow_marker</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
+
+<p>
+The template intentionally publishes the rectangular field parts used by the
+Default Path realization. Hosts may provide focus handling through overlays or
+platform behavior, but this asset does not publish a separate
+<code>focus_ring</code> part.
+</p>

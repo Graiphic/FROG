@@ -30,7 +30,7 @@ This document describes the default realization posture for <code>frog.widgets.p
 </p>
 
 <p>
-The default path realization provides one rectangular path-field embodiment with path display, optional browse button, optional path icon, optional validation marker, optional text-overflow marker, caption and label surfaces, and focus ring.
+The default path realization provides one rectangular path-field embodiment with path display, optional browse button, optional browse text, optional path icon, optional validation marker, optional text-overflow marker, caption and label surfaces.
 </p>
 
 <hr/>
@@ -55,14 +55,13 @@ The default path realization provides one rectangular path-field embodiment with
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>path_face</code></li>
   <li><code>path_display</code></li>
   <li><code>browse_button</code></li>
+  <li><code>browse_button_text</code></li>
   <li><code>path_icon</code></li>
   <li><code>validation_marker</code></li>
   <li><code>text_overflow_marker</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
 
 <hr/>
@@ -76,4 +75,14 @@ The default path realization provides one rectangular path-field embodiment with
 <p>
 The SVG template provides visual structure and part markers.
 It does not own path value semantics or host browse behavior.
+</p>
+
+<h2>6. Reuse Posture</h2>
+
+<p>
+The Default Path realization is the reusable public baseline for path controls
+and indicators. Public examples that need a path value should reference this
+realization and its published SVG asset instead of duplicating local path SVGs.
+Example-specific placement, labels, initial values, binding ids, browse
+filters, and visual overrides remain source-owned instance data.
 </p>
