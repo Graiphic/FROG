@@ -57,7 +57,7 @@ A realization may provide templates, subobjects, slots, bindings, and host hints
     <tr><td><a href="./Frame.md"><code>Frame.md</code></a></td><td>Frame</td><td><code>frog.widgets.frame</code></td><td>support</td><td>support</td><td>published support baseline</td></tr>
     <tr><td><a href="./Decorations.md"><code>Decorations.md</code></a></td><td>Decorations</td><td><code>frog.widgets.flat_box</code>, <code>frog.widgets.horizontal_line</code>, <code>frog.widgets.vertical_line</code></td><td>support</td><td>decorative support</td><td>published intentionally non-value baseline</td></tr>
     <tr><td><a href="./Splitter.md"><code>Splitter.md</code></a></td><td>Splitter</td><td><code>frog.widgets.horizontal_splitter</code>, <code>frog.widgets.vertical_splitter</code></td><td>layout</td><td>layout</td><td>published layout baseline</td></tr>
-    <tr><td><a href="./Panel.md"><code>Panel.md</code></a></td><td>Panel/SubPanel</td><td><code>frog.widgets.panel</code>, <code>frog.widgets.subpanel</code></td><td>layout / container</td><td>container</td><td>published container baseline</td></tr>
+    <tr><td><a href="./Subpanel.md"><code>Subpanel.md</code></a></td><td>Subpanel</td><td><code>frog.widgets.subpanel</code></td><td>layout / embedded front panel</td><td>subpanel host</td><td>published embedded-front-panel baseline</td></tr>
   </tbody>
 </table>
 
@@ -108,7 +108,7 @@ Object-style access through <code>frog.ui.property_read</code>, <code>frog.ui.pr
   <li><code>frog.widgets.array</code> is the homogeneous collection widget.</li>
   <li><code>frog.widgets.cluster</code> is the heterogeneous named aggregate widget.</li>
   <li><code>frog.widgets.table_control</code> and <code>frog.widgets.table_indicator</code> are visible flat tabular widgets.</li>
-  <li>Tree, Tab, Listbox, Table, Picture, and Chart are not generic host containers for arbitrary private state; their public surfaces are bounded by their class-law documents.</li>
+  <li>Tree, Tab, Listbox, Table, Picture, Chart, and Subpanel are not generic host containers for arbitrary private state; their public surfaces are bounded by their class-law documents.</li>
 </ul>
 
 <hr/>

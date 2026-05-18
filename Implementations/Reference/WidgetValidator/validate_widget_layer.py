@@ -36,7 +36,7 @@ FAMILIES: dict[str, dict[str, Any]] = {
     "frame": {"widget_doc": "Frame.md", "default_doc": "Frame.md", "manifest": "frame.default.wfrog", "classes": ["frog.widgets.frame"]},
     "decorations": {"widget_doc": "Decorations.md", "default_doc": "Decorations.md", "manifest": "decorations.default.wfrog", "classes": ["frog.widgets.flat_box", "frog.widgets.horizontal_line", "frog.widgets.vertical_line"]},
     "splitter": {"widget_doc": "Splitter.md", "default_doc": "Splitter.md", "manifest": "splitter.default.wfrog", "classes": ["frog.widgets.horizontal_splitter", "frog.widgets.vertical_splitter"]},
-    "panel": {"widget_doc": "Panel.md", "default_doc": "Panel.md", "manifest": "panel.default.wfrog", "classes": ["frog.widgets.panel", "frog.widgets.subpanel"]},
+    "subpanel": {"widget_doc": "Subpanel.md", "default_doc": "Subpanel.md", "manifest": "subpanel.default.wfrog", "classes": ["frog.widgets.subpanel"]},
 }
 
 REQUIRED_MANIFEST_KEYS = [

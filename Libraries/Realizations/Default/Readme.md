@@ -69,7 +69,7 @@ They provide a repository-visible default embodiment surface that runtimes and h
     <tr><td><a href="./Frame.md">Frame</a></td><td><code>frame.default.wfrog</code></td><td><code>frog.widgets.frame</code></td><td>support</td><td>support</td><td>support SVG-backed baseline</td></tr>
     <tr><td><a href="./Decorations.md">Decorations</a></td><td><code>decorations.default.wfrog</code></td><td><code>frog.widgets.flat_box</code>, <code>frog.widgets.horizontal_line</code>, <code>frog.widgets.vertical_line</code></td><td>support</td><td>decorative support</td><td>decorative non-value baseline</td></tr>
     <tr><td><a href="./Splitter.md">Splitter</a></td><td><code>splitter.default.wfrog</code></td><td><code>frog.widgets.horizontal_splitter</code>, <code>frog.widgets.vertical_splitter</code></td><td>layout</td><td>layout</td><td>layout realization baseline</td></tr>
-    <tr><td><a href="./Panel.md">Panel/SubPanel</a></td><td><code>panel.default.wfrog</code></td><td><code>frog.widgets.panel</code>, <code>frog.widgets.subpanel</code></td><td>layout / container</td><td>container</td><td>container realization baseline</td></tr>
+    <tr><td><a href="./Subpanel.md">Subpanel</a></td><td><code>subpanel.default.wfrog</code></td><td><code>frog.widgets.subpanel</code></td><td>layout / embedded front panel</td><td>subpanel host</td><td>embedded-front-panel realization baseline</td></tr>
   </tbody>
 </table>
 

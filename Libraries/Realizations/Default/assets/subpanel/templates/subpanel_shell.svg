@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 300" preserveAspectRatio="none">
+  <g data-frog-part="root">
+    <text data-frog-part="label" data-frog-anchor="label.anchor" x="12" y="12" display="none">subpanel_1</text>
+    <text data-frog-part="caption" data-frog-anchor="caption.anchor" x="18" y="26">Subpanel</text>
+    <rect data-frog-part="focus_ring" x="4" y="34" width="552" height="262" fill="none" stroke="#2563eb" stroke-width="2" vector-effect="non-scaling-stroke" opacity="0"/>
+    <rect data-frog-part="frame" x="8" y="38" width="544" height="254" fill="#f8fafc" stroke="#94a3b8" stroke-width="1" vector-effect="non-scaling-stroke"/>
+    <rect data-frog-part="subpanel_region" data-frog-slot="subpanel_region" x="22" y="58" width="516" height="220" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" vector-effect="non-scaling-stroke"/>
+  </g>
+</svg>

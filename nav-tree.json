@@ -900,9 +900,9 @@
                       "children": []
                     },
                     {
-                      "key": "libraries/realizations/default/panel.md",
-                      "title": "Panel",
-                      "path": "/Libraries/Realizations/Default/Panel.md",
+                      "key": "libraries/realizations/default/subpanel.md",
+                      "title": "Subpanel",
+                      "path": "/Libraries/Realizations/Default/Subpanel.md",
                       "kind": "page",
                       "children": []
                     },
@@ -1060,9 +1060,9 @@
                           "children": []
                         },
                         {
-                          "key": "libraries/realizations/default/assets/panel/",
-                          "title": "panel",
-                          "path": "/Libraries/Realizations/Default/assets/panel/Readme.md",
+                          "key": "libraries/realizations/default/assets/subpanel/",
+                          "title": "subpanel",
+                          "path": "/Libraries/Realizations/Default/assets/subpanel/Readme.md",
                           "kind": "category",
                           "children": []
                         },
@@ -1249,9 +1249,9 @@
                   "children": []
                 },
                 {
-                  "key": "libraries/widgets/panel.md",
-                  "title": "Panel",
-                  "path": "/Libraries/Widgets/Panel.md",
+                  "key": "libraries/widgets/subpanel.md",
+                  "title": "Subpanel",
+                  "path": "/Libraries/Widgets/Subpanel.md",
                   "kind": "page",
                   "children": []
                 },
@@ -4283,7 +4283,7 @@
     "/Libraries/Realizations/Default/Listbox.md",
     "/Libraries/Realizations/Default/Numeric.md",
     "/Libraries/Realizations/Default/Package.md",
-    "/Libraries/Realizations/Default/Panel.md",
+    "/Libraries/Realizations/Default/Subpanel.md",
     "/Libraries/Realizations/Default/Path.md",
     "/Libraries/Realizations/Default/Picture.md",
     "/Libraries/Realizations/Default/Resource%20model.md",
@@ -4305,7 +4305,7 @@
     "/Libraries/Realizations/Default/assets/label/Readme.md",
     "/Libraries/Realizations/Default/assets/listbox/Readme.md",
     "/Libraries/Realizations/Default/assets/numeric/Readme.md",
-    "/Libraries/Realizations/Default/assets/panel/Readme.md",
+    "/Libraries/Realizations/Default/assets/subpanel/Readme.md",
     "/Libraries/Realizations/Default/assets/path/Readme.md",
     "/Libraries/Realizations/Default/assets/picture/Readme.md",
     "/Libraries/Realizations/Default/assets/splitter/Readme.md",
@@ -4332,7 +4332,7 @@
     "/Libraries/Widgets/Label.md",
     "/Libraries/Widgets/Listbox.md",
     "/Libraries/Widgets/Numeric.md",
-    "/Libraries/Widgets/Panel.md",
+    "/Libraries/Widgets/Subpanel.md",
     "/Libraries/Widgets/Path.md",
     "/Libraries/Widgets/Picture.md",
     "/Libraries/Widgets/Splitter.md",

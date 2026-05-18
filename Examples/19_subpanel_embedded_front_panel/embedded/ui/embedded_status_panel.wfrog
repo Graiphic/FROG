@@ -1,0 +1,86 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_package",
+  "package_id": "example19.embedded_status_panel",
+  "title": "Example 19 embedded child Default Label/Boolean realization package",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "19_subpanel_embedded_status",
+    "source_path": "Examples/19_subpanel_embedded_front_panel/embedded/embedded_status.frog"
+  },
+  "ownership_boundary": {
+    "owns": [
+      "Default Label realization references",
+      "Default Boolean realization references",
+      "Default Label and Boolean SVG asset references"
+    ],
+    "does_not_own": [
+      "canonical source semantics",
+      "front-panel widget instance layout",
+      "front-panel widget instance values",
+      "front-panel widget instance visual customization",
+      "runtime-private execution behavior",
+      "widget class law"
+    ]
+  },
+  "widget_classes": [
+    {
+      "class_id": "frog.widgets.label",
+      "role": "support",
+      "value_type": null
+    },
+    {
+      "class_id": "frog.widgets.boolean_indicator",
+      "role": "indicator",
+      "value_type": "bool"
+    }
+  ],
+  "host_bindings": [
+    {
+      "binding_id": "embedded_status_host_default",
+      "host_family": "frog_conforming_embedded_front_panel_host",
+      "target": "frog_conforming_embedded_front_panel_host",
+      "required_capabilities": [
+        "basic_widget_rendering",
+        "support_text_rendering",
+        "boolean_indicator_rendering",
+        "svg_part_overlay_alignment",
+        "svg_style_property_binding"
+      ]
+    }
+  ],
+  "realization_refs": [
+    {
+      "package_ref": "Libraries/Realizations/Default/label.default.wfrog",
+      "target_classes": [
+        "frog.widgets.label"
+      ]
+    },
+    {
+      "package_ref": "Libraries/Realizations/Default/boolean.default.wfrog",
+      "target_classes": [
+        "frog.widgets.boolean_indicator"
+      ]
+    }
+  ],
+  "svg_assets": [
+    {
+      "asset_id": "label_rectangular_svg",
+      "kind": "svg",
+      "path": "../../../../Libraries/Realizations/Default/assets/label/templates/label_rectangular.svg",
+      "target_classes": [
+        "frog.widgets.label"
+      ]
+    },
+    {
+      "asset_id": "boolean_circular_svg",
+      "kind": "svg",
+      "path": "../../../../Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg",
+      "target_classes": [
+        "frog.widgets.boolean_indicator"
+      ]
+    }
+  ]
+}

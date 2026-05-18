@@ -196,7 +196,7 @@ publications
     <tr><td>Frame</td><td><code>Libraries/Widgets/Frame.md</code></td><td><code>frog.widgets.frame</code></td><td>Published</td><td>Support widget baseline.</td></tr>
     <tr><td>Decorations</td><td><code>Libraries/Widgets/Decorations.md</code></td><td><code>frog.widgets.flat_box</code>, <code>frog.widgets.horizontal_line</code>, <code>frog.widgets.vertical_line</code></td><td>Published</td><td>Decorative non-value baseline.</td></tr>
     <tr><td>Splitter</td><td><code>Libraries/Widgets/Splitter.md</code></td><td><code>frog.widgets.horizontal_splitter</code>, <code>frog.widgets.vertical_splitter</code></td><td>Published</td><td>Layout baseline.</td></tr>
-    <tr><td>Panel/SubPanel</td><td><code>Libraries/Widgets/Panel.md</code></td><td><code>frog.widgets.panel</code>, <code>frog.widgets.subpanel</code></td><td>Published</td><td>Container baseline.</td></tr>
+    <tr><td>Subpanel</td><td><code>Libraries/Widgets/Subpanel.md</code></td><td><code>frog.widgets.subpanel</code></td><td>Published</td><td>Embedded-front-panel host baseline.</td></tr>
   </tbody>
 </table>
 
@@ -233,7 +233,7 @@ publications
     <tr><td>Frame</td><td><code>Libraries/Realizations/Default/Frame.md</code></td><td><code>frame.default.wfrog</code></td><td>SVG-backed support resources</td><td>Published</td></tr>
     <tr><td>Decorations</td><td><code>Libraries/Realizations/Default/Decorations.md</code></td><td><code>decorations.default.wfrog</code></td><td>SVG-backed decorative resources</td><td>Published</td></tr>
     <tr><td>Splitter</td><td><code>Libraries/Realizations/Default/Splitter.md</code></td><td><code>splitter.default.wfrog</code></td><td>SVG-backed layout resources</td><td>Published</td></tr>
-    <tr><td>Panel/SubPanel</td><td><code>Libraries/Realizations/Default/Panel.md</code></td><td><code>panel.default.wfrog</code></td><td>SVG-backed container resources</td><td>Published</td></tr>
+    <tr><td>Subpanel</td><td><code>Libraries/Realizations/Default/Subpanel.md</code></td><td><code>subpanel.default.wfrog</code></td><td>SVG-backed embedded-front-panel host resources</td><td>Published</td></tr>
   </tbody>
 </table>
 

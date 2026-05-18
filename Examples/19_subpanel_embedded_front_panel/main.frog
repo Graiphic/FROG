@@ -1,0 +1,143 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "19_subpanel_embedded_front_panel",
+    "summary": "Subpanel widget hosting a referenced child .frog front panel through Default Subpanel realization assets.",
+    "description": "Places one Subpanel host region on the parent front panel. The parent .frog owns the Subpanel instance, layout, caption, style, and hosted .frog reference. The child .frog owns its own visible widgets. The .wfrog package references the Default Subpanel realization and SVG asset. Runtime implementation for this post-boundary example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "subpanel",
+      "embedded_front_panel",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "scene_ready_request",
+        "type": "bool",
+        "default": true,
+        "binding_origin": "runtime.host_scene_request"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "scene_ready",
+        "type": "bool"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "scene_ready_request",
+        "kind": "interface_input",
+        "interface_port": "scene_ready_request"
+      },
+      {
+        "id": "output_scene_ready",
+        "kind": "interface_output",
+        "interface_port": "scene_ready"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "scene_ready_request",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_scene_ready",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 620,
+      "height": 390,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/subpanel_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "embedded_status_subpanel",
+        "role": "support",
+        "class_ref": "frog.widgets.subpanel",
+        "instance_ref": "embedded_status_subpanel",
+        "layout": {
+          "x": 30,
+          "y": 46,
+          "width": 560,
+          "height": 300
+        },
+        "props": {
+          "caption.text": "Embedded status .frog",
+          "caption.visible": true,
+          "caption.anchor.x": 18,
+          "caption.anchor.y": 26,
+          "caption.align.horizontal": "start",
+          "caption.style.text_color": "#0f172a",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
+          "hosted_front_panel_ref": "./embedded/embedded_status.frog",
+          "hosted_front_panel_package_ref": "./embedded/ui/embedded_status_panel.wfrog",
+          "hosted_front_panel.instance_id": "embedded_status_instance",
+          "style.frame.fill_color": "#f8fafc",
+          "style.frame.border_color": "#94a3b8",
+          "style.frame.border_width": "1px",
+          "style.host_region.fill_color": "#ffffff",
+          "style.host_region.border_color": "#cbd5e1",
+          "style.host_region.border_width": "1px",
+          "layout.clip_overflow": true,
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "embedded_front_panel"
+        },
+        "visual": {
+          "asset_ref": "asset:subpanel_shell_svg"
+        },
+        "binding": {
+          "mode": "front_panel_host",
+          "hosted_front_panel_ref": "./embedded/embedded_status.frog"
+        }
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Subpanel Embedded Front Panel",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "subpanel_runtime_host_default",
+    "documentation": {
+      "title": "Subpanel legend",
+      "summary": "A Subpanel is a host region for another .frog front panel, not a decorative frame and not a tab control.",
+      "legend": [
+        {
+          "label": "Parent .frog",
+          "description": "Owns the Subpanel instance, its position, caption, style, and child .frog reference."
+        },
+        {
+          "label": "Child .frog",
+          "description": "Owns the embedded front-panel widgets, layout, values, and styling."
+        },
+        {
+          "label": "Runtime host",
+          "description": "Aligns the child front-panel surface to the published Default Subpanel subpanel_region part."
+        }
+      ],
+      "note": "Simple visual grouping remains Decoration. Page selection remains Tab. Embedding another front panel is Subpanel."
+    }
+  }
+}

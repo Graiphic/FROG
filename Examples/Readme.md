@@ -158,6 +158,12 @@ Production-grade runtime development for future FROG execution surfaces continue
       <td><code>main.frog</code> + <code>ui/decoration_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
+    <tr>
+      <td><code>19_subpanel_embedded_front_panel</code></td>
+      <td>Subpanel host region displaying a referenced child <code>.frog</code> front panel</td>
+      <td><code>main.frog</code> + <code>embedded/embedded_status.frog</code> + <code>ui/subpanel_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
   </tbody>
 </table>
 
@@ -204,7 +210,10 @@ Production-grade runtime development for future FROG execution surfaces continue
 18   standalone Decorations as a post-boundary widget progression example
     |
     v
-19+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
+19   Subpanel embedding another .frog front panel as a post-boundary widget progression example
+    |
+    v
+20+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
 </code></pre>
 
 <hr/>
@@ -301,13 +310,24 @@ Production-grade runtime development for future FROG execution surfaces continue
     ├── main.lowering.json
     └── ui/
         └── label_panel.wfrog
-└── 18_decoration_board/
+├── 18_decoration_board/
     ├── Readme.md
     ├── main.frog
     ├── main.fir.json
     ├── main.lowering.json
     └── ui/
         └── decoration_panel.wfrog
+└── 19_subpanel_embedded_front_panel/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    ├── embedded/
+    │   ├── embedded_status.frog
+    │   └── ui/
+    │       └── embedded_status_panel.wfrog
+    └── ui/
+        └── subpanel_panel.wfrog
 </code></pre>
 
 <p>
@@ -341,6 +361,17 @@ progression with standalone Decoration support widgets. It contains public
 source, FIR/lowering shape, a <code>.wfrog</code> package referencing the Default
 Decorations realization, and a small native manifest proof output.
 It does not add public runtime source beyond the Example 15 closure.
+</p>
+
+<p>
+Example <code>19</code> continues the repository-visible post-boundary widget
+progression with a Subpanel host region. It contains a parent public source,
+a referenced child <code>.frog</code> front panel, FIR/lowering shape, a
+<code>.wfrog</code> package referencing the Default Subpanel realization, and a
+small native manifest proof output. The parent <code>.frog</code> owns the
+Subpanel instance and child reference; the child <code>.frog</code> owns the
+widgets displayed inside the Subpanel. It does not add public runtime source
+beyond the Example 15 closure.
 </p>
 
 <hr/>

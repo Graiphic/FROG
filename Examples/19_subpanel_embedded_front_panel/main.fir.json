@@ -1,0 +1,66 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "19_subpanel_embedded_front_panel",
+    "path": "Examples/19_subpanel_embedded_front_panel/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/19_subpanel_embedded_front_panel/ui/subpanel_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "subpanel_embedded_front_panel_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "scene_ready_request",
+            "type": "bool"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "scene_ready",
+            "type": "bool"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "support_bindings": [
+          {
+            "widget_class": "frog.widgets.subpanel",
+            "mode": "front_panel_host",
+            "hosted_front_panel_ref": "Examples/19_subpanel_embedded_front_panel/embedded/embedded_status.frog",
+            "hosted_front_panel_package_ref": "Examples/19_subpanel_embedded_front_panel/embedded/ui/embedded_status_panel.wfrog",
+            "realization_asset_ref": "asset:subpanel_shell_svg"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "identity_scene_ready_publication",
+        "body_rule": {
+          "kind": "identity_bool",
+          "expression": "scene_ready = scene_ready_request"
+        }
+      },
+      "publications": [
+        {
+          "target": "public_output.scene_ready",
+          "source": "input.scene_ready_request"
+        }
+      ],
+      "notes": [
+        "This FIR is a repository-visible Subpanel widget progression slice beyond the current public reference runtime closure.",
+        "The parent .frog owns the Subpanel host widget and the hosted front-panel reference.",
+        "The hosted child .frog owns its own Label and Boolean front-panel widgets.",
+        "The Default Subpanel SVG realization publishes root, label, caption, frame, subpanel_region, and focus_ring parts.",
+        "Runtime implementation for this example continues in Graiphic/FROG-Runtime unless explicitly promoted later."
+      ]
+    }
+  ]
+}

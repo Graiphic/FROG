@@ -1,0 +1,74 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_package",
+  "package_id": "example19.subpanel_panel",
+  "title": "Example 19 Default Subpanel realization package",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "19_subpanel_embedded_front_panel",
+    "source_path": "Examples/19_subpanel_embedded_front_panel/main.frog",
+    "fir_path": "Examples/19_subpanel_embedded_front_panel/main.fir.json",
+    "lowering_path": "Examples/19_subpanel_embedded_front_panel/main.lowering.json"
+  },
+  "ownership_boundary": {
+    "owns": [
+      "Default Subpanel realization references",
+      "Default Subpanel SVG asset references",
+      "host binding requirements for Subpanel embedding"
+    ],
+    "does_not_own": [
+      "canonical source semantics",
+      "front-panel widget instance layout",
+      "hosted .frog source semantics",
+      "hosted front-panel widget layout",
+      "FIR semantics",
+      "lowering semantics",
+      "runtime-private execution behavior",
+      "widget class law",
+      "Default Subpanel SVG geometry"
+    ]
+  },
+  "widget_classes": [
+    {
+      "class_id": "frog.widgets.subpanel",
+      "role": "support",
+      "value_type": null
+    }
+  ],
+  "host_bindings": [
+    {
+      "binding_id": "subpanel_runtime_host_default",
+      "host_family": "frog_conforming_subpanel_runtime_host",
+      "target": "frog_conforming_subpanel_runtime_host",
+      "required_capabilities": [
+        "window",
+        "basic_widget_rendering",
+        "subpanel_embedding",
+        "front_panel_reference_hosting",
+        "svg_part_overlay_alignment",
+        "svg_style_property_binding",
+        "native_kernel_manifest"
+      ]
+    }
+  ],
+  "realization_refs": [
+    {
+      "package_ref": "Libraries/Realizations/Default/subpanel.default.wfrog",
+      "target_classes": [
+        "frog.widgets.subpanel"
+      ]
+    }
+  ],
+  "svg_assets": [
+    {
+      "asset_id": "subpanel_shell_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/subpanel/templates/subpanel_shell.svg",
+      "target_classes": [
+        "frog.widgets.subpanel"
+      ]
+    }
+  ]
+}

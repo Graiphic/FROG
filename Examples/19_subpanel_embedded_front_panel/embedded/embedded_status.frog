@@ -1,0 +1,218 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "19_subpanel_embedded_status",
+    "summary": "Child .frog front panel hosted by Example 19 Subpanel.",
+    "description": "Small child front panel used by the parent Subpanel example. The child owns its own Label and Boolean widgets, layout, values, and style overrides.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "subpanel_child",
+      "label",
+      "boolean"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "ready_input",
+        "type": "bool",
+        "default": true
+      }
+    ],
+    "outputs": [
+      {
+        "id": "ready",
+        "type": "bool"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "ready_input",
+        "kind": "interface_input",
+        "interface_port": "ready_input"
+      },
+      {
+        "id": "ready_indicator_value",
+        "kind": "widget_value",
+        "widget": "ready_indicator"
+      },
+      {
+        "id": "ready_output",
+        "kind": "interface_output",
+        "interface_port": "ready"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "ready_input",
+          "port": "value"
+        },
+        "to": {
+          "node": "ready_indicator_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "ready_input",
+          "port": "value"
+        },
+        "to": {
+          "node": "ready_output",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 500,
+      "height": 190,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/embedded_status_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "child_title",
+        "role": "support",
+        "class_ref": "frog.widgets.label",
+        "instance_ref": "child_title",
+        "layout": {
+          "x": 22,
+          "y": 18,
+          "width": 330,
+          "height": 34
+        },
+        "props": {
+          "label.text": "Embedded title",
+          "text.value": "Hosted child .frog front panel",
+          "text.visible": true,
+          "text.multiline": false,
+          "text.wrap_enabled": false,
+          "text.horizontal_alignment": "left",
+          "text.vertical_alignment": "middle",
+          "text.padding": "0px",
+          "style.text.color": "#0f172a",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "21px",
+          "style.text.font_weight": "700",
+          "style.background.visible": false,
+          "style.frame.visible": false,
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:label_rectangular_svg"
+        },
+        "binding": {
+          "mode": "support_text"
+        }
+      },
+      {
+        "id": "child_note",
+        "role": "support",
+        "class_ref": "frog.widgets.label",
+        "instance_ref": "child_note",
+        "layout": {
+          "x": 24,
+          "y": 66,
+          "width": 310,
+          "height": 88
+        },
+        "props": {
+          "label.text": "Embedded note",
+          "text.value": "This content comes from the referenced child .frog. The parent Subpanel only hosts it.",
+          "text.visible": true,
+          "text.multiline": true,
+          "text.wrap_enabled": true,
+          "text.horizontal_alignment": "left",
+          "text.vertical_alignment": "top",
+          "text.padding": "12px",
+          "style.text.color": "#334155",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "15px",
+          "style.text.font_weight": "400",
+          "style.background.visible": true,
+          "style.background.fill_color": "#f8fafc",
+          "style.frame.visible": true,
+          "style.frame.border_color": "#cbd5e1",
+          "style.frame.border_width": "1px",
+          "style.frame.corner_radius": "0px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:label_rectangular_svg"
+        },
+        "binding": {
+          "mode": "support_text"
+        }
+      },
+      {
+        "id": "ready_indicator",
+        "role": "indicator",
+        "class_ref": "frog.widgets.boolean_indicator",
+        "instance_ref": "ready_indicator",
+        "value_type": "bool",
+        "layout": {
+          "x": 370,
+          "y": 68,
+          "width": 92,
+          "height": 92
+        },
+        "props": {
+          "value": true,
+          "label.text": "Ready indicator",
+          "caption.text": "Ready",
+          "caption.align.horizontal": "center",
+          "caption.anchor.x": 46,
+          "caption.anchor.y": 14,
+          "caption.visible": true,
+          "caption.style.text_color": "#0f172a",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
+          "state_text.visible": false,
+          "style.outer.border_color.false": "transparent",
+          "style.outer.border_color.true": "transparent",
+          "style.frame.visible": false,
+          "style.inner.left": "26px",
+          "style.inner.top": "34px",
+          "style.inner.width": "38px",
+          "style.inner.height": "38px",
+          "style.inner.fill_color.false": "#ef4444",
+          "style.inner.fill_color.true": "#22c55e",
+          "interaction.enabled": false,
+          "realization.variant": "circular"
+        },
+        "visual": {
+          "asset_ref": "asset:boolean_circular_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "ready"
+        }
+      }
+    ],
+    "panel_id": "embedded_panel",
+    "title": "Embedded Status",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "embedded_status_host_default"
+  }
+}
