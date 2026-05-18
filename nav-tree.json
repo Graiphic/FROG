@@ -532,6 +532,21 @@
               ]
             },
             {
+              "key": "examples/18_decoration_board/",
+              "title": "18 decoration board",
+              "path": "/Examples/18_decoration_board/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/18_decoration_board/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/18_decoration_board/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -4218,6 +4233,8 @@
     "/Examples/16_picture_logo_jpeg/Readme.md",
     "/Examples/17_label_typography_board/main.frog",
     "/Examples/17_label_typography_board/Readme.md",
+    "/Examples/18_decoration_board/main.frog",
+    "/Examples/18_decoration_board/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",

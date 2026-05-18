@@ -73,6 +73,8 @@
     - [ui](/Examples/16_picture_logo_jpeg/ui/Readme.md)
   - [17 label typography board](/Examples/17_label_typography_board/Readme.md)
     - [main.frog](/Examples/17_label_typography_board/main.frog)
+  - [18 decoration board](/Examples/18_decoration_board/Readme.md)
+    - [main.frog](/Examples/18_decoration_board/main.frog)
   - [compiler](/Examples/compiler/Readme.md)
     - [01 pure arithmetic](/Examples/compiler/01_pure_arithmetic.md)
     - [02 structured control](/Examples/compiler/02_structured_control.md)
