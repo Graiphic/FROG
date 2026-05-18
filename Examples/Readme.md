@@ -152,6 +152,12 @@ Production-grade runtime development for future FROG execution surfaces continue
       <td><code>main.frog</code> + <code>ui/label_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
+    <tr>
+      <td><code>18_decoration_board</code></td>
+      <td>Standalone Decoration support widgets with one source-owned flat box, one horizontal line, and one vertical line</td>
+      <td><code>main.frog</code> + <code>ui/decoration_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
   </tbody>
 </table>
 
@@ -195,7 +201,10 @@ Production-grade runtime development for future FROG execution surfaces continue
 17   standalone Label support text as a post-boundary widget progression example
     |
     v
-18+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
+18   standalone Decorations as a post-boundary widget progression example
+    |
+    v
+19+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
 </code></pre>
 
 <hr/>
@@ -285,13 +294,20 @@ Production-grade runtime development for future FROG execution surfaces continue
     │   └── frog_logo.jpg
     └── ui/
         └── picture_panel.wfrog
-└── 17_label_typography_board/
+├── 17_label_typography_board/
     ├── Readme.md
     ├── main.frog
     ├── main.fir.json
     ├── main.lowering.json
     └── ui/
         └── label_panel.wfrog
+└── 18_decoration_board/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── decoration_panel.wfrog
 </code></pre>
 
 <p>
@@ -317,6 +333,14 @@ progression with standalone Label support text. It contains public source,
 FIR/lowering shape, a <code>.wfrog</code> package referencing the Default Label
 realization, and a small native manifest proof output. It does not add public
 runtime source beyond the Example 15 closure.
+</p>
+
+<p>
+Example <code>18</code> continues the repository-visible post-boundary widget
+progression with standalone Decoration support widgets. It contains public
+source, FIR/lowering shape, a <code>.wfrog</code> package referencing the Default
+Decorations realization, and a small native manifest proof output.
+It does not add public runtime source beyond the Example 15 closure.
 </p>
 
 <hr/>

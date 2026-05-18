@@ -1,0 +1,88 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "18_decoration_board",
+    "path": "Examples/18_decoration_board/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/18_decoration_board/ui/decoration_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "decoration_support_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "scene_ready_request",
+            "type": "bool"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "scene_ready",
+            "type": "bool"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "support_bindings": [
+          {
+            "widget_class": "frog.widgets.flat_box",
+            "mode": "decorative_support",
+            "style_members": [
+              "style.fill_color",
+              "style.border_color",
+              "style.border_width"
+            ],
+            "realization_asset_ref": "asset:decoration_flat_box_svg"
+          },
+          {
+            "widget_class": "frog.widgets.horizontal_line",
+            "mode": "decorative_support",
+            "style_members": [
+              "style.line_color",
+              "style.line_width"
+            ],
+            "realization_asset_ref": "asset:decoration_horizontal_line_svg"
+          },
+          {
+            "widget_class": "frog.widgets.vertical_line",
+            "mode": "decorative_support",
+            "style_members": [
+              "style.line_color",
+              "style.line_width"
+            ],
+            "realization_asset_ref": "asset:decoration_vertical_line_svg"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "identity_scene_ready_publication",
+        "body_rule": {
+          "kind": "identity_bool",
+          "expression": "scene_ready = scene_ready_request"
+        }
+      },
+      "publications": [
+        {
+          "target": "public_output.scene_ready",
+          "source": "input.scene_ready_request"
+        }
+      ],
+      "notes": [
+        "This FIR is a repository-visible Decoration widget progression slice beyond the current public reference runtime closure.",
+        "The example intentionally contains only one flat box, one horizontal line, and one vertical line.",
+        "Decoration widgets are support widgets; they are not scalar value controls or indicators.",
+        "Decoration layout and visual overrides are owned by .frog instance properties, not by baked SVG previews.",
+        "The Default Decorations SVG realization publishes root, shape, and line parts.",
+        "Runtime implementation for this example continues in Graiphic/FROG-Runtime unless explicitly promoted later."
+      ]
+    }
+  ]
+}

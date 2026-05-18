@@ -1,1 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80" data-frog-part="root"><rect data-frog-part="shape" x="4" y="4" width="112" height="72" fill="#fff" stroke="#94a3b8"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80" preserveAspectRatio="none" data-frog-part="root">
+  <rect data-frog-part="shape" x="0.5" y="0.5" width="119" height="79" fill="#ffffff" stroke="#94a3b8" stroke-width="1" vector-effect="non-scaling-stroke"/>
+</svg>

@@ -1,0 +1,180 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "18_decoration_board",
+    "summary": "Standalone Decoration support widgets rendered from .frog instance layout/style and Default Decorations .wfrog realization assets.",
+    "description": "Places one flat box, one horizontal line, and one vertical line on the front panel as non-semantic visual structure. Decoration position, size, fill, border, and line styling are source-owned by .frog instances. The .wfrog package references the Default Decorations realization and SVG assets. Runtime implementation for this post-boundary example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "decoration",
+      "support_widget",
+      "flat_box",
+      "line",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "scene_ready_request",
+        "type": "bool",
+        "default": true,
+        "binding_origin": "runtime.host_scene_request"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "scene_ready",
+        "type": "bool"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "scene_ready_request",
+        "kind": "interface_input",
+        "interface_port": "scene_ready_request"
+      },
+      {
+        "id": "output_scene_ready",
+        "kind": "interface_output",
+        "interface_port": "scene_ready"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "scene_ready_request",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_scene_ready",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 620,
+      "height": 360,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/decoration_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "flat_box",
+        "role": "support",
+        "class_ref": "frog.widgets.flat_box",
+        "instance_ref": "flat_box",
+        "layout": {
+          "x": 48,
+          "y": 48,
+          "width": 250,
+          "height": 170
+        },
+        "props": {
+          "style.fill_color": "#f8fafc",
+          "style.border_color": "#cbd5e1",
+          "style.border_width": "1px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "flat_box"
+        },
+        "visual": {
+          "asset_ref": "asset:decoration_flat_box_svg"
+        },
+        "binding": {
+          "mode": "decorative_support"
+        }
+      },
+      {
+        "id": "horizontal_line",
+        "role": "support",
+        "class_ref": "frog.widgets.horizontal_line",
+        "instance_ref": "horizontal_line",
+        "layout": {
+          "x": 48,
+          "y": 270,
+          "width": 470,
+          "height": 20
+        },
+        "props": {
+          "style.line_color": "#94a3b8",
+          "style.line_width": "1px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "horizontal_line"
+        },
+        "visual": {
+          "asset_ref": "asset:decoration_horizontal_line_svg"
+        },
+        "binding": {
+          "mode": "decorative_support"
+        }
+      },
+      {
+        "id": "vertical_line",
+        "role": "support",
+        "class_ref": "frog.widgets.vertical_line",
+        "instance_ref": "vertical_line",
+        "layout": {
+          "x": 380,
+          "y": 48,
+          "width": 20,
+          "height": 170
+        },
+        "props": {
+          "style.line_color": "#94a3b8",
+          "style.line_width": "1px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "realization.variant": "vertical_line"
+        },
+        "visual": {
+          "asset_ref": "asset:decoration_vertical_line_svg"
+        },
+        "binding": {
+          "mode": "decorative_support"
+        }
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Decoration Board",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "decoration_runtime_host_default",
+    "documentation": {
+      "title": "Decoration legend",
+      "summary": "Decorations are non-value front-panel support widgets. They structure the scene without participating in diagram dataflow.",
+      "legend": [
+        {
+          "label": "Flat box",
+          "description": "A simple source-positioned rectangle used to visually group an area."
+        },
+        {
+          "label": "Vertical line",
+          "description": "A separator line whose position, length, color, and thickness are .frog instance properties."
+        },
+        {
+          "label": "Horizontal line",
+          "description": "A separator line rendered from the Default Decoration SVG line part."
+        }
+      ],
+      "note": "The .frog source owns layout and style overrides. The .wfrog package only resolves the Default Decoration assets and host capabilities."
+    }
+  }
+}
