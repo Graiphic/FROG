@@ -164,6 +164,12 @@ Production-grade runtime development for future FROG execution surfaces continue
       <td><code>main.frog</code> + <code>embedded/embedded_status.frog</code> + <code>ui/subpanel_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
+    <tr>
+      <td><code>20_tab_page_selection</code></td>
+      <td>Tab control page selection with wrapped page headers and a movable page label display</td>
+      <td><code>main.frog</code> + <code>ui/tab_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
   </tbody>
 </table>
 
@@ -213,7 +219,10 @@ Production-grade runtime development for future FROG execution surfaces continue
 19   Subpanel embedding another .frog front panel as a post-boundary widget progression example
     |
     v
-20+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
+20   Tab selected-page value and page region as a post-boundary widget progression example
+    |
+    v
+21+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
 </code></pre>
 
 <hr/>
@@ -317,7 +326,7 @@ Production-grade runtime development for future FROG execution surfaces continue
     ├── main.lowering.json
     └── ui/
         └── decoration_panel.wfrog
-└── 19_subpanel_embedded_front_panel/
+├── 19_subpanel_embedded_front_panel/
     ├── Readme.md
     ├── main.frog
     ├── main.fir.json
@@ -328,6 +337,13 @@ Production-grade runtime development for future FROG execution surfaces continue
     │       └── embedded_status_panel.wfrog
     └── ui/
         └── subpanel_panel.wfrog
+└── 20_tab_page_selection/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── tab_panel.wfrog
 </code></pre>
 
 <p>
@@ -372,6 +388,17 @@ small native manifest proof output. The parent <code>.frog</code> owns the
 Subpanel instance and child reference; the child <code>.frog</code> owns the
 widgets displayed inside the Subpanel. It does not add public runtime source
 beyond the Example 15 closure.
+</p>
+
+<p>
+Example <code>20</code> continues the repository-visible post-boundary widget
+progression with a Tab control. It contains public source, FIR/lowering shape,
+a <code>.wfrog</code> package referencing the Default Tab realization, and a
+native manifest string proof output. The <code>.frog</code>
+owns page records, selected page value, layout, style, and visible page
+content. Its host capability declarations include selected-page state patching
+as a realization-facing browser interaction. It does not add public runtime
+source beyond the Example 15 closure.
 </p>
 
 <hr/>

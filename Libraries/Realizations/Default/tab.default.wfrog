@@ -90,6 +90,11 @@
         "overflow_menu",
         "tab_scroll_previous",
         "tab_scroll_next",
+        "page_label_display",
+        "page_label_display_face",
+        "page_label_display_text",
+        "page_label_display_previous",
+        "page_label_display_next",
         "page_region",
         "page_container",
         "page_content",
@@ -107,10 +112,59 @@
         "fixed",
         "content"
       ],
+      "supported_item_positioning_policies": [
+        "source_layout",
+        "flow"
+      ],
+      "supported_selected_row_policies": [
+        "none",
+        "selected_row_nearest_page"
+      ],
+      "supported_selected_join_edges": [
+        "none",
+        "bottom"
+      ],
+      "supported_overflow_policies": [
+        "wrap",
+        "fit",
+        "scroll",
+        "clip",
+        "menu"
+      ],
       "supported_close_policies": [
         "deny",
         "request",
         "immediate"
+      ],
+      "configurable_property_surfaces": [
+        "headers.placement",
+        "headers.visible",
+        "headers.item_positioning_policy",
+        "headers.selected_row_policy",
+        "headers.item_width_policy",
+        "headers.overflow_policy",
+        "headers.allow_multiple_rows",
+        "headers.max_rows",
+        "headers.item_width",
+        "headers.item_min_width",
+        "headers.item_flex",
+        "headers.item_gap",
+        "headers.row_gap",
+        "pages[].tab_item.layout.*",
+        "page_label_display.*",
+        "page_region.*",
+        "style.frame.*",
+        "style.header.*",
+        "style.tab_item.*",
+        "style.tab_item.selected_join_edge",
+        "style.tab_item.selected_join_border_color",
+        "style.tab_item.selected_join_overlap",
+        "style.tab_item.selected_row_join_edge",
+        "style.tab_item.selected_row_join_border_color",
+        "style.selection_face.*",
+        "style.page_region.*",
+        "style.page_content.*",
+        "style.focus_ring.*"
       ],
       "fallbacks": {
         "missing_resource": "host_native_or_generic_compatible_rendering",
@@ -255,6 +309,31 @@
       "binding_selector": "[data-frog-part='tab_scroll_next']"
     },
     {
+      "part": "page_label_display",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='page_label_display']"
+    },
+    {
+      "part": "page_label_display_face",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='page_label_display_face']"
+    },
+    {
+      "part": "page_label_display_text",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='page_label_display_text']"
+    },
+    {
+      "part": "page_label_display_previous",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='page_label_display_previous']"
+    },
+    {
+      "part": "page_label_display_next",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='page_label_display_next']"
+    },
+    {
       "part": "page_region",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='page_region']"
@@ -332,9 +411,119 @@
       "target_operation": "apply_header_layout"
     },
     {
+      "member": "headers.item_positioning_policy",
+      "target_part": "tab_header_region",
+      "target_operation": "set_tab_item_positioning_policy"
+    },
+    {
+      "member": "headers.selected_row_policy",
+      "target_part": "tab_header_region",
+      "target_operation": "set_selected_tab_row_placement"
+    },
+    {
+      "member": "pages[].tab_item.layout.*",
+      "target_part": "tab_item",
+      "target_operation": "position_tab_item_from_source_layout"
+    },
+    {
+      "member": "headers.item_width",
+      "target_part": "tab_item",
+      "target_operation": "set_tab_item_width"
+    },
+    {
+      "member": "headers.item_min_width",
+      "target_part": "tab_item",
+      "target_operation": "set_tab_item_min_width"
+    },
+    {
+      "member": "headers.item_gap",
+      "target_part": "tab_header_region",
+      "target_operation": "set_tab_item_gap"
+    },
+    {
+      "member": "headers.row_gap",
+      "target_part": "tab_header_region",
+      "target_operation": "set_tab_row_gap"
+    },
+    {
+      "member": "headers.allow_multiple_rows",
+      "target_part": "tab_header_region",
+      "target_operation": "set_tab_header_wrapping"
+    },
+    {
+      "member": "headers.overflow_policy",
+      "target_part": "tab_header_region",
+      "target_operation": "set_tab_overflow_policy"
+    },
+    {
+      "member": "page_label_display.*",
+      "target_part": "page_label_display",
+      "target_operation": "render_page_label_display"
+    },
+    {
       "member": "page_region.*",
       "target_part": "page_region",
       "target_operation": "render_selected_page_region"
+    },
+    {
+      "member": "style.frame.*",
+      "target_part": "frame",
+      "target_operation": "apply_visual_style"
+    },
+    {
+      "member": "style.header.*",
+      "target_part": "tab_header_region",
+      "target_operation": "apply_visual_style"
+    },
+    {
+      "member": "style.tab_item.*",
+      "target_part": "tab_item",
+      "target_operation": "apply_visual_style"
+    },
+    {
+      "member": "style.tab_item.selected_join_edge",
+      "target_part": "tab_item",
+      "target_operation": "set_selected_tab_join_edge"
+    },
+    {
+      "member": "style.tab_item.selected_join_border_color",
+      "target_part": "tab_item",
+      "target_operation": "set_selected_tab_join_border_color"
+    },
+    {
+      "member": "style.tab_item.selected_join_overlap",
+      "target_part": "tab_item",
+      "target_operation": "set_selected_tab_join_overlap"
+    },
+    {
+      "member": "style.tab_item.selected_row_join_edge",
+      "target_part": "tab_item",
+      "target_operation": "set_selected_tab_row_join_edge"
+    },
+    {
+      "member": "style.tab_item.selected_row_join_border_color",
+      "target_part": "tab_item",
+      "target_operation": "set_selected_tab_row_join_border_color"
+    },
+    {
+      "member": "style.selection_face.*",
+      "target_part": "selection_face",
+      "target_operation": "apply_visual_style"
+    },
+    {
+      "member": "style.page_region.*",
+      "target_part": "page_region",
+      "target_operation": "apply_visual_style"
+    },
+    {
+      "member": "style.page_content.*",
+      "target_part": "page_content",
+      "target_operation": "apply_visual_style"
+    },
+    {
+      "member": "style.focus_ring.*",
+      "target_part": "focus_ring",
+      "target_operation": "apply_visual_style"
     },
     {
       "member": "overflow.*",
@@ -490,6 +679,11 @@
       "tab_close_button",
       "tab_scroll_previous",
       "tab_scroll_next",
+      "page_label_display",
+      "page_label_display_face",
+      "page_label_display_text",
+      "page_label_display_previous",
+      "page_label_display_next",
       "overflow_button",
       "overflow_menu",
       "focus_ring",
@@ -558,6 +752,14 @@
       "anchor_kind": "text_anchor",
       "default_horizontal_alignment": "start",
       "default_vertical_alignment": "baseline"
+    },
+    {
+      "id": "frog.realizations.default.tab.page_label_display.anchor",
+      "target_part": "page_label_display",
+      "source_selector": "[data-frog-anchor='page_label_display.anchor']",
+      "anchor_kind": "control_surface_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "top"
     }
   ],
   "host_hints": {
@@ -573,6 +775,7 @@
     "resources must resolve relative to this package file",
     "resources must not become semantic owners of selected page value or child widget values",
     "runtime-private tab handles must not be exposed as public widget members",
+    "page label display overlays must align to the published page_label_display parts and remain source-owned",
     "hidden page renderer handles must remain realization-private",
     "declared SVG resources should expose all supported data-frog-part markers",
     "unsupported close or reorder operations on indicator classes must be rejected"

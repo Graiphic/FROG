@@ -1,0 +1,81 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_package",
+  "package_id": "example20.tab_panel",
+  "title": "Example 20 Default Tab realization package",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "20_tab_page_selection",
+    "source_path": "Examples/20_tab_page_selection/main.frog",
+    "fir_path": "Examples/20_tab_page_selection/main.fir.json",
+    "lowering_path": "Examples/20_tab_page_selection/main.lowering.json"
+  },
+  "ownership_boundary": {
+    "owns": [
+      "Default Tab realization reference",
+      "Default Tab SVG asset reference",
+      "host binding requirements for Tab selection rendering"
+    ],
+    "does_not_own": [
+      "canonical source semantics",
+      "front-panel widget instance layout",
+      "front-panel widget instance visual customization",
+      "Tab page records",
+      "selected page value",
+      "FIR semantics",
+      "lowering semantics",
+      "runtime-private execution behavior",
+      "widget class law",
+      "Default Tab SVG geometry"
+    ]
+  },
+  "widget_classes": [
+    {
+      "class_id": "frog.widgets.tab_control",
+      "role": "control",
+      "value_type": "frog.tab_selection"
+    }
+  ],
+  "host_bindings": [
+    {
+      "binding_id": "tab_runtime_host_default",
+      "host_family": "frog_conforming_tab_runtime_host",
+      "target": "frog_conforming_tab_runtime_host",
+      "required_capabilities": [
+        "window",
+        "basic_widget_rendering",
+        "widget_value_binding",
+        "tab_selection_rendering",
+        "tab_header_wrapping",
+        "tab_item_sizing",
+        "tab_selected_row_placement",
+        "tab_state_patch_interaction",
+        "page_label_display_rendering",
+        "page_region_rendering",
+        "svg_part_overlay_alignment",
+        "svg_style_property_binding",
+        "native_kernel_manifest"
+      ]
+    }
+  ],
+  "realization_refs": [
+    {
+      "package_ref": "Libraries/Realizations/Default/tab.default.wfrog",
+      "target_classes": [
+        "frog.widgets.tab_control"
+      ]
+    }
+  ],
+  "svg_assets": [
+    {
+      "asset_id": "tab_shell_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/tab/templates/tab_shell.svg",
+      "target_classes": [
+        "frog.widgets.tab_control"
+      ]
+    }
+  ]
+}

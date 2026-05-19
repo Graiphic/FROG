@@ -76,6 +76,7 @@ The family separates:
   <li><code>pages.*</code> — page records and page state,</li>
   <li><code>selection.*</code> — currently selected page,</li>
   <li><code>headers.*</code> — tab-header view posture,</li>
+  <li><code>page_label_display.*</code> — movable page-label selector posture,</li>
   <li><code>page_region.*</code> — selected-page host posture,</li>
   <li><code>overflow.*</code> — overflow menu / tab-scroll posture,</li>
   <li><code>reorder.*</code> — optional page reordering posture,</li>
@@ -205,11 +206,57 @@ Changing selection changes which page is active; it does not mutate the hidden p
 <ul>
   <li><code>headers.placement</code> — <code>top</code>, <code>bottom</code>, <code>left</code>, or <code>right</code></li>
   <li><code>headers.item_width_policy</code> — <code>auto</code>, <code>equal</code>, <code>fixed</code>, or <code>content</code></li>
+  <li><code>headers.item_positioning_policy</code> - <code>source_layout</code> or <code>flow</code></li>
+  <li><code>headers.selected_row_policy</code> - <code>none</code> or <code>selected_row_nearest_page</code></li>
+  <li><code>headers.item_width</code></li>
+  <li><code>headers.item_min_width</code></li>
+  <li><code>headers.item_flex</code></li>
+  <li><code>headers.item_gap</code></li>
+  <li><code>headers.row_gap</code></li>
+  <li><code>headers.allow_multiple_rows</code></li>
+  <li><code>headers.max_rows</code></li>
+  <li><code>headers.overflow_policy</code> - <code>wrap</code>, <code>fit</code>, <code>scroll</code>, <code>clip</code>, or <code>menu</code></li>
   <li><code>headers.visible</code></li>
   <li><code>headers.scrollable</code></li>
   <li><code>headers.icon_visible</code></li>
   <li><code>headers.close_button_visible</code></li>
 </ul>
+
+<p>
+Header sizing and overflow posture are source-owned widget properties.
+An IDE may adapt tab positions, tab dimensions, row count, or overflow policy by
+writing these properties on the <code>.frog</code> instance. With
+<code>headers.item_positioning_policy = source_layout</code>, each visible page
+selector is positioned from <code>pages[].tab_item.layout.*</code>; the runtime
+must not bake a fixed tab width, private wrapping rule, or overlapping header
+layout that bypasses the realization surface. With
+<code>headers.selected_row_policy = selected_row_nearest_page</code>, the
+source-owned row layout remains authoritative, but the selected page row is
+rendered in the row nearest the page body, matching the standard LabVIEW-like
+multi-row tab posture.
+</p>
+
+<p>
+Tab rows are a constrained-width layout posture. A Tab instance must not create
+an extra stacked row when the declared tab-item positions and dimensions fit the
+published header region. When multiple rows are source-declared or required by
+overflow policy, row heights remain uniform; tab widths may vary per row only
+when those widths are explicitly owned by the <code>.frog</code> instance or an
+IDE-authored source update.
+</p>
+
+<p>
+The selected tab may visually join the selected page body through source-owned
+style members such as <code>style.tab_item.selected_join_edge</code> and
+<code>style.tab_item.selected_join_border_color</code>. When the selected tab
+must cover the selected page border, <code>style.tab_item.selected_join_overlap</code>
+declares the source-owned overlap distance. A multi-row tab strip may also join
+the whole selected row through
+<code>style.tab_item.selected_row_join_edge</code> and
+<code>style.tab_item.selected_row_join_border_color</code>. This preserves the
+LabVIEW-like pressed tab effect without making the runtime invent a private
+selected-tab skin.
+</p>
 
 <h3>Page region</h3>
 
@@ -224,6 +271,23 @@ Changing selection changes which page is active; it does not mutate the hidden p
 <p>
 The selected page region is a host surface for child widgets or page content.
 It is not the semantic owner of child widget values.
+</p>
+
+<h3>Page label display</h3>
+
+<ul>
+  <li><code>page_label_display.visible</code></li>
+  <li><code>page_label_display.enabled</code></li>
+  <li><code>page_label_display.layout.*</code></li>
+  <li><code>page_label_display.style.*</code></li>
+  <li><code>page_label_display.selected_page_id</code></li>
+</ul>
+
+<p>
+The page label display is a movable control surface for the active tab page.
+It is useful for compact debugging and for host/IDE workflows that need to move
+the page selector away from the tab body. Its position, size, label text, and
+visual style are source-owned instance data.
 </p>
 
 <hr/>
@@ -288,6 +352,7 @@ A host must not silently mutate the page model through private UI behavior.
   <li><code>pages.content_ref</code></li>
   <li><code>selection.*</code></li>
   <li><code>headers.*</code></li>
+  <li><code>page_label_display.*</code></li>
   <li><code>page_region.*</code></li>
   <li><code>overflow.*</code></li>
   <li><code>reorder.*</code></li>
@@ -358,6 +423,11 @@ A host must not silently mutate the page model through private UI behavior.
   <li><code>overflow_menu</code></li>
   <li><code>tab_scroll_previous</code></li>
   <li><code>tab_scroll_next</code></li>
+  <li><code>page_label_display</code></li>
+  <li><code>page_label_display_face</code></li>
+  <li><code>page_label_display_text</code></li>
+  <li><code>page_label_display_previous</code></li>
+  <li><code>page_label_display_next</code></li>
   <li><code>page_region</code></li>
   <li><code>page_container</code></li>
   <li><code>page_content</code></li>

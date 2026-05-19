@@ -1,0 +1,100 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "20_tab_page_selection",
+    "path": "Examples/20_tab_page_selection/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/20_tab_page_selection/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "summary": "make one post-boundary Tab selected-page value example consumable through a manifest-declared LLVM/native string proof boundary and Default Tab realization",
+    "backend_family_target": "llvm_native_kernel",
+    "capability_targets": [
+      "native_kernel_manifest",
+      "private_runtime_tab_selection_binding",
+      "svg_part_overlay_alignment",
+      "tab_selected_row_placement",
+      "tab_state_patch_interaction",
+      "svg_style_property_binding"
+    ],
+    "native_artifact_ref": {
+      "manifest": "Implementations/Reference/LLVM/examples/20_tab_page_selection/native_kernel_manifest.json",
+      "llvm_ir": "Implementations/Reference/LLVM/examples/20_tab_page_selection/kernel.ll"
+    },
+    "public_reference_runtime_source_added": false
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "tab_page_selection_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "selected_page_id",
+            "type": "string"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "selected_page_id_out",
+            "type": "string"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "value_bindings": [
+          {
+            "widget_id": "page_tabs",
+            "widget_class": "frog.widgets.tab_control",
+            "mode": "widget_value",
+            "semantic_value_member": "value.selected_page_id",
+            "realization_asset_ref": "asset:tab_shell_svg"
+          }
+        ],
+        "host_overlays": [
+          {
+            "widget_id": "page_tabs",
+            "part": "tab_item",
+            "source_members": [
+              "pages.*",
+              "pages[].tab_item.layout.*",
+              "selection.*",
+              "headers.*"
+            ]
+          },
+          {
+            "widget_id": "page_tabs",
+            "part": "page_label_display",
+            "source_members": [
+              "page_label_display.*",
+              "pages.*",
+              "value.selected_page_id"
+            ]
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "identity_string",
+        "native_manifest": "Implementations/Reference/LLVM/examples/20_tab_page_selection/native_kernel_manifest.json",
+        "inputs": {
+          "selected_page_id": "widget.page_tabs.value.selected_page_id"
+        },
+        "outputs": {
+          "selected_page_id_out": "selected_page_id_out"
+        },
+        "final_publication": [
+          {
+            "target": "public_output.selected_page_id_out",
+            "source": "native_kernel.selected_page_id_out"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -24,7 +24,7 @@
 
 <p>
 This default realization publishes a portable tab embodiment for the FROG Tab widget family.
-It provides a shell, header region, tab items, icon and label surfaces, selection face, optional close button, overflow button/menu, tab scroll buttons, page region, page container, page content surface, and focus surface.
+It provides a shell, header region, tab items, icon and label surfaces, selection face, optional close button, overflow button/menu, tab scroll buttons, movable page label display, page region, page container, page content surface, and focus surface.
 </p>
 
 <p>
@@ -51,6 +51,11 @@ It does not define page-content semantics, host-native tab controls, hidden page
   <li><code>overflow_menu</code></li>
   <li><code>tab_scroll_previous</code></li>
   <li><code>tab_scroll_next</code></li>
+  <li><code>page_label_display</code></li>
+  <li><code>page_label_display_face</code></li>
+  <li><code>page_label_display_text</code></li>
+  <li><code>page_label_display_previous</code></li>
+  <li><code>page_label_display_next</code></li>
   <li><code>page_region</code></li>
   <li><code>page_container</code></li>
   <li><code>page_content</code></li>
@@ -85,8 +90,22 @@ It does not define page-content semantics, host-native tab controls, hidden page
   <li><code>selection_face</code> renders selected-page state.</li>
   <li><code>overflow_button</code> and <code>overflow_menu</code> anchor hidden-page navigation.</li>
   <li><code>tab_scroll_previous</code> and <code>tab_scroll_next</code> anchor scrollable tab strips.</li>
+  <li><code>page_label_display</code> anchors a movable page selector surface.</li>
   <li><code>page_region</code>, <code>page_container</code>, and <code>page_content</code> anchor the selected page host.</li>
 </ul>
+
+<p>
+The Default Tab realization declares tab item positioning, selected-row
+placement, selected-tab join styling, selected-tab join overlap, selected-row
+join styling, item sizing, item gaps, row gaps, multi-row wrapping, and overflow
+posture as configurable surfaces. A
+runtime or IDE may adapt those values from the <code>.frog</code> instance and
+the <code>.wfrog</code> declaration; it must not replace them with a private
+fixed or overlapping tab strip. Multi-row tab strips are valid only when the
+source-owned layout or constrained-width overflow posture requires them; a
+single-row layout that fits the published <code>tab_header_region</code> must
+remain single-row.
+</p>
 
 <p>
 A runtime may replace the SVG-backed tab with a host-native tab control when it preserves the public part model and property/method/event surfaces.

@@ -1,0 +1,93 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "20_tab_page_selection",
+    "path": "Examples/20_tab_page_selection/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/20_tab_page_selection/ui/tab_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "tab_page_selection_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "selected_page_id",
+            "type": "string"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "selected_page_id_out",
+            "type": "string"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "value_bindings": [
+          {
+            "widget_id": "page_tabs",
+            "widget_class": "frog.widgets.tab_control",
+            "value_member": "value.selected_page_id",
+            "value_type": "string",
+            "public_input_id": "selected_page_id",
+            "public_output_id": "selected_page_id_out",
+            "realization_asset_ref": "asset:tab_shell_svg"
+          }
+        ],
+        "host_overlays": [
+          {
+            "widget_id": "page_tabs",
+            "part": "tab_item",
+            "source_members": [
+              "pages.*",
+              "pages[].tab_item.layout.*",
+              "selection.*",
+              "headers.*"
+            ]
+          },
+          {
+            "widget_id": "page_tabs",
+            "part": "page_label_display",
+            "source_members": [
+              "page_label_display.*",
+              "pages.*",
+              "value.selected_page_id"
+            ]
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "selected_tab_page_id_publication",
+        "body_rule": {
+          "kind": "identity_string",
+          "expression": "selected_page_id_out = selected_page_id"
+        }
+      },
+      "publications": [
+        {
+          "target": "public_output.selected_page_id_out",
+          "source": "input.selected_page_id"
+        }
+      ],
+      "notes": [
+        "This FIR is a repository-visible Tab widget progression slice beyond the current public reference runtime closure.",
+        "The Tab control value is the selected page id; page records remain source-owned .frog instance data.",
+        "Header sizing, per-page tab item layout, selected-row placement, selected-tab and selected-row join styling, constrained-width row wrapping, and overflow posture remain .frog-owned properties declared by the Default Tab realization surface.",
+        "This example keeps all five tab selectors on one row because the source-owned layout fits the published Default Tab header region.",
+        "The movable page label display is part of the Tab control surface, not a separate String indicator.",
+        "Interactive hosts may apply selected-page state patches without reloading the full document when the .wfrog host binding declares that capability.",
+        "Visible page content in this example is source-owned page record data, not runtime-hardcoded content.",
+        "The Default Tab SVG realization publishes tab_header_region, tab_item, tab_item_label, selection_face, page_label_display, page_region, page_container, and page_content parts.",
+        "Runtime implementation for this example continues in Graiphic/FROG-Runtime unless explicitly promoted later."
+      ]
+    }
+  ]
+}

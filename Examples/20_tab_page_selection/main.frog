@@ -1,0 +1,305 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "20_tab_page_selection",
+    "summary": "Tab control page selection roundtrip with .frog-owned pages, source-positioned headers, and Default Tab .wfrog realization asset.",
+    "description": "Places one Tab control with five source-owned pages on the front panel. The .frog source owns page ids, titles, selected value, layout, style, header sizing, page content, and the movable page label display. Because the five tabs fit the available header width, this example keeps them on one row; wrapping is a constrained-width posture, not a default stack. The .wfrog package references the Default Tab realization and SVG asset. Runtime implementation for this post-boundary example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "tab",
+      "tab_control",
+      "page_selection",
+      "page_label_display",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "selected_page_id",
+        "type": "string",
+        "default": "page_1",
+        "binding_origin": "widget.page_tabs.value.selected_page_id"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "selected_page_id_out",
+        "type": "string"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "page_tabs_selection",
+        "kind": "widget_value",
+        "widget": "page_tabs",
+        "member": "value.selected_page_id"
+      },
+      {
+        "id": "output_selected_page_id",
+        "kind": "interface_output",
+        "interface_port": "selected_page_id_out"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "page_tabs_selection",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_selected_page_id",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 660,
+      "height": 410,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/tab_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "page_tabs",
+        "role": "control",
+        "class_ref": "frog.widgets.tab_control",
+        "instance_ref": "page_tabs",
+        "value_type": "frog.tab_selection",
+        "layout": {
+          "x": 30,
+          "y": 52,
+          "width": 520,
+          "height": 310
+        },
+        "props": {
+          "label.text": "Tab Control",
+          "label.visible": true,
+          "caption.text": "Tab pages",
+          "caption.visible": true,
+          "caption.anchor.x": 0,
+          "caption.anchor.y": -20,
+          "caption.align.horizontal": "start",
+          "caption.style.text_color": "#0f172a",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
+          "value.selected_index": 0,
+          "value.selected_page_id": "page_1",
+          "selection.index": 0,
+          "selection.id": "page_1",
+          "selection.enabled_only": true,
+          "selection.wrap_navigation": true,
+          "headers.placement": "top",
+          "headers.visible": true,
+          "headers.item_positioning_policy": "source_layout",
+          "headers.selected_row_policy": "selected_row_nearest_page",
+          "headers.item_width_policy": "content",
+          "headers.overflow_policy": "wrap",
+          "headers.allow_multiple_rows": true,
+          "headers.max_rows": 1,
+          "headers.item_width": "96px",
+          "headers.item_min_width": "72px",
+          "headers.item_flex": false,
+          "headers.item_gap": "0px",
+          "headers.row_gap": "0px",
+          "headers.close_button_visible": false,
+          "headers.icon_visible": false,
+          "overflow.enabled": false,
+          "close.enabled": false,
+          "reorder.enabled": false,
+          "page_label_display.visible": true,
+          "page_label_display.enabled": true,
+          "page_label_display.layout.x": 520,
+          "page_label_display.layout.y": 72,
+          "page_label_display.layout.width": 96,
+          "page_label_display.layout.height": 24,
+          "page_label_display.style.fill_color": "#d1d5db",
+          "page_label_display.style.border_color": "#6b7280",
+          "page_label_display.style.border_width": "1px",
+          "page_label_display.style.text_color": "#111827",
+          "page_label_display.style.font_family": "Segoe UI, Arial, sans-serif",
+          "page_label_display.style.font_size": "13px",
+          "page_label_display.style.font_weight": "400",
+          "page_label_display.style.padding_inline": "4px",
+          "page_region.clip_content": true,
+          "page_region.content_padding": "18px",
+          "pages": [
+            {
+              "id": "page_1",
+              "title": "Page 1",
+              "caption": "Page 1",
+              "enabled": true,
+              "visible": true,
+              "tab_item.layout.x": 0,
+              "tab_item.layout.y": 4,
+              "tab_item.layout.width": 96,
+              "tab_item.layout.height": 34,
+              "content_ref": "page:page_1",
+              "content.tag": "PAGE 1",
+              "content.heading": "Page 1",
+              "content.body": "The tab control owns a selected-page value and exposes it to the diagram."
+            },
+            {
+              "id": "page_2",
+              "title": "Page 2",
+              "caption": "Page 2",
+              "enabled": true,
+              "visible": true,
+              "tab_item.layout.x": 95,
+              "tab_item.layout.y": 4,
+              "tab_item.layout.width": 96,
+              "tab_item.layout.height": 34,
+              "content_ref": "page:page_2",
+              "content.tag": "PAGE 2",
+              "content.heading": "Page 2",
+              "content.body": "The movable page label display is a source-owned Tab control surface."
+            },
+            {
+              "id": "page_3",
+              "title": "Page 3",
+              "caption": "Page 3",
+              "enabled": true,
+              "visible": true,
+              "tab_item.layout.x": 190,
+              "tab_item.layout.y": 4,
+              "tab_item.layout.width": 96,
+              "tab_item.layout.height": 34,
+              "content_ref": "page:page_3",
+              "content.tag": "PAGE 3",
+              "content.heading": "Page 3",
+              "content.body": "The native string proof publishes the selected page id through the manifest."
+            },
+            {
+              "id": "page_4",
+              "title": "Page 4",
+              "caption": "Page 4",
+              "enabled": true,
+              "visible": true,
+              "tab_item.layout.x": 285,
+              "tab_item.layout.y": 4,
+              "tab_item.layout.width": 96,
+              "tab_item.layout.height": 34,
+              "content_ref": "page:page_4",
+              "content.tag": "PAGE 4",
+              "content.heading": "Page 4",
+              "content.body": "Header sizing and wrapping are source-owned properties, so an IDE may adapt them without changing runtime code."
+            },
+            {
+              "id": "page_5",
+              "title": "Page 5",
+              "caption": "Page 5",
+              "enabled": true,
+              "visible": true,
+              "tab_item.layout.x": 380,
+              "tab_item.layout.y": 4,
+              "tab_item.layout.width": 96,
+              "tab_item.layout.height": 34,
+              "content_ref": "page:page_5",
+              "content.tag": "PAGE 5",
+              "content.heading": "Page 5",
+              "content.body": "The page label display remains a movable Tab control surface for quick page selection."
+            }
+          ],
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.header.fill_color": "transparent",
+          "style.header.border_color": "transparent",
+          "style.header.border_width": "0px",
+          "style.tab_item.fill_color": "#f8fafc",
+          "style.tab_item.fill_color.hover": "#edf2f7",
+          "style.tab_item.border_color": "#9ca3af",
+          "style.tab_item.border_width": "1px",
+          "style.tab_item.text_color": "#111827",
+          "style.tab_item.font_family": "Segoe UI, Arial, sans-serif",
+          "style.tab_item.font_size": "13px",
+          "style.tab_item.font_weight": "400",
+          "style.tab_item.padding_inline": "12px",
+          "style.tab_item.selected_fill_color": "#ffffff",
+          "style.tab_item.selected_border_color": "#9ca3af",
+          "style.tab_item.selected_text_color": "#111827",
+          "style.tab_item.selected_join_edge": "bottom",
+          "style.tab_item.selected_join_border_color": "#ffffff",
+          "style.tab_item.selected_join_overlap": "1px",
+          "style.tab_item.selected_row_join_edge": "bottom",
+          "style.tab_item.selected_row_join_border_color": "#ffffff",
+          "style.selection_face.fill_color": "transparent",
+          "style.selection_face.border_color": "transparent",
+          "style.selection_face.border_width": "0px",
+          "style.page_region.fill_color": "#ffffff",
+          "style.page_region.border_color": "#9ca3af",
+          "style.page_region.border_width": "1px",
+          "style.page_content.fill_color": "transparent",
+          "style.page_content.border_color": "transparent",
+          "style.page_content.border_width": "0px",
+          "style.page_content.font_family": "Segoe UI, Arial, sans-serif",
+          "style.page_content.font_size": "14px",
+          "style.page_content.line_height": "20px",
+          "style.page_content.heading_font_size": "18px",
+          "style.page_content.heading_font_weight": "600",
+          "style.page_content.tag_font_size": "11px",
+          "style.page_content.tag_font_weight": "700",
+          "style.page_content.tag_margin_bottom": "10px",
+          "style.page_content.tag_padding_vertical": "3px",
+          "style.page_content.tag_padding_horizontal": "7px",
+          "style.page_content.tag_fill_color": "#ecfeff",
+          "style.page_content.tag_text_color": "#155e75",
+          "style.page_content.heading_color": "#0f172a",
+          "style.page_content.text_color": "#334155",
+          "style.focus_ring.color": "#2563eb",
+          "style.focus_ring.width": "2px",
+          "interaction.visible": true,
+          "interaction.enabled": true,
+          "interaction.read_only": false,
+          "realization.variant": "default_shell"
+        },
+        "visual": {
+          "asset_ref": "asset:tab_shell_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "selected_page_id",
+          "public_output_id": "selected_page_id_out"
+        }
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Tab Page Selection",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "tab_runtime_host_default",
+    "documentation": {
+      "title": "Tab legend",
+      "summary": "A Tab is a page-navigation control. It selects one named page and exposes the selected page id as widget value.",
+      "legend": [
+        {
+          "label": "Tab control",
+          "description": "Owns a selected-page value. User clicks change value.selected_page_id when pages are enabled."
+        },
+        {
+          "label": "Page label display",
+          "description": "Movable control surface for quickly selecting or debugging the active page."
+        },
+        {
+          "label": "Page records",
+          "description": "The .frog instance owns page ids, titles, enabled/visible flags, content refs, and page copy."
+        }
+      ],
+      "note": "The runtime may provide host overlays for tab clicks and the page label display, but they must align to the Default Tab SVG parts and consume .frog-owned page/style data."
+    }
+  }
+}
