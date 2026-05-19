@@ -334,6 +334,7 @@ This directory currently contains the following documents:
   <li><code>IO.md</code> — standard <code>frog.io</code> primitives.</li>
   <li><code>Image.md</code> — standard <code>frog.image</code> primitives, currently publishing <code>frog.image.decode_file_rgba8</code> and the portable <code>frog.image.buffer_rgba8</code> contract.</li>
   <li><code>Signal.md</code> — standard <code>frog.signal</code> primitives.</li>
+  <li><code>System.md</code> — standard <code>frog.system</code> introspection primitives for platform, CPU, memory, process, environment, and capability reads.</li>
   <li><code>UI.md</code> — standard <code>frog.ui</code> executable widget interaction primitives.</li>
   <li><code>Connectivity.md</code> — transition note indicating that <code>frog.connectivity.*</code> is no longer normatively owned by the intrinsic library layer and is now owned by the Interop profile.</li>
 </ul>
@@ -372,6 +373,7 @@ At the current repository stage, the intrinsic standardized primitive taxonomy i
   <li><strong><code>frog.io.*</code></strong> — file, path, resource, and byte-oriented I/O primitives</li>
   <li><strong><code>frog.image.*</code></strong> — basic image-data decoding and portable image-buffer primitives; current published primitive: <code>frog.image.decode_file_rgba8</code></li>
   <li><strong><code>frog.signal.*</code></strong> — signal-processing primitives</li>
+  <li><strong><code>frog.system.*</code></strong> — bounded system introspection primitives</li>
   <li><strong><code>frog.ui.*</code></strong> — executable widget interaction primitives</li>
 </ul>
 
@@ -386,6 +388,7 @@ frog.text.*         -&gt; text processing
 frog.io.*           -&gt; file/path/resource/byte I/O
 frog.image.*        -&gt; image decoding and image-buffer values
 frog.signal.*       -&gt; signal-oriented operations
+frog.system.*       -&gt; bounded system introspection
 frog.ui.*           -&gt; object-style widget interaction in execution
 </code></pre>
 
@@ -544,12 +547,12 @@ implies:
       <td>Runtime-hosted and capability-managed; requires source, FIR, lowering, and safety guardrails before publication.</td>
     </tr>
     <tr>
-      <td><code>frog.os</code> or <code>frog.system</code></td>
-      <td>candidate OS-dependent library</td>
-      <td>Portable system and process introspection where possible.</td>
-      <td>Platform identifier, architecture, CPU count, memory totals, process id, executable path, current directory, and environment reads as candidates.</td>
-      <td>Making OS introspection mandatory for minimal embedded profiles, leaking private host policy, and exposing platform APIs without capability boundaries.</td>
-      <td>OS-dependent and runtime-hosted; unavailable data must have explicit fallback or status behavior.</td>
+      <td><code>frog.system</code></td>
+      <td>published lightweight standard library</td>
+      <td>Bounded, read-only system introspection.</td>
+      <td>Platform identifier, architecture, CPU count/load, memory totals/availability, process id, executable path, current directory, environment reads, and FROG capability availability checks.</td>
+      <td>Process execution, process enumeration, OS-specific APIs, permission enumeration, time/timing, hardware inventory, secrets, and making system introspection mandatory for minimal embedded profiles.</td>
+      <td>OS-dependent and runtime-hosted; each call has explicit capability requirements plus local <code>success</code>/<code>error_code</code> status outputs.</td>
     </tr>
     <tr>
       <td><code>frog.process</code>, <code>frog.ffi</code>, <code>frog.net</code>, <code>frog.http</code>, <code>frog.db</code>, <code>frog.registry</code>, <code>frog.com</code>, <code>frog.dotnet</code></td>
@@ -678,6 +681,7 @@ Examples:
   <li><code>frog.io.read_text</code></li>
   <li><code>frog.image.decode_file_rgba8</code></li>
   <li><code>frog.signal.moving_average</code></li>
+  <li><code>frog.system.platform_info</code></li>
   <li><code>frog.ui.property_read</code></li>
 </ul>
 
@@ -734,6 +738,7 @@ The intrinsic standardized library families in this directory are intentionally 
   <li><strong><code>frog.io.*</code></strong> owns file, path, resource, and byte-oriented I/O primitives.</li>
   <li><strong><code>frog.image.*</code></strong> owns portable image-data primitives such as decode-to-buffer operations.</li>
   <li><strong><code>frog.signal.*</code></strong> owns signal-processing primitives.</li>
+  <li><strong><code>frog.system.*</code></strong> owns bounded, read-only system introspection primitives.</li>
   <li><strong><code>frog.ui.*</code></strong> owns executable widget interaction primitives only.</li>
 </ul>
 
@@ -748,6 +753,7 @@ frog.text.*         -&gt; text only
 frog.io.*           -&gt; I/O only
 frog.image.*        -&gt; image data only
 frog.signal.*       -&gt; signal only
+frog.system.*       -&gt; system introspection only
 frog.ui.*           -&gt; executable UI interaction only
 </code></pre>
 
@@ -760,6 +766,7 @@ Therefore:
   <li><code>frog.io.*</code> MUST remain distinct from foreign-runtime interoperability, deployment, database access, and broader external integration concerns unless those are explicitly standardized as intrinsic libraries.</li>
   <li><code>frog.image.*</code> MUST remain distinct from Picture widget realization, camera acquisition, advanced computer vision, and implementation-specific codec stacks.</li>
   <li><code>frog.ui.*</code> MUST remain distinct from front-panel serialization, widget catalog definition, broader IDE UI editing concerns, target-profile classes, deployment-mode classes, and backend-family-specific UI binding contracts.</li>
+  <li><code>frog.system.*</code> MUST remain distinct from process execution, networking, file mutation, time/timing, hardware access, permission enumeration, secret access, and host-private runtime service discovery.</li>
   <li><code>frog.text.*</code> MUST remain distinct from file, path, and external-service semantics.</li>
   <li><code>frog.collections.*</code> MUST remain distinct from future specialized families unless those are explicitly standardized.</li>
   <li><code>frog.signal.*</code> MUST remain distinct from broader acquisition, streaming, tensor, or specialized domain families unless those are explicitly standardized.</li>
@@ -926,6 +933,7 @@ The current intrinsic standardized library surface already covers:
   <li>text processing,</li>
   <li>I/O,</li>
   <li>signal processing,</li>
+  <li>system introspection,</li>
   <li>widget interaction.</li>
 </ul>
 
