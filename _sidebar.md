@@ -23,6 +23,7 @@
   - [Widget package (.wfrog)](/Expression/Widget%20package%20%28.wfrog%29.md)
   - [Widget realization](/Expression/Widget%20realization.md)
 - [Examples](/Examples/Readme.md)
+  - [example dossier standard](/Examples/example_dossier_standard.md)
   - [widget public boundary](/Examples/widget_public_boundary.md)
   - [widget public progression](/Examples/widget_public_progression.md)
   - [01 pure addition](/Examples/01_pure_addition/Readme.md)

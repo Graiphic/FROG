@@ -165,6 +165,13 @@
           "kind": "category",
           "children": [
             {
+              "key": "examples/example_dossier_standard.md",
+              "title": "example dossier standard",
+              "path": "/Examples/example_dossier_standard.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "examples/widget_public_boundary.md",
               "title": "widget public boundary",
               "path": "/Examples/widget_public_boundary.md",
@@ -4235,6 +4242,7 @@
     "/Expression/Widget%20package%20%28.wfrog%29.md",
     "/Expression/Widget%20realization.md",
     "/Expression/Readme.md",
+    "/Examples/example_dossier_standard.md",
     "/Examples/widget_public_boundary.md",
     "/Examples/widget_public_progression.md",
     "/Examples/01_pure_addition/main.frog",
