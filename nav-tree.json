@@ -771,6 +771,13 @@
               "children": []
             },
             {
+              "key": "ir/source-to-fir-scope-matrix.md",
+              "title": "Source to FIR scope matrix",
+              "path": "/IR/Source%20to%20FIR%20scope%20matrix.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "ir/schema/",
               "title": "schema",
               "path": "/IR/schema/README.md",
@@ -4310,6 +4317,7 @@
     "/IR/Identity%20and%20Mapping.md",
     "/IR/Lowering.md",
     "/IR/Schema.md",
+    "/IR/Source%20to%20FIR%20scope%20matrix.md",
     "/IR/schema/README.md",
     "/IR/Readme.md",
     "/Libraries/Collections.md",
