@@ -884,6 +884,13 @@
               "children": []
             },
             {
+              "key": "libraries/time.md",
+              "title": "Time",
+              "path": "/Libraries/Time.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "libraries/ui.md",
               "title": "UI",
               "path": "/Libraries/UI.md",
@@ -4431,6 +4438,7 @@
     "/Libraries/Signal.md",
     "/Libraries/System.md",
     "/Libraries/Text.md",
+    "/Libraries/Time.md",
     "/Libraries/UI.md",
     "/Libraries/Realizations/Default/Array.md",
     "/Libraries/Realizations/Default/Boolean.md",

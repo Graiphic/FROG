@@ -122,6 +122,7 @@
   - [Signal](/Libraries/Signal.md)
   - [System](/Libraries/System.md)
   - [Text](/Libraries/Text.md)
+  - [Time](/Libraries/Time.md)
   - [UI](/Libraries/UI.md)
   - [Realizations](/Libraries/Realizations/Readme.md)
     - [Default](/Libraries/Realizations/Default/Readme.md)
