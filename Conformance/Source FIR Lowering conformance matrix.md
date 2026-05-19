@@ -378,6 +378,40 @@ should not be the only proof for all stages at once.
 
 <hr/>
 
+<h2>Concrete Case Files</h2>
+
+<p>
+The following concrete case files instantiate this matrix for the first
+source/FIR/lowering corpus expansion. They are intentionally narrow records,
+not broad runtime implementation recipes.
+</p>
+
+<h3>Positive cases</h3>
+
+<ul>
+  <li><a href="./valid/compiler/04_provider_backed_standard_library_call_declares_provider_requirement.md"><code>valid/compiler/04_provider_backed_standard_library_call_declares_provider_requirement</code></a> - provider-backed standard-library call with explicit provider/capability/dependency requirements.</li>
+  <li><a href="./valid/compiler/05_widget_value_and_reference_are_preserved_across_lowering.md"><code>valid/compiler/05_widget_value_and_reference_are_preserved_across_lowering</code></a> - widget value and widget reference preservation across FIR, lowering, and backend contract boundaries.</li>
+</ul>
+
+<h3>Negative cases</h3>
+
+<ul>
+  <li><a href="./invalid/compiler/05_provider_backed_call_missing_provider_requirement.md"><code>invalid/compiler/05_provider_backed_call_missing_provider_requirement</code></a> - provider-backed call reaches lowering or contract emission without its required provider boundary.</li>
+  <li><a href="./invalid/compiler/06_backend_contract_abi_profile_mismatch.md"><code>invalid/compiler/06_backend_contract_abi_profile_mismatch</code></a> - consumer rejects explicit ABI, target profile, backend family, or representation mismatch.</li>
+  <li><a href="./invalid/compiler/07_manifest_missing_artifact_or_failed_checksum.md"><code>invalid/compiler/07_manifest_missing_artifact_or_failed_checksum</code></a> - manifest-compatible handoff fails artifact-reference or checksum validation.</li>
+  <li><a href="./invalid/compiler/08_llvm_must_not_be_treated_as_frog_runtime_identity.md"><code>invalid/compiler/08_llvm_must_not_be_treated_as_frog_runtime_identity</code></a> - contract rejects the collapse of FROG/FIR/runtime identity into LLVM identity.</li>
+  <li><a href="./invalid/compiler/09_valid_fir_rejected_by_backend_profile_unsupported_subset.md"><code>invalid/compiler/09_valid_fir_rejected_by_backend_profile_unsupported_subset</code></a> - valid FIR is explicitly rejected by a selected backend profile or implementation subset.</li>
+</ul>
+
+<p>
+These cases cover the first provider, ABI/profile, manifest/artifact,
+backend-identity, widget-preservation, and unsupported-subset families called
+out by this matrix. Additional families remain open until they gain similarly
+focused positive and negative case files.
+</p>
+
+<hr/>
+
 <h2>Public Reference Boundary</h2>
 
 <p>
@@ -432,10 +466,10 @@ be claimed:
   <li>path typing consistency,</li>
   <li>explicit conversion primitives,</li>
   <li>array construction and loop collection outputs,</li>
-  <li>provider-backed standard-library calls beyond the initial image path,</li>
+  <li>provider-backed standard-library calls beyond the initial image path and its first provider-requirement cases,</li>
   <li>host-capability calls such as time, OS/system, process, and connectivity surfaces,</li>
   <li>external provider calls and policy requirements,</li>
-  <li>backend-consumer rejection cases for ABI, artifact, checksum, and target mismatch.</li>
+  <li>additional backend-consumer rejection cases beyond the first ABI/profile, artifact, checksum, and target-mismatch anchors.</li>
 </ul>
 
 <hr/>

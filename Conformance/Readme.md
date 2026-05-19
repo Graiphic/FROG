@@ -656,6 +656,15 @@ That mirror is illustrative.
 The conformance families remain the public expectation surface.
 </p>
 
+<p>
+The compiler-corridor families now include concrete source/FIR/lowering case
+records for provider-backed standard-library calls, provider requirement
+omission, ABI/profile mismatch, manifest artifact or checksum failure, LLVM
+identity collapse, widget value/reference preservation, and selected-profile
+<code>unsupported_subset</code> rejection. These records instantiate the
+source/FIR/lowering matrix while remaining implementation-independent.
+</p>
+
 <h3>9.5 Executable subfamily posture</h3>
 
 <p>
@@ -771,6 +780,7 @@ The published corpus already contains:
   <li>a dedicated compiler-corridor family,</li>
   <li>a dedicated executable subtree for structured future executable growth,</li>
   <li>dedicated positive and negative structural subtrees for focused source-shape growth.</li>
+  <li>focused source/FIR/lowering compiler-corridor cases for provider, manifest, backend-contract, runtime-consumption, widget-preservation, and unsupported-subset boundaries.</li>
 </ul>
 
 <p>

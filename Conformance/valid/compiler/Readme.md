@@ -164,7 +164,9 @@ The canonical file order for this directory SHOULD be:
 
 <pre><code>01_pure_arithmetic_is_consumable.md
 02_structured_control_is_consumable.md
-03_explicit_state_is_consumable.md</code></pre>
+03_explicit_state_is_consumable.md
+04_provider_backed_standard_library_call_declares_provider_requirement.md
+05_widget_value_and_reference_are_preserved_across_lowering.md</code></pre>
 
 <p>
 This order reflects a deliberate corridor-closing strategy:
@@ -179,6 +181,14 @@ explicit state</code></pre>
 <p>
 The order is intentionally conservative.
 It closes one serious native compiled core before widening the corridor to more effect-heavy or runtime-heavy surfaces.
+</p>
+
+<p>
+The fourth and fifth cases extend the corridor from the first pure/control/state
+core into explicit provider-backed dependency closure and explicit UI/widget
+category preservation. They remain bounded case records; they do not claim that
+all provider, UI, or runtime-service-heavy programs are accepted by every
+backend family.
 </p>
 
 <hr/>
@@ -233,11 +243,12 @@ For v0.1, the first intended downstream compilation corridor is the optional pro
 <pre><code>native_cpu_llvm</code></pre>
 
 <p>
-Accordingly, the first compiler-corridor cases in this directory target the conservative accepted subset of that profile.
+Accordingly, the first three compiler-corridor cases in this directory target
+the conservative accepted subset of that profile.
 </p>
 
 <p>
-The published positive anchors currently correspond to:
+The published positive native-core anchors currently correspond to:
 </p>
 
 <ul>
@@ -261,7 +272,20 @@ can travel through the declared Native CPU LLVM corridor when all staged obligat
 </p>
 
 <p>
-UI-heavy or runtime-service-heavy cases are intentionally not the first positive anchors of this directory.
+Additional positive source/FIR/lowering anchors now cover provider-backed
+dependency closure and UI/widget category preservation under their own declared
+provider-capable or host-service-capable scopes:
+</p>
+
+<ul>
+  <li><code>04_provider_backed_standard_library_call_declares_provider_requirement</code></li>
+  <li><code>05_widget_value_and_reference_are_preserved_across_lowering</code></li>
+</ul>
+
+<p>
+UI-heavy or runtime-service-heavy cases remain explicitly bounded by their
+declared capabilities. They do not expand the default first Native CPU LLVM
+core subset by implication.
 </p>
 
 <hr/>
@@ -341,6 +365,10 @@ explicit state
    -&gt;
 restricted interop
    -&gt;
+provider-backed dependency closure
+   -&gt;
+UI/widget category preservation
+   -&gt;
 more complex effect surfaces</code></pre>
 
 <p>
@@ -366,7 +394,9 @@ The canonical v0.1 positive order is:
 
 <pre><code>01_pure_arithmetic_is_consumable
 02_structured_control_is_consumable
-03_explicit_state_is_consumable</code></pre>
+03_explicit_state_is_consumable
+04_provider_backed_standard_library_call_declares_provider_requirement
+05_widget_value_and_reference_are_preserved_across_lowering</code></pre>
 
 <p>
 These cases extend the public truth surface beyond ordinary language validity by making the following stages testable where declared:

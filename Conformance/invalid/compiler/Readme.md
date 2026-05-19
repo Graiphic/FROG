@@ -171,6 +171,34 @@ The program or lowered form is language-valid, IR-derivable, and lowerable, but 
 The program and lowered form are language-valid, IR-derivable, lowerable, and backend-contract-emittable, but rejected by the declared backend-family consumer because that consumer cannot honor the declared assumptions.
 </p>
 
+<h3>5.5 Provider-backed call missing provider requirement</h3>
+<p>
+The program and FIR call may be valid, but the lowering or backend contract
+omits the abstract provider, capability, or dependency requirement required by
+the public call model.
+</p>
+
+<h3>5.6 ABI, profile, artifact, or manifest mismatch</h3>
+<p>
+The downstream handoff may exist, but the declared ABI profile, target profile,
+artifact reference, checksum, provider slot, or dependency closure cannot be
+validated by the selected consumer.
+</p>
+
+<h3>5.7 Backend-family identity collapse</h3>
+<p>
+A downstream contract or profile assertion is invalid if it treats one backend
+family, such as an LLVM-oriented route, as the public identity of FROG, FIR, or
+runtime conformance.
+</p>
+
+<h3>5.8 Valid FIR outside selected backend subset</h3>
+<p>
+The source and FIR may be valid FROG, but the selected backend profile or
+implementation subset may still reject explicitly as <code>unsupported_subset</code>
+without redefining the language.
+</p>
+
 <hr/>
 
 <h2 id="published-case-order">6. Published Case Order</h2>
@@ -182,7 +210,12 @@ The canonical file order for this directory SHOULD be:
 <pre><code>01_language_valid_but_profile_rejected.md
 02_ir_derivable_but_not_lowerable.md
 03_lowerable_but_not_backend_contract_emittable.md
-04_contract_emittable_but_consumer_rejected.md</code></pre>
+04_contract_emittable_but_consumer_rejected.md
+05_provider_backed_call_missing_provider_requirement.md
+06_backend_contract_abi_profile_mismatch.md
+07_manifest_missing_artifact_or_failed_checksum.md
+08_llvm_must_not_be_treated_as_frog_runtime_identity.md
+09_valid_fir_rejected_by_backend_profile_unsupported_subset.md</code></pre>
 
 <p>
 This order mirrors the downstream corridor in the cleanest way:
@@ -209,6 +242,9 @@ These cases test the negative edges of the compiler corridor.
   <li>that explicit state or structure is not silently compiled through an unfaithful lowering path,</li>
   <li>that a backend contract is rejected rather than emitted with hidden assumptions,</li>
   <li>that a backend-family consumer rejects unsupported contract content rather than silently reinterpreting it.</li>
+  <li>that provider-backed calls do not lose provider/capability requirements before contract emission,</li>
+  <li>that manifest-compatible handoffs reject missing artifacts and failed checksums,</li>
+  <li>that LLVM-oriented routes remain downstream backend-family routes rather than FROG identity.</li>
 </ul>
 
 <hr/>
@@ -301,7 +337,13 @@ lowering rejection
    -&gt;
 backend-contract rejection
    -&gt;
-backend-family consumer rejection</code></pre>
+backend-family consumer rejection
+   -&gt;
+provider/manifest resolution rejection
+   -&gt;
+backend-family identity-collapse rejection
+   -&gt;
+unsupported-subset reporting</code></pre>
 
 <hr/>
 
@@ -343,7 +385,12 @@ The canonical v0.1 rejection order is:
 <pre><code>01_language_valid_but_profile_rejected
 02_ir_derivable_but_not_lowerable
 03_lowerable_but_not_backend_contract_emittable
-04_contract_emittable_but_consumer_rejected</code></pre>
+04_contract_emittable_but_consumer_rejected
+05_provider_backed_call_missing_provider_requirement
+06_backend_contract_abi_profile_mismatch
+07_manifest_missing_artifact_or_failed_checksum
+08_llvm_must_not_be_treated_as_frog_runtime_identity
+09_valid_fir_rejected_by_backend_profile_unsupported_subset</code></pre>
 
 <p>
 This keeps the compiler corridor explicit not only on the success path, but also on the rejection path.
