@@ -309,6 +309,7 @@ The documents in this directory play four different roles:
 </p>
 
 <ul>
+  <li>canonical source scope and ownership matrices,</li>
   <li>top-level source-section specifications,</li>
   <li>cross-cutting source subsystems,</li>
   <li>widget-oriented source package boundary documents,</li>
@@ -331,6 +332,14 @@ Some documents define dedicated top-level source sections such as:
   <li><code>ide</code>,</li>
   <li><code>cache</code>.</li>
 </ul>
+
+<p>
+<code>Canonical source scope.md</code> provides the compact cross-section view
+of this ownership model. It should be read before drilling into individual
+section documents when the question is whether a source fact is required,
+optional, descriptive metadata, diagram-owned, front-panel-owned, binding
+source, or excluded from executable source meaning.
+</p>
 
 <h3>5.2 Cross-cutting source subsystems</h3>
 

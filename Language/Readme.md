@@ -225,6 +225,12 @@ The documents in this directory define meaning and semantic boundaries that late
 They do not define one mandatory implementation pipeline.
 </p>
 
+<p>
+<code>Semantic validation before FIR.md</code> makes the pre-FIR validation
+gate explicit. It should be read when the question is whether a structurally
+valid source file has enough accepted meaning for FIR derivation.
+</p>
+
 <hr/>
 
 <h2 id="current-documents">5. Current Documents</h2>

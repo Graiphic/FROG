@@ -423,6 +423,14 @@ At top level:
 </code></pre>
 
 <p>
+<code>Source to FIR conformance matrix.md</code> defines the staged
+accept / reject / preserve expectations for moving from canonical
+<code>.frog</code> source through semantic validation into canonical
+Execution IR / FIR. It is a matrix for organizing future cases, not a
+replacement for the case corpus.
+</p>
+
+<p>
 Inside <code>valid/</code>, the published corpus already combines:
 </p>
 
@@ -527,6 +535,13 @@ For v0.1, published cases SHOULD remain small, sharply owned, and explicit about
 
 <p>
 The currently published conformance corpus is staged rather than monolithic.
+</p>
+
+<p>
+The source-to-FIR matrix is the public planning and classification surface for
+future cases that test canonical source acceptance, semantic validation, FIR
+eligibility, and preservation. Case files remain the concrete truth surface;
+the matrix keeps those cases aligned with the repository architecture.
 </p>
 
 <h3>9.1 Published top-level valid anchors</h3>
@@ -899,6 +914,13 @@ Compiler-corridor growth should:
 
 <p>
 Conformance growth should therefore follow publication maturity, not wishful scope expansion.
+</p>
+
+<p>
+For source-to-FIR growth, each feature family should gain source scope,
+semantic validation, positive cases, negative cases, preservation
+expectations, and bounded implementation posture before being described as
+systematically covered.
 </p>
 
 <hr/>
