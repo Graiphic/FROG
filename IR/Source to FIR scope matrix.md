@@ -185,7 +185,7 @@ coverage.
     <tr>
       <td><code>primitive</code> nodes for <code>frog.xxx</code> libraries</td>
       <td><code>primary_fir</code> with <code>deferred</code> details</td>
-      <td>Preserve namespaced function identity and typed ports. Provider, capability, status, effect, and dependency modeling are completed by the FIR library-call model.</td>
+      <td>Preserve namespaced function identity and typed ports. Provider, capability, status, effect, and dependency posture follows <code>IR/Library call model.md</code>.</td>
     </tr>
     <tr>
       <td><code>constant</code> nodes</td>
@@ -331,7 +331,7 @@ coverage.
   <li>Diagram connectivity is execution-relevant, but visual adjacency is not a substitute for an explicit source edge.</li>
   <li>Widget value, widget event, and widget reference participation can be execution-relevant; widget realization geometry is not FIR ownership.</li>
   <li><code>.wfrog</code> packages, Default SVG assets, runtime overlays, host rendering, and IDE view state must remain outside primary FIR.</li>
-  <li>Library calls must remain explicit in FIR. Their full identity, effect, provider, capability, and status model is owned by the FIR library-call model.</li>
+  <li>Library calls must remain explicit in FIR. Their public identity, effect, provider, capability, and status posture is defined by <code>IR/Library call model.md</code>.</li>
   <li>Unsupported-but-valid source must be reported as unsupported by a bounded implementation subset, not silently reinterpreted as invalid FROG or guessed into private FIR.</li>
 </ul>
 
@@ -347,7 +347,7 @@ The following items must be closed before the project can claim systematic
 <ul>
   <li>section-level machine-checkable source schemas for <code>metadata</code>, <code>interface</code>, <code>diagram</code>, and <code>front_panel</code>,</li>
   <li>complete semantic validation rules for supported node families, type compatibility, widget participation, structures, and state,</li>
-  <li>canonical FIR library-call model for <code>frog.xxx</code> functions, provider-backed functions, effects, status, and dependency requirements,</li>
+  <li>first-class schema support for FIR call metadata, provider requirements, and document-level dependency summaries,</li>
   <li>record/cluster value model,</li>
   <li>uniform error/status corridor,</li>
   <li>array construction, indexing, loop collection output, and auto-indexing posture,</li>

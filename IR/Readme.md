@@ -767,6 +767,7 @@ The core open-IR bundle is:
   <li><code>Execution IR.md</code></li>
   <li><code>Derivation rules.md</code></li>
   <li><code>Source to FIR scope matrix.md</code></li>
+  <li><code>Library call model.md</code></li>
   <li><code>Construction rules.md</code></li>
   <li><code>Identity and Mapping.md</code></li>
   <li><code>Schema.md</code></li>
@@ -813,6 +814,10 @@ Source to FIR scope matrix.md
    - compact field-by-field guide for what .frog source facts become
      primary FIR, correspondence, downstream references, or exclusions
 
+Library call model.md
+   - public FIR posture for intrinsic, standard-library, provider-backed,
+     host-capability, and external calls before lowering
+
 Construction rules.md
    - material construction of conforming canonical IR payloads
 
@@ -854,6 +859,10 @@ If the question is:
 If the question is:
 "How does validated meaning become canonical IR?"
    -&gt; IR/Derivation rules.md
+
+If the question is:
+"How is a validated library/provider call represented before lowering?"
+   -&gt; IR/Library call model.md
 
 If the question is:
 "How is conforming canonical IR materially built?"
@@ -908,12 +917,13 @@ A practical reading path for this directory is:
 2. Read Execution IR.md
 3. Read Derivation rules.md
 4. Read Source to FIR scope matrix.md
-5. Read Identity and Mapping.md
-6. Read Construction rules.md
-7. Read Schema.md
-8. Inspect schema/
-9. Read Lowering.md
-10. Read Backend contract.md</code></pre>
+5. Read Library call model.md
+6. Read Identity and Mapping.md
+7. Read Construction rules.md
+8. Read Schema.md
+9. Inspect schema/
+10. Read Lowering.md
+11. Read Backend contract.md</code></pre>
 
 <p>
 That order follows the architectural corridor from validated meaning toward later downstream specialization.
@@ -930,6 +940,8 @@ IR/Readme.md
 Derivation rules.md
    -&gt;
 Source to FIR scope matrix.md
+   -&gt;
+Library call model.md
    -&gt;
 Identity and Mapping.md
    -&gt;
