@@ -36,6 +36,19 @@ They should not be interpreted as a commitment to publish Graiphic's production 
 Production-grade runtime development for future FROG execution surfaces continues in Graiphic proprietary repositories, including <code>Graiphic/FROG-Runtime</code>, while preserving the public contracts required for independent implementations.
 </p>
 
+<h2>Browser-Hosted Inspection Surface</h2>
+
+<p>
+When a browser-hosted example is used for validation, the visible page should expose a collapsed-by-default source and execution artifact inspector.
+Opening the inspector should show formatted in-page content, while raw routes remain available for direct checks.
+The expected inspection surface includes <code>state.json</code>, the owning <code>main.frog</code>, the directly consumed example <code>.wfrog</code> package, and FIR/lowering artifacts when those artifacts exist.
+</p>
+
+<p>
+This browser presentation is a validation host convention, not the FROG language runtime identity.
+Other front-panel hosts may expose the same source, realization, FIR, lowering, manifest, and diagnostic contracts through an equivalent inspection surface.
+</p>
+
 <hr/>
 
 <h2>Current Example Progression</h2>

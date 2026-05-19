@@ -195,7 +195,7 @@
           "style.path_display.font_size": "16px",
           "style.path_display.font_weight": "400",
           "style.path_display.padding_inline": "4px",
-          "style.path_display.baseline_offset": "-5px",
+          "style.path_display.baseline_offset": "0px",
           "style.path_icon.fill_color": "#facc15",
           "style.path_icon.front_fill_color": "#fde68a",
           "style.path_icon.stroke_color": "#b45309",

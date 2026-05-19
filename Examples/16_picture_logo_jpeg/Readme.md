@@ -59,11 +59,12 @@ but that provider is not the public semantic owner of the FROG program.
 For browser-style hosts, a file picker cannot portably expose the user's
 absolute local filesystem path. Such hosts may therefore import the selected
 file into a host-accessible temporary path, update the Path control value to
-that imported path, and then execute the same diagram contract:
+that imported path, and then execute the same diagram contract through an
+explicit run action:
 <code>Path -&gt; frog.image.decode_file_rgba8 -&gt; Picture</code>. The host import
-step is a front-panel convenience for path selection; it does not turn Picture
-into a decoder and it does not replace the explicit <code>frog.image</code>
-primitive.
+step is a front-panel convenience for path selection; it must not decode the
+image by itself, it does not turn Picture into a decoder, and it does not
+replace the explicit <code>frog.image</code> primitive.
 </p>
 
 <p>
