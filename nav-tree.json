@@ -870,6 +870,20 @@
               "children": []
             },
             {
+              "key": "libraries/table.md",
+              "title": "Table",
+              "path": "/Libraries/Table.md",
+              "kind": "page",
+              "children": []
+            },
+            {
+              "key": "libraries/waveform.md",
+              "title": "Waveform",
+              "path": "/Libraries/Waveform.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "libraries/system.md",
               "title": "System",
               "path": "/Libraries/System.md",
@@ -4436,6 +4450,8 @@
     "/Libraries/IO.md",
     "/Libraries/Math.md",
     "/Libraries/Signal.md",
+    "/Libraries/Table.md",
+    "/Libraries/Waveform.md",
     "/Libraries/System.md",
     "/Libraries/Text.md",
     "/Libraries/Time.md",

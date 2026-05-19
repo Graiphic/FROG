@@ -334,6 +334,8 @@ This directory currently contains the following documents:
   <li><code>IO.md</code> — standard <code>frog.io</code> primitives.</li>
   <li><code>Image.md</code> — standard <code>frog.image</code> primitives, currently publishing <code>frog.image.decode_file_rgba8</code> and the portable <code>frog.image.buffer_rgba8</code> contract.</li>
   <li><code>Signal.md</code> — standard <code>frog.signal</code> primitives.</li>
+  <li><code>Waveform.md</code> — standard <code>frog.waveform</code> value and primitive surface.</li>
+  <li><code>Table.md</code> — standard <code>frog.table</code> value and primitive surface.</li>
   <li><code>System.md</code> — standard <code>frog.system</code> introspection primitives for platform, CPU, memory, process, environment, and capability reads.</li>
   <li><code>UI.md</code> — standard <code>frog.ui</code> executable widget interaction primitives.</li>
   <li><code>Connectivity.md</code> — transition note indicating that <code>frog.connectivity.*</code> is no longer normatively owned by the intrinsic library layer and is now owned by the Interop profile.</li>
@@ -374,6 +376,8 @@ At the current repository stage, the intrinsic standardized primitive taxonomy i
   <li><strong><code>frog.io.*</code></strong> — file, path, resource, and byte-oriented I/O primitives</li>
   <li><strong><code>frog.image.*</code></strong> — basic image-data decoding and portable image-buffer primitives; current published primitive: <code>frog.image.decode_file_rgba8</code></li>
   <li><strong><code>frog.signal.*</code></strong> — signal-processing primitives</li>
+  <li><strong><code>frog.waveform.*</code></strong> — waveform value construction and timing helpers</li>
+  <li><strong><code>frog.table.*</code></strong> — portable tabular value construction and access</li>
   <li><strong><code>frog.system.*</code></strong> — bounded system introspection primitives</li>
   <li><strong><code>frog.time.*</code></strong> - wall-clock, monotonic, duration, wait, formatting/parsing, and profiling primitives</li>
   <li><strong><code>frog.ui.*</code></strong> — executable widget interaction primitives</li>
@@ -390,6 +394,8 @@ frog.text.*         -&gt; text processing
 frog.io.*           -&gt; file/path/resource/byte I/O
 frog.image.*        -&gt; image decoding and image-buffer values
 frog.signal.*       -&gt; signal-oriented operations
+frog.waveform.*     -&gt; t0/dt/sample waveform values
+frog.table.*        -&gt; portable rectangular table values
 frog.system.*       -&gt; bounded system introspection
 frog.time.*         -&gt; time and timing operations
 frog.ui.*           -&gt; object-style widget interaction in execution
@@ -473,7 +479,7 @@ implies:
       <td><code>frog.signal</code></td>
       <td>published lightweight standard library</td>
       <td>Portable one-dimensional sampled-signal transforms.</td>
-      <td>Basic analysis, deterministic filtering, decimation, and simple resampling over numeric sample arrays.</td>
+      <td>Sample count, basic analysis, scale/offset, peak normalization, deterministic filtering, decimation, and simple resampling over numeric sample arrays.</td>
       <td>Waveform records, hardware acquisition, streaming, FFT/spectral analysis, adaptive filters, and multi-channel containers.</td>
       <td>Value-only for the published v0.1 surface.</td>
     </tr>
@@ -492,20 +498,21 @@ implies:
       <td><code>now</code>, <code>monotonic_now</code>, elapsed helpers, duration conversion/arithmetic, ISO 8601 UTC format/parse, scheduler wait boundaries, periodic target helper, and profiling marks.</td>
       <td>Hard real-time guarantees, scheduler internals, timer handles, timed loops, wall-clock alarms, locale-heavy formatting, private profiling transports, and OS-specific clock APIs as public law.</td>
       <td>Mixed value-only and runtime-hosted. Clock reads, waits, and profiling hooks require explicit host capability metadata and local <code>success</code>/<code>error_code</code> status outputs where failure is possible.</td>
-    </tr>    <tr>
+    </tr>
+    <tr>
       <td><code>frog.waveform</code></td>
-      <td>candidate lightweight standard library</td>
+      <td>published lightweight standard library</td>
       <td>Portable waveform value helpers around sampled data with timing metadata.</td>
-      <td>Build/unbundle waveform values, access samples, access or update <code>t0</code> and <code>dt</code>, and append compatible waveforms.</td>
-      <td>Hardware acquisition, streaming buffers, chart history widgets, and device timing.</td>
-      <td>Value-only if limited to waveform records; provider/runtime dependencies start only when acquisition or streaming is introduced.</td>
+      <td>Build/unbundle waveform values, access samples, access or update <code>t0</code> and <code>dt</code>, sample count, contiguous append, and index-to-time conversion.</td>
+      <td>Hardware acquisition, streaming buffers, chart history widgets, device timing, rich attributes, and multi-channel containers.</td>
+      <td>Value-only for the published v0.1 surface; provider/runtime dependencies start only when acquisition or streaming is introduced.</td>
     </tr>
     <tr>
       <td><code>frog.table</code></td>
-      <td>candidate lightweight standard library</td>
-      <td>Portable tabular value construction and access.</td>
-      <td>Build table values, row/column counts, cell access, row/column extraction, and simple table formatting.</td>
-      <td>Database connectivity, spreadsheet automation, table widgets, and external data-frame engines.</td>
+      <td>published lightweight standard library</td>
+      <td>Portable text-cell tabular value construction and access.</td>
+      <td>Build table values, empty tables, row/column counts, headers, rows, cell access, row/column extraction, pure cell/header/row updates, and delimited-text formatting.</td>
+      <td>Database connectivity, spreadsheet automation, table widgets, external data-frame engines, typed cells, row ids, and table view state.</td>
       <td>Value-only for data-shape helpers; provider-backed only if later formatting/import/export contracts require it.</td>
     </tr>
     <tr>
@@ -683,6 +690,8 @@ Examples:
   <li><code>frog.io.read_text</code></li>
   <li><code>frog.image.decode_file_rgba8</code></li>
   <li><code>frog.signal.moving_average</code></li>
+  <li><code>frog.waveform.build</code></li>
+  <li><code>frog.table.cell</code></li>
   <li><code>frog.system.platform_info</code></li>
   <li><code>frog.time.monotonic_now</code></li>
   <li><code>frog.ui.property_read</code></li>
@@ -741,6 +750,8 @@ The intrinsic standardized library families in this directory are intentionally 
   <li><strong><code>frog.io.*</code></strong> owns file, path, resource, and byte-oriented I/O primitives.</li>
   <li><strong><code>frog.image.*</code></strong> owns portable image-data primitives such as decode-to-buffer operations.</li>
   <li><strong><code>frog.signal.*</code></strong> owns signal-processing primitives.</li>
+  <li><strong><code>frog.waveform.*</code></strong> owns waveform value construction, timing access, and sample replacement helpers.</li>
+  <li><strong><code>frog.table.*</code></strong> owns portable tabular data values and pure table transforms.</li>
   <li><strong><code>frog.system.*</code></strong> owns bounded, read-only system introspection primitives.</li>
   <li><strong><code>frog.time.*</code></strong> owns explicit time and timing primitives.</li>
   <li><strong><code>frog.time.*</code></strong> - wall-clock, monotonic, duration, wait, formatting/parsing, and profiling primitives</li>
@@ -758,6 +769,8 @@ frog.text.*         -&gt; text only
 frog.io.*           -&gt; I/O only
 frog.image.*        -&gt; image data only
 frog.signal.*       -&gt; signal only
+frog.waveform.*     -&gt; waveform values only
+frog.table.*        -&gt; tabular values only
 frog.system.*       -&gt; system introspection only
 frog.time.*         -&gt; time and timing only
 frog.ui.*           -&gt; executable UI interaction only
@@ -777,6 +790,8 @@ Therefore:
   <li><code>frog.text.*</code> MUST remain distinct from file, path, and external-service semantics.</li>
   <li><code>frog.collections.*</code> MUST remain distinct from future specialized families unless those are explicitly standardized.</li>
   <li><code>frog.signal.*</code> MUST remain distinct from broader acquisition, streaming, tensor, or specialized domain families unless those are explicitly standardized.</li>
+  <li><code>frog.waveform.*</code> MUST remain distinct from chart widgets, acquisition sessions, streaming buffers, and private waveform-history stores.</li>
+  <li><code>frog.table.*</code> MUST remain distinct from Table widget state, database cursors, spreadsheets, host grid controls, and external data-frame engines.</li>
   <li><code>Libraries/</code> MUST NOT become a catch-all container for ecosystem-specific capability growth.</li>
   <li>Optional capability families that depend on foreign runtimes, host ABIs, managed platforms, databases, protocols, services, target-profile classes, deployment-mode classes, or comparable environment assumptions SHOULD be specified in <code>Profiles/</code> rather than in <code>Libraries/</code>.</li>
 </ul>
@@ -940,6 +955,8 @@ The current intrinsic standardized library surface already covers:
   <li>text processing,</li>
   <li>I/O,</li>
   <li>signal processing,</li>
+  <li>waveform values,</li>
+  <li>table values,</li>
   <li>system introspection,</li>
   <li>time and timing,</li>
   <li>widget interaction.</li>

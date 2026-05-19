@@ -120,6 +120,8 @@
   - [IO](/Libraries/IO.md)
   - [Math](/Libraries/Math.md)
   - [Signal](/Libraries/Signal.md)
+  - [Table](/Libraries/Table.md)
+  - [Waveform](/Libraries/Waveform.md)
   - [System](/Libraries/System.md)
   - [Text](/Libraries/Text.md)
   - [Time](/Libraries/Time.md)
