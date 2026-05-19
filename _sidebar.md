@@ -210,6 +210,7 @@
   - [Snippet](/IDE/Snippet.md)
   - [Watch](/IDE/Watch.md)
 - [Conformance](/Conformance/Readme.md)
+  - [Source FIR Lowering conformance matrix](/Conformance/Source%20FIR%20Lowering%20conformance%20matrix.md)
   - [Source to FIR conformance matrix](/Conformance/Source%20to%20FIR%20conformance%20matrix.md)
   - invalid
     - [01 missing required section](/Conformance/invalid/01_missing_required_section/Readme.md)

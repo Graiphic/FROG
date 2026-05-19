@@ -1509,6 +1509,13 @@
           "kind": "category",
           "children": [
             {
+              "key": "conformance/source-fir-lowering-conformance-matrix.md",
+              "title": "Source FIR Lowering conformance matrix",
+              "path": "/Conformance/Source%20FIR%20Lowering%20conformance%20matrix.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "conformance/source-to-fir-conformance-matrix.md",
               "title": "Source to FIR conformance matrix",
               "path": "/Conformance/Source%20to%20FIR%20conformance%20matrix.md",
@@ -4455,6 +4462,7 @@
     "/IDE/Snippet.md",
     "/IDE/Watch.md",
     "/IDE/Readme.md",
+    "/Conformance/Source%20FIR%20Lowering%20conformance%20matrix.md",
     "/Conformance/Source%20to%20FIR%20conformance%20matrix.md",
     "/Conformance/invalid/01_missing_required_section/case.frog",
     "/Conformance/invalid/01_missing_required_section/Readme.md",
