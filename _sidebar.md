@@ -79,6 +79,8 @@
     - [main.frog](/Examples/19_subpanel_embedded_front_panel/main.frog)
     - embedded
       - [embedded_status.frog](/Examples/19_subpanel_embedded_front_panel/embedded/embedded_status.frog)
+  - [20 tab page selection](/Examples/20_tab_page_selection/Readme.md)
+    - [main.frog](/Examples/20_tab_page_selection/main.frog)
   - [compiler](/Examples/compiler/Readme.md)
     - [01 pure arithmetic](/Examples/compiler/01_pure_arithmetic.md)
     - [02 structured control](/Examples/compiler/02_structured_control.md)

@@ -577,6 +577,21 @@
               ]
             },
             {
+              "key": "examples/20_tab_page_selection/",
+              "title": "20 tab page selection",
+              "path": "/Examples/20_tab_page_selection/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/20_tab_page_selection/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/20_tab_page_selection/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -4268,6 +4283,8 @@
     "/Examples/19_subpanel_embedded_front_panel/main.frog",
     "/Examples/19_subpanel_embedded_front_panel/embedded/embedded_status.frog",
     "/Examples/19_subpanel_embedded_front_panel/Readme.md",
+    "/Examples/20_tab_page_selection/main.frog",
+    "/Examples/20_tab_page_selection/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
