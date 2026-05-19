@@ -552,6 +552,15 @@ remain visible as a standard-library primitive reference in IR rather than
 being hidden as Picture-widget behavior or runtime-private image magic.
 </p>
 
+<p>
+When that call later requires a provider, native dependency, host capability,
+or package artifact, FIR still owns the public call identity and typed
+participation. Lowering and backend contracts own the provider boundary,
+dependency closure, manifest-compatible handoff, and rejection conditions.
+Concrete provider binaries, loader behavior, ABI strategy, and runtime object
+storage remain implementation-owned.
+</p>
+
 <ul>
   <li>primitive identity remains owned by the relevant library layer,</li>
   <li>optional capability identity remains owned by the relevant profile layer,</li>
@@ -831,10 +840,13 @@ schema/
    - machine-checkable schema artifacts
 
 Lowering.md
-   - downstream specialization boundary
+   - downstream specialization boundary, including provider/capability
+     and dependency-closure preparation
 
 Backend contract.md
-   - standardized consumer-facing handoff after lowering</code></pre>
+   - standardized consumer-facing handoff after lowering, including
+     manifest-compatible artifact, ABI, provider, host capability, and
+     dependency declarations where applicable</code></pre>
 
 <p>
 This split matters because it prevents one giant document from blurring architectural responsibility.
@@ -981,7 +993,7 @@ In the current published v0.1 posture, the IR layer is no longer only architectu
   <li>recoverable identity and mapping,</li>
   <li>material canonical IR construction,</li>
   <li>canonical JSON schema validation,</li>
-  <li>later lowering and backend-facing handoff.</li>
+  <li>later lowering and backend-facing handoff, including provider and dependency boundaries where applicable.</li>
 </ul>
 
 <p>

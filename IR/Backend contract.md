@@ -513,9 +513,13 @@ In base v0.1, that required content SHOULD include, as applicable:
   <li>contract version or contract semantics version,</li>
   <li>backend family declaration,</li>
   <li>lowered executable scope,</li>
+  <li>backend artifact kind declarations where artifacts are produced,</li>
+  <li>ABI profile declarations where a native or foreign-call boundary is fixed,</li>
   <li>capability requirements,</li>
+  <li>provider requirements and provider slots where a call is provider-backed,</li>
   <li>selected runtime or host-service requirements where execution depends on them,</li>
   <li>external dependency declarations such as native libraries, shared libraries, static libraries, symbols, or equivalent callable artifacts,</li>
+  <li>package-relative artifact and dependency references where packaging is part of the handoff,</li>
   <li>type or representation commitments already fixed,</li>
   <li>storage or memory commitments already fixed,</li>
   <li>effect / call / service boundary commitments already fixed,</li>
@@ -528,6 +532,39 @@ In base v0.1, that required content SHOULD include, as applicable:
 <p>
 This does not force one serialized syntax.
 It does force one explicit consumer-facing content surface.
+</p>
+
+<h3>Manifest-Compatible Contract Surface</h3>
+
+<p>
+A backend contract may be carried directly by a lowered artifact, stored beside
+that artifact, or expressed as a manifest-compatible handoff. FROG does not
+require one manifest syntax here, but the contract surface must be explicit
+enough for a runtime host, generated launcher, packager, or backend consumer
+to validate compatibility without guessing.
+</p>
+
+<p>
+Where applicable, a manifest-compatible handoff should make the following
+facts explicit:
+</p>
+
+<ul>
+  <li>the source, FIR, lowering, and backend artifact references needed for attribution and compatibility checks,</li>
+  <li>target, platform, architecture, backend family, and ABI profile assumptions,</li>
+  <li>produced native artifacts, bytecode artifacts, interpreted artifacts, or other backend products,</li>
+  <li>entrypoint descriptors and lifecycle hooks that a consumer may call,</li>
+  <li>ownership, memory, buffer, and release-policy commitments already fixed at the backend boundary,</li>
+  <li>provider slots and abstract provider requirements for provider-backed calls,</li>
+  <li>host capability requirements such as filesystem, clock, process, UI host, or provider access,</li>
+  <li>dependency-closure metadata for packaging, linking, loading, or rejection diagnostics.</li>
+</ul>
+
+<p>
+The backend contract must not become a private runtime recipe. It declares
+what a consumer may rely on and what it must reject; it does not standardize
+Graiphic-private loader internals, scheduler internals, optimizer choices, or
+runtime object tables.
 </p>
 
 <hr/>
@@ -589,6 +626,22 @@ A consumer MUST NOT:
   <li>erase required attribution or diagnostics anchors if the contract still requires them,</li>
   <li>reinterpret public-interface, state, structure, UI, or effect categories in ways that contradict the contract.</li>
 </ul>
+
+<h3>Runtime or Launcher Consumption Without LLVM Identity</h3>
+
+<p>
+A runtime host, generated launcher, packager, or executable wrapper consumes
+the backend contract and any referenced artifacts. It should not be required
+to parse LLVM IR or link against LLVM merely because one backend family used
+LLVM-oriented tooling earlier in the pipeline.
+</p>
+
+<p>
+In a native deployment posture, the consumer validates the declared artifact
+kinds, ABI profile, entrypoints, provider requirements, host capabilities, and
+dependency closure. LLVM may have been part of producing those artifacts, but
+LLVM is not the FROG runtime identity and not the public definition of FIR.
+</p>
 
 <hr/>
 

@@ -502,6 +502,31 @@ The following transformation classes are allowed when they preserve the required
 Allowed lowering is therefore a broad specialization space, but it remains bounded by upstream truth.
 </p>
 
+<h3>Provider and Dependency Closure</h3>
+
+<p>
+When a canonical FIR call requires a standard-library provider, host
+capability, external provider, native dependency, or runtime service,
+lowering may make the required boundary explicit for the selected backend
+family.
+</p>
+
+<p>
+This includes preparing provider call boundaries, dependency-closure
+metadata, package-relative references, host capability requirements, and
+rejection conditions. It does not include choosing private provider binaries,
+private loader algorithms, private symbol names, or runtime object-table
+shapes as language truth.
+</p>
+
+<pre><code>FIR call identity
+   -&gt;
+lowering provider/capability boundary
+   -&gt;
+backend contract or manifest-compatible handoff
+   -&gt;
+implementation-owned provider resolution</code></pre>
+
 <hr/>
 
 <h2 id="forbidden-lowering-transformations">14. Forbidden Lowering Transformations</h2>
@@ -801,6 +826,14 @@ An incorrect reading would be:
 <p>
 FROG remains upstream, open, inspectable, and language-owned.
 LLVM remains downstream, consumer-oriented, and compiler-family-specific.
+</p>
+
+<p>
+For a native route, lowering may prepare artifacts and metadata that a later
+LLVM-oriented backend, native backend, runtime host, launcher, or packager can
+consume. The public lowering rule is still the same: the selected backend
+family consumes the lowered/contracted output; it does not replace FIR as the
+public representation of program meaning.
 </p>
 
 <hr/>
