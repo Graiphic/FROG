@@ -766,6 +766,7 @@ The core open-IR bundle is:
 <ul>
   <li><code>Execution IR.md</code></li>
   <li><code>Derivation rules.md</code></li>
+  <li><code>Source to FIR scope matrix.md</code></li>
   <li><code>Construction rules.md</code></li>
   <li><code>Identity and Mapping.md</code></li>
   <li><code>Schema.md</code></li>
@@ -807,6 +808,10 @@ The ownership split inside <code>IR/</code> is:
 
 Derivation rules.md
    - normative derivation from validated meaning to canonical IR
+
+Source to FIR scope matrix.md
+   - compact field-by-field guide for what .frog source facts become
+     primary FIR, correspondence, downstream references, or exclusions
 
 Construction rules.md
    - material construction of conforming canonical IR payloads
@@ -902,12 +907,13 @@ A practical reading path for this directory is:
 <pre><code>1. Read this README first
 2. Read Execution IR.md
 3. Read Derivation rules.md
-4. Read Identity and Mapping.md
-5. Read Construction rules.md
-6. Read Schema.md
-7. Inspect schema/
-8. Read Lowering.md
-9. Read Backend contract.md</code></pre>
+4. Read Source to FIR scope matrix.md
+5. Read Identity and Mapping.md
+6. Read Construction rules.md
+7. Read Schema.md
+8. Inspect schema/
+9. Read Lowering.md
+10. Read Backend contract.md</code></pre>
 
 <p>
 That order follows the architectural corridor from validated meaning toward later downstream specialization.
@@ -922,6 +928,8 @@ A second practical path, when working from conformance or compiler-corridor ques
 IR/Readme.md
    -&gt;
 Derivation rules.md
+   -&gt;
+Source to FIR scope matrix.md
    -&gt;
 Identity and Mapping.md
    -&gt;
