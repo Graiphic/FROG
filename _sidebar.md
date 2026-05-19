@@ -16,6 +16,7 @@
   - [Type](/Expression/Type.md)
   - [Widget interaction](/Expression/Widget%20interaction.md)
   - [Widget](/Expression/Widget.md)
+  - [Canonical source scope](/Expression/Canonical%20source%20scope.md)
   - [Front-panel object model](/Expression/Front-panel%20object%20model.md)
   - [Source provenance](/Expression/Source%20provenance.md)
   - [Widget behavior](/Expression/Widget%20behavior.md)
@@ -98,6 +99,7 @@
   - [Execution control and observation boundaries](/Language/Execution%20control%20and%20observation%20boundaries.md)
   - [Execution model](/Language/Execution%20model.md)
   - [Expression to validated meaning](/Language/Expression%20to%20validated%20meaning.md)
+  - [Semantic validation before FIR](/Language/Semantic%20validation%20before%20FIR.md)
   - [State and cycles](/Language/State%20and%20cycles.md)
 - [IR](/IR/Readme.md)
   - [Backend contract](/IR/Backend%20contract.md)
@@ -207,6 +209,7 @@
   - [Snippet](/IDE/Snippet.md)
   - [Watch](/IDE/Watch.md)
 - [Conformance](/Conformance/Readme.md)
+  - [Source to FIR conformance matrix](/Conformance/Source%20to%20FIR%20conformance%20matrix.md)
   - invalid
     - [01 missing required section](/Conformance/invalid/01_missing_required_section/Readme.md)
       - [case.frog](/Conformance/invalid/01_missing_required_section/case.frog)

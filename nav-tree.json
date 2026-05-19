@@ -115,6 +115,13 @@
               "children": []
             },
             {
+              "key": "expression/canonical-source-scope.md",
+              "title": "Canonical source scope",
+              "path": "/Expression/Canonical%20source%20scope.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "expression/front-panel-object-model.md",
               "title": "Front-panel object model",
               "path": "/Expression/Front-panel%20object%20model.md",
@@ -710,6 +717,13 @@
               "key": "language/expression-to-validated-meaning.md",
               "title": "Expression to validated meaning",
               "path": "/Language/Expression%20to%20validated%20meaning.md",
+              "kind": "page",
+              "children": []
+            },
+            {
+              "key": "language/semantic-validation-before-fir.md",
+              "title": "Semantic validation before FIR",
+              "path": "/Language/Semantic%20validation%20before%20FIR.md",
               "kind": "page",
               "children": []
             },
@@ -1487,6 +1501,13 @@
           "path": "/Conformance/Readme.md",
           "kind": "category",
           "children": [
+            {
+              "key": "conformance/source-to-fir-conformance-matrix.md",
+              "title": "Source to FIR conformance matrix",
+              "path": "/Conformance/Source%20to%20FIR%20conformance%20matrix.md",
+              "kind": "page",
+              "children": []
+            },
             {
               "key": "conformance/invalid/",
               "title": "invalid",
@@ -4235,6 +4256,7 @@
     "/Expression/Type.md",
     "/Expression/Widget%20interaction.md",
     "/Expression/Widget.md",
+    "/Expression/Canonical%20source%20scope.md",
     "/Expression/Front-panel%20object%20model.md",
     "/Expression/Source%20provenance.md",
     "/Expression/Widget%20behavior.md",
@@ -4316,6 +4338,7 @@
     "/Language/Execution%20control%20and%20observation%20boundaries.md",
     "/Language/Execution%20model.md",
     "/Language/Expression%20to%20validated%20meaning.md",
+    "/Language/Semantic%20validation%20before%20FIR.md",
     "/Language/State%20and%20cycles.md",
     "/Language/Readme.md",
     "/IR/Backend%20contract.md",
@@ -4424,6 +4447,7 @@
     "/IDE/Snippet.md",
     "/IDE/Watch.md",
     "/IDE/Readme.md",
+    "/Conformance/Source%20to%20FIR%20conformance%20matrix.md",
     "/Conformance/invalid/01_missing_required_section/case.frog",
     "/Conformance/invalid/01_missing_required_section/Readme.md",
     "/Conformance/invalid/02_wrong_top_level_section_type/case.frog",
