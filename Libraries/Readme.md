@@ -337,6 +337,7 @@ This directory currently contains the following documents:
   <li><code>System.md</code> — standard <code>frog.system</code> introspection primitives for platform, CPU, memory, process, environment, and capability reads.</li>
   <li><code>UI.md</code> — standard <code>frog.ui</code> executable widget interaction primitives.</li>
   <li><code>Connectivity.md</code> — transition note indicating that <code>frog.connectivity.*</code> is no longer normatively owned by the intrinsic library layer and is now owned by the Interop profile.</li>
+  <li><code>Time.md</code> - standard <code>frog.time</code> primitives for wall-clock time, monotonic time, durations, waits, formatting/parsing, and profiling marks.</li>
 </ul>
 
 <p>
@@ -374,6 +375,7 @@ At the current repository stage, the intrinsic standardized primitive taxonomy i
   <li><strong><code>frog.image.*</code></strong> — basic image-data decoding and portable image-buffer primitives; current published primitive: <code>frog.image.decode_file_rgba8</code></li>
   <li><strong><code>frog.signal.*</code></strong> — signal-processing primitives</li>
   <li><strong><code>frog.system.*</code></strong> — bounded system introspection primitives</li>
+  <li><strong><code>frog.time.*</code></strong> - wall-clock, monotonic, duration, wait, formatting/parsing, and profiling primitives</li>
   <li><strong><code>frog.ui.*</code></strong> — executable widget interaction primitives</li>
 </ul>
 
@@ -389,6 +391,7 @@ frog.io.*           -&gt; file/path/resource/byte I/O
 frog.image.*        -&gt; image decoding and image-buffer values
 frog.signal.*       -&gt; signal-oriented operations
 frog.system.*       -&gt; bounded system introspection
+frog.time.*         -&gt; time and timing operations
 frog.ui.*           -&gt; object-style widget interaction in execution
 </code></pre>
 
@@ -484,13 +487,12 @@ implies:
     </tr>
     <tr>
       <td><code>frog.time</code></td>
-      <td>candidate lightweight standard library</td>
-      <td>Portable time values and timing primitives.</td>
-      <td>Wall-clock time, monotonic time, elapsed-time helpers, waits/delays, time arithmetic, formatting/parsing, and profiling hooks.</td>
-      <td>Hard real-time guarantees, scheduler internals, private runtime timing loops, and OS-specific clock APIs as public law.</td>
-      <td>Runtime-hosted and partly OS-dependent. Wait/delay behavior must be coordinated with execution semantics before publication.</td>
-    </tr>
-    <tr>
+      <td>published lightweight standard library</td>
+      <td>Explicit wall-clock, monotonic, duration, wait, formatting/parsing, and diagnostic timing primitives.</td>
+      <td><code>now</code>, <code>monotonic_now</code>, elapsed helpers, duration conversion/arithmetic, ISO 8601 UTC format/parse, scheduler wait boundaries, periodic target helper, and profiling marks.</td>
+      <td>Hard real-time guarantees, scheduler internals, timer handles, timed loops, wall-clock alarms, locale-heavy formatting, private profiling transports, and OS-specific clock APIs as public law.</td>
+      <td>Mixed value-only and runtime-hosted. Clock reads, waits, and profiling hooks require explicit host capability metadata and local <code>success</code>/<code>error_code</code> status outputs where failure is possible.</td>
+    </tr>    <tr>
       <td><code>frog.waveform</code></td>
       <td>candidate lightweight standard library</td>
       <td>Portable waveform value helpers around sampled data with timing metadata.</td>
@@ -682,6 +684,7 @@ Examples:
   <li><code>frog.image.decode_file_rgba8</code></li>
   <li><code>frog.signal.moving_average</code></li>
   <li><code>frog.system.platform_info</code></li>
+  <li><code>frog.time.monotonic_now</code></li>
   <li><code>frog.ui.property_read</code></li>
 </ul>
 
@@ -739,6 +742,8 @@ The intrinsic standardized library families in this directory are intentionally 
   <li><strong><code>frog.image.*</code></strong> owns portable image-data primitives such as decode-to-buffer operations.</li>
   <li><strong><code>frog.signal.*</code></strong> owns signal-processing primitives.</li>
   <li><strong><code>frog.system.*</code></strong> owns bounded, read-only system introspection primitives.</li>
+  <li><strong><code>frog.time.*</code></strong> owns explicit time and timing primitives.</li>
+  <li><strong><code>frog.time.*</code></strong> - wall-clock, monotonic, duration, wait, formatting/parsing, and profiling primitives</li>
   <li><strong><code>frog.ui.*</code></strong> owns executable widget interaction primitives only.</li>
 </ul>
 
@@ -754,6 +759,7 @@ frog.io.*           -&gt; I/O only
 frog.image.*        -&gt; image data only
 frog.signal.*       -&gt; signal only
 frog.system.*       -&gt; system introspection only
+frog.time.*         -&gt; time and timing only
 frog.ui.*           -&gt; executable UI interaction only
 </code></pre>
 
@@ -767,6 +773,7 @@ Therefore:
   <li><code>frog.image.*</code> MUST remain distinct from Picture widget realization, camera acquisition, advanced computer vision, and implementation-specific codec stacks.</li>
   <li><code>frog.ui.*</code> MUST remain distinct from front-panel serialization, widget catalog definition, broader IDE UI editing concerns, target-profile classes, deployment-mode classes, and backend-family-specific UI binding contracts.</li>
   <li><code>frog.system.*</code> MUST remain distinct from process execution, networking, file mutation, time/timing, hardware access, permission enumeration, secret access, and host-private runtime service discovery.</li>
+  <li><code>frog.time.*</code> MUST remain distinct from hard real-time profiles, private scheduler internals, UI event pumps, OS-specific clock APIs, profiling transports, system introspection, and synchronization primitives.</li>
   <li><code>frog.text.*</code> MUST remain distinct from file, path, and external-service semantics.</li>
   <li><code>frog.collections.*</code> MUST remain distinct from future specialized families unless those are explicitly standardized.</li>
   <li><code>frog.signal.*</code> MUST remain distinct from broader acquisition, streaming, tensor, or specialized domain families unless those are explicitly standardized.</li>
@@ -934,6 +941,7 @@ The current intrinsic standardized library surface already covers:
   <li>I/O,</li>
   <li>signal processing,</li>
   <li>system introspection,</li>
+  <li>time and timing,</li>
   <li>widget interaction.</li>
 </ul>
 
