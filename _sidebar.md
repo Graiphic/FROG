@@ -107,6 +107,7 @@
   - [Derivation rules](/IR/Derivation%20rules.md)
   - [Execution IR](/IR/Execution%20IR.md)
   - [Identity and Mapping](/IR/Identity%20and%20Mapping.md)
+  - [Library call model](/IR/Library%20call%20model.md)
   - [Lowering](/IR/Lowering.md)
   - [Schema](/IR/Schema.md)
   - [Source to FIR scope matrix](/IR/Source%20to%20FIR%20scope%20matrix.md)

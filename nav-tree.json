@@ -778,6 +778,13 @@
               "children": []
             },
             {
+              "key": "ir/library-call-model.md",
+              "title": "Library call model",
+              "path": "/IR/Library%20call%20model.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "ir/lowering.md",
               "title": "Lowering",
               "path": "/IR/Lowering.md",
@@ -4346,6 +4353,7 @@
     "/IR/Derivation%20rules.md",
     "/IR/Execution%20IR.md",
     "/IR/Identity%20and%20Mapping.md",
+    "/IR/Library%20call%20model.md",
     "/IR/Lowering.md",
     "/IR/Schema.md",
     "/IR/Source%20to%20FIR%20scope%20matrix.md",
