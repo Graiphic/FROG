@@ -387,6 +387,11 @@ The repository also contains repository-level support areas and repository-level
 The published numbered example surface now exposes a repository-visible progression under <code>Examples/01_*</code> through <code>Examples/15_*</code>.
 Examples <code>01</code> through <code>15</code> define the current public reference runtime closure.
 Examples beyond this boundary may remain repository-visible as specification-facing, widget-facing, conformance-facing, or design-progression examples, while Graiphic production runtime work for those later examples continues in the proprietary <code>Graiphic/FROG-Runtime</code> repository unless explicitly promoted later.
+All example families are organized by the public
+<a href="./Examples/example_dossier_standard.md">FROG Example Dossier Standard</a>,
+so future widget, operator, structure, library, compiler, and conformance
+examples expose their source, derived artifacts, ownership boundary, validation
+posture, and limitations in a consistent way.
 </p>
 
 <table>

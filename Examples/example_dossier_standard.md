@@ -1,0 +1,221 @@
+<p align="center">
+  <img src="../FROG logo.svg" alt="FROG logo" width="140" />
+</p>
+
+<h1 align="center">FROG Example Dossier Standard</h1>
+
+<p align="center">
+  <strong>Common organization for public FROG examples</strong><br/>
+  <em>FROG - Free Open Graphical Language</em>
+</p>
+
+<hr/>
+
+<h2>Purpose</h2>
+
+<p>
+A FROG example is a focused, inspectable dossier.
+It is not the owner of language semantics.
+It demonstrates how a specific language feature, widget surface, operator,
+library call, structure, compiler corridor, or runtime-facing contract is
+represented through the public FROG artifact chain.
+</p>
+
+<p>
+Each example should make one primary idea easy to inspect.
+If an example combines several already validated ideas, it should name the new
+composition being tested and should reuse the accepted baselines instead of
+redefining them.
+</p>
+
+<hr/>
+
+<h2>Minimum Dossier Shape</h2>
+
+<p>
+A numbered example directory should contain the smallest set of files needed to
+make its public claim inspectable:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>File or directory</th>
+      <th>Role</th>
+      <th>When expected</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Readme.md</code></td>
+      <td>Human explanation of the example, its focus, artifact path, validation posture, and limitations.</td>
+      <td>Always.</td>
+    </tr>
+    <tr>
+      <td><code>main.frog</code></td>
+      <td>Canonical FROG source for the example.</td>
+      <td>Always, unless the example is explicitly a documentation-only mirror.</td>
+    </tr>
+    <tr>
+      <td><code>main.fir.json</code></td>
+      <td>Derived FIR / execution-facing representation of the source.</td>
+      <td>When the example participates in the source-to-FIR corridor.</td>
+    </tr>
+    <tr>
+      <td><code>main.lowering.json</code></td>
+      <td>Lowered execution/backend handoff for the example.</td>
+      <td>When the example participates in a lowering or backend corridor.</td>
+    </tr>
+    <tr>
+      <td><code>ui/*.wfrog</code></td>
+      <td>Front-panel realization package references, Default asset references, and host capability declarations.</td>
+      <td>When the example has a front panel or widget surface.</td>
+    </tr>
+    <tr>
+      <td><code>assets/</code></td>
+      <td>Example-owned input fixtures such as sample images or data files.</td>
+      <td>Only for true example data fixtures, not duplicated Default widget skins.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+Compiler, conformance, or library examples may add specialized artifacts when
+they are the subject of the example.
+Those artifacts should be linked from the example README and should not obscure
+the primary source-to-artifact story.
+</p>
+
+<hr/>
+
+<h2>README Expectations</h2>
+
+<p>
+An example README should identify:
+</p>
+
+<ul>
+  <li>the example title and numbered directory;</li>
+  <li>the single primary behavior or concept under test;</li>
+  <li>the source artifact path, normally starting at <code>main.frog</code>;</li>
+  <li>the public artifact chain, such as <code>.frog -&gt; FIR -&gt; lowering -&gt; contract -&gt; native manifest</code> where applicable;</li>
+  <li>front-panel packages and Default realization assets when widgets are involved;</li>
+  <li>the stated validation level, without claiming broader runtime or compiler completeness than the example proves;</li>
+  <li>known limits, especially when the example is post-boundary public material whose runtime implementation continues privately.</li>
+</ul>
+
+<p>
+The README should be useful to a reader who has not seen the chat that created
+the example.
+It should explain what changed, what is reused, and what evidence the directory
+provides.
+</p>
+
+<hr/>
+
+<h2>Ownership Boundaries</h2>
+
+<p>
+Examples must preserve the public FROG ownership model:
+</p>
+
+<ul>
+  <li><code>.frog</code> owns diagram logic, source identity, front-panel instances, widget layout, bindings, initial values, labels, and instance-level visual overrides.</li>
+  <li><code>.wfrog</code> owns realization package references, Default asset references, supported classes, and host capability declarations.</li>
+  <li>Default realization assets own reusable widget visual grammar, SVG templates, public parts, anchors, bindings, internal geometry, and default visual behavior.</li>
+  <li>Runtime or host material consumes the published artifacts; it does not become the semantic definition of the example.</li>
+</ul>
+
+<p>
+For non-widget examples, the same principle applies: the example should show the
+source truth, the public derived artifacts, and the handoff boundary instead of
+hiding meaning inside an implementation-specific shortcut.
+</p>
+
+<hr/>
+
+<h2>Browser-Hosted Examples</h2>
+
+<p>
+When an example is launched through a browser host for validation, the page
+should make the example inspectable without treating the browser as the FROG
+runtime identity.
+</p>
+
+<p>
+The browser-hosted surface should expose:
+</p>
+
+<ul>
+  <li>the example title and validation badges;</li>
+  <li>the visible front panel or equivalent review surface;</li>
+  <li>an explicit <code>Execute</code> action when the example requires running the diagram or manifest-backed contract;</li>
+  <li><code>Read</code> only when the example specifically validates program-read semantics;</li>
+  <li>a collapsed-by-default source and execution artifact inspector with formatted readable content and raw routes for <code>state.json</code>, the owning <code>.frog</code>, directly consumed <code>.wfrog</code> packages, and FIR/lowering artifacts when present.</li>
+</ul>
+
+<p>
+Widget edits are front-panel state changes.
+They should not silently execute the diagram unless the example explicitly
+defines that interaction as the execution event.
+</p>
+
+<hr/>
+
+<h2>Example Families</h2>
+
+<p>
+The same dossier pattern applies beyond widget work:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Example family</th>
+      <th>What it should emphasize</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Widget examples</td>
+      <td>Source-owned instances, <code>.wfrog</code> realization references, Default SVG assets, public parts, bindings, and visible behavior.</td>
+    </tr>
+    <tr>
+      <td>Operator examples</td>
+      <td>Source operator identity, type/value behavior, FIR preservation, lowering behavior, and backend/runtime evidence where in scope.</td>
+    </tr>
+    <tr>
+      <td>Structure examples</td>
+      <td>Explicit structure boundaries, regions, terminals, state participation, and preservation across FIR/lowering.</td>
+    </tr>
+    <tr>
+      <td>Library examples</td>
+      <td>Explicit <code>frog.xxx</code> function identity, provider or dependency boundary, manifest declaration, and dataflow-visible inputs/outputs.</td>
+    </tr>
+    <tr>
+      <td>Compiler/conformance examples</td>
+      <td>Positive and negative cases, expected diagnostics, accepted/rejected source patterns, and artifact preservation claims.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<h2>Acceptance Posture</h2>
+
+<p>
+An example is complete at the level it honestly proves.
+It may be a public specification-facing example, a bounded public reference
+runtime example, a compiler corridor example, a widget progression example, or a
+future conformance case.
+The README and artifacts should state that posture precisely.
+</p>
+
+<p>
+For the current repository boundary, Examples <code>01</code> through
+<code>15</code> define the public reference runtime closure.
+Examples after that boundary may remain public as source, specification,
+widget, library, conformance, or design-progression material while Graiphic
+runtime implementation continues privately unless a later public reference
+surface is explicitly promoted.
+</p>

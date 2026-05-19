@@ -19,6 +19,14 @@ Examples are not semantic owners.
 They are published slices used to inspect how source, FIR, lowering, contracts, runtimes, and native proof paths relate.
 </p>
 
+<p>
+New examples should follow the
+<a href="./example_dossier_standard.md">FROG Example Dossier Standard</a>.
+That document defines the shared public organization for widget, operator,
+structure, library, compiler, and conformance examples without publishing
+Graiphic's internal validation recipe.
+</p>
+
 <hr/>
 
 <h2>Public Runtime Boundary</h2>
@@ -477,6 +485,13 @@ Widget examples are framed by the
 That document records the public source / realization / runtime-consumer
 ownership split without publishing Graiphic's internal widget acceptance recipe,
 manual visual QA procedure, or private runtime roadmap.
+</p>
+
+<p>
+All example families are organized by the
+<a href="./example_dossier_standard.md">FROG Example Dossier Standard</a>.
+Use the widget boundary document as the additional public boundary only when an
+example has a front-panel widget or Default realization surface.
 </p>
 
 <p>
