@@ -870,23 +870,16 @@
               "children": []
             },
             {
-              "key": "libraries/table.md",
-              "title": "Table",
-              "path": "/Libraries/Table.md",
-              "kind": "page",
-              "children": []
-            },
-            {
-              "key": "libraries/waveform.md",
-              "title": "Waveform",
-              "path": "/Libraries/Waveform.md",
-              "kind": "page",
-              "children": []
-            },
-            {
               "key": "libraries/system.md",
               "title": "System",
               "path": "/Libraries/System.md",
+              "kind": "page",
+              "children": []
+            },
+            {
+              "key": "libraries/table.md",
+              "title": "Table",
+              "path": "/Libraries/Table.md",
               "kind": "page",
               "children": []
             },
@@ -908,6 +901,13 @@
               "key": "libraries/ui.md",
               "title": "UI",
               "path": "/Libraries/UI.md",
+              "kind": "page",
+              "children": []
+            },
+            {
+              "key": "libraries/waveform.md",
+              "title": "Waveform",
+              "path": "/Libraries/Waveform.md",
               "kind": "page",
               "children": []
             },
@@ -4450,12 +4450,12 @@
     "/Libraries/IO.md",
     "/Libraries/Math.md",
     "/Libraries/Signal.md",
-    "/Libraries/Table.md",
-    "/Libraries/Waveform.md",
     "/Libraries/System.md",
+    "/Libraries/Table.md",
     "/Libraries/Text.md",
     "/Libraries/Time.md",
     "/Libraries/UI.md",
+    "/Libraries/Waveform.md",
     "/Libraries/Realizations/Default/Array.md",
     "/Libraries/Realizations/Default/Boolean.md",
     "/Libraries/Realizations/Default/Button.md",
