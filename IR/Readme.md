@@ -88,6 +88,41 @@ private realization</code></pre>
 The core of this layer is the canonical open Execution IR bundle. The directory also contains downstream-adjacent documents that define how open IR connects to later stages without collapsing the open IR layer into runtime-private form.
 </p>
 
+<h3>Public Derivation and Private Implementation Boundary</h3>
+
+<p>
+The <code>.frog -&gt; FIR</code> boundary is part of the public FROG
+specification. Independent implementations must be able to understand,
+validate, emit, and inspect canonical Execution IR without depending on
+Graiphic private runtimes, private IDE state, or private compiler internals.
+</p>
+
+<p>
+The public repository may also publish bounded reference tools and proof
+artifacts for derivation, lowering, backend contracts, and LLVM-oriented native
+artifacts. Those tools are conformance-oriented reference material. They do not
+define Graiphic's production compiler, production lowering implementation, ABI
+strategy, scheduler, optimizer, deployment packager, runtime implementation, or
+IDE implementation.
+</p>
+
+<p>
+The boundary is therefore:
+</p>
+
+<pre><code>public specification:
+  .frog source model
+  validated program meaning
+  canonical Execution IR / FIR
+  derivation, construction, identity, schema, and conformance rules
+  public lowering boundary invariants and backend handoff expectations
+
+Graiphic private implementation:
+  production source analysis implementation
+  production lowering and LLVM/native artifact generation
+  optimization strategy, ABI strategy, packaging closure, runtime, and IDE
+</code></pre>
+
 <hr/>
 
 <h2 id="reading-legend">2. Reading Legend</h2>

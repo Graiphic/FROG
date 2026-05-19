@@ -145,12 +145,20 @@ lowered_unit.kind
 <ul>
   <li><code>ArtifactChecks/</code> verifies that the artifacts announced by the executable corridor exist and have the expected high-level identity.</li>
   <li><code>WidgetValidator/</code> protects the published widget class-law and Default realization layer.</li>
-  <li><code>Deriver/</code> derives FIR from supported canonical <code>.frog</code> source patterns.</li>
+  <li><code>Deriver/</code> derives FIR from supported canonical <code>.frog</code> source patterns. It protects the public <code>.frog -&gt; FIR</code> corridor, but it is not yet a complete derivation engine for every valid future <code>.frog</code> construct or every <code>frog.xxx</code> library function.</li>
   <li><code>Lowerer/</code> lowers supported FIR unit kinds into backend- or compiler-facing lowered unit kinds.</li>
   <li><code>ContractEmitter/</code> emits backend contracts from published lowered unit kinds.</li>
   <li><code>Runtime/</code> checks contract-unit-kind-driven runtime acceptance.</li>
   <li><code>LLVM/</code> checks lowered-unit-kind-to-native proof modules.</li>
 </ul>
+
+<p>
+The public reference lowerer, contract emitter, and LLVM proof material are
+bounded conformance corridors. They show how published FIR artifacts can move
+toward backend-facing proof material without making Graiphic's production
+lowering bridge, native compiler integration, optimizer, runtime, or deployment
+packager public implementation requirements.
+</p>
 
 <hr/>
 

@@ -25,6 +25,36 @@ Rule selection is based on explicit source-pattern recognition rather than trust
 
 <hr/>
 
+<h2>Systematic Coverage Status</h2>
+
+<p>
+The public FROG architecture requires the <code>.frog -&gt; FIR</code> boundary to
+remain public and inspectable. A complete conforming implementation should be
+able to derive a canonical FIR / Execution IR document from any accepted FROG
+program for the supported specification version.
+</p>
+
+<p>
+The Python deriver in this directory is not that complete implementation yet.
+It is a bounded reference tool for the currently recognized source-pattern
+families. It does not automatically derive FIR for arbitrary valid
+<code>.frog</code> graphs, every future source construct, or every
+<code>frog.xxx</code> library function. Unsupported source shapes must fail
+explicitly instead of guessing a FIR shape.
+</p>
+
+<p>
+This distinction is intentional:
+</p>
+
+<ul>
+  <li><code>.frog -&gt; FIR</code> is a public specification boundary.</li>
+  <li>This directory contains a non-production reference deriver for the current bounded corridor.</li>
+  <li>Broader source syntax closure, general semantic validation, full library-call modeling, and complete source-family coverage remain follow-up standardization work.</li>
+</ul>
+
+<hr/>
+
 <h2>Current Derivation Posture</h2>
 
 <pre><code>canonical .frog source
@@ -107,6 +137,7 @@ The generic <code>derive_fir.py</code> entry point is the preferred path for sup
   <li><a href="./rules/example04_fir_derivation.md">Example 04 FIR derivation rules</a></li>
   <li><a href="./rules/example05_fir_derivation.md">Example 05 FIR derivation rules</a></li>
   <li>Examples 06-10 are covered by the current bounded scalar widget derivation rules in <code>fir_deriver.py</code>.</li>
+  <li>Examples 11-15 are covered by the current bounded Button mechanical-action derivation rules in <code>fir_deriver.py</code>.</li>
   <li>Example 16 is covered by the bounded Picture path-to-image derivation rule in <code>fir_deriver.py</code>.</li>
 </ul>
 
@@ -125,6 +156,11 @@ The generic <code>derive_fir.py</code> entry point is the preferred path for sup
   <li><code>enum_value_roundtrip</code></li>
   <li><code>path_value_roundtrip</code></li>
   <li><code>button_press_to_boolean</code></li>
+  <li><code>button_switch_when_pressed</code></li>
+  <li><code>button_switch_when_released</code></li>
+  <li><code>button_latch_when_pressed</code></li>
+  <li><code>button_latch_when_released</code></li>
+  <li><code>button_latch_until_released</code></li>
   <li><code>picture_path_to_image</code></li>
 </ul>
 
@@ -151,6 +187,11 @@ The generic <code>derive_fir.py</code> entry point is the preferred path for sup
     <tr><td><code>enum_value_roundtrip</code></td><td>Enum widget value roundtrip</td><td><code>enum_value_roundtrip_ui_unit</code></td></tr>
     <tr><td><code>path_value_roundtrip</code></td><td>Path widget value roundtrip</td><td><code>path_value_roundtrip_ui_unit</code></td></tr>
     <tr><td><code>button_press_to_boolean</code></td><td>Button press-to-Boolean publication</td><td><code>button_press_to_boolean_ui_unit</code></td></tr>
+    <tr><td><code>button_switch_when_pressed</code></td><td>Button switch mechanical action</td><td><code>button_switch_when_pressed_ui_unit</code></td></tr>
+    <tr><td><code>button_switch_when_released</code></td><td>Button switch mechanical action</td><td><code>button_switch_when_released_ui_unit</code></td></tr>
+    <tr><td><code>button_latch_when_pressed</code></td><td>Button latch mechanical action</td><td><code>button_latch_when_pressed_ui_unit</code></td></tr>
+    <tr><td><code>button_latch_when_released</code></td><td>Button latch mechanical action</td><td><code>button_latch_when_released_ui_unit</code></td></tr>
+    <tr><td><code>button_latch_until_released</code></td><td>Button latch mechanical action</td><td><code>button_latch_until_released_ui_unit</code></td></tr>
     <tr><td><code>picture_path_to_image</code></td><td>Path to <code>frog.image.decode_file_rgba8</code> to Picture publication</td><td><code>picture_path_to_image_ui_unit</code></td></tr>
   </tbody>
 </table>
