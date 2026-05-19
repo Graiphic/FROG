@@ -416,8 +416,16 @@ The current published directory structure is layered rather than uniform.
 At top level:
 </p>
 
+<p>
+The top-level conformance directory includes both staged matrix documents:
+<code>Source to FIR conformance matrix.md</code> and
+<code>Source FIR Lowering conformance matrix.md</code>.
+</p>
+
 <pre><code>Conformance/
 ├── Readme.md
+├── Source to FIR conformance matrix.md
+├── Source FIR Lowering conformance matrix.md
 ├── valid/
 └── invalid/
 </code></pre>
@@ -542,6 +550,13 @@ The source-to-FIR matrix is the public planning and classification surface for
 future cases that test canonical source acceptance, semantic validation, FIR
 eligibility, and preservation. Case files remain the concrete truth surface;
 the matrix keeps those cases aligned with the repository architecture.
+</p>
+
+<p>
+The source/FIR/lowering matrix is the corresponding public planning and
+classification surface for later corridor cases. It does not replace concrete
+case files. It states which stage owns acceptance, rejection, preservation,
+manifest/provider resolution, and runtime-consumption expectations.
 </p>
 
 <h3>9.1 Published top-level valid anchors</h3>
