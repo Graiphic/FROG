@@ -384,7 +384,7 @@ The repository also contains repository-level support areas and repository-level
 </ul>
 
 <p>
-The published numbered example surface now exposes a repository-visible progression under <code>Examples/01_*</code> through <code>Examples/15_*</code>.
+The published numbered example surface now exposes a repository-visible progression under <code>Examples/01_*</code> through <code>Examples/20_*</code>.
 Examples <code>01</code> through <code>15</code> define the current public reference runtime closure.
 Examples beyond this boundary may remain repository-visible as specification-facing, widget-facing, conformance-facing, or design-progression examples, while Graiphic production runtime work for those later examples continues in the proprietary <code>Graiphic/FROG-Runtime</code> repository unless explicitly promoted later.
 All example families are organized by the public
@@ -494,6 +494,36 @@ posture, and limitations in a consistent way.
       <td>Button control and Boolean indicator through the Default Button and Boolean realizations.</td>
       <td>Current public reference runtime closure with published FIR/lowering/contract, LLVM kernel manifest, and C++/Python/Rust runtime coverage.</td>
     </tr>
+    <tr>
+      <td><code>16_picture_logo_jpeg</code></td>
+      <td>Path-driven Picture display using the standard <code>frog.image.decode_file_rgba8</code> contract.</td>
+      <td>Path control and Picture indicator through the Default Path and Picture realizations.</td>
+      <td>Post-boundary public example material; Graiphic private runtime validation continues in <code>Graiphic/FROG-Runtime</code>.</td>
+    </tr>
+    <tr>
+      <td><code>17_label_typography_board</code></td>
+      <td>Label typography and support-text surface.</td>
+      <td>Label widgets through the Default Label realization.</td>
+      <td>Post-boundary public example material; Graiphic private runtime validation continues in <code>Graiphic/FROG-Runtime</code>.</td>
+    </tr>
+    <tr>
+      <td><code>18_decoration_board</code></td>
+      <td>Flat box and line decorations for front-panel visual structure.</td>
+      <td>Decoration widgets through the Default Decorations realizations.</td>
+      <td>Post-boundary public example material; Graiphic private runtime validation continues in <code>Graiphic/FROG-Runtime</code>.</td>
+    </tr>
+    <tr>
+      <td><code>19_subpanel_embedded_front_panel</code></td>
+      <td>Subpanel host embedding a referenced child <code>.frog</code> front panel.</td>
+      <td>Subpanel host through the Default Subpanel realization plus child front-panel widgets.</td>
+      <td>Post-boundary public example material; Graiphic private runtime validation continues in <code>Graiphic/FROG-Runtime</code>.</td>
+    </tr>
+    <tr>
+      <td><code>20_tab_page_selection</code></td>
+      <td>Tab page selection with a movable page-label display value.</td>
+      <td>Tab control and page-label display through the Default Tab realization.</td>
+      <td>Post-boundary public example material; Graiphic private runtime validation continues in <code>Graiphic/FROG-Runtime</code>.</td>
+    </tr>
   </tbody>
 </table>
 
@@ -554,6 +584,21 @@ The progression is intentionally staged:
 
 15_button_latch_until_released
   -> Button latch_until_released state to Boolean indicator
+
+16_picture_logo_jpeg
+  -> Path to frog.image.decode_file_rgba8 to Picture indicator
+
+17_label_typography_board
+  -> Label typography, support text, and source-owned visual overrides
+
+18_decoration_board
+  -> Flat box plus vertical and horizontal line decorations
+
+19_subpanel_embedded_front_panel
+  -> Subpanel host for a referenced child .frog front panel
+
+20_tab_page_selection
+  -> Tab selected-page value and page-label display
 </code></pre>
 
 <p>
@@ -564,16 +609,16 @@ Runtime development for examples beyond Example <code>15</code> continues in Gra
 </p>
 
 <p>
-Example <code>16_picture_logo_jpeg</code> is the first post-boundary Picture
-progression example. It remains public as source, library, widget, and
-realization material, and models <code>Path -&gt; frog.image.decode_file_rgba8
--&gt; Picture</code> without adding public runtime implementation beyond the
-Example <code>15</code> closure.
+Examples <code>16</code> through <code>20</code> are the current post-boundary
+widget-facing progression examples. They remain public as source, library,
+widget, realization, and conformance-facing material for Picture, Label,
+Decoration, Subpanel, and Tab surfaces without adding public runtime
+implementation beyond the Example <code>15</code> closure.
 </p>
 
 <p>
 The correct current statement is therefore:
-the repository materially exposes an executable Examples <code>01</code> through <code>15</code> progression, while Example <code>05</code> remains the richest applicative UI/state/runtime/native reference corridor and Examples <code>06</code> through <code>15</code> define the current bounded public widget-runtime wave.
+the repository materially exposes Examples <code>01</code> through <code>20</code>, while Example <code>05</code> remains the richest applicative UI/state/runtime/native reference corridor, Examples <code>06</code> through <code>15</code> define the current bounded public widget-runtime wave, and Examples <code>16</code> through <code>20</code> are public post-boundary widget/design progression material backed by Graiphic private runtime validation.
 This does not claim full generalized symmetry across all future examples, all runtime families, or rendered-native front-panel closure.
 </p>
 
@@ -1325,6 +1370,7 @@ runtime acceptance            native proof
 For Examples <code>01</code> through <code>04</code>, the runtime acceptance and LLVM proofs are intentionally narrow reference proofs.
 For Example <code>05</code>, the repository carries the richer applicative path involving a front-panel package, widget values, widget references, UI property writes, explicit state, bounded iteration, runtime-family acceptance, and LLVM native proof material.
 Examples <code>06</code> through <code>15</code> currently exercise the public widget-front-panel runtime discipline for Boolean, String, Enum, Path, and Button across the C++, Python, and Rust reference runtimes.
+Examples <code>16</code> through <code>20</code> remain public post-boundary widget-facing material for Picture, Label, Decoration, Subpanel, and Tab while their runtime implementation line continues privately in <code>Graiphic/FROG-Runtime</code>.
 Runtime development for examples beyond Example <code>15</code> belongs to Graiphic's proprietary runtime work unless explicitly promoted later as public reference material.
 </p>
 
@@ -1906,8 +1952,9 @@ The repository already contains substantial material across canonical source rep
 
 <p>
 At the current published state, the repository has reached a stronger closure milestone:
-Examples <code>01</code> through <code>15</code> materially expose repository-visible source, FIR, lowering, backend-contract, widget, and LLVM-oriented proof material.
+Examples <code>01</code> through <code>20</code> materially expose repository-visible source, FIR, lowering, backend-contract, widget, and LLVM-oriented proof material.
 Examples <code>06</code> through <code>15</code> extend the current public reference workspace with validated widget-front-panel runtime slices for Boolean, String, Enum, Path, and Button.
+Examples <code>16</code> through <code>20</code> extend the public post-boundary widget-facing progression for Picture, Label, Decoration, Subpanel, and Tab while runtime implementation continues privately.
 </p>
 
 <p>
@@ -1918,12 +1965,13 @@ They do not, by presence alone, expand the public runtime implementation maintai
 </p>
 
 <p>
-The first such post-boundary example is <code>16_picture_logo_jpeg</code>, which
-uses a Path control, the standard <code>frog.image.decode_file_rgba8</code>
-primitive contract, and a Picture indicator. It models the first lightweight
-standard image-library corridor without making image decoding a hidden widget
-or runtime behavior. Runtime support for this example continues in
-<code>Graiphic/FROG-Runtime</code> unless deliberately promoted later.
+The current post-boundary set starts with <code>16_picture_logo_jpeg</code>,
+which uses a Path control, the standard
+<code>frog.image.decode_file_rgba8</code> primitive contract, and a Picture
+indicator. It now continues through <code>20_tab_page_selection</code> with
+Label, Decoration, Subpanel, and Tab widget-facing examples. Runtime support
+for these examples continues in <code>Graiphic/FROG-Runtime</code> unless
+deliberately promoted later.
 </p>
 
 <p>
