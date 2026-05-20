@@ -85,6 +85,8 @@
     - [main.frog](/Examples/20_tab_page_selection/main.frog)
   - [21 ring selection roundtrip](/Examples/21_ring_selection_roundtrip/Readme.md)
     - [main.frog](/Examples/21_ring_selection_roundtrip/main.frog)
+  - [22 listbox selection roundtrip](/Examples/22_listbox_selection_roundtrip/Readme.md)
+    - [main.frog](/Examples/22_listbox_selection_roundtrip/main.frog)
   - [compiler](/Examples/compiler/Readme.md)
     - [01 pure arithmetic](/Examples/compiler/01_pure_arithmetic.md)
     - [02 structured control](/Examples/compiler/02_structured_control.md)
