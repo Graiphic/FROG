@@ -154,7 +154,7 @@ The Interop profile is distinct from:
   <li><code>frog.core</code>, which contains the minimal always-available computational primitives,</li>
   <li><code>frog.io</code>, which covers file, path, byte, and related resource I/O only,</li>
   <li><code>frog.ui</code>, which covers widget interaction only,</li>
-  <li>future profiles for networking, hardware access, runtime coordination, deployment, or richer external capability families.</li>
+  <li>future Interop subprofiles or separate optional profiles for process execution, networking, HTTP, host input devices, hardware access, runtime coordination, deployment, or richer external capability families.</li>
 </ul>
 
 <p>
@@ -230,6 +230,91 @@ FROG v0.1 standardizes the following Interop profile primitive families:
 </ul>
 
 <p>
+For v0.1, these families remain in a single Interop profile document. The
+profile owns <code>frog.connectivity.*</code> as an optional capability
+namespace, while each family remains claimable only to the extent explicitly
+defined here or by a later profile revision.
+</p>
+
+<p>
+The following table records the public routing posture for current and future
+connectivity families:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Family</th>
+      <th>Namespace posture</th>
+      <th>v0.1 status</th>
+      <th>Boundary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Python request/response</td>
+      <td><code>frog.connectivity.python.*</code></td>
+      <td>Published in this profile.</td>
+      <td>Source-visible session handles, interpreter lifecycle objects, and environment selection contracts are deferred.</td>
+    </tr>
+    <tr>
+      <td>Native or shared-library request/response</td>
+      <td><code>frog.connectivity.native.*</code></td>
+      <td>Published in this profile as byte request/response.</td>
+      <td>Typed FFI, calling-convention catalogs, structured ABI parameters, and memory ownership contracts are deferred.</td>
+    </tr>
+    <tr>
+      <td>.NET request/response</td>
+      <td><code>frog.connectivity.dotnet.*</code></td>
+      <td>Published in this profile as textual request/response.</td>
+      <td>Managed object handles, reflection surfaces, COM, ActiveX, and arbitrary object-graph interop are deferred.</td>
+    </tr>
+    <tr>
+      <td>SQL query and execute</td>
+      <td><code>frog.connectivity.sql.*</code></td>
+      <td>Published in this profile as minimal query and execute primitives.</td>
+      <td>Connection handles, prepared statements, transactions, cursors, pooling, and row streaming are deferred.</td>
+    </tr>
+    <tr>
+      <td>Process and command execution</td>
+      <td><code>frog.connectivity.process.*</code> or a later process subprofile</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires explicit argv versus shell execution, stdin/stdout/stderr, working directory, environment, timeout, exit status, security policy, and async-spawn boundaries.</td>
+    </tr>
+    <tr>
+      <td>Network and HTTP</td>
+      <td><code>frog.connectivity.net.*</code> and <code>frog.connectivity.http.*</code> or later subprofiles</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires explicit socket/session lifetimes, DNS, TLS, headers, redirects, authentication, secrets, timeouts, cancellation, streaming, and policy gates.</td>
+    </tr>
+    <tr>
+      <td>Host input devices</td>
+      <td><code>frog.connectivity.input_device.*</code> or a later host-input subprofile</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires platform gates, device discovery, open/acquire/close lifecycle, polling semantics, status behavior, and distinction from FROG UI widget events.</td>
+    </tr>
+    <tr>
+      <td>Windows-specific system interop</td>
+      <td><code>frog.connectivity.windows.*</code> or narrower Windows subprofiles</td>
+      <td>Not published in v0.1, except the existing bounded .NET request/response family.</td>
+      <td>Registry, COM, ActiveX, and broader managed-runtime integration require explicit platform, trust, threading, object lifetime, and capability policy.</td>
+    </tr>
+    <tr>
+      <td>Service hosting, callbacks, and live data</td>
+      <td>Later profile or profile revision only</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires lifecycle, routing, concurrency, subscription, buffering, reconnection, security, and async/session semantics.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+These future families are reserved only as routing posture. Their names,
+ports, capability tokens, and conformance claims are not standardized until a
+future profile document or profile revision publishes them explicitly.
+</p>
+
+<p>
 These primitives provide a first standardized interoperability layer for:
 </p>
 
@@ -246,8 +331,12 @@ FROG v0.1 does <strong>not</strong> attempt to define:
 
 <ul>
   <li>persistent source-level handles or sessions,</li>
+  <li>process or command execution primitives,</li>
+  <li>source-visible Python session lifecycle primitives,</li>
+  <li>typed foreign-function or ABI call nodes beyond the byte request/response native primitive,</li>
   <li>callbacks, event subscriptions, or bidirectional host integration,</li>
   <li>async or streaming interop,</li>
+  <li>keyboard, mouse, joystick, game controller, or other host input-device acquisition primitives,</li>
   <li>object-graph reflection as a standard source-level mechanism,</li>
   <li>prepared statements, transactions, cursors, or connection pooling as source-level standardized objects,</li>
   <li>automatic marshaling of arbitrary FROG values into foreign object systems,</li>
@@ -292,6 +381,10 @@ unless standardized elsewhere.
 
 <p>
 This document standardizes the source-visible primitive contract only.
+Implementation-defined binding does not make an unsupported family valid: a
+program that references a <code>frog.connectivity.*</code> primitive outside
+the supported profile or subset must be rejected or reported through the
+implementation's unsupported-profile or unsupported-subset diagnostic model.
 </p>
 
 <hr/>
@@ -657,6 +750,14 @@ Unsupported profile usage MUST instead be rejected or reported as unsupported ac
 implementation's validation or capability-reporting model.
 </p>
 
+<p>
+An implementation that supports only a subset of this profile MUST likewise
+reject or report primitives outside its claimed subset. For example, support
+for <code>frog.connectivity.python.*</code> does not imply support for
+<code>frog.connectivity.sql.*</code>, future process execution primitives,
+future HTTP primitives, or future host input-device primitives.
+</p>
+
 <hr/>
 
 <h2 id="support-and-claims">15. Support and Capability Claims</h2>
@@ -696,6 +797,14 @@ Examples of explicit non-full claims may include implementation wording such as:
 </ul>
 
 <p>
+Future subprofiles may make narrower claims first-class, such as a process
+execution subset, an HTTP client subset, a typed native FFI subset, an
+input-device subset, or a Windows-specific subset. Until such documents are
+published, those claims are descriptive implementation claims rather than
+full standardized Interop profile claims.
+</p>
+
+<p>
 Capability claims under this document do not automatically imply certification, trademark permission,
 official endorsement, or branding authorization.
 </p>
@@ -706,12 +815,16 @@ official endorsement, or branding authorization.
 
 <ul>
   <li>persistent foreign handles or object references as source-level standardized values,</li>
+  <li>process launch, shell execution, background process management, stdout/stderr streaming, or OS command nodes,</li>
   <li>standardized reflection over Python objects, .NET objects, or native ABI structures,</li>
+  <li>standardized Python interpreter sessions, virtual-environment selection, or reusable scripting-session objects,</li>
   <li>automatic bidirectional mapping between arbitrary FROG values and foreign structured types,</li>
+  <li>typed ABI configuration for native/shared-library calls beyond the byte request/response primitive,</li>
   <li>callbacks and re-entrant invocation into FROG graphs,</li>
   <li>transaction control primitives such as begin, commit, and rollback,</li>
   <li>prepared statements, cursors, and row-by-row iteration,</li>
   <li>network protocols such as HTTP, TCP, UDP, WebSocket, MQTT, or gRPC,</li>
+  <li>host input-device discovery or acquisition for keyboards, mice, joysticks, game controllers, or comparable devices,</li>
   <li>COM, ActiveX, Java, or other non-listed foreign platforms,</li>
   <li>generic external-runtime or external-service primitives beyond the explicit families standardized here,</li>
   <li>async execution, futures, promises, channels, or runtime scheduling primitives,</li>

@@ -20,7 +20,8 @@
   <li><a href="#what-changed">4. What Changed</a></li>
   <li><a href="#what-did-not-change">5. What Did Not Change</a></li>
   <li><a href="#how-to-read-this-file">6. How to Read this File</a></li>
-  <li><a href="#summary">7. Summary</a></li>
+  <li><a href="#future-family-routing">7. Future Family Routing</a></li>
+  <li><a href="#summary">8. Summary</a></li>
 </ul>
 
 <hr/>
@@ -172,7 +173,33 @@ reduced further or removed.
 
 <hr/>
 
-<h2 id="summary">7. Summary</h2>
+<h2 id="future-family-routing">7. Future Family Routing</h2>
+
+<p>
+<code>Profiles/Interop.md</code> keeps the v0.1 public
+<code>frog.connectivity.*</code> posture in one normative profile document.
+That document publishes the current conservative request/response families and
+records where future optional families may route.
+</p>
+
+<p>
+Future connectivity work may add or split profile-owned families for process
+execution, typed native FFI, HTTP or network clients, advanced database
+sessions, host input devices, Windows-specific integration, service hosting,
+callbacks, streaming, or live data. Those families remain outside the
+intrinsic lightweight library core unless a later public decision explicitly
+promotes a narrow portable subset.
+</p>
+
+<p>
+This transition note does not define those future primitives. It only points
+readers back to the Interop profile as the public authority for claimable
+connectivity behavior.
+</p>
+
+<hr/>
+
+<h2 id="summary">8. Summary</h2>
 
 <p>
 <code>frog.connectivity.*</code> remains part of the standardized FROG specification surface,
