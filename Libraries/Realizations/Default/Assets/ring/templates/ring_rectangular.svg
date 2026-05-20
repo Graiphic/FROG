@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 150" data-frog-template="frog.realizations.default.ring.rectangular">
+  <title>FROG Default Ring Rectangular</title>
+  <desc>Default SVG-backed Ring widget realization with selected value, selector, popup anchor, option-row grammar, label, caption, frame, and focus surfaces.</desc>
+  <style>
+    #label_text { display: var(--frog-ring-label-display, none); }
+    #caption_text { display: var(--frog-ring-caption-display, inline); }
+    #frame { display: var(--frog-ring-frame-display, none); fill: var(--frog-ring-frame-fill, transparent); stroke: var(--frog-ring-frame-stroke, transparent); stroke-width: var(--frog-ring-frame-stroke-width, 0); }
+    #value_face { fill: var(--frog-ring-value-face-fill, #ffffff); stroke: var(--frog-ring-value-face-stroke, #64748b); stroke-width: var(--frog-ring-value-face-stroke-width, 1.5); }
+    #value_display { fill: var(--frog-ring-value-display-color, #111827); }
+    #selector_face { display: var(--frog-ring-selector-display, inline); fill: var(--frog-ring-selector-fill, #f1f5f9); stroke: var(--frog-ring-selector-stroke, #64748b); stroke-width: var(--frog-ring-selector-stroke-width, 1); }
+    #selector_arrow { display: var(--frog-ring-selector-display, inline); fill: var(--frog-ring-selector-symbol, #111827); stroke: none; }
+    #popup_layer { display: var(--frog-ring-popup-display, none); }
+    #option_row { fill: var(--frog-ring-popup-option-fill, #ffffff); stroke: var(--frog-ring-popup-option-stroke, #e2e8f0); stroke-width: var(--frog-ring-popup-option-stroke-width, 1); }
+    #option_label { fill: var(--frog-ring-popup-option-text, #111827); }
+    #option_selection_face { fill: var(--frog-ring-popup-option-selected-fill, #dbeafe); stroke: var(--frog-ring-popup-option-selected-stroke, #2563eb); stroke-width: var(--frog-ring-popup-option-selected-stroke-width, 1); opacity: var(--frog-ring-popup-option-selected-opacity, 0.75); }
+    #focus_ring { opacity: var(--frog-ring-focus-opacity, 0); stroke: var(--frog-ring-focus-color, #2563eb); stroke-width: var(--frog-ring-focus-width, 2); }
+  </style>
+  <g data-frog-part="root">
+    <text id="label_text" data-frog-part="label" data-frog-anchor="label.anchor" x="16" y="22" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">ring_1</text>
+    <text id="caption_text" data-frog-part="caption" data-frog-anchor="caption.anchor" x="16" y="46" font-size="14" font-family="Inter, Arial, sans-serif" font-weight="600" fill="#111827">Ring</text>
+    <rect id="frame" data-frog-part="frame" x="12" y="58" width="284" height="58" fill="transparent" stroke="transparent" stroke-width="0"/>
+    <rect id="value_face" data-frog-part="value_face" data-frog-anchor="value_face.bounds" x="22" y="76" width="214" height="30" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+    <text id="value_display" data-frog-part="value_display" data-frog-anchor="value_display.left_center" data-frog-bind="value.selected_label" x="34" y="96" font-size="15" font-family="Inter, Arial, sans-serif" fill="#111827">Standby</text>
+    <rect id="selector_face" data-frog-part="selector_face" data-frog-anchor="selector_face.bounds" x="236" y="76" width="28" height="30" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
+    <path id="selector_arrow" data-frog-part="selector_arrow" data-frog-anchor="selector_arrow.center" d="M246 88 L254 88 L250 94 Z" fill="#111827"/>
+    <g id="popup_layer" data-frog-part="popup_layer" data-frog-anchor="popup_layer.bounds">
+      <rect x="22" y="108" width="242" height="66" fill="#ffffff" stroke="#64748b" stroke-width="1"/>
+      <rect id="option_selection_face" data-frog-part="option_selection_face" x="24" y="110" width="238" height="20" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>
+      <g data-frog-part="option_row">
+        <rect id="option_row" x="24" y="132" width="238" height="20" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+        <text id="option_label" data-frog-part="option_label" x="34" y="146" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">Option</text>
+      </g>
+    </g>
+    <rect id="focus_ring" data-frog-part="focus_ring" x="18" y="72" width="250" height="38" fill="none" stroke="#2563eb" stroke-width="2" opacity="0"/>
+  </g>
+</svg>

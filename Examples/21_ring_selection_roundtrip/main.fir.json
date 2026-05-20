@@ -1,0 +1,111 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "21_ring_selection_roundtrip",
+    "path": "Examples/21_ring_selection_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/21_ring_selection_roundtrip/ui/ring_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "ring_selection_roundtrip_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "mode_value",
+            "type": "u16"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "selected_mode_value",
+            "type": "u16"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "value_bindings": [
+          {
+            "widget_id": "mode_ring",
+            "widget_class": "frog.widgets.ring_control",
+            "value_member": "value.selected_value",
+            "value_type": "u16",
+            "ui_identity_member": "value.selected_id",
+            "public_input_id": "mode_value",
+            "realization_asset_ref": "asset:ring_rectangular_svg"
+          },
+          {
+            "widget_id": "selected_ring",
+            "widget_class": "frog.widgets.ring_indicator",
+            "value_member": "value.selected_value",
+            "value_type": "u16",
+            "ui_identity_member": "value.selected_id",
+            "public_output_id": "selected_mode_value",
+            "realization_asset_ref": "asset:ring_rectangular_svg"
+          }
+        ],
+        "host_overlays": [
+          {
+            "widget_id": "mode_ring",
+            "part": "value_face",
+            "source_members": [
+              "value.*",
+              "items.*",
+              "interaction.*"
+            ]
+          },
+          {
+            "widget_id": "mode_ring",
+            "part": "popup_layer",
+            "source_members": [
+              "items.*",
+              "style.popup.*",
+              "display.popup_max_visible_items"
+            ]
+          },
+          {
+            "widget_id": "selected_ring",
+            "part": "value_display",
+            "source_members": [
+              "value.*",
+              "items.*"
+            ]
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "ring_selected_numeric_value_publication",
+        "body_rule": {
+          "kind": "identity_u16",
+          "expression": "selected_mode_value = mode_value"
+        }
+      },
+      "publications": [
+        {
+          "target": "widget.selected_ring.value.selected_value",
+          "source": "input.mode_value"
+        },
+        {
+          "target": "public_output.selected_mode_value",
+          "source": "input.mode_value"
+        }
+      ],
+      "notes": [
+        "This FIR is a repository-visible Ring widget progression slice beyond the current public reference runtime closure.",
+        "The Ring diagram value is numeric, matching the selected item value from the .frog Strings And Values style item records.",
+        "The selected item id remains a UI identity member used to resolve the display label and host interaction state.",
+        "Ring is intentionally distinct from Enum: no typed enum domain is introduced by this example.",
+        "The Default Ring SVG realization publishes value_face, value_display, selector_face, selector_arrow, popup_layer, option_row, option_label, option_selection_face, and focus_ring parts.",
+        "Interactive hosts may update Ring front-panel state without executing the diagram; Execute runs the manifest-backed identity proof.",
+        "Runtime implementation for this example continues in Graiphic/FROG-Runtime unless explicitly promoted later."
+      ]
+    }
+  ]
+}

@@ -230,6 +230,7 @@
           "style.tab_item.font_size": "13px",
           "style.tab_item.font_weight": "400",
           "style.tab_item.padding_inline": "12px",
+          "style.tab_item.disabled_opacity": "0.62",
           "style.tab_item.selected_fill_color": "#ffffff",
           "style.tab_item.selected_border_color": "#9ca3af",
           "style.tab_item.selected_text_color": "#111827",

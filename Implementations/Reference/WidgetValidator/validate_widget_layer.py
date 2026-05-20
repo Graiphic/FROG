@@ -23,6 +23,7 @@ FAMILIES: dict[str, dict[str, Any]] = {
     "button": {"widget_doc": "Button.md", "default_doc": "Button.md", "manifest": "button.default.wfrog", "classes": ["frog.widgets.button"]},
     "numeric": {"widget_doc": "Numeric.md", "default_doc": "Numeric.md", "manifest": "numeric.default.wfrog", "classes": ["frog.widgets.numeric_control", "frog.widgets.numeric_indicator"]},
     "enum": {"widget_doc": "Enum.md", "default_doc": "Enum.md", "manifest": "enum.default.wfrog", "classes": ["frog.widgets.enum_control", "frog.widgets.enum_indicator"]},
+    "ring": {"widget_doc": "Ring.md", "default_doc": "Ring.md", "manifest": "ring.default.wfrog", "classes": ["frog.widgets.ring_control", "frog.widgets.ring_indicator"]},
     "path": {"widget_doc": "Path.md", "default_doc": "Path.md", "manifest": "path.default.wfrog", "classes": ["frog.widgets.path_control", "frog.widgets.path_indicator"]},
     "picture": {"widget_doc": "Picture.md", "default_doc": "Picture.md", "manifest": "picture.default.wfrog", "classes": ["frog.widgets.picture_control", "frog.widgets.picture_indicator"]},
     "chart": {"widget_doc": "Chart.md", "default_doc": "Chart.md", "manifest": "chart.default.wfrog", "classes": ["frog.widgets.waveform_chart"]},

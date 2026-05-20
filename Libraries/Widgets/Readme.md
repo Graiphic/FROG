@@ -44,6 +44,7 @@ A realization may provide templates, subobjects, slots, bindings, and host hints
     <tr><td><a href="./Button.md"><code>Button.md</code></a></td><td>Button</td><td><code>frog.widgets.button</code></td><td>action</td><td>command</td><td>published action baseline</td></tr>
     <tr><td><a href="./Numeric.md"><code>Numeric.md</code></a></td><td>Numeric</td><td><code>frog.widgets.numeric_control</code>, <code>frog.widgets.numeric_indicator</code></td><td>core value</td><td>control / indicator</td><td>published scalar baseline</td></tr>
     <tr><td><a href="./Enum.md"><code>Enum.md</code></a></td><td>Enum</td><td><code>frog.widgets.enum_control</code>, <code>frog.widgets.enum_indicator</code></td><td>core value</td><td>control / indicator</td><td>published scalar baseline</td></tr>
+    <tr><td><a href="./Ring.md"><code>Ring.md</code></a></td><td>Ring</td><td><code>frog.widgets.ring_control</code>, <code>frog.widgets.ring_indicator</code></td><td>selection / navigation</td><td>control / indicator</td><td>published compact finite-choice baseline</td></tr>
     <tr><td><a href="./Path.md"><code>Path.md</code></a></td><td>Path</td><td><code>frog.widgets.path_control</code>, <code>frog.widgets.path_indicator</code></td><td>core value</td><td>control / indicator</td><td>published scalar baseline</td></tr>
     <tr><td><a href="./Picture.md"><code>Picture.md</code></a></td><td>Picture</td><td><code>frog.widgets.picture_control</code>, <code>frog.widgets.picture_indicator</code></td><td>visual data</td><td>control / indicator</td><td>published image / viewport baseline</td></tr>
     <tr><td><a href="./Chart.md"><code>Chart.md</code></a></td><td>Waveform Chart</td><td><code>frog.widgets.waveform_chart</code></td><td>visual data</td><td>indicator</td><td>published composite chart baseline</td></tr>
@@ -71,6 +72,7 @@ The current published widget layer includes detailed class-law baselines for the
 
 <ul>
   <li><strong>Picture</strong> — image payload, pixel metadata, viewport, display posture, overlay and pointer surfaces.</li>
+  <li><strong>Ring</strong> — compact finite-choice selection with a selected item id/value and popup selector surface.</li>
   <li><strong>Waveform Chart</strong> — retained sample history, plots, scales, legends, cursors, palette, scrollbars, overlays, and plot-image layers.</li>
   <li><strong>Listbox</strong> — item identity, selection, active item, hover, viewport, search/filter posture, and item public parts.</li>
   <li><strong>Tab</strong> — page identity, selected-page value, header posture, page region, overflow, close/reorder posture, and page composition surfaces.</li>

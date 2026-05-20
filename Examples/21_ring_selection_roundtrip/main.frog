@@ -1,0 +1,358 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "21_ring_selection_roundtrip",
+    "summary": "Ring control-to-indicator numeric selected-value roundtrip using .frog-owned item data and Default Ring .wfrog realization assets.",
+    "description": "Places one Ring control and one Ring indicator on the front panel. The .frog source owns item ids, item labels, numeric item values, selected value, layout, labels, bindings, and instance-level visual overrides. The .wfrog package references the Default Ring realization and SVG asset. Runtime implementation for this post-boundary example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "ring",
+      "ring_control",
+      "ring_indicator",
+      "selection",
+      "roundtrip",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "mode_value",
+        "type": "u16",
+        "binding_origin": "widget.mode_ring.value.selected_value"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "selected_mode_value",
+        "type": "u16"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "mode_ring_value",
+        "kind": "widget_value",
+        "widget": "mode_ring",
+        "member": "value.selected_value"
+      },
+      {
+        "id": "selected_ring_value",
+        "kind": "widget_value",
+        "widget": "selected_ring",
+        "member": "value.selected_value"
+      },
+      {
+        "id": "output_selected_mode_value",
+        "kind": "interface_output",
+        "interface_port": "selected_mode_value"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "mode_ring_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "selected_ring_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "mode_ring_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_selected_mode_value",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 690,
+      "height": 230,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/ring_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "mode_ring",
+        "role": "control",
+        "class_ref": "frog.widgets.ring_control",
+        "instance_ref": "mode_ring",
+        "value_type": "u16",
+        "layout": {
+          "x": 32,
+          "y": 36,
+          "width": 290,
+          "height": 120
+        },
+        "props": {
+          "label.text": "Mode ring",
+          "label.visible": true,
+          "caption.text": "Mode",
+          "caption.visible": true,
+          "caption.anchor.x": 22,
+          "caption.anchor.y": 58,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
+          "value.selected_id": "standby",
+          "value.selected_value": 0,
+          "value.selected_index": 0,
+          "value.selected_label": "Standby",
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "data_type.allow_undefined_values": false,
+          "data_type.last_value_hidden": false,
+          "items.sequential_values": true,
+          "items": [
+            {
+              "id": "standby",
+              "label": "Standby",
+              "value": 0,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "manual",
+              "label": "Manual",
+              "value": 1,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "automatic",
+              "label": "Automatic",
+              "value": 2,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "service",
+              "label": "Service",
+              "value": 3,
+              "enabled": true,
+              "visible": true
+            }
+          ],
+          "data_entry.use_default_limits": true,
+          "data_entry.minimum": 0,
+          "data_entry.maximum": 65535,
+          "data_entry.increment": 1,
+          "data_entry.page_size": 0,
+          "data_entry.response_to_value_outside_limits": "ignore",
+          "display.digital_display_visible": false,
+          "display.increment_decrement_visible": false,
+          "display.format.type": "unsigned_decimal",
+          "display.format.string": "%u",
+          "display.format.advanced_editing": false,
+          "display.selector_visible": true,
+          "display.popup_max_visible_items": 6,
+          "display.text_overflow_visible": false,
+          "style.scale.reference_width": 290,
+          "style.scale.reference_height": 120,
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.value_face.fill_color": "#ffffff",
+          "style.value_face.fill_color.hover": "#eef6ff",
+          "style.value_face.border_color": "#64748b",
+          "style.value_face.border_color.hover": "#475569",
+          "style.value_face.border_width": "1.5px",
+          "style.value_display.color": "#111827",
+          "style.value_display.font_size": "15px",
+          "style.value_display.font_weight": "400",
+          "style.value_display.padding_inline": "9px",
+          "style.selector_face.fill_color": "#f1f5f9",
+          "style.selector_face.fill_color.hover": "#dbeafe",
+          "style.selector_face.border_color": "#64748b",
+          "style.selector_face.border_color.hover": "#2563eb",
+          "style.selector_face.border_width": "1px",
+          "style.selector_face.symbol_color": "#111827",
+          "style.selector_face.symbol_color.hover": "#1d4ed8",
+          "style.popup.fill_color": "#ffffff",
+          "style.popup.border_color": "#64748b",
+          "style.popup.border_width": "1px",
+          "style.popup.shadow": "0 8px 20px rgba(15,23,42,0.12)",
+          "style.popup.option.fill_color": "#ffffff",
+          "style.popup.option.text_color": "#111827",
+          "style.popup.option.hover_fill_color": "#dbeafe",
+          "style.popup.option.hover_text_color": "#0f172a",
+          "style.popup.option.selected_fill_color": "#bfdbfe",
+          "style.popup.option.selected_text_color": "#0f172a",
+          "style.popup.option.disabled_opacity": "0.62",
+          "style.popup.option.font_family": "Segoe UI, Arial, sans-serif",
+          "style.popup.option.font_size": "14px",
+          "style.popup.option.font_weight": "400",
+          "style.popup.option.height": "28px",
+          "style.popup.option.padding_inline": "9px",
+          "style.focus_ring.color": "#2563eb",
+          "style.focus_ring.width": "2px",
+          "interaction.visible": true,
+          "interaction.enabled": true,
+          "interaction.read_only": false,
+          "interaction.focusable": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:ring_rectangular_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "mode_value"
+        }
+      },
+      {
+        "id": "selected_ring",
+        "role": "indicator",
+        "class_ref": "frog.widgets.ring_indicator",
+        "instance_ref": "selected_ring",
+        "value_type": "u16",
+        "layout": {
+          "x": 370,
+          "y": 36,
+          "width": 290,
+          "height": 120
+        },
+        "props": {
+          "label.text": "Selected mode ring",
+          "label.visible": true,
+          "caption.text": "Selected mode",
+          "caption.visible": true,
+          "caption.anchor.x": 22,
+          "caption.anchor.y": 58,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
+          "value.selected_id": "standby",
+          "value.selected_value": 0,
+          "value.selected_index": 0,
+          "value.selected_label": "Standby",
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "data_type.allow_undefined_values": false,
+          "data_type.last_value_hidden": false,
+          "items.sequential_values": true,
+          "items": [
+            {
+              "id": "standby",
+              "label": "Standby",
+              "value": 0,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "manual",
+              "label": "Manual",
+              "value": 1,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "automatic",
+              "label": "Automatic",
+              "value": 2,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "service",
+              "label": "Service",
+              "value": 3,
+              "enabled": true,
+              "visible": true
+            }
+          ],
+          "data_entry.use_default_limits": true,
+          "data_entry.minimum": 0,
+          "data_entry.maximum": 65535,
+          "data_entry.increment": 1,
+          "data_entry.page_size": 0,
+          "data_entry.response_to_value_outside_limits": "ignore",
+          "display.digital_display_visible": false,
+          "display.increment_decrement_visible": false,
+          "display.format.type": "unsigned_decimal",
+          "display.format.string": "%u",
+          "display.format.advanced_editing": false,
+          "display.selector_visible": false,
+          "display.popup_max_visible_items": 0,
+          "display.text_overflow_visible": false,
+          "style.scale.reference_width": 290,
+          "style.scale.reference_height": 120,
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.value_face.fill_color": "#f8fafc",
+          "style.value_face.border_color": "#64748b",
+          "style.value_face.border_width": "1.5px",
+          "style.value_display.color": "#111827",
+          "style.value_display.font_size": "15px",
+          "style.value_display.font_weight": "400",
+          "style.value_display.padding_inline": "9px",
+          "style.selector_face.fill_color": "transparent",
+          "style.selector_face.border_color": "transparent",
+          "style.selector_face.border_width": "0px",
+          "style.selector_face.symbol_color": "transparent",
+          "style.focus_ring.color": "#2563eb",
+          "style.focus_ring.width": "2px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "interaction.focusable": false,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:ring_rectangular_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "selected_mode_value"
+        }
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Ring Selection Roundtrip",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "ring_runtime_host_default",
+    "documentation": {
+      "title": "Ring legend",
+      "summary": "A Ring is a compact finite-choice selector. It displays item text while publishing one selected numeric item value without becoming an Enum domain.",
+      "legend": [
+        {
+          "label": "Ring control",
+          "description": "User selection changes front-panel state. Execute publishes the selected numeric value through the native manifest corridor."
+        },
+        {
+          "label": "Ring indicator",
+          "description": "Read-only Ring display updated by the diagram output after Execute."
+        },
+        {
+          "label": "Item records",
+          "description": "The .frog instance owns item ids, labels, numeric values, enabled flags, selected id/value, and visual overrides."
+        }
+      ],
+      "note": "The runtime may provide host overlays for the selector and popup, but they must align to the Default Ring SVG parts and consume .frog-owned item/style data."
+    }
+  }
+}

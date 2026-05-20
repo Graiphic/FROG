@@ -191,6 +191,12 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
       <td><code>main.frog</code> + <code>ui/tab_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
+    <tr>
+      <td><code>21_ring_selection_roundtrip</code></td>
+      <td>Ring numeric selected-value roundtrip with a read-only Ring indicator</td>
+      <td><code>main.frog</code> + <code>ui/ring_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
   </tbody>
 </table>
 
@@ -243,7 +249,10 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
 20   Tab selected-page value and page region as a post-boundary widget progression example
     |
     v
-21+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
+21   Ring numeric selected-value as a post-boundary widget progression example
+    |
+    v
+22+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
 </code></pre>
 
 <hr/>
@@ -358,13 +367,20 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
     │       └── embedded_status_panel.wfrog
     └── ui/
         └── subpanel_panel.wfrog
-└── 20_tab_page_selection/
+├── 20_tab_page_selection/
     ├── Readme.md
     ├── main.frog
     ├── main.fir.json
     ├── main.lowering.json
     └── ui/
         └── tab_panel.wfrog
+└── 21_ring_selection_roundtrip/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── ring_panel.wfrog
 </code></pre>
 
 <p>
@@ -420,6 +436,16 @@ owns page records, selected page value, layout, style, and visible page
 content. Its host capability declarations include selected-page state patching
 as a realization-facing browser interaction. It does not add public runtime
 source beyond the Example 15 closure.
+</p>
+
+<p>
+Example <code>21</code> continues the repository-visible post-boundary widget
+progression with a Ring control and read-only Ring indicator. It contains
+public source, FIR/lowering shape, a <code>.wfrog</code> package referencing the
+Default Ring realization, and a native manifest <code>u16</code> proof output.
+The <code>.frog</code> owns item ids, labels, numeric values, selected item state,
+layout, and style overrides. It does not add public runtime source beyond the
+Example 15 closure.
 </p>
 
 <hr/>

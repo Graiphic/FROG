@@ -1,0 +1,111 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "21_ring_selection_roundtrip",
+    "path": "Examples/21_ring_selection_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/21_ring_selection_roundtrip/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "summary": "make one post-boundary Ring numeric selected-value example consumable through a manifest-declared LLVM/native u16 proof boundary and Default Ring realization",
+    "backend_family_target": "llvm_native_kernel",
+    "capability_targets": [
+      "native_kernel_manifest",
+      "private_runtime_ring_selection_binding",
+      "svg_part_overlay_alignment",
+      "ring_popup_overlay",
+      "ring_state_patch_interaction",
+      "svg_style_property_binding"
+    ],
+    "native_artifact_ref": {
+      "manifest": "Implementations/Reference/LLVM/examples/21_ring_selection_roundtrip/native_kernel_manifest.json",
+      "llvm_ir": "Implementations/Reference/LLVM/examples/21_ring_selection_roundtrip/kernel.ll"
+    },
+    "public_reference_runtime_source_added": false
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "ring_selection_roundtrip_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "mode_value",
+            "type": "u16"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "selected_mode_value",
+            "type": "u16"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "value_bindings": [
+          {
+            "widget_id": "mode_ring",
+            "widget_class": "frog.widgets.ring_control",
+            "mode": "widget_value",
+            "semantic_value_member": "value.selected_value",
+            "ui_identity_member": "value.selected_id",
+            "realization_asset_ref": "asset:ring_rectangular_svg"
+          },
+          {
+            "widget_id": "selected_ring",
+            "widget_class": "frog.widgets.ring_indicator",
+            "mode": "widget_value",
+            "semantic_value_member": "value.selected_value",
+            "ui_identity_member": "value.selected_id",
+            "realization_asset_ref": "asset:ring_rectangular_svg"
+          }
+        ],
+        "host_overlays": [
+          {
+            "widget_id": "mode_ring",
+            "part": "value_face",
+            "source_members": [
+              "value.*",
+              "items.*",
+              "interaction.*"
+            ]
+          },
+          {
+            "widget_id": "mode_ring",
+            "part": "popup_layer",
+            "source_members": [
+              "items.*",
+              "style.popup.*"
+            ]
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "identity_u16",
+        "native_manifest": "Implementations/Reference/LLVM/examples/21_ring_selection_roundtrip/native_kernel_manifest.json",
+        "inputs": {
+          "mode_value": "widget.mode_ring.value.selected_value"
+        },
+        "outputs": {
+          "selected_mode_value": "selected_mode_value"
+        },
+        "final_publication": [
+          {
+            "target": "widget.selected_ring.value.selected_value",
+            "source": "native_kernel.selected_mode_value"
+          },
+          {
+            "target": "public_output.selected_mode_value",
+            "source": "native_kernel.selected_mode_value"
+          }
+        ]
+      }
+    }
+  ]
+}

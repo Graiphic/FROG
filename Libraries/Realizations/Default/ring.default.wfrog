@@ -1,0 +1,300 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_ring_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.ring",
+    "name": "FROG Default Ring Realization",
+    "namespace": "frog.realizations.default.ring",
+    "family": "default",
+    "category": "selection / navigation",
+    "role_posture": "control / indicator",
+    "summary": "Machine-readable default realization manifest for standardized Ring widgets."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default Ring realization records",
+      "Ring SVG resources",
+      "Ring part bindings",
+      "Ring host hints",
+      "Ring validation expectations"
+    ],
+    "does_not_own": [
+      "Ring widget class law",
+      "canonical .frog source",
+      "Ring item identity",
+      "Ring item numeric values",
+      "FIR semantics",
+      "lowering semantics",
+      "runtime-private host handles",
+      "host-native combo handles",
+      "IDE-private item editing behavior"
+    ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Ring.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.ring_control",
+      "role": "control"
+    },
+    {
+      "class_id": "frog.widgets.ring_indicator",
+      "role": "indicator"
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.ring"
+    ],
+    "resources": [
+      "frog.realizations.default.ring.assets.rectangular_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.ring",
+      "family": "default",
+      "target_classes": [
+        "frog.widgets.ring_control",
+        "frog.widgets.ring_indicator"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "frame",
+        "value_face",
+        "value_display",
+        "selector_face",
+        "selector_arrow",
+        "popup_layer",
+        "option_row",
+        "option_label",
+        "option_selection_face",
+        "focus_ring"
+      ],
+      "supported_selection_modes": [
+        "single"
+      ],
+      "supported_item_features": [
+        "id",
+        "label",
+        "value",
+        "numeric_value",
+        "enabled",
+        "visible",
+        "tooltip",
+        "metadata",
+        "strings_and_values",
+        "disabled_items",
+        "sequential_values",
+        "undefined_value_policy"
+      ],
+      "fallbacks": {
+        "missing_resource": "reject_or_host_native_compatible_rendering",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint",
+        "unsupported_item_value": "reject_unless_source_allows_undefined_values",
+        "unsupported_popup_host": "host_native_or_generic_compatible_selector"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.ring.assets.rectangular_svg",
+      "kind": "svg",
+      "path": "./assets/ring/templates/ring_rectangular.svg",
+      "role": "primary_template",
+      "target_parts": [
+        "root",
+        "value_face",
+        "value_display",
+        "selector_face",
+        "popup_layer"
+      ]
+    }
+  ],
+  "part_bindings": [
+    {
+      "part": "root",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "label",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='label']"
+    },
+    {
+      "part": "caption",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='caption']"
+    },
+    {
+      "part": "frame",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='frame']"
+    },
+    {
+      "part": "value_face",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='value_face']"
+    },
+    {
+      "part": "value_display",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='value_display']"
+    },
+    {
+      "part": "selector_face",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='selector_face']"
+    },
+    {
+      "part": "selector_arrow",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='selector_arrow']"
+    },
+    {
+      "part": "popup_layer",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='popup_layer']"
+    },
+    {
+      "part": "option_row",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='option_row']"
+    },
+    {
+      "part": "option_label",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='option_label']"
+    },
+    {
+      "part": "option_selection_face",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='option_selection_face']"
+    },
+    {
+      "part": "focus_ring",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='focus_ring']"
+    }
+  ],
+  "property_bindings": [
+    {
+      "source": "value.selected_id",
+      "target_part": "value_display",
+      "target": "selected_item_text"
+    },
+    {
+      "source": "value.selected_value",
+      "target_part": "value_display",
+      "target": "selected_item_value"
+    },
+    {
+      "source": "data_type.representation",
+      "target_part": "value_display",
+      "target": "selected_item_numeric_representation"
+    },
+    {
+      "source": "items[]",
+      "target_part": "popup_layer",
+      "target": "option_inventory"
+    },
+    {
+      "source": "items.sequential_values",
+      "target_part": "popup_layer",
+      "target": "strings_and_values_policy"
+    },
+    {
+      "source": "items[].enabled",
+      "target_part": "option_row",
+      "target": "disabled_item_policy"
+    },
+    {
+      "source": "display.digital_display_visible",
+      "target_part": "value_display",
+      "target": "optional_numeric_display"
+    },
+    {
+      "source": "display.increment_decrement_visible",
+      "target_part": "selector_face",
+      "target": "optional_increment_decrement_surface"
+    },
+    {
+      "source": "display.format.*",
+      "target_part": "value_display",
+      "target": "numeric_display_format_policy"
+    },
+    {
+      "source": "data_entry.*",
+      "target_part": "value_face",
+      "target": "numeric_data_entry_policy"
+    },
+    {
+      "source": "style.value_face.*",
+      "target_part": "value_face",
+      "target": "css_variables"
+    },
+    {
+      "source": "style.selector_face.*",
+      "target_part": "selector_face",
+      "target": "css_variables"
+    },
+    {
+      "source": "style.popup.option.*",
+      "target_part": "option_row",
+      "target": "css_variables"
+    },
+    {
+      "source": "style.popup.*",
+      "target_part": "popup_layer",
+      "target": "css_variables"
+    }
+  ],
+  "event_bindings": [
+    {
+      "event": "value_changed",
+      "source_part": "value_face",
+      "payload": [
+        "value.selected_id",
+        "value.selected_value",
+        "value.selected_index",
+        "value.selected_label"
+      ]
+    },
+    {
+      "event": "selector_opened",
+      "source_part": "selector_face",
+      "payload": [
+        "interaction.opened"
+      ]
+    }
+  ],
+  "host_hints": {
+    "preferred_rendering": "svg_template_with_host_popup_overlay",
+    "popup_overlay_alignment_part": "popup_layer",
+    "hit_area_parts": [
+      "value_face",
+      "selector_face"
+    ],
+    "style_property_source": ".frog instance props"
+  },
+  "validation_expectations": [
+    "Ring widgets keep item inventory and selected numeric value in source-owned instance data.",
+    "The LabVIEW-like Ring default posture maps display strings to scalar numeric values; selected_id is UI identity, not the diagram value.",
+    "The visible selector consumes the Default Ring SVG asset and published parts.",
+    "Runtime host overlays align to value_face, value_display, selector_face, and popup_layer.",
+    "Visual styles are source-owned properties or Default realization values, not runtime constants.",
+    "Ring remains distinct from Enum class law."
+  ]
+}
