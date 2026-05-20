@@ -184,11 +184,15 @@ records where future optional families may route.
 
 <p>
 Future connectivity work may add or split profile-owned families for process
-execution, typed native FFI, HTTP or network clients, advanced database
-sessions, host input devices, Windows-specific integration, service hosting,
-callbacks, streaming, or live data. Those families remain outside the
-intrinsic lightweight library core unless a later public decision explicitly
-promotes a narrow portable subset.
+execution, typed native FFI, TCP, UDP, TLS, HTTP clients, WebSocket, file
+transfer, mail, advanced database sessions, host input devices,
+Windows-specific integration, RPC, IoT messaging, industrial protocols,
+service hosting, callbacks, streaming, or live data. Instrument-control
+surfaces such as serial, GPIB, USB, Ethernet, PXI, VXI, or comparable message
+I/O may require a separate instrument profile rather than generic
+connectivity ownership. Those families remain outside the intrinsic
+lightweight library core unless a later public decision explicitly promotes a
+narrow portable subset.
 </p>
 
 <p>

@@ -282,10 +282,76 @@ connectivity families:
       <td>Requires explicit argv versus shell execution, stdin/stdout/stderr, working directory, environment, timeout, exit status, security policy, and async-spawn boundaries.</td>
     </tr>
     <tr>
-      <td>Network and HTTP</td>
-      <td><code>frog.connectivity.net.*</code> and <code>frog.connectivity.http.*</code> or later subprofiles</td>
+      <td>TCP sockets</td>
+      <td><code>frog.connectivity.tcp.*</code> or a later low-level socket subprofile</td>
       <td>Not published in v0.1.</td>
-      <td>Requires explicit socket/session lifetimes, DNS, TLS, headers, redirects, authentication, secrets, timeouts, cancellation, streaming, and policy gates.</td>
+      <td>Requires explicit open, listen, accept, read, write, close, address, port, timeout, cancellation, backpressure, and session-lifetime rules.</td>
+    </tr>
+    <tr>
+      <td>UDP sockets</td>
+      <td><code>frog.connectivity.udp.*</code> or a later datagram subprofile</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires datagram-size, source/destination addressing, multicast, broadcast, packet loss, ordering, timeout, and host-policy rules.</td>
+    </tr>
+    <tr>
+      <td>TLS</td>
+      <td><code>frog.connectivity.tls.*</code> or a later secure-transport subprofile</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires certificate, key, trust store, hostname verification, protocol-version, cipher, client/server handshake, and secret-handling policy.</td>
+    </tr>
+    <tr>
+      <td>HTTP client</td>
+      <td><code>frog.connectivity.http.*</code> or a later HTTP subprofile</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires methods, URL, headers, body, status code, redirects, authentication, cookies, proxy policy, TLS policy, streaming, and secret handling.</td>
+    </tr>
+    <tr>
+      <td>WebSocket</td>
+      <td><code>frog.connectivity.websocket.*</code> or a later streaming subprofile</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires session handles, message framing, close codes, ping/pong, ordering, reconnect, TLS, backpressure, and async/event semantics.</td>
+    </tr>
+    <tr>
+      <td>File transfer</td>
+      <td><code>frog.connectivity.file_transfer.*</code> or narrower WebDAV, SFTP, FTPS, or HTTPS-backed subprofiles</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires remote path semantics, credentials, upload/download operations, directory listing, overwrite policy, resumability, TLS/trust policy, and legacy-protocol gates for FTP-style surfaces.</td>
+    </tr>
+    <tr>
+      <td>Mail</td>
+      <td><code>frog.connectivity.mail.*</code> or a later SMTP-oriented subprofile</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires send-only versus receive-capable scope, MIME attachment handling, authentication, TLS, server policy, and secret handling. IMAP and POP-style receive surfaces are deferred.</td>
+    </tr>
+    <tr>
+      <td>Instrument and serial I/O</td>
+      <td><code>frog.instrument.*</code> or a separate instrument-control profile, not intrinsic connectivity core</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires a distinct instrument-resource model for serial, GPIB, USB, Ethernet, PXI, VXI, or comparable message I/O and should not be hidden inside generic network connectivity.</td>
+    </tr>
+    <tr>
+      <td>Bluetooth and legacy infrared</td>
+      <td><code>frog.connectivity.bluetooth.*</code> or legacy-only profile material</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires discovery, pairing, permissions, listener lifecycle, read/write semantics, platform gates, and explicit legacy/deferred posture for IrDA-style surfaces.</td>
+    </tr>
+    <tr>
+      <td>RPC</td>
+      <td><code>frog.connectivity.rpc.*</code> or narrower gRPC, Protobuf, or JSON-RPC subprofiles</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires schema ownership, service/method identity, streaming posture, generated bindings, versioning, authentication, and compatibility policy.</td>
+    </tr>
+    <tr>
+      <td>IoT and messaging</td>
+      <td><code>frog.connectivity.iot_messaging.*</code> or narrower MQTT/AMQP subprofiles</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires broker/session identity, topics, QoS, acknowledgements, reconnect, buffering, credentials, TLS, and delivery-order policy.</td>
+    </tr>
+    <tr>
+      <td>Industrial protocols</td>
+      <td><code>frog.connectivity.industrial.*</code> or separate industrial profile set</td>
+      <td>Not published in v0.1.</td>
+      <td>Requires protocol-specific data models, bus/device identity, real-time or fieldbus constraints, safety policy, and optional families such as Modbus, OPC UA, EPICS, CAN, LIN, FlexRay, or EtherCAT.</td>
     </tr>
     <tr>
       <td>Host input devices</td>
@@ -336,7 +402,9 @@ FROG v0.1 does <strong>not</strong> attempt to define:
   <li>typed foreign-function or ABI call nodes beyond the byte request/response native primitive,</li>
   <li>callbacks, event subscriptions, or bidirectional host integration,</li>
   <li>async or streaming interop,</li>
+  <li>TCP, UDP, TLS, HTTP, WebSocket, FTP, WebDAV, SFTP, SMTP, MQTT, AMQP, RPC, gRPC, or industrial-protocol primitives,</li>
   <li>keyboard, mouse, joystick, game controller, or other host input-device acquisition primitives,</li>
+  <li>serial, GPIB, USB, Ethernet, PXI, VXI, instrument-resource message I/O, or fieldbus-specific communication primitives,</li>
   <li>object-graph reflection as a standard source-level mechanism,</li>
   <li>prepared statements, transactions, cursors, or connection pooling as source-level standardized objects,</li>
   <li>automatic marshaling of arbitrary FROG values into foreign object systems,</li>
@@ -798,10 +866,12 @@ Examples of explicit non-full claims may include implementation wording such as:
 
 <p>
 Future subprofiles may make narrower claims first-class, such as a process
-execution subset, an HTTP client subset, a typed native FFI subset, an
-input-device subset, or a Windows-specific subset. Until such documents are
-published, those claims are descriptive implementation claims rather than
-full standardized Interop profile claims.
+execution subset, a TCP/UDP socket subset, a TLS subset, an HTTP client
+subset, a WebSocket subset, a file-transfer subset, a mail subset, a typed
+native FFI subset, an input-device subset, an RPC subset, an IoT messaging
+subset, an industrial-protocol subset, or a Windows-specific subset. Until
+such documents are published, those claims are descriptive implementation
+claims rather than full standardized Interop profile claims.
 </p>
 
 <p>
@@ -824,6 +894,10 @@ official endorsement, or branding authorization.
   <li>transaction control primitives such as begin, commit, and rollback,</li>
   <li>prepared statements, cursors, and row-by-row iteration,</li>
   <li>network protocols such as HTTP, TCP, UDP, WebSocket, MQTT, or gRPC,</li>
+  <li>TLS configuration, certificate/trust material, or cryptographic provider selection,</li>
+  <li>file-transfer protocols such as FTP, FTPS, SFTP, WebDAV, SCP, or remote filesystem synchronization,</li>
+  <li>mail protocols such as SMTP, SMTPS, IMAP, or POP3,</li>
+  <li>instrument-control protocols, serial message I/O, or fieldbus families such as Modbus, OPC UA, EPICS, CAN, LIN, FlexRay, or EtherCAT,</li>
   <li>host input-device discovery or acquisition for keyboards, mice, joysticks, game controllers, or comparable devices,</li>
   <li>COM, ActiveX, Java, or other non-listed foreign platforms,</li>
   <li>generic external-runtime or external-service primitives beyond the explicit families standardized here,</li>
