@@ -189,7 +189,7 @@
     - [Button](/Libraries/Widgets/Button.md)
     - [Chart](/Libraries/Widgets/Chart.md)
     - [Cluster](/Libraries/Widgets/Cluster.md)
-    - [Common Properties](/Libraries/Widgets/CommonProperties.md)
+    - [CommonProperties](/Libraries/Widgets/CommonProperties.md)
     - [Decorations](/Libraries/Widgets/Decorations.md)
     - [Enum](/Libraries/Widgets/Enum.md)
     - [Frame](/Libraries/Widgets/Frame.md)
