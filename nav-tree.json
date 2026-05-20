@@ -606,6 +606,21 @@
               ]
             },
             {
+              "key": "examples/21_ring_selection_roundtrip/",
+              "title": "21 ring selection roundtrip",
+              "path": "/Examples/21_ring_selection_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/21_ring_selection_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/21_ring_selection_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -1029,6 +1044,13 @@
                       "children": []
                     },
                     {
+                      "key": "libraries/realizations/default/ring.md",
+                      "title": "Ring",
+                      "path": "/Libraries/Realizations/Default/Ring.md",
+                      "kind": "page",
+                      "children": []
+                    },
+                    {
                       "key": "libraries/realizations/default/splitter.md",
                       "title": "Splitter",
                       "path": "/Libraries/Realizations/Default/Splitter.md",
@@ -1237,6 +1259,13 @@
                           "path": "/Libraries/Realizations/Default/Assets/Naming.md",
                           "kind": "page",
                           "children": []
+                        },
+                        {
+                          "key": "libraries/realizations/default/assets/ring/",
+                          "title": "ring",
+                          "path": "/Libraries/Realizations/Default/Assets/ring/Readme.md",
+                          "kind": "category",
+                          "children": []
                         }
                       ]
                     },
@@ -1367,6 +1396,13 @@
                   "key": "libraries/widgets/picture.md",
                   "title": "Picture",
                   "path": "/Libraries/Widgets/Picture.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
+                  "key": "libraries/widgets/ring.md",
+                  "title": "Ring",
+                  "path": "/Libraries/Widgets/Ring.md",
                   "kind": "page",
                   "children": []
                 },
@@ -4413,6 +4449,8 @@
     "/Examples/19_subpanel_embedded_front_panel/Readme.md",
     "/Examples/20_tab_page_selection/main.frog",
     "/Examples/20_tab_page_selection/Readme.md",
+    "/Examples/21_ring_selection_roundtrip/main.frog",
+    "/Examples/21_ring_selection_roundtrip/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
@@ -4471,6 +4509,7 @@
     "/Libraries/Realizations/Default/Path.md",
     "/Libraries/Realizations/Default/Picture.md",
     "/Libraries/Realizations/Default/Resource%20model.md",
+    "/Libraries/Realizations/Default/Ring.md",
     "/Libraries/Realizations/Default/Splitter.md",
     "/Libraries/Realizations/Default/State%20mapping.md",
     "/Libraries/Realizations/Default/String.md",
@@ -4499,6 +4538,7 @@
     "/Libraries/Realizations/Default/assets/table/Readme.md",
     "/Libraries/Realizations/Default/assets/tree/Readme.md",
     "/Libraries/Realizations/Default/Assets/Naming.md",
+    "/Libraries/Realizations/Default/Assets/ring/Readme.md",
     "/Libraries/Realizations/Default/Assets/Readme.md",
     "/Libraries/Realizations/Default/Examples/Button%20default%20realization.wfrog.md",
     "/Libraries/Realizations/Default/Examples/Button%20package%20and%20assets%20example.md",
@@ -4519,6 +4559,7 @@
     "/Libraries/Widgets/Numeric.md",
     "/Libraries/Widgets/Path.md",
     "/Libraries/Widgets/Picture.md",
+    "/Libraries/Widgets/Ring.md",
     "/Libraries/Widgets/Splitter.md",
     "/Libraries/Widgets/String.md",
     "/Libraries/Widgets/Styling.md",
