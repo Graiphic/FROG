@@ -232,6 +232,7 @@ It may differ from the selected item in multi-selection or focus-only navigation
   <li><code>viewport.visible_item_count</code></li>
   <li><code>viewport.row_height</code></li>
   <li><code>viewport.horizontal_offset</code></li>
+  <li><code>viewport.auto_reveal_selected_value</code></li>
 </ul>
 
 <ul>
@@ -245,6 +246,14 @@ It may differ from the selected item in multi-selection or focus-only navigation
 
 <p>
 Search and filtering are view postures unless explicitly modeled as value transformations elsewhere.
+</p>
+
+<p>
+Viewport state is instance-local front-panel state. A Listbox control may publish its selected value through the diagram, but its top row or scroll offset does not flow to an indicator unless the source explicitly models that property flow. An indicator may locally reveal a newly published selected value when <code>viewport.auto_reveal_selected_value</code> is enabled.
+</p>
+
+<p>
+Scrollbar visibility and appearance are source-owned widget properties. The vertical scrollbar may be hidden or shown with <code>display.vertical_scrollbar_visible</code>, and its track, thumb, borders, radius, hover, pressed, minimum thumb size, and inner padding are controlled by <code>style.scrollbar.*</code>. Indicator scrollbars are read-only viewport controls: they allow the user to inspect available result rows without writing a new listbox value.
 </p>
 
 <hr/>
@@ -337,7 +346,6 @@ Search and filtering are view postures unless explicitly modeled as value transf
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>item_region</code></li>
   <li><code>item_row</code></li>
   <li><code>item_icon</code></li>

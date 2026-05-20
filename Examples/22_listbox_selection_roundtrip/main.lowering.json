@@ -1,0 +1,126 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "22_listbox_selection_roundtrip",
+    "path": "Examples/22_listbox_selection_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/22_listbox_selection_roundtrip/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "summary": "make one post-boundary Listbox numeric selected-value example consumable through a manifest-declared LLVM/native u16 proof boundary and Default Listbox realization",
+    "backend_family_target": "llvm_native_kernel",
+    "capability_targets": [
+      "native_kernel_manifest",
+      "private_runtime_listbox_selection_binding",
+      "svg_part_overlay_alignment",
+      "listbox_state_patch_interaction",
+      "svg_style_property_binding"
+    ],
+    "native_artifact_ref": {
+      "manifest": "Implementations/Reference/LLVM/examples/22_listbox_selection_roundtrip/native_kernel_manifest.json",
+      "llvm_ir": "Implementations/Reference/LLVM/examples/22_listbox_selection_roundtrip/kernel.ll"
+    },
+    "public_reference_runtime_source_added": false
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "listbox_selection_roundtrip_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "item_value",
+            "type": "u16"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "selected_item_value",
+            "type": "u16"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "value_bindings": [
+          {
+            "widget_id": "mode_listbox",
+            "widget_class": "frog.widgets.listbox_control",
+            "mode": "widget_value",
+            "semantic_value_member": "value.selected_value",
+            "ui_identity_member": "value.selected_id",
+            "realization_asset_ref": "asset:listbox_shell_svg"
+          },
+          {
+            "widget_id": "selected_listbox",
+            "widget_class": "frog.widgets.listbox_indicator",
+            "mode": "widget_value",
+            "semantic_value_member": "value.selected_value",
+            "ui_identity_member": "value.selected_id",
+            "realization_asset_ref": "asset:listbox_shell_svg"
+          }
+        ],
+        "host_overlays": [
+          {
+            "widget_id": "mode_listbox",
+            "part": "item_region",
+            "source_members": [
+              "value.*",
+              "items.*",
+              "selection.*",
+              "viewport.*",
+              "interaction.*"
+            ]
+          },
+          {
+            "widget_id": "selected_listbox",
+            "part": "item_region",
+            "source_members": [
+              "value.*",
+              "items.*",
+              "selection.*",
+              "viewport.*",
+              "viewport.auto_reveal_selected_value"
+            ],
+            "host_state_rule": "viewport_state_is_instance_local_not_dataflow",
+            "host_reveal_rule": "indicator_may_reveal_published_selection_when_enabled_by_source"
+          },
+          {
+            "widget_id": "mode_listbox",
+            "part": "item_row",
+            "source_members": [
+              "items.*",
+              "style.item_row.*",
+              "style.selection_face.*"
+            ]
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "identity_u16",
+        "native_manifest": "Implementations/Reference/LLVM/examples/22_listbox_selection_roundtrip/native_kernel_manifest.json",
+        "inputs": {
+          "item_value": "widget.mode_listbox.value.selected_value"
+        },
+        "outputs": {
+          "selected_item_value": "selected_item_value"
+        },
+        "final_publication": [
+          {
+            "target": "widget.selected_listbox.value.selected_value",
+            "source": "native_kernel.selected_item_value"
+          },
+          {
+            "target": "public_output.selected_item_value",
+            "source": "native_kernel.selected_item_value"
+          }
+        ]
+      }
+    }
+  ]
+}

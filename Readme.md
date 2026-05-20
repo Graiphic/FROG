@@ -530,6 +530,12 @@ posture, and limitations in a consistent way.
       <td>Ring control and read-only Ring indicator through the Default Ring realization.</td>
       <td>Post-boundary public example material; Graiphic private runtime validation continues in <code>Graiphic/FROG-Runtime</code>.</td>
     </tr>
+    <tr>
+      <td><code>22_listbox_selection_roundtrip</code></td>
+      <td>Listbox numeric selected-value roundtrip.</td>
+      <td>Listbox control and read-only Listbox indicator through the Default Listbox realization.</td>
+      <td>Post-boundary public example material; Graiphic private runtime validation continues in <code>Graiphic/FROG-Runtime</code>.</td>
+    </tr>
   </tbody>
 </table>
 
@@ -608,6 +614,9 @@ The progression is intentionally staged:
 
 21_ring_selection_roundtrip
   -> Ring numeric selected-value roundtrip
+
+22_listbox_selection_roundtrip
+  -> Listbox numeric selected-value roundtrip
 </code></pre>
 
 <p>
@@ -618,16 +627,16 @@ Runtime development for examples beyond Example <code>15</code> continues in Gra
 </p>
 
 <p>
-Examples <code>16</code> through <code>21</code> are the current post-boundary
+Examples <code>16</code> through <code>22</code> are the current post-boundary
 widget-facing progression examples. They remain public as source, library,
 widget, realization, and conformance-facing material for Picture, Label,
-Decoration, Subpanel, Tab, and Ring surfaces without adding public runtime
+Decoration, Subpanel, Tab, Ring, and Listbox surfaces without adding public runtime
 implementation beyond the Example <code>15</code> closure.
 </p>
 
 <p>
 The correct current statement is therefore:
-the repository materially exposes Examples <code>01</code> through <code>21</code>, while Example <code>05</code> remains the richest applicative UI/state/runtime/native reference corridor, Examples <code>06</code> through <code>15</code> define the current bounded public widget-runtime wave, and Examples <code>16</code> through <code>21</code> are public post-boundary widget/design progression material backed by Graiphic private runtime validation.
+the repository materially exposes Examples <code>01</code> through <code>22</code>, while Example <code>05</code> remains the richest applicative UI/state/runtime/native reference corridor, Examples <code>06</code> through <code>15</code> define the current bounded public widget-runtime wave, and Examples <code>16</code> through <code>22</code> are public post-boundary widget/design progression material backed by Graiphic private runtime validation.
 This does not claim full generalized symmetry across all future examples, all runtime families, or rendered-native front-panel closure.
 </p>
 
@@ -1379,7 +1388,7 @@ runtime acceptance            native proof
 For Examples <code>01</code> through <code>04</code>, the runtime acceptance and LLVM proofs are intentionally narrow reference proofs.
 For Example <code>05</code>, the repository carries the richer applicative path involving a front-panel package, widget values, widget references, UI property writes, explicit state, bounded iteration, runtime-family acceptance, and LLVM native proof material.
 Examples <code>06</code> through <code>15</code> currently exercise the public widget-front-panel runtime discipline for Boolean, String, Enum, Path, and Button across the C++, Python, and Rust reference runtimes.
-Examples <code>16</code> through <code>21</code> remain public post-boundary widget-facing material for Picture, Label, Decoration, Subpanel, Tab, and Ring while their runtime implementation line continues privately in <code>Graiphic/FROG-Runtime</code>.
+Examples <code>16</code> through <code>22</code> remain public post-boundary widget-facing material for Picture, Label, Decoration, Subpanel, Tab, Ring, and Listbox while their runtime implementation line continues privately in <code>Graiphic/FROG-Runtime</code>.
 Runtime development for examples beyond Example <code>15</code> belongs to Graiphic's proprietary runtime work unless explicitly promoted later as public reference material.
 </p>
 
@@ -1961,9 +1970,9 @@ The repository already contains substantial material across canonical source rep
 
 <p>
 At the current published state, the repository has reached a stronger closure milestone:
-Examples <code>01</code> through <code>21</code> materially expose repository-visible source, FIR, lowering, backend-contract, widget, and LLVM-oriented proof material.
+Examples <code>01</code> through <code>22</code> materially expose repository-visible source, FIR, lowering, backend-contract, widget, and LLVM-oriented proof material.
 Examples <code>06</code> through <code>15</code> extend the current public reference workspace with validated widget-front-panel runtime slices for Boolean, String, Enum, Path, and Button.
-Examples <code>16</code> through <code>21</code> extend the public post-boundary widget-facing progression for Picture, Label, Decoration, Subpanel, Tab, and Ring while runtime implementation continues privately.
+Examples <code>16</code> through <code>22</code> extend the public post-boundary widget-facing progression for Picture, Label, Decoration, Subpanel, Tab, Ring, and Listbox while runtime implementation continues privately.
 </p>
 
 <p>
@@ -1977,8 +1986,8 @@ They do not, by presence alone, expand the public runtime implementation maintai
 The current post-boundary set starts with <code>16_picture_logo_jpeg</code>,
 which uses a Path control, the standard
 <code>frog.image.decode_file_rgba8</code> primitive contract, and a Picture
-indicator. It now continues through <code>21_ring_selection_roundtrip</code> with
-Label, Decoration, Subpanel, Tab, and Ring widget-facing examples. Runtime support
+indicator. It now continues through <code>22_listbox_selection_roundtrip</code> with
+Label, Decoration, Subpanel, Tab, Ring, and Listbox widget-facing examples. Runtime support
 for these examples continues in <code>Graiphic/FROG-Runtime</code> unless
 deliberately promoted later.
 </p>

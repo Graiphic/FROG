@@ -40,7 +40,6 @@ It does not define listbox value semantics, host-native list handles, item rende
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>item_region</code></li>
   <li><code>item_row</code></li>
   <li><code>item_icon</code></li>
@@ -88,10 +87,19 @@ It does not define listbox value semantics, host-native list handles, item rende
   <li><code>disabled_face</code> renders disabled-item posture.</li>
   <li><code>empty_state</code> renders empty list posture.</li>
   <li><code>search_highlight</code> renders lightweight search match emphasis.</li>
+  <li><code>vertical_scrollbar</code> renders source-configured viewport posture. The default thumb length policy is the visible-item ratio with a source-owned minimum height and source-owned inner padding.</li>
 </ul>
 
 <p>
-A runtime may replace the SVG-backed list with a host-native virtual list when it preserves the public part model and property/method/event surfaces.
+A runtime may layer host-managed interactive surfaces over the SVG template when those surfaces align to published parts and consume source-owned properties. The Default Listbox realization is not valid when its SVG resource is missing, and a host-native or HTML/CSS-only replacement must not be treated as the Default widget realization.
+</p>
+
+<p>
+Viewport state such as top row, item offset, and reveal-selected behavior is instance-local front-panel state. It must not flow from a control to an indicator unless the source explicitly models that property flow.
+</p>
+
+<p>
+The scrollbar is part of the default realization, not a runtime fallback shell. Its visibility comes from <code>display.vertical_scrollbar_visible</code>, and its colors, borders, radius, hover/pressed states, thumb minimum height, and inner padding come from <code>style.scrollbar.*</code>. A read-only Listbox indicator may still expose an interactive scrollbar because scrolling only changes its local viewport, not the value published by the diagram.
 </p>
 
 <hr/>

@@ -1,0 +1,890 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "22_listbox_selection_roundtrip",
+    "summary": "Listbox control-to-indicator selected-value roundtrip using .frog-owned item data and Default Listbox .wfrog realization assets.",
+    "description": "Places one Listbox control and one Listbox indicator on the front panel. The .frog source owns item ids, labels, numeric item values, selection, viewport, layout, labels, bindings, and instance-level visual overrides. The .wfrog package references the Default Listbox realization and SVG asset. Runtime implementation for this post-boundary example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "listbox",
+      "listbox_control",
+      "listbox_indicator",
+      "selection",
+      "roundtrip",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "item_value",
+        "type": "u16",
+        "binding_origin": "widget.mode_listbox.value.selected_value"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "selected_item_value",
+        "type": "u16"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "mode_listbox_value",
+        "kind": "widget_value",
+        "widget": "mode_listbox",
+        "member": "value.selected_value"
+      },
+      {
+        "id": "selected_listbox_value",
+        "kind": "widget_value",
+        "widget": "selected_listbox",
+        "member": "value.selected_value"
+      },
+      {
+        "id": "output_selected_item_value",
+        "kind": "interface_output",
+        "interface_port": "selected_item_value"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "mode_listbox_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "selected_listbox_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "mode_listbox_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_selected_item_value",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 750,
+      "height": 360,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/listbox_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "mode_listbox",
+        "role": "control",
+        "class_ref": "frog.widgets.listbox_control",
+        "instance_ref": "mode_listbox",
+        "value_type": "u16",
+        "layout": {
+          "x": 32,
+          "y": 34,
+          "width": 320,
+          "height": 260
+        },
+        "props": {
+          "label.text": "Mode listbox",
+          "label.visible": true,
+          "caption.text": "Mode",
+          "caption.visible": true,
+          "caption.anchor.x": 28,
+          "caption.anchor.y": 64,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
+          "value.selected_id": "standby",
+          "value.selected_value": 0,
+          "value.selected_index": 0,
+          "value.selected_label": "Standby",
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "items.sequential_values": true,
+          "items": [
+            {
+              "id": "standby",
+              "label": "Standby",
+              "value": 0,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "manual",
+              "label": "Manual",
+              "value": 1,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "automatic",
+              "label": "Automatic",
+              "value": 2,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "service",
+              "label": "Service",
+              "value": 3,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "diagnostics",
+              "label": "Diagnostics",
+              "value": 4,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "maintenance",
+              "label": "Maintenance",
+              "value": 5,
+              "enabled": false,
+              "visible": true
+            },
+            {
+              "id": "calibration",
+              "label": "Calibration",
+              "value": 6,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "production",
+              "label": "Production",
+              "value": 7,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "inspection",
+              "label": "Inspection",
+              "value": 8,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "remote",
+              "label": "Remote",
+              "value": 9,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "offline",
+              "label": "Offline",
+              "value": 10,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "startup",
+              "label": "Startup",
+              "value": 11,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "shutdown",
+              "label": "Shutdown",
+              "value": 12,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "archive",
+              "label": "Archive",
+              "value": 13,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "review",
+              "label": "Review",
+              "value": 14,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "quality",
+              "label": "Quality",
+              "value": 15,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "simulation",
+              "label": "Simulation",
+              "value": 16,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "training",
+              "label": "Training",
+              "value": 17,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "safety",
+              "label": "Safety",
+              "value": 18,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "locked",
+              "label": "Locked",
+              "value": 19,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "validation",
+              "label": "Validation",
+              "value": 20,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "commissioning",
+              "label": "Commissioning",
+              "value": 21,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "operator",
+              "label": "Operator",
+              "value": 22,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "engineering",
+              "label": "Engineering",
+              "value": 23,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "backup",
+              "label": "Backup",
+              "value": 24,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "recovery",
+              "label": "Recovery",
+              "value": 25,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "network",
+              "label": "Network",
+              "value": 26,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "power",
+              "label": "Power",
+              "value": 27,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "cooling",
+              "label": "Cooling",
+              "value": 28,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "audit",
+              "label": "Audit",
+              "value": 29,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "history",
+              "label": "History",
+              "value": 30,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "standalone",
+              "label": "Standalone",
+              "value": 31,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "planning",
+              "label": "Planning",
+              "value": 32,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "reporting",
+              "label": "Reporting",
+              "value": 33,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "inventory",
+              "label": "Inventory",
+              "value": 34,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "staging",
+              "label": "Staging",
+              "value": 35,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "acceptance",
+              "label": "Acceptance",
+              "value": 36,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "release",
+              "label": "Release",
+              "value": 37,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "support",
+              "label": "Support",
+              "value": 38,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "laboratory",
+              "label": "Laboratory",
+              "value": 39,
+              "enabled": true,
+              "visible": true
+            }
+          ],
+          "selection.mode": "single",
+          "selection.require_enabled_item": true,
+          "active.index": 0,
+          "viewport.item_offset": 0,
+          "viewport.visible_item_count": 6,
+          "viewport.row_height": 28.1,
+          "display.vertical_scrollbar_visible": true,
+          "display.horizontal_scrollbar_visible": false,
+          "display.column_header_visible": false,
+          "display.row_header_visible": false,
+          "display.horizontal_lines_visible": true,
+          "display.vertical_lines_visible": false,
+          "display.symbols_visible": true,
+          "display.index_display_visible": false,
+          "style.scale.reference_width": 320,
+          "style.scale.reference_height": 260,
+          "style.item_region.fill_color": "#f8fafc",
+          "style.item_region.border_color": "#64748b",
+          "style.item_region.border_width": "1px",
+          "style.item_row.fill_color": "#ffffff",
+          "style.item_row.border_color": "#dbe3ec",
+          "style.item_row.border_width": "1px",
+          "style.item_row.hover_fill_color": "#eef6ff",
+          "style.item_row.disabled_fill_color": "#f1f5f9",
+          "style.item_row.disabled_text_color": "#94a3b8",
+          "style.selection_face.fill_color": "#dbeafe",
+          "style.selection_face.border_color": "#3b82f6",
+          "style.selection_face.border_width": "1px",
+          "style.active_item.border_color": "#22c55e",
+          "style.active_item.border_width": "1px",
+          "style.item_label.text_color": "#111827",
+          "style.item_label.font_family": "Segoe UI, Arial, sans-serif",
+          "style.item_label.font_size": "14px",
+          "style.item_label.font_weight": "400",
+          "style.item_label.padding_inline": "10px",
+          "style.item_symbol.fill_color": "#60a5fa",
+          "style.item_symbol.border_color": "#2563eb",
+          "style.item_symbol.border_width": "1px",
+          "style.item_symbol.size": "12px",
+          "style.item_symbol.margin_right": "8px",
+          "style.scrollbar.track_fill_color": "#f8fafc",
+          "style.scrollbar.track_hover_fill_color": "#eef6ff",
+          "style.scrollbar.track_pressed_fill_color": "#dbeafe",
+          "style.scrollbar.thumb_fill_color": "#94a3b8",
+          "style.scrollbar.thumb_hover_fill_color": "#64748b",
+          "style.scrollbar.thumb_pressed_fill_color": "#475569",
+          "style.scrollbar.thumb_border_color": "#64748b",
+          "style.scrollbar.thumb_border_width": "0px",
+          "style.scrollbar.thumb_radius": "0px",
+          "style.scrollbar.thumb_min_height_percent": 12,
+          "style.scrollbar.inner_padding": "2px",
+          "style.scrollbar.border_color": "#94a3b8",
+          "style.scrollbar.border_width": "1px",
+          "style.scrollbar.border_radius": "0px",
+          "interaction.scroll.wheel_step_items": 1,
+          "style.focus_ring.color": "#2563eb",
+          "style.focus_ring.width": "2px",
+          "interaction.visible": true,
+          "interaction.enabled": true,
+          "interaction.read_only": false,
+          "interaction.focusable": true,
+          "interaction.description": "Select a mode item, then Execute to publish its numeric value.",
+          "interaction.tip_strip": "Listbox selection updates front-panel state before Execute."
+        },
+        "visual": {
+          "asset_ref": "asset:listbox_shell_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "item_value"
+        }
+      },
+      {
+        "id": "selected_listbox",
+        "role": "indicator",
+        "class_ref": "frog.widgets.listbox_indicator",
+        "instance_ref": "selected_listbox",
+        "value_type": "u16",
+        "layout": {
+          "x": 400,
+          "y": 34,
+          "width": 320,
+          "height": 260
+        },
+        "props": {
+          "label.text": "Selected item listbox",
+          "label.visible": true,
+          "caption.text": "Selected",
+          "caption.visible": true,
+          "caption.anchor.x": 28,
+          "caption.anchor.y": 64,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
+          "value.selected_id": "standby",
+          "value.selected_value": 0,
+          "value.selected_index": 0,
+          "value.selected_label": "Standby",
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "items.sequential_values": true,
+          "items": [
+            {
+              "id": "standby",
+              "label": "Standby",
+              "value": 0,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "manual",
+              "label": "Manual",
+              "value": 1,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "automatic",
+              "label": "Automatic",
+              "value": 2,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "service",
+              "label": "Service",
+              "value": 3,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "diagnostics",
+              "label": "Diagnostics",
+              "value": 4,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "maintenance",
+              "label": "Maintenance",
+              "value": 5,
+              "enabled": false,
+              "visible": true
+            },
+            {
+              "id": "calibration",
+              "label": "Calibration",
+              "value": 6,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "production",
+              "label": "Production",
+              "value": 7,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "inspection",
+              "label": "Inspection",
+              "value": 8,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "remote",
+              "label": "Remote",
+              "value": 9,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "offline",
+              "label": "Offline",
+              "value": 10,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "startup",
+              "label": "Startup",
+              "value": 11,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "shutdown",
+              "label": "Shutdown",
+              "value": 12,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "archive",
+              "label": "Archive",
+              "value": 13,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "review",
+              "label": "Review",
+              "value": 14,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "quality",
+              "label": "Quality",
+              "value": 15,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "simulation",
+              "label": "Simulation",
+              "value": 16,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "training",
+              "label": "Training",
+              "value": 17,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "safety",
+              "label": "Safety",
+              "value": 18,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "locked",
+              "label": "Locked",
+              "value": 19,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "validation",
+              "label": "Validation",
+              "value": 20,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "commissioning",
+              "label": "Commissioning",
+              "value": 21,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "operator",
+              "label": "Operator",
+              "value": 22,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "engineering",
+              "label": "Engineering",
+              "value": 23,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "backup",
+              "label": "Backup",
+              "value": 24,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "recovery",
+              "label": "Recovery",
+              "value": 25,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "network",
+              "label": "Network",
+              "value": 26,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "power",
+              "label": "Power",
+              "value": 27,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "cooling",
+              "label": "Cooling",
+              "value": 28,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "audit",
+              "label": "Audit",
+              "value": 29,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "history",
+              "label": "History",
+              "value": 30,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "standalone",
+              "label": "Standalone",
+              "value": 31,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "planning",
+              "label": "Planning",
+              "value": 32,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "reporting",
+              "label": "Reporting",
+              "value": 33,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "inventory",
+              "label": "Inventory",
+              "value": 34,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "staging",
+              "label": "Staging",
+              "value": 35,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "acceptance",
+              "label": "Acceptance",
+              "value": 36,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "release",
+              "label": "Release",
+              "value": 37,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "support",
+              "label": "Support",
+              "value": 38,
+              "enabled": true,
+              "visible": true
+            },
+            {
+              "id": "laboratory",
+              "label": "Laboratory",
+              "value": 39,
+              "enabled": true,
+              "visible": true
+            }
+          ],
+          "selection.mode": "single",
+          "selection.require_enabled_item": true,
+          "active.index": 0,
+          "viewport.item_offset": 0,
+          "viewport.visible_item_count": 6,
+          "viewport.row_height": 28.1,
+          "display.vertical_scrollbar_visible": true,
+          "display.horizontal_scrollbar_visible": false,
+          "display.column_header_visible": false,
+          "display.row_header_visible": false,
+          "display.horizontal_lines_visible": true,
+          "display.vertical_lines_visible": false,
+          "display.symbols_visible": true,
+          "display.index_display_visible": false,
+          "style.scale.reference_width": 320,
+          "style.scale.reference_height": 260,
+          "style.item_region.fill_color": "#f8fafc",
+          "style.item_region.border_color": "#64748b",
+          "style.item_region.border_width": "1px",
+          "style.item_row.fill_color": "#ffffff",
+          "style.item_row.border_color": "#dbe3ec",
+          "style.item_row.border_width": "1px",
+          "style.item_row.hover_fill_color": "#eef6ff",
+          "style.item_row.disabled_fill_color": "#f1f5f9",
+          "style.item_row.disabled_text_color": "#94a3b8",
+          "style.selection_face.fill_color": "#eef4ff",
+          "style.selection_face.border_color": "#94a3b8",
+          "style.selection_face.border_width": "1px",
+          "style.active_item.border_color": "#22c55e",
+          "style.active_item.border_width": "1px",
+          "style.item_label.text_color": "#111827",
+          "style.item_label.font_family": "Segoe UI, Arial, sans-serif",
+          "style.item_label.font_size": "14px",
+          "style.item_label.font_weight": "400",
+          "style.item_label.padding_inline": "10px",
+          "style.item_symbol.fill_color": "#94a3b8",
+          "style.item_symbol.border_color": "#64748b",
+          "style.item_symbol.border_width": "1px",
+          "style.item_symbol.size": "12px",
+          "style.item_symbol.margin_right": "8px",
+          "style.scrollbar.track_fill_color": "#f8fafc",
+          "style.scrollbar.track_hover_fill_color": "#eef6ff",
+          "style.scrollbar.track_pressed_fill_color": "#dbeafe",
+          "style.scrollbar.thumb_fill_color": "#94a3b8",
+          "style.scrollbar.thumb_hover_fill_color": "#64748b",
+          "style.scrollbar.thumb_pressed_fill_color": "#475569",
+          "style.scrollbar.thumb_border_color": "#64748b",
+          "style.scrollbar.thumb_border_width": "0px",
+          "style.scrollbar.thumb_radius": "0px",
+          "viewport.auto_reveal_selected_value": true,
+          "style.scrollbar.thumb_min_height_percent": 12,
+          "style.scrollbar.inner_padding": "2px",
+          "style.scrollbar.border_color": "#94a3b8",
+          "style.scrollbar.border_width": "1px",
+          "style.scrollbar.border_radius": "0px",
+          "interaction.scroll.wheel_step_items": 1,
+          "style.focus_ring.color": "#2563eb",
+          "style.focus_ring.width": "2px",
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "interaction.focusable": false,
+          "interaction.description": "Read-only listbox indicator updated by Execute.",
+          "interaction.tip_strip": "Indicator selection follows the native execution result."
+        },
+        "visual": {
+          "asset_ref": "asset:listbox_shell_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "selected_item_value"
+        }
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Listbox Selection Roundtrip",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "listbox_runtime_host_default",
+    "documentation": {
+      "title": "Listbox selection",
+      "summary": "A Listbox presents a finite visible item list. This example publishes the selected numeric item value while keeping item labels and selection posture source-owned.",
+      "legend": [
+        {
+          "label": "Listbox control",
+          "description": "Clicking an enabled item patches front-panel selection state only."
+        },
+        {
+          "label": "Execute",
+          "description": "Execute consumes the selected item value through the native manifest corridor."
+        },
+        {
+          "label": "Listbox indicator",
+          "description": "Read-only selection display updated from the diagram output after Execute."
+        }
+      ],
+      "note": "The runtime may provide hitbox overlays for item rows, but they must align to the Default Listbox SVG parts and consume .frog-owned item/style data."
+    }
+  }
+}

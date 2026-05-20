@@ -197,6 +197,12 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
       <td><code>main.frog</code> + <code>ui/ring_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
+    <tr>
+      <td><code>22_listbox_selection_roundtrip</code></td>
+      <td>Listbox numeric selected-value roundtrip with a read-only Listbox indicator</td>
+      <td><code>main.frog</code> + <code>ui/listbox_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
   </tbody>
 </table>
 
@@ -374,13 +380,20 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
     ├── main.lowering.json
     └── ui/
         └── tab_panel.wfrog
-└── 21_ring_selection_roundtrip/
+├── 21_ring_selection_roundtrip/
     ├── Readme.md
     ├── main.frog
     ├── main.fir.json
     ├── main.lowering.json
     └── ui/
         └── ring_panel.wfrog
+└── 22_listbox_selection_roundtrip/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── listbox_panel.wfrog
 </code></pre>
 
 <p>
@@ -446,6 +459,16 @@ Default Ring realization, and a native manifest <code>u16</code> proof output.
 The <code>.frog</code> owns item ids, labels, numeric values, selected item state,
 layout, and style overrides. It does not add public runtime source beyond the
 Example 15 closure.
+</p>
+
+<p>
+Example <code>22</code> continues the repository-visible post-boundary widget
+progression with a Listbox control and read-only Listbox indicator. It contains
+public source, FIR/lowering shape, a <code>.wfrog</code> package referencing the
+Default Listbox realization, and a native manifest <code>u16</code> proof output.
+The <code>.frog</code> owns item ids, labels, numeric values, selected item state,
+viewport, layout, and style overrides. It does not add public runtime source
+beyond the Example 15 closure.
 </p>
 
 <hr/>

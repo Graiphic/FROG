@@ -80,7 +80,6 @@
         "root",
         "label",
         "caption",
-        "frame",
         "item_region",
         "item_row",
         "item_icon",
@@ -111,9 +110,9 @@
         "metadata"
       ],
       "fallbacks": {
-        "missing_resource": "host_native_or_generic_compatible_rendering",
+        "missing_resource": "invalid_realization_contract",
         "unsupported_style_member": "preserve_semantics_ignore_visual_hint",
-        "unsupported_selection_mode": "reject_or_downgrade_to_single_selection",
+        "unsupported_selection_mode": "reject_until_explicitly_supported",
         "unsupported_icon": "hide_icon_preserve_label",
         "unsupported_filter": "preserve_items_ignore_filter_view"
       }
@@ -202,11 +201,6 @@
       "part": "caption",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='caption']"
-    },
-    {
-      "part": "frame",
-      "binding_kind": "svg_or_host_surface",
-      "binding_selector": "[data-frog-part='frame']"
     },
     {
       "part": "item_region",
@@ -344,6 +338,41 @@
       "member": "viewport.*",
       "target_part": "item_region",
       "target_operation": "apply_viewport"
+    },
+    {
+      "member": "viewport.auto_reveal_selected_value",
+      "target_part": "item_region",
+      "target_operation": "reveal_selected_value_with_instance_local_viewport"
+    },
+    {
+      "member": "display.vertical_scrollbar_visible",
+      "target_part": "vertical_scrollbar",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "display.horizontal_scrollbar_visible",
+      "target_part": "horizontal_scrollbar",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "interaction.scroll.wheel_step_items",
+      "target_part": "vertical_scrollbar",
+      "target_operation": "apply_scroll_step"
+    },
+    {
+      "member": "style.scrollbar.*",
+      "target_part": "vertical_scrollbar",
+      "target_operation": "apply_scrollbar_style"
+    },
+    {
+      "member": "style.scrollbar.thumb_min_height_percent",
+      "target_part": "vertical_scrollbar",
+      "target_operation": "set_thumb_minimum_height"
+    },
+    {
+      "member": "style.scrollbar.inner_padding",
+      "target_part": "vertical_scrollbar",
+      "target_operation": "set_thumb_inner_padding"
     },
     {
       "member": "search.*",
@@ -499,7 +528,6 @@
   "composition": {
     "shell": "frog.realizations.default.listbox.assets.shell_svg",
     "layer_order": [
-      "frame",
       "item_region",
       "item_row",
       "disabled_face",
@@ -587,11 +615,13 @@
     }
   ],
   "host_hints": {
-    "preferred_host_kind": "svg_template_host_or_host_native_list",
+    "preferred_host_kind": "svg_template_host_with_published_host_overlays",
     "style_application_posture": "apply_property_bindings_before_render",
-    "host_native_replacement_allowed": true,
+    "host_native_replacement_allowed": false,
     "virtualization_allowed": true,
-    "minimum_visible_items": 1
+    "minimum_visible_items": 1,
+    "scrollbar_thumb_length_policy": "visible_items_over_item_count_with_source_owned_minimum",
+    "viewport_state_policy": "instance_local_unless_source_models_property_flow"
   },
   "validation_expectations": [
     "target classes must exist in the referenced widget class-law document",
