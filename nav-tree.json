@@ -1359,6 +1359,13 @@
                   "children": []
                 },
                 {
+                  "key": "libraries/widgets/commonproperties.md",
+                  "title": "Common Properties",
+                  "path": "/Libraries/Widgets/CommonProperties.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
                   "key": "libraries/widgets/decorations.md",
                   "title": "Decorations",
                   "path": "/Libraries/Widgets/Decorations.md",
@@ -4568,6 +4575,7 @@
     "/Libraries/Widgets/Button.md",
     "/Libraries/Widgets/Chart.md",
     "/Libraries/Widgets/Cluster.md",
+    "/Libraries/Widgets/CommonProperties.md",
     "/Libraries/Widgets/Decorations.md",
     "/Libraries/Widgets/Enum.md",
     "/Libraries/Widgets/Frame.md",

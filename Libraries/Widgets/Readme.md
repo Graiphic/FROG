@@ -25,6 +25,19 @@ A realization may provide templates, subobjects, slots, bindings, and host hints
 
 <hr/>
 
+<h2>Common Property Surface</h2>
+
+<p>
+Shared widget properties such as bounds, position, size, label, caption,
+documentation, visibility, enabled state, focus, tabbing, binding, primary
+value mirrors, display posture, viewport posture, and source-owned styling are
+defined once in <a href="./CommonProperties.md"><code>CommonProperties.md</code></a>.
+Family documents add the specialized value, method, event, and property
+surfaces that are specific to each widget class.
+</p>
+
+<hr/>
+
 <h2>Current Widget Baseline</h2>
 
 <table>
@@ -100,6 +113,7 @@ The current published widget layer includes detailed class-law baselines for the
 Standard widgets may participate in diagrams through natural value access and object-style interaction surfaces.
 Ordinary dataflow should use <code>widget_value</code> for the widget's primary value.
 Object-style access through <code>frog.ui.property_read</code>, <code>frog.ui.property_write</code>, method invocation, and event observation should be used for interaction surfaces such as viewport, selection, editing, focus, page management, cursor posture, history management, and host-facing display posture.
+The shared property vocabulary is documented in <a href="./CommonProperties.md"><code>CommonProperties.md</code></a>.
 </p>
 
 <hr/>
