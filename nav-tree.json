@@ -636,6 +636,21 @@
               ]
             },
             {
+              "key": "examples/23_table_cell_selection_roundtrip/",
+              "title": "23 table cell selection roundtrip",
+              "path": "/Examples/23_table_cell_selection_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/23_table_cell_selection_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/23_table_cell_selection_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -4475,6 +4490,8 @@
     "/Examples/21_ring_selection_roundtrip/Readme.md",
     "/Examples/22_listbox_selection_roundtrip/main.frog",
     "/Examples/22_listbox_selection_roundtrip/Readme.md",
+    "/Examples/23_table_cell_selection_roundtrip/main.frog",
+    "/Examples/23_table_cell_selection_roundtrip/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
