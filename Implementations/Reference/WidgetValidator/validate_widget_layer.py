@@ -111,6 +111,18 @@ def extract_supported_parts(manifest: dict[str, Any]) -> set[str]:
     return parts
 
 
+def extract_svg_bound_parts(manifest: dict[str, Any]) -> set[str]:
+    parts: set[str] = set()
+    for binding in manifest.get("part_bindings", []) or []:
+        if not isinstance(binding, dict):
+            continue
+        part = binding.get("part")
+        binding_kind = binding.get("binding_kind")
+        if isinstance(part, str) and isinstance(binding_kind, str) and "svg" in binding_kind:
+            parts.add(part)
+    return parts
+
+
 def extract_declared_resource_ids(manifest: dict[str, Any]) -> set[str]:
     ids: set[str] = set()
     for resource in extract_resources(manifest):
@@ -351,10 +363,12 @@ def validate_resources(
                 if part not in svg_text:
                     warn(warnings, f"{manifest_path}: resource {rel_path} targets part {part!r} but the SVG does not mention that part")
 
-    if all_svg_parts and supported_parts:
-        missing_markers = sorted(part for part in supported_parts if part not in all_svg_parts)
+    svg_bound_parts = extract_svg_bound_parts(manifest)
+    marker_required_parts = svg_bound_parts if svg_bound_parts else supported_parts
+    if all_svg_parts and marker_required_parts:
+        missing_markers = sorted(part for part in marker_required_parts if part not in all_svg_parts)
         for part in missing_markers:
-            warn(warnings, f"{manifest_path}: supported part {part!r} has no data-frog-part marker in declared SVG resources")
+            warn(warnings, f"{manifest_path}: SVG-bound part {part!r} has no data-frog-part marker in declared SVG resources")
 
     composition = manifest.get("composition")
     if isinstance(composition, dict):

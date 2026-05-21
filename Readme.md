@@ -392,6 +392,11 @@ All example families are organized by the public
 so future widget, operator, structure, library, compiler, and conformance
 examples expose their source, derived artifacts, ownership boundary, validation
 posture, and limitations in a consistent way.
+For accepted executable examples in the current validation line, that dossier
+is expected to expose the full <code>.frog -&gt; FIR -&gt; lowering -&gt; LLVM IR -&gt;
+native artifact + manifest -&gt; runtime host</code> corridor. Earlier stopping
+points must be explicitly documented as documentation-only, negative
+conformance, or exploratory posture rather than implied executable closure.
 </p>
 
 <table>
@@ -542,6 +547,12 @@ posture, and limitations in a consistent way.
       <td>Table control and read-only Table indicator through the Default Table realization.</td>
       <td>Post-boundary public example material; Graiphic private runtime validation continues in <code>Graiphic/FROG-Runtime</code>.</td>
     </tr>
+    <tr>
+      <td><code>24_tree_node_selection_roundtrip</code></td>
+      <td>Tree numeric selected-node roundtrip.</td>
+      <td>Tree control and read-only Tree indicator through the Default Tree realization.</td>
+      <td>Post-boundary public example material; Graiphic private runtime validation continues in <code>Graiphic/FROG-Runtime</code>.</td>
+    </tr>
   </tbody>
 </table>
 
@@ -626,6 +637,9 @@ The progression is intentionally staged:
 
 23_table_cell_selection_roundtrip
   -> Table numeric selected-cell roundtrip
+
+24_tree_node_selection_roundtrip
+  -> Tree numeric selected-node roundtrip
 </code></pre>
 
 <p>
@@ -636,16 +650,16 @@ Runtime development for examples beyond Example <code>15</code> continues in Gra
 </p>
 
 <p>
-Examples <code>16</code> through <code>23</code> are the current post-boundary
+Examples <code>16</code> through <code>24</code> are the current post-boundary
 widget-facing progression examples. They remain public as source, library,
 widget, realization, and conformance-facing material for Picture, Label,
-Decoration, Subpanel, Tab, Ring, Listbox, and Table surfaces without adding public runtime
+Decoration, Subpanel, Tab, Ring, Listbox, Table, and Tree surfaces without adding public runtime
 implementation beyond the Example <code>15</code> closure.
 </p>
 
 <p>
 The correct current statement is therefore:
-the repository materially exposes Examples <code>01</code> through <code>23</code>, while Example <code>05</code> remains the richest applicative UI/state/runtime/native reference corridor, Examples <code>06</code> through <code>15</code> define the current bounded public widget-runtime wave, and Examples <code>16</code> through <code>23</code> are public post-boundary widget/design progression material backed by Graiphic private runtime validation.
+the repository materially exposes Examples <code>01</code> through <code>24</code>, while Example <code>05</code> remains the richest applicative UI/state/runtime/native reference corridor, Examples <code>06</code> through <code>15</code> define the current bounded public widget-runtime wave, and Examples <code>16</code> through <code>24</code> are public post-boundary widget/design progression material backed by Graiphic private runtime validation.
 This does not claim full generalized symmetry across all future examples, all runtime families, or rendered-native front-panel closure.
 </p>
 
@@ -1397,7 +1411,7 @@ runtime acceptance            native proof
 For Examples <code>01</code> through <code>04</code>, the runtime acceptance and LLVM proofs are intentionally narrow reference proofs.
 For Example <code>05</code>, the repository carries the richer applicative path involving a front-panel package, widget values, widget references, UI property writes, explicit state, bounded iteration, runtime-family acceptance, and LLVM native proof material.
 Examples <code>06</code> through <code>15</code> currently exercise the public widget-front-panel runtime discipline for Boolean, String, Enum, Path, and Button across the C++, Python, and Rust reference runtimes.
-Examples <code>16</code> through <code>23</code> remain public post-boundary widget-facing material for Picture, Label, Decoration, Subpanel, Tab, Ring, Listbox, and Table while their runtime implementation line continues privately in <code>Graiphic/FROG-Runtime</code>.
+Examples <code>16</code> through <code>24</code> remain public post-boundary widget-facing material for Picture, Label, Decoration, Subpanel, Tab, Ring, Listbox, Table, and Tree while their runtime implementation line continues privately in <code>Graiphic/FROG-Runtime</code>.
 Runtime development for examples beyond Example <code>15</code> belongs to Graiphic's proprietary runtime work unless explicitly promoted later as public reference material.
 </p>
 
@@ -1979,9 +1993,9 @@ The repository already contains substantial material across canonical source rep
 
 <p>
 At the current published state, the repository has reached a stronger closure milestone:
-Examples <code>01</code> through <code>23</code> materially expose repository-visible source, FIR, lowering, backend-contract, widget, and LLVM-oriented proof material.
+Examples <code>01</code> through <code>24</code> materially expose repository-visible source, FIR, lowering, backend-contract, widget, and LLVM-oriented proof material.
 Examples <code>06</code> through <code>15</code> extend the current public reference workspace with validated widget-front-panel runtime slices for Boolean, String, Enum, Path, and Button.
-Examples <code>16</code> through <code>23</code> extend the public post-boundary widget-facing progression for Picture, Label, Decoration, Subpanel, Tab, Ring, Listbox, and Table while runtime implementation continues privately.
+Examples <code>16</code> through <code>24</code> extend the public post-boundary widget-facing progression for Picture, Label, Decoration, Subpanel, Tab, Ring, Listbox, Table, and Tree while runtime implementation continues privately.
 </p>
 
 <p>
@@ -1995,8 +2009,8 @@ They do not, by presence alone, expand the public runtime implementation maintai
 The current post-boundary set starts with <code>16_picture_logo_jpeg</code>,
 which uses a Path control, the standard
 <code>frog.image.decode_file_rgba8</code> primitive contract, and a Picture
-indicator. It now continues through <code>23_table_cell_selection_roundtrip</code> with
-Label, Decoration, Subpanel, Tab, Ring, Listbox, and Table widget-facing examples. Runtime support
+indicator. It now continues through <code>24_tree_node_selection_roundtrip</code> with
+Label, Decoration, Subpanel, Tab, Ring, Listbox, Table, and Tree widget-facing examples. Runtime support
 for these examples continues in <code>Graiphic/FROG-Runtime</code> unless
 deliberately promoted later.
 </p>

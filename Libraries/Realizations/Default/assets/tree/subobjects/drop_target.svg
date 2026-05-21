@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 14">
-  <g data-frog-part="drop_target">
-    <line x1="2" y1="7" x2="218" y2="7" stroke="#ef4444" stroke-width="2"/>
-    <circle cx="2" cy="7" r="4" fill="#ef4444"/>
-  </g>
-</svg>

@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>SVG assets for the default tree realization family</strong><br/>
-  <em>FROG — Free Open Graphical Language</em>
+  <em>FROG &mdash; Free Open Graphical Language</em>
 </p>
 
 <hr/>
@@ -15,26 +15,26 @@
 
 <ul>
   <li><code>assets/tree/templates/tree_shell.svg</code></li>
-  <li><code>assets/tree/subobjects/node_region.svg</code></li>
-  <li><code>assets/tree/subobjects/node_row.svg</code></li>
-  <li><code>assets/tree/subobjects/selection_face.svg</code></li>
-  <li><code>assets/tree/subobjects/expander_face.svg</code></li>
-  <li><code>assets/tree/subobjects/vertical_scrollbar.svg</code></li>
 </ul>
 
 <hr/>
 
-<h2>Required Public Parts</h2>
+<h2>Static Shell Parts</h2>
 
 <ul>
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>node_region</code></li>
-  <li><code>node_row</code></li>
-  <li><code>selection_face</code></li>
-  <li><code>expander_face</code></li>
   <li><code>vertical_scrollbar</code></li>
-  <li><code>focus_ring</code></li>
+  <li><code>horizontal_scrollbar</code></li>
 </ul>
+
+<hr/>
+
+<h2>Overlay Contract</h2>
+
+<p>
+The Tree shell does not contain hidden rows, hidden backgrounds, hidden buttons, hidden focus rings, or prototype scrollbar artwork.
+Dynamic Tree surfaces such as column headers, rows, selection, edit fields, expand/collapse controls, and scrollbar thumbs are host overlays generated from <code>.frog</code> instance data and aligned to the geometry published by this SVG.
+</p>

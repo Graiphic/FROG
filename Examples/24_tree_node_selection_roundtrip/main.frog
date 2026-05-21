@@ -1,0 +1,1026 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "24_tree_node_selection_roundtrip",
+    "summary": "Tree control-to-indicator selected-node numeric value roundtrip using .frog-owned hierarchy data and Default Tree .wfrog realization assets.",
+    "description": "Places one Tree control and one Tree indicator on the front panel. The .frog source owns node ids, tags, labels, values, hierarchy, expansion, selection, visible-item posture, layout, labels, bindings, and instance-level visual overrides. The .wfrog package references the Default Tree realization and SVG asset. Runtime implementation for this post-boundary example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "tree",
+      "tree_control",
+      "tree_indicator",
+      "node_selection",
+      "roundtrip",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "node_value",
+        "type": "u16",
+        "binding_origin": "widget.system_tree.value.selected_node_value"
+      },
+      {
+        "id": "tree_records",
+        "type": "frog.tree.records",
+        "binding_origin": "widget.system_tree.nodes.*"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "selected_node_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_tree_records",
+        "type": "frog.tree.records"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "system_tree_node_value",
+        "kind": "widget_value",
+        "widget": "system_tree",
+        "member": "value.selected_node_value"
+      },
+      {
+        "id": "published_tree_node_value",
+        "kind": "widget_value",
+        "widget": "published_tree",
+        "member": "value.selected_node_value"
+      },
+      {
+        "id": "system_tree_records",
+        "kind": "widget_value",
+        "widget": "system_tree",
+        "member": "nodes.*",
+        "type": "frog.tree.records"
+      },
+      {
+        "id": "published_tree_records",
+        "kind": "widget_value",
+        "widget": "published_tree",
+        "member": "nodes.*",
+        "type": "frog.tree.records"
+      },
+      {
+        "id": "output_published_tree_records",
+        "kind": "interface_output",
+        "interface_port": "published_tree_records"
+      },
+      {
+        "id": "output_selected_node_value",
+        "kind": "interface_output",
+        "interface_port": "selected_node_value"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "system_tree_node_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "published_tree_node_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "system_tree_node_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_selected_node_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e3",
+        "from": {
+          "node": "system_tree_records",
+          "port": "records"
+        },
+        "to": {
+          "node": "published_tree_records",
+          "port": "records"
+        }
+      },
+      {
+        "id": "e4",
+        "from": {
+          "node": "system_tree_records",
+          "port": "records"
+        },
+        "to": {
+          "node": "output_published_tree_records",
+          "port": "records"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 900,
+      "height": 410,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/tree_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "system_tree",
+        "role": "control",
+        "class_ref": "frog.widgets.tree_control",
+        "instance_ref": "system_tree",
+        "value_type": "u16",
+        "layout": {
+          "x": 32,
+          "y": 30,
+          "width": 405,
+          "height": 370
+        },
+        "props": {
+          "label.text": "Tree control",
+          "label.visible": true,
+          "label.anchor.x": 16,
+          "label.anchor.y": 34,
+          "label.style.text_color": "#111827",
+          "label.style.font_family": "Segoe UI, Arial, sans-serif",
+          "label.style.font_size": "13px",
+          "label.style.font_weight": "600",
+          "caption.text": "",
+          "caption.visible": false,
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 48,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
+          "value.selected_node_id": "duplicate_parent",
+          "value.selected_node_tag": "duplicate-tag",
+          "value.selected_node_label": "Duplicate",
+          "value.selected_node_value": 20,
+          "selection.mode": "single_node",
+          "selection.active_node_id": "duplicate_parent",
+          "selection.selected_node_ids": [
+            "duplicate_parent"
+          ],
+          "expansion.expanded_node_ids": [
+            "first_item",
+            "duplicate_parent"
+          ],
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "root_ids": [
+            "first_item"
+          ],
+          "columns": [
+            {
+              "id": "node",
+              "label": "Item",
+              "value_ref": "label",
+              "width": 145,
+              "visible": true
+            },
+            {
+              "id": "attribute_one",
+              "label": "Attribute One",
+              "value_ref": "attribute_one",
+              "width": 105,
+              "visible": true
+            },
+            {
+              "id": "attribute_two",
+              "label": "Attribute Two",
+              "value_ref": "attribute_two",
+              "width": 105,
+              "visible": true
+            },
+            {
+              "id": "attribute_three",
+              "label": "Attribute Three",
+              "value_ref": "attribute_three",
+              "width": 118,
+              "visible": true
+            },
+            {
+              "id": "tag",
+              "label": "Requested Tag",
+              "value_ref": "tag",
+              "width": 132,
+              "visible": true
+            },
+            {
+              "id": "numeric_value",
+              "label": "Value",
+              "value_ref": "value",
+              "width": 76,
+              "visible": true
+            }
+          ],
+          "nodes": [
+            {
+              "id": "first_item",
+              "tag": "one-tag",
+              "label": "First item",
+              "value": 10,
+              "depth": 0,
+              "expanded": true,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": true,
+              "icon": "folder",
+              "attributes": {
+                "attribute_one": "Sample 1",
+                "attribute_two": "Sample 2",
+                "attribute_three": "Group A"
+              }
+            },
+            {
+              "id": "duplicate_parent",
+              "parent_id": "first_item",
+              "tag": "duplicate-tag",
+              "label": "Duplicate",
+              "value": 20,
+              "depth": 1,
+              "expanded": true,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": true,
+              "icon": "folder",
+              "attributes": {
+                "attribute_one": "Sample 3",
+                "attribute_two": "Sample 4",
+                "attribute_three": "Group A"
+              }
+            },
+            {
+              "id": "duplicate_child",
+              "parent_id": "duplicate_parent",
+              "tag": "duplicate-child-tag",
+              "label": "Duplicate",
+              "value": 30,
+              "depth": 2,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": true,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 5",
+                "attribute_two": "Sample 6",
+                "attribute_three": "Group A"
+              }
+            },
+            {
+              "id": "settings",
+              "parent_id": "first_item",
+              "tag": "settings-tag",
+              "label": "Settings",
+              "value": 40,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 7",
+                "attribute_two": "Sample 8",
+                "attribute_three": "Group B"
+              }
+            },
+            {
+              "id": "diagnostics",
+              "parent_id": "first_item",
+              "tag": "diagnostics-tag",
+              "label": "Diagnostics",
+              "value": 50,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 9",
+                "attribute_two": "Sample 10",
+                "attribute_three": "Group B"
+              }
+            },
+            {
+              "id": "archive",
+              "parent_id": "first_item",
+              "tag": "archive-tag",
+              "label": "Archive",
+              "value": 60,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 11",
+                "attribute_two": "Sample 12",
+                "attribute_three": "Group C"
+              }
+            },
+            {
+              "id": "recipes",
+              "parent_id": "first_item",
+              "tag": "recipes-tag",
+              "label": "Recipes",
+              "value": 70,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 13",
+                "attribute_two": "Sample 14",
+                "attribute_three": "Group C"
+              }
+            },
+            {
+              "id": "calibration",
+              "parent_id": "first_item",
+              "tag": "calibration-tag",
+              "label": "Calibration",
+              "value": 80,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 15",
+                "attribute_two": "Sample 16",
+                "attribute_three": "Group D"
+              }
+            },
+            {
+              "id": "alarms",
+              "parent_id": "first_item",
+              "tag": "alarms-tag",
+              "label": "Alarms",
+              "value": 90,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 17",
+                "attribute_two": "Sample 18",
+                "attribute_three": "Group D"
+              }
+            },
+            {
+              "id": "logs",
+              "parent_id": "first_item",
+              "tag": "logs-tag",
+              "label": "Logs",
+              "value": 100,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 19",
+                "attribute_two": "Sample 20",
+                "attribute_three": "Group E"
+              }
+            },
+            {
+              "id": "reports",
+              "parent_id": "first_item",
+              "tag": "reports-tag",
+              "label": "Reports",
+              "value": 110,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 21",
+                "attribute_two": "Sample 22",
+                "attribute_three": "Group E"
+              }
+            },
+            {
+              "id": "maintenance",
+              "parent_id": "first_item",
+              "tag": "maintenance-tag",
+              "label": "Maintenance",
+              "value": 120,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 23",
+                "attribute_two": "Sample 24",
+                "attribute_three": "Group F"
+              }
+            }
+          ],
+          "viewport.column_header_height": 24,
+          "viewport.row_height": 32,
+          "viewport.indent_width": 18,
+          "viewport.visible_node_count": 6,
+          "viewport.node_offset": 0,
+          "viewport.visible_column_count": 3,
+          "viewport.column_offset": 0,
+          "viewport.cell_padding_inline": "7px",
+          "display.row_headers_visible": false,
+          "display.column_headers_visible": true,
+          "display.column_headers_fixed": true,
+          "display.vertical_scrollbar_visible": true,
+          "display.horizontal_scrollbar_visible": true,
+          "display.vertical_lines_visible": true,
+          "display.horizontal_lines_visible": true,
+          "display.hierarchy_lines_visible": false,
+          "display.symbols_visible": false,
+          "display.expand_contract_symbols_visible": true,
+          "display.checkboxes_visible": false,
+          "selection.allow_parent_items": true,
+          "interaction.selection_scrolling_enabled": true,
+          "headers.editable": false,
+          "columns.separators_movable": false,
+          "rows.autosize_height": true,
+          "input.multi_line_enabled": false,
+          "scrolling.smooth_enabled": true,
+          "interaction.scroll.wheel_step_nodes": 1,
+          "interaction.scroll.repeat_interval_ms": 45,
+          "interaction.selection_patch_delay_ms": 280,
+          "editing.enabled": true,
+          "editing.allow_during_execution": true,
+          "editing.mode": "example_interactive_runtime",
+          "drag.enabled": false,
+          "drop.enabled": false,
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.default_asset.opacity": 0.28,
+          "style.node_region.fill_color": "#ffffff",
+          "style.node_region.border_color": "#64748b",
+          "style.node_region.border_width": "1px",
+          "style.header_region.fill_color": "#dbe5f1",
+          "style.header_region.border_color": "#94a3b8",
+          "style.header_region.border_width": "1px",
+          "style.node_row.fill_color": "#ffffff",
+          "style.node_row.alternate_fill_color": "#f8fafc",
+          "style.node_row.border_color": "#e2e8f0",
+          "style.node_row.border_width": "1px",
+          "style.node_row.hover_fill_color": "#eef6ff",
+          "style.selection_face.fill_color": "#dbeafe",
+          "style.selection_face.border_color": "#2563eb",
+          "style.selection_face.border_width": "1px",
+          "style.active_node.border_color": "#2563eb",
+          "style.active_node.border_width": "2px",
+          "style.active_node.outline_offset": "-2px",
+          "style.edit_overlay.fill_color": "#ffffff",
+          "style.edit_overlay.border_color": "#2563eb",
+          "style.edit_overlay.border_width": "1px",
+          "style.edit_overlay.text_color": "#111827",
+          "style.hierarchy_line.color": "#94a3b8",
+          "style.hierarchy_line.width": "1px",
+          "style.text.color": "#111827",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "13px",
+          "style.text.font_weight": "400",
+          "style.header_text.color": "#102a43",
+          "style.header_text.font_weight": "600",
+          "style.symbol.fill_color": "#ffffff",
+          "style.symbol.icon_fill_color": "#eab308",
+          "style.symbol.border_color": "#64748b",
+          "style.symbol.border_width": "1px",
+          "style.symbol.size": "13px",
+          "style.symbol.font_size": "10px",
+          "style.symbol.margin_right": "5px",
+          "style.scrollbar.track_fill_color": "#e2e8f0",
+          "style.scrollbar.track_hover_fill_color": "#dbe5f1",
+          "style.scrollbar.track_pressed_fill_color": "#bfdbfe",
+          "style.scrollbar.border_color": "#94a3b8",
+          "style.scrollbar.border_width": "1px",
+          "style.scrollbar.thumb_padding_percent": 4,
+          "style.scrollbar.vertical_thumb_bleed": "1px",
+          "style.scrollbar.horizontal_height": "18px",
+          "style.scrollbar.thumb_fill_color": "#94a3b8",
+          "style.scrollbar.thumb_hover_fill_color": "#64748b",
+          "style.scrollbar.thumb_pressed_fill_color": "#475569",
+          "style.scrollbar.vertical_thumb_width_percent": 100,
+          "style.scrollbar.vertical_thumb_height_percent": 30,
+          "style.scrollbar.vertical_thumb_offset_y_percent": 18,
+          "style.scrollbar.horizontal_thumb_width_percent": 30,
+          "style.scrollbar.horizontal_thumb_height_percent": 66.67,
+          "style.scrollbar.horizontal_thumb_offset_x_percent": 16,
+          "style.scrollbar.horizontal_thumb_offset_y_percent": 16.67,
+          "style.focus_ring.color": "#2563eb",
+          "style.focus_ring.width": "2px",
+          "interaction.enabled": true,
+          "interaction.read_only": false,
+          "interaction.description": "Clicking a tree node patches front-panel selection state only.",
+          "interaction.tip_strip": "Select a node, then Execute to publish the selected numeric node value."
+        },
+        "visual": {
+          "asset_ref": "asset:tree_shell_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "node_value",
+          "public_record_input_id": "tree_records"
+        }
+      },
+      {
+        "id": "published_tree",
+        "role": "indicator",
+        "class_ref": "frog.widgets.tree_indicator",
+        "instance_ref": "published_tree",
+        "value_type": "u16",
+        "layout": {
+          "x": 465,
+          "y": 30,
+          "width": 405,
+          "height": 370
+        },
+        "props": {
+          "label.text": "Tree indicator",
+          "label.visible": true,
+          "label.anchor.x": 16,
+          "label.anchor.y": 34,
+          "label.style.text_color": "#111827",
+          "label.style.font_family": "Segoe UI, Arial, sans-serif",
+          "label.style.font_size": "13px",
+          "label.style.font_weight": "600",
+          "caption.text": "",
+          "caption.visible": false,
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 48,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
+          "value.selected_node_id": "duplicate_parent",
+          "value.selected_node_tag": "duplicate-tag",
+          "value.selected_node_label": "Duplicate",
+          "value.selected_node_value": 20,
+          "selection.mode": "single_node",
+          "selection.active_node_id": "duplicate_parent",
+          "selection.selected_node_ids": [
+            "duplicate_parent"
+          ],
+          "expansion.expanded_node_ids": [
+            "first_item",
+            "duplicate_parent"
+          ],
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "root_ids": [
+            "first_item"
+          ],
+          "columns": [
+            {
+              "id": "node",
+              "label": "Item",
+              "value_ref": "label",
+              "width": 145,
+              "visible": true
+            },
+            {
+              "id": "attribute_one",
+              "label": "Attribute One",
+              "value_ref": "attribute_one",
+              "width": 105,
+              "visible": true
+            },
+            {
+              "id": "attribute_two",
+              "label": "Attribute Two",
+              "value_ref": "attribute_two",
+              "width": 105,
+              "visible": true
+            },
+            {
+              "id": "attribute_three",
+              "label": "Attribute Three",
+              "value_ref": "attribute_three",
+              "width": 118,
+              "visible": true
+            },
+            {
+              "id": "tag",
+              "label": "Requested Tag",
+              "value_ref": "tag",
+              "width": 132,
+              "visible": true
+            },
+            {
+              "id": "numeric_value",
+              "label": "Value",
+              "value_ref": "value",
+              "width": 76,
+              "visible": true
+            }
+          ],
+          "nodes": [
+            {
+              "id": "first_item",
+              "tag": "one-tag",
+              "label": "First item",
+              "value": 10,
+              "depth": 0,
+              "expanded": true,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": true,
+              "icon": "folder",
+              "attributes": {
+                "attribute_one": "Sample 1",
+                "attribute_two": "Sample 2",
+                "attribute_three": "Group A"
+              }
+            },
+            {
+              "id": "duplicate_parent",
+              "parent_id": "first_item",
+              "tag": "duplicate-tag",
+              "label": "Duplicate",
+              "value": 20,
+              "depth": 1,
+              "expanded": true,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": true,
+              "icon": "folder",
+              "attributes": {
+                "attribute_one": "Sample 3",
+                "attribute_two": "Sample 4",
+                "attribute_three": "Group A"
+              }
+            },
+            {
+              "id": "duplicate_child",
+              "parent_id": "duplicate_parent",
+              "tag": "duplicate-child-tag",
+              "label": "Duplicate",
+              "value": 30,
+              "depth": 2,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": true,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 5",
+                "attribute_two": "Sample 6",
+                "attribute_three": "Group A"
+              }
+            },
+            {
+              "id": "settings",
+              "parent_id": "first_item",
+              "tag": "settings-tag",
+              "label": "Settings",
+              "value": 40,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 7",
+                "attribute_two": "Sample 8",
+                "attribute_three": "Group B"
+              }
+            },
+            {
+              "id": "diagnostics",
+              "parent_id": "first_item",
+              "tag": "diagnostics-tag",
+              "label": "Diagnostics",
+              "value": 50,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 9",
+                "attribute_two": "Sample 10",
+                "attribute_three": "Group B"
+              }
+            },
+            {
+              "id": "archive",
+              "parent_id": "first_item",
+              "tag": "archive-tag",
+              "label": "Archive",
+              "value": 60,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 11",
+                "attribute_two": "Sample 12",
+                "attribute_three": "Group C"
+              }
+            },
+            {
+              "id": "recipes",
+              "parent_id": "first_item",
+              "tag": "recipes-tag",
+              "label": "Recipes",
+              "value": 70,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 13",
+                "attribute_two": "Sample 14",
+                "attribute_three": "Group C"
+              }
+            },
+            {
+              "id": "calibration",
+              "parent_id": "first_item",
+              "tag": "calibration-tag",
+              "label": "Calibration",
+              "value": 80,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 15",
+                "attribute_two": "Sample 16",
+                "attribute_three": "Group D"
+              }
+            },
+            {
+              "id": "alarms",
+              "parent_id": "first_item",
+              "tag": "alarms-tag",
+              "label": "Alarms",
+              "value": 90,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 17",
+                "attribute_two": "Sample 18",
+                "attribute_three": "Group D"
+              }
+            },
+            {
+              "id": "logs",
+              "parent_id": "first_item",
+              "tag": "logs-tag",
+              "label": "Logs",
+              "value": 100,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 19",
+                "attribute_two": "Sample 20",
+                "attribute_three": "Group E"
+              }
+            },
+            {
+              "id": "reports",
+              "parent_id": "first_item",
+              "tag": "reports-tag",
+              "label": "Reports",
+              "value": 110,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 21",
+                "attribute_two": "Sample 22",
+                "attribute_three": "Group E"
+              }
+            },
+            {
+              "id": "maintenance",
+              "parent_id": "first_item",
+              "tag": "maintenance-tag",
+              "label": "Maintenance",
+              "value": 120,
+              "depth": 1,
+              "expanded": false,
+              "selectable": true,
+              "enabled": true,
+              "visible": true,
+              "checked": false,
+              "icon": "leaf",
+              "attributes": {
+                "attribute_one": "Sample 23",
+                "attribute_two": "Sample 24",
+                "attribute_three": "Group F"
+              }
+            }
+          ],
+          "viewport.column_header_height": 24,
+          "viewport.row_height": 32,
+          "viewport.indent_width": 18,
+          "viewport.visible_node_count": 6,
+          "viewport.node_offset": 0,
+          "viewport.visible_column_count": 3,
+          "viewport.column_offset": 0,
+          "viewport.cell_padding_inline": "7px",
+          "display.row_headers_visible": false,
+          "display.column_headers_visible": true,
+          "display.column_headers_fixed": true,
+          "display.vertical_scrollbar_visible": true,
+          "display.horizontal_scrollbar_visible": true,
+          "display.vertical_lines_visible": true,
+          "display.horizontal_lines_visible": true,
+          "display.hierarchy_lines_visible": false,
+          "display.symbols_visible": false,
+          "display.expand_contract_symbols_visible": true,
+          "display.checkboxes_visible": false,
+          "selection.allow_parent_items": true,
+          "interaction.selection_scrolling_enabled": true,
+          "headers.editable": false,
+          "columns.separators_movable": false,
+          "rows.autosize_height": true,
+          "input.multi_line_enabled": false,
+          "scrolling.smooth_enabled": true,
+          "interaction.scroll.wheel_step_nodes": 1,
+          "interaction.scroll.repeat_interval_ms": 45,
+          "editing.enabled": false,
+          "editing.allow_during_execution": false,
+          "drag.enabled": false,
+          "drop.enabled": false,
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.default_asset.opacity": 0.28,
+          "style.node_region.fill_color": "#ffffff",
+          "style.node_region.border_color": "#64748b",
+          "style.node_region.border_width": "1px",
+          "style.header_region.fill_color": "#dbe5f1",
+          "style.header_region.border_color": "#94a3b8",
+          "style.header_region.border_width": "1px",
+          "style.node_row.fill_color": "#ffffff",
+          "style.node_row.alternate_fill_color": "#f8fafc",
+          "style.node_row.border_color": "#e2e8f0",
+          "style.node_row.border_width": "1px",
+          "style.node_row.hover_fill_color": "#ffffff",
+          "style.selection_face.fill_color": "#dcfce7",
+          "style.selection_face.border_color": "#16a34a",
+          "style.selection_face.border_width": "1px",
+          "style.active_node.border_color": "#16a34a",
+          "style.active_node.border_width": "2px",
+          "style.active_node.outline_offset": "-2px",
+          "style.edit_overlay.fill_color": "#ffffff",
+          "style.edit_overlay.border_color": "#16a34a",
+          "style.edit_overlay.border_width": "1px",
+          "style.edit_overlay.text_color": "#111827",
+          "style.hierarchy_line.color": "#94a3b8",
+          "style.hierarchy_line.width": "1px",
+          "style.text.color": "#111827",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "13px",
+          "style.text.font_weight": "400",
+          "style.header_text.color": "#102a43",
+          "style.header_text.font_weight": "600",
+          "style.symbol.fill_color": "#ffffff",
+          "style.symbol.icon_fill_color": "#eab308",
+          "style.symbol.border_color": "#64748b",
+          "style.symbol.border_width": "1px",
+          "style.symbol.size": "13px",
+          "style.symbol.font_size": "10px",
+          "style.symbol.margin_right": "5px",
+          "style.scrollbar.track_fill_color": "#e2e8f0",
+          "style.scrollbar.track_hover_fill_color": "#dbe5f1",
+          "style.scrollbar.track_pressed_fill_color": "#bfdbfe",
+          "style.scrollbar.border_color": "#94a3b8",
+          "style.scrollbar.border_width": "1px",
+          "style.scrollbar.thumb_padding_percent": 4,
+          "style.scrollbar.vertical_thumb_bleed": "1px",
+          "style.scrollbar.horizontal_height": "18px",
+          "style.scrollbar.thumb_fill_color": "#94a3b8",
+          "style.scrollbar.thumb_hover_fill_color": "#64748b",
+          "style.scrollbar.thumb_pressed_fill_color": "#475569",
+          "style.scrollbar.vertical_thumb_width_percent": 100,
+          "style.scrollbar.vertical_thumb_height_percent": 30,
+          "style.scrollbar.vertical_thumb_offset_y_percent": 18,
+          "style.scrollbar.horizontal_thumb_width_percent": 30,
+          "style.scrollbar.horizontal_thumb_height_percent": 66.67,
+          "style.scrollbar.horizontal_thumb_offset_x_percent": 16,
+          "style.scrollbar.horizontal_thumb_offset_y_percent": 16.67,
+          "style.focus_ring.color": "#16a34a",
+          "style.focus_ring.width": "2px",
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "interaction.focusable": false,
+          "interaction.description": "Read-only Tree indicator updated by Execute.",
+          "interaction.tip_strip": "Indicator selection follows the native execution result."
+        },
+        "visual": {
+          "asset_ref": "asset:tree_shell_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "selected_node_value",
+          "public_record_output_id": "published_tree_records"
+        }
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Tree Node Selection Roundtrip",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "tree_runtime_host_default",
+    "documentation": {
+      "title": "Tree node selection",
+      "summary": "A Tree presents finite hierarchical data. This example publishes the selected numeric node value while keeping node ids, tags, labels, expansion state, selection posture, visible-item posture, layout, and style source-owned.",
+      "legend": [
+        {
+          "label": "Tree control",
+          "description": "Clicking a node patches front-panel selection state only."
+        },
+        {
+          "label": "Execute",
+          "description": "Execute consumes the selected node value through the native manifest corridor."
+        },
+        {
+          "label": "Tree indicator",
+          "description": "Read-only node selection and tree-record display updated from diagram outputs after Execute."
+        }
+      ],
+      "note": "The runtime may provide hitbox overlays for tree rows and scrollbars, but they must align to the Default Tree SVG parts and consume .frog-owned nodes, tags, display, selection, expansion, interaction, and style data. Editable Tree cell records are part of the diagram dataflow: Execute publishes system_tree.nodes.* to published_tree.nodes.* instead of using an implicit UI synchronization."
+    }
+  }
+}

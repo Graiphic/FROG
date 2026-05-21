@@ -54,19 +54,7 @@
       "frog.realizations.default.tree"
     ],
     "resources": [
-      "frog.realizations.default.tree.assets.shell_svg",
-      "frog.realizations.default.tree.assets.node_region_svg",
-      "frog.realizations.default.tree.assets.node_row_svg",
-      "frog.realizations.default.tree.assets.selection_face_svg",
-      "frog.realizations.default.tree.assets.active_node_svg",
-      "frog.realizations.default.tree.assets.expander_face_svg",
-      "frog.realizations.default.tree.assets.checkbox_face_svg",
-      "frog.realizations.default.tree.assets.node_icon_svg",
-      "frog.realizations.default.tree.assets.edit_overlay_svg",
-      "frog.realizations.default.tree.assets.drag_feedback_svg",
-      "frog.realizations.default.tree.assets.drop_target_svg",
-      "frog.realizations.default.tree.assets.vertical_scrollbar_svg",
-      "frog.realizations.default.tree.assets.horizontal_scrollbar_svg"
+      "frog.realizations.default.tree.assets.shell_svg"
     ]
   },
   "realizations": [
@@ -78,12 +66,12 @@
         "frog.widgets.tree_indicator"
       ],
       "supported_parts": [
-        "root",
-        "label",
-        "caption",
-        "frame",
-        "node_region",
-        "node_row",
+      "root",
+      "label",
+      "caption",
+      "node_region",
+      "column_headers",
+      "node_row",
         "node_indent",
         "node_connector",
         "expander_face",
@@ -93,11 +81,10 @@
         "active_node",
         "selection_face",
         "edit_overlay",
-        "drag_feedback",
-        "drop_target",
-        "vertical_scrollbar",
-        "horizontal_scrollbar",
-        "focus_ring"
+      "drag_feedback",
+      "drop_target",
+      "vertical_scrollbar",
+      "horizontal_scrollbar"
       ],
       "supported_selection_modes": [
         "none",
@@ -129,181 +116,104 @@
       "id": "frog.realizations.default.tree.assets.shell_svg",
       "kind": "svg",
       "path": "./assets/tree/templates/tree_shell.svg",
-      "role": "assembly_shell"
-    },
-    {
-      "id": "frog.realizations.default.tree.assets.node_region_svg",
-      "kind": "svg",
-      "path": "./assets/tree/subobjects/node_region.svg",
-      "target_part": "node_region"
-    },
-    {
-      "id": "frog.realizations.default.tree.assets.node_row_svg",
-      "kind": "svg",
-      "path": "./assets/tree/subobjects/node_row.svg",
-      "target_part": "node_row"
-    },
-    {
-      "id": "frog.realizations.default.tree.assets.selection_face_svg",
-      "kind": "svg",
-      "path": "./assets/tree/subobjects/selection_face.svg",
-      "target_part": "selection_face"
-    },
-    {
-      "id": "frog.realizations.default.tree.assets.active_node_svg",
-      "kind": "svg",
-      "path": "./assets/tree/subobjects/active_node.svg",
-      "target_part": "active_node"
-    },
-    {
-      "id": "frog.realizations.default.tree.assets.expander_face_svg",
-      "kind": "svg",
-      "path": "./assets/tree/subobjects/expander_face.svg",
-      "target_part": "expander_face"
-    },
-    {
-      "id": "frog.realizations.default.tree.assets.checkbox_face_svg",
-      "kind": "svg",
-      "path": "./assets/tree/subobjects/checkbox_face.svg",
-      "target_part": "checkbox_face"
-    },
-    {
-      "id": "frog.realizations.default.tree.assets.node_icon_svg",
-      "kind": "svg",
-      "path": "./assets/tree/subobjects/node_icon.svg",
-      "target_part": "node_icon"
-    },
-    {
-      "id": "frog.realizations.default.tree.assets.edit_overlay_svg",
-      "kind": "svg",
-      "path": "./assets/tree/subobjects/edit_overlay.svg",
-      "target_part": "edit_overlay"
-    },
-    {
-      "id": "frog.realizations.default.tree.assets.drag_feedback_svg",
-      "kind": "svg",
-      "path": "./assets/tree/subobjects/drag_feedback.svg",
-      "target_part": "drag_feedback"
-    },
-    {
-      "id": "frog.realizations.default.tree.assets.drop_target_svg",
-      "kind": "svg",
-      "path": "./assets/tree/subobjects/drop_target.svg",
-      "target_part": "drop_target"
-    },
-    {
-      "id": "frog.realizations.default.tree.assets.vertical_scrollbar_svg",
-      "kind": "svg",
-      "path": "./assets/tree/subobjects/vertical_scrollbar.svg",
-      "target_part": "vertical_scrollbar"
-    },
-    {
-      "id": "frog.realizations.default.tree.assets.horizontal_scrollbar_svg",
-      "kind": "svg",
-      "path": "./assets/tree/subobjects/horizontal_scrollbar.svg",
-      "target_part": "horizontal_scrollbar"
+      "role": "geometry_shell"
     }
   ],
   "part_bindings": [
     {
       "part": "root",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "svg_geometry_surface",
       "binding_selector": "[data-frog-part='root']"
     },
     {
       "part": "label",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "svg_geometry_surface",
       "binding_selector": "[data-frog-part='label']"
     },
     {
       "part": "caption",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "svg_geometry_surface",
       "binding_selector": "[data-frog-part='caption']"
     },
     {
-      "part": "frame",
-      "binding_kind": "svg_or_host_surface",
-      "binding_selector": "[data-frog-part='frame']"
-    },
-    {
       "part": "node_region",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "svg_geometry_surface",
       "binding_selector": "[data-frog-part='node_region']"
     },
     {
+      "part": "column_headers",
+      "binding_kind": "host_overlay_generated_surface",
+      "binding_selector": "[data-frog-part='column_headers']"
+    },
+    {
       "part": "node_row",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "host_overlay_generated_surface",
       "binding_selector": "[data-frog-part='node_row']"
     },
     {
       "part": "node_indent",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "host_overlay_generated_surface",
       "binding_selector": "[data-frog-part='node_indent']"
     },
     {
       "part": "node_connector",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "host_overlay_generated_surface",
       "binding_selector": "[data-frog-part='node_connector']"
     },
     {
       "part": "expander_face",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "host_overlay_generated_surface",
       "binding_selector": "[data-frog-part='expander_face']"
     },
     {
       "part": "checkbox_face",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "host_overlay_generated_surface",
       "binding_selector": "[data-frog-part='checkbox_face']"
     },
     {
       "part": "node_icon",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "host_overlay_generated_surface",
       "binding_selector": "[data-frog-part='node_icon']"
     },
     {
       "part": "node_label",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "host_overlay_generated_surface",
       "binding_selector": "[data-frog-part='node_label']"
     },
     {
       "part": "active_node",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "host_overlay_generated_surface",
       "binding_selector": "[data-frog-part='active_node']"
     },
     {
       "part": "selection_face",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "host_overlay_generated_surface",
       "binding_selector": "[data-frog-part='selection_face']"
     },
     {
       "part": "edit_overlay",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "host_overlay_generated_surface",
       "binding_selector": "[data-frog-part='edit_overlay']"
     },
     {
       "part": "drag_feedback",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "host_overlay_generated_surface",
       "binding_selector": "[data-frog-part='drag_feedback']"
     },
     {
       "part": "drop_target",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "host_overlay_generated_surface",
       "binding_selector": "[data-frog-part='drop_target']"
     },
     {
       "part": "vertical_scrollbar",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "svg_geometry_surface",
       "binding_selector": "[data-frog-part='vertical_scrollbar']"
     },
     {
       "part": "horizontal_scrollbar",
-      "binding_kind": "svg_or_host_surface",
+      "binding_kind": "svg_geometry_surface",
       "binding_selector": "[data-frog-part='horizontal_scrollbar']"
-    },
-    {
-      "part": "focus_ring",
-      "binding_kind": "svg_or_host_surface",
-      "binding_selector": "[data-frog-part='focus_ring']"
     }
   ],
   "property_bindings": [
@@ -376,6 +286,16 @@
       "member": "viewport.*",
       "target_part": "node_region",
       "target_operation": "apply_viewport"
+    },
+    {
+      "member": "display.column_headers_visible",
+      "target_part": "column_headers",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "display.column_headers_fixed",
+      "target_part": "column_headers",
+      "target_operation": "set_fixed_header_posture"
     },
     {
       "member": "search.*",
@@ -540,9 +460,32 @@
   ],
   "composition": {
     "shell": "frog.realizations.default.tree.assets.shell_svg",
-    "layer_order": [
-      "frame",
+    "static_shell_parts": [
+      "root",
+      "label",
+      "caption",
       "node_region",
+      "vertical_scrollbar",
+      "horizontal_scrollbar"
+    ],
+    "dynamic_host_overlay_parts": [
+      "column_headers",
+      "node_row",
+      "node_indent",
+      "node_connector",
+      "expander_face",
+      "checkbox_face",
+      "node_icon",
+      "node_label",
+      "active_node",
+      "selection_face",
+      "edit_overlay",
+      "drag_feedback",
+      "drop_target"
+    ],
+    "layer_order": [
+      "node_region",
+      "column_headers",
       "node_connector",
       "node_indent",
       "node_row",
@@ -557,71 +500,11 @@
       "drop_target",
       "vertical_scrollbar",
       "horizontal_scrollbar",
-      "focus_ring",
       "label",
       "caption"
     ],
-    "slots": [
-      {
-        "slot": "node_region",
-        "resource_ref": "frog.realizations.default.tree.assets.node_region_svg"
-      },
-      {
-        "slot": "vertical_scrollbar",
-        "resource_ref": "frog.realizations.default.tree.assets.vertical_scrollbar_svg"
-      },
-      {
-        "slot": "horizontal_scrollbar",
-        "resource_ref": "frog.realizations.default.tree.assets.horizontal_scrollbar_svg"
-      }
-    ],
-    "nested_slots": [
-      {
-        "parent_part": "node_region",
-        "slot": "node_row",
-        "resource_ref": "frog.realizations.default.tree.assets.node_row_svg"
-      },
-      {
-        "parent_part": "node_region",
-        "slot": "selection_face",
-        "resource_ref": "frog.realizations.default.tree.assets.selection_face_svg"
-      },
-      {
-        "parent_part": "node_region",
-        "slot": "active_node",
-        "resource_ref": "frog.realizations.default.tree.assets.active_node_svg"
-      },
-      {
-        "parent_part": "node_region",
-        "slot": "expander_face",
-        "resource_ref": "frog.realizations.default.tree.assets.expander_face_svg"
-      },
-      {
-        "parent_part": "node_region",
-        "slot": "checkbox_face",
-        "resource_ref": "frog.realizations.default.tree.assets.checkbox_face_svg"
-      },
-      {
-        "parent_part": "node_region",
-        "slot": "node_icon",
-        "resource_ref": "frog.realizations.default.tree.assets.node_icon_svg"
-      },
-      {
-        "parent_part": "node_region",
-        "slot": "edit_overlay",
-        "resource_ref": "frog.realizations.default.tree.assets.edit_overlay_svg"
-      },
-      {
-        "parent_part": "node_region",
-        "slot": "drag_feedback",
-        "resource_ref": "frog.realizations.default.tree.assets.drag_feedback_svg"
-      },
-      {
-        "parent_part": "node_region",
-        "slot": "drop_target",
-        "resource_ref": "frog.realizations.default.tree.assets.drop_target_svg"
-      }
-    ]
+    "slots": [],
+    "nested_slots": []
   },
   "anchors": [
     {
@@ -655,7 +538,7 @@
     "resources must not become semantic owners of widget value",
     "runtime-private host handles must not be exposed as public widget members",
     "virtualized node and row handles must remain realization-private",
-    "declared SVG resources should expose all supported data-frog-part markers",
+    "the shell SVG must expose static anchor and geometry data-frog-part markers; dynamic Tree column header, row, selection, expansion, editing, and drag/drop parts are generated host overlays aligned to those geometry markers",
     "unsupported edit or drag/drop operations on indicator classes must be rejected"
   ]
 }

@@ -14,7 +14,6 @@ EXPECTED_PARTS = {
     "root",
     "label",
     "caption",
-    "frame",
     "node_region",
     "node_row",
     "node_indent",
@@ -30,8 +29,18 @@ EXPECTED_PARTS = {
     "drop_target",
     "vertical_scrollbar",
     "horizontal_scrollbar",
-    "focus_ring",
 }
+
+STATIC_SHELL_PARTS = {
+    "root",
+    "label",
+    "caption",
+    "node_region",
+    "vertical_scrollbar",
+    "horizontal_scrollbar",
+}
+
+DYNAMIC_OVERLAY_PARTS = EXPECTED_PARTS - STATIC_SHELL_PARTS
 
 
 def test_tree_widget_doc_defines_deepened_public_surface() -> None:
@@ -71,12 +80,19 @@ def test_tree_manifest_declares_expected_parts_and_bindings() -> None:
     assert "drag.*" in property_members
     assert "drop.*" in property_members
 
+    binding_kinds = {item["part"]: item["binding_kind"] for item in data["part_bindings"]}
+    for part in STATIC_SHELL_PARTS:
+        assert binding_kinds[part] == "svg_geometry_surface"
+    for part in DYNAMIC_OVERLAY_PARTS:
+        assert binding_kinds[part] == "host_overlay_generated_surface"
 
-def test_tree_svg_resources_expose_all_public_part_markers() -> None:
+
+def test_tree_svg_resource_exposes_only_static_geometry_markers() -> None:
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
     parts = set()
     for resource in data["resources"]:
         path = DEFAULT_DIR / resource["path"]
         text = path.read_text(encoding="utf-8")
         parts |= set(re.findall(r"data-frog-part=[\\\"']([^\\\"']+)[\\\"']", text))
-    assert EXPECTED_PARTS <= parts
+    assert parts == STATIC_SHELL_PARTS
+    assert DYNAMIC_OVERLAY_PARTS.isdisjoint(parts)

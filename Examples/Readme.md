@@ -209,6 +209,12 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
       <td><code>main.frog</code> + <code>ui/table_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
+    <tr>
+      <td><code>24_tree_node_selection_roundtrip</code></td>
+      <td>Tree numeric selected-node roundtrip with parent/child expansion, editable cells, and scrollable columns/rows</td>
+      <td><code>main.frog</code> + <code>ui/tree_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
   </tbody>
 </table>
 
@@ -270,7 +276,10 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
 23   Table numeric selected-cell value as a post-boundary widget progression example
     |
     v
-24+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
+24   Tree numeric selected-node value as a post-boundary widget progression example
+    |
+    v
+25+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
 </code></pre>
 
 <hr/>
@@ -406,13 +415,20 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
     ├── main.lowering.json
     └── ui/
         └── listbox_panel.wfrog
-└── 23_table_cell_selection_roundtrip/
+├── 23_table_cell_selection_roundtrip/
     ├── Readme.md
     ├── main.frog
     ├── main.fir.json
     ├── main.lowering.json
     └── ui/
         └── table_panel.wfrog
+└── 24_tree_node_selection_roundtrip/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── tree_panel.wfrog
 </code></pre>
 
 <p>

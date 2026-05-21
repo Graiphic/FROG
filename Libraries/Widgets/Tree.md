@@ -334,6 +334,34 @@ Hosts that do not support portable drag/drop may still support selection and exp
   <li><code>nodes.visible</code></li>
 </ul>
 
+<h3>Display properties</h3>
+
+<ul>
+  <li><code>display.column_headers_visible</code></li>
+  <li><code>display.column_headers_fixed</code></li>
+  <li><code>display.row_headers_visible</code></li>
+  <li><code>display.vertical_scrollbar_visible</code></li>
+  <li><code>display.horizontal_scrollbar_visible</code></li>
+  <li><code>display.vertical_lines_visible</code></li>
+  <li><code>display.horizontal_lines_visible</code></li>
+  <li><code>display.hierarchy_lines_visible</code></li>
+  <li><code>display.symbols_visible</code></li>
+  <li><code>display.expand_contract_symbols_visible</code></li>
+  <li><code>display.checkboxes_visible</code></li>
+</ul>
+
+<h3>Scrollbar style properties</h3>
+
+<ul>
+  <li><code>style.scrollbar.track_fill_color</code></li>
+  <li><code>style.scrollbar.border_color</code></li>
+  <li><code>style.scrollbar.border_width</code></li>
+  <li><code>style.scrollbar.thumb_fill_color</code></li>
+  <li><code>style.scrollbar.vertical_thumb_width_percent</code></li>
+  <li><code>style.scrollbar.vertical_thumb_bleed</code></li>
+  <li><code>style.scrollbar.horizontal_thumb_height_percent</code></li>
+</ul>
+
 <h3>Interaction properties</h3>
 
 <ul>
@@ -416,6 +444,7 @@ Hosts that do not support portable drag/drop may still support selection and exp
   <li><code>caption</code></li>
   <li><code>frame</code></li>
   <li><code>node_region</code></li>
+  <li><code>column_headers</code></li>
   <li><code>node_row</code></li>
   <li><code>node_indent</code></li>
   <li><code>node_connector</code></li>

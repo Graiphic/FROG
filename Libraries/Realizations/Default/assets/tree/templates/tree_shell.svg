@@ -1,59 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 360" data-frog-template="frog.realizations.default.tree.shell">
-  <title>FROG Default Tree Shell</title>
-  <desc>Default SVG-backed tree widget realization with hierarchy, expanders, icons, checkboxes, selection, editing, drag/drop, scrollbars, label, caption, frame, and focus surfaces.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 544 370" data-frog-template="frog.realizations.default.tree.shell">
+  <title>FROG Default Tree Geometry Shell</title>
+  <desc>Default Tree shell publishing only stable anchors and geometry surfaces. Rows, text, selection, expansion, editing, and scrollbar thumbs are runtime host overlays driven by .frog instance data.</desc>
   <g data-frog-part="root">
-    <text data-frog-part="label" data-frog-anchor="label.anchor" x="16" y="22" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">tree_1</text>
-    <text data-frog-part="caption" data-frog-anchor="caption.anchor" x="16" y="48" font-size="16" font-family="Inter, Arial, sans-serif" font-weight="600" fill="#111827">Tree</text>
-    <rect data-frog-part="frame" x="14" y="64" width="492" height="280" rx="8" fill="#ffffff" stroke="#111827" stroke-width="2"/>
-
+    <text data-frog-part="label" data-frog-anchor="label.anchor" x="16" y="22"></text>
+    <text data-frog-part="caption" data-frog-anchor="caption.anchor" x="16" y="46"></text>
     <g data-frog-part="node_region">
-      <rect x="28" y="82" width="446" height="236" fill="#f8fafc" stroke="#cbd5e1"/>
-      <g data-frog-part="node_connector">
-        <line x1="52" y1="112" x2="52" y2="220" stroke="#94a3b8" stroke-width="1.5"/>
-        <line x1="52" y1="146" x2="72" y2="146" stroke="#94a3b8" stroke-width="1.5"/>
-        <line x1="52" y1="180" x2="72" y2="180" stroke="#94a3b8" stroke-width="1.5"/>
-      </g>
-      <g data-frog-part="node_row">
-        <rect x="34" y="92" width="430" height="30" fill="#ffffff" stroke="#e2e8f0"/>
-        <g data-frog-part="node_indent">
-          <rect x="38" y="96" width="20" height="22" fill="none" stroke="none"/>
-        </g>
-        <g data-frog-part="expander_face">
-          <rect x="42" y="100" width="14" height="14" rx="2" fill="#e2e8f0" stroke="#64748b"/>
-          <path d="M46 105 L49 110 L53 105 Z" fill="#334155"/>
-        </g>
-        <g data-frog-part="checkbox_face">
-          <rect x="64" y="100" width="14" height="14" rx="2" fill="#ffffff" stroke="#64748b"/>
-          <path d="M67 107 L70 110 L75 103" fill="none" stroke="#2563eb" stroke-width="1.8"/>
-        </g>
-        <g data-frog-part="node_icon">
-          <rect x="86" y="99" width="16" height="16" rx="3" fill="#facc15" stroke="#ca8a04"/>
-        </g>
-        <text data-frog-part="node_label" x="112" y="112" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">Root node</text>
-      </g>
-
-      <rect data-frog-part="selection_face" x="72" y="132" width="392" height="30" fill="#60a5fa" opacity="0.24" stroke="#2563eb"/>
-      <rect data-frog-part="active_node" x="72" y="166" width="392" height="30" fill="none" stroke="#22c55e" stroke-width="2"/>
-      <rect data-frog-part="edit_overlay" x="110" y="170" width="160" height="22" rx="3" fill="none" stroke="#f97316" stroke-width="2" stroke-dasharray="5 4"/>
-      <g data-frog-part="drag_feedback" opacity="0.8">
-        <rect x="94" y="216" width="188" height="26" rx="4" fill="#334155" opacity="0.18" stroke="#334155" stroke-dasharray="5 4"/>
-      </g>
-      <g data-frog-part="drop_target">
-        <line x1="74" y1="252" x2="464" y2="252" stroke="#ef4444" stroke-width="2"/>
-        <circle cx="74" cy="252" r="4" fill="#ef4444"/>
-      </g>
+      <rect x="16" y="64" width="486" height="260" fill="none" stroke="none"/>
     </g>
-
     <g data-frog-part="vertical_scrollbar">
-      <rect x="476" y="82" width="18" height="236" rx="8" fill="#e2e8f0" stroke="#94a3b8"/>
-      <rect x="479" y="112" width="12" height="74" rx="6" fill="#94a3b8"/>
+      <rect x="506" y="64" width="18" height="260" fill="none" stroke="none"/>
     </g>
-
     <g data-frog-part="horizontal_scrollbar">
-      <rect x="28" y="322" width="446" height="16" rx="8" fill="#e2e8f0" stroke="#94a3b8"/>
-      <rect x="78" y="325" width="130" height="10" rx="5" fill="#94a3b8"/>
+      <rect x="16" y="328" width="486" height="18" fill="none" stroke="none"/>
     </g>
-
-    <rect data-frog-part="focus_ring" x="10" y="60" width="500" height="284" rx="10" fill="none" stroke="#2f80ed" stroke-width="3" opacity="0"/>
   </g>
 </svg>

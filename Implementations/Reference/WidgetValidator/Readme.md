@@ -28,7 +28,8 @@ It does not define widget semantics.
   <li><code>*.default.wfrog</code> manifests exist and parse as JSON,</li>
   <li>manifest resources resolve relative to the manifest directory,</li>
   <li>target classes are mentioned in the matching widget class-law document,</li>
-  <li>declared SVG public parts are visible through <code>data-frog-part</code> markers where possible,</li>
+  <li>declared SVG-bound public parts are visible through <code>data-frog-part</code> markers where possible,</li>
+  <li>host-overlay public parts may be declared in <code>.wfrog</code> without requiring hidden prototype SVG markers,</li>
   <li>Default package documentation does not contain literal escaped newline artifacts.</li>
 </ul>
 

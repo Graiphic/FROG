@@ -1,0 +1,137 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "24_tree_node_selection_roundtrip",
+    "path": "Examples/24_tree_node_selection_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "unit_id": "main",
+  "summary": "Tree selected-node numeric value roundtrip with source-owned hierarchy, tags, column attributes, expansion, selection, layout, style, Default Tree realization, and native u16 proof corridor.",
+  "interfaces": {
+    "inputs": [
+      {
+        "id": "node_value",
+        "type": "u16",
+        "source": "widget.system_tree.value.selected_node_value"
+      },
+      {
+        "id": "tree_records",
+        "type": "frog.tree.records",
+        "source": "widget.system_tree.nodes.*"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "selected_node_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_tree_records",
+        "type": "frog.tree.records"
+      }
+    ]
+  },
+  "front_panel": {
+    "package_refs": [
+      "Examples/24_tree_node_selection_roundtrip/ui/tree_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "widget_id": "system_tree",
+        "class_ref": "frog.widgets.tree_control",
+        "role": "control",
+        "value_type": "u16",
+        "value_member": "value.selected_node_value",
+        "identity_member": "value.selected_node_id",
+        "tag_member": "value.selected_node_tag",
+        "record_member": "nodes.*",
+        "node_source": ".frog nodes",
+        "realization_asset_ref": "asset:tree_shell_svg"
+      },
+      {
+        "widget_id": "published_tree",
+        "class_ref": "frog.widgets.tree_indicator",
+        "role": "indicator",
+        "value_type": "u16",
+        "value_member": "value.selected_node_value",
+        "identity_member": "value.selected_node_id",
+        "tag_member": "value.selected_node_tag",
+        "record_member": "nodes.*",
+        "node_source": ".frog nodes",
+        "realization_asset_ref": "asset:tree_shell_svg"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "system_tree_node_value",
+        "kind": "widget_value",
+        "widget_id": "system_tree",
+        "member": "value.selected_node_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_tree_node_value",
+        "kind": "widget_value",
+        "widget_id": "published_tree",
+        "member": "value.selected_node_value",
+        "type": "u16"
+      },
+      {
+        "id": "system_tree_records",
+        "kind": "widget_value",
+        "widget_id": "system_tree",
+        "member": "nodes.*",
+        "type": "frog.tree.records"
+      },
+      {
+        "id": "published_tree_records",
+        "kind": "widget_value",
+        "widget_id": "published_tree",
+        "member": "nodes.*",
+        "type": "frog.tree.records"
+      },
+      {
+        "id": "published_tree_records_output",
+        "kind": "public_output",
+        "type": "frog.tree.records"
+      },
+      {
+        "id": "selected_node_value",
+        "kind": "public_output",
+        "type": "u16"
+      }
+    ],
+    "edges": [
+      {
+        "from": "system_tree_node_value",
+        "to": "published_tree_node_value"
+      },
+      {
+        "from": "system_tree_node_value",
+        "to": "selected_node_value"
+      },
+      {
+        "from": "system_tree_records",
+        "to": "published_tree_records"
+      },
+      {
+        "from": "system_tree_records",
+        "to": "published_tree_records_output"
+      }
+    ]
+  },
+  "validation": {
+    "source_owns_layout": true,
+    "source_owns_nodes_tags_column_attributes_expansion_selection_and_style": true,
+    "source_owns_tree_record_dataflow": true,
+    "source_owns_visible_items_and_interaction_posture": true,
+    "wfrog_owns_realization_refs_only": true,
+    "runtime_requires_native_manifest": true,
+    "runtime_requires_default_tree_svg": true
+  }
+}

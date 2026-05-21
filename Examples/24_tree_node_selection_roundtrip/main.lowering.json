@@ -1,0 +1,170 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "24_tree_node_selection_roundtrip",
+    "path": "Examples/24_tree_node_selection_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/24_tree_node_selection_roundtrip/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "summary": "make one post-boundary Tree numeric selected-node example consumable through a manifest-declared LLVM/native u16 proof boundary and Default Tree realization",
+    "backend_family_target": "llvm_native_kernel",
+    "capability_targets": [
+      "native_kernel_manifest",
+      "private_runtime_tree_node_selection_binding",
+      "svg_part_overlay_alignment",
+      "tree_parent_child_expansion_rendering",
+      "tree_column_attribute_rendering",
+      "tree_state_patch_interaction",
+      "tree_expansion_patch_interaction",
+      "tree_scroll_interaction",
+      "tree_cell_edit_interaction",
+      "tree_record_dataflow",
+      "svg_style_property_binding"
+    ],
+    "native_artifact_ref": {
+      "manifest": "Implementations/Reference/LLVM/examples/24_tree_node_selection_roundtrip/native_kernel_manifest.json",
+      "llvm_ir": "Implementations/Reference/LLVM/examples/24_tree_node_selection_roundtrip/kernel.ll"
+    },
+    "public_reference_runtime_source_added": false
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "tree_node_selection_roundtrip_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "node_value",
+            "type": "u16"
+          },
+          {
+            "id": "tree_records",
+            "type": "frog.tree.records"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "selected_node_value",
+            "type": "u16"
+          },
+          {
+            "id": "published_tree_records",
+            "type": "frog.tree.records"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "value_bindings": [
+          {
+            "widget_id": "system_tree",
+            "widget_class": "frog.widgets.tree_control",
+            "mode": "widget_value",
+            "semantic_value_member": "value.selected_node_value",
+            "ui_identity_member": "value.selected_node_id",
+            "ui_tag_member": "value.selected_node_tag",
+            "semantic_record_member": "nodes.*",
+            "realization_asset_ref": "asset:tree_shell_svg"
+          },
+          {
+            "widget_id": "published_tree",
+            "widget_class": "frog.widgets.tree_indicator",
+            "mode": "widget_value",
+            "semantic_value_member": "value.selected_node_value",
+            "ui_identity_member": "value.selected_node_id",
+            "ui_tag_member": "value.selected_node_tag",
+            "semantic_record_member": "nodes.*",
+            "realization_asset_ref": "asset:tree_shell_svg"
+          }
+        ],
+        "diagram_dataflows": [
+          {
+            "id": "tree_records_passthrough",
+            "source": "widget.system_tree.nodes.*",
+            "target": "widget.published_tree.nodes.*",
+            "public_output": "published_tree_records",
+            "execution_phase": "execute",
+            "native_kernel_member": false,
+            "rule": "editable Tree records are diagram values, not an implicit UI synchronization"
+          }
+        ],
+        "host_overlays": [
+          {
+            "widget_id": "system_tree",
+            "part": "node_region",
+            "source_members": [
+              "nodes.*",
+              "columns.*",
+              "value.*",
+              "selection.*",
+              "expansion.*",
+              "viewport.*",
+              "interaction.*",
+              "display.*",
+              "style.*"
+            ]
+          },
+          {
+            "widget_id": "published_tree",
+            "part": "node_region",
+            "source_members": [
+              "nodes.*",
+              "columns.*",
+              "value.*",
+              "selection.*",
+              "expansion.*",
+              "viewport.*",
+              "display.*",
+              "style.*"
+            ],
+            "host_state_rule": "selection_state_is_instance_local_not_dataflow"
+          },
+          {
+            "widget_id": "system_tree",
+            "part": "node_row",
+            "source_members": [
+              "nodes.*",
+              "style.node_row.*",
+              "style.selection_face.*",
+              "style.active_node.*"
+            ]
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "identity_u16",
+        "native_manifest": "Implementations/Reference/LLVM/examples/24_tree_node_selection_roundtrip/native_kernel_manifest.json",
+        "inputs": {
+          "node_value": "widget.system_tree.value.selected_node_value"
+        },
+        "outputs": {
+          "selected_node_value": "selected_node_value"
+        },
+        "final_publication": [
+          {
+            "target": "widget.published_tree.value.selected_node_value",
+            "source": "native_kernel.selected_node_value"
+          },
+          {
+            "target": "widget.published_tree.nodes.*",
+            "source": "diagram.tree_records_passthrough"
+          },
+          {
+            "target": "public_output.selected_node_value",
+            "source": "native_kernel.selected_node_value"
+          },
+          {
+            "target": "public_output.published_tree_records",
+            "source": "diagram.tree_records_passthrough"
+          }
+        ]
+      }
+    }
+  ]
+}

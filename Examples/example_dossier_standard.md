@@ -59,12 +59,22 @@ make its public claim inspectable:
     <tr>
       <td><code>main.fir.json</code></td>
       <td>Derived FIR / execution-facing representation of the source.</td>
-      <td>When the example participates in the source-to-FIR corridor.</td>
+      <td>Required for accepted executable examples.</td>
     </tr>
     <tr>
       <td><code>main.lowering.json</code></td>
       <td>Lowered execution/backend handoff for the example.</td>
-      <td>When the example participates in a lowering or backend corridor.</td>
+      <td>Required for accepted executable examples.</td>
+    </tr>
+    <tr>
+      <td><code>Implementations/Reference/LLVM/examples/&lt;example&gt;/kernel.ll</code></td>
+      <td>LLVM IR proof for the current executable example validation corridor.</td>
+      <td>Required for accepted executable examples in the current LLVM/native line.</td>
+    </tr>
+    <tr>
+      <td><code>Implementations/Reference/LLVM/examples/&lt;example&gt;/native_kernel_manifest.json</code></td>
+      <td>Native/provider manifest declaring ABI, entry symbols, inputs, outputs, artifacts, and provider dependencies where relevant.</td>
+      <td>Required for accepted executable examples in the current LLVM/native line.</td>
     </tr>
     <tr>
       <td><code>ui/*.wfrog</code></td>
@@ -86,6 +96,16 @@ Those artifacts should be linked from the example README and should not obscure
 the primary source-to-artifact story.
 </p>
 
+<p>
+For the current executable example line, the acceptance corridor is complete
+only when it reaches LLVM IR, a native artifact or native artifact build
+material, a manifest, and runtime-host consumption. Documentation-only,
+negative conformance, or explicitly exploratory examples may stop earlier, but
+their README must state that limitation instead of implying executable closure.
+This does not make LLVM the identity of FROG; LLVM remains one backend producer
+of native artifacts.
+</p>
+
 <hr/>
 
 <h2>README Expectations</h2>
@@ -98,7 +118,7 @@ An example README should identify:
   <li>the example title and numbered directory;</li>
   <li>the single primary behavior or concept under test;</li>
   <li>the source artifact path, normally starting at <code>main.frog</code>;</li>
-  <li>the public artifact chain, such as <code>.frog -&gt; FIR -&gt; lowering -&gt; contract -&gt; native manifest</code> where applicable;</li>
+  <li>the public artifact chain for executable examples: <code>.frog -&gt; FIR -&gt; lowering -&gt; LLVM IR -&gt; native artifact + manifest -&gt; runtime host</code>;</li>
   <li>front-panel packages and Default realization assets when widgets are involved;</li>
   <li>the stated validation level, without claiming broader runtime or compiler completeness than the example proves;</li>
   <li>known limits, especially when the example is post-boundary public material whose runtime implementation continues privately.</li>

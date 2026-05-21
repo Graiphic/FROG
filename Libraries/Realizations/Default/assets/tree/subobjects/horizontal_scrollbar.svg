@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 22">
-  <g data-frog-part="horizontal_scrollbar">
-    <rect x="2" y="2" width="216" height="18" rx="8" fill="#e2e8f0" stroke="#94a3b8"/>
-    <rect x="44" y="5" width="86" height="12" rx="6" fill="#94a3b8"/>
-  </g>
-</svg>
