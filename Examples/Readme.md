@@ -203,6 +203,12 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
       <td><code>main.frog</code> + <code>ui/listbox_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
+    <tr>
+      <td><code>23_table_cell_selection_roundtrip</code></td>
+      <td>Table numeric selected-cell roundtrip with a read-only Table indicator</td>
+      <td><code>main.frog</code> + <code>ui/table_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
   </tbody>
 </table>
 
@@ -258,7 +264,13 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
 21   Ring numeric selected-value as a post-boundary widget progression example
     |
     v
-22+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
+22   Listbox numeric selected-value as a post-boundary widget progression example
+    |
+    v
+23   Table numeric selected-cell value as a post-boundary widget progression example
+    |
+    v
+24+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
 </code></pre>
 
 <hr/>
@@ -387,13 +399,20 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
     ├── main.lowering.json
     └── ui/
         └── ring_panel.wfrog
-└── 22_listbox_selection_roundtrip/
+├── 22_listbox_selection_roundtrip/
     ├── Readme.md
     ├── main.frog
     ├── main.fir.json
     ├── main.lowering.json
     └── ui/
         └── listbox_panel.wfrog
+└── 23_table_cell_selection_roundtrip/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── table_panel.wfrog
 </code></pre>
 
 <p>
@@ -467,6 +486,16 @@ progression with a Listbox control and read-only Listbox indicator. It contains
 public source, FIR/lowering shape, a <code>.wfrog</code> package referencing the
 Default Listbox realization, and a native manifest <code>u16</code> proof output.
 The <code>.frog</code> owns item ids, labels, numeric values, selected item state,
+viewport, layout, and style overrides. It does not add public runtime source
+beyond the Example 15 closure.
+</p>
+
+<p>
+Example <code>23</code> continues the repository-visible post-boundary widget
+progression with a Table control and read-only Table indicator. It contains
+public source, FIR/lowering shape, a <code>.wfrog</code> package referencing the
+Default Table realization, and a native manifest <code>u16</code> proof output.
+The <code>.frog</code> owns the table schema, rows, cells, selected cell state,
 viewport, layout, and style overrides. It does not add public runtime source
 beyond the Example 15 closure.
 </p>

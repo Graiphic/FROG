@@ -1,0 +1,85 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_package",
+  "package_id": "example23.table_panel",
+  "title": "Example 23 Default Table realization package",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "23_table_cell_selection_roundtrip",
+    "source_path": "Examples/23_table_cell_selection_roundtrip/main.frog",
+    "fir_path": "Examples/23_table_cell_selection_roundtrip/main.fir.json",
+    "lowering_path": "Examples/23_table_cell_selection_roundtrip/main.lowering.json"
+  },
+  "ownership_boundary": {
+    "owns": [
+      "Default Table realization reference",
+      "Default Table SVG asset reference",
+      "host binding requirements for Table cell selection rendering"
+    ],
+    "does_not_own": [
+      "canonical source semantics",
+      "front-panel widget instance layout",
+      "front-panel widget instance visual customization",
+      "Table columns, rows, and cell records",
+      "selected Table cell value",
+      "Table visible-item toggles and interaction posture",
+      "FIR semantics",
+      "lowering semantics",
+      "runtime-private execution behavior",
+      "widget class law",
+      "Default Table SVG geometry"
+    ]
+  },
+  "widget_classes": [
+    {
+      "class_id": "frog.widgets.table_control",
+      "role": "control",
+      "value_type": "u16"
+    },
+    {
+      "class_id": "frog.widgets.table_indicator",
+      "role": "indicator",
+      "value_type": "u16"
+    }
+  ],
+  "host_bindings": [
+    {
+      "binding_id": "table_runtime_host_default",
+      "host_family": "frog_conforming_table_runtime_host",
+      "target": "frog_conforming_table_runtime_host",
+      "required_capabilities": [
+        "window",
+        "basic_widget_rendering",
+        "widget_value_binding",
+        "table_cell_selection_rendering",
+        "table_visible_item_rendering",
+        "table_state_patch_interaction",
+        "svg_part_overlay_alignment",
+        "svg_style_property_binding",
+        "native_kernel_manifest"
+      ]
+    }
+  ],
+  "realization_refs": [
+    {
+      "package_ref": "Libraries/Realizations/Default/table.default.wfrog",
+      "target_classes": [
+        "frog.widgets.table_control",
+        "frog.widgets.table_indicator"
+      ]
+    }
+  ],
+  "svg_assets": [
+    {
+      "asset_id": "table_shell_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/table/templates/table_shell.svg",
+      "target_classes": [
+        "frog.widgets.table_control",
+        "frog.widgets.table_indicator"
+      ]
+    }
+  ]
+}

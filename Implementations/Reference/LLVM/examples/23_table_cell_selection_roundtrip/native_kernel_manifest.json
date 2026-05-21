@@ -1,0 +1,74 @@
+{
+  "artifact_kind": "frog_native_kernel_manifest",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "kernel": {
+    "id": "example23_table_cell_selection_roundtrip_kernel",
+    "source_lowered_unit": "Examples/23_table_cell_selection_roundtrip/main.lowering.json",
+    "backend": {
+      "family": "llvm",
+      "artifact_kind": "native_dynamic_library",
+      "source_artifact": "Implementations/Reference/LLVM/examples/23_table_cell_selection_roundtrip/kernel.ll",
+      "artifact_library": {
+        "windows": "frog_example23_table_kernel.dll",
+        "linux": "libfrog_example23_table_kernel.so",
+        "macos": "libfrog_example23_table_kernel.dylib"
+      }
+    },
+    "entry": {
+      "symbol": "frog_example23_run",
+      "abi": "frog_u16_to_result_status_outptr"
+    },
+    "io": {
+      "inputs": [
+        {
+          "id": "cell_value",
+          "type": "u16"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "selected_cell_value",
+          "type": "u16"
+        }
+      ]
+    },
+    "result_status_layout": {
+      "carrier": "out_parameter",
+      "c_signature": "void frog_example23_run(uint16_t cell_value, FrogRunResult* out_result)",
+      "fields": [
+        {
+          "id": "ok",
+          "type": "u8"
+        },
+        {
+          "id": "result",
+          "type": "u16"
+        },
+        {
+          "id": "error_code",
+          "type": "u16"
+        }
+      ]
+    },
+    "error_model": {
+      "overflow": "reject_execution_on_u16_overflow",
+      "error_codes": [
+        {
+          "code": 0,
+          "meaning": "no_error"
+        },
+        {
+          "code": 1,
+          "meaning": "u16_overflow",
+          "diagnostic": "cell_value must remain within the u16 domain."
+        }
+      ]
+    }
+  },
+  "runtime_boundary": {
+    "reference": "Implementations/Reference/Runtime/KernelBridge.md",
+    "runtime_dependency_posture": "runtime_consumes_manifest_declared_kernel_not_llvm_directly"
+  }
+}

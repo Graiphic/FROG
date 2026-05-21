@@ -1,0 +1,100 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "23_table_cell_selection_roundtrip",
+    "path": "Examples/23_table_cell_selection_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "unit_id": "main",
+  "summary": "Table selected-cell numeric value roundtrip with source-owned schema, cells, selection, layout, style, Default Table realization, and native u16 proof corridor.",
+  "interfaces": {
+    "inputs": [
+      {
+        "id": "cell_value",
+        "type": "u16",
+        "source": "widget.measurement_table.value.selected_cell_value"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "selected_cell_value",
+        "type": "u16"
+      }
+    ]
+  },
+  "front_panel": {
+    "package_refs": [
+      "Examples/23_table_cell_selection_roundtrip/ui/table_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "widget_id": "measurement_table",
+        "class_ref": "frog.widgets.table_control",
+        "role": "control",
+        "value_type": "u16",
+        "value_member": "value.selected_cell_value",
+        "identity_member": "value.selected_cell_id",
+        "schema_source": ".frog columns",
+        "row_source": ".frog rows",
+        "cell_source": ".frog cells",
+        "realization_asset_ref": "asset:table_shell_svg"
+      },
+      {
+        "widget_id": "published_table",
+        "class_ref": "frog.widgets.table_indicator",
+        "role": "indicator",
+        "value_type": "u16",
+        "value_member": "value.selected_cell_value",
+        "identity_member": "value.selected_cell_id",
+        "schema_source": ".frog columns",
+        "row_source": ".frog rows",
+        "cell_source": ".frog cells",
+        "realization_asset_ref": "asset:table_shell_svg"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "measurement_table_cell_value",
+        "kind": "widget_value",
+        "widget_id": "measurement_table",
+        "member": "value.selected_cell_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_table_cell_value",
+        "kind": "widget_value",
+        "widget_id": "published_table",
+        "member": "value.selected_cell_value",
+        "type": "u16"
+      },
+      {
+        "id": "selected_cell_value",
+        "kind": "public_output",
+        "type": "u16"
+      }
+    ],
+    "edges": [
+      {
+        "from": "measurement_table_cell_value",
+        "to": "published_table_cell_value"
+      },
+      {
+        "from": "measurement_table_cell_value",
+        "to": "selected_cell_value"
+      }
+    ]
+  },
+  "validation": {
+    "source_owns_layout": true,
+    "source_owns_schema_rows_cells_selection_and_style": true,
+    "source_owns_visible_items_and_interaction_posture": true,
+    "wfrog_owns_realization_refs_only": true,
+    "runtime_requires_native_manifest": true,
+    "runtime_requires_default_table_svg": true
+  }
+}

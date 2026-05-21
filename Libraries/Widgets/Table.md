@@ -297,15 +297,51 @@ Sorting and filtering are view postures unless explicitly exposed as value trans
   <li><code>cells.read_only</code></li>
 </ul>
 
+<h3>Visible item properties</h3>
+
+<p>
+Table realizations expose LabVIEW-like visible-item posture as source-owned properties.
+The runtime may render host overlays, scroll tracks, headers, index displays, and selection faces, but it must consume these properties and the published Default Table parts instead of baking a table shell into runtime code.
+</p>
+
+<ul>
+  <li><code>display.index_display_visible</code></li>
+  <li><code>display.vertical_scrollbar_visible</code></li>
+  <li><code>display.horizontal_scrollbar_visible</code></li>
+  <li><code>display.row_headers_visible</code></li>
+  <li><code>display.column_headers_visible</code></li>
+  <li><code>display.vertical_lines_visible</code></li>
+  <li><code>display.horizontal_lines_visible</code></li>
+  <li><code>display.symbols_visible</code></li>
+</ul>
+
+<p>
+Row and column header text maps to <code>rows[].label</code> and <code>columns[].label</code>.
+Selection color maps to <code>style.selection_face.*</code>.
+The active cell maps to <code>selection.active_cell.*</code>.
+Scrollbar colors, borders, and thumb geometry map to <code>style.scrollbar.*</code>.
+</p>
+
 <h3>Interaction properties</h3>
 
 <ul>
   <li><code>selection.*</code></li>
+  <li><code>interaction.selection_scrolling_enabled</code></li>
+  <li><code>headers.editable</code></li>
+  <li><code>columns.separators_movable</code></li>
+  <li><code>rows.autosize_height</code></li>
+  <li><code>input.multi_line_enabled</code></li>
+  <li><code>scrolling.smooth_enabled</code></li>
   <li><code>editing.*</code></li>
   <li><code>viewport.*</code></li>
   <li><code>sort.*</code></li>
   <li><code>filter.*</code></li>
 </ul>
+
+<p>
+If a runtime does not yet implement an advanced operation such as editable headers, moveable separators, or multi-line editing, it must report the limitation explicitly.
+It must not silently replace the source-owned property model with hardcoded runtime behavior.
+</p>
 
 <hr/>
 

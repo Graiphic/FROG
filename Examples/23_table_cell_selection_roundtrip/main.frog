@@ -1,0 +1,520 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "23_table_cell_selection_roundtrip",
+    "summary": "Table control-to-indicator selected-cell numeric value roundtrip using .frog-owned table data and Default Table .wfrog realization assets.",
+    "description": "Places one Table control and one Table indicator on the front panel. The .frog source owns column schema, row ids, cell values, selected cell state, layout, labels, bindings, and instance-level visual overrides. The .wfrog package references the Default Table realization and SVG asset. Runtime implementation for this post-boundary example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "table",
+      "table_control",
+      "table_indicator",
+      "cell_selection",
+      "roundtrip",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "cell_value",
+        "type": "u16",
+        "binding_origin": "widget.measurement_table.value.selected_cell_value"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "selected_cell_value",
+        "type": "u16"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "measurement_table_cell_value",
+        "kind": "widget_value",
+        "widget": "measurement_table",
+        "member": "value.selected_cell_value"
+      },
+      {
+        "id": "published_table_cell_value",
+        "kind": "widget_value",
+        "widget": "published_table",
+        "member": "value.selected_cell_value"
+      },
+      {
+        "id": "output_selected_cell_value",
+        "kind": "interface_output",
+        "interface_port": "selected_cell_value"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "measurement_table_cell_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "published_table_cell_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "measurement_table_cell_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_selected_cell_value",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 820,
+      "height": 390,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/table_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "measurement_table",
+        "role": "control",
+        "class_ref": "frog.widgets.table_control",
+        "instance_ref": "measurement_table",
+        "value_type": "u16",
+        "layout": {
+          "x": 32,
+          "y": 34,
+          "width": 360,
+          "height": 265
+        },
+        "props": {
+          "label.text": "Measurement table",
+          "label.visible": true,
+          "label.anchor.x": 0,
+          "label.anchor.y": -22,
+          "label.style.text_color": "#111827",
+          "label.style.font_family": "Segoe UI, Arial, sans-serif",
+          "label.style.font_size": "13px",
+          "label.style.font_weight": "600",
+          "caption.text": "Input table",
+          "caption.visible": true,
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 38,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
+          "value.selected_cell_id": "nominal.load",
+          "value.selected_cell_value": 50,
+          "selection.mode": "single_cell",
+          "selection.active_cell.row_id": "nominal",
+          "selection.active_cell.column_id": "load",
+          "selection.active_cell.value": 50,
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "columns": [
+            {
+              "id": "speed",
+              "label": "Speed",
+              "type": "u16",
+              "width": 82,
+              "editable": true,
+              "visible": true
+            },
+            {
+              "id": "load",
+              "label": "Load",
+              "type": "u16",
+              "width": 82,
+              "editable": true,
+              "visible": true
+            },
+            {
+              "id": "torque",
+              "label": "Torque",
+              "type": "u16",
+              "width": 82,
+              "editable": true,
+              "visible": true
+            }
+          ],
+          "rows": [
+            {
+              "id": "idle",
+              "label": "Idle",
+              "visible": true
+            },
+            {
+              "id": "nominal",
+              "label": "Nominal",
+              "visible": true
+            },
+            {
+              "id": "peak",
+              "label": "Peak",
+              "visible": true
+            }
+          ],
+          "cells": [
+            {
+              "row_id": "idle",
+              "column_id": "speed",
+              "value": 10
+            },
+            {
+              "row_id": "idle",
+              "column_id": "load",
+              "value": 20
+            },
+            {
+              "row_id": "idle",
+              "column_id": "torque",
+              "value": 30
+            },
+            {
+              "row_id": "nominal",
+              "column_id": "speed",
+              "value": 40
+            },
+            {
+              "row_id": "nominal",
+              "column_id": "load",
+              "value": 50
+            },
+            {
+              "row_id": "nominal",
+              "column_id": "torque",
+              "value": 60
+            },
+            {
+              "row_id": "peak",
+              "column_id": "speed",
+              "value": 70
+            },
+            {
+              "row_id": "peak",
+              "column_id": "load",
+              "value": 80
+            },
+            {
+              "row_id": "peak",
+              "column_id": "torque",
+              "value": 90
+            }
+          ],
+          "viewport.row_header_width": 76,
+          "viewport.column_header_height": 30,
+          "viewport.row_height": 34,
+          "viewport.cell_padding_inline": "8px",
+          "display.index_display_visible": false,
+          "display.row_headers_visible": true,
+          "display.column_headers_visible": true,
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": false,
+          "display.vertical_lines_visible": true,
+          "display.horizontal_lines_visible": true,
+          "display.symbols_visible": false,
+          "interaction.selection_scrolling_enabled": true,
+          "headers.editable": false,
+          "columns.separators_movable": false,
+          "rows.autosize_height": true,
+          "input.multi_line_enabled": false,
+          "scrolling.smooth_enabled": true,
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.table_region.fill_color": "#ffffff",
+          "style.table_region.border_color": "#64748b",
+          "style.table_region.border_width": "1px",
+          "style.header_region.fill_color": "#f1f5f9",
+          "style.header_region.border_color": "#94a3b8",
+          "style.header_region.border_width": "1px",
+          "style.row_header.fill_color": "#f8fafc",
+          "style.scrollbar.track_fill_color": "#eef2f7",
+          "style.scrollbar.border_color": "#94a3b8",
+          "style.scrollbar.border_width": "1px",
+          "style.scrollbar.thumb_fill_color": "#cbd5e1",
+          "style.scrollbar.thumb_hover_fill_color": "#94a3b8",
+          "style.scrollbar.vertical_thumb_width_percent": 66.67,
+          "style.scrollbar.vertical_thumb_height_percent": 32.77,
+          "style.scrollbar.vertical_thumb_offset_x_percent": 16.67,
+          "style.scrollbar.vertical_thumb_offset_y_percent": 15.13,
+          "style.scrollbar.horizontal_thumb_width_percent": 29.79,
+          "style.scrollbar.horizontal_thumb_height_percent": 62.5,
+          "style.scrollbar.horizontal_thumb_offset_x_percent": 10.64,
+          "style.scrollbar.horizontal_thumb_offset_y_percent": 18.75,
+          "style.cell.fill_color": "#ffffff",
+          "style.cell.alternate_fill_color": "#f8fafc",
+          "style.cell.border_color": "#cbd5e1",
+          "style.cell.border_width": "1px",
+          "style.cell.hover_fill_color": "#eef6ff",
+          "style.selection_face.fill_color": "#dbeafe",
+          "style.selection_face.border_color": "#2563eb",
+          "style.selection_face.border_width": "1px",
+          "style.active_cell.border_color": "#2563eb",
+          "style.active_cell.border_width": "2px",
+          "style.text.color": "#111827",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "13px",
+          "style.text.font_weight": "400",
+          "style.header_text.color": "#102a43",
+          "style.header_text.font_weight": "600",
+          "style.focus_ring.color": "#2563eb",
+          "style.focus_ring.width": "2px",
+          "interaction.enabled": true,
+          "interaction.read_only": false,
+          "interaction.description": "Clicking a numeric cell patches front-panel selection state only.",
+          "interaction.tip_strip": "Select a cell, then Execute to publish the selected value."
+        },
+        "visual": {
+          "asset_ref": "asset:table_shell_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "cell_value"
+        }
+      },
+      {
+        "id": "published_table",
+        "role": "indicator",
+        "class_ref": "frog.widgets.table_indicator",
+        "instance_ref": "published_table",
+        "value_type": "u16",
+        "layout": {
+          "x": 430,
+          "y": 34,
+          "width": 360,
+          "height": 265
+        },
+        "props": {
+          "label.text": "Published table",
+          "label.visible": true,
+          "label.anchor.x": 0,
+          "label.anchor.y": -22,
+          "label.style.text_color": "#111827",
+          "label.style.font_family": "Segoe UI, Arial, sans-serif",
+          "label.style.font_size": "13px",
+          "label.style.font_weight": "600",
+          "caption.text": "Published cell",
+          "caption.visible": true,
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 38,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "14px",
+          "caption.style.font_weight": "600",
+          "value.selected_cell_id": "nominal.load",
+          "value.selected_cell_value": 50,
+          "selection.mode": "single_cell",
+          "selection.active_cell.row_id": "nominal",
+          "selection.active_cell.column_id": "load",
+          "selection.active_cell.value": 50,
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "columns": [
+            {
+              "id": "speed",
+              "label": "Speed",
+              "type": "u16",
+              "width": 82,
+              "editable": false,
+              "visible": true
+            },
+            {
+              "id": "load",
+              "label": "Load",
+              "type": "u16",
+              "width": 82,
+              "editable": false,
+              "visible": true
+            },
+            {
+              "id": "torque",
+              "label": "Torque",
+              "type": "u16",
+              "width": 82,
+              "editable": false,
+              "visible": true
+            }
+          ],
+          "rows": [
+            {
+              "id": "idle",
+              "label": "Idle",
+              "visible": true
+            },
+            {
+              "id": "nominal",
+              "label": "Nominal",
+              "visible": true
+            },
+            {
+              "id": "peak",
+              "label": "Peak",
+              "visible": true
+            }
+          ],
+          "cells": [
+            {
+              "row_id": "idle",
+              "column_id": "speed",
+              "value": 10
+            },
+            {
+              "row_id": "idle",
+              "column_id": "load",
+              "value": 20
+            },
+            {
+              "row_id": "idle",
+              "column_id": "torque",
+              "value": 30
+            },
+            {
+              "row_id": "nominal",
+              "column_id": "speed",
+              "value": 40
+            },
+            {
+              "row_id": "nominal",
+              "column_id": "load",
+              "value": 50
+            },
+            {
+              "row_id": "nominal",
+              "column_id": "torque",
+              "value": 60
+            },
+            {
+              "row_id": "peak",
+              "column_id": "speed",
+              "value": 70
+            },
+            {
+              "row_id": "peak",
+              "column_id": "load",
+              "value": 80
+            },
+            {
+              "row_id": "peak",
+              "column_id": "torque",
+              "value": 90
+            }
+          ],
+          "viewport.row_header_width": 76,
+          "viewport.column_header_height": 30,
+          "viewport.row_height": 34,
+          "viewport.cell_padding_inline": "8px",
+          "display.index_display_visible": false,
+          "display.row_headers_visible": true,
+          "display.column_headers_visible": true,
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": false,
+          "display.vertical_lines_visible": true,
+          "display.horizontal_lines_visible": true,
+          "display.symbols_visible": false,
+          "interaction.selection_scrolling_enabled": true,
+          "headers.editable": false,
+          "columns.separators_movable": false,
+          "rows.autosize_height": true,
+          "input.multi_line_enabled": false,
+          "scrolling.smooth_enabled": true,
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.table_region.fill_color": "#ffffff",
+          "style.table_region.border_color": "#64748b",
+          "style.table_region.border_width": "1px",
+          "style.header_region.fill_color": "#f1f5f9",
+          "style.header_region.border_color": "#94a3b8",
+          "style.header_region.border_width": "1px",
+          "style.row_header.fill_color": "#f8fafc",
+          "style.scrollbar.track_fill_color": "#eef2f7",
+          "style.scrollbar.border_color": "#94a3b8",
+          "style.scrollbar.border_width": "1px",
+          "style.scrollbar.thumb_fill_color": "#cbd5e1",
+          "style.scrollbar.thumb_hover_fill_color": "#94a3b8",
+          "style.scrollbar.vertical_thumb_width_percent": 66.67,
+          "style.scrollbar.vertical_thumb_height_percent": 32.77,
+          "style.scrollbar.vertical_thumb_offset_x_percent": 16.67,
+          "style.scrollbar.vertical_thumb_offset_y_percent": 15.13,
+          "style.scrollbar.horizontal_thumb_width_percent": 29.79,
+          "style.scrollbar.horizontal_thumb_height_percent": 62.5,
+          "style.scrollbar.horizontal_thumb_offset_x_percent": 10.64,
+          "style.scrollbar.horizontal_thumb_offset_y_percent": 18.75,
+          "style.cell.fill_color": "#ffffff",
+          "style.cell.alternate_fill_color": "#f8fafc",
+          "style.cell.border_color": "#cbd5e1",
+          "style.cell.border_width": "1px",
+          "style.cell.hover_fill_color": "#ffffff",
+          "style.selection_face.fill_color": "#dcfce7",
+          "style.selection_face.border_color": "#16a34a",
+          "style.selection_face.border_width": "1px",
+          "style.active_cell.border_color": "#16a34a",
+          "style.active_cell.border_width": "2px",
+          "style.text.color": "#111827",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "13px",
+          "style.text.font_weight": "400",
+          "style.header_text.color": "#102a43",
+          "style.header_text.font_weight": "600",
+          "style.focus_ring.color": "#16a34a",
+          "style.focus_ring.width": "2px",
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "interaction.focusable": false,
+          "interaction.description": "Read-only Table indicator updated by Execute.",
+          "interaction.tip_strip": "Indicator selection follows the native execution result."
+        },
+        "visual": {
+          "asset_ref": "asset:table_shell_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "selected_cell_value"
+        }
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Table Cell Selection Roundtrip",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "table_runtime_host_default",
+    "documentation": {
+      "title": "Table cell selection",
+      "summary": "A Table presents flat row-and-column data. This example publishes the selected numeric cell value while keeping column schema, row ids, cells, selection posture, visible-item posture, layout, and style source-owned.",
+      "legend": [
+        {
+          "label": "Table control",
+          "description": "Clicking a numeric cell patches front-panel selection state only."
+        },
+        {
+          "label": "Execute",
+          "description": "Execute consumes the selected cell value through the native manifest corridor."
+        },
+        {
+          "label": "Table indicator",
+          "description": "Read-only cell selection display updated from the diagram output after Execute."
+        }
+      ],
+      "note": "The runtime may provide hitbox overlays for cells, headers, and scrollbars, but they must align to the Default Table SVG parts and consume .frog-owned schema, display, selection, interaction, and style data."
+    }
+  }
+}

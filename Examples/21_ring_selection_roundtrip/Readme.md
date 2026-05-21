@@ -74,7 +74,7 @@ matching source-owned Ring item for display.
 
 <p>
 This example is repository-visible public specification material beyond the
-current public reference runtime closure. It is introduced C++-first in
-<code>Graiphic/FROG-Runtime</code>; Python and Rust private-runtime parity should
-be added only after the C++ visual and behavioral posture is accepted.
+current public reference runtime closure. Its private implementation is aligned
+across the C++, Python, and Rust families in <code>Graiphic/FROG-Runtime</code>
+after C++ visual and behavioral acceptance.
 </p>
