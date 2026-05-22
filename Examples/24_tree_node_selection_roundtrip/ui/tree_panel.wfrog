@@ -57,6 +57,7 @@
         "tree_visible_item_rendering",
         "tree_parent_child_expansion_rendering",
         "tree_column_attribute_rendering",
+        "tree_node_icon_rendering",
         "tree_state_patch_interaction",
         "tree_expansion_patch_interaction",
         "tree_scroll_interaction",
@@ -85,6 +86,58 @@
         "frog.widgets.tree_control",
         "frog.widgets.tree_indicator"
       ]
+    },
+    {
+      "asset_id": "tree_item_symbol_check",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/tree/item_symbols/check.svg",
+      "target_classes": [
+        "frog.widgets.tree_control",
+        "frog.widgets.tree_indicator"
+      ]
+    },
+    {
+      "asset_id": "tree_item_symbol_folder_closed",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/tree/item_symbols/folder_closed.svg",
+      "target_classes": [
+        "frog.widgets.tree_control",
+        "frog.widgets.tree_indicator"
+      ]
+    },
+    {
+      "asset_id": "tree_item_symbol_folder_open",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/tree/item_symbols/folder_open.svg",
+      "target_classes": [
+        "frog.widgets.tree_control",
+        "frog.widgets.tree_indicator"
+      ]
+    },
+    {
+      "asset_id": "tree_item_symbol_document",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/tree/item_symbols/document.svg",
+      "target_classes": [
+        "frog.widgets.tree_control",
+        "frog.widgets.tree_indicator"
+      ]
+    },
+    {
+      "asset_id": "tree_item_symbol_leaf",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/tree/item_symbols/leaf.svg",
+      "target_classes": [
+        "frog.widgets.tree_control",
+        "frog.widgets.tree_indicator"
+      ]
     }
-  ]
+  ],
+  "item_symbol_assets": {
+    "check": "tree_item_symbol_check",
+    "folder_closed": "tree_item_symbol_folder_closed",
+    "folder_open": "tree_item_symbol_folder_open",
+    "document": "tree_item_symbol_document",
+    "leaf": "tree_item_symbol_leaf"
+  }
 }

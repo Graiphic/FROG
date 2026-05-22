@@ -11,17 +11,18 @@ This example is C++-first in the private Graiphic runtime. Python and Rust parit
 ## Expected Behavior
 
 - Selecting a node patches front-panel state without executing the diagram.
-- The Tree exposes one LabVIEW-like expand/collapse control per parent node; optional checkboxes and node icons are disabled in this example by `.frog` display properties.
+- The Tree exposes one LabVIEW-like expand/collapse control per parent node; node icons are enabled from `.frog` node icon enums and resolved through the Default Tree `.wfrog` item-symbol SVG registry.
+- Optional checkboxes remain disabled in this example by `.frog` display properties.
 - Column headers are visible and fixed in this example; both visibility and fixed/scrolling posture are `.frog` display properties.
 - The source data deliberately includes more rows and columns than the viewport so vertical and horizontal scrollbars can be inspected.
 - `Execute` runs the manifest-backed native `u16` proof kernel.
 - The read-only Tree indicator updates its selected numeric node from the native execution result and its editable record display from the declared `frog.tree.records` diagram dataflow.
-- Node label, tag, value, visible items, selection, expansion, hierarchy lines, scrollbars, colors, border widths, font, and hit areas remain source/realization-owned.
+- Node label, tag, value, item icon enum, visible items, selection, expansion, hierarchy lines, scrollbars, colors, border widths, font, and hit areas remain source/realization-owned.
 
 ## Files
 
 - `main.frog` - source-owned Tree instances, hierarchy data, selection state, layout, bindings, and visual overrides.
 - `main.fir.json` - FIR-facing value and UI binding summary.
 - `main.lowering.json` - lowering intent toward the native manifest corridor.
-- `ui/tree_panel.wfrog` - Example-local realization package that points to the Default Tree package and SVG asset.
+- `ui/tree_panel.wfrog` - Example-local realization package that points to the Default Tree package, geometry SVG asset, and item-symbol SVG assets.
 - `../../Implementations/Reference/LLVM/examples/24_tree_node_selection_roundtrip/native_kernel_manifest.json` - native kernel manifest consumed by the private runtime.

@@ -332,6 +332,7 @@ Hosts that do not support portable drag/drop may still support selection and exp
   <li><code>nodes.label</code></li>
   <li><code>nodes.value</code></li>
   <li><code>nodes.icon</code></li>
+  <li><code>nodes.collapsed_icon</code></li>
   <li><code>nodes.path</code></li>
   <li><code>nodes.depth</code></li>
   <li><code>nodes.visible</code></li>
@@ -468,6 +469,7 @@ Hosts that do not support portable drag/drop may still support selection and exp
 
 <p>
 Node rows, expanders, connectors, checkbox faces, icons, labels, and selection surfaces are public part categories.
+Tree node icons are source-owned enum/string values that must resolve through realization-published item-symbol assets when <code>display.symbols_visible</code> is enabled; a host must not invent fallback icon artwork.
 When a tabular Tree exposes cell focus, <code>active_cell</code> is the published cell-selection surface and its fill, border color, and border width remain source-owned style properties.
 Virtualized node renderers, host-native row handles, recycled item views, or IDE-private node references remain realization-private.
 </p>

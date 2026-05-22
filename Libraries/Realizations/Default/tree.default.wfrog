@@ -54,7 +54,12 @@
       "frog.realizations.default.tree"
     ],
     "resources": [
-      "frog.realizations.default.tree.assets.shell_svg"
+      "frog.realizations.default.tree.assets.shell_svg",
+      "frog.realizations.default.tree.assets.item_symbol_check",
+      "frog.realizations.default.tree.assets.item_symbol_folder_closed",
+      "frog.realizations.default.tree.assets.item_symbol_folder_open",
+      "frog.realizations.default.tree.assets.item_symbol_document",
+      "frog.realizations.default.tree.assets.item_symbol_leaf"
     ]
   },
   "realizations": [
@@ -118,8 +123,45 @@
       "kind": "svg",
       "path": "./assets/tree/templates/tree_shell.svg",
       "role": "geometry_shell"
+    },
+    {
+      "id": "frog.realizations.default.tree.assets.item_symbol_check",
+      "kind": "svg",
+      "path": "./assets/tree/item_symbols/check.svg",
+      "role": "tree_item_symbol"
+    },
+    {
+      "id": "frog.realizations.default.tree.assets.item_symbol_folder_closed",
+      "kind": "svg",
+      "path": "./assets/tree/item_symbols/folder_closed.svg",
+      "role": "tree_item_symbol"
+    },
+    {
+      "id": "frog.realizations.default.tree.assets.item_symbol_folder_open",
+      "kind": "svg",
+      "path": "./assets/tree/item_symbols/folder_open.svg",
+      "role": "tree_item_symbol"
+    },
+    {
+      "id": "frog.realizations.default.tree.assets.item_symbol_document",
+      "kind": "svg",
+      "path": "./assets/tree/item_symbols/document.svg",
+      "role": "tree_item_symbol"
+    },
+    {
+      "id": "frog.realizations.default.tree.assets.item_symbol_leaf",
+      "kind": "svg",
+      "path": "./assets/tree/item_symbols/leaf.svg",
+      "role": "tree_item_symbol"
     }
   ],
+  "item_symbol_assets": {
+    "check": "frog.realizations.default.tree.assets.item_symbol_check",
+    "folder_closed": "frog.realizations.default.tree.assets.item_symbol_folder_closed",
+    "folder_open": "frog.realizations.default.tree.assets.item_symbol_folder_open",
+    "document": "frog.realizations.default.tree.assets.item_symbol_document",
+    "leaf": "frog.realizations.default.tree.assets.item_symbol_leaf"
+  },
   "part_bindings": [
     {
       "part": "root",

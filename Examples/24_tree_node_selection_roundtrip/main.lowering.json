@@ -13,7 +13,7 @@
     "unit_id": "main"
   },
   "lowering_intent": {
-    "summary": "make one post-boundary Tree numeric selected-node example consumable through a manifest-declared LLVM/native u16 proof boundary and Default Tree realization",
+    "summary": "make one post-boundary Tree numeric selected-node example consumable through a manifest-declared LLVM/native u16 proof boundary and Default Tree realization with .wfrog-resolved item symbol SVG assets",
     "backend_family_target": "llvm_native_kernel",
     "capability_targets": [
       "native_kernel_manifest",
@@ -21,6 +21,7 @@
       "svg_part_overlay_alignment",
       "tree_parent_child_expansion_rendering",
       "tree_column_attribute_rendering",
+      "tree_node_icon_rendering",
       "tree_state_patch_interaction",
       "tree_expansion_patch_interaction",
       "tree_scroll_interaction",
@@ -104,6 +105,8 @@
               "value.*",
               "selection.*",
               "expansion.*",
+              "nodes.icon",
+              "nodes.collapsed_icon",
               "viewport.*",
               "interaction.*",
               "display.*",

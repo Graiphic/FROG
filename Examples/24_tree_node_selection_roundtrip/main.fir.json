@@ -9,7 +9,7 @@
     "entry_unit": "main"
   },
   "unit_id": "main",
-  "summary": "Tree selected-node numeric value roundtrip with source-owned hierarchy, tags, column attributes, expansion, selection, layout, style, Default Tree realization, and native u16 proof corridor.",
+  "summary": "Tree selected-node numeric value roundtrip with source-owned hierarchy, tags, column attributes, item icon enums, expansion, selection, layout, style, Default Tree realization, and native u16 proof corridor.",
   "interfaces": {
     "inputs": [
       {
@@ -49,6 +49,8 @@
         "tag_member": "value.selected_node_tag",
         "record_member": "nodes.*",
         "node_source": ".frog nodes",
+        "icon_member": "nodes.icon",
+        "collapsed_icon_member": "nodes.collapsed_icon",
         "realization_asset_ref": "asset:tree_shell_svg"
       },
       {
@@ -61,6 +63,8 @@
         "tag_member": "value.selected_node_tag",
         "record_member": "nodes.*",
         "node_source": ".frog nodes",
+        "icon_member": "nodes.icon",
+        "collapsed_icon_member": "nodes.collapsed_icon",
         "realization_asset_ref": "asset:tree_shell_svg"
       }
     ]
@@ -127,7 +131,7 @@
   },
   "validation": {
     "source_owns_layout": true,
-    "source_owns_nodes_tags_column_attributes_expansion_selection_and_style": true,
+    "source_owns_nodes_tags_column_attributes_item_icons_expansion_selection_and_style": true,
     "source_owns_tree_record_dataflow": true,
     "source_owns_visible_items_and_interaction_posture": true,
     "wfrog_owns_realization_refs_only": true,
