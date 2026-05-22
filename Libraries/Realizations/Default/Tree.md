@@ -91,6 +91,9 @@ The following public parts are realized by host overlays aligned to the static s
   <li><code>horizontal_scrollbar</code> anchors the horizontal scrollbar host overlay.</li>
   <li><code>label</code> and <code>caption</code> expose movable text anchors owned by the <code>.frog</code> instance.</li>
   <li>Tree rows, text, expand/collapse controls, selection, edits, and scroll thumbs are generated overlays, not hidden SVG artwork.</li>
+  <li><code>node_icon</code> consumes realization-published item-symbol SVG assets and <code>style.node_icon_slot.*</code> for the item icon slot.</li>
+  <li><code>expander_face</code> consumes <code>style.expander.*</code>; it must not share the item icon slot style.</li>
+  <li><code>checkbox_face</code> consumes <code>style.checkbox.*</code>; it must not share the expander or item icon slot style.</li>
 </ul>
 
 <p>
@@ -107,6 +110,7 @@ A runtime may replace the SVG-backed tree with a host-native virtual tree when i
   <li>The shell SVG must expose only static anchor and geometry <code>data-frog-part</code> markers.</li>
   <li>Dynamic Tree parts must be generated as host overlays aligned to the static geometry markers.</li>
   <li>Resources must not become semantic owners of tree value.</li>
+  <li>Item icon slots, expanders, and checkbox faces must remain independently styleable through <code>style.node_icon_slot.*</code>, <code>style.expander.*</code>, and <code>style.checkbox.*</code>.</li>
   <li>Host-native virtualization must not expose private node or row handles as public members.</li>
   <li>Unused prototype visuals must be removed from the SVG and <code>.wfrog</code>, not hidden in the runtime.</li>
 </ul>

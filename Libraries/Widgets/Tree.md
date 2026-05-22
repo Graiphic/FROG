@@ -366,6 +366,40 @@ Hosts that do not support portable drag/drop may still support selection and exp
   <li><code>style.scrollbar.horizontal_thumb_height_percent</code></li>
 </ul>
 
+<h3>Tree affordance style properties</h3>
+
+<p>
+Tree item symbols, expand/collapse controls, and optional checkbox surfaces are
+separate visual affordances. A realization or runtime host must not drive them
+from one shared style bucket because doing so makes an item icon look like a
+button, or a button look like ordinary decoration.
+</p>
+
+<ul>
+  <li><code>style.node_icon_slot.fill_color</code></li>
+  <li><code>style.node_icon_slot.icon_fill_color</code></li>
+  <li><code>style.node_icon_slot.border_color</code></li>
+  <li><code>style.node_icon_slot.border_width</code></li>
+  <li><code>style.node_icon_slot.size</code></li>
+  <li><code>style.node_icon_slot.margin_right</code></li>
+  <li><code>style.expander.fill_color</code></li>
+  <li><code>style.expander.hover_fill_color</code></li>
+  <li><code>style.expander.text_color</code></li>
+  <li><code>style.expander.border_color</code></li>
+  <li><code>style.expander.border_width</code></li>
+  <li><code>style.expander.size</code></li>
+  <li><code>style.expander.font_size</code></li>
+  <li><code>style.expander.margin_right</code></li>
+  <li><code>style.checkbox.fill_color</code></li>
+  <li><code>style.checkbox.checked_fill_color</code></li>
+  <li><code>style.checkbox.check_color</code></li>
+  <li><code>style.checkbox.border_color</code></li>
+  <li><code>style.checkbox.border_width</code></li>
+  <li><code>style.checkbox.size</code></li>
+  <li><code>style.checkbox.font_size</code></li>
+  <li><code>style.checkbox.margin_right</code></li>
+</ul>
+
 <h3>Interaction properties</h3>
 
 <ul>
@@ -470,6 +504,9 @@ Hosts that do not support portable drag/drop may still support selection and exp
 <p>
 Node rows, expanders, connectors, checkbox faces, icons, labels, and selection surfaces are public part categories.
 Tree node icons are source-owned enum/string values that must resolve through realization-published item-symbol assets when <code>display.symbols_visible</code> is enabled; a host must not invent fallback icon artwork.
+The item icon slot, expand/collapse face, and checkbox face have distinct style surfaces:
+<code>style.node_icon_slot.*</code>, <code>style.expander.*</code>, and
+<code>style.checkbox.*</code>.
 When a tabular Tree exposes cell focus, <code>active_cell</code> is the published cell-selection surface and its fill, border color, and border width remain source-owned style properties.
 Virtualized node renderers, host-native row handles, recycled item views, or IDE-private node references remain realization-private.
 </p>

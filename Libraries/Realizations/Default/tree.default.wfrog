@@ -311,6 +311,11 @@
       "target_operation": "render_node_icon"
     },
     {
+      "member": "style.node_icon_slot.*",
+      "target_part": "node_icon",
+      "target_operation": "apply_node_icon_slot_style"
+    },
+    {
       "member": "selection.*",
       "target_part": "selection_face",
       "target_operation": "render_selection"
@@ -336,9 +341,19 @@
       "target_operation": "render_expansion"
     },
     {
+      "member": "style.expander.*",
+      "target_part": "expander_face",
+      "target_operation": "apply_expander_style"
+    },
+    {
       "member": "check.*",
       "target_part": "checkbox_face",
       "target_operation": "render_check_state"
+    },
+    {
+      "member": "style.checkbox.*",
+      "target_part": "checkbox_face",
+      "target_operation": "apply_checkbox_style"
     },
     {
       "member": "viewport.*",
