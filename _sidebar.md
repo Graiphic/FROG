@@ -102,6 +102,7 @@
     - [Numeric](/Examples/widget_reference/Numeric.md)
     - [Path](/Examples/widget_reference/Path.md)
     - [String](/Examples/widget_reference/String.md)
+    - [Tree](/Examples/widget_reference/Tree.md)
 - [Language](/Language/Readme.md)
   - [Control structures](/Language/Control%20structures.md)
   - [Execution control and observation boundaries](/Language/Execution%20control%20and%20observation%20boundaries.md)

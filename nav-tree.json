@@ -741,6 +741,13 @@
                   "path": "/Examples/widget_reference/String.md",
                   "kind": "page",
                   "children": []
+                },
+                {
+                  "key": "examples/widget_reference/tree.md",
+                  "title": "Tree",
+                  "path": "/Examples/widget_reference/Tree.md",
+                  "kind": "page",
+                  "children": []
                 }
               ]
             }
@@ -4519,6 +4526,7 @@
     "/Examples/widget_reference/Numeric.md",
     "/Examples/widget_reference/Path.md",
     "/Examples/widget_reference/String.md",
+    "/Examples/widget_reference/Tree.md",
     "/Examples/widget_reference/Readme.md",
     "/Examples/Readme.md",
     "/Language/Control%20structures.md",
