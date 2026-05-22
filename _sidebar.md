@@ -89,6 +89,8 @@
     - [main.frog](/Examples/22_listbox_selection_roundtrip/main.frog)
   - [23 table cell selection roundtrip](/Examples/23_table_cell_selection_roundtrip/Readme.md)
     - [main.frog](/Examples/23_table_cell_selection_roundtrip/main.frog)
+  - [24 tree node selection roundtrip](/Examples/24_tree_node_selection_roundtrip/Readme.md)
+    - [main.frog](/Examples/24_tree_node_selection_roundtrip/main.frog)
   - [compiler](/Examples/compiler/Readme.md)
     - [01 pure arithmetic](/Examples/compiler/01_pure_arithmetic.md)
     - [02 structured control](/Examples/compiler/02_structured_control.md)

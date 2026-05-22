@@ -651,6 +651,21 @@
               ]
             },
             {
+              "key": "examples/24_tree_node_selection_roundtrip/",
+              "title": "24 tree node selection roundtrip",
+              "path": "/Examples/24_tree_node_selection_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/24_tree_node_selection_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/24_tree_node_selection_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -4492,6 +4507,8 @@
     "/Examples/22_listbox_selection_roundtrip/Readme.md",
     "/Examples/23_table_cell_selection_roundtrip/main.frog",
     "/Examples/23_table_cell_selection_roundtrip/Readme.md",
+    "/Examples/24_tree_node_selection_roundtrip/main.frog",
+    "/Examples/24_tree_node_selection_roundtrip/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
