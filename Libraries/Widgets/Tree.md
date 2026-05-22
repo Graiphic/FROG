@@ -388,6 +388,9 @@ button, or a button look like ordinary decoration.
   <li><code>style.expander.border_width</code></li>
   <li><code>style.expander.size</code></li>
   <li><code>style.expander.font_size</code></li>
+  <li><code>style.expander.glyph_size</code></li>
+  <li><code>style.expander.glyph_stroke_width</code></li>
+  <li><code>style.expander.frame_visible</code></li>
   <li><code>style.expander.margin_right</code></li>
   <li><code>style.checkbox.fill_color</code></li>
   <li><code>style.checkbox.checked_fill_color</code></li>

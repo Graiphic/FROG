@@ -614,6 +614,8 @@
     "runtime-private host handles must not be exposed as public widget members",
     "virtualized node and row handles must remain realization-private",
     "the shell SVG must expose static anchor and geometry data-frog-part markers; dynamic Tree column header, row, selection, expansion, editing, and drag/drop parts are generated host overlays aligned to those geometry markers",
+    "style.expander.frame_visible hides or shows the expander square frame without changing the plus/minus glyph or expansion semantics",
+    "style.expander.glyph_size and style.expander.glyph_stroke_width tune the centered plus/minus glyph geometry",
     "unsupported edit or drag/drop operations on indicator classes must be rejected"
   ]
 }
