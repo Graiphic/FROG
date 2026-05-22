@@ -65,6 +65,7 @@ The following public parts are realized by host overlays aligned to the static s
   <li><code>node_icon</code></li>
   <li><code>node_label</code></li>
   <li><code>active_node</code></li>
+  <li><code>active_cell</code></li>
   <li><code>selection_face</code></li>
   <li><code>edit_overlay</code></li>
   <li><code>drag_feedback</code></li>

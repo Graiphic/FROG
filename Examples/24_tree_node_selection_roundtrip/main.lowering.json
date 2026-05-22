@@ -132,7 +132,7 @@
               "nodes.*",
               "style.node_row.*",
               "style.selection_face.*",
-              "style.active_node.*"
+              "style.active_cell.*"
             ]
           }
         ]

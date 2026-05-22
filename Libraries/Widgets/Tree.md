@@ -456,6 +456,7 @@ Hosts that do not support portable drag/drop may still support selection and exp
   <li><code>node_icon</code></li>
   <li><code>node_label</code></li>
   <li><code>active_node</code></li>
+  <li><code>active_cell</code></li>
   <li><code>selection_face</code></li>
   <li><code>edit_overlay</code></li>
   <li><code>drag_feedback</code></li>
@@ -467,6 +468,7 @@ Hosts that do not support portable drag/drop may still support selection and exp
 
 <p>
 Node rows, expanders, connectors, checkbox faces, icons, labels, and selection surfaces are public part categories.
+When a tabular Tree exposes cell focus, <code>active_cell</code> is the published cell-selection surface and its fill, border color, and border width remain source-owned style properties.
 Virtualized node renderers, host-native row handles, recycled item views, or IDE-private node references remain realization-private.
 </p>
 

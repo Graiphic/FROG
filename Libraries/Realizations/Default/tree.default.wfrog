@@ -79,6 +79,7 @@
         "node_icon",
         "node_label",
         "active_node",
+        "active_cell",
         "selection_face",
         "edit_overlay",
       "drag_feedback",
@@ -186,6 +187,11 @@
       "binding_selector": "[data-frog-part='active_node']"
     },
     {
+      "part": "active_cell",
+      "binding_kind": "host_overlay_generated_surface",
+      "binding_selector": "[data-frog-part='active_cell']"
+    },
+    {
       "part": "selection_face",
       "binding_kind": "host_overlay_generated_surface",
       "binding_selector": "[data-frog-part='selection_face']"
@@ -274,12 +280,12 @@
     },
     {
       "member": "selection.active_column_id",
-      "target_part": "active_node",
+      "target_part": "active_cell",
       "target_operation": "render_active_cell_column"
     },
     {
       "member": "selection.active_cell_id",
-      "target_part": "active_node",
+      "target_part": "active_cell",
       "target_operation": "render_active_cell"
     },
     {
@@ -488,6 +494,7 @@
       "node_icon",
       "node_label",
       "active_node",
+      "active_cell",
       "selection_face",
       "edit_overlay",
       "drag_feedback",
@@ -501,6 +508,7 @@
       "node_row",
       "selection_face",
       "active_node",
+      "active_cell",
       "expander_face",
       "checkbox_face",
       "node_icon",
