@@ -108,6 +108,10 @@ opens the language layer so multiple tools, runtimes, compilers, and deployment
 models can share durable public meaning.
 </p>
 
+<p align="center">
+  <img src="frog-orville-chart.png" alt="FROG positioning chart" width="640" />
+</p>
+
 <p>
 The long-form strategic explanation, including the whitepaper links and
 AI-era accountability framing, is maintained in
