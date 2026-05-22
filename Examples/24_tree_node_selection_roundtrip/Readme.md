@@ -6,7 +6,9 @@ The diagram copies `system_tree.value.selected_node_value` to `published_tree.va
 
 ## Runtime Status
 
-This example is C++-first in the private Graiphic runtime. Python and Rust parity must wait until the C++ visual and behavioral pass is accepted.
+This example is accepted at the same C++ / Python / Rust private-runtime source level.
+The C++ runtime remains the visually inspected reference host for this slice, and the Python and Rust runtimes carry the same validated Example 24 Tree behavior.
+This status does not claim generalized runtime completeness beyond the validated Tree slice.
 
 ## Expected Behavior
 
@@ -18,6 +20,7 @@ This example is C++-first in the private Graiphic runtime. Python and Rust parit
 - `Execute` runs the manifest-backed native `u16` proof kernel.
 - The read-only Tree indicator updates its selected numeric node from the native execution result and its editable record display from the declared `frog.tree.records` diagram dataflow.
 - Node label, tag, value, item icon enum, visible items, selection, expansion, hierarchy lines, scrollbars, colors, border widths, font, and hit areas remain source/realization-owned.
+- The SVG-backed shell can scale without bitmap pixelation, but each host must recompute overlays from published SVG parts and source-owned layout/style properties.
 
 ## Files
 

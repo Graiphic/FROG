@@ -93,6 +93,37 @@ Each page records the practical contract that must stay true while the examples 
 
 <hr/>
 
+<h2>Post-Boundary Private Runtime Widget Notes</h2>
+
+<p>
+The following repository-visible widget notes document later specification-facing examples.
+They are validated through Graiphic private runtime slices and do not expand the current public reference runtime
+closure unless that boundary is explicitly promoted later.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Widget family</th>
+      <th>Example</th>
+      <th>Reference note</th>
+      <th>Default realization package</th>
+      <th>Default SVG asset</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tree</td>
+      <td><code>24_tree_node_selection_roundtrip</code></td>
+      <td><a href="./Tree.md">Tree.md</a></td>
+      <td><code>Libraries/Realizations/Default/tree.default.wfrog</code></td>
+      <td><code>assets/tree/templates/tree_shell.svg</code> + <code>assets/tree/item_symbols/*.svg</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr/>
+
 <h2>Runtime Parity Snapshot</h2>
 
 <p>
@@ -161,6 +192,14 @@ native-backed.
       <td>validated</td>
       <td>validated</td>
       <td><code>LLVM native kernel manifest + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>24</code></td>
+      <td>Tree</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td><code>LLVM native kernel manifest + explicit frog.tree.records dataflow + .frog/.wfrog UI</code></td>
     </tr>
   </tbody>
 </table>

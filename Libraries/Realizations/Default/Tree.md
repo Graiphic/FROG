@@ -102,6 +102,21 @@ A runtime may replace the SVG-backed tree with a host-native virtual tree when i
 
 <hr/>
 
+<h2>Resizable Host Posture</h2>
+
+<p>
+The Tree shell SVG uses a <code>viewBox</code> and published static geometry parts, so the realization can be resized by an IDE or runtime host without bitmap pixelation.
+The host must still recompute its dynamic overlays from the source-owned widget bounds, viewport settings, row and column records, text metrics, and this realization's published parts.
+</p>
+
+<p>
+Scaling the SVG does not authorize hardcoded runtime visuals.
+Rows, cells, scrollbars, expanders, checkboxes, item icons, active selection, edit overlays, labels, and captions remain bound to <code>.frog</code> instance data and the <code>.wfrog</code> asset/part contract.
+Browser, Qt, native desktop, or GPU-backed hosts may all render this widget when they preserve that same contract.
+</p>
+
+<hr/>
+
 <h2>Validation Expectations</h2>
 
 <ul>
