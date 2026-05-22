@@ -42,5 +42,5 @@
 <p>
 The Tree shell does not contain hidden rows, hidden backgrounds, hidden buttons, hidden focus rings, or prototype scrollbar artwork.
 Dynamic Tree surfaces such as column headers, rows, selection, edit fields, expand/collapse controls, and scrollbar thumbs are host overlays generated from <code>.frog</code> instance data and aligned to the geometry published by this SVG.
-Item symbols are separate Default SVG assets resolved through the <code>.wfrog</code> item-symbol registry from source-owned <code>nodes.icon</code> and <code>nodes.collapsed_icon</code> values.
+Item symbols are separate Default SVG assets resolved through the <code>.wfrog</code> item-symbol registry from source-owned <code>nodes.icon</code> values. They are static item markers per node; expand/collapse visuals are rendered by the separate expander parts.
 </p>

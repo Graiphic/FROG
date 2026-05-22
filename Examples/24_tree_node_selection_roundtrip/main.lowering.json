@@ -106,7 +106,6 @@
               "selection.*",
               "expansion.*",
               "nodes.icon",
-              "nodes.collapsed_icon",
               "viewport.*",
               "interaction.*",
               "display.*",

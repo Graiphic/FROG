@@ -275,7 +275,6 @@
               "visible": true,
               "checked": true,
               "icon": "folder_open",
-              "collapsed_icon": "folder_closed",
               "attributes": {
                 "attribute_one": "Sample 3",
                 "attribute_two": "Sample 4",
@@ -713,7 +712,6 @@
               "visible": true,
               "checked": true,
               "icon": "folder_open",
-              "collapsed_icon": "folder_closed",
               "attributes": {
                 "attribute_one": "Sample 3",
                 "attribute_two": "Sample 4",

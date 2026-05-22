@@ -50,7 +50,6 @@
         "record_member": "nodes.*",
         "node_source": ".frog nodes",
         "icon_member": "nodes.icon",
-        "collapsed_icon_member": "nodes.collapsed_icon",
         "realization_asset_ref": "asset:tree_shell_svg"
       },
       {
@@ -64,7 +63,6 @@
         "record_member": "nodes.*",
         "node_source": ".frog nodes",
         "icon_member": "nodes.icon",
-        "collapsed_icon_member": "nodes.collapsed_icon",
         "realization_asset_ref": "asset:tree_shell_svg"
       }
     ]

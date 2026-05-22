@@ -332,7 +332,6 @@ Hosts that do not support portable drag/drop may still support selection and exp
   <li><code>nodes.label</code></li>
   <li><code>nodes.value</code></li>
   <li><code>nodes.icon</code></li>
-  <li><code>nodes.collapsed_icon</code></li>
   <li><code>nodes.path</code></li>
   <li><code>nodes.depth</code></li>
   <li><code>nodes.visible</code></li>
@@ -503,7 +502,7 @@ button, or a button look like ordinary decoration.
 
 <p>
 Node rows, expanders, connectors, checkbox faces, icons, labels, and selection surfaces are public part categories.
-Tree node icons are source-owned enum/string values that must resolve through realization-published item-symbol assets when <code>display.symbols_visible</code> is enabled; a host must not invent fallback icon artwork.
+Tree node icons are source-owned enum/string values that must resolve through realization-published item-symbol assets when <code>display.symbols_visible</code> is enabled; a host must not invent fallback icon artwork. The item icon is static per node. Expand/collapse state is rendered only through <code>expander_face</code> and <code>style.expander.*</code>, not by mutating the node icon.
 The item icon slot, expand/collapse face, and checkbox face have distinct style surfaces:
 <code>style.node_icon_slot.*</code>, <code>style.expander.*</code>, and
 <code>style.checkbox.*</code>.
