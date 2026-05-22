@@ -53,7 +53,7 @@
 
 <p>
 This root README is the public entry point for FROG. It keeps the strategic
-positioning, execution architecture image, public/private boundary, repository
+positioning, execution architecture reference, public/private boundary, repository
 map, and current published state visible without forcing every reader through
 the full long-form material.
 </p>
@@ -129,14 +129,10 @@ representation, lowering, runtime/compiler consumers, target execution, and
 source-aligned observability.
 </p>
 
-<p align="center">
-  <img src="./assets/frog-execution-architecture.svg" alt="FROG execution architecture" width="960" />
-</p>
-
 <p>
-The SVG above is a cleaned engineering rendering of the original ASCII
-execution architecture. The original ASCII diagram and detailed explanation
-are preserved in <a href="./FROG-Architecture.md#execution-architecture">FROG Architecture</a>.
+The original ASCII execution architecture diagram remains the reference view.
+It is preserved with the detailed explanation in
+<a href="./FROG-Architecture.md#execution-architecture">FROG Architecture</a>.
 </p>
 
 <hr/>
