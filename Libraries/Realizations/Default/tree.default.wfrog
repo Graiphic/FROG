@@ -273,6 +273,16 @@
       "target_operation": "render_active_node"
     },
     {
+      "member": "selection.active_column_id",
+      "target_part": "active_node",
+      "target_operation": "render_active_cell_column"
+    },
+    {
+      "member": "selection.active_cell_id",
+      "target_part": "active_node",
+      "target_operation": "render_active_cell"
+    },
+    {
       "member": "expansion.*",
       "target_part": "expander_face",
       "target_operation": "render_expansion"

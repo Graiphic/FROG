@@ -210,6 +210,8 @@ It may be represented as an array of node ids or as a canonicalized path string 
   <li><code>selection.mode</code> — <code>none</code>, <code>single_node</code>, <code>multi_node</code>, or <code>range</code></li>
   <li><code>selection.selected_node_ids</code></li>
   <li><code>selection.active_node_id</code></li>
+  <li><code>selection.active_column_id</code></li>
+  <li><code>selection.active_cell_id</code></li>
   <li><code>selection.anchor_node_id</code></li>
   <li><code>selection.selected_paths</code></li>
 </ul>
@@ -217,6 +219,7 @@ It may be represented as an array of node ids or as a canonicalized path string 
 <p>
 Selection is distinct from tree value.
 Changing selection does not mutate node payloads unless an explicit edit or method mutates tree data.
+When a tabular Tree surface exposes columns, <code>selection.active_column_id</code> and <code>selection.active_cell_id</code> may identify the currently focused cell while <code>selection.active_node_id</code> remains the selected node used by ordinary node-selection dataflow.
 </p>
 
 <hr/>

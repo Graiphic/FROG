@@ -25,7 +25,7 @@
 <p>
 This default realization publishes the portable Tree geometry needed by runtimes and IDE hosts.
 It intentionally keeps the SVG asset small: the shell publishes only stable anchors and geometry surfaces.
-Rows, hierarchy affordances, selection, editing, drag/drop feedback, and scrollbar thumbs are runtime host overlays generated from <code>.frog</code> instance data and this <code>.wfrog</code> realization contract.
+Rows, hierarchy affordances, active node or cell selection, editing, drag/drop feedback, and scrollbar thumbs are runtime host overlays generated from <code>.frog</code> instance data and this <code>.wfrog</code> realization contract.
 </p>
 
 <p>

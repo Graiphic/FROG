@@ -177,6 +177,8 @@
           "value.selected_node_value": 20,
           "selection.mode": "single_node",
           "selection.active_node_id": "duplicate_parent",
+          "selection.active_column_id": "node",
+          "selection.active_cell_id": "duplicate_parent.node",
           "selection.selected_node_ids": [
             "duplicate_parent"
           ],
@@ -606,6 +608,8 @@
           "value.selected_node_value": 20,
           "selection.mode": "single_node",
           "selection.active_node_id": "duplicate_parent",
+          "selection.active_column_id": "node",
+          "selection.active_cell_id": "duplicate_parent.node",
           "selection.selected_node_ids": [
             "duplicate_parent"
           ],
