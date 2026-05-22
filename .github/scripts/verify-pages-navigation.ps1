@@ -20,6 +20,10 @@ $rootSections = @(
 )
 
 $preferredRootDocs = @(
+    @{ File = "FROG-Strategy.md"; Label = "FROG Strategy" },
+    @{ File = "FROG-Architecture.md"; Label = "FROG Architecture" },
+    @{ File = "FROG-Repository-Guide.md"; Label = "FROG Repository Guide" },
+    @{ File = "FROG-Project-Status.md"; Label = "FROG Project Status" },
     @{ File = "GOVERNANCE.md"; Label = "Governance" },
     @{ File = "CONTRIBUTING.md"; Label = "Contributing" },
     @{ File = "CLA.md"; Label = "CLA" }
@@ -38,6 +42,10 @@ $expectedRootOrder = @(
     "Reference Implementation",
     "Roadmap",
     "Strategy",
+    "FROG Strategy",
+    "FROG Architecture",
+    "FROG Repository Guide",
+    "FROG Project Status",
     "Governance",
     "Contributing",
     "CLA"
@@ -51,6 +59,10 @@ $requiredFiles = @(
     "nav-tree.json",
     "_navbar.md",
     "Readme.md",
+    "FROG-Strategy.md",
+    "FROG-Architecture.md",
+    "FROG-Repository-Guide.md",
+    "FROG-Project-Status.md",
     ".github/scripts/build-pages-navigation.ps1",
     ".github/scripts/verify-pages-navigation.ps1",
     ".github/workflows/refresh-pages-navigation.yml"

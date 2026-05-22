@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1900" viewBox="0 0 1800 1900" role="img" aria-labelledby="title desc">
+  <title id="title">FROG execution architecture</title>
+  <desc id="desc">A faithful engineering-style rendering of the FROG execution architecture ASCII diagram, with clean orthogonal routing.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#1f2937"/>
+    </marker>
+    <style>
+      .background { fill: #ffffff; }
+      .title { font: 700 34px Arial, sans-serif; fill: #111827; letter-spacing: 0; }
+      .subtitle { font: 400 16px Arial, sans-serif; fill: #4b5563; letter-spacing: 0; }
+      .box { fill: #ffffff; stroke: #1f2937; stroke-width: 2; rx: 8; }
+      .soft-box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 8; }
+      .source-box { fill: #f8fafc; stroke: #0f172a; stroke-width: 2; rx: 8; }
+      .validation-box { fill: #fafafa; stroke: #0f172a; stroke-width: 2; rx: 8; }
+      .execution-box { fill: #eff6ff; stroke: #1d4ed8; stroke-width: 2.5; rx: 8; }
+      .runtime-box { fill: #f7fee7; stroke: #3f6212; stroke-width: 2; rx: 8; }
+      .compiler-box { fill: #fff7ed; stroke: #9a3412; stroke-width: 2; rx: 8; }
+      .observe-box { fill: #f5f3ff; stroke: #5b21b6; stroke-width: 2; rx: 8; }
+      .activity-box { fill: #fefce8; stroke: #854d0e; stroke-width: 2; rx: 8; }
+      .label { font: 700 20px Arial, sans-serif; fill: #111827; text-anchor: middle; letter-spacing: 0; }
+      .body { font: 400 17px Arial, sans-serif; fill: #1f2937; text-anchor: middle; letter-spacing: 0; }
+      .small { font: 400 15px Arial, sans-serif; fill: #374151; text-anchor: middle; letter-spacing: 0; }
+      .list { font: 400 17px Arial, sans-serif; fill: #1f2937; letter-spacing: 0; }
+      .edge { fill: none; stroke: #1f2937; stroke-width: 2.2; marker-end: url(#arrow); }
+      .line { fill: none; stroke: #1f2937; stroke-width: 2.2; }
+      .edge-label { font: 700 15px Arial, sans-serif; fill: #111827; text-anchor: middle; letter-spacing: 0; }
+      .label-mask { fill: #ffffff; stroke: none; }
+    </style>
+  </defs>
+
+  <rect class="background" x="0" y="0" width="1800" height="1900"/>
+
+  <text class="title" x="900" y="52" text-anchor="middle">FROG Execution Architecture</text>
+  <text class="subtitle" x="900" y="82" text-anchor="middle">Authoring, source, validation, FIR, lowering, runtime/compiler consumers, and observability</text>
+
+  <!-- Authoring layer -->
+  <text class="label" x="900" y="130">FROG IDE</text>
+  <rect class="box" x="560" y="148" width="680" height="82"/>
+  <text class="body" x="900" y="196">Diagram + Front Panel UI + Probes + Watches</text>
+
+  <path class="edge" d="M900 230 V282"/>
+
+  <rect class="soft-box" x="590" y="282" width="620" height="100"/>
+  <text class="label" x="900" y="324">FROG Program Model</text>
+  <text class="small" x="900" y="354">(editable in-memory source model)</text>
+
+  <!-- Program model split -->
+  <path class="line" d="M900 382 V420"/>
+  <path class="line" d="M370 420 H1430"/>
+
+  <rect class="label-mask" x="300" y="370" width="140" height="34"/>
+  <text class="edge-label" x="370" y="394">save / load</text>
+
+  <rect class="label-mask" x="1348" y="370" width="164" height="34"/>
+  <text class="edge-label" x="1430" y="394">execute / validate</text>
+
+  <path class="edge" d="M370 420 V462"/>
+  <path class="edge" d="M1430 420 V462"/>
+
+  <!-- Source and validation branches -->
+  <rect class="source-box" x="120" y="462" width="500" height="132"/>
+  <text class="label" x="370" y="506">OPEN SOURCE LAYER</text>
+  <text class="body" x="370" y="542">FROG Expression</text>
+  <text class="small" x="370" y="572">(.frog, canonical source)</text>
+
+  <rect class="validation-box" x="1180" y="462" width="500" height="216"/>
+  <text class="label" x="1282" y="548">Validation</text>
+  <text class="label" x="1282" y="578">against</text>
+  <path class="line" d="M1380 500 V640"/>
+  <text class="list" x="1440" y="528">Expression/</text>
+  <text class="list" x="1440" y="568">Language/</text>
+  <text class="list" x="1440" y="608">Libraries/</text>
+  <text class="list" x="1440" y="648">Profiles/</text>
+
+  <path class="line" d="M1430 678 V704"/>
+  <path class="line" d="M1430 704 H900"/>
+  <path class="edge" d="M900 704 V720"/>
+
+  <!-- Execution layer -->
+  <rect class="execution-box" x="500" y="720" width="800" height="156"/>
+  <text class="label" x="900" y="762">OPEN EXECUTION LAYER</text>
+  <text class="body" x="900" y="798">FROG Execution IR</text>
+  <text class="small" x="900" y="832">(canonical execution-facing document, derived, inspectable,</text>
+  <text class="small" x="900" y="858">source-attributed, execution-facing, not backend-private)</text>
+
+  <path class="edge" d="M900 876 V930"/>
+
+  <rect class="soft-box" x="560" y="930" width="680" height="74"/>
+  <text class="body" x="900" y="974">Identity / Mapping preservation</text>
+
+  <path class="edge" d="M900 1004 V1058"/>
+
+  <rect class="soft-box" x="560" y="1058" width="680" height="74"/>
+  <text class="body" x="900" y="1102">Lowering / backend-facing handoff</text>
+
+  <!-- Runtime/compiler split -->
+  <path class="line" d="M900 1132 V1182"/>
+  <path class="line" d="M355 1182 H1445"/>
+  <path class="edge" d="M355 1182 V1220"/>
+  <path class="edge" d="M1445 1182 V1220"/>
+
+  <rect class="runtime-box" x="120" y="1220" width="470" height="76"/>
+  <text class="body" x="355" y="1266">Runtime-family consumers</text>
+
+  <rect class="compiler-box" x="1210" y="1220" width="470" height="76"/>
+  <text class="body" x="1445" y="1266">Compiler-family consumers</text>
+
+  <path class="edge" d="M355 1296 V1348"/>
+  <path class="edge" d="M1445 1296 V1348"/>
+
+  <rect class="runtime-box" x="120" y="1348" width="470" height="76"/>
+  <text class="body" x="355" y="1394">Target execution instance</text>
+
+  <rect class="compiler-box" x="1210" y="1348" width="470" height="76"/>
+  <text class="body" x="1445" y="1394">Target artifact / executable</text>
+
+  <!-- Target outcomes -->
+  <path class="line" d="M355 1424 V1466"/>
+  <path class="line" d="M1445 1424 V1466"/>
+  <path class="line" d="M355 1466 H1445"/>
+  <path class="edge" d="M355 1466 V1506"/>
+  <path class="edge" d="M1130 1466 V1506"/>
+
+  <rect class="observe-box" x="90" y="1506" width="530" height="94"/>
+  <text class="body" x="355" y="1546">Source-aligned execution observability</text>
+  <text class="small" x="355" y="1574">(mapped back to meaningful FROG objects)</text>
+
+  <rect class="activity-box" x="890" y="1506" width="480" height="94"/>
+  <text class="body" x="1130" y="1560">Runtime activity on the active target</text>
+
+  <!-- Debugging branch -->
+  <path class="edge" d="M355 1600 V1648"/>
+
+  <rect class="observe-box" x="45" y="1648" width="620" height="72"/>
+  <text class="body" x="355" y="1692">Debugging / inspection / pause / resume / break / step</text>
+
+  <path class="line" d="M355 1720 V1764"/>
+  <path class="line" d="M230 1764 H490"/>
+  <path class="edge" d="M230 1764 V1796"/>
+  <path class="edge" d="M490 1764 V1796"/>
+
+  <rect class="observe-box" x="120" y="1796" width="220" height="56"/>
+  <text class="body" x="230" y="1830">Probes</text>
+
+  <rect class="observe-box" x="380" y="1796" width="220" height="56"/>
+  <text class="body" x="490" y="1830">Watches</text>
+</svg>

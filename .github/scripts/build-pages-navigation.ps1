@@ -20,6 +20,10 @@ $rootSections = @(
 )
 
 $preferredRootDocs = @(
+    @{ File = "FROG-Strategy.md"; Label = "FROG Strategy" },
+    @{ File = "FROG-Architecture.md"; Label = "FROG Architecture" },
+    @{ File = "FROG-Repository-Guide.md"; Label = "FROG Repository Guide" },
+    @{ File = "FROG-Project-Status.md"; Label = "FROG Project Status" },
     @{ File = "GOVERNANCE.md"; Label = "Governance" },
     @{ File = "CONTRIBUTING.md"; Label = "Contributing" },
     @{ File = "CLA.md"; Label = "CLA" }
