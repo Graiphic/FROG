@@ -41,6 +41,7 @@
   <a href="#start-here">Start here</a> •
   <a href="#positioning">Positioning</a> •
   <a href="#execution-architecture">Execution architecture</a> •
+  <a href="#end-to-end-execution-pipeline">Execution pipeline</a> •
   <a href="#public-specification-and-implementation-boundary">Public boundary</a> •
   <a href="#repository-map">Repository map</a> •
   <a href="#published-repository-state">Published state</a> •
@@ -133,6 +134,106 @@ source-aligned observability.
 The original ASCII execution architecture diagram remains the reference view.
 It is preserved with the detailed explanation in
 <a href="./FROG-Architecture.md#execution-architecture">FROG Architecture</a>.
+</p>
+
+<hr/>
+
+<h2 id="end-to-end-execution-pipeline">End-to-end execution pipeline</h2>
+
+<p>
+A FROG program starts from canonical <code>.frog</code> source. The
+<code>.frog</code> file owns the program-level source: metadata, public
+interface, executable diagram, optional front panel, widget instances, and
+diagram/widget bindings.
+</p>
+
+<p>
+When a front panel is present, canonical source may reference widget classes,
+widget packages, or realization choices. <code>.wfrog</code> packages publish
+widget-oriented package content such as reusable widget law, compositions,
+realization metadata, bounded behavior surfaces, host-binding metadata, and
+visual resources. SVG assets may participate as visual realization resources.
+None of those artifacts replaces <code>.frog</code> as the canonical program
+source, and none of them becomes hidden language semantics.
+</p>
+
+<pre><code>.frog source
+  -&gt; loadability
+  -&gt; structural validation
+  -&gt; semantic validation
+  -&gt; validated program meaning
+  -&gt; FIR / Execution IR
+  -&gt; lowering
+  -&gt; backend contract
+  -&gt; runtime-family and/or compiler-family consumption</code></pre>
+
+<p>
+For compiler-family paths such as LLVM, the lowered form may be consumed to
+produce an LLVM-oriented module, native proof, or native loadable artifact.
+LLVM remains a downstream compiler-family consumer; it does not define FROG
+semantics and does not replace the runtime boundary.
+</p>
+
+<p>
+For runtime-family paths, the runtime consumes explicit contracts and published
+artifacts. It may instantiate a front panel through a host-specific UI layer,
+bind widget values or widget references to execution-facing units, load or call
+compiled artifacts when applicable, execute the dataflow unit, and project
+results, diagnostics, and observability back to source-meaningful objects.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Artifact or layer</th>
+      <th>Pipeline role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>.frog</code></td>
+      <td>Canonical program source.</td>
+    </tr>
+    <tr>
+      <td><code>.wfrog</code></td>
+      <td>Widget/package publication or realization metadata.</td>
+    </tr>
+    <tr>
+      <td>SVG/assets</td>
+      <td>Visual realization resources.</td>
+    </tr>
+    <tr>
+      <td>FIR / Execution IR</td>
+      <td>Open execution-facing representation derived from validated meaning.</td>
+    </tr>
+    <tr>
+      <td>Lowering</td>
+      <td>Target, backend, runtime, or deployment specialization.</td>
+    </tr>
+    <tr>
+      <td>Backend contract</td>
+      <td>Explicit downstream handoff.</td>
+    </tr>
+    <tr>
+      <td>LLVM</td>
+      <td>One possible compiler-family consumer and native proof path.</td>
+    </tr>
+    <tr>
+      <td>Runtime</td>
+      <td>Execution and orchestration consumer of explicit contracts and artifacts.</td>
+    </tr>
+    <tr>
+      <td>Host UI</td>
+      <td>Rendering and interaction surface; replaceable across host families.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+The practical reference-corridor details are documented in
+<a href="./Implementations/Reference/pipeline.md">Reference Pipeline</a>.
+A concrete UI/runtime/LLVM-oriented example is documented in
+<a href="./Examples/05_bounded_ui_accumulator/Readme.md">Example 05 — Bounded UI Accumulator</a>.
 </p>
 
 <hr/>
@@ -254,6 +355,7 @@ published-state and maturity notes that used to live here.
   <li>Start with this root README.</li>
   <li>Read <a href="./FROG-Strategy.md">FROG Strategy and Positioning</a> for why the language exists.</li>
   <li>Read <a href="./FROG-Architecture.md">FROG Architecture</a> for source, FIR, lowering, runtime/compiler, and observability posture.</li>
+  <li>Read <a href="#end-to-end-execution-pipeline">End-to-end execution pipeline</a> for the short path from source to runtime/compiler consumers.</li>
   <li>Read <a href="./FROG-Repository-Guide.md">FROG Repository Guide</a> for the detailed repository map.</li>
   <li>Use <a href="./Examples/Readme.md">Examples</a> and <a href="./Conformance/Readme.md">Conformance</a> for concrete validation material.</li>
   <li>Use <a href="./FROG-Project-Status.md">FROG Project Status</a> for the current published state.</li>
