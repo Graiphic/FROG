@@ -109,6 +109,16 @@ opens the language layer so multiple tools, runtimes, compilers, and deployment
 models can share durable public meaning.
 </p>
 
+<p>
+FROG is therefore not an IDE-first platform. A FROG IDE is a tool that edits,
+validates, observes, and projects a FROG program; it is not the owner of the
+language. The durable asset is the canonical <code>.frog</code> source, the
+validated meaning, the open FIR, and the explicit downstream contracts. This
+means IDEs, runtimes, compilers, UI hosts, and hardware backends can evolve or
+be replaced without making existing FROG programs dependent on one monolithic
+product stack.
+</p>
+
 <p align="center">
   <img src="frog-orville-chart.png" alt="FROG positioning chart" width="640" />
 </p>
