@@ -167,6 +167,10 @@ source, and none of them becomes hidden language semantics.
   -&gt; backend contract
   -&gt; runtime-family and/or compiler-family consumption</code></pre>
 
+<p align="center">
+  <img src="./assets/execution-pipeline-diagram.svg" alt="FROG end-to-end execution pipeline" width="640" />
+</p>
+
 <p>
 For compiler-family paths such as LLVM, the lowered form may be consumed to
 produce an LLVM-oriented module, native proof, or native loadable artifact.
@@ -230,6 +234,8 @@ results, diagnostics, and observability back to source-meaningful objects.
 </table>
 
 <p>
+The standalone diagram page is available in
+<a href="./ExecutionPipelineDiagram.md">End-to-End Execution Pipeline Diagram</a>.
 The practical reference-corridor details are documented in
 <a href="./Implementations/Reference/pipeline.md">Reference Pipeline</a>.
 A concrete UI/runtime/LLVM-oriented example is documented in
