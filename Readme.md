@@ -72,6 +72,10 @@ the full long-form material.
       <td>Whitepaper links, FROG definition, GO HW continuity, campaign priority, AI-era positioning, and dataflow rationale.</td>
     </tr>
     <tr>
+      <td><a href="./Strategy/FormatFirstNotIdeFirst.md">Format-first, not IDE-first</a></td>
+      <td>Strategic note explaining why FROG's durable asset is the public source-to-FIR-to-contract pipeline rather than one IDE product.</td>
+    </tr>
+    <tr>
       <td><a href="./FROG-Architecture.md">FROG Architecture</a></td>
       <td>Program representation, FIR posture, runtime/compiler complementarity, original ASCII execution architecture, observability, targets, security, interoperability, and language/tooling separation.</td>
     </tr>
