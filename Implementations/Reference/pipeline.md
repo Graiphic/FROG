@@ -65,6 +65,52 @@ The current UI and native-proof corridor has two visible branches that meet at
 the runtime boundary.
 </p>
 
+<pre><code>+----------------------+
+| .frog                |
+| canonical source     |
++----------+-----------+
+           |
+           v
++----------------------+
+| structural validation|
++----------+-----------+
+           |
+           v
++----------------------+
+| semantic validation  |
++----------+-----------+
+           |
+           v
++----------------------+
+| FIR                  |
+| open Execution IR    |
++------+-------+-------+
+       |       |
+       |       +----------------------------+
+       |                                    |
+       v                                    v
++----------------------+        +----------------------+
+| lowering             |        | widget realization   |
+| backend contract     |        | .wfrog + SVG         |
++----------+-----------+        +----------+-----------+
+           |                               |
+           v                               v
++----------------------+        +----------------------+
+| LLVM backend         |        | UI host              |
+| native artifact      |        | replaceable host     |
++----------+-----------+        +----------+-----------+
+           |                               |
+           +---------------+---------------+
+                           |
+                           v
+                 +----------------------+
+                 | runtime              |
+                 | orchestration        |
+                 | bindings             |
+                 | scheduling           |
+                 | diagnostics          |
+                 +----------------------+</code></pre>
+
 <p>
 The diagram and computation branch is:
 </p>
