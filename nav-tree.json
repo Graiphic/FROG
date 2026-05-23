@@ -157,6 +157,13 @@
               "children": []
             },
             {
+              "key": "expression/widget-package-hosting.md",
+              "title": "Widget package hosting",
+              "path": "/Expression/Widget%20package%20hosting.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "expression/widget-realization.md",
               "title": "Widget realization",
               "path": "/Expression/Widget%20realization.md",
@@ -258,6 +265,13 @@
               "path": "/Examples/05_bounded_ui_accumulator/Readme.md",
               "kind": "category",
               "children": [
+                {
+                  "key": "examples/05_bounded_ui_accumulator/execution-pipeline.md",
+                  "title": "Execution pipeline",
+                  "path": "/Examples/05_bounded_ui_accumulator/Execution%20pipeline.md",
+                  "kind": "page",
+                  "children": []
+                },
                 {
                   "key": "examples/05_bounded_ui_accumulator/freeze.md",
                   "title": "Freeze",
@@ -834,6 +848,13 @@
               "key": "ir/execution-ir.md",
               "title": "Execution IR",
               "path": "/IR/Execution%20IR.md",
+              "kind": "page",
+              "children": []
+            },
+            {
+              "key": "ir/hybrid-ui-compiler-execution.md",
+              "title": "Hybrid UI compiler execution",
+              "path": "/IR/Hybrid%20UI%20compiler%20execution.md",
               "kind": "page",
               "children": []
             },
@@ -4476,6 +4497,7 @@
     "/Expression/Widget%20behavior.md",
     "/Expression/Widget%20class%20contract.md",
     "/Expression/Widget%20package%20%28.wfrog%29.md",
+    "/Expression/Widget%20package%20hosting.md",
     "/Expression/Widget%20realization.md",
     "/Expression/Readme.md",
     "/Examples/example_dossier_standard.md",
@@ -4489,6 +4511,7 @@
     "/Examples/03_ui_property_write/Readme.md",
     "/Examples/04_stateful_feedback_delay/main.frog",
     "/Examples/04_stateful_feedback_delay/Readme.md",
+    "/Examples/05_bounded_ui_accumulator/Execution%20pipeline.md",
     "/Examples/05_bounded_ui_accumulator/Freeze.md",
     "/Examples/05_bounded_ui_accumulator/NumericCompatibility.md",
     "/Examples/05_bounded_ui_accumulator/main.frog",
@@ -4568,6 +4591,7 @@
     "/IR/Construction%20rules.md",
     "/IR/Derivation%20rules.md",
     "/IR/Execution%20IR.md",
+    "/IR/Hybrid%20UI%20compiler%20execution.md",
     "/IR/Identity%20and%20Mapping.md",
     "/IR/Library%20call%20model.md",
     "/IR/Lowering.md",
