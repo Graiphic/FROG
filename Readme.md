@@ -168,6 +168,56 @@ source, and none of them becomes hidden language semantics.
   -&gt; runtime-family and/or compiler-family consumption</code></pre>
 
 <p>
+The same corridor can be read as the following ASCII execution diagram:
+</p>
+
+<pre><code>+----------------------+
+| .frog                |
+| canonical source     |
++----------+-----------+
+           |
+           v
++----------------------+
+| structural validation|
++----------+-----------+
+           |
+           v
++----------------------+
+| semantic validation  |
++----------+-----------+
+           |
+           v
++----------------------+
+| FIR                  |
+| open Execution IR    |
++------+-------+-------+
+       |       |
+       |       +----------------------------+
+       |                                    |
+       v                                    v
++----------------------+        +----------------------+
+| lowering             |        | widget realization   |
+| backend contract     |        | .wfrog + SVG         |
++----------+-----------+        +----------+-----------+
+           |                               |
+           v                               v
++----------------------+        +----------------------+
+| LLVM backend         |        | UI host              |
+| native artifact      |        | replaceable host     |
++----------+-----------+        +----------+-----------+
+           |                               |
+           +---------------+---------------+
+                           |
+                           v
+                 +----------------------+
+                 | runtime              |
+                 | orchestration        |
+                 | bindings             |
+                 | scheduling           |
+                 | diagnostics          |
+                 +----------------------+</code></pre>
+
+<p>
 For compiler-family paths such as LLVM, the lowered form may be consumed to
 produce an LLVM-oriented module, native proof, or native loadable artifact.
 LLVM remains a downstream compiler-family consumer; it does not define FROG
@@ -230,6 +280,8 @@ results, diagnostics, and observability back to source-meaningful objects.
 </table>
 
 <p>
+The standalone ASCII diagram page is available in
+<a href="./ExecutionPipelineDiagram.md">End-to-End Execution Pipeline Diagram</a>.
 The practical reference-corridor details are documented in
 <a href="./Implementations/Reference/pipeline.md">Reference Pipeline</a>.
 A concrete UI/runtime/LLVM-oriented example is documented in
