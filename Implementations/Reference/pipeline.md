@@ -38,6 +38,80 @@ runtime-family tests and native-kernel bridge checks documented under
 
 <hr/>
 
+<h2>How the Current Reference Corridor Runs</h2>
+
+<p>
+This section describes the current reference corridor as a non-normative
+implementation-facing shape. It explains how the published artifacts are wired
+together for the bounded public reference runtime closure. It does not define
+the FROG language, widget law, runtime law, LLVM law, or future production
+implementation strategy.
+</p>
+
+<pre><code>main.frog
+  -&gt; loadability
+  -&gt; structural validation
+  -&gt; semantic validation
+  -&gt; main.fir.json
+  -&gt; main.lowering.json
+  -&gt; backend contract
+  -&gt; runtime acceptance
+  -&gt; LLVM-oriented module / native proof where applicable
+  -&gt; runtime orchestration
+  -&gt; host UI / front-panel update where applicable</code></pre>
+
+<p>
+The current UI and native-proof corridor has two visible branches that meet at
+the runtime boundary.
+</p>
+
+<p>
+The diagram and computation branch is:
+</p>
+
+<pre><code>.frog diagram
+  -&gt; loadability / structural validation
+  -&gt; semantic validation
+  -&gt; FIR / Execution IR
+  -&gt; lowering
+  -&gt; backend contract
+  -&gt; LLVM-oriented module or native loadable artifact where applicable
+  -&gt; runtime call/load boundary</code></pre>
+
+<p>
+The front-panel and widget branch is:
+</p>
+
+<pre><code>.frog front_panel
+  -&gt; widget instances and diagram/widget bindings
+  -&gt; .wfrog packages or realization packages
+  -&gt; SVG/assets and realization resources
+  -&gt; host UI</code></pre>
+
+<p>
+The runtime joins those branches by consuming explicit published artifacts
+rather than by becoming the owner of language semantics. In the current
+reference corridor, runtime-family consumers may:
+</p>
+
+<ul>
+  <li>consume FIR, lowering artifacts, backend contracts, manifests, and realization package references,</li>
+  <li>load or call compiled artifacts where the backend contract and manifest declare such an artifact,</li>
+  <li>bind <code>widget_value</code> and <code>widget_reference</code> surfaces to execution-facing values, properties, or calls,</li>
+  <li>sample input widget values on Run/Execute where the example uses a run-on-demand host loop,</li>
+  <li>publish output values, property updates, events, snapshots, or diagnostics back to the host surface,</li>
+  <li>preserve source attribution and diagnostic recoverability where the FIR and downstream artifacts expose it.</li>
+</ul>
+
+<p>
+LLVM remains one compiler-family proof path in this repository. It may consume
+lowered material to produce an LLVM-oriented module or native proof artifact,
+but it does not replace FIR, does not define FROG semantics, and does not make
+the runtime LLVM-specific.
+</p>
+
+<hr/>
+
 <h2>Command</h2>
 
 <pre><code>python Implementations/Reference/Pipeline/check_examples01_10_full.py</code></pre>
