@@ -680,6 +680,21 @@
               ]
             },
             {
+              "key": "examples/25_frame_grouping_board/",
+              "title": "25 frame grouping board",
+              "path": "/Examples/25_frame_grouping_board/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/25_frame_grouping_board/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/25_frame_grouping_board/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -4567,6 +4582,8 @@
     "/Examples/23_table_cell_selection_roundtrip/Readme.md",
     "/Examples/24_tree_node_selection_roundtrip/main.frog",
     "/Examples/24_tree_node_selection_roundtrip/Readme.md",
+    "/Examples/25_frame_grouping_board/main.frog",
+    "/Examples/25_frame_grouping_board/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
