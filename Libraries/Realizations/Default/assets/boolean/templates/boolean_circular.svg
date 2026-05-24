@@ -29,12 +29,14 @@
         fill: none;
         stroke: transparent;
         stroke-width: 3px;
+        vector-effect: non-scaling-stroke;
       }
 
       #inner_face {
         fill: none;
         stroke: transparent;
         stroke-width: 1px;
+        vector-effect: non-scaling-stroke;
       }
 
       #focus_ring {
@@ -42,6 +44,7 @@
         fill: none;
         stroke: #2563eb;
         stroke-width: 2px;
+        vector-effect: non-scaling-stroke;
       }
     </style>
   </defs>

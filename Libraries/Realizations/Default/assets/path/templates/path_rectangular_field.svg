@@ -46,13 +46,13 @@
 
       #label_text { display: var(--frog-path-label-display); fill: #6b7280; font-family: system-ui, Segoe UI, Arial, sans-serif; font-size: 12px; }
       #caption_text { display: var(--frog-path-caption-display); fill: var(--frog-path-caption-fill); font-family: var(--frog-path-caption-font-family); font-size: var(--frog-path-caption-font-size); font-weight: var(--frog-path-caption-font-weight); }
-      #path_face { fill: var(--frog-path-face-fill); stroke: var(--frog-path-face-stroke); stroke-width: var(--frog-path-face-stroke-width); }
+      #path_face { fill: var(--frog-path-face-fill); stroke: var(--frog-path-face-stroke); stroke-width: var(--frog-path-face-stroke-width); vector-effect: non-scaling-stroke; }
       #path_display { fill: var(--frog-path-text-fill); font-family: system-ui, Segoe UI, Arial, sans-serif; font-size: var(--frog-path-text-font-size); font-weight: var(--frog-path-text-font-weight); }
-      #browse_button { display: var(--frog-path-browse-display); fill: var(--frog-path-button-fill); stroke: var(--frog-path-button-stroke); stroke-width: var(--frog-path-button-stroke-width); }
+      #browse_button { display: var(--frog-path-browse-display); fill: var(--frog-path-button-fill); stroke: var(--frog-path-button-stroke); stroke-width: var(--frog-path-button-stroke-width); vector-effect: non-scaling-stroke; }
       #browse_button_text { display: var(--frog-path-browse-display); fill: var(--frog-path-button-text-fill); font-size: var(--frog-path-button-text-font-size); }
       #path_icon { display: var(--frog-path-icon-display); }
-      #path_icon .folder_back { fill: var(--frog-path-icon-fill); stroke: var(--frog-path-icon-stroke); stroke-width: 1px; }
-      #path_icon .folder_front { fill: var(--frog-path-icon-front-fill); stroke: var(--frog-path-icon-stroke); stroke-width: 1px; }
+      #path_icon .folder_back { fill: var(--frog-path-icon-fill); stroke: var(--frog-path-icon-stroke); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+      #path_icon .folder_front { fill: var(--frog-path-icon-front-fill); stroke: var(--frog-path-icon-stroke); stroke-width: 1px; vector-effect: non-scaling-stroke; }
       #path_icon .folder_highlight { fill: var(--frog-path-icon-highlight); opacity: 0.75; }
       #text_overflow_marker { display: var(--frog-path-overflow-display); }
       #validation_marker { display: var(--frog-path-validation-display); }
@@ -140,7 +140,7 @@
        data-frog-part="validation_marker"
        data-frog-bind="validation.* display.validation_marker_visible">
       <circle cx="478" cy="96" r="8" fill="#22c55e" />
-      <path d="M474 96 L477 100 L483 91" fill="none" stroke="#ffffff" stroke-width="2" />
+      <path d="M474 96 L477 100 L483 91" fill="none" stroke="#ffffff" stroke-width="2" vector-effect="non-scaling-stroke" />
     </g>
   </g>
 </svg>

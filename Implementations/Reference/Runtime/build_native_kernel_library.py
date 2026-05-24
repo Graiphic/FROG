@@ -86,6 +86,8 @@ def build_native_kernel_library(
 
     command = [clang, "-shared", "-Wno-override-module", "-o", str(output_path), str(kernel_ll)]
     if sys.platform == "win32":
+        if shutil.which("ld.lld") is not None:
+            command.insert(1, "-fuse-ld=lld")
         command.insert(2, "-Wl,--export-all-symbols")
 
     print("$ " + " ".join(command))

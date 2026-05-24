@@ -77,12 +77,13 @@
         fill: var(--frog-numeric-frame-fill);
         stroke: var(--frog-numeric-frame-stroke);
         stroke-width: var(--frog-numeric-frame-stroke-width);
+        vector-effect: non-scaling-stroke;
       }
-
       #value_face {
         fill: var(--frog-numeric-value-face-fill);
         stroke: var(--frog-numeric-value-face-stroke);
         stroke-width: var(--frog-numeric-value-face-stroke-width);
+        vector-effect: non-scaling-stroke;
       }
 
       #text_value {
@@ -129,6 +130,7 @@
         fill: none;
         stroke: var(--frog-numeric-focus-stroke);
         stroke-width: var(--frog-numeric-focus-stroke-width);
+        vector-effect: non-scaling-stroke;
       }
     </style>
   </defs>
@@ -204,7 +206,7 @@
          data-frog-state-law="normal-pressed-color-only"
          data-frog-bind="style.increment_button.*">
         <rect x="246" y="82" width="30" height="13" />
-        <path d="M261 85 L269 92 L253 92 Z" fill="none" stroke-width="2" />
+        <path d="M261 85 L269 92 L253 92 Z" fill="none" stroke-width="2" vector-effect="non-scaling-stroke" />
       </g>
       <g id="increment_down"
          data-frog-part="increment_down"
@@ -212,7 +214,7 @@
          data-frog-state-law="normal-pressed-color-only"
          data-frog-bind="style.increment_button.*">
         <rect x="246" y="97" width="30" height="13" />
-        <path d="M253 100 L269 100 L261 107 Z" fill="none" stroke-width="2" />
+        <path d="M253 100 L269 100 L261 107 Z" fill="none" stroke-width="2" vector-effect="non-scaling-stroke" />
       </g>
     </g>
 
@@ -226,6 +228,7 @@
           fill="#ffffff"
           stroke="#5b9bd5"
           stroke-width="1"
+          vector-effect="non-scaling-stroke"
           data-frog-bind="display.radix_visible representation.kind" />
 
     <text id="radix_text"

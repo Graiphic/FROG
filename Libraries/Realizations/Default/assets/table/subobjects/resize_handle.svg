@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 36">
   <g data-frog-part="resize_handle">
-    <line x1="6" y1="4" x2="6" y2="32" stroke="#64748b" stroke-width="2"/>
+    <line x1="6" y1="4" x2="6" y2="32" stroke="#64748b" stroke-width="2" vector-effect="non-scaling-stroke"/>
     <circle cx="6" cy="12" r="1.5" fill="#64748b"/>
     <circle cx="6" cy="18" r="1.5" fill="#64748b"/>
     <circle cx="6" cy="24" r="1.5" fill="#64748b"/>

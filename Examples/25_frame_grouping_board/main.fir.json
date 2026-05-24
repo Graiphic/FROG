@@ -1,0 +1,77 @@
+{
+  "format": "frog.fir",
+  "version": "0.1",
+  "source": {
+    "example_id": "25_frame_grouping_board",
+    "path": "Examples/25_frame_grouping_board/main.frog"
+  },
+  "front_panel_realization": {
+    "package_path": "Examples/25_frame_grouping_board/ui/frame_panel.wfrog"
+  },
+  "units": [
+    {
+      "id": "main",
+      "kind": "frame_support_ui_unit",
+      "inputs": [
+        {
+          "id": "scene_ready_request",
+          "type": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "scene_ready",
+          "type": "bool"
+        }
+      ],
+      "operations": [
+        {
+          "id": "copy_scene_ready",
+          "op": "identity",
+          "input": "scene_ready_request",
+          "output": "scene_ready"
+        }
+      ],
+      "front_panel_widgets": [
+        {
+          "widget_id": "thin_neutral_frame",
+          "widget_class": "frog.widgets.frame",
+          "role": "support",
+          "published_members": [
+            "layout.*",
+            "style.background.*",
+            "style.border.*"
+          ],
+          "realization_asset_ref": "asset:frame_rectangular_svg"
+        },
+        {
+          "widget_id": "medium_blue_frame",
+          "widget_class": "frog.widgets.frame",
+          "role": "support",
+          "published_members": [
+            "layout.*",
+            "style.background.*",
+            "style.border.*"
+          ],
+          "realization_asset_ref": "asset:frame_rectangular_svg"
+        },
+        {
+          "widget_id": "thick_green_frame",
+          "widget_class": "frog.widgets.frame",
+          "role": "support",
+          "published_members": [
+            "layout.*",
+            "style.background.*",
+            "style.border.*"
+          ],
+          "realization_asset_ref": "asset:frame_rectangular_svg"
+        }
+      ],
+      "notes": [
+        "Frame layout and visual style are owned by .frog instance properties.",
+        "The Default Frame SVG realization publishes root, background, and border parts.",
+        "Frame is a visual support rectangle only; it is not a value widget, Subpanel, scrollable container, caption owner, or method-node surface."
+      ]
+    }
+  ]
+}

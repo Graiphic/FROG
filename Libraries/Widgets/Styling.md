@@ -467,10 +467,43 @@ The following portable style properties are the recommended minimum shared style
   <li><code>style.foreground_color</code></li>
   <li><code>style.background_color</code></li>
   <li><code>style.border_color</code></li>
+  <li><code>style.border_width</code></li>
   <li><code>style.opacity</code></li>
 </ul>
 
-<h3>13.2 Text-oriented style properties</h3>
+<h3>13.2 Border geometry rule</h3>
+
+<p>
+Any visible widget border, frame, selection outline, scrollbar track, cell
+outline, or equivalent stroke-like surface MUST keep one visually uniform
+thickness on every side of the same bordered surface.
+</p>
+
+<p>
+This rule applies across all widget families, not only to standalone support
+frames. A resized widget must not produce a thicker horizontal edge than
+vertical edge, or a thicker left edge than right edge, unless the widget class
+explicitly publishes separate side-specific border properties.
+</p>
+
+<p>
+The preferred portable property is one source-owned width value such as
+<code>style.border_width</code>, <code>style.frame.border_width</code>,
+<code>style.selection.border_width</code>, or the corresponding family-specific
+published property. SVG-backed realizations should use non-scaling stroke
+behavior or an equivalent host strategy so resize operations preserve the
+declared thickness.
+</p>
+
+<p>
+Runtime renderers must not repair non-uniform borders by adding private
+unpublished frames, hidden duplicate lines, or host-only CSS constants. If a
+border is visible, its color, visibility, style, and width must be part of the
+source / realization property surface or an explicitly documented generic
+fallback for missing optional data.
+</p>
+
+<h3>13.3 Text-oriented style properties</h3>
 
 <ul>
   <li><code>style.font_family</code></li>
@@ -480,7 +513,7 @@ The following portable style properties are the recommended minimum shared style
   <li><code>style.text_alignment</code></li>
 </ul>
 
-<h3>13.3 Realization-selection properties</h3>
+<h3>13.4 Realization-selection properties</h3>
 
 <ul>
   <li><code>realization.family</code></li>

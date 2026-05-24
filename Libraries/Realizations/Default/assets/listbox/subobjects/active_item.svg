@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 34">
   <g data-frog-part="active_item">
-    <rect width="300" height="34" fill="none" stroke="#22c55e" stroke-width="2"/>
+    <rect width="300" height="34" fill="none" stroke="#22c55e" stroke-width="2" vector-effect="non-scaling-stroke"/>
   </g>
 </svg>

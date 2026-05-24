@@ -152,6 +152,16 @@ source truth, the public derived artifacts, and the handoff boundary instead of
 hiding meaning inside an implementation-specific shortcut.
 </p>
 
+<p>
+For widget examples, visible borders are part of the inspectable realization
+contract. Any border, frame, outline, selection rectangle, cell boundary,
+scrollbar track, or equivalent stroke-like surface should keep one uniform
+thickness on every side after resize unless the widget class deliberately
+publishes side-specific border properties. The width, color, visibility, and
+style of such surfaces should be source-owned or realization-published, not
+hardcoded by the runtime host.
+</p>
+
 <hr/>
 
 <h2>Browser-Hosted Examples</h2>

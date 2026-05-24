@@ -6,15 +6,15 @@
     <text data-frog-part="caption" data-frog-anchor="caption.anchor" x="16" y="48" font-size="16" font-family="Inter, Arial, sans-serif" font-weight="600" fill="#111827">Listbox</text>
 
     <g data-frog-part="item_region">
-      <rect x="28" y="78" width="386" height="208" fill="#f8fafc" stroke="#64748b" stroke-width="1"/>
+      <rect x="28" y="78" width="386" height="208" fill="#f8fafc" stroke="#64748b" stroke-width="1" vector-effect="non-scaling-stroke"/>
       <g data-frog-part="item_row">
-        <rect x="28" y="78" width="368" height="32" fill="#ffffff" stroke="#e2e8f0"/>
-        <g data-frog-part="item_icon"><rect x="46" y="86" width="16" height="16" rx="0" fill="#60a5fa" stroke="#2563eb"/></g>
+        <rect x="28" y="78" width="368" height="32" fill="#ffffff" stroke="#e2e8f0" vector-effect="non-scaling-stroke"/>
+        <g data-frog-part="item_icon"><rect x="46" y="86" width="16" height="16" rx="0" fill="#60a5fa" stroke="#2563eb" vector-effect="non-scaling-stroke"/></g>
         <text data-frog-part="item_label" x="74" y="99" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">Item A</text>
       </g>
-      <rect data-frog-part="selection_face" x="28" y="110" width="368" height="32" fill="#bfdbfe" stroke="#2563eb" opacity="0.55"/>
-      <rect data-frog-part="active_item" x="28" y="78" width="368" height="32" fill="none" stroke="#22c55e" stroke-width="2"/>
-      <rect data-frog-part="hover_face" x="28" y="142" width="368" height="32" fill="#e0f2fe" stroke="#38bdf8" opacity="0.55"/>
+      <rect data-frog-part="selection_face" x="28" y="110" width="368" height="32" fill="#bfdbfe" stroke="#2563eb" vector-effect="non-scaling-stroke" opacity="0.55"/>
+      <rect data-frog-part="active_item" x="28" y="78" width="368" height="32" fill="none" stroke="#22c55e" stroke-width="2" vector-effect="non-scaling-stroke"/>
+      <rect data-frog-part="hover_face" x="28" y="142" width="368" height="32" fill="#e0f2fe" stroke="#38bdf8" vector-effect="non-scaling-stroke" opacity="0.55"/>
       <rect data-frog-part="disabled_face" x="28" y="206" width="368" height="32" fill="#e5e7eb" opacity="0.66"/>
       <g data-frog-part="search_highlight"><rect x="70" y="116" width="54" height="16" fill="#fde68a" opacity="0.72"/></g>
       <g data-frog-part="empty_state" opacity="0">
@@ -23,15 +23,15 @@
     </g>
 
     <g data-frog-part="vertical_scrollbar">
-      <rect x="396" y="78" width="18" height="208" rx="0" fill="#f8fafc" stroke="#94a3b8"/>
+      <rect x="396" y="78" width="18" height="208" rx="0" fill="#f8fafc" stroke="#94a3b8" vector-effect="non-scaling-stroke"/>
       <rect x="402" y="116" width="6" height="34" rx="0" fill="#94a3b8"/>
     </g>
 
     <g data-frog-part="horizontal_scrollbar">
-      <rect x="30" y="286" width="360" height="16" rx="8" fill="#e2e8f0" stroke="#94a3b8"/>
+      <rect x="30" y="286" width="360" height="16" rx="8" fill="#e2e8f0" stroke="#94a3b8" vector-effect="non-scaling-stroke"/>
       <rect x="78" y="289" width="120" height="10" rx="5" fill="#94a3b8"/>
     </g>
 
-    <rect data-frog-part="focus_ring" x="26" y="76" width="390" height="212" rx="0" fill="none" stroke="#2f80ed" stroke-width="2" opacity="0"/>
+    <rect data-frog-part="focus_ring" x="26" y="76" width="390" height="212" rx="0" fill="none" stroke="#2f80ed" stroke-width="2" vector-effect="non-scaling-stroke" opacity="0"/>
   </g>
 </svg>

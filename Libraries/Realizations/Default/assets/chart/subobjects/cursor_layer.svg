@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 100">
   <g data-frog-part="cursor_layer">
-    <line x1="80" y1="0" x2="80" y2="100" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5 5"/>
+    <line x1="80" y1="0" x2="80" y2="100" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5 5" vector-effect="non-scaling-stroke"/>
   </g>
 </svg>

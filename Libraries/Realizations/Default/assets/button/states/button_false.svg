@@ -31,11 +31,11 @@
       }
       #label_text { display: var(--frog-button-label-display); fill: var(--frog-button-label-fill); font-family: var(--frog-button-label-font-family); font-size: var(--frog-button-label-font-size); }
       #caption_text { display: var(--frog-button-caption-display); fill: var(--frog-button-caption-fill); font-family: var(--frog-button-caption-font-family); font-size: var(--frog-button-caption-font-size); }
-      #frame { fill: var(--frog-button-frame-fill); stroke: var(--frog-button-frame-stroke); stroke-width: var(--frog-button-frame-stroke-width); }
-      #face { fill: var(--frog-button-face-fill); stroke: transparent; stroke-width: 0px; }
-      #state_face { fill: var(--frog-button-state-face-fill); stroke: transparent; stroke-width: 0px; }
+      #frame { fill: var(--frog-button-frame-fill); stroke: var(--frog-button-frame-stroke); stroke-width: var(--frog-button-frame-stroke-width); vector-effect: non-scaling-stroke; }
+      #face { fill: var(--frog-button-face-fill); stroke: transparent; stroke-width: 0px; vector-effect: non-scaling-stroke; }
+      #state_face { fill: var(--frog-button-state-face-fill); stroke: transparent; stroke-width: 0px; vector-effect: non-scaling-stroke; }
       #state_text { fill: var(--frog-button-state-text-fill); font-family: var(--frog-button-state-text-font-family); font-size: var(--frog-button-state-text-font-size); }
-      #focus_ring { display: var(--frog-button-focus-display); fill: none; stroke: var(--frog-button-focus-stroke); stroke-width: var(--frog-button-focus-stroke-width); }
+      #focus_ring { display: var(--frog-button-focus-display); fill: none; stroke: var(--frog-button-focus-stroke); stroke-width: var(--frog-button-focus-stroke-width); vector-effect: non-scaling-stroke; }
     </style>
   </defs>
   <g id="root" data-frog-part="root">

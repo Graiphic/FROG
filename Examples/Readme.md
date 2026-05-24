@@ -215,6 +215,12 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
       <td><code>main.frog</code> + <code>ui/tree_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
+    <tr>
+      <td><code>25_frame_grouping_board</code></td>
+      <td>Standalone simple Frame support rectangles with source-owned size, background color, border color, and uniform border thickness</td>
+      <td><code>main.frog</code> + <code>ui/frame_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
   </tbody>
 </table>
 
@@ -279,7 +285,10 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
 24   Tree numeric selected-node value as a post-boundary widget progression example
     |
     v
-25+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
+25   standalone Frame support grouping surface as a post-boundary widget progression example
+    |
+    v
+26+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
 </code></pre>
 
 <hr/>
@@ -422,13 +431,20 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
     ├── main.lowering.json
     └── ui/
         └── table_panel.wfrog
-└── 24_tree_node_selection_roundtrip/
+├── 24_tree_node_selection_roundtrip/
     ├── Readme.md
     ├── main.frog
     ├── main.fir.json
     ├── main.lowering.json
     └── ui/
         └── tree_panel.wfrog
+└── 25_frame_grouping_board/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── frame_panel.wfrog
 </code></pre>
 
 <p>
@@ -514,6 +530,27 @@ Default Table realization, and a native manifest <code>u16</code> proof output.
 The <code>.frog</code> owns the table schema, rows, cells, selected cell state,
 viewport, layout, and style overrides. It does not add public runtime source
 beyond the Example 15 closure.
+</p>
+
+<p>
+Example <code>24</code> continues the repository-visible post-boundary widget
+progression with a Tree control and read-only Tree indicator. It contains
+public source, FIR/lowering shape, a <code>.wfrog</code> package referencing the
+Default Tree realization, and a native manifest <code>u16</code> proof output.
+The <code>.frog</code> owns tree records, hierarchy, item symbols, selected cell
+state, viewport, layout, and style overrides. It does not add public runtime
+source beyond the Example 15 closure.
+</p>
+
+<p>
+Example <code>25</code> continues the repository-visible post-boundary widget
+progression with standalone simple Frame support rectangles. It contains public source,
+FIR/lowering shape, a <code>.wfrog</code> package referencing the Default Frame
+realization, and a native manifest bool proof output. The <code>.frog</code>
+owns Frame instance layout, background visibility/color, border visibility/color,
+and one uniform border thickness value per instance. Frame does not own labels,
+captions, methods, scrollbars, child <code>.frog</code> references, or value flow. It
+does not add public runtime source beyond the Example 15 closure.
 </p>
 
 <hr/>

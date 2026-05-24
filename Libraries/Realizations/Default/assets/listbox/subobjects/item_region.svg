@@ -7,7 +7,7 @@
       <text data-frog-part="item_label" x="48" y="29" font-size="12" font-family="Inter, Arial, sans-serif">item_label</text>
     </g>
     <rect data-frog-part="selection_face" x="8" y="46" width="344" height="32" fill="#bfdbfe" stroke="#2563eb" opacity="0.55"/>
-    <rect data-frog-part="active_item" x="8" y="8" width="344" height="32" fill="none" stroke="#22c55e" stroke-width="2"/>
+    <rect data-frog-part="active_item" x="8" y="8" width="344" height="32" fill="none" stroke="#22c55e" stroke-width="2" vector-effect="non-scaling-stroke"/>
     <rect data-frog-part="hover_face" x="8" y="84" width="344" height="32" fill="#e0f2fe" stroke="#38bdf8" opacity="0.55"/>
     <rect data-frog-part="disabled_face" x="8" y="122" width="344" height="32" fill="#e5e7eb" opacity="0.66"/>
     <g data-frog-part="search_highlight"><rect x="48" y="54" width="70" height="16" fill="#fde68a" opacity="0.72"/></g>

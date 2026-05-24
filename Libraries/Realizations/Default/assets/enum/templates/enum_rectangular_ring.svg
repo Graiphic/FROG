@@ -38,6 +38,7 @@
           fill="none"
           stroke="#2f80ed"
           stroke-width="3"
+          vector-effect="non-scaling-stroke"
           opacity="0"
           data-frog-bind="interaction.focused style.focus_ring.*" />
 
@@ -47,7 +48,7 @@
           y="72"
           width="264"
           height="48"
-          style="display: var(--frog-enum-frame-display, none); fill: var(--frog-enum-frame-fill, transparent); stroke: var(--frog-enum-frame-stroke, transparent); stroke-width: var(--frog-enum-frame-stroke-width, 0);"
+          style="display: var(--frog-enum-frame-display, none); fill: var(--frog-enum-frame-fill, transparent); stroke: var(--frog-enum-frame-stroke, transparent); stroke-width: var(--frog-enum-frame-stroke-width, 0); vector-effect: non-scaling-stroke;"
           data-frog-bind="style.frame.*" />
 
     <rect id="value_face"
@@ -56,7 +57,7 @@
           y="82"
           width="214"
           height="28"
-          style="fill: var(--frog-enum-value-face-fill, #ffffff); stroke: var(--frog-enum-value-face-stroke, #94a3b8); stroke-width: var(--frog-enum-value-face-stroke-width, 1px);"
+          style="fill: var(--frog-enum-value-face-fill, #ffffff); stroke: var(--frog-enum-value-face-stroke, #94a3b8); stroke-width: var(--frog-enum-value-face-stroke-width, 1px); vector-effect: non-scaling-stroke;"
           data-frog-bind="style.value_face.*" />
 
     <text id="value_display"
@@ -78,7 +79,7 @@
           width="24"
           height="28"
           rx="1"
-          style="display: var(--frog-enum-selector-display, inline); fill: var(--frog-enum-selector-fill, #e5e7eb); stroke: var(--frog-enum-selector-stroke, #94a3b8); stroke-width: var(--frog-enum-selector-stroke-width, 1px);"
+          style="display: var(--frog-enum-selector-display, inline); fill: var(--frog-enum-selector-fill, #e5e7eb); stroke: var(--frog-enum-selector-stroke, #94a3b8); stroke-width: var(--frog-enum-selector-stroke-width, 1px); vector-effect: non-scaling-stroke;"
           data-frog-bind="interaction.opened style.selector_face.*" />
 
     <path id="selector_arrow"
@@ -92,7 +93,7 @@
        style="display: var(--frog-enum-increment-display, none);"
        data-frog-bind="display.increment_buttons_visible">
       <rect x="278" y="82" width="24" height="13" fill="#5b9bd5" />
-      <path d="M290 85 L296 92 L284 92 Z" fill="none" stroke="#ffffff" stroke-width="2" />
+      <path d="M290 85 L296 92 L284 92 Z" fill="none" stroke="#ffffff" stroke-width="2" vector-effect="non-scaling-stroke" />
     </g>
 
     <g id="increment_down"
@@ -100,7 +101,7 @@
        style="display: var(--frog-enum-increment-display, none);"
        data-frog-bind="display.increment_buttons_visible">
       <rect x="278" y="97" width="24" height="13" fill="#5b9bd5" />
-      <path d="M284 100 L296 100 L290 107 Z" fill="none" stroke="#ffffff" stroke-width="2" />
+      <path d="M284 100 L296 100 L290 107 Z" fill="none" stroke="#ffffff" stroke-width="2" vector-effect="non-scaling-stroke" />
     </g>
 
     <rect id="digital_display"
@@ -110,7 +111,7 @@
           width="46"
           height="28"
           rx="1"
-          style="display: var(--frog-enum-digital-display, none); fill: #ffffff; stroke: #94a3b8; stroke-width: 1px;"
+          style="display: var(--frog-enum-digital-display, none); fill: #ffffff; stroke: #94a3b8; stroke-width: 1px; vector-effect: non-scaling-stroke;"
           data-frog-bind="display.digital_display_visible selected.numeric_value" />
 
     <text id="digital_display_text"

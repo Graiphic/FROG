@@ -1,0 +1,63 @@
+{
+  "format": "frog.lowering",
+  "version": "0.1",
+  "source": {
+    "example_id": "25_frame_grouping_board",
+    "path": "Examples/25_frame_grouping_board/main.frog"
+  },
+  "fir": {
+    "path": "Examples/25_frame_grouping_board/main.fir.json"
+  },
+  "target": {
+    "backend": "llvm",
+    "artifact_kind": "native_kernel_manifest",
+    "runtime_boundary": "private_graiphic_runtime_slice",
+    "contracts": [
+      "private_runtime_frame_support_binding",
+      "native_bool_kernel_manifest"
+    ]
+  },
+  "emission": {
+    "native_kernel": {
+      "manifest": "Implementations/Reference/LLVM/examples/25_frame_grouping_board/native_kernel_manifest.json",
+      "llvm_ir": "Implementations/Reference/LLVM/examples/25_frame_grouping_board/kernel.ll"
+    },
+    "ui_binding": {
+      "kind": "frame_rectangle_board_with_ui_bindings",
+      "wfrog": "Examples/25_frame_grouping_board/ui/frame_panel.wfrog",
+      "front_panel_widgets": [
+        {
+          "widget_id": "thin_neutral_frame",
+          "widget_class": "frog.widgets.frame",
+          "role": "support",
+          "realization_asset_ref": "asset:frame_rectangular_svg"
+        },
+        {
+          "widget_id": "medium_blue_frame",
+          "widget_class": "frog.widgets.frame",
+          "role": "support",
+          "realization_asset_ref": "asset:frame_rectangular_svg"
+        },
+        {
+          "widget_id": "thick_green_frame",
+          "widget_class": "frog.widgets.frame",
+          "role": "support",
+          "realization_asset_ref": "asset:frame_rectangular_svg"
+        }
+      ]
+    }
+  },
+  "entrypoints": [
+    {
+      "name": "main",
+      "inputs": [
+        "scene_ready_request"
+      ],
+      "outputs": [
+        "scene_ready"
+      ],
+      "native_manifest": "Implementations/Reference/LLVM/examples/25_frame_grouping_board/native_kernel_manifest.json",
+      "abi": "frog_bool_to_result_status_outptr"
+    }
+  ]
+}

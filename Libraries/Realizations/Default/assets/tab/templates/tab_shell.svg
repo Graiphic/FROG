@@ -8,28 +8,28 @@
     <g data-frog-part="tab_header_region" x="14" y="48" width="532" height="38">
       <rect x="14" y="48" width="532" height="38" fill="none" stroke="none" stroke-width="0"/>
       <g data-frog-part="tab_item" x="14" y="52" width="96" height="34">
-        <rect x="14" y="52" width="96" height="34" fill="#f8fafc" stroke="#9ca3af" stroke-width="1"/>
+        <rect x="14" y="52" width="96" height="34" fill="#f8fafc" stroke="#9ca3af" stroke-width="1" vector-effect="non-scaling-stroke"/>
         <g data-frog-part="tab_item_icon" opacity="0"><rect x="24" y="63" width="10" height="10" fill="#60a5fa"/></g>
         <text data-frog-part="tab_item_label" x="46" y="73" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">Page 1</text>
         <g data-frog-part="tab_close_button" opacity="0"><rect x="92" y="62" width="10" height="10" fill="none"/></g>
       </g>
-      <rect data-frog-part="selection_face" x="14" y="52" width="96" height="34" fill="#e0f2fe" stroke="#2563eb" stroke-width="1" opacity="0.65"/>
-      <g data-frog-part="tab_scroll_previous" opacity="0"><rect x="470" y="56" width="18" height="24" fill="#f8fafc" stroke="#94a3b8"/></g>
-      <g data-frog-part="tab_scroll_next" opacity="0"><rect x="494" y="56" width="18" height="24" fill="#f8fafc" stroke="#94a3b8"/></g>
-      <g data-frog-part="overflow_button" opacity="0"><rect x="516" y="56" width="28" height="24" fill="#f8fafc" stroke="#94a3b8"/></g>
+      <rect data-frog-part="selection_face" x="14" y="52" width="96" height="34" fill="#e0f2fe" stroke="#2563eb" stroke-width="1" vector-effect="non-scaling-stroke" opacity="0.65"/>
+      <g data-frog-part="tab_scroll_previous" opacity="0"><rect x="470" y="56" width="18" height="24" fill="#f8fafc" stroke="#94a3b8" vector-effect="non-scaling-stroke"/></g>
+      <g data-frog-part="tab_scroll_next" opacity="0"><rect x="494" y="56" width="18" height="24" fill="#f8fafc" stroke="#94a3b8" vector-effect="non-scaling-stroke"/></g>
+      <g data-frog-part="overflow_button" opacity="0"><rect x="516" y="56" width="28" height="24" fill="#f8fafc" stroke="#94a3b8" vector-effect="non-scaling-stroke"/></g>
     </g>
     <g data-frog-part="page_region" x="14" y="86" width="532" height="238">
-      <rect x="14" y="86" width="532" height="238" fill="#ffffff" stroke="#9ca3af" stroke-width="1"/>
+      <rect x="14" y="86" width="532" height="238" fill="#ffffff" stroke="#9ca3af" stroke-width="1" vector-effect="non-scaling-stroke"/>
       <g data-frog-part="page_container"><rect x="14" y="86" width="532" height="238" fill="none" stroke="none" stroke-width="0"/></g>
       <g data-frog-part="page_content"><rect x="36" y="112" width="160" height="28" fill="#eef6ff" stroke="none"/></g>
     </g>
     <g data-frog-part="page_label_display" data-frog-anchor="page_label_display.anchor" x="420" y="18" width="112" height="24">
-      <rect data-frog-part="page_label_display_face" x="420" y="18" width="112" height="24" fill="#d1d5db" stroke="#6b7280" stroke-width="1"/>
+      <rect data-frog-part="page_label_display_face" x="420" y="18" width="112" height="24" fill="#d1d5db" stroke="#6b7280" stroke-width="1" vector-effect="non-scaling-stroke"/>
       <text data-frog-part="page_label_display_text" x="440" y="34" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">Page 1</text>
       <g data-frog-part="page_label_display_previous"><path d="M426 24 L431 24 L428.5 21 Z" fill="#111827"/></g>
       <g data-frog-part="page_label_display_next"><path d="M426 36 L431 36 L428.5 39 Z" fill="#111827"/></g>
     </g>
     <g data-frog-part="overflow_menu" opacity="0"><rect x="390" y="86" width="138" height="82" fill="#111827"/></g>
-    <rect data-frog-part="focus_ring" x="10" y="48" width="540" height="280" fill="none" stroke="#2f80ed" stroke-width="2" opacity="0"/>
+    <rect data-frog-part="focus_ring" x="10" y="48" width="540" height="280" fill="none" stroke="#2f80ed" stroke-width="2" vector-effect="non-scaling-stroke" opacity="0"/>
   </g>
 </svg>

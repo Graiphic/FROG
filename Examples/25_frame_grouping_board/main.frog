@@ -1,0 +1,180 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "25_frame_grouping_board",
+    "summary": "Three simple Frame support rectangles rendered from .frog instance layout/style and Default Frame .wfrog realization assets.",
+    "description": "Demonstrates frog.widgets.frame as a simple LabVIEW-like visual support rectangle. Each Frame instance owns only position, size, background visibility/color, border visibility/color, and one uniform border width. The .wfrog package references the Default Frame realization and SVG asset. Runtime implementation for this post-boundary example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "frame",
+      "support_widget",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "scene_ready_request",
+        "type": "bool",
+        "default": true,
+        "binding_origin": "runtime.host_scene_request"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "scene_ready",
+        "type": "bool"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "scene_ready_request",
+        "kind": "interface_input",
+        "interface_port": "scene_ready_request"
+      },
+      {
+        "id": "output_scene_ready",
+        "kind": "interface_output",
+        "interface_port": "scene_ready"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "scene_ready_request",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_scene_ready",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 760,
+      "height": 450,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/frame_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "thin_neutral_frame",
+        "role": "support",
+        "class_ref": "frog.widgets.frame",
+        "instance_ref": "thin_neutral_frame",
+        "layout": {
+          "x": 48,
+          "y": 52,
+          "width": 235,
+          "height": 170
+        },
+        "props": {
+          "label.visible": false,
+          "style.background.visible": true,
+          "style.background.fill_color": "#f8fafc",
+          "style.border.visible": true,
+          "style.border.color": "#64748b",
+          "style.border.width": "1px",
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:frame_rectangular_svg"
+        },
+        "binding": {
+          "mode": "support_frame_rectangle"
+        }
+      },
+      {
+        "id": "medium_blue_frame",
+        "role": "support",
+        "class_ref": "frog.widgets.frame",
+        "instance_ref": "medium_blue_frame",
+        "layout": {
+          "x": 330,
+          "y": 52,
+          "width": 350,
+          "height": 170
+        },
+        "props": {
+          "label.visible": false,
+          "style.background.visible": true,
+          "style.background.fill_color": "#eef6ff",
+          "style.border.visible": true,
+          "style.border.color": "#2f80ed",
+          "style.border.width": "2px",
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:frame_rectangular_svg"
+        },
+        "binding": {
+          "mode": "support_frame_rectangle"
+        }
+      },
+      {
+        "id": "thick_green_frame",
+        "role": "support",
+        "class_ref": "frog.widgets.frame",
+        "instance_ref": "thick_green_frame",
+        "layout": {
+          "x": 80,
+          "y": 270,
+          "width": 590,
+          "height": 120
+        },
+        "props": {
+          "label.visible": false,
+          "style.background.visible": true,
+          "style.background.fill_color": "#ecfdf5",
+          "style.border.visible": true,
+          "style.border.color": "#16a34a",
+          "style.border.width": "3px",
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:frame_rectangular_svg"
+        },
+        "binding": {
+          "mode": "support_frame_rectangle"
+        }
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Frame Rectangle Board",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "frame_runtime_host_default",
+    "documentation": {
+      "title": "Frame legend",
+      "summary": "A Frame is a simple front-panel support rectangle. It groups visually but does not own dataflow, execution, child widgets, labels, methods, or a child .frog.",
+      "legend": [
+        {
+          "label": "Thin neutral frame",
+          "description": "A small 1 px border frame with a light neutral background."
+        },
+        {
+          "label": "Medium blue frame",
+          "description": "A wider frame with a 2 px border and a different fill color."
+        },
+        {
+          "label": "Thick green frame",
+          "description": "A resized frame proving that the border stays uniformly thick on every side."
+        }
+      ],
+      "note": "The Default Frame SVG publishes only root, background, and border parts. The runtime consumes these parts and applies .frog-owned instance style through the .wfrog realization."
+    }
+  }
+}

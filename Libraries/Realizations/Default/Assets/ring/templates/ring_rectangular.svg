@@ -4,16 +4,16 @@
   <style>
     #label_text { display: var(--frog-ring-label-display, none); }
     #caption_text { display: var(--frog-ring-caption-display, inline); }
-    #frame { display: var(--frog-ring-frame-display, none); fill: var(--frog-ring-frame-fill, transparent); stroke: var(--frog-ring-frame-stroke, transparent); stroke-width: var(--frog-ring-frame-stroke-width, 0); }
-    #value_face { fill: var(--frog-ring-value-face-fill, #ffffff); stroke: var(--frog-ring-value-face-stroke, #64748b); stroke-width: var(--frog-ring-value-face-stroke-width, 1.5); }
+    #frame { display: var(--frog-ring-frame-display, none); fill: var(--frog-ring-frame-fill, transparent); stroke: var(--frog-ring-frame-stroke, transparent); stroke-width: var(--frog-ring-frame-stroke-width, 0); vector-effect: non-scaling-stroke; }
+    #value_face { fill: var(--frog-ring-value-face-fill, #ffffff); stroke: var(--frog-ring-value-face-stroke, #64748b); stroke-width: var(--frog-ring-value-face-stroke-width, 1.5); vector-effect: non-scaling-stroke; }
     #value_display { fill: var(--frog-ring-value-display-color, #111827); }
-    #selector_face { display: var(--frog-ring-selector-display, inline); fill: var(--frog-ring-selector-fill, #f1f5f9); stroke: var(--frog-ring-selector-stroke, #64748b); stroke-width: var(--frog-ring-selector-stroke-width, 1); }
+    #selector_face { display: var(--frog-ring-selector-display, inline); fill: var(--frog-ring-selector-fill, #f1f5f9); stroke: var(--frog-ring-selector-stroke, #64748b); stroke-width: var(--frog-ring-selector-stroke-width, 1); vector-effect: non-scaling-stroke; }
     #selector_arrow { display: var(--frog-ring-selector-display, inline); fill: var(--frog-ring-selector-symbol, #111827); stroke: none; }
     #popup_layer { display: var(--frog-ring-popup-display, none); }
-    #option_row { fill: var(--frog-ring-popup-option-fill, #ffffff); stroke: var(--frog-ring-popup-option-stroke, #e2e8f0); stroke-width: var(--frog-ring-popup-option-stroke-width, 1); }
+    #option_row { fill: var(--frog-ring-popup-option-fill, #ffffff); stroke: var(--frog-ring-popup-option-stroke, #e2e8f0); stroke-width: var(--frog-ring-popup-option-stroke-width, 1); vector-effect: non-scaling-stroke; }
     #option_label { fill: var(--frog-ring-popup-option-text, #111827); }
-    #option_selection_face { fill: var(--frog-ring-popup-option-selected-fill, #dbeafe); stroke: var(--frog-ring-popup-option-selected-stroke, #2563eb); stroke-width: var(--frog-ring-popup-option-selected-stroke-width, 1); opacity: var(--frog-ring-popup-option-selected-opacity, 0.75); }
-    #focus_ring { opacity: var(--frog-ring-focus-opacity, 0); stroke: var(--frog-ring-focus-color, #2563eb); stroke-width: var(--frog-ring-focus-width, 2); }
+    #option_selection_face { fill: var(--frog-ring-popup-option-selected-fill, #dbeafe); stroke: var(--frog-ring-popup-option-selected-stroke, #2563eb); stroke-width: var(--frog-ring-popup-option-selected-stroke-width, 1); vector-effect: non-scaling-stroke; opacity: var(--frog-ring-popup-option-selected-opacity, 0.75); }
+    #focus_ring { opacity: var(--frog-ring-focus-opacity, 0); stroke: var(--frog-ring-focus-color, #2563eb); stroke-width: var(--frog-ring-focus-width, 2); vector-effect: non-scaling-stroke; }
   </style>
   <g data-frog-part="root">
     <text id="label_text" data-frog-part="label" data-frog-anchor="label.anchor" x="16" y="22" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">ring_1</text>
@@ -24,7 +24,7 @@
     <rect id="selector_face" data-frog-part="selector_face" data-frog-anchor="selector_face.bounds" x="236" y="76" width="28" height="30" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
     <path id="selector_arrow" data-frog-part="selector_arrow" data-frog-anchor="selector_arrow.center" d="M246 88 L254 88 L250 94 Z" fill="#111827"/>
     <g id="popup_layer" data-frog-part="popup_layer" data-frog-anchor="popup_layer.bounds">
-      <rect x="22" y="108" width="242" height="66" fill="#ffffff" stroke="#64748b" stroke-width="1"/>
+      <rect x="22" y="108" width="242" height="66" fill="#ffffff" stroke="#64748b" stroke-width="1" vector-effect="non-scaling-stroke"/>
       <rect id="option_selection_face" data-frog-part="option_selection_face" x="24" y="110" width="238" height="20" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>
       <g data-frog-part="option_row">
         <rect id="option_row" x="24" y="132" width="238" height="20" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 54">
   <g data-frog-part="plot_legend">
     <rect width="150" height="54" rx="5" fill="#f8fafc" stroke="#cbd5e1"/>
-    <line x1="14" y1="24" x2="44" y2="24" stroke="#2563eb" stroke-width="3"/>
+    <line x1="14" y1="24" x2="44" y2="24" stroke="#2563eb" stroke-width="3" vector-effect="non-scaling-stroke"/>
     <text x="54" y="28" font-family="system-ui" font-size="12">Plot 0</text>
   </g>
 </svg>

@@ -8,37 +8,32 @@
     "name": "FROG Default Frame Realization",
     "namespace": "frog.realizations.default.frame",
     "family": "default",
-    "category": "layout",
-    "role_posture": "container",
-    "summary": "Machine-readable default realization manifest for the standardized standalone frame widget."
+    "category": "decoration",
+    "role_posture": "support",
+    "summary": "Machine-readable default realization manifest for the standardized simple frame support widget."
   },
   "ownership_boundary": {
     "owns": [
       "default frame realization record",
       "frame realization variant declarations",
-      "frame realization resource references",
-      "frame part bindings",
-      "frame state maps",
-      "frame realization property bindings",
-      "frame anchors",
-      "frame host hints",
+      "frame SVG resource references",
+      "frame background and border part bindings",
+      "default frame visual properties",
       "frame realization validation expectations"
     ],
     "does_not_own": [
       "frame widget class law",
       "front-panel containment semantics",
       "canonical .frog source",
-      "frog.ui primitive semantics",
       "runtime-private layout handles",
-      "IDE-private editing behavior"
+      "IDE-private editing behavior",
+      "caption text",
+      "method-node behavior",
+      "value-flow semantics"
     ],
     "class_law_refs": [
       "../../../Libraries/Widgets/Frame.md",
       "../../../Libraries/Widgets/Readme.md"
-    ],
-    "interaction_refs": [
-      "../../../Libraries/UI.md",
-      "../../../Expression/Widget interaction.md"
     ],
     "package_posture_ref": "./Package.md"
   },
@@ -48,10 +43,6 @@
       "role": "support",
       "primary_value": {
         "present": false
-      },
-      "semantic_caption": {
-        "member": "caption.text",
-        "dynamic": true
       }
     }
   ],
@@ -79,22 +70,22 @@
       "supported_parts": [
         "root",
         "background",
-        "border",
-        "caption_surface",
-        "content_region",
-        "focus_ring"
+        "border"
       ],
       "supported_visual_states": [
         "normal",
-        "focused",
-        "disabled",
         "hidden"
       ],
+      "default_properties": {
+        "style.background.visible": true,
+        "style.background.fill_color": "transparent",
+        "style.border.visible": true,
+        "style.border.color": "#6b7280",
+        "style.border.width": "1px"
+      },
       "fallbacks": {
         "missing_variant": "rectangular",
         "missing_background": "transparent_background",
-        "missing_caption": "untitled_frame",
-        "missing_focus_ring": "host_native_focus_ring",
         "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
       }
     }
@@ -106,14 +97,13 @@
       "target_class": "frog.widgets.frame",
       "resource_ref": "frog.realizations.default.frame.assets.rectangular_svg",
       "geometry_posture": {
-        "shape_family": "rectangular_grouping_region",
+        "shape_family": "rectangular_support_frame",
         "layout_source": "front_panel_layout_rectangle",
         "scales_to_layout": true,
-        "supports_caption": true,
-        "supports_background": true,
-        "supports_content_region": true
+        "preserve_uniform_border_width": true,
+        "supports_background": true
       },
-      "fallback": "host_group_box"
+      "fallback": "host_rectangle_frame"
     }
   ],
   "resources": [
@@ -127,9 +117,7 @@
         "template": "frog.realizations.default.frame.rectangular",
         "variant": "rectangular",
         "part_attribute": "data-frog-part",
-        "binding_attribute": "data-frog-bind",
-        "member_attribute": "data-frog-member",
-        "anchor_attribute": "data-frog-anchor"
+        "binding_attribute": "data-frog-bind"
       }
     }
   ],
@@ -149,125 +137,53 @@
       "part": "border",
       "binding_kind": "svg_shape",
       "binding_selector": "[data-frog-part='border']",
-      "style_binding_group": "style.border"
-    },
-    {
-      "part": "caption_surface",
-      "binding_kind": "svg_text_or_host_text",
-      "binding_selector": "[data-frog-part='caption_surface']",
-      "semantic_member": "caption.text",
-      "style_binding_group": "caption.style"
-    },
-    {
-      "part": "content_region",
-      "binding_kind": "svg_region_or_host_group_region",
-      "binding_selector": "[data-frog-part='content_region']",
-      "style_binding_group": "style.content_region"
-    },
-    {
-      "part": "focus_ring",
-      "binding_kind": "svg_shape",
-      "binding_selector": "[data-frog-part='focus_ring']",
-      "style_binding_group": "style.focus_ring"
-    }
-  ],
-  "state_maps": [
-    {
-      "state": "normal"
-    },
-    {
-      "state": "focused",
-      "value_condition": {
-        "interaction.focused": true
-      },
-      "inherits": "normal",
-      "property_bindings": [
-        "style.focus_ring.visible",
-        "style.focus_ring.color"
-      ]
-    },
-    {
-      "state": "disabled",
-      "value_condition": {
-        "interaction.enabled": false
-      },
-      "inherits": "normal",
-      "property_bindings": [
-        "style.disabled.opacity"
-      ]
-    },
-    {
-      "state": "hidden",
-      "value_condition": {
-        "interaction.visible": false
-      }
+      "style_binding_group": "style.border",
+      "uniform_width_requirement": "vector-effect:non-scaling-stroke"
     }
   ],
   "property_bindings": [
     {
-      "member": "caption.text",
-      "target_part": "caption_surface",
-      "target_operation": "set_text_content"
-    },
-    {
-      "member": "caption.visible",
-      "target_part": "caption_surface",
+      "member": "style.background.visible",
+      "target_part": "background",
       "target_operation": "set_visibility"
     },
     {
-      "member": "caption.style.*",
-      "target_part": "caption_surface",
-      "target_operation": "apply_caption_style"
-    },
-    {
-      "member": "style.background.*",
+      "member": "style.background.fill_color",
       "target_part": "background",
-      "target_operation": "apply_background_style"
+      "target_operation": "set_fill"
     },
     {
-      "member": "style.border.*",
+      "member": "style.border.visible",
       "target_part": "border",
-      "target_operation": "apply_border_style"
+      "target_operation": "set_visibility"
     },
     {
-      "member": "style.content_region.*",
-      "target_part": "content_region",
-      "target_operation": "apply_content_region_style"
+      "member": "style.border.color",
+      "target_part": "border",
+      "target_operation": "set_stroke"
     },
     {
-      "member": "style.focus_ring.*",
-      "target_part": "focus_ring",
-      "target_operation": "apply_focus_ring_style"
-    }
-  ],
-  "anchors": [
-    {
-      "id": "frog.realizations.default.frame.caption_surface.left_center",
-      "target_part": "caption_surface",
-      "source_selector": "[data-frog-anchor='caption_surface.left_center']",
-      "anchor_kind": "text_anchor",
-      "default_horizontal_alignment": "start",
-      "default_vertical_alignment": "middle"
+      "member": "style.border.width",
+      "target_part": "border",
+      "target_operation": "set_uniform_stroke_width"
     }
   ],
   "host_hints": {
-    "preferred_host_kind": "svg_template_host_or_host_native_group_box",
+    "preferred_host_kind": "svg_template_host_or_host_native_rectangle",
     "resize_posture": "scale_template_to_front_panel_layout_rectangle",
-    "caption_rendering_posture": "host_may_replace_template_text_content",
     "style_application_posture": "apply_property_bindings_before_render",
     "accessibility_posture": {
-      "role": "group",
-      "caption_source": "caption.text",
+      "role": "presentation",
       "label_source": "label.text"
     }
   },
   "validation_expectations": [
     "target class must exist in Libraries/Widgets/Frame.md",
-    "all declared public parts must exist in the frame class law",
     "resources must resolve relative to this package file",
-    "resource SVG templates should expose data-frog-part markers for declared parts",
-    "caption.text must remain the semantic owner of visible frame title text",
-    "content_region must not be treated as owning child widgets unless front-panel composition explicitly says so",
-    "property bindings must target public frame members declared by class law"
+    "resource SVG templates must expose root, background, and border parts",
+    "border width must stay visually uniform when the frame is resized",
+    "border must be a continuous rectangular stroke; the simple Frame baseline does not expose dashed, dotted, or textured border styles",
+    "caption, child containment, scrolling, value flow, and method behavior must not be attributed to the simple Frame widget",
+    "property bindings must target public frame style members declared by class law"
   ]
 }

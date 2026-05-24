@@ -63,12 +63,13 @@
         fill: var(--frog-string-frame-fill);
         stroke: var(--frog-string-frame-stroke);
         stroke-width: var(--frog-string-frame-stroke-width);
+        vector-effect: non-scaling-stroke;
       }
-
       #text_region {
         fill: var(--frog-string-text-region-fill);
         stroke: var(--frog-string-text-region-stroke);
         stroke-width: var(--frog-string-text-region-stroke-width);
+        vector-effect: non-scaling-stroke;
       }
 
       #text_value {
