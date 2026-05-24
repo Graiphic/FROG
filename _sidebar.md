@@ -232,6 +232,7 @@
   - [Snippet](/IDE/Snippet.md)
   - [Watch](/IDE/Watch.md)
 - [Conformance](/Conformance/Readme.md)
+  - [Math library conformance plan](/Conformance/Math%20library%20conformance%20plan.md)
   - [Source FIR Lowering conformance matrix](/Conformance/Source%20FIR%20Lowering%20conformance%20matrix.md)
   - [Source to FIR conformance matrix](/Conformance/Source%20to%20FIR%20conformance%20matrix.md)
   - invalid
@@ -327,6 +328,7 @@
       - [09 valid fir rejected by backend profile unsupported subset](/Conformance/invalid/compiler/09_valid_fir_rejected_by_backend_profile_unsupported_subset.md)
       - [10 system library unknown or malformed call is rejected](/Conformance/invalid/compiler/10_system_library_unknown_or_malformed_call_is_rejected.md)
       - [11 system library capability or subset must report explicitly](/Conformance/invalid/compiler/11_system_library_capability_or_subset_must_report_explicitly.md)
+      - [12 math library unknown or malformed call is rejected](/Conformance/invalid/compiler/12_math_library_unknown_or_malformed_call_is_rejected.md)
     - [executable](/Conformance/invalid/executable/Readme.md)
       - [01 backend consumable but execution contract invalid](/Conformance/invalid/executable/01_backend_consumable_but_execution_contract_invalid/Readme.md)
       - [02 execution contract valid but required host service missing](/Conformance/invalid/executable/02_execution_contract_valid_but_required_host_service_missing/Readme.md)
@@ -425,6 +427,7 @@
       - [04 provider backed standard library call declares provider requirement](/Conformance/valid/compiler/04_provider_backed_standard_library_call_declares_provider_requirement.md)
       - [05 widget value and reference are preserved across lowering](/Conformance/valid/compiler/05_widget_value_and_reference_are_preserved_across_lowering.md)
       - [06 system library call preserves capability and local status](/Conformance/valid/compiler/06_system_library_call_preserves_capability_and_local_status.md)
+      - [07 scalar math call preserves value library identity](/Conformance/valid/compiler/07_scalar_math_call_preserves_value_library_identity.md)
     - [executable](/Conformance/valid/executable/Readme.md)
       - [01 one shot pure core starts and terminates](/Conformance/valid/executable/01_one_shot_pure_core_starts_and_terminates/Readme.md)
       - [02 structured control one shot executes correctly](/Conformance/valid/executable/02_structured_control_one_shot_executes_correctly/Readme.md)

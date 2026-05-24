@@ -1668,6 +1668,13 @@
           "kind": "category",
           "children": [
             {
+              "key": "conformance/math-library-conformance-plan.md",
+              "title": "Math library conformance plan",
+              "path": "/Conformance/Math%20library%20conformance%20plan.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "conformance/source-fir-lowering-conformance-matrix.md",
               "title": "Source FIR Lowering conformance matrix",
               "path": "/Conformance/Source%20FIR%20Lowering%20conformance%20matrix.md",
@@ -2334,6 +2341,13 @@
                       "key": "conformance/invalid/compiler/11_system_library_capability_or_subset_must_report_explicitly.md",
                       "title": "11 system library capability or subset must report explicitly",
                       "path": "/Conformance/invalid/compiler/11_system_library_capability_or_subset_must_report_explicitly.md",
+                      "kind": "page",
+                      "children": []
+                    },
+                    {
+                      "key": "conformance/invalid/compiler/12_math_library_unknown_or_malformed_call_is_rejected.md",
+                      "title": "12 math library unknown or malformed call is rejected",
+                      "path": "/Conformance/invalid/compiler/12_math_library_unknown_or_malformed_call_is_rejected.md",
                       "kind": "page",
                       "children": []
                     }
@@ -3036,6 +3050,13 @@
                       "key": "conformance/valid/compiler/06_system_library_call_preserves_capability_and_local_status.md",
                       "title": "06 system library call preserves capability and local status",
                       "path": "/Conformance/valid/compiler/06_system_library_call_preserves_capability_and_local_status.md",
+                      "kind": "page",
+                      "children": []
+                    },
+                    {
+                      "key": "conformance/valid/compiler/07_scalar_math_call_preserves_value_library_identity.md",
+                      "title": "07 scalar math call preserves value library identity",
+                      "path": "/Conformance/valid/compiler/07_scalar_math_call_preserves_value_library_identity.md",
                       "kind": "page",
                       "children": []
                     }
@@ -4741,6 +4762,7 @@
     "/IDE/Snippet.md",
     "/IDE/Watch.md",
     "/IDE/Readme.md",
+    "/Conformance/Math%20library%20conformance%20plan.md",
     "/Conformance/Source%20FIR%20Lowering%20conformance%20matrix.md",
     "/Conformance/Source%20to%20FIR%20conformance%20matrix.md",
     "/Conformance/invalid/01_missing_required_section/case.frog",
@@ -4834,6 +4856,7 @@
     "/Conformance/invalid/compiler/09_valid_fir_rejected_by_backend_profile_unsupported_subset.md",
     "/Conformance/invalid/compiler/10_system_library_unknown_or_malformed_call_is_rejected.md",
     "/Conformance/invalid/compiler/11_system_library_capability_or_subset_must_report_explicitly.md",
+    "/Conformance/invalid/compiler/12_math_library_unknown_or_malformed_call_is_rejected.md",
     "/Conformance/invalid/compiler/Readme.md",
     "/Conformance/invalid/executable/01_backend_consumable_but_execution_contract_invalid/Readme.md",
     "/Conformance/invalid/executable/02_execution_contract_valid_but_required_host_service_missing/Readme.md",
@@ -4931,6 +4954,7 @@
     "/Conformance/valid/compiler/04_provider_backed_standard_library_call_declares_provider_requirement.md",
     "/Conformance/valid/compiler/05_widget_value_and_reference_are_preserved_across_lowering.md",
     "/Conformance/valid/compiler/06_system_library_call_preserves_capability_and_local_status.md",
+    "/Conformance/valid/compiler/07_scalar_math_call_preserves_value_library_identity.md",
     "/Conformance/valid/compiler/Readme.md",
     "/Conformance/valid/executable/01_one_shot_pure_core_starts_and_terminates/Readme.md",
     "/Conformance/valid/executable/02_structured_control_one_shot_executes_correctly/Readme.md",
