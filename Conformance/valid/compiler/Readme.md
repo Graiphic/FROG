@@ -166,7 +166,8 @@ The canonical file order for this directory SHOULD be:
 02_structured_control_is_consumable.md
 03_explicit_state_is_consumable.md
 04_provider_backed_standard_library_call_declares_provider_requirement.md
-05_widget_value_and_reference_are_preserved_across_lowering.md</code></pre>
+05_widget_value_and_reference_are_preserved_across_lowering.md
+06_system_library_call_preserves_capability_and_local_status.md</code></pre>
 
 <p>
 This order reflects a deliberate corridor-closing strategy:
@@ -184,11 +185,12 @@ It closes one serious native compiled core before widening the corridor to more 
 </p>
 
 <p>
-The fourth and fifth cases extend the corridor from the first pure/control/state
-core into explicit provider-backed dependency closure and explicit UI/widget
-category preservation. They remain bounded case records; they do not claim that
-all provider, UI, or runtime-service-heavy programs are accepted by every
-backend family.
+The fourth, fifth, and sixth cases extend the corridor from the first
+pure/control/state core into explicit provider-backed dependency closure,
+explicit UI/widget category preservation, and bounded <code>frog.system</code>
+host-capability reads. They remain bounded case records; they do not claim that
+all provider, UI, host-capability, or runtime-service-heavy programs are
+accepted by every backend family.
 </p>
 
 <hr/>
@@ -280,6 +282,7 @@ provider-capable or host-service-capable scopes:
 <ul>
   <li><code>04_provider_backed_standard_library_call_declares_provider_requirement</code></li>
   <li><code>05_widget_value_and_reference_are_preserved_across_lowering</code></li>
+  <li><code>06_system_library_call_preserves_capability_and_local_status</code></li>
 </ul>
 
 <p>
@@ -369,6 +372,8 @@ provider-backed dependency closure
    -&gt;
 UI/widget category preservation
    -&gt;
+bounded system host-capability reads
+   -&gt;
 more complex effect surfaces</code></pre>
 
 <p>
@@ -396,7 +401,8 @@ The canonical v0.1 positive order is:
 02_structured_control_is_consumable
 03_explicit_state_is_consumable
 04_provider_backed_standard_library_call_declares_provider_requirement
-05_widget_value_and_reference_are_preserved_across_lowering</code></pre>
+05_widget_value_and_reference_are_preserved_across_lowering
+06_system_library_call_preserves_capability_and_local_status</code></pre>
 
 <p>
 These cases extend the public truth surface beyond ordinary language validity by making the following stages testable where declared:

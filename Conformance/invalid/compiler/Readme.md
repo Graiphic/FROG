@@ -199,6 +199,20 @@ implementation subset may still reject explicitly as <code>unsupported_subset</c
 without redefining the language.
 </p>
 
+<h3>5.9 Invalid <code>frog.system</code> call shape</h3>
+<p>
+The source may be loadable, but an unknown <code>frog.system</code> primitive,
+missing required port, wrong port type, empty environment name, or malformed
+capability id must be rejected before FIR derivation.
+</p>
+
+<h3>5.10 Unsatisfied system host capability</h3>
+<p>
+The source and FIR may be valid, but the selected host, profile, provider, or
+deployment posture may still reject or report unsupported, denied, blocked, or
+unavailable <code>frog.system</code> capability reads explicitly.
+</p>
+
 <hr/>
 
 <h2 id="published-case-order">6. Published Case Order</h2>
@@ -215,7 +229,9 @@ The canonical file order for this directory SHOULD be:
 06_backend_contract_abi_profile_mismatch.md
 07_manifest_missing_artifact_or_failed_checksum.md
 08_llvm_must_not_be_treated_as_frog_runtime_identity.md
-09_valid_fir_rejected_by_backend_profile_unsupported_subset.md</code></pre>
+09_valid_fir_rejected_by_backend_profile_unsupported_subset.md
+10_system_library_unknown_or_malformed_call_is_rejected.md
+11_system_library_capability_or_subset_must_report_explicitly.md</code></pre>
 
 <p>
 This order mirrors the downstream corridor in the cleanest way:
@@ -245,6 +261,8 @@ These cases test the negative edges of the compiler corridor.
   <li>that provider-backed calls do not lose provider/capability requirements before contract emission,</li>
   <li>that manifest-compatible handoffs reject missing artifacts and failed checksums,</li>
   <li>that LLVM-oriented routes remain downstream backend-family routes rather than FROG identity.</li>
+  <li>that invalid <code>frog.system</code> call identity, ports, or inputs are rejected before FIR derivation,</li>
+  <li>that unsatisfied <code>frog.system</code> host capabilities are rejected or reported explicitly rather than guessed.</li>
 </ul>
 
 <hr/>
@@ -343,7 +361,9 @@ provider/manifest resolution rejection
    -&gt;
 backend-family identity-collapse rejection
    -&gt;
-unsupported-subset reporting</code></pre>
+unsupported-subset reporting
+   -&gt;
+bounded host-capability rejection and status reporting</code></pre>
 
 <hr/>
 
@@ -390,7 +410,9 @@ The canonical v0.1 rejection order is:
 06_backend_contract_abi_profile_mismatch
 07_manifest_missing_artifact_or_failed_checksum
 08_llvm_must_not_be_treated_as_frog_runtime_identity
-09_valid_fir_rejected_by_backend_profile_unsupported_subset</code></pre>
+09_valid_fir_rejected_by_backend_profile_unsupported_subset
+10_system_library_unknown_or_malformed_call_is_rejected
+11_system_library_capability_or_subset_must_report_explicitly</code></pre>
 
 <p>
 This keeps the compiler corridor explicit not only on the success path, but also on the rejection path.

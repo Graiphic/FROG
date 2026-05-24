@@ -391,6 +391,7 @@ not broad runtime implementation recipes.
 <ul>
   <li><a href="./valid/compiler/04_provider_backed_standard_library_call_declares_provider_requirement.md"><code>valid/compiler/04_provider_backed_standard_library_call_declares_provider_requirement</code></a> - provider-backed standard-library call with explicit provider/capability/dependency requirements.</li>
   <li><a href="./valid/compiler/05_widget_value_and_reference_are_preserved_across_lowering.md"><code>valid/compiler/05_widget_value_and_reference_are_preserved_across_lowering</code></a> - widget value and widget reference preservation across FIR, lowering, and backend contract boundaries.</li>
+  <li><a href="./valid/compiler/06_system_library_call_preserves_capability_and_local_status.md"><code>valid/compiler/06_system_library_call_preserves_capability_and_local_status</code></a> - bounded <code>frog.system</code> host-capability read with explicit local status and capability preservation.</li>
 </ul>
 
 <h3>Negative cases</h3>
@@ -401,13 +402,15 @@ not broad runtime implementation recipes.
   <li><a href="./invalid/compiler/07_manifest_missing_artifact_or_failed_checksum.md"><code>invalid/compiler/07_manifest_missing_artifact_or_failed_checksum</code></a> - manifest-compatible handoff fails artifact-reference or checksum validation.</li>
   <li><a href="./invalid/compiler/08_llvm_must_not_be_treated_as_frog_runtime_identity.md"><code>invalid/compiler/08_llvm_must_not_be_treated_as_frog_runtime_identity</code></a> - contract rejects the collapse of FROG/FIR/runtime identity into LLVM identity.</li>
   <li><a href="./invalid/compiler/09_valid_fir_rejected_by_backend_profile_unsupported_subset.md"><code>invalid/compiler/09_valid_fir_rejected_by_backend_profile_unsupported_subset</code></a> - valid FIR is explicitly rejected by a selected backend profile or implementation subset.</li>
+  <li><a href="./invalid/compiler/10_system_library_unknown_or_malformed_call_is_rejected.md"><code>invalid/compiler/10_system_library_unknown_or_malformed_call_is_rejected</code></a> - invalid <code>frog.system</code> primitive identity, ports, or inputs reject before FIR derivation.</li>
+  <li><a href="./invalid/compiler/11_system_library_capability_or_subset_must_report_explicitly.md"><code>invalid/compiler/11_system_library_capability_or_subset_must_report_explicitly</code></a> - unsatisfied <code>frog.system</code> capability reads reject or report explicitly.</li>
 </ul>
 
 <p>
 These cases cover the first provider, ABI/profile, manifest/artifact,
-backend-identity, widget-preservation, and unsupported-subset families called
-out by this matrix. Additional families remain open until they gain similarly
-focused positive and negative case files.
+backend-identity, widget-preservation, <code>frog.system</code> host-capability,
+and unsupported-subset families called out by this matrix. Additional families
+remain open until they gain similarly focused positive and negative case files.
 </p>
 
 <hr/>
@@ -467,7 +470,7 @@ be claimed:
   <li>explicit conversion primitives,</li>
   <li>array construction and loop collection outputs,</li>
   <li>provider-backed standard-library calls beyond the initial image path and its first provider-requirement cases,</li>
-  <li>host-capability calls such as time, OS/system, process, and connectivity surfaces,</li>
+  <li>host-capability calls beyond the initial <code>frog.system</code> fixture set, such as time, broader process, and connectivity surfaces,</li>
   <li>external provider calls and policy requirements,</li>
   <li>additional backend-consumer rejection cases beyond the first ABI/profile, artifact, checksum, and target-mismatch anchors.</li>
 </ul>

@@ -27,8 +27,9 @@ Definition of the standard <strong>frog.system</strong> introspection library fo
   <li><a href="#diagram-representation">15. Diagram Representation</a></li>
   <li><a href="#validation-rules">16. Validation Rules</a></li>
   <li><a href="#support-and-claims">17. Support and Claims</a></li>
-  <li><a href="#out-of-scope">18. Out of Scope for v0.1</a></li>
-  <li><a href="#summary">19. Summary</a></li>
+  <li><a href="#conformance-fixtures">18. Conformance Fixtures</a></li>
+  <li><a href="#out-of-scope">19. Out of Scope for v0.1</a></li>
+  <li><a href="#summary">20. Summary</a></li>
 </ul>
 
 <hr/>
@@ -770,7 +771,28 @@ the requested information.
 
 <hr/>
 
-<h2 id="out-of-scope">18. Out of Scope for v0.1</h2>
+<h2 id="conformance-fixtures">18. Conformance Fixtures</h2>
+
+<p>
+The public conformance corpus includes initial <code>frog.system</code> fixture
+records under the compiler corridor:
+</p>
+
+<ul>
+  <li><a href="../Conformance/valid/compiler/06_system_library_call_preserves_capability_and_local_status.md"><code>valid/compiler/06_system_library_call_preserves_capability_and_local_status</code></a> covers valid host-capability reads, local status tuple preservation, and public capability-token preservation.</li>
+  <li><a href="../Conformance/invalid/compiler/10_system_library_unknown_or_malformed_call_is_rejected.md"><code>invalid/compiler/10_system_library_unknown_or_malformed_call_is_rejected</code></a> covers unknown primitive ids, missing or mistyped ports, empty environment names, and malformed capability ids.</li>
+  <li><a href="../Conformance/invalid/compiler/11_system_library_capability_or_subset_must_report_explicitly.md"><code>invalid/compiler/11_system_library_capability_or_subset_must_report_explicitly</code></a> covers unsupported, denied, blocked, unavailable, or partial-support host-capability posture.</li>
+</ul>
+
+<p>
+These cases are conformance-facing records. They do not implement providers,
+choose private runtime APIs, or expand the <code>frog.system</code> v0.1 primitive
+catalog.
+</p>
+
+<hr/>
+
+<h2 id="out-of-scope">19. Out of Scope for v0.1</h2>
 
 <p>
 The following are outside the strict scope of <code>frog.system</code> in v0.1:
@@ -792,7 +814,7 @@ The following are outside the strict scope of <code>frog.system</code> in v0.1:
 
 <hr/>
 
-<h2 id="summary">19. Summary</h2>
+<h2 id="summary">20. Summary</h2>
 
 <p>
 The <code>frog.system</code> library defines a minimal standard system introspection surface for
