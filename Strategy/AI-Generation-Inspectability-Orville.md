@@ -27,6 +27,14 @@ The strategic message is narrow and intentional: the post-AI bottleneck is not o
 
 <hr/>
 
+<h2>Repository visibility</h2>
+
+<p>
+This page is intended to be referenced from the root <code>Readme.md</code>, <code>FROG-Strategy.md</code>, and <code>Strategy/Readme.md</code> so the chart remains visible from the repository entry points rather than living only as an isolated strategy file.
+</p>
+
+<hr/>
+
 <h2>Axes</h2>
 
 <table>
