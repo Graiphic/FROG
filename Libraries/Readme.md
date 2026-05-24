@@ -328,7 +328,7 @@ This directory currently contains the following documents:
 <ul>
   <li><code>Readme.md</code> — architectural entry point for intrinsic standardized primitive libraries.</li>
   <li><code>Core.md</code> — foundational <code>frog.core</code> primitives.</li>
-  <li><code>Math.md</code> — standard <code>frog.math</code> primitives.</li>
+  <li><code>Math.md</code> — standard <code>frog.math</code> scalar primitives plus the conservative public staging note for <code>frog.numeric</code> and future <code>frog.math.*</code> domain namespaces.</li>
   <li><code>Collections.md</code> — standard <code>frog.collections</code> primitives.</li>
   <li><code>Text.md</code> — standard <code>frog.text</code> primitives.</li>
   <li><code>IO.md</code> — standard <code>frog.io</code> primitives.</li>
@@ -371,6 +371,7 @@ At the current repository stage, the intrinsic standardized primitive taxonomy i
 <ul>
   <li><strong><code>frog.core.*</code></strong> — foundational language primitives</li>
   <li><strong><code>frog.math.*</code></strong> — numeric scalar primitives</li>
+  <li><strong><code>frog.numeric</code></strong> — conservative candidate namespace documented inside <code>Libraries/Math.md</code> for future constants, scalar classification, and explicit conversion/coercion support; not a published v0.1 primitive catalog yet</li>
   <li><strong><code>frog.collections.*</code></strong> — collection primitives</li>
   <li><strong><code>frog.text.*</code></strong> — text-processing primitives</li>
   <li><strong><code>frog.io.*</code></strong> — file, path, resource, and byte-oriented I/O primitives</li>
@@ -389,6 +390,7 @@ The taxonomy can also be read as a simple mental map:
 
 <pre><code>frog.core.*         -&gt; foundational execution building blocks
 frog.math.*         -&gt; scalar numeric operations
+frog.numeric        -&gt; candidate numeric support namespace, not yet a v0.1 primitive catalog
 frog.collections.*  -&gt; collection manipulation
 frog.text.*         -&gt; text processing
 frog.io.*           -&gt; file/path/resource/byte I/O
@@ -440,8 +442,16 @@ implies:
       <td>published lightweight standard library</td>
       <td>Portable scalar mathematics beyond the minimal core.</td>
       <td>Utility, rounding, powers, roots, logarithms, trigonometric, and hyperbolic scalar functions.</td>
-      <td>Linear algebra, statistics, tensors, symbolic math, optimization, and signal processing.</td>
+      <td><code>frog.numeric</code> candidate support, linear algebra, statistics, tensors, symbolic math, optimization, hidden random state, and signal processing.</td>
       <td>Value-only, with numeric edge behavior constrained by the active execution profile.</td>
+    </tr>
+    <tr>
+      <td><code>frog.numeric</code></td>
+      <td>candidate, documented in <code>Libraries/Math.md</code></td>
+      <td>Future core-adjacent numeric constants, scalar classification, explicit conversions, and representation helpers.</td>
+      <td>Candidate only; no separate public page and no published v0.1 primitive ids until exact contracts and conformance cases are promoted.</td>
+      <td>Broad mathematics, hidden coercion repair, random generation, signal/waveform/table semantics, and provider-backed numerical domains.</td>
+      <td>Expected to be value-only where promoted, with profile-dependent representation details stated explicitly.</td>
     </tr>
     <tr>
       <td><code>frog.collections</code></td>
@@ -745,6 +755,7 @@ The intrinsic standardized library families in this directory are intentionally 
 <ul>
   <li><strong><code>frog.core.*</code></strong> owns only the foundational primitive baseline.</li>
   <li><strong><code>frog.math.*</code></strong> owns numeric scalar primitives beyond the core.</li>
+  <li><strong><code>frog.numeric</code></strong> is only a candidate public namespace documented in <code>Libraries/Math.md</code> until exact primitive contracts are promoted.</li>
   <li><strong><code>frog.collections.*</code></strong> owns collection manipulation primitives.</li>
   <li><strong><code>frog.text.*</code></strong> owns text-processing primitives.</li>
   <li><strong><code>frog.io.*</code></strong> owns file, path, resource, and byte-oriented I/O primitives.</li>
@@ -764,6 +775,7 @@ Boundary sketch:
 
 <pre><code>frog.core.*         -&gt; foundational primitives only
 frog.math.*         -&gt; math only
+frog.numeric        -&gt; candidate numeric support only
 frog.collections.*  -&gt; collections only
 frog.text.*         -&gt; text only
 frog.io.*           -&gt; I/O only
@@ -782,6 +794,7 @@ Therefore:
 
 <ul>
   <li><code>frog.core.*</code> MUST NOT become a generic bucket for unrelated future functionality.</li>
+  <li><code>frog.math.*</code> MUST remain distinct from <code>frog.core.*</code> intrinsic operators and from the candidate <code>frog.numeric</code> support namespace.</li>
   <li><code>frog.io.*</code> MUST remain distinct from foreign-runtime interoperability, deployment, database access, and broader external integration concerns unless those are explicitly standardized as intrinsic libraries.</li>
   <li><code>frog.image.*</code> MUST remain distinct from Picture widget realization, camera acquisition, advanced computer vision, and implementation-specific codec stacks.</li>
   <li><code>frog.ui.*</code> MUST remain distinct from front-panel serialization, widget catalog definition, broader IDE UI editing concerns, target-profile classes, deployment-mode classes, and backend-family-specific UI binding contracts.</li>
@@ -792,6 +805,7 @@ Therefore:
   <li><code>frog.signal.*</code> MUST remain distinct from broader acquisition, streaming, tensor, or specialized domain families unless those are explicitly standardized.</li>
   <li><code>frog.waveform.*</code> MUST remain distinct from chart widgets, acquisition sessions, streaming buffers, and private waveform-history stores.</li>
   <li><code>frog.table.*</code> MUST remain distinct from Table widget state, database cursors, spreadsheets, host grid controls, and external data-frame engines.</li>
+  <li>Future <code>frog.math.linalg</code>, <code>frog.math.fit</code>, <code>frog.math.optimize</code>, and comparable provider-heavy numerical domains MUST preserve explicit status, provider, manifest, and capability boundaries rather than becoming hidden runtime services.</li>
   <li><code>Libraries/</code> MUST NOT become a catch-all container for ecosystem-specific capability growth.</li>
   <li>Optional capability families that depend on foreign runtimes, host ABIs, managed platforms, databases, protocols, services, target-profile classes, deployment-mode classes, or comparable environment assumptions SHOULD be specified in <code>Profiles/</code> rather than in <code>Libraries/</code>.</li>
 </ul>

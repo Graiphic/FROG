@@ -420,12 +420,16 @@ At top level:
 The top-level conformance directory includes both staged matrix documents:
 <code>Source to FIR conformance matrix.md</code> and
 <code>Source FIR Lowering conformance matrix.md</code>.
+It also includes focused family plans such as
+<code>Math library conformance plan.md</code> when a published surface needs a
+public staged case roadmap before every future domain is promoted.
 </p>
 
 <pre><code>Conformance/
 ├── Readme.md
 ├── Source to FIR conformance matrix.md
 ├── Source FIR Lowering conformance matrix.md
+├── Math library conformance plan.md
 ├── valid/
 └── invalid/
 </code></pre>
@@ -661,7 +665,9 @@ The compiler-corridor families now include concrete source/FIR/lowering case
 records for provider-backed standard-library calls, provider requirement
 omission, ABI/profile mismatch, manifest artifact or checksum failure, LLVM
 identity collapse, widget value/reference preservation, and selected-profile
-<code>unsupported_subset</code> rejection. These records instantiate the
+<code>unsupported_subset</code> rejection. They also include focused
+<code>frog.system</code> and scalar <code>frog.math</code> records for
+host-capability and value-library boundaries. These records instantiate the
 source/FIR/lowering matrix while remaining implementation-independent.
 </p>
 
@@ -781,6 +787,7 @@ The published corpus already contains:
   <li>a dedicated executable subtree for structured future executable growth,</li>
   <li>dedicated positive and negative structural subtrees for focused source-shape growth.</li>
   <li>focused source/FIR/lowering compiler-corridor cases for provider, manifest, backend-contract, runtime-consumption, widget-preservation, and unsupported-subset boundaries.</li>
+  <li>focused public standard-library conformance fixtures for <code>frog.system</code> host-capability reads and published scalar <code>frog.math</code> value calls.</li>
 </ul>
 
 <p>

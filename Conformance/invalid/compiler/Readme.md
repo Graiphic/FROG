@@ -213,6 +213,16 @@ deployment posture may still reject or report unsupported, denied, blocked, or
 unavailable <code>frog.system</code> capability reads explicitly.
 </p>
 
+<h3>5.11 Invalid or premature math-library call</h3>
+<p>
+The source may be loadable, but an unknown <code>frog.math</code> primitive,
+missing required scalar math port, nonscalar lift, or premature use of
+candidate/deferred math namespaces such as <code>frog.numeric</code>,
+<code>frog.math.random</code>, <code>frog.math.interpolate</code>, or
+<code>frog.math.linalg</code> must be rejected before FIR derivation unless a
+future public contract promotes that namespace explicitly.
+</p>
+
 <hr/>
 
 <h2 id="published-case-order">6. Published Case Order</h2>
@@ -231,7 +241,8 @@ The canonical file order for this directory SHOULD be:
 08_llvm_must_not_be_treated_as_frog_runtime_identity.md
 09_valid_fir_rejected_by_backend_profile_unsupported_subset.md
 10_system_library_unknown_or_malformed_call_is_rejected.md
-11_system_library_capability_or_subset_must_report_explicitly.md</code></pre>
+11_system_library_capability_or_subset_must_report_explicitly.md
+12_math_library_unknown_or_malformed_call_is_rejected.md</code></pre>
 
 <p>
 This order mirrors the downstream corridor in the cleanest way:
@@ -263,6 +274,7 @@ These cases test the negative edges of the compiler corridor.
   <li>that LLVM-oriented routes remain downstream backend-family routes rather than FROG identity.</li>
   <li>that invalid <code>frog.system</code> call identity, ports, or inputs are rejected before FIR derivation,</li>
   <li>that unsatisfied <code>frog.system</code> host capabilities are rejected or reported explicitly rather than guessed.</li>
+  <li>that invalid or premature math-library calls are rejected before private runtime helpers, backend intrinsics, hidden random state, or provider guesses can redefine the public surface.</li>
 </ul>
 
 <hr/>
@@ -365,6 +377,13 @@ unsupported-subset reporting
    -&gt;
 bounded host-capability rejection and status reporting</code></pre>
 
+<p>
+Published scalar math rejection sits with semantic primitive-contract
+rejection. Future provider-heavy math-domain rejection should be staged later
+only after exact public primitive contracts, status surfaces, and provider
+requirements are promoted.
+</p>
+
 <hr/>
 
 <h2 id="relation-with-valid-compiler-corridor-cases">13. Relation with Valid Compiler-Corridor Cases</h2>
@@ -412,7 +431,8 @@ The canonical v0.1 rejection order is:
 08_llvm_must_not_be_treated_as_frog_runtime_identity
 09_valid_fir_rejected_by_backend_profile_unsupported_subset
 10_system_library_unknown_or_malformed_call_is_rejected
-11_system_library_capability_or_subset_must_report_explicitly</code></pre>
+11_system_library_capability_or_subset_must_report_explicitly
+12_math_library_unknown_or_malformed_call_is_rejected</code></pre>
 
 <p>
 This keeps the compiler corridor explicit not only on the success path, but also on the rejection path.

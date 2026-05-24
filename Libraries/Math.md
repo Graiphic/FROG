@@ -58,6 +58,15 @@ In v0.1, this library focuses on portable and commonly expected scalar mathemati
 This document does not attempt to define full linear algebra, statistics, optimization, signal processing, tensor computation, or symbolic mathematics.
 </p>
 
+<p>
+This document also records the public promotion boundary for the staged math
+surface. The existing flat scalar <code>frog.math.*</code> v0.1 names remain
+valid. Candidate names such as <code>frog.numeric</code> and deeper
+<code>frog.math.*</code> domain namespaces are documented here as staged
+surfaces, not as implemented v0.1 APIs unless this document explicitly marks
+them as published primitives.
+</p>
+
 <hr/>
 
 <h2 id="goals">2. Goals</h2>
@@ -67,7 +76,7 @@ This document does not attempt to define full linear algebra, statistics, optimi
   <li><strong>Separation of concerns</strong> — keep minimal language primitives in <code>frog.core</code> while placing broader scalar mathematics in a dedicated library.</li>
   <li><strong>Portability</strong> — ensure that the defined function names and port models remain stable across conforming implementations.</li>
   <li><strong>Clarity</strong> — define each primitive with an explicit name, role, and expected typing model.</li>
-  <li><strong>Extensibility</strong> — leave room for future sibling libraries such as <code>frog.linalg</code>, <code>frog.stats</code>, <code>frog.signal</code>, or <code>frog.tensor</code>.</li>
+  <li><strong>Extensibility</strong> — leave room for staged future namespaces such as <code>frog.numeric</code>, <code>frog.math.linalg</code>, <code>frog.math.stats</code>, and related domain surfaces without treating them as implemented v0.1 APIs prematurely.</li>
 </ul>
 
 <hr/>
@@ -80,9 +89,11 @@ This document complements the following specifications:
 
 <ul>
   <li><strong>Libraries/Core.md</strong> — defines the minimal standard primitive core, including basic arithmetic and comparison primitives.</li>
+  <li><strong>Libraries/Signal.md</strong>, <strong>Libraries/Waveform.md</strong>, and <strong>Libraries/Table.md</strong> — own signal, waveform, and tabular value semantics that must not be absorbed by generic math.</li>
   <li><strong>Expression/Diagram.md</strong> — defines how library functions are serialized as diagram nodes.</li>
   <li><strong>Expression/Type.md</strong> — defines built-in types, type compatibility, and implicit coercion rules.</li>
   <li><strong>Expression/Control structures.md</strong> — defines standardized language structures, which remain distinct from ordinary primitive functions.</li>
+  <li><strong>IR/Library call model.md</strong>, <strong>IR/Lowering.md</strong>, and <strong>IR/Backend contract.md</strong> — define how published math call identity, provider requirements, status behavior, and backend handoff remain explicit downstream.</li>
 </ul>
 
 <p>
@@ -110,7 +121,16 @@ Therefore:
 <ul>
   <li><code>frog.math.sqrt</code> is a standard mathematical function,</li>
   <li>in a diagram, that function call appears as a <code>primitive</code> node with <code>type = "frog.math.sqrt"</code>.</li>
+  <li>in FIR, that call remains a standard-library value call rather than an intrinsic core operator or a private runtime operation.</li>
 </ul>
+
+<p>
+Basic arithmetic and comparison operations that belong to
+<code>frog.core</code> remain intrinsic core primitives. The presence of
+<code>frog.math</code> does not move addition, subtraction, multiplication,
+division, comparison, boolean logic, selection, or explicit state carriers out
+of the core language corridor.
+</p>
 
 <hr/>
 
@@ -170,6 +190,118 @@ FROG v0.1 standardizes the following mathematical families in <code>frog.math</c
 In v0.1, <code>frog.math</code> is intentionally limited to scalar mathematics.
 Array-wide, matrix-wide, tensor-wide, and domain-specific mathematical libraries are outside the strict scope of this document.
 </p>
+
+<h3>6.1 Compatibility of the Flat Scalar Surface</h3>
+
+<p>
+The published v0.1 scalar surface uses flat names such as
+<code>frog.math.sqrt</code>, <code>frog.math.sin</code>,
+<code>frog.math.atan2</code>, and <code>frog.math.clamp</code>. Those names
+remain the public v0.1 primitive identities. A future organization layer such
+as <code>frog.math.elementary</code> may improve discovery or palette grouping,
+but it must not silently break or reinterpret the published flat names.
+</p>
+
+<h3>6.2 Conservative <code>frog.numeric</code> Candidate</h3>
+
+<p>
+For T048, <code>frog.numeric</code> is intentionally introduced as a
+conservative candidate section inside this document rather than as a separate
+public library page. This avoids publishing a broad numeric API before the
+source type model, conversion posture, and conformance cases are ready.
+</p>
+
+<p>
+The candidate scope for <code>frog.numeric</code> is limited to core-adjacent
+numeric support:
+</p>
+
+<ul>
+  <li>numeric constants such as implementation-independent mathematical constants where their precision and type rules are explicit,</li>
+  <li>scalar classification such as finite, NaN, infinity, signbit, and comparable representation-aware predicates,</li>
+  <li>explicit conversions and coercion helpers once the public source/type posture defines their legality,</li>
+  <li>machine-representation helpers such as epsilon only when their target/profile dependency is stated clearly.</li>
+</ul>
+
+<p>
+Until those rules are promoted explicitly, a source file must not assume that
+<code>frog.numeric.*</code> is a published v0.1 primitive family merely because
+the candidate namespace is documented here.
+</p>
+
+<h3>6.3 Staged Future Math Namespaces</h3>
+
+<p>
+The following namespaces are staged for future public work. They are not
+implemented v0.1 primitive catalogs unless a future revision adds exact
+primitive ids, ports, type rules, status behavior, and conformance cases.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Namespace</th>
+      <th>Current public posture</th>
+      <th>Boundary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>frog.math.elementary</code></td>
+      <td>Candidate organization layer.</td>
+      <td>May group scalar utility, rounding, power/root/log, trigonometric, hyperbolic, and selected special functions without replacing flat v0.1 names.</td>
+    </tr>
+    <tr>
+      <td><code>frog.math.complex</code></td>
+      <td>Candidate staged surface.</td>
+      <td>Requires a public complex value/type model before primitive promotion.</td>
+    </tr>
+    <tr>
+      <td><code>frog.math.random</code></td>
+      <td>Candidate staged surface.</td>
+      <td>Must use explicit random state or explicit entropy/capability inputs; hidden global random state is not a valid public contract.</td>
+    </tr>
+    <tr>
+      <td><code>frog.math.linalg</code></td>
+      <td>Deferred provider-aware surface.</td>
+      <td>Matrix/vector values, shape rules, status behavior, and provider/capability requirements must be explicit before promotion.</td>
+    </tr>
+    <tr>
+      <td><code>frog.math.stats</code></td>
+      <td>Split staged surface.</td>
+      <td>Simple descriptive statistics may become value-only; distributions and statistical tests need status and numeric edge rules.</td>
+    </tr>
+    <tr>
+      <td><code>frog.math.interpolate</code></td>
+      <td>Candidate staged surface.</td>
+      <td>Requires precondition and status rules for dimensions, ordered axes, duplicate samples, and out-of-range policy.</td>
+    </tr>
+    <tr>
+      <td><code>frog.math.fit</code></td>
+      <td>Deferred provider-aware surface.</td>
+      <td>Requires model shape, status, provider, and later callable/function-reference policy.</td>
+    </tr>
+    <tr>
+      <td><code>frog.math.optimize</code></td>
+      <td>Deferred provider-aware surface.</td>
+      <td>Requires callable/function-reference, status, cancellation/timeout, convergence, and provider rules.</td>
+    </tr>
+    <tr>
+      <td><code>frog.math.calculus</code></td>
+      <td>Deferred surface.</td>
+      <td>Requires function-reference, step/error controls, status, cancellation, and provider posture for advanced solvers.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>6.4 Boundaries With Other Libraries</h3>
+
+<ul>
+  <li><code>frog.signal</code> owns signal sample-array operations, filtering, decimation, resampling, and future signal-specific analysis.</li>
+  <li><code>frog.waveform</code> owns sampled waveform values with timing semantics such as <code>t0</code>, <code>dt</code>, and sample arrays.</li>
+  <li><code>frog.table</code> owns portable rectangular table values and table transforms, not statistical modeling or dataframe engines.</li>
+  <li><code>frog.time</code> owns clocks, durations, waits, formatting/parsing, and profiling marks, not numerical calculus time-step policy.</li>
+</ul>
 
 <hr/>
 
@@ -596,6 +728,15 @@ Another example:
 The exact port existence, direction, and typing of these nodes are resolved from this specification together with the type system and the graph rules.
 </p>
 
+<p>
+When a published <code>frog.math.*</code> call reaches FIR, FIR must preserve the
+public call identity, typed ports, pure value-call classification, source
+attribution, and any profile-defined numeric edge policy needed by downstream
+lowering. FIR must not collapse the call into a private runtime helper name,
+native symbol, provider symbol, or backend-family operation unless a later
+lowering stage records that specialization separately.
+</p>
+
 <hr/>
 
 <h2 id="validation-rules">15. Validation Rules</h2>
@@ -610,6 +751,8 @@ Implementations MUST enforce the following rules:
   <li>all produced output ports MUST match the function definition,</li>
   <li>all implicit coercions MUST follow <strong>Expression/Type.md</strong>,</li>
   <li>all functions in this document MUST be treated as stateless and side-effect-free.</li>
+  <li>published <code>frog.math.*</code> calls MUST remain distinct from <code>frog.core.*</code> intrinsic operators in source validation and FIR,</li>
+  <li>candidate or deferred namespaces such as <code>frog.numeric</code>, <code>frog.math.random</code>, <code>frog.math.interpolate</code>, and <code>frog.math.linalg</code> MUST NOT be accepted as published v0.1 primitives until exact primitive contracts are promoted.</li>
 </ul>
 
 <p>
@@ -630,6 +773,28 @@ For numeric edge cases:
   <li>domain violations, overflow, underflow, NaN propagation, and infinity handling MUST be defined by the active execution profile,</li>
   <li>these profile-defined runtime details MUST NOT change primitive identity or source-level meaning.</li>
 </ul>
+
+<h3>15.1 Conformance Promotion Plan</h3>
+
+<p>
+The public conformance surface for math is staged as follows:
+</p>
+
+<ul>
+  <li>current positive cases should verify that published flat scalar <code>frog.math.*</code> calls are accepted, remain pure value standard-library calls, derive to FIR, and preserve call identity through lowering,</li>
+  <li>current negative cases should reject unknown <code>frog.math.*</code> names, missing or mismatched ports, nonscalar lifting, and premature use of candidate namespaces,</li>
+  <li>future <code>frog.numeric</code> cases should cover numeric classification and explicit conversions only after the candidate surface is promoted to exact public primitive ids,</li>
+  <li>future <code>frog.math.random</code> cases should require explicit random state or explicit entropy/capability inputs and reject hidden global RNG state,</li>
+  <li>future <code>frog.math.interpolate</code> cases should test dimension, ordering, duplicate-sample, and out-of-range preconditions with explicit status behavior,</li>
+  <li>future provider-aware <code>frog.math.linalg</code> cases should verify manifest/provider requirements and reject contracts that hide provider dependencies or turn BLAS/LAPACK-like choices into language law.</li>
+</ul>
+
+<p>
+These conformance cases must remain implementation-neutral. They may require
+provider or capability declarations where a future surface needs them, but they
+must not name Graiphic private runtime providers, loader mechanisms, binaries,
+or local paths.
+</p>
 
 <hr/>
 
@@ -709,8 +874,11 @@ The following are outside the strict scope of <code>frog.math</code> in v0.1:
 
 <ul>
   <li>vectorized or broadcast semantics over arrays, matrices, or tensors,</li>
+  <li><code>frog.numeric</code> as a published v0.1 primitive catalog,</li>
+  <li><code>frog.math.elementary</code> as a breaking replacement for flat <code>frog.math.*</code> v0.1 names,</li>
   <li>linear algebra primitives,</li>
   <li>probability and statistics primitives,</li>
+  <li>hidden global random-number state,</li>
   <li>curve fitting, optimization, and numerical solvers,</li>
   <li>signal-processing primitives,</li>
   <li>symbolic or algebraic manipulation,</li>

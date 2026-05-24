@@ -392,6 +392,7 @@ not broad runtime implementation recipes.
   <li><a href="./valid/compiler/04_provider_backed_standard_library_call_declares_provider_requirement.md"><code>valid/compiler/04_provider_backed_standard_library_call_declares_provider_requirement</code></a> - provider-backed standard-library call with explicit provider/capability/dependency requirements.</li>
   <li><a href="./valid/compiler/05_widget_value_and_reference_are_preserved_across_lowering.md"><code>valid/compiler/05_widget_value_and_reference_are_preserved_across_lowering</code></a> - widget value and widget reference preservation across FIR, lowering, and backend contract boundaries.</li>
   <li><a href="./valid/compiler/06_system_library_call_preserves_capability_and_local_status.md"><code>valid/compiler/06_system_library_call_preserves_capability_and_local_status</code></a> - bounded <code>frog.system</code> host-capability read with explicit local status and capability preservation.</li>
+  <li><a href="./valid/compiler/07_scalar_math_call_preserves_value_library_identity.md"><code>valid/compiler/07_scalar_math_call_preserves_value_library_identity</code></a> - published scalar <code>frog.math</code> value call with preserved public call identity and no provider guessing.</li>
 </ul>
 
 <h3>Negative cases</h3>
@@ -404,13 +405,27 @@ not broad runtime implementation recipes.
   <li><a href="./invalid/compiler/09_valid_fir_rejected_by_backend_profile_unsupported_subset.md"><code>invalid/compiler/09_valid_fir_rejected_by_backend_profile_unsupported_subset</code></a> - valid FIR is explicitly rejected by a selected backend profile or implementation subset.</li>
   <li><a href="./invalid/compiler/10_system_library_unknown_or_malformed_call_is_rejected.md"><code>invalid/compiler/10_system_library_unknown_or_malformed_call_is_rejected</code></a> - invalid <code>frog.system</code> primitive identity, ports, or inputs reject before FIR derivation.</li>
   <li><a href="./invalid/compiler/11_system_library_capability_or_subset_must_report_explicitly.md"><code>invalid/compiler/11_system_library_capability_or_subset_must_report_explicitly</code></a> - unsatisfied <code>frog.system</code> capability reads reject or report explicitly.</li>
+  <li><a href="./invalid/compiler/12_math_library_unknown_or_malformed_call_is_rejected.md"><code>invalid/compiler/12_math_library_unknown_or_malformed_call_is_rejected</code></a> - invalid <code>frog.math</code> call identity, malformed ports, nonscalar lifting, or premature candidate math namespaces reject before FIR derivation.</li>
 </ul>
 
 <p>
 These cases cover the first provider, ABI/profile, manifest/artifact,
 backend-identity, widget-preservation, <code>frog.system</code> host-capability,
-and unsupported-subset families called out by this matrix. Additional families
-remain open until they gain similarly focused positive and negative case files.
+published scalar <code>frog.math</code>, and unsupported-subset families called
+out by this matrix. Additional families remain open until they gain similarly
+focused positive and negative case files.
+</p>
+
+<h3>Math conformance plan</h3>
+
+<p>
+The staged math conformance plan is recorded in
+<a href="./Math library conformance plan.md"><code>Math library conformance plan.md</code></a>.
+It makes the current scalar <code>frog.math</code> cases concrete while keeping
+<code>frog.numeric</code>, deterministic random-state posture, interpolation
+preconditions, provider-backed linear algebra, fitting, optimization,
+statistics, and calculus as planned case families until exact public contracts
+are promoted.
 </p>
 
 <hr/>
@@ -470,6 +485,7 @@ be claimed:
   <li>explicit conversion primitives,</li>
   <li>array construction and loop collection outputs,</li>
   <li>provider-backed standard-library calls beyond the initial image path and its first provider-requirement cases,</li>
+  <li>math-domain candidate cases beyond published scalar <code>frog.math</code>, including <code>frog.numeric</code> classification/conversion, explicit random-state, interpolation preconditions, and provider-backed linear algebra,</li>
   <li>host-capability calls beyond the initial <code>frog.system</code> fixture set, such as time, broader process, and connectivity surfaces,</li>
   <li>external provider calls and policy requirements,</li>
   <li>additional backend-consumer rejection cases beyond the first ABI/profile, artifact, checksum, and target-mismatch anchors.</li>

@@ -167,7 +167,8 @@ The canonical file order for this directory SHOULD be:
 03_explicit_state_is_consumable.md
 04_provider_backed_standard_library_call_declares_provider_requirement.md
 05_widget_value_and_reference_are_preserved_across_lowering.md
-06_system_library_call_preserves_capability_and_local_status.md</code></pre>
+06_system_library_call_preserves_capability_and_local_status.md
+07_scalar_math_call_preserves_value_library_identity.md</code></pre>
 
 <p>
 This order reflects a deliberate corridor-closing strategy:
@@ -185,12 +186,13 @@ It closes one serious native compiled core before widening the corridor to more 
 </p>
 
 <p>
-The fourth, fifth, and sixth cases extend the corridor from the first
+The fourth, fifth, sixth, and seventh cases extend the corridor from the first
 pure/control/state core into explicit provider-backed dependency closure,
-explicit UI/widget category preservation, and bounded <code>frog.system</code>
-host-capability reads. They remain bounded case records; they do not claim that
-all provider, UI, host-capability, or runtime-service-heavy programs are
-accepted by every backend family.
+explicit UI/widget category preservation, bounded <code>frog.system</code>
+host-capability reads, and published scalar <code>frog.math</code> value-call
+preservation. They remain bounded case records; they do not claim that all
+provider, UI, host-capability, math-domain, or runtime-service-heavy programs
+are accepted by every backend family.
 </p>
 
 <hr/>
@@ -283,6 +285,7 @@ provider-capable or host-service-capable scopes:
   <li><code>04_provider_backed_standard_library_call_declares_provider_requirement</code></li>
   <li><code>05_widget_value_and_reference_are_preserved_across_lowering</code></li>
   <li><code>06_system_library_call_preserves_capability_and_local_status</code></li>
+  <li><code>07_scalar_math_call_preserves_value_library_identity</code></li>
 </ul>
 
 <p>
@@ -374,6 +377,8 @@ UI/widget category preservation
    -&gt;
 bounded system host-capability reads
    -&gt;
+published scalar math value-call preservation
+   -&gt;
 more complex effect surfaces</code></pre>
 
 <p>
@@ -402,7 +407,8 @@ The canonical v0.1 positive order is:
 03_explicit_state_is_consumable
 04_provider_backed_standard_library_call_declares_provider_requirement
 05_widget_value_and_reference_are_preserved_across_lowering
-06_system_library_call_preserves_capability_and_local_status</code></pre>
+06_system_library_call_preserves_capability_and_local_status
+07_scalar_math_call_preserves_value_library_identity</code></pre>
 
 <p>
 These cases extend the public truth surface beyond ordinary language validity by making the following stages testable where declared:
