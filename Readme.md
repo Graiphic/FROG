@@ -1,9 +1,3 @@
-<div align="center" class="go-pages-link" data-render-target="github">
-  <a href="https://graiphic.github.io/FROG/">
-    <img src="./assets/open-github-pages-banner.svg" alt="Open the GitHub Pages version" width="640" />
-  </a>
-</div>
-
 <p align="center">
   <img src="FROG logo.svg" alt="FROG logo" width="140" />
 </p>
@@ -12,15 +6,11 @@
 
 <p align="center">
   <strong>Free Open Graphical Dataflow Programming Language</strong><br/>
-  FROG is an open, hardware-agnostic graphical dataflow programming language designed to describe computation as explicit executable graphs while remaining accessible, explicit, inspectable, portable, auditable, modular, and scalable across heterogeneous execution targets.
+  FROG is an open, hardware-agnostic graphical dataflow programming language designed to describe computation as explicit executable graphs while remaining accessible, inspectable, portable, auditable, modular, and scalable across heterogeneous execution targets.
 </p>
 
 <p align="center">
-  FROG aims to establish itself as the open-source standard foundation for graphical dataflow language infrastructure.
-</p>
-
-<p align="center">
-  <strong>FROG attacks the structural lock-in of graphical industrial programming by opening the language layer itself:</strong><br/>
+  <strong>FROG opens the language layer itself:</strong><br/>
   canonical source, validated meaning, execution-facing FIR, lowering, backend contracts, runtime bridges, and compiler bridges.
 </p>
 
@@ -30,34 +20,16 @@
 </p>
 
 <p align="center">
-  FROG can also carry optional source provenance through <code>ide.provenance</code>, allowing provenance-aware tools to distinguish unknown, human-direct, AI-generated, AI-assisted, imported, reviewed, stale, invalid, and untrusted source-object states without changing executable meaning.
-</p>
-
-<p align="center">
-  Specification work initiated: <strong>8 March 2026</strong>
-</p>
-
-<p align="center">
   <a href="#start-here">Start here</a> •
   <a href="#positioning">Positioning</a> •
   <a href="#execution-architecture">Execution architecture</a> •
-  <a href="#end-to-end-execution-pipeline">Execution pipeline</a> •
-  <a href="#public-specification-and-implementation-boundary">Public boundary</a> •
   <a href="#repository-map">Repository map</a> •
-  <a href="#published-repository-state">Published state</a> •
   <a href="#license">License</a>
 </p>
 
 <hr/>
 
 <h2 id="start-here">Start here</h2>
-
-<p>
-This root README is the public entry point for FROG. It keeps the strategic
-positioning, execution architecture reference, public/private boundary, repository
-map, and current published state visible without forcing every reader through
-the full long-form material.
-</p>
 
 <table>
   <thead>
@@ -69,27 +41,31 @@ the full long-form material.
   <tbody>
     <tr>
       <td><a href="./FROG-Strategy.md">FROG Strategy and Positioning</a></td>
-      <td>Whitepaper links, FROG definition, GO HW continuity, campaign priority, AI-era positioning, and dataflow rationale.</td>
+      <td>FROG definition, GO HW continuity, campaign priority, AI-era positioning, and dataflow rationale.</td>
+    </tr>
+    <tr>
+      <td><a href="./AI-Generation-Inspectability-Orville.md">AI generation vs inspectability Orville chart</a></td>
+      <td>Visible root-level entry point for the AI-era positioning chart.</td>
+    </tr>
+    <tr>
+      <td><a href="./Strategy/AI-Generation-Inspectability-Orville.md">AI Orville chart explanation</a></td>
+      <td>Detailed non-normative explanation of why FROG <code>(.frog / JSON)</code> targets both AI generation compatibility and AI inspectability.</td>
     </tr>
     <tr>
       <td><a href="./Strategy/FormatFirstNotIdeFirst.md">Format-first, not IDE-first</a></td>
-      <td>Strategic note explaining why FROG's durable asset is the public source-to-FIR-to-contract pipeline rather than one IDE product.</td>
+      <td>Why FROG's durable asset is the public source-to-FIR-to-contract pipeline rather than one IDE product.</td>
     </tr>
     <tr>
       <td><a href="./FROG-Architecture.md">FROG Architecture</a></td>
-      <td>Program representation, FIR posture, runtime/compiler complementarity, original ASCII execution architecture, observability, targets, security, interoperability, and language/tooling separation.</td>
+      <td>Source, FIR, lowering, runtime/compiler, observability, targets, security, interoperability, and language/tooling separation.</td>
     </tr>
     <tr>
       <td><a href="./FROG-Repository-Guide.md">FROG Repository Guide</a></td>
-      <td>What this repository defines, what it does not define, public specification boundaries, repository structure, documentation map, governance, and contribution/licensing pointers.</td>
+      <td>Repository structure, public specification boundaries, documentation map, governance, and contribution/licensing pointers.</td>
     </tr>
     <tr>
       <td><a href="./FROG-Project-Status.md">FROG Project Status</a></td>
       <td>Published repository state, examples, conformance coverage, library/profile surfaces, and maturity notes.</td>
-    </tr>
-    <tr>
-      <td><a href="./Examples/Readme.md">Examples</a></td>
-      <td>The growing example catalogue and validation-oriented example documentation.</td>
     </tr>
   </tbody>
 </table>
@@ -99,38 +75,25 @@ the full long-form material.
 <h2 id="positioning">Positioning</h2>
 
 <p>
-FROG is a public language specification, not a single IDE, runtime, compiler,
-device target, or vendor product. It defines a graphical dataflow language
-layer where source, validated meaning, execution-facing FIR, lowering, runtime
-contracts, compiler contracts, widgets, libraries, profiles, and conformance
-can be inspected independently.
-</p>
-
-<p>
-That distinction matters because graphical industrial programming has often
-been locked inside product-specific file formats and execution stacks. FROG
-opens the language layer so multiple tools, runtimes, compilers, and deployment
-models can share durable public meaning.
-</p>
-
-<p>
-FROG is therefore not an IDE-first platform. A FROG IDE is a tool that edits,
-validates, observes, and projects a FROG program; it is not the owner of the
-language. The durable asset is the canonical <code>.frog</code> source, the
-validated meaning, the open FIR, and the explicit downstream contracts. This
-means IDEs, runtimes, compilers, UI hosts, and hardware backends can evolve or
-be replaced without making existing FROG programs dependent on one monolithic
-product stack.
+FROG is a public language specification, not a single IDE, runtime, compiler, device target, or vendor product. It defines a graphical dataflow language layer where source, validated meaning, execution-facing FIR, lowering, runtime contracts, compiler contracts, widgets, libraries, profiles, and conformance can be inspected independently.
 </p>
 
 <p align="center">
   <img src="frog-orville-chart.png" alt="FROG positioning chart" width="640" />
 </p>
 
+<p align="center">
+  <img src="./assets/strategy/frog-ai-generation-inspectability-orville.png" alt="FROG AI generation compatibility vs AI inspectability Orville chart" width="640" />
+</p>
+
+<p align="center">
+  <em>
+    In the generative AI era, FROG targets the upper-right quadrant where machine-generatable structured source meets graph-level inspection, validation, and governance.
+  </em>
+</p>
+
 <p>
-The long-form strategic explanation, including the whitepaper links and
-AI-era accountability framing, is maintained in
-<a href="./FROG-Strategy.md">FROG Strategy and Positioning</a>.
+The long-form strategic explanation is maintained in <a href="./FROG-Strategy.md">FROG Strategy and Positioning</a>. The dedicated AI generation compatibility vs AI inspectability chart explanation is maintained in <a href="./Strategy/AI-Generation-Inspectability-Orville.md">AI Generation Compatibility vs AI Inspectability Orville Chart</a>.
 </p>
 
 <hr/>
@@ -138,37 +101,7 @@ AI-era accountability framing, is maintained in
 <h2 id="execution-architecture">Execution architecture</h2>
 
 <p>
-A conforming FROG ecosystem separates authoring, canonical source, structural
-validity, validated program meaning, canonical open execution-facing
-representation, lowering, runtime/compiler consumers, target execution, and
-source-aligned observability.
-</p>
-
-<p>
-The original ASCII execution architecture diagram remains the reference view.
-It is preserved with the detailed explanation in
-<a href="./FROG-Architecture.md#execution-architecture">FROG Architecture</a>.
-</p>
-
-<hr/>
-
-<h2 id="end-to-end-execution-pipeline">End-to-end execution pipeline</h2>
-
-<p>
-A FROG program starts from canonical <code>.frog</code> source. The
-<code>.frog</code> file owns the program-level source: metadata, public
-interface, executable diagram, optional front panel, widget instances, and
-diagram/widget bindings.
-</p>
-
-<p>
-When a front panel is present, canonical source may reference widget classes,
-widget packages, or realization choices. <code>.wfrog</code> packages publish
-widget-oriented package content such as reusable widget law, compositions,
-realization metadata, bounded behavior surfaces, host-binding metadata, and
-visual resources. SVG assets may participate as visual realization resources.
-None of those artifacts replaces <code>.frog</code> as the canonical program
-source, and none of them becomes hidden language semantics.
+A conforming FROG ecosystem separates authoring, canonical source, structural validity, validated program meaning, canonical open execution-facing representation, lowering, runtime/compiler consumers, target execution, and source-aligned observability.
 </p>
 
 <pre><code>.frog source
@@ -182,161 +115,7 @@ source, and none of them becomes hidden language semantics.
   -&gt; runtime-family and/or compiler-family consumption</code></pre>
 
 <p>
-The same corridor can be read as the following ASCII execution diagram:
-</p>
-
-<pre><code>+----------------------+
-| .frog                |
-| canonical source     |
-+----------+-----------+
-           |
-           v
-+----------------------+
-| structural validation|
-+----------+-----------+
-           |
-           v
-+----------------------+
-| semantic validation  |
-+----------+-----------+
-           |
-           v
-+----------------------+
-| FIR                  |
-| open Execution IR    |
-+------+-------+-------+
-       |       |
-       |       +----------------------------+
-       |                                    |
-       v                                    v
-+----------------------+        +----------------------+
-| lowering             |        | widget realization   |
-| backend contract     |        | .wfrog + SVG         |
-+----------+-----------+        +----------+-----------+
-           |                               |
-           v                               v
-+----------------------+        +----------------------+
-| LLVM backend         |        | UI host              |
-| native artifact      |        | replaceable host     |
-+----------+-----------+        +----------+-----------+
-           |                               |
-           +---------------+---------------+
-                           |
-                           v
-                 +----------------------+
-                 | runtime              |
-                 | orchestration        |
-                 | bindings             |
-                 | scheduling           |
-                 | diagnostics          |
-                 +----------------------+</code></pre>
-
-<p>
-For compiler-family paths such as LLVM, the lowered form may be consumed to
-produce an LLVM-oriented module, native proof, or native loadable artifact.
-LLVM remains a downstream compiler-family consumer; it does not define FROG
-semantics and does not replace the runtime boundary.
-</p>
-
-<p>
-For runtime-family paths, the runtime consumes explicit contracts and published
-artifacts. It may instantiate a front panel through a host-specific UI layer,
-bind widget values or widget references to execution-facing units, load or call
-compiled artifacts when applicable, execute the dataflow unit, and project
-results, diagnostics, and observability back to source-meaningful objects.
-</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Artifact or layer</th>
-      <th>Pipeline role</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>.frog</code></td>
-      <td>Canonical program source.</td>
-    </tr>
-    <tr>
-      <td><code>.wfrog</code></td>
-      <td>Widget/package publication or realization metadata.</td>
-    </tr>
-    <tr>
-      <td>SVG/assets</td>
-      <td>Visual realization resources.</td>
-    </tr>
-    <tr>
-      <td>FIR / Execution IR</td>
-      <td>Open execution-facing representation derived from validated meaning.</td>
-    </tr>
-    <tr>
-      <td>Lowering</td>
-      <td>Target, backend, runtime, or deployment specialization.</td>
-    </tr>
-    <tr>
-      <td>Backend contract</td>
-      <td>Explicit downstream handoff.</td>
-    </tr>
-    <tr>
-      <td>LLVM</td>
-      <td>One possible compiler-family consumer and native proof path.</td>
-    </tr>
-    <tr>
-      <td>Runtime</td>
-      <td>Execution and orchestration consumer of explicit contracts and artifacts.</td>
-    </tr>
-    <tr>
-      <td>Host UI</td>
-      <td>Rendering and interaction surface; replaceable across host families.</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>
-The standalone ASCII diagram page is available in
-<a href="./ExecutionPipelineDiagram.md">End-to-End Execution Pipeline Diagram</a>.
-The practical reference-corridor details are documented in
-<a href="./Implementations/Reference/pipeline.md">Reference Pipeline</a>.
-A concrete UI/runtime/LLVM-oriented example is documented in
-<a href="./Examples/05_bounded_ui_accumulator/Readme.md">Example 05 — Bounded UI Accumulator</a>.
-</p>
-
-<hr/>
-
-<h2 id="public-specification-and-implementation-boundary">Public Specification and Implementation Boundary</h2>
-
-<p>
-The public FROG repository defines open language and ecosystem-facing material.
-Graiphic may build proprietary runtimes, IDEs, product integrations, and
-services around that public specification, but those private implementations do
-not become required public language law.
-</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Public FROG repository</th>
-      <th>Private Graiphic implementation work</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>.frog</code>, FIR posture, conformance, public examples, public libraries, profiles, Default realizations, and specification-facing docs.</td>
-      <td>Graiphic production runtime families, private runtime orchestration details, IDE implementation, product packaging, and internal project coordination.</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>
-The current public reference runtime closure remains bounded to Examples
-<code>01</code> through <code>15</code>. Later public examples remain
-specification-facing, widget-facing, conformance-facing, or design-progression
-material unless a later public runtime surface is explicitly promoted.
-</p>
-
-<p>
-See <a href="./FROG-Repository-Guide.md#public-specification-and-implementation-boundary">Public Specification and Implementation Boundary</a> for the full boundary statement.
+The reference execution architecture is preserved in <a href="./FROG-Architecture.md#execution-architecture">FROG Architecture</a>. The standalone ASCII pipeline page is available in <a href="./ExecutionPipelineDiagram.md">End-to-End Execution Pipeline Diagram</a>.
 </p>
 
 <hr/>
@@ -351,105 +130,31 @@ See <a href="./FROG-Repository-Guide.md#public-specification-and-implementation-
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td><a href="./Language/Readme.md"><code>Language/</code></a></td>
-      <td>Canonical source and language-facing rules.</td>
-    </tr>
-    <tr>
-      <td><a href="./Expression/Readme.md"><code>Expression/</code></a></td>
-      <td>FROG expression/source shape.</td>
-    </tr>
-    <tr>
-      <td><a href="./IR/Readme.md"><code>IR/</code></a></td>
-      <td>Execution-facing intermediate representation posture.</td>
-    </tr>
-    <tr>
-      <td><a href="./Libraries/Readme.md"><code>Libraries/</code></a></td>
-      <td>Public libraries, widgets, and Default realizations.</td>
-    </tr>
-    <tr>
-      <td><a href="./Profiles/Readme.md"><code>Profiles/</code></a></td>
-      <td>Capability/profile surfaces such as interoperability profiles.</td>
-    </tr>
-    <tr>
-      <td><a href="./Examples/Readme.md"><code>Examples/</code></a></td>
-      <td>Public examples and validation-oriented dossiers.</td>
-    </tr>
-    <tr>
-      <td><a href="./Conformance/Readme.md"><code>Conformance/</code></a></td>
-      <td>Positive and negative conformance cases.</td>
-    </tr>
-    <tr>
-      <td><a href="./Implementations/Reference/Readme.md"><code>Implementations/Reference/</code></a></td>
-      <td>Public reference implementation and tooling material within the current public boundary.</td>
-    </tr>
-    <tr>
-      <td><a href="./IDE/Readme.md"><code>IDE/</code></a></td>
-      <td>Public IDE-facing specification concepts, not the private Graiphic Studio implementation.</td>
-    </tr>
+    <tr><td><a href="./Expression/Readme.md"><code>Expression/</code></a></td><td>Canonical source and structural validity.</td></tr>
+    <tr><td><a href="./Language/Readme.md"><code>Language/</code></a></td><td>Validated program meaning.</td></tr>
+    <tr><td><a href="./IR/Readme.md"><code>IR/</code></a></td><td>Open execution-facing representation and downstream handoff posture.</td></tr>
+    <tr><td><a href="./Libraries/Readme.md"><code>Libraries/</code></a></td><td>Public libraries, widgets, and Default realizations.</td></tr>
+    <tr><td><a href="./Profiles/Readme.md"><code>Profiles/</code></a></td><td>Optional capability/profile surfaces.</td></tr>
+    <tr><td><a href="./IDE/Readme.md"><code>IDE/</code></a></td><td>IDE-facing concepts, authoring, observability, and inspection.</td></tr>
+    <tr><td><a href="./Examples/Readme.md"><code>Examples/</code></a></td><td>Public examples and validation-oriented dossiers.</td></tr>
+    <tr><td><a href="./Conformance/Readme.md"><code>Conformance/</code></a></td><td>Accept / reject / preserve expectations.</td></tr>
+    <tr><td><a href="./Implementations/Reference/Readme.md"><code>Implementations/Reference/</code></a></td><td>Non-normative reference implementation workspace.</td></tr>
+    <tr><td><a href="./Strategy/Readme.md"><code>Strategy/</code></a></td><td>Non-normative strategic framing layer, including AI-era Orville positioning.</td></tr>
+    <tr><td><a href="./Versioning/Readme.md"><code>Versioning/</code></a></td><td>Centralized specification-version governance and current-status reporting.</td></tr>
   </tbody>
 </table>
 
 <p>
-The detailed repository structure and reading path are maintained in
-<a href="./FROG-Repository-Guide.md">FROG Repository Guide</a>.
+The detailed repository structure and reading path are maintained in <a href="./FROG-Repository-Guide.md">FROG Repository Guide</a>.
 </p>
-
-<hr/>
-
-<h2 id="published-repository-state">Published repository state</h2>
-
-<p>
-The public repository currently publishes the open specification surface,
-conformance-facing material, public examples through Example <code>24</code>,
-Default widget realizations, public library/profile documentation, and the
-reference implementation material that belongs inside the public boundary.
-</p>
-
-<p>
-The examples table will continue to grow in <a href="./Examples/Readme.md">Examples</a>.
-The root page intentionally keeps only the orientation-level status, while
-<a href="./FROG-Project-Status.md">FROG Project Status</a> preserves the detailed
-published-state and maturity notes that used to live here.
-</p>
-
-<hr/>
-
-<h2 id="recommended-reading-path">Recommended reading path</h2>
-
-<ol>
-  <li>Start with this root README.</li>
-  <li>Read <a href="./FROG-Strategy.md">FROG Strategy and Positioning</a> for why the language exists.</li>
-  <li>Read <a href="./FROG-Architecture.md">FROG Architecture</a> for source, FIR, lowering, runtime/compiler, and observability posture.</li>
-  <li>Read <a href="#end-to-end-execution-pipeline">End-to-end execution pipeline</a> for the short path from source to runtime/compiler consumers.</li>
-  <li>Read <a href="./FROG-Repository-Guide.md">FROG Repository Guide</a> for the detailed repository map.</li>
-  <li>Use <a href="./Examples/Readme.md">Examples</a> and <a href="./Conformance/Readme.md">Conformance</a> for concrete validation material.</li>
-  <li>Use <a href="./FROG-Project-Status.md">FROG Project Status</a> for the current published state.</li>
-</ol>
 
 <hr/>
 
 <h2 id="license">License</h2>
 
 <p>
-This project is licensed under the <strong>Apache License 2.0</strong>.
-See <code>LICENSE</code> for details.
+This project is licensed under the <strong>Apache License 2.0</strong>. See <code>LICENSE</code> for details. External contributions are governed through <code>CONTRIBUTING.md</code> and <code>CLA.md</code>. Repository stewardship and governance are described in <code>GOVERNANCE.md</code>.
 </p>
-
-<p>
-External contributions are governed through the repository contribution process
-and Contributor License Agreement requirements. See <code>CONTRIBUTING.md</code>
-and <code>CLA.md</code>. Repository stewardship, governance direction, and ecosystem
-positioning are described in <code>GOVERNANCE.md</code>.
-</p>
-
-<p align="center">
-  <a href="https://cla-assistant.io/Graiphic/FROG">
-    <img src="./assets/cla-assistant-badge.svg" alt="CLA Assistant" />
-  </a>
-</p>
-
-<hr/>
 
 <p align="center">
   <strong>FROG — Free Open Graphical Language</strong><br/>
