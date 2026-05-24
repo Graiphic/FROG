@@ -567,7 +567,10 @@ fn render_numeric_skin(widget: &WidgetState, is_control: bool, value_face_color:
     let unit_display = if property_bool(&widget.properties, "unit_label.visible", false) { "inline" } else { "none" };
     let radix_display = if property_bool(&widget.properties, "display.radix_visible", false) { "inline" } else { "none" };
     let spinner_display = if is_control && property_bool(&widget.properties, "display.increment_buttons_visible", true) { "inline" } else { "none" };
-    let frame_fill = safe_css_color(&property_string(&widget.properties, "style.frame.fill_color", "#ffffff"), "#ffffff");
+    let frame_fill = safe_css_color(
+        &property_string(&widget.properties, "style.frame.fill_color", "transparent"),
+        "transparent",
+    );
     let frame_stroke = safe_css_color(&property_string(&widget.properties, "style.frame.border_color", "#000000"), "#000000");
     let frame_stroke_width = safe_css_length(&property_string(&widget.properties, "style.frame.border_width", "2px"), "2px");
     let value_face_fill = safe_css_color(&property_string(&widget.properties, "style.value_face.fill_color", value_face_color), value_face_color);

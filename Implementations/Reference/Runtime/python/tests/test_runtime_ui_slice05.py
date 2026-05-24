@@ -73,6 +73,7 @@ def test_slice05_ui_routes_and_state_match_shared_acceptance() -> None:
         assert "data-frog-part='increment_down'" in html
         assert "data-frog-method='decrement'" in html
         assert "data-frog-button-state-law='normal-pressed'" in html
+        assert "--frog-numeric-frame-fill:transparent" in html
         assert "--frog-numeric-frame-stroke:transparent" in html
         assert "--frog-numeric-frame-stroke-width:2px" in html
         assert "--frog-numeric-step-fill:#5B9BD5" in html

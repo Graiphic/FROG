@@ -242,6 +242,7 @@ void test_ui_surface() {
     assert_contains(html, "data-frog-part='increment_down'");
     assert_contains(html, "data-frog-method='decrement'");
     assert_contains(html, "data-frog-button-state-law='normal-pressed'");
+    assert_contains(html, "--frog-numeric-frame-fill:transparent");
     assert_contains(html, "--frog-numeric-frame-stroke:transparent");
     assert_contains(html, "--frog-numeric-frame-stroke-width:2px");
     assert_contains(html, "--frog-numeric-step-fill:#5B9BD5");

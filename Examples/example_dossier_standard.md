@@ -162,6 +162,15 @@ style of such surfaces should be source-owned or realization-published, not
 hardcoded by the runtime host.
 </p>
 
+<p>
+When a bordered widget face, value region, text region, state face, or similar
+published fill surface is meant to touch its surrounding border, the Default SVG
+and rendered host surface must not leave an unintended inner gap. The fill
+surface should either meet the stroke inner edge exactly or extend under a
+transparent / stroke-only frame so the visible result remains one clean bordered
+surface.
+</p>
+
 <hr/>
 
 <h2>Browser-Hosted Examples</h2>

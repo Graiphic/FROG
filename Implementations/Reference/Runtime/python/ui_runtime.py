@@ -514,7 +514,7 @@ def render_numeric_skin(widget_state: Any, *, is_control: bool, value_face_color
     if asset_path is None or not asset_path.exists():
         return "<div class='numeric-skin missing-skin'></div>"
     properties = widget_state.properties
-    frame_fill = safe_css_color(properties.get("style.frame.fill_color"), "#ffffff")
+    frame_fill = safe_css_color(properties.get("style.frame.fill_color"), "transparent")
     frame_stroke = safe_css_color(properties.get("style.frame.border_color"), "#000000")
     frame_stroke_width = safe_css_length(properties.get("style.frame.border_width"), "2px")
     value_face_fill = safe_css_color(properties.get("style.value_face.fill_color"), value_face_color)

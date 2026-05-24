@@ -17,7 +17,7 @@
         --frog-button-caption-fill: #d00000;
         --frog-button-caption-font-family: system-ui, Segoe UI, Arial, sans-serif;
         --frog-button-caption-font-size: 18px;
-        --frog-button-frame-fill: #ffffff;
+        --frog-button-frame-fill: transparent;
         --frog-button-frame-stroke: #2f80ed;
         --frog-button-frame-stroke-width: 6px;
         --frog-button-face-fill: #b7d7f2;
@@ -42,9 +42,9 @@
     <text id="label_text" data-frog-part="label" data-frog-member="label.text" data-frog-anchor="label.anchor" x="16" y="18">button_1</text>
     <text id="caption_text" data-frog-part="caption" data-frog-member="caption.text" data-frog-anchor="caption.anchor" x="16" y="46">Button</text>
     <rect id="focus_ring" data-frog-part="focus_ring" x="4" y="64" width="332" height="124" rx="6" data-frog-bind="interaction.focused style.focus_ring.*" />
+    <rect id="face" data-frog-part="face" x="12" y="72" width="316" height="108" rx="0" data-frog-bind="style.face.*" />
+    <rect id="state_face" data-frog-part="state_face" x="12" y="72" width="316" height="108" rx="0" data-frog-bind="style.state_face.*" />
     <rect id="frame" data-frog-part="frame" x="12" y="72" width="316" height="108" rx="0" data-frog-bind="style.frame.*" />
-    <rect id="face" data-frog-part="face" x="26" y="86" width="288" height="80" rx="0" data-frog-bind="style.face.*" />
-    <rect id="state_face" data-frog-part="state_face" x="42" y="102" width="256" height="48" rx="0" data-frog-bind="style.state_face.*" />
     <text id="state_text" data-frog-part="state_text" data-frog-member="state_text.false_text state_text.true_text" data-frog-anchor="state_text.center" x="170" y="127" text-anchor="middle" dominant-baseline="middle">ON</text>
   </g>
 </svg>

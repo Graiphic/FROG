@@ -69,6 +69,7 @@ fn slice05_ui_surface_matches_shared_acceptance() {
     assert!(html.contains("data-frog-part='increment_down'"));
     assert!(html.contains("data-frog-method='decrement'"));
     assert!(html.contains("data-frog-button-state-law='normal-pressed'"));
+    assert!(html.contains("--frog-numeric-frame-fill:transparent"));
     assert!(html.contains("--frog-numeric-frame-stroke:transparent"));
     assert!(html.contains("--frog-numeric-frame-stroke-width:2px"));
     assert!(html.contains("--frog-numeric-step-fill:#5B9BD5"));

@@ -585,7 +585,7 @@ std::string render_numeric_skin(const WidgetState& widget, bool is_control, cons
     if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
         return "<div class='numeric-skin missing-skin'></div>";
     }
-    const auto frame_fill = safe_css_color(property_string(widget.properties, "style.frame.fill_color", "#ffffff"), "#ffffff");
+    const auto frame_fill = safe_css_color(property_string(widget.properties, "style.frame.fill_color", "transparent"), "transparent");
     const auto frame_stroke = safe_css_color(property_string(widget.properties, "style.frame.border_color", "#000000"), "#000000");
     const auto frame_stroke_width = safe_css_length(property_string(widget.properties, "style.frame.border_width", "2px"), "2px");
     const auto value_face_fill = safe_css_color(property_string(widget.properties, "style.value_face.fill_color", color), color);

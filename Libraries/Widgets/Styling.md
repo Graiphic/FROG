@@ -503,6 +503,15 @@ source / realization property surface or an explicitly documented generic
 fallback for missing optional data.
 </p>
 
+<p>
+Border-adjacent fill regions are part of the same visual contract. When a
+widget face, value face, text region, state face, or equivalent published fill
+surface is intended to touch the border, the realization must not introduce a
+blank inner strip between that fill and the border. The fill region should meet
+the stroke inner edge exactly, or it may extend under a transparent /
+stroke-only frame when the border stroke is drawn above it.
+</p>
+
 <h3>13.3 Text-oriented style properties</h3>
 
 <ul>

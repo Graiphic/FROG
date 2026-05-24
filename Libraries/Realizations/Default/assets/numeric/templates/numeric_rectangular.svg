@@ -25,7 +25,7 @@
         --frog-numeric-caption-font-size: 20px;
         --frog-numeric-caption-font-weight: 400;
 
-        --frog-numeric-frame-fill: #ffffff;
+        --frog-numeric-frame-fill: transparent;
         --frog-numeric-frame-stroke: #000000;
         --frog-numeric-frame-stroke-width: 2px;
 
@@ -160,6 +160,15 @@
           rx="6"
           data-frog-bind="interaction.focused style.focus_ring.*" />
 
+    <rect id="value_face"
+          data-frog-part="value_face"
+          x="18"
+          y="78"
+          width="222"
+          height="36"
+          rx="0"
+          data-frog-bind="style.value_face.*" />
+
     <rect id="frame"
           data-frog-part="frame"
           x="18"
@@ -168,15 +177,6 @@
           height="36"
           rx="0"
           data-frog-bind="style.frame.*" />
-
-    <rect id="value_face"
-          data-frog-part="value_face"
-          x="22"
-          y="82"
-          width="214"
-          height="28"
-          rx="0"
-          data-frog-bind="style.value_face.*" />
 
     <text id="text_value"
           data-frog-part="text_value"
