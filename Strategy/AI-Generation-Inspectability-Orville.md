@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="../assets/strategy/frog-ai-generation-inspectability-orville.svg" alt="FROG AI generation compatibility vs AI inspectability Orville chart" width="640" />
+  <img src="../assets/strategy/frog-ai-generation-inspectability-orville.png" alt="FROG AI generation compatibility vs AI inspectability Orville chart" width="640" />
 </p>
 
 <hr/>
