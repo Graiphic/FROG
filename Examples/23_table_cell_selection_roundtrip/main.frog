@@ -100,7 +100,7 @@
         "layout": {
           "x": 32,
           "y": 34,
-          "width": 360,
+          "width": 380,
           "height": 265
         },
         "props": {
@@ -153,6 +153,22 @@
               "width": 82,
               "editable": true,
               "visible": true
+            },
+            {
+              "id": "temperature",
+              "label": "Temperature",
+              "type": "u16",
+              "width": 82,
+              "editable": true,
+              "visible": true
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "u16",
+              "width": 82,
+              "editable": true,
+              "visible": true
             }
           ],
           "rows": [
@@ -169,6 +185,26 @@
             {
               "id": "peak",
               "label": "Peak",
+              "visible": true
+            },
+            {
+              "id": "diagnostics",
+              "label": "Diagnostics",
+              "visible": true
+            },
+            {
+              "id": "calibration",
+              "label": "Calibration",
+              "visible": true
+            },
+            {
+              "id": "archive",
+              "label": "Archive",
+              "visible": true
+            },
+            {
+              "id": "maintenance",
+              "label": "Maintenance",
               "visible": true
             }
           ],
@@ -189,6 +225,16 @@
               "value": 30
             },
             {
+              "row_id": "idle",
+              "column_id": "temperature",
+              "value": 31
+            },
+            {
+              "row_id": "idle",
+              "column_id": "status",
+              "value": 32
+            },
+            {
               "row_id": "nominal",
               "column_id": "speed",
               "value": 40
@@ -204,6 +250,16 @@
               "value": 60
             },
             {
+              "row_id": "nominal",
+              "column_id": "temperature",
+              "value": 61
+            },
+            {
+              "row_id": "nominal",
+              "column_id": "status",
+              "value": 62
+            },
+            {
               "row_id": "peak",
               "column_id": "speed",
               "value": 70
@@ -217,17 +273,131 @@
               "row_id": "peak",
               "column_id": "torque",
               "value": 90
+            },
+            {
+              "row_id": "peak",
+              "column_id": "temperature",
+              "value": 91
+            },
+            {
+              "row_id": "peak",
+              "column_id": "status",
+              "value": 92
+            },
+            {
+              "row_id": "diagnostics",
+              "column_id": "speed",
+              "value": 100
+            },
+            {
+              "row_id": "diagnostics",
+              "column_id": "load",
+              "value": 110
+            },
+            {
+              "row_id": "diagnostics",
+              "column_id": "torque",
+              "value": 120
+            },
+            {
+              "row_id": "diagnostics",
+              "column_id": "temperature",
+              "value": 121
+            },
+            {
+              "row_id": "diagnostics",
+              "column_id": "status",
+              "value": 122
+            },
+            {
+              "row_id": "calibration",
+              "column_id": "speed",
+              "value": 130
+            },
+            {
+              "row_id": "calibration",
+              "column_id": "load",
+              "value": 140
+            },
+            {
+              "row_id": "calibration",
+              "column_id": "torque",
+              "value": 150
+            },
+            {
+              "row_id": "calibration",
+              "column_id": "temperature",
+              "value": 151
+            },
+            {
+              "row_id": "calibration",
+              "column_id": "status",
+              "value": 152
+            },
+            {
+              "row_id": "archive",
+              "column_id": "speed",
+              "value": 160
+            },
+            {
+              "row_id": "archive",
+              "column_id": "load",
+              "value": 170
+            },
+            {
+              "row_id": "archive",
+              "column_id": "torque",
+              "value": 180
+            },
+            {
+              "row_id": "archive",
+              "column_id": "temperature",
+              "value": 181
+            },
+            {
+              "row_id": "archive",
+              "column_id": "status",
+              "value": 182
+            },
+            {
+              "row_id": "maintenance",
+              "column_id": "speed",
+              "value": 190
+            },
+            {
+              "row_id": "maintenance",
+              "column_id": "load",
+              "value": 200
+            },
+            {
+              "row_id": "maintenance",
+              "column_id": "torque",
+              "value": 210
+            },
+            {
+              "row_id": "maintenance",
+              "column_id": "temperature",
+              "value": 211
+            },
+            {
+              "row_id": "maintenance",
+              "column_id": "status",
+              "value": 212
             }
           ],
-          "viewport.row_header_width": 76,
-          "viewport.column_header_height": 30,
-          "viewport.row_height": 34,
+          "viewport.row_header_width": 85,
+          "viewport.column_header_height": 24,
+          "viewport.row_height": 32,
+          "viewport.visible_row_count": 5,
+          "viewport.row_offset": 0,
+          "viewport.visible_column_count": 3,
+          "viewport.column_offset": 0,
           "viewport.cell_padding_inline": "8px",
           "display.index_display_visible": false,
           "display.row_headers_visible": true,
           "display.column_headers_visible": true,
-          "display.vertical_scrollbar_visible": false,
-          "display.horizontal_scrollbar_visible": false,
+          "display.vertical_scrollbar_visible": true,
+          "display.horizontal_scrollbar_visible": true,
           "display.vertical_lines_visible": true,
           "display.horizontal_lines_visible": true,
           "display.symbols_visible": false,
@@ -243,27 +413,32 @@
           "style.table_region.fill_color": "#ffffff",
           "style.table_region.border_color": "#64748b",
           "style.table_region.border_width": "1px",
+          "style.grid_line.color": "#cbd5e1",
+          "style.grid_line.width": "1px",
           "style.header_region.fill_color": "#f1f5f9",
-          "style.header_region.border_color": "#94a3b8",
-          "style.header_region.border_width": "1px",
           "style.row_header.fill_color": "#f8fafc",
           "style.scrollbar.track_fill_color": "#eef2f7",
-          "style.scrollbar.border_color": "#94a3b8",
+          "style.scrollbar.track_hover_fill_color": "#dbe5f1",
+          "style.scrollbar.track_pressed_fill_color": "#bfdbfe",
+          "style.scrollbar.border_color": "#64748b",
           "style.scrollbar.border_width": "1px",
           "style.scrollbar.thumb_fill_color": "#cbd5e1",
           "style.scrollbar.thumb_hover_fill_color": "#94a3b8",
+          "style.scrollbar.thumb_pressed_fill_color": "#64748b",
+          "style.scrollbar.thumb_padding_percent": 4,
+          "style.scrollbar.thickness": "18px",
+          "style.scrollbar.horizontal_height": "18px",
           "style.scrollbar.vertical_thumb_width_percent": 66.67,
-          "style.scrollbar.vertical_thumb_height_percent": 32.77,
-          "style.scrollbar.vertical_thumb_offset_x_percent": 16.67,
-          "style.scrollbar.vertical_thumb_offset_y_percent": 15.13,
-          "style.scrollbar.horizontal_thumb_width_percent": 29.79,
-          "style.scrollbar.horizontal_thumb_height_percent": 62.5,
-          "style.scrollbar.horizontal_thumb_offset_x_percent": 10.64,
-          "style.scrollbar.horizontal_thumb_offset_y_percent": 18.75,
+          "style.scrollbar.vertical_thumb_height_percent": 62,
+          "style.scrollbar.vertical_thumb_offset_x_percent": 50,
+          "style.scrollbar.vertical_thumb_offset_y_percent": 4,
+          "style.scrollbar.vertical_thumb_translate_x": "-50%",
+          "style.scrollbar.horizontal_thumb_width_percent": 62,
+          "style.scrollbar.horizontal_thumb_height_percent": 66.67,
+          "style.scrollbar.horizontal_thumb_offset_x_percent": 4,
+          "style.scrollbar.horizontal_thumb_offset_y_percent": 16.67,
           "style.cell.fill_color": "#ffffff",
           "style.cell.alternate_fill_color": "#f8fafc",
-          "style.cell.border_color": "#cbd5e1",
-          "style.cell.border_width": "1px",
           "style.cell.hover_fill_color": "#eef6ff",
           "style.selection_face.fill_color": "#dbeafe",
           "style.selection_face.border_color": "#2563eb",
@@ -300,7 +475,7 @@
         "layout": {
           "x": 430,
           "y": 34,
-          "width": 360,
+          "width": 380,
           "height": 265
         },
         "props": {
@@ -353,6 +528,22 @@
               "width": 82,
               "editable": false,
               "visible": true
+            },
+            {
+              "id": "temperature",
+              "label": "Temperature",
+              "type": "u16",
+              "width": 82,
+              "editable": false,
+              "visible": true
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "u16",
+              "width": 82,
+              "editable": false,
+              "visible": true
             }
           ],
           "rows": [
@@ -369,6 +560,26 @@
             {
               "id": "peak",
               "label": "Peak",
+              "visible": true
+            },
+            {
+              "id": "diagnostics",
+              "label": "Diagnostics",
+              "visible": true
+            },
+            {
+              "id": "calibration",
+              "label": "Calibration",
+              "visible": true
+            },
+            {
+              "id": "archive",
+              "label": "Archive",
+              "visible": true
+            },
+            {
+              "id": "maintenance",
+              "label": "Maintenance",
               "visible": true
             }
           ],
@@ -389,6 +600,16 @@
               "value": 30
             },
             {
+              "row_id": "idle",
+              "column_id": "temperature",
+              "value": 31
+            },
+            {
+              "row_id": "idle",
+              "column_id": "status",
+              "value": 32
+            },
+            {
               "row_id": "nominal",
               "column_id": "speed",
               "value": 40
@@ -404,6 +625,16 @@
               "value": 60
             },
             {
+              "row_id": "nominal",
+              "column_id": "temperature",
+              "value": 61
+            },
+            {
+              "row_id": "nominal",
+              "column_id": "status",
+              "value": 62
+            },
+            {
               "row_id": "peak",
               "column_id": "speed",
               "value": 70
@@ -417,17 +648,131 @@
               "row_id": "peak",
               "column_id": "torque",
               "value": 90
+            },
+            {
+              "row_id": "peak",
+              "column_id": "temperature",
+              "value": 91
+            },
+            {
+              "row_id": "peak",
+              "column_id": "status",
+              "value": 92
+            },
+            {
+              "row_id": "diagnostics",
+              "column_id": "speed",
+              "value": 100
+            },
+            {
+              "row_id": "diagnostics",
+              "column_id": "load",
+              "value": 110
+            },
+            {
+              "row_id": "diagnostics",
+              "column_id": "torque",
+              "value": 120
+            },
+            {
+              "row_id": "diagnostics",
+              "column_id": "temperature",
+              "value": 121
+            },
+            {
+              "row_id": "diagnostics",
+              "column_id": "status",
+              "value": 122
+            },
+            {
+              "row_id": "calibration",
+              "column_id": "speed",
+              "value": 130
+            },
+            {
+              "row_id": "calibration",
+              "column_id": "load",
+              "value": 140
+            },
+            {
+              "row_id": "calibration",
+              "column_id": "torque",
+              "value": 150
+            },
+            {
+              "row_id": "calibration",
+              "column_id": "temperature",
+              "value": 151
+            },
+            {
+              "row_id": "calibration",
+              "column_id": "status",
+              "value": 152
+            },
+            {
+              "row_id": "archive",
+              "column_id": "speed",
+              "value": 160
+            },
+            {
+              "row_id": "archive",
+              "column_id": "load",
+              "value": 170
+            },
+            {
+              "row_id": "archive",
+              "column_id": "torque",
+              "value": 180
+            },
+            {
+              "row_id": "archive",
+              "column_id": "temperature",
+              "value": 181
+            },
+            {
+              "row_id": "archive",
+              "column_id": "status",
+              "value": 182
+            },
+            {
+              "row_id": "maintenance",
+              "column_id": "speed",
+              "value": 190
+            },
+            {
+              "row_id": "maintenance",
+              "column_id": "load",
+              "value": 200
+            },
+            {
+              "row_id": "maintenance",
+              "column_id": "torque",
+              "value": 210
+            },
+            {
+              "row_id": "maintenance",
+              "column_id": "temperature",
+              "value": 211
+            },
+            {
+              "row_id": "maintenance",
+              "column_id": "status",
+              "value": 212
             }
           ],
-          "viewport.row_header_width": 76,
-          "viewport.column_header_height": 30,
-          "viewport.row_height": 34,
+          "viewport.row_header_width": 85,
+          "viewport.column_header_height": 24,
+          "viewport.row_height": 32,
+          "viewport.visible_row_count": 5,
+          "viewport.row_offset": 0,
+          "viewport.visible_column_count": 3,
+          "viewport.column_offset": 0,
           "viewport.cell_padding_inline": "8px",
           "display.index_display_visible": false,
           "display.row_headers_visible": true,
           "display.column_headers_visible": true,
-          "display.vertical_scrollbar_visible": false,
-          "display.horizontal_scrollbar_visible": false,
+          "display.vertical_scrollbar_visible": true,
+          "display.horizontal_scrollbar_visible": true,
           "display.vertical_lines_visible": true,
           "display.horizontal_lines_visible": true,
           "display.symbols_visible": false,
@@ -443,27 +788,32 @@
           "style.table_region.fill_color": "#ffffff",
           "style.table_region.border_color": "#64748b",
           "style.table_region.border_width": "1px",
+          "style.grid_line.color": "#cbd5e1",
+          "style.grid_line.width": "1px",
           "style.header_region.fill_color": "#f1f5f9",
-          "style.header_region.border_color": "#94a3b8",
-          "style.header_region.border_width": "1px",
           "style.row_header.fill_color": "#f8fafc",
           "style.scrollbar.track_fill_color": "#eef2f7",
-          "style.scrollbar.border_color": "#94a3b8",
+          "style.scrollbar.track_hover_fill_color": "#dbe5f1",
+          "style.scrollbar.track_pressed_fill_color": "#bfdbfe",
+          "style.scrollbar.border_color": "#64748b",
           "style.scrollbar.border_width": "1px",
           "style.scrollbar.thumb_fill_color": "#cbd5e1",
           "style.scrollbar.thumb_hover_fill_color": "#94a3b8",
+          "style.scrollbar.thumb_pressed_fill_color": "#64748b",
+          "style.scrollbar.thumb_padding_percent": 4,
+          "style.scrollbar.thickness": "18px",
+          "style.scrollbar.horizontal_height": "18px",
           "style.scrollbar.vertical_thumb_width_percent": 66.67,
-          "style.scrollbar.vertical_thumb_height_percent": 32.77,
-          "style.scrollbar.vertical_thumb_offset_x_percent": 16.67,
-          "style.scrollbar.vertical_thumb_offset_y_percent": 15.13,
-          "style.scrollbar.horizontal_thumb_width_percent": 29.79,
-          "style.scrollbar.horizontal_thumb_height_percent": 62.5,
-          "style.scrollbar.horizontal_thumb_offset_x_percent": 10.64,
-          "style.scrollbar.horizontal_thumb_offset_y_percent": 18.75,
+          "style.scrollbar.vertical_thumb_height_percent": 62,
+          "style.scrollbar.vertical_thumb_offset_x_percent": 50,
+          "style.scrollbar.vertical_thumb_offset_y_percent": 4,
+          "style.scrollbar.vertical_thumb_translate_x": "-50%",
+          "style.scrollbar.horizontal_thumb_width_percent": 62,
+          "style.scrollbar.horizontal_thumb_height_percent": 66.67,
+          "style.scrollbar.horizontal_thumb_offset_x_percent": 4,
+          "style.scrollbar.horizontal_thumb_offset_y_percent": 16.67,
           "style.cell.fill_color": "#ffffff",
           "style.cell.alternate_fill_color": "#f8fafc",
-          "style.cell.border_color": "#cbd5e1",
-          "style.cell.border_width": "1px",
           "style.cell.hover_fill_color": "#ffffff",
           "style.selection_face.fill_color": "#dcfce7",
           "style.selection_face.border_color": "#16a34a",

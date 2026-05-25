@@ -518,8 +518,8 @@ progression with a Listbox control and read-only Listbox indicator. It contains
 public source, FIR/lowering shape, a <code>.wfrog</code> package referencing the
 Default Listbox realization, and a native manifest <code>u16</code> proof output.
 The <code>.frog</code> owns item ids, labels, numeric values, selected item state,
-viewport, layout, and style overrides. It does not add public runtime source
-beyond the Example 15 closure.
+viewport, scrollbar posture, layout, and style overrides. It does not add
+public runtime source beyond the Example 15 closure.
 </p>
 
 <p>
@@ -528,8 +528,9 @@ progression with a Table control and read-only Table indicator. It contains
 public source, FIR/lowering shape, a <code>.wfrog</code> package referencing the
 Default Table realization, and a native manifest <code>u16</code> proof output.
 The <code>.frog</code> owns the table schema, rows, cells, selected cell state,
-viewport, layout, and style overrides. It does not add public runtime source
-beyond the Example 15 closure.
+editable-cell posture, horizontal and vertical scrollbar posture, viewport,
+layout, and style overrides. It does not add public runtime source beyond the
+Example 15 closure.
 </p>
 
 <p>

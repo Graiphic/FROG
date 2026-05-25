@@ -76,13 +76,14 @@
        data-frog-anchor="overlay_region.bounds"
        data-frog-member="overlay.*"
        data-frog-bind="overlay.* pointer.position"
+       style="display:none"
        opacity="0.9">
       <line x1="29" y1="75" x2="491" y2="333" stroke="#2563eb" stroke-width="2" vector-effect="non-scaling-stroke" opacity="0.22"/>
       <rect x="316" y="116" width="96" height="64" fill="none" stroke="#f97316" stroke-width="2" stroke-dasharray="6 4" vector-effect="non-scaling-stroke"/>
       <text x="322" y="108" font-size="11" font-family="Inter, Arial, sans-serif" fill="#f97316">overlay</text>
     </g>
 
-    <g id="roi_layer" data-frog-part="roi_layer" data-frog-member="roi.*" data-frog-bind="roi.* display.roi_visible">
+    <g id="roi_layer" data-frog-part="roi_layer" data-frog-member="roi.*" data-frog-bind="roi.* display.roi_visible" style="display:none">
       <rect x="110" y="132" width="164" height="106" fill="none" stroke="#22c55e" stroke-width="2.5" vector-effect="non-scaling-stroke"/>
       <circle cx="110" cy="132" r="4" fill="#22c55e"/>
       <circle cx="274" cy="132" r="4" fill="#22c55e"/>
@@ -90,13 +91,13 @@
       <circle cx="274" cy="238" r="4" fill="#22c55e"/>
     </g>
 
-    <g id="crosshair_layer" data-frog-part="crosshair_layer" data-frog-member="pointer.position" data-frog-bind="pointer.position crosshair.* display.crosshair_visible" opacity="0.9">
+    <g id="crosshair_layer" data-frog-part="crosshair_layer" data-frog-member="pointer.position" data-frog-bind="pointer.position crosshair.* display.crosshair_visible" style="display:none" opacity="0.9">
       <line x1="260" y1="75" x2="260" y2="333" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5 5" vector-effect="non-scaling-stroke"/>
       <line x1="29" y1="204" x2="491" y2="204" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5 5" vector-effect="non-scaling-stroke"/>
       <circle cx="260" cy="204" r="5" fill="none" stroke="#ef4444" stroke-width="2" vector-effect="non-scaling-stroke"/>
     </g>
 
-    <g id="cursor_readout" data-frog-part="cursor_readout" data-frog-member="pointer.pixel_value" data-frog-bind="pointer.pixel_value cursor_readout.visible cursor_readout.style.*">
+    <g id="cursor_readout" data-frog-part="cursor_readout" data-frog-member="pointer.pixel_value" data-frog-bind="pointer.pixel_value cursor_readout.visible cursor_readout.style.*" style="display:none">
       <rect x="28" y="336" width="238" height="20" rx="0" fill="#111827" opacity="0.86"/>
       <text x="40" y="350" font-size="12" font-family="Consolas, Menlo, monospace" fill="#f8fafc">x=0 y=0 rgb=(--,--,--)</text>
     </g>

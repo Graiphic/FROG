@@ -17,10 +17,10 @@
       :root {
         --frog-path-label-display: none;
         --frog-path-caption-display: inline;
-        --frog-path-caption-fill: #d00000;
+        --frog-path-caption-fill: #111827;
         --frog-path-caption-font-family: system-ui, Segoe UI, Arial, sans-serif;
-        --frog-path-caption-font-size: 18px;
-        --frog-path-caption-font-weight: 400;
+        --frog-path-caption-font-size: 14px;
+        --frog-path-caption-font-weight: 600;
         --frog-path-face-fill: #ffffff;
         --frog-path-face-stroke: #94a3b8;
         --frog-path-face-stroke-width: 1px;

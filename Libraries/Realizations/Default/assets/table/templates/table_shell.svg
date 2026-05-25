@@ -1,51 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 390" data-frog-template="frog.realizations.default.table.shell">
-  <title>FROG Default Table Shell</title>
-  <desc>Default SVG-backed table shell with published frame, header, grid, cell, selection, editing, sort, resize, scrollbar, caption, label, and focus parts. Runtime-visible rows and text are bound from .frog instance data.</desc>
+  <title>FROG Default Table Geometry Shell</title>
+  <desc>Default Table shell publishing stable anchors and geometry surfaces. Headers, cells, selection, editing, and scrollbar thumbs are host overlays driven by .frog instance data.</desc>
   <g data-frog-part="root">
-    <text id="label_text" data-frog-part="label" data-frog-anchor="label.anchor" x="16" y="22" font-size="12" font-family="Inter, Arial, sans-serif" fill="var(--frog-table-label-color,#111827)"></text>
-    <text id="caption_text" data-frog-part="caption" data-frog-anchor="caption.anchor" x="16" y="48" font-size="16" font-family="Inter, Arial, sans-serif" fill="var(--frog-table-caption-color,#111827)"></text>
-
-    <rect id="table_frame" data-frog-part="frame" x="14" y="64" width="592" height="310" rx="0" fill="var(--frog-table-frame-fill,#ffffff)" stroke="var(--frog-table-frame-stroke,#64748b)" stroke-width="var(--frog-table-frame-stroke-width,1)" vector-effect="non-scaling-stroke"/>
-
-    <g id="table_header_region" data-frog-part="header_region">
-      <rect x="28" y="82" width="540" height="34" rx="0" fill="var(--frog-table-header-fill,#f1f5f9)" stroke="var(--frog-table-header-stroke,#94a3b8)" stroke-width="var(--frog-table-header-stroke-width,1)" vector-effect="non-scaling-stroke"/>
-      <g id="table_column_header_region" data-frog-part="column_header_region">
-        <rect x="78" y="82" width="470" height="34" rx="0" fill="var(--frog-table-column-header-fill,#f1f5f9)" stroke="var(--frog-table-header-stroke,#94a3b8)" stroke-width="var(--frog-table-header-stroke-width,1)" vector-effect="non-scaling-stroke"/>
-      </g>
-      <g id="table_row_header_region" data-frog-part="row_header_region">
-        <rect x="28" y="116" width="50" height="238" rx="0" fill="var(--frog-table-row-header-fill,#f8fafc)" stroke="var(--frog-table-header-stroke,#94a3b8)" stroke-width="var(--frog-table-header-stroke-width,1)" vector-effect="non-scaling-stroke"/>
-      </g>
-      <g id="table_sort_indicator" data-frog-part="sort_indicator">
-        <path d="M530 96 L538 88 L546 96 Z" fill="var(--frog-table-sort-indicator-fill,#64748b)" opacity="var(--frog-table-sort-indicator-opacity,0)"/>
-      </g>
-      <g id="table_resize_handle" data-frog-part="resize_handle" opacity="var(--frog-table-resize-handle-opacity,0)">
-        <line x1="226" y1="88" x2="226" y2="110" stroke="var(--frog-table-resize-handle-stroke,#64748b)" stroke-width="var(--frog-table-resize-handle-width,1)" vector-effect="non-scaling-stroke"/>
-        <line x1="374" y1="88" x2="374" y2="110" stroke="var(--frog-table-resize-handle-stroke,#64748b)" stroke-width="var(--frog-table-resize-handle-width,1)" vector-effect="non-scaling-stroke"/>
-      </g>
+    <text data-frog-part="label" data-frog-anchor="label.anchor" x="16" y="22"></text>
+    <text data-frog-part="caption" data-frog-anchor="caption.anchor" x="16" y="48"></text>
+    <g data-frog-part="frame">
+      <rect x="14" y="64" width="592" height="314" fill="none" stroke="none"/>
     </g>
-
-    <g id="table_grid_region" data-frog-part="grid_region">
-      <rect x="78" y="116" width="470" height="238" rx="0" fill="var(--frog-table-grid-fill,#ffffff)" stroke="var(--frog-table-grid-stroke,#cbd5e1)" stroke-width="var(--frog-table-grid-stroke-width,1)" vector-effect="non-scaling-stroke"/>
-      <g id="table_body_region" data-frog-part="body_region"></g>
-      <g id="table_row" data-frog-part="row"></g>
-      <g id="table_cell" data-frog-part="cell"></g>
-      <rect id="table_selection_face" data-frog-part="selection_face" x="78" y="116" width="148" height="34" rx="0" fill="var(--frog-table-selection-fill,#dbeafe)" stroke="var(--frog-table-selection-stroke,#2563eb)" stroke-width="var(--frog-table-selection-stroke-width,1)" vector-effect="non-scaling-stroke" opacity="var(--frog-table-selection-opacity,0)"/>
-      <rect id="table_active_cell" data-frog-part="active_cell" x="78" y="116" width="148" height="34" rx="0" fill="none" stroke="var(--frog-table-active-cell-stroke,#2563eb)" stroke-width="var(--frog-table-active-cell-stroke-width,1)" vector-effect="non-scaling-stroke" opacity="var(--frog-table-active-cell-opacity,0)"/>
-      <g id="table_edit_overlay" data-frog-part="edit_overlay" opacity="var(--frog-table-edit-overlay-opacity,0)">
-        <rect x="80" y="118" width="144" height="30" rx="0" fill="none" stroke="var(--frog-table-edit-overlay-stroke,#f97316)" stroke-width="var(--frog-table-edit-overlay-width,1)" stroke-dasharray="5 4" vector-effect="non-scaling-stroke"/>
-      </g>
+    <g data-frog-part="header_region">
+      <rect x="28" y="82" width="540" height="34" fill="none" stroke="none"/>
     </g>
-
-    <g id="table_vertical_scrollbar" data-frog-part="vertical_scrollbar" opacity="var(--frog-table-vertical-scrollbar-opacity,0)">
-      <rect x="568" y="116" width="18" height="238" rx="0" fill="var(--frog-table-scrollbar-track-fill,#e2e8f0)" stroke="var(--frog-table-scrollbar-border,#94a3b8)" stroke-width="var(--frog-table-scrollbar-border-width,1)" vector-effect="non-scaling-stroke"/>
-      <rect x="571" y="144" width="12" height="78" rx="0" fill="var(--frog-table-scrollbar-thumb-fill,#94a3b8)"/>
+    <g data-frog-part="column_header_region">
+      <rect x="78" y="82" width="470" height="34" fill="none" stroke="none"/>
     </g>
-
-    <g id="table_horizontal_scrollbar" data-frog-part="horizontal_scrollbar" opacity="var(--frog-table-horizontal-scrollbar-opacity,0)">
-      <rect x="78" y="354" width="470" height="16" rx="0" fill="var(--frog-table-scrollbar-track-fill,#e2e8f0)" stroke="var(--frog-table-scrollbar-border,#94a3b8)" stroke-width="var(--frog-table-scrollbar-border-width,1)" vector-effect="non-scaling-stroke"/>
-      <rect x="128" y="357" width="140" height="10" rx="0" fill="var(--frog-table-scrollbar-thumb-fill,#94a3b8)"/>
+    <g data-frog-part="row_header_region">
+      <rect x="28" y="116" width="50" height="238" fill="none" stroke="none"/>
     </g>
-
-    <rect id="table_focus_ring" data-frog-part="focus_ring" x="10" y="60" width="600" height="314" rx="0" fill="none" stroke="var(--frog-table-focus-color,#2563eb)" stroke-width="var(--frog-table-focus-width,2)" vector-effect="non-scaling-stroke" opacity="var(--frog-table-focus-opacity,0)"/>
+    <g data-frog-part="grid_region">
+      <rect x="28" y="82" width="540" height="272" fill="none" stroke="none"/>
+    </g>
+    <g data-frog-part="body_region">
+      <rect x="78" y="116" width="470" height="238" fill="none" stroke="none"/>
+    </g>
+    <g data-frog-part="row"></g>
+    <g data-frog-part="cell"></g>
+    <g data-frog-part="selection_face"></g>
+    <g data-frog-part="active_cell"></g>
+    <g data-frog-part="edit_overlay"></g>
+    <g data-frog-part="sort_indicator"></g>
+    <g data-frog-part="resize_handle"></g>
+    <g data-frog-part="vertical_scrollbar">
+      <rect x="574" y="82" width="18" height="272" fill="none" stroke="none"/>
+    </g>
+    <g data-frog-part="horizontal_scrollbar">
+      <rect x="28" y="360" width="540" height="18" fill="none" stroke="none"/>
+    </g>
+    <g data-frog-part="focus_ring">
+      <rect x="10" y="60" width="600" height="318" fill="none" stroke="none"/>
+    </g>
   </g>
 </svg>
