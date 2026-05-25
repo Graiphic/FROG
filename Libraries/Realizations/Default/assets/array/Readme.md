@@ -24,4 +24,7 @@
 
 <p>
 The actual element behavior is owned by the element widget class, not by these array realization assets.
+The <code>.frog</code> instance owns rank, shape, viewport size, scrollbar gap,
+index values, element records, and per-instance style overrides.
+The Default SVG assets publish parts and baseline geometry only.
 </p>

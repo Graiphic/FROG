@@ -47,6 +47,22 @@
         "present": true,
         "kind": "homogeneous_collection"
       }
+    },
+    {
+      "class_id": "frog.widgets.array_control",
+      "role": "control",
+      "primary_value": {
+        "present": true,
+        "kind": "homogeneous_collection"
+      }
+    },
+    {
+      "class_id": "frog.widgets.array_indicator",
+      "role": "indicator",
+      "primary_value": {
+        "present": true,
+        "kind": "homogeneous_collection"
+      }
     }
   ],
   "exports": {
@@ -69,7 +85,11 @@
     {
       "id": "frog.realizations.default.array",
       "family": "default",
-      "target_class": "frog.widgets.array",
+      "target_classes": [
+        "frog.widgets.array",
+        "frog.widgets.array_control",
+        "frog.widgets.array_indicator"
+      ],
       "variant_property": "realization.variant",
       "default_variant": "rectangular_viewport",
       "supported_variants": [
@@ -101,7 +121,11 @@
     {
       "id": "frog.realizations.default.array.rectangular_viewport",
       "variant": "rectangular_viewport",
-      "target_class": "frog.widgets.array",
+      "target_classes": [
+        "frog.widgets.array",
+        "frog.widgets.array_control",
+        "frog.widgets.array_indicator"
+      ],
       "shell_resource_ref": "frog.realizations.default.array.assets.shell_svg",
       "geometry_posture": {
         "shape_family": "rectangular_collection_viewport",

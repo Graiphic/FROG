@@ -1,0 +1,134 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_package",
+  "package_id": "example26.array_panel",
+  "title": "Example 26 Default Array realization package",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "26_array_numeric_selection_roundtrip",
+    "source_path": "Examples/26_array_numeric_selection_roundtrip/main.frog",
+    "fir_path": "Examples/26_array_numeric_selection_roundtrip/main.fir.json",
+    "lowering_path": "Examples/26_array_numeric_selection_roundtrip/main.lowering.json"
+  },
+  "ownership_boundary": {
+    "owns": [
+      "Default Array realization reference",
+      "Default Array SVG asset references",
+      "host binding requirements for Array selected-element rendering"
+    ],
+    "does_not_own": [
+      "canonical source semantics",
+      "front-panel widget instance layout",
+      "front-panel widget instance visual customization",
+      "Array rank, shape, elements, selected element, index values, viewport, and styles",
+      "FIR semantics",
+      "lowering semantics",
+      "runtime-private execution behavior",
+      "widget class law",
+      "Default Array SVG geometry"
+    ]
+  },
+  "widget_classes": [
+    {
+      "class_id": "frog.widgets.array_control",
+      "role": "control",
+      "value_type": "frog.array<u16,rank=2>"
+    },
+    {
+      "class_id": "frog.widgets.array_indicator",
+      "role": "indicator",
+      "value_type": "frog.array<u16,rank=2>"
+    }
+  ],
+  "host_bindings": [
+    {
+      "binding_id": "array_runtime_host_default",
+      "host_family": "frog_conforming_array_runtime_host",
+      "target": "frog_conforming_array_runtime_host",
+      "required_capabilities": [
+        "window",
+        "basic_widget_rendering",
+        "widget_value_binding",
+        "array_element_selection_rendering",
+        "array_index_display_rendering",
+        "array_visible_item_rendering",
+        "array_state_patch_interaction",
+        "svg_part_overlay_alignment",
+        "svg_style_property_binding",
+        "native_kernel_manifest"
+      ]
+    }
+  ],
+  "realization_refs": [
+    {
+      "package_ref": "Libraries/Realizations/Default/array.default.wfrog",
+      "target_classes": [
+        "frog.widgets.array_control",
+        "frog.widgets.array_indicator"
+      ]
+    }
+  ],
+  "svg_assets": [
+    {
+      "asset_id": "array_shell_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+      "target_classes": [
+        "frog.widgets.array_control",
+        "frog.widgets.array_indicator"
+      ]
+    },
+    {
+      "asset_id": "array_index_display_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/array/subobjects/index_display.svg",
+      "target_classes": [
+        "frog.widgets.array_control",
+        "frog.widgets.array_indicator"
+      ]
+    },
+    {
+      "asset_id": "array_element_region_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/array/subobjects/element_region.svg",
+      "target_classes": [
+        "frog.widgets.array_control",
+        "frog.widgets.array_indicator"
+      ]
+    },
+    {
+      "asset_id": "array_element_slot_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/array/subobjects/element_slot.svg",
+      "target_classes": [
+        "frog.widgets.array_control",
+        "frog.widgets.array_indicator"
+      ]
+    },
+    {
+      "asset_id": "array_vertical_scrollbar_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/array/subobjects/vertical_scrollbar.svg",
+      "target_classes": [
+        "frog.widgets.array_control",
+        "frog.widgets.array_indicator"
+      ]
+    },
+    {
+      "asset_id": "array_horizontal_scrollbar_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/array/subobjects/horizontal_scrollbar.svg",
+      "target_classes": [
+        "frog.widgets.array_control",
+        "frog.widgets.array_indicator"
+      ]
+    }
+  ],
+  "notes": [
+    "This package references the Default Array realization instead of duplicating local SVG skins.",
+    "The .frog source owns Array rank, shape, elements, selected element, viewport, layout, and visual overrides.",
+    "The .wfrog package resolves Default realization assets and declares host capabilities."
+  ]
+}

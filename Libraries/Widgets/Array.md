@@ -70,7 +70,17 @@ A numeric array is only one specialization created by binding the array element 
 
 <ul>
   <li><code>frog.widgets.array</code></li>
+  <li><code>frog.widgets.array_control</code></li>
+  <li><code>frog.widgets.array_indicator</code></li>
 </ul>
+
+<p>
+<code>frog.widgets.array</code> is the abstract structured collection class.
+<code>frog.widgets.array_control</code> is the interactive front-panel form
+that may edit element values, selection, index displays, and viewport state
+when enabled. <code>frog.widgets.array_indicator</code> is the read-only
+front-panel form used to display collection values published by diagram flow.
+</p>
 
 <hr/>
 
@@ -189,6 +199,7 @@ element_region
   <li><code>viewport.orientation</code> — <code>vertical</code>, <code>horizontal</code>, or <code>grid</code>.</li>
   <li><code>viewport.selection_start[]</code></li>
   <li><code>viewport.selection_size[]</code></li>
+  <li><code>viewport.scrollbar_gap</code> — source-owned distance between the element viewport and any visible scrollbar surfaces.</li>
   <li><code>scrollbars.vertical.visible</code></li>
   <li><code>scrollbars.horizontal.visible</code></li>
   <li><code>scrollbars.vertical.position</code></li>

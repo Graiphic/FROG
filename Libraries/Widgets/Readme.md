@@ -65,7 +65,7 @@ surfaces that are specific to each widget class.
     <tr><td><a href="./Tab.md"><code>Tab.md</code></a></td><td>Tab</td><td><code>frog.widgets.tab_control</code>, <code>frog.widgets.tab_indicator</code></td><td>selection / navigation</td><td>control / indicator</td><td>published page-navigation baseline</td></tr>
     <tr><td><a href="./Tree.md"><code>Tree.md</code></a></td><td>Tree</td><td><code>frog.widgets.tree_control</code>, <code>frog.widgets.tree_indicator</code></td><td>selection / navigation</td><td>control / indicator</td><td>published hierarchical-data baseline</td></tr>
     <tr><td><a href="./Table.md"><code>Table.md</code></a></td><td>Table</td><td><code>frog.widgets.table_control</code>, <code>frog.widgets.table_indicator</code></td><td>structured data</td><td>control / indicator</td><td>published tabular-data baseline</td></tr>
-    <tr><td><a href="./Array.md"><code>Array.md</code></a></td><td>Array</td><td><code>frog.widgets.array</code></td><td>structured data</td><td>structured collection</td><td>published homogeneous collection baseline</td></tr>
+    <tr><td><a href="./Array.md"><code>Array.md</code></a></td><td>Array</td><td><code>frog.widgets.array</code>, <code>frog.widgets.array_control</code>, <code>frog.widgets.array_indicator</code></td><td>structured data</td><td>structured collection</td><td>published homogeneous collection baseline</td></tr>
     <tr><td><a href="./Cluster.md"><code>Cluster.md</code></a></td><td>Cluster</td><td><code>frog.widgets.cluster</code></td><td>structured data</td><td>structured aggregate</td><td>published heterogeneous aggregate baseline</td></tr>
     <tr><td><a href="./Label.md"><code>Label.md</code></a></td><td>Label</td><td><code>frog.widgets.label</code></td><td>support</td><td>support</td><td>published support baseline</td></tr>
     <tr><td><a href="./Frame.md"><code>Frame.md</code></a></td><td>Frame</td><td><code>frog.widgets.frame</code></td><td>support</td><td>support</td><td>published support baseline</td></tr>
@@ -121,7 +121,7 @@ The shared property vocabulary is documented in <a href="./CommonProperties.md">
 <h2>Collection and Structure Rule</h2>
 
 <ul>
-  <li><code>frog.widgets.array</code> is the homogeneous collection widget.</li>
+  <li><code>frog.widgets.array</code> is the homogeneous collection class; <code>frog.widgets.array_control</code> and <code>frog.widgets.array_indicator</code> are the interactive and read-only front-panel forms.</li>
   <li><code>frog.widgets.cluster</code> is the heterogeneous named aggregate widget.</li>
   <li><code>frog.widgets.table_control</code> and <code>frog.widgets.table_indicator</code> are visible flat tabular widgets.</li>
   <li>Tree, Tab, Listbox, Table, Picture, Chart, and Subpanel are not generic host containers for arbitrary private state; their public surfaces are bounded by their class-law documents.</li>

@@ -26,7 +26,9 @@
 <h2>1. Overview</h2>
 
 <p>
-This document describes the default realization posture for <code>frog.widgets.array</code>.
+This document describes the default realization posture for <code>frog.widgets.array</code>,
+<code>frog.widgets.array_control</code>, and
+<code>frog.widgets.array_indicator</code>.
 </p>
 
 <p>

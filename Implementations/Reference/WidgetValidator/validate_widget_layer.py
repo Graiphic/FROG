@@ -31,7 +31,7 @@ FAMILIES: dict[str, dict[str, Any]] = {
     "tab": {"widget_doc": "Tab.md", "default_doc": "Tab.md", "manifest": "tab.default.wfrog", "classes": ["frog.widgets.tab_control", "frog.widgets.tab_indicator"]},
     "tree": {"widget_doc": "Tree.md", "default_doc": "Tree.md", "manifest": "tree.default.wfrog", "classes": ["frog.widgets.tree_control", "frog.widgets.tree_indicator"]},
     "table": {"widget_doc": "Table.md", "default_doc": "Table.md", "manifest": "table.default.wfrog", "classes": ["frog.widgets.table_control", "frog.widgets.table_indicator"]},
-    "array": {"widget_doc": "Array.md", "default_doc": "Array.md", "manifest": "array.default.wfrog", "classes": ["frog.widgets.array"]},
+    "array": {"widget_doc": "Array.md", "default_doc": "Array.md", "manifest": "array.default.wfrog", "classes": ["frog.widgets.array", "frog.widgets.array_control", "frog.widgets.array_indicator"]},
     "cluster": {"widget_doc": "Cluster.md", "default_doc": "Cluster.md", "manifest": "cluster.default.wfrog", "classes": ["frog.widgets.cluster"]},
     "label": {"widget_doc": "Label.md", "default_doc": "Label.md", "manifest": "label.default.wfrog", "classes": ["frog.widgets.label"]},
     "frame": {"widget_doc": "Frame.md", "default_doc": "Frame.md", "manifest": "frame.default.wfrog", "classes": ["frog.widgets.frame"]},

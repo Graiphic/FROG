@@ -1,24 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 180"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 310"
      role="img" aria-label="FROG default array shell"
      data-frog-template="frog.realizations.default.array.shell"
      data-frog-target-class="frog.widgets.array">
   <title>FROG Default Array Shell</title>
   <g id="root" data-frog-part="root">
-    <text id="label_text" data-frog-part="label" data-frog-member="label.text" data-frog-anchor="label.anchor"
-          x="12" y="18" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="12">array_1</text>
-    <text id="caption_text" data-frog-part="caption" data-frog-member="caption.text" data-frog-anchor="caption.anchor"
-          x="12" y="40" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="14">Array</text>
-    <rect id="focus_ring" data-frog-part="focus_ring" x="4" y="48" width="250" height="120" rx="6"
+    <rect id="label_anchor" data-frog-part="label" data-frog-member="label.text" data-frog-anchor="label.anchor"
+          x="64" y="22" width="1" height="1" fill="none" stroke="none" />
+    <rect id="caption_anchor" data-frog-part="caption" data-frog-member="caption.text" data-frog-anchor="caption.anchor"
+          x="64" y="44" width="1" height="1" fill="none" stroke="none" />
+    <rect id="focus_ring" data-frog-part="focus_ring" x="8" y="46" width="472" height="250"
           fill="none" stroke="#2f80ed" stroke-width="3" opacity="0"
           vector-effect="non-scaling-stroke"
           data-frog-bind="interaction.focused style.focus_ring.*" />
-    <rect id="frame" data-frog-part="frame" x="10" y="54" width="238" height="108"
-          fill="#ffffff" stroke="#000000" stroke-width="2" vector-effect="non-scaling-stroke" data-frog-bind="style.frame.*" />
-    <g id="slot_index_display" data-frog-slot="index_display" data-frog-part="index_display" transform="translate(18 62)" />
-    <g id="dimension_controls" data-frog-part="dimension_controls" data-frog-bind="dimensions.*" transform="translate(18 142)" />
-    <g id="slot_element_region" data-frog-slot="element_region" data-frog-part="element_region" transform="translate(58 62)" />
+    <rect id="frame" data-frog-part="frame" x="56" y="54" width="368" height="210"
+          fill="transparent" stroke="transparent" stroke-width="0" vector-effect="non-scaling-stroke" data-frog-bind="style.frame.*" />
+    <g id="slot_index_display" data-frog-slot="index_display" data-frog-part="index_display" transform="translate(12 54)" />
+    <g id="dimension_controls" data-frog-part="dimension_controls" data-frog-bind="dimensions.*" transform="translate(12 54)" />
+    <g id="slot_element_region" data-frog-slot="element_region" data-frog-part="element_region" transform="translate(56 54)" />
     <g id="element_gap" data-frog-part="element_gap" data-frog-bind="layout.element_gap" />
-    <g id="slot_vertical_scrollbar" data-frog-slot="vertical_scrollbar" data-frog-part="vertical_scrollbar" transform="translate(222 62)" />
-    <g id="slot_horizontal_scrollbar" data-frog-slot="horizontal_scrollbar" data-frog-part="horizontal_scrollbar" transform="translate(58 142)" />
+    <g id="slot_vertical_scrollbar" data-frog-slot="vertical_scrollbar" data-frog-part="vertical_scrollbar" transform="translate(432 54)" />
+    <g id="slot_horizontal_scrollbar" data-frog-slot="horizontal_scrollbar" data-frog-part="horizontal_scrollbar" transform="translate(56 272)" />
   </g>
 </svg>

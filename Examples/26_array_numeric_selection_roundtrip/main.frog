@@ -1,0 +1,490 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "26_array_numeric_selection_roundtrip",
+    "summary": "2D numeric Array control-to-indicator selected-element roundtrip using .frog-owned array data and Default Array .wfrog realization assets.",
+    "description": "Places one 2D numeric Array control and one read-only Array indicator on the front panel. The .frog source owns rank, shape, elements, selected element, index display, viewport, layout, labels, bindings, and instance-level visual overrides. The .wfrog package references the Default Array realization and SVG assets. Runtime implementation for this post-boundary example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "array",
+      "array_control",
+      "array_indicator",
+      "numeric_array",
+      "selected_element",
+      "roundtrip",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "element_value",
+        "type": "u16",
+        "binding_origin": "widget.numeric_array.value.selected_element_value"
+      },
+      {
+        "id": "array_records",
+        "type": "frog.array.records<u16,rank=2>",
+        "binding_origin": "widget.numeric_array.elements.*"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_array_records",
+        "type": "frog.array.records<u16,rank=2>"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "numeric_array_element_value",
+        "kind": "widget_value",
+        "widget": "numeric_array",
+        "member": "value.selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_array_element_value",
+        "kind": "widget_value",
+        "widget": "published_array",
+        "member": "value.selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "numeric_array_records",
+        "kind": "widget_value",
+        "widget": "numeric_array",
+        "member": "elements.*",
+        "type": "frog.array.records<u16,rank=2>"
+      },
+      {
+        "id": "published_array_records",
+        "kind": "widget_value",
+        "widget": "published_array",
+        "member": "elements.*",
+        "type": "frog.array.records<u16,rank=2>"
+      },
+      {
+        "id": "output_selected_element_value",
+        "kind": "interface_output",
+        "interface_port": "selected_element_value"
+      },
+      {
+        "id": "output_published_array_records",
+        "kind": "interface_output",
+        "interface_port": "published_array_records"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "numeric_array_element_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "published_array_element_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "numeric_array_element_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_selected_element_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e3",
+        "from": {
+          "node": "numeric_array_records",
+          "port": "records"
+        },
+        "to": {
+          "node": "published_array_records",
+          "port": "records"
+        }
+      },
+      {
+        "id": "e4",
+        "from": {
+          "node": "numeric_array_records",
+          "port": "records"
+        },
+        "to": {
+          "node": "output_published_array_records",
+          "port": "records"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 900,
+      "height": 410,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/array_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "numeric_array",
+        "role": "control",
+        "class_ref": "frog.widgets.array_control",
+        "instance_ref": "numeric_array",
+        "value_type": "frog.array<u16,rank=2>",
+        "layout": {
+          "x": 32,
+          "y": 30,
+          "width": 405,
+          "height": 300
+        },
+        "props": {
+          "label.text": "Array control",
+          "label.visible": true,
+          "label.anchor.x": 64,
+          "label.anchor.y": 22,
+          "label.style.text_color": "#111827",
+          "label.style.font_family": "Segoe UI, Arial, sans-serif",
+          "label.style.font_size": "13px",
+          "label.style.font_weight": "600",
+          "caption.text": "",
+          "caption.visible": false,
+          "caption.anchor.x": 64,
+          "caption.anchor.y": 44,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "12px",
+          "caption.style.font_weight": "400",
+          "value.selected_element_id": "r1c1",
+          "value.selected_indices": [1, 1],
+          "value.selected_element_value": 70,
+          "selection.mode": "single_element",
+          "selection.active_indices": [1, 1],
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "element.class_id": "frog.widgets.numeric",
+          "element.value_type": "u16",
+          "element.role": "control",
+          "dimensions.rank": 2,
+          "dimensions.shape": [7, 5],
+          "dimensions.index_base": 0,
+          "dimensions.allow_resize": false,
+          "viewport.first_indices": [0, 0],
+          "viewport.visible_counts": [5, 3],
+          "viewport.row_offset": 0,
+          "viewport.column_offset": 0,
+          "viewport.row_count": 5,
+          "viewport.column_count": 3,
+          "viewport.row_height": 32,
+          "viewport.column_width": 105,
+          "viewport.cell_padding_inline": "8px",
+          "viewport.scrollbar_gap": 6,
+          "index_display.visible": true,
+          "index_display.rank": 2,
+          "index_display.values": [0, 0],
+          "display.vertical_scrollbar_visible": true,
+          "display.horizontal_scrollbar_visible": true,
+          "display.vertical_lines_visible": true,
+          "display.horizontal_lines_visible": true,
+          "interaction.enabled": true,
+          "interaction.read_only": false,
+          "interaction.editable_elements": true,
+          "interaction.selection_scrolling_enabled": true,
+          "interaction.index_display_enabled": true,
+          "scrolling.smooth_enabled": true,
+          "editing.allow_during_execution": true,
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.array_region.fill_color": "#ffffff",
+          "style.array_region.border_color": "#64748b",
+          "style.array_region.border_width": "1px",
+          "style.grid_line.color": "#cbd5e1",
+          "style.grid_line.width": "1px",
+          "style.index_display.fill_color": "#ffffff",
+          "style.index_display.border_color": "#94a3b8",
+          "style.index_display.border_width": "1px",
+          "style.index_display.step_fill_color": "#edf2f7",
+          "style.index_display.step_hover_fill_color": "#dbeafe",
+          "style.index_display.step_pressed_fill_color": "#bfdbfe",
+          "style.index_display.glyph_color": "#334e68",
+          "style.scrollbar.track_fill_color": "#eef2f7",
+          "style.scrollbar.track_hover_fill_color": "#dbe5f1",
+          "style.scrollbar.track_pressed_fill_color": "#bfdbfe",
+          "style.scrollbar.border_color": "#64748b",
+          "style.scrollbar.border_width": "1px",
+          "style.scrollbar.thumb_fill_color": "#cbd5e1",
+          "style.scrollbar.thumb_hover_fill_color": "#94a3b8",
+          "style.scrollbar.thumb_pressed_fill_color": "#64748b",
+          "style.scrollbar.thumb_padding_percent": 4,
+          "style.scrollbar.thickness": "18px",
+          "style.scrollbar.horizontal_height": "18px",
+          "style.scrollbar.vertical_thumb_width_percent": 66.67,
+          "style.scrollbar.vertical_thumb_offset_x_percent": 50,
+          "style.scrollbar.vertical_thumb_translate_x": "-50%",
+          "style.scrollbar.horizontal_thumb_height_percent": 66.67,
+          "style.scrollbar.horizontal_thumb_offset_y_percent": 16.67,
+          "style.element.fill_color": "#ffffff",
+          "style.element.alternate_fill_color": "#f8fafc",
+          "style.element.hover_fill_color": "#eef6ff",
+          "style.selection_face.fill_color": "#dbeafe",
+          "style.selection_face.border_color": "#2563eb",
+          "style.selection_face.border_width": "1px",
+          "style.active_element.border_color": "#2563eb",
+          "style.active_element.border_width": "2px",
+          "style.text.color": "#111827",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "13px",
+          "style.text.font_weight": "400",
+          "style.focus_ring.color": "#2563eb",
+          "style.focus_ring.width": "2px",
+          "elements": [
+            {"id": "r0c0", "indices": [0, 0], "value": 10},
+            {"id": "r0c1", "indices": [0, 1], "value": 20},
+            {"id": "r0c2", "indices": [0, 2], "value": 30},
+            {"id": "r0c3", "indices": [0, 3], "value": 40},
+            {"id": "r0c4", "indices": [0, 4], "value": 50},
+            {"id": "r1c0", "indices": [1, 0], "value": 60},
+            {"id": "r1c1", "indices": [1, 1], "value": 70},
+            {"id": "r1c2", "indices": [1, 2], "value": 80},
+            {"id": "r1c3", "indices": [1, 3], "value": 90},
+            {"id": "r1c4", "indices": [1, 4], "value": 100},
+            {"id": "r2c0", "indices": [2, 0], "value": 110},
+            {"id": "r2c1", "indices": [2, 1], "value": 120},
+            {"id": "r2c2", "indices": [2, 2], "value": 130},
+            {"id": "r2c3", "indices": [2, 3], "value": 140},
+            {"id": "r2c4", "indices": [2, 4], "value": 150},
+            {"id": "r3c0", "indices": [3, 0], "value": 160},
+            {"id": "r3c1", "indices": [3, 1], "value": 170},
+            {"id": "r3c2", "indices": [3, 2], "value": 180},
+            {"id": "r3c3", "indices": [3, 3], "value": 190},
+            {"id": "r3c4", "indices": [3, 4], "value": 200},
+            {"id": "r4c0", "indices": [4, 0], "value": 210},
+            {"id": "r4c1", "indices": [4, 1], "value": 220},
+            {"id": "r4c2", "indices": [4, 2], "value": 230},
+            {"id": "r4c3", "indices": [4, 3], "value": 240},
+            {"id": "r4c4", "indices": [4, 4], "value": 250},
+            {"id": "r5c0", "indices": [5, 0], "value": 260},
+            {"id": "r5c1", "indices": [5, 1], "value": 270},
+            {"id": "r5c2", "indices": [5, 2], "value": 280},
+            {"id": "r5c3", "indices": [5, 3], "value": 290},
+            {"id": "r5c4", "indices": [5, 4], "value": 300},
+            {"id": "r6c0", "indices": [6, 0], "value": 310},
+            {"id": "r6c1", "indices": [6, 1], "value": 320},
+            {"id": "r6c2", "indices": [6, 2], "value": 330},
+            {"id": "r6c3", "indices": [6, 3], "value": 340},
+            {"id": "r6c4", "indices": [6, 4], "value": 350}
+          ]
+        },
+        "visual": {
+          "asset_ref": "asset:array_shell_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "element_value"
+        }
+      },
+      {
+        "id": "published_array",
+        "role": "indicator",
+        "class_ref": "frog.widgets.array_indicator",
+        "instance_ref": "published_array",
+        "value_type": "frog.array<u16,rank=2>",
+        "layout": {
+          "x": 465,
+          "y": 30,
+          "width": 405,
+          "height": 300
+        },
+        "props": {
+          "label.text": "Array indicator",
+          "label.visible": true,
+          "label.anchor.x": 64,
+          "label.anchor.y": 22,
+          "label.style.text_color": "#111827",
+          "label.style.font_family": "Segoe UI, Arial, sans-serif",
+          "label.style.font_size": "13px",
+          "label.style.font_weight": "600",
+          "caption.text": "",
+          "caption.visible": false,
+          "caption.anchor.x": 64,
+          "caption.anchor.y": 44,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "12px",
+          "caption.style.font_weight": "400",
+          "value.selected_element_id": "r1c1",
+          "value.selected_indices": [1, 1],
+          "value.selected_element_value": 70,
+          "selection.mode": "single_element",
+          "selection.active_indices": [1, 1],
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "element.class_id": "frog.widgets.numeric",
+          "element.value_type": "u16",
+          "element.role": "indicator",
+          "dimensions.rank": 2,
+          "dimensions.shape": [7, 5],
+          "dimensions.index_base": 0,
+          "dimensions.allow_resize": false,
+          "viewport.first_indices": [0, 0],
+          "viewport.visible_counts": [5, 3],
+          "viewport.row_offset": 0,
+          "viewport.column_offset": 0,
+          "viewport.row_count": 5,
+          "viewport.column_count": 3,
+          "viewport.row_height": 32,
+          "viewport.column_width": 105,
+          "viewport.cell_padding_inline": "8px",
+          "viewport.scrollbar_gap": 6,
+          "index_display.visible": true,
+          "index_display.rank": 2,
+          "index_display.values": [0, 0],
+          "display.vertical_scrollbar_visible": true,
+          "display.horizontal_scrollbar_visible": true,
+          "display.vertical_lines_visible": true,
+          "display.horizontal_lines_visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "interaction.editable_elements": false,
+          "interaction.selection_scrolling_enabled": true,
+          "interaction.index_display_enabled": true,
+          "scrolling.smooth_enabled": true,
+          "editing.allow_during_execution": false,
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.array_region.fill_color": "#ffffff",
+          "style.array_region.border_color": "#64748b",
+          "style.array_region.border_width": "1px",
+          "style.grid_line.color": "#cbd5e1",
+          "style.grid_line.width": "1px",
+          "style.index_display.fill_color": "#ffffff",
+          "style.index_display.border_color": "#94a3b8",
+          "style.index_display.border_width": "1px",
+          "style.index_display.step_fill_color": "#edf2f7",
+          "style.index_display.step_hover_fill_color": "#dbeafe",
+          "style.index_display.step_pressed_fill_color": "#bfdbfe",
+          "style.index_display.glyph_color": "#334e68",
+          "style.scrollbar.track_fill_color": "#eef2f7",
+          "style.scrollbar.track_hover_fill_color": "#dbe5f1",
+          "style.scrollbar.track_pressed_fill_color": "#bfdbfe",
+          "style.scrollbar.border_color": "#64748b",
+          "style.scrollbar.border_width": "1px",
+          "style.scrollbar.thumb_fill_color": "#cbd5e1",
+          "style.scrollbar.thumb_hover_fill_color": "#94a3b8",
+          "style.scrollbar.thumb_pressed_fill_color": "#64748b",
+          "style.scrollbar.thumb_padding_percent": 4,
+          "style.scrollbar.thickness": "18px",
+          "style.scrollbar.horizontal_height": "18px",
+          "style.scrollbar.vertical_thumb_width_percent": 66.67,
+          "style.scrollbar.vertical_thumb_offset_x_percent": 50,
+          "style.scrollbar.vertical_thumb_translate_x": "-50%",
+          "style.scrollbar.horizontal_thumb_height_percent": 66.67,
+          "style.scrollbar.horizontal_thumb_offset_y_percent": 16.67,
+          "style.element.fill_color": "#ffffff",
+          "style.element.alternate_fill_color": "#f8fafc",
+          "style.element.hover_fill_color": "#ffffff",
+          "style.selection_face.fill_color": "#dcfce7",
+          "style.selection_face.border_color": "#16a34a",
+          "style.selection_face.border_width": "1px",
+          "style.active_element.border_color": "#16a34a",
+          "style.active_element.border_width": "2px",
+          "style.text.color": "#111827",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "13px",
+          "style.text.font_weight": "400",
+          "style.focus_ring.color": "#16a34a",
+          "style.focus_ring.width": "2px",
+          "elements": [
+            {"id": "r0c0", "indices": [0, 0], "value": 10},
+            {"id": "r0c1", "indices": [0, 1], "value": 20},
+            {"id": "r0c2", "indices": [0, 2], "value": 30},
+            {"id": "r0c3", "indices": [0, 3], "value": 40},
+            {"id": "r0c4", "indices": [0, 4], "value": 50},
+            {"id": "r1c0", "indices": [1, 0], "value": 60},
+            {"id": "r1c1", "indices": [1, 1], "value": 70},
+            {"id": "r1c2", "indices": [1, 2], "value": 80},
+            {"id": "r1c3", "indices": [1, 3], "value": 90},
+            {"id": "r1c4", "indices": [1, 4], "value": 100},
+            {"id": "r2c0", "indices": [2, 0], "value": 110},
+            {"id": "r2c1", "indices": [2, 1], "value": 120},
+            {"id": "r2c2", "indices": [2, 2], "value": 130},
+            {"id": "r2c3", "indices": [2, 3], "value": 140},
+            {"id": "r2c4", "indices": [2, 4], "value": 150},
+            {"id": "r3c0", "indices": [3, 0], "value": 160},
+            {"id": "r3c1", "indices": [3, 1], "value": 170},
+            {"id": "r3c2", "indices": [3, 2], "value": 180},
+            {"id": "r3c3", "indices": [3, 3], "value": 190},
+            {"id": "r3c4", "indices": [3, 4], "value": 200},
+            {"id": "r4c0", "indices": [4, 0], "value": 210},
+            {"id": "r4c1", "indices": [4, 1], "value": 220},
+            {"id": "r4c2", "indices": [4, 2], "value": 230},
+            {"id": "r4c3", "indices": [4, 3], "value": 240},
+            {"id": "r4c4", "indices": [4, 4], "value": 250},
+            {"id": "r5c0", "indices": [5, 0], "value": 260},
+            {"id": "r5c1", "indices": [5, 1], "value": 270},
+            {"id": "r5c2", "indices": [5, 2], "value": 280},
+            {"id": "r5c3", "indices": [5, 3], "value": 290},
+            {"id": "r5c4", "indices": [5, 4], "value": 300},
+            {"id": "r6c0", "indices": [6, 0], "value": 310},
+            {"id": "r6c1", "indices": [6, 1], "value": 320},
+            {"id": "r6c2", "indices": [6, 2], "value": 330},
+            {"id": "r6c3", "indices": [6, 3], "value": 340},
+            {"id": "r6c4", "indices": [6, 4], "value": 350}
+          ]
+        },
+        "visual": {
+          "asset_ref": "asset:array_shell_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "selected_element_value"
+        }
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Array Numeric Selection Roundtrip",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "array_runtime_host_default",
+    "documentation": {
+      "title": "Array numeric selection",
+      "summary": "An Array presents a homogeneous collection. This example uses a 2D u16 Array control and read-only indicator. Selecting or editing an element changes front-panel state; Execute consumes the selected element through the native manifest and publishes the declared array-record flow to the indicator.",
+      "legend": [
+        {
+          "label": "Array control",
+          "description": "Click or edit an element. Index displays and scrollbars adjust only viewport state until Execute."
+        },
+        {
+          "label": "Execute",
+          "description": "Execute reads the selected u16 element through the manifest-backed native corridor."
+        },
+        {
+          "label": "Array indicator",
+          "description": "Read-only Array display patched from the declared dataflow output after Execute."
+        }
+      ],
+      "note": "The runtime may provide host overlays for element cells, index displays, and scrollbars, but they must align to Default Array SVG parts and consume .frog-owned dimensions, elements, viewport, interaction, and style data."
+    }
+  }
+}

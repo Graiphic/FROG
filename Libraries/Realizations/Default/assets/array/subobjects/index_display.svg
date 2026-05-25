@@ -1,11 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 72"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 72"
      role="img" aria-label="FROG array index display"
      data-frog-template="frog.realizations.default.array.subobject.index_display">
   <title>Array Index Display</title>
   <g id="index_display" data-frog-part="index_display" data-frog-bind="index_display.* viewport.first_indices[]">
-    <rect x="0" y="0" width="32" height="22" fill="#ffffff" stroke="#94a3b8" />
-    <text x="16" y="14" text-anchor="middle" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="11">0</text>
-    <rect x="0" y="26" width="32" height="22" fill="#ffffff" stroke="#94a3b8" />
-    <text x="16" y="40" text-anchor="middle" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="11">1</text>
+    <g data-frog-part="dimension_index" data-frog-bind="viewport.first_indices[0]">
+      <rect data-frog-part="index_frame" x="0" y="0" width="40" height="24" fill="#ffffff" stroke="#94a3b8" vector-effect="non-scaling-stroke" />
+      <line data-frog-part="index_stepper_separator" x1="16" y1="0" x2="16" y2="24" stroke="#94a3b8" vector-effect="non-scaling-stroke" />
+      <line data-frog-part="index_stepper_separator" x1="0" y1="12" x2="16" y2="12" stroke="#94a3b8" vector-effect="non-scaling-stroke" />
+      <path data-frog-part="index_step_up" d="M5 6 L11 6 L8 3 Z" fill="#64748b" />
+      <path data-frog-part="index_step_down" d="M5 18 L11 18 L8 21 Z" fill="#64748b" />
+      <text x="28" y="16" text-anchor="middle" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="11">0</text>
+    </g>
+    <g data-frog-part="dimension_index" data-frog-bind="viewport.first_indices[1]" transform="translate(0 32)">
+      <rect data-frog-part="index_frame" x="0" y="0" width="40" height="24" fill="#ffffff" stroke="#94a3b8" vector-effect="non-scaling-stroke" />
+      <line data-frog-part="index_stepper_separator" x1="16" y1="0" x2="16" y2="24" stroke="#94a3b8" vector-effect="non-scaling-stroke" />
+      <line data-frog-part="index_stepper_separator" x1="0" y1="12" x2="16" y2="12" stroke="#94a3b8" vector-effect="non-scaling-stroke" />
+      <path data-frog-part="index_step_up" d="M5 6 L11 6 L8 3 Z" fill="#64748b" />
+      <path data-frog-part="index_step_down" d="M5 18 L11 18 L8 21 Z" fill="#64748b" />
+      <text x="28" y="16" text-anchor="middle" font-family="system-ui, Segoe UI, Arial, sans-serif" font-size="11">0</text>
+    </g>
   </g>
 </svg>

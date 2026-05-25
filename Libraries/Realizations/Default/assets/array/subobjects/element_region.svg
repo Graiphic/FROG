@@ -1,11 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 72"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 210"
      role="img" aria-label="FROG array element region"
      data-frog-template="frog.realizations.default.array.subobject.element_region">
   <title>Array Element Region</title>
   <g id="element_region" data-frog-part="element_region" data-frog-bind="viewport.* layout.* element.*">
-    <rect x="0" y="0" width="160" height="72" fill="#f8fafc" stroke="#94a3b8" />
-    <g id="slot_element_0" data-frog-slot="element_slot" data-frog-part="element_slot" transform="translate(6 6)" />
-    <g id="slot_element_1" data-frog-slot="element_slot" data-frog-part="element_slot" transform="translate(6 30)" />
-    <g id="slot_element_2" data-frog-slot="element_slot" data-frog-part="element_slot" transform="translate(6 54)" />
+    <rect x="0" y="0" width="360" height="210" fill="#ffffff" stroke="#64748b" stroke-width="1" vector-effect="non-scaling-stroke" />
+    <g id="slot_element_0" data-frog-slot="element_slot" data-frog-part="element_slot" transform="translate(0 0)" />
   </g>
 </svg>

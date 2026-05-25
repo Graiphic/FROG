@@ -1,0 +1,133 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "26_array_numeric_selection_roundtrip",
+    "path": "Examples/26_array_numeric_selection_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "unit_id": "main",
+  "summary": "2D numeric Array selected-element roundtrip with source-owned rank, shape, elements, viewport, style, Default Array realization, and native u16 proof corridor.",
+  "interfaces": {
+    "inputs": [
+      {
+        "id": "element_value",
+        "type": "u16",
+        "source": "widget.numeric_array.value.selected_element_value"
+      },
+      {
+        "id": "array_records",
+        "type": "frog.array.records<u16,rank=2>",
+        "source": "widget.numeric_array.elements.*"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_array_records",
+        "type": "frog.array.records<u16,rank=2>"
+      }
+    ]
+  },
+  "front_panel": {
+    "package_refs": [
+      "Examples/26_array_numeric_selection_roundtrip/ui/array_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "widget_id": "numeric_array",
+        "class_ref": "frog.widgets.array_control",
+        "role": "control",
+        "value_type": "frog.array<u16,rank=2>",
+        "value_member": "value.selected_element_value",
+        "identity_member": "value.selected_element_id",
+        "record_member": "elements.*",
+        "shape_source": ".frog dimensions.shape",
+        "element_source": ".frog elements",
+        "realization_asset_ref": "asset:array_shell_svg"
+      },
+      {
+        "widget_id": "published_array",
+        "class_ref": "frog.widgets.array_indicator",
+        "role": "indicator",
+        "value_type": "frog.array<u16,rank=2>",
+        "value_member": "value.selected_element_value",
+        "identity_member": "value.selected_element_id",
+        "record_member": "elements.*",
+        "shape_source": ".frog dimensions.shape",
+        "element_source": ".frog elements",
+        "realization_asset_ref": "asset:array_shell_svg"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "numeric_array_element_value",
+        "kind": "widget_value",
+        "widget_id": "numeric_array",
+        "member": "value.selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_array_element_value",
+        "kind": "widget_value",
+        "widget_id": "published_array",
+        "member": "value.selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "numeric_array_records",
+        "kind": "widget_value",
+        "widget_id": "numeric_array",
+        "member": "elements.*",
+        "type": "frog.array.records<u16,rank=2>"
+      },
+      {
+        "id": "published_array_records",
+        "kind": "widget_value",
+        "widget_id": "published_array",
+        "member": "elements.*",
+        "type": "frog.array.records<u16,rank=2>"
+      },
+      {
+        "id": "selected_element_value",
+        "kind": "public_output",
+        "type": "u16"
+      },
+      {
+        "id": "published_array_records",
+        "kind": "public_output",
+        "type": "frog.array.records<u16,rank=2>"
+      }
+    ],
+    "edges": [
+      {
+        "from": "numeric_array_element_value",
+        "to": "published_array_element_value"
+      },
+      {
+        "from": "numeric_array_element_value",
+        "to": "selected_element_value"
+      },
+      {
+        "from": "numeric_array_records",
+        "to": "published_array_records"
+      }
+    ]
+  },
+  "validation": {
+    "source_owns_layout": true,
+    "source_owns_rank_shape_elements_selection_viewport_and_style": true,
+    "source_owns_visible_items_and_interaction_posture": true,
+    "wfrog_owns_realization_refs_only": true,
+    "runtime_requires_native_manifest": true,
+    "runtime_requires_default_array_svg": true,
+    "record_flow_declared_not_implicit_ui_sync": true
+  }
+}
