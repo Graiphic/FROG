@@ -1,0 +1,157 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "27_array_1d_vertical_numeric_selection_roundtrip",
+    "path": "Examples/27_array_1d_vertical_numeric_selection_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/27_array_1d_vertical_numeric_selection_roundtrip/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "summary": "make one post-boundary 2D Array numeric selected-element example consumable through a manifest-declared LLVM/native u16 proof boundary and Default Array realization",
+    "backend_family_target": "llvm_native_kernel",
+    "capability_targets": [
+      "native_kernel_manifest",
+      "private_runtime_array_element_selection_binding",
+      "array_index_display_rendering",
+      "svg_part_overlay_alignment",
+      "array_state_patch_interaction",
+      "svg_style_property_binding"
+    ],
+    "native_artifact_ref": {
+      "manifest": "Implementations/Reference/LLVM/examples/27_array_1d_vertical_numeric_selection_roundtrip/native_kernel_manifest.json",
+      "llvm_ir": "Implementations/Reference/LLVM/examples/27_array_1d_vertical_numeric_selection_roundtrip/kernel.ll"
+    },
+    "public_reference_runtime_source_added": false
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "array_element_selection_roundtrip_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "element_value",
+            "type": "u16"
+          },
+          {
+            "id": "array_records",
+            "type": "frog.array.records<u16,rank=1>"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "selected_element_value",
+            "type": "u16"
+          },
+          {
+            "id": "published_array_records",
+            "type": "frog.array.records<u16,rank=1>"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "value_bindings": [
+          {
+            "widget_id": "numeric_array",
+            "widget_class": "frog.widgets.array_control",
+            "mode": "widget_value",
+            "semantic_value_member": "value.selected_element_value",
+            "ui_identity_member": "value.selected_element_id",
+            "record_member": "elements.*",
+            "realization_asset_ref": "asset:array_shell_svg"
+          },
+          {
+            "widget_id": "published_array",
+            "widget_class": "frog.widgets.array_indicator",
+            "mode": "widget_value",
+            "semantic_value_member": "value.selected_element_value",
+            "ui_identity_member": "value.selected_element_id",
+            "record_member": "elements.*",
+            "realization_asset_ref": "asset:array_shell_svg"
+          }
+        ],
+        "host_overlays": [
+          {
+            "widget_id": "numeric_array",
+            "part": "element_region",
+            "source_members": [
+              "dimensions.*",
+              "elements.*",
+              "value.*",
+              "selection.*",
+              "viewport.*",
+              "interaction.*",
+              "display.*",
+              "style.*"
+            ]
+          },
+          {
+            "widget_id": "numeric_array",
+            "part": "index_display",
+            "source_members": [
+              "index_display.*",
+              "viewport.first_indices[]",
+              "dimensions.*",
+              "style.index_display.*"
+            ]
+          },
+          {
+            "widget_id": "published_array",
+            "part": "element_region",
+            "source_members": [
+              "dimensions.*",
+              "elements.*",
+              "value.*",
+              "selection.*",
+              "viewport.*",
+              "display.*",
+              "style.*"
+            ],
+            "host_state_rule": "viewport_state_is_instance_local_not_dataflow"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "identity_u16",
+        "native_manifest": "Implementations/Reference/LLVM/examples/27_array_1d_vertical_numeric_selection_roundtrip/native_kernel_manifest.json",
+        "inputs": {
+          "element_value": "widget.numeric_array.value.selected_element_value"
+        },
+        "outputs": {
+          "selected_element_value": "selected_element_value"
+        },
+        "record_flow": {
+          "operation": "typed_record_passthrough",
+          "source": "widget.numeric_array.elements.*",
+          "target": "widget.published_array.elements.*",
+          "native_kernel_member": false,
+          "publication_rule": "fir_declared_passthrough_not_implicit_ui_sync"
+        },
+        "final_publication": [
+          {
+            "target": "widget.published_array.value.selected_element_value",
+            "source": "native_kernel.selected_element_value"
+          },
+          {
+            "target": "widget.published_array.elements.*",
+            "source": "widget.numeric_array.elements.*"
+          },
+          {
+            "target": "public_output.selected_element_value",
+            "source": "native_kernel.selected_element_value"
+          },
+          {
+            "target": "public_output.published_array_records",
+            "source": "widget.numeric_array.elements.*"
+          }
+        ]
+      }
+    }
+  ]
+}

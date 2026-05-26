@@ -710,6 +710,21 @@
               ]
             },
             {
+              "key": "examples/27_array_1d_vertical_numeric_selection_roundtrip/",
+              "title": "27 array 1d vertical numeric selection roundtrip",
+              "path": "/Examples/27_array_1d_vertical_numeric_selection_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/27_array_1d_vertical_numeric_selection_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/27_array_1d_vertical_numeric_selection_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -4643,6 +4658,8 @@
     "/Examples/25_frame_grouping_board/Readme.md",
     "/Examples/26_array_numeric_selection_roundtrip/main.frog",
     "/Examples/26_array_numeric_selection_roundtrip/Readme.md",
+    "/Examples/27_array_1d_vertical_numeric_selection_roundtrip/main.frog",
+    "/Examples/27_array_1d_vertical_numeric_selection_roundtrip/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",

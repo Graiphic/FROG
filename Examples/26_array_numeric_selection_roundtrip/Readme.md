@@ -1,4 +1,4 @@
-<h1>Array Numeric Selection Roundtrip</h1>
+<h1>Array 2D Numeric Selection Roundtrip</h1>
 
 <p>
 Example <code>26</code> demonstrates a bounded 2D numeric
