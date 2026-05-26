@@ -131,8 +131,20 @@ The collection value remains the class-owned semantic value.
 
 <p>
 The baseline supports the array structure required to represent multiple dimensions.
-The first Default realization remains intentionally simple and may display a one-dimensional or two-dimensional viewport.
-Higher-dimensional arrays require host-specific navigation or later specialized realization profiles.
+The Default realization remains intentionally simple: a one-dimensional array is
+displayed as a single visible axis, a two-dimensional array is displayed as a
+matrix viewport, and a three-dimensional array is displayed as one two-dimensional
+layer at a time through a layer index display plus row/column index displays.
+Higher-dimensional arrays require host-specific navigation or later specialized
+realization profiles.
+</p>
+
+<p>
+For numeric arrays, editing a value outside the current shape materializes the
+regular rectangular shape required to include that value. Newly created numeric
+cells are initialized to <code>0</code>. This keeps one-dimensional vectors,
+two-dimensional matrices, and three-dimensional <code>[layer,row,column]</code>
+volumes regular instead of creating sparse or ragged collection shapes.
 </p>
 
 <hr/>

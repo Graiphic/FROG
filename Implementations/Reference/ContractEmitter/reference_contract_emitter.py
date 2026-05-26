@@ -6,12 +6,21 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from .emit_backend_contract import (
-    ContractEmissionError,
-    emit_contract_to_path,
-    emit_reference_host_runtime_contract,
-    load_lowering_from_path,
-)
+try:
+    from .emit_backend_contract import (
+        ContractEmissionError,
+        emit_contract_to_path,
+        emit_reference_host_runtime_contract,
+        load_lowering_from_path,
+    )
+except ImportError:  # pragma: no cover
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from emit_backend_contract import (  # type: ignore
+        ContractEmissionError,
+        emit_contract_to_path,
+        emit_reference_host_runtime_contract,
+        load_lowering_from_path,
+    )
 
 
 def find_repo_root(start: Path) -> Path:

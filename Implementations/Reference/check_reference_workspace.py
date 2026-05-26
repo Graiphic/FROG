@@ -4,18 +4,50 @@
 from __future__ import annotations
 
 import argparse
+import os
+import re
 import subprocess
 import sys
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
+LOCAL_TOOLCHAIN_BIN = ROOT.parent / ".tools" / "WinLibs" / "mingw64" / "bin"
+LOCAL_CARGO_BIN = Path.home() / ".cargo" / "bin"
 
 
 def run_stage(name: str, command: list[str]) -> int:
     print(f"\n== {name} ==")
+    if len(command) >= 3 and command[1:3] == ["-m", "pytest"]:
+        slug = re.sub(r"[^A-Za-z0-9_.-]+", "_", name).strip("_").lower()
+        pytest_tmp = ROOT / ".pytest_tmp"
+        pytest_tmp.mkdir(exist_ok=True)
+        command = [*command, "--basetemp", str(pytest_tmp / slug)]
     print("$ " + " ".join(command))
-    result = subprocess.run(command, cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+    env = os.environ.copy()
+    pythonpath = str(ROOT)
+    existing_pythonpath = env.get("PYTHONPATH")
+    if existing_pythonpath:
+        pythonpath = pythonpath + os.pathsep + existing_pythonpath
+    env["PYTHONPATH"] = pythonpath
+    env.setdefault("FROG_SPEC_ROOT", str(ROOT))
+    path_prefixes = [str(path) for path in (LOCAL_TOOLCHAIN_BIN, LOCAL_CARGO_BIN) if path.exists()]
+    if path_prefixes:
+        existing_path = env.get("PATH") or env.get("Path") or ""
+        env["PATH"] = os.pathsep.join([*path_prefixes, existing_path])
+        env["Path"] = env["PATH"]
+    if sys.platform == "win32":
+        env.setdefault("CARGO_BUILD_TARGET", "x86_64-pc-windows-gnu")
+        env.setdefault("CARGO_TARGET_DIR", str(ROOT / "b" / "cargo-target-gnu"))
+    result = subprocess.run(
+        command,
+        cwd=ROOT,
+        env=env,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
     if result.stdout:
         print(result.stdout.rstrip())
     if result.stderr:

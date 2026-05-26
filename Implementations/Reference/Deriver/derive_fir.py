@@ -9,6 +9,7 @@ from pathlib import Path
 try:
     from .fir_deriver import DerivationError, canonical_json_bytes, derive_fir_from_source, dump_json, load_json
 except ImportError:  # pragma: no cover
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
     from fir_deriver import DerivationError, canonical_json_bytes, derive_fir_from_source, dump_json, load_json  # type: ignore
 
 ROOT = Path(__file__).resolve().parents[3]

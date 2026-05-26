@@ -1,0 +1,1216 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "28_array_3d_numeric_selection_roundtrip",
+    "summary": "3D numeric Array control-to-indicator selected-element roundtrip using .frog-owned layer,row,column data and Default Array .wfrog realization assets.",
+    "description": "Places one 3D numeric Array control and one read-only Array indicator on the front panel. The .frog source owns rank, shape, elements, selected element, three index displays, viewport, layout, labels, bindings, and instance-level visual overrides. The .wfrog package references the Default Array realization and SVG assets. Runtime implementation for this post-boundary example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "array",
+      "array_control",
+      "array_indicator",
+      "numeric_array",
+      "3d_array",
+      "selected_element",
+      "roundtrip",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "element_value",
+        "type": "u16",
+        "binding_origin": "widget.numeric_array.value.selected_element_value"
+      },
+      {
+        "id": "array_records",
+        "type": "frog.array.records<u16,rank=3>",
+        "binding_origin": "widget.numeric_array.elements.*"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_array_records",
+        "type": "frog.array.records<u16,rank=3>"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "numeric_array_element_value",
+        "kind": "widget_value",
+        "widget": "numeric_array",
+        "member": "value.selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_array_element_value",
+        "kind": "widget_value",
+        "widget": "published_array",
+        "member": "value.selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "numeric_array_records",
+        "kind": "widget_value",
+        "widget": "numeric_array",
+        "member": "elements.*",
+        "type": "frog.array.records<u16,rank=3>"
+      },
+      {
+        "id": "published_array_records",
+        "kind": "widget_value",
+        "widget": "published_array",
+        "member": "elements.*",
+        "type": "frog.array.records<u16,rank=3>"
+      },
+      {
+        "id": "output_selected_element_value",
+        "kind": "interface_output",
+        "interface_port": "selected_element_value"
+      },
+      {
+        "id": "output_published_array_records",
+        "kind": "interface_output",
+        "interface_port": "published_array_records"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "numeric_array_element_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "published_array_element_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "numeric_array_element_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_selected_element_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e3",
+        "from": {
+          "node": "numeric_array_records",
+          "port": "records"
+        },
+        "to": {
+          "node": "published_array_records",
+          "port": "records"
+        }
+      },
+      {
+        "id": "e4",
+        "from": {
+          "node": "numeric_array_records",
+          "port": "records"
+        },
+        "to": {
+          "node": "output_published_array_records",
+          "port": "records"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 900,
+      "height": 410,
+      "coordinate_space": "panel_pixels"
+    },
+    "package_refs": [
+      "./ui/array_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "numeric_array",
+        "role": "control",
+        "class_ref": "frog.widgets.array_control",
+        "instance_ref": "numeric_array",
+        "value_type": "frog.array<u16,rank=3>",
+        "layout": {
+          "x": 32,
+          "y": 34,
+          "width": 405,
+          "height": 300
+        },
+        "props": {
+          "label.text": "Array 3D control",
+          "label.visible": true,
+          "label.anchor.x": 64,
+          "label.anchor.y": 22,
+          "label.style.text_color": "#111827",
+          "label.style.font_family": "Segoe UI, Arial, sans-serif",
+          "label.style.font_size": "13px",
+          "label.style.font_weight": "600",
+          "caption.text": "",
+          "caption.visible": false,
+          "caption.anchor.x": 64,
+          "caption.anchor.y": 44,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "12px",
+          "caption.style.font_weight": "400",
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "element.class_id": "frog.widgets.numeric",
+          "element.value_type": "u16",
+          "element.role": "control",
+          "viewport.first_indices": [
+            0,
+            0,
+            0
+          ],
+          "viewport.visible_counts": [
+            3,
+            3
+          ],
+          "viewport.row_offset": 0,
+          "viewport.column_offset": 0,
+          "viewport.row_count": 3,
+          "viewport.column_count": 3,
+          "viewport.row_height": 32,
+          "viewport.column_width": 105,
+          "viewport.cell_padding_inline": "8px",
+          "viewport.scrollbar_gap": 6,
+          "display.vertical_scrollbar_visible": true,
+          "display.horizontal_scrollbar_visible": true,
+          "display.vertical_lines_visible": true,
+          "display.horizontal_lines_visible": true,
+          "interaction.enabled": true,
+          "interaction.read_only": false,
+          "interaction.editable_elements": true,
+          "interaction.selection_scrolling_enabled": true,
+          "interaction.index_display_enabled": true,
+          "scrolling.smooth_enabled": true,
+          "editing.allow_during_execution": true,
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.array_region.fill_color": "#ffffff",
+          "style.array_region.border_color": "#64748b",
+          "style.array_region.border_width": "1px",
+          "style.grid_line.color": "#cbd5e1",
+          "style.grid_line.width": "1px",
+          "style.index_display.fill_color": "#ffffff",
+          "style.index_display.border_color": "#94a3b8",
+          "style.index_display.border_width": "1px",
+          "style.index_display.step_fill_color": "#edf2f7",
+          "style.index_display.step_hover_fill_color": "#dbeafe",
+          "style.index_display.step_pressed_fill_color": "#bfdbfe",
+          "style.index_display.glyph_color": "#334e68",
+          "style.scrollbar.track_fill_color": "#eef2f7",
+          "style.scrollbar.track_hover_fill_color": "#dbe5f1",
+          "style.scrollbar.track_pressed_fill_color": "#bfdbfe",
+          "style.scrollbar.border_color": "#64748b",
+          "style.scrollbar.border_width": "1px",
+          "style.scrollbar.thumb_fill_color": "#cbd5e1",
+          "style.scrollbar.thumb_hover_fill_color": "#94a3b8",
+          "style.scrollbar.thumb_pressed_fill_color": "#64748b",
+          "style.scrollbar.thumb_padding_percent": 4,
+          "style.scrollbar.thickness": "18px",
+          "style.scrollbar.horizontal_height": "18px",
+          "style.scrollbar.vertical_thumb_width_percent": 66.67,
+          "style.scrollbar.vertical_thumb_offset_x_percent": 50,
+          "style.scrollbar.vertical_thumb_translate_x": "-50%",
+          "style.scrollbar.horizontal_thumb_height_percent": 66.67,
+          "style.scrollbar.horizontal_thumb_offset_y_percent": 16.67,
+          "style.element.fill_color": "#ffffff",
+          "style.element.alternate_fill_color": "#f8fafc",
+          "style.element.undefined_fill_color": "#eef2f7",
+          "style.element.undefined_text_color": "#94a3b8",
+          "style.element.hover_fill_color": "#eef6ff",
+          "style.selection_face.fill_color": "#dbeafe",
+          "style.selection_face.border_color": "#2563eb",
+          "style.selection_face.border_width": "1px",
+          "style.active_element.border_color": "#2563eb",
+          "style.active_element.border_width": "2px",
+          "style.text.color": "#111827",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "13px",
+          "style.text.font_weight": "400",
+          "style.focus_ring.color": "#2563eb",
+          "style.focus_ring.width": "2px",
+          "value.selected_element_id": "l0r1c1",
+          "value.selected_indices": [
+            0,
+            1,
+            1
+          ],
+          "value.selected_element_value": 70,
+          "selection.mode": "single_element",
+          "selection.active_indices": [
+            0,
+            1,
+            1
+          ],
+          "dimensions.rank": 3,
+          "dimensions.shape": [
+            2,
+            4,
+            5
+          ],
+          "dimensions.allow_resize": false,
+          "dimensions.default_element_value": 0,
+          "dimensions.materialize_out_of_range_edits": true,
+          "viewport.layer_offset": 0,
+          "viewport.orientation": "grid",
+          "index_display.visible": true,
+          "index_display.rank": 3,
+          "index_display.values": [
+            0,
+            0,
+            0
+          ],
+          "index_display.layout.x": 0,
+          "index_display.layout.y": 54,
+          "index_display.layout.width": 50,
+          "index_display.layout.height": 98,
+          "index_display.layout.box_width": 50,
+          "index_display.layout.box_height": 30,
+          "index_display.layout.gap": 4,
+          "index_display.layout.step_width": 16,
+          "elements": [
+            {
+              "id": "l0r0c0",
+              "indices": [
+                0,
+                0,
+                0
+              ],
+              "value": 10
+            },
+            {
+              "id": "l0r0c1",
+              "indices": [
+                0,
+                0,
+                1
+              ],
+              "value": 20
+            },
+            {
+              "id": "l0r0c2",
+              "indices": [
+                0,
+                0,
+                2
+              ],
+              "value": 30
+            },
+            {
+              "id": "l0r0c3",
+              "indices": [
+                0,
+                0,
+                3
+              ],
+              "value": 40
+            },
+            {
+              "id": "l0r0c4",
+              "indices": [
+                0,
+                0,
+                4
+              ],
+              "value": 50
+            },
+            {
+              "id": "l0r1c0",
+              "indices": [
+                0,
+                1,
+                0
+              ],
+              "value": 60
+            },
+            {
+              "id": "l0r1c1",
+              "indices": [
+                0,
+                1,
+                1
+              ],
+              "value": 70
+            },
+            {
+              "id": "l0r1c2",
+              "indices": [
+                0,
+                1,
+                2
+              ],
+              "value": 80
+            },
+            {
+              "id": "l0r1c3",
+              "indices": [
+                0,
+                1,
+                3
+              ],
+              "value": 90
+            },
+            {
+              "id": "l0r1c4",
+              "indices": [
+                0,
+                1,
+                4
+              ],
+              "value": 100
+            },
+            {
+              "id": "l0r2c0",
+              "indices": [
+                0,
+                2,
+                0
+              ],
+              "value": 110
+            },
+            {
+              "id": "l0r2c1",
+              "indices": [
+                0,
+                2,
+                1
+              ],
+              "value": 120
+            },
+            {
+              "id": "l0r2c2",
+              "indices": [
+                0,
+                2,
+                2
+              ],
+              "value": 130
+            },
+            {
+              "id": "l0r2c3",
+              "indices": [
+                0,
+                2,
+                3
+              ],
+              "value": 140
+            },
+            {
+              "id": "l0r2c4",
+              "indices": [
+                0,
+                2,
+                4
+              ],
+              "value": 150
+            },
+            {
+              "id": "l0r3c0",
+              "indices": [
+                0,
+                3,
+                0
+              ],
+              "value": 160
+            },
+            {
+              "id": "l0r3c1",
+              "indices": [
+                0,
+                3,
+                1
+              ],
+              "value": 170
+            },
+            {
+              "id": "l0r3c2",
+              "indices": [
+                0,
+                3,
+                2
+              ],
+              "value": 180
+            },
+            {
+              "id": "l0r3c3",
+              "indices": [
+                0,
+                3,
+                3
+              ],
+              "value": 190
+            },
+            {
+              "id": "l0r3c4",
+              "indices": [
+                0,
+                3,
+                4
+              ],
+              "value": 200
+            },
+            {
+              "id": "l1r0c0",
+              "indices": [
+                1,
+                0,
+                0
+              ],
+              "value": 210
+            },
+            {
+              "id": "l1r0c1",
+              "indices": [
+                1,
+                0,
+                1
+              ],
+              "value": 220
+            },
+            {
+              "id": "l1r0c2",
+              "indices": [
+                1,
+                0,
+                2
+              ],
+              "value": 230
+            },
+            {
+              "id": "l1r0c3",
+              "indices": [
+                1,
+                0,
+                3
+              ],
+              "value": 240
+            },
+            {
+              "id": "l1r0c4",
+              "indices": [
+                1,
+                0,
+                4
+              ],
+              "value": 250
+            },
+            {
+              "id": "l1r1c0",
+              "indices": [
+                1,
+                1,
+                0
+              ],
+              "value": 260
+            },
+            {
+              "id": "l1r1c1",
+              "indices": [
+                1,
+                1,
+                1
+              ],
+              "value": 270
+            },
+            {
+              "id": "l1r1c2",
+              "indices": [
+                1,
+                1,
+                2
+              ],
+              "value": 280
+            },
+            {
+              "id": "l1r1c3",
+              "indices": [
+                1,
+                1,
+                3
+              ],
+              "value": 290
+            },
+            {
+              "id": "l1r1c4",
+              "indices": [
+                1,
+                1,
+                4
+              ],
+              "value": 300
+            },
+            {
+              "id": "l1r2c0",
+              "indices": [
+                1,
+                2,
+                0
+              ],
+              "value": 310
+            },
+            {
+              "id": "l1r2c1",
+              "indices": [
+                1,
+                2,
+                1
+              ],
+              "value": 320
+            },
+            {
+              "id": "l1r2c2",
+              "indices": [
+                1,
+                2,
+                2
+              ],
+              "value": 330
+            },
+            {
+              "id": "l1r2c3",
+              "indices": [
+                1,
+                2,
+                3
+              ],
+              "value": 340
+            },
+            {
+              "id": "l1r2c4",
+              "indices": [
+                1,
+                2,
+                4
+              ],
+              "value": 350
+            },
+            {
+              "id": "l1r3c0",
+              "indices": [
+                1,
+                3,
+                0
+              ],
+              "value": 360
+            },
+            {
+              "id": "l1r3c1",
+              "indices": [
+                1,
+                3,
+                1
+              ],
+              "value": 370
+            },
+            {
+              "id": "l1r3c2",
+              "indices": [
+                1,
+                3,
+                2
+              ],
+              "value": 380
+            },
+            {
+              "id": "l1r3c3",
+              "indices": [
+                1,
+                3,
+                3
+              ],
+              "value": 390
+            },
+            {
+              "id": "l1r3c4",
+              "indices": [
+                1,
+                3,
+                4
+              ],
+              "value": 400
+            }
+          ],
+          "value_type": "frog.array<u16,rank=3>"
+        },
+        "visual": {
+          "asset_ref": "asset:array_shell_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "element_value"
+        },
+        "label": "Array 3D control"
+      },
+      {
+        "id": "published_array",
+        "role": "indicator",
+        "class_ref": "frog.widgets.array_indicator",
+        "instance_ref": "published_array",
+        "value_type": "frog.array<u16,rank=3>",
+        "layout": {
+          "x": 465,
+          "y": 34,
+          "width": 405,
+          "height": 300
+        },
+        "props": {
+          "label.text": "Array 3D indicator",
+          "label.visible": true,
+          "label.anchor.x": 64,
+          "label.anchor.y": 22,
+          "label.style.text_color": "#111827",
+          "label.style.font_family": "Segoe UI, Arial, sans-serif",
+          "label.style.font_size": "13px",
+          "label.style.font_weight": "600",
+          "caption.text": "",
+          "caption.visible": false,
+          "caption.anchor.x": 64,
+          "caption.anchor.y": 44,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "12px",
+          "caption.style.font_weight": "400",
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "element.class_id": "frog.widgets.numeric",
+          "element.value_type": "u16",
+          "element.role": "indicator",
+          "viewport.first_indices": [
+            0,
+            0,
+            0
+          ],
+          "viewport.visible_counts": [
+            3,
+            3
+          ],
+          "viewport.row_offset": 0,
+          "viewport.column_offset": 0,
+          "viewport.row_count": 3,
+          "viewport.column_count": 3,
+          "viewport.row_height": 32,
+          "viewport.column_width": 105,
+          "viewport.cell_padding_inline": "8px",
+          "viewport.scrollbar_gap": 6,
+          "display.vertical_scrollbar_visible": true,
+          "display.horizontal_scrollbar_visible": true,
+          "display.vertical_lines_visible": true,
+          "display.horizontal_lines_visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "interaction.editable_elements": false,
+          "interaction.selection_scrolling_enabled": true,
+          "interaction.index_display_enabled": true,
+          "scrolling.smooth_enabled": true,
+          "editing.allow_during_execution": false,
+          "style.frame.fill_color": "transparent",
+          "style.frame.border_color": "transparent",
+          "style.frame.border_width": "0px",
+          "style.array_region.fill_color": "#ffffff",
+          "style.array_region.border_color": "#64748b",
+          "style.array_region.border_width": "1px",
+          "style.grid_line.color": "#cbd5e1",
+          "style.grid_line.width": "1px",
+          "style.index_display.fill_color": "#ffffff",
+          "style.index_display.border_color": "#94a3b8",
+          "style.index_display.border_width": "1px",
+          "style.index_display.step_fill_color": "#edf2f7",
+          "style.index_display.step_hover_fill_color": "#dbeafe",
+          "style.index_display.step_pressed_fill_color": "#bfdbfe",
+          "style.index_display.glyph_color": "#334e68",
+          "style.scrollbar.track_fill_color": "#eef2f7",
+          "style.scrollbar.track_hover_fill_color": "#dbe5f1",
+          "style.scrollbar.track_pressed_fill_color": "#bfdbfe",
+          "style.scrollbar.border_color": "#64748b",
+          "style.scrollbar.border_width": "1px",
+          "style.scrollbar.thumb_fill_color": "#cbd5e1",
+          "style.scrollbar.thumb_hover_fill_color": "#94a3b8",
+          "style.scrollbar.thumb_pressed_fill_color": "#64748b",
+          "style.scrollbar.thumb_padding_percent": 4,
+          "style.scrollbar.thickness": "18px",
+          "style.scrollbar.horizontal_height": "18px",
+          "style.scrollbar.vertical_thumb_width_percent": 66.67,
+          "style.scrollbar.vertical_thumb_offset_x_percent": 50,
+          "style.scrollbar.vertical_thumb_translate_x": "-50%",
+          "style.scrollbar.horizontal_thumb_height_percent": 66.67,
+          "style.scrollbar.horizontal_thumb_offset_y_percent": 16.67,
+          "style.element.fill_color": "#ffffff",
+          "style.element.alternate_fill_color": "#f8fafc",
+          "style.element.undefined_fill_color": "#eef2f7",
+          "style.element.undefined_text_color": "#94a3b8",
+          "style.element.hover_fill_color": "#ffffff",
+          "style.selection_face.fill_color": "#d7f5df",
+          "style.selection_face.border_color": "#09a64b",
+          "style.selection_face.border_width": "1px",
+          "style.active_element.border_color": "#16a34a",
+          "style.active_element.border_width": "2px",
+          "style.text.color": "#111827",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "13px",
+          "style.text.font_weight": "400",
+          "style.focus_ring.color": "#16a34a",
+          "style.focus_ring.width": "2px",
+          "value.selected_element_id": "l0r1c1",
+          "value.selected_indices": [
+            0,
+            1,
+            1
+          ],
+          "value.selected_element_value": 70,
+          "selection.mode": "single_element",
+          "selection.active_indices": [
+            0,
+            1,
+            1
+          ],
+          "dimensions.rank": 3,
+          "dimensions.shape": [
+            2,
+            4,
+            5
+          ],
+          "dimensions.allow_resize": false,
+          "dimensions.default_element_value": 0,
+          "dimensions.materialize_out_of_range_edits": true,
+          "viewport.layer_offset": 0,
+          "viewport.orientation": "grid",
+          "index_display.visible": true,
+          "index_display.rank": 3,
+          "index_display.values": [
+            0,
+            0,
+            0
+          ],
+          "index_display.layout.x": 0,
+          "index_display.layout.y": 54,
+          "index_display.layout.width": 50,
+          "index_display.layout.height": 98,
+          "index_display.layout.box_width": 50,
+          "index_display.layout.box_height": 30,
+          "index_display.layout.gap": 4,
+          "index_display.layout.step_width": 16,
+          "elements": [
+            {
+              "id": "l0r0c0",
+              "indices": [
+                0,
+                0,
+                0
+              ],
+              "value": 10
+            },
+            {
+              "id": "l0r0c1",
+              "indices": [
+                0,
+                0,
+                1
+              ],
+              "value": 20
+            },
+            {
+              "id": "l0r0c2",
+              "indices": [
+                0,
+                0,
+                2
+              ],
+              "value": 30
+            },
+            {
+              "id": "l0r0c3",
+              "indices": [
+                0,
+                0,
+                3
+              ],
+              "value": 40
+            },
+            {
+              "id": "l0r0c4",
+              "indices": [
+                0,
+                0,
+                4
+              ],
+              "value": 50
+            },
+            {
+              "id": "l0r1c0",
+              "indices": [
+                0,
+                1,
+                0
+              ],
+              "value": 60
+            },
+            {
+              "id": "l0r1c1",
+              "indices": [
+                0,
+                1,
+                1
+              ],
+              "value": 70
+            },
+            {
+              "id": "l0r1c2",
+              "indices": [
+                0,
+                1,
+                2
+              ],
+              "value": 80
+            },
+            {
+              "id": "l0r1c3",
+              "indices": [
+                0,
+                1,
+                3
+              ],
+              "value": 90
+            },
+            {
+              "id": "l0r1c4",
+              "indices": [
+                0,
+                1,
+                4
+              ],
+              "value": 100
+            },
+            {
+              "id": "l0r2c0",
+              "indices": [
+                0,
+                2,
+                0
+              ],
+              "value": 110
+            },
+            {
+              "id": "l0r2c1",
+              "indices": [
+                0,
+                2,
+                1
+              ],
+              "value": 120
+            },
+            {
+              "id": "l0r2c2",
+              "indices": [
+                0,
+                2,
+                2
+              ],
+              "value": 130
+            },
+            {
+              "id": "l0r2c3",
+              "indices": [
+                0,
+                2,
+                3
+              ],
+              "value": 140
+            },
+            {
+              "id": "l0r2c4",
+              "indices": [
+                0,
+                2,
+                4
+              ],
+              "value": 150
+            },
+            {
+              "id": "l0r3c0",
+              "indices": [
+                0,
+                3,
+                0
+              ],
+              "value": 160
+            },
+            {
+              "id": "l0r3c1",
+              "indices": [
+                0,
+                3,
+                1
+              ],
+              "value": 170
+            },
+            {
+              "id": "l0r3c2",
+              "indices": [
+                0,
+                3,
+                2
+              ],
+              "value": 180
+            },
+            {
+              "id": "l0r3c3",
+              "indices": [
+                0,
+                3,
+                3
+              ],
+              "value": 190
+            },
+            {
+              "id": "l0r3c4",
+              "indices": [
+                0,
+                3,
+                4
+              ],
+              "value": 200
+            },
+            {
+              "id": "l1r0c0",
+              "indices": [
+                1,
+                0,
+                0
+              ],
+              "value": 210
+            },
+            {
+              "id": "l1r0c1",
+              "indices": [
+                1,
+                0,
+                1
+              ],
+              "value": 220
+            },
+            {
+              "id": "l1r0c2",
+              "indices": [
+                1,
+                0,
+                2
+              ],
+              "value": 230
+            },
+            {
+              "id": "l1r0c3",
+              "indices": [
+                1,
+                0,
+                3
+              ],
+              "value": 240
+            },
+            {
+              "id": "l1r0c4",
+              "indices": [
+                1,
+                0,
+                4
+              ],
+              "value": 250
+            },
+            {
+              "id": "l1r1c0",
+              "indices": [
+                1,
+                1,
+                0
+              ],
+              "value": 260
+            },
+            {
+              "id": "l1r1c1",
+              "indices": [
+                1,
+                1,
+                1
+              ],
+              "value": 270
+            },
+            {
+              "id": "l1r1c2",
+              "indices": [
+                1,
+                1,
+                2
+              ],
+              "value": 280
+            },
+            {
+              "id": "l1r1c3",
+              "indices": [
+                1,
+                1,
+                3
+              ],
+              "value": 290
+            },
+            {
+              "id": "l1r1c4",
+              "indices": [
+                1,
+                1,
+                4
+              ],
+              "value": 300
+            },
+            {
+              "id": "l1r2c0",
+              "indices": [
+                1,
+                2,
+                0
+              ],
+              "value": 310
+            },
+            {
+              "id": "l1r2c1",
+              "indices": [
+                1,
+                2,
+                1
+              ],
+              "value": 320
+            },
+            {
+              "id": "l1r2c2",
+              "indices": [
+                1,
+                2,
+                2
+              ],
+              "value": 330
+            },
+            {
+              "id": "l1r2c3",
+              "indices": [
+                1,
+                2,
+                3
+              ],
+              "value": 340
+            },
+            {
+              "id": "l1r2c4",
+              "indices": [
+                1,
+                2,
+                4
+              ],
+              "value": 350
+            },
+            {
+              "id": "l1r3c0",
+              "indices": [
+                1,
+                3,
+                0
+              ],
+              "value": 360
+            },
+            {
+              "id": "l1r3c1",
+              "indices": [
+                1,
+                3,
+                1
+              ],
+              "value": 370
+            },
+            {
+              "id": "l1r3c2",
+              "indices": [
+                1,
+                3,
+                2
+              ],
+              "value": 380
+            },
+            {
+              "id": "l1r3c3",
+              "indices": [
+                1,
+                3,
+                3
+              ],
+              "value": 390
+            },
+            {
+              "id": "l1r3c4",
+              "indices": [
+                1,
+                3,
+                4
+              ],
+              "value": 400
+            }
+          ],
+          "value_type": "frog.array<u16,rank=3>"
+        },
+        "visual": {
+          "asset_ref": "asset:array_shell_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "selected_element_value"
+        },
+        "label": "Array 3D indicator"
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Array 3D Numeric Selection Roundtrip",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "array_runtime_host_default",
+    "documentation": {
+      "title": "Array 3D Numeric Selection Roundtrip",
+      "summary": "A three-dimensional numeric Array is a stack of 2D matrices. The index display exposes layer, row, and column indices; the visible grid shows one layer at a time.",
+      "sections": [
+        {
+          "title": "Array control",
+          "body": "Editing a visible or out-of-range numeric cell materializes the 3D rectangular volume up to [layer,row,column] and fills new numeric elements with 0."
+        },
+        {
+          "title": "Execute",
+          "body": "Execute consumes the selected 3D element value through the native manifest corridor and publishes the value plus record flow to the read-only Array indicator."
+        },
+        {
+          "title": "Array indicator",
+          "body": "The indicator is read-only. Its scrollbars and layer index are local viewport inspection state; semantic data changes only after Execute."
+        }
+      ]
+    }
+  }
+}

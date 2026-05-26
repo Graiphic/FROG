@@ -7,6 +7,7 @@ from pathlib import Path
 try:
     from .derive_fir import main as generic_main
 except ImportError:  # pragma: no cover
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
     from derive_fir import main as generic_main  # type: ignore
 
 ROOT = Path(__file__).resolve().parents[3]

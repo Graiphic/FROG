@@ -27,6 +27,7 @@ try:
         write_text,
     )
 except ImportError:  # pragma: no cover
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
     from llvm_lowering_emitter import (  # type: ignore
         LLVMEmissionError,
         emit_llvm_from_lowering_path,

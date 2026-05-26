@@ -11,6 +11,7 @@ from pathlib import Path
 try:
     from .fir_lowerer import LoweringError, canonical_json_bytes, dump_json, load_json, lower_fir_artifact
 except ImportError:  # pragma: no cover
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
     from fir_lowerer import LoweringError, canonical_json_bytes, dump_json, load_json, lower_fir_artifact  # type: ignore
 
 

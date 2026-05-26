@@ -34,6 +34,8 @@ This document describes the default realization posture for <code>frog.widgets.a
 <p>
 The default array realization exposes a shell with slots for index display, element region, element slots, scrollbars, and optional element gap.
 It does not define the semantics of the element widget class.
+For rank-3 arrays, the same realization surface may expose a layer index
+display while the element region renders the selected two-dimensional layer.
 </p>
 
 <hr/>

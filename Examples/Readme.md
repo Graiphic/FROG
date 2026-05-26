@@ -233,6 +233,12 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
+    <tr>
+      <td><code>28_array_3d_numeric_selection_roundtrip</code></td>
+      <td>3D Array numeric selected-element roundtrip with layer/row/column index displays, one visible 2D layer, editable elements, and read-only Array indicator</td>
+      <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
   </tbody>
 </table>
 
@@ -306,7 +312,10 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
 27   1D vertical Array numeric selected-element value as a post-boundary widget progression example
     |
     v
-28+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
+28   3D Array numeric selected-element value as a post-boundary widget progression example
+    |
+    v
+29+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
 </code></pre>
 
 <hr/>
@@ -477,6 +486,13 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
     ├── main.lowering.json
     └── ui/
         └── array_panel.wfrog
+└── 28_array_3d_numeric_selection_roundtrip/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── array_panel.wfrog
 </code></pre>
 
 <p>
@@ -605,6 +621,19 @@ Array realization, and a native manifest <code>u16</code> proof output. The
 one index display, selected element, vertical viewport, scrollbar posture,
 layout, and style overrides. It does not add public runtime source beyond the
 Example 15 closure.
+</p>
+
+<p>
+Example <code>28</code> continues the Array progression with a 3D numeric Array
+control and read-only Array indicator. It contains public source,
+FIR/lowering shape, a <code>.wfrog</code> package referencing the same Default
+Array realization, and a native manifest <code>u16</code> proof output. The
+<code>.frog</code> owns rank <code>3</code>, semantic shape, layer/row/column
+element records, three index displays, selected element, viewport posture,
+layout, and style overrides. The visible grid displays one 2D layer at a time;
+editing outside the current numeric volume materializes the rectangular
+<code>[layer,row,column]</code> volume with new cells initialized to <code>0</code>.
+It does not add public runtime source beyond the Example 15 closure.
 </p>
 
 <hr/>

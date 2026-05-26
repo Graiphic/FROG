@@ -9,6 +9,7 @@ from Implementations.Reference.ContractEmitter.reference_contract_emitter import
 
 ROOT = Path(__file__).resolve().parents[4]
 CONTRACT = ROOT / "Implementations/Reference/ContractEmitter/examples/05_bounded_ui_accumulator.reference_host_runtime_ui_binding.contract.json"
+EMITTER = ROOT / "Implementations/Reference/ContractEmitter/reference_contract_emitter.py"
 
 LEGACY_KEYS = {
     "legacy_runtime_shape",
@@ -23,7 +24,7 @@ LEGACY_KEYS = {
 
 def test_example05_contract_emission_check_passes() -> None:
     result = subprocess.run(
-        [sys.executable, "-m", "Implementations.Reference.ContractEmitter.reference_contract_emitter", "--check"],
+        [sys.executable, str(EMITTER), "--check"],
         cwd=ROOT,
         text=True,
         stdout=subprocess.PIPE,

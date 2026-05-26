@@ -87,7 +87,7 @@ def stages(include_widget_validator: bool, include_llvm_build: bool, skip_artifa
             continue
         out.append(Stage(
             f"Example {example.key} lowering -> backend contract",
-            [py, "-m", "Implementations.Reference.ContractEmitter.reference_contract_emitter", "--lowering", example.lowering, "--expected", example.contract, "--check"],
+            [py, "Implementations/Reference/ContractEmitter/reference_contract_emitter.py", "--lowering", example.lowering, "--expected", example.contract, "--check"],
         ))
 
     out.append(Stage("Examples 01-10 historical runtime acceptance", [py, "Implementations/Reference/Runtime/check_examples01_10_runtime_acceptance.py"]))

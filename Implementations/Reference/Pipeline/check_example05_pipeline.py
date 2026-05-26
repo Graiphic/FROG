@@ -84,7 +84,7 @@ def build_stages(
             ),
             Stage(
                 "emit lowering -> backend contract",
-                [python, "-m", "Implementations.Reference.ContractEmitter.reference_contract_emitter", "--check"],
+                [python, "Implementations/Reference/ContractEmitter/reference_contract_emitter.py", "--check"],
             ),
         ]
     )

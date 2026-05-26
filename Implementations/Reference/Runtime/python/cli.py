@@ -61,7 +61,8 @@ try:
 except ImportError:  # pragma: no cover
     import sys
 
-    sys.path.append(str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     from execute_contract import execute_contract
     from native_kernel import load_native_bool_kernel_bridge, load_native_enum_kernel_bridge, load_native_kernel_bridge, load_native_string_kernel_bridge
     from runtime_core import Slice05RuntimeCore, default_contract_path, default_wfrog_path

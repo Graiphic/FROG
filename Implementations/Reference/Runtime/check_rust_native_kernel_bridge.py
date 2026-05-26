@@ -4,9 +4,11 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 from build_native_kernel_library import build_native_kernel_library, shared_library_suffix
@@ -15,6 +17,12 @@ from build_native_kernel_library import build_native_kernel_library, shared_libr
 ROOT = Path(__file__).resolve().parents[3]
 BUILD_DIR = ROOT / "b" / "rsn"
 RUST_DIR = ROOT / "Implementations/Reference/Runtime/rust"
+RUST_TARGET_DIR = Path(
+    os.environ.get(
+        "FROG_RUST_NATIVE_TARGET_DIR",
+        str(Path(tempfile.gettempdir()) / "frog-rust-native-kernel-bridge-target"),
+    )
+)
 EXAMPLE05_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/05_bounded_ui_accumulator/native_kernel_manifest.json"
 EXAMPLE06_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/native_kernel_manifest.json"
 EXAMPLE07_MANIFEST = ROOT / "Implementations/Reference/LLVM/examples/07_string_value_roundtrip/native_kernel_manifest.json"
@@ -34,6 +42,17 @@ def require_tool(name: str) -> None:
 
 
 def run(command: list[str], *, cwd: Path = ROOT) -> subprocess.CompletedProcess[str]:
+    if sys.platform == "win32" and command[:2] == ["cargo", "run"]:
+        command = [
+            "cargo",
+            "+stable-x86_64-pc-windows-gnu",
+            "run",
+            "--target",
+            "x86_64-pc-windows-gnu",
+            "--target-dir",
+            str(RUST_TARGET_DIR),
+            *command[2:],
+        ]
     print("$ " + " ".join(command))
     result = subprocess.run(command, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
     if result.stdout:

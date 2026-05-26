@@ -14,6 +14,7 @@ from pathlib import Path
 try:
     from .llvm_lowering_emitter import LLVMEmissionError, emit_llvm_from_lowering_path, normalize_text, write_text
 except ImportError:  # pragma: no cover
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
     from llvm_lowering_emitter import LLVMEmissionError, emit_llvm_from_lowering_path, normalize_text, write_text  # type: ignore
 
 
