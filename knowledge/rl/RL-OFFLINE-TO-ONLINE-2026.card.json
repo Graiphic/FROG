@@ -1,0 +1,36 @@
+{
+  "knowledge_id": "RL-OFFLINE-TO-ONLINE-2026",
+  "domain": "rl",
+  "concept": "offline_to_online_rl_and_sequence_pretraining",
+  "source_documents": [
+    "Etat de l'art RL/deep-research-report.md",
+    "Etat de l'art RL/synthese_technique_RL_tendances_papiers_mai_2026.docx",
+    "Etat de l'art RL/État de l’art du Reinforcement Learning jusqu’en mai 2026.docx"
+  ],
+  "core_claim": "En 2026, offline RL, offline-to-online and sequence modeling are useful when interaction is costly or logs are valuable, but dataset coverage becomes the main bottleneck.",
+  "botschild_usage": {
+    "future_algorithms": [
+      "iql",
+      "cql",
+      "decision_transformer",
+      "trajectory_transformer"
+    ],
+    "near_term_use": [
+      "trajectory logging",
+      "baseline trajectory dataset",
+      "offline pretraining design",
+      "coverage diagnostics"
+    ],
+    "not_first_campaign": [
+      "decision_transformer_without_offline_dataset",
+      "offline_claim_without_behavior_policy_report"
+    ]
+  },
+  "leakage_risks": [
+    "Offline trajectory datasets must preserve chronological splits.",
+    "Do not train on trajectories generated from Test set feedback.",
+    "Do not claim deployable performance from offline-only backtest without online-style validation."
+  ],
+  "campaign_templates": [],
+  "decision_rule": "Use this card to prepare trajectory logging and offline datasets; do not prioritize Decision Transformer before PPO/RecurrentPPO baselines and non-RL benchmarks exist."
+}
