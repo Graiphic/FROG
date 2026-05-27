@@ -1241,6 +1241,28 @@
                     },
                     {
                       "key": "libraries/realizations/default/assets/",
+                      "title": "Assets",
+                      "path": "/Libraries/Realizations/Default/Assets/Readme.md",
+                      "kind": "category",
+                      "children": [
+                        {
+                          "key": "libraries/realizations/default/assets/naming.md",
+                          "title": "Naming",
+                          "path": "/Libraries/Realizations/Default/Assets/Naming.md",
+                          "kind": "page",
+                          "children": []
+                        },
+                        {
+                          "key": "libraries/realizations/default/assets/ring/",
+                          "title": "ring",
+                          "path": "/Libraries/Realizations/Default/Assets/ring/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "key": "libraries/realizations/default/assets/",
                       "title": "assets",
                       "path": null,
                       "kind": "category",
@@ -1375,28 +1397,6 @@
                           "key": "libraries/realizations/default/assets/tree/",
                           "title": "tree",
                           "path": "/Libraries/Realizations/Default/assets/tree/Readme.md",
-                          "kind": "category",
-                          "children": []
-                        }
-                      ]
-                    },
-                    {
-                      "key": "libraries/realizations/default/assets/",
-                      "title": "Assets",
-                      "path": "/Libraries/Realizations/Default/Assets/Readme.md",
-                      "kind": "category",
-                      "children": [
-                        {
-                          "key": "libraries/realizations/default/assets/naming.md",
-                          "title": "Naming",
-                          "path": "/Libraries/Realizations/Default/Assets/Naming.md",
-                          "kind": "page",
-                          "children": []
-                        },
-                        {
-                          "key": "libraries/realizations/default/assets/ring/",
-                          "title": "ring",
-                          "path": "/Libraries/Realizations/Default/Assets/ring/Readme.md",
                           "kind": "category",
                           "children": []
                         }
@@ -4746,6 +4746,9 @@
     "/Libraries/Realizations/Default/Table.md",
     "/Libraries/Realizations/Default/Tree.md",
     "/Libraries/Realizations/Default/Validation.md",
+    "/Libraries/Realizations/Default/Assets/Naming.md",
+    "/Libraries/Realizations/Default/Assets/ring/Readme.md",
+    "/Libraries/Realizations/Default/Assets/Readme.md",
     "/Libraries/Realizations/Default/assets/array/Readme.md",
     "/Libraries/Realizations/Default/assets/boolean/Readme.md",
     "/Libraries/Realizations/Default/assets/button/Readme.md",
@@ -4765,9 +4768,6 @@
     "/Libraries/Realizations/Default/assets/tab/Readme.md",
     "/Libraries/Realizations/Default/assets/table/Readme.md",
     "/Libraries/Realizations/Default/assets/tree/Readme.md",
-    "/Libraries/Realizations/Default/Assets/Naming.md",
-    "/Libraries/Realizations/Default/Assets/ring/Readme.md",
-    "/Libraries/Realizations/Default/Assets/Readme.md",
     "/Libraries/Realizations/Default/Examples/Button%20default%20realization.wfrog.md",
     "/Libraries/Realizations/Default/Examples/Button%20package%20and%20assets%20example.md",
     "/Libraries/Realizations/Default/Examples/Numeric%20control%20default%20realization.wfrog.md",
