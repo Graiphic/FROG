@@ -740,6 +740,21 @@
               ]
             },
             {
+              "key": "examples/29_array_1d_numeric_container_roundtrip/",
+              "title": "29 array 1d numeric container roundtrip",
+              "path": "/Examples/29_array_1d_numeric_container_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/29_array_1d_numeric_container_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/29_array_1d_numeric_container_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -4677,6 +4692,8 @@
     "/Examples/27_array_1d_vertical_numeric_selection_roundtrip/Readme.md",
     "/Examples/28_array_3d_numeric_selection_roundtrip/main.frog",
     "/Examples/28_array_3d_numeric_selection_roundtrip/Readme.md",
+    "/Examples/29_array_1d_numeric_container_roundtrip/main.frog",
+    "/Examples/29_array_1d_numeric_container_roundtrip/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
