@@ -1,0 +1,13 @@
+{
+  "knowledge_id": "FIN-STOCHASTIC-CONTROL-DYNAMIC-RISK",
+  "domain": "finance",
+  "concept": "stochastic_control_dynamic_utility_and_risk_constraints",
+  "source_documents": ["El Karoui", "C-I-R.pdf", "TR000900.pdf", "RP497.pdf"],
+  "core_claim": "Dynamic financial decisions should account for state-dependent risk, constraints, utility and uncertainty, not only terminal return.",
+  "botschild_usage": {
+    "risk_policy": ["dynamic_risk_budget", "drawdown_soft_limit", "regime_scaled_exposure"],
+    "features": ["rates_regime", "volatility_regime", "credit_stress_regime"],
+    "metrics": ["utility_proxy", "constraint_violation_count", "drawdown_path"]
+  },
+  "decision_rule": "Use this card to design state-dependent risk policies and utility-aware rewards; validate against costs, drawdown and Test set generalization."
+}
