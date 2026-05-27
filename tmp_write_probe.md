@@ -1,1 +1,1 @@
-write probe
+probe
