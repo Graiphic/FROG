@@ -89,12 +89,12 @@ browser-hosted example.
     <tr>
       <td>Label</td>
       <td><code>label.visible</code>, <code>label.text</code>, <code>label.style.*</code>, <code>label.position.*</code></td>
-      <td>The logical front-panel label associated with the widget instance.</td>
+      <td>The logical front-panel label associated with the widget instance. When visible, its anchor must align deliberately with the widget body or another published realization anchor.</td>
     </tr>
     <tr>
       <td>Caption</td>
       <td><code>caption.visible</code>, <code>caption.text</code>, <code>caption.style.*</code>, <code>caption.position.*</code></td>
-      <td>Optional visible caption or local explanatory text associated with the widget instance.</td>
+      <td>Optional visible caption or local explanatory text associated with the widget instance. Caption offset must be source-owned and aligned to the intended widget part, not a runtime fallback.</td>
     </tr>
     <tr>
       <td>Documentation</td>
@@ -153,5 +153,6 @@ browser-hosted example.
   <li>When a visual effect is configurable, the value must come from <code>.frog</code> instance data, a Default realization property, or a documented generic fallback for missing optional properties.</li>
   <li>Common layout and style properties must not be hidden inside runtime code.</li>
   <li>Host overlays must consume published parts, anchors, and bindings from the chosen realization.</li>
+  <li>Visible labels and captions must be checked against their widget body or published anchor; accidental offsets, touching labels, and per-runtime fallback placement are not valid.</li>
   <li>Family-specific documents remain responsible for value semantics, legal methods, events, and specialized property surfaces.</li>
 </ul>

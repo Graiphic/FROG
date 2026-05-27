@@ -189,28 +189,56 @@ value / text_value
 <h2 id="numeric-representation-model">6. Numeric Representation Model</h2>
 
 <p>
-The canonical property is:
+The canonical source-owned representation members are:
 </p>
 
-<pre><code>representation.kind</code></pre>
+<pre><code>data_type.representation
+data_type.named_numeric_size</code></pre>
 
 <p>
-The standard representation kinds are:
+The <code>data_type.representation</code> member is the machine-readable semantic carrier used by
+the diagram, FIR, lowering, native artifact contract, runtime, and host UI binding. The
+<code>data_type.named_numeric_size</code> member is the LabVIEW-like display name an IDE may show in
+the palette or property dialog.
 </p>
 
-<ul>
-  <li><code>int8</code>, <code>int16</code>, <code>int32</code>, <code>int64</code></li>
-  <li><code>uint8</code>, <code>uint16</code>, <code>uint32</code>, <code>uint64</code></li>
-  <li><code>float32</code>, <code>float64</code></li>
-  <li><code>decimal64</code>, <code>decimal128</code></li>
-  <li><code>fixed_point_signed</code>, <code>fixed_point_unsigned</code></li>
-  <li><code>complex64</code>, <code>complex128</code></li>
-</ul>
+<table>
+  <thead>
+    <tr>
+      <th>Named size</th>
+      <th>Canonical representation</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>EXT</code></td><td><code>ext</code></td><td>extended precision floating point, host/backend defined</td></tr>
+    <tr><td><code>DBL</code></td><td><code>dbl</code></td><td>64-bit floating point</td></tr>
+    <tr><td><code>SGL</code></td><td><code>sgl</code></td><td>32-bit floating point</td></tr>
+    <tr><td><code>FXP</code></td><td><code>fxp</code></td><td>fixed-point numeric value with explicit fixed-point members</td></tr>
+    <tr><td><code>I64</code></td><td><code>i64</code></td><td>signed 64-bit integer</td></tr>
+    <tr><td><code>I32</code></td><td><code>i32</code></td><td>signed 32-bit integer</td></tr>
+    <tr><td><code>I16</code></td><td><code>i16</code></td><td>signed 16-bit integer</td></tr>
+    <tr><td><code>I8</code></td><td><code>i8</code></td><td>signed 8-bit integer</td></tr>
+    <tr><td><code>U64</code></td><td><code>u64</code></td><td>unsigned 64-bit integer</td></tr>
+    <tr><td><code>U32</code></td><td><code>u32</code></td><td>unsigned 32-bit integer</td></tr>
+    <tr><td><code>U16</code></td><td><code>u16</code></td><td>unsigned 16-bit integer</td></tr>
+    <tr><td><code>U8</code></td><td><code>u8</code></td><td>unsigned 8-bit integer</td></tr>
+    <tr><td><code>CXT</code></td><td><code>cxt</code></td><td>extended precision complex value, host/backend defined</td></tr>
+    <tr><td><code>CDB</code></td><td><code>cdb</code></td><td>complex value with double-precision components</td></tr>
+    <tr><td><code>CSG</code></td><td><code>csg</code></td><td>complex value with single-precision components</td></tr>
+  </tbody>
+</table>
 
 <p>
-IDEs may expose aliases such as <code>I32</code>, <code>DBL</code>, <code>SGL</code>, or <code>FXP</code>.
-Those aliases are ergonomic presentation names.
-The canonical class law should preserve explicit representation identifiers.
+Older reference material may still contain <code>representation.kind</code>. That member is a
+compatibility alias for the same source-owned concept and should be lowered to
+<code>data_type.representation</code> in new examples and runtime-facing artifacts.
+</p>
+
+<p>
+Declaring a representation in the specification does not automatically validate broad runtime
+behavior. A runtime may accept only the representation corridor proven by an example/native
+artifact pair until additional representation examples are accepted.
 </p>
 
 <p>
@@ -233,6 +261,8 @@ When the active representation is fixed-point, the following additional members 
   <li><code>label</code></li>
   <li><code>caption</code></li>
   <li><code>frame</code></li>
+  <li><code>control_body</code> when present — compact bounds for embedding the numeric control face as a contained element.</li>
+  <li><code>indicator_body</code> when present — compact bounds for embedding the numeric indicator face as a contained element.</li>
   <li><code>value_face</code></li>
   <li><code>text_value</code></li>
   <li><code>spinner</code> when present</li>
@@ -243,6 +273,13 @@ When the active representation is fixed-point, the following additional members 
   <li><code>focus_ring</code> when present</li>
 </ul>
 
+<p>
+When the Default Numeric realization is embedded as a contained element, hosts should align to
+<code>control_body</code> or <code>indicator_body</code> and preserve the published compact proportions:
+value face width, value-to-spinner gap, spinner width, and equal increment/decrement half-heights.
+Those proportions are realization-owned geometry, not runtime-local widget drawing rules.
+</p>
+
 <hr/>
 
 <h2 id="standard-property-surface">8. Standard Property Surface</h2>
@@ -251,12 +288,20 @@ When the active representation is fixed-point, the following additional members 
 
 <ul>
   <li><code>value : numeric</code></li>
-  <li><code>representation.kind : enum</code></li>
-  <li><code>representation.encoding : enum</code> when applicable</li>
-  <li><code>representation.word_length_bits : u32</code> when applicable</li>
-  <li><code>representation.integer_word_length_bits : u32</code> when applicable</li>
-  <li><code>representation.include_overflow_status : bool</code> when applicable</li>
+  <li><code>default_value : numeric</code> — semantic value used when a numeric control is reset or when another source-owned container materializes a new numeric element without an explicit value.</li>
+  <li><code>data_type.representation : enum</code></li>
+  <li><code>data_type.named_numeric_size : string</code></li>
+  <li><code>data_type.fixed_point.encoding : enum</code> when applicable</li>
+  <li><code>data_type.fixed_point.word_length_bits : u32</code> when applicable</li>
+  <li><code>data_type.fixed_point.integer_word_length_bits : u32</code> when applicable</li>
+  <li><code>data_type.fixed_point.include_overflow_status : bool</code> when applicable</li>
 </ul>
+
+<p>
+The numeric default value is a semantic widget/class value, not a Default realization visual property.
+A <code>.frog</code> widget instance or a source-owned container such as <code>frog.widgets.array</code> may bind a concrete <code>default_value</code>.
+The Default <code>.wfrog</code> realization may publish the parts needed to display and edit the value, but it must not become the owner of the semantic default.
+</p>
 
 <h3>8.2 Label, caption, and unit label</h3>
 
@@ -468,8 +513,9 @@ Validators SHOULD diagnose at least:
 
 <ul>
   <li>non-numeric values on numeric widgets,</li>
-  <li>unknown representation kinds,</li>
-  <li>fixed-point members used without a fixed-point representation kind,</li>
+  <li>unknown <code>data_type.representation</code> values,</li>
+  <li>fixed-point members used without <code>data_type.representation = fxp</code>,</li>
+  <li>runtime-facing examples whose native artifact ABI type does not match the source-owned numeric representation,</li>
   <li>minimum greater than maximum,</li>
   <li>non-positive increment steps for increment/decrement posture,</li>
   <li>out-of-range values where the configured response forbids them,</li>

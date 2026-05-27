@@ -90,6 +90,8 @@
         "label",
         "caption",
         "frame",
+        "control_body",
+        "indicator_body",
         "value_face",
         "text_value",
         "spinner",
@@ -128,6 +130,7 @@
         "label",
         "caption",
         "frame",
+        "indicator_body",
         "value_face",
         "text_value",
         "radix_badge",
@@ -462,6 +465,130 @@
     "resize_posture": "scale_template_to_front_panel_layout_rectangle",
     "text_rendering_posture": "host_may_replace_template_text_content",
     "style_application_posture": "apply_property_bindings_before_render",
+    "default_value_posture": "semantic_default_value_is_source_or_class_owned_not_realization_owned",
+    "default_compact_geometry": {
+      "posture": "labview_like_value_face_plus_vertical_increment_decrement",
+      "body_height": 30,
+      "value_face_width": 74,
+      "value_to_spinner_gap": 4,
+      "spinner_width": 18,
+      "spinner_half_height": 15,
+      "control_body_width": 96,
+      "indicator_body_width": 74,
+      "default_label_anchor_x": 18,
+      "default_caption_anchor_x": 18,
+      "proportionality_rule": "hosts must preserve these part ratios when embedding the Default Numeric SVG as an Array element or other contained widget surface"
+    },
+    "numeric_representation_surface": {
+      "posture": "representation_is_source_owned_and_runtime_interpreted",
+      "canonical_members": [
+        "data_type.representation",
+        "data_type.named_numeric_size"
+      ],
+      "compatibility_aliases": [
+        "representation.kind"
+      ],
+      "supported_named_sizes": [
+        {
+          "name": "EXT",
+          "representation": "ext",
+          "kind": "floating_point",
+          "precision": "extended_host_or_backend_defined"
+        },
+        {
+          "name": "DBL",
+          "representation": "dbl",
+          "kind": "floating_point",
+          "bits": 64
+        },
+        {
+          "name": "SGL",
+          "representation": "sgl",
+          "kind": "floating_point",
+          "bits": 32
+        },
+        {
+          "name": "FXP",
+          "representation": "fxp",
+          "kind": "fixed_point"
+        },
+        {
+          "name": "I64",
+          "representation": "i64",
+          "kind": "integer",
+          "signed": true,
+          "bits": 64
+        },
+        {
+          "name": "I32",
+          "representation": "i32",
+          "kind": "integer",
+          "signed": true,
+          "bits": 32
+        },
+        {
+          "name": "I16",
+          "representation": "i16",
+          "kind": "integer",
+          "signed": true,
+          "bits": 16
+        },
+        {
+          "name": "I8",
+          "representation": "i8",
+          "kind": "integer",
+          "signed": true,
+          "bits": 8
+        },
+        {
+          "name": "U64",
+          "representation": "u64",
+          "kind": "integer",
+          "signed": false,
+          "bits": 64
+        },
+        {
+          "name": "U32",
+          "representation": "u32",
+          "kind": "integer",
+          "signed": false,
+          "bits": 32
+        },
+        {
+          "name": "U16",
+          "representation": "u16",
+          "kind": "integer",
+          "signed": false,
+          "bits": 16
+        },
+        {
+          "name": "U8",
+          "representation": "u8",
+          "kind": "integer",
+          "signed": false,
+          "bits": 8
+        },
+        {
+          "name": "CXT",
+          "representation": "cxt",
+          "kind": "complex",
+          "precision": "extended_host_or_backend_defined"
+        },
+        {
+          "name": "CDB",
+          "representation": "cdb",
+          "kind": "complex",
+          "component_representation": "dbl"
+        },
+        {
+          "name": "CSG",
+          "representation": "csg",
+          "kind": "complex",
+          "component_representation": "sgl"
+        }
+      ],
+      "validated_runtime_scope": "runtimes must only accept representations proven by the source/FIR/lowering/native artifact corridor under test"
+    },
     "accessibility_posture": {
       "roles": {
         "frog.widgets.numeric_control": "spinbutton",
@@ -478,6 +605,9 @@
     "resources must resolve relative to this package file",
     "resource SVG templates should expose data-frog-part markers for declared parts",
     "property bindings must target public numeric members declared by class law",
+    "semantic default_value must come from the numeric class/source instance or containing widget model",
+    "numeric representation must come from source-owned data_type.representation or its documented compatibility alias",
+    "runtime-facing examples must validate that the source-owned representation matches the native artifact ABI corridor before accepting edits",
     "variant selection must not create a new widget class"
   ]
 }

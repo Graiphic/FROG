@@ -9,6 +9,9 @@
   <desc>
     Semantic SVG template for the default rectangular realization variant of FROG numeric widgets.
     The runtime or IDE binds public widget properties to stable parts declared by id and data-frog-part.
+    Compact numeric geometry follows a LabVIEW-like proportion rule:
+    30 unit body height, 74 unit value face, 4 unit value-to-spinner gap,
+    18 unit increment/decrement spinner, and two equal 15 unit spinner halves.
   </desc>
 
   <defs>
@@ -20,23 +23,23 @@
         --frog-numeric-label-font-size: 12px;
 
         --frog-numeric-caption-display: inline;
-        --frog-numeric-caption-fill: #d00000;
+        --frog-numeric-caption-fill: #111827;
         --frog-numeric-caption-font-family: system-ui, Segoe UI, Arial, sans-serif;
         --frog-numeric-caption-font-size: 20px;
-        --frog-numeric-caption-font-weight: 400;
+        --frog-numeric-caption-font-weight: 600;
 
         --frog-numeric-frame-fill: transparent;
-        --frog-numeric-frame-stroke: #000000;
-        --frog-numeric-frame-stroke-width: 2px;
+        --frog-numeric-frame-stroke: #94a3b8;
+        --frog-numeric-frame-stroke-width: 1px;
 
-        --frog-numeric-value-face-fill: #5b9bd5;
+        --frog-numeric-value-face-fill: #ffffff;
         --frog-numeric-value-face-stroke: transparent;
         --frog-numeric-value-face-stroke-width: 0px;
 
         --frog-numeric-text-display: inline;
         --frog-numeric-text-fill: #111111;
         --frog-numeric-text-font-family: system-ui, Segoe UI, Arial, sans-serif;
-        --frog-numeric-text-font-size: 20px;
+        --frog-numeric-text-font-size: 13px;
 
         --frog-numeric-unit-display: none;
         --frog-numeric-unit-fill: #111111;
@@ -49,10 +52,10 @@
         --frog-numeric-radix-font-size: 9px;
 
         --frog-numeric-spinner-display: inline;
-        --frog-numeric-spinner-fill: #5b9bd5;
-        --frog-numeric-spinner-stroke: #ffffff;
-        --frog-numeric-spinner-fill-pressed: #2b4f7b;
-        --frog-numeric-spinner-stroke-pressed: #ffffff;
+        --frog-numeric-spinner-fill: #edf2f7;
+        --frog-numeric-spinner-stroke: #334e68;
+        --frog-numeric-spinner-fill-pressed: #bfdbfe;
+        --frog-numeric-spinner-stroke-pressed: #1e40af;
         --frog-numeric-focus-display: none;
         --frog-numeric-focus-stroke: #2f80ed;
         --frog-numeric-focus-stroke-width: 3px;
@@ -118,11 +121,15 @@
       #increment_up rect,
       #increment_down rect {
         fill: var(--frog-numeric-spinner-fill);
+        stroke: var(--frog-numeric-spinner-stroke);
+        stroke-width: 1;
+        vector-effect: non-scaling-stroke;
       }
 
       #increment_up path,
       #increment_down path {
-        stroke: var(--frog-numeric-spinner-stroke);
+        fill: var(--frog-numeric-spinner-stroke);
+        stroke: none;
       }
 
       #focus_ring {
@@ -140,7 +147,7 @@
           data-frog-part="label"
           data-frog-member="label.text"
           data-frog-anchor="label.anchor"
-          x="16"
+          x="18"
           y="18">numeric_1</text>
 
     <text id="caption_text"
@@ -148,24 +155,44 @@
           data-frog-member="caption.text"
           data-frog-anchor="caption.anchor"
           data-frog-bind="caption.text caption.visible caption.anchor.* caption.align.horizontal style.caption.*"
-          x="16"
+          x="18"
           y="46">Numeric</text>
 
     <rect id="focus_ring"
           data-frog-part="focus_ring"
-          x="4"
-          y="64"
-          width="360"
-          height="64"
+          x="16"
+          y="76"
+          width="100"
+          height="34"
           rx="6"
           data-frog-bind="interaction.focused style.focus_ring.*" />
+
+    <rect id="control_body"
+          data-frog-part="control_body"
+          x="18"
+          y="78"
+          width="96"
+          height="30"
+          fill="none"
+          stroke="none"
+          pointer-events="none" />
+
+    <rect id="indicator_body"
+          data-frog-part="indicator_body"
+          x="18"
+          y="78"
+          width="74"
+          height="30"
+          fill="none"
+          stroke="none"
+          pointer-events="none" />
 
     <rect id="value_face"
           data-frog-part="value_face"
           x="18"
           y="78"
-          width="222"
-          height="36"
+          width="74"
+          height="30"
           rx="0"
           data-frog-bind="style.value_face.*" />
 
@@ -173,8 +200,8 @@
           data-frog-part="frame"
           x="18"
           y="78"
-          width="222"
-          height="36"
+          width="74"
+          height="30"
           rx="0"
           data-frog-bind="style.frame.*" />
 
@@ -183,8 +210,8 @@
           data-frog-member="value"
           data-frog-anchor="text_value.center"
           data-frog-bind="value style.text_value.*"
-          x="126"
-          y="97"
+          x="55"
+          y="93"
           text-anchor="middle"
           dominant-baseline="middle">0</text>
 
@@ -192,8 +219,8 @@
           data-frog-part="unit_label"
           data-frog-member="unit_label.text"
           data-frog-anchor="unit_label.inline_after_value"
-          x="194"
-          y="97"
+          x="124"
+          y="93"
           text-anchor="start"
           dominant-baseline="middle">unit</text>
 
@@ -205,23 +232,23 @@
          data-frog-states="normal pressed"
          data-frog-state-law="normal-pressed-color-only"
          data-frog-bind="style.increment_button.*">
-        <rect x="246" y="82" width="30" height="13" />
-        <path d="M261 85 L269 92 L253 92 Z" fill="none" stroke-width="2" vector-effect="non-scaling-stroke" />
+        <rect x="96" y="78" width="18" height="15" />
+        <path d="M105 82 L111 89 L99 89 Z" fill="var(--frog-numeric-spinner-stroke)" stroke="none" />
       </g>
       <g id="increment_down"
          data-frog-part="increment_down"
          data-frog-states="normal pressed"
          data-frog-state-law="normal-pressed-color-only"
          data-frog-bind="style.increment_button.*">
-        <rect x="246" y="97" width="30" height="13" />
-        <path d="M253 100 L269 100 L261 107 Z" fill="none" stroke-width="2" vector-effect="non-scaling-stroke" />
+        <rect x="96" y="93" width="18" height="15" />
+        <path d="M99 97 L111 97 L105 104 Z" fill="var(--frog-numeric-spinner-stroke)" stroke="none" />
       </g>
     </g>
 
     <rect id="radix_badge"
           data-frog-part="radix_badge"
-          x="300"
-          y="82"
+          x="126"
+          y="78"
           width="42"
           height="16"
           rx="1"
@@ -232,8 +259,8 @@
           data-frog-bind="display.radix_visible representation.kind" />
 
     <text id="radix_text"
-          x="321"
-          y="90"
+          x="147"
+          y="86"
           text-anchor="middle"
           dominant-baseline="middle"
           data-frog-member="representation.kind">type</text>
