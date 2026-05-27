@@ -1,0 +1,7 @@
+{
+  "knowledge_id": "RL-WORLD-MODELS-2026",
+  "domain": "rl",
+  "concept": "world_models_and_model_based_rl",
+  "core_claim": "Modern RL increasingly uses latent world models, planning and sample-efficient control.",
+  "decision_rule": "Use as medium-term direction after PPO, RecurrentPPO and baseline stabilization."
+}
