@@ -1,3 +1,3 @@
 from __future__ import annotations
 
-print('research manifest validator placeholder')
+print("Use schemas/campaign_manifest.schema.json to validate campaign manifests.")
