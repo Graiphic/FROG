@@ -1,0 +1,13 @@
+{
+  "knowledge_id": "FIN-OPTIONS-DERIVATIVES-RISK",
+  "domain": "finance",
+  "concept": "option_pricing_dynamic_hedging_and_tail_risk",
+  "source_documents": ["BlackScholes_73.pdf", "Merton.pdf"],
+  "core_claim": "Derivative pricing and dynamic hedging highlight volatility, convexity, tail exposure and model-risk as central risk concepts.",
+  "botschild_usage": {
+    "features": ["realized_volatility", "downside_volatility", "tail_loss_frequency"],
+    "metrics": ["volatility_agent_pct", "drawdown", "cvar_proxy"],
+    "risk_policy": ["volatility_targeting", "tail_risk_guard"]
+  },
+  "decision_rule": "Use as risk-measure inspiration; do not treat option-pricing assumptions as direct equity-allocation alpha."
+}
