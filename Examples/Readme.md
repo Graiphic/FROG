@@ -239,6 +239,12 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
+    <tr>
+      <td><code>29_array_1d_numeric_container_roundtrip</code></td>
+      <td>1D Array container with cells realized as Default Numeric widget instances and a read-only Array/Numeric indicator</td>
+      <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
   </tbody>
 </table>
 
@@ -315,7 +321,10 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
 28   3D Array numeric selected-element value as a post-boundary widget progression example
     |
     v
-29+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
+29   1D Array container with Default Numeric element widgets as a post-boundary widget progression example
+    |
+    v
+30+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
 </code></pre>
 
 <hr/>
@@ -493,6 +502,13 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
     ├── main.lowering.json
     └── ui/
         └── array_panel.wfrog
+└── 29_array_1d_numeric_container_roundtrip/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── array_panel.wfrog
 </code></pre>
 
 <p>
@@ -634,6 +650,18 @@ layout, and style overrides. The visible grid displays one 2D layer at a time;
 editing outside the current numeric volume materializes the rectangular
 <code>[layer,row,column]</code> volume with new cells initialized to <code>0</code>.
 It does not add public runtime source beyond the Example 15 closure.
+</p>
+
+<p>
+Example <code>29</code> continues the Array progression by separating the Array
+container from its contained element widget. It contains a rank-1 Array control
+whose visible cells are source-owned Default Numeric widget instances, plus a
+read-only Array indicator using the Default Numeric indicator template. The
+<code>.frog</code> owns the Array rank, vector length, selected element, viewport,
+materialization posture, element default value, contained Numeric class/template
+binding, and instance-level style overrides. The <code>.wfrog</code> package resolves
+both Default Array and Default Numeric realization assets. It does not add
+public runtime source beyond the Example 15 closure.
 </p>
 
 <hr/>

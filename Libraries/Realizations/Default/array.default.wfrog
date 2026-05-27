@@ -294,6 +294,9 @@
     "preferred_host_kind": "subobject_svg_composition_or_host_native_repeater",
     "composition_posture": "assemble_subobject_assets_into_shell_slots",
     "element_rendering_posture": "host_instantiates_element_template_per_visible_cell",
+    "element_default_value_posture": "semantic_default_value_comes_from_frog_element_model_not_realization",
+    "element_cell_sizing_posture": "derive_from_element_template_or_source_owned_array_cell_properties",
+    "element_fit_part_posture": "source_may_fit_repeated_cell_to_contained_widget_published_part_without_redrawing_element",
     "virtualization_posture": "allowed_if_public_viewport_state_is_preserved"
   },
   "validation_expectations": [
@@ -302,6 +305,9 @@
     "shell resource must resolve",
     "all subobject resources must resolve",
     "element class must be compatible with element model",
+    "element default value must be provided by source-owned element model when materialization is allowed",
+    "element widget overlays must align to Array element_region and element_slot parts",
+    "element fit parts must be published by the contained widget realization when used",
     "element cells must not become the only semantic storage for array value",
     "scrollbar helpers must not be treated as array semantics"
   ]

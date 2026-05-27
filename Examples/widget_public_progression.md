@@ -69,8 +69,9 @@ Example <code>16_picture_logo_jpeg</code> starts the repository-visible
 post-boundary widget progression. It publishes a Path control, the standard
 <code>frog.image.decode_file_rgba8</code> library contract, and a Picture
 indicator backed by Default Path/Picture realizations. Examples
-<code>17</code> through <code>21</code> continue that public progression with
-Label, Decoration, Subpanel, Tab, and Ring widget-facing material. These
+<code>17</code> through <code>29</code> continue that public progression with
+Label, Decoration, Subpanel, Tab, Ring, Listbox, Table, Tree, Frame, and
+Array widget-facing material. These
 examples may publish source, library, FIR/lowering, and realization material
 without expanding the public runtime implementation beyond the Example
 <code>15</code> closure.

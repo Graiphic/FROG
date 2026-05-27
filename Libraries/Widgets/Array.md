@@ -103,17 +103,45 @@ The array owns the repeated collection structure around that element.
 
 <h2 id="generic-element-model">4. Generic Element Model</h2>
 
+<p>
+An array may realize each cell as an instance of another widget class. The array
+owns the repeated collection, viewport, index display, scrolling, insertion,
+materialization, and shape rules; the contained element widget owns per-cell
+editing and display behavior.
+</p>
+
+<p>
+The array must preserve the contained widget property surface. It may repeat,
+clip, scroll, materialize, and position contained widget instances, but it must
+not replace the contained widget with a reduced hardcoded surrogate. If the
+contained widget supports visible items, styles, interaction posture, data-entry
+limits, default value, or type representation, those properties remain
+source-owned element properties and must be passed through the array container
+contract.
+</p>
+
 <ul>
   <li><code>element.class_id</code> — widget class used as the array element template when the array is UI-realized.</li>
   <li><code>element.value_type</code> — semantic value type of each element.</li>
   <li><code>element.role</code> — <code>control</code>, <code>indicator</code>, or <code>mixed</code>.</li>
   <li><code>element.template_ref</code> — optional reference to the published element template or element widget instance model.</li>
+  <li><code>element.props.*</code> — source-owned property surface passed through to each contained element widget realization.</li>
   <li><code>element.default_value</code> — value used when new elements are inserted or appended.</li>
 </ul>
 
 <p>
 A conforming array must not make the visible repeated cells the only source of collection truth.
 The collection value remains the class-owned semantic value.
+</p>
+
+<p>
+A numeric array is an array whose element template is a numeric widget. It is
+not a separate hardcoded array widget class. For source-owned materialization,
+<code>element.default_value</code> is the value used to create new semantic
+elements. If the element class also defines a natural default, the
+<code>.frog</code> array instance may mirror that value explicitly. The
+<code>.wfrog</code> realization resolves visual assets and host capabilities; it
+does not own the semantic default value.
 </p>
 
 <hr/>
@@ -189,6 +217,22 @@ element_region
 
 <h3>8.1 Value, element, and dimensions</h3>
 
+<p>
+Array element sizing may be derived from the contained widget template or
+overridden by the source instance through <code>element.cell_width</code> and
+<code>element.cell_height</code>. Runtime hosts may compose overlays for the
+repeated element widgets, but those overlays must align to the published Array
+and element realization parts.
+</p>
+
+<p>
+When a contained widget realization publishes a compact embedding part, the
+array may fit the repeated cell to that published part through
+<code>element.layout.fit_part</code>. This is still composition of the contained
+widget realization; it is not permission to redraw the element as an array-local
+surrogate.
+</p>
+
 <ul>
   <li><code>value</code></li>
   <li><code>length</code></li>
@@ -197,6 +241,7 @@ element_region
   <li><code>element.role</code></li>
   <li><code>element.template_ref</code></li>
   <li><code>element.default_value</code></li>
+  <li><code>element.layout.fit_part</code> — optional contained-widget public part used as the repeated-cell fitting bounds.</li>
   <li><code>dimensions.rank</code></li>
   <li><code>dimensions.shape[]</code></li>
   <li><code>dimensions.index_base</code></li>
