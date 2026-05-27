@@ -1,0 +1,11 @@
+{
+  "knowledge_id": "RL-SAFETY-ROBUSTNESS-REWARD-2026",
+  "domain": "rl",
+  "concept": "robustness_safety_reward_hacking",
+  "core_claim": "Modern RL campaigns must measure robustness, reward hacking, safety constraints and reproducibility, not only final return.",
+  "botschild_usage": {
+    "diagnostics": ["reward_hacking", "cash_collapse", "drawdown", "cost_explosion", "validation_test_gap"],
+    "required_protocols": ["multi_seed", "multi_fold", "full_curve_reporting", "baseline_comparison"]
+  },
+  "decision_rule": "Do not promote a campaign if reward improvement is explained by reward hacking, cash collapse, ignored costs or weak validation."
+}
