@@ -276,8 +276,11 @@ When the active representation is fixed-point, the following additional members 
 <p>
 When the Default Numeric realization is embedded as a contained element, hosts should align to
 <code>control_body</code> or <code>indicator_body</code> and preserve the published compact proportions:
-value face width, value-to-spinner gap, spinner width, and equal increment/decrement half-heights.
+value face width, value-to-spinner gap, spinner width, separated increment/decrement button height,
+and the vertical button gap.
 Those proportions are realization-owned geometry, not runtime-local widget drawing rules.
+The default compact increment/decrement buttons intentionally share the same separated-button proportion
+as the Default Array index display, mirrored to the right of the numeric value face.
 </p>
 
 <hr/>

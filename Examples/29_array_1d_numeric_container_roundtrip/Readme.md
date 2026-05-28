@@ -13,8 +13,14 @@ Example 29 is a post-public-boundary widget progression example. Graiphic privat
 - The Array is a container widget, not a hardcoded numeric grid.
 - Each visible cell references the Default Numeric realization through `element.template_ref` and `element.asset_ref`.
 - Each visible Numeric cell declares its source-owned representation as `u16` / `U16`; the private runtime must not infer another numeric type from the SVG or host widget.
-- Control cells keep the Numeric increment/decrement buttons visible through `element.props.display.increment_buttons_visible = true`; indicator cells keep them hidden because they are read-only.
+- The example validates both Numeric integration postures inside an Array:
+  - control cells use `element.layout.fit_part = control_body` with `element.props.display.increment_buttons_visible = true`;
+  - indicator cells use `element.layout.fit_part = indicator_body` with `element.props.display.increment_buttons_visible = false`.
+- Both postures keep the same Array frame, border width, and padding law. The posture changes only which published Numeric part is fitted into each repeated cell.
+- `element.layout.boundary_policy = superpose_adjacent_widget_bounds` declares that repeated Numeric cells share their adjacent published bounds. The runtime must not add Array-local separator lines, fake cell shells, or geometry-changing selection borders around the contained Numeric widgets.
 - New numeric elements materialize from `element.default_value = 0`.
+- `style.frame.*` styles the Array element viewport container. The visible index display is a neighboring Array subcontainer with its own `style.index_display.*` surface, separated from the element viewport by source-owned geometry. `element.props.style.frame.*` styles each contained Numeric widget frame. These are intentionally separate surfaces.
+- `style.index_display.step_gap` and `style.index_display.value_gap` keep the Array indexer proportions source-owned instead of hardcoded in the runtime host.
 - Runtime overlays must align to Default Array `element_region` / `element_slot` parts and Default Numeric `value_face` / `text_value` / `increment_up` / `increment_down` parts.
 - The control is editable. The indicator is read-only.
 - No local Example SVG skin is duplicated.

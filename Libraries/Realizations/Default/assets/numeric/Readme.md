@@ -24,6 +24,13 @@
 
 <h2>1. Published Asset</h2>
 
+<p>
+The compact numeric control geometry publishes a value face and two right-side increment/decrement button parts.
+The template uses a compact 220 x 88 viewBox so the 30 unit numeric body can preserve the same height posture as the Default Array index display when rendered by the current host.
+The buttons use the same separated-button proportion as the Default Array index display:
+16 unit width, 14 unit height, 2 unit vertical gap, and a 4 unit gap from the value face.
+</p>
+
 <ul>
   <li><code>templates/numeric_rectangular.svg</code> — rectangular default numeric realization template.</li>
 </ul>

@@ -38,6 +38,47 @@ For rank-3 arrays, the same realization surface may expose a layer index
 display while the element region renders the selected two-dimensional layer.
 </p>
 
+<p>
+The published <code>frame</code> part represents the outer Array container
+surface. Hosts may realize it as a dynamic overlay when the source-owned
+viewport and scrollbar geometry changes, but its fill, border, and padding
+remain instance properties. When the index display is visible, it remains a
+neighboring Array subcontainer with its own source-owned surface and a
+source-owned gap to the element viewport. The repeated element widgets keep
+their own realization frames through <code>element.props.*</code>; the Array
+frame must not replace or redraw those contained widgets.
+</p>
+
+<p>
+The index display is an Array subobject. Arrow/value proportions, arrow gap,
+and value gap are source-owned through <code>index_display.layout.*</code> and
+<code>style.index_display.*</code>. A visible index display may also expose its
+own source-owned subcontainer fill, border, border width, and padding so it
+reads as a neighboring Array container rather than a floating control. A host
+may overlay native or HTML hit areas, but those hit areas must align to the
+published Default Array index display parts and must not bake spacing into
+runtime code.
+</p>
+
+<p>
+When the Array repeats another Default widget, the repeated cell may be fitted
+to a public part of that contained realization. A Numeric control element may
+consume <code>control_body</code> so the increment/decrement surfaces remain
+visible; a Numeric indicator element may consume <code>indicator_body</code>
+when those surfaces are hidden. The Default Array frame and padding must remain
+geometrically identical across those postures.
+</p>
+
+<p>
+The Default contained-widget boundary posture is border sharing. If
+<code>element.layout.padding</code>, row gap, and column gap are zero, repeated
+contained widgets may touch and their adjacent published frames may visually
+superpose. The Default Array realization must not insert a fake separator
+stroke or per-cell shell between contained widgets. The only collection border
+owned by the Array is the outer frame controlled by <code>style.frame.*</code>,
+plus the neighboring index-display subcontainer when it is visible.
+</p>
+
 <hr/>
 
 <h2>2. Published Default Variant</h2>

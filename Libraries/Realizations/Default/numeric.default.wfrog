@@ -276,7 +276,12 @@
       "value_condition": {
         "interaction.hovered": true
       },
-      "inherits": "normal"
+      "inherits": "normal",
+      "property_bindings": [
+        "style.increment_button.fill_color.hover",
+        "style.increment_button.symbol_color.hover",
+        "style.increment_button.border_color.hover"
+      ]
     },
     {
       "state": "focused",
@@ -467,17 +472,20 @@
     "style_application_posture": "apply_property_bindings_before_render",
     "default_value_posture": "semantic_default_value_is_source_or_class_owned_not_realization_owned",
     "default_compact_geometry": {
-      "posture": "labview_like_value_face_plus_vertical_increment_decrement",
+      "posture": "labview_like_value_face_plus_array_indexer_style_vertical_increment_decrement",
+      "view_box_width": 220,
+      "view_box_height": 88,
       "body_height": 30,
       "value_face_width": 74,
       "value_to_spinner_gap": 4,
-      "spinner_width": 18,
-      "spinner_half_height": 15,
-      "control_body_width": 96,
+      "spinner_width": 16,
+      "spinner_button_height": 14,
+      "spinner_button_gap": 2,
+      "control_body_width": 94,
       "indicator_body_width": 74,
       "default_label_anchor_x": 18,
       "default_caption_anchor_x": 18,
-      "proportionality_rule": "hosts must preserve these part ratios when embedding the Default Numeric SVG as an Array element or other contained widget surface"
+      "proportionality_rule": "hosts must preserve these part ratios when embedding the Default Numeric SVG as an Array element or other contained widget surface; the increment/decrement buttons use the same separated-button proportion as the Default Array index display, mirrored to the right of the value face"
     },
     "numeric_representation_surface": {
       "posture": "representation_is_source_owned_and_runtime_interpreted",

@@ -111,6 +111,18 @@ editing and display behavior.
 </p>
 
 <p>
+For widget-backed arrays, each visible cell is a composition boundary whose
+size is the contained widget fitting bounds unless the source declares an
+explicit cell size. The Array owns the outer collection frame, index displays,
+viewport, scrolling, and materialization; the contained widget owns the visible
+cell body and its own published frame. When source-owned padding and gaps are
+zero, neighboring contained widget instances may touch or visually superpose
+their adjacent published bounds. The runtime must not insert array-local
+separator lines, fake per-cell shells, or extra borders between contained
+widgets.
+</p>
+
+<p>
 The array must preserve the contained widget property surface. It may repeat,
 clip, scroll, materialize, and position contained widget instances, but it must
 not replace the contained widget with a reduced hardcoded surrogate. If the
@@ -233,6 +245,26 @@ widget realization; it is not permission to redraw the element as an array-local
 surrogate.
 </p>
 
+<p>
+The array container may use different contained-widget fitting postures without
+changing its own frame law. For example, a Numeric element may be fitted to its
+published <code>control_body</code> part when increment/decrement buttons are
+visible, or to its published <code>indicator_body</code> part when those buttons
+are hidden. In both cases the Array frame, padding, and border thickness remain
+Array instance properties; only the contained Numeric part selected by
+<code>element.layout.fit_part</code> changes.
+</p>
+
+<p>
+When the array cell intentionally wraps a contained widget with extra breathing
+room, <code>element.layout.padding</code> defines the source-owned
+space between the repeated cell bounds and the contained widget instance. This
+padding must be consumed as layout geometry; it must not be replaced by a
+runtime-local fake border or duplicated element skin. Border-sharing repeated
+widgets may keep this value at <code>0</code> so neighboring element widgets
+touch or visually share their adjacent borders.
+</p>
+
 <ul>
   <li><code>value</code></li>
   <li><code>length</code></li>
@@ -241,7 +273,9 @@ surrogate.
   <li><code>element.role</code></li>
   <li><code>element.template_ref</code></li>
   <li><code>element.default_value</code></li>
+  <li><code>element.layout.padding</code> - optional source-owned inset between the array cell bounds and the contained widget instance.</li>
   <li><code>element.layout.fit_part</code> — optional contained-widget public part used as the repeated-cell fitting bounds.</li>
+  <li><code>element.layout.boundary_policy</code> - optional source-owned posture for contained-widget boundary sharing; the Default realization supports <code>superpose_adjacent_widget_bounds</code> when padding and gaps are zero.</li>
   <li><code>dimensions.rank</code></li>
   <li><code>dimensions.shape[]</code></li>
   <li><code>dimensions.index_base</code></li>
@@ -279,6 +313,20 @@ surrogate.
   <li><code>layout.column_gap</code></li>
 </ul>
 
+<p>
+The array container frame is distinct from the contained element widget frame.
+For a widget-backed array, <code>style.frame.*</code> controls the outer
+array viewport shell around element viewports and scrollbar surfaces.
+Visible index displays are neighboring Array subcontainers controlled through
+<code>index_display.layout.*</code> and <code>style.index_display.*</code>;
+they are not visually merged into the element viewport frame. The index display
+may have its own source-owned container fill, border, border width, and padding
+around the visible arrow/value indexer.
+<code>element.props.style.*</code> controls the
+repeated contained widget. This preserves the visual distinction between
+the collection container and the element realization.
+</p>
+
 <h3>8.4 Interaction and style</h3>
 
 <ul>
@@ -287,8 +335,15 @@ surrogate.
   <li><code>interaction.read_only</code></li>
   <li><code>interaction.focused</code></li>
   <li><code>style.frame.*</code></li>
+  <li><code>style.frame.padding</code> — optional source-owned padding between the outer container frame and the element viewport / scrollbar surfaces.</li>
   <li><code>style.element_region.*</code></li>
   <li><code>style.index_display.*</code></li>
+  <li><code>style.index_display.container_fill_color</code></li>
+  <li><code>style.index_display.container_border_color</code></li>
+  <li><code>style.index_display.container_border_width</code></li>
+  <li><code>style.index_display.container_padding</code></li>
+  <li><code>style.index_display.step_gap</code> — optional source-owned spacing between the increment and decrement arrow surfaces.</li>
+  <li><code>style.index_display.value_gap</code> — optional source-owned spacing between the arrow surfaces and the visible index value surface.</li>
   <li><code>style.scrollbar.*</code></li>
   <li><code>style.focus_ring.*</code></li>
   <li><code>realization.family</code></li>

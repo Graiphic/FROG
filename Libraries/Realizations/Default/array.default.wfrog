@@ -296,7 +296,12 @@
     "element_rendering_posture": "host_instantiates_element_template_per_visible_cell",
     "element_default_value_posture": "semantic_default_value_comes_from_frog_element_model_not_realization",
     "element_cell_sizing_posture": "derive_from_element_template_or_source_owned_array_cell_properties",
+    "frame_layout_posture": "array_element_viewport_frame_uses_source_owned_style_frame_properties_and_stays_visually_separate_from_neighboring_index_display_subcontainer",
+    "index_display_spacing_posture": "arrow_gap_and_value_gap_are_source_owned_style_index_display_properties",
+    "index_display_container_posture": "visible_index_display_may_have_its_own_source_owned_subcontainer_fill_border_and_padding",
     "element_fit_part_posture": "source_may_fit_repeated_cell_to_contained_widget_published_part_without_redrawing_element",
+    "element_padding_posture": "source_owned_element_layout_padding_may_inset_contained_widget_instances_inside_array_cells_without_creating_a_runtime_local_skin",
+    "contained_widget_boundary_posture": "zero_gap_repeated_contained_widget_cells_superpose_adjacent_widget_bounds_without_runtime_separator_lines",
     "virtualization_posture": "allowed_if_public_viewport_state_is_preserved"
   },
   "validation_expectations": [
@@ -307,7 +312,13 @@
     "element class must be compatible with element model",
     "element default value must be provided by source-owned element model when materialization is allowed",
     "element widget overlays must align to Array element_region and element_slot parts",
+    "array frame styling must remain source-owned, stay separate from visible index display subcontainers, and stay separate from contained widget frame styling",
+    "index display container fill, border, padding, arrow spacing, and value spacing must remain source-owned and aligned to the published index_display part",
     "element fit parts must be published by the contained widget realization when used",
+    "element layout padding must remain source-owned and must inset the contained widget instance rather than create an array-local surrogate visual",
+    "widget-backed element cell size must come from contained widget fit bounds or explicit source-owned cell dimensions",
+    "zero-gap contained widget cells must touch or superpose adjacent contained widget bounds without runtime-added separator lines or local cell shells",
+    "selection state must not resize cells, shift contained widgets, or add runtime-local selection geometry unless source-owned style declares it",
     "element cells must not become the only semantic storage for array value",
     "scrollbar helpers must not be treated as array semantics"
   ]

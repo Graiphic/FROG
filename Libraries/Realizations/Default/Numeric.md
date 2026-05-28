@@ -87,6 +87,9 @@ The rectangular variant is the initial default numeric realization variant.
 
 <p>
 The template is intended to be interpreted by an IDE or runtime through published part markers and property bindings.
+Its compact control body uses a LabVIEW-like 30 unit value body inside a compact 220 x 88 viewBox: a 74 unit value face, a 4 unit value-to-button gap,
+and right-side 16 x 14 increment/decrement button surfaces separated by a 2 unit vertical gap.
+The button proportion intentionally matches the Default Array index display button style.
 </p>
 
 <hr/>
