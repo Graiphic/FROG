@@ -213,6 +213,23 @@ Example 30 currently publishes an accepted reference snapshot:
 
 <pre><code>Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/</code></pre>
 
+<p align="center">
+  <img src="../30_array_1d_horizontal_numeric_container_roundtrip/reference/screenshot.png" alt="Accepted Example 30 horizontal Array container snapshot" width="720" />
+</p>
+
+<p>
+Clear public snapshot links:
+</p>
+
+<ul>
+  <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md">Reference snapshot README</a></li>
+  <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/screenshot.png">Accepted screenshot</a></li>
+  <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
+  <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.md">Visual contract</a></li>
+  <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
+  <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/artifact-index.json">Artifact hash index</a></li>
+</ul>
+
 <p>
 That directory records the accepted screenshot, public runtime snapshot,
 visual contract, machine-readable visual contract, and artifact hash index.
