@@ -862,6 +862,13 @@
                   "children": []
                 },
                 {
+                  "key": "examples/widget_reference/frame.md",
+                  "title": "Frame",
+                  "path": "/Examples/widget_reference/Frame.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
                   "key": "examples/widget_reference/label.md",
                   "title": "Label",
                   "path": "/Examples/widget_reference/Label.md",
@@ -4815,6 +4822,7 @@
     "/Examples/widget_reference/Button.md",
     "/Examples/widget_reference/Decorations.md",
     "/Examples/widget_reference/Enum.md",
+    "/Examples/widget_reference/Frame.md",
     "/Examples/widget_reference/Label.md",
     "/Examples/widget_reference/Listbox.md",
     "/Examples/widget_reference/Numeric.md",

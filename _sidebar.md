@@ -118,6 +118,7 @@
     - [Button](/Examples/widget_reference/Button.md)
     - [Decorations](/Examples/widget_reference/Decorations.md)
     - [Enum](/Examples/widget_reference/Enum.md)
+    - [Frame](/Examples/widget_reference/Frame.md)
     - [Label](/Examples/widget_reference/Label.md)
     - [Listbox](/Examples/widget_reference/Listbox.md)
     - [Numeric](/Examples/widget_reference/Numeric.md)
