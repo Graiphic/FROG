@@ -12,7 +12,8 @@
     Compact numeric geometry follows a LabVIEW-like proportion rule:
     30 unit body height, 74 unit value face, 4 unit value-to-spinner gap,
     16 unit increment/decrement buttons, 2 unit vertical button gap,
-    and two equal 14 unit button surfaces.
+    two equal 14 unit button surfaces, and the same compact arrow-symbol
+    proportions as the Default Array index display.
   </desc>
 
   <defs>
@@ -236,7 +237,7 @@
          data-frog-state-law="normal-pressed-color-only"
          data-frog-bind="style.increment_button.*">
         <rect x="96" y="58" width="16" height="14" />
-        <path d="M104 62 L109 68 L99 68 Z" fill="var(--frog-numeric-spinner-symbol)" stroke="none" />
+        <path d="M101 66 L107 66 L104 63 Z" fill="var(--frog-numeric-spinner-symbol)" stroke="none" />
       </g>
       <g id="increment_down"
          data-frog-part="increment_down"
@@ -244,7 +245,7 @@
          data-frog-state-law="normal-pressed-color-only"
          data-frog-bind="style.increment_button.*">
         <rect x="96" y="74" width="16" height="14" />
-        <path d="M99 78 L109 78 L104 84 Z" fill="var(--frog-numeric-spinner-symbol)" stroke="none" />
+        <path d="M101 80 L107 80 L104 83 Z" fill="var(--frog-numeric-spinner-symbol)" stroke="none" />
       </g>
     </g>
 
