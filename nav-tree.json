@@ -869,6 +869,13 @@
                   "children": []
                 },
                 {
+                  "key": "examples/widget_reference/listbox.md",
+                  "title": "Listbox",
+                  "path": "/Examples/widget_reference/Listbox.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
                   "key": "examples/widget_reference/numeric.md",
                   "title": "Numeric",
                   "path": "/Examples/widget_reference/Numeric.md",
@@ -4802,6 +4809,7 @@
     "/Examples/widget_reference/Decorations.md",
     "/Examples/widget_reference/Enum.md",
     "/Examples/widget_reference/Label.md",
+    "/Examples/widget_reference/Listbox.md",
     "/Examples/widget_reference/Numeric.md",
     "/Examples/widget_reference/Path.md",
     "/Examples/widget_reference/Picture.md",

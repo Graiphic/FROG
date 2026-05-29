@@ -119,6 +119,7 @@
     - [Decorations](/Examples/widget_reference/Decorations.md)
     - [Enum](/Examples/widget_reference/Enum.md)
     - [Label](/Examples/widget_reference/Label.md)
+    - [Listbox](/Examples/widget_reference/Listbox.md)
     - [Numeric](/Examples/widget_reference/Numeric.md)
     - [Path](/Examples/widget_reference/Path.md)
     - [Picture](/Examples/widget_reference/Picture.md)
