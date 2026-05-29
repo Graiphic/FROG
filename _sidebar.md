@@ -124,6 +124,7 @@
     - [Picture](/Examples/widget_reference/Picture.md)
     - [String](/Examples/widget_reference/String.md)
     - [Subpanel](/Examples/widget_reference/Subpanel.md)
+    - [Tab](/Examples/widget_reference/Tab.md)
     - [Tree](/Examples/widget_reference/Tree.md)
 - [Language](/Language/Readme.md)
   - [Control structures](/Language/Control%20structures.md)

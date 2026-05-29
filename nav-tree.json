@@ -904,6 +904,13 @@
                   "children": []
                 },
                 {
+                  "key": "examples/widget_reference/tab.md",
+                  "title": "Tab",
+                  "path": "/Examples/widget_reference/Tab.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
                   "key": "examples/widget_reference/tree.md",
                   "title": "Tree",
                   "path": "/Examples/widget_reference/Tree.md",
@@ -4793,6 +4800,7 @@
     "/Examples/widget_reference/Picture.md",
     "/Examples/widget_reference/String.md",
     "/Examples/widget_reference/Subpanel.md",
+    "/Examples/widget_reference/Tab.md",
     "/Examples/widget_reference/Tree.md",
     "/Examples/widget_reference/Readme.md",
     "/Examples/Readme.md",
