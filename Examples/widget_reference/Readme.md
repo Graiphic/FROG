@@ -113,11 +113,74 @@ closure unless that boundary is explicitly promoted later.
   </thead>
   <tbody>
     <tr>
+      <td>Picture</td>
+      <td><code>16_picture_logo_jpeg</code></td>
+      <td><a href="./Picture.md">Picture.md</a></td>
+      <td><code>Libraries/Realizations/Default/picture.default.wfrog</code></td>
+      <td><code>assets/picture/templates/picture_rectangular.svg</code></td>
+    </tr>
+    <tr>
+      <td>Label</td>
+      <td><code>17_label_typography_board</code></td>
+      <td><a href="./Label.md">Label.md</a></td>
+      <td><code>Libraries/Realizations/Default/label.default.wfrog</code></td>
+      <td><code>assets/label/templates/label_rectangular.svg</code></td>
+    </tr>
+    <tr>
+      <td>Decorations</td>
+      <td><code>18_decoration_board</code></td>
+      <td><a href="./Decorations.md">Decorations.md</a></td>
+      <td><code>Libraries/Realizations/Default/decorations.default.wfrog</code></td>
+      <td><code>assets/decorations/templates/flat_box.svg</code>, <code>horizontal_line.svg</code>, <code>vertical_line.svg</code></td>
+    </tr>
+    <tr>
+      <td>Subpanel</td>
+      <td><code>19_subpanel_embedded_front_panel</code></td>
+      <td><a href="./Subpanel.md">Subpanel.md</a></td>
+      <td><code>Libraries/Realizations/Default/subpanel.default.wfrog</code></td>
+      <td><code>assets/subpanel/templates/subpanel_shell.svg</code></td>
+    </tr>
+    <tr>
+      <td>Tab</td>
+      <td><code>20_tab_page_selection</code></td>
+      <td><a href="./Tab.md">Tab.md</a></td>
+      <td><code>Libraries/Realizations/Default/tab.default.wfrog</code></td>
+      <td><code>assets/tab/templates/tab_shell.svg</code> + <code>assets/tab/subobjects/*.svg</code></td>
+    </tr>
+    <tr>
+      <td>Ring</td>
+      <td><code>21_ring_selection_roundtrip</code></td>
+      <td><a href="./Ring.md">Ring.md</a></td>
+      <td><code>Libraries/Realizations/Default/ring.default.wfrog</code></td>
+      <td><code>assets/ring/templates/ring_rectangular.svg</code></td>
+    </tr>
+    <tr>
+      <td>Listbox</td>
+      <td><code>22_listbox_selection_roundtrip</code></td>
+      <td><a href="./Listbox.md">Listbox.md</a></td>
+      <td><code>Libraries/Realizations/Default/listbox.default.wfrog</code></td>
+      <td><code>assets/listbox/templates/listbox_shell.svg</code> + <code>assets/listbox/subobjects/*.svg</code></td>
+    </tr>
+    <tr>
+      <td>Table</td>
+      <td><code>23_table_cell_selection_roundtrip</code></td>
+      <td><a href="./Table.md">Table.md</a></td>
+      <td><code>Libraries/Realizations/Default/table.default.wfrog</code></td>
+      <td><code>assets/table/templates/table_shell.svg</code> + <code>assets/table/subobjects/*.svg</code></td>
+    </tr>
+    <tr>
       <td>Tree</td>
       <td><code>24_tree_node_selection_roundtrip</code></td>
       <td><a href="./Tree.md">Tree.md</a></td>
       <td><code>Libraries/Realizations/Default/tree.default.wfrog</code></td>
       <td><code>assets/tree/templates/tree_shell.svg</code> + <code>assets/tree/item_symbols/*.svg</code></td>
+    </tr>
+    <tr>
+      <td>Frame</td>
+      <td><code>25_frame_grouping_board</code></td>
+      <td><a href="./Frame.md">Frame.md</a></td>
+      <td><code>Libraries/Realizations/Default/frame.default.wfrog</code></td>
+      <td><code>assets/frame/templates/frame_rectangular.svg</code></td>
     </tr>
     <tr>
       <td>Array</td>
@@ -201,12 +264,84 @@ native-backed.
       <td><code>LLVM native kernel manifest + .frog/.wfrog UI</code></td>
     </tr>
     <tr>
+      <td><code>16</code></td>
+      <td>Picture</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td><code>LLVM native manifest + frog.image provider + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>17</code></td>
+      <td>Label</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td><code>LLVM native manifest + source-owned support text + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>18</code></td>
+      <td>Decorations</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td><code>LLVM native manifest + source-owned support geometry + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>19</code></td>
+      <td>Subpanel</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td><code>LLVM native manifest + hosted child .frog front panel + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>20</code></td>
+      <td>Tab</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td><code>LLVM native manifest + selected-page string proof + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>21</code></td>
+      <td>Ring</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td><code>LLVM native manifest + selected numeric value proof + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>22</code></td>
+      <td>Listbox</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td><code>LLVM native manifest + selected numeric value proof + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>23</code></td>
+      <td>Table</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td><code>LLVM native manifest + selected table cell proof + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
       <td><code>24</code></td>
       <td>Tree</td>
       <td>validated private slice</td>
       <td>validated private slice</td>
       <td>validated private slice</td>
       <td><code>LLVM native kernel manifest + explicit frog.tree.records dataflow + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>25</code></td>
+      <td>Frame</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td><code>LLVM native manifest + source-owned support frame geometry + .frog/.wfrog UI</code></td>
     </tr>
     <tr>
       <td><code>26-30</code></td>
@@ -218,6 +353,46 @@ native-backed.
     </tr>
   </tbody>
 </table>
+
+<hr/>
+
+<h2>Reference Snapshot Coverage</h2>
+
+<p>
+Widget reference snapshots are accepted-state evidence. They are published only
+after the visible example state has been accepted and captured according to
+<a href="../example_reference_snapshot_standard.md">the reference snapshot standard</a>.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Example</th>
+      <th>Widget family</th>
+      <th>Public snapshot status</th>
+      <th>Reference path</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>16</code></td><td>Picture</td><td>pending accepted public snapshot</td><td><code>Examples/16_picture_logo_jpeg/reference/</code></td></tr>
+    <tr><td><code>17</code></td><td>Label</td><td>pending accepted public snapshot</td><td><code>Examples/17_label_typography_board/reference/</code></td></tr>
+    <tr><td><code>18</code></td><td>Decorations</td><td>pending accepted public snapshot</td><td><code>Examples/18_decoration_board/reference/</code></td></tr>
+    <tr><td><code>19</code></td><td>Subpanel</td><td>pending accepted public snapshot</td><td><code>Examples/19_subpanel_embedded_front_panel/reference/</code></td></tr>
+    <tr><td><code>20</code></td><td>Tab</td><td>pending accepted public snapshot</td><td><code>Examples/20_tab_page_selection/reference/</code></td></tr>
+    <tr><td><code>21</code></td><td>Ring</td><td>pending accepted public snapshot</td><td><code>Examples/21_ring_selection_roundtrip/reference/</code></td></tr>
+    <tr><td><code>22</code></td><td>Listbox</td><td>pending accepted public snapshot</td><td><code>Examples/22_listbox_selection_roundtrip/reference/</code></td></tr>
+    <tr><td><code>23</code></td><td>Table</td><td>pending accepted public snapshot</td><td><code>Examples/23_table_cell_selection_roundtrip/reference/</code></td></tr>
+    <tr><td><code>24</code></td><td>Tree</td><td>pending accepted public snapshot</td><td><code>Examples/24_tree_node_selection_roundtrip/reference/</code></td></tr>
+    <tr><td><code>25</code></td><td>Frame</td><td>pending accepted public snapshot</td><td><code>Examples/25_frame_grouping_board/reference/</code></td></tr>
+    <tr><td><code>30</code></td><td>Array</td><td><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md">accepted public snapshot published</a></td><td><code>Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/</code></td></tr>
+  </tbody>
+</table>
+
+<p>
+Pending rows are deliberate: the repository should not publish placeholder
+screenshots or claim accepted visual evidence before the browser-host state is
+captured and reviewed.
+</p>
 
 <hr/>
 
