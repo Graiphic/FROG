@@ -113,6 +113,7 @@
     - [02 structured control](/Examples/compiler/02_structured_control.md)
     - [03 explicit state](/Examples/compiler/03_explicit_state.md)
   - [widget reference](/Examples/widget_reference/Readme.md)
+    - [Array](/Examples/widget_reference/Array.md)
     - [Boolean](/Examples/widget_reference/Boolean.md)
     - [Button](/Examples/widget_reference/Button.md)
     - [Enum](/Examples/widget_reference/Enum.md)
