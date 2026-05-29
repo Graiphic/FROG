@@ -123,6 +123,7 @@
     - [Path](/Examples/widget_reference/Path.md)
     - [Picture](/Examples/widget_reference/Picture.md)
     - [String](/Examples/widget_reference/String.md)
+    - [Subpanel](/Examples/widget_reference/Subpanel.md)
     - [Tree](/Examples/widget_reference/Tree.md)
 - [Language](/Language/Readme.md)
   - [Control structures](/Language/Control%20structures.md)
