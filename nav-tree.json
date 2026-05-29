@@ -186,6 +186,13 @@
               "children": []
             },
             {
+              "key": "examples/example_reference_snapshot_standard.md",
+              "title": "example reference snapshot standard",
+              "path": "/Examples/example_reference_snapshot_standard.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "examples/widget_public_boundary.md",
               "title": "widget public boundary",
               "path": "/Examples/widget_public_boundary.md",
@@ -766,6 +773,21 @@
                   "path": "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/main.frog",
                   "kind": "code",
                   "children": []
+                },
+                {
+                  "key": "examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/",
+                  "title": "reference",
+                  "path": "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.md",
+                      "title": "visual-contract",
+                      "path": "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
                 }
               ]
             },
@@ -1622,6 +1644,13 @@
                   "key": "libraries/widgets/tree.md",
                   "title": "Tree",
                   "path": "/Libraries/Widgets/Tree.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
+                  "key": "libraries/widgets/widgetengineeringreferencestandard.md",
+                  "title": "WidgetEngineeringReferenceStandard",
+                  "path": "/Libraries/Widgets/WidgetEngineeringReferenceStandard.md",
                   "kind": "page",
                   "children": []
                 }
@@ -4633,6 +4662,7 @@
     "/Expression/Widget%20realization.md",
     "/Expression/Readme.md",
     "/Examples/example_dossier_standard.md",
+    "/Examples/example_reference_snapshot_standard.md",
     "/Examples/widget_public_boundary.md",
     "/Examples/widget_public_progression.md",
     "/Examples/01_pure_addition/main.frog",
@@ -4710,6 +4740,8 @@
     "/Examples/29_array_1d_numeric_container_roundtrip/main.frog",
     "/Examples/29_array_1d_numeric_container_roundtrip/Readme.md",
     "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/main.frog",
+    "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.md",
+    "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md",
     "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
@@ -4830,6 +4862,7 @@
     "/Libraries/Widgets/Tab.md",
     "/Libraries/Widgets/Table.md",
     "/Libraries/Widgets/Tree.md",
+    "/Libraries/Widgets/WidgetEngineeringReferenceStandard.md",
     "/Libraries/Widgets/Readme.md",
     "/Libraries/Readme.md",
     "/Profiles/Interop.md",
