@@ -119,6 +119,7 @@
     - [Enum](/Examples/widget_reference/Enum.md)
     - [Numeric](/Examples/widget_reference/Numeric.md)
     - [Path](/Examples/widget_reference/Path.md)
+    - [Picture](/Examples/widget_reference/Picture.md)
     - [String](/Examples/widget_reference/String.md)
     - [Tree](/Examples/widget_reference/Tree.md)
 - [Language](/Language/Readme.md)
