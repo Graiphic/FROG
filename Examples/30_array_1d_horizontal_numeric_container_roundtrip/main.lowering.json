@@ -1,0 +1,208 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "30_array_1d_horizontal_numeric_container_roundtrip",
+    "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "summary": "make one post-boundary 1D horizontal Array container example consumable through a manifest-declared LLVM/native u16 proof boundary plus Default Array and Default Numeric realizations",
+    "backend_family_target": "llvm_native_kernel",
+    "capability_targets": [
+      "native_kernel_manifest",
+      "private_runtime_array_element_selection_binding",
+      "array_index_display_rendering",
+      "svg_part_overlay_alignment",
+      "array_state_patch_interaction",
+      "svg_style_property_binding",
+      "array_element_widget_template_rendering",
+      "numeric_value_binding",
+      "default_numeric_realization_asset"
+    ],
+    "native_artifact_ref": {
+      "manifest": "Implementations/Reference/LLVM/examples/30_array_1d_horizontal_numeric_container_roundtrip/native_kernel_manifest.json",
+      "llvm_ir": "Implementations/Reference/LLVM/examples/30_array_1d_horizontal_numeric_container_roundtrip/kernel.ll"
+    },
+    "public_reference_runtime_source_added": false
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "array_container_numeric_element_roundtrip_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "element_value",
+            "type": "u16"
+          },
+          {
+            "id": "array_records",
+            "type": "frog.array.records<u16,rank=1>"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "selected_element_value",
+            "type": "u16"
+          },
+          {
+            "id": "published_array_records",
+            "type": "frog.array.records<u16,rank=1>"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "value_bindings": [
+          {
+            "widget_id": "numeric_array",
+            "widget_class": "frog.widgets.array_control",
+            "mode": "widget_value",
+            "semantic_value_member": "value.selected_element_value",
+            "ui_identity_member": "value.selected_element_id",
+            "record_member": "elements.*",
+            "realization_asset_ref": "asset:array_shell_svg",
+            "element_class_ref": "frog.widgets.numeric_control",
+            "element_template_ref": "frog.realizations.default.numeric_control",
+            "element_asset_ref": "asset:numeric_rectangular_svg",
+            "element_data_type": {
+              "representation": "u16",
+              "named_numeric_size": "U16",
+              "value_type": "u16"
+            },
+            "element_visible_items": {
+              "increment_buttons_visible": true,
+              "radix_visible": false
+            }
+          },
+          {
+            "widget_id": "published_array",
+            "widget_class": "frog.widgets.array_indicator",
+            "mode": "widget_value",
+            "semantic_value_member": "value.selected_element_value",
+            "ui_identity_member": "value.selected_element_id",
+            "record_member": "elements.*",
+            "realization_asset_ref": "asset:array_shell_svg",
+            "element_class_ref": "frog.widgets.numeric_indicator",
+            "element_template_ref": "frog.realizations.default.numeric_indicator",
+            "element_asset_ref": "asset:numeric_rectangular_svg",
+            "element_data_type": {
+              "representation": "u16",
+              "named_numeric_size": "U16",
+              "value_type": "u16"
+            },
+            "element_visible_items": {
+              "increment_buttons_visible": false,
+              "radix_visible": false
+            }
+          }
+        ],
+        "host_overlays": [
+          {
+            "widget_id": "numeric_array",
+            "part": "element_region",
+            "source_members": [
+              "dimensions.*",
+              "elements.*",
+              "value.*",
+              "selection.*",
+              "viewport.*",
+              "interaction.*",
+              "display.*",
+              "style.*",
+              "element.template_ref",
+              "element.asset_ref",
+              "element.default_value",
+              "element.cell_width",
+              "element.cell_height",
+              "element.props.data_type.*",
+              "element.props.data_entry.*",
+              "element.props.*"
+            ]
+          },
+          {
+            "widget_id": "numeric_array",
+            "part": "index_display",
+            "source_members": [
+              "index_display.*",
+              "viewport.first_indices[]",
+              "dimensions.*",
+              "style.index_display.*",
+              "element.template_ref",
+              "element.asset_ref",
+              "element.default_value",
+              "element.cell_width",
+              "element.cell_height",
+              "element.props.data_type.*",
+              "element.props.data_entry.*",
+              "element.props.*"
+            ]
+          },
+          {
+            "widget_id": "published_array",
+            "part": "element_region",
+            "source_members": [
+              "dimensions.*",
+              "elements.*",
+              "value.*",
+              "selection.*",
+              "viewport.*",
+              "display.*",
+              "style.*",
+              "element.template_ref",
+              "element.asset_ref",
+              "element.default_value",
+              "element.cell_width",
+              "element.cell_height",
+              "element.props.data_type.*",
+              "element.props.data_entry.*",
+              "element.props.*"
+            ],
+            "host_state_rule": "viewport_state_is_instance_local_not_dataflow"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "identity_u16",
+        "native_manifest": "Implementations/Reference/LLVM/examples/30_array_1d_horizontal_numeric_container_roundtrip/native_kernel_manifest.json",
+        "inputs": {
+          "element_value": "widget.numeric_array.value.selected_element_value"
+        },
+        "outputs": {
+          "selected_element_value": "selected_element_value"
+        },
+        "record_flow": {
+          "operation": "typed_record_passthrough",
+          "source": "widget.numeric_array.elements.*",
+          "target": "widget.published_array.elements.*",
+          "native_kernel_member": false,
+          "publication_rule": "fir_declared_passthrough_not_implicit_ui_sync"
+        },
+        "final_publication": [
+          {
+            "target": "widget.published_array.value.selected_element_value",
+            "source": "native_kernel.selected_element_value"
+          },
+          {
+            "target": "widget.published_array.elements.*",
+            "source": "widget.numeric_array.elements.*"
+          },
+          {
+            "target": "public_output.selected_element_value",
+            "source": "native_kernel.selected_element_value"
+          },
+          {
+            "target": "public_output.published_array_records",
+            "source": "widget.numeric_array.elements.*"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,819 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "30_array_1d_horizontal_numeric_container_roundtrip",
+    "summary": "1D horizontal Array container control-to-indicator roundtrip using Default Array cells that instantiate Default Numeric element widgets.",
+    "description": "Places one horizontal 1D Array control and one read-only horizontal Array indicator on the front panel. The Array owns rank, shape, viewport orientation, index display, horizontal scrolling, and materialization. Each visible cell is a contained Numeric widget whose per-cell editing/display behavior comes from the Default Numeric realization. The .frog source owns element class binding, element default value, cell sizing, labels, bindings, initial values, and instance-level visual overrides. The .wfrog package references Default Array and Default Numeric realization assets.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "array",
+      "array_control",
+      "array_indicator",
+      "rank_1",
+      "horizontal_array",
+      "selected_element",
+      "roundtrip",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary",
+      "array_container",
+      "numeric_element_template",
+      "default_numeric_realization",
+      "widget_container"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "element_value",
+        "type": "u16",
+        "binding_origin": "widget.numeric_array.value.selected_element_value"
+      },
+      {
+        "id": "array_records",
+        "type": "frog.array.records<u16,rank=1>",
+        "binding_origin": "widget.numeric_array.elements.*"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_array_records",
+        "type": "frog.array.records<u16,rank=1>"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "numeric_array_element_value",
+        "kind": "widget_value",
+        "widget": "numeric_array",
+        "member": "value.selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_array_element_value",
+        "kind": "widget_value",
+        "widget": "published_array",
+        "member": "value.selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "numeric_array_records",
+        "kind": "widget_value",
+        "widget": "numeric_array",
+        "member": "elements.*",
+        "type": "frog.array.records<u16,rank=1>"
+      },
+      {
+        "id": "published_array_records",
+        "kind": "widget_value",
+        "widget": "published_array",
+        "member": "elements.*",
+        "type": "frog.array.records<u16,rank=1>"
+      },
+      {
+        "id": "output_selected_element_value",
+        "kind": "interface_output",
+        "interface_port": "selected_element_value"
+      },
+      {
+        "id": "output_published_array_records",
+        "kind": "interface_output",
+        "interface_port": "published_array_records"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "numeric_array_element_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "published_array_element_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "numeric_array_element_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_selected_element_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e3",
+        "from": {
+          "node": "numeric_array_records",
+          "port": "records"
+        },
+        "to": {
+          "node": "published_array_records",
+          "port": "records"
+        }
+      },
+      {
+        "id": "e4",
+        "from": {
+          "node": "numeric_array_records",
+          "port": "records"
+        },
+        "to": {
+          "node": "output_published_array_records",
+          "port": "records"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 780,
+      "height": 300,
+      "units": "px"
+    },
+    "package_refs": [
+      "./ui/array_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "numeric_array",
+        "role": "control",
+        "class_ref": "frog.widgets.array_control",
+        "instance_ref": "numeric_array",
+        "value_type": "frog.array<u16,rank=1>",
+        "layout": {
+          "x": 32,
+          "y": 34,
+          "width": 690,
+          "height": 104
+        },
+        "props": {
+          "label.text": "Horizontal Array container",
+          "label.visible": true,
+          "label.anchor.x": 56,
+          "label.anchor.y": 22,
+          "label.style.text_color": "#111827",
+          "label.style.font_family": "Segoe UI, Arial, sans-serif",
+          "label.style.font_size": "13px",
+          "label.style.font_weight": "600",
+          "caption.text": "",
+          "caption.visible": false,
+          "caption.anchor.x": 56,
+          "caption.anchor.y": 44,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "12px",
+          "caption.style.font_weight": "400",
+          "value.selected_element_id": "i2",
+          "value.selected_indices": [
+            2
+          ],
+          "value.selected_element_value": 30,
+          "selection.mode": "single_element",
+          "selection.active_indices": [
+            2
+          ],
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "element.class_id": "frog.widgets.numeric_control",
+          "element.value_type": "u16",
+          "element.role": "control",
+          "element.props.data_type.representation": "u16",
+          "element.props.data_type.named_numeric_size": "U16",
+          "element.props.data_entry.minimum": 0,
+          "element.props.data_entry.maximum": 65535,
+          "element.props.data_entry.increment_step": 1,
+          "dimensions.rank": 1,
+          "dimensions.shape": [
+            10
+          ],
+          "dimensions.index_base": 0,
+          "dimensions.allow_resize": true,
+          "viewport.first_indices": [
+            0
+          ],
+          "viewport.visible_counts": [
+            6
+          ],
+          "viewport.row_offset": 0,
+          "viewport.column_offset": 0,
+          "viewport.row_count": 1,
+          "viewport.column_count": 6,
+          "viewport.row_height": 30,
+          "viewport.column_width": 96,
+          "viewport.cell_padding_inline": "0px",
+          "viewport.scrollbar_gap": 6,
+          "index_display.visible": true,
+          "index_display.rank": 1,
+          "index_display.values": [
+            0
+          ],
+          "index_display.layout.x": -17,
+          "index_display.layout.y": 49,
+          "index_display.layout.width": 64,
+          "index_display.layout.height": 40,
+          "index_display.layout.box_width": 54,
+          "index_display.layout.box_height": 30,
+          "index_display.layout.gap": 0,
+          "index_display.layout.step_width": 16,
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": true,
+          "display.vertical_lines_visible": false,
+          "display.horizontal_lines_visible": false,
+          "interaction.enabled": true,
+          "interaction.read_only": false,
+          "interaction.editable_elements": true,
+          "interaction.selection_scrolling_enabled": true,
+          "interaction.index_display_enabled": true,
+          "scrolling.smooth_enabled": true,
+          "editing.allow_during_execution": true,
+          "style.frame.fill_color": "#f8fafc",
+          "style.frame.border_color": "#94a3b8",
+          "style.frame.border_width": "1px",
+          "style.frame.padding": 5,
+          "style.array_region.fill_color": "#ffffff",
+          "style.array_region.border_color": "#64748b",
+          "style.array_region.border_width": "0px",
+          "style.grid_line.color": "#d6dee8",
+          "style.grid_line.width": "0px",
+          "style.index_display.fill_color": "#f8fafc",
+          "style.index_display.border_color": "#94a3b8",
+          "style.index_display.border_width": "1px",
+          "style.index_display.container_fill_color": "#f8fafc",
+          "style.index_display.container_border_color": "#94a3b8",
+          "style.index_display.container_border_width": "1px",
+          "style.index_display.container_padding": "4px",
+          "style.index_display.step_fill_color": "#edf2f7",
+          "style.index_display.step_hover_fill_color": "#dbeafe",
+          "style.index_display.step_pressed_fill_color": "#bfdbfe",
+          "style.index_display.glyph_color": "#334e68",
+          "style.index_display.step_gap": 2,
+          "style.index_display.value_gap": 4,
+          "style.scrollbar.track_fill_color": "#eef2f7",
+          "style.scrollbar.track_hover_fill_color": "#dbe5f1",
+          "style.scrollbar.track_pressed_fill_color": "#bfdbfe",
+          "style.scrollbar.border_color": "#8fa0b4",
+          "style.scrollbar.border_width": "1px",
+          "style.scrollbar.thumb_fill_color": "#9cadbf",
+          "style.scrollbar.thumb_hover_fill_color": "#8ca0b5",
+          "style.scrollbar.thumb_pressed_fill_color": "#64748b",
+          "style.scrollbar.thumb_padding_percent": 4,
+          "style.scrollbar.thickness": "16px",
+          "style.scrollbar.horizontal_height": "16px",
+          "style.scrollbar.vertical_thumb_width_percent": 66.67,
+          "style.scrollbar.vertical_thumb_offset_x_percent": 50,
+          "style.scrollbar.vertical_thumb_translate_x": "-50%",
+          "style.scrollbar.horizontal_thumb_height_percent": 66.67,
+          "style.scrollbar.horizontal_thumb_offset_y_percent": 16.67,
+          "style.element.fill_color": "transparent",
+          "style.element.alternate_fill_color": "transparent",
+          "style.element.undefined_fill_color": "#f3f4f6",
+          "style.element.undefined_text_color": "#94a3b8",
+          "style.element.undefined_opacity": "0.78",
+          "style.element.hover_fill_color": "#eef6ff",
+          "style.selection_face.fill_color": "#dbeafe",
+          "style.selection_face.border_color": "#2563eb",
+          "style.selection_face.border_width": "1px",
+          "style.active_element.border_color": "#2563eb",
+          "style.active_element.border_width": "1px",
+          "style.text.color": "#111827",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "13px",
+          "style.text.font_weight": "400",
+          "style.focus_ring.color": "#2563eb",
+          "style.focus_ring.width": "2px",
+          "elements": [
+            {
+              "id": "i0",
+              "indices": [
+                0
+              ],
+              "value": 10,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_control",
+                "template_ref": "frog.realizations.default.numeric_control",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i1",
+              "indices": [
+                1
+              ],
+              "value": 20,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_control",
+                "template_ref": "frog.realizations.default.numeric_control",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i2",
+              "indices": [
+                2
+              ],
+              "value": 30,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_control",
+                "template_ref": "frog.realizations.default.numeric_control",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i3",
+              "indices": [
+                3
+              ],
+              "value": 40,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_control",
+                "template_ref": "frog.realizations.default.numeric_control",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i4",
+              "indices": [
+                4
+              ],
+              "value": 50,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_control",
+                "template_ref": "frog.realizations.default.numeric_control",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i5",
+              "indices": [
+                5
+              ],
+              "value": 60,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_control",
+                "template_ref": "frog.realizations.default.numeric_control",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i6",
+              "indices": [
+                6
+              ],
+              "value": 70,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_control",
+                "template_ref": "frog.realizations.default.numeric_control",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i7",
+              "indices": [
+                7
+              ],
+              "value": 80,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_control",
+                "template_ref": "frog.realizations.default.numeric_control",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i8",
+              "indices": [
+                8
+              ],
+              "value": 90,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_control",
+                "template_ref": "frog.realizations.default.numeric_control",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i9",
+              "indices": [
+                9
+              ],
+              "value": 100,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_control",
+                "template_ref": "frog.realizations.default.numeric_control",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            }
+          ],
+          "value_type": "frog.array<u16,rank=1>",
+          "dimensions.length": 10,
+          "dimensions.default_element_value": 0,
+          "dimensions.materialize_out_of_range_edits": true,
+          "viewport.orientation": "horizontal",
+          "element.template_ref": "frog.realizations.default.numeric_control",
+          "element.asset_ref": "asset:numeric_rectangular_svg",
+          "element.default_value": 0,
+          "element.cell_width": 96,
+          "element.cell_height": 30,
+          "element.layout.fit_part": "control_body",
+          "element.layout.boundary_policy": "superpose_adjacent_widget_bounds",
+          "element.props.caption.visible": false,
+          "element.props.label.visible": false,
+          "element.props.display.increment_buttons_visible": true,
+          "element.props.display.radix_visible": false,
+          "element.props.interaction.read_only": false,
+          "element.props.style.frame.fill_color": "transparent",
+          "element.props.style.frame.border_color": "#94a3b8",
+          "element.props.style.frame.border_width": "1px",
+          "element.props.style.value_face.fill_color": "#ffffff",
+          "element.props.style.value_face.border_color": "transparent",
+          "element.props.style.value_face.border_width": "0px",
+          "element.props.style.increment_button.fill_color.normal": "#edf2f7",
+          "element.props.style.increment_button.fill_color.hover": "#dbeafe",
+          "element.props.style.increment_button.fill_color.pressed": "#bfdbfe",
+          "element.props.style.increment_button.border_color.normal": "#94a3b8",
+          "element.props.style.increment_button.border_color.hover": "#64748b",
+          "element.props.style.increment_button.border_color.pressed": "#2563eb",
+          "element.props.style.increment_button.symbol_color.normal": "#334e68",
+          "element.props.style.increment_button.symbol_color.hover": "#1d4ed8",
+          "element.props.style.increment_button.symbol_color.pressed": "#1e40af",
+          "element.props.style.text_value.color": "#111827",
+          "element.props.style.text_value.font_family": "Segoe UI, Arial, sans-serif",
+          "element.props.style.text_value.font_size": "13px",
+          "element.props.style.text_value.font_weight": "400"
+        },
+        "visual": {
+          "asset_ref": "asset:array_shell_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "element_value"
+        },
+        "label": "Horizontal Array container"
+      },
+      {
+        "id": "published_array",
+        "role": "indicator",
+        "class_ref": "frog.widgets.array_indicator",
+        "instance_ref": "published_array",
+        "value_type": "frog.array<u16,rank=1>",
+        "layout": {
+          "x": 32,
+          "y": 156,
+          "width": 690,
+          "height": 104
+        },
+        "props": {
+          "label.text": "Horizontal Array indicator",
+          "label.visible": true,
+          "label.anchor.x": 56,
+          "label.anchor.y": 22,
+          "label.style.text_color": "#111827",
+          "label.style.font_family": "Segoe UI, Arial, sans-serif",
+          "label.style.font_size": "13px",
+          "label.style.font_weight": "600",
+          "caption.text": "",
+          "caption.visible": false,
+          "caption.anchor.x": 56,
+          "caption.anchor.y": 44,
+          "caption.align.horizontal": "left",
+          "caption.style.text_color": "#111827",
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "12px",
+          "caption.style.font_weight": "400",
+          "value.selected_element_id": "i2",
+          "value.selected_indices": [
+            2
+          ],
+          "value.selected_element_value": 30,
+          "selection.mode": "single_element",
+          "selection.active_indices": [
+            2
+          ],
+          "data_type.representation": "u16",
+          "data_type.named_numeric_size": "U16",
+          "element.class_id": "frog.widgets.numeric_indicator",
+          "element.value_type": "u16",
+          "element.role": "indicator",
+          "element.props.data_type.representation": "u16",
+          "element.props.data_type.named_numeric_size": "U16",
+          "element.props.data_entry.minimum": 0,
+          "element.props.data_entry.maximum": 65535,
+          "element.props.data_entry.increment_step": 1,
+          "dimensions.rank": 1,
+          "dimensions.shape": [
+            10
+          ],
+          "dimensions.index_base": 0,
+          "dimensions.allow_resize": true,
+          "viewport.first_indices": [
+            0
+          ],
+          "viewport.visible_counts": [
+            6
+          ],
+          "viewport.row_offset": 0,
+          "viewport.column_offset": 0,
+          "viewport.row_count": 1,
+          "viewport.column_count": 6,
+          "viewport.row_height": 30,
+          "viewport.column_width": 74,
+          "viewport.cell_padding_inline": "0px",
+          "viewport.scrollbar_gap": 6,
+          "index_display.visible": true,
+          "index_display.rank": 1,
+          "index_display.values": [
+            0
+          ],
+          "index_display.layout.x": -17,
+          "index_display.layout.y": 49,
+          "index_display.layout.width": 64,
+          "index_display.layout.height": 40,
+          "index_display.layout.box_width": 54,
+          "index_display.layout.box_height": 30,
+          "index_display.layout.gap": 0,
+          "index_display.layout.step_width": 16,
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": true,
+          "display.vertical_lines_visible": false,
+          "display.horizontal_lines_visible": false,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "interaction.editable_elements": false,
+          "interaction.selection_scrolling_enabled": true,
+          "interaction.index_display_enabled": false,
+          "scrolling.smooth_enabled": true,
+          "editing.allow_during_execution": true,
+          "style.frame.fill_color": "#f8fafc",
+          "style.frame.border_color": "#94a3b8",
+          "style.frame.border_width": "1px",
+          "style.frame.padding": 5,
+          "style.array_region.fill_color": "#ffffff",
+          "style.array_region.border_color": "#64748b",
+          "style.array_region.border_width": "0px",
+          "style.grid_line.color": "#d6dee8",
+          "style.grid_line.width": "0px",
+          "style.index_display.fill_color": "#f8fafc",
+          "style.index_display.border_color": "#94a3b8",
+          "style.index_display.border_width": "1px",
+          "style.index_display.container_fill_color": "#f8fafc",
+          "style.index_display.container_border_color": "#94a3b8",
+          "style.index_display.container_border_width": "1px",
+          "style.index_display.container_padding": "4px",
+          "style.index_display.step_fill_color": "#edf2f7",
+          "style.index_display.step_hover_fill_color": "#dbeafe",
+          "style.index_display.step_pressed_fill_color": "#bfdbfe",
+          "style.index_display.glyph_color": "#334e68",
+          "style.index_display.step_gap": 2,
+          "style.index_display.value_gap": 4,
+          "style.scrollbar.track_fill_color": "#eef2f7",
+          "style.scrollbar.track_hover_fill_color": "#dbe5f1",
+          "style.scrollbar.track_pressed_fill_color": "#bfdbfe",
+          "style.scrollbar.border_color": "#8fa0b4",
+          "style.scrollbar.border_width": "1px",
+          "style.scrollbar.thumb_fill_color": "#9cadbf",
+          "style.scrollbar.thumb_hover_fill_color": "#8ca0b5",
+          "style.scrollbar.thumb_pressed_fill_color": "#64748b",
+          "style.scrollbar.thumb_padding_percent": 4,
+          "style.scrollbar.thickness": "16px",
+          "style.scrollbar.horizontal_height": "16px",
+          "style.scrollbar.vertical_thumb_width_percent": 66.67,
+          "style.scrollbar.vertical_thumb_offset_x_percent": 50,
+          "style.scrollbar.vertical_thumb_translate_x": "-50%",
+          "style.scrollbar.horizontal_thumb_height_percent": 66.67,
+          "style.scrollbar.horizontal_thumb_offset_y_percent": 16.67,
+          "style.element.fill_color": "transparent",
+          "style.element.alternate_fill_color": "transparent",
+          "style.element.undefined_fill_color": "#f3f4f6",
+          "style.element.undefined_text_color": "#94a3b8",
+          "style.element.undefined_opacity": "0.78",
+          "style.element.hover_fill_color": "#eef6ff",
+          "style.selection_face.fill_color": "#d7f5df",
+          "style.selection_face.border_color": "#09a64b",
+          "style.selection_face.border_width": "1px",
+          "style.active_element.border_color": "#16a34a",
+          "style.active_element.border_width": "1px",
+          "style.text.color": "#111827",
+          "style.text.font_family": "Segoe UI, Arial, sans-serif",
+          "style.text.font_size": "13px",
+          "style.text.font_weight": "400",
+          "style.focus_ring.color": "#16a34a",
+          "style.focus_ring.width": "2px",
+          "elements": [
+            {
+              "id": "i0",
+              "indices": [
+                0
+              ],
+              "value": 10,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_indicator",
+                "template_ref": "frog.realizations.default.numeric_indicator",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i1",
+              "indices": [
+                1
+              ],
+              "value": 20,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_indicator",
+                "template_ref": "frog.realizations.default.numeric_indicator",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i2",
+              "indices": [
+                2
+              ],
+              "value": 30,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_indicator",
+                "template_ref": "frog.realizations.default.numeric_indicator",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i3",
+              "indices": [
+                3
+              ],
+              "value": 40,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_indicator",
+                "template_ref": "frog.realizations.default.numeric_indicator",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i4",
+              "indices": [
+                4
+              ],
+              "value": 50,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_indicator",
+                "template_ref": "frog.realizations.default.numeric_indicator",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i5",
+              "indices": [
+                5
+              ],
+              "value": 60,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_indicator",
+                "template_ref": "frog.realizations.default.numeric_indicator",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i6",
+              "indices": [
+                6
+              ],
+              "value": 70,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_indicator",
+                "template_ref": "frog.realizations.default.numeric_indicator",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i7",
+              "indices": [
+                7
+              ],
+              "value": 80,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_indicator",
+                "template_ref": "frog.realizations.default.numeric_indicator",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i8",
+              "indices": [
+                8
+              ],
+              "value": 90,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_indicator",
+                "template_ref": "frog.realizations.default.numeric_indicator",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            },
+            {
+              "id": "i9",
+              "indices": [
+                9
+              ],
+              "value": 100,
+              "widget": {
+                "class_ref": "frog.widgets.numeric_indicator",
+                "template_ref": "frog.realizations.default.numeric_indicator",
+                "asset_ref": "asset:numeric_rectangular_svg",
+                "value_member": "value"
+              }
+            }
+          ],
+          "value_type": "frog.array<u16,rank=1>",
+          "dimensions.length": 10,
+          "dimensions.default_element_value": 0,
+          "dimensions.materialize_out_of_range_edits": true,
+          "viewport.orientation": "horizontal",
+          "element.template_ref": "frog.realizations.default.numeric_indicator",
+          "element.asset_ref": "asset:numeric_rectangular_svg",
+          "element.default_value": 0,
+          "element.cell_width": 74,
+          "element.cell_height": 30,
+          "element.layout.fit_part": "indicator_body",
+          "element.layout.boundary_policy": "superpose_adjacent_widget_bounds",
+          "element.props.caption.visible": false,
+          "element.props.label.visible": false,
+          "element.props.display.increment_buttons_visible": false,
+          "element.props.display.radix_visible": false,
+          "element.props.interaction.read_only": true,
+          "element.props.style.frame.fill_color": "transparent",
+          "element.props.style.frame.border_color": "#94a3b8",
+          "element.props.style.frame.border_width": "1px",
+          "element.props.style.value_face.fill_color": "#ffffff",
+          "element.props.style.value_face.border_color": "transparent",
+          "element.props.style.value_face.border_width": "0px",
+          "element.props.style.text_value.color": "#111827",
+          "element.props.style.text_value.font_family": "Segoe UI, Arial, sans-serif",
+          "element.props.style.text_value.font_size": "13px",
+          "element.props.style.text_value.font_weight": "400"
+        },
+        "visual": {
+          "asset_ref": "asset:array_shell_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "selected_element_value"
+        },
+        "label": "Horizontal Array indicator"
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Array 1D Horizontal Numeric Container Roundtrip",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "array_runtime_host_default",
+    "documentation": {
+      "title": "Array 1D Horizontal Numeric Container Roundtrip",
+      "summary": "A one-dimensional Array can act as a widget container. This example binds the Array element template to the Default Numeric widget so each visible cell behaves as a Numeric element inside the Array viewport.",
+      "sections": [
+        {
+          "title": "Array container",
+          "body": "The Array owns rank, shape, index display, viewport, scrolling, materialization, and repeated-cell layout."
+        },
+        {
+          "title": "Numeric element",
+          "body": "Each cell instantiates a Numeric element template. The Numeric widget owns per-cell value editing, value text, and numeric visual parts."
+        },
+        {
+          "title": "Execute",
+          "body": "Execute consumes the selected Numeric element value through the native manifest corridor and publishes the value and vector records to the read-only Array indicator."
+        }
+      ]
+    }
+  }
+}

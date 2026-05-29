@@ -1,0 +1,172 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "30_array_1d_horizontal_numeric_container_roundtrip",
+    "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "unit_id": "main",
+  "summary": "1D horizontal Array container roundtrip with source-owned Numeric element template binding, Default Array realization, Default Numeric realization, and native u16 proof corridor.",
+  "interfaces": {
+    "inputs": [
+      {
+        "id": "element_value",
+        "type": "u16",
+        "source": "widget.numeric_array.value.selected_element_value"
+      },
+      {
+        "id": "array_records",
+        "type": "frog.array.records<u16,rank=1>",
+        "source": "widget.numeric_array.elements.*"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_array_records",
+        "type": "frog.array.records<u16,rank=1>"
+      }
+    ]
+  },
+  "front_panel": {
+    "package_refs": [
+      "Examples/30_array_1d_horizontal_numeric_container_roundtrip/ui/array_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "widget_id": "numeric_array",
+        "class_ref": "frog.widgets.array_control",
+        "role": "control",
+        "value_type": "frog.array<u16,rank=1>",
+        "value_member": "value.selected_element_value",
+        "identity_member": "value.selected_element_id",
+        "record_member": "elements.*",
+        "shape_source": ".frog dimensions.shape",
+        "element_source": ".frog elements",
+        "realization_asset_ref": "asset:array_shell_svg",
+        "element_class_ref": "frog.widgets.numeric_control",
+        "element_template_ref": "frog.realizations.default.numeric_control",
+        "element_asset_ref": "asset:numeric_rectangular_svg",
+        "element_default_value": 0,
+        "element_data_type": {
+          "representation": "u16",
+          "named_numeric_size": "U16",
+          "value_type": "u16"
+        },
+        "element_data_entry": {
+          "minimum": 0,
+          "maximum": 65535,
+          "increment_step": 1
+        },
+        "element_visible_items": {
+          "increment_buttons_visible": true,
+          "radix_visible": false
+        }
+      },
+      {
+        "widget_id": "published_array",
+        "class_ref": "frog.widgets.array_indicator",
+        "role": "indicator",
+        "value_type": "frog.array<u16,rank=1>",
+        "value_member": "value.selected_element_value",
+        "identity_member": "value.selected_element_id",
+        "record_member": "elements.*",
+        "shape_source": ".frog dimensions.shape",
+        "element_source": ".frog elements",
+        "realization_asset_ref": "asset:array_shell_svg",
+        "element_class_ref": "frog.widgets.numeric_indicator",
+        "element_template_ref": "frog.realizations.default.numeric_indicator",
+        "element_asset_ref": "asset:numeric_rectangular_svg",
+        "element_default_value": 0,
+        "element_data_type": {
+          "representation": "u16",
+          "named_numeric_size": "U16",
+          "value_type": "u16"
+        },
+        "element_data_entry": {
+          "minimum": 0,
+          "maximum": 65535,
+          "increment_step": 1
+        },
+        "element_visible_items": {
+          "increment_buttons_visible": false,
+          "radix_visible": false
+        }
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "numeric_array_element_value",
+        "kind": "widget_value",
+        "widget_id": "numeric_array",
+        "member": "value.selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "published_array_element_value",
+        "kind": "widget_value",
+        "widget_id": "published_array",
+        "member": "value.selected_element_value",
+        "type": "u16"
+      },
+      {
+        "id": "numeric_array_records",
+        "kind": "widget_value",
+        "widget_id": "numeric_array",
+        "member": "elements.*",
+        "type": "frog.array.records<u16,rank=1>"
+      },
+      {
+        "id": "published_array_records",
+        "kind": "widget_value",
+        "widget_id": "published_array",
+        "member": "elements.*",
+        "type": "frog.array.records<u16,rank=1>"
+      },
+      {
+        "id": "selected_element_value",
+        "kind": "public_output",
+        "type": "u16"
+      },
+      {
+        "id": "published_array_records",
+        "kind": "public_output",
+        "type": "frog.array.records<u16,rank=1>"
+      }
+    ],
+    "edges": [
+      {
+        "from": "numeric_array_element_value",
+        "to": "published_array_element_value"
+      },
+      {
+        "from": "numeric_array_element_value",
+        "to": "selected_element_value"
+      },
+      {
+        "from": "numeric_array_records",
+        "to": "published_array_records"
+      }
+    ]
+  },
+  "validation": {
+    "source_owns_layout": true,
+    "source_owns_rank_shape_elements_selection_viewport_and_style": true,
+    "source_owns_visible_items_and_interaction_posture": true,
+    "wfrog_owns_realization_refs_only": true,
+    "runtime_requires_native_manifest": true,
+    "runtime_requires_default_array_svg": true,
+    "record_flow_declared_not_implicit_ui_sync": true,
+    "source_owns_element_template_binding": true,
+    "runtime_requires_default_numeric_svg": true,
+    "array_cells_are_widget_template_instances": true
+  }
+}

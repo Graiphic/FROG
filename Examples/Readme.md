@@ -245,6 +245,12 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
+    <tr>
+      <td><code>30_array_1d_horizontal_numeric_container_roundtrip</code></td>
+      <td>1D horizontal Array container with cells realized as Default Numeric widget instances and a read-only horizontal Array/Numeric indicator</td>
+      <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
   </tbody>
 </table>
 
@@ -503,6 +509,13 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
     └── ui/
         └── array_panel.wfrog
 └── 29_array_1d_numeric_container_roundtrip/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── array_panel.wfrog
+└── 30_array_1d_horizontal_numeric_container_roundtrip/
     ├── Readme.md
     ├── main.frog
     ├── main.fir.json
