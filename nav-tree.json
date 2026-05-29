@@ -848,6 +848,13 @@
                   "children": []
                 },
                 {
+                  "key": "examples/widget_reference/decorations.md",
+                  "title": "Decorations",
+                  "path": "/Examples/widget_reference/Decorations.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
                   "key": "examples/widget_reference/enum.md",
                   "title": "Enum",
                   "path": "/Examples/widget_reference/Enum.md",
@@ -4771,6 +4778,7 @@
     "/Examples/widget_reference/Array.md",
     "/Examples/widget_reference/Boolean.md",
     "/Examples/widget_reference/Button.md",
+    "/Examples/widget_reference/Decorations.md",
     "/Examples/widget_reference/Enum.md",
     "/Examples/widget_reference/Label.md",
     "/Examples/widget_reference/Numeric.md",
