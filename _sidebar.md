@@ -103,6 +103,8 @@
     - [main.frog](/Examples/28_array_3d_numeric_selection_roundtrip/main.frog)
   - [29 array 1d numeric container roundtrip](/Examples/29_array_1d_numeric_container_roundtrip/Readme.md)
     - [main.frog](/Examples/29_array_1d_numeric_container_roundtrip/main.frog)
+  - [30 array 1d horizontal numeric container roundtrip](/Examples/30_array_1d_horizontal_numeric_container_roundtrip/Readme.md)
+    - [main.frog](/Examples/30_array_1d_horizontal_numeric_container_roundtrip/main.frog)
   - [compiler](/Examples/compiler/Readme.md)
     - [01 pure arithmetic](/Examples/compiler/01_pure_arithmetic.md)
     - [02 structured control](/Examples/compiler/02_structured_control.md)
