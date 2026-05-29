@@ -25,6 +25,10 @@ New examples should follow the
 That document defines the shared public organization for widget, operator,
 structure, library, compiler, and conformance examples without publishing
 Graiphic's internal validation recipe.
+Accepted examples may also publish a small
+<a href="./example_reference_snapshot_standard.md">Example Reference Snapshot</a>
+that records the accepted screenshot, public runtime snapshot, visual contract,
+and source/artifact hash index without duplicating source truth.
 </p>
 
 <hr/>
@@ -55,6 +59,14 @@ The expected inspection surface includes <code>state.json</code>, the owning <co
 <p>
 This browser presentation is a validation host convention, not the FROG language runtime identity.
 Other front-panel hosts may expose the same source, realization, FIR, lowering, manifest, and diagnostic contracts through an equivalent inspection surface.
+</p>
+
+<p>
+When a widget-facing example is accepted, a <code>reference/</code> directory
+may preserve the visible browser-host state and visual contract as public
+evidence. The snapshot is subordinate to the owning source and artifacts; it is
+not a private runtime recipe and it does not redefine the example's validation
+boundary.
 </p>
 
 <hr/>

@@ -34,6 +34,10 @@ value mirrors, display posture, viewport posture, and source-owned styling are
 defined once in <a href="./CommonProperties.md"><code>CommonProperties.md</code></a>.
 Family documents add the specialized value, method, event, and property
 surfaces that are specific to each widget class.
+Use <a href="./WidgetEngineeringReferenceStandard.md"><code>WidgetEngineeringReferenceStandard.md</code></a>
+as the public structure for class identity, value model, properties, methods,
+events, source ownership, realization ownership, Default SVG parts, visual
+states, container compatibility, accepted examples, and validated limitations.
 </p>
 
 <hr/>

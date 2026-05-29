@@ -24,3 +24,10 @@ Example 30 is a post-public-boundary widget progression example. It is intention
 - Runtime overlays must align to Default Array `element_region` / `element_slot` parts and Default Numeric `value_face` / `text_value` / `increment_up` / `increment_down` parts.
 - The control is editable. The indicator is read-only.
 - No local Example SVG skin is duplicated.
+
+## Reference Snapshot
+
+The accepted public visual reference for this example is recorded under
+[`reference/`](./reference/). It includes the browser-host screenshot, accepted
+runtime state snapshot, visual contract, and artifact hash index for the source,
+realization, FIR, lowering, and native manifest material used by this example.

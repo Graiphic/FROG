@@ -1,0 +1,68 @@
+{
+  "example_id": "30_array_1d_horizontal_numeric_container_roundtrip",
+  "snapshot_role": "accepted_public_reference_snapshot",
+  "source_artifacts": [
+    {
+      "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/main.frog",
+      "sha256": "9f89f6551ea6be8ef4f6dee36b8b44f48ab9beaac16d25aeee8dc67a93200311"
+    },
+    {
+      "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/main.fir.json",
+      "sha256": "7ead10c99ec9250d5ff245bb4e3cd695c3088c44269fbcbb7963d55974b64e85"
+    },
+    {
+      "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/main.lowering.json",
+      "sha256": "684d7b7d3ef7de92f01bae23df5876ca1c2ecf9d7ec32a2656eee55ee03dfd04"
+    },
+    {
+      "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/ui/array_panel.wfrog",
+      "sha256": "b9f7a3f602ecac9ab1c6a4c78e3958af465c1c715ddc79e169792d120b679195"
+    }
+  ],
+  "backend_artifacts": [
+    {
+      "path": "Implementations/Reference/LLVM/examples/30_array_1d_horizontal_numeric_container_roundtrip/kernel.ll",
+      "sha256": "8d0e64fac67721fac03565b9712c3385308e6a2a052ed2d34e4c7030c76d3d16"
+    },
+    {
+      "path": "Implementations/Reference/LLVM/examples/30_array_1d_horizontal_numeric_container_roundtrip/native_kernel_manifest.json",
+      "sha256": "f42df25e3ac1a4bbb561858527e7b35dd19b5c16c7c674c8a1b2c7b379a1383b"
+    }
+  ],
+  "default_realization_artifacts": [
+    {
+      "path": "Libraries/Realizations/Default/array.default.wfrog",
+      "sha256": "fca3f717f1aec4259ec7e94563708ae77503a3b72c54442666bfac27e5443204"
+    },
+    {
+      "path": "Libraries/Realizations/Default/numeric.default.wfrog",
+      "sha256": "31c9b99d874b92c3332159fd14745822c1a2f07d9f30e7a96300d5c35a7b1496"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+      "sha256": "77eea10878960fd6a1f47a41453f4b078acf914bed86392eea246cf4466b28d3"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+      "sha256": "a4743467de542781cb2382c273426d21ed1a6a0426b680fd8403d6a2c3ea7764"
+    }
+  ],
+  "snapshot_artifacts": [
+    {
+      "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/screenshot.png",
+      "sha256": "bbb83d0fea3786fa48dc481d2932e8d866f36e33dfc43358e152ccc41aa3e401"
+    },
+    {
+      "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/state.accepted.json",
+      "sha256": "accd48192b5d1702ed5ec96ab613f2bd084c86e736b24792621294bb9901aee2"
+    },
+    {
+      "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.md",
+      "sha256": "f4cefc1a12f029adc31607b7091907334fcc3c980f58da77685f6bf8c1c0c5e8"
+    },
+    {
+      "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.json",
+      "sha256": "1cf1e9c4a442fd3da5321966d28b4be5468196d46423a010f85cd11a3a670748"
+    }
+  ]
+}

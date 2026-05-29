@@ -1,0 +1,95 @@
+{
+  "example_id": "30_array_1d_horizontal_numeric_container_roundtrip",
+  "snapshot_role": "accepted_public_visual_reference",
+  "validation_level": "post_public_runtime_boundary_cpp_accepted",
+  "host": {
+    "surface": "browser_host",
+    "runtime_family": "graiphic_private_runtime_cpp"
+  },
+  "widgets": [
+    {
+      "id": "numeric_array",
+      "class_ref": "frog.widgets.array_control",
+      "role": "control",
+      "label": "Horizontal Array container",
+      "array_rank": 1,
+      "orientation": "horizontal",
+      "contained_widget": {
+        "class_ref": "frog.widgets.numeric_control",
+        "template_ref": "frog.realizations.default.numeric_control",
+        "asset_ref": "asset:numeric_rectangular_svg",
+        "fit_part": "control_body",
+        "increment_buttons_visible": true
+      },
+      "accepted_state": {
+        "selected_element_id": "i2",
+        "selected_indices": [2],
+        "selected_element_value": 30,
+        "column_offset": 0,
+        "visible_count": 6
+      }
+    },
+    {
+      "id": "published_array",
+      "class_ref": "frog.widgets.array_indicator",
+      "role": "indicator",
+      "label": "Horizontal Array indicator",
+      "array_rank": 1,
+      "orientation": "horizontal",
+      "contained_widget": {
+        "class_ref": "frog.widgets.numeric_indicator",
+        "template_ref": "frog.realizations.default.numeric_indicator",
+        "asset_ref": "asset:numeric_rectangular_svg",
+        "fit_part": "indicator_body",
+        "increment_buttons_visible": false
+      },
+      "accepted_state": {
+        "selected_element_id": "i2",
+        "selected_indices": [2],
+        "selected_element_value": 30,
+        "column_offset": 0,
+        "visible_count": 6
+      }
+    }
+  ],
+  "required_surfaces": {
+    "source_owned": [
+      "widget layout",
+      "labels",
+      "array rank",
+      "array shape",
+      "index display value",
+      "viewport offset",
+      "selected element",
+      "element template binding",
+      "element default value",
+      "instance visual overrides"
+    ],
+    "wfrog_owned": [
+      "Default Array realization asset references",
+      "Default Numeric realization asset references",
+      "host capability declarations"
+    ],
+    "default_svg_parts": [
+      "array index_display",
+      "array element_region",
+      "array element_slot",
+      "array horizontal_scrollbar",
+      "numeric value_face",
+      "numeric text_value",
+      "numeric increment_up",
+      "numeric increment_down",
+      "numeric control_body",
+      "numeric indicator_body"
+    ]
+  },
+  "visual_rules": [
+    "Array index display is visually separate from the element viewport.",
+    "Repeated Numeric widget bounds superpose; the Array does not draw fake local cell shells.",
+    "Control cells keep Numeric increment/decrement faces visible.",
+    "Indicator cells omit Numeric increment/decrement faces and remain read-only.",
+    "Selection does not change layout dimensions.",
+    "Horizontal scrollbars stay inside the Array frame and consume source-owned style values."
+  ],
+  "accepted_values": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+}
