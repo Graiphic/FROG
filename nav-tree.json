@@ -890,6 +890,13 @@
                   "children": []
                 },
                 {
+                  "key": "examples/widget_reference/ring.md",
+                  "title": "Ring",
+                  "path": "/Examples/widget_reference/Ring.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
                   "key": "examples/widget_reference/string.md",
                   "title": "String",
                   "path": "/Examples/widget_reference/String.md",
@@ -4798,6 +4805,7 @@
     "/Examples/widget_reference/Numeric.md",
     "/Examples/widget_reference/Path.md",
     "/Examples/widget_reference/Picture.md",
+    "/Examples/widget_reference/Ring.md",
     "/Examples/widget_reference/String.md",
     "/Examples/widget_reference/Subpanel.md",
     "/Examples/widget_reference/Tab.md",

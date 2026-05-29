@@ -122,6 +122,7 @@
     - [Numeric](/Examples/widget_reference/Numeric.md)
     - [Path](/Examples/widget_reference/Path.md)
     - [Picture](/Examples/widget_reference/Picture.md)
+    - [Ring](/Examples/widget_reference/Ring.md)
     - [String](/Examples/widget_reference/String.md)
     - [Subpanel](/Examples/widget_reference/Subpanel.md)
     - [Tab](/Examples/widget_reference/Tab.md)
