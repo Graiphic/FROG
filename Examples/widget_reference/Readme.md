@@ -119,6 +119,13 @@ closure unless that boundary is explicitly promoted later.
       <td><code>Libraries/Realizations/Default/tree.default.wfrog</code></td>
       <td><code>assets/tree/templates/tree_shell.svg</code> + <code>assets/tree/item_symbols/*.svg</code></td>
     </tr>
+    <tr>
+      <td>Array</td>
+      <td><code>26_array_numeric_selection_roundtrip</code> through <code>30_array_1d_horizontal_numeric_container_roundtrip</code></td>
+      <td><a href="./Array.md">Array.md</a></td>
+      <td><code>Libraries/Realizations/Default/array.default.wfrog</code></td>
+      <td><code>assets/array/templates/array_shell.svg</code> + contained widget assets such as <code>assets/numeric/templates/numeric_rectangular.svg</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -200,6 +207,14 @@ native-backed.
       <td>validated private slice</td>
       <td>validated private slice</td>
       <td><code>LLVM native kernel manifest + explicit frog.tree.records dataflow + .frog/.wfrog UI</code></td>
+    </tr>
+    <tr>
+      <td><code>26-30</code></td>
+      <td>Array</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td>validated private slice</td>
+      <td><code>LLVM native kernel manifest + source-owned Array shape/viewport/element data + .frog/.wfrog UI</code></td>
     </tr>
   </tbody>
 </table>
