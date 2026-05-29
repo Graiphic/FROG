@@ -8,6 +8,18 @@ one-dimensional Array container example. It is evidence for the public example
 dossier, not runtime source truth and not a promotion of Graiphic private
 runtime implementation code into the public repository.
 
+<p align="center">
+  <img src="./screenshot.png" alt="Accepted Example 30 horizontal Array container snapshot" width="720" />
+</p>
+
+## Reference Snapshot Links
+
+- [Accepted screenshot](./screenshot.png)
+- [Accepted state JSON](./state.accepted.json)
+- [Visual contract](./visual-contract.md)
+- [Machine-readable visual contract](./visual-contract.json)
+- [Artifact hash index](./artifact-index.json)
+
 ## Files
 
 - `screenshot.png` - accepted browser-host visual state.
