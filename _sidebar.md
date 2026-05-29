@@ -117,6 +117,7 @@
     - [Boolean](/Examples/widget_reference/Boolean.md)
     - [Button](/Examples/widget_reference/Button.md)
     - [Enum](/Examples/widget_reference/Enum.md)
+    - [Label](/Examples/widget_reference/Label.md)
     - [Numeric](/Examples/widget_reference/Numeric.md)
     - [Path](/Examples/widget_reference/Path.md)
     - [Picture](/Examples/widget_reference/Picture.md)
