@@ -792,6 +792,29 @@
               ]
             },
             {
+              "key": "examples/34_array_2d_visible_counts_property_roundtrip/",
+              "title": "34 array 2d visible counts property roundtrip",
+              "path": "/Examples/34_array_2d_visible_counts_property_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/34_array_2d_visible_counts_property_roundtrip/reference/",
+                  "title": "reference",
+                  "path": "/Examples/34_array_2d_visible_counts_property_roundtrip/reference/README.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "examples/34_array_2d_visible_counts_property_roundtrip/reference/visual-contract.md",
+                      "title": "visual-contract",
+                      "path": "/Examples/34_array_2d_visible_counts_property_roundtrip/reference/visual-contract.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -4813,6 +4836,9 @@
     "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.md",
     "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md",
     "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/Readme.md",
+    "/Examples/34_array_2d_visible_counts_property_roundtrip/reference/visual-contract.md",
+    "/Examples/34_array_2d_visible_counts_property_roundtrip/reference/README.md",
+    "/Examples/34_array_2d_visible_counts_property_roundtrip/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
