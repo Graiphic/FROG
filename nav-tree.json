@@ -825,7 +825,15 @@
                   "title": "reference",
                   "path": "/Examples/33_array_2d_numeric_container_roundtrip/reference/README.md",
                   "kind": "category",
-                  "children": []
+                  "children": [
+                    {
+                      "key": "examples/33_array_2d_numeric_container_roundtrip/reference/visual-contract.md",
+                      "title": "visual-contract",
+                      "path": "/Examples/33_array_2d_numeric_container_roundtrip/reference/visual-contract.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
                 }
               ]
             },
@@ -4876,6 +4884,7 @@
     "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/Readme.md",
     "/Examples/32_array_1d_horizontal_visible_count_property_roundtrip/reference/visual-contract.md",
     "/Examples/32_array_1d_horizontal_visible_count_property_roundtrip/reference/README.md",
+    "/Examples/33_array_2d_numeric_container_roundtrip/reference/visual-contract.md",
     "/Examples/33_array_2d_numeric_container_roundtrip/reference/README.md",
     "/Examples/34_array_2d_visible_counts_property_roundtrip/reference/visual-contract.md",
     "/Examples/34_array_2d_visible_counts_property_roundtrip/reference/README.md",
