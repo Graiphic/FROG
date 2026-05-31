@@ -903,6 +903,13 @@
                   "children": []
                 },
                 {
+                  "key": "examples/widget_reference/arrayreferencesnapshots.md",
+                  "title": "ArrayReferenceSnapshots",
+                  "path": "/Examples/widget_reference/ArrayReferenceSnapshots.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
                   "key": "examples/widget_reference/boolean.md",
                   "title": "Boolean",
                   "path": "/Examples/widget_reference/Boolean.md",
@@ -4894,6 +4901,7 @@
     "/Examples/compiler/03_explicit_state.md",
     "/Examples/compiler/Readme.md",
     "/Examples/widget_reference/Array.md",
+    "/Examples/widget_reference/ArrayReferenceSnapshots.md",
     "/Examples/widget_reference/Boolean.md",
     "/Examples/widget_reference/Button.md",
     "/Examples/widget_reference/Decorations.md",
