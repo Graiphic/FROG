@@ -1,0 +1,95 @@
+{
+  "example_id": "34_array_2d_visible_counts_property_roundtrip",
+  "snapshot_role": "accepted_public_reference_snapshot",
+  "title": "Array 2D Visible Counts Property Roundtrip",
+  "runtime_scope": {
+    "accepted_runtime": "C++ Graiphic private runtime",
+    "python_runtime": "deferred",
+    "rust_runtime": "deferred"
+  },
+  "host": {
+    "name": "Graiphic browser host",
+    "surface": "HTML browser host for current examples"
+  },
+  "source_ref": {
+    "frog": "Examples/34_array_2d_visible_counts_property_roundtrip/main.frog",
+    "wfrog": "Examples/34_array_2d_visible_counts_property_roundtrip/ui/array_panel.wfrog",
+    "fir": "Examples/34_array_2d_visible_counts_property_roundtrip/main.fir.json",
+    "lowering": "Examples/34_array_2d_visible_counts_property_roundtrip/main.lowering.json",
+    "native_manifest": "Implementations/Reference/LLVM/examples/34_array_2d_visible_counts_property_roundtrip/native_kernel_manifest.json"
+  },
+  "ui_state": {
+    "visible_row_count_control": {
+      "widget_id": "visible_row_count",
+      "class_id": "frog.widgets.numeric_control",
+      "data_type": "u8",
+      "value": 3,
+      "property_write_targets": [
+        "numeric_array.viewport.visible_counts[0]",
+        "published_array.viewport.visible_counts[0]"
+      ]
+    },
+    "visible_column_count_control": {
+      "widget_id": "visible_column_count",
+      "class_id": "frog.widgets.numeric_control",
+      "data_type": "u8",
+      "value": 3,
+      "property_write_targets": [
+        "numeric_array.viewport.visible_counts[1]",
+        "published_array.viewport.visible_counts[1]"
+      ]
+    },
+    "numeric_array": {
+      "widget_id": "numeric_array",
+      "class_id": "frog.widgets.array_control",
+      "role": "control",
+      "rank": 2,
+      "shape": [5, 6],
+      "visible_counts": [3, 3],
+      "first_indices": [0, 0],
+      "selected_element_id": "r2c1",
+      "selected_indices": [2, 1],
+      "selected_element_value": 3,
+      "visible_records": [
+        { "id": "r0c0", "indices": [0, 0], "value": 0 },
+        { "id": "r0c1", "indices": [0, 1], "value": 0 },
+        { "id": "r0c2", "indices": [0, 2], "value": 0 },
+        { "id": "r1c0", "indices": [1, 0], "value": 2 },
+        { "id": "r1c1", "indices": [1, 1], "value": 0 },
+        { "id": "r1c2", "indices": [1, 2], "value": 0 },
+        { "id": "r2c0", "indices": [2, 0], "value": 0 },
+        { "id": "r2c1", "indices": [2, 1], "value": 3 },
+        { "id": "r2c2", "indices": [2, 2], "value": 0 }
+      ]
+    },
+    "published_array": {
+      "widget_id": "published_array",
+      "class_id": "frog.widgets.array_indicator",
+      "role": "indicator",
+      "rank": 2,
+      "shape": [5, 6],
+      "visible_counts": [3, 3],
+      "first_indices": [0, 0],
+      "selected_element_id": "r2c1",
+      "selected_indices": [2, 1],
+      "selected_element_value": 3
+    }
+  },
+  "public_outputs": {
+    "native_ok": true,
+    "native_error_code": 0,
+    "selected_element_id": "r2c1",
+    "selected_indices": [2, 1],
+    "selected_element_value": 3
+  },
+  "consumed_default_assets": [
+    "asset:array_shell_svg",
+    "asset:numeric_rectangular_svg"
+  ],
+  "validation_notes": [
+    "The visible row and visible column controls update viewport display properties only when Execute consumes the diagram flow.",
+    "Visible counts may exceed the currently materialized semantic shape without forcing data materialization.",
+    "The Array remains a widget container whose visible cells instantiate Default Numeric widgets.",
+    "The public snapshot is intentionally sanitized and does not publish private runtime implementation paths."
+  ]
+}

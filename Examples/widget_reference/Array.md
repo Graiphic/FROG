@@ -14,11 +14,13 @@
 <h2>Scope</h2>
 
 <p>
-The stabilized Array progression is currently demonstrated by
+The current Array progression is demonstrated by
 <code>Examples/26_array_numeric_selection_roundtrip</code> through
-<code>Examples/30_array_1d_horizontal_numeric_container_roundtrip</code>.
-These examples prove the Array as a source-owned collection widget, not as a
-hardcoded numeric grid.
+<code>Examples/34_array_2d_visible_counts_property_roundtrip</code>.
+Examples 26-28 are retained as intermediate non-widget-composed development
+snapshots. Examples 29-34 show the current final rendering direction: an Array
+container that repeats contained Default Numeric widget realizations instead of
+drawing a simplified numeric grid.
 </p>
 
 <p>
@@ -87,12 +89,17 @@ initialized to <code>0</code>, matching the public Array class law.
     <tr>
       <td>Index display</td>
       <td><code>index_display.*</code>, <code>style.index_display.*</code></td>
-      <td>Render the index display as a neighboring Array subcontainer, not as part of the element viewport.</td>
+      <td>Render the index display as a neighboring Array subcontainer, not as part of the element viewport. The index display must keep a measured source-owned clearance from the Array viewport/frame so the two blocks never touch, overlap, or visually collapse. The current Default Array reference clearance from the index-display outer edge to the Array frame is 4 CSS px.</td>
     </tr>
     <tr>
       <td>Element region</td>
       <td><code>viewport.*</code>, <code>layout.cell_width</code>, <code>layout.cell_height</code></td>
-      <td>Place visible cells from the Array viewport model and keep overlays aligned to the Default SVG parts.</td>
+      <td>Place visible cells from the Array viewport model and keep overlays aligned to the Default SVG parts. At maximum row or column offsets, the final visible row or column must remain fully visible. Any host clipping allowance such as <code>viewport.clip_bleed_trailing_x/y</code> is source-owned/default-realization data and must not move scrollbar geometry or logical visible counts.</td>
+    </tr>
+    <tr>
+      <td>Visible-count property</td>
+      <td><code>viewport.visible_counts[]</code>, property-write targets</td>
+      <td>Apply visible viewport count changes only through declared diagram/property-write flow, not through runtime-local shortcuts.</td>
     </tr>
     <tr>
       <td>Contained Numeric widget</td>
@@ -109,8 +116,32 @@ initialized to <code>0</code>, matching the public Array class law.
       <td><code>viewport.selection_start[]</code>, <code>viewport.selection_size[]</code>, <code>style.selection.*</code></td>
       <td>Selection must not change layout dimensions or create extra per-cell shells.</td>
     </tr>
-  </tbody>
+</tbody>
 </table>
+
+<p>
+For 2D Array examples, <code>viewport.visible_counts[0]</code> is the visible
+row count and <code>viewport.visible_counts[1]</code> is the visible column
+count. Example 34 proves that these are diagram-addressable Array properties:
+the Numeric U8 controls are ordinary front-panel controls, and their values
+only alter the Array visible shape when <code>Execute</code> consumes explicit
+property-write nodes from the <code>.frog</code> diagram.
+</p>
+
+<p>
+Example 34 also validates that visible row and column counts may exceed the
+currently materialized Array shape. The viewport may show additional default
+numeric element positions without rejecting the value or clipping the final
+visible row/column. Those limits belong to the source-owned Numeric U8 controls
+and must not be silently derived from the current Array allocation.
+</p>
+
+<p>
+Array geometry values consumed by a host as numbers, including
+<code>index_display.layout.*</code>, viewport sizes, gaps, and padding, must be
+authored as numeric values in source-owned data. A quoted numeric-looking value
+is text, not a validated layout number.
+</p>
 
 <p>
 The Default Array SVG publishes the Array shell and public composition parts.
@@ -155,7 +186,11 @@ The Array examples use package files such as:
 Examples/27_array_1d_vertical_numeric_selection_roundtrip/ui/array_panel.wfrog
 Examples/28_array_3d_numeric_selection_roundtrip/ui/array_panel.wfrog
 Examples/29_array_1d_numeric_container_roundtrip/ui/array_panel.wfrog
-Examples/30_array_1d_horizontal_numeric_container_roundtrip/ui/array_panel.wfrog</code></pre>
+Examples/30_array_1d_horizontal_numeric_container_roundtrip/ui/array_panel.wfrog
+Examples/31_array_1d_visible_count_property_roundtrip/ui/array_panel.wfrog
+Examples/32_array_1d_horizontal_visible_count_property_roundtrip/ui/array_panel.wfrog
+Examples/33_array_2d_numeric_container_roundtrip/ui/array_panel.wfrog
+Examples/34_array_2d_visible_counts_property_roundtrip/ui/array_panel.wfrog</code></pre>
 
 <p>
 The <code>.wfrog</code> package resolves Default realization assets and host
@@ -196,46 +231,171 @@ promoted later.
 </p>
 
 <ul>
-  <li>Example 26: 2D numeric selected-element proof.</li>
-  <li>Example 27: 1D vertical numeric selected-element proof.</li>
-  <li>Example 28: 3D numeric selected-element proof.</li>
-  <li>Example 29: 1D vertical Array container with Default Numeric element widgets.</li>
-  <li>Example 30: 1D horizontal Array container with Default Numeric element widgets.</li>
+  <li>Example 26: intermediate 2D numeric selected-element proof; not the final widget-composed Array rendering target.</li>
+  <li>Example 27: intermediate 1D vertical numeric selected-element proof; not the final widget-composed Array rendering target.</li>
+  <li>Example 28: intermediate 3D numeric selected-element proof; not the final widget-composed Array rendering target.</li>
+  <li>Example 29: current 1D vertical Array container posture with repeated Default Numeric element widgets.</li>
+  <li>Example 30: current 1D horizontal Array container posture with repeated Default Numeric element widgets.</li>
+  <li>Example 31: current 1D vertical Array container property-write posture where a Numeric U8 control drives <code>viewport.visible_counts[0]</code> on <code>Execute</code>.</li>
+  <li>Example 32: current 1D horizontal Array container property-write posture where a Numeric U8 control drives <code>viewport.visible_counts[1]</code> on <code>Execute</code>.</li>
+  <li>Example 33: current 2D Array container posture with repeated Default Numeric element widgets.</li>
+  <li>Example 34: current 2D Array container property-write posture where two Numeric U8 controls drive <code>viewport.visible_counts[0]</code> and <code>viewport.visible_counts[1]</code> on <code>Execute</code>.</li>
 </ul>
+
+<p>
+Example 34 keeps the LabVIEW-like flow explicit:
+</p>
+
+<pre><code>visible_row_count.value
+  -&gt; property_write numeric_array.viewport.visible_counts[0]
+  -&gt; property_write published_array.viewport.visible_counts[0]
+
+visible_column_count.value
+  -&gt; property_write numeric_array.viewport.visible_counts[1]
+  -&gt; property_write published_array.viewport.visible_counts[1]
+
+numeric_array.selected_element_value
+  -&gt; native u16 proof manifest
+  -&gt; published_array.selected_element_value
+  -&gt; public selected element output</code></pre>
+
+<p>
+The visible-shape controls therefore do not mutate the Array through a
+runtime-local shortcut. They are part of the <code>.frog</code> diagram, are
+preserved in FIR, are declared in lowering, and are consumed by the runtime
+alongside the native manifest and Default Array/Numeric realization assets.
+</p>
+
+<p>
+Examples 26-28 helped validate Array rank, shape, indexing, materialization,
+viewport, selection, and native value flow before the Array container began
+composing real widget instances. They are not the final runtime rendering
+target for Array. The final direction is the widget-composed Array container
+posture demonstrated by Examples 29-34.
+</p>
 
 <hr/>
 
 <h2>Reference Snapshots</h2>
 
 <p>
-Example 30 currently publishes an accepted reference snapshot:
-</p>
-
-<pre><code>Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/</code></pre>
-
-<p align="center">
-  <img src="../30_array_1d_horizontal_numeric_container_roundtrip/reference/screenshot.png" alt="Accepted Example 30 horizontal Array container snapshot" width="720" />
+The accepted Array reference snapshots below show the current public visual dossier for the Array family.
+They are browser-host evidence for the examples and do not expose Graiphic private runtime source internals.
 </p>
 
 <p>
-Clear public snapshot links:
+Snapshots for Examples 26-28 are historical/intermediate evidence. They remain
+useful for regression context, but should not be used as the final visual model
+for Array rendering.
 </p>
 
-<ul>
-  <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md">Reference snapshot README</a></li>
-  <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/screenshot.png">Accepted screenshot</a></li>
-  <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
-  <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.md">Visual contract</a></li>
-  <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
-  <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/artifact-index.json">Artifact hash index</a></li>
-</ul>
+<section>
+  <h3>Example 26: Array 2D numeric selection</h3>
+  <p><strong>Intermediate note:</strong> This snapshot records a non-widget-composed Array development milestone. It is preserved for traceability and regression context, but the final Array rendering direction is the widget-composed container posture introduced in Examples 29-30.</p>
+  <p><a href="../26_array_numeric_selection_roundtrip/reference/README.md">Reference snapshot README</a></p>
+  <p align="center">
+    <a href="../26_array_numeric_selection_roundtrip/reference/README.md"><img src="../26_array_numeric_selection_roundtrip/reference/screenshot.jpg" alt="Accepted Example 26 Array 2D numeric selection snapshot" width="400" /></a>
+  </p>
+  <ul>
+    <li><a href="../26_array_numeric_selection_roundtrip/reference/screenshot.jpg">Accepted screenshot</a></li>
+    <li><a href="../26_array_numeric_selection_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
+    <li><a href="../26_array_numeric_selection_roundtrip/reference/visual-contract.md">Visual contract</a></li>
+    <li><a href="../26_array_numeric_selection_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
+    <li><a href="../26_array_numeric_selection_roundtrip/reference/artifact-index.json">Artifact hash index</a></li>
+  </ul>
+</section>
 
-<p>
-That directory records the accepted screenshot, public runtime snapshot,
-visual contract, machine-readable visual contract, and artifact hash index.
-Additional Array examples may publish equivalent <code>reference/</code>
-directories after visual acceptance.
-</p>
+<section>
+  <h3>Example 27: Array 1D vertical numeric selection</h3>
+  <p><strong>Intermediate note:</strong> This snapshot records a non-widget-composed Array development milestone. It is preserved for traceability and regression context, but the final Array rendering direction is the widget-composed container posture introduced in Examples 29-30.</p>
+  <p><a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/README.md">Reference snapshot README</a></p>
+  <p align="center">
+    <a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/README.md"><img src="../27_array_1d_vertical_numeric_selection_roundtrip/reference/screenshot.jpg" alt="Accepted Example 27 Array 1D vertical numeric selection snapshot" width="400" /></a>
+  </p>
+  <ul>
+    <li><a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/screenshot.jpg">Accepted screenshot</a></li>
+    <li><a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
+    <li><a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/visual-contract.md">Visual contract</a></li>
+    <li><a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
+    <li><a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/artifact-index.json">Artifact hash index</a></li>
+  </ul>
+</section>
+
+<section>
+  <h3>Example 28: Array 3D numeric selection</h3>
+  <p><strong>Intermediate note:</strong> This snapshot records a non-widget-composed Array development milestone. It is preserved for traceability and regression context, but the final Array rendering direction is the widget-composed container posture introduced in Examples 29-30.</p>
+  <p><a href="../28_array_3d_numeric_selection_roundtrip/reference/README.md">Reference snapshot README</a></p>
+  <p align="center">
+    <a href="../28_array_3d_numeric_selection_roundtrip/reference/README.md"><img src="../28_array_3d_numeric_selection_roundtrip/reference/screenshot.jpg" alt="Accepted Example 28 Array 3D numeric selection snapshot" width="400" /></a>
+  </p>
+  <ul>
+    <li><a href="../28_array_3d_numeric_selection_roundtrip/reference/screenshot.jpg">Accepted screenshot</a></li>
+    <li><a href="../28_array_3d_numeric_selection_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
+    <li><a href="../28_array_3d_numeric_selection_roundtrip/reference/visual-contract.md">Visual contract</a></li>
+    <li><a href="../28_array_3d_numeric_selection_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
+    <li><a href="../28_array_3d_numeric_selection_roundtrip/reference/artifact-index.json">Artifact hash index</a></li>
+  </ul>
+</section>
+
+<section>
+  <h3>Example 29: Array 1D vertical Numeric container</h3>
+  <p><a href="../29_array_1d_numeric_container_roundtrip/reference/README.md">Reference snapshot README</a></p>
+  <p align="center">
+    <a href="../29_array_1d_numeric_container_roundtrip/reference/README.md"><img src="../29_array_1d_numeric_container_roundtrip/reference/screenshot.jpg" alt="Accepted Example 29 Array 1D vertical Numeric container snapshot" width="400" /></a>
+  </p>
+  <ul>
+    <li><a href="../29_array_1d_numeric_container_roundtrip/reference/screenshot.jpg">Accepted screenshot</a></li>
+    <li><a href="../29_array_1d_numeric_container_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
+    <li><a href="../29_array_1d_numeric_container_roundtrip/reference/visual-contract.md">Visual contract</a></li>
+    <li><a href="../29_array_1d_numeric_container_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
+    <li><a href="../29_array_1d_numeric_container_roundtrip/reference/artifact-index.json">Artifact hash index</a></li>
+  </ul>
+</section>
+
+<section>
+  <h3>Example 30: Array 1D horizontal Numeric container</h3>
+  <p><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md">Reference snapshot README</a></p>
+  <p align="center">
+    <a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md"><img src="../30_array_1d_horizontal_numeric_container_roundtrip/reference/screenshot.jpg" alt="Accepted Example 30 Array 1D horizontal Numeric container snapshot" width="400" /></a>
+  </p>
+  <ul>
+    <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/screenshot.jpg">Accepted screenshot</a></li>
+    <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
+    <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.md">Visual contract</a></li>
+    <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
+    <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/artifact-index.json">Artifact hash index</a></li>
+  </ul>
+</section>
+
+<section>
+  <h3>Example 31: Array 1D visible-count property write</h3>
+  <p><a href="../31_array_1d_visible_count_property_roundtrip/reference/README.md">Reference snapshot README</a></p>
+  <p align="center">
+    <a href="../31_array_1d_visible_count_property_roundtrip/reference/README.md"><img src="../31_array_1d_visible_count_property_roundtrip/reference/screenshot.jpg" alt="Accepted Example 31 Array 1D visible-count property snapshot" width="400" /></a>
+  </p>
+  <ul>
+    <li><a href="../31_array_1d_visible_count_property_roundtrip/reference/screenshot.jpg">Accepted screenshot</a></li>
+    <li><a href="../31_array_1d_visible_count_property_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
+    <li><a href="../31_array_1d_visible_count_property_roundtrip/reference/visual-contract.md">Visual contract</a></li>
+    <li><a href="../31_array_1d_visible_count_property_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
+    <li><a href="../31_array_1d_visible_count_property_roundtrip/reference/artifact-index.json">Artifact hash index</a></li>
+  </ul>
+</section>
+
+<section>
+  <h3>Example 34: Array 2D visible-count property write</h3>
+  <p><a href="../34_array_2d_visible_counts_property_roundtrip/reference/README.md">Reference snapshot README</a></p>
+  <p align="center">
+    <a href="../34_array_2d_visible_counts_property_roundtrip/reference/README.md"><img src="../34_array_2d_visible_counts_property_roundtrip/reference/screenshot.jpg" alt="Accepted Example 34 Array 2D visible-count property snapshot" width="400" /></a>
+  </p>
+  <ul>
+    <li><a href="../34_array_2d_visible_counts_property_roundtrip/reference/screenshot.jpg">Accepted screenshot</a></li>
+    <li><a href="../34_array_2d_visible_counts_property_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
+    <li><a href="../34_array_2d_visible_counts_property_roundtrip/reference/visual-contract.md">Visual contract</a></li>
+    <li><a href="../34_array_2d_visible_counts_property_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
+    <li><a href="../34_array_2d_visible_counts_property_roundtrip/reference/artifact-index.json">Artifact hash index</a></li>
+  </ul>
+</section>
 
 <hr/>
 
@@ -245,8 +405,10 @@ directories after visual acceptance.
   <li>Index displays and Array element containers must remain visually distinct subcontainers.</li>
   <li>Array outer frame thickness must remain uniform after resize.</li>
   <li>Repeated contained widgets must preserve the contained widget's own validated default realization.</li>
+  <li>Maximum row and column offsets must be visually inspected: the terminal row or column must remain fully visible, with scrollbars aligned to the logical viewport rather than any clipping bleed.</li>
   <li>Array selection must not resize cells or alter the contained widget border geometry.</li>
   <li>Scrollbar tracks and thumbs must stay configurable and aligned to the Array viewport.</li>
   <li>Control and indicator surfaces may differ in interactivity, but their geometry law must remain comparable.</li>
+  <li>Property writes such as <code>viewport.visible_counts[]</code> must remain explicit diagram flow consumed on <code>Execute</code> unless a later IDE/design-time host task deliberately validates live editing behavior.</li>
   <li>Browser-host screenshots are accepted evidence for the current host, not the only possible FROG host.</li>
 </ul>

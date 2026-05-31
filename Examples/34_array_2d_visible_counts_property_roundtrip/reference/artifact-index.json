@@ -1,0 +1,72 @@
+{
+    "example_id":  "34_array_2d_visible_counts_property_roundtrip",
+    "snapshot_role":  "accepted_public_reference_snapshot",
+    "example_source_artifacts":  [
+                                     {
+                                         "sha256":  "7a3595dd80dd5658325ef7022f18bcf76dc043dde4c896607c92bc4aa6c01f7a",
+                                         "path":  "Examples/34_array_2d_visible_counts_property_roundtrip/Readme.md"
+                                     },
+                                     {
+                                         "sha256":  "447a21c0a2d92b1f5f5cdfdeadcd0b2df73011a3e4904232439ff4c67ea4432f",
+                                         "path":  "Examples/34_array_2d_visible_counts_property_roundtrip/main.fir.json"
+                                     },
+                                     {
+                                         "sha256":  "0475176bd021c405f2ded5c8e9bd82aa71de4029f12793c954d0e82a960703fa",
+                                         "path":  "Examples/34_array_2d_visible_counts_property_roundtrip/main.frog"
+                                     },
+                                     {
+                                         "sha256":  "f9925d820fa1b849e37c69d1382017f39d18341c0146d59bf3730f9e5cabc9ed",
+                                         "path":  "Examples/34_array_2d_visible_counts_property_roundtrip/main.lowering.json"
+                                     },
+                                     {
+                                         "sha256":  "5199ec481d800e2702962cba26befbe3bb8aa1cf91df58ac8886dcde46a17f9f",
+                                         "path":  "Examples/34_array_2d_visible_counts_property_roundtrip/ui/array_panel.wfrog"
+                                     }
+                                 ],
+    "backend_artifacts":  [
+                              {
+                                  "sha256":  "92a1d3220ceb06307b9a2adf871dc2212a3211941fea27dd802b10bd08743e9e",
+                                  "path":  "Implementations/Reference/LLVM/examples/34_array_2d_visible_counts_property_roundtrip/kernel.ll"
+                              },
+                              {
+                                  "sha256":  "6fa2865e74d64446370c95cc7630153769b1724c3530cf14364162254cc0ae89",
+                                  "path":  "Implementations/Reference/LLVM/examples/34_array_2d_visible_counts_property_roundtrip/native_kernel_manifest.json"
+                              }
+                          ],
+    "default_realization_artifacts":  [
+                                          {
+                                              "sha256":  "77eea10878960fd6a1f47a41453f4b078acf914bed86392eea246cf4466b28d3",
+                                              "path":  "Libraries/Realizations/Default/assets/array/templates/array_shell.svg"
+                                          },
+                                          {
+                                              "sha256":  "fca3f717f1aec4259ec7e94563708ae77503a3b72c54442666bfac27e5443204",
+                                              "path":  "Libraries/Realizations/Default/array.default.wfrog"
+                                          },
+                                          {
+                                              "sha256":  "4bb2e6c91c866a1e551791ecae663fdaedea2854d8b6dbccb4eac58f496661d4",
+                                              "path":  "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+                                          },
+                                          {
+                                              "sha256":  "31c9b99d874b92c3332159fd14745822c1a2f07d9f30e7a96300d5c35a7b1496",
+                                              "path":  "Libraries/Realizations/Default/numeric.default.wfrog"
+                                          }
+                                      ],
+    "snapshot_artifacts":  [
+                               {
+                                   "sha256":  "6bdef2e8ded0cbd22f4b7e6b97170dbaf65a0b958929db40de4b45674b653705",
+                                   "path":  "Examples/34_array_2d_visible_counts_property_roundtrip/reference/screenshot.jpg"
+                               },
+                               {
+                                   "sha256":  "5a77d85e2a5b3214d30f793eb2a005278cb0a0cf08b119021e49a871f99ce92d",
+                                   "path":  "Examples/34_array_2d_visible_counts_property_roundtrip/reference/state.accepted.json"
+                               },
+                               {
+                                   "sha256":  "da0b567fbc5d181535d59d2de348b13ddff83416a39e7fd0e85123e90eaba71b",
+                                   "path":  "Examples/34_array_2d_visible_counts_property_roundtrip/reference/visual-contract.md"
+                               },
+                               {
+                                   "sha256":  "01fb0b13cb40f7c8d05571cf9cc7f710c088eec674cf5002691eccdd41b5d527",
+                                   "path":  "Examples/34_array_2d_visible_counts_property_roundtrip/reference/visual-contract.json"
+                               }
+                           ]
+}
