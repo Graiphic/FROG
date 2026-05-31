@@ -53,7 +53,7 @@
                                       ],
     "snapshot_artifacts":  [
                                {
-                                   "sha256":  "f8c65b56cd5f451db302c4079415d6db4d246d3c7a75580ecc1ea785e3cf9558",
+                                   "sha256":  "bc226e0144b3bc92f56dbc5c1a435917428d966c8d36631bc926a1a93b4f7623",
                                    "path":  "Examples/34_array_2d_visible_counts_property_roundtrip/reference/screenshot.jpg"
                                },
                                {
