@@ -1,0 +1,72 @@
+{
+    "example_id":  "33_array_2d_numeric_container_roundtrip",
+    "snapshot_role":  "accepted_public_reference_snapshot",
+    "example_source_artifacts":  [
+                                     {
+                                         "sha256":  "a388cbbca02e1d90adc6fc7a82d733cf76933521945194c523f8c12c47495b2c",
+                                         "path":  "Examples/33_array_2d_numeric_container_roundtrip/Readme.md"
+                                     },
+                                     {
+                                         "sha256":  "040d346138370233a5bbbbfad044975782f24dd11a6f4436441511dd5bad8d34",
+                                         "path":  "Examples/33_array_2d_numeric_container_roundtrip/main.fir.json"
+                                     },
+                                     {
+                                         "sha256":  "a64cdb5baf6b618684de2a4c6961cb0622a3f633d7f46ceb2392da5b31e92439",
+                                         "path":  "Examples/33_array_2d_numeric_container_roundtrip/main.frog"
+                                     },
+                                     {
+                                         "sha256":  "23b6343600b60ecbe3a5a337f67bf3a4b411b906936c937216981fb01127aa18",
+                                         "path":  "Examples/33_array_2d_numeric_container_roundtrip/main.lowering.json"
+                                     },
+                                     {
+                                         "sha256":  "826a897fb291e4e5afaa426b05ae568c565753ed5434bb40db3fbf647417a3e4",
+                                         "path":  "Examples/33_array_2d_numeric_container_roundtrip/ui/array_panel.wfrog"
+                                     }
+                                 ],
+    "backend_artifacts":  [
+                              {
+                                  "sha256":  "13c5bb913f8dbb0836da925551dffdc99ac7fe5a9a555a501f5993126db78342",
+                                  "path":  "Implementations/Reference/LLVM/examples/33_array_2d_numeric_container_roundtrip/kernel.ll"
+                              },
+                              {
+                                  "sha256":  "afa979d234fb0bb6262c57c0f25fa0cf9ec4f49ee3361afaa1742d6da9d96ccd",
+                                  "path":  "Implementations/Reference/LLVM/examples/33_array_2d_numeric_container_roundtrip/native_kernel_manifest.json"
+                              }
+                          ],
+    "default_realization_artifacts":  [
+                                          {
+                                              "sha256":  "77eea10878960fd6a1f47a41453f4b078acf914bed86392eea246cf4466b28d3",
+                                              "path":  "Libraries/Realizations/Default/assets/array/templates/array_shell.svg"
+                                          },
+                                          {
+                                              "sha256":  "fca3f717f1aec4259ec7e94563708ae77503a3b72c54442666bfac27e5443204",
+                                              "path":  "Libraries/Realizations/Default/array.default.wfrog"
+                                          },
+                                          {
+                                              "sha256":  "4bb2e6c91c866a1e551791ecae663fdaedea2854d8b6dbccb4eac58f496661d4",
+                                              "path":  "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+                                          },
+                                          {
+                                              "sha256":  "31c9b99d874b92c3332159fd14745822c1a2f07d9f30e7a96300d5c35a7b1496",
+                                              "path":  "Libraries/Realizations/Default/numeric.default.wfrog"
+                                          }
+                                      ],
+    "snapshot_artifacts":  [
+                               {
+                                   "sha256":  "73d0f9c4e62e81e675e76c3817aafb73752095cfa9857448dc8a45698c45d469",
+                                   "path":  "Examples/33_array_2d_numeric_container_roundtrip/reference/screenshot.svg"
+                               },
+                               {
+                                   "sha256":  "cf279f3e1ab99225ce9fe4226075f8d4ead0c87d42065e910614360faf6785cc",
+                                   "path":  "Examples/33_array_2d_numeric_container_roundtrip/reference/state.accepted.json"
+                               },
+                               {
+                                   "sha256":  "a38fb11f699fb06aca4a1e76c4e74b1c41c883d6402ad26003c9d84672361016",
+                                   "path":  "Examples/33_array_2d_numeric_container_roundtrip/reference/visual-contract.md"
+                               },
+                               {
+                                   "sha256":  "f75030d9581ce5ca2417d054e8bb1df3d7f4222af7288f95caad2a8dfd6cf6d2",
+                                   "path":  "Examples/33_array_2d_numeric_container_roundtrip/reference/visual-contract.json"
+                               }
+                           ]
+}
