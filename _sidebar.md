@@ -108,6 +108,8 @@
     - [main.frog](/Examples/30_array_1d_horizontal_numeric_container_roundtrip/main.frog)
     - [reference](/Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md)
       - [visual-contract](/Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.md)
+  - 32 array 1d horizontal visible count property roundtrip
+    - [reference](/Examples/32_array_1d_horizontal_visible_count_property_roundtrip/reference/README.md)
   - [34 array 2d visible counts property roundtrip](/Examples/34_array_2d_visible_counts_property_roundtrip/Readme.md)
     - [reference](/Examples/34_array_2d_visible_counts_property_roundtrip/reference/README.md)
       - [visual-contract](/Examples/34_array_2d_visible_counts_property_roundtrip/reference/visual-contract.md)

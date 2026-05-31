@@ -792,6 +792,21 @@
               ]
             },
             {
+              "key": "examples/32_array_1d_horizontal_visible_count_property_roundtrip/",
+              "title": "32 array 1d horizontal visible count property roundtrip",
+              "path": null,
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/32_array_1d_horizontal_visible_count_property_roundtrip/reference/",
+                  "title": "reference",
+                  "path": "/Examples/32_array_1d_horizontal_visible_count_property_roundtrip/reference/README.md",
+                  "kind": "category",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/34_array_2d_visible_counts_property_roundtrip/",
               "title": "34 array 2d visible counts property roundtrip",
               "path": "/Examples/34_array_2d_visible_counts_property_roundtrip/Readme.md",
@@ -4836,6 +4851,7 @@
     "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.md",
     "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md",
     "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/Readme.md",
+    "/Examples/32_array_1d_horizontal_visible_count_property_roundtrip/reference/README.md",
     "/Examples/34_array_2d_visible_counts_property_roundtrip/reference/visual-contract.md",
     "/Examples/34_array_2d_visible_counts_property_roundtrip/reference/README.md",
     "/Examples/34_array_2d_visible_counts_property_roundtrip/Readme.md",
