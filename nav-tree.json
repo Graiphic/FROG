@@ -713,6 +713,21 @@
                   "path": "/Examples/26_array_numeric_selection_roundtrip/main.frog",
                   "kind": "code",
                   "children": []
+                },
+                {
+                  "key": "examples/26_array_numeric_selection_roundtrip/reference/",
+                  "title": "reference",
+                  "path": "/Examples/26_array_numeric_selection_roundtrip/reference/README.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "examples/26_array_numeric_selection_roundtrip/reference/visual-contract.md",
+                      "title": "visual-contract",
+                      "path": "/Examples/26_array_numeric_selection_roundtrip/reference/visual-contract.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
                 }
               ]
             },
@@ -728,6 +743,21 @@
                   "path": "/Examples/27_array_1d_vertical_numeric_selection_roundtrip/main.frog",
                   "kind": "code",
                   "children": []
+                },
+                {
+                  "key": "examples/27_array_1d_vertical_numeric_selection_roundtrip/reference/",
+                  "title": "reference",
+                  "path": "/Examples/27_array_1d_vertical_numeric_selection_roundtrip/reference/README.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "examples/27_array_1d_vertical_numeric_selection_roundtrip/reference/visual-contract.md",
+                      "title": "visual-contract",
+                      "path": "/Examples/27_array_1d_vertical_numeric_selection_roundtrip/reference/visual-contract.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
                 }
               ]
             },
@@ -743,6 +773,21 @@
                   "path": "/Examples/28_array_3d_numeric_selection_roundtrip/main.frog",
                   "kind": "code",
                   "children": []
+                },
+                {
+                  "key": "examples/28_array_3d_numeric_selection_roundtrip/reference/",
+                  "title": "reference",
+                  "path": "/Examples/28_array_3d_numeric_selection_roundtrip/reference/README.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "examples/28_array_3d_numeric_selection_roundtrip/reference/visual-contract.md",
+                      "title": "visual-contract",
+                      "path": "/Examples/28_array_3d_numeric_selection_roundtrip/reference/visual-contract.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
                 }
               ]
             },
@@ -758,6 +803,21 @@
                   "path": "/Examples/29_array_1d_numeric_container_roundtrip/main.frog",
                   "kind": "code",
                   "children": []
+                },
+                {
+                  "key": "examples/29_array_1d_numeric_container_roundtrip/reference/",
+                  "title": "reference",
+                  "path": "/Examples/29_array_1d_numeric_container_roundtrip/reference/README.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "examples/29_array_1d_numeric_container_roundtrip/reference/visual-contract.md",
+                      "title": "visual-contract",
+                      "path": "/Examples/29_array_1d_numeric_container_roundtrip/reference/visual-contract.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
                 }
               ]
             },
@@ -792,11 +852,48 @@
               ]
             },
             {
-              "key": "examples/32_array_1d_horizontal_visible_count_property_roundtrip/",
-              "title": "32 array 1d horizontal visible count property roundtrip",
-              "path": null,
+              "key": "examples/31_array_1d_visible_count_property_roundtrip/",
+              "title": "31 array 1d visible count property roundtrip",
+              "path": "/Examples/31_array_1d_visible_count_property_roundtrip/Readme.md",
               "kind": "category",
               "children": [
+                {
+                  "key": "examples/31_array_1d_visible_count_property_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/31_array_1d_visible_count_property_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "examples/31_array_1d_visible_count_property_roundtrip/reference/",
+                  "title": "reference",
+                  "path": "/Examples/31_array_1d_visible_count_property_roundtrip/reference/README.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "examples/31_array_1d_visible_count_property_roundtrip/reference/visual-contract.md",
+                      "title": "visual-contract",
+                      "path": "/Examples/31_array_1d_visible_count_property_roundtrip/reference/visual-contract.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "key": "examples/32_array_1d_horizontal_visible_count_property_roundtrip/",
+              "title": "32 array 1d horizontal visible count property roundtrip",
+              "path": "/Examples/32_array_1d_horizontal_visible_count_property_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/32_array_1d_horizontal_visible_count_property_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/32_array_1d_horizontal_visible_count_property_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
                 {
                   "key": "examples/32_array_1d_horizontal_visible_count_property_roundtrip/reference/",
                   "title": "reference",
@@ -817,9 +914,16 @@
             {
               "key": "examples/33_array_2d_numeric_container_roundtrip/",
               "title": "33 array 2d numeric container roundtrip",
-              "path": null,
+              "path": "/Examples/33_array_2d_numeric_container_roundtrip/Readme.md",
               "kind": "category",
               "children": [
+                {
+                  "key": "examples/33_array_2d_numeric_container_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/33_array_2d_numeric_container_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
                 {
                   "key": "examples/33_array_2d_numeric_container_roundtrip/reference/",
                   "title": "reference",
@@ -843,6 +947,13 @@
               "path": "/Examples/34_array_2d_visible_counts_property_roundtrip/Readme.md",
               "kind": "category",
               "children": [
+                {
+                  "key": "examples/34_array_2d_visible_counts_property_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/34_array_2d_visible_counts_property_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
                 {
                   "key": "examples/34_array_2d_visible_counts_property_roundtrip/reference/",
                   "title": "reference",
@@ -4878,21 +4989,38 @@
     "/Examples/25_frame_grouping_board/main.frog",
     "/Examples/25_frame_grouping_board/Readme.md",
     "/Examples/26_array_numeric_selection_roundtrip/main.frog",
+    "/Examples/26_array_numeric_selection_roundtrip/reference/visual-contract.md",
+    "/Examples/26_array_numeric_selection_roundtrip/reference/README.md",
     "/Examples/26_array_numeric_selection_roundtrip/Readme.md",
     "/Examples/27_array_1d_vertical_numeric_selection_roundtrip/main.frog",
+    "/Examples/27_array_1d_vertical_numeric_selection_roundtrip/reference/visual-contract.md",
+    "/Examples/27_array_1d_vertical_numeric_selection_roundtrip/reference/README.md",
     "/Examples/27_array_1d_vertical_numeric_selection_roundtrip/Readme.md",
     "/Examples/28_array_3d_numeric_selection_roundtrip/main.frog",
+    "/Examples/28_array_3d_numeric_selection_roundtrip/reference/visual-contract.md",
+    "/Examples/28_array_3d_numeric_selection_roundtrip/reference/README.md",
     "/Examples/28_array_3d_numeric_selection_roundtrip/Readme.md",
     "/Examples/29_array_1d_numeric_container_roundtrip/main.frog",
+    "/Examples/29_array_1d_numeric_container_roundtrip/reference/visual-contract.md",
+    "/Examples/29_array_1d_numeric_container_roundtrip/reference/README.md",
     "/Examples/29_array_1d_numeric_container_roundtrip/Readme.md",
     "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/main.frog",
     "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.md",
     "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md",
     "/Examples/30_array_1d_horizontal_numeric_container_roundtrip/Readme.md",
+    "/Examples/31_array_1d_visible_count_property_roundtrip/main.frog",
+    "/Examples/31_array_1d_visible_count_property_roundtrip/reference/visual-contract.md",
+    "/Examples/31_array_1d_visible_count_property_roundtrip/reference/README.md",
+    "/Examples/31_array_1d_visible_count_property_roundtrip/Readme.md",
+    "/Examples/32_array_1d_horizontal_visible_count_property_roundtrip/main.frog",
     "/Examples/32_array_1d_horizontal_visible_count_property_roundtrip/reference/visual-contract.md",
     "/Examples/32_array_1d_horizontal_visible_count_property_roundtrip/reference/README.md",
+    "/Examples/32_array_1d_horizontal_visible_count_property_roundtrip/Readme.md",
+    "/Examples/33_array_2d_numeric_container_roundtrip/main.frog",
     "/Examples/33_array_2d_numeric_container_roundtrip/reference/visual-contract.md",
     "/Examples/33_array_2d_numeric_container_roundtrip/reference/README.md",
+    "/Examples/33_array_2d_numeric_container_roundtrip/Readme.md",
+    "/Examples/34_array_2d_visible_counts_property_roundtrip/main.frog",
     "/Examples/34_array_2d_visible_counts_property_roundtrip/reference/visual-contract.md",
     "/Examples/34_array_2d_visible_counts_property_roundtrip/reference/README.md",
     "/Examples/34_array_2d_visible_counts_property_roundtrip/Readme.md",
