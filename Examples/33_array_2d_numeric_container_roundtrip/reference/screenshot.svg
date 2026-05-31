@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620" role="img" aria-label="Accepted Example 33 Array 2D Numeric Container Roundtrip snapshot">
+  <title>Accepted Example 33 Array 2D Numeric Container Roundtrip snapshot</title>
+  <desc>Text-safe public visual reference for the accepted browser-host layout: a 2D Array container repeats Default Numeric widgets and publishes the selected value on Execute.</desc>
+  <style>
+    .page { fill: #eef2f6; }
+    .card { fill: #ffffff; stroke: #d8e1ec; stroke-width: 1; }
+    .title { font: 700 28px Arial, sans-serif; fill: #102a43; }
+    .subtitle { font: 18px Arial, sans-serif; fill: #38506b; }
+    .label { font: 700 16px Arial, sans-serif; fill: #0d1f33; }
+    .text { font: 15px Arial, sans-serif; fill: #102a43; }
+    .small { font: 13px Arial, sans-serif; fill: #38506b; }
+    .badge { fill: #ffffff; stroke: #cad6e4; stroke-width: 1; }
+    .frame { fill: #eef3f8; stroke: #8aa2c0; stroke-width: 1; }
+    .cell { fill: #ffffff; stroke: #a9b9cc; stroke-width: 1; }
+    .indicator { fill: #edf2f7; stroke: #a9b9cc; stroke-width: 1; }
+    .selected { fill: none; stroke: #1f5fff; stroke-width: 2; }
+    .published { fill: none; stroke: #00a651; stroke-width: 2; }
+    .thumb { fill: #9aacbf; }
+    .button { fill: #f7fbff; stroke: #8aa2c0; stroke-width: 1; }
+  </style>
+  <rect class="page" x="0" y="0" width="1120" height="620"/>
+  <text class="title" x="32" y="50">Array 2D Numeric Container Roundtrip</text>
+  <text class="subtitle" x="32" y="86">Example 33 - .frog 2D Array container + Default Array/Numeric assets + C++ private runtime</text>
+  <rect class="badge" x="32" y="112" width="260" height="32" rx="4"/>
+  <text class="small" x="48" y="133">RUNTIME  C++ Graiphic private runtime</text>
+  <rect class="badge" x="306" y="112" width="350" height="32" rx="4"/>
+  <text class="small" x="322" y="133">EXECUTION  LLVM/native manifest u16 proof executor</text>
+  <rect class="card" x="30" y="176" width="1030" height="330" rx="10"/>
+  <text class="label" x="108" y="232">Array 2D container</text>
+  <g transform="translate(74 254)">
+    <rect class="frame" x="0" y="0" width="82" height="72"/>
+    <rect class="button" x="8" y="8" width="20" height="14"/><path d="M18 11 L13 19 L23 19 Z" fill="#294b68"/>
+    <rect class="button" x="8" y="26" width="20" height="14"/><path d="M13 29 L23 29 L18 37 Z" fill="#294b68"/>
+    <rect class="cell" x="34" y="8" width="40" height="28"/><text class="text" x="54" y="28" text-anchor="middle">0</text>
+    <rect class="button" x="8" y="44" width="20" height="14"/><path d="M18 47 L13 55 L23 55 Z" fill="#294b68"/>
+    <rect class="button" x="8" y="58" width="20" height="14"/><path d="M13 61 L23 61 L18 69 Z" fill="#294b68"/>
+    <rect class="cell" x="34" y="44" width="40" height="28"/><text class="text" x="54" y="64" text-anchor="middle">0</text>
+  </g>
+  <g transform="translate(166 254)">
+    <rect class="frame" x="0" y="0" width="445" height="174"/>
+    <g transform="translate(8 8)">
+      <g>
+        <rect class="cell" x="0" y="0" width="98" height="36"/><text class="text" x="49" y="23" text-anchor="middle">0</text>
+        <rect class="button" x="100" y="0" width="22" height="17"/><path d="M111 4 L106 12 L116 12 Z" fill="#294b68"/>
+        <rect class="button" x="100" y="19" width="22" height="17"/><path d="M106 23 L116 23 L111 31 Z" fill="#294b68"/>
+      </g>
+      <g transform="translate(124 0)">
+        <rect class="cell" x="0" y="0" width="98" height="36"/><text class="text" x="49" y="23" text-anchor="middle">0</text>
+        <rect class="button" x="100" y="0" width="22" height="17"/><path d="M111 4 L106 12 L116 12 Z" fill="#294b68"/>
+        <rect class="button" x="100" y="19" width="22" height="17"/><path d="M106 23 L116 23 L111 31 Z" fill="#294b68"/>
+      </g>
+      <g transform="translate(248 0)">
+        <rect class="cell" x="0" y="0" width="98" height="36"/><text class="text" x="49" y="23" text-anchor="middle">0</text>
+        <rect class="button" x="100" y="0" width="22" height="17"/><path d="M111 4 L106 12 L116 12 Z" fill="#294b68"/>
+        <rect class="button" x="100" y="19" width="22" height="17"/><path d="M106 23 L116 23 L111 31 Z" fill="#294b68"/>
+      </g>
+      <g transform="translate(0 36)">
+        <rect class="cell" x="0" y="0" width="98" height="36"/><text class="text" x="49" y="23" text-anchor="middle">0</text>
+        <rect class="button" x="100" y="0" width="22" height="17"/><path d="M111 4 L106 12 L116 12 Z" fill="#294b68"/>
+        <rect class="button" x="100" y="19" width="22" height="17"/><path d="M106 23 L116 23 L111 31 Z" fill="#294b68"/>
+      </g>
+      <g transform="translate(124 36)">
+        <rect class="cell" x="0" y="0" width="98" height="36"/><text class="text" x="49" y="23" text-anchor="middle">2</text>
+        <rect class="button" x="100" y="0" width="22" height="17"/><path d="M111 4 L106 12 L116 12 Z" fill="#294b68"/>
+        <rect class="button" x="100" y="19" width="22" height="17"/><path d="M106 23 L116 23 L111 31 Z" fill="#294b68"/>
+      </g>
+      <g transform="translate(248 36)">
+        <rect class="cell" x="0" y="0" width="98" height="36"/><text class="text" x="49" y="23" text-anchor="middle">0</text>
+        <rect class="button" x="100" y="0" width="22" height="17"/><path d="M111 4 L106 12 L116 12 Z" fill="#294b68"/>
+        <rect class="button" x="100" y="19" width="22" height="17"/><path d="M106 23 L116 23 L111 31 Z" fill="#294b68"/>
+      </g>
+      <g transform="translate(0 72)">
+        <rect class="cell" x="0" y="0" width="98" height="36"/><text class="text" x="49" y="23" text-anchor="middle">0</text>
+        <rect class="button" x="100" y="0" width="22" height="17"/><path d="M111 4 L106 12 L116 12 Z" fill="#294b68"/>
+        <rect class="button" x="100" y="19" width="22" height="17"/><path d="M106 23 L116 23 L111 31 Z" fill="#294b68"/>
+      </g>
+      <g transform="translate(124 72)">
+        <rect class="cell" x="0" y="0" width="98" height="36"/><text class="text" x="49" y="23" text-anchor="middle">3</text>
+        <rect class="button" x="100" y="0" width="22" height="17"/><path d="M111 4 L106 12 L116 12 Z" fill="#294b68"/>
+        <rect class="button" x="100" y="19" width="22" height="17"/><path d="M106 23 L116 23 L111 31 Z" fill="#294b68"/>
+      </g>
+      <g transform="translate(248 72)">
+        <rect class="cell" x="0" y="0" width="98" height="36"/><text class="text" x="49" y="23" text-anchor="middle">0</text>
+        <rect class="button" x="100" y="0" width="22" height="17"/><path d="M111 4 L106 12 L116 12 Z" fill="#294b68"/>
+        <rect class="button" x="100" y="19" width="22" height="17"/><path d="M106 23 L116 23 L111 31 Z" fill="#294b68"/>
+      </g>
+      <rect class="selected" x="124" y="72" width="122" height="36"/>
+      <rect class="frame" x="372" y="0" width="22" height="144"/>
+      <rect class="thumb" x="378" y="18" width="10" height="70"/>
+      <rect class="frame" x="0" y="116" width="394" height="24"/>
+      <rect class="thumb" x="18" y="123" width="170" height="10"/>
+    </g>
+  </g>
+  <text class="label" x="674" y="232">Array 2D indicator</text>
+  <g transform="translate(640 254)">
+    <rect class="frame" x="0" y="0" width="372" height="174"/>
+    <g transform="translate(8 8)">
+      <rect class="indicator" x="0" y="0" width="100" height="36"/><text class="text" x="50" y="23" text-anchor="middle">0</text>
+      <rect class="indicator" x="100" y="0" width="100" height="36"/><text class="text" x="150" y="23" text-anchor="middle">0</text>
+      <rect class="indicator" x="200" y="0" width="100" height="36"/><text class="text" x="250" y="23" text-anchor="middle">0</text>
+      <rect class="indicator" x="0" y="36" width="100" height="36"/><text class="text" x="50" y="59" text-anchor="middle">2</text>
+      <rect class="indicator" x="100" y="36" width="100" height="36"/><text class="text" x="150" y="59" text-anchor="middle">0</text>
+      <rect class="indicator" x="200" y="36" width="100" height="36"/><text class="text" x="250" y="59" text-anchor="middle">0</text>
+      <rect class="indicator" x="0" y="72" width="100" height="36"/><text class="text" x="50" y="95" text-anchor="middle">0</text>
+      <rect class="indicator" x="100" y="72" width="100" height="36"/><text class="text" x="150" y="95" text-anchor="middle">3</text>
+      <rect class="indicator" x="200" y="72" width="100" height="36"/><text class="text" x="250" y="95" text-anchor="middle">0</text>
+      <rect class="published" x="100" y="72" width="100" height="36"/>
+      <rect class="frame" x="308" y="0" width="22" height="144"/>
+      <rect class="thumb" x="314" y="18" width="10" height="70"/>
+      <rect class="frame" x="0" y="116" width="330" height="24"/>
+      <rect class="thumb" x="18" y="123" width="150" height="10"/>
+    </g>
+  </g>
+  <rect class="button" x="32" y="538" width="96" height="36"/>
+  <text class="text" x="80" y="561" text-anchor="middle">Execute</text>
+  <rect class="card" x="30" y="588" width="1030" height="28" rx="8"/>
+  <text class="small" x="54" y="607">Array owns rank, shape, index displays, viewport, scrollbars, and selection. Each visible cell consumes the Default Numeric realization.</text>
+</svg>
