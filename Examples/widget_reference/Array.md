@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
   <img src="../../FROG logo.svg" alt="FROG logo" width="140" />
 </p>
 
@@ -294,10 +294,10 @@ for Array rendering.
   <p><strong>Intermediate note:</strong> This snapshot records a non-widget-composed Array development milestone. It is preserved for traceability and regression context, but the final Array rendering direction is the widget-composed container posture introduced in Examples 29-30.</p>
   <p><a href="../26_array_numeric_selection_roundtrip/reference/README.md">Reference snapshot README</a></p>
   <p align="center">
-    <a href="../26_array_numeric_selection_roundtrip/reference/README.md"><img src="../26_array_numeric_selection_roundtrip/reference/screenshot.jpg" alt="Accepted Example 26 Array 2D numeric selection snapshot" width="400" /></a>
+    <a href="../26_array_numeric_selection_roundtrip/reference/README.md"><img src="../26_array_numeric_selection_roundtrip/reference/screenshot.svg" alt="Accepted Example 26 Array 2D numeric selection snapshot" width="400" /></a>
   </p>
   <ul>
-    <li><a href="../26_array_numeric_selection_roundtrip/reference/screenshot.jpg">Accepted screenshot</a></li>
+    <li><a href="../26_array_numeric_selection_roundtrip/reference/screenshot.svg">Accepted screenshot</a></li>
     <li><a href="../26_array_numeric_selection_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
     <li><a href="../26_array_numeric_selection_roundtrip/reference/visual-contract.md">Visual contract</a></li>
     <li><a href="../26_array_numeric_selection_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
@@ -310,10 +310,10 @@ for Array rendering.
   <p><strong>Intermediate note:</strong> This snapshot records a non-widget-composed Array development milestone. It is preserved for traceability and regression context, but the final Array rendering direction is the widget-composed container posture introduced in Examples 29-30.</p>
   <p><a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/README.md">Reference snapshot README</a></p>
   <p align="center">
-    <a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/README.md"><img src="../27_array_1d_vertical_numeric_selection_roundtrip/reference/screenshot.jpg" alt="Accepted Example 27 Array 1D vertical numeric selection snapshot" width="400" /></a>
+    <a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/README.md"><img src="../27_array_1d_vertical_numeric_selection_roundtrip/reference/screenshot.svg" alt="Accepted Example 27 Array 1D vertical numeric selection snapshot" width="400" /></a>
   </p>
   <ul>
-    <li><a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/screenshot.jpg">Accepted screenshot</a></li>
+    <li><a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/screenshot.svg">Accepted screenshot</a></li>
     <li><a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
     <li><a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/visual-contract.md">Visual contract</a></li>
     <li><a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
@@ -326,10 +326,10 @@ for Array rendering.
   <p><strong>Intermediate note:</strong> This snapshot records a non-widget-composed Array development milestone. It is preserved for traceability and regression context, but the final Array rendering direction is the widget-composed container posture introduced in Examples 29-30.</p>
   <p><a href="../28_array_3d_numeric_selection_roundtrip/reference/README.md">Reference snapshot README</a></p>
   <p align="center">
-    <a href="../28_array_3d_numeric_selection_roundtrip/reference/README.md"><img src="../28_array_3d_numeric_selection_roundtrip/reference/screenshot.jpg" alt="Accepted Example 28 Array 3D numeric selection snapshot" width="400" /></a>
+    <a href="../28_array_3d_numeric_selection_roundtrip/reference/README.md"><img src="../28_array_3d_numeric_selection_roundtrip/reference/screenshot.svg" alt="Accepted Example 28 Array 3D numeric selection snapshot" width="400" /></a>
   </p>
   <ul>
-    <li><a href="../28_array_3d_numeric_selection_roundtrip/reference/screenshot.jpg">Accepted screenshot</a></li>
+    <li><a href="../28_array_3d_numeric_selection_roundtrip/reference/screenshot.svg">Accepted screenshot</a></li>
     <li><a href="../28_array_3d_numeric_selection_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
     <li><a href="../28_array_3d_numeric_selection_roundtrip/reference/visual-contract.md">Visual contract</a></li>
     <li><a href="../28_array_3d_numeric_selection_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
@@ -341,10 +341,10 @@ for Array rendering.
   <h3>Example 29: Array 1D vertical Numeric container</h3>
   <p><a href="../29_array_1d_numeric_container_roundtrip/reference/README.md">Reference snapshot README</a></p>
   <p align="center">
-    <a href="../29_array_1d_numeric_container_roundtrip/reference/README.md"><img src="../29_array_1d_numeric_container_roundtrip/reference/screenshot.jpg" alt="Accepted Example 29 Array 1D vertical Numeric container snapshot" width="400" /></a>
+    <a href="../29_array_1d_numeric_container_roundtrip/reference/README.md"><img src="../29_array_1d_numeric_container_roundtrip/reference/screenshot.svg" alt="Accepted Example 29 Array 1D vertical Numeric container snapshot" width="400" /></a>
   </p>
   <ul>
-    <li><a href="../29_array_1d_numeric_container_roundtrip/reference/screenshot.jpg">Accepted screenshot</a></li>
+    <li><a href="../29_array_1d_numeric_container_roundtrip/reference/screenshot.svg">Accepted screenshot</a></li>
     <li><a href="../29_array_1d_numeric_container_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
     <li><a href="../29_array_1d_numeric_container_roundtrip/reference/visual-contract.md">Visual contract</a></li>
     <li><a href="../29_array_1d_numeric_container_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
@@ -356,10 +356,10 @@ for Array rendering.
   <h3>Example 30: Array 1D horizontal Numeric container</h3>
   <p><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md">Reference snapshot README</a></p>
   <p align="center">
-    <a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md"><img src="../30_array_1d_horizontal_numeric_container_roundtrip/reference/screenshot.jpg" alt="Accepted Example 30 Array 1D horizontal Numeric container snapshot" width="400" /></a>
+    <a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/README.md"><img src="../30_array_1d_horizontal_numeric_container_roundtrip/reference/screenshot.png" alt="Accepted Example 30 Array 1D horizontal Numeric container snapshot" width="400" /></a>
   </p>
   <ul>
-    <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/screenshot.jpg">Accepted screenshot</a></li>
+    <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/screenshot.png">Accepted screenshot</a></li>
     <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
     <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.md">Visual contract</a></li>
     <li><a href="../30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
@@ -371,10 +371,10 @@ for Array rendering.
   <h3>Example 31: Array 1D visible-count property write</h3>
   <p><a href="../31_array_1d_visible_count_property_roundtrip/reference/README.md">Reference snapshot README</a></p>
   <p align="center">
-    <a href="../31_array_1d_visible_count_property_roundtrip/reference/README.md"><img src="../31_array_1d_visible_count_property_roundtrip/reference/screenshot.jpg" alt="Accepted Example 31 Array 1D visible-count property snapshot" width="400" /></a>
+    <a href="../31_array_1d_visible_count_property_roundtrip/reference/README.md"><img src="../31_array_1d_visible_count_property_roundtrip/reference/screenshot.svg" alt="Accepted Example 31 Array 1D visible-count property snapshot" width="400" /></a>
   </p>
   <ul>
-    <li><a href="../31_array_1d_visible_count_property_roundtrip/reference/screenshot.jpg">Accepted screenshot</a></li>
+    <li><a href="../31_array_1d_visible_count_property_roundtrip/reference/screenshot.svg">Accepted screenshot</a></li>
     <li><a href="../31_array_1d_visible_count_property_roundtrip/reference/state.accepted.json">Accepted state JSON</a></li>
     <li><a href="../31_array_1d_visible_count_property_roundtrip/reference/visual-contract.md">Visual contract</a></li>
     <li><a href="../31_array_1d_visible_count_property_roundtrip/reference/visual-contract.json">Machine-readable visual contract</a></li>
@@ -442,3 +442,4 @@ for Array rendering.
   <li>Property writes such as <code>viewport.visible_counts[]</code> must remain explicit diagram flow consumed on <code>Execute</code> unless a later IDE/design-time host task deliberately validates live editing behavior.</li>
   <li>Browser-host screenshots are accepted evidence for the current host, not the only possible FROG host.</li>
 </ul>
+

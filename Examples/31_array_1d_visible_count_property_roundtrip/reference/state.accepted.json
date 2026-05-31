@@ -1,0 +1,498 @@
+﻿{
+    "native_kernel_manifest":  {
+                                   "abi":  "frog_u16_to_result_status_outptr",
+                                   "artifact_library":  "frog_example31_array_visible_count_property_kernel.dll",
+                                   "backend_artifact_kind":  "native_dynamic_library",
+                                   "backend_family":  "llvm",
+                                   "entry_invoked_by_runtime":  false,
+                                   "entry_symbol":  "frog_example31_run",
+                                   "input_id":  "element_value",
+                                   "input_type":  "u16",
+                                   "kernel_id":  "example31_array_1d_visible_count_property_roundtrip_kernel",
+                                   "output_id":  "selected_element_value",
+                                   "output_type":  "u16",
+                                   "path":  "C:/Users/youss/TDF Dropbox/1_Graiphic/3 - Services et Etudes/5_FROG/Source/FROG/Implementations/Reference/LLVM/examples/31_array_1d_visible_count_property_roundtrip/native_kernel_manifest.json",
+                                   "source_artifact":  "Implementations/Reference/LLVM/examples/31_array_1d_visible_count_property_roundtrip/kernel.ll",
+                                   "source_lowered_unit":  "Examples/31_array_1d_visible_count_property_roundtrip/main.lowering.json"
+                               },
+    "outputs":  {
+                    "public":  {
+                                   "native_error_code":  0,
+                                   "native_ok":  true,
+                                   "published_array_records":  [
+                                                                   {
+                                                                       "column":  0,
+                                                                       "defined":  true,
+                                                                       "display":  "10",
+                                                                       "enabled":  true,
+                                                                       "id":  "i0",
+                                                                       "indices":  [
+                                                                                       0
+                                                                                   ],
+                                                                       "row":  0,
+                                                                       "value":  10
+                                                                   },
+                                                                   {
+                                                                       "column":  0,
+                                                                       "defined":  true,
+                                                                       "display":  "20",
+                                                                       "enabled":  true,
+                                                                       "id":  "i1",
+                                                                       "indices":  [
+                                                                                       1
+                                                                                   ],
+                                                                       "row":  1,
+                                                                       "value":  20
+                                                                   },
+                                                                   {
+                                                                       "column":  0,
+                                                                       "defined":  true,
+                                                                       "display":  "30",
+                                                                       "enabled":  true,
+                                                                       "id":  "i2",
+                                                                       "indices":  [
+                                                                                       2
+                                                                                   ],
+                                                                       "row":  2,
+                                                                       "value":  30
+                                                                   },
+                                                                   {
+                                                                       "column":  0,
+                                                                       "defined":  true,
+                                                                       "display":  "40",
+                                                                       "enabled":  true,
+                                                                       "id":  "i3",
+                                                                       "indices":  [
+                                                                                       3
+                                                                                   ],
+                                                                       "row":  3,
+                                                                       "value":  40
+                                                                   },
+                                                                   {
+                                                                       "column":  0,
+                                                                       "defined":  true,
+                                                                       "display":  "50",
+                                                                       "enabled":  true,
+                                                                       "id":  "i4",
+                                                                       "indices":  [
+                                                                                       4
+                                                                                   ],
+                                                                       "row":  4,
+                                                                       "value":  50
+                                                                   },
+                                                                   {
+                                                                       "column":  0,
+                                                                       "defined":  true,
+                                                                       "display":  "60",
+                                                                       "enabled":  true,
+                                                                       "id":  "i5",
+                                                                       "indices":  [
+                                                                                       5
+                                                                                   ],
+                                                                       "row":  5,
+                                                                       "value":  60
+                                                                   },
+                                                                   {
+                                                                       "column":  0,
+                                                                       "defined":  true,
+                                                                       "display":  "70",
+                                                                       "enabled":  true,
+                                                                       "id":  "i6",
+                                                                       "indices":  [
+                                                                                       6
+                                                                                   ],
+                                                                       "row":  6,
+                                                                       "value":  70
+                                                                   },
+                                                                   {
+                                                                       "column":  0,
+                                                                       "defined":  true,
+                                                                       "display":  "80",
+                                                                       "enabled":  true,
+                                                                       "id":  "i7",
+                                                                       "indices":  [
+                                                                                       7
+                                                                                   ],
+                                                                       "row":  7,
+                                                                       "value":  80
+                                                                   },
+                                                                   {
+                                                                       "column":  0,
+                                                                       "defined":  true,
+                                                                       "display":  "90",
+                                                                       "enabled":  true,
+                                                                       "id":  "i8",
+                                                                       "indices":  [
+                                                                                       8
+                                                                                   ],
+                                                                       "row":  8,
+                                                                       "value":  90
+                                                                   },
+                                                                   {
+                                                                       "column":  0,
+                                                                       "defined":  true,
+                                                                       "display":  "100",
+                                                                       "enabled":  true,
+                                                                       "id":  "i9",
+                                                                       "indices":  [
+                                                                                       9
+                                                                                   ],
+                                                                       "row":  9,
+                                                                       "value":  100
+                                                                   }
+                                                               ],
+                                   "selected_element_id":  "i2",
+                                   "selected_element_value":  30,
+                                   "selected_indices":  [
+                                                            2
+                                                        ]
+                               }
+                },
+    "runtime_family":  "graiphic_private_runtime_cpp",
+    "source_ref":  {
+                       "example_id":  "31_array_1d_visible_count_property_roundtrip",
+                       "path":  "C:/Users/youss/TDF Dropbox/1_Graiphic/3 - Services et Etudes/5_FROG/Source/FROG/Examples/31_array_1d_visible_count_property_roundtrip/main.frog"
+                   },
+    "ui_runtime":  {
+                       "array_control":  {
+                                             "class_ref":  "frog.widgets.array_control",
+                                             "layout":  {
+                                                            "height":  270,
+                                                            "width":  230,
+                                                            "x":  32,
+                                                            "y":  108
+                                                        },
+                                             "role":  "control",
+                                             "runtime":  {
+                                                             "asset_path":  "C:/Users/youss/TDF Dropbox/1_Graiphic/3 - Services et Etudes/5_FROG/Source/FROG/Examples/31_array_1d_visible_count_property_roundtrip\\./ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+                                                             "asset_ref":  "asset:array_shell_svg",
+                                                             "behavior":  {
+                                                                              "editable_elements":  true,
+                                                                              "editing_allow_during_execution":  true,
+                                                                              "index_display_enabled":  true,
+                                                                              "selection_scrolling_enabled":  true,
+                                                                              "smooth_scrolling_enabled":  true
+                                                                          },
+                                                             "column_offset":  0,
+                                                             "data_type_representation":  "u16",
+                                                             "element_count":  10,
+                                                             "elements":  [
+                                                                              {
+                                                                                  "column":  0,
+                                                                                  "defined":  true,
+                                                                                  "display":  "10",
+                                                                                  "enabled":  true,
+                                                                                  "id":  "i0",
+                                                                                  "indices":  [
+                                                                                                  0
+                                                                                              ],
+                                                                                  "row":  0,
+                                                                                  "value":  10
+                                                                              },
+                                                                              {
+                                                                                  "column":  0,
+                                                                                  "defined":  true,
+                                                                                  "display":  "20",
+                                                                                  "enabled":  true,
+                                                                                  "id":  "i1",
+                                                                                  "indices":  [
+                                                                                                  1
+                                                                                              ],
+                                                                                  "row":  1,
+                                                                                  "value":  20
+                                                                              },
+                                                                              {
+                                                                                  "column":  0,
+                                                                                  "defined":  true,
+                                                                                  "display":  "30",
+                                                                                  "enabled":  true,
+                                                                                  "id":  "i2",
+                                                                                  "indices":  [
+                                                                                                  2
+                                                                                              ],
+                                                                                  "row":  2,
+                                                                                  "value":  30
+                                                                              },
+                                                                              {
+                                                                                  "column":  0,
+                                                                                  "defined":  true,
+                                                                                  "display":  "40",
+                                                                                  "enabled":  true,
+                                                                                  "id":  "i3",
+                                                                                  "indices":  [
+                                                                                                  3
+                                                                                              ],
+                                                                                  "row":  3,
+                                                                                  "value":  40
+                                                                              },
+                                                                              {
+                                                                                  "column":  0,
+                                                                                  "defined":  true,
+                                                                                  "display":  "50",
+                                                                                  "enabled":  true,
+                                                                                  "id":  "i4",
+                                                                                  "indices":  [
+                                                                                                  4
+                                                                                              ],
+                                                                                  "row":  4,
+                                                                                  "value":  50
+                                                                              },
+                                                                              {
+                                                                                  "column":  0,
+                                                                                  "defined":  true,
+                                                                                  "display":  "60",
+                                                                                  "enabled":  true,
+                                                                                  "id":  "i5",
+                                                                                  "indices":  [
+                                                                                                  5
+                                                                                              ],
+                                                                                  "row":  5,
+                                                                                  "value":  60
+                                                                              },
+                                                                              {
+                                                                                  "column":  0,
+                                                                                  "defined":  true,
+                                                                                  "display":  "70",
+                                                                                  "enabled":  true,
+                                                                                  "id":  "i6",
+                                                                                  "indices":  [
+                                                                                                  6
+                                                                                              ],
+                                                                                  "row":  6,
+                                                                                  "value":  70
+                                                                              },
+                                                                              {
+                                                                                  "column":  0,
+                                                                                  "defined":  true,
+                                                                                  "display":  "80",
+                                                                                  "enabled":  true,
+                                                                                  "id":  "i7",
+                                                                                  "indices":  [
+                                                                                                  7
+                                                                                              ],
+                                                                                  "row":  7,
+                                                                                  "value":  80
+                                                                              },
+                                                                              {
+                                                                                  "column":  0,
+                                                                                  "defined":  true,
+                                                                                  "display":  "90",
+                                                                                  "enabled":  true,
+                                                                                  "id":  "i8",
+                                                                                  "indices":  [
+                                                                                                  8
+                                                                                              ],
+                                                                                  "row":  8,
+                                                                                  "value":  90
+                                                                              },
+                                                                              {
+                                                                                  "column":  0,
+                                                                                  "defined":  true,
+                                                                                  "display":  "100",
+                                                                                  "enabled":  true,
+                                                                                  "id":  "i9",
+                                                                                  "indices":  [
+                                                                                                  9
+                                                                                              ],
+                                                                                  "row":  9,
+                                                                                  "value":  100
+                                                                              }
+                                                                          ],
+                                                             "layer_offset":  0,
+                                                             "materialized_control_cell_count":  0,
+                                                             "max_column_offset":  0,
+                                                             "max_layer_offset":  0,
+                                                             "max_row_offset":  1,
+                                                             "pending_control_edit_count":  0,
+                                                             "published_parts":  [
+                                                                                     "root",
+                                                                                     "label",
+                                                                                     "caption",
+                                                                                     "frame",
+                                                                                     "index_display",
+                                                                                     "element_region",
+                                                                                     "element_slot",
+                                                                                     "selection_face",
+                                                                                     "active_element",
+                                                                                     "edit_overlay",
+                                                                                     "vertical_scrollbar",
+                                                                                     "horizontal_scrollbar",
+                                                                                     "focus_ring"
+                                                                                 ],
+                                                             "rank":  1,
+                                                             "row_offset":  0,
+                                                             "selection_mode":  "single_element",
+                                                             "selection_patch_policy":  "front_panel_state_without_program_read",
+                                                             "shape":  [
+                                                                           10
+                                                                       ],
+                                                             "style_array_region_border_color":  "#64748b",
+                                                             "style_array_region_border_width":  "0px",
+                                                             "style_array_region_fill_color":  "#ffffff",
+                                                             "style_selection_face_border_color":  "#2563eb",
+                                                             "style_selection_face_border_width":  "1px",
+                                                             "style_selection_face_fill_color":  "#dbeafe",
+                                                             "view_shape":  [
+                                                                                10
+                                                                            ],
+                                                             "visible_counts":  [
+                                                                                    9,
+                                                                                    1
+                                                                                ],
+                                                             "visible_items":  {
+                                                                                   "horizontal_lines_visible":  false,
+                                                                                   "horizontal_scrollbar_visible":  false,
+                                                                                   "index_display_visible":  true,
+                                                                                   "vertical_lines_visible":  false,
+                                                                                   "vertical_scrollbar_visible":  true
+                                                                               },
+                                                             "visual_shape":  [
+                                                                                  10,
+                                                                                  1
+                                                                              ],
+                                                             "visual_view_shape":  [
+                                                                                       10,
+                                                                                       1
+                                                                                   ]
+                                                         },
+                                             "value":  {
+                                                           "selected_element_id":  "i2",
+                                                           "selected_element_value":  30,
+                                                           "selected_indices":  [
+                                                                                    2
+                                                                                ]
+                                                       },
+                                             "widget_id":  "numeric_array"
+                                         },
+                       "array_indicator":  {
+                                               "class_ref":  "frog.widgets.array_indicator",
+                                               "layout":  {
+                                                              "height":  270,
+                                                              "width":  230,
+                                                              "x":  300,
+                                                              "y":  108
+                                                          },
+                                               "role":  "indicator",
+                                               "runtime":  {
+                                                               "asset_path":  "C:/Users/youss/TDF Dropbox/1_Graiphic/3 - Services et Etudes/5_FROG/Source/FROG/Examples/31_array_1d_visible_count_property_roundtrip\\./ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+                                                               "asset_ref":  "asset:array_shell_svg",
+                                                               "behavior":  {
+                                                                                "editable_elements":  false,
+                                                                                "editing_allow_during_execution":  true,
+                                                                                "index_display_enabled":  false,
+                                                                                "selection_scrolling_enabled":  true,
+                                                                                "smooth_scrolling_enabled":  true
+                                                                            },
+                                                               "column_offset":  0,
+                                                               "data_type_representation":  "u16",
+                                                               "layer_offset":  0,
+                                                               "materialized_indicator_cell_count":  0,
+                                                               "max_column_offset":  0,
+                                                               "max_layer_offset":  0,
+                                                               "max_row_offset":  1,
+                                                               "published_indicator_edit_count":  0,
+                                                               "rank":  1,
+                                                               "row_offset":  0,
+                                                               "selection_patch_policy":  "native_execution_result_only",
+                                                               "shape":  [
+                                                                             10
+                                                                         ],
+                                                               "view_shape":  [
+                                                                                  10
+                                                                              ],
+                                                               "visible_counts":  [
+                                                                                      9,
+                                                                                      1
+                                                                                  ],
+                                                               "visible_items":  {
+                                                                                     "horizontal_lines_visible":  false,
+                                                                                     "horizontal_scrollbar_visible":  false,
+                                                                                     "index_display_visible":  true,
+                                                                                     "vertical_lines_visible":  false,
+                                                                                     "vertical_scrollbar_visible":  true
+                                                                                 },
+                                                               "visual_shape":  [
+                                                                                    10,
+                                                                                    1
+                                                                                ],
+                                                               "visual_view_shape":  [
+                                                                                         10,
+                                                                                         1
+                                                                                     ]
+                                                           },
+                                               "value":  {
+                                                             "selected_element_id":  "i2",
+                                                             "selected_element_value":  30,
+                                                             "selected_indices":  [
+                                                                                      2
+                                                                                  ]
+                                                         },
+                                               "widget_id":  "published_array"
+                                           },
+                       "diagram_dataflow":  {
+                                                "array_records_declared":  true,
+                                                "native_kernel_reads_selected_element_value":  true,
+                                                "published_array_records_declared":  true,
+                                                "visible_count_property_write_consumed_on_execute":  true,
+                                                "visible_count_property_write_declared":  true
+                                            },
+                       "panel":  {
+                                     "documentation":  {
+                                                           "sections":  [
+                                                                            {
+                                                                                "body":  "The Numeric U8 control is front-panel state until Execute consumes it and writes numeric_array.viewport.visible_counts[0] and published_array.viewport.visible_counts[0].",
+                                                                                "title":  "Visible-count property"
+                                                                            },
+                                                                            {
+                                                                                "body":  "Each cell instantiates a Numeric element template. The Numeric widget owns per-cell value editing, value text, and numeric visual parts.",
+                                                                                "title":  "Numeric element"
+                                                                            },
+                                                                            {
+                                                                                "body":  "Execute consumes the selected Numeric element value through the native manifest corridor and publishes the value and vector records to the read-only Array indicator.",
+                                                                                "title":  "Execute"
+                                                                            }
+                                                                        ],
+                                                           "summary":  "A Numeric U8 control writes the visible-cell count of a one-dimensional Array through an explicit diagram property node. The Array still acts as a widget container whose visible cells instantiate Default Numeric widgets.",
+                                                           "title":  "Array 1D Visible Count Property Roundtrip"
+                                                       },
+                                     "layout":  {
+                                                    "height":  420,
+                                                    "units":  "px",
+                                                    "width":  620
+                                                },
+                                     "panel_id":  "main_panel",
+                                     "title":  "Array 1D Visible Count Property Roundtrip"
+                                 },
+                       "realization":  {
+                                           "default_array_asset_consumed":  true,
+                                           "host_overlay_alignment_parts":  [
+                                                                                "index_display",
+                                                                                "element_region",
+                                                                                "element_slot",
+                                                                                "vertical_scrollbar",
+                                                                                "horizontal_scrollbar"
+                                                                            ],
+                                           "wfrog_path":  "C:/Users/youss/TDF Dropbox/1_Graiphic/3 - Services et Etudes/5_FROG/Source/FROG/Examples/31_array_1d_visible_count_property_roundtrip\\./ui/array_panel.wfrog"
+                                       },
+                       "visible_count_control":  {
+                                                     "asset_path":  "C:/Users/youss/TDF Dropbox/1_Graiphic/3 - Services et Etudes/5_FROG/Source/FROG/Examples/31_array_1d_visible_count_property_roundtrip\\./ui\\../../../Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+                                                     "asset_ref":  "asset:numeric_rectangular_svg",
+                                                     "class_ref":  "frog.widgets.numeric_control",
+                                                     "data_type_representation":  "u8",
+                                                     "layout":  {
+                                                                    "height":  62,
+                                                                    "width":  150,
+                                                                    "x":  32,
+                                                                    "y":  28
+                                                                },
+                                                     "named_numeric_size":  "U8",
+                                                     "property_write_targets":  [
+                                                                                    "numeric_array.viewport.visible_counts[0]",
+                                                                                    "published_array.viewport.visible_counts[0]"
+                                                                                ],
+                                                     "role":  "control",
+                                                     "value":  9,
+                                                     "widget_id":  "visible_cell_count"
+                                                 }
+                   }
+}

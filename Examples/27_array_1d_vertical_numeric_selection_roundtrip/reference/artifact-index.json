@@ -1,0 +1,64 @@
+{
+  "example_id": "27_array_1d_vertical_numeric_selection_roundtrip",
+  "snapshot_role": "accepted_public_reference_snapshot",
+  "example_source_artifacts": [
+    {
+      "path": "Examples/27_array_1d_vertical_numeric_selection_roundtrip/Readme.md",
+      "sha256": "5aff28fb01b7c520aa9b6eaa1f8dc3d1e2b903f57efa2cbb9a623187eba7f2bc"
+    },
+    {
+      "path": "Examples/27_array_1d_vertical_numeric_selection_roundtrip/main.fir.json",
+      "sha256": "f000da7bd86b35e9e46dedf36c38b9a670f284d3b0bcdf01da48ec95197d23fe"
+    },
+    {
+      "path": "Examples/27_array_1d_vertical_numeric_selection_roundtrip/main.frog",
+      "sha256": "54a52699d71bfd2e16125ff060d41916817e85c3b1fbb5061b8fc5fbac4e91c6"
+    },
+    {
+      "path": "Examples/27_array_1d_vertical_numeric_selection_roundtrip/main.lowering.json",
+      "sha256": "95b0d8dba7ceab715188ad6c3dbc449e85e7f00c82af30bb89649cb1b9748c58"
+    },
+    {
+      "path": "Examples/27_array_1d_vertical_numeric_selection_roundtrip/ui/array_panel.wfrog",
+      "sha256": "44c331d8b4538ab42e853f1fc1ae43401f886d230126acffeb13fb777f224c41"
+    }
+  ],
+  "backend_artifacts": [
+    {
+      "path": "Implementations/Reference/LLVM/examples/27_array_1d_vertical_numeric_selection_roundtrip/kernel.ll",
+      "sha256": "8c85e9e0539fb2830e60f4e1f556009c8b888cd65d010863f2dc16b52b295005"
+    },
+    {
+      "path": "Implementations/Reference/LLVM/examples/27_array_1d_vertical_numeric_selection_roundtrip/native_kernel_manifest.json",
+      "sha256": "2f609d8e31be91deb6b4c8d963fd03abebefc558e6ae26327a5dcccc45f17f7a"
+    }
+  ],
+  "default_realization_artifacts": [
+    {
+      "path": "Examples/27_array_1d_vertical_numeric_selection_roundtrip/ui/../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+      "sha256": "77eea10878960fd6a1f47a41453f4b078acf914bed86392eea246cf4466b28d3"
+    },
+    {
+      "path": "Libraries/Realizations/Default/array.default.wfrog",
+      "sha256": "fca3f717f1aec4259ec7e94563708ae77503a3b72c54442666bfac27e5443204"
+    }
+  ],
+  "snapshot_artifacts": [
+    {
+      "path": "Examples/27_array_1d_vertical_numeric_selection_roundtrip/reference/screenshot.svg",
+      "sha256": "0d29db10d2fbe4fc581b5dbc0647778328b18f768d22d21af96683b3f0071be8"
+    },
+    {
+      "path": "Examples/27_array_1d_vertical_numeric_selection_roundtrip/reference/state.accepted.json",
+      "sha256": "ff3294f6842437add8e51bd84bf562c972826c92fe54d686596cb4da046ef730"
+    },
+    {
+      "path": "Examples/27_array_1d_vertical_numeric_selection_roundtrip/reference/visual-contract.md",
+      "sha256": "4c7e07767f17b628a3fbe044e5bd187762d6e13a19e73e7e9b59a75d69d26a95"
+    },
+    {
+      "path": "Examples/27_array_1d_vertical_numeric_selection_roundtrip/reference/visual-contract.json",
+      "sha256": "59e3b55c3ad770d29a6dc213c2f424d4327502a3619192556f6867d5a35355f1"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "example_id": "28_array_3d_numeric_selection_roundtrip",
+  "snapshot_role": "accepted_public_visual_reference",
+  "development_stage": "intermediate_non_widget_composed_array",
+  "final_runtime_rendering_target": false,
+  "successor_rendering_posture": "widget_composed_array_container_examples_29_30",
+  "validation_level": "post_public_runtime_boundary_cpp_accepted",
+  "host": {
+    "surface": "browser_host",
+    "runtime_family": "graiphic_private_runtime_cpp"
+  },
+  "title": "Array 3D Numeric Selection Roundtrip",
+  "widget_family": "Array",
+  "summary": "3D numeric Array control-to-indicator selected-element roundtrip using .frog-owned layer,row,column data and Default Array .wfrog realization assets.",
+  "widgets": [
+    {
+      "id": "numeric_array",
+      "class_ref": "frog.widgets.array_control",
+      "role": "control",
+      "label": null,
+      "layout": {
+        "x": 32,
+        "y": 34,
+        "width": 405,
+        "height": 300
+      },
+      "asset_ref": null,
+      "published_part": null
+    },
+    {
+      "id": "published_array",
+      "class_ref": "frog.widgets.array_indicator",
+      "role": "indicator",
+      "label": null,
+      "layout": {
+        "x": 465,
+        "y": 34,
+        "width": 405,
+        "height": 300
+      },
+      "asset_ref": null,
+      "published_part": null
+    }
+  ],
+  "required_surfaces": {
+    "source_owned": [
+      "diagram logic",
+      "widget instance ids",
+      "bindings",
+      "labels",
+      "layout",
+      "initial values",
+      "instance visual overrides"
+    ],
+    "wfrog_owned": [
+      "realization package references",
+      "Default asset ids",
+      "supported widget classes",
+      "host capability declarations"
+    ],
+    "default_svg_owned": [
+      "public data-frog parts",
+      "published anchors",
+      "published bindings",
+      "default visual behavior"
+    ],
+    "runtime_owned": [
+      "host interaction overlays aligned to published parts",
+      "manifest-backed execution orchestration"
+    ]
+  },
+  "consumed_asset_refs": [
+    "asset:array_shell_svg"
+  ],
+  "consumed_published_parts": [],
+  "notes": [
+    "Snapshot evidence is public example documentation, not private runtime source truth.",
+    "This is an intermediate non-widget-composed Array snapshot, not the final Array runtime rendering target.",
+    "Final Array rendering direction starts with the widget-composed container posture in Examples 29-30.",
+    "No HTML/CSS fallback widget may be considered valid without the Default SVG-backed surface."
+  ]
+}

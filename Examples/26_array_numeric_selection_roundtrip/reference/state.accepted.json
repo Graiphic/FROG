@@ -1,19 +1,19 @@
-﻿{
+{
   "native_kernel_manifest": {
     "abi": "frog_u16_to_result_status_outptr",
-    "artifact_library": "frog_example33_array_2d_numeric_container_kernel.dll",
+    "artifact_library": "frog_example26_array_kernel.dll",
     "backend_artifact_kind": "native_dynamic_library",
     "backend_family": "llvm",
     "entry_invoked_by_runtime": false,
-    "entry_symbol": "frog_example33_run",
+    "entry_symbol": "frog_example26_run",
     "input_id": "element_value",
     "input_type": "u16",
-    "kernel_id": "example33_array_2d_numeric_container_roundtrip_kernel",
+    "kernel_id": "example26_array_numeric_selection_roundtrip_kernel",
     "output_id": "selected_element_value",
     "output_type": "u16",
-    "path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Implementations\\Reference\\LLVM\\examples\\33_array_2d_numeric_container_roundtrip\\native_kernel_manifest.json",
-    "source_artifact": "Implementations/Reference/LLVM/examples/33_array_2d_numeric_container_roundtrip/kernel.ll",
-    "source_lowered_unit": "Examples/33_array_2d_numeric_container_roundtrip/main.lowering.json"
+    "path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Implementations\\Reference\\LLVM\\examples\\26_array_numeric_selection_roundtrip\\native_kernel_manifest.json",
+    "source_artifact": "Implementations/Reference/LLVM/examples/26_array_numeric_selection_roundtrip/kernel.ll",
+    "source_lowered_unit": "Examples/26_array_numeric_selection_roundtrip/main.lowering.json"
   },
   "outputs": {
     "public": {
@@ -23,7 +23,7 @@
         {
           "column": 0,
           "defined": true,
-          "display": "0",
+          "display": "10",
           "enabled": true,
           "id": "r0c0",
           "indices": [
@@ -31,12 +31,12 @@
             0
           ],
           "row": 0,
-          "value": 0
+          "value": 10
         },
         {
           "column": 1,
           "defined": true,
-          "display": "0",
+          "display": "20",
           "enabled": true,
           "id": "r0c1",
           "indices": [
@@ -44,12 +44,12 @@
             1
           ],
           "row": 0,
-          "value": 0
+          "value": 20
         },
         {
           "column": 2,
           "defined": true,
-          "display": "0",
+          "display": "30",
           "enabled": true,
           "id": "r0c2",
           "indices": [
@@ -57,12 +57,12 @@
             2
           ],
           "row": 0,
-          "value": 0
+          "value": 30
         },
         {
           "column": 3,
           "defined": true,
-          "display": "0",
+          "display": "40",
           "enabled": true,
           "id": "r0c3",
           "indices": [
@@ -70,12 +70,12 @@
             3
           ],
           "row": 0,
-          "value": 0
+          "value": 40
         },
         {
           "column": 4,
           "defined": true,
-          "display": "0",
+          "display": "50",
           "enabled": true,
           "id": "r0c4",
           "indices": [
@@ -83,25 +83,12 @@
             4
           ],
           "row": 0,
-          "value": 0
-        },
-        {
-          "column": 5,
-          "defined": true,
-          "display": "0",
-          "enabled": true,
-          "id": "r0c5",
-          "indices": [
-            0,
-            5
-          ],
-          "row": 0,
-          "value": 0
+          "value": 50
         },
         {
           "column": 0,
           "defined": true,
-          "display": "2",
+          "display": "60",
           "enabled": true,
           "id": "r1c0",
           "indices": [
@@ -109,12 +96,12 @@
             0
           ],
           "row": 1,
-          "value": 2
+          "value": 60
         },
         {
           "column": 1,
           "defined": true,
-          "display": "0",
+          "display": "70",
           "enabled": true,
           "id": "r1c1",
           "indices": [
@@ -122,12 +109,12 @@
             1
           ],
           "row": 1,
-          "value": 0
+          "value": 70
         },
         {
           "column": 2,
           "defined": true,
-          "display": "0",
+          "display": "80",
           "enabled": true,
           "id": "r1c2",
           "indices": [
@@ -135,12 +122,12 @@
             2
           ],
           "row": 1,
-          "value": 0
+          "value": 80
         },
         {
           "column": 3,
           "defined": true,
-          "display": "0",
+          "display": "90",
           "enabled": true,
           "id": "r1c3",
           "indices": [
@@ -148,12 +135,12 @@
             3
           ],
           "row": 1,
-          "value": 0
+          "value": 90
         },
         {
           "column": 4,
           "defined": true,
-          "display": "0",
+          "display": "100",
           "enabled": true,
           "id": "r1c4",
           "indices": [
@@ -161,25 +148,12 @@
             4
           ],
           "row": 1,
-          "value": 0
-        },
-        {
-          "column": 5,
-          "defined": true,
-          "display": "0",
-          "enabled": true,
-          "id": "r1c5",
-          "indices": [
-            1,
-            5
-          ],
-          "row": 1,
-          "value": 0
+          "value": 100
         },
         {
           "column": 0,
           "defined": true,
-          "display": "0",
+          "display": "110",
           "enabled": true,
           "id": "r2c0",
           "indices": [
@@ -187,12 +161,12 @@
             0
           ],
           "row": 2,
-          "value": 0
+          "value": 110
         },
         {
           "column": 1,
           "defined": true,
-          "display": "3",
+          "display": "120",
           "enabled": true,
           "id": "r2c1",
           "indices": [
@@ -200,12 +174,12 @@
             1
           ],
           "row": 2,
-          "value": 3
+          "value": 120
         },
         {
           "column": 2,
           "defined": true,
-          "display": "0",
+          "display": "130",
           "enabled": true,
           "id": "r2c2",
           "indices": [
@@ -213,12 +187,12 @@
             2
           ],
           "row": 2,
-          "value": 0
+          "value": 130
         },
         {
           "column": 3,
           "defined": true,
-          "display": "0",
+          "display": "140",
           "enabled": true,
           "id": "r2c3",
           "indices": [
@@ -226,12 +200,12 @@
             3
           ],
           "row": 2,
-          "value": 0
+          "value": 140
         },
         {
           "column": 4,
           "defined": true,
-          "display": "0",
+          "display": "150",
           "enabled": true,
           "id": "r2c4",
           "indices": [
@@ -239,25 +213,12 @@
             4
           ],
           "row": 2,
-          "value": 0
-        },
-        {
-          "column": 5,
-          "defined": true,
-          "display": "0",
-          "enabled": true,
-          "id": "r2c5",
-          "indices": [
-            2,
-            5
-          ],
-          "row": 2,
-          "value": 0
+          "value": 150
         },
         {
           "column": 0,
           "defined": true,
-          "display": "4",
+          "display": "160",
           "enabled": true,
           "id": "r3c0",
           "indices": [
@@ -265,12 +226,12 @@
             0
           ],
           "row": 3,
-          "value": 4
+          "value": 160
         },
         {
           "column": 1,
           "defined": true,
-          "display": "0",
+          "display": "170",
           "enabled": true,
           "id": "r3c1",
           "indices": [
@@ -278,12 +239,12 @@
             1
           ],
           "row": 3,
-          "value": 0
+          "value": 170
         },
         {
           "column": 2,
           "defined": true,
-          "display": "0",
+          "display": "180",
           "enabled": true,
           "id": "r3c2",
           "indices": [
@@ -291,12 +252,12 @@
             2
           ],
           "row": 3,
-          "value": 0
+          "value": 180
         },
         {
           "column": 3,
           "defined": true,
-          "display": "0",
+          "display": "190",
           "enabled": true,
           "id": "r3c3",
           "indices": [
@@ -304,12 +265,12 @@
             3
           ],
           "row": 3,
-          "value": 0
+          "value": 190
         },
         {
           "column": 4,
           "defined": true,
-          "display": "0",
+          "display": "200",
           "enabled": true,
           "id": "r3c4",
           "indices": [
@@ -317,25 +278,12 @@
             4
           ],
           "row": 3,
-          "value": 0
-        },
-        {
-          "column": 5,
-          "defined": true,
-          "display": "0",
-          "enabled": true,
-          "id": "r3c5",
-          "indices": [
-            3,
-            5
-          ],
-          "row": 3,
-          "value": 0
+          "value": 200
         },
         {
           "column": 0,
           "defined": true,
-          "display": "0",
+          "display": "210",
           "enabled": true,
           "id": "r4c0",
           "indices": [
@@ -343,12 +291,12 @@
             0
           ],
           "row": 4,
-          "value": 0
+          "value": 210
         },
         {
           "column": 1,
           "defined": true,
-          "display": "5",
+          "display": "220",
           "enabled": true,
           "id": "r4c1",
           "indices": [
@@ -356,12 +304,12 @@
             1
           ],
           "row": 4,
-          "value": 5
+          "value": 220
         },
         {
           "column": 2,
           "defined": true,
-          "display": "0",
+          "display": "230",
           "enabled": true,
           "id": "r4c2",
           "indices": [
@@ -369,12 +317,12 @@
             2
           ],
           "row": 4,
-          "value": 0
+          "value": 230
         },
         {
           "column": 3,
           "defined": true,
-          "display": "0",
+          "display": "240",
           "enabled": true,
           "id": "r4c3",
           "indices": [
@@ -382,12 +330,12 @@
             3
           ],
           "row": 4,
-          "value": 0
+          "value": 240
         },
         {
           "column": 4,
           "defined": true,
-          "display": "0",
+          "display": "250",
           "enabled": true,
           "id": "r4c4",
           "indices": [
@@ -395,47 +343,164 @@
             4
           ],
           "row": 4,
-          "value": 0
+          "value": 250
         },
         {
-          "column": 5,
+          "column": 0,
           "defined": true,
-          "display": "0",
+          "display": "260",
           "enabled": true,
-          "id": "r4c5",
+          "id": "r5c0",
           "indices": [
-            4,
-            5
+            5,
+            0
           ],
-          "row": 4,
-          "value": 0
+          "row": 5,
+          "value": 260
+        },
+        {
+          "column": 1,
+          "defined": true,
+          "display": "270",
+          "enabled": true,
+          "id": "r5c1",
+          "indices": [
+            5,
+            1
+          ],
+          "row": 5,
+          "value": 270
+        },
+        {
+          "column": 2,
+          "defined": true,
+          "display": "280",
+          "enabled": true,
+          "id": "r5c2",
+          "indices": [
+            5,
+            2
+          ],
+          "row": 5,
+          "value": 280
+        },
+        {
+          "column": 3,
+          "defined": true,
+          "display": "290",
+          "enabled": true,
+          "id": "r5c3",
+          "indices": [
+            5,
+            3
+          ],
+          "row": 5,
+          "value": 290
+        },
+        {
+          "column": 4,
+          "defined": true,
+          "display": "300",
+          "enabled": true,
+          "id": "r5c4",
+          "indices": [
+            5,
+            4
+          ],
+          "row": 5,
+          "value": 300
+        },
+        {
+          "column": 0,
+          "defined": true,
+          "display": "310",
+          "enabled": true,
+          "id": "r6c0",
+          "indices": [
+            6,
+            0
+          ],
+          "row": 6,
+          "value": 310
+        },
+        {
+          "column": 1,
+          "defined": true,
+          "display": "320",
+          "enabled": true,
+          "id": "r6c1",
+          "indices": [
+            6,
+            1
+          ],
+          "row": 6,
+          "value": 320
+        },
+        {
+          "column": 2,
+          "defined": true,
+          "display": "330",
+          "enabled": true,
+          "id": "r6c2",
+          "indices": [
+            6,
+            2
+          ],
+          "row": 6,
+          "value": 330
+        },
+        {
+          "column": 3,
+          "defined": true,
+          "display": "340",
+          "enabled": true,
+          "id": "r6c3",
+          "indices": [
+            6,
+            3
+          ],
+          "row": 6,
+          "value": 340
+        },
+        {
+          "column": 4,
+          "defined": true,
+          "display": "350",
+          "enabled": true,
+          "id": "r6c4",
+          "indices": [
+            6,
+            4
+          ],
+          "row": 6,
+          "value": 350
         }
       ],
-      "selected_element_id": "r2c1",
-      "selected_element_value": 3,
+      "selected_element_id": "r1c1",
+      "selected_element_value": 70,
       "selected_indices": [
-        2,
+        1,
         1
       ]
     }
   },
   "runtime_family": "graiphic_private_runtime_cpp",
   "source_ref": {
-    "example_id": "33_array_2d_numeric_container_roundtrip",
-    "path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\33_array_2d_numeric_container_roundtrip\\main.frog"
+    "example_id": "26_array_numeric_selection_roundtrip",
+    "path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\26_array_numeric_selection_roundtrip\\main.frog"
   },
   "ui_runtime": {
     "array_control": {
       "class_ref": "frog.widgets.array_control",
       "layout": {
-        "height": 238,
-        "width": 390,
+        "height": 300,
+        "width": 405,
         "x": 32,
-        "y": 34
+        "y": 30
       },
       "role": "control",
       "runtime": {
-        "asset_path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\33_array_2d_numeric_container_roundtrip\\ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+        "asset_path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\26_array_numeric_selection_roundtrip\\./ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
         "asset_ref": "asset:array_shell_svg",
         "behavior": {
           "editable_elements": true,
@@ -446,12 +511,12 @@
         },
         "column_offset": 0,
         "data_type_representation": "u16",
-        "element_count": 30,
+        "element_count": 35,
         "elements": [
           {
             "column": 0,
             "defined": true,
-            "display": "0",
+            "display": "10",
             "enabled": true,
             "id": "r0c0",
             "indices": [
@@ -459,12 +524,12 @@
               0
             ],
             "row": 0,
-            "value": 0
+            "value": 10
           },
           {
             "column": 1,
             "defined": true,
-            "display": "0",
+            "display": "20",
             "enabled": true,
             "id": "r0c1",
             "indices": [
@@ -472,12 +537,12 @@
               1
             ],
             "row": 0,
-            "value": 0
+            "value": 20
           },
           {
             "column": 2,
             "defined": true,
-            "display": "0",
+            "display": "30",
             "enabled": true,
             "id": "r0c2",
             "indices": [
@@ -485,12 +550,12 @@
               2
             ],
             "row": 0,
-            "value": 0
+            "value": 30
           },
           {
             "column": 3,
             "defined": true,
-            "display": "0",
+            "display": "40",
             "enabled": true,
             "id": "r0c3",
             "indices": [
@@ -498,12 +563,12 @@
               3
             ],
             "row": 0,
-            "value": 0
+            "value": 40
           },
           {
             "column": 4,
             "defined": true,
-            "display": "0",
+            "display": "50",
             "enabled": true,
             "id": "r0c4",
             "indices": [
@@ -511,25 +576,12 @@
               4
             ],
             "row": 0,
-            "value": 0
-          },
-          {
-            "column": 5,
-            "defined": true,
-            "display": "0",
-            "enabled": true,
-            "id": "r0c5",
-            "indices": [
-              0,
-              5
-            ],
-            "row": 0,
-            "value": 0
+            "value": 50
           },
           {
             "column": 0,
             "defined": true,
-            "display": "2",
+            "display": "60",
             "enabled": true,
             "id": "r1c0",
             "indices": [
@@ -537,12 +589,12 @@
               0
             ],
             "row": 1,
-            "value": 2
+            "value": 60
           },
           {
             "column": 1,
             "defined": true,
-            "display": "0",
+            "display": "70",
             "enabled": true,
             "id": "r1c1",
             "indices": [
@@ -550,12 +602,12 @@
               1
             ],
             "row": 1,
-            "value": 0
+            "value": 70
           },
           {
             "column": 2,
             "defined": true,
-            "display": "0",
+            "display": "80",
             "enabled": true,
             "id": "r1c2",
             "indices": [
@@ -563,12 +615,12 @@
               2
             ],
             "row": 1,
-            "value": 0
+            "value": 80
           },
           {
             "column": 3,
             "defined": true,
-            "display": "0",
+            "display": "90",
             "enabled": true,
             "id": "r1c3",
             "indices": [
@@ -576,12 +628,12 @@
               3
             ],
             "row": 1,
-            "value": 0
+            "value": 90
           },
           {
             "column": 4,
             "defined": true,
-            "display": "0",
+            "display": "100",
             "enabled": true,
             "id": "r1c4",
             "indices": [
@@ -589,25 +641,12 @@
               4
             ],
             "row": 1,
-            "value": 0
-          },
-          {
-            "column": 5,
-            "defined": true,
-            "display": "0",
-            "enabled": true,
-            "id": "r1c5",
-            "indices": [
-              1,
-              5
-            ],
-            "row": 1,
-            "value": 0
+            "value": 100
           },
           {
             "column": 0,
             "defined": true,
-            "display": "0",
+            "display": "110",
             "enabled": true,
             "id": "r2c0",
             "indices": [
@@ -615,12 +654,12 @@
               0
             ],
             "row": 2,
-            "value": 0
+            "value": 110
           },
           {
             "column": 1,
             "defined": true,
-            "display": "3",
+            "display": "120",
             "enabled": true,
             "id": "r2c1",
             "indices": [
@@ -628,12 +667,12 @@
               1
             ],
             "row": 2,
-            "value": 3
+            "value": 120
           },
           {
             "column": 2,
             "defined": true,
-            "display": "0",
+            "display": "130",
             "enabled": true,
             "id": "r2c2",
             "indices": [
@@ -641,12 +680,12 @@
               2
             ],
             "row": 2,
-            "value": 0
+            "value": 130
           },
           {
             "column": 3,
             "defined": true,
-            "display": "0",
+            "display": "140",
             "enabled": true,
             "id": "r2c3",
             "indices": [
@@ -654,12 +693,12 @@
               3
             ],
             "row": 2,
-            "value": 0
+            "value": 140
           },
           {
             "column": 4,
             "defined": true,
-            "display": "0",
+            "display": "150",
             "enabled": true,
             "id": "r2c4",
             "indices": [
@@ -667,25 +706,12 @@
               4
             ],
             "row": 2,
-            "value": 0
-          },
-          {
-            "column": 5,
-            "defined": true,
-            "display": "0",
-            "enabled": true,
-            "id": "r2c5",
-            "indices": [
-              2,
-              5
-            ],
-            "row": 2,
-            "value": 0
+            "value": 150
           },
           {
             "column": 0,
             "defined": true,
-            "display": "4",
+            "display": "160",
             "enabled": true,
             "id": "r3c0",
             "indices": [
@@ -693,12 +719,12 @@
               0
             ],
             "row": 3,
-            "value": 4
+            "value": 160
           },
           {
             "column": 1,
             "defined": true,
-            "display": "0",
+            "display": "170",
             "enabled": true,
             "id": "r3c1",
             "indices": [
@@ -706,12 +732,12 @@
               1
             ],
             "row": 3,
-            "value": 0
+            "value": 170
           },
           {
             "column": 2,
             "defined": true,
-            "display": "0",
+            "display": "180",
             "enabled": true,
             "id": "r3c2",
             "indices": [
@@ -719,12 +745,12 @@
               2
             ],
             "row": 3,
-            "value": 0
+            "value": 180
           },
           {
             "column": 3,
             "defined": true,
-            "display": "0",
+            "display": "190",
             "enabled": true,
             "id": "r3c3",
             "indices": [
@@ -732,12 +758,12 @@
               3
             ],
             "row": 3,
-            "value": 0
+            "value": 190
           },
           {
             "column": 4,
             "defined": true,
-            "display": "0",
+            "display": "200",
             "enabled": true,
             "id": "r3c4",
             "indices": [
@@ -745,25 +771,12 @@
               4
             ],
             "row": 3,
-            "value": 0
-          },
-          {
-            "column": 5,
-            "defined": true,
-            "display": "0",
-            "enabled": true,
-            "id": "r3c5",
-            "indices": [
-              3,
-              5
-            ],
-            "row": 3,
-            "value": 0
+            "value": 200
           },
           {
             "column": 0,
             "defined": true,
-            "display": "0",
+            "display": "210",
             "enabled": true,
             "id": "r4c0",
             "indices": [
@@ -771,12 +784,12 @@
               0
             ],
             "row": 4,
-            "value": 0
+            "value": 210
           },
           {
             "column": 1,
             "defined": true,
-            "display": "5",
+            "display": "220",
             "enabled": true,
             "id": "r4c1",
             "indices": [
@@ -784,12 +797,12 @@
               1
             ],
             "row": 4,
-            "value": 5
+            "value": 220
           },
           {
             "column": 2,
             "defined": true,
-            "display": "0",
+            "display": "230",
             "enabled": true,
             "id": "r4c2",
             "indices": [
@@ -797,12 +810,12 @@
               2
             ],
             "row": 4,
-            "value": 0
+            "value": 230
           },
           {
             "column": 3,
             "defined": true,
-            "display": "0",
+            "display": "240",
             "enabled": true,
             "id": "r4c3",
             "indices": [
@@ -810,12 +823,12 @@
               3
             ],
             "row": 4,
-            "value": 0
+            "value": 240
           },
           {
             "column": 4,
             "defined": true,
-            "display": "0",
+            "display": "250",
             "enabled": true,
             "id": "r4c4",
             "indices": [
@@ -823,25 +836,142 @@
               4
             ],
             "row": 4,
-            "value": 0
+            "value": 250
           },
           {
-            "column": 5,
+            "column": 0,
             "defined": true,
-            "display": "0",
+            "display": "260",
             "enabled": true,
-            "id": "r4c5",
+            "id": "r5c0",
             "indices": [
-              4,
-              5
+              5,
+              0
             ],
-            "row": 4,
-            "value": 0
+            "row": 5,
+            "value": 260
+          },
+          {
+            "column": 1,
+            "defined": true,
+            "display": "270",
+            "enabled": true,
+            "id": "r5c1",
+            "indices": [
+              5,
+              1
+            ],
+            "row": 5,
+            "value": 270
+          },
+          {
+            "column": 2,
+            "defined": true,
+            "display": "280",
+            "enabled": true,
+            "id": "r5c2",
+            "indices": [
+              5,
+              2
+            ],
+            "row": 5,
+            "value": 280
+          },
+          {
+            "column": 3,
+            "defined": true,
+            "display": "290",
+            "enabled": true,
+            "id": "r5c3",
+            "indices": [
+              5,
+              3
+            ],
+            "row": 5,
+            "value": 290
+          },
+          {
+            "column": 4,
+            "defined": true,
+            "display": "300",
+            "enabled": true,
+            "id": "r5c4",
+            "indices": [
+              5,
+              4
+            ],
+            "row": 5,
+            "value": 300
+          },
+          {
+            "column": 0,
+            "defined": true,
+            "display": "310",
+            "enabled": true,
+            "id": "r6c0",
+            "indices": [
+              6,
+              0
+            ],
+            "row": 6,
+            "value": 310
+          },
+          {
+            "column": 1,
+            "defined": true,
+            "display": "320",
+            "enabled": true,
+            "id": "r6c1",
+            "indices": [
+              6,
+              1
+            ],
+            "row": 6,
+            "value": 320
+          },
+          {
+            "column": 2,
+            "defined": true,
+            "display": "330",
+            "enabled": true,
+            "id": "r6c2",
+            "indices": [
+              6,
+              2
+            ],
+            "row": 6,
+            "value": 330
+          },
+          {
+            "column": 3,
+            "defined": true,
+            "display": "340",
+            "enabled": true,
+            "id": "r6c3",
+            "indices": [
+              6,
+              3
+            ],
+            "row": 6,
+            "value": 340
+          },
+          {
+            "column": 4,
+            "defined": true,
+            "display": "350",
+            "enabled": true,
+            "id": "r6c4",
+            "indices": [
+              6,
+              4
+            ],
+            "row": 6,
+            "value": 350
           }
         ],
         "layer_offset": 0,
         "materialized_control_cell_count": 0,
-        "max_column_offset": 3,
+        "max_column_offset": 2,
         "max_layer_offset": 0,
         "max_row_offset": 2,
         "pending_control_edit_count": 0,
@@ -865,44 +995,44 @@
         "selection_mode": "single_element",
         "selection_patch_policy": "front_panel_state_without_program_read",
         "shape": [
-          5,
-          6
+          7,
+          5
         ],
         "style_array_region_border_color": "#64748b",
-        "style_array_region_border_width": "0px",
+        "style_array_region_border_width": "1px",
         "style_array_region_fill_color": "#ffffff",
         "style_selection_face_border_color": "#2563eb",
         "style_selection_face_border_width": "1px",
         "style_selection_face_fill_color": "#dbeafe",
         "view_shape": [
-          5,
-          6
+          7,
+          5
         ],
         "visible_counts": [
-          3,
+          5,
           3
         ],
         "visible_items": {
-          "horizontal_lines_visible": false,
+          "horizontal_lines_visible": true,
           "horizontal_scrollbar_visible": true,
           "index_display_visible": true,
-          "vertical_lines_visible": false,
+          "vertical_lines_visible": true,
           "vertical_scrollbar_visible": true
         },
         "visual_shape": [
-          5,
-          6
+          7,
+          5
         ],
         "visual_view_shape": [
-          5,
-          6
+          7,
+          5
         ]
       },
       "value": {
-        "selected_element_id": "r2c1",
-        "selected_element_value": 3,
+        "selected_element_id": "r1c1",
+        "selected_element_value": 70,
         "selected_indices": [
-          2,
+          1,
           1
         ]
       },
@@ -911,19 +1041,19 @@
     "array_indicator": {
       "class_ref": "frog.widgets.array_indicator",
       "layout": {
-        "height": 238,
-        "width": 365,
-        "x": 468,
-        "y": 34
+        "height": 300,
+        "width": 405,
+        "x": 465,
+        "y": 30
       },
       "role": "indicator",
       "runtime": {
-        "asset_path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\33_array_2d_numeric_container_roundtrip\\ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+        "asset_path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\26_array_numeric_selection_roundtrip\\./ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
         "asset_ref": "asset:array_shell_svg",
         "behavior": {
           "editable_elements": false,
-          "editing_allow_during_execution": true,
-          "index_display_enabled": false,
+          "editing_allow_during_execution": false,
+          "index_display_enabled": true,
           "selection_scrolling_enabled": true,
           "smooth_scrolling_enabled": true
         },
@@ -931,7 +1061,7 @@
         "data_type_representation": "u16",
         "layer_offset": 0,
         "materialized_indicator_cell_count": 0,
-        "max_column_offset": 3,
+        "max_column_offset": 2,
         "max_layer_offset": 0,
         "max_row_offset": 2,
         "published_indicator_edit_count": 0,
@@ -939,38 +1069,34 @@
         "row_offset": 0,
         "selection_patch_policy": "native_execution_result_only",
         "shape": [
-          5,
-          6
+          7,
+          5
         ],
         "view_shape": [
-          5,
-          6
-        ],
-        "visible_counts": [
-          3,
-          3
+          7,
+          5
         ],
         "visible_items": {
-          "horizontal_lines_visible": false,
+          "horizontal_lines_visible": true,
           "horizontal_scrollbar_visible": true,
           "index_display_visible": true,
-          "vertical_lines_visible": false,
+          "vertical_lines_visible": true,
           "vertical_scrollbar_visible": true
         },
         "visual_shape": [
-          5,
-          6
+          7,
+          5
         ],
         "visual_view_shape": [
-          5,
-          6
+          7,
+          5
         ]
       },
       "value": {
-        "selected_element_id": "r2c1",
-        "selected_element_value": 3,
+        "selected_element_id": "r1c1",
+        "selected_element_value": 70,
         "selected_indices": [
-          2,
+          1,
           1
         ]
       },
@@ -979,36 +1105,35 @@
     "diagram_dataflow": {
       "array_records_declared": true,
       "native_kernel_reads_selected_element_value": true,
-      "published_array_records_declared": true,
-      "visible_count_property_write_consumed_on_execute": false,
-      "visible_count_property_write_declared": false
+      "published_array_records_declared": true
     },
     "panel": {
       "documentation": {
-        "sections": [
+        "legend": [
           {
-            "body": "The Array owns rank 2, shape, index displays, viewport, scrolling, materialization, and repeated-cell layout.",
-            "title": "Array container"
+            "description": "Click or edit an element. Index displays and scrollbars adjust only viewport state until Execute.",
+            "label": "Array control"
           },
           {
-            "body": "Each visible cell instantiates a Numeric element template. Control cells keep increment/decrement buttons; indicator cells are read-only and visually greyed.",
-            "title": "Numeric element"
+            "description": "Execute reads the selected u16 element through the manifest-backed native corridor.",
+            "label": "Execute"
           },
           {
-            "body": "Execute consumes the selected Numeric element value through the native manifest corridor and publishes the value and matrix records to the read-only Array indicator.",
-            "title": "Execute"
+            "description": "Read-only Array display patched from the declared dataflow output after Execute.",
+            "label": "Array indicator"
           }
         ],
-        "summary": "A two-dimensional Array can act as a widget container. This example binds each visible Array cell to the Default Numeric widget so the Array manages dimensions and scrolling while the contained Numeric widgets keep their own control/indicator posture.",
-        "title": "Array 2D Numeric Container Roundtrip"
+        "note": "The runtime may provide host overlays for element cells, index displays, and scrollbars, but they must align to Default Array SVG parts and consume .frog-owned dimensions, elements, viewport, interaction, and style data.",
+        "summary": "An Array presents a homogeneous collection. This example uses a 2D u16 Array control and read-only indicator. Selecting or editing an element changes front-panel state; Execute consumes the selected element through the native manifest and publishes the declared array-record flow to the indicator.",
+        "title": "Array numeric selection"
       },
       "layout": {
-        "height": 330,
-        "units": "px",
+        "coordinate_space": "panel_pixels",
+        "height": 410,
         "width": 900
       },
       "panel_id": "main_panel",
-      "title": "Array 2D Numeric Container Roundtrip"
+      "title": "Array 2D Numeric Selection Roundtrip"
     },
     "realization": {
       "default_array_asset_consumed": true,
@@ -1019,9 +1144,7 @@
         "vertical_scrollbar",
         "horizontal_scrollbar"
       ],
-      "wfrog_path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\33_array_2d_numeric_container_roundtrip\\ui\\array_panel.wfrog"
-    },
-    "visible_count_control": null,
-    "visible_count_controls": null
+      "wfrog_path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\26_array_numeric_selection_roundtrip\\./ui/array_panel.wfrog"
+    }
   }
 }

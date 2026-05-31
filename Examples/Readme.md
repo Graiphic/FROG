@@ -73,10 +73,16 @@ boundary.
 
 <h2>Current Example Progression</h2>
 
+<p>
+Last worked dates use ISO 8601 format and record the latest known public example-dossier work date.
+They are traceability metadata only; they are not FROG language versions and they do not redefine the validation boundary.
+</p>
+
 <table>
   <thead>
     <tr>
       <th>Example</th>
+      <th>Last worked</th>
       <th>Focus</th>
       <th>Starts at</th>
       <th>Current repository status</th>
@@ -85,181 +91,239 @@ boundary.
   <tbody>
     <tr>
       <td><code>01_pure_addition</code></td>
+      <td><time datetime="2026-05-15">2026-05-15</time></td>
       <td>Pure public-interface arithmetic</td>
       <td><code>main.frog</code></td>
       <td><code>FIR → lowering → contract → runtime → LLVM</code></td>
     </tr>
     <tr>
       <td><code>02_ui_value_roundtrip</code></td>
+      <td><time datetime="2026-05-15">2026-05-15</time></td>
       <td>Natural widget-value participation</td>
       <td><code>main.frog</code> with inline front panel</td>
       <td><code>FIR → lowering → contract → runtime → LLVM</code></td>
     </tr>
     <tr>
       <td><code>03_ui_property_write</code></td>
+      <td><time datetime="2026-05-15">2026-05-15</time></td>
       <td>Object-style widget reference and property write</td>
       <td><code>main.frog</code> with inline front panel</td>
       <td><code>FIR → lowering → contract → runtime → LLVM</code></td>
     </tr>
     <tr>
       <td><code>04_stateful_feedback_delay</code></td>
+      <td><time datetime="2026-05-15">2026-05-15</time></td>
       <td>Explicit state and feedback through <code>frog.core.delay</code></td>
       <td><code>main.frog</code></td>
       <td><code>FIR → lowering → contract → runtime → LLVM</code></td>
     </tr>
     <tr>
       <td><code>05_bounded_ui_accumulator</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Full bounded UI accumulator corridor</td>
       <td><code>main.frog</code> + <code>ui/accumulator_panel.wfrog</code></td>
       <td><code>FIR → lowering → contract → runtime acceptance → LLVM module/native proof</code></td>
     </tr>
     <tr>
       <td><code>06_boolean_value_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Boolean control/indicator value roundtrip</td>
       <td><code>main.frog</code> + <code>ui/boolean_panel.wfrog</code></td>
       <td><code>FIR → lowering → contract → LLVM native manifest → C++/Python/Rust runtime bridge → Default Boolean realization</code></td>
     </tr>
     <tr>
       <td><code>07_string_value_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>String control/indicator hello-world roundtrip</td>
       <td><code>main.frog</code> + <code>ui/string_panel.wfrog</code></td>
       <td><code>FIR → lowering → contract → LLVM native manifest → C++/Python/Rust runtime bridge → Default String realization</code></td>
     </tr>
     <tr>
       <td><code>08_enum_value_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Enum control/indicator mode roundtrip</td>
       <td><code>main.frog</code> + <code>ui/enum_panel.wfrog</code></td>
       <td><code>FIR → lowering → contract → LLVM native manifest → C++/Python/Rust runtime bridge → Default Enum realization</code></td>
     </tr>
     <tr>
       <td><code>09_path_value_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Path control/indicator value roundtrip</td>
       <td><code>main.frog</code> + <code>ui/path_panel.wfrog</code></td>
       <td><code>FIR → lowering → contract → LLVM native manifest → C++/Python/Rust runtime bridge → Default Path realization</code></td>
     </tr>
     <tr>
       <td><code>10_button_press_to_boolean</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Button <code>switch_until_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
       <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
     </tr>
     <tr>
       <td><code>11_button_switch_when_pressed</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Button <code>switch_when_pressed</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
       <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
     </tr>
     <tr>
       <td><code>12_button_switch_when_released</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Button <code>switch_when_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
       <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
     </tr>
     <tr>
       <td><code>13_button_latch_when_pressed</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Button <code>latch_when_pressed</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
       <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
     </tr>
     <tr>
       <td><code>14_button_latch_when_released</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Button <code>latch_when_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
       <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
     </tr>
     <tr>
       <td><code>15_button_latch_until_released</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Button <code>latch_until_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
       <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
     </tr>
     <tr>
       <td><code>16_picture_logo_jpeg</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Path-selected PNG/JPEG/BMP decoded by <code>frog.image.decode_file_rgba8</code> and displayed by a Picture indicator</td>
       <td><code>main.frog</code> + <code>ui/picture_panel.wfrog</code> + <code>assets/frog_logo.jpg</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>17_label_typography_board</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Standalone Label support widgets with source-owned typography, frames, backgrounds, and annotation text</td>
       <td><code>main.frog</code> + <code>ui/label_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>18_decoration_board</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Standalone Decoration support widgets with one source-owned flat box, one horizontal line, and one vertical line</td>
       <td><code>main.frog</code> + <code>ui/decoration_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>19_subpanel_embedded_front_panel</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Subpanel host region displaying a referenced child <code>.frog</code> front panel</td>
       <td><code>main.frog</code> + <code>embedded/embedded_status.frog</code> + <code>ui/subpanel_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>20_tab_page_selection</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Tab control page selection with wrapped page headers and a movable page label display</td>
       <td><code>main.frog</code> + <code>ui/tab_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>21_ring_selection_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Ring numeric selected-value roundtrip with a read-only Ring indicator</td>
       <td><code>main.frog</code> + <code>ui/ring_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>22_listbox_selection_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Listbox numeric selected-value roundtrip with a read-only Listbox indicator</td>
       <td><code>main.frog</code> + <code>ui/listbox_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>23_table_cell_selection_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Table numeric selected-cell roundtrip with a read-only Table indicator</td>
       <td><code>main.frog</code> + <code>ui/table_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>24_tree_node_selection_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Tree numeric selected-node roundtrip with parent/child expansion, editable cells, and scrollable columns/rows</td>
       <td><code>main.frog</code> + <code>ui/tree_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>25_frame_grouping_board</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>Standalone simple Frame support rectangles with source-owned size, background color, border color, and uniform border thickness</td>
       <td><code>main.frog</code> + <code>ui/frame_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>26_array_numeric_selection_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>2D Array numeric selected-element roundtrip with index display, scrollbars, editable elements, and read-only Array indicator</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>27_array_1d_vertical_numeric_selection_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>1D vertical Array numeric selected-element roundtrip with one index display, vertical viewport, editable elements, and read-only Array indicator</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>28_array_3d_numeric_selection_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>3D Array numeric selected-element roundtrip with layer/row/column index displays, one visible 2D layer, editable elements, and read-only Array indicator</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>29_array_1d_numeric_container_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>1D Array container with cells realized as Default Numeric widget instances and a read-only Array/Numeric indicator</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>30_array_1d_horizontal_numeric_container_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
       <td>1D horizontal Array container with cells realized as Default Numeric widget instances and a read-only horizontal Array/Numeric indicator</td>
+      <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
+    <tr>
+      <td><code>31_array_1d_visible_count_property_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td>1D Array container whose visible cell count is driven by a Numeric U8 property-write control consumed on Execute</td>
+      <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
+    <tr>
+      <td><code>32_array_1d_horizontal_visible_count_property_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td>1D horizontal Array container whose visible column count is driven by a Numeric U8 property-write control consumed on Execute</td>
+      <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
+    <tr>
+      <td><code>33_array_2d_numeric_container_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td>2D Array container with cells realized as Default Numeric widget instances and a read-only 2D Array/Numeric indicator</td>
+      <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
+    <tr>
+      <td><code>34_array_2d_visible_counts_property_roundtrip</code></td>
+      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td>2D Array container whose visible row and column counts are driven by Numeric U8 property-write controls consumed on Execute, including visible counts beyond the current materialized shape</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
@@ -342,7 +406,22 @@ boundary.
 29   1D Array container with Default Numeric element widgets as a post-boundary widget progression example
     |
     v
-30+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
+30   1D horizontal Array container with Default Numeric element widgets as a post-boundary widget progression example
+    |
+    v
+31   1D vertical Array visible-count property write consumed on Execute
+    |
+    v
+32   1D horizontal Array visible-count property write consumed on Execute
+    |
+    v
+33   2D Array container with Default Numeric element widgets as a post-boundary widget progression example
+    |
+    v
+34   2D Array visible row/column property writes consumed on Execute
+    |
+    v
+35+  future examples continue runtime implementation in Graiphic/FROG-Runtime unless explicitly promoted
 </code></pre>
 
 <hr/>
@@ -534,6 +613,34 @@ boundary.
     ├── main.lowering.json
     └── ui/
         └── array_panel.wfrog
+└── 31_array_1d_visible_count_property_roundtrip/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── array_panel.wfrog
+└── 32_array_1d_horizontal_visible_count_property_roundtrip/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── array_panel.wfrog
+└── 33_array_2d_numeric_container_roundtrip/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── array_panel.wfrog
+└── 34_array_2d_visible_counts_property_roundtrip/
+    ├── Readme.md
+    ├── main.frog
+    ├── main.fir.json
+    ├── main.lowering.json
+    └── ui/
+        └── array_panel.wfrog
 </code></pre>
 
 <p>
@@ -689,6 +796,45 @@ both Default Array and Default Numeric realization assets. It does not add
 public runtime source beyond the Example 15 closure.
 </p>
 
+<p>
+Example <code>30</code> is the horizontal counterpart to Example <code>29</code>.
+It contains a rank-1 horizontal Array control whose visible cells are
+source-owned Default Numeric widget instances, plus a read-only horizontal
+Array indicator using the Default Numeric indicator template. The
+<code>.frog</code> owns orientation, viewport state, horizontal scrollbar
+posture, contained Numeric element properties, and the declared native
+selected-value flow. It does not add public runtime source beyond the
+Example 15 closure.
+</p>
+
+<p>
+Example <code>31</code> adds an execution-mode property-write slice for the
+vertical Array container. A Numeric <code>U8</code> control publishes the
+requested visible cell count. The diagram consumes that value on
+<code>Execute</code> and writes <code>viewport.visible_counts[0]</code> on both
+the command Array and read-only indicator. Direct Numeric edits remain
+front-panel state until the explicit execution flow consumes them.
+</p>
+
+<p>
+Example <code>32</code> applies the same execution-mode property-write posture
+to the horizontal Array container. A Numeric <code>U8</code> control writes
+<code>viewport.visible_counts[1]</code> on <code>Execute</code>, so the example
+validates the column-count property path without turning IDE/design-time live
+resizing into runtime behavior. Python/Rust parity remains a later private
+runtime task after C++ acceptance.
+</p>
+
+<p>
+Example <code>33</code> extends the Array-as-container posture to rank
+<code>2</code>. It contains a 2D Array control whose visible cells are
+source-owned Default Numeric widget instances, plus a read-only 2D
+Array/Numeric indicator. The <code>.frog</code> owns rank, shape, row/column
+index displays, viewport posture, contained Numeric element binding, selection,
+and instance-level visual overrides. It does not add public runtime source
+beyond the Example 15 closure.
+</p>
+
 <hr/>
 
 <h2>Minimum Local Setup</h2>
@@ -796,3 +942,4 @@ Examples remain subordinate to the owning specification documents.
 They illustrate and verify published corridors.
 They do not define FROG semantics.
 </p>
+

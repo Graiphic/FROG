@@ -297,6 +297,47 @@ touch or visually share their adjacent borders.
   <li><code>scrollbars.horizontal.position</code></li>
 </ul>
 
+<p>
+<code>viewport.visible_counts[]</code> is the source-owned visible-shape
+property surface of the Array viewport. It describes how many element slots are
+visible along each displayed Array axis; it does not change the semantic Array
+rank, shape, or stored value by itself.
+</p>
+
+<p>
+The visible count may exceed the currently materialized semantic shape. In that
+case, the Array viewport displays additional default-valued element positions
+without forcing the source value to grow until ordinary Array edit/materialization
+rules require it. A data-entry limit on a visible-count control is therefore a
+source-owned UI policy, not an implicit clamp to the Array's allocated shape.
+</p>
+
+<p>
+For a two-dimensional Array, the Default convention is:
+</p>
+
+<ul>
+  <li><code>viewport.visible_counts[0]</code> controls the visible row count.</li>
+  <li><code>viewport.visible_counts[1]</code> controls the visible column count.</li>
+</ul>
+
+<p>
+For one-dimensional Array examples, the <code>.frog</code> instance declares
+which visible display axis is controlled. A vertical 1D viewport may drive the
+visible row count; a horizontal 1D viewport may drive the visible column count.
+This mapping is source-owned and must survive FIR and lowering instead of being
+invented by a runtime host.
+</p>
+
+<p>
+When <code>viewport.visible_counts[]</code> is changed by another front-panel
+control, that change is represented as explicit diagram flow through
+<code>frog.ui.property_write</code> / property-write nodes. In the executable
+example posture, those writes are consumed on <code>Execute</code>. A host may
+later support IDE/design-time live preview behavior, but that behavior is a
+separate host capability and must not be confused with diagram execution.
+</p>
+
 <h3>8.3 Appearance and layout</h3>
 
 <ul>
@@ -410,12 +451,33 @@ The element widget class owns the element's individual behavior.
 The array supports natural value participation through <code>widget_value</code>, property access through <code>frog.ui.property_read</code> and <code>frog.ui.property_write</code>, method invocation through <code>frog.ui.method_invoke</code>, event observation where legal, and widget reference targeting through <code>widget_reference</code>.
 </p>
 
+<p>
+Array viewport properties are first-class diagram targets. A LabVIEW-like
+property-node flow must be visible in <code>.frog</code>, preserved in FIR, and
+declared through lowering before the runtime consumes the native manifest and
+front-panel realization package. Example 34 demonstrates this for a 2D Array:
+two Numeric U8 controls feed property-write nodes targeting
+<code>viewport.visible_counts[0]</code> and
+<code>viewport.visible_counts[1]</code> on both the Array control and the
+Array indicator, while the selected element value still passes through the
+native manifest-backed value corridor.
+</p>
+
 <hr/>
 
 <h2 id="validation-expectations">13. Validation Expectations</h2>
 
 <p>
 Validators SHOULD diagnose element-type mismatch, invalid rank, invalid shape, invalid index, invalid visible-count posture, illegal resize when resizing is disabled, unsupported element class, and attempts to treat realization-only repeated-cell structures as semantic array storage.
+</p>
+
+<p>
+A visible-count property example is not valid unless the source contains
+explicit property-write nodes, FIR preserves those nodes and edges, lowering
+declares the property-write flow and native manifest boundary, and the runtime
+updates only the declared Array viewport properties on diagram execution. The
+runtime must not create an implicit live-layout shortcut that bypasses
+<code>.frog</code> flow.
 </p>
 
 <hr/>

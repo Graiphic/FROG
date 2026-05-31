@@ -70,6 +70,25 @@ geometrically identical across those postures.
 </p>
 
 <p>
+The Default realization treats <code>viewport.visible_counts[]</code> as a
+source-owned viewport property surface. In a two-dimensional Array viewport,
+<code>viewport.visible_counts[0]</code> controls the visible rows and
+<code>viewport.visible_counts[1]</code> controls the visible columns. The
+Default realization may expose host overlays for the visible-count effect, but
+the values must come from the Array instance data or from explicit
+property-write flow declared by the <code>.frog</code> source.
+</p>
+
+<p>
+Visible counts describe the viewport, not the allocated data shape. The Default
+realization must therefore allow a viewport to show more rows or columns than
+currently contain authored values, rendering those extra visible slots with the
+contained element default value and disabled/read-only visual posture where
+appropriate. The realization must not bake a runtime maximum equal to the
+semantic Array shape.
+</p>
+
+<p>
 The Default contained-widget boundary posture is border sharing. If
 <code>element.layout.padding</code>, row gap, and column gap are zero, repeated
 contained widgets may touch and their adjacent published frames may visually

@@ -3,7 +3,7 @@
   "snapshot_role": "accepted_public_reference_snapshot",
   "example_source_artifacts": [
     {
-      "sha256": "0ac7f699179e4e30a3e4aba89bc64964dd7fc6e4853eb65eaf31ad352c747dcf",
+      "sha256": "bdc5bb28afe5a9c515b634b6776da513b49abd3e1bc3af944839216d0f8158ff",
       "path": "Examples/32_array_1d_horizontal_visible_count_property_roundtrip/Readme.md"
     },
     {
@@ -53,15 +53,15 @@
   ],
   "snapshot_artifacts": [
     {
-      "sha256": "bb07bb7a047289beffcbfcf4bf54b0160d6742ba98079ea26447481f0297a396",
+      "sha256": "dbf7641f19d08ced7da477952d56714896c43619abe18617573c654bc386a8b1",
       "path": "Examples/32_array_1d_horizontal_visible_count_property_roundtrip/reference/screenshot.svg"
     },
     {
-      "sha256": "678a3b81af621c70c50abc446b5a403a7bd93b9e414756859521e4d36189a801",
+      "sha256": "f59012e4286af17ee657c4fb1c3ab6b25182f1bd2753361e5c520188ff0d24bd",
       "path": "Examples/32_array_1d_horizontal_visible_count_property_roundtrip/reference/state.accepted.json"
     },
     {
-      "sha256": "bdea3beca1c7210ae5ac11105912c3a31f43f3a5b51b690a5aae791d3bd21e05",
+      "sha256": "66163cf04483fac1f0398a93717cd0ef75fa7a9c5f1721c3ee5b75b1b11faa00",
       "path": "Examples/32_array_1d_horizontal_visible_count_property_roundtrip/reference/visual-contract.md"
     },
     {

@@ -1,0 +1,64 @@
+{
+  "example_id": "28_array_3d_numeric_selection_roundtrip",
+  "snapshot_role": "accepted_public_reference_snapshot",
+  "example_source_artifacts": [
+    {
+      "path": "Examples/28_array_3d_numeric_selection_roundtrip/Readme.md",
+      "sha256": "6107c39f3896d6be872cee29773438b8b7bf8bb96cd9209434ca18738ede9af4"
+    },
+    {
+      "path": "Examples/28_array_3d_numeric_selection_roundtrip/main.fir.json",
+      "sha256": "aae254609c7cd6849c06d2ff60ad2f045e29ed0aa485fc36badbc7e0f3eb5ebf"
+    },
+    {
+      "path": "Examples/28_array_3d_numeric_selection_roundtrip/main.frog",
+      "sha256": "a1708ad781af0a991425d91cc2bd1b0c0f62b1706e111031ead7f5ebaf7fe911"
+    },
+    {
+      "path": "Examples/28_array_3d_numeric_selection_roundtrip/main.lowering.json",
+      "sha256": "77a925866ad4968521302b22fb858d07434c2dc3b170747b4c26fc545f81cb00"
+    },
+    {
+      "path": "Examples/28_array_3d_numeric_selection_roundtrip/ui/array_panel.wfrog",
+      "sha256": "9f58a735e4bdba98e8aaeb698a2bdd82299ea47360a09142ac6d840d25bdd302"
+    }
+  ],
+  "backend_artifacts": [
+    {
+      "path": "Implementations/Reference/LLVM/examples/28_array_3d_numeric_selection_roundtrip/kernel.ll",
+      "sha256": "ff738c1836cd5c936f068b40479e8a79571cc7f2156fc35120e3955e8fe60a4a"
+    },
+    {
+      "path": "Implementations/Reference/LLVM/examples/28_array_3d_numeric_selection_roundtrip/native_kernel_manifest.json",
+      "sha256": "269035111d98830aa62a6f1c1b66930b19bb5192a5b53739b0abced68a1dea59"
+    }
+  ],
+  "default_realization_artifacts": [
+    {
+      "path": "Examples/28_array_3d_numeric_selection_roundtrip/ui/../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+      "sha256": "77eea10878960fd6a1f47a41453f4b078acf914bed86392eea246cf4466b28d3"
+    },
+    {
+      "path": "Libraries/Realizations/Default/array.default.wfrog",
+      "sha256": "fca3f717f1aec4259ec7e94563708ae77503a3b72c54442666bfac27e5443204"
+    }
+  ],
+  "snapshot_artifacts": [
+    {
+      "path": "Examples/28_array_3d_numeric_selection_roundtrip/reference/screenshot.svg",
+      "sha256": "86556579a91a2be8c6914dc304c4221ee9101e91e9864d5834b75262fd8f9740"
+    },
+    {
+      "path": "Examples/28_array_3d_numeric_selection_roundtrip/reference/state.accepted.json",
+      "sha256": "338cf4eadc0a8436362182546f606dd5fc24b65aee4fbb8dacdc59d3dc938c93"
+    },
+    {
+      "path": "Examples/28_array_3d_numeric_selection_roundtrip/reference/visual-contract.md",
+      "sha256": "163695c4d9f458e0f9d2b9e1f30b8806d716c13bffaaa6a1f925e873ec597ea9"
+    },
+    {
+      "path": "Examples/28_array_3d_numeric_selection_roundtrip/reference/visual-contract.json",
+      "sha256": "4e13ef2108fdb5b7a2a7c6acca0231dda7cbfa06dd1a2fb8b204b9a9b388d830"
+    }
+  ]
+}

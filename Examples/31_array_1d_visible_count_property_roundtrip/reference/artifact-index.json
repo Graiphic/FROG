@@ -1,0 +1,76 @@
+{
+  "example_id": "31_array_1d_visible_count_property_roundtrip",
+  "snapshot_role": "accepted_public_reference_snapshot",
+  "example_source_artifacts": [
+    {
+      "path": "Examples/31_array_1d_visible_count_property_roundtrip/Readme.md",
+      "sha256": "45ca630ff8bb5a05806caaa4f02d89b0da1e55ec06a61712f2931fa09b5390fe"
+    },
+    {
+      "path": "Examples/31_array_1d_visible_count_property_roundtrip/main.fir.json",
+      "sha256": "1a973d3426d4c3bf4a8dcf505c4fb289113fdeb83e00266fda4fe3d75261d029"
+    },
+    {
+      "path": "Examples/31_array_1d_visible_count_property_roundtrip/main.frog",
+      "sha256": "fc265a21e746c3c9efc49a3718f0fb7991ffb55205ff240c61aa8131857797a5"
+    },
+    {
+      "path": "Examples/31_array_1d_visible_count_property_roundtrip/main.lowering.json",
+      "sha256": "96a552431016019ba80b1de909dab614112b959856868980da3e675496381b56"
+    },
+    {
+      "path": "Examples/31_array_1d_visible_count_property_roundtrip/ui/array_panel.wfrog",
+      "sha256": "c77ee493aaeed24115af56f8c411acd0594b1d1ce36ae522e02977ee33041cf2"
+    }
+  ],
+  "backend_artifacts": [
+    {
+      "path": "Implementations/Reference/LLVM/examples/31_array_1d_visible_count_property_roundtrip/kernel.ll",
+      "sha256": "aa4c3eb171400436ef110d85a203634f47bb11c663a69862875f12542e97069a"
+    },
+    {
+      "path": "Implementations/Reference/LLVM/examples/31_array_1d_visible_count_property_roundtrip/native_kernel_manifest.json",
+      "sha256": "380ad1879be9d6189ea2424b7ca9359dc31a871d36b7436cb3f30a1bd53093c9"
+    }
+  ],
+  "default_realization_artifacts": [
+    {
+      "path": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+      "sha256": "77eea10878960fd6a1f47a41453f4b078acf914bed86392eea246cf4466b28d3"
+    },
+    {
+      "path": "Libraries/Realizations/Default/array.default.wfrog",
+      "sha256": "fca3f717f1aec4259ec7e94563708ae77503a3b72c54442666bfac27e5443204"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+      "sha256": "4bb2e6c91c866a1e551791ecae663fdaedea2854d8b6dbccb4eac58f496661d4"
+    },
+    {
+      "path": "Libraries/Realizations/Default/numeric.default.wfrog",
+      "sha256": "31c9b99d874b92c3332159fd14745822c1a2f07d9f30e7a96300d5c35a7b1496"
+    }
+  ],
+  "snapshot_artifacts": [
+    {
+      "path": "Examples/31_array_1d_visible_count_property_roundtrip/reference/screenshot.svg",
+      "sha256": "67b445aac92e7da5aedd6515fc977234bde40955a1090653a920862b2b320983"
+    },
+    {
+      "path": "Examples/31_array_1d_visible_count_property_roundtrip/reference/screenshot.svg",
+      "sha256": "67b445aac92e7da5aedd6515fc977234bde40955a1090653a920862b2b320983"
+    },
+    {
+      "path": "Examples/31_array_1d_visible_count_property_roundtrip/reference/state.accepted.json",
+      "sha256": "4da119f54220f45f73c3a571b38b452888e41d537772d9e30b94ca8a1cf60cd7"
+    },
+    {
+      "path": "Examples/31_array_1d_visible_count_property_roundtrip/reference/visual-contract.md",
+      "sha256": "c71cc474e54693aa02323384712bce48424c6c53eab2a948df5979fdcba8c784"
+    },
+    {
+      "path": "Examples/31_array_1d_visible_count_property_roundtrip/reference/visual-contract.json",
+      "sha256": "26a03144f19c59108747e1a543f7b92305e93952306db31dce6f036098aa0c86"
+    }
+  ]
+}

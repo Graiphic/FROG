@@ -44,7 +44,7 @@
     },
     {
       "path": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
-      "sha256": "a4743467de542781cb2382c273426d21ed1a6a0426b680fd8403d6a2c3ea7764"
+      "sha256": "4bb2e6c91c866a1e551791ecae663fdaedea2854d8b6dbccb4eac58f496661d4"
     }
   ],
   "snapshot_artifacts": [
@@ -54,15 +54,15 @@
     },
     {
       "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/state.accepted.json",
-      "sha256": "accd48192b5d1702ed5ec96ab613f2bd084c86e736b24792621294bb9901aee2"
+      "sha256": "c7ef601cfbc4ebc6065b99ddca807ece899655aee23bfdd4554e16c4d54e79b3"
     },
     {
       "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.md",
-      "sha256": "f4cefc1a12f029adc31607b7091907334fcc3c980f58da77685f6bf8c1c0c5e8"
+      "sha256": "1cd6eb4577e001bf6581b828e5a492178570229e640f74d5ad3b1a75cd67b263"
     },
     {
       "path": "Examples/30_array_1d_horizontal_numeric_container_roundtrip/reference/visual-contract.json",
-      "sha256": "1cf1e9c4a442fd3da5321966d28b4be5468196d46423a010f85cd11a3a670748"
+      "sha256": "9e6aa8e470a6fb9b8b637cbb0010a3f54a5c6b0fdede134a2a335a3df1df1a1b"
     }
   ]
 }

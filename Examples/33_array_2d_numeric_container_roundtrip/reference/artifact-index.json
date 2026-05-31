@@ -3,7 +3,7 @@
   "snapshot_role": "accepted_public_reference_snapshot",
   "example_source_artifacts": [
     {
-      "sha256": "a388cbbca02e1d90adc6fc7a82d733cf76933521945194c523f8c12c47495b2c",
+      "sha256": "f76b04dec71fdea00b75aed281fca52f0b64bebd9be0ed20293d1715d9c6b536",
       "path": "Examples/33_array_2d_numeric_container_roundtrip/Readme.md"
     },
     {
@@ -11,7 +11,7 @@
       "path": "Examples/33_array_2d_numeric_container_roundtrip/main.fir.json"
     },
     {
-      "sha256": "a64cdb5baf6b618684de2a4c6961cb0622a3f633d7f46ceb2392da5b31e92439",
+      "sha256": "c6a35bc520b8b13fb8b8d655d3e58581e2736d3b6271cf3f02e4d011fe879332",
       "path": "Examples/33_array_2d_numeric_container_roundtrip/main.frog"
     },
     {
@@ -25,7 +25,7 @@
   ],
   "backend_artifacts": [
     {
-      "sha256": "13c5bb913f8dbb0836da925551dffdc99ac7fe5a9a555a501f5993126db78342",
+      "sha256": "a01b9c8da122c15fe2abdc7b77cd003c8e145695a0967daa68678ce56b4df598",
       "path": "Implementations/Reference/LLVM/examples/33_array_2d_numeric_container_roundtrip/kernel.ll"
     },
     {
@@ -53,15 +53,15 @@
   ],
   "snapshot_artifacts": [
     {
-      "sha256": "73d0f9c4e62e81e675e76c3817aafb73752095cfa9857448dc8a45698c45d469",
+      "sha256": "1a9f770941cc9c6ca19d146e16fbc80e161756222d4da2fd5b2e07c8411ef5b0",
       "path": "Examples/33_array_2d_numeric_container_roundtrip/reference/screenshot.svg"
     },
     {
-      "sha256": "3dce3d88b61a8ab5de075cdf96d7a5bc3fe0ebe855bba76529de06ea9d3a20f4",
+      "sha256": "5f9d14270daa7a72c208c38c5310448436be4e8e85903b1ca2e398c1357ef53a",
       "path": "Examples/33_array_2d_numeric_container_roundtrip/reference/state.accepted.json"
     },
     {
-      "sha256": "a38fb11f699fb06aca4a1e76c4e74b1c41c883d6402ad26003c9d84672361016",
+      "sha256": "72e5502b4c09f2bc6993aef647872e9eb10ab0514507430eb7b98dc078daa01e",
       "path": "Examples/33_array_2d_numeric_container_roundtrip/reference/visual-contract.md"
     },
     {
