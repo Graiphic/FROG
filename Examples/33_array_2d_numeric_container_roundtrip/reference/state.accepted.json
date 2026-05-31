@@ -1,0 +1,88 @@
+{
+  "native_kernel_manifest": {
+    "abi": "frog_u16_to_result_status_outptr",
+    "artifact_library": "frog_example33_array_2d_numeric_container_kernel.dll",
+    "backend_artifact_kind": "native_dynamic_library",
+    "backend_family": "llvm",
+    "entry_invoked_by_runtime": false,
+    "entry_symbol": "frog_example33_run",
+    "input_id": "element_value",
+    "input_type": "u16",
+    "kernel_id": "example33_array_2d_numeric_container_roundtrip_kernel",
+    "output_id": "selected_element_value",
+    "output_type": "u16",
+    "source_artifact": "Implementations/Reference/LLVM/examples/33_array_2d_numeric_container_roundtrip/kernel.ll",
+    "source_lowered_unit": "Examples/33_array_2d_numeric_container_roundtrip/main.lowering.json"
+  },
+  "outputs": {
+    "public": {
+      "native_error_code": 0,
+      "native_ok": true,
+      "published_array_records": [
+        { "row": 0, "column": 0, "indices": [0, 0], "defined": true, "id": "r0c0", "display": "0", "value": 0 },
+        { "row": 0, "column": 1, "indices": [0, 1], "defined": true, "id": "r0c1", "display": "0", "value": 0 },
+        { "row": 0, "column": 2, "indices": [0, 2], "defined": true, "id": "r0c2", "display": "0", "value": 0 },
+        { "row": 1, "column": 0, "indices": [1, 0], "defined": true, "id": "r1c0", "display": "2", "value": 2 },
+        { "row": 1, "column": 1, "indices": [1, 1], "defined": true, "id": "r1c1", "display": "0", "value": 0 },
+        { "row": 1, "column": 2, "indices": [1, 2], "defined": true, "id": "r1c2", "display": "0", "value": 0 },
+        { "row": 2, "column": 0, "indices": [2, 0], "defined": true, "id": "r2c0", "display": "0", "value": 0 },
+        { "row": 2, "column": 1, "indices": [2, 1], "defined": true, "id": "r2c1", "display": "3", "value": 3 },
+        { "row": 2, "column": 2, "indices": [2, 2], "defined": true, "id": "r2c2", "display": "0", "value": 0 }
+      ],
+      "selected_element_id": "r2c1",
+      "selected_element_value": 3,
+      "selected_indices": [2, 1]
+    }
+  },
+  "runtime_family": "graiphic_private_runtime_cpp",
+  "source_ref": {
+    "example_id": "33_array_2d_numeric_container_roundtrip",
+    "path": "Examples/33_array_2d_numeric_container_roundtrip/main.frog"
+  },
+  "ui_runtime": {
+    "array_control": {
+      "class_ref": "frog.widgets.array_control",
+      "role": "control",
+      "runtime": {
+        "asset_ref": "asset:array_shell_svg",
+        "contained_asset_ref": "asset:numeric_rectangular_svg",
+        "rank": 2,
+        "shape": [3, 3],
+        "visible_counts": [3, 3],
+        "selection_mode": "single_element",
+        "selection_patch_policy": "front_panel_state_without_program_read",
+        "behavior": {
+          "editable_elements": true,
+          "editing_allow_during_execution": true,
+          "index_display_enabled": true,
+          "selection_scrolling_enabled": true,
+          "smooth_scrolling_enabled": true
+        },
+        "element_layout_policy": "superpose_adjacent_widget_bounds",
+        "published_parts": ["root", "frame", "index_display", "element_region", "element_slot", "selection_face", "vertical_scrollbar", "horizontal_scrollbar", "focus_ring"]
+      },
+      "value": { "selected_element_id": "r2c1", "selected_element_value": 3, "selected_indices": [2, 1] },
+      "widget_id": "numeric_array"
+    },
+    "array_indicator": {
+      "class_ref": "frog.widgets.array_indicator",
+      "role": "indicator",
+      "runtime": {
+        "asset_ref": "asset:array_shell_svg",
+        "contained_asset_ref": "asset:numeric_rectangular_svg",
+        "rank": 2,
+        "shape": [3, 3],
+        "visible_counts": [3, 3],
+        "behavior": { "editable_elements": false, "index_display_enabled": true, "selection_scrolling_enabled": true, "smooth_scrolling_enabled": true },
+        "element_layout_policy": "superpose_adjacent_widget_bounds"
+      },
+      "value": { "selected_element_id": "r2c1", "selected_element_value": 3, "selected_indices": [2, 1] },
+      "widget_id": "published_array"
+    },
+    "diagram_dataflow": {
+      "array_records_declared": true,
+      "native_kernel_reads_selected_element_value": true,
+      "published_array_records_declared": true
+    }
+  }
+}
