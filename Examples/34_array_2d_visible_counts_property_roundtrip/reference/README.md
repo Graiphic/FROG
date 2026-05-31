@@ -12,12 +12,12 @@ runtime source truth, it does not publish Graiphic private runtime internals, an
 it does not redefine the public FROG specification.
 
 <p align="center">
-  <img src="./screenshot.jpg" alt="Accepted Example 34 Array 2D Visible Counts Property Roundtrip snapshot" width="400" />
+  <img src="./screenshot.svg" alt="Accepted Example 34 Array 2D Visible Counts Property Roundtrip snapshot" width="700" />
 </p>
 
 ## Reference Snapshot Links
 
-- [Accepted screenshot](./screenshot.jpg)
+- [Accepted screenshot](./screenshot.svg)
 - [Accepted state JSON](./state.accepted.json)
 - [Visual contract](./visual-contract.md)
 - [Machine-readable visual contract](./visual-contract.json)
@@ -25,7 +25,7 @@ it does not redefine the public FROG specification.
 
 ## Files
 
-- `screenshot.jpg` - accepted browser-host visual state.
+- `screenshot.svg` - accepted public visual reference for the browser-host checkpoint.
 - `state.accepted.json` - accepted public runtime snapshot.
 - `visual-contract.md` - human-readable appearance and interaction contract.
 - `visual-contract.json` - machine-readable visual contract summary.
