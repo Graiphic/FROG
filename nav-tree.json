@@ -972,6 +972,51 @@
               ]
             },
             {
+              "key": "examples/35_array_dimension_count_property_roundtrip/",
+              "title": "35 array dimension count property roundtrip",
+              "path": "/Examples/35_array_dimension_count_property_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/35_array_dimension_count_property_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/35_array_dimension_count_property_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "key": "examples/36_array_string_container_dimension_count_roundtrip/",
+              "title": "36 array string container dimension count roundtrip",
+              "path": "/Examples/36_array_string_container_dimension_count_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/36_array_string_container_dimension_count_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/36_array_string_container_dimension_count_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "key": "examples/37_array_path_container_dimension_count_roundtrip/",
+              "title": "37 array path container dimension count roundtrip",
+              "path": "/Examples/37_array_path_container_dimension_count_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/37_array_path_container_dimension_count_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/37_array_path_container_dimension_count_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -5024,6 +5069,12 @@
     "/Examples/34_array_2d_visible_counts_property_roundtrip/reference/visual-contract.md",
     "/Examples/34_array_2d_visible_counts_property_roundtrip/reference/README.md",
     "/Examples/34_array_2d_visible_counts_property_roundtrip/Readme.md",
+    "/Examples/35_array_dimension_count_property_roundtrip/main.frog",
+    "/Examples/35_array_dimension_count_property_roundtrip/Readme.md",
+    "/Examples/36_array_string_container_dimension_count_roundtrip/main.frog",
+    "/Examples/36_array_string_container_dimension_count_roundtrip/Readme.md",
+    "/Examples/37_array_path_container_dimension_count_roundtrip/main.frog",
+    "/Examples/37_array_path_container_dimension_count_roundtrip/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",

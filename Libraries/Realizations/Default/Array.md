@@ -34,8 +34,12 @@ This document describes the default realization posture for <code>frog.widgets.a
 <p>
 The default array realization exposes a shell with slots for index display, element region, element slots, scrollbars, and optional element gap.
 It does not define the semantics of the element widget class.
-For rank-3 arrays, the same realization surface may expose a layer index
-display while the element region renders the selected two-dimensional layer.
+For rank-3-or-higher arrays, the same realization surface exposes one index
+display per active dimension while the element region renders the selected
+two-dimensional slice formed by the last two semantic dimensions.
+The realization must not assume that rank stops at three; higher leading
+dimensions extend the index-display stack and keep the same last-two-dimensions
+matrix projection.
 </p>
 
 <p>
@@ -58,6 +62,10 @@ reads as a neighboring Array container rather than a floating control. A host
 may overlay native or HTML hit areas, but those hit areas must align to the
 published Default Array index display parts and must not bake spacing into
 runtime code.
+The index-display subcontainer height is derived from the active
+<code>index_display.rank</code>, box height, gap, border width, and padding so
+the container cleanly wraps one indexer per active dimension, including ranks
+above three.
 </p>
 
 <p>
@@ -71,9 +79,11 @@ geometrically identical across those postures.
 
 <p>
 The Default realization treats <code>viewport.visible_counts[]</code> as a
-source-owned viewport property surface. In a two-dimensional Array viewport,
-<code>viewport.visible_counts[0]</code> controls the visible rows and
-<code>viewport.visible_counts[1]</code> controls the visible columns. The
+source-owned viewport property surface. In a two-dimensional-or-higher Array
+viewport, <code>viewport.visible_counts[0]</code> controls the visible rows of
+the penultimate semantic dimension and
+<code>viewport.visible_counts[1]</code> controls the visible columns of the
+final semantic dimension. The
 Default realization may expose host overlays for the visible-count effect, but
 the values must come from the Array instance data or from explicit
 property-write flow declared by the <code>.frog</code> source.

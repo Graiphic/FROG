@@ -240,6 +240,9 @@ promoted later.
   <li>Example 32: current 1D horizontal Array container property-write posture where a Numeric U8 control drives <code>viewport.visible_counts[1]</code> on <code>Execute</code>.</li>
   <li>Example 33: current 2D Array container posture with repeated Default Numeric element widgets.</li>
   <li>Example 34: current 2D Array container property-write posture where two Numeric U8 controls drive <code>viewport.visible_counts[0]</code> and <code>viewport.visible_counts[1]</code> on <code>Execute</code>.</li>
+  <li>Example 35: current N-dimensional Array container property-write posture where Numeric U8 controls drive <code>dimensions.rank</code>, <code>index_display.rank</code>, and the visible row/column counts on <code>Execute</code>.</li>
+  <li>Example 36: current N-dimensional Array container posture with repeated Default String element widgets.</li>
+  <li>Example 37: current N-dimensional Array container posture with repeated Default Path element widgets.</li>
 </ul>
 
 <p>
@@ -271,7 +274,7 @@ Examples 26-28 helped validate Array rank, shape, indexing, materialization,
 viewport, selection, and native value flow before the Array container began
 composing real widget instances. They are not the final runtime rendering
 target for Array. The final direction is the widget-composed Array container
-posture demonstrated by Examples 29-34.
+posture demonstrated by Examples 29-37.
 </p>
 
 <hr/>

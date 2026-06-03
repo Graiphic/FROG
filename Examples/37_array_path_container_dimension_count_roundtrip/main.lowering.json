@@ -1,0 +1,333 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "37_array_path_container_dimension_count_roundtrip",
+    "path": "Examples/37_array_path_container_dimension_count_roundtrip/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/37_array_path_container_dimension_count_roundtrip/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "summary": "make one post-boundary Array dynamic dimension-count property example consumable through a manifest-declared LLVM/native path proof boundary plus Default Array and Default Numeric realizations",
+    "backend_family_target": "llvm_native_kernel",
+    "capability_targets": [
+      "native_kernel_manifest",
+      "private_runtime_array_element_selection_binding",
+      "array_index_display_rendering",
+      "svg_part_overlay_alignment",
+      "array_state_patch_interaction",
+      "svg_style_property_binding",
+      "array_element_widget_template_rendering",
+      "numeric_value_binding",
+      "default_numeric_realization_asset",
+      "array_property_write_binding",
+      "numeric_u8_property_control_binding"
+    ],
+    "native_artifact_ref": {
+      "manifest": "Implementations/Reference/LLVM/examples/37_array_path_container_dimension_count_roundtrip/native_kernel_manifest.json",
+      "llvm_ir": "Implementations/Reference/LLVM/examples/37_array_path_container_dimension_count_roundtrip/kernel.ll"
+    },
+    "public_reference_runtime_source_added": false
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "array_dynamic_dimension_count_numeric_element_property_roundtrip_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "element_value",
+            "type": "u16"
+          },
+          {
+            "id": "array_records",
+            "type": "frog.array.records<path,rank=N>"
+          },
+          {
+            "id": "dimension_count",
+            "type": "u8"
+          },
+          {
+            "id": "visible_row_count",
+            "type": "u8"
+          },
+          {
+            "id": "visible_column_count",
+            "type": "u8"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "selected_element_value",
+            "type": "u16"
+          },
+          {
+            "id": "published_array_records",
+            "type": "frog.array.records<path,rank=N>"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "value_bindings": [
+          {
+            "widget_id": "dimension_count",
+            "widget_class": "frog.widgets.numeric_control",
+            "mode": "widget_value",
+            "semantic_value_member": "value",
+            "realization_asset_ref": "asset:numeric_rectangular_svg",
+            "data_type": {
+              "representation": "u8",
+              "named_numeric_size": "U8",
+              "value_type": "u8"
+            }
+          },
+          {
+            "widget_id": "visible_row_count",
+            "widget_class": "frog.widgets.numeric_control",
+            "mode": "widget_value",
+            "semantic_value_member": "value",
+            "realization_asset_ref": "asset:numeric_rectangular_svg",
+            "data_type": {
+              "representation": "u8",
+              "named_numeric_size": "U8",
+              "value_type": "u8"
+            }
+          },
+          {
+            "widget_id": "visible_column_count",
+            "widget_class": "frog.widgets.numeric_control",
+            "mode": "widget_value",
+            "semantic_value_member": "value",
+            "realization_asset_ref": "asset:numeric_rectangular_svg",
+            "data_type": {
+              "representation": "u8",
+              "named_numeric_size": "U8",
+              "value_type": "u8"
+            }
+          },
+          {
+            "widget_id": "path_array",
+            "widget_class": "frog.widgets.array_control",
+            "mode": "widget_value",
+            "semantic_value_member": "value.selected_element_value",
+            "ui_identity_member": "value.selected_element_id",
+            "record_member": "elements.*",
+            "realization_asset_ref": "asset:array_shell_svg",
+            "element_class_ref": "frog.widgets.numeric_control",
+            "element_template_ref": "frog.realizations.default.numeric_control",
+            "element_asset_ref": "asset:numeric_rectangular_svg",
+            "element_data_type": {
+              "representation": "u16",
+              "named_numeric_size": "U16",
+              "value_type": "u16"
+            },
+            "element_visible_items": {
+              "increment_buttons_visible": true,
+              "radix_visible": false
+            }
+          },
+          {
+            "widget_id": "published_array",
+            "widget_class": "frog.widgets.array_indicator",
+            "mode": "widget_value",
+            "semantic_value_member": "value.selected_element_value",
+            "ui_identity_member": "value.selected_element_id",
+            "record_member": "elements.*",
+            "realization_asset_ref": "asset:array_shell_svg",
+            "element_class_ref": "frog.widgets.numeric_indicator",
+            "element_template_ref": "frog.realizations.default.numeric_indicator",
+            "element_asset_ref": "asset:numeric_rectangular_svg",
+            "element_data_type": {
+              "representation": "u16",
+              "named_numeric_size": "U16",
+              "value_type": "u16"
+            },
+            "element_visible_items": {
+              "increment_buttons_visible": false,
+              "radix_visible": false
+            }
+          }
+        ],
+        "host_overlays": [
+          {
+            "widget_id": "path_array",
+            "part": "element_region",
+            "source_members": [
+              "dimensions.*",
+              "elements.*",
+              "value.*",
+              "selection.*",
+              "viewport.*",
+              "interaction.*",
+              "display.*",
+              "style.*",
+              "element.template_ref",
+              "element.asset_ref",
+              "element.default_value",
+              "element.cell_width",
+              "element.cell_height",
+              "element.props.data_type.*",
+              "element.props.data_entry.*",
+              "element.props.*"
+            ]
+          },
+          {
+            "widget_id": "path_array",
+            "part": "index_display",
+            "source_members": [
+              "index_display.*",
+              "viewport.first_indices[]",
+              "dimensions.*",
+              "style.index_display.*",
+              "element.template_ref",
+              "element.asset_ref",
+              "element.default_value",
+              "element.cell_width",
+              "element.cell_height",
+              "element.props.data_type.*",
+              "element.props.data_entry.*",
+              "element.props.*"
+            ]
+          },
+          {
+            "widget_id": "published_array",
+            "part": "element_region",
+            "source_members": [
+              "dimensions.*",
+              "elements.*",
+              "value.*",
+              "selection.*",
+              "viewport.*",
+              "display.*",
+              "style.*",
+              "element.template_ref",
+              "element.asset_ref",
+              "element.default_value",
+              "element.cell_width",
+              "element.cell_height",
+              "element.props.data_type.*",
+              "element.props.data_entry.*",
+              "element.props.*"
+            ],
+            "host_state_rule": "viewport_state_is_instance_local_not_dataflow"
+          },
+          {
+            "widget_id": "published_array",
+            "part": "index_display",
+            "source_members": [
+              "index_display.*",
+              "viewport.first_indices[]",
+              "dimensions.*",
+              "style.index_display.*",
+              "element.template_ref",
+              "element.asset_ref",
+              "element.default_value",
+              "element.cell_width",
+              "element.cell_height",
+              "element.props.data_type.*",
+              "element.props.data_entry.*",
+              "element.props.*"
+            ],
+            "host_state_rule": "viewport_state_is_instance_local_not_dataflow"
+          }
+        ],
+        "property_writes": [
+          {
+            "source": "widget.dimension_count.value",
+            "targets": [
+              "widget.path_array.dimensions.rank",
+              "widget.published_array.dimensions.rank",
+              "widget.path_array.index_display.rank",
+              "widget.published_array.index_display.rank"
+            ],
+            "consume_on": "execute"
+          },
+          {
+            "source": "widget.visible_row_count.value",
+            "targets": [
+              "widget.path_array.viewport.visible_counts[0]",
+              "widget.published_array.viewport.visible_counts[0]"
+            ],
+            "consume_on": "execute"
+          },
+          {
+            "source": "widget.visible_column_count.value",
+            "targets": [
+              "widget.path_array.viewport.visible_counts[1]",
+              "widget.published_array.viewport.visible_counts[1]"
+            ],
+            "consume_on": "execute"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "identity_u16",
+        "native_manifest": "Implementations/Reference/LLVM/examples/37_array_path_container_dimension_count_roundtrip/native_kernel_manifest.json",
+        "inputs": {
+          "element_value": "widget.path_array.value.selected_element_value"
+        },
+        "outputs": {
+          "selected_element_value": "selected_element_value"
+        },
+        "record_flow": {
+          "operation": "typed_record_passthrough",
+          "source": "widget.path_array.elements.*",
+          "target": "widget.published_array.elements.*",
+          "native_kernel_member": false,
+          "publication_rule": "fir_declared_passthrough_not_implicit_ui_sync"
+        },
+        "final_publication": [
+          {
+            "target": "widget.published_array.value.selected_element_value",
+            "source": "native_kernel.selected_element_value"
+          },
+          {
+            "target": "widget.published_array.elements.*",
+            "source": "widget.path_array.elements.*"
+          },
+          {
+            "target": "public_output.selected_element_value",
+            "source": "native_kernel.selected_element_value"
+          },
+          {
+            "target": "public_output.published_array_records",
+            "source": "widget.path_array.elements.*"
+          }
+        ],
+        "property_write_flow": [
+          {
+            "source": "widget.dimension_count.value",
+            "targets": [
+              "widget.path_array.dimensions.rank",
+              "widget.published_array.dimensions.rank",
+              "widget.path_array.index_display.rank",
+              "widget.published_array.index_display.rank"
+            ],
+            "consume_on": "execute"
+          },
+          {
+            "source": "widget.visible_row_count.value",
+            "targets": [
+              "widget.path_array.viewport.visible_counts[0]",
+              "widget.published_array.viewport.visible_counts[0]"
+            ],
+            "consume_on": "execute"
+          },
+          {
+            "source": "widget.visible_column_count.value",
+            "targets": [
+              "widget.path_array.viewport.visible_counts[1]",
+              "widget.published_array.viewport.visible_counts[1]"
+            ],
+            "consume_on": "execute"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -170,13 +170,12 @@ does not own the semantic default value.
 </ul>
 
 <p>
-The baseline supports the array structure required to represent multiple dimensions.
-The Default realization remains intentionally simple: a one-dimensional array is
-displayed as a single visible axis, a two-dimensional array is displayed as a
-matrix viewport, and a three-dimensional array is displayed as one two-dimensional
-layer at a time through a layer index display plus row/column index displays.
-Higher-dimensional arrays require host-specific navigation or later specialized
-realization profiles.
+The baseline supports the array structure required to represent N dimensions.
+The Default realization remains intentionally simple and LabVIEW-like: a
+one-dimensional array is displayed as a single visible axis, a two-dimensional
+array is displayed as a matrix viewport, and arrays of rank three or higher are
+displayed by projecting the last two dimensions into the visible matrix while
+all leading dimensions are addressed through stacked index displays.
 </p>
 
 <p>
@@ -313,12 +312,12 @@ source-owned UI policy, not an implicit clamp to the Array's allocated shape.
 </p>
 
 <p>
-For a two-dimensional Array, the Default convention is:
+For a two-dimensional or higher-rank Array, the Default convention is:
 </p>
 
 <ul>
-  <li><code>viewport.visible_counts[0]</code> controls the visible row count.</li>
-  <li><code>viewport.visible_counts[1]</code> controls the visible column count.</li>
+  <li><code>viewport.visible_counts[0]</code> controls the visible row count of the penultimate semantic dimension.</li>
+  <li><code>viewport.visible_counts[1]</code> controls the visible column count of the final semantic dimension.</li>
 </ul>
 
 <p>
@@ -363,6 +362,10 @@ Visible index displays are neighboring Array subcontainers controlled through
 they are not visually merged into the element viewport frame. The index display
 may have its own source-owned container fill, border, border width, and padding
 around the visible arrow/value indexer.
+When <code>index_display.rank</code> changes, the realization must wrap the
+active number of visible index boxes using the source-owned box height, gap,
+container border, and container padding; it must not leave stale empty
+subcontainer space from a previous rank.
 <code>element.props.style.*</code> controls the
 repeated contained widget. This preserves the visual distinction between
 the collection container and the element realization.
@@ -461,6 +464,18 @@ two Numeric U8 controls feed property-write nodes targeting
 <code>viewport.visible_counts[1]</code> on both the Array control and the
 Array indicator, while the selected element value still passes through the
 native manifest-backed value corridor.
+</p>
+
+<p>
+The same rule applies to dimension-count changes. A command that changes
+<code>dimensions.rank</code> must be represented as explicit diagram flow and,
+when the visible index display count is meant to follow the semantic rank, it
+must also write the matching <code>index_display.rank</code> surface. For an
+N-dimensional Array, the source may provide explicit rank profiles and a
+default shape policy. The realization displays rank <code>1</code> as one
+visible axis, rank <code>2</code> as a matrix, and rank <code>3</code> or
+higher by projecting the final two semantic dimensions into the matrix while
+leading dimensions are controlled through index displays.
 </p>
 
 <hr/>
