@@ -29,6 +29,22 @@ The secondary no-icon row is a visual-configuration proof.
 It demonstrates that hiding the icon can tighten the field without creating a dead empty gap.
 </p>
 
+<h2>Review Status</h2>
+
+<p>
+Latest Path reference review:
+<time datetime="2026-06-03">2026-06-03</time>. The reviewed public surface is
+Example <code>09_path_value_roundtrip</code> consuming
+<code>Libraries/Realizations/Default/path.default.wfrog</code> and
+<code>assets/path/templates/path_rectangular_field.svg</code>, with C++ browser-host
+rendering used as the validation witness.
+</p>
+
+<p>
+This note is a public widget-reference record, not publication of Graiphic's
+runtime implementation internals.
+</p>
+
 <hr/>
 
 <h2>FROG-Owned Instance Data</h2>
@@ -49,7 +65,7 @@ Current instance-level properties proven by the example include:
 
 <ul>
   <li><code>path.kind</code>, <code>path.display_value</code>, and <code>path.validation_state</code></li>
-  <li><code>display.icon_visible</code>, <code>display.text_overflow_visible</code>, and <code>display.validation_marker_visible</code></li>
+  <li><code>display.icon_visible</code></li>
   <li><code>browse.enabled</code> and <code>browse.button_visible</code></li>
   <li><code>style.path_face.*</code> including fill, hover fill, border color, hover border color, and border width</li>
   <li><code>style.path_display.*</code> including color, font size, font weight, padding, and baseline offset</li>
@@ -92,11 +108,6 @@ Current instance-level properties proven by the example include:
       <td>Show a flat, instance-styled button that can open the host file picker for the owning control only.</td>
     </tr>
     <tr>
-      <td>Validation and overflow markers</td>
-      <td><code>display.validation_marker_visible</code>, <code>display.text_overflow_visible</code>, <code>path.validation_state</code></td>
-      <td>Keep optional markers controlled by instance properties rather than always-visible runtime decorations.</td>
-    </tr>
-    <tr>
       <td>Independent rows</td>
       <td><code>binding.output_id</code>, <code>binding.preview_input_id</code>, <code>binding.preview_output_id</code></td>
       <td>Preserve separate primary and no-icon bindings; editing one control must not update the other control.</td>
@@ -106,9 +117,9 @@ Current instance-level properties proven by the example include:
 
 <p>
 The Default Path SVG currently exposes these public parts:
-<code>browse_button</code>, <code>browse_button_text</code>, <code>caption</code>, <code>focus_ring</code>,
-<code>frame</code>, <code>label</code>, <code>path_display</code>, <code>path_face</code>,
-<code>path_icon</code>, <code>root</code>, <code>text_overflow_marker</code>, and <code>validation_marker</code>.
+<code>browse_button</code>, <code>browse_button_text</code>, <code>caption</code>,
+<code>label</code>, <code>path_display</code>, <code>path_face</code>,
+<code>path_icon</code>, and <code>root</code>.
 </p>
 
 <hr/>

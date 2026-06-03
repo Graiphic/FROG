@@ -180,9 +180,69 @@ The logical widget name, visible caption, semantic path value, and shortened dis
   <li><code>browse_button</code> when present</li>
   <li><code>browse_button_text</code> when present</li>
   <li><code>path_icon</code> when present</li>
-  <li><code>validation_marker</code> when present</li>
-  <li><code>text_overflow_marker</code> when present</li>
 </ul>
+
+<h3>7.1 Default SVG Skin Geometry Contract</h3>
+
+<p>
+The Default rectangular path field is a semantic SVG skin. The SVG is not only
+artwork: its published parts and anchors define how a host places editable
+text, path display text, browse hit targets, optional icons, and browse
+affordances.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Part</th>
+      <th>Resize posture</th>
+      <th>Solidarity / host interpretation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>root</code></td>
+      <td>Scales to the widget layout rectangle.</td>
+      <td>Owns the complete Path skin coordinate system.</td>
+    </tr>
+    <tr>
+      <td><code>caption</code></td>
+      <td>Anchored text, not stretched artwork.</td>
+      <td>Host overlays align to <code>caption.anchor</code>; the logical label remains separate.</td>
+    </tr>
+    <tr>
+      <td><code>path_face</code></td>
+      <td>Stretch surface with one uniform border thickness.</td>
+      <td>Primary field body and crop/reference rectangle for embedded Path renderings.</td>
+    </tr>
+    <tr>
+      <td><code>path_icon</code></td>
+      <td>Optional proportional indivisible group.</td>
+      <td>Moves with the left side of <code>path_face</code>; hiding it must move <code>path_display</code> back to the face inset.</td>
+    </tr>
+    <tr>
+      <td><code>path_display</code></td>
+      <td>Dynamic text region stretched horizontally with the field.</td>
+      <td>Host value overlays align to <code>path_display.left_center</code>, preserve padding, and clip/ellipsis within the field.</td>
+    </tr>
+    <tr>
+      <td><code>browse_button</code></td>
+      <td>Optional fixed-size right-pinned surface.</td>
+      <td>Present for controls when browse is visible; absent or hidden for indicators without changing path value semantics.</td>
+    </tr>
+    <tr>
+      <td><code>browse_button_text</code></td>
+      <td>Centered glyph/text inside <code>browse_button</code>.</td>
+      <td>Moves as part of the browse-button solidary group.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+Derived or restyled Path skins may change visual shape and styling, but they
+must preserve these public parts, anchors, and resize/solidarity rules unless
+they publish a distinct realization variant.
+</p>
 
 <hr/>
 
@@ -230,9 +290,7 @@ The logical widget name, visible caption, semantic path value, and shortened dis
 
 <ul>
   <li><code>display.shorten_mode : enum</code> — <code>none</code>, <code>middle_ellipsis</code>, <code>tail</code>, or <code>name_only</code></li>
-  <li><code>display.text_overflow_visible : bool</code></li>
   <li><code>display.icon_visible : bool</code></li>
-  <li><code>display.validation_marker_visible : bool</code></li>
 </ul>
 
 <h3>8.5 Interaction</h3>
@@ -251,7 +309,6 @@ The logical widget name, visible caption, semantic path value, and shortened dis
   <li><code>style.path_face.*</code></li>
   <li><code>style.path_display.*</code></li>
   <li><code>style.browse_button.*</code></li>
-  <li><code>style.validation_marker.*</code></li>
   <li><code>realization.family : string</code></li>
   <li><code>realization.variant : string</code></li>
   <li><code>realization.skin_id : string</code></li>
@@ -341,7 +398,7 @@ A runtime may use a native file picker, directory picker, browser-provided file 
 <h2 id="default-realization-posture">12. Default Realization Posture</h2>
 
 <p>
-The Default realization should expose a rectangular path field with a value face, path display, optional browse button, optional path icon, optional validation marker, optional overflow marker, caption and label surfaces, and a focus ring.
+The Default realization should expose a rectangular path field with a value face, path display, optional browse button, optional path icon, caption and label surfaces.
 </p>
 
 <hr/>

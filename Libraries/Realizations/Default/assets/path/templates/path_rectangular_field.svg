@@ -1,146 +1,285 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 520 150"
+     viewBox="0 0 459.71 74.08"
      preserveAspectRatio="none"
      role="img"
      aria-label="FROG default path rectangular field realization template"
+     data-frog-skin-contract="semantic_svg_skin_v1"
      data-frog-template="frog.realizations.default.path.rectangular_field"
      data-frog-target-classes="frog.widgets.path_control frog.widgets.path_indicator"
-     data-frog-variant="rectangular_field">
+     data-frog-variant="rectangular_field"
+     data-frog-resize="scale_to_front_panel_layout_rectangle">
   <title>FROG Default Path Rectangular Field Realization Template</title>
   <desc>
-    Semantic SVG template for the default path field realization.
-    The runtime or IDE binds value and path display state to dynamic path_display.
+    Compact rectangular path field realization derived from the lighter
+    path_rectangular_field_svg artwork. The runtime binds the path value to
+    path_display and may expose a native browse affordance through browse_button.
   </desc>
+  <metadata id="frog_semantic_skin_contract"
+            data-frog-kind="semantic_svg_skin_contract"
+            data-frog-contract-version="0.1">
+    {
+      "template": "frog.realizations.default.path.rectangular_field",
+      "skin_contract": "semantic_svg_skin_v1",
+      "target_classes": [
+        "frog.widgets.path_control",
+        "frog.widgets.path_indicator"
+      ],
+      "parts": [
+        {
+          "part": "root",
+          "role": "coordinate_space",
+          "resize": "scale_to_front_panel_layout_rectangle",
+          "solidary_group": "whole_path_widget"
+        },
+        {
+          "part": "label",
+          "member": "label.text",
+          "anchor": "label.anchor",
+          "resize": "anchored_text",
+          "runtime_surface": "logical_label_preview_hidden_by_runtime"
+        },
+        {
+          "part": "caption",
+          "member": "caption.text",
+          "anchor": "caption.anchor",
+          "resize": "anchored_text",
+          "runtime_surface": "host_caption_overlay"
+        },
+        {
+          "part": "path_face",
+          "style_group": "style.path_face",
+          "resize": "stretch_surface",
+          "border_policy": "uniform_non_scaling_stroke",
+          "crop_reference": true
+        },
+        {
+          "part": "path_icon",
+          "members": [
+            "display.icon_visible",
+            "path.kind"
+          ],
+          "resize": "proportional_indivisible_optional_group",
+          "solidary_group": "field_left_adornment"
+        },
+        {
+          "part": "path_display",
+          "members": [
+            "value",
+            "path.display_value"
+          ],
+          "anchor": "path_display.left_center",
+          "resize": "stretch_dynamic_text_region",
+          "runtime_surface": "host_path_value_overlay",
+          "hidden_icon_behavior": "left_edge_returns_to_path_face_inset"
+        },
+        {
+          "part": "browse_button",
+          "members": [
+            "browse.enabled",
+            "browse.button_visible",
+            "style.browse_button.*"
+          ],
+          "resize": "fixed_size_right_pinned_optional_hit_target",
+          "solidary_group": "browse_affordance"
+        },
+        {
+          "part": "browse_button_text",
+          "member": "display.browse_label",
+          "anchor": "browse_button.center",
+          "resize": "centered_inside_browse_button",
+          "solidary_group": "browse_affordance"
+        }
+      ]
+    }
+  </metadata>
 
   <defs>
+    <linearGradient id="path_folder_back_gradient" gradientUnits="userSpaceOnUse" x1="32.89" y1="30.09" x2="32.89" y2="35.50">
+      <stop offset="0" stop-color="#eba600" />
+      <stop offset="1" stop-color="#c28200" />
+    </linearGradient>
+    <linearGradient id="path_folder_front_gradient" gradientUnits="userSpaceOnUse" x1="33.59" y1="32.96" x2="33.59" y2="53.90">
+      <stop offset="0" stop-color="#ffd869" />
+      <stop offset="1" stop-color="#fec52b" />
+    </linearGradient>
+
     <style>
       :root {
         --frog-path-label-display: none;
         --frog-path-caption-display: inline;
         --frog-path-caption-fill: #111827;
         --frog-path-caption-font-family: system-ui, Segoe UI, Arial, sans-serif;
-        --frog-path-caption-font-size: 14px;
+        --frog-path-caption-font-size: 12px;
         --frog-path-caption-font-weight: 600;
         --frog-path-face-fill: #ffffff;
-        --frog-path-face-stroke: #94a3b8;
-        --frog-path-face-stroke-width: 1px;
+        --frog-path-face-stroke: #000000;
+        --frog-path-face-stroke-width: 0.5px;
         --frog-path-text-fill: #111111;
-        --frog-path-text-font-size: 14px;
+        --frog-path-text-font-size: 12px;
         --frog-path-text-font-weight: 400;
-        --frog-path-button-fill: #f8fafc;
-        --frog-path-button-fill-hover: #e5eef9;
-        --frog-path-button-stroke: #64748b;
-        --frog-path-button-stroke-hover: #64748b;
-        --frog-path-button-stroke-width: 1px;
-        --frog-path-button-text-fill: #111827;
-        --frog-path-button-text-font-size: 22px;
-        --frog-path-icon-display: none;
-        --frog-path-icon-fill: #facc15;
-        --frog-path-icon-front-fill: #fde68a;
-        --frog-path-icon-stroke: #b45309;
-        --frog-path-icon-highlight: #fff7cc;
-        --frog-path-validation-display: none;
-        --frog-path-overflow-display: none;
+        --frog-path-button-fill: #ffffff;
+        --frog-path-button-fill-hover: #eef4fb;
+        --frog-path-button-stroke: #000000;
+        --frog-path-button-stroke-hover: #4b5563;
+        --frog-path-button-stroke-width: 0.5px;
+        --frog-path-button-text-fill: #111111;
+        --frog-path-button-text-font-size: 12px;
+        --frog-path-icon-display: inline;
+        --frog-path-icon-fill: #eba600;
+        --frog-path-icon-front-fill: #fec52b;
+        --frog-path-icon-stroke: #8a5a00;
+        --frog-path-icon-highlight: #ffd869;
         --frog-path-browse-display: inline;
       }
 
-      #label_text { display: var(--frog-path-label-display); fill: #6b7280; font-family: system-ui, Segoe UI, Arial, sans-serif; font-size: 12px; }
-      #caption_text { display: var(--frog-path-caption-display); fill: var(--frog-path-caption-fill); font-family: var(--frog-path-caption-font-family); font-size: var(--frog-path-caption-font-size); font-weight: var(--frog-path-caption-font-weight); }
-      #path_face { fill: var(--frog-path-face-fill); stroke: var(--frog-path-face-stroke); stroke-width: var(--frog-path-face-stroke-width); vector-effect: non-scaling-stroke; }
-      #path_display { fill: var(--frog-path-text-fill); font-family: system-ui, Segoe UI, Arial, sans-serif; font-size: var(--frog-path-text-font-size); font-weight: var(--frog-path-text-font-weight); }
-      #browse_button { display: var(--frog-path-browse-display); fill: var(--frog-path-button-fill); stroke: var(--frog-path-button-stroke); stroke-width: var(--frog-path-button-stroke-width); vector-effect: non-scaling-stroke; }
-      #browse_button_text { display: var(--frog-path-browse-display); fill: var(--frog-path-button-text-fill); font-size: var(--frog-path-button-text-font-size); }
-      #path_icon { display: var(--frog-path-icon-display); }
-      #path_icon .folder_back { fill: var(--frog-path-icon-fill); stroke: var(--frog-path-icon-stroke); stroke-width: 1px; vector-effect: non-scaling-stroke; }
-      #path_icon .folder_front { fill: var(--frog-path-icon-front-fill); stroke: var(--frog-path-icon-stroke); stroke-width: 1px; vector-effect: non-scaling-stroke; }
-      #path_icon .folder_highlight { fill: var(--frog-path-icon-highlight); opacity: 0.75; }
-      #text_overflow_marker { display: var(--frog-path-overflow-display); }
-      #validation_marker { display: var(--frog-path-validation-display); }
+      #label_text {
+        display: var(--frog-path-label-display);
+        fill: #6b7280;
+        font-family: system-ui, Segoe UI, Arial, sans-serif;
+        font-size: 12px;
+      }
+      #caption_text {
+        display: var(--frog-path-caption-display);
+        fill: var(--frog-path-caption-fill);
+        font-family: var(--frog-path-caption-font-family);
+        font-size: var(--frog-path-caption-font-size);
+        font-weight: var(--frog-path-caption-font-weight);
+      }
+      #path_face {
+        fill: var(--frog-path-face-fill);
+        stroke: var(--frog-path-face-stroke);
+        stroke-width: var(--frog-path-face-stroke-width);
+        vector-effect: non-scaling-stroke;
+      }
+      #path_display {
+        fill: var(--frog-path-text-fill);
+        font-family: Segoe UI, Arial, sans-serif;
+        font-size: var(--frog-path-text-font-size);
+        font-weight: var(--frog-path-text-font-weight);
+      }
+      #browse_button {
+        display: var(--frog-path-browse-display);
+        fill: var(--frog-path-button-fill);
+        stroke: var(--frog-path-button-stroke);
+        stroke-width: var(--frog-path-button-stroke-width);
+        vector-effect: non-scaling-stroke;
+      }
+      #browse_button_text {
+        display: var(--frog-path-browse-display);
+        fill: var(--frog-path-button-text-fill);
+        font-family: Segoe UI, Arial, sans-serif;
+        font-size: var(--frog-path-button-text-font-size);
+      }
+      #path_icon {
+        display: var(--frog-path-icon-display);
+        transform-box: fill-box;
+        transform-origin: left center;
+        transform: scaleX(var(--frog-path-icon-aspect-correction, 1));
+      }
     </style>
   </defs>
 
-  <g id="root" data-frog-part="root">
+  <g id="root"
+     data-frog-part="root"
+     data-frog-role="coordinate_space"
+     data-frog-resize="scale_to_front_panel_layout_rectangle"
+     data-frog-solidary-group="whole_path_widget">
     <text id="label_text"
+          x="12.75"
+          y="10"
           data-frog-part="label"
+          data-frog-role="logical_label_preview"
           data-frog-member="label.text"
           data-frog-anchor="label.anchor"
-          x="16"
-          y="18">path_1</text>
+          data-frog-resize="anchored_text"
+          data-frog-solidary-group="label_overlay"
+          data-frog-runtime-surface="preview_hidden_by_host_overlay">path_1</text>
 
     <text id="caption_text"
-          data-frog-part="caption"
+          x="12.75"
+          y="19.09"
+          data-frog-role="visible_caption_preview"
           data-frog-member="caption.text"
+          data-frog-part="caption"
           data-frog-anchor="caption.anchor"
           data-frog-bind="caption.text caption.visible caption.anchor.* caption.align.horizontal caption.style.*"
-          x="16"
-          y="46">Path</text>
+          data-frog-resize="anchored_text"
+          data-frog-solidary-group="caption_overlay"
+          data-frog-runtime-surface="host_caption_overlay"
+          data-frog-runtime-preview="hidden_when_host_projects_caption">Path</text>
 
     <rect id="path_face"
-          data-frog-part="path_face"
-          x="22"
-          y="78"
+          x="12.75"
+          y="24.09"
           width="390"
           height="36"
-          rx="0"
-          data-frog-bind="style.path_face.*" />
+          data-frog-part="path_face"
+          data-frog-role="primary_field_body"
+          data-frog-bind="style.path_face.*"
+          data-frog-resize="stretch_surface"
+          data-frog-solidary-group="field_body"
+          data-frog-border-policy="uniform_non_scaling_stroke"
+          data-frog-crop-reference="true" />
 
     <g id="path_icon"
        data-frog-part="path_icon"
-       data-frog-bind="display.icon_visible path.kind style.path_icon.*">
-      <path class="folder_back"
-            d="M30 89 H38 L40 92 H51 V104 H30 Z" />
-      <path class="folder_front"
-            d="M31 96 H52 L49 106 H29 Z" />
-      <path class="folder_highlight"
-            d="M33 97 H49 L48.5 99 H33 Z" />
+       data-frog-role="path_kind_icon"
+       data-frog-bind="display.icon_visible path.kind"
+       data-frog-resize="proportional_indivisible_optional_group"
+       data-frog-solidary-group="field_left_adornment"
+       data-frog-visibility-member="display.icon_visible">
+      <path fill="url(#path_folder_back_gradient)"
+            d="M33.88,32.65l-1.76-1.76c-0.39-0.39-0.92-0.61-1.47-0.61h-9.56c-0.77,0-1.39,0.62-1.39,1.39v4.52
+               l1.39,14.95c0,0.77,0.62,1.39,1.39,1.39h22.24c0.77,0,1.39-0.62,1.39-1.39V35.14c0-0.77-0.62-1.39-1.39-1.39l-9.85-0.7
+               C34.49,33.06,34.14,32.91,33.88,32.65z" />
+      <path fill="url(#path_folder_front_gradient)"
+            d="M31.91,35.43l2.27-2.27c0.06-0.06,0.15-0.1,0.25-0.1H46.1c0.77,0,1.39,0.62,1.39,1.39v18.07
+               c0,0.77-0.62,1.39-1.39,1.39H21.08c-0.77,0-1.39-0.62-1.39-1.39V36.19c0-0.19,0.16-0.35,0.35-0.35h10.89
+               C31.3,35.84,31.65,35.69,31.91,35.43z" />
     </g>
 
     <text id="path_display"
-          data-frog-part="path_display"
+          x="50"
+          y="42.09"
+          dominant-baseline="middle"
           data-frog-member="value path.display_value"
+          data-frog-part="path_display"
+          data-frog-role="dynamic_path_value_text_region"
           data-frog-anchor="path_display.left_center"
-          x="56"
-          y="96"
-          dominant-baseline="middle"
-          data-frog-bind="value path.* display.* style.path_display.*">C:\data\file.txt</text>
-
-    <text id="text_overflow_marker"
-          data-frog-part="text_overflow_marker"
-          x="398"
-          y="96"
-          text-anchor="middle"
-          dominant-baseline="middle"
-          font-family="system-ui, Segoe UI, Arial, sans-serif"
-          font-size="12"
-          fill="#111111"
-          data-frog-bind="display.text_overflow_visible">...</text>
+          data-frog-bind="value path.* display.* style.path_display.*"
+          data-frog-resize="stretch_dynamic_text_region"
+          data-frog-solidary-group="field_value_text"
+          data-frog-runtime-surface="host_path_value_overlay"
+          data-frog-runtime-preview="hidden_when_host_projects_value"
+          data-frog-hidden-icon-behavior="left_edge_returns_to_path_face_inset">C:\data\file.txt</text>
 
     <rect id="browse_button"
-          data-frog-part="browse_button"
-          x="424"
-          y="78"
+          x="414.75"
+          y="24.09"
           width="34"
           height="36"
           rx="2"
-          data-frog-bind="browse.enabled browse.button_visible style.browse_button.*" />
+          data-frog-part="browse_button"
+          data-frog-role="browse_hit_target"
+          data-frog-bind="browse.enabled browse.button_visible style.browse_button.*"
+          data-frog-resize="fixed_size_right_pinned_optional_hit_target"
+          data-frog-solidary-group="browse_affordance"
+          data-frog-visibility-member="browse.button_visible"
+          data-frog-hit-target="browse"
+          data-frog-border-policy="uniform_non_scaling_stroke" />
 
     <text id="browse_button_text"
-          data-frog-part="browse_button_text"
-          data-frog-member="display.browse_label"
-          data-frog-anchor="browse_button.center"
-          data-frog-bind="browse.button_visible display.browse_label style.browse_button.text.*"
-          x="441"
-          y="96"
+          x="431.75"
+          y="42.09"
           text-anchor="middle"
           dominant-baseline="middle"
-          font-family="system-ui, Segoe UI, Arial, sans-serif"
-          font-size="13">...</text>
-
-    <g id="validation_marker"
-       data-frog-part="validation_marker"
-       data-frog-bind="validation.* display.validation_marker_visible">
-      <circle cx="478" cy="96" r="8" fill="#22c55e" />
-      <path d="M474 96 L477 100 L483 91" fill="none" stroke="#ffffff" stroke-width="2" vector-effect="non-scaling-stroke" />
-    </g>
+          data-frog-member="display.browse_label"
+          data-frog-part="browse_button_text"
+          data-frog-role="browse_button_label"
+          data-frog-anchor="browse_button.center"
+          data-frog-bind="browse.button_visible display.browse_label style.browse_button.text.*"
+          data-frog-resize="centered_inside_browse_button"
+          data-frog-solidary-group="browse_affordance"
+          data-frog-visibility-member="browse.button_visible">...</text>
   </g>
 </svg>

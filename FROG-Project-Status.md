@@ -116,7 +116,7 @@ conformance, or exploratory posture rather than implied executable closure.
       <td><code>09_path_value_roundtrip</code></td>
       <td>Path control-to-indicator roundtrip, including browse-button UI behavior.</td>
       <td>Path control and indicator through the Default Path realization.</td>
-      <td>Widget runtime slice with published FIR/lowering/contract, LLVM kernel manifest, and C++/Python/Rust runtime coverage.</td>
+      <td>Widget runtime slice with published FIR/lowering/contract, LLVM kernel manifest, and runtime coverage evidence. Latest Default Path SVG skin review: <time datetime="2026-06-03">2026-06-03</time>; Graiphic runtime implementation code remains outside the public publication scope.</td>
     </tr>
     <tr>
       <td><code>10_button_press_to_boolean</code></td>

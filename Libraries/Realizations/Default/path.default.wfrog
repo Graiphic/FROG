@@ -12,6 +12,11 @@
     "role_posture": "control_indicator",
     "summary": "Machine-readable default realization manifest for standardized path widgets."
   },
+  "publication_review": {
+    "last_reviewed": "2026-06-03",
+    "scope": "Default Path rectangular SVG skin, semantic parts, and Example 09 C++ browser-host rendering",
+    "public_posture": "Publishes the realization contract, SVG skin metadata, example source, and review date; runtime implementation code remains outside the public publication scope."
+  },
   "ownership_boundary": {
     "owns": [
       "default path realization records",
@@ -93,9 +98,7 @@
         "path_display",
         "browse_button",
         "browse_button_text",
-        "path_icon",
-        "validation_marker",
-        "text_overflow_marker"
+        "path_icon"
       ],
       "supported_visual_states": [
         "normal",
@@ -108,7 +111,6 @@
       ],
       "fallbacks": {
         "missing_browse_button": "host_native_browse_or_text_only",
-        "missing_validation_marker": "hide_validation_marker",
         "missing_path_icon": "hide_path_icon",
         "missing_caption": "host_external_caption_region"
       }
@@ -128,9 +130,7 @@
         "caption",
         "path_face",
         "path_display",
-        "path_icon",
-        "validation_marker",
-        "text_overflow_marker"
+        "path_icon"
       ],
       "supported_visual_states": [
         "normal",
@@ -141,7 +141,6 @@
         "inaccessible"
       ],
       "fallbacks": {
-        "missing_validation_marker": "hide_validation_marker",
         "missing_path_icon": "hide_path_icon",
         "missing_caption": "host_external_caption_region"
       }
@@ -161,11 +160,54 @@
         "layout_source": "front_panel_layout_rectangle",
         "scales_to_layout": true,
         "supports_browse_button": true,
-        "supports_validation_marker": true,
         "supports_path_icon": true,
-        "supports_text_overflow_marker": true,
-        "supports_caption": true
+        "supports_caption": true,
+        "border_thickness_policy": "uniform_non_scaling_stroke_for_path_face_and_browse_button",
+        "embedded_crop_reference_part": "path_face"
       },
+      "part_resize_policy": [
+        {
+          "part": "root",
+          "resize": "scale_to_front_panel_layout_rectangle",
+          "solidary_group": "whole_path_widget"
+        },
+        {
+          "part": "caption",
+          "resize": "anchored_text",
+          "anchor": "caption.anchor",
+          "solidary_group": "caption_overlay"
+        },
+        {
+          "part": "path_face",
+          "resize": "stretch_surface",
+          "border_policy": "uniform_thickness_all_sides",
+          "solidary_group": "field_body"
+        },
+        {
+          "part": "path_icon",
+          "resize": "proportional_indivisible_optional_group",
+          "visibility_member": "display.icon_visible",
+          "solidary_group": "field_left_adornment"
+        },
+        {
+          "part": "path_display",
+          "resize": "stretch_dynamic_text_region",
+          "anchor": "path_display.left_center",
+          "solidary_group": "field_value_text",
+          "hidden_icon_behavior": "left_edge_returns_to_path_face_inset"
+        },
+        {
+          "part": "browse_button",
+          "resize": "fixed_size_right_pinned_optional_hit_target",
+          "visibility_member": "browse.button_visible",
+          "solidary_group": "browse_affordance"
+        },
+        {
+          "part": "browse_button_text",
+          "resize": "centered_inside_browse_button",
+          "solidary_group": "browse_affordance"
+        }
+      ],
       "fallback": "host_path_field"
     }
   ],
@@ -242,18 +284,6 @@
       "binding_selector": "[data-frog-part='path_icon']",
       "semantic_member": "path.kind",
       "style_binding_group": "style.path_icon"
-    },
-    {
-      "part": "validation_marker",
-      "binding_kind": "svg_group_or_host_marker",
-      "binding_selector": "[data-frog-part='validation_marker']",
-      "semantic_member": "path.validation_state"
-    },
-    {
-      "part": "text_overflow_marker",
-      "binding_kind": "svg_text_or_host_marker",
-      "binding_selector": "[data-frog-part='text_overflow_marker']",
-      "visibility_member": "display.text_overflow_visible"
     }
   ],
   "state_maps": [
@@ -370,11 +400,6 @@
       "target_operation": "select_icon"
     },
     {
-      "member": "path.validation_state",
-      "target_part": "validation_marker",
-      "target_operation": "select_validation_visual"
-    },
-    {
       "member": "browse.button_visible",
       "target_part": "browse_button",
       "target_operation": "set_visibility"
@@ -387,16 +412,6 @@
     {
       "member": "display.icon_visible",
       "target_part": "path_icon",
-      "target_operation": "set_visibility"
-    },
-    {
-      "member": "display.validation_marker_visible",
-      "target_part": "validation_marker",
-      "target_operation": "set_visibility"
-    },
-    {
-      "member": "display.text_overflow_visible",
-      "target_part": "text_overflow_marker",
       "target_operation": "set_visibility"
     },
     {
