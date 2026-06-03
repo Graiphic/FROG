@@ -17,6 +17,7 @@
   <li><a href="../Readme.md">Realizations index</a></li>
   <li><a href="../../Widgets/Readme.md">Standard widgets</a></li>
   <li><a href="./Readme.md">Default realization family overview</a></li>
+  <li><a href="./Semantic SVG Skin Contract.md">Semantic SVG skin contract</a></li>
   <li><a href="./Validation.md">Default realization validation checklist</a></li>
 </ul>
 
@@ -98,6 +99,7 @@ A Default realization manifest should provide the following machine-readable sur
   <li><code>state_maps</code> — visual or interaction state posture, when present.</li>
   <li><code>composition</code> — shell, layer order, slots, and nested slots for composite families, when present.</li>
   <li><code>host_hints</code> — rendering and host-native replacement posture.</li>
+  <li><code>skin_contract</code> or equivalent documentation — semantic SVG parts, anchors, bindings, slots, resize policy, solidary groups, repeatable regions, clip regions, and dynamic text/value projection posture when the realization is SVG-backed.</li>
   <li><code>validation_expectations</code> — repository-visible validation expectations.</li>
 </ul>
 
@@ -137,6 +139,8 @@ They do not redefine public widget class law.
   <li>Every declared public part should correspond to a public part defined by the owning widget class-law document.</li>
   <li>Every declared resource path should resolve relative to the manifest file.</li>
   <li>SVG resources should expose relevant public parts through <code>data-frog-part</code> markers when those parts are represented in the SVG template.</li>
+  <li>SVG resources should expose host-aligned placement through published anchors, bindings, slots, or equivalent realization records rather than requiring private coordinate guesses.</li>
+  <li>SVG-backed resources should document which parts stretch, stay fixed, scale proportionally, move as solidary groups, repeat, clip child content, or receive dynamic text/value overlays.</li>
   <li>Composite shell resources may expose slots through <code>data-frog-slot</code> markers.</li>
   <li>A resource may serve multiple public parts when the manifest explicitly declares that relationship.</li>
   <li>Realization-private renderer handles, host-native handles, virtualized rows, virtualized nodes, canvas handles, GPU surfaces, and IDE-private editors must not become public semantic storage.</li>

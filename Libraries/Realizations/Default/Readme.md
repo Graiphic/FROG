@@ -17,6 +17,7 @@
   <li><a href="../Readme.md">Realizations index</a></li>
   <li><a href="../../Widgets/Readme.md">Standard widgets</a></li>
   <li><a href="./Package.md">Default realization package</a></li>
+  <li><a href="./Semantic SVG Skin Contract.md">Semantic SVG skin contract</a></li>
   <li><a href="./Validation.md">Default realization validation checklist</a></li>
 </ul>
 
@@ -33,6 +34,13 @@ A Default realization gives a portable embodiment posture for a widget class fam
 Default realizations are downstream from widget class law.
 They do not define FROG source semantics, FIR semantics, lowering semantics, runtime semantics, or host-private rendering behavior.
 They provide a repository-visible default embodiment surface that runtimes and hosts can consume, replace, or adapt while preserving the public widget contract.
+</p>
+
+<p>
+SVG-backed Default assets are treated as semantic skins, not as inert pictures.
+Their meaningful surfaces should be named through published parts, anchors,
+bindings, and slots so hosts can project dynamic values and interaction
+surfaces without hardcoded geometry. See the <a href="./Semantic SVG Skin Contract.md">Semantic SVG Skin Contract</a>.
 </p>
 
 <hr/>
@@ -112,6 +120,7 @@ Implementations/Reference/WidgetValidator/
   <li>Composite widgets may use a shell plus subobject assets.</li>
   <li>Composite widgets may declare slots, nested slots, layer order, property bindings, method bindings, event bindings, host hints, and fallback behavior.</li>
   <li>Assets are templates or realization resources; they are not semantic owners of widget values.</li>
+  <li>SVG-backed assets publish semantic skins: visible shapes may change, but required parts, anchors, bindings, slots, and resize policy remain the stable host contract.</li>
   <li>Host-native replacement is allowed only when the public class-law surface remains preserved.</li>
 </ul>
 

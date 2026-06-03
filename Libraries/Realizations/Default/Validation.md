@@ -63,6 +63,8 @@ Each published widget family should provide:
   <li>Each declared supported part should appear in the corresponding widget class-law document.</li>
   <li>SVG resources should expose declared public parts through <code>data-frog-part</code> markers when applicable.</li>
   <li>SVG shell resources may expose composition slots through <code>data-frog-slot</code> markers.</li>
+  <li>SVG-backed resources should have a reviewable semantic skin contract covering required parts, optional parts, anchors, bindings, slots, dynamic text/value regions, resize policy, solidary groups, repeatable regions, and clip regions.</li>
+  <li>Runtime-facing overlays should be alignable from published SVG parts or anchors; a Default realization should not require private example-specific coordinates to render accepted widget surfaces.</li>
   <li>Any visible border, frame, selection outline, cell outline, scrollbar track, or equivalent stroke-like surface should preserve one uniform published thickness after resize; SVG-backed resources should use non-scaling strokes or an equivalent realization strategy when a single width property controls the surface.</li>
   <li>Bordered fill surfaces should not leave unintended inner gaps. If a value face, text region, button face, state face, or equivalent part is meant to touch its surrounding border, the SVG geometry should meet the stroke inner edge or extend under a transparent / stroke-only frame.</li>
   <li>Documentation files should not contain literal escaped newline artifacts in rendered lists.</li>

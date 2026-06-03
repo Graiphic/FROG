@@ -71,7 +71,7 @@ ownership, realization ownership, public parts, and validated limits.
     </tr>
     <tr>
       <td>Default SVG Parts</td>
-      <td>Published parts, anchors, bindings, slots, and repeated regions that a host may target.</td>
+      <td>Published parts, anchors, bindings, slots, repeated regions, dynamic text/value regions, and resize/solidarity policy that a host may target.</td>
     </tr>
     <tr>
       <td>Visual States</td>
@@ -91,6 +91,43 @@ ownership, realization ownership, public parts, and validated limits.
     </tr>
   </tbody>
 </table>
+
+<hr/>
+
+<h2>Default SVG Skin Table Shape</h2>
+
+<p>
+For SVG-backed Default realizations, widget documents should make the skin
+contract explicit enough that a runtime or host can consume the SVG without
+private geometry guesses.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Surface</th>
+      <th>Required</th>
+      <th>Marker</th>
+      <th>Resize posture</th>
+      <th>Host use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>example_face</code></td>
+      <td>yes / no</td>
+      <td><code>data-frog-part="example_face"</code></td>
+      <td>stretch / fixed / proportional / repeated / clipped</td>
+      <td>Value face, hit target, overlay anchor, or visual state surface.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+The table should also name surfaces that move together as a solidary group,
+surfaces that remain indivisible such as icons, and surfaces where dynamic text
+or values are projected.
+</p>
 
 <hr/>
 

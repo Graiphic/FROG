@@ -22,11 +22,12 @@
   <li><a href="#part-directories-and-placement-directories">6. Part Directories and Placement Directories</a></li>
   <li><a href="#state-organization">7. State Organization</a></li>
   <li><a href="#supported-asset-kinds">8. Supported Asset Kinds</a></li>
-  <li><a href="#recommended-tree-shape">9. Recommended Tree Shape</a></li>
-  <li><a href="#examples">10. Examples</a></li>
-  <li><a href="#fallback-posture">11. Fallback Posture</a></li>
-  <li><a href="#validation-posture">12. Validation Posture</a></li>
-  <li><a href="#summary">13. Summary</a></li>
+  <li><a href="#semantic-svg-skin-posture">9. Semantic SVG Skin Posture</a></li>
+  <li><a href="#recommended-tree-shape">10. Recommended Tree Shape</a></li>
+  <li><a href="#examples">11. Examples</a></li>
+  <li><a href="#fallback-posture">12. Fallback Posture</a></li>
+  <li><a href="#validation-posture">13. Validation Posture</a></li>
+  <li><a href="#summary">14. Summary</a></li>
 </ul>
 
 <hr/>
@@ -284,7 +285,32 @@ They do not become semantic truth.
 
 <hr/>
 
-<h2 id="recommended-tree-shape">9. Recommended Tree Shape</h2>
+<h2 id="semantic-svg-skin-posture">9. Semantic SVG Skin Posture</h2>
+
+<p>
+SVG templates in this asset tree should be authored as semantic skins.
+A skin may be visually restyled, but its public meaning is carried by stable
+markers and realization records rather than by private coordinate conventions.
+See <a href="../Semantic SVG Skin Contract.md">Semantic SVG Skin Contract</a>.
+</p>
+
+<p>
+An asset README or corresponding realization document should identify the
+required and optional parts for the widget family, the dynamic text/value
+regions, and the resize policy for surfaces that stretch, remain fixed, scale
+proportionally, move as solidary groups, repeat, or clip child content.
+</p>
+
+<p>
+This keeps the asset tree friendly to derived skins: a new visual style can be
+introduced by preserving the same semantic markers and resize contract, while a
+true contract change becomes visible as a new realization variant or deliberate
+documentation update.
+</p>
+
+<hr/>
+
+<h2 id="recommended-tree-shape">10. Recommended Tree Shape</h2>
 
 <p>
 The recommended official asset-tree shape is:
@@ -377,7 +403,7 @@ This shape is illustrative but normative in posture:
 
 <hr/>
 
-<h2 id="examples">10. Examples</h2>
+<h2 id="examples">11. Examples</h2>
 
 <p>
 Example resource paths:
@@ -405,7 +431,7 @@ Example placement-support paths:
 
 <hr/>
 
-<h2 id="fallback-posture">11. Fallback Posture</h2>
+<h2 id="fallback-posture">12. Fallback Posture</h2>
 
 <p>
 When a state-specific resource is missing, runtimes MAY apply published fallback rules.
@@ -421,7 +447,7 @@ Likewise, when a preferred placement-support resource is unavailable, runtimes M
 
 <hr/>
 
-<h2 id="validation-posture">12. Validation Posture</h2>
+<h2 id="validation-posture">13. Validation Posture</h2>
 
 <p>
 Validators SHOULD diagnose at least:
@@ -432,12 +458,13 @@ Validators SHOULD diagnose at least:
   <li>directories named with non-published part identifiers or non-published placement roles,</li>
   <li>state resource filenames that do not correspond to declared realization states,</li>
   <li>placement-support files attached to unknown parts,</li>
-  <li>visual directories that appear to claim ownership of dynamic public text without a matching realization contract.</li>
+  <li>visual directories that appear to claim ownership of dynamic public text without a matching realization contract,</li>
+  <li>SVG-backed widget assets that lack a reviewable semantic skin contract for required parts, dynamic regions, resize posture, and solidary groups.</li>
 </ul>
 
 <hr/>
 
-<h2 id="summary">13. Summary</h2>
+<h2 id="summary">14. Summary</h2>
 
 <p>
 The default-family asset tree is organized by:
