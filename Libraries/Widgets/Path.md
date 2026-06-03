@@ -64,6 +64,18 @@ The intrinsic baseline does not define a filesystem API or one mandatory file-di
 It defines a portable path-value widget family that runtimes and IDEs can implement consistently.
 </p>
 
+<h3>Review Status</h3>
+
+<p>
+Latest Path widget review:
+<time datetime="2026-06-03">2026-06-03</time>. The reviewed public surface
+covers the Path widget law, the Default Path realization manifest, the
+rectangular SVG skin contract, and Example <code>09_path_value_roundtrip</code>
+as the scalar Path reference. This review records public source, manifest,
+SVG, and documentation posture; it does not publish Graiphic runtime
+implementation code.
+</p>
+
 <hr/>
 
 <h2 id="classes-defined-here">2. Classes Defined Here</h2>

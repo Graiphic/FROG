@@ -6,6 +6,11 @@
                      "description":  "Reads one path value from a .frog-owned Path control, exposes that value through the public input surface, copies it to one public output, and publishes it to one Path indicator. The first reference closure is C++ and consumes the .frog front-panel instance, Default Path .wfrog realization assets, and an LLVM-produced native path kernel through an explicit manifest.",
                      "author":  "Graiphic",
                      "program_version":  "0.1.0",
+                     "review":  {
+                                    "last_reviewed":  "2026-06-03",
+                                    "scope":  "Example 09 Path source/package posture, Default Path SVG skin contract, and C++ browser-host rendering",
+                                    "public_posture":  "Review evidence is public; Graiphic runtime implementation code remains outside the public publication scope."
+                                },
                      "tags":  [
                                   "example",
                                   "ui",
