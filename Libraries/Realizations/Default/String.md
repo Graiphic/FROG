@@ -40,6 +40,12 @@ The class law belongs to <code>Libraries/Widgets/String.md</code>.
 This document describes how the default realization family can embody that law through SVG template resources, part bindings, state maps, and realization variants.
 </p>
 
+<p>
+Latest public realization metadata review:
+<time datetime="2026-06-03">2026-06-03</time>. The reviewed surface is the
+Default rectangular String SVG skin and its public semantic part contract.
+</p>
+
 <hr/>
 
 <h2>2. Label and Caption</h2>
@@ -119,4 +125,65 @@ Representative bindings include <code>caption.text</code> to <code>caption</code
 <p>
 The published String default realization keeps hover and text-region appearance on <code>style.text_region.*</code>.
 It does not publish a <code>focus_ring</code> part, so runtimes must not add a separate hardcoded String focus surface.
+</p>
+
+<h2>8. Rectangular SVG Geometry Contract</h2>
+
+<p>
+The rectangular String realization is a semantic SVG skin. Its published parts
+and anchors define where a host places the caption, editable/display text
+overlay, placeholder overlay, and stretched text field body.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Part</th>
+      <th>Runtime interpretation</th>
+      <th>Resize posture</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>root</code></td>
+      <td>Complete String widget coordinate system.</td>
+      <td>Scales to the front-panel widget layout rectangle.</td>
+    </tr>
+    <tr>
+      <td><code>label</code></td>
+      <td>Logical/tooling label preview; separate from the visible caption.</td>
+      <td>Anchored text, hidden or replaced by host policy.</td>
+    </tr>
+    <tr>
+      <td><code>caption</code></td>
+      <td>User-facing front-panel caption.</td>
+      <td>Anchored text aligned to <code>caption.anchor</code>.</td>
+    </tr>
+    <tr>
+      <td><code>frame</code></td>
+      <td>Outer field frame driven by <code>style.frame.*</code>.</td>
+      <td>Stretch surface with uniform non-scaling stroke.</td>
+    </tr>
+    <tr>
+      <td><code>text_region</code></td>
+      <td>Main editable/display field body and embedded-widget crop reference.</td>
+      <td>Stretch surface with uniform non-scaling stroke.</td>
+    </tr>
+    <tr>
+      <td><code>text_value</code></td>
+      <td>Dynamic current string value.</td>
+      <td>Host overlay aligns to <code>text_region.left_center</code>.</td>
+    </tr>
+    <tr>
+      <td><code>placeholder</code></td>
+      <td>Optional empty-value fallback text only; never the semantic value.</td>
+      <td>Host overlay aligns to <code>text_region.left_center</code> when visible.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+The Default rectangular String skin intentionally has no published focus ring,
+validation marker, overflow marker, caret, or selection surface. Those are host
+or editor details unless a later realization explicitly promotes them.
 </p>

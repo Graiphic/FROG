@@ -219,6 +219,67 @@ Caret, selection highlight, scroll thumb, scroll track, text layout cache, and h
 They may be realized by a host, but they are not class law unless standardized later.
 </p>
 
+<h3>6.1 Default SVG Skin Geometry Contract</h3>
+
+<p>
+The Default rectangular String realization is a semantic SVG skin. Hosts use its
+published parts and anchors to place live overlays, not private coordinate
+guesses or runtime-hardcoded String geometry.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Part</th>
+      <th>Resize posture</th>
+      <th>Host interpretation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>root</code></td>
+      <td>Scales to the widget layout rectangle.</td>
+      <td>Owns the complete String skin coordinate system.</td>
+    </tr>
+    <tr>
+      <td><code>label</code></td>
+      <td>Anchored text.</td>
+      <td>Logical/tooling label; it remains separate from the user-facing caption.</td>
+    </tr>
+    <tr>
+      <td><code>caption</code></td>
+      <td>Anchored text.</td>
+      <td>User-facing caption; host overlays align to <code>caption.anchor</code>.</td>
+    </tr>
+    <tr>
+      <td><code>frame</code></td>
+      <td>Stretch surface with uniform non-scaling stroke.</td>
+      <td>Outer field frame driven by <code>style.frame.*</code>.</td>
+    </tr>
+    <tr>
+      <td><code>text_region</code></td>
+      <td>Stretch surface with uniform non-scaling stroke.</td>
+      <td>Main text field body; it is the crop/reference rectangle for embedded String renderings.</td>
+    </tr>
+    <tr>
+      <td><code>text_value</code></td>
+      <td>Dynamic text region.</td>
+      <td>Current semantic <code>value</code>; host overlays align to <code>text_region.left_center</code>.</td>
+    </tr>
+    <tr>
+      <td><code>placeholder</code></td>
+      <td>Optional dynamic text region.</td>
+      <td>Empty-value fallback only; it never replaces the semantic <code>value</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+The Default String skin intentionally has no public <code>focus_ring</code>,
+validation marker, overflow marker, caret, or selection part. Those may exist as
+host/editor internals, but a runtime must not address them as String class law.
+</p>
+
 <hr/>
 
 <h2 id="standard-property-surface">7. Standard Property Surface</h2>

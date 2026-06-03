@@ -166,12 +166,17 @@
       ],
       "target_variant": "rectangular",
       "template_markers": {
+        "skin_contract": "semantic_svg_skin_v1",
+        "skin_contract_attribute": "data-frog-skin-contract",
         "template": "frog.realizations.default.string.rectangular",
         "variant": "rectangular",
         "part_attribute": "data-frog-part",
+        "role_attribute": "data-frog-role",
         "binding_attribute": "data-frog-bind",
         "member_attribute": "data-frog-member",
-        "anchor_attribute": "data-frog-anchor"
+        "anchor_attribute": "data-frog-anchor",
+        "resize_attribute": "data-frog-resize",
+        "solidary_group_attribute": "data-frog-solidary-group"
       }
     }
   ],
@@ -481,6 +486,8 @@
     "all declared public parts must exist in the string class law",
     "resources must resolve relative to this package file",
     "resource SVG templates should expose data-frog-part markers for declared parts",
+    "resource SVG templates should expose data-frog-skin-contract='semantic_svg_skin_v1'",
+    "resource SVG templates must not publish undeclared focus, validation, overflow, or editor-internal parts",
     "placeholder text must not replace the semantic value",
     "property bindings must target public string members declared by the class law",
     "variant selection must not create a new widget class"

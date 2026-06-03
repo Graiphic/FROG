@@ -92,8 +92,10 @@ Current instance-level properties proven by the example include:
 
 <p>
 The Default String SVG currently exposes these public parts:
-<code>caption</code>, <code>focus_ring</code>, <code>frame</code>, <code>label</code>,
-<code>placeholder</code>, <code>root</code>, <code>text_region</code>, and <code>text_value</code>.
+<code>caption</code>, <code>frame</code>, <code>label</code>, <code>placeholder</code>,
+<code>root</code>, <code>text_region</code>, and <code>text_value</code>.
+It intentionally does not expose a public <code>focus_ring</code>, validation marker,
+overflow marker, caret, or selection surface.
 </p>
 
 <hr/>

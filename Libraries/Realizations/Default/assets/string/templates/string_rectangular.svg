@@ -2,14 +2,78 @@
      viewBox="0 0 420 190"
      role="img"
      aria-label="FROG default string rectangular realization template"
+     data-frog-skin-contract="semantic_svg_skin_v1"
      data-frog-template="frog.realizations.default.string.rectangular"
      data-frog-target-classes="frog.widgets.string_control frog.widgets.string_indicator"
-     data-frog-variant="rectangular">
+     data-frog-variant="rectangular"
+     data-frog-resize="scale_to_front_panel_layout_rectangle">
   <title>FROG Default String Rectangular Realization Template</title>
   <desc>
     Semantic SVG template for the default rectangular realization variant of FROG string widgets.
     The runtime or IDE binds public widget properties to stable parts declared by id and data-frog-part.
   </desc>
+  <metadata id="frog_semantic_skin_contract"
+            data-frog-kind="semantic_svg_skin_contract"
+            data-frog-contract-version="0.1">
+    {
+      "template": "frog.realizations.default.string.rectangular",
+      "skin_contract": "semantic_svg_skin_v1",
+      "target_classes": [
+        "frog.widgets.string_control",
+        "frog.widgets.string_indicator"
+      ],
+      "parts": [
+        {
+          "part": "root",
+          "role": "coordinate_space",
+          "resize": "scale_to_front_panel_layout_rectangle",
+          "solidary_group": "whole_string_widget"
+        },
+        {
+          "part": "label",
+          "member": "label.text",
+          "anchor": "label.anchor",
+          "resize": "anchored_text",
+          "runtime_surface": "logical_label_preview_hidden_by_runtime"
+        },
+        {
+          "part": "caption",
+          "member": "caption.text",
+          "anchor": "caption.anchor",
+          "resize": "anchored_text",
+          "runtime_surface": "host_caption_overlay"
+        },
+        {
+          "part": "frame",
+          "style_group": "style.frame",
+          "resize": "stretch_surface",
+          "border_policy": "uniform_non_scaling_stroke"
+        },
+        {
+          "part": "text_region",
+          "style_group": "style.text_region",
+          "resize": "stretch_surface",
+          "border_policy": "uniform_non_scaling_stroke",
+          "crop_reference": true
+        },
+        {
+          "part": "text_value",
+          "member": "value",
+          "anchor": "text_region.left_center",
+          "resize": "stretch_dynamic_text_region",
+          "runtime_surface": "host_string_value_overlay"
+        },
+        {
+          "part": "placeholder",
+          "member": "placeholder.text",
+          "anchor": "text_region.left_center",
+          "resize": "stretch_dynamic_text_region",
+          "visibility_member": "placeholder.visible",
+          "runtime_surface": "optional_host_placeholder_overlay"
+        }
+      ]
+    }
+  </metadata>
 
   <defs>
     <style>
@@ -89,51 +153,86 @@
     </style>
   </defs>
 
-  <g id="root" data-frog-part="root">
+  <g id="root"
+     data-frog-part="root"
+     data-frog-role="coordinate_space"
+     data-frog-resize="scale_to_front_panel_layout_rectangle"
+     data-frog-solidary-group="whole_string_widget">
     <text id="label_text"
           data-frog-part="label"
+          data-frog-role="logical_label_preview"
           data-frog-member="label.text"
           data-frog-anchor="label.anchor"
+          data-frog-resize="anchored_text"
+          data-frog-solidary-group="label_overlay"
+          data-frog-runtime-surface="preview_hidden_by_host_overlay"
           x="16"
           y="18">string_1</text>
 
     <text id="caption_text"
           data-frog-part="caption"
+          data-frog-role="visible_caption_preview"
           data-frog-member="caption.text"
           data-frog-anchor="caption.anchor"
           data-frog-bind="caption.text caption.visible caption.anchor.* caption.align.horizontal caption.style.*"
+          data-frog-resize="anchored_text"
+          data-frog-solidary-group="caption_overlay"
+          data-frog-runtime-surface="host_caption_overlay"
+          data-frog-runtime-preview="hidden_when_host_projects_caption"
           x="28"
           y="64">String</text>
 
     <rect id="frame"
           data-frog-part="frame"
+          data-frog-role="outer_field_frame"
           x="12"
           y="72"
           width="396"
           height="64"
           rx="0"
-          data-frog-bind="style.frame.fill_color style.frame.border_color style.frame.border_width style.frame.corner_radius" />
+          data-frog-bind="style.frame.fill_color style.frame.border_color style.frame.border_width style.frame.corner_radius"
+          data-frog-resize="stretch_surface"
+          data-frog-solidary-group="field_body"
+          data-frog-border-policy="uniform_non_scaling_stroke" />
     <rect id="text_region"
           data-frog-part="text_region"
+          data-frog-role="editable_text_region"
           x="15"
           y="75"
           width="390"
           height="58"
           rx="0"
-          data-frog-bind="style.text_region.fill_color style.text_region.fill_color.hover style.text_region.border_color style.text_region.border_color.hover style.text_region.border_width style.text_region.border_width.hover style.text_region.inset" />
+          data-frog-bind="style.text_region.fill_color style.text_region.fill_color.hover style.text_region.border_color style.text_region.border_color.hover style.text_region.border_width style.text_region.border_width.hover style.text_region.inset"
+          data-frog-resize="stretch_surface"
+          data-frog-solidary-group="field_body"
+          data-frog-border-policy="uniform_non_scaling_stroke"
+          data-frog-crop-reference="true" />
 
     <text id="placeholder"
           data-frog-part="placeholder"
+          data-frog-role="optional_placeholder_text"
           data-frog-member="placeholder.text"
           data-frog-anchor="text_region.left_center"
+          data-frog-bind="placeholder.text placeholder.visible placeholder.style.*"
+          data-frog-resize="stretch_dynamic_text_region"
+          data-frog-solidary-group="field_value_text"
+          data-frog-visibility-member="placeholder.visible"
+          data-frog-runtime-surface="optional_host_placeholder_overlay"
+          data-frog-runtime-preview="hidden_when_host_projects_placeholder"
           x="44"
           y="104"
           dominant-baseline="middle">placeholder</text>
 
     <text id="text_value"
           data-frog-part="text_value"
+          data-frog-role="dynamic_string_value_text_region"
           data-frog-member="value"
           data-frog-anchor="text_region.left_center"
+          data-frog-bind="value text.* style.text.*"
+          data-frog-resize="stretch_dynamic_text_region"
+          data-frog-solidary-group="field_value_text"
+          data-frog-runtime-surface="host_string_value_overlay"
+          data-frog-runtime-preview="hidden_when_host_projects_value"
           x="44"
           y="104"
           dominant-baseline="middle">TEXT</text>

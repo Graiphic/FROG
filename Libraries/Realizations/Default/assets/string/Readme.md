@@ -60,3 +60,68 @@ These files are SVG template resources consumed by the default realization manif
 The String rectangular template intentionally has no <code>focus_ring</code> marker.
 Interactive hover and text-region styling are carried through the manifest bindings and instance <code>.wfrog</code> properties.
 </p>
+
+<hr/>
+
+<h2>4. Semantic SVG Contract</h2>
+
+<p>
+The SVG root publishes <code>data-frog-skin-contract="semantic_svg_skin_v1"</code>
+and a <code>metadata</code> block named
+<code>frog_semantic_skin_contract</code>. A host should discover String geometry
+from these public markers instead of guessing private coordinates.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Part</th>
+      <th>Member/style surface</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>root</code></td>
+      <td>widget coordinate space</td>
+      <td>Complete rectangular String skin.</td>
+    </tr>
+    <tr>
+      <td><code>label</code></td>
+      <td><code>label.text</code></td>
+      <td>Logical/tooling label, separate from the visible caption.</td>
+    </tr>
+    <tr>
+      <td><code>caption</code></td>
+      <td><code>caption.text</code>, <code>caption.visible</code>, <code>caption.style.*</code></td>
+      <td>Visible front-panel caption.</td>
+    </tr>
+    <tr>
+      <td><code>frame</code></td>
+      <td><code>style.frame.*</code></td>
+      <td>Outer rectangular field border and background.</td>
+    </tr>
+    <tr>
+      <td><code>text_region</code></td>
+      <td><code>style.text_region.*</code></td>
+      <td>Editable/display field body and crop reference for embedded String cells.</td>
+    </tr>
+    <tr>
+      <td><code>text_value</code></td>
+      <td><code>value</code>, <code>text.*</code>, <code>style.text.*</code></td>
+      <td>Current string value rendered by the host overlay.</td>
+    </tr>
+    <tr>
+      <td><code>placeholder</code></td>
+      <td><code>placeholder.text</code>, <code>placeholder.visible</code>, <code>placeholder.style.*</code></td>
+      <td>Optional empty-value fallback text; never the value itself.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+The Default String SVG must not publish decorative validation markers,
+overflow markers, hardcoded focus rings, caret surfaces, or selection surfaces.
+Those remain host/editor internals unless a future realization explicitly
+standardizes them.
+</p>
