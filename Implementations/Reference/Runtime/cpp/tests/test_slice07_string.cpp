@@ -52,6 +52,8 @@ void test_string_runtime_core_consumes_wfrog_assets() {
 
     const auto string_svg = read_text(runtime.asset_map.at("string_rectangular_svg"));
     assert_contains(string_svg, "data-frog-template=\"frog.realizations.default.string.rectangular\"");
+    assert_not_contains(string_svg, "data-frog-part=\"frame\"");
+    assert_not_contains(string_svg, "--frog-string-frame-");
     assert_contains(string_svg, "data-frog-part=\"text_region\"");
     assert_contains(string_svg, "data-frog-part=\"text_value\"");
     assert_contains(string_svg, "data-frog-anchor=\"text_region.left_center\"");
@@ -72,13 +74,15 @@ void test_string_browser_ui_surface() {
     frog::runtime::StringBrowserUiRuntime runtime(contract_path(), wfrog_path());
     std::string html = runtime.render_html();
 
-    assert_contains(html, "String Hello World Roundtrip");
+    assert_contains(html, "String Placeholder Roundtrip");
     assert_contains(html, "class='front-panel'");
     assert_contains(html, "style='width:560px;height:170px;'");
     assert_contains(html, "data-panel-id='main_panel'");
     assert_contains(html, "C++ reference runtime");
     assert_contains(html, "string contract executor");
     assert_contains(html, "none for Example 07");
+    assert_contains(html, "Reviewed");
+    assert_contains(html, "2026-06-04");
     assert_contains(html, "data-runtime-language='cpp'");
     assert_contains(html, "data-compiler-backend='none'");
     assert_contains(html, "data-execution-path='cpp_string_contract_executor'");
@@ -89,6 +93,8 @@ void test_string_browser_ui_surface() {
     assert_contains(html, "data-asset-route='/asset/string_rectangular_svg'");
     assert_contains(html, "class='string-skin'");
     assert_contains(html, "data-frog-visual-law='wfrog-realization-state-map'");
+    assert_not_contains(html, "data-frog-part=\"frame\"");
+    assert_not_contains(html, "--frog-string-frame-");
     assert_contains(html, "--frog-string-text-region-fill-hover:#eef6ff;");
     assert_contains(html, "--frog-string-text-region-stroke-hover:#2563eb;");
     assert_contains(html, "--frog-string-caption-color:#111827;");
@@ -97,7 +103,11 @@ void test_string_browser_ui_surface() {
     assert_contains(html, "font-size:var(--frog-string-caption-font-size)");
     assert_contains(html, ".string-control:hover .string-skin svg");
     assert_contains(html, "name='input_text' type='text'");
-    assert_contains(html, "hello world");
+    assert_contains(html, "data-frog-part='placeholder'");
+    assert_contains(html, "placeholder='Type your text here'");
+    assert_contains(html, "Type your text here");
+    assert_contains(html, "data-frog-part='text_value'");
+    assert_contains(html, "value=''");
     assert_contains(html, "String input");
     assert_contains(html, "String result");
     assert_not_contains(html, "string-card");

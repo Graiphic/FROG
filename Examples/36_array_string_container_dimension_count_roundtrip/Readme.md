@@ -19,7 +19,7 @@ Example 36 is a post-public-boundary widget progression example. Graiphic privat
 - In rank 1, the visible column count is intentionally collapsed to one visual column; in rank 2 or higher, row/column counts control the visible projection of the last two semantic dimensions.
 - Visible counts are viewport display properties. They may exceed the currently materialized semantic shape without forcing data materialization.
 - Each visible cell references the Default String realization through `element.template_ref` and `element.asset_ref`.
-- Runtime overlays must align to Default Array `index_display`, `element_region`, `element_slot`, and scrollbar parts, plus the full Default String `frame` part.
+- Runtime overlays must align to Default Array `index_display`, `element_region`, `element_slot`, and scrollbar parts, plus the Default String `text_region` part.
 - No local Example SVG skin is duplicated.
 - Runtime-family validation for this post-boundary example must preserve the same source-owned N-dimensional rank, index-display wrapping, final-two-dimensions projection, visible row/column command semantics, and String cell roundtrip across the private hosts that implement this slice.
 

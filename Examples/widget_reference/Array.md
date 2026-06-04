@@ -16,10 +16,10 @@
 <p>
 The current Array progression is demonstrated by
 <code>Examples/26_array_numeric_selection_roundtrip</code> through
-<code>Examples/34_array_2d_visible_counts_property_roundtrip</code>.
-Examples 26-28 are retained as intermediate non-widget-composed development
-snapshots. Examples 29-34 show the current final rendering direction: an Array
-container that repeats contained Default Numeric widget realizations instead of
+<code>Examples/37_array_path_container_dimension_count_roundtrip</code>.
+Examples 26-28 are deprecated historical non-widget-composed development
+snapshots. Examples 29-37 show the current final rendering direction: an Array
+container that repeats contained Default widget realizations instead of
 drawing a simplified numeric grid.
 </p>
 
@@ -145,6 +145,9 @@ is text, not a validated layout number.
 
 <p>
 The Default Array SVG publishes the Array shell and public composition parts.
+For the index display, the public part is the <code>index_display</code>
+subcontainer itself; per-dimension rows, arrow glyphs, separators, frame, and
+displayed values are internal SVG details, not additional public parts.
 The Default Numeric SVG publishes the value face, text value, increment up,
 increment down, control body, and indicator body parts used by the contained
 Numeric elements.
@@ -182,15 +185,18 @@ Array container examples.
 The Array examples use package files such as:
 </p>
 
-<pre><code>Examples/26_array_numeric_selection_roundtrip/ui/array_panel.wfrog
-Examples/27_array_1d_vertical_numeric_selection_roundtrip/ui/array_panel.wfrog
-Examples/28_array_3d_numeric_selection_roundtrip/ui/array_panel.wfrog
+<pre><code>Examples/26_array_numeric_selection_roundtrip/ui/array_panel.wfrog (deprecated historical rigid milestone)
+Examples/27_array_1d_vertical_numeric_selection_roundtrip/ui/array_panel.wfrog (deprecated historical rigid milestone)
+Examples/28_array_3d_numeric_selection_roundtrip/ui/array_panel.wfrog (deprecated historical rigid milestone)
 Examples/29_array_1d_numeric_container_roundtrip/ui/array_panel.wfrog
 Examples/30_array_1d_horizontal_numeric_container_roundtrip/ui/array_panel.wfrog
 Examples/31_array_1d_visible_count_property_roundtrip/ui/array_panel.wfrog
 Examples/32_array_1d_horizontal_visible_count_property_roundtrip/ui/array_panel.wfrog
 Examples/33_array_2d_numeric_container_roundtrip/ui/array_panel.wfrog
-Examples/34_array_2d_visible_counts_property_roundtrip/ui/array_panel.wfrog</code></pre>
+Examples/34_array_2d_visible_counts_property_roundtrip/ui/array_panel.wfrog
+Examples/35_array_dimension_count_property_roundtrip/ui/array_panel.wfrog
+Examples/36_array_string_container_dimension_count_roundtrip/ui/array_panel.wfrog
+Examples/37_array_path_container_dimension_count_roundtrip/ui/array_panel.wfrog</code></pre>
 
 <p>
 The <code>.wfrog</code> package resolves Default realization assets and host
@@ -231,9 +237,9 @@ promoted later.
 </p>
 
 <ul>
-  <li>Example 26: intermediate 2D numeric selected-element proof; not the final widget-composed Array rendering target.</li>
-  <li>Example 27: intermediate 1D vertical numeric selected-element proof; not the final widget-composed Array rendering target.</li>
-  <li>Example 28: intermediate 3D numeric selected-element proof; not the final widget-composed Array rendering target.</li>
+  <li>Example 26: deprecated historical 2D rigid/non-widget-composed numeric selected-element proof; not the final widget-composed Array rendering target.</li>
+  <li>Example 27: deprecated historical 1D vertical rigid/non-widget-composed numeric selected-element proof; not the final widget-composed Array rendering target.</li>
+  <li>Example 28: deprecated historical 3D rigid/non-widget-composed numeric selected-element proof; not the final widget-composed Array rendering target.</li>
   <li>Example 29: current 1D vertical Array container posture with repeated Default Numeric element widgets.</li>
   <li>Example 30: current 1D horizontal Array container posture with repeated Default Numeric element widgets.</li>
   <li>Example 31: current 1D vertical Array container property-write posture where a Numeric U8 control drives <code>viewport.visible_counts[0]</code> on <code>Execute</code>.</li>
@@ -270,11 +276,12 @@ alongside the native manifest and Default Array/Numeric realization assets.
 </p>
 
 <p>
-Examples 26-28 helped validate Array rank, shape, indexing, materialization,
-viewport, selection, and native value flow before the Array container began
-composing real widget instances. They are not the final runtime rendering
-target for Array. The final direction is the widget-composed Array container
-posture demonstrated by Examples 29-37.
+Examples 26-28 are deprecated historical milestones that helped validate Array
+rank, shape, indexing, materialization, viewport, selection, and native value
+flow before the Array container began composing real widget instances. They are
+retained for regression and traceability, but they are not the final runtime
+rendering target for Array. The final direction is the widget-composed Array
+container posture demonstrated by Examples 29-37.
 </p>
 
 <hr/>
@@ -287,14 +294,14 @@ They are browser-host evidence for the examples and do not expose Graiphic priva
 </p>
 
 <p>
-Snapshots for Examples 26-28 are historical/intermediate evidence. They remain
+Snapshots for Examples 26-28 are deprecated historical evidence. They remain
 useful for regression context, but should not be used as the final visual model
 for Array rendering.
 </p>
 
 <section>
   <h3>Example 26: Array 2D numeric selection</h3>
-  <p><strong>Intermediate note:</strong> This snapshot records a non-widget-composed Array development milestone. It is preserved for traceability and regression context, but the final Array rendering direction is the widget-composed container posture introduced in Examples 29-30.</p>
+  <p><strong>Deprecated historical milestone:</strong> This snapshot records a non-widget-composed Array development milestone. It is preserved for traceability and regression context, but the final Array rendering direction is the widget-composed container posture introduced in Examples 29-30.</p>
   <p><a href="../26_array_numeric_selection_roundtrip/reference/README.md">Reference snapshot README</a></p>
   <p align="center">
     <a href="../26_array_numeric_selection_roundtrip/reference/README.md"><img src="../26_array_numeric_selection_roundtrip/reference/screenshot.svg" alt="Accepted Example 26 Array 2D numeric selection snapshot" width="400" /></a>
@@ -310,7 +317,7 @@ for Array rendering.
 
 <section>
   <h3>Example 27: Array 1D vertical numeric selection</h3>
-  <p><strong>Intermediate note:</strong> This snapshot records a non-widget-composed Array development milestone. It is preserved for traceability and regression context, but the final Array rendering direction is the widget-composed container posture introduced in Examples 29-30.</p>
+  <p><strong>Deprecated historical milestone:</strong> This snapshot records a non-widget-composed Array development milestone. It is preserved for traceability and regression context, but the final Array rendering direction is the widget-composed container posture introduced in Examples 29-30.</p>
   <p><a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/README.md">Reference snapshot README</a></p>
   <p align="center">
     <a href="../27_array_1d_vertical_numeric_selection_roundtrip/reference/README.md"><img src="../27_array_1d_vertical_numeric_selection_roundtrip/reference/screenshot.svg" alt="Accepted Example 27 Array 1D vertical numeric selection snapshot" width="400" /></a>
@@ -326,7 +333,7 @@ for Array rendering.
 
 <section>
   <h3>Example 28: Array 3D numeric selection</h3>
-  <p><strong>Intermediate note:</strong> This snapshot records a non-widget-composed Array development milestone. It is preserved for traceability and regression context, but the final Array rendering direction is the widget-composed container posture introduced in Examples 29-30.</p>
+  <p><strong>Deprecated historical milestone:</strong> This snapshot records a non-widget-composed Array development milestone. It is preserved for traceability and regression context, but the final Array rendering direction is the widget-composed container posture introduced in Examples 29-30.</p>
   <p><a href="../28_array_3d_numeric_selection_roundtrip/reference/README.md">Reference snapshot README</a></p>
   <p align="center">
     <a href="../28_array_3d_numeric_selection_roundtrip/reference/README.md"><img src="../28_array_3d_numeric_selection_roundtrip/reference/screenshot.svg" alt="Accepted Example 28 Array 3D numeric selection snapshot" width="400" /></a>

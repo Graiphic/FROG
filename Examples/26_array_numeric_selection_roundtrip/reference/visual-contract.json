@@ -1,9 +1,10 @@
 {
   "example_id": "26_array_numeric_selection_roundtrip",
   "snapshot_role": "accepted_public_visual_reference",
-  "development_stage": "intermediate_non_widget_composed_array",
+  "development_stage": "deprecated_historical_non_widget_composed_array",
+  "deprecated_on": "2026-06-04",
   "final_runtime_rendering_target": false,
-  "successor_rendering_posture": "widget_composed_array_container_examples_29_30",
+  "successor_rendering_posture": "widget_composed_array_container_examples_29_37",
   "validation_level": "post_public_runtime_boundary_cpp_accepted",
   "host": {
     "surface": "browser_host",
@@ -75,8 +76,8 @@
   "consumed_published_parts": [],
   "notes": [
     "Snapshot evidence is public example documentation, not private runtime source truth.",
-    "This is an intermediate non-widget-composed Array snapshot, not the final Array runtime rendering target.",
-    "Final Array rendering direction starts with the widget-composed container posture in Examples 29-30.",
+    "This is a deprecated historical non-widget-composed Array snapshot, not the final Array runtime rendering target.",
+    "Final Array rendering direction starts with the widget-composed container posture in Examples 29-37.",
     "No HTML/CSS fallback widget may be considered valid without the Default SVG-backed surface."
   ]
 }

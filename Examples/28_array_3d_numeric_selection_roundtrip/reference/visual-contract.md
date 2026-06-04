@@ -3,10 +3,11 @@
 Example 28 records the accepted browser-host reference surface for
 `Array 3D Numeric Selection Roundtrip`.
 
-This is an intermediate non-widget-composed Array development snapshot. It is
-preserved for traceability and regression context, but it is not the final
-runtime rendering target for Array. The final rendering direction is the
-widget-composed Array container posture introduced by Examples 29-30.
+This is a deprecated historical non-widget-composed Array development snapshot
+as of 2026-06-04. It is preserved for traceability and regression context, but
+it is not the final runtime rendering target for Array. The final rendering
+direction is the widget-composed Array container posture introduced by
+Examples 29-37.
 
 ## Accepted Visible Surface
 

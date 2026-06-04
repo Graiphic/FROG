@@ -133,8 +133,8 @@ They are traceability metadata only; they are not FROG language versions and the
     </tr>
     <tr>
       <td><code>07_string_value_roundtrip</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
-      <td>String control/indicator hello-world roundtrip</td>
+      <td><time datetime="2026-06-04">2026-06-04</time></td>
+      <td>String control/indicator placeholder launch-state roundtrip</td>
       <td><code>main.frog</code> + <code>ui/string_panel.wfrog</code></td>
       <td><code>FIR → lowering → contract → LLVM native manifest → C++/Python/Rust runtime bridge → Default String realization</code></td>
     </tr>
@@ -266,24 +266,24 @@ They are traceability metadata only; they are not FROG language versions and the
     </tr>
     <tr>
       <td><code>26_array_numeric_selection_roundtrip</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
-      <td>2D Array numeric selected-element roundtrip with index display, scrollbars, editable elements, and read-only Array indicator</td>
+      <td><time datetime="2026-06-04">2026-06-04</time></td>
+      <td>Deprecated historical 2D rigid Array numeric selected-element milestone retained for regression and traceability</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
-      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+      <td>Deprecated historical milestone: non-widget-composed Array, superseded by widget-composed Array container examples starting at <code>29</code></td>
     </tr>
     <tr>
       <td><code>27_array_1d_vertical_numeric_selection_roundtrip</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
-      <td>1D vertical Array numeric selected-element roundtrip with one index display, vertical viewport, editable elements, and read-only Array indicator</td>
+      <td><time datetime="2026-06-04">2026-06-04</time></td>
+      <td>Deprecated historical 1D vertical rigid Array numeric selected-element milestone retained for regression and traceability</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
-      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+      <td>Deprecated historical milestone: non-widget-composed Array, superseded by widget-composed Array container examples starting at <code>29</code></td>
     </tr>
     <tr>
       <td><code>28_array_3d_numeric_selection_roundtrip</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
-      <td>3D Array numeric selected-element roundtrip with layer/row/column index displays, one visible 2D layer, editable elements, and read-only Array indicator</td>
+      <td><time datetime="2026-06-04">2026-06-04</time></td>
+      <td>Deprecated historical 3D rigid Array numeric selected-element milestone retained for regression and traceability</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
-      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+      <td>Deprecated historical milestone: non-widget-composed Array, superseded by widget-composed Array container examples starting at <code>29</code></td>
     </tr>
     <tr>
       <td><code>29_array_1d_numeric_container_roundtrip</code></td>
@@ -415,13 +415,13 @@ They are traceability metadata only; they are not FROG language versions and the
 25   standalone Frame support grouping surface as a post-boundary widget progression example
     |
     v
-26   2D Array numeric selected-element value as a post-boundary widget progression example
+26   deprecated historical 2D rigid Array numeric selected-element milestone
     |
     v
-27   1D vertical Array numeric selected-element value as a post-boundary widget progression example
+27   deprecated historical 1D vertical rigid Array numeric selected-element milestone
     |
     v
-28   3D Array numeric selected-element value as a post-boundary widget progression example
+28   deprecated historical 3D rigid Array numeric selected-element milestone
     |
     v
 29   1D Array container with Default Numeric element widgets as a post-boundary widget progression example

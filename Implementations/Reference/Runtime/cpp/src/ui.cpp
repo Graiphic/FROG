@@ -760,9 +760,6 @@ std::string render_string_skin(const WidgetState& widget) {
     if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
         return "<div class='string-skin missing-skin'></div>";
     }
-    const auto frame_fill = safe_css_color(property_string(widget.properties, "style.frame.fill_color", "transparent"), "transparent");
-    const auto frame_stroke = safe_css_color(property_string(widget.properties, "style.frame.border_color", "transparent"), "transparent");
-    const auto frame_stroke_width = safe_css_length(property_string(widget.properties, "style.frame.border_width", "0px"), "0px");
     const auto region_fill = safe_css_color(property_string(widget.properties, "style.text_region.fill_color", "#ffffff"), "#ffffff");
     const auto region_stroke = safe_css_color(property_string(widget.properties, "style.text_region.border_color", "#64748b"), "#64748b");
     const auto region_stroke_width = safe_css_length(property_string(widget.properties, "style.text_region.border_width", "2px"), "2px");
@@ -777,9 +774,6 @@ std::string render_string_skin(const WidgetState& widget) {
     style << "--frog-string-label-display:none;";
     style << "--frog-string-caption-display:none;";
     style << "--frog-string-placeholder-display:none;";
-    style << "--frog-string-frame-fill:" << html_escape(frame_fill) << ";";
-    style << "--frog-string-frame-stroke:" << html_escape(frame_stroke) << ";";
-    style << "--frog-string-frame-stroke-width:" << html_escape(frame_stroke_width) << ";";
     style << "--frog-string-text-region-fill:" << html_escape(region_fill) << ";";
     style << "--frog-string-text-region-stroke:" << html_escape(region_stroke) << ";";
     style << "--frog-string-text-region-stroke-width:" << html_escape(region_stroke_width) << ";";
@@ -815,6 +809,12 @@ std::string render_string_widget(const WidgetState& widget) {
     const auto text_color = safe_css_color(property_string(widget.properties, "style.text.color", "#111827"), "#111827");
     const auto text_size = safe_css_length(property_string(widget.properties, "style.text.font_size", "16px"), "16px");
     const auto text_weight = safe_css_font_weight(property_string(widget.properties, "style.text.font_weight", "400"), "400");
+    const auto placeholder_text = property_string(widget.properties, "placeholder.text", "");
+    const bool placeholder_visible = property_bool(widget.properties, "placeholder.visible", false);
+    const auto placeholder_color =
+        safe_css_color(property_string(widget.properties, "placeholder.style.text_color", "#6b7280"), "#6b7280");
+    const auto placeholder_font_style =
+        safe_css_font_style(property_string(widget.properties, "placeholder.style.font_style", "normal"), "normal");
     const auto route = asset_route(widget);
     const auto value_style = svg_box_style(
         geometry.value_face_x,
@@ -849,10 +849,20 @@ std::string render_string_widget(const WidgetState& widget) {
           << "'>" << html_escape(label) << "</span>";
 
     if (is_control) {
+        if (placeholder_visible && value.empty() && !placeholder_text.empty()) {
+            html << "<span class='string-placeholder-overlay' data-frog-part='placeholder' data-svg-anchor='text_region.left_center'"
+                 << " aria-hidden='true' style='" << value_style << "color:" << html_escape(placeholder_color)
+                 << ";font-size:" << html_escape(text_size) << ";font-weight:" << html_escape(text_weight)
+                 << ";font-style:" << html_escape(placeholder_font_style) << ";'>"
+                 << html_escape(placeholder_text) << "</span>";
+        }
         html << "<input id='" << html_escape(widget.widget_id) << "_value' name='input_text' type='text'";
         html << " class='string-value-overlay string-control-editor' data-frog-part='text_value' data-svg-anchor='text_region.left_center'";
         html << " style='" << value_style << "color:" << html_escape(text_color) << ";font-size:" << html_escape(text_size)
              << ";font-weight:" << html_escape(text_weight) << ";'";
+        if (placeholder_visible && !placeholder_text.empty()) {
+            html << " placeholder='" << html_escape(placeholder_text) << "'";
+        }
         html << " value='" << html_escape(value) << "'";
         if (!property_bool(widget.properties, "interaction.enabled", true)) {
             html << " disabled";
@@ -2627,13 +2637,16 @@ std::string StringBrowserUiRuntime::render_html() const {
             ".frog-widget{position:absolute;box-sizing:border-box;}"
             ".string-widget{font-family:Segoe UI,Arial,sans-serif;}"
             ".string-skin{position:absolute;inset:0;width:100%;height:100%;display:block;}"
-            ".string-skin svg{width:100%;height:100%;display:block;--frog-string-label-display:inherit;--frog-string-caption-display:inherit;--frog-string-placeholder-display:inherit;--frog-string-frame-fill:inherit;--frog-string-frame-stroke:inherit;--frog-string-frame-stroke-width:inherit;--frog-string-text-region-fill:inherit;--frog-string-text-region-stroke:inherit;--frog-string-text-region-stroke-width:inherit;--frog-string-text-fill:inherit;--frog-string-text-font-size:inherit;--frog-string-text-font-weight:inherit;}"
+            ".string-skin svg{width:100%;height:100%;display:block;--frog-string-label-display:inherit;--frog-string-caption-display:inherit;--frog-string-placeholder-display:inherit;--frog-string-text-region-fill:inherit;--frog-string-text-region-stroke:inherit;--frog-string-text-region-stroke-width:inherit;--frog-string-text-fill:inherit;--frog-string-text-font-size:inherit;--frog-string-text-font-weight:inherit;}"
             ".string-skin #label_text,.string-skin #caption_text,.string-skin #placeholder,.string-skin #text_value{display:none;}"
             ".string-control:hover .string-skin svg{--frog-string-text-region-fill:var(--frog-string-text-region-fill-hover);--frog-string-text-region-stroke:var(--frog-string-text-region-stroke-hover);--frog-string-text-region-stroke-width:var(--frog-string-text-region-stroke-width-hover);}"
             ".string-caption-overlay{position:absolute;transform:translateY(-50%);font-size:var(--frog-string-caption-font-size);font-weight:var(--frog-string-caption-font-weight);font-family:var(--frog-string-caption-font-family);color:var(--frog-string-caption-color);line-height:1;white-space:nowrap;pointer-events:none;}"
-            ".string-value-overlay{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1.2;border:0;background:transparent;}"
+            ".string-value-overlay{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1.2;border:0;background:transparent;z-index:1;}"
             ".string-control-editor{padding:0 8px;outline:0;}"
             ".string-control-editor:focus{outline:0;}"
+            ".string-control-editor::placeholder{color:transparent;opacity:0;}"
+            ".string-placeholder-overlay{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:1.2;border:0;background:transparent;display:flex;align-items:center;padding:0 8px;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:2;}"
+            ".string-control:has(.string-control-editor:not(:placeholder-shown)) .string-placeholder-overlay{display:none;}"
             ".string-indicator-value{display:flex;align-items:center;padding:0 8px;pointer-events:none;}"
             ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
             "button{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#0f62fe;color:#ffffff;font-weight:600;}"
@@ -2646,6 +2659,7 @@ std::string StringBrowserUiRuntime::render_html() const {
     html << "<div><dt>Runtime</dt><dd>C++ reference runtime</dd></div>";
     html << "<div><dt>Execution</dt><dd>" << (uses_native_kernel ? "native kernel bridge" : "string contract executor") << "</dd></div>";
     html << "<div><dt>Compiler backend</dt><dd>" << (uses_native_kernel ? "LLVM native string kernel artifact" : "none for Example 07") << "</dd></div>";
+    html << "<div><dt>Reviewed</dt><dd>2026-06-04</dd></div>";
     html << "</dl>";
     html << diagnostics;
     html << "<form method='post' action='/run'>";

@@ -17,7 +17,7 @@
     <g id="slot_index_display" data-frog-slot="index_display" data-frog-part="index_display" transform="translate(12 54)" />
     <g id="dimension_controls" data-frog-part="dimension_controls" data-frog-bind="dimensions.*" transform="translate(12 54)" />
     <g id="slot_element_region" data-frog-slot="element_region" data-frog-part="element_region" transform="translate(56 54)" />
-    <g id="element_gap" data-frog-part="element_gap" data-frog-bind="layout.element_gap" />
+    <g id="element_gap" data-frog-part="element_gap" data-frog-bind="element_gap.size" />
     <g id="slot_vertical_scrollbar" data-frog-slot="vertical_scrollbar" data-frog-part="vertical_scrollbar" transform="translate(432 54)" />
     <g id="slot_horizontal_scrollbar" data-frog-slot="horizontal_scrollbar" data-frog-part="horizontal_scrollbar" transform="translate(56 272)" />
   </g>

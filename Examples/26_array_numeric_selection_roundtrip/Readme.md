@@ -6,6 +6,14 @@ Example <code>26</code> demonstrates a bounded 2D numeric
 <code>frog.widgets.array_indicator</code>.
 </p>
 
+<blockquote>
+<strong>Deprecated historical milestone. Reviewed 2026-06-04.</strong>
+This rigid/non-widget-composed Array example is retained for regression and
+traceability only. It is superseded by the widget-composed Array container
+examples starting at Example <code>29</code>, where Array repeats contained
+Default widget realizations.
+</blockquote>
+
 <p>
 The example proves the first Default Array baseline: rank, shape, element
 records, selected element, index displays, viewport, scrollbars, labels, layout,
@@ -38,7 +46,7 @@ consumes the manifest-backed native selected-element proof corridor.
 
 <ul>
   <li>Array is a homogeneous collection widget, not a hardcoded numeric table.</li>
-  <li>This first example intentionally validates a bounded 2D <code>u16</code> Array specialization.</li>
+  <li>This deprecated historical example intentionally validates a bounded 2D <code>u16</code> Array specialization for regression context.</li>
   <li>The <code>.frog</code> source owns rank, shape, element records, selected indices, viewport, labels, layout, and visual overrides.</li>
   <li>Scrollbar placement and distance from the element viewport are source-owned viewport/style properties, not runtime constants.</li>
   <li>The <code>.wfrog</code> package resolves Default Array assets and declares Array host capabilities.</li>

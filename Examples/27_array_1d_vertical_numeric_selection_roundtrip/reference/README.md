@@ -29,12 +29,13 @@ it does not redefine the public FROG specification.
 - `visual-contract.json` - machine-readable visual contract summary.
 - `artifact-index.json` - relative artifact paths and hashes for traceability.
 
-## Intermediate Development Note
+## Deprecated Historical Milestone
 
-This snapshot records a non-widget-composed Array development milestone. It is
-retained for traceability because it validated 1D vertical Array rank, shape,
-index, materialization, undefined-cell styling, selection posture, and native
-value flow before the widget-composed Array container surface was introduced.
+Deprecated 2026-06-04. This snapshot records a non-widget-composed Array
+development milestone. It is retained for traceability because it validated 1D
+vertical Array rank, shape, index, materialization, undefined-cell styling,
+selection posture, and native value flow before the widget-composed Array
+container surface was introduced.
 
 It is not the final runtime rendering target for Array. The final Array
 rendering direction is the widget-composed container posture introduced by

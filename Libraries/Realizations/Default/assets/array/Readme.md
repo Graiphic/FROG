@@ -42,8 +42,11 @@ properties under <code>style.index_display.*</code>.
 </p>
 
 <p>
-The <code>index_display</code> subobject publishes the index value and arrow
-surfaces. Per-instance spacing between the arrows and between the arrows and
+The <code>index_display</code> subobject publishes one public Array part:
+<code>index_display</code>. Its per-dimension row, frame, separator, arrow
+glyphs, and displayed value are named with <code>data-frog-detail</code> for
+inspection and realization maintenance, but they are not additional public
+Array parts. Per-instance spacing between the arrows and between the arrows and
 the value surface is owned by <code>style.index_display.step_gap</code> and
 <code>style.index_display.value_gap</code>.
 </p>

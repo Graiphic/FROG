@@ -976,6 +976,12 @@ std::map<std::string, WidgetState> Slice07StringRuntimeCore::build_widgets() con
         properties.emplace("caption.text", properties.count("caption.text") ? properties.at("caption.text") : Value(binding.widget_id));
         properties.emplace("placeholder.text", properties.count("placeholder.text") ? properties.at("placeholder.text") : Value(""));
         properties.emplace("placeholder.visible", properties.count("placeholder.visible") ? properties.at("placeholder.visible") : Value(false));
+        properties.emplace(
+            "placeholder.style.text_color",
+            properties.count("placeholder.style.text_color") ? properties.at("placeholder.style.text_color") : Value("#6b7280"));
+        properties.emplace(
+            "placeholder.style.font_style",
+            properties.count("placeholder.style.font_style") ? properties.at("placeholder.style.font_style") : Value("normal"));
         properties.emplace("interaction.enabled", properties.count("interaction.enabled") ? properties.at("interaction.enabled") : Value(binding.role == "control"));
         properties.emplace("interaction.read_only", properties.count("interaction.read_only") ? properties.at("interaction.read_only") : Value(binding.role != "control"));
         properties.emplace("realization.variant", properties.count("realization.variant") ? properties.at("realization.variant") : Value("rectangular"));
@@ -1057,9 +1063,6 @@ Value Slice07StringRuntimeCore::execution_artifact() const {
         copy_property("caption.style.font_family");
         copy_property("caption.style.font_size");
         copy_property("caption.style.font_weight");
-        copy_property("style.frame.fill_color");
-        copy_property("style.frame.border_color");
-        copy_property("style.frame.border_width");
         copy_property("style.text_region.fill_color");
         copy_property("style.text_region.fill_color.hover");
         copy_property("style.text_region.border_color");
@@ -1071,6 +1074,8 @@ Value Slice07StringRuntimeCore::execution_artifact() const {
         copy_property("style.text.font_weight");
         copy_property("placeholder.text");
         copy_property("placeholder.visible");
+        copy_property("placeholder.style.text_color");
+        copy_property("placeholder.style.font_style");
         copy_property("interaction.enabled");
         copy_property("interaction.read_only");
 

@@ -16,7 +16,15 @@
 <p>
 The stabilized String slice is <code>Examples/07_string_value_roundtrip</code>.
 It proves one <code>frog.widgets.string_control</code> and one
-<code>frog.widgets.string_indicator</code> with the standard <code>hello world</code> roundtrip.
+<code>frog.widgets.string_indicator</code> with an empty launch value, a visible
+placeholder, and the standard String value roundtrip once text is entered.
+</p>
+
+<p>
+Reviewed <time datetime="2026-06-04">2026-06-04</time>: the visible browser-host
+surface must show <code>Reviewed 2026-06-04</code>, expose the placeholder text
+<code>Type your text here</code> at launch, and keep <code>text_value</code> as the
+actual editable value surface.
 </p>
 
 <pre><code>str_input.value
@@ -33,7 +41,7 @@ It proves one <code>frog.widgets.string_control</code> and one
   <li>front panel canvas: <code>560 x 170</code> panel pixels</li>
   <li>control widget: <code>str_input</code>, <code>frog.widgets.string_control</code></li>
   <li>indicator widget: <code>str_result</code>, <code>frog.widgets.string_indicator</code></li>
-  <li>widget layout, caption placement, text values, binding, and text-region styling live in <code>.frog</code></li>
+  <li>widget layout, caption placement, placeholder text, text values, binding, and text-region styling live in <code>.frog</code></li>
 </ul>
 
 <p>
@@ -42,7 +50,6 @@ Current instance-level properties proven by the example include:
 
 <ul>
   <li><code>caption.text</code>, <code>caption.anchor.x</code>, <code>caption.anchor.y</code>, and <code>caption.align.horizontal</code></li>
-  <li><code>style.frame.fill_color = transparent</code>, <code>style.frame.border_color = transparent</code>, and <code>style.frame.border_width = 0px</code></li>
   <li><code>style.text_region.fill_color</code>, <code>fill_color.hover</code>, <code>border_color</code>, <code>border_color.hover</code>, and <code>border_width</code></li>
   <li><code>style.text.color</code>, <code>style.text.font_size</code>, and <code>style.text.font_weight</code></li>
   <li><code>placeholder.*</code> on the control</li>
@@ -78,8 +85,13 @@ Current instance-level properties proven by the example include:
       <td>Keep visible text aligned, legible, and inside the region for both control and indicator.</td>
     </tr>
     <tr>
-      <td>Frame/focus posture</td>
-      <td><code>style.frame.*</code></td>
+      <td>Placeholder</td>
+      <td><code>placeholder.text</code>, <code>placeholder.visible</code>, <code>placeholder.style.text_color</code></td>
+      <td>Show placeholder text only while the control value is empty; never copy it into <code>value</code>.</td>
+    </tr>
+    <tr>
+      <td>Focus/editor internals</td>
+      <td>No public part</td>
       <td>Respect the accepted no-external-focus-ring posture for this example.</td>
     </tr>
     <tr>
@@ -92,7 +104,7 @@ Current instance-level properties proven by the example include:
 
 <p>
 The Default String SVG currently exposes these public parts:
-<code>caption</code>, <code>frame</code>, <code>label</code>, <code>placeholder</code>,
+<code>caption</code>, <code>label</code>, <code>placeholder</code>,
 <code>root</code>, <code>text_region</code>, and <code>text_value</code>.
 It intentionally does not expose a public <code>focus_ring</code>, validation marker,
 overflow marker, caret, or selection surface.
@@ -120,6 +132,8 @@ The example package is:
 
 <ul>
   <li>The text field must be rendered from the Default String SVG public parts and anchors.</li>
+  <li>The launch state must visibly render <code>Type your text here</code> through the public <code>placeholder</code> part.</li>
+  <li>The browser-host page must visibly render <code>Reviewed 2026-06-04</code>.</li>
   <li>Hover and visual state colors must come from the <code>.frog</code> instance properties.</li>
   <li>The accepted visible surface has no external focus ring for the String widget.</li>
   <li>The indicator is read-only and receives the diagram result.</li>
@@ -142,7 +156,8 @@ The example package is:
 <h2>Validation Notes</h2>
 
 <ul>
-  <li>The canonical test value is <code>hello world</code>.</li>
+  <li>The canonical launch value is empty so placeholder rendering can be inspected.</li>
+  <li>The canonical typed test value remains <code>hello world</code>.</li>
   <li>The visible text must remain aligned and contained inside the text region.</li>
   <li>The control and indicator must consume the same Default String SVG asset through the <code>.wfrog</code> asset route.</li>
   <li>There must be no local duplicated String SVG under the example directory.</li>

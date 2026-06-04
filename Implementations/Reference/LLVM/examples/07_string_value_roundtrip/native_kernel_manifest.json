@@ -3,6 +3,10 @@
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },
+  "review": {
+    "last_reviewed": "2026-06-04",
+    "scope": "Example 07 String native kernel manifest. The UI review covers the placeholder/text_value launch posture; kernel semantics remain string-in to string-out."
+  },
   "kernel": {
     "id": "example07_string_roundtrip_kernel",
     "source_lowered_unit": "Examples/07_string_value_roundtrip/main.lowering.json",

@@ -75,6 +75,12 @@ The intrinsic string baseline is a text-value widget family.
 It does not standardize a full rich-text editor, code editor, terminal widget, document editor, or full text-processing component in the intrinsic core.
 </p>
 
+<p>
+Latest String widget review:
+<time datetime="2026-06-04">2026-06-04</time>. The reviewed Default SVG posture keeps
+<code>placeholder</code> separate from <code>text_value</code>; placeholder text is visible only for an empty value and never replaces the semantic string value.
+</p>
+
 <hr/>
 
 <h2 id="classes-defined-here">2. Classes Defined Here</h2>
@@ -208,7 +214,6 @@ The string family exposes the following stable public parts:
   <li><code>root</code> — root widget surface and hit-test container,</li>
   <li><code>label</code> — structural label surface when displayed by tooling or host,</li>
   <li><code>caption</code> — user-facing front-panel caption surface,</li>
-  <li><code>frame</code> — outer frame or border surface,</li>
   <li><code>text_region</code> — interior text area or editing/display region,</li>
   <li><code>text_value</code> — visible current value text surface,</li>
   <li><code>placeholder</code> — optional placeholder text surface.</li>
@@ -252,14 +257,9 @@ guesses or runtime-hardcoded String geometry.
       <td>User-facing caption; host overlays align to <code>caption.anchor</code>.</td>
     </tr>
     <tr>
-      <td><code>frame</code></td>
-      <td>Stretch surface with uniform non-scaling stroke.</td>
-      <td>Outer field frame driven by <code>style.frame.*</code>.</td>
-    </tr>
-    <tr>
       <td><code>text_region</code></td>
       <td>Stretch surface with uniform non-scaling stroke.</td>
-      <td>Main text field body; it is the crop/reference rectangle for embedded String renderings.</td>
+      <td>Main text field body, fill, border, and crop/reference rectangle for embedded String renderings.</td>
     </tr>
     <tr>
       <td><code>text_value</code></td>
@@ -364,13 +364,9 @@ It is not the value.
   <li><code>scroll.position.y : number</code> when scroll position is publicly exposed.</li>
 </ul>
 
-<h3>7.8 Frame and text-region style properties</h3>
+<h3>7.8 Text-region style properties</h3>
 
 <ul>
-  <li><code>style.frame.fill_color : frog.color.rgba8</code></li>
-  <li><code>style.frame.border_color : frog.color.rgba8</code></li>
-  <li><code>style.frame.border_width : length</code></li>
-  <li><code>style.frame.corner_radius : length</code></li>
   <li><code>style.text_region.fill_color : frog.color.rgba8</code></li>
   <li><code>style.text_region.border_color : frog.color.rgba8</code></li>
   <li><code>style.text_region.border_width : length</code></li>
@@ -447,7 +443,6 @@ At minimum, a portable implementation should preserve:
   <li><code>text.update_while_typing</code></li>
   <li><code>scroll.horizontal.visible</code></li>
   <li><code>scroll.vertical.visible</code></li>
-  <li><code>style.frame.*</code> surfaces declared by the active publication corridor</li>
   <li><code>style.text_region.*</code> surfaces declared by the active publication corridor</li>
   <li><code>style.text.*</code> surfaces declared by the active publication corridor</li>
   <li><code>realization.*</code> surfaces declared by the active publication corridor</li>
@@ -481,7 +476,6 @@ At minimum, a portable implementation should preserve:
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>text_region</code></li>
   <li><code>text_value</code></li>
   <li><code>placeholder</code></li>
@@ -528,7 +522,6 @@ At minimum, a portable implementation should preserve:
   <li><code>text.wrap_enabled</code></li>
   <li><code>scroll.horizontal.visible</code></li>
   <li><code>scroll.vertical.visible</code></li>
-  <li><code>style.frame.*</code> surfaces declared by the active publication corridor</li>
   <li><code>style.text_region.*</code> surfaces declared by the active publication corridor</li>
   <li><code>style.text.*</code> surfaces declared by the active publication corridor</li>
   <li><code>realization.*</code> surfaces declared by the active publication corridor</li>
@@ -561,7 +554,6 @@ If published, it controls host affordances only and MUST NOT imply user mutabili
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>text_region</code></li>
   <li><code>text_value</code></li>
 </ul>
@@ -582,12 +574,12 @@ A default SVG realization SHOULD support:
 
 <ul>
   <li>resizing through the front-panel layout rectangle,</li>
-  <li>mapping of <code>root</code>, <code>caption</code>, <code>frame</code>, <code>text_region</code>, <code>text_value</code>, and <code>placeholder</code> to visible SVG or host-rendered surfaces,</li>
+  <li>mapping of <code>root</code>, <code>caption</code>, <code>text_region</code>, <code>text_value</code>, and <code>placeholder</code> to visible SVG or host-rendered surfaces,</li>
   <li>external caption visibility and styling,</li>
   <li>text value rendering or editing inside <code>text_region</code>,</li>
   <li>placeholder visibility when the value is empty,</li>
-  <li>configurable frame and text-region border widths,</li>
-  <li>configurable frame and text-region fill colors,</li>
+  <li>configurable text-region border width,</li>
+  <li>configurable text-region fill color,</li>
   <li>configurable text style surfaces.</li>
 </ul>
 

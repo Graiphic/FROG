@@ -204,6 +204,12 @@
   },
   "part_bindings": [
     {
+      "part": "root",
+      "resource_ref": "frog.realizations.default.array.assets.shell_svg",
+      "binding_selector": "[data-frog-part='root']",
+      "role": "widget_root"
+    },
+    {
       "part": "label",
       "resource_ref": "frog.realizations.default.array.assets.shell_svg",
       "binding_selector": "[data-frog-part='label']",
@@ -216,13 +222,28 @@
       "semantic_member": "caption.text"
     },
     {
+      "part": "frame",
+      "resource_ref": "frog.realizations.default.array.assets.shell_svg",
+      "binding_selector": "[data-frog-part='frame']",
+      "semantic_member": "style.frame.*",
+      "placement_role": "outer_array_container_frame"
+    },
+    {
       "part": "index_display",
       "resource_ref": "frog.realizations.default.array.assets.index_display_svg",
+      "binding_selector": "[data-frog-part='index_display']",
       "semantic_member": "index_display.*"
+    },
+    {
+      "part": "dimension_controls",
+      "resource_ref": "frog.realizations.default.array.assets.shell_svg",
+      "binding_selector": "[data-frog-part='dimension_controls']",
+      "semantic_member": "dimensions.*"
     },
     {
       "part": "element_region",
       "resource_ref": "frog.realizations.default.array.assets.element_region_svg",
+      "binding_selector": "[data-frog-part='element_region']",
       "semantic_members": [
         "value",
         "viewport.*",
@@ -232,17 +253,35 @@
     {
       "part": "element_slot",
       "resource_ref": "frog.realizations.default.array.assets.element_slot_svg",
+      "binding_selector": "[data-frog-part='element_slot']",
       "semantic_member": "element.template_ref"
+    },
+    {
+      "part": "element_gap",
+      "resource_ref": "frog.realizations.default.array.assets.shell_svg",
+      "binding_selector": "[data-frog-part='element_gap']",
+      "semantic_member": "element_gap.size"
     },
     {
       "part": "vertical_scrollbar",
       "resource_ref": "frog.realizations.default.array.assets.vertical_scrollbar_svg",
+      "binding_selector": "[data-frog-part='vertical_scrollbar']",
       "semantic_member": "scrollbars.vertical.*"
     },
     {
       "part": "horizontal_scrollbar",
       "resource_ref": "frog.realizations.default.array.assets.horizontal_scrollbar_svg",
+      "binding_selector": "[data-frog-part='horizontal_scrollbar']",
       "semantic_member": "scrollbars.horizontal.*"
+    },
+    {
+      "part": "focus_ring",
+      "resource_ref": "frog.realizations.default.array.assets.shell_svg",
+      "binding_selector": "[data-frog-part='focus_ring']",
+      "semantic_members": [
+        "interaction.focused",
+        "style.focus_ring.*"
+      ]
     }
   ],
   "property_bindings": [
@@ -314,6 +353,7 @@
     "element widget overlays must align to Array element_region and element_slot parts",
     "array frame styling must remain source-owned, stay separate from visible index display subcontainers, and stay separate from contained widget frame styling",
     "index display container fill, border, padding, arrow spacing, and value spacing must remain source-owned and aligned to the published index_display part",
+    "index display frame, separator, arrow, and text details must remain data-frog-detail internals rather than additional public data-frog-part entries",
     "element fit parts must be published by the contained widget realization when used",
     "element layout padding must remain source-owned and must inset the contained widget instance rather than create an array-local surrogate visual",
     "widget-backed element cell size must come from contained widget fit bounds or explicit source-owned cell dimensions",

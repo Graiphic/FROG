@@ -62,6 +62,10 @@ reads as a neighboring Array container rather than a floating control. A host
 may overlay native or HTML hit areas, but those hit areas must align to the
 published Default Array index display parts and must not bake spacing into
 runtime code.
+Only the outer <code>index_display</code> container is a public Array part.
+The per-dimension row, index frame, separator, arrow glyphs, and visible index
+text are named SVG details, not additional public <code>data-frog-part</code>
+entries.
 The index-display subcontainer height is derived from the active
 <code>index_display.rank</code>, box height, gap, border width, and padding so
 the container cleanly wraps one indexer per active dimension, including ranks
@@ -140,6 +144,13 @@ plus the neighboring index-display subcontainer when it is visible.
   <li><code>vertical_scrollbar</code></li>
   <li><code>focus_ring</code></li>
 </ul>
+
+<p>
+The <code>index_display</code> part may contain named internal details for the
+frame, separators, arrow glyphs, and displayed value. Those details are
+inspectable SVG structure only; they are not part of the public Array contract
+and must not be published as <code>data-frog-part</code>.
+</p>
 
 <hr/>
 

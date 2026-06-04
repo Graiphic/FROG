@@ -44,12 +44,6 @@
           "runtime_surface": "host_caption_overlay"
         },
         {
-          "part": "frame",
-          "style_group": "style.frame",
-          "resize": "stretch_surface",
-          "border_policy": "uniform_non_scaling_stroke"
-        },
-        {
           "part": "text_region",
           "style_group": "style.text_region",
           "resize": "stretch_surface",
@@ -90,10 +84,6 @@
         --frog-string-caption-font-size: 18px;
         --frog-string-caption-font-weight: 400;
 
-        --frog-string-frame-fill: #ffffff;
-        --frog-string-frame-stroke: #000000;
-        --frog-string-frame-stroke-width: 6px;
-
         --frog-string-text-region-fill: #5b9bd5;
         --frog-string-text-region-stroke: transparent;
         --frog-string-text-region-stroke-width: 0px;
@@ -123,12 +113,6 @@
         font-weight: var(--frog-string-caption-font-weight);
       }
 
-      #frame {
-        fill: var(--frog-string-frame-fill);
-        stroke: var(--frog-string-frame-stroke);
-        stroke-width: var(--frog-string-frame-stroke-width);
-        vector-effect: non-scaling-stroke;
-      }
       #text_region {
         fill: var(--frog-string-text-region-fill);
         stroke: var(--frog-string-text-region-stroke);
@@ -182,18 +166,6 @@
           x="28"
           y="64">String</text>
 
-    <rect id="frame"
-          data-frog-part="frame"
-          data-frog-role="outer_field_frame"
-          x="12"
-          y="72"
-          width="396"
-          height="64"
-          rx="0"
-          data-frog-bind="style.frame.fill_color style.frame.border_color style.frame.border_width style.frame.corner_radius"
-          data-frog-resize="stretch_surface"
-          data-frog-solidary-group="field_body"
-          data-frog-border-policy="uniform_non_scaling_stroke" />
     <rect id="text_region"
           data-frog-part="text_region"
           data-frog-role="editable_text_region"

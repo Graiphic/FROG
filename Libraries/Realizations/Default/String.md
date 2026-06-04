@@ -42,8 +42,9 @@ This document describes how the default realization family can embody that law t
 
 <p>
 Latest public realization metadata review:
-<time datetime="2026-06-03">2026-06-03</time>. The reviewed surface is the
-Default rectangular String SVG skin and its public semantic part contract.
+<time datetime="2026-06-04">2026-06-04</time>. The reviewed surface is the
+Default rectangular String SVG skin, its public semantic part contract, and the
+Example 07 placeholder/text_value browser-host launch posture.
 </p>
 
 <hr/>
@@ -95,7 +96,6 @@ That manifest declares target classes, realization records, variants, SVG resour
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>text_region</code></li>
   <li><code>text_value</code></li>
   <li><code>placeholder</code></li>
@@ -119,7 +119,7 @@ That manifest declares target classes, realization records, variants, SVG resour
 </code></pre>
 
 <p>
-Representative bindings include <code>caption.text</code> to <code>caption</code>, <code>value</code> to <code>text_value</code>, <code>placeholder.text</code> to <code>placeholder</code>, <code>style.frame.*</code> to <code>frame</code>, <code>style.text_region.*</code> to <code>text_region</code>, and <code>style.text.*</code> to <code>text_value</code>.
+Representative bindings include <code>caption.text</code> to <code>caption</code>, <code>value</code> to <code>text_value</code>, <code>placeholder.text</code> to <code>placeholder</code>, <code>style.text_region.*</code> to <code>text_region</code>, and <code>style.text.*</code> to <code>text_value</code>.
 </p>
 
 <p>
@@ -160,13 +160,8 @@ overlay, placeholder overlay, and stretched text field body.
       <td>Anchored text aligned to <code>caption.anchor</code>.</td>
     </tr>
     <tr>
-      <td><code>frame</code></td>
-      <td>Outer field frame driven by <code>style.frame.*</code>.</td>
-      <td>Stretch surface with uniform non-scaling stroke.</td>
-    </tr>
-    <tr>
       <td><code>text_region</code></td>
-      <td>Main editable/display field body and embedded-widget crop reference.</td>
+      <td>Main editable/display field body, border, and embedded-widget crop reference.</td>
       <td>Stretch surface with uniform non-scaling stroke.</td>
     </tr>
     <tr>
@@ -183,7 +178,7 @@ overlay, placeholder overlay, and stretched text field body.
 </table>
 
 <p>
-The Default rectangular String skin intentionally has no published focus ring,
-validation marker, overflow marker, caret, or selection surface. Those are host
-or editor details unless a later realization explicitly promotes them.
+The Default rectangular String skin intentionally has no published frame,
+focus ring, validation marker, overflow marker, caret, or selection surface.
+Those are host or editor details unless a later realization explicitly promotes them.
 </p>

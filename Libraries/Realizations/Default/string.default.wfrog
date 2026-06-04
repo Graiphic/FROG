@@ -3,6 +3,11 @@
   "kind": "widget_realization_library",
   "publication_role": "default_string_realization_manifest",
   "version_governance_ref": "../../../Versioning/Readme.md",
+  "publication_review": {
+    "last_reviewed": "2026-06-04",
+    "scope": "Default rectangular String SVG skin contract, placeholder/text_value surfaces, no-frame public part posture, and C++ browser-host rendering.",
+    "public_posture": "Publishes the realization contract, SVG skin metadata, example source, and review date; runtime implementation code remains outside the public publication scope."
+  },
   "package": {
     "id": "frog.realizations.default.string",
     "name": "FROG Default String Realization",
@@ -84,7 +89,6 @@
         "root",
         "label",
         "caption",
-        "frame",
         "text_region",
         "text_value",
         "placeholder"
@@ -117,7 +121,6 @@
         "root",
         "label",
         "caption",
-        "frame",
         "text_region",
         "text_value"
       ],
@@ -147,7 +150,6 @@
         "shape_family": "rectangular",
         "layout_source": "front_panel_layout_rectangle",
         "scales_to_layout": true,
-        "supports_corner_radius": true,
         "supports_text_region_inset": true,
         "supports_caption": true,
         "supports_placeholder": true
@@ -202,12 +204,6 @@
       "semantic_member": "caption.text",
       "visibility_member": "caption.visible",
       "placement_role": "front_panel_caption"
-    },
-    {
-      "part": "frame",
-      "binding_kind": "svg_shape",
-      "binding_selector": "[data-frog-part='frame']",
-      "style_binding_group": "style.frame"
     },
     {
       "part": "text_region",
@@ -356,24 +352,14 @@
       "target_operation": "set_visibility"
     },
     {
-      "member": "style.frame.fill_color",
-      "target_part": "frame",
-      "target_operation": "set_fill"
+      "member": "placeholder.style.text_color",
+      "target_part": "placeholder",
+      "target_operation": "set_text_fill"
     },
     {
-      "member": "style.frame.border_color",
-      "target_part": "frame",
-      "target_operation": "set_stroke"
-    },
-    {
-      "member": "style.frame.border_width",
-      "target_part": "frame",
-      "target_operation": "set_stroke_width"
-    },
-    {
-      "member": "style.frame.corner_radius",
-      "target_part": "frame",
-      "target_operation": "set_rect_corner_radius"
+      "member": "placeholder.style.font_style",
+      "target_part": "placeholder",
+      "target_operation": "set_text_font_style"
     },
     {
       "member": "style.text_region.fill_color",
@@ -420,7 +406,7 @@
     {
       "member": "style.text_region.inset",
       "target_part": "text_region",
-      "target_operation": "set_inset_relative_to_frame"
+      "target_operation": "set_text_region_inset"
     },
     {
       "member": "style.text.color",

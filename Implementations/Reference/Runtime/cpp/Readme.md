@@ -176,7 +176,7 @@ It renders:
 </ul>
 
 <p>
-The Example 05 panel uses the shared Default Numeric realization. Example 06 uses the shared Default Boolean realization. Example 07 uses the shared Default String realization without a published String focus-ring part. Example 08 uses the shared Default Enum realization. Example 09 uses the shared Default Path realization without an invisible outer frame or focus-ring hover target. Examples 10 through 15 use the shared Default Button realization for the command and the shared Default Boolean realization for the read-only indicator while covering the six published Button mechanical actions.
+The Example 05 panel uses the shared Default Numeric realization. Example 06 uses the shared Default Boolean realization. Example 07 uses the shared Default String realization without a published String frame or focus-ring part. Example 08 uses the shared Default Enum realization. Example 09 uses the shared Default Path realization without an invisible outer frame or focus-ring hover target. Examples 10 through 15 use the shared Default Button realization for the command and the shared Default Boolean realization for the read-only indicator while covering the six published Button mechanical actions.
 This is a bounded fidelity pass for the current published examples, not a complete generalized <code>.wfrog</code> renderer.
 </p>
 

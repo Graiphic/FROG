@@ -2,11 +2,14 @@
 
 This example demonstrates a one-dimensional vertical numeric Array control feeding a read-only Array indicator through the FROG source-to-runtime corridor.
 
+> **Deprecated historical milestone. Reviewed 2026-06-04.**
+> This rigid/non-widget-composed Array example is retained for regression and traceability only. It is superseded by the widget-composed Array container examples starting at Example `29`, where Array repeats contained Default widget realizations.
+
 The visible UI is owned by `main.frog`: widget ids, labels, layout, rank, length, elements, selected value, one-dimensional index display, viewport, binding, and instance-level visual overrides. The `.wfrog` package only references the Default Array realization assets and host capabilities.
 
 ## Runtime Boundary
 
-Example 27 is a post-public-boundary widget progression example. Graiphic private runtimes validate this behavior unless the example is explicitly promoted later as public reference runtime material.
+Example 27 is a deprecated post-public-boundary widget progression milestone. Graiphic private runtimes may keep validating this behavior for regression context, but it is not the final Array rendering model.
 
 ## Validation Notes
 

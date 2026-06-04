@@ -19,9 +19,29 @@
       "roundtrip",
       "wfrog",
       "widget_realization_package",
-      "post_public_runtime_boundary"
+      "post_public_runtime_boundary",
+      "deprecated",
+      "historical_milestone",
+      "non_widget_composed_array",
+      "rigid_array"
     ],
     "is_example": true,
+    "lifecycle": {
+      "status": "deprecated",
+      "deprecated_on": "2026-06-04",
+      "deprecated_reason": "Historical rigid/non-widget-composed Array milestone retained for regression and traceability; superseded by widget-composed Array container examples.",
+      "superseded_by": [
+        "29_array_1d_numeric_container_roundtrip",
+        "30_array_1d_horizontal_numeric_container_roundtrip",
+        "31_array_1d_visible_count_property_roundtrip",
+        "32_array_1d_horizontal_visible_count_property_roundtrip",
+        "33_array_2d_numeric_container_roundtrip",
+        "34_array_2d_visible_counts_property_roundtrip",
+        "35_array_dimension_count_property_roundtrip",
+        "36_array_string_container_dimension_count_roundtrip",
+        "37_array_path_container_dimension_count_roundtrip"
+      ]
+    },
     "license": "Apache-2.0"
   },
   "interface": {

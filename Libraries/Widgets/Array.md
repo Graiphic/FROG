@@ -222,6 +222,14 @@ element_region
   <li><code>focus_ring</code></li>
 </ul>
 
+<p>
+The public <code>index_display</code> part represents the Array index-display
+subcontainer as a whole. Realizations may name per-dimension rows, arrow
+glyphs, separators, frames, and displayed values as internal SVG details, but
+those details must not expand the Array public part contract unless the class
+law explicitly adds them.
+</p>
+
 <hr/>
 
 <h2 id="standard-property-surface">8. Standard Property Surface</h2>

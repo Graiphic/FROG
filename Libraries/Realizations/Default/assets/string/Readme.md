@@ -34,6 +34,13 @@ The string class law belongs to <code>Libraries/Widgets/String.md</code>.
 These files are SVG template resources consumed by the default realization manifest.
 </p>
 
+<p>
+Reviewed <time datetime="2026-06-04">2026-06-04</time>: the String asset surface publishes
+<code>root</code>, <code>label</code>, <code>caption</code>, <code>text_region</code>,
+<code>text_value</code>, and <code>placeholder</code>; it does not publish a
+<code>frame</code> part.
+</p>
+
 <hr/>
 
 <h2>2. Published Assets</h2>
@@ -50,14 +57,13 @@ These files are SVG template resources consumed by the default realization manif
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>text_region</code></li>
   <li><code>text_value</code></li>
   <li><code>placeholder</code></li>
 </ul>
 
 <p>
-The String rectangular template intentionally has no <code>focus_ring</code> marker.
+The String rectangular template intentionally has no public <code>frame</code> or <code>focus_ring</code> marker.
 Interactive hover and text-region styling are carried through the manifest bindings and instance <code>.wfrog</code> properties.
 </p>
 
@@ -97,11 +103,6 @@ from these public markers instead of guessing private coordinates.
       <td>Visible front-panel caption.</td>
     </tr>
     <tr>
-      <td><code>frame</code></td>
-      <td><code>style.frame.*</code></td>
-      <td>Outer rectangular field border and background.</td>
-    </tr>
-    <tr>
       <td><code>text_region</code></td>
       <td><code>style.text_region.*</code></td>
       <td>Editable/display field body and crop reference for embedded String cells.</td>
@@ -120,7 +121,7 @@ from these public markers instead of guessing private coordinates.
 </table>
 
 <p>
-The Default String SVG must not publish decorative validation markers,
+The Default String SVG must not publish a public frame, decorative validation markers,
 overflow markers, hardcoded focus rings, caret surfaces, or selection surfaces.
 Those remain host/editor internals unless a future realization explicitly
 standardizes them.
