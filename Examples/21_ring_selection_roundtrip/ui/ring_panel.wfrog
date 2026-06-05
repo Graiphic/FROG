@@ -3,6 +3,11 @@
   "kind": "widget_realization_package",
   "package_id": "example21.ring_panel",
   "title": "Example 21 Default Ring realization package",
+  "review": {
+    "last_reviewed": "2026-06-05",
+    "scope": "Example 21 Ring closed selector skin, dropdown list SVG skin, default widget properties, value-face dropdown width, 1px value-face border, and value-display vertical alignment in the C++ browser host.",
+    "visible_runtime_fact": "Reviewed 2026-06-05"
+  },
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },
@@ -16,12 +21,14 @@
     "owns": [
       "Default Ring realization reference",
       "Default Ring SVG asset reference",
-      "host binding requirements for Ring selector rendering"
+      "host binding requirements for Ring selector rendering",
+      "accepted reusable Ring default widget properties for control and indicator roles",
+      "example-local dropdown host-surface layout contract"
     ],
     "does_not_own": [
       "canonical source semantics",
       "front-panel widget instance layout",
-      "front-panel widget instance visual customization",
+      "intentional front-panel widget instance visual overrides",
       "Ring item records",
       "selected Ring value",
       "FIR semantics",
@@ -70,6 +77,112 @@
       ]
     }
   ],
+  "default_widget_properties": [
+    {
+      "class_id": "frog.widgets.ring_control",
+      "role": "control",
+      "visual": {
+        "asset_ref": "asset:ring_rectangular_svg",
+        "popup_asset_ref": "asset:ring_dropdown_list_svg"
+      },
+      "props": {
+        "display.digital_display_visible": false,
+        "display.increment_decrement_visible": false,
+        "display.format.type": "unsigned_decimal",
+        "display.format.string": "%u",
+        "display.format.advanced_editing": false,
+        "display.selector_visible": true,
+        "display.popup_max_visible_items": 6,
+        "display.text_overflow_visible": false,
+        "style.scale.reference_width": 290,
+        "style.scale.reference_height": 120,
+        "style.frame.fill_color": "transparent",
+        "style.frame.border_color": "transparent",
+        "style.frame.border_width": "0px",
+        "style.value_face.fill_color": "#ffffff",
+        "style.value_face.fill_color.hover": "#eef6ff",
+        "style.value_face.border_color": "#64748b",
+        "style.value_face.border_color.hover": "#475569",
+        "style.value_face.border_width": "1px",
+        "style.value_display.color": "#111827",
+        "style.value_display.font_size": "15px",
+        "style.value_display.font_weight": "400",
+        "style.value_display.vertical_offset": "-2px",
+        "style.value_display.padding_inline": "9px",
+        "style.selector_face.fill_color": "#f1f5f9",
+        "style.selector_face.fill_color.hover": "#dbeafe",
+        "style.selector_face.border_color": "#64748b",
+        "style.selector_face.border_color.hover": "#2563eb",
+        "style.selector_face.border_width": "1px",
+        "style.selector_face.symbol_color": "#111827",
+        "style.selector_face.symbol_color.hover": "#1d4ed8",
+        "style.popup.fill_color": "#ffffff",
+        "style.popup.border_color": "#64748b",
+        "style.popup.border_width": "1px",
+        "style.popup.shadow": "0 8px 20px rgba(15,23,42,0.12)",
+        "style.popup.option.fill_color": "#ffffff",
+        "style.popup.option.text_color": "#111827",
+        "style.popup.option.hover_fill_color": "#dbeafe",
+        "style.popup.option.hover_text_color": "#0f172a",
+        "style.popup.option.selected_fill_color": "#bfdbfe",
+        "style.popup.option.selected_text_color": "#0f172a",
+        "style.popup.option.disabled_opacity": "0.62",
+        "style.popup.option.font_family": "Segoe UI, Arial, sans-serif",
+        "style.popup.option.font_size": "14px",
+        "style.popup.option.font_weight": "400",
+        "style.popup.option.height": "28px",
+        "style.popup.option.padding_inline": "9px",
+        "style.focus_ring.color": "#2563eb",
+        "style.focus_ring.width": "2px",
+        "interaction.visible": true,
+        "interaction.enabled": true,
+        "interaction.read_only": false,
+        "interaction.focusable": true,
+        "realization.variant": "rectangular"
+      }
+    },
+    {
+      "class_id": "frog.widgets.ring_indicator",
+      "role": "indicator",
+      "visual": {
+        "asset_ref": "asset:ring_rectangular_svg"
+      },
+      "props": {
+        "display.digital_display_visible": false,
+        "display.increment_decrement_visible": false,
+        "display.format.type": "unsigned_decimal",
+        "display.format.string": "%u",
+        "display.format.advanced_editing": false,
+        "display.selector_visible": false,
+        "display.popup_max_visible_items": 0,
+        "display.text_overflow_visible": false,
+        "style.scale.reference_width": 290,
+        "style.scale.reference_height": 120,
+        "style.frame.fill_color": "transparent",
+        "style.frame.border_color": "transparent",
+        "style.frame.border_width": "0px",
+        "style.value_face.fill_color": "#f8fafc",
+        "style.value_face.border_color": "#64748b",
+        "style.value_face.border_width": "1px",
+        "style.value_display.color": "#111827",
+        "style.value_display.font_size": "15px",
+        "style.value_display.font_weight": "400",
+        "style.value_display.vertical_offset": "-2px",
+        "style.value_display.padding_inline": "9px",
+        "style.selector_face.fill_color": "transparent",
+        "style.selector_face.border_color": "transparent",
+        "style.selector_face.border_width": "0px",
+        "style.selector_face.symbol_color": "transparent",
+        "style.focus_ring.color": "#2563eb",
+        "style.focus_ring.width": "2px",
+        "interaction.visible": true,
+        "interaction.enabled": false,
+        "interaction.read_only": true,
+        "interaction.focusable": false,
+        "realization.variant": "rectangular"
+      }
+    }
+  ],
   "svg_assets": [
     {
       "asset_id": "ring_rectangular_svg",
@@ -79,6 +192,50 @@
         "frog.widgets.ring_control",
         "frog.widgets.ring_indicator"
       ]
+    },
+    {
+      "asset_id": "ring_dropdown_list_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/ring/templates/ring_dropdown_list.svg",
+      "target_classes": [
+        "frog.widgets.ring_control"
+      ],
+      "host_surface": "dropdown"
+    }
+  ],
+  "host_surface_bindings": [
+    {
+      "surface": "dropdown",
+      "asset_ref": "asset:ring_dropdown_list_svg",
+      "supported_parts": [
+        "root",
+        "list_panel",
+        "option_row",
+        "option_label",
+        "option_selection_face"
+      ],
+      "panel_part": "list_panel",
+      "repeat_part": "option_row",
+      "text_part": "option_label",
+      "selection_part": "option_selection_face",
+      "semantic_members": [
+        "items[]",
+        "items[].label",
+        "items[].enabled",
+        "value.selected_id",
+        "value.selected_value",
+        "selected.*"
+      ],
+      "layout": {
+        "anchor_part": "value_face",
+        "x": "left",
+        "y": "bottom",
+        "width": "width",
+        "height": "repeated_part_stack",
+        "included_parts": [
+          "value_face"
+        ]
+      }
     }
   ]
 }

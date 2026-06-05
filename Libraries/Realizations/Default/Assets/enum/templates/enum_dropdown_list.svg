@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 238 72"
+     role="img"
+     aria-label="FROG default enum dropdown list realization template"
+     data-frog-template="frog.realizations.default.enum.dropdown_list"
+     data-frog-target-classes="frog.widgets.enum_control"
+     data-frog-host-surface="dropdown"
+     data-frog-variant="rectangular_ring">
+  <title>FROG Default Enum Dropdown List Realization Template</title>
+  <desc>Semantic SVG template for the host-rendered enum popup list. The runtime repeats option_row and option_text for each enum item.</desc>
+
+  <g id="root" data-frog-part="root">
+    <rect id="list_panel"
+          data-frog-part="list_panel"
+          x="0.5"
+          y="0.5"
+          width="237"
+          height="71"
+          style="fill: var(--frog-enum-dropdown-fill, #ffffff); stroke: var(--frog-enum-dropdown-border, #64748b); stroke-width: var(--frog-enum-dropdown-border-width, 1px); vector-effect: non-scaling-stroke;"
+          data-frog-bind="items[] interaction.opened style.dropdown.*" />
+
+    <g id="option_template"
+       data-frog-template-part="option_template"
+       data-frog-repeat="items[]">
+      <rect id="option_row"
+            data-frog-part="option_row"
+            x="1"
+            y="1"
+            width="236"
+            height="24"
+            style="fill: var(--frog-enum-dropdown-option-fill, #ffffff);"
+            data-frog-bind="items[] selected.* style.dropdown.option.*" />
+
+      <text id="option_text"
+            data-frog-part="option_text"
+            data-frog-member="items[].text"
+            x="8"
+            y="13"
+            dominant-baseline="middle"
+            style="fill: var(--frog-enum-dropdown-option-text, #111827); font-family: var(--frog-enum-dropdown-option-font-family, Segoe UI, Arial, sans-serif); font-size: var(--frog-enum-dropdown-option-font-size, 14px); font-weight: var(--frog-enum-dropdown-option-font-weight, 400); font-style: var(--frog-enum-dropdown-option-font-style, normal);"
+            data-frog-bind="items[].text selected.* style.dropdown.option.*">Item</text>
+    </g>
+  </g>
+</svg>

@@ -185,17 +185,21 @@ labels as identity.
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>value_face</code></li>
   <li><code>value_display</code></li>
   <li><code>selector_face</code></li>
-  <li><code>selector_arrow</code></li>
-  <li><code>popup_layer</code></li>
+  <li><code>list_panel</code></li>
   <li><code>option_row</code></li>
   <li><code>option_label</code></li>
   <li><code>option_selection_face</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
+
+<p>
+The selector arrow is a realization detail owned by <code>selector_face</code>,
+not a public semantic part. Focus rings, native handles, popup caches, and other
+host-private interaction affordances remain runtime or realization-private
+unless a concrete Ring behavior explicitly promotes them later.
+</p>
 
 <hr/>
 
@@ -295,13 +299,12 @@ families shown by LabVIEW without copying LabVIEW internals:
 <h3>Style</h3>
 
 <ul>
-  <li><code>style.frame.*</code></li>
   <li><code>style.value_face.*</code></li>
   <li><code>style.value_display.*</code></li>
+  <li><code>style.value_display.vertical_offset : signed px length</code></li>
   <li><code>style.selector_face.*</code></li>
   <li><code>style.popup.*</code></li>
   <li><code>style.popup.option.*</code></li>
-  <li><code>style.focus_ring.*</code></li>
 </ul>
 
 <hr/>
@@ -325,7 +328,7 @@ families shown by LabVIEW without copying LabVIEW internals:
   <li>In the LabVIEW-like default posture, Ring controls publish the selected item value to the diagram and use the selected item id for UI identity.</li>
   <li><code>items[].value</code>, <code>data_type.representation</code>, data-entry limits, display-format posture, undefined-value policy, disabled-item posture, and optional digital/increment surfaces must be source-owned properties when used.</li>
   <li>The visible selector must consume a realization asset and published parts.</li>
-  <li>Runtime overlays must align to <code>value_face</code>, <code>value_display</code>, <code>selector_face</code>, and <code>popup_layer</code>.</li>
+  <li>Runtime overlays must align to <code>value_face</code>, <code>value_display</code>, <code>selector_face</code>, and <code>list_panel</code>.</li>
   <li>Visual values such as colors, borders, thickness, text, hover, and selected states must come from source-owned properties or the Default realization.</li>
   <li>Ring must not be treated as Enum unless the source explicitly uses an Enum widget class.</li>
 </ul>

@@ -28,34 +28,11 @@
           y="46"
           style="display: var(--frog-enum-caption-display, inline); fill: var(--frog-enum-caption-fill, #111827); font-family: var(--frog-enum-caption-font-family, system-ui, Segoe UI, Arial, sans-serif); font-size: var(--frog-enum-caption-font-size, 14px); font-weight: var(--frog-enum-caption-font-weight, 600);">Enum</text>
 
-    <rect id="focus_ring"
-          data-frog-part="focus_ring"
-          x="4"
-          y="64"
-          width="360"
-          height="64"
-          rx="6"
-          fill="none"
-          stroke="#2f80ed"
-          stroke-width="3"
-          vector-effect="non-scaling-stroke"
-          opacity="0"
-          data-frog-bind="interaction.focused style.focus_ring.*" />
-
-    <rect id="frame"
-          data-frog-part="frame"
-          x="12"
-          y="72"
-          width="264"
-          height="48"
-          style="display: var(--frog-enum-frame-display, none); fill: var(--frog-enum-frame-fill, transparent); stroke: var(--frog-enum-frame-stroke, transparent); stroke-width: var(--frog-enum-frame-stroke-width, 0); vector-effect: non-scaling-stroke;"
-          data-frog-bind="style.frame.*" />
-
     <rect id="value_face"
           data-frog-part="value_face"
           x="22"
           y="82"
-          width="214"
+          width="208.154"
           height="28"
           style="fill: var(--frog-enum-value-face-fill, #ffffff); stroke: var(--frog-enum-value-face-stroke, #94a3b8); stroke-width: var(--frog-enum-value-face-stroke-width, 1px); vector-effect: non-scaling-stroke;"
           data-frog-bind="style.value_face.*" />
@@ -74,66 +51,22 @@
 
     <rect id="selector_face"
           data-frog-part="selector_face"
-          x="246"
+          data-frog-layout-anchor-part="value_face"
+          data-frog-layout-anchor-edge="right"
+          data-frog-layout-gap-units="3.959"
+          x="234.113"
           y="82"
           width="24"
-          height="28"
+          height="25.077"
           rx="1"
           style="display: var(--frog-enum-selector-display, inline); fill: var(--frog-enum-selector-fill, #e5e7eb); stroke: var(--frog-enum-selector-stroke, #94a3b8); stroke-width: var(--frog-enum-selector-stroke-width, 1px); vector-effect: non-scaling-stroke;"
           data-frog-bind="interaction.opened style.selector_face.*" />
 
     <path id="selector_arrow"
-          data-frog-part="selector_arrow"
-          d="M253 93 L263 93 L258 101 Z"
+          data-frog-detail="selector_arrow"
+          data-frog-owner-part="selector_face"
+          d="M241.113 88.615 L251.113 88.615 L246.113 96.615 Z"
           style="display: var(--frog-enum-selector-display, inline); fill: var(--frog-enum-selector-symbol, #111111);"
           data-frog-bind="style.selector_face.symbol_color" />
-
-    <g id="increment_up"
-       data-frog-part="increment_up"
-       style="display: var(--frog-enum-increment-display, none);"
-       data-frog-bind="display.increment_buttons_visible">
-      <rect x="278" y="82" width="24" height="13" fill="#5b9bd5" />
-      <path d="M290 85 L296 92 L284 92 Z" fill="none" stroke="#ffffff" stroke-width="2" vector-effect="non-scaling-stroke" />
-    </g>
-
-    <g id="increment_down"
-       data-frog-part="increment_down"
-       style="display: var(--frog-enum-increment-display, none);"
-       data-frog-bind="display.increment_buttons_visible">
-      <rect x="278" y="97" width="24" height="13" fill="#5b9bd5" />
-      <path d="M284 100 L296 100 L290 107 Z" fill="none" stroke="#ffffff" stroke-width="2" vector-effect="non-scaling-stroke" />
-    </g>
-
-    <rect id="digital_display"
-          data-frog-part="digital_display"
-          x="314"
-          y="82"
-          width="46"
-          height="28"
-          rx="1"
-          style="display: var(--frog-enum-digital-display, none); fill: #ffffff; stroke: #94a3b8; stroke-width: 1px; vector-effect: non-scaling-stroke;"
-          data-frog-bind="display.digital_display_visible selected.numeric_value" />
-
-    <text id="digital_display_text"
-          x="337"
-          y="97"
-          text-anchor="middle"
-          dominant-baseline="middle"
-          font-family="system-ui, Segoe UI, Arial, sans-serif"
-          font-size="12"
-          style="display: var(--frog-enum-digital-display, none);"
-          fill="#111111">0</text>
-
-    <text id="text_overflow_marker"
-          data-frog-part="text_overflow_marker"
-          data-frog-bind="display.text_overflow_visible"
-          x="226"
-          y="97"
-          text-anchor="middle"
-          dominant-baseline="middle"
-          font-family="system-ui, Segoe UI, Arial, sans-serif"
-          font-size="12"
-          style="display: var(--frog-enum-overflow-display, none);"
-          fill="#111111">...</text>
   </g>
 </svg>

@@ -25,8 +25,7 @@
 <p>
 This default realization publishes a compact selector embodiment for the FROG
 Ring widget family. It provides a rectangular value face, selected-item display,
-selector affordance, popup anchor surface, option row surfaces, and focus
-surface.
+selector affordance, and a dropdown host-surface skin for option rows.
 </p>
 
 <p>
@@ -43,17 +42,20 @@ lowering, runtime-private host handles, or IDE-private item editing behavior.
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>value_face</code></li>
   <li><code>value_display</code></li>
   <li><code>selector_face</code></li>
-  <li><code>selector_arrow</code></li>
-  <li><code>popup_layer</code></li>
+  <li><code>list_panel</code></li>
   <li><code>option_row</code></li>
   <li><code>option_label</code></li>
   <li><code>option_selection_face</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
+
+<p>
+The visible arrow inside the selector is a realization detail owned by
+<code>selector_face</code>. It is named in SVG as a detail so hosts can style it,
+but it is not a public semantic part.
+</p>
 
 <hr/>
 
@@ -61,6 +63,7 @@ lowering, runtime-private host handles, or IDE-private item editing behavior.
 
 <ul>
   <li><code>assets/ring/templates/ring_rectangular.svg</code></li>
+  <li><code>assets/ring/templates/ring_dropdown_list.svg</code></li>
 </ul>
 
 <hr/>
@@ -69,9 +72,9 @@ lowering, runtime-private host handles, or IDE-private item editing behavior.
 
 <ul>
   <li><code>value_face</code> anchors the selected value body.</li>
-  <li><code>value_display</code> anchors selected item text.</li>
-  <li><code>selector_face</code> and <code>selector_arrow</code> anchor the open-selector affordance.</li>
-  <li><code>popup_layer</code> anchors a host overlay for visible options.</li>
+  <li><code>value_display</code> anchors selected item text and consumes Default-supplied or source-overridden text style members such as <code>style.value_display.vertical_offset</code>.</li>
+  <li><code>selector_face</code> anchors the open-selector affordance.</li>
+  <li><code>list_panel</code> anchors the dropdown host overlay for visible options.</li>
   <li><code>option_row</code>, <code>option_label</code>, and <code>option_selection_face</code> publish option-row grammar.</li>
 </ul>
 
@@ -79,6 +82,21 @@ lowering, runtime-private host handles, or IDE-private item editing behavior.
 A runtime may use a host-native popup or select surface when it preserves the
 public part alignment, value posture, item inventory, and style-property
 bindings.
+</p>
+
+<p>
+The accepted Ring appearance is published as reusable
+<code>default_widget_properties</code> in <code>ring.default.wfrog</code>.
+That includes the one-pixel value-face border, value text vertical offset,
+selector styling, popup styling, and dropdown asset posture. Hosts apply these
+defaults by widget class and role before any source-owned <code>.frog</code>
+instance overrides.
+</p>
+
+<p>
+The dropdown host surface is declared in the manifest. Its width is anchored to
+<code>value_face</code> only, not the selector face, so changing the main value
+body width changes the dropdown width by the same amount.
 </p>
 
 <p>

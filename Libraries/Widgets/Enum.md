@@ -55,6 +55,13 @@ This document defines the standardized baseline for enum widgets in FROG.
 </p>
 
 <p>
+Latest Enum widget review:
+<time datetime="2026-06-05">2026-06-05</time>. The reviewed Default posture
+keeps the closed selector SVG minimal and publishes a separate dropdown list
+SVG skin for the host-rendered item popup.
+</p>
+
+<p>
 The enum family provides single-selection discrete named-value widgets.
 It covers the common graphical-programming case where a front-panel object selects one symbolic value from a finite item set, while preserving a clear underlying integer representation for serialization, comparison, and backend-friendly execution.
 </p>
@@ -90,7 +97,7 @@ An enum class is not the same thing as a dropdown widget, ring widget, popup men
 
 <p>
 The class owns selected enum value semantics, the legal item set, the representation posture, the control-versus-indicator distinction, properties, methods, events, and public parts.
-The realization owns visual embodiment, popup layout, selector affordances, increment/decrement buttons, optional digital display, optional text-overflow markers, and SVG or host-native resources.
+The realization owns visual embodiment, popup layout, selector affordances, dropdown/list surfaces, accepted reusable default style values, and SVG or host-native resources. The reviewed Default Enum posture does not publish increment/decrement buttons, digital display, or text-overflow marker parts.
 </p>
 
 <hr/>
@@ -132,13 +139,11 @@ caption.*
 
 value_display
     - visible selected-item text surface
-
-digital_display
-    - optional numeric representation display
 </code></pre>
 
 <p>
-This distinction prevents item text, logical widget identity, caption text, and numeric representation display from collapsing into one ambiguous field.
+This distinction prevents item text, logical widget identity, and caption text
+from collapsing into one ambiguous field.
 </p>
 
 <hr/>
@@ -167,17 +172,21 @@ This distinction prevents item text, logical widget identity, caption text, and 
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>value_face</code></li>
   <li><code>value_display</code></li>
   <li><code>selector_face</code></li>
-  <li><code>increment_up</code> when present</li>
-  <li><code>increment_down</code> when present</li>
-  <li><code>digital_display</code> when present</li>
-  <li><code>text_overflow_marker</code> when present</li>
-  <li><code>popup_layer</code> when the active realization exposes it</li>
-  <li><code>focus_ring</code> when present</li>
 </ul>
+
+<p>
+The selector arrow is an internal detail of <code>selector_face</code> in the
+Default realization. The closed selector SVG does not expose popup rows as
+public parts. When a realization publishes a host dropdown surface, that surface
+MAY carry its own skin parts such as <code>list_panel</code>,
+<code>option_row</code>, and <code>option_text</code>; hidden value state
+controls, focus treatment, overflow handling, and any future
+numeric-representation display remain host or variant details unless explicitly
+published by a later realization contract.
+</p>
 
 <hr/>
 
@@ -227,12 +236,8 @@ This distinction prevents item text, logical widget identity, caption text, and 
 
 <ul>
   <li><code>display.value_text_visible : bool</code></li>
-  <li><code>display.digital_display_visible : bool</code></li>
-  <li><code>display.increment_buttons_visible : bool</code></li>
-  <li><code>display.text_overflow_visible : bool</code></li>
+  <li><code>display.selector_visible : bool</code></li>
   <li><code>display.text_width_chars : u32</code></li>
-  <li><code>display.format_kind : enum</code> — <code>text</code>, <code>numeric</code>, or <code>text_and_numeric</code></li>
-  <li><code>display.format_string : string</code> when custom numeric display is exposed</li>
 </ul>
 
 <h3>8.6 Interaction</h3>
@@ -259,12 +264,10 @@ This distinction prevents item text, logical widget identity, caption text, and 
 <h3>8.8 Style and realization</h3>
 
 <ul>
-  <li><code>style.frame.*</code></li>
   <li><code>style.value_face.*</code></li>
   <li><code>style.value_display.*</code></li>
   <li><code>style.selector_face.*</code></li>
-  <li><code>style.digital_display.*</code></li>
-  <li><code>style.focus_ring.*</code></li>
+  <li><code>style.dropdown.*</code> when a host exposes a popup/dropdown selector surface or dropdown SVG skin</li>
   <li><code>realization.family : string</code></li>
   <li><code>realization.variant : string</code></li>
   <li><code>realization.skin_id : string</code></li>
@@ -353,7 +356,28 @@ They must not create hidden runtime-only enum values.
 <h2 id="default-realization-posture">12. Default Realization Posture</h2>
 
 <p>
-The Default realization should expose a rectangular enum ring/selector template with a value face, visible value text, selector affordance, optional increment/decrement buttons, optional digital display, optional overflow marker, caption and label surfaces, and a focus ring.
+The Default realization should expose a rectangular enum selector template with
+a value face, visible selected-item text, selector affordance, caption, and
+label surfaces. Popup/dropdown option interaction is host-owned for the current
+baseline, but the visible dropdown panel, row, and option text skin are
+published through a separate SVG template. The selector arrow remains an
+internal detail of <code>selector_face</code>.
+</p>
+
+<p>
+Popup/dropdown layout must be declared by the realization manifest, not inferred
+from runtime-specific widget knowledge. The Default realization declares that
+its dropdown host surface anchors to <code>value_face</code>, measures
+<code>outer_width</code> with a declared source-width outset, centers the popup
+under the body, and excludes <code>selector_face</code> from the popup width.
+</p>
+
+<p>
+The Default closed selector also declares the selector spacing in the SVG skin:
+<code>selector_face</code> is anchored to <code>value_face.right</code> with a
+fixed source-unit gap. This keeps body width changes proportional: the dropdown
+width follows the body width, and the selector face must shift by the same
+source delta so the visual gap is preserved.
 </p>
 
 <hr/>

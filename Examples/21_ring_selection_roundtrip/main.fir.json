@@ -39,7 +39,8 @@
             "value_type": "u16",
             "ui_identity_member": "value.selected_id",
             "public_input_id": "mode_value",
-            "realization_asset_ref": "asset:ring_rectangular_svg"
+            "realization_asset_ref": "asset:ring_rectangular_svg",
+            "popup_asset_ref": "asset:ring_dropdown_list_svg"
           },
           {
             "widget_id": "selected_ring",
@@ -63,7 +64,7 @@
           },
           {
             "widget_id": "mode_ring",
-            "part": "popup_layer",
+            "part": "list_panel",
             "source_members": [
               "items.*",
               "style.popup.*",
@@ -102,7 +103,7 @@
         "The Ring diagram value is numeric, matching the selected item value from the .frog Strings And Values style item records.",
         "The selected item id remains a UI identity member used to resolve the display label and host interaction state.",
         "Ring is intentionally distinct from Enum: no typed enum domain is introduced by this example.",
-        "The Default Ring SVG realization publishes value_face, value_display, selector_face, selector_arrow, popup_layer, option_row, option_label, option_selection_face, and focus_ring parts.",
+        "The Default Ring realization publishes closed selector parts value_face, value_display, and selector_face, plus dropdown host-surface parts list_panel, option_row, option_label, and option_selection_face. The selector arrow remains a realization detail, not a public semantic part.",
         "Interactive hosts may update Ring front-panel state without executing the diagram; Execute runs the manifest-backed identity proof.",
         "Runtime implementation for this example continues in Graiphic/FROG-Runtime unless explicitly promoted later."
       ]

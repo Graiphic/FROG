@@ -3,9 +3,14 @@
   "metadata": {
     "name": "21_ring_selection_roundtrip",
     "summary": "Ring control-to-indicator numeric selected-value roundtrip using .frog-owned item data and Default Ring .wfrog realization assets.",
-    "description": "Places one Ring control and one Ring indicator on the front panel. The .frog source owns item ids, item labels, numeric item values, selected value, layout, labels, bindings, and instance-level visual overrides. The .wfrog package references the Default Ring realization and SVG asset. Runtime implementation for this post-boundary example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
+    "description": "Places one Ring control and one Ring indicator on the front panel. The .frog source owns item ids, item labels, numeric item values, selected value, layout, labels, bindings, and intentional instance-level visual overrides. The .wfrog package references the Default Ring realization, SVG assets, reusable default widget properties, and dropdown host-surface layout. Runtime implementation for this post-boundary example continues in Graiphic/FROG-Runtime unless explicitly promoted later.",
     "author": "Graiphic",
     "program_version": "0.1.0",
+    "review": {
+      "last_reviewed": "2026-06-05",
+      "scope": "Example 21 Ring semantic SVG parts, dropdown list SVG skin, value-face dropdown width, 1px value-face border, and value-display vertical alignment.",
+      "visible_runtime_fact": "Reviewed 2026-06-05"
+    },
     "tags": [
       "example",
       "ui",
@@ -177,10 +182,11 @@
           "style.value_face.fill_color.hover": "#eef6ff",
           "style.value_face.border_color": "#64748b",
           "style.value_face.border_color.hover": "#475569",
-          "style.value_face.border_width": "1.5px",
+          "style.value_face.border_width": "1px",
           "style.value_display.color": "#111827",
           "style.value_display.font_size": "15px",
           "style.value_display.font_weight": "400",
+          "style.value_display.vertical_offset": "-2px",
           "style.value_display.padding_inline": "9px",
           "style.selector_face.fill_color": "#f1f5f9",
           "style.selector_face.fill_color.hover": "#dbeafe",
@@ -305,10 +311,11 @@
           "style.frame.border_width": "0px",
           "style.value_face.fill_color": "#f8fafc",
           "style.value_face.border_color": "#64748b",
-          "style.value_face.border_width": "1.5px",
+          "style.value_face.border_width": "1px",
           "style.value_display.color": "#111827",
           "style.value_display.font_size": "15px",
           "style.value_display.font_weight": "400",
+          "style.value_display.vertical_offset": "-2px",
           "style.value_display.padding_inline": "9px",
           "style.selector_face.fill_color": "transparent",
           "style.selector_face.border_color": "transparent",
@@ -349,10 +356,10 @@
         },
         {
           "label": "Item records",
-          "description": "The .frog instance owns item ids, labels, numeric values, enabled flags, selected id/value, and visual overrides."
+          "description": "The .frog instance owns item ids, labels, numeric values, enabled flags, selected id/value, and intentional visual overrides over the Default Ring posture."
         }
       ],
-      "note": "The runtime may provide host overlays for the selector and popup, but they must align to the Default Ring SVG parts and consume .frog-owned item/style data."
+      "note": "The runtime may provide host overlays for the selector and popup, but they must align to the Default Ring SVG parts and consume .frog-owned item data merged with .wfrog Default style data."
     }
   }
 }

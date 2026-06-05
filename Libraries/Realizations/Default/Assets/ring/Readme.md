@@ -15,6 +15,7 @@
 
 <ul>
   <li><code>assets/ring/templates/ring_rectangular.svg</code></li>
+  <li><code>assets/ring/templates/ring_dropdown_list.svg</code></li>
 </ul>
 
 <hr/>
@@ -25,17 +26,23 @@
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>value_face</code></li>
   <li><code>value_display</code></li>
   <li><code>selector_face</code></li>
-  <li><code>selector_arrow</code></li>
-  <li><code>popup_layer</code></li>
+  <li><code>list_panel</code></li>
   <li><code>option_row</code></li>
   <li><code>option_label</code></li>
   <li><code>option_selection_face</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
+
+<p>
+The closed selector skin publishes <code>root</code>, <code>label</code>,
+<code>caption</code>, <code>value_face</code>, <code>value_display</code>, and
+<code>selector_face</code>. The dropdown skin publishes <code>list_panel</code>,
+<code>option_row</code>, <code>option_label</code>, and
+<code>option_selection_face</code>. Selector arrows and focus affordances are
+realization or host details, not public Ring parts.
+</p>
 
 <hr/>
 

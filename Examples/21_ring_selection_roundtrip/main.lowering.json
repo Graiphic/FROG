@@ -55,7 +55,8 @@
             "mode": "widget_value",
             "semantic_value_member": "value.selected_value",
             "ui_identity_member": "value.selected_id",
-            "realization_asset_ref": "asset:ring_rectangular_svg"
+            "realization_asset_ref": "asset:ring_rectangular_svg",
+            "popup_asset_ref": "asset:ring_dropdown_list_svg"
           },
           {
             "widget_id": "selected_ring",
@@ -78,7 +79,7 @@
           },
           {
             "widget_id": "mode_ring",
-            "part": "popup_layer",
+            "part": "list_panel",
             "source_members": [
               "items.*",
               "style.popup.*"

@@ -3,6 +3,11 @@
   "kind": "widget_realization_library",
   "publication_role": "default_enum_realization_manifest",
   "version_governance_ref": "../../../Versioning/Readme.md",
+  "publication_review": {
+    "last_reviewed": "2026-06-05",
+    "scope": "Default Enum closed selector SVG, dropdown list SVG skin, dropdown host-surface layout, and semantic public parts.",
+    "public_posture": "Publishes the closed selector skin, popup list skin, reusable default widget properties, popup layout contract, supported semantic parts, and review date; runtime implementation code remains outside the public publication scope."
+  },
   "package": {
     "id": "frog.realizations.default.enum",
     "name": "FROG Default Enum Realization",
@@ -68,7 +73,8 @@
       "frog.realizations.default.enum.rectangular_ring"
     ],
     "resources": [
-      "frog.realizations.default.enum.assets.rectangular_ring_svg"
+      "frog.realizations.default.enum.assets.rectangular_ring_svg",
+      "frog.realizations.default.enum.assets.dropdown_list_svg"
     ]
   },
   "realizations": [
@@ -81,15 +87,9 @@
         "root",
         "label",
         "caption",
-        "frame",
         "value_face",
         "value_display",
-        "selector_face",
-        "increment_up",
-        "increment_down",
-        "digital_display",
-        "text_overflow_marker",
-        "focus_ring"
+        "selector_face"
       ],
       "supported_visual_states": [
         "normal",
@@ -108,12 +108,8 @@
         "root",
         "label",
         "caption",
-        "frame",
         "value_face",
-        "value_display",
-        "digital_display",
-        "text_overflow_marker",
-        "focus_ring"
+        "value_display"
       ],
       "supported_visual_states": [
         "normal",
@@ -130,7 +126,8 @@
         "frog.widgets.enum_control",
         "frog.widgets.enum_indicator"
       ],
-      "resource_ref": "frog.realizations.default.enum.assets.rectangular_ring_svg"
+      "resource_ref": "frog.realizations.default.enum.assets.rectangular_ring_svg",
+      "popup_resource_ref": "frog.realizations.default.enum.assets.dropdown_list_svg"
     }
   ],
   "resources": [
@@ -143,6 +140,142 @@
         "frog.widgets.enum_indicator"
       ],
       "target_variant": "rectangular_ring"
+    },
+    {
+      "id": "frog.realizations.default.enum.assets.dropdown_list_svg",
+      "kind": "svg",
+      "path": "./assets/enum/templates/enum_dropdown_list.svg",
+      "target_classes": [
+        "frog.widgets.enum_control"
+      ],
+      "target_variant": "rectangular_ring",
+      "host_surface": "dropdown"
+    }
+  ],
+  "default_widget_properties": [
+    {
+      "class_id": "frog.widgets.enum_control",
+      "role": "control",
+      "visual": {
+        "resource_ref": "frog.realizations.default.enum.assets.rectangular_ring_svg",
+        "popup_resource_ref": "frog.realizations.default.enum.assets.dropdown_list_svg"
+      },
+      "props": {
+        "display.selector_visible": true,
+        "style.scale.reference_width": 260,
+        "style.scale.reference_height": 110,
+        "style.value_face.fill_color": "#ffffff",
+        "style.value_face.fill_color.hover": "#eef6ff",
+        "style.value_face.border_color": "#64748b",
+        "style.value_face.border_color.hover": "#64748b",
+        "style.value_face.border_width": "1px",
+        "style.value_display.color": "#111827",
+        "style.value_display.font_size": "16px",
+        "style.value_display.font_size_mode": "scale_with_widget",
+        "style.value_display.font_weight": "400",
+        "style.value_display.vertical_offset": "-2px",
+        "style.value_display.vertical_offset_mode": "scale_with_widget",
+        "style.value_display.padding_inline": "8px",
+        "style.value_display.padding_inline_mode": "scale_with_widget",
+        "style.selector_face.fill_color": "#f1f5f9",
+        "style.selector_face.fill_color.hover": "#60a5fa",
+        "style.selector_face.border_color": "#64748b",
+        "style.selector_face.border_color.hover": "#2563eb",
+        "style.selector_face.border_width": "1px",
+        "style.selector_face.border_width_mode": "scale_with_widget",
+        "style.selector_face.border_radius": "1px",
+        "style.selector_face.border_radius_mode": "scale_with_widget",
+        "style.selector_face.symbol_color": "#111827",
+        "style.selector_face.symbol_color.hover": "#ffffff",
+        "style.selector_face.symbol_width": "10px",
+        "style.selector_face.symbol_height": "7px",
+        "style.selector_face.symbol_size_mode": "scale_with_widget",
+        "style.dropdown.fill_color": "#ffffff",
+        "style.dropdown.border_color": "#64748b",
+        "style.dropdown.border_width": "1px",
+        "style.dropdown.border_width_mode": "scale_with_widget",
+        "style.dropdown.option.fill_color": "#ffffff",
+        "style.dropdown.option.text_color": "#111827",
+        "style.dropdown.option.hover_fill_color": "#dbeafe",
+        "style.dropdown.option.hover_text_color": "#111827",
+        "style.dropdown.option.selected_fill_color": "#3b6db5",
+        "style.dropdown.option.selected_text_color": "#ffffff",
+        "style.dropdown.option.font_family": "Segoe UI,Arial,sans-serif",
+        "style.dropdown.option.font_size": "14px",
+        "style.dropdown.option.font_size_mode": "scale_with_widget",
+        "style.dropdown.option.font_weight": "400",
+        "style.dropdown.option.font_style": "normal",
+        "style.dropdown.option.padding_inline": "7px",
+        "style.dropdown.option.padding_inline_mode": "scale_with_widget",
+        "style.dropdown.option.height": "24px",
+        "style.dropdown.option.height_mode": "scale_with_widget",
+        "interaction.enabled": true,
+        "interaction.read_only": false,
+        "realization.variant": "rectangular_ring"
+      }
+    },
+    {
+      "class_id": "frog.widgets.enum_indicator",
+      "role": "indicator",
+      "visual": {
+        "resource_ref": "frog.realizations.default.enum.assets.rectangular_ring_svg"
+      },
+      "props": {
+        "display.selector_visible": false,
+        "style.scale.reference_width": 260,
+        "style.scale.reference_height": 110,
+        "style.value_face.fill_color": "#f8fafc",
+        "style.value_face.border_color": "#64748b",
+        "style.value_face.border_width": "1px",
+        "style.value_display.color": "#111827",
+        "style.value_display.font_size": "16px",
+        "style.value_display.font_size_mode": "scale_with_widget",
+        "style.value_display.font_weight": "400",
+        "style.value_display.vertical_offset": "-2px",
+        "style.value_display.vertical_offset_mode": "scale_with_widget",
+        "style.value_display.padding_inline": "8px",
+        "style.value_display.padding_inline_mode": "scale_with_widget",
+        "style.selector_face.fill_color": "transparent",
+        "style.selector_face.border_color": "transparent",
+        "style.selector_face.border_width": "0px",
+        "style.selector_face.symbol_color": "transparent",
+        "interaction.enabled": false,
+        "interaction.read_only": true,
+        "realization.variant": "rectangular_ring"
+      }
+    }
+  ],
+  "host_surface_bindings": [
+    {
+      "surface": "dropdown",
+      "resource_ref": "frog.realizations.default.enum.assets.dropdown_list_svg",
+      "supported_parts": [
+        "root",
+        "list_panel",
+        "option_row",
+        "option_text"
+      ],
+      "panel_part": "list_panel",
+      "repeat_part": "option_row",
+      "text_part": "option_text",
+      "semantic_members": [
+        "items[]",
+        "items[].text",
+        "selected.*"
+      ],
+      "layout": {
+        "anchor_part": "value_face",
+        "x": "center_on_anchor",
+        "y": "bottom",
+        "width": "outer_width",
+        "source_width_outset_units": 2.923,
+        "height": "repeated_part_stack",
+        "outer_box_stroke_width_property": "style.value_face.border_width",
+        "outer_box_stroke_width_mode_property": "style.value_face.border_width_mode",
+        "excluded_parts": [
+          "selector_face"
+        ]
+      }
     }
   ],
   "part_bindings": [
@@ -161,18 +294,6 @@
         "selected.text",
         "items[]"
       ]
-    },
-    {
-      "part": "digital_display",
-      "semantic_member": "selected.numeric_value"
-    },
-    {
-      "part": "increment_up",
-      "method_member": "select_next()"
-    },
-    {
-      "part": "increment_down",
-      "method_member": "select_previous()"
     }
   ],
   "state_maps": [
@@ -247,26 +368,6 @@
       "member": "items[]",
       "target_part": "value_display",
       "target_operation": "resolve_selected_item_text"
-    },
-    {
-      "member": "selected.numeric_value",
-      "target_part": "digital_display",
-      "target_operation": "set_numeric_text"
-    },
-    {
-      "member": "display.digital_display_visible",
-      "target_part": "digital_display",
-      "target_operation": "set_visibility"
-    },
-    {
-      "member": "display.increment_buttons_visible",
-      "target_part": "increment_up",
-      "target_operation": "set_visibility"
-    },
-    {
-      "member": "display.text_overflow_visible",
-      "target_part": "text_overflow_marker",
-      "target_operation": "set_visibility"
     }
   ],
   "anchors": [
@@ -295,11 +396,13 @@
   ],
   "host_hints": {
     "preferred_host_kind": "svg_template_host_or_host_native_single_selector",
-    "popup_posture": "host_may_provide_native_popup_for_item_selection"
+    "popup_posture": "host_may_provide_native_popup_for_item_selection",
+    "style_property_source": ".frog instance props overriding Default realization values"
   },
   "validation_expectations": [
     "target classes must exist in Libraries/Widgets/Enum.md",
     "value must resolve to a declared item unless undefined runtime values are explicitly allowed",
-    "items must preserve stable ids"
+    "items must preserve stable ids",
+    "accepted visual defaults are manifest data merged before source-owned instance overrides, not runtime constants"
   ]
 }

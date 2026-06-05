@@ -30,7 +30,26 @@ This document describes the default realization posture for <code>frog.widgets.e
 </p>
 
 <p>
-The default enum realization provides one rectangular ring/selector embodiment with value display, selector face, optional increment/decrement buttons, optional digital display, and optional text-overflow marker.
+Latest public realization metadata review:
+<time datetime="2026-06-05">2026-06-05</time>. The reviewed surface keeps the
+closed selector SVG minimal and adds a separate dropdown list SVG skin for the
+host-rendered enum item popup.
+</p>
+
+<p>
+The default enum realization provides one rectangular selector embodiment with
+value face, selected-item text, selector face, caption, and label surfaces.
+Selector arrows remain internal details of <code>selector_face</code>. The
+opened popup/dropdown is a host surface rendered from a separate semantic SVG
+skin so item rows can be styled without making them public parts of the closed
+selector SVG.
+</p>
+
+<p>
+The accepted closed-selector and dropdown appearance is published as reusable
+<code>default_widget_properties</code> in <code>enum.default.wfrog</code>.
+Hosts apply those defaults by widget class and role before any source-owned
+<code>.frog</code> instance overrides.
 </p>
 
 <hr/>
@@ -55,26 +74,42 @@ The default enum realization provides one rectangular ring/selector embodiment w
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>value_face</code></li>
   <li><code>value_display</code></li>
   <li><code>selector_face</code></li>
-  <li><code>increment_up</code></li>
-  <li><code>increment_down</code></li>
-  <li><code>digital_display</code></li>
-  <li><code>text_overflow_marker</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
 
 <hr/>
 
-<h2>5. SVG Template Asset</h2>
+<h2>5. SVG Template Assets</h2>
 
 <ul>
   <li><code>assets/enum/templates/enum_rectangular_ring.svg</code></li>
+  <li><code>assets/enum/templates/enum_dropdown_list.svg</code></li>
 </ul>
 
 <p>
-The SVG template provides visual structure and part markers.
-It does not own enum value, item inventory, or selected item semantics.
+The closed selector SVG provides visual structure and part markers for the
+resting widget. The dropdown list SVG provides a repeated row/text skin for the
+host-rendered item popup. Neither SVG owns enum value, item inventory, or
+selected item semantics.
+</p>
+
+<p>
+The popup geometry is declared in <code>enum.default.wfrog</code> under
+<code>host_surface_bindings</code>. The Default dropdown anchors to
+<code>value_face</code>, uses that part's outer width with a declared
+source-width outset, centers the dropdown under the body, and explicitly
+excludes <code>selector_face</code> from the measured popup width.
+The runtime must interpret this contract; it must not hardcode Enum-specific
+popup alignment.
+</p>
+
+<p>
+The closed selector geometry keeps <code>selector_face</code> tied to
+<code>value_face.right</code> by the SVG-declared gap
+<code>data-frog-layout-gap-units="3.959"</code>. When the value body width is
+changed, selector geometry must move by the same source delta, and the dropdown
+width must continue to follow the body through the manifest's
+<code>outer_width</code> rule.
 </p>

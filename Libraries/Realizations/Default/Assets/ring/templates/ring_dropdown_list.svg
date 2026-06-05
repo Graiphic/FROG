@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 242 84"
+     role="img"
+     aria-label="FROG default ring dropdown list realization template"
+     data-frog-template="frog.realizations.default.ring.dropdown_list"
+     data-frog-target-classes="frog.widgets.ring_control"
+     data-frog-host-surface="dropdown"
+     data-frog-variant="rectangular">
+  <title>FROG Default Ring Dropdown List Realization Template</title>
+  <desc>Semantic SVG template for the host-rendered ring popup list. The runtime repeats option_row, option_label, and option_selection_face for each visible ring item.</desc>
+
+  <g id="root" data-frog-part="root">
+    <rect id="list_panel"
+          data-frog-part="list_panel"
+          x="0.5"
+          y="0.5"
+          width="241"
+          height="83"
+          style="fill: var(--frog-ring-dropdown-fill, #ffffff); stroke: var(--frog-ring-dropdown-border, #64748b); stroke-width: var(--frog-ring-dropdown-border-width, 1px); vector-effect: non-scaling-stroke;"
+          data-frog-bind="items[] interaction.opened style.popup.*" />
+
+    <g id="option_template"
+       data-frog-template-part="option_template"
+       data-frog-repeat="items[]">
+      <rect id="option_selection_face"
+            data-frog-part="option_selection_face"
+            x="1"
+            y="1"
+            width="240"
+            height="28"
+            style="fill: var(--frog-ring-dropdown-option-selected-fill, #bfdbfe);"
+            data-frog-bind="selected.* style.popup.option.*" />
+
+      <rect id="option_row"
+            data-frog-part="option_row"
+            x="1"
+            y="1"
+            width="240"
+            height="28"
+            style="fill: var(--frog-ring-dropdown-option-fill, #ffffff);"
+            data-frog-bind="items[] items[].enabled selected.* style.popup.option.*" />
+
+      <text id="option_label"
+            data-frog-part="option_label"
+            data-frog-member="items[].label"
+            x="10"
+            y="15"
+            dominant-baseline="middle"
+            style="fill: var(--frog-ring-dropdown-option-text, #111827); font-family: var(--frog-ring-dropdown-option-font-family, Segoe UI, Arial, sans-serif); font-size: var(--frog-ring-dropdown-option-font-size, 14px); font-weight: var(--frog-ring-dropdown-option-font-weight, 400);"
+            data-frog-bind="items[].label items[].enabled selected.* style.popup.option.*">Item</text>
+    </g>
+  </g>
+</svg>
