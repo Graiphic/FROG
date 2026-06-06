@@ -7,6 +7,15 @@
      data-frog-variant="rectangular_ring">
   <title>FROG Default Enum Rectangular Ring Realization Template</title>
   <desc>Semantic SVG template for the default enum ring-like realization.</desc>
+  <style>
+    #focus_ring {
+      display: var(--frog-enum-focus-display, none);
+      fill: none;
+      stroke: var(--frog-enum-focus-stroke, #2563eb);
+      stroke-width: var(--frog-enum-focus-stroke-width, 2px);
+      vector-effect: non-scaling-stroke;
+    }
+  </style>
 
   <g id="root" data-frog-part="root">
     <text id="label_text"
@@ -36,6 +45,52 @@
           height="28"
           style="fill: var(--frog-enum-value-face-fill, #ffffff); stroke: var(--frog-enum-value-face-stroke, #94a3b8); stroke-width: var(--frog-enum-value-face-stroke-width, 1px); vector-effect: non-scaling-stroke;"
           data-frog-bind="style.value_face.*" />
+
+    <rect id="focus_ring"
+          data-frog-part="focus_ring"
+          data-frog-role="keyboard_focus_boundary"
+          x="0"
+          y="80"
+          width="260"
+          height="32"
+          rx="2"
+          data-frog-bind="interaction.focused style.focus_ring.*" />
+
+    <g id="spinner"
+       data-frog-part="spinner"
+       data-frog-bind="display.increment_buttons_visible"
+       style="display: var(--frog-enum-spinner-display, inline);">
+      <g id="increment_up"
+         data-frog-part="increment_up"
+         data-frog-member="increment()"
+         data-frog-states="normal pressed"
+         data-frog-state-law="normal-pressed-color-only"
+         data-frog-bind="style.increment_button.*">
+        <rect x="2"
+              y="82"
+              width="16"
+              height="13"
+              rx="1"
+              style="fill: var(--frog-enum-spinner-fill, #edf2f7); stroke: var(--frog-enum-spinner-border, #94a3b8); stroke-width: 1; vector-effect: non-scaling-stroke;" />
+        <path d="M7 90 L13 90 L10 87 Z"
+              style="fill: var(--frog-enum-spinner-symbol, #334e68); stroke: none;" />
+      </g>
+      <g id="increment_down"
+         data-frog-part="increment_down"
+         data-frog-member="decrement()"
+         data-frog-states="normal pressed"
+         data-frog-state-law="normal-pressed-color-only"
+         data-frog-bind="style.increment_button.*">
+        <rect x="2"
+              y="97"
+              width="16"
+              height="13"
+              rx="1"
+              style="fill: var(--frog-enum-spinner-fill, #edf2f7); stroke: var(--frog-enum-spinner-border, #94a3b8); stroke-width: 1; vector-effect: non-scaling-stroke;" />
+        <path d="M7 102 L13 102 L10 105 Z"
+              style="fill: var(--frog-enum-spinner-symbol, #334e68); stroke: none;" />
+      </g>
+    </g>
 
     <text id="value_display"
           data-frog-part="value_display"

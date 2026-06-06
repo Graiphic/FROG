@@ -4,8 +4,8 @@
   "publication_role": "default_enum_realization_manifest",
   "version_governance_ref": "../../../Versioning/Readme.md",
   "publication_review": {
-    "last_reviewed": "2026-06-05",
-    "scope": "Default Enum closed selector SVG, dropdown list SVG skin, dropdown host-surface layout, and semantic public parts.",
+    "last_reviewed": "2026-06-06",
+    "scope": "Default Enum closed selector SVG, optional increment/decrement command parts, dropdown list SVG skin, dropdown host-surface layout, and semantic public parts.",
     "public_posture": "Publishes the closed selector skin, popup list skin, reusable default widget properties, popup layout contract, supported semantic parts, and review date; runtime implementation code remains outside the public publication scope."
   },
   "package": {
@@ -88,8 +88,12 @@
         "label",
         "caption",
         "value_face",
+        "focus_ring",
         "value_display",
-        "selector_face"
+        "selector_face",
+        "spinner",
+        "increment_up",
+        "increment_down"
       ],
       "supported_visual_states": [
         "normal",
@@ -109,6 +113,7 @@
         "label",
         "caption",
         "value_face",
+        "focus_ring",
         "value_display"
       ],
       "supported_visual_states": [
@@ -162,6 +167,8 @@
       },
       "props": {
         "display.selector_visible": true,
+        "display.increment_buttons_visible": true,
+        "data_entry.increment_wrap": false,
         "style.scale.reference_width": 260,
         "style.scale.reference_height": 110,
         "style.value_face.fill_color": "#ffffff",
@@ -190,6 +197,17 @@
         "style.selector_face.symbol_width": "10px",
         "style.selector_face.symbol_height": "7px",
         "style.selector_face.symbol_size_mode": "scale_with_widget",
+        "style.focus_ring.color": "#2563eb",
+        "style.focus_ring.width": "2px",
+        "style.increment_button.fill_color.normal": "#edf2f7",
+        "style.increment_button.fill_color.hover": "#dbeafe",
+        "style.increment_button.fill_color.pressed": "#bfdbfe",
+        "style.increment_button.border_color.normal": "#94a3b8",
+        "style.increment_button.border_color.hover": "#64748b",
+        "style.increment_button.border_color.pressed": "#2563eb",
+        "style.increment_button.symbol_color.normal": "#334e68",
+        "style.increment_button.symbol_color.hover": "#1d4ed8",
+        "style.increment_button.symbol_color.pressed": "#1e40af",
         "style.dropdown.fill_color": "#ffffff",
         "style.dropdown.border_color": "#64748b",
         "style.dropdown.border_width": "1px",
@@ -239,6 +257,8 @@
         "style.selector_face.border_color": "transparent",
         "style.selector_face.border_width": "0px",
         "style.selector_face.symbol_color": "transparent",
+        "style.focus_ring.color": "#2563eb",
+        "style.focus_ring.width": "2px",
         "interaction.enabled": false,
         "interaction.read_only": true,
         "realization.variant": "rectangular_ring"
@@ -294,6 +314,27 @@
         "selected.text",
         "items[]"
       ]
+    },
+    {
+      "part": "focus_ring",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='focus_ring']",
+      "style_binding_group": "style.focus_ring",
+      "state_sensitive": true
+    },
+    {
+      "part": "spinner",
+      "visibility_member": "display.increment_buttons_visible"
+    },
+    {
+      "part": "increment_up",
+      "semantic_member": "select_next()",
+      "method_member": "increment()"
+    },
+    {
+      "part": "increment_down",
+      "semantic_member": "select_previous()",
+      "method_member": "decrement()"
     }
   ],
   "state_maps": [
@@ -301,7 +342,12 @@
       "state": "normal"
     },
     {
-      "state": "focused"
+      "state": "focused",
+      "property_bindings": [
+        "style.focus_ring.visible",
+        "style.focus_ring.color",
+        "style.focus_ring.width"
+      ]
     },
     {
       "state": "disabled"
@@ -368,6 +414,26 @@
       "member": "items[]",
       "target_part": "value_display",
       "target_operation": "resolve_selected_item_text"
+    },
+    {
+      "member": "display.increment_buttons_visible",
+      "target_part": "spinner",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "style.increment_button.*",
+      "target_part": "increment_up",
+      "target_operation": "apply_increment_button_style"
+    },
+    {
+      "member": "style.increment_button.*",
+      "target_part": "increment_down",
+      "target_operation": "apply_increment_button_style"
+    },
+    {
+      "member": "style.focus_ring.*",
+      "target_part": "focus_ring",
+      "target_operation": "apply_focus_ring_style"
     }
   ],
   "anchors": [
@@ -403,6 +469,7 @@
     "target classes must exist in Libraries/Widgets/Enum.md",
     "value must resolve to a declared item unless undefined runtime values are explicitly allowed",
     "items must preserve stable ids",
-    "accepted visual defaults are manifest data merged before source-owned instance overrides, not runtime constants"
+    "accepted visual defaults are manifest data merged before source-owned instance overrides, not runtime constants",
+    "increment/decrement commands must navigate the declared items[] order and honor display.increment_buttons_visible"
   ]
 }

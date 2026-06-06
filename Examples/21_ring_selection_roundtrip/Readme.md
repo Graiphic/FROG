@@ -12,11 +12,11 @@
 <hr/>
 
 <p>
-Reviewed 2026-06-05: the example consumes the Default Ring closed selector SVG
-and dropdown list SVG skin. The dropdown list aligns to the value face only,
-not the selector arrow, the Ring value face uses a 1px border, and the visible
-selected-item text is vertically aligned through source-owned
-<code>style.value_display.vertical_offset</code>.
+Reviewed 2026-06-06: the example consumes the Default Ring closed selector SVG,
+optional increment/decrement command parts, and dropdown list SVG skin. The
+dropdown list aligns to the value face only, not the selector arrow, the Ring
+value face uses a 1px border, and the visible selected-item text is vertically
+aligned through source-owned <code>style.value_display.vertical_offset</code>.
 </p>
 
 <p>
@@ -24,6 +24,14 @@ The accepted Ring visual posture is now a reusable default:
 <code>ui/ring_panel.wfrog</code> declares <code>default_widget_properties</code>
 for the control and indicator roles, and the C++ runtime merges those defaults
 before any <code>.frog</code> instance-level overrides.
+</p>
+
+<p>
+The accepted Ring control posture exposes the LabVIEW-like increment/decrement
+command as semantic skin parts: <code>spinner</code>,
+<code>increment_up</code>, and <code>increment_down</code>.
+<code>display.increment_decrement_visible</code> controls whether that command
+is shown.
 </p>
 
 <hr/>
@@ -53,7 +61,7 @@ proof and updates the read-only Ring indicator.
 <ul>
   <li><code>.frog</code> owns the Ring instances, item ids, item labels, numeric item values, selected value, representation, captions, layout, bindings, and instance-level style overrides.</li>
   <li><code>.wfrog</code> references the Default Ring realization package, SVG assets, host capability declarations, dropdown host-surface layout, and reusable default widget properties.</li>
-  <li>The Default Ring closed selector SVG publishes <code>root</code>, <code>label</code>, <code>caption</code>, <code>value_face</code>, <code>value_display</code>, and <code>selector_face</code>. The arrow glyph is a private detail owned by <code>selector_face</code>, not a public part.</li>
+  <li>The Default Ring closed selector SVG publishes <code>root</code>, <code>label</code>, <code>caption</code>, <code>value_face</code>, <code>value_display</code>, <code>selector_face</code>, <code>spinner</code>, <code>increment_up</code>, and <code>increment_down</code>. The arrow glyph is a private detail owned by <code>selector_face</code>, not a public part.</li>
   <li>The Default Ring dropdown SVG publishes <code>root</code>, <code>list_panel</code>, <code>option_row</code>, <code>option_label</code>, and <code>option_selection_face</code>.</li>
   <li>The runtime consumes the manifest-backed native <code>u16</code> artifact and binds host overlays to the published SVG parts.</li>
 </ul>

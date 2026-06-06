@@ -56,9 +56,10 @@ This document defines the standardized baseline for enum widgets in FROG.
 
 <p>
 Latest Enum widget review:
-<time datetime="2026-06-05">2026-06-05</time>. The reviewed Default posture
-keeps the closed selector SVG minimal and publishes a separate dropdown list
-SVG skin for the host-rendered item popup.
+<time datetime="2026-06-06">2026-06-06</time>. The reviewed Default posture
+keeps the closed selector SVG semantic, publishes optional increment/decrement
+command parts for LabVIEW-like item stepping, and publishes a separate dropdown
+list SVG skin for the host-rendered item popup.
 </p>
 
 <p>
@@ -97,7 +98,7 @@ An enum class is not the same thing as a dropdown widget, ring widget, popup men
 
 <p>
 The class owns selected enum value semantics, the legal item set, the representation posture, the control-versus-indicator distinction, properties, methods, events, and public parts.
-The realization owns visual embodiment, popup layout, selector affordances, dropdown/list surfaces, accepted reusable default style values, and SVG or host-native resources. The reviewed Default Enum posture does not publish increment/decrement buttons, digital display, or text-overflow marker parts.
+The realization owns visual embodiment, popup layout, selector affordances, optional increment/decrement affordances, dropdown/list surfaces, accepted reusable default style values, and SVG or host-native resources. The reviewed Default Enum posture does not publish digital display or text-overflow marker parts.
 </p>
 
 <hr/>
@@ -175,17 +176,22 @@ from collapsing into one ambiguous field.
   <li><code>value_face</code></li>
   <li><code>value_display</code></li>
   <li><code>selector_face</code></li>
+  <li><code>focus_ring</code></li>
+  <li><code>spinner</code> when a realization exposes increment/decrement commands</li>
+  <li><code>increment_up</code> when a realization exposes increment/decrement commands</li>
+  <li><code>increment_down</code> when a realization exposes increment/decrement commands</li>
 </ul>
 
 <p>
 The selector arrow is an internal detail of <code>selector_face</code> in the
-Default realization. The closed selector SVG does not expose popup rows as
-public parts. When a realization publishes a host dropdown surface, that surface
+Default realization. The <code>focus_ring</code> is public so focus geometry is
+owned by the SVG skin and not invented by runtime code. The closed selector SVG
+does not expose popup rows as public parts. When a realization publishes a host dropdown surface, that surface
 MAY carry its own skin parts such as <code>list_panel</code>,
 <code>option_row</code>, and <code>option_text</code>; hidden value state
-controls, focus treatment, overflow handling, and any future
-numeric-representation display remain host or variant details unless explicitly
-published by a later realization contract.
+controls, overflow handling, and any future numeric-representation display
+remain host or variant details unless explicitly published by a later
+realization contract.
 </p>
 
 <hr/>
@@ -237,10 +243,17 @@ published by a later realization contract.
 <ul>
   <li><code>display.value_text_visible : bool</code></li>
   <li><code>display.selector_visible : bool</code></li>
+  <li><code>display.increment_buttons_visible : bool</code></li>
   <li><code>display.text_width_chars : u32</code></li>
 </ul>
 
-<h3>8.6 Interaction</h3>
+<h3>8.6 Data entry</h3>
+
+<ul>
+  <li><code>data_entry.increment_wrap : bool</code></li>
+</ul>
+
+<h3>8.7 Interaction</h3>
 
 <ul>
   <li><code>interaction.visible : bool</code></li>
@@ -251,7 +264,7 @@ published by a later realization contract.
   <li><code>interaction.opened : bool</code> when an opened selector posture exists</li>
 </ul>
 
-<h3>8.7 Authoring item-editing posture</h3>
+<h3>8.8 Authoring item-editing posture</h3>
 
 <ul>
   <li><code>item_editing.allow_insert : bool</code></li>
@@ -261,12 +274,14 @@ published by a later realization contract.
   <li><code>item_editing.allow_undefined_runtime_values : bool</code></li>
 </ul>
 
-<h3>8.8 Style and realization</h3>
+<h3>8.9 Style and realization</h3>
 
 <ul>
   <li><code>style.value_face.*</code></li>
   <li><code>style.value_display.*</code></li>
   <li><code>style.selector_face.*</code></li>
+  <li><code>style.focus_ring.*</code></li>
+  <li><code>style.increment_button.*</code> when a realization exposes increment/decrement command parts</li>
   <li><code>style.dropdown.*</code> when a host exposes a popup/dropdown selector surface or dropdown SVG skin</li>
   <li><code>realization.family : string</code></li>
   <li><code>realization.variant : string</code></li>
@@ -291,6 +306,8 @@ published by a later realization contract.
   <li><code>focus()</code></li>
   <li><code>open_selector()</code></li>
   <li><code>close_selector()</code></li>
+  <li><code>increment()</code> as the LabVIEW-like visual command alias for <code>select_next()</code></li>
+  <li><code>decrement()</code> as the LabVIEW-like visual command alias for <code>select_previous()</code></li>
   <li><code>select_next()</code></li>
   <li><code>select_previous()</code></li>
   <li><code>select_item(id)</code></li>
@@ -358,10 +375,13 @@ They must not create hidden runtime-only enum values.
 <p>
 The Default realization should expose a rectangular enum selector template with
 a value face, visible selected-item text, selector affordance, caption, and
-label surfaces. Popup/dropdown option interaction is host-owned for the current
-baseline, but the visible dropdown panel, row, and option text skin are
-published through a separate SVG template. The selector arrow remains an
-internal detail of <code>selector_face</code>.
+label surfaces. A control realization MAY expose LabVIEW-like increment and
+decrement command parts as <code>spinner</code>, <code>increment_up</code>, and
+<code>increment_down</code>, controlled by
+<code>display.increment_buttons_visible</code>. Popup/dropdown option
+interaction is host-owned for the current baseline, but the visible dropdown
+panel, row, and option text skin are published through a separate SVG template.
+The selector arrow remains an internal detail of <code>selector_face</code>.
 </p>
 
 <p>

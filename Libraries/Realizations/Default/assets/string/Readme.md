@@ -35,10 +35,10 @@ These files are SVG template resources consumed by the default realization manif
 </p>
 
 <p>
-Reviewed <time datetime="2026-06-04">2026-06-04</time>: the String asset surface publishes
+Reviewed <time datetime="2026-06-06">2026-06-06</time>: the String asset surface publishes
 <code>root</code>, <code>label</code>, <code>caption</code>, <code>text_region</code>,
-<code>text_value</code>, and <code>placeholder</code>; it does not publish a
-<code>frame</code> part.
+<code>text_value</code>, <code>placeholder</code>, and <code>focus_ring</code>;
+it does not publish a <code>frame</code> part.
 </p>
 
 <hr/>
@@ -60,11 +60,12 @@ Reviewed <time datetime="2026-06-04">2026-06-04</time>: the String asset surface
   <li><code>text_region</code></li>
   <li><code>text_value</code></li>
   <li><code>placeholder</code></li>
+  <li><code>focus_ring</code></li>
 </ul>
 
 <p>
-The String rectangular template intentionally has no public <code>frame</code> or <code>focus_ring</code> marker.
-Interactive hover and text-region styling are carried through the manifest bindings and instance <code>.wfrog</code> properties.
+The String rectangular template intentionally has no public <code>frame</code> marker.
+Interactive hover, text-region styling, and focus-ring styling are carried through the manifest bindings and instance <code>.wfrog</code> properties.
 </p>
 
 <hr/>
@@ -117,12 +118,17 @@ from these public markers instead of guessing private coordinates.
       <td><code>placeholder.text</code>, <code>placeholder.visible</code>, <code>placeholder.style.*</code></td>
       <td>Optional empty-value fallback text; never the value itself.</td>
     </tr>
+    <tr>
+      <td><code>focus_ring</code></td>
+      <td><code>style.focus_ring.*</code>, <code>interaction.focused</code></td>
+      <td>Keyboard/browser focus boundary owned by the SVG skin geometry.</td>
+    </tr>
   </tbody>
 </table>
 
 <p>
 The Default String SVG must not publish a public frame, decorative validation markers,
-overflow markers, hardcoded focus rings, caret surfaces, or selection surfaces.
+overflow markers, caret surfaces, or selection surfaces.
 Those remain host/editor internals unless a future realization explicitly
 standardizes them.
 </p>

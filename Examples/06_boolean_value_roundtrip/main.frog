@@ -6,6 +6,12 @@
     "description": "Reads a bool value from one .frog front-panel Boolean value control, exposes that value through the public input surface, copies it to one public output, and publishes it to one Boolean indicator. This example intentionally validates Boolean value widgets, not the Button command widget. The .frog source owns the Boolean widget instances, layout, binding, state labels, and per-instance appearance. The .wfrog package owns the published Default Boolean widget realization, host requirements, and SVG asset references consumed by the runtimes.",
     "author": "Graiphic",
     "program_version": "0.1.0",
+    "review": {
+      "last_reviewed": "2026-06-06",
+      "scope": "Example 06 Boolean rectangular/circular SVG focus_ring posture and C++ browser-host rendering",
+      "visible_runtime_fact": "Reviewed 2026-06-06",
+      "public_posture": "Review evidence is public; Graiphic runtime implementation code remains outside the public publication scope."
+    },
     "tags": [
       "example",
       "ui",

@@ -104,10 +104,22 @@ The current published widget layer includes detailed class-law baselines for the
 <ul>
   <li>Widget documents define public widget class law.</li>
   <li>Default realization documents and manifests define default embodiment.</li>
-  <li>SVG assets are templates or subobject resources, not semantic owners.</li>
+  <li>SVG assets are templates or subobject resources. They own published visual geometry, anchors, and skin parts, but they do not own widget values or diagram semantics.</li>
   <li>Runtime implementations consume these surfaces; they do not define the standard.</li>
   <li>Host-native widgets may replace SVG-backed rendering when they preserve public parts, value posture, property/method/event surfaces, and realization-private boundaries.</li>
 </ul>
+
+<h3>Focus Geometry Rule</h3>
+
+<p>
+For focusable SVG-backed widgets, visible keyboard/browser focus geometry is a
+public skin concern. A widget family should publish a <code>focus_ring</code>
+part whenever the widget shape owns the focus boundary. The SVG owns the shape,
+the source or realization owns <code>interaction.focused</code> and
+<code>style.focus_ring.*</code>, and runtimes only toggle declared state and
+apply declared style. Runtimes must not invent private focus outlines that
+change the widget shape outside the public part model.
+</p>
 
 <hr/>
 

@@ -26,10 +26,10 @@ template. A fallback HTML-only Path widget is not a valid implementation of this
 <h2>Review Status</h2>
 
 <p>
-Latest public Path review: <time datetime="2026-06-03">2026-06-03</time>.
+Latest public Path review: <time datetime="2026-06-06">2026-06-06</time>.
 The review covers the Example 09 source/package posture, the Default Path
-rectangular SVG skin contract, and C++ browser-host rendering of the public
-example surface.
+rectangular SVG skin contract, the source-owned <code>focus_ring</code>, and
+C++ browser-host rendering of the public example surface.
 </p>
 
 <p>

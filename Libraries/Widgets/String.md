@@ -77,8 +77,8 @@ It does not standardize a full rich-text editor, code editor, terminal widget, d
 
 <p>
 Latest String widget review:
-<time datetime="2026-06-04">2026-06-04</time>. The reviewed Default SVG posture keeps
-<code>placeholder</code> separate from <code>text_value</code>; placeholder text is visible only for an empty value and never replaces the semantic string value.
+<time datetime="2026-06-06">2026-06-06</time>. The reviewed Default SVG posture keeps
+<code>placeholder</code> separate from <code>text_value</code>; placeholder text is visible only for an empty value and never replaces the semantic string value. It also publishes <code>focus_ring</code> so focus geometry remains source-owned.
 </p>
 
 <hr/>
@@ -271,13 +271,20 @@ guesses or runtime-hardcoded String geometry.
       <td>Optional dynamic text region.</td>
       <td>Empty-value fallback only; it never replaces the semantic <code>value</code>.</td>
     </tr>
+    <tr>
+      <td><code>focus_ring</code></td>
+      <td>Optional focus visualization surface.</td>
+      <td>Keyboard/browser focus boundary owned by the SVG skin shape; runtimes toggle and style it through <code>style.focus_ring.*</code>.</td>
+    </tr>
   </tbody>
 </table>
 
 <p>
-The Default String skin intentionally has no public <code>focus_ring</code>,
+The Default String skin intentionally has no public <code>frame</code>,
 validation marker, overflow marker, caret, or selection part. Those may exist as
 host/editor internals, but a runtime must not address them as String class law.
+The <code>focus_ring</code> is public because focus geometry belongs to the
+SVG skin, not to hardcoded runtime CSS.
 </p>
 
 <hr/>

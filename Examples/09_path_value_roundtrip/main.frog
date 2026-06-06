@@ -7,8 +7,9 @@
                      "author":  "Graiphic",
                      "program_version":  "0.1.0",
                      "review":  {
-                                    "last_reviewed":  "2026-06-03",
-                                    "scope":  "Example 09 Path source/package posture, Default Path SVG skin contract, and C++ browser-host rendering",
+                                    "last_reviewed":  "2026-06-06",
+                                    "scope":  "Example 09 Path source/package posture, Default Path SVG skin contract, focus_ring, and C++ browser-host rendering",
+                                    "visible_runtime_fact":  "Reviewed 2026-06-06",
                                     "public_posture":  "Review evidence is public; Graiphic runtime implementation code remains outside the public publication scope."
                                 },
                      "tags":  [

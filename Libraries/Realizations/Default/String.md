@@ -42,9 +42,9 @@ This document describes how the default realization family can embody that law t
 
 <p>
 Latest public realization metadata review:
-<time datetime="2026-06-04">2026-06-04</time>. The reviewed surface is the
+<time datetime="2026-06-06">2026-06-06</time>. The reviewed surface is the
 Default rectangular String SVG skin, its public semantic part contract, and the
-Example 07 placeholder/text_value browser-host launch posture.
+Example 07 placeholder/text_value/focus_ring browser-host launch posture.
 </p>
 
 <hr/>
@@ -99,6 +99,7 @@ That manifest declares target classes, realization records, variants, SVG resour
   <li><code>text_region</code></li>
   <li><code>text_value</code></li>
   <li><code>placeholder</code></li>
+  <li><code>focus_ring</code></li>
 </ul>
 
 <hr/>
@@ -174,11 +175,18 @@ overlay, placeholder overlay, and stretched text field body.
       <td>Optional empty-value fallback text only; never the semantic value.</td>
       <td>Host overlay aligns to <code>text_region.left_center</code> when visible.</td>
     </tr>
+    <tr>
+      <td><code>focus_ring</code></td>
+      <td>Optional focus visualization surface.</td>
+      <td>SVG-owned focus boundary toggled by host focus state.</td>
+    </tr>
   </tbody>
 </table>
 
 <p>
 The Default rectangular String skin intentionally has no published frame,
-focus ring, validation marker, overflow marker, caret, or selection surface.
+validation marker, overflow marker, caret, or selection surface.
 Those are host or editor details unless a later realization explicitly promotes them.
+The published <code>focus_ring</code> is the exception because focus shape is
+owned by the SVG skin contract.
 </p>

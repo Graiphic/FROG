@@ -4,8 +4,8 @@
   "publication_role": "default_string_realization_manifest",
   "version_governance_ref": "../../../Versioning/Readme.md",
   "publication_review": {
-    "last_reviewed": "2026-06-04",
-    "scope": "Default rectangular String SVG skin contract, placeholder/text_value surfaces, no-frame public part posture, and C++ browser-host rendering.",
+    "last_reviewed": "2026-06-06",
+    "scope": "Default rectangular String SVG skin contract, placeholder/text_value/focus_ring surfaces, no-frame public part posture, and C++ browser-host rendering.",
     "public_posture": "Publishes the realization contract, SVG skin metadata, example source, and review date; runtime implementation code remains outside the public publication scope."
   },
   "package": {
@@ -90,6 +90,7 @@
         "label",
         "caption",
         "text_region",
+        "focus_ring",
         "text_value",
         "placeholder"
       ],
@@ -122,6 +123,7 @@
         "label",
         "caption",
         "text_region",
+        "focus_ring",
         "text_value"
       ],
       "supported_visual_states": [
@@ -212,6 +214,13 @@
       "style_binding_group": "style.text_region"
     },
     {
+      "part": "focus_ring",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='focus_ring']",
+      "style_binding_group": "style.focus_ring",
+      "state_sensitive": true
+    },
+    {
       "part": "text_value",
       "binding_kind": "svg_text_or_host_text",
       "binding_selector": "[data-frog-part='text_value']",
@@ -258,6 +267,17 @@
         "style.text_region.fill_color.hover",
         "style.text_region.border_color.hover",
         "style.text_region.border_width.hover"
+      ]
+    },
+    {
+      "state": "focused",
+      "value_condition": {
+        "interaction.focused": true
+      },
+      "property_bindings": [
+        "style.focus_ring.visible",
+        "style.focus_ring.color",
+        "style.focus_ring.width"
       ]
     },
     {
@@ -407,6 +427,11 @@
       "member": "style.text_region.inset",
       "target_part": "text_region",
       "target_operation": "set_text_region_inset"
+    },
+    {
+      "member": "style.focus_ring.*",
+      "target_part": "focus_ring",
+      "target_operation": "apply_focus_ring_style"
     },
     {
       "member": "style.text.color",

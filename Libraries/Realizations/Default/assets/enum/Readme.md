@@ -40,11 +40,13 @@
   <li><code>value_face</code></li>
   <li><code>value_display</code></li>
   <li><code>selector_face</code></li>
+  <li><code>focus_ring</code></li>
 </ul>
 
 <p>
 The selector arrow is an internal detail of <code>selector_face</code>, not a
-separate public part.
+separate public part. The <code>focus_ring</code> is public so the SVG owns the
+closed selector focus boundary while the runtime only toggles and styles it.
 </p>
 
 <p>

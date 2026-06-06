@@ -24,6 +24,13 @@ This example now has a bounded C++ native-kernel closure.
 It keeps the standard runtime/UI-binding path, adds an LLVM-produced Boolean kernel artifact behind an explicit manifest, and does not broaden the Deriver, Lowerer, or ContractEmitter rule families.
 </p>
 
+<p>
+Reviewed <time datetime="2026-06-06">2026-06-06</time>: the Boolean rectangular
+and circular SVG skins publish <code>focus_ring</code> as the source-owned focus
+geometry. The C++ browser host must render that SVG part instead of inventing a
+private focus outline.
+</p>
+
 <hr/>
 
 <h2>Rendering Requirement</h2>

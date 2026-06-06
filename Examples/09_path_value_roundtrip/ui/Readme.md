@@ -8,7 +8,7 @@ caption placement, and per-instance style values.
 
 <p>
 The current Path UI package review date is
-<time datetime="2026-06-03">2026-06-03</time>. This review records public
-package/SVG consumption and C++ browser-host rendering only; it does not publish
+<time datetime="2026-06-06">2026-06-06</time>. This review records public
+package/SVG consumption, focus-ring geometry, and C++ browser-host rendering only; it does not publish
 Graiphic runtime implementation code.
 </p>

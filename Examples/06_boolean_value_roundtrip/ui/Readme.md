@@ -71,3 +71,9 @@ The host overlay owns the visible caption and state text, preventing duplicated 
 This package is a bounded Example 06 front-panel publication.
 It is not a generalized <code>.wfrog</code> renderer and does not introduce new widget classes.
 </p>
+
+<p>
+Reviewed <time datetime="2026-06-06">2026-06-06</time>: the package records the
+Boolean focus-ring visual contract for the rectangular control and circular
+indicator SVG assets.
+</p>

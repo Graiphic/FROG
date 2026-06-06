@@ -51,6 +51,13 @@
           "crop_reference": true
         },
         {
+          "part": "focus_ring",
+          "style_group": "style.focus_ring",
+          "resize": "stretch_surface",
+          "border_policy": "uniform_non_scaling_stroke",
+          "visibility_member": "interaction.focused"
+        },
+        {
           "part": "text_value",
           "member": "value",
           "anchor": "text_region.left_center",
@@ -87,6 +94,9 @@
         --frog-string-text-region-fill: #5b9bd5;
         --frog-string-text-region-stroke: transparent;
         --frog-string-text-region-stroke-width: 0px;
+        --frog-string-focus-display: none;
+        --frog-string-focus-stroke: #2563eb;
+        --frog-string-focus-stroke-width: 2px;
 
         --frog-string-text-fill: #111111;
         --frog-string-text-font-family: system-ui, Segoe UI, Arial, sans-serif;
@@ -117,6 +127,14 @@
         fill: var(--frog-string-text-region-fill);
         stroke: var(--frog-string-text-region-stroke);
         stroke-width: var(--frog-string-text-region-stroke-width);
+        vector-effect: non-scaling-stroke;
+      }
+
+      #focus_ring {
+        display: var(--frog-string-focus-display);
+        fill: none;
+        stroke: var(--frog-string-focus-stroke);
+        stroke-width: var(--frog-string-focus-stroke-width);
         vector-effect: non-scaling-stroke;
       }
 
@@ -179,6 +197,19 @@
           data-frog-solidary-group="field_body"
           data-frog-border-policy="uniform_non_scaling_stroke"
           data-frog-crop-reference="true" />
+
+    <rect id="focus_ring"
+          data-frog-part="focus_ring"
+          data-frog-role="keyboard_focus_boundary"
+          x="12"
+          y="72"
+          width="396"
+          height="64"
+          rx="2"
+          data-frog-bind="interaction.focused style.focus_ring.*"
+          data-frog-resize="stretch_surface"
+          data-frog-solidary-group="field_body"
+          data-frog-border-policy="uniform_non_scaling_stroke" />
 
     <text id="placeholder"
           data-frog-part="placeholder"

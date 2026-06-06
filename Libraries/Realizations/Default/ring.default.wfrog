@@ -4,8 +4,8 @@
   "publication_role": "default_ring_realization_manifest",
   "version_governance_ref": "../../../Versioning/Readme.md",
   "publication_review": {
-    "last_reviewed": "2026-06-05",
-    "scope": "Default Ring closed selector SVG, dropdown list SVG skin, and semantic public parts.",
+    "last_reviewed": "2026-06-06",
+    "scope": "Default Ring closed selector SVG, optional increment/decrement command parts, dropdown list SVG skin, and semantic public parts.",
     "public_posture": "Publishes the closed selector skin, popup list skin, reusable default widget properties, supported semantic parts, and review date; runtime implementation code remains outside the public publication scope."
   },
   "package": {
@@ -78,8 +78,12 @@
         "label",
         "caption",
         "value_face",
+        "focus_ring",
         "value_display",
         "selector_face",
+        "spinner",
+        "increment_up",
+        "increment_down",
         "list_panel",
         "option_row",
         "option_label",
@@ -119,8 +123,12 @@
       "target_parts": [
         "root",
         "value_face",
+        "focus_ring",
         "value_display",
-        "selector_face"
+        "selector_face",
+        "spinner",
+        "increment_up",
+        "increment_down"
       ]
     },
     {
@@ -148,7 +156,8 @@
       },
       "props": {
         "display.digital_display_visible": false,
-        "display.increment_decrement_visible": false,
+        "display.increment_decrement_visible": true,
+        "data_entry.increment_wrap": false,
         "display.format.type": "unsigned_decimal",
         "display.format.string": "%u",
         "display.format.advanced_editing": false,
@@ -177,6 +186,15 @@
         "style.selector_face.border_width": "1px",
         "style.selector_face.symbol_color": "#111827",
         "style.selector_face.symbol_color.hover": "#1d4ed8",
+        "style.increment_button.fill_color.normal": "#edf2f7",
+        "style.increment_button.fill_color.hover": "#dbeafe",
+        "style.increment_button.fill_color.pressed": "#bfdbfe",
+        "style.increment_button.border_color.normal": "#94a3b8",
+        "style.increment_button.border_color.hover": "#64748b",
+        "style.increment_button.border_color.pressed": "#2563eb",
+        "style.increment_button.symbol_color.normal": "#334e68",
+        "style.increment_button.symbol_color.hover": "#1d4ed8",
+        "style.increment_button.symbol_color.pressed": "#1e40af",
         "style.popup.fill_color": "#ffffff",
         "style.popup.border_color": "#64748b",
         "style.popup.border_width": "1px",
@@ -301,6 +319,13 @@
       "binding_selector": "[data-frog-part='value_face']"
     },
     {
+      "part": "focus_ring",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='focus_ring']",
+      "style_binding_group": "style.focus_ring",
+      "state_sensitive": true
+    },
+    {
       "part": "value_display",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='value_display']"
@@ -309,6 +334,24 @@
       "part": "selector_face",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='selector_face']"
+    },
+    {
+      "part": "spinner",
+      "binding_kind": "svg_group_or_host_spinner",
+      "binding_selector": "[data-frog-part='spinner']",
+      "visibility_member": "display.increment_decrement_visible"
+    },
+    {
+      "part": "increment_up",
+      "binding_kind": "svg_group_or_host_button",
+      "binding_selector": "[data-frog-part='increment_up']",
+      "method_member": "increment()"
+    },
+    {
+      "part": "increment_down",
+      "binding_kind": "svg_group_or_host_button",
+      "binding_selector": "[data-frog-part='increment_down']",
+      "method_member": "decrement()"
     },
     {
       "part": "list_panel",
@@ -369,8 +412,18 @@
     },
     {
       "source": "display.increment_decrement_visible",
-      "target_part": "selector_face",
-      "target": "optional_increment_decrement_surface"
+      "target_part": "spinner",
+      "target": "set_visibility"
+    },
+    {
+      "source": "style.increment_button.*",
+      "target_part": "increment_up",
+      "target": "css_variables"
+    },
+    {
+      "source": "style.increment_button.*",
+      "target_part": "increment_down",
+      "target": "css_variables"
     },
     {
       "source": "display.format.*",
@@ -390,6 +443,11 @@
     {
       "source": "style.value_face.*",
       "target_part": "value_face",
+      "target": "css_variables"
+    },
+    {
+      "source": "style.focus_ring.*",
+      "target_part": "focus_ring",
       "target": "css_variables"
     },
     {
@@ -441,8 +499,9 @@
     "Ring widgets keep item inventory and selected numeric value in source-owned instance data.",
     "The LabVIEW-like Ring default posture maps display strings to scalar numeric values; selected_id is UI identity, not the diagram value.",
     "The visible selector consumes the Default Ring SVG asset and published parts.",
-    "Runtime host overlays align to value_face, value_display, selector_face, and list_panel.",
+    "Runtime host overlays align to value_face, value_display, selector_face, spinner, increment_up, increment_down, and list_panel.",
     "Visual styles are source-owned properties or Default realization values, not runtime constants.",
+    "Increment/decrement commands navigate visible enabled items and honor display.increment_decrement_visible.",
     "Ring remains distinct from Enum class law."
   ]
 }

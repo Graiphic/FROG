@@ -7,9 +7,9 @@
     "author": "Graiphic",
     "program_version": "0.1.0",
     "review": {
-      "last_reviewed": "2026-06-04",
-      "scope": "Example 07 String placeholder/text_value launch state, Default String no-frame semantic part contract, and C++ browser-host rendering.",
-      "visible_runtime_fact": "Reviewed 2026-06-04"
+      "last_reviewed": "2026-06-06",
+      "scope": "Example 07 String placeholder/text_value launch state, Default String no-frame semantic part contract, focus_ring, and C++ browser-host rendering.",
+      "visible_runtime_fact": "Reviewed 2026-06-06"
     },
     "tags": [
       "example",

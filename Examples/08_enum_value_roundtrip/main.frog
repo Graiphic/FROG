@@ -7,9 +7,9 @@
     "author": "Graiphic",
     "program_version": "0.1.0",
     "review": {
-      "last_reviewed": "2026-06-05",
-      "scope": "Example 08 Enum closed selector skin, dropdown list SVG skin, and C++ browser-host rendering.",
-      "visible_runtime_fact": "Reviewed 2026-06-05"
+      "last_reviewed": "2026-06-06",
+      "scope": "Example 08 Enum closed selector skin, optional increment/decrement command parts, dropdown list SVG skin, and C++ browser-host rendering.",
+      "visible_runtime_fact": "Reviewed 2026-06-06"
     },
     "tags": [
       "example",
@@ -140,6 +140,8 @@
             }
           ],
           "display.selector_visible": true,
+          "display.increment_buttons_visible": true,
+          "data_entry.increment_wrap": false,
           "style.scale.reference_width": 260,
           "style.scale.reference_height": 110,
           "style.value_face.fill_color": "#ffffff",
@@ -168,6 +170,15 @@
           "style.selector_face.symbol_width": "10px",
           "style.selector_face.symbol_height": "7px",
           "style.selector_face.symbol_size_mode": "scale_with_widget",
+          "style.increment_button.fill_color.normal": "#edf2f7",
+          "style.increment_button.fill_color.hover": "#dbeafe",
+          "style.increment_button.fill_color.pressed": "#bfdbfe",
+          "style.increment_button.border_color.normal": "#94a3b8",
+          "style.increment_button.border_color.hover": "#64748b",
+          "style.increment_button.border_color.pressed": "#2563eb",
+          "style.increment_button.symbol_color.normal": "#334e68",
+          "style.increment_button.symbol_color.hover": "#1d4ed8",
+          "style.increment_button.symbol_color.pressed": "#1e40af",
           "style.dropdown.fill_color": "#ffffff",
           "style.dropdown.border_color": "#64748b",
           "style.dropdown.border_width": "1px",

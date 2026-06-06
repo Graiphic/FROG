@@ -65,6 +65,7 @@ Each published widget family should provide:
   <li>SVG shell resources may expose composition slots through <code>data-frog-slot</code> markers.</li>
   <li>Any visible border, frame, selection outline, cell outline, scrollbar track, or equivalent stroke-like surface should preserve one uniform published thickness after resize; SVG-backed resources should use non-scaling strokes or an equivalent realization strategy when a single width property controls the surface.</li>
   <li>Bordered fill surfaces should not leave unintended inner gaps. If a value face, text region, button face, state face, or equivalent part is meant to touch its surrounding border, the SVG geometry should meet the stroke inner edge or extend under a transparent / stroke-only frame.</li>
+  <li>Focusable SVG-backed widgets should publish a <code>focus_ring</code> part when their shape owns the visible focus boundary. The runtime may toggle visibility and apply <code>style.focus_ring.*</code>, but it must not invent private focus geometry in host code.</li>
   <li>Documentation files should not contain literal escaped newline artifacts in rendered lists.</li>
 </ul>
 

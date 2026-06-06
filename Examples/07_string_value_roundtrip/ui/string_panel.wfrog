@@ -4,9 +4,9 @@
   "package_id": "example07.string_panel",
   "title": "Example 07 Default String realization package",
   "review": {
-    "last_reviewed": "2026-06-04",
-    "scope": "Example 07 String placeholder/text_value launch state, Default String no-frame semantic parts, and C++ browser-host rendering.",
-    "visible_runtime_fact": "Reviewed 2026-06-04"
+    "last_reviewed": "2026-06-06",
+    "scope": "Example 07 String placeholder/text_value launch state, Default String no-frame semantic parts, focus_ring, and C++ browser-host rendering.",
+    "visible_runtime_fact": "Reviewed 2026-06-06"
   },
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"

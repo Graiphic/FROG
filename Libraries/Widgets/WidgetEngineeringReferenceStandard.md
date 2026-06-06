@@ -71,11 +71,11 @@ ownership, realization ownership, public parts, and validated limits.
     </tr>
     <tr>
       <td>Default SVG Parts</td>
-      <td>Published parts, anchors, bindings, slots, and repeated regions that a host may target.</td>
+      <td>Published parts, anchors, bindings, slots, repeated regions, and focus-ring geometry when the widget skin owns focus visualization.</td>
     </tr>
     <tr>
       <td>Visual States</td>
-      <td>Normal, hover, pressed, selected, disabled, read-only, focused, overflow, or equivalent states relevant to the widget.</td>
+      <td>Normal, hover, pressed, selected, disabled, read-only, focused, overflow, or equivalent states relevant to the widget. Focused state must bind to published skin parts such as <code>focus_ring</code> when the focus shape is visible.</td>
     </tr>
     <tr>
       <td>Container Compatibility</td>
@@ -91,6 +91,20 @@ ownership, realization ownership, public parts, and validated limits.
     </tr>
   </tbody>
 </table>
+
+<hr/>
+
+<h2>Focus Ring Rule</h2>
+
+<p>
+When a focusable widget uses an SVG-backed skin, visible focus geometry belongs
+to the public part model if the shape is widget-specific. The standard part name
+is <code>focus_ring</code>. Widget class-law documents should list it as a
+public part when applicable, realization manifests should bind it to
+<code>interaction.focused</code> and <code>style.focus_ring.*</code>, and hosts
+should only toggle/style that declared part. Runtime-private CSS outlines are
+not a valid replacement for source-owned focus geometry.
+</p>
 
 <hr/>
 

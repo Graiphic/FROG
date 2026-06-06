@@ -7,4 +7,4 @@ The package references the Default String realization and does not publish a loc
 The package owns the Example 07 instance-level caption anchors and hover styling.
 The runtime must apply those properties to the Default String realization instead of hardcoding label placement or interaction colors.
 
-The normal String surface for this example has no focus-ring part; keyboard or browser focus behavior must not be represented by an untracked host CSS ring.
+Reviewed 2026-06-06. The normal String surface publishes `focus_ring` so keyboard/browser focus geometry stays source-owned by the SVG skin. Browser hosts must not invent a different untracked CSS focus shape.

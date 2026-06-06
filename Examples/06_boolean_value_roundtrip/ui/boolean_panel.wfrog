@@ -3,6 +3,11 @@
   "kind": "widget_realization_package",
   "package_id": "example06.boolean_panel",
   "title": "Example 06 Default Boolean value realization package",
+  "review": {
+    "last_reviewed": "2026-06-06",
+    "scope": "Example 06 Boolean rectangular/circular SVG focus_ring posture and C++ browser-host rendering",
+    "visible_runtime_fact": "Reviewed 2026-06-06"
+  },
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },

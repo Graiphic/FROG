@@ -7,9 +7,9 @@
     "author": "Graiphic",
     "program_version": "0.1.0",
     "review": {
-      "last_reviewed": "2026-06-05",
-      "scope": "Example 21 Ring semantic SVG parts, dropdown list SVG skin, value-face dropdown width, 1px value-face border, and value-display vertical alignment.",
-      "visible_runtime_fact": "Reviewed 2026-06-05"
+      "last_reviewed": "2026-06-06",
+      "scope": "Example 21 Ring semantic SVG parts, optional increment/decrement command parts, dropdown list SVG skin, value-face dropdown width, 1px value-face border, and value-display vertical alignment.",
+      "visible_runtime_fact": "Reviewed 2026-06-06"
     },
     "tags": [
       "example",
@@ -166,7 +166,8 @@
           "data_entry.page_size": 0,
           "data_entry.response_to_value_outside_limits": "ignore",
           "display.digital_display_visible": false,
-          "display.increment_decrement_visible": false,
+          "display.increment_decrement_visible": true,
+          "data_entry.increment_wrap": false,
           "display.format.type": "unsigned_decimal",
           "display.format.string": "%u",
           "display.format.advanced_editing": false,
@@ -195,6 +196,15 @@
           "style.selector_face.border_width": "1px",
           "style.selector_face.symbol_color": "#111827",
           "style.selector_face.symbol_color.hover": "#1d4ed8",
+          "style.increment_button.fill_color.normal": "#edf2f7",
+          "style.increment_button.fill_color.hover": "#dbeafe",
+          "style.increment_button.fill_color.pressed": "#bfdbfe",
+          "style.increment_button.border_color.normal": "#94a3b8",
+          "style.increment_button.border_color.hover": "#64748b",
+          "style.increment_button.border_color.pressed": "#2563eb",
+          "style.increment_button.symbol_color.normal": "#334e68",
+          "style.increment_button.symbol_color.hover": "#1d4ed8",
+          "style.increment_button.symbol_color.pressed": "#1e40af",
           "style.popup.fill_color": "#ffffff",
           "style.popup.border_color": "#64748b",
           "style.popup.border_width": "1px",

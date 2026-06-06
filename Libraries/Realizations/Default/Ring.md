@@ -25,7 +25,8 @@
 <p>
 This default realization publishes a compact selector embodiment for the FROG
 Ring widget family. It provides a rectangular value face, selected-item display,
-selector affordance, and a dropdown host-surface skin for option rows.
+selector affordance, optional increment/decrement command, and a dropdown
+host-surface skin for option rows.
 </p>
 
 <p>
@@ -45,6 +46,9 @@ lowering, runtime-private host handles, or IDE-private item editing behavior.
   <li><code>value_face</code></li>
   <li><code>value_display</code></li>
   <li><code>selector_face</code></li>
+  <li><code>spinner</code></li>
+  <li><code>increment_up</code></li>
+  <li><code>increment_down</code></li>
   <li><code>list_panel</code></li>
   <li><code>option_row</code></li>
   <li><code>option_label</code></li>
@@ -55,6 +59,14 @@ lowering, runtime-private host handles, or IDE-private item editing behavior.
 The visible arrow inside the selector is a realization detail owned by
 <code>selector_face</code>. It is named in SVG as a detail so hosts can style it,
 but it is not a public semantic part.
+</p>
+
+<p>
+The optional increment/decrement command is public when shown. The
+<code>spinner</code> group is controlled by
+<code>display.increment_decrement_visible</code>, and the
+<code>increment_up</code> / <code>increment_down</code> parts invoke the
+LabVIEW-like next/previous item command without replacing the selector.
 </p>
 
 <hr/>
@@ -74,6 +86,7 @@ but it is not a public semantic part.
   <li><code>value_face</code> anchors the selected value body.</li>
   <li><code>value_display</code> anchors selected item text and consumes Default-supplied or source-overridden text style members such as <code>style.value_display.vertical_offset</code>.</li>
   <li><code>selector_face</code> anchors the open-selector affordance.</li>
+  <li><code>spinner</code>, <code>increment_up</code>, and <code>increment_down</code> anchor the optional next/previous item command.</li>
   <li><code>list_panel</code> anchors the dropdown host overlay for visible options.</li>
   <li><code>option_row</code>, <code>option_label</code>, and <code>option_selection_face</code> publish option-row grammar.</li>
 </ul>

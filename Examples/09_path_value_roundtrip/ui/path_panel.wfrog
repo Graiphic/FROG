@@ -3,6 +3,11 @@
   "kind": "widget_realization_package",
   "package_id": "example09.path_panel",
   "title": "Example 09 Default Path realization package",
+  "review": {
+    "last_reviewed": "2026-06-06",
+    "scope": "Example 09 Path source/package posture, Default Path SVG skin contract, focus_ring, and C++ browser-host rendering",
+    "visible_runtime_fact": "Reviewed 2026-06-06"
+  },
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },

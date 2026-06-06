@@ -108,8 +108,8 @@ browser-hosted example.
     </tr>
     <tr>
       <td>Focus and tabbing</td>
-      <td><code>interaction.focusable</code>, <code>interaction.key_focus</code>, <code>interaction.skip_when_tabbing</code></td>
-      <td>Host interaction posture for keyboard focus and tab traversal.</td>
+      <td><code>interaction.focusable</code>, <code>interaction.focused</code>, <code>interaction.key_focus</code>, <code>interaction.skip_when_tabbing</code></td>
+      <td>Host interaction posture for keyboard focus and tab traversal. Focusable SVG-backed widgets should expose a <code>focus_ring</code> part when the widget skin owns the visible focus boundary.</td>
     </tr>
     <tr>
       <td>Mouse wheel</td>
@@ -133,7 +133,7 @@ browser-hosted example.
     </tr>
     <tr>
       <td>Style</td>
-      <td><code>style.*</code></td>
+      <td><code>style.*</code>, including <code>style.focus_ring.*</code> when a widget publishes <code>focus_ring</code></td>
       <td>Source-owned visual overrides for colors, borders, thicknesses, fonts, hover, pressed, selected, disabled, and focus states.</td>
     </tr>
     <tr>
@@ -152,6 +152,7 @@ browser-hosted example.
   <li>A widget example must state which common properties it uses and which family-specific properties it adds.</li>
   <li>When a visual effect is configurable, the value must come from <code>.frog</code> instance data, a Default realization property, or a documented generic fallback for missing optional properties.</li>
   <li>Common layout and style properties must not be hidden inside runtime code.</li>
+  <li>Focusable SVG-backed widgets must not rely on private runtime focus geometry. When a visible focus boundary is part of the widget skin, publish <code>focus_ring</code> and bind it through <code>interaction.focused</code> and <code>style.focus_ring.*</code>.</li>
   <li>Host overlays must consume published parts, anchors, and bindings from the chosen realization.</li>
   <li>Visible labels and captions must be checked against their widget body or published anchor; accidental offsets, touching labels, and per-runtime fallback placement are not valid.</li>
   <li>Family-specific documents remain responsible for value semantics, legal methods, events, and specialized property surfaces.</li>

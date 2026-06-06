@@ -53,6 +53,13 @@
           "crop_reference": true
         },
         {
+          "part": "focus_ring",
+          "style_group": "style.focus_ring",
+          "resize": "stretch_surface",
+          "border_policy": "uniform_non_scaling_stroke",
+          "visibility_member": "interaction.focused"
+        },
+        {
           "part": "path_icon",
           "members": [
             "display.icon_visible",
@@ -114,6 +121,9 @@
         --frog-path-face-fill: #ffffff;
         --frog-path-face-stroke: #000000;
         --frog-path-face-stroke-width: 0.5px;
+        --frog-path-focus-display: none;
+        --frog-path-focus-stroke: #2563eb;
+        --frog-path-focus-stroke-width: 2px;
         --frog-path-text-fill: #111111;
         --frog-path-text-font-size: 12px;
         --frog-path-text-font-weight: 400;
@@ -149,6 +159,13 @@
         fill: var(--frog-path-face-fill);
         stroke: var(--frog-path-face-stroke);
         stroke-width: var(--frog-path-face-stroke-width);
+        vector-effect: non-scaling-stroke;
+      }
+      #focus_ring {
+        display: var(--frog-path-focus-display);
+        fill: none;
+        stroke: var(--frog-path-focus-stroke);
+        stroke-width: var(--frog-path-focus-stroke-width);
         vector-effect: non-scaling-stroke;
       }
       #path_display {
@@ -220,6 +237,19 @@
           data-frog-solidary-group="field_body"
           data-frog-border-policy="uniform_non_scaling_stroke"
           data-frog-crop-reference="true" />
+
+    <rect id="focus_ring"
+          x="10.75"
+          y="22.09"
+          width="440"
+          height="40"
+          rx="2"
+          data-frog-part="focus_ring"
+          data-frog-role="keyboard_focus_boundary"
+          data-frog-bind="interaction.focused style.focus_ring.*"
+          data-frog-resize="stretch_surface"
+          data-frog-solidary-group="field_body"
+          data-frog-border-policy="uniform_non_scaling_stroke" />
 
     <g id="path_icon"
        data-frog-part="path_icon"

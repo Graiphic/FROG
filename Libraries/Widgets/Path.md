@@ -192,6 +192,7 @@ The logical widget name, visible caption, semantic path value, and shortened dis
   <li><code>browse_button</code> when present</li>
   <li><code>browse_button_text</code> when present</li>
   <li><code>path_icon</code> when present</li>
+  <li><code>focus_ring</code></li>
 </ul>
 
 <h3>7.1 Default SVG Skin Geometry Contract</h3>
@@ -246,6 +247,11 @@ affordances.
       <td><code>browse_button_text</code></td>
       <td>Centered glyph/text inside <code>browse_button</code>.</td>
       <td>Moves as part of the browse-button solidary group.</td>
+    </tr>
+    <tr>
+      <td><code>focus_ring</code></td>
+      <td>Optional focus visualization surface.</td>
+      <td>Keyboard/browser focus boundary owned by the SVG skin geometry.</td>
     </tr>
   </tbody>
 </table>
@@ -321,6 +327,7 @@ they publish a distinct realization variant.
   <li><code>style.path_face.*</code></li>
   <li><code>style.path_display.*</code></li>
   <li><code>style.browse_button.*</code></li>
+  <li><code>style.focus_ring.*</code></li>
   <li><code>realization.family : string</code></li>
   <li><code>realization.variant : string</code></li>
   <li><code>realization.skin_id : string</code></li>

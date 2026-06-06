@@ -11,9 +11,15 @@
     #label_text { display: var(--frog-ring-label-display, none); }
     #caption_text { display: var(--frog-ring-caption-display, inline); }
     #value_face { fill: var(--frog-ring-value-face-fill, #ffffff); stroke: var(--frog-ring-value-face-stroke, #64748b); stroke-width: var(--frog-ring-value-face-stroke-width, 1); vector-effect: non-scaling-stroke; }
+    #focus_ring { display: var(--frog-ring-focus-display, none); fill: none; stroke: var(--frog-ring-focus-stroke, #2563eb); stroke-width: var(--frog-ring-focus-stroke-width, 2px); vector-effect: non-scaling-stroke; }
     #value_display { fill: var(--frog-ring-value-display-color, #111827); }
     #selector_face { display: var(--frog-ring-selector-display, inline); fill: var(--frog-ring-selector-fill, #f1f5f9); stroke: var(--frog-ring-selector-stroke, #64748b); stroke-width: var(--frog-ring-selector-stroke-width, 1); vector-effect: non-scaling-stroke; }
     #selector_arrow { display: var(--frog-ring-selector-display, inline); fill: var(--frog-ring-selector-symbol, #111827); stroke: none; }
+    #spinner { display: var(--frog-ring-spinner-display, none); }
+    #increment_up rect,
+    #increment_down rect { fill: var(--frog-ring-spinner-fill, #edf2f7); stroke: var(--frog-ring-spinner-border, #94a3b8); stroke-width: 1; vector-effect: non-scaling-stroke; }
+    #increment_up path,
+    #increment_down path { fill: var(--frog-ring-spinner-symbol, #334e68); stroke: none; }
   </style>
   <g data-frog-part="root">
     <text id="label_text"
@@ -47,6 +53,38 @@
           fill="#ffffff"
           stroke="#64748b"
           stroke-width="1"/>
+    <rect id="focus_ring"
+          data-frog-part="focus_ring"
+          data-frog-role="keyboard_focus_boundary"
+          data-frog-anchor="focus_ring.bounds"
+          data-frog-bind="interaction.focused style.focus_ring.*"
+          x="0"
+          y="74"
+          width="266"
+          height="34"
+          rx="2"/>
+    <g id="spinner"
+       data-frog-part="spinner"
+       data-frog-bind="display.increment_decrement_visible">
+      <g id="increment_up"
+         data-frog-part="increment_up"
+         data-frog-member="increment()"
+         data-frog-states="normal pressed"
+         data-frog-state-law="normal-pressed-color-only"
+         data-frog-bind="style.increment_button.*">
+        <rect x="2" y="76" width="16" height="14" rx="1"/>
+        <path d="M7 84 L13 84 L10 81 Z"/>
+      </g>
+      <g id="increment_down"
+         data-frog-part="increment_down"
+         data-frog-member="decrement()"
+         data-frog-states="normal pressed"
+         data-frog-state-law="normal-pressed-color-only"
+         data-frog-bind="style.increment_button.*">
+        <rect x="2" y="92" width="16" height="14" rx="1"/>
+        <path d="M7 98 L13 98 L10 101 Z"/>
+      </g>
+    </g>
     <text id="value_display"
           data-frog-part="value_display"
           data-frog-member="value.selected_label"

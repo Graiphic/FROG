@@ -188,6 +188,10 @@ labels as identity.
   <li><code>value_face</code></li>
   <li><code>value_display</code></li>
   <li><code>selector_face</code></li>
+  <li><code>focus_ring</code></li>
+  <li><code>spinner</code> when a realization exposes increment/decrement commands</li>
+  <li><code>increment_up</code> when a realization exposes increment/decrement commands</li>
+  <li><code>increment_down</code> when a realization exposes increment/decrement commands</li>
   <li><code>list_panel</code></li>
   <li><code>option_row</code></li>
   <li><code>option_label</code></li>
@@ -196,9 +200,17 @@ labels as identity.
 
 <p>
 The selector arrow is a realization detail owned by <code>selector_face</code>,
-not a public semantic part. Focus rings, native handles, popup caches, and other
-host-private interaction affordances remain runtime or realization-private
-unless a concrete Ring behavior explicitly promotes them later.
+not a public semantic part. The <code>focus_ring</code> is public so the SVG
+skin owns focus geometry. Native handles, popup caches, and other host-private
+interaction affordances remain runtime or realization-private unless a concrete
+Ring behavior explicitly promotes them later.
+</p>
+
+<p>
+When a realization promotes the LabVIEW-like increment/decrement command, the
+command surfaces are semantic Ring parts. <code>spinner</code> owns visibility,
+while <code>increment_up</code> and <code>increment_down</code> invoke the next
+and previous visible enabled item command.
 </p>
 
 <hr/>
@@ -278,6 +290,7 @@ families shown by LabVIEW without copying LabVIEW internals:
   <li><code>data_entry.minimum : scalar</code></li>
   <li><code>data_entry.maximum : scalar</code></li>
   <li><code>data_entry.increment : scalar</code></li>
+  <li><code>data_entry.increment_wrap : bool</code></li>
   <li><code>data_entry.page_size : scalar</code></li>
   <li><code>data_entry.response_below_minimum : enum</code></li>
   <li><code>data_entry.response_above_maximum : enum</code></li>
@@ -303,6 +316,8 @@ families shown by LabVIEW without copying LabVIEW internals:
   <li><code>style.value_display.*</code></li>
   <li><code>style.value_display.vertical_offset : signed px length</code></li>
   <li><code>style.selector_face.*</code></li>
+  <li><code>style.focus_ring.*</code></li>
+  <li><code>style.increment_button.*</code> when a realization exposes increment/decrement command parts</li>
   <li><code>style.popup.*</code></li>
   <li><code>style.popup.option.*</code></li>
 </ul>
@@ -328,7 +343,7 @@ families shown by LabVIEW without copying LabVIEW internals:
   <li>In the LabVIEW-like default posture, Ring controls publish the selected item value to the diagram and use the selected item id for UI identity.</li>
   <li><code>items[].value</code>, <code>data_type.representation</code>, data-entry limits, display-format posture, undefined-value policy, disabled-item posture, and optional digital/increment surfaces must be source-owned properties when used.</li>
   <li>The visible selector must consume a realization asset and published parts.</li>
-  <li>Runtime overlays must align to <code>value_face</code>, <code>value_display</code>, <code>selector_face</code>, and <code>list_panel</code>.</li>
+  <li>Runtime overlays must align to <code>value_face</code>, <code>value_display</code>, <code>selector_face</code>, optional increment/decrement parts, and <code>list_panel</code>.</li>
   <li>Visual values such as colors, borders, thickness, text, hover, and selected states must come from source-owned properties or the Default realization.</li>
   <li>Ring must not be treated as Enum unless the source explicitly uses an Enum widget class.</li>
 </ul>

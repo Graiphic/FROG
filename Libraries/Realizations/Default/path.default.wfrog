@@ -13,8 +13,8 @@
     "summary": "Machine-readable default realization manifest for standardized path widgets."
   },
   "publication_review": {
-    "last_reviewed": "2026-06-03",
-    "scope": "Default Path rectangular SVG skin, semantic parts, and Example 09 C++ browser-host rendering",
+    "last_reviewed": "2026-06-06",
+    "scope": "Default Path rectangular SVG skin, semantic parts, focus_ring, and Example 09 C++ browser-host rendering",
     "public_posture": "Publishes the realization contract, SVG skin metadata, example source, and review date; runtime implementation code remains outside the public publication scope."
   },
   "ownership_boundary": {
@@ -95,6 +95,7 @@
         "label",
         "caption",
         "path_face",
+        "focus_ring",
         "path_display",
         "browse_button",
         "browse_button_text",
@@ -129,6 +130,7 @@
         "label",
         "caption",
         "path_face",
+        "focus_ring",
         "path_display",
         "path_icon"
       ],
@@ -179,6 +181,12 @@
         },
         {
           "part": "path_face",
+          "resize": "stretch_surface",
+          "border_policy": "uniform_thickness_all_sides",
+          "solidary_group": "field_body"
+        },
+        {
+          "part": "focus_ring",
           "resize": "stretch_surface",
           "border_policy": "uniform_thickness_all_sides",
           "solidary_group": "field_body"
@@ -256,6 +264,13 @@
       "style_binding_group": "style.path_face"
     },
     {
+      "part": "focus_ring",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='focus_ring']",
+      "style_binding_group": "style.focus_ring",
+      "state_sensitive": true
+    },
+    {
       "part": "path_display",
       "binding_kind": "svg_text_or_host_text",
       "binding_selector": "[data-frog-part='path_display']",
@@ -295,7 +310,12 @@
       "value_condition": {
         "interaction.focused": true
       },
-      "inherits": "normal"
+      "inherits": "normal",
+      "property_bindings": [
+        "style.focus_ring.visible",
+        "style.focus_ring.color",
+        "style.focus_ring.width"
+      ]
     },
     {
       "state": "disabled",
@@ -418,6 +438,11 @@
       "member": "style.path_face.*",
       "target_part": "path_face",
       "target_operation": "apply_path_face_style"
+    },
+    {
+      "member": "style.focus_ring.*",
+      "target_part": "focus_ring",
+      "target_operation": "apply_focus_ring_style"
     },
     {
       "member": "style.path_display.*",
