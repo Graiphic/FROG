@@ -289,6 +289,7 @@
       "part": "focus_ring",
       "binding_kind": "svg_shape",
       "binding_selector": "[data-frog-part='focus_ring']",
+      "geometry_contract": "same_outer_bounds_as_visible_inner_face; rectangular uses matching x/y/width/height/rx, circular uses matching cx/cy/r",
       "style_binding_group": "style.focus_ring",
       "state_sensitive": true
     }

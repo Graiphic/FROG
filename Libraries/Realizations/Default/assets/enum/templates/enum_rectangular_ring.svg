@@ -49,11 +49,11 @@
     <rect id="focus_ring"
           data-frog-part="focus_ring"
           data-frog-role="keyboard_focus_boundary"
-          x="0"
-          y="80"
-          width="260"
-          height="32"
-          rx="2"
+          x="22"
+          y="82"
+          width="208.154"
+          height="28"
+          rx="0"
           data-frog-bind="interaction.focused style.focus_ring.*" />
 
     <g id="spinner"

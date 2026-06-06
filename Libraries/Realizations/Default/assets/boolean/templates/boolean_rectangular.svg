@@ -66,11 +66,11 @@
 
     <rect id="focus_ring"
           data-frog-part="focus_ring"
-          x="3"
-          y="19"
-          width="154"
-          height="58"
-          rx="12"
+          x="18"
+          y="31"
+          width="124"
+          height="34"
+          rx="7"
           data-frog-bind="interaction.focused style.focus_ring.*" />
 
     <rect id="frame_shadow"

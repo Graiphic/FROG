@@ -68,7 +68,7 @@
             data-frog-part="focus_ring"
             cx="80"
             cy="50"
-            r="30"
+            r="19"
             data-frog-bind="interaction.focused style.focus_ring.*" />
 
     <circle id="frame_shadow"

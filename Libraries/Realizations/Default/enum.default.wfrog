@@ -319,6 +319,7 @@
       "part": "focus_ring",
       "binding_kind": "svg_shape",
       "binding_selector": "[data-frog-part='focus_ring']",
+      "geometry_contract": "same_outer_bounds_as_value_face; excludes selector_face, spinner, increment_up, and increment_down",
       "style_binding_group": "style.focus_ring",
       "state_sensitive": true
     },
@@ -470,6 +471,7 @@
     "value must resolve to a declared item unless undefined runtime values are explicitly allowed",
     "items must preserve stable ids",
     "accepted visual defaults are manifest data merged before source-owned instance overrides, not runtime constants",
+    "focus_ring covers only the value_face outer boundary; selector and increment/decrement command parts keep their own geometry and are not enclosed by focus.",
     "increment/decrement commands must navigate the declared items[] order and honor display.increment_buttons_visible"
   ]
 }

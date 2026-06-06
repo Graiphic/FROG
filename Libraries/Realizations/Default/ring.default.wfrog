@@ -322,6 +322,7 @@
       "part": "focus_ring",
       "binding_kind": "svg_shape",
       "binding_selector": "[data-frog-part='focus_ring']",
+      "geometry_contract": "same_outer_bounds_as_value_face; excludes selector_face, spinner, increment_up, and increment_down",
       "style_binding_group": "style.focus_ring",
       "state_sensitive": true
     },
@@ -501,6 +502,7 @@
     "The visible selector consumes the Default Ring SVG asset and published parts.",
     "Runtime host overlays align to value_face, value_display, selector_face, spinner, increment_up, increment_down, and list_panel.",
     "Visual styles are source-owned properties or Default realization values, not runtime constants.",
+    "focus_ring covers only the value_face outer boundary; selector and increment/decrement command parts keep their own geometry and are not enclosed by focus.",
     "Increment/decrement commands navigate visible enabled items and honor display.increment_decrement_visible.",
     "Ring remains distinct from Enum class law."
   ]

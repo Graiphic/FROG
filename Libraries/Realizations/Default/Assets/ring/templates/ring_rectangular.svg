@@ -58,11 +58,11 @@
           data-frog-role="keyboard_focus_boundary"
           data-frog-anchor="focus_ring.bounds"
           data-frog-bind="interaction.focused style.focus_ring.*"
-          x="0"
-          y="74"
-          width="266"
-          height="34"
-          rx="2"/>
+          x="22"
+          y="76"
+          width="214"
+          height="30"
+          rx="0"/>
     <g id="spinner"
        data-frog-part="spinner"
        data-frog-bind="display.increment_decrement_visible">
