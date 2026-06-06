@@ -106,6 +106,13 @@ should only toggle/style that declared part. Runtime-private CSS outlines are
 not a valid replacement for source-owned focus geometry.
 </p>
 
+<p>
+Unless a widget family deliberately states otherwise, <code>focus_ring</code>
+should duplicate the primary visible command/value face boundary and render as a
+styleable outline. It must not silently expand to neighboring controls or IDE
+selection/manipulation affordances.
+</p>
+
 <hr/>
 
 <h2>Public Property Table Shape</h2>

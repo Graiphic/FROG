@@ -201,9 +201,13 @@ labels as identity.
 <p>
 The selector arrow is a realization detail owned by <code>selector_face</code>,
 not a public semantic part. The <code>focus_ring</code> is public so the SVG
-skin owns focus geometry. Native handles, popup caches, and other host-private
-interaction affordances remain runtime or realization-private unless a concrete
-Ring behavior explicitly promotes them later.
+skin owns focus geometry. In the Default rectangular realization,
+<code>focus_ring</code> follows <code>value_face</code> only; it does not
+enclose <code>selector_face</code>, <code>spinner</code>,
+<code>increment_up</code>, or <code>increment_down</code>. Native handles,
+popup caches, and other host-private interaction affordances remain runtime or
+realization-private unless a concrete Ring behavior explicitly promotes them
+later.
 </p>
 
 <p>

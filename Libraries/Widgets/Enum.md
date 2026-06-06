@@ -185,8 +185,12 @@ from collapsing into one ambiguous field.
 <p>
 The selector arrow is an internal detail of <code>selector_face</code> in the
 Default realization. The <code>focus_ring</code> is public so focus geometry is
-owned by the SVG skin and not invented by runtime code. The closed selector SVG
-does not expose popup rows as public parts. When a realization publishes a host dropdown surface, that surface
+owned by the SVG skin and not invented by runtime code. In the Default
+rectangular-ring realization, <code>focus_ring</code> follows
+<code>value_face</code> only; it does not enclose <code>selector_face</code>,
+<code>spinner</code>, <code>increment_up</code>, or
+<code>increment_down</code>. The closed selector SVG does not expose popup rows
+as public parts. When a realization publishes a host dropdown surface, that surface
 MAY carry its own skin parts such as <code>list_panel</code>,
 <code>option_row</code>, and <code>option_text</code>; hidden value state
 controls, overflow handling, and any future numeric-representation display

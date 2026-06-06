@@ -172,6 +172,12 @@ The boolean family follows these architectural rules:
   <li><code>frame</code> — optional outer frame surface when a realization separates frame from outer face.</li>
 </ul>
 
+<p>
+For the Default Boolean realization, <code>focus_ring</code> follows the visible
+<code>inner_face</code> boundary. It is a styleable outline, not a larger host
+or IDE selection envelope.
+</p>
+
 <hr/>
 
 <h2 id="standard-property-surface">7. Standard Property Surface</h2>

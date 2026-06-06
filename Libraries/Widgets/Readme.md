@@ -121,6 +121,13 @@ apply declared style. Runtimes must not invent private focus outlines that
 change the widget shape outside the public part model.
 </p>
 
+<p>
+The focus boundary follows the widget's primary visible command/value face by
+default. Auxiliary controls such as selector arrows, increment/decrement
+buttons, scrollbars, popup rows, or IDE selection handles are not included unless
+the widget family explicitly publishes that behavior.
+</p>
+
 <hr/>
 
 <h2>Interaction Rule</h2>
