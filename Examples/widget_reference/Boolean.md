@@ -78,8 +78,8 @@ Current instance-level properties proven by the example include:
     </tr>
     <tr>
       <td>Boolean face</td>
-      <td><code>style.outer.*</code>, <code>style.inner.*</code>, <code>style.frame.visible</code></td>
-      <td>Apply false/true visual states through the SVG parts rather than through a hardcoded HTML switch.</td>
+      <td><code>style.outer.*</code>, <code>style.inner.*</code>, <code>style.frame.visible</code>, <code>style.frame.fill_color</code>, <code>style.frame.opacity</code></td>
+      <td>Apply false/true visual states and optional frame posture through the SVG parts rather than through a hardcoded HTML switch.</td>
     </tr>
     <tr>
       <td>State text</td>

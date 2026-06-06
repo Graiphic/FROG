@@ -271,7 +271,22 @@ or IDE selection envelope.
   <li><code>style.inner.opacity : number</code></li>
 </ul>
 
-<h3>7.8 Focus and disabled style properties</h3>
+<h3>7.8 Optional frame style properties</h3>
+
+<ul>
+  <li><code>style.frame.visible : bool</code></li>
+  <li><code>style.frame.fill_color : frog.color.rgba8</code></li>
+  <li><code>style.frame.opacity : number</code></li>
+</ul>
+
+<p>
+The optional <code>frame</code> part is for realizations that separate an outer
+bezel, shadow, or surrounding frame from <code>outer_face</code>. The Default
+Boolean baseline keeps it invisible unless a source instance or realization
+default explicitly enables it.
+</p>
+
+<h3>7.9 Focus and disabled style properties</h3>
 
 <ul>
   <li><code>style.focus_ring.visible : bool</code></li>
@@ -280,7 +295,7 @@ or IDE selection envelope.
   <li><code>style.disabled.opacity : number</code></li>
 </ul>
 
-<h3>7.9 Realization-selection properties</h3>
+<h3>7.10 Realization-selection properties</h3>
 
 <ul>
   <li><code>realization.family : string</code></li>

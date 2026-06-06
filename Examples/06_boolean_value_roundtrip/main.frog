@@ -132,7 +132,6 @@
           "style.outer.border_color.hover_true": "transparent",
           "style.outer.border_color.pressed_false": "transparent",
           "style.outer.border_color.pressed_true": "transparent",
-          "style.frame.visible": false,
           "style.inner.border_color.false": "transparent",
           "style.inner.border_color.true": "transparent",
           "style.inner.border_color.hover_false": "transparent",
@@ -145,14 +144,10 @@
           "style.inner.fill_color.hover_true": "#9be884",
           "style.inner.fill_color.pressed_false": "#dbeafe",
           "style.inner.fill_color.pressed_true": "#6fc657",
-          "style.focus_ring.visible": true,
-          "style.focus_ring.color": "#2563eb",
-          "style.focus_ring.width": "3px",
           "style.pressed.inset": "1px",
           "style.transition.duration_ms": 120,
           "style.transition.timing": "ease-out",
-          "interaction.enabled": true,
-          "realization.variant": "rectangular"
+          "interaction.enabled": true
         },
         "visual": {
           "asset_ref": "asset:boolean_rectangular_svg"
@@ -199,7 +194,6 @@
           "style.outer.border_color.hover_true": "transparent",
           "style.outer.border_color.pressed_false": "transparent",
           "style.outer.border_color.pressed_true": "transparent",
-          "style.frame.visible": false,
           "style.inner.border_color.false": "transparent",
           "style.inner.border_color.true": "transparent",
           "style.inner.border_color.hover_false": "transparent",
@@ -214,8 +208,7 @@
           "style.inner.fill_color.true": "#22c55e",
           "style.transition.duration_ms": 120,
           "style.transition.timing": "ease-out",
-          "interaction.enabled": false,
-          "realization.variant": "circular"
+          "interaction.enabled": false
         },
         "visual": {
           "asset_ref": "asset:boolean_circular_svg"

@@ -225,6 +225,41 @@ def validate_wfrog_assets(
     return assets
 
 
+def merge_default_widget_properties(panel: dict[str, Any], wfrog: dict[str, Any]) -> dict[str, Any]:
+    defaults = wfrog.get("default_widget_properties", [])
+    require(isinstance(defaults, list), "Example 06 .wfrog default_widget_properties must be an array when present")
+
+    merged_panel = dict(panel)
+    merged_widgets: list[dict[str, Any]] = []
+    for widget in panel["widgets"]:
+        merged_widget = dict(widget)
+        class_ref = str(widget["class_ref"])
+        role = str(widget.get("role", ""))
+        props: dict[str, Any] = {}
+        visual: dict[str, Any] = {}
+        for entry in defaults:
+            require(isinstance(entry, dict), "default_widget_properties entries must be objects")
+            default_class = entry.get("class_id") or entry.get("target_class")
+            default_role = entry.get("role", "")
+            if default_class != class_ref:
+                continue
+            if isinstance(default_role, str) and default_role and default_role != role:
+                continue
+            default_visual = entry.get("visual", {})
+            default_props = entry.get("props", entry.get("properties", {}))
+            require(isinstance(default_visual, dict), "default_widget_properties.visual must be an object")
+            require(isinstance(default_props, dict), "default_widget_properties.props must be an object")
+            visual.update(default_visual)
+            props.update(default_props)
+        visual.update(widget.get("visual", {}))
+        props.update(widget.get("props", {}))
+        merged_widget["visual"] = visual
+        merged_widget["props"] = props
+        merged_widgets.append(merged_widget)
+    merged_panel["widgets"] = merged_widgets
+    return merged_panel
+
+
 def validate_svg_template(svg_text: str, *, label: str, expected_class: str, expected_variant: str, widget_width: int, widget_height: int) -> None:
     require(f'data-frog-variant="{expected_variant}"' in svg_text, f"{label} must declare variant {expected_variant}")
     require(expected_class in svg_text, f"{label} must target {expected_class}")
@@ -293,17 +328,17 @@ def validate_layout(panel: dict[str, Any]) -> dict[str, dict[str, Any]]:
     require(widgets["bool_result"]["visual"]["asset_ref"] == "asset:boolean_circular_svg", "bool_result asset_ref mismatch")
     input_props = widgets["bool_input"].get("props", {})
     result_props = widgets["bool_result"].get("props", {})
-    require(input_props.get("style.frame.visible") is False, "bool_input external frame must be disabled through the .frog front-panel instance")
-    require(result_props.get("style.frame.visible") is False, "bool_result external frame must be disabled through the .frog front-panel instance")
+    require(input_props.get("style.frame.visible") is False, "bool_input external frame must be disabled through merged .wfrog defaults")
+    require(result_props.get("style.frame.visible") is False, "bool_result external frame must be disabled through merged .wfrog defaults")
     require(input_props.get("caption.align.horizontal") == "center", "bool_input caption must be centered through the .frog front-panel instance")
     require(result_props.get("caption.align.horizontal") == "center", "bool_result caption must be centered through the .frog front-panel instance")
     require(input_props.get("caption.anchor.x") == 80 and input_props.get("caption.anchor.y") == 16, "bool_input caption anchor must be declared through the .frog front-panel instance")
     require(result_props.get("caption.anchor.x") == 80 and result_props.get("caption.anchor.y") == 16, "bool_result caption anchor must be declared through the .frog front-panel instance")
-    require(input_props.get("state_text.visible") is True, "bool_input state text must remain visible through the .frog front-panel instance")
-    require(input_props.get("style.focus_ring.visible") is True, "bool_input focus ring visibility must be declared through the .frog front-panel instance")
-    require(input_props.get("style.focus_ring.color") == "#2563eb", "bool_input focus ring color must be declared through the .frog front-panel instance")
-    require(input_props.get("style.focus_ring.width") == "3px", "bool_input focus ring width must be declared through the .frog front-panel instance")
-    require(result_props.get("state_text.visible") is False, "bool_result state text must be hidden through the .frog front-panel instance")
+    require(input_props.get("state_text.visible") is True, "bool_input state text must remain visible through merged .wfrog defaults")
+    require(input_props.get("style.focus_ring.visible") is True, "bool_input focus ring visibility must be declared through merged .wfrog defaults")
+    require(input_props.get("style.focus_ring.color") == "#2563eb", "bool_input focus ring color must be declared through merged .wfrog defaults")
+    require(input_props.get("style.focus_ring.width") == "3px", "bool_input focus ring width must be declared through merged .wfrog defaults")
+    require(result_props.get("state_text.visible") is False, "bool_result state text must be hidden through merged .wfrog defaults")
     require(result_props.get("style.inner.fill_color.false") == "#ef4444", "bool_result false state must be red through the .frog front-panel instance")
     require(result_props.get("style.inner.fill_color.true") == "#22c55e", "bool_result true state must be green through the .frog front-panel instance")
     require(result_props.get("style.inner.left") == "60px", "bool_result LED must be horizontally recentered through the .frog front-panel instance")
@@ -805,7 +840,8 @@ def check_acceptance(acceptance_path: Path, *, print_json: bool = False) -> None
     assets = validate_wfrog_assets(wfrog, wfrog_path, default_resources)
 
     source = load_json(repo_path(refs["source_path"]))
-    panel = normalize_source_front_panel(source)
+    source_panel = normalize_source_front_panel(source)
+    panel = merge_default_widget_properties(source_panel, wfrog)
     widgets = validate_layout(panel)
 
     rectangular_svg = read_text(assets["boolean_rectangular_svg"])

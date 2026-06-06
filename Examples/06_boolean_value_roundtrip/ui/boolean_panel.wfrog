@@ -67,6 +67,48 @@
       ]
     }
   ],
+  "default_widget_properties": [
+    {
+      "class_id": "frog.widgets.boolean_control",
+      "role": "control",
+      "visual": {
+        "asset_ref": "asset:boolean_rectangular_svg"
+      },
+      "props": {
+        "state_text.visible": true,
+        "style.frame.visible": false,
+        "style.frame.fill_color": "transparent",
+        "style.frame.opacity": 0,
+        "style.focus_ring.visible": true,
+        "style.focus_ring.color": "#2563eb",
+        "style.focus_ring.width": "3px",
+        "interaction.enabled": true,
+        "interaction.read_only": false,
+        "interaction.focusable": true,
+        "realization.variant": "rectangular"
+      }
+    },
+    {
+      "class_id": "frog.widgets.boolean_indicator",
+      "role": "indicator",
+      "visual": {
+        "asset_ref": "asset:boolean_circular_svg"
+      },
+      "props": {
+        "state_text.visible": false,
+        "style.frame.visible": false,
+        "style.frame.fill_color": "transparent",
+        "style.frame.opacity": 0,
+        "style.focus_ring.visible": false,
+        "style.focus_ring.color": "#2563eb",
+        "style.focus_ring.width": "3px",
+        "interaction.enabled": false,
+        "interaction.read_only": true,
+        "interaction.focusable": false,
+        "realization.variant": "circular"
+      }
+    }
+  ],
   "svg_assets": [
     {
       "asset_id": "boolean_rectangular_svg",

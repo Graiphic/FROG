@@ -237,6 +237,48 @@
       }
     }
   ],
+  "default_widget_properties": [
+    {
+      "class_id": "frog.widgets.boolean_control",
+      "role": "control",
+      "visual": {
+        "resource_ref": "frog.realizations.default.boolean.assets.rectangular_svg"
+      },
+      "props": {
+        "state_text.visible": true,
+        "style.frame.visible": false,
+        "style.frame.fill_color": "transparent",
+        "style.frame.opacity": 0,
+        "style.focus_ring.visible": true,
+        "style.focus_ring.color": "#2563eb",
+        "style.focus_ring.width": "3px",
+        "interaction.enabled": true,
+        "interaction.read_only": false,
+        "interaction.focusable": true,
+        "realization.variant": "rectangular"
+      }
+    },
+    {
+      "class_id": "frog.widgets.boolean_indicator",
+      "role": "indicator",
+      "visual": {
+        "resource_ref": "frog.realizations.default.boolean.assets.circular_svg"
+      },
+      "props": {
+        "state_text.visible": false,
+        "style.frame.visible": false,
+        "style.frame.fill_color": "transparent",
+        "style.frame.opacity": 0,
+        "style.focus_ring.visible": false,
+        "style.focus_ring.color": "#2563eb",
+        "style.focus_ring.width": "3px",
+        "interaction.enabled": false,
+        "interaction.read_only": true,
+        "interaction.focusable": false,
+        "realization.variant": "circular"
+      }
+    }
+  ],
   "part_bindings": [
     {
       "part": "root",
@@ -259,6 +301,14 @@
       "semantic_member": "caption.text",
       "visibility_member": "caption.visible",
       "placement_role": "front_panel_caption"
+    },
+    {
+      "part": "frame",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='frame']",
+      "visibility_member": "style.frame.visible",
+      "style_binding_group": "style.frame",
+      "role": "optional_outer_frame_or_shadow"
     },
     {
       "part": "outer_face",
@@ -600,6 +650,21 @@
       "member": "style.inner.inset",
       "target_part": "inner_face",
       "target_operation": "set_inset_relative_to_outer_face"
+    },
+    {
+      "member": "style.frame.visible",
+      "target_part": "frame",
+      "target_operation": "set_visibility"
+    },
+    {
+      "member": "style.frame.fill_color",
+      "target_part": "frame",
+      "target_operation": "set_fill"
+    },
+    {
+      "member": "style.frame.opacity",
+      "target_part": "frame",
+      "target_operation": "set_opacity"
     },
     {
       "member": "style.focus_ring.visible",
