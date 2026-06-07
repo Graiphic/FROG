@@ -77,7 +77,7 @@
   "notes": [
     "Snapshot evidence is public example documentation, not private runtime source truth.",
     "This is a deprecated historical non-widget-composed Array snapshot, not the final Array runtime rendering target.",
-    "Final Array rendering direction starts with the widget-composed container posture in Examples 29-37.",
+    "Final Array rendering direction starts with the widget-composed container posture in Examples 29-40.",
     "No HTML/CSS fallback widget may be considered valid without the Default SVG-backed surface."
   ]
 }

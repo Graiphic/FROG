@@ -37,7 +37,10 @@
         "34_array_2d_visible_counts_property_roundtrip",
         "35_array_dimension_count_property_roundtrip",
         "36_array_string_container_dimension_count_roundtrip",
-        "37_array_path_container_dimension_count_roundtrip"
+        "37_array_path_container_dimension_count_roundtrip",
+        "38_array_boolean_container_dimension_count_roundtrip",
+        "39_array_enum_container_dimension_count_roundtrip",
+        "40_array_ring_container_dimension_count_roundtrip"
       ]
     },
     "license": "Apache-2.0"

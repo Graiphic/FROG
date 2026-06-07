@@ -184,7 +184,7 @@ closure unless that boundary is explicitly promoted later.
     </tr>
     <tr>
       <td>Array</td>
-      <td><code>26_array_numeric_selection_roundtrip</code> through <code>28_array_3d_numeric_selection_roundtrip</code><br/><small>deprecated historical rigid milestones</small><br/><code>29_array_1d_numeric_container_roundtrip</code> and later<br/><small>current widget-composed container direction</small></td>
+      <td><code>26_array_numeric_selection_roundtrip</code> through <code>28_array_3d_numeric_selection_roundtrip</code><br/><small>deprecated historical rigid milestones</small><br/><code>29_array_1d_numeric_container_roundtrip</code> through <code>40_array_ring_container_dimension_count_roundtrip</code><br/><small>current widget-composed container direction</small></td>
       <td><a href="./Array.md">Array.md</a></td>
       <td><code>Libraries/Realizations/Default/array.default.wfrog</code></td>
       <td><code>assets/array/templates/array_shell.svg</code> + contained widget assets such as <code>assets/numeric/templates/numeric_rectangular.svg</code></td>
@@ -352,9 +352,9 @@ native-backed.
       <td><code>LLVM native kernel manifest + rigid/non-widget-composed Array shape/viewport/element data + .frog/.wfrog UI</code></td>
     </tr>
     <tr>
-      <td><code>29-37</code></td>
+      <td><code>29-40</code></td>
       <td>Array</td>
-      <td>validated private slices</td>
+      <td>validated private slices where explicitly recorded</td>
       <td>validated where explicitly recorded</td>
       <td>validated where explicitly recorded</td>
       <td><code>LLVM native kernel manifest + source-owned Array container data + contained Default widget realizations + .frog/.wfrog UI</code></td>

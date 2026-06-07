@@ -1,11 +1,16 @@
 {
   "spec_version": "0.1",
   "metadata": {
-    "name": "35_array_dimension_count_property_roundtrip",
-    "summary": "Array dynamic dimension-count property roundtrip using one Numeric U8 dimension control plus two Numeric U8 visible row/column controls.",
-    "description": "Places a Numeric U8 dimension-count control, two Numeric U8 visible-count controls, one Array control, and one read-only Array indicator on the front panel. Execute consumes the dimension count through explicit diagram property-write nodes that update Array dimensions.rank and index_display.rank, then consumes the row and column values through property-write nodes that update Array viewport.visible_counts[0] and viewport.visible_counts[1]. This slice commands an N-dimensional Array posture: rank 1 renders as a single-axis array, rank 2 renders as a matrix, and rank 3 or higher renders the last two dimensions as the visible matrix while exposing all leading dimensions through stacked index displays. Each visible cell is a contained Numeric widget whose per-cell editing/display behavior comes from the Default Numeric realization.",
+    "name": "39_array_enum_container_dimension_count_roundtrip",
+    "summary": "Enum Array dynamic dimension-count property roundtrip using one Numeric U8 dimension control plus two Numeric U8 visible row/column controls.",
+    "description": "Places Numeric U8 controls for dimensions and visible row/column counts around an Array control and Array indicator whose contained element widget is Default Enum. Execute consumes the selected Enum cell through the native Enum manifest corridor, while dimensions.rank, index_display.rank, and viewport.visible_counts keep the same N-dimensional behavior validated by the Numeric Array example.",
     "author": "Graiphic",
     "program_version": "0.1.0",
+    "review": {
+      "last_reviewed": "2026-06-07",
+      "reviewer": "Codex + Graiphic",
+      "visible_runtime_fact": "Reviewed 2026-06-07"
+    },
     "tags": [
       "example",
       "ui",
@@ -20,8 +25,6 @@
       "widget_realization_package",
       "post_public_runtime_boundary",
       "array_container",
-      "numeric_element_template",
-      "default_numeric_realization",
       "widget_container",
       "last_two_dimension_projection",
       "leading_index_displays",
@@ -34,7 +37,10 @@
       "index_display_rank",
       "display_dimension_count",
       "dynamic_rank",
-      "rank_command"
+      "rank_command",
+      "enum_element_template",
+      "default_enum_realization",
+      "enum_array_container"
     ],
     "is_example": true,
     "license": "Apache-2.0"
@@ -43,13 +49,13 @@
     "inputs": [
       {
         "id": "element_value",
-        "type": "u16",
-        "binding_origin": "widget.numeric_array.value.selected_element_value"
+        "type": "enum_item_id",
+        "binding_origin": "widget.enum_array.value.selected_element_value"
       },
       {
         "id": "array_records",
-        "type": "frog.array.records<u16,rank=N>",
-        "binding_origin": "widget.numeric_array.elements.*"
+        "type": "frog.array.records<enum_item_id,rank=N>",
+        "binding_origin": "widget.enum_array.elements.*"
       },
       {
         "id": "dimension_count",
@@ -70,43 +76,43 @@
     "outputs": [
       {
         "id": "selected_element_value",
-        "type": "u16"
+        "type": "enum_item_id"
       },
       {
         "id": "published_array_records",
-        "type": "frog.array.records<u16,rank=N>"
+        "type": "frog.array.records<enum_item_id,rank=N>"
       }
     ]
   },
   "diagram": {
     "nodes": [
       {
-        "id": "numeric_array_element_value",
+        "id": "enum_array_element_value",
         "kind": "widget_value",
-        "widget": "numeric_array",
+        "widget": "enum_array",
         "member": "value.selected_element_value",
-        "type": "u16"
+        "type": "enum_item_id"
       },
       {
         "id": "published_array_element_value",
         "kind": "widget_value",
         "widget": "published_array",
         "member": "value.selected_element_value",
-        "type": "u16"
+        "type": "enum_item_id"
       },
       {
-        "id": "numeric_array_records",
+        "id": "enum_array_records",
         "kind": "widget_value",
-        "widget": "numeric_array",
+        "widget": "enum_array",
         "member": "elements.*",
-        "type": "frog.array.records<u16,rank=N>"
+        "type": "frog.array.records<enum_item_id,rank=N>"
       },
       {
         "id": "published_array_records",
         "kind": "widget_value",
         "widget": "published_array",
         "member": "elements.*",
-        "type": "frog.array.records<u16,rank=N>"
+        "type": "frog.array.records<enum_item_id,rank=N>"
       },
       {
         "id": "output_selected_element_value",
@@ -140,9 +146,9 @@
         "type": "u8"
       },
       {
-        "id": "numeric_array_dimension_count_property",
+        "id": "enum_array_dimension_count_property",
         "kind": "property_write",
-        "widget": "numeric_array",
+        "widget": "enum_array",
         "member": "dimensions.rank",
         "type": "u8"
       },
@@ -154,9 +160,9 @@
         "type": "u8"
       },
       {
-        "id": "numeric_array_visible_row_count_property",
+        "id": "enum_array_visible_row_count_property",
         "kind": "property_write",
-        "widget": "numeric_array",
+        "widget": "enum_array",
         "member": "viewport.visible_counts[0]",
         "type": "u8"
       },
@@ -168,9 +174,9 @@
         "type": "u8"
       },
       {
-        "id": "numeric_array_visible_column_count_property",
+        "id": "enum_array_visible_column_count_property",
         "kind": "property_write",
-        "widget": "numeric_array",
+        "widget": "enum_array",
         "member": "viewport.visible_counts[1]",
         "type": "u8"
       },
@@ -182,9 +188,9 @@
         "type": "u8"
       },
       {
-        "id": "numeric_array_index_display_rank_property",
+        "id": "enum_array_index_display_rank_property",
         "kind": "property_write",
-        "widget": "numeric_array",
+        "widget": "enum_array",
         "member": "index_display.rank",
         "type": "u8"
       },
@@ -200,7 +206,7 @@
       {
         "id": "e1",
         "from": {
-          "node": "numeric_array_element_value",
+          "node": "enum_array_element_value",
           "port": "value"
         },
         "to": {
@@ -211,7 +217,7 @@
       {
         "id": "e2",
         "from": {
-          "node": "numeric_array_element_value",
+          "node": "enum_array_element_value",
           "port": "value"
         },
         "to": {
@@ -222,7 +228,7 @@
       {
         "id": "e3",
         "from": {
-          "node": "numeric_array_records",
+          "node": "enum_array_records",
           "port": "records"
         },
         "to": {
@@ -233,7 +239,7 @@
       {
         "id": "e4",
         "from": {
-          "node": "numeric_array_records",
+          "node": "enum_array_records",
           "port": "records"
         },
         "to": {
@@ -248,7 +254,7 @@
           "port": "value"
         },
         "to": {
-          "node": "numeric_array_dimension_count_property",
+          "node": "enum_array_dimension_count_property",
           "port": "value"
         }
       },
@@ -270,7 +276,7 @@
           "port": "value"
         },
         "to": {
-          "node": "numeric_array_visible_row_count_property",
+          "node": "enum_array_visible_row_count_property",
           "port": "value"
         }
       },
@@ -292,7 +298,7 @@
           "port": "value"
         },
         "to": {
-          "node": "numeric_array_visible_column_count_property",
+          "node": "enum_array_visible_column_count_property",
           "port": "value"
         }
       },
@@ -314,7 +320,7 @@
           "port": "value"
         },
         "to": {
-          "node": "numeric_array_index_display_rank_property",
+          "node": "enum_array_index_display_rank_property",
           "port": "value"
         }
       },
@@ -333,8 +339,8 @@
   },
   "front_panel": {
     "canvas": {
-      "width": 920,
-      "height": 410,
+      "width": 1120,
+      "height": 670,
       "units": "px"
     },
     "package_refs": [
@@ -540,19 +546,19 @@
         "label": "Visible columns"
       },
       {
-        "id": "numeric_array",
+        "id": "enum_array",
         "role": "control",
         "class_ref": "frog.widgets.array_control",
-        "instance_ref": "numeric_array",
-        "value_type": "frog.array<u16,rank=N>",
+        "instance_ref": "enum_array",
+        "value_type": "frog.array<enum_item_id,rank=N>",
         "layout": {
           "x": 32,
           "y": 122,
-          "width": 390,
+          "width": 800,
           "height": 238
         },
         "props": {
-          "label.text": "Array container",
+          "label.text": "Enum Array container",
           "label.visible": true,
           "label.anchor.x": 56,
           "label.anchor.y": 22,
@@ -569,27 +575,21 @@
           "caption.style.font_family": "Segoe UI, Arial, sans-serif",
           "caption.style.font_size": "12px",
           "caption.style.font_weight": "400",
-          "value.selected_element_id": "r2c1",
+          "value.selected_element_id": "r1c1",
           "value.selected_indices": [
-            2,
+            1,
             1
           ],
-          "value.selected_element_value": 3,
+          "value.selected_element_value": "run",
           "selection.mode": "single_element",
           "selection.active_indices": [
-            2,
+            1,
             1
           ],
-          "data_type.representation": "u16",
-          "data_type.named_numeric_size": "U16",
-          "element.class_id": "frog.widgets.numeric_control",
-          "element.value_type": "u16",
+          "data_type.representation": "enum_item_id",
+          "element.class_id": "frog.widgets.enum_control",
+          "element.value_type": "enum_item_id",
           "element.role": "control",
-          "element.props.data_type.representation": "u16",
-          "element.props.data_type.named_numeric_size": "U16",
-          "element.props.data_entry.minimum": 0,
-          "element.props.data_entry.maximum": 65535,
-          "element.props.data_entry.increment_step": 1,
           "dimensions.rank": 2,
           "dimensions.shape": [
             5,
@@ -609,8 +609,8 @@
           "viewport.column_offset": 0,
           "viewport.row_count": 3,
           "viewport.column_count": 3,
-          "viewport.row_height": 30,
-          "viewport.column_width": 96,
+          "viewport.row_height": 28,
+          "viewport.column_width": 257,
           "viewport.cell_padding_inline": "0px",
           "viewport.clip_bleed_trailing_y": 1,
           "viewport.scrollbar_gap": 6,
@@ -701,13 +701,16 @@
                 0,
                 0
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r0c1",
@@ -715,13 +718,16 @@
                 0,
                 1
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r0c2",
@@ -729,13 +735,16 @@
                 0,
                 2
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r0c3",
@@ -743,13 +752,16 @@
                 0,
                 3
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r0c4",
@@ -757,13 +769,16 @@
                 0,
                 4
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r0c5",
@@ -771,13 +786,16 @@
                 0,
                 5
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r1c0",
@@ -785,13 +803,16 @@
                 1,
                 0
               ],
-              "value": 2,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r1c1",
@@ -799,13 +820,16 @@
                 1,
                 1
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r1c2",
@@ -813,13 +837,16 @@
                 1,
                 2
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r1c3",
@@ -827,13 +854,16 @@
                 1,
                 3
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r1c4",
@@ -841,13 +871,16 @@
                 1,
                 4
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r1c5",
@@ -855,13 +888,16 @@
                 1,
                 5
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r2c0",
@@ -869,13 +905,16 @@
                 2,
                 0
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r2c1",
@@ -883,13 +922,16 @@
                 2,
                 1
               ],
-              "value": 3,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r2c2",
@@ -897,13 +939,16 @@
                 2,
                 2
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r2c3",
@@ -911,13 +956,16 @@
                 2,
                 3
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r2c4",
@@ -925,13 +973,16 @@
                 2,
                 4
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r2c5",
@@ -939,13 +990,16 @@
                 2,
                 5
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r3c0",
@@ -953,13 +1007,16 @@
                 3,
                 0
               ],
-              "value": 4,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r3c1",
@@ -967,13 +1024,16 @@
                 3,
                 1
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r3c2",
@@ -981,13 +1041,16 @@
                 3,
                 2
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r3c3",
@@ -995,13 +1058,16 @@
                 3,
                 3
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r3c4",
@@ -1009,13 +1075,16 @@
                 3,
                 4
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r3c5",
@@ -1023,13 +1092,16 @@
                 3,
                 5
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r4c0",
@@ -1037,13 +1109,16 @@
                 4,
                 0
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r4c1",
@@ -1051,13 +1126,16 @@
                 4,
                 1
               ],
-              "value": 5,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r4c2",
@@ -1065,13 +1143,16 @@
                 4,
                 2
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r4c3",
@@ -1079,13 +1160,16 @@
                 4,
                 3
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r4c4",
@@ -1093,13 +1177,16 @@
                 4,
                 4
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r4c5",
@@ -1107,50 +1194,29 @@
                 4,
                 5
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_control",
-                "template_ref": "frog.realizations.default.numeric_control",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_control",
+                "template_ref": "frog.realizations.default.enum_control",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             }
           ],
-          "value_type": "frog.array<u16,rank=N>",
-          "dimensions.default_element_value": 0,
+          "value_type": "frog.array<enum_item_id,rank=N>",
+          "dimensions.default_element_value": "idle",
           "dimensions.materialize_out_of_range_edits": true,
           "viewport.orientation": "matrix",
-          "element.template_ref": "frog.realizations.default.numeric_control",
-          "element.asset_ref": "asset:numeric_rectangular_svg",
-          "element.default_value": 0,
-          "element.cell_width": 96,
-          "element.cell_height": 30,
+          "element.template_ref": "frog.realizations.default.enum_control",
+          "element.asset_ref": "asset:enum_rectangular_ring_svg",
+          "element.default_value": "idle",
+          "element.cell_width": 257,
+          "element.cell_height": 28,
           "element.layout.fit_part": "control_body",
           "element.layout.boundary_policy": "superpose_adjacent_widget_bounds",
-          "element.props.caption.visible": false,
-          "element.props.label.visible": false,
-          "element.props.display.increment_buttons_visible": true,
-          "element.props.display.radix_visible": false,
-          "element.props.interaction.read_only": false,
-          "element.props.style.frame.fill_color": "transparent",
-          "element.props.style.frame.border_color": "#94a3b8",
-          "element.props.style.frame.border_width": "1px",
-          "element.props.style.value_face.fill_color": "#ffffff",
-          "element.props.style.value_face.border_color": "transparent",
-          "element.props.style.value_face.border_width": "0px",
-          "element.props.style.increment_button.fill_color.normal": "#edf2f7",
-          "element.props.style.increment_button.fill_color.hover": "#dbeafe",
-          "element.props.style.increment_button.fill_color.pressed": "#bfdbfe",
-          "element.props.style.increment_button.border_color.normal": "#94a3b8",
-          "element.props.style.increment_button.border_color.hover": "#64748b",
-          "element.props.style.increment_button.border_color.pressed": "#2563eb",
-          "element.props.style.increment_button.symbol_color.normal": "#334e68",
-          "element.props.style.increment_button.symbol_color.hover": "#1d4ed8",
-          "element.props.style.increment_button.symbol_color.pressed": "#1e40af",
-          "element.props.style.text_value.color": "#111827",
-          "element.props.style.text_value.font_family": "Segoe UI, Arial, sans-serif",
-          "element.props.style.text_value.font_size": "13px",
-          "element.props.style.text_value.font_weight": "400",
           "dimensions.rank_profile.1.shape": [
             30
           ],
@@ -1173,7 +1239,105 @@
           "dimensions.rank_command.domain": "u8_positive_rank_N",
           "dimensions.rank_command.max_rank": 255,
           "dimensions.rank_command.default_shape_policy": "leading_singletons_preserve_last_two_axes",
-          "dimensions.rank_command.value_projection": "row_major_preserve_existing_values_then_default"
+          "dimensions.rank_command.value_projection": "row_major_preserve_existing_values_then_default",
+          "element.popup_asset_ref": "asset:enum_dropdown_list_svg",
+          "element.props.value": "run",
+          "element.props.enum.domain_id": "example39.mode",
+          "element.props.label.text": "Mode",
+          "element.props.caption.text": "Mode input",
+          "element.props.caption.visible": false,
+          "element.props.caption.anchor.x": 22,
+          "element.props.caption.anchor.y": 68,
+          "element.props.caption.align.horizontal": "left",
+          "element.props.caption.style.text_color": "#111827",
+          "element.props.caption.style.font_family": "system-ui, Segoe UI, Arial, sans-serif",
+          "element.props.caption.style.font_size": "14px",
+          "element.props.caption.style.font_weight": "600",
+          "element.props.items": [
+            {
+              "id": "idle",
+              "text": "Idle",
+              "numeric_value": 0,
+              "enabled": true
+            },
+            {
+              "id": "run",
+              "text": "Run",
+              "numeric_value": 1,
+              "enabled": true
+            },
+            {
+              "id": "fault",
+              "text": "Fault",
+              "numeric_value": 2,
+              "enabled": true
+            }
+          ],
+          "element.props.display.selector_visible": true,
+          "element.props.display.increment_buttons_visible": true,
+          "element.props.data_entry.increment_wrap": false,
+          "element.props.style.scale.reference_width": 257,
+          "element.props.style.scale.reference_height": 28,
+          "element.props.style.value_face.fill_color": "#ffffff",
+          "element.props.style.value_face.fill_color.hover": "#eef6ff",
+          "element.props.style.value_face.border_color": "#64748b",
+          "element.props.style.value_face.border_color.hover": "#64748b",
+          "element.props.style.value_face.border_width": "1px",
+          "element.props.style.value_display.color": "#111827",
+          "element.props.style.value_display.font_size": "16px",
+          "element.props.style.value_display.font_size_mode": "scale_with_widget",
+          "element.props.style.value_display.font_weight": "400",
+          "element.props.style.value_display.vertical_offset": "-2px",
+          "element.props.style.value_display.vertical_offset_mode": "scale_with_widget",
+          "element.props.style.value_display.padding_inline": "8px",
+          "element.props.style.value_display.padding_inline_mode": "scale_with_widget",
+          "element.props.style.selector_face.fill_color": "#f1f5f9",
+          "element.props.style.selector_face.fill_color.hover": "#60a5fa",
+          "element.props.style.selector_face.border_color": "#64748b",
+          "element.props.style.selector_face.border_color.hover": "#2563eb",
+          "element.props.style.selector_face.border_width": "1px",
+          "element.props.style.selector_face.border_width_mode": "scale_with_widget",
+          "element.props.style.selector_face.border_radius": "1px",
+          "element.props.style.selector_face.border_radius_mode": "scale_with_widget",
+          "element.props.style.selector_face.symbol_color": "#111827",
+          "element.props.style.selector_face.symbol_color.hover": "#ffffff",
+          "element.props.style.selector_face.symbol_width": "10px",
+          "element.props.style.selector_face.symbol_height": "7px",
+          "element.props.style.selector_face.symbol_size_mode": "scale_with_widget",
+          "element.props.style.increment_button.fill_color.normal": "#edf2f7",
+          "element.props.style.increment_button.fill_color.hover": "#dbeafe",
+          "element.props.style.increment_button.fill_color.pressed": "#bfdbfe",
+          "element.props.style.increment_button.border_color.normal": "#94a3b8",
+          "element.props.style.increment_button.border_color.hover": "#64748b",
+          "element.props.style.increment_button.border_color.pressed": "#2563eb",
+          "element.props.style.increment_button.symbol_color.normal": "#334e68",
+          "element.props.style.increment_button.symbol_color.hover": "#1d4ed8",
+          "element.props.style.increment_button.symbol_color.pressed": "#1e40af",
+          "element.props.style.dropdown.fill_color": "#ffffff",
+          "element.props.style.dropdown.border_color": "#64748b",
+          "element.props.style.dropdown.border_width": "1px",
+          "element.props.style.dropdown.border_width_mode": "scale_with_widget",
+          "element.props.style.dropdown.option.fill_color": "#ffffff",
+          "element.props.style.dropdown.option.text_color": "#111827",
+          "element.props.style.dropdown.option.hover_fill_color": "#dbeafe",
+          "element.props.style.dropdown.option.hover_text_color": "#111827",
+          "element.props.style.dropdown.option.selected_fill_color": "#3b6db5",
+          "element.props.style.dropdown.option.selected_text_color": "#ffffff",
+          "element.props.style.dropdown.option.font_family": "Segoe UI,Arial,sans-serif",
+          "element.props.style.dropdown.option.font_size": "14px",
+          "element.props.style.dropdown.option.font_size_mode": "scale_with_widget",
+          "element.props.style.dropdown.option.font_weight": "400",
+          "element.props.style.dropdown.option.font_style": "normal",
+          "element.props.style.dropdown.option.padding_inline": "7px",
+          "element.props.style.dropdown.option.padding_inline_mode": "scale_with_widget",
+          "element.props.style.dropdown.option.height": "24px",
+          "element.props.style.dropdown.option.height_mode": "scale_with_widget",
+          "element.props.interaction.enabled": true,
+          "element.props.interaction.read_only": false,
+          "element.props.realization.variant": "rectangular_ring",
+          "element.props.label.visible": false,
+          "element.props.interaction.focusable": false,
+          "element.props.style.focus_ring.visible": false
         },
         "visual": {
           "asset_ref": "asset:array_shell_svg"
@@ -1182,22 +1346,22 @@
           "mode": "widget_value",
           "public_input_id": "element_value"
         },
-        "label": "Array container"
+        "label": "Enum Array control"
       },
       {
         "id": "published_array",
         "role": "indicator",
         "class_ref": "frog.widgets.array_indicator",
         "instance_ref": "published_array",
-        "value_type": "frog.array<u16,rank=N>",
+        "value_type": "frog.array<enum_item_id,rank=N>",
         "layout": {
-          "x": 468,
-          "y": 122,
-          "width": 365,
+          "x": 32,
+          "y": 386,
+          "width": 700,
           "height": 238
         },
         "props": {
-          "label.text": "Array indicator",
+          "label.text": "Published Enum Array",
           "label.visible": true,
           "label.anchor.x": 56,
           "label.anchor.y": 22,
@@ -1214,27 +1378,21 @@
           "caption.style.font_family": "Segoe UI, Arial, sans-serif",
           "caption.style.font_size": "12px",
           "caption.style.font_weight": "400",
-          "value.selected_element_id": "r2c1",
+          "value.selected_element_id": "r1c1",
           "value.selected_indices": [
-            2,
+            1,
             1
           ],
-          "value.selected_element_value": 3,
+          "value.selected_element_value": "run",
           "selection.mode": "single_element",
           "selection.active_indices": [
-            2,
+            1,
             1
           ],
-          "data_type.representation": "u16",
-          "data_type.named_numeric_size": "U16",
-          "element.class_id": "frog.widgets.numeric_indicator",
-          "element.value_type": "u16",
+          "data_type.representation": "enum_item_id",
+          "element.class_id": "frog.widgets.enum_indicator",
+          "element.value_type": "enum_item_id",
           "element.role": "indicator",
-          "element.props.data_type.representation": "u16",
-          "element.props.data_type.named_numeric_size": "U16",
-          "element.props.data_entry.minimum": 0,
-          "element.props.data_entry.maximum": 65535,
-          "element.props.data_entry.increment_step": 1,
           "dimensions.rank": 2,
           "dimensions.shape": [
             5,
@@ -1254,8 +1412,8 @@
           "viewport.column_offset": 0,
           "viewport.row_count": 3,
           "viewport.column_count": 3,
-          "viewport.row_height": 30,
-          "viewport.column_width": 74,
+          "viewport.row_height": 28,
+          "viewport.column_width": 209,
           "viewport.cell_padding_inline": "0px",
           "viewport.clip_bleed_trailing_y": 1,
           "viewport.scrollbar_gap": 6,
@@ -1346,13 +1504,16 @@
                 0,
                 0
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r0c1",
@@ -1360,13 +1521,16 @@
                 0,
                 1
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r0c2",
@@ -1374,13 +1538,16 @@
                 0,
                 2
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r0c3",
@@ -1388,13 +1555,16 @@
                 0,
                 3
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r0c4",
@@ -1402,13 +1572,16 @@
                 0,
                 4
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r0c5",
@@ -1416,13 +1589,16 @@
                 0,
                 5
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r1c0",
@@ -1430,13 +1606,16 @@
                 1,
                 0
               ],
-              "value": 2,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r1c1",
@@ -1444,13 +1623,16 @@
                 1,
                 1
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r1c2",
@@ -1458,13 +1640,16 @@
                 1,
                 2
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r1c3",
@@ -1472,13 +1657,16 @@
                 1,
                 3
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r1c4",
@@ -1486,13 +1674,16 @@
                 1,
                 4
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r1c5",
@@ -1500,13 +1691,16 @@
                 1,
                 5
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r2c0",
@@ -1514,13 +1708,16 @@
                 2,
                 0
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r2c1",
@@ -1528,13 +1725,16 @@
                 2,
                 1
               ],
-              "value": 3,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r2c2",
@@ -1542,13 +1742,16 @@
                 2,
                 2
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r2c3",
@@ -1556,13 +1759,16 @@
                 2,
                 3
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r2c4",
@@ -1570,13 +1776,16 @@
                 2,
                 4
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r2c5",
@@ -1584,13 +1793,16 @@
                 2,
                 5
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r3c0",
@@ -1598,13 +1810,16 @@
                 3,
                 0
               ],
-              "value": 4,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r3c1",
@@ -1612,13 +1827,16 @@
                 3,
                 1
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r3c2",
@@ -1626,13 +1844,16 @@
                 3,
                 2
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r3c3",
@@ -1640,13 +1861,16 @@
                 3,
                 3
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r3c4",
@@ -1654,13 +1878,16 @@
                 3,
                 4
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r3c5",
@@ -1668,13 +1895,16 @@
                 3,
                 5
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r4c0",
@@ -1682,13 +1912,16 @@
                 4,
                 0
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r4c1",
@@ -1696,13 +1929,16 @@
                 4,
                 1
               ],
-              "value": 5,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r4c2",
@@ -1710,13 +1946,16 @@
                 4,
                 2
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             },
             {
               "id": "r4c3",
@@ -1724,13 +1963,16 @@
                 4,
                 3
               ],
-              "value": 0,
+              "value": "run",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Run",
+              "enabled": true
             },
             {
               "id": "r4c4",
@@ -1738,13 +1980,16 @@
                 4,
                 4
               ],
-              "value": 0,
+              "value": "fault",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Fault",
+              "enabled": true
             },
             {
               "id": "r4c5",
@@ -1752,41 +1997,29 @@
                 4,
                 5
               ],
-              "value": 0,
+              "value": "idle",
               "widget": {
-                "class_ref": "frog.widgets.numeric_indicator",
-                "template_ref": "frog.realizations.default.numeric_indicator",
-                "asset_ref": "asset:numeric_rectangular_svg",
+                "class_ref": "frog.widgets.enum_indicator",
+                "template_ref": "frog.realizations.default.enum_indicator",
+                "asset_ref": "asset:enum_rectangular_ring_svg",
+                "popup_asset_ref": "asset:enum_dropdown_list_svg",
                 "value_member": "value"
-              }
+              },
+              "display": "Idle",
+              "enabled": true
             }
           ],
-          "value_type": "frog.array<u16,rank=N>",
-          "dimensions.default_element_value": 0,
+          "value_type": "frog.array<enum_item_id,rank=N>",
+          "dimensions.default_element_value": "idle",
           "dimensions.materialize_out_of_range_edits": true,
           "viewport.orientation": "matrix",
-          "element.template_ref": "frog.realizations.default.numeric_indicator",
-          "element.asset_ref": "asset:numeric_rectangular_svg",
-          "element.default_value": 0,
-          "element.cell_width": 74,
-          "element.cell_height": 30,
-          "element.layout.fit_part": "indicator_body",
+          "element.template_ref": "frog.realizations.default.enum_indicator",
+          "element.asset_ref": "asset:enum_rectangular_ring_svg",
+          "element.default_value": "idle",
+          "element.cell_width": 209,
+          "element.cell_height": 28,
+          "element.layout.fit_part": "value_face",
           "element.layout.boundary_policy": "superpose_adjacent_widget_bounds",
-          "element.props.caption.visible": false,
-          "element.props.label.visible": false,
-          "element.props.display.increment_buttons_visible": false,
-          "element.props.display.radix_visible": false,
-          "element.props.interaction.read_only": true,
-          "element.props.style.frame.fill_color": "transparent",
-          "element.props.style.frame.border_color": "#94a3b8",
-          "element.props.style.frame.border_width": "1px",
-          "element.props.style.value_face.fill_color": "#eef2f7",
-          "element.props.style.value_face.border_color": "transparent",
-          "element.props.style.value_face.border_width": "0px",
-          "element.props.style.text_value.color": "#111827",
-          "element.props.style.text_value.font_family": "Segoe UI, Arial, sans-serif",
-          "element.props.style.text_value.font_size": "13px",
-          "element.props.style.text_value.font_weight": "400",
           "dimensions.rank_profile.1.shape": [
             30
           ],
@@ -1809,7 +2042,65 @@
           "dimensions.rank_command.domain": "u8_positive_rank_N",
           "dimensions.rank_command.max_rank": 255,
           "dimensions.rank_command.default_shape_policy": "leading_singletons_preserve_last_two_axes",
-          "dimensions.rank_command.value_projection": "row_major_preserve_existing_values_then_default"
+          "dimensions.rank_command.value_projection": "row_major_preserve_existing_values_then_default",
+          "element.popup_asset_ref": "asset:enum_dropdown_list_svg",
+          "element.props.value": "run",
+          "element.props.enum.domain_id": "example39.mode",
+          "element.props.label.text": "Mode result",
+          "element.props.caption.text": "Mode result",
+          "element.props.caption.visible": false,
+          "element.props.caption.anchor.x": 22,
+          "element.props.caption.anchor.y": 68,
+          "element.props.caption.align.horizontal": "left",
+          "element.props.caption.style.text_color": "#111827",
+          "element.props.caption.style.font_family": "system-ui, Segoe UI, Arial, sans-serif",
+          "element.props.caption.style.font_size": "14px",
+          "element.props.caption.style.font_weight": "600",
+          "element.props.items": [
+            {
+              "id": "idle",
+              "text": "Idle",
+              "numeric_value": 0,
+              "enabled": true
+            },
+            {
+              "id": "run",
+              "text": "Run",
+              "numeric_value": 1,
+              "enabled": true
+            },
+            {
+              "id": "fault",
+              "text": "Fault",
+              "numeric_value": 2,
+              "enabled": true
+            }
+          ],
+          "element.props.display.selector_visible": false,
+          "element.props.style.scale.reference_width": 209,
+          "element.props.style.scale.reference_height": 28,
+          "element.props.style.value_face.fill_color": "#f8fafc",
+          "element.props.style.value_face.border_color": "#64748b",
+          "element.props.style.value_face.border_width": "1px",
+          "element.props.style.value_display.color": "#111827",
+          "element.props.style.value_display.font_size": "16px",
+          "element.props.style.value_display.font_size_mode": "scale_with_widget",
+          "element.props.style.value_display.font_weight": "400",
+          "element.props.style.value_display.vertical_offset": "-2px",
+          "element.props.style.value_display.vertical_offset_mode": "scale_with_widget",
+          "element.props.style.value_display.padding_inline": "8px",
+          "element.props.style.value_display.padding_inline_mode": "scale_with_widget",
+          "element.props.style.selector_face.fill_color": "transparent",
+          "element.props.style.selector_face.border_color": "transparent",
+          "element.props.style.selector_face.border_width": "0px",
+          "element.props.style.selector_face.symbol_color": "transparent",
+          "element.props.interaction.enabled": false,
+          "element.props.interaction.read_only": true,
+          "element.props.realization.variant": "rectangular_ring",
+          "element.props.label.visible": false,
+          "element.props.interaction.focusable": false,
+          "element.props.style.focus_ring.visible": false,
+          "element.props.display.increment_buttons_visible": false
         },
         "visual": {
           "asset_ref": "asset:array_shell_svg"
@@ -1818,32 +2109,32 @@
           "mode": "widget_value",
           "public_output_id": "selected_element_value"
         },
-        "label": "Array indicator"
+        "label": "Enum Array indicator"
       }
     ],
     "panel_id": "main_panel",
-    "title": "Numeric Array Dimension Count Property Roundtrip",
+    "title": "Enum Array Dimension Count Property Roundtrip",
     "class_ref": "frog.widgets.panel",
     "host_binding_ref": "array_runtime_host_default",
     "documentation": {
-      "title": "Numeric Array Dimension Count Property Roundtrip",
-      "summary": "A Numeric U8 control writes Array dimensions.rank and index_display.rank while two Numeric U8 controls continue to write visible row and column counts. The Array adapts as an N-dimensional widget: every dimension owns an index display and the last two dimensions form the visible matrix whose cells instantiate Default Numeric widgets.",
+      "title": "Enum Array Dimension Count Property Roundtrip",
+      "summary": "A Numeric U8 control writes Array dimensions.rank and index_display.rank while two Numeric U8 controls continue to write visible row and column counts. The Array adapts as an N-dimensional widget and each visible cell instantiates a Default Enum widget.",
       "sections": [
         {
           "title": "Dimension property",
-          "body": "Execute consumes Dimensions, then writes numeric_array.dimensions.rank / published_array.dimensions.rank and their index_display.rank mirrors. The widget creates the requested N-dimensional shape from explicit profiles and the default leading-singleton trailing-matrix policy."
+          "body": "Execute consumes Dimensions, then writes enum_array.dimensions.rank / published_array.dimensions.rank and their index_display.rank mirrors."
         },
         {
           "title": "Visible-count properties",
-          "body": "Execute consumes Visible rows and Visible columns, then writes numeric_array.viewport.visible_counts[0]/[1] and published_array.viewport.visible_counts[0]/[1]."
+          "body": "Execute consumes Visible rows and Visible columns, then writes enum_array.viewport.visible_counts[0]/[1] and published_array.viewport.visible_counts[0]/[1]."
         },
         {
-          "title": "Numeric element",
-          "body": "Each visible cell instantiates a Numeric element template. Control cells keep increment/decrement buttons; indicator cells are read-only and visually greyed."
+          "title": "Enum element",
+          "body": "Each visible cell instantiates an Enum element template. Control cells select source-owned enum items; indicator cells are read-only and visually greyed."
         },
         {
           "title": "Execute",
-          "body": "Execute consumes the selected Numeric element value through the native manifest corridor and publishes the value and matrix records to the read-only Array indicator."
+          "body": "Execute consumes the selected Enum element value through the native manifest corridor and publishes the value and matrix records to the read-only Array indicator."
         }
       ]
     }

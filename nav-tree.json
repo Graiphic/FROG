@@ -973,7 +973,7 @@
             },
             {
               "key": "examples/35_array_dimension_count_property_roundtrip/",
-              "title": "35 array dimension count property roundtrip",
+              "title": "35 numeric array dimension count property roundtrip",
               "path": "/Examples/35_array_dimension_count_property_roundtrip/Readme.md",
               "kind": "category",
               "children": [
@@ -1011,6 +1011,51 @@
                   "key": "examples/37_array_path_container_dimension_count_roundtrip/main.frog",
                   "title": "main.frog",
                   "path": "/Examples/37_array_path_container_dimension_count_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "key": "examples/38_array_boolean_container_dimension_count_roundtrip/",
+              "title": "38 array boolean container dimension count roundtrip",
+              "path": "/Examples/38_array_boolean_container_dimension_count_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/38_array_boolean_container_dimension_count_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/38_array_boolean_container_dimension_count_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "key": "examples/39_array_enum_container_dimension_count_roundtrip/",
+              "title": "39 array enum container dimension count roundtrip",
+              "path": "/Examples/39_array_enum_container_dimension_count_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/39_array_enum_container_dimension_count_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/39_array_enum_container_dimension_count_roundtrip/main.frog",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "key": "examples/40_array_ring_container_dimension_count_roundtrip/",
+              "title": "40 array ring container dimension count roundtrip",
+              "path": "/Examples/40_array_ring_container_dimension_count_roundtrip/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/40_array_ring_container_dimension_count_roundtrip/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/40_array_ring_container_dimension_count_roundtrip/main.frog",
                   "kind": "code",
                   "children": []
                 }
@@ -5075,6 +5120,12 @@
     "/Examples/36_array_string_container_dimension_count_roundtrip/Readme.md",
     "/Examples/37_array_path_container_dimension_count_roundtrip/main.frog",
     "/Examples/37_array_path_container_dimension_count_roundtrip/Readme.md",
+    "/Examples/38_array_boolean_container_dimension_count_roundtrip/main.frog",
+    "/Examples/38_array_boolean_container_dimension_count_roundtrip/Readme.md",
+    "/Examples/39_array_enum_container_dimension_count_roundtrip/main.frog",
+    "/Examples/39_array_enum_container_dimension_count_roundtrip/Readme.md",
+    "/Examples/40_array_ring_container_dimension_count_roundtrip/main.frog",
+    "/Examples/40_array_ring_container_dimension_count_roundtrip/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",

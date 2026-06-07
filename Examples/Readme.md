@@ -330,7 +330,7 @@ They are traceability metadata only; they are not FROG language versions and the
     <tr>
       <td><code>35_array_dimension_count_property_roundtrip</code></td>
       <td><time datetime="2026-06-01">2026-06-01</time></td>
-      <td>Array container whose active N-dimensional rank and visible row/column counts are driven by Numeric U8 property-write controls consumed on Execute</td>
+      <td>Numeric Array container whose active N-dimensional rank and visible row/column counts are driven by Numeric U8 property-write controls consumed on Execute</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
@@ -345,6 +345,27 @@ They are traceability metadata only; they are not FROG language versions and the
       <td><code>37_array_path_container_dimension_count_roundtrip</code></td>
       <td><time datetime="2026-06-02">2026-06-02</time></td>
       <td>Array container whose cells are Default Path widgets while N-dimensional rank and visible row/column counts remain driven by Numeric U8 property-write controls consumed on Execute</td>
+      <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
+    <tr>
+      <td><code>38_array_boolean_container_dimension_count_roundtrip</code></td>
+      <td><time datetime="2026-06-07">2026-06-07</time></td>
+      <td>Array container whose cells are Default Boolean widgets while N-dimensional rank and visible row/column counts remain driven by Numeric U8 property-write controls consumed on Execute</td>
+      <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
+    <tr>
+      <td><code>39_array_enum_container_dimension_count_roundtrip</code></td>
+      <td><time datetime="2026-06-07">2026-06-07</time></td>
+      <td>Array container whose cells are Default Enum widgets while N-dimensional rank and visible row/column counts remain driven by Numeric U8 property-write controls consumed on Execute</td>
+      <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
+    <tr>
+      <td><code>40_array_ring_container_dimension_count_roundtrip</code></td>
+      <td><time datetime="2026-06-07">2026-06-07</time></td>
+      <td>Array container whose cells are Default Ring widgets while N-dimensional rank and visible row/column counts remain driven by Numeric U8 property-write controls consumed on Execute</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>

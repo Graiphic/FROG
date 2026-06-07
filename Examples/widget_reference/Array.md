@@ -16,9 +16,9 @@
 <p>
 The current Array progression is demonstrated by
 <code>Examples/26_array_numeric_selection_roundtrip</code> through
-<code>Examples/37_array_path_container_dimension_count_roundtrip</code>.
+<code>Examples/40_array_ring_container_dimension_count_roundtrip</code>.
 Examples 26-28 are deprecated historical non-widget-composed development
-snapshots. Examples 29-37 show the current final rendering direction: an Array
+snapshots. Examples 29-40 show the current final rendering direction: an Array
 container that repeats contained Default widget realizations instead of
 drawing a simplified numeric grid.
 </p>
@@ -38,7 +38,7 @@ Array examples evolve.
   -&gt; public selected element output
 
 array element template
-  -&gt; Default Numeric widget realization
+  -&gt; Default Numeric/String/Path/Boolean/Enum/Ring widget realization
   -&gt; repeated widget-backed cells inside the Array viewport</code></pre>
 
 <hr/>
@@ -57,8 +57,8 @@ instance data:
   <li>Selected element id, selected indices, and optional selected value output.</li>
   <li>Viewport first indices, visible counts, orientation, and scrollbar posture.</li>
   <li>Index display visibility, values, position, and style.</li>
-  <li>Element template binding, including <code>frog.widgets.numeric_control</code> or <code>frog.widgets.numeric_indicator</code> for the current numeric examples.</li>
-  <li>Contained widget properties such as numeric representation, increment/decrement visibility, read-only posture, and default value.</li>
+  <li>Element template binding, including the contained widget class such as Numeric, String, Path, Boolean, Enum, or Ring control/indicator classes for current widget-backed examples.</li>
+  <li>Contained widget properties such as numeric representation, string/path text behavior, Boolean state text, increment/decrement visibility, read-only posture, and default value.</li>
   <li>Labels, caption placement, layout, and instance-level visual overrides.</li>
 </ul>
 
@@ -102,9 +102,9 @@ initialized to <code>0</code>, matching the public Array class law.
       <td>Apply visible viewport count changes only through declared diagram/property-write flow, not through runtime-local shortcuts.</td>
     </tr>
     <tr>
-      <td>Contained Numeric widget</td>
-      <td><code>element.class_id</code>, <code>element.template_ref</code>, <code>element.props.*</code></td>
-      <td>Compose the Default Numeric widget inside each visible cell without replacing it with a runtime-local surrogate.</td>
+      <td>Contained widget</td>
+      <td><code>element.class_id</code>, <code>element.template_ref</code>, <code>element.layout.fit_part</code>, <code>element.props.*</code></td>
+      <td>Compose the declared Default widget realization inside each visible cell without replacing it with a runtime-local surrogate. The cell must size to the contained widget's effective visible fit part; it must not reserve hidden selector, spinner, popup, frame, or decorative geometry.</td>
     </tr>
     <tr>
       <td>Scrollbars</td>
@@ -148,9 +148,11 @@ The Default Array SVG publishes the Array shell and public composition parts.
 For the index display, the public part is the <code>index_display</code>
 subcontainer itself; per-dimension rows, arrow glyphs, separators, frame, and
 displayed values are internal SVG details, not additional public parts.
-The Default Numeric SVG publishes the value face, text value, increment up,
-increment down, control body, and indicator body parts used by the contained
-Numeric elements.
+The contained widget SVG publishes its own semantic parts, such as Numeric
+value face and increment buttons, String text region, Path face, Boolean
+inner face/state text, Enum value/selector/spinner surfaces, or Ring
+value/selector/spinner surfaces. Array repeats those widget skins instead of
+substituting runtime-local drawing.
 </p>
 
 <hr/>
@@ -159,8 +161,9 @@ Numeric elements.
 
 <p>
 The Array container may repeat another widget class as its element template.
-For the current examples, the contained widget is Numeric. The contained widget
-keeps its own realization, behavior, and property surface.
+For the current examples, the contained widget progression covers Numeric,
+String, Path, Boolean, Enum, and Ring. The contained widget keeps its own
+realization, behavior, and property surface.
 </p>
 
 <p>
@@ -171,10 +174,19 @@ already sharing their published bounds.
 </p>
 
 <p>
+For widget-backed cells, the Array cell is the visible box around the
+contained widget. With zero padding/gap, the cell must match the contained
+widget's visible fit part at rendered CSS-pixel size. A control may therefore
+use a wider fit part than its matching indicator when the control exposes
+selector or increment/decrement surfaces that the indicator hides. The runtime
+must not let hidden widget parts create blank space or misalign the grid.
+</p>
+
+<p>
 When <code>element.layout.padding</code> and <code>element_gap.size</code> are
 zero, repeated contained widgets may touch or visually superpose adjacent
-borders. This is the expected LabVIEW-like posture for the current Numeric
-Array container examples.
+borders. This is the expected LabVIEW-like posture for the current
+widget-backed Array container examples.
 </p>
 
 <hr/>
@@ -196,7 +208,10 @@ Examples/33_array_2d_numeric_container_roundtrip/ui/array_panel.wfrog
 Examples/34_array_2d_visible_counts_property_roundtrip/ui/array_panel.wfrog
 Examples/35_array_dimension_count_property_roundtrip/ui/array_panel.wfrog
 Examples/36_array_string_container_dimension_count_roundtrip/ui/array_panel.wfrog
-Examples/37_array_path_container_dimension_count_roundtrip/ui/array_panel.wfrog</code></pre>
+Examples/37_array_path_container_dimension_count_roundtrip/ui/array_panel.wfrog
+Examples/38_array_boolean_container_dimension_count_roundtrip/ui/array_panel.wfrog
+Examples/39_array_enum_container_dimension_count_roundtrip/ui/array_panel.wfrog
+Examples/40_array_ring_container_dimension_count_roundtrip/ui/array_panel.wfrog</code></pre>
 
 <p>
 The <code>.wfrog</code> package resolves Default realization assets and host
@@ -209,6 +224,11 @@ indices, or diagram behavior.
   <li>Default Array shell: <code>Libraries/Realizations/Default/assets/array/templates/array_shell.svg</code></li>
   <li>Default Numeric package for widget-backed cells: <code>Libraries/Realizations/Default/numeric.default.wfrog</code></li>
   <li>Default Numeric SVG: <code>Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg</code></li>
+  <li>Default String package/SVG for widget-backed cells: <code>Libraries/Realizations/Default/string.default.wfrog</code> and <code>Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg</code></li>
+  <li>Default Path package/SVG for widget-backed cells: <code>Libraries/Realizations/Default/path.default.wfrog</code> and <code>Libraries/Realizations/Default/assets/path/templates/path_rectangular_field.svg</code></li>
+  <li>Default Boolean package/SVG for widget-backed cells: <code>Libraries/Realizations/Default/boolean.default.wfrog</code> and <code>Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg</code></li>
+  <li>Default Enum package/SVG/dropdown SVG for widget-backed cells: <code>Libraries/Realizations/Default/enum.default.wfrog</code>, <code>Libraries/Realizations/Default/assets/enum/templates/enum_rectangular_ring.svg</code>, and <code>Libraries/Realizations/Default/assets/enum/templates/enum_dropdown_list.svg</code></li>
+  <li>Default Ring package/SVG/dropdown SVG for widget-backed cells: <code>Libraries/Realizations/Default/ring.default.wfrog</code>, <code>Libraries/Realizations/Default/assets/ring/templates/ring_rectangular.svg</code>, and <code>Libraries/Realizations/Default/assets/ring/templates/ring_dropdown_list.svg</code></li>
 </ul>
 
 <hr/>
@@ -249,6 +269,9 @@ promoted later.
   <li>Example 35: current N-dimensional Array container property-write posture where Numeric U8 controls drive <code>dimensions.rank</code>, <code>index_display.rank</code>, and the visible row/column counts on <code>Execute</code>.</li>
   <li>Example 36: current N-dimensional Array container posture with repeated Default String element widgets.</li>
   <li>Example 37: current N-dimensional Array container posture with repeated Default Path element widgets.</li>
+  <li>Example 38: current N-dimensional Array container posture with repeated Default Boolean element widgets.</li>
+  <li>Example 39: current N-dimensional Array container posture with repeated Default Enum element widgets.</li>
+  <li>Example 40: current N-dimensional Array container posture with repeated Default Ring element widgets.</li>
 </ul>
 
 <p>
@@ -272,7 +295,8 @@ numeric_array.selected_element_value
 The visible-shape controls therefore do not mutate the Array through a
 runtime-local shortcut. They are part of the <code>.frog</code> diagram, are
 preserved in FIR, are declared in lowering, and are consumed by the runtime
-alongside the native manifest and Default Array/Numeric realization assets.
+alongside the native manifest and Default Array/contained-widget realization
+assets.
 </p>
 
 <p>
@@ -281,7 +305,7 @@ rank, shape, indexing, materialization, viewport, selection, and native value
 flow before the Array container began composing real widget instances. They are
 retained for regression and traceability, but they are not the final runtime
 rendering target for Array. The final direction is the widget-composed Array
-container posture demonstrated by Examples 29-37.
+container posture demonstrated by Examples 29-40.
 </p>
 
 <hr/>
