@@ -973,7 +973,7 @@
             },
             {
               "key": "examples/35_array_dimension_count_property_roundtrip/",
-              "title": "35 numeric array dimension count property roundtrip",
+              "title": "35 array dimension count property roundtrip",
               "path": "/Examples/35_array_dimension_count_property_roundtrip/Readme.md",
               "kind": "category",
               "children": [

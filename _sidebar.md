@@ -132,7 +132,7 @@
     - [main.frog](/Examples/34_array_2d_visible_counts_property_roundtrip/main.frog)
     - [reference](/Examples/34_array_2d_visible_counts_property_roundtrip/reference/README.md)
       - [visual-contract](/Examples/34_array_2d_visible_counts_property_roundtrip/reference/visual-contract.md)
-  - [35 numeric array dimension count property roundtrip](/Examples/35_array_dimension_count_property_roundtrip/Readme.md)
+  - [35 array dimension count property roundtrip](/Examples/35_array_dimension_count_property_roundtrip/Readme.md)
     - [main.frog](/Examples/35_array_dimension_count_property_roundtrip/main.frog)
   - [36 array string container dimension count roundtrip](/Examples/36_array_string_container_dimension_count_roundtrip/Readme.md)
     - [main.frog](/Examples/36_array_string_container_dimension_count_roundtrip/main.frog)
