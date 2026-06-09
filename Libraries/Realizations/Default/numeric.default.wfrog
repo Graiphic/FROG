@@ -203,7 +203,7 @@
         "layout.grid.*",
         "layout.resize.*"
       ],
-      "placement_role": "grid_snapped_widget_aura_not_focus_not_selection"
+      "placement_role": "widget_placement_aura_not_focus_not_selection_optional_grid_snap_policy"
     },
     {
       "part": "label",
@@ -420,7 +420,7 @@
     {
       "member": "layout.placement_bounds.*",
       "target_part": "placement_bounds",
-      "target_operation": "publish_grid_snapped_placement_aura"
+      "target_operation": "publish_placement_aura"
     },
     {
       "member": "layout.grid.*",
@@ -466,9 +466,9 @@
       "placement_bounds_y": 48,
       "placement_bounds_width": 96,
       "placement_bounds_height": 32,
-      "placement_bounds_posture": "widget_aura_with_grid_snapped_top_left_and_grid_controlled_width_not_focus_or_selection",
+      "placement_bounds_posture": "widget_aura_with_optional_grid_snap_policy_not_focus_or_selection",
       "placement_aura_padding": 4,
-      "placement_aura_padding_rule": "uniform band around the main body; top_left snaps to the common grid; width changes point_to_point on the grid; height follows body plus the uniform band",
+      "placement_aura_padding_rule": "uniform band around the main body; top_left and top_right snap to the common grid only when source_or_container_policy_declares_snap; width is quantized as a grid_pitch_multiple only when declared; height follows body plus the uniform band",
       "body_x": 20,
       "body_y": 52,
       "body_height": 24,
@@ -489,12 +489,14 @@
       "ide_aura_posture": "host_overlay_aligned_to_placement_bounds; body parts stay centered inside the aura and are not the aura",
       "focus_ring_posture": "widget_focus_interaction_part_not_placement_aura_not_ide_selection",
       "default_control_value_face_fill_color": "#ffffff",
-      "default_indicator_value_face_fill_color": "#e9edf2",
+      "default_indicator_value_face_fill_color": "#E8EBED",
+      "default_value_face_border_color": "#A8ABAE",
+      "default_value_face_border_width": "1px",
       "default_label_anchor_x": 18,
       "default_caption_anchor_x": 18,
       "default_caption_anchor_y": 38,
       "caption_aura_posture": "caption sits above placement_bounds with enough separation that the label aura does not overlap the body aura",
-      "resize_rule": "horizontal resizing changes placement_bounds.width point_to_point_on_the_grid; the visible body keeps a uniform aura padding; spinner stays inside the body on display_increment_buttons_side; hidden_spinner_allows_value_face_to_expand_to_control_body; vertical size follows text/font comfort plus the same aura padding",
+      "resize_rule": "horizontal resizing changes placement_bounds.width while the visible body keeps a uniform aura padding; source_or_container_policy_may_quantize_width_point_to_point_on_the_grid; spinner stays inside the body on display_increment_buttons_side; hidden_spinner_allows_value_face_to_expand_to_control_body; vertical size follows text/font comfort plus the same aura padding",
       "proportionality_rule": "hosts must preserve these part ratios when embedding the Default Numeric SVG as an Array element or other contained widget surface; the increment/decrement buttons use the same separated-button proportion as the Default Array index display and may be mirrored to the left of the value face"
     },
     "numeric_representation_surface": {

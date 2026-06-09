@@ -3,7 +3,7 @@
   "kind": "widget_realization_package",
   "package_id": "example31.array_visible_count_property_panel",
   "title": "Example 31 Default Array + Numeric visible-count realization package",
-  "reviewed_date": "2026-06-08",
+  "reviewed_date": "2026-06-09",
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },

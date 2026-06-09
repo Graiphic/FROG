@@ -3,7 +3,7 @@
   "kind": "widget_realization_package",
   "package_id": "example34.array_2d_visible_counts_property_panel",
   "title": "Example 34 Default Array + Numeric visible row/column property realization package",
-  "reviewed_date": "2026-06-08",
+  "reviewed_date": "2026-06-09",
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },

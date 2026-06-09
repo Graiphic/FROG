@@ -63,6 +63,8 @@ C++ browser host
   grid.pitch: 16
   grid.origin: { x: 0, y: 0 }
   grid.snap: placement_bounds
+  grid.snap_edges: [placement_bounds.top_left, placement_bounds.top_right]
+  grid.width_quantization: grid_pitch_multiple
 
 right-button control / indicator:
   y: 32
@@ -77,10 +79,10 @@ hidden-button control / indicator:
 <p>
 All six widgets use <code>layout.origin=placement_bounds.top_left</code> and
 <code>layout.bounds_ref=placement_bounds</code>. This is the portable aura
-whose top-left snaps to the shared placement grid. Its width is controlled by
-grid point-to-point movement; its height follows the visible body plus the
-declared uniform aura band. The visible Numeric body remains inside that aura
-and is aligned through the SVG semantic parts.
+whose top-left and top-right snap to the shared placement grid. Its width is
+controlled by grid point-to-point movement; its height follows the visible body
+plus the declared uniform aura band. The visible Numeric body remains inside
+that aura and is aligned through the SVG semantic parts.
 </p>
 
 <hr/>
@@ -88,7 +90,7 @@ and is aligned through the SVG semantic parts.
 <h2>SVG Parts Consumed</h2>
 
 <ul>
-  <li><code>placement_bounds</code> - portable widget aura, top-left grid-snapped and width grid-controlled,</li>
+  <li><code>placement_bounds</code> - portable widget aura, top-left and top-right grid-snapped with grid-controlled width,</li>
   <li><code>caption</code> - source-owned label/caption anchor and IDE label aura,</li>
   <li><code>control_body</code> - centered visible body for controls,</li>
   <li><code>indicator_body</code> - centered visible body for indicators,</li>

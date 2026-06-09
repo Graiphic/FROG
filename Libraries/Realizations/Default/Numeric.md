@@ -98,9 +98,12 @@ The compact indicator uses the same value-face geometry but a distinct indicator
 The compact default does not publish a separate frame, radix badge, or unit label;
 the visible value border belongs to <code>value_face</code>, future unit text is rendered inline through <code>text_value</code>, and
 <code>placement_bounds</code> is the invisible placement aura. Its top-left
-corner snaps to the grid, its width is controlled point-to-point on the grid,
-and its height follows the main body plus the declared uniform aura band. IDE
-hosts render the selection aura from <code>placement_bounds</code>; the
+corner is the canonical placement origin, its width and height are the portable
+layout rectangle, and its height follows the main body plus the declared
+uniform aura band. When source or container policy declares grid snap, this same
+<code>placement_bounds</code> rectangle supplies the top-left/top-right edges
+and width used for snap and quantization. IDE hosts render the selection aura
+from <code>placement_bounds</code>; the
 <code>control_body</code> and <code>indicator_body</code> parts describe the
 visible body centered inside that aura. Those overlays are not additional SVG
 parts. The <code>focus_ring</code> remains the widget focus interaction part and

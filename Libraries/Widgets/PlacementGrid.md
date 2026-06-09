@@ -5,7 +5,7 @@
 <h1 align="center">FROG Widget Placement Grid</h1>
 
 <p align="center">
-  <strong>Common grid, placement aura, and resize law for front-panel widgets</strong><br/>
+  <strong>Common placement aura vocabulary and optional grid snap policy for front-panel widgets</strong><br/>
   <em>FROG - Free Open Graphical Language</em>
 </p>
 
@@ -18,8 +18,9 @@ FROG widgets are autonomous objects. A widget owns its class law, skin,
 default size, resize constraints, anchors, and interaction parts. The front
 panel, IDE, and container widgets such as Array must be able to place different
 widgets together without inventing runtime-private geometry. This document
-defines the shared placement grid and the placement aura used for that
-cohabitation.
+defines the shared <code>placement_bounds</code> vocabulary and the optional
+grid snap policy used for authoring, composition, calibration, and visual
+inspection.
 </p>
 
 <hr/>
@@ -30,10 +31,13 @@ cohabitation.
   <li>The default visible front-panel grid pitch is <code>16px</code> at 100% design zoom.</li>
   <li>The canonical front-panel coordinate system uses <code>x</code> increasing to the right and <code>y</code> increasing downward.</li>
   <li>The canonical source origin of the front panel is <code>0,0</code> at the top-left of the front-panel canvas.</li>
+  <li>When the grid is rendered, ordinary grid-dot centers are located at <code>grid.origin + n * grid.pitch</code>. Renderers must not center repeated background tiles in a way that shifts visible dots by half a pitch from the source coordinate system.</li>
   <li>When the grid is visible, the <code>0,0</code> origin point must render with a stronger visual marker than ordinary grid points. The default marker is a point twice the standard grid-dot radius, not a large decorative target.</li>
   <li>A widget's canonical placement origin is the top-left corner of its <code>placement_bounds</code>.</li>
-  <li>The top-left corner of widget placement bounds snaps to the grid.</li>
-  <li>For horizontally resizable widgets, placement width changes point-to-point on the grid while the widget keeps its declared uniform aura band around the main body.</li>
+  <li>The grid is a shared placement reference and optional snap policy. It is not a universal hidden constraint on every widget instance.</li>
+  <li>When a source declares grid snap, the declared edge such as <code>placement_bounds.top_left</code> snaps to the grid.</li>
+  <li>For horizontally resizable widgets, a source may also declare that <code>placement_bounds.top_right</code> snaps to the grid. Equivalently, <code>layout.width</code> is quantized as an integer multiple of <code>canvas.grid.pitch</code> for that declared posture.</li>
+  <li>When width quantization is declared, placement width changes point-to-point on the grid while the widget keeps its declared uniform aura band around the main body.</li>
   <li>Placement height follows the widget body plus the declared aura band. It MAY be grid-aligned when the body law naturally lands on the grid, but it is not forced to invent extra bottom space only to hit a grid point.</li>
   <li>Internal skin geometry may use smaller values when required by the realization.</li>
   <li>Runtime hosts consume declared placement properties; they must not hardcode a private grid per widget.</li>
@@ -43,8 +47,10 @@ cohabitation.
 The grid is a placement and inspection surface. It is not a widget skin part
 and it is not semantic program data. Examples may show the grid background so
 humans can inspect calibration, placement bounds, and contained-widget cells.
-Execution examples normally keep the same grid law in source while rendering
-the grid hidden.
+Execution examples normally render with the grid hidden. Runtime hosts validate
+strict snap only when the source or containing widget declares that policy; if
+no strict snap policy is declared, the host renders the exact source-owned
+layout coordinates.
 </p>
 
 <p>
@@ -76,6 +82,14 @@ initial widget for visual validation, and a host MAY update that selection
 interactively without changing program semantics.
 </p>
 
+<p>
+Example naming and rendering must make the posture visible to reviewers:
+ordinary <code>Execute</code> examples keep <code>canvas.grid.visible=false</code>
+and may omit strict snap policy entirely; dedicated <code>IDE</code> or
+calibration examples set <code>canvas.grid.visible=true</code> and may declare
+snap edges plus width quantization so humans can inspect the grid contract.
+</p>
+
 <hr/>
 
 <h2>Canonical <code>.frog</code> Layout Syntax</h2>
@@ -96,7 +110,13 @@ runtime-private host control rectangle.
       "visible": true,
       "pitch": 16,
       "origin": { "x": 0, "y": 0 },
-      "snap": "placement_bounds"
+      "mode": "reference",
+      "snap": "placement_bounds",
+      "snap_edges": [
+        "placement_bounds.top_left",
+        "placement_bounds.top_right"
+      ],
+      "width_quantization": "grid_pitch_multiple"
     },
     "presentation_mode": "ide_view",
     "selected_widget_id": "numeric_input"
@@ -122,7 +142,10 @@ runtime-private host control rectangle.
   <li><code>canvas.grid.visible</code> declares whether the design grid is rendered by examples or IDE front-panel surfaces. When omitted, the default is <code>false</code> for ordinary hosts and MAY be <code>true</code> for calibration examples.</li>
   <li><code>canvas.grid.pitch</code> declares the visible design grid pitch in panel pixels. When omitted, the default is <code>16</code>.</li>
   <li><code>canvas.grid.origin</code> declares the grid origin in the front-panel coordinate space. When omitted, the default is <code>{ "x": 0, "y": 0 }</code>. Runtime and IDE grid renderers must distinguish this origin marker from ordinary repeated grid points, for example with a stronger color or larger point radius.</li>
-  <li><code>canvas.grid.snap</code> declares what snaps to the grid. For widgets, the portable value is <code>placement_bounds</code>.</li>
+  <li><code>canvas.grid.mode</code> may declare the grid posture. The portable value <code>reference</code> means the grid is an authoring/calibration reference; hosts may support stricter profile values later.</li>
+  <li><code>canvas.grid.snap</code> declares what snaps to the grid when strict snap is active. For widgets, the portable value is <code>placement_bounds</code>. When omitted, snap is not enforced by default.</li>
+  <li><code>canvas.grid.snap_edges</code> may make required snapped placement edges explicit. For reviewed Numeric IDE calibration examples this may include <code>placement_bounds.top_left</code> and <code>placement_bounds.top_right</code>.</li>
+  <li><code>canvas.grid.width_quantization</code> declares how the placement width changes during resize. The portable reviewed value is <code>grid_pitch_multiple</code>. When omitted, width is rendered from the source value without grid quantization.</li>
   <li><code>canvas.presentation_mode</code> declares whether the host is rendering an execution surface or an IDE/calibration surface.</li>
   <li><code>canvas.selected_widget_id</code> is optional and only meaningful for IDE/calibration hosts that render selection overlays.</li>
   <li><code>layout.x</code> and <code>layout.y</code> declare the grid-positioned coordinates of <code>layout.origin</code> in the parent coordinate space.</li>
@@ -162,7 +185,7 @@ over <code>placement_bounds</code>.
 
 <ul>
   <li><strong>Skin bounds</strong> - the visible and interactive realization surface of the widget.</li>
-  <li><strong>Placement bounds</strong> - the widget aura used to place, select, resize, or contain the widget. Its top-left corner snaps to the grid; its width is grid-controlled; its height follows the widget body plus the declared aura band.</li>
+  <li><strong>Placement bounds</strong> - the widget aura used to place, select, resize, or contain the widget. It is the portable layout and containment rectangle. Its edges snap to the grid only when source or container policy declares snap; its height follows the widget body plus the declared aura band.</li>
   <li><strong>Main body</strong> - the visible core body of the widget, such as <code>control_body</code> or <code>indicator_body</code>. It sits inside <code>placement_bounds</code> with the widget's declared aura padding. It is not the aura.</li>
   <li><strong>Label aura</strong> - an IDE overlay aligned to the caption/label anchor. It is derived from <code>caption</code> or equivalent label parts.</li>
   <li><strong>Focus ring</strong> - a runtime interaction state owned by the focused widget skin.</li>
@@ -172,10 +195,12 @@ over <code>placement_bounds</code>.
 
 <p>
 The placement bounds are the portable aura. They are a declared band around the
-widget's main body. The band is uniform for a given posture. The aura's top-left
-corner snaps to the common grid and horizontal resizing moves the aura width
-from grid point to grid point. The visible body remains centered within that
-band and resizes according to the widget class and realization law.
+widget's main body. The band is uniform for a given posture. When snap is
+declared, the aura edges named by the source or container policy align to the
+common grid. For horizontally resizable widgets, a declared width quantization
+policy moves the aura width from grid point to grid point. The visible body
+remains centered within that band and resizes according to the widget class and
+realization law.
 </p>
 
 <hr/>
@@ -190,9 +215,20 @@ selection belong to the Array cell. The contained widget focus ring appears
 only when the contained widget itself receives focus for editing.
 </p>
 
+<p>
+The Array widget also has its own top-level placement bounds when the Array
+itself is selected in an IDE view. That Array body aura is the external
+envelope of the complete container body: index display, element viewport,
+scrollbars, frame, and container background. It is distinct from the internal
+cell selection overlay and distinct from any contained widget focus ring. The
+Array label/caption may have a separate label aura above the body aura; both
+auras are editor overlays derived from source-declared geometry, not runtime
+skin parts.
+</p>
+
 <pre><code>contained widget skin
  declared aura padding
- grid snap
+ optional grid snap policy
 = contained widget placement bounds
 = Array element cell when hosted by Array
 </code></pre>
@@ -206,9 +242,10 @@ The Default Numeric realization is the first reviewed placement-grid witness.
 Its compact control posture declares a 4px uniform aura band around the main
 body. The compact default aura is 96x32; the visible control body is 88x24 and
 is centered inside that aura. The value face and optional increment/decrement
-buttons are the visible skin. Width may be resized manually by moving the aura
-from grid point to grid point; the visible body stretches while preserving the
-uniform band. Height is driven by font and display comfort plus the same band.
+buttons are the visible skin. Width may be resized manually. In IDE/calibration
+or source-declared snap postures, that resize may move the aura from grid point
+to grid point; the visible body stretches while preserving the uniform band.
+Height is driven by font and display comfort plus the same band.
 The spinner stays anchored to the declared side inside the body. The value text
 stays right-aligned and vertically centered.
 </p>
@@ -226,6 +263,8 @@ must not be used to represent Array cell selection.
 <ul>
   <li>Examples that review widget geometry should show the 16px point grid unless the example explicitly tests a plain host surface.</li>
   <li>The visible grid must distinguish the <code>0,0</code> origin marker from ordinary pitch points.</li>
+  <li>Geometry validation must check the rendered grid coordinate system itself before accepting declared widget snap. Runtime/source assertions are diagnostics; final acceptance requires browser-rendered evidence that the actual visible grid points and actual placement bounds agree.</li>
+  <li>For declared top-left/top-right placement snap, reviewers should inspect a current browser screenshot or zoom crop that shows the placement-bounds corner on the rendered grid point.</li>
   <li>Standalone widgets must expose their placement posture without changing their visible skin semantics.</li>
   <li>Array cells containing widgets must size to the contained widget placement posture, not to a hardcoded host grid or a fake cell skin.</li>
   <li>Hover/preselection/selection on Array cells must cover the cell placement surface.</li>

@@ -209,9 +209,10 @@ dimensions.
   <li>Default front-panel grid pitch: <code>16px</code> at 100% design zoom.</li>
   <li>Width may be resized manually to fit expected value display range.</li>
   <li>Height may grow from font size and display comfort requirements.</li>
-  <li>Final placement bounds snap to the common grid.</li>
-  <li>The top-left of the placement aura snaps to the common grid.</li>
-  <li>Horizontal resizing moves the aura width from grid point to grid point while keeping the declared uniform aura band around the main body.</li>
+  <li>The default compact proportions are designed to align cleanly to the common grid, but grid snap is a source-owned placement policy rather than an intrinsic Numeric class requirement.</li>
+  <li>When the front panel or containing widget declares snap, the top-left of the placement aura snaps to the common grid.</li>
+  <li>When the front panel or containing widget declares top-right snap or width quantization, the top-right of the Numeric placement aura also snaps to the common grid and <code>layout.width</code> is quantized as an integer multiple of <code>canvas.grid.pitch</code>.</li>
+  <li>When horizontal resize is grid-quantized, the aura width moves from grid point to grid point while keeping the declared uniform aura band around the main body.</li>
   <li>The distance between the visible skin and the placement aura remains declared and uniform for a given placement posture.</li>
   <li>The value face, control body, indicator body, and focus ring are stretchable surfaces.</li>
   <li>The increment/decrement spinner follows the source-owned side declaration: <code>display.increment_buttons_side</code>. It may be placed on the right, placed on the left, or hidden through <code>display.increment_buttons_visible</code>.</li>
@@ -229,6 +230,16 @@ the host renders the selection aura from <code>placement_bounds</code>.
 visible body inside that aura. A label aura may be derived from
 <code>caption</code>. These auras are runtime/IDE overlays, not additional SVG
 public parts.
+</p>
+
+<p>
+The placement contract is source-owned and applies whether the grid points are
+drawn or hidden. <code>canvas.grid.visible=false</code> only hides the review
+surface. It does not by itself enable or disable snap; strict Numeric
+top-left/top-right validation and grid-pitch width quantization are active only
+when the source or containing widget declares that policy. Array containment
+still consumes <code>placement_bounds</code> as the portable contained-widget
+surface.
 </p>
 
 <hr/>
@@ -305,7 +316,7 @@ When the active representation is fixed-point, the following additional members 
 
 <ul>
   <li><code>root</code></li>
-  <li><code>placement_bounds</code> - invisible placement aura: top-left grid-snapped, width grid-controlled, height equal to body plus declared aura band; not focus and not the visible body.</li>
+  <li><code>placement_bounds</code> - invisible placement aura: portable placement and containment rectangle, height equal to body plus declared aura band; not focus and not the visible body. Top-left/top-right snap and grid-controlled width apply when source or container policy declares them.</li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
   <li><code>control_body</code> when present — centered main body bounds for the numeric control face.</li>

@@ -70,6 +70,7 @@ The current Example 05 front panel is:
   height: 128
   canvas.grid.visible: false
   canvas.grid.pitch: 16
+  canvas.grid.snap: omitted for execution view
   canvas.presentation_mode: execution
 
 ctrl_input:
@@ -87,7 +88,7 @@ ind_result:
   y: 32
   width: 96
   height: 32
-  style.value_face.fill_color: #e9edf2
+  style.value_face.fill_color: #E8EBED
   visual.asset_ref: asset:numeric_rectangular_svg
 </code></pre>
 

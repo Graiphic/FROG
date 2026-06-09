@@ -25,8 +25,8 @@ For input <code>3</code>, the bounded accumulator executes five iterations and p
 <p>
 Reviewed: <code>2026-06-08</code>. Example 05 is the executable Numeric
 front-panel slice. Its source keeps <code>placement_bounds</code> layout syntax
-and the shared <code>canvas.grid.pitch=16</code> rule, but
-<code>canvas.grid.visible=false</code> because this is a runtime execution view,
+and the shared <code>canvas.grid.pitch=16</code> reference, but declares no
+strict snap policy. <code>canvas.grid.visible=false</code> because this is a runtime execution view,
 not an IDE calibration view. The IDE/grid/aura Numeric posture witness is
 published separately in <code>Examples/41_numeric_placement_ide_view</code>.
 </p>
@@ -47,7 +47,7 @@ The Example 05 closure is intentionally bounded and explicit:
 
 .frog front panel
   -&gt; panel_pixels layout
-  -&gt; hidden execution grid with 16px placement law declared by canvas.grid
+  -&gt; hidden execution grid reference with 16px pitch declared by canvas.grid
   -&gt; Default Numeric realization SVG skin
   -&gt; caption_text / value_face / text_value / increment overlays
 

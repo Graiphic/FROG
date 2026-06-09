@@ -2,7 +2,7 @@
 
 This example demonstrates an N-dimensional Array container whose dimension count is controlled by a Numeric U8 control through explicit diagram property writes. Two additional Numeric U8 controls continue to command visible row and column counts for the active Array view.
 
-Reviewed 2026-06-08.
+Reviewed 2026-06-09.
 
 The Array owns the N-dimensional rank posture, source-owned explicit/default shape profiles, one index display per active dimension, viewport, scrolling, insertion/materialization posture, and repeated-cell layout. Rank 1 renders as one visible axis; rank 2 renders as a matrix; rank 3 or higher renders the last two dimensions as the visible matrix and exposes every leading dimension through stacked index displays. The Numeric U8 controls are front-panel values until Execute consumes them and writes the Array rank/display/viewport properties. The Numeric element owns per-cell value editing and value display.
 
@@ -13,7 +13,7 @@ Example 35 is a post-public-boundary widget progression example. Graiphic privat
 ## Validation Notes
 
 - The Array is a container widget, not a hardcoded numeric grid.
-- The front panel declares the visible 16 px placement grid through `front_panel.canvas.grid` (`visible = true`, `snap = placement_bounds`); the runtime only renders that source-owned calibration.
+- This is an execution example: the front panel keeps the 16 px placement grid law through `front_panel.canvas.grid` (`visible = false`, `snap = placement_bounds`) and declares `canvas.presentation_mode = execution`, so the runtime hides IDE calibration points while preserving placement geometry.
 - The dimension count is a source-owned Numeric U8 control that writes `dimensions.rank` and the matching `index_display.rank` mirror on Execute.
 - This slice commands the widget's active Array dimension count across source-owned explicit profiles and a default N-dimensional leading-singleton/trailing-matrix profile, not a fixed 1D/2D/3D-only switch.
 - Ranks above 2 keep the last two dimensions as the visible matrix and expose every leading dimension through stacked index displays.
@@ -22,6 +22,8 @@ Example 35 is a post-public-boundary widget progression example. Graiphic privat
 - In rank 1, the visible column count is intentionally collapsed to one visual column; in rank 2 or higher, row/column counts control the visible projection of the last two semantic dimensions.
 - Visible counts are viewport display properties. They may exceed the currently materialized semantic shape without forcing data materialization.
 - Each visible cell references the Default Numeric realization through `element.template_ref` and `element.asset_ref`.
+- Numeric control cells use the white editable value face and visible increment/decrement commands; Numeric indicator cells use the Default Numeric indicator gray `#E8EBED` and hide increment/decrement commands. In the compact Numeric skin, the visible per-cell border is owned by `element.props.style.value_face.*`, not by an Array-local fake frame.
+- The reviewed Numeric-backed Array palette is source-owned: Array container body `#EEF4F6`, Array frame/region/helper borders `#A8ABAE`, scrollbar/button helper faces `#DDE1E4`, Numeric control value face white, Numeric indicator value face `#E8EBED`, and selection/aura blue `#00ADEF`.
 - Runtime overlays must align to Default Array `index_display`, `element_region`, `element_slot`, and scrollbar parts, plus Default Numeric value/increment parts.
 - No local Example SVG skin is duplicated.
 - Runtime-family validation for this post-boundary example must preserve the same source-owned N-dimensional rank, index-display wrapping, final-two-dimensions projection, and visible row/column command semantics across the private C++, Python, and Rust hosts.

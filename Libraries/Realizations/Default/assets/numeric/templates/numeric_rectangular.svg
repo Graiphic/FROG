@@ -15,8 +15,9 @@
     increment/decrement buttons, 2 unit vertical button gap, two equal 11 unit
     button surfaces, and a uniform 4 unit aura band around the main body.
     The non-visible placement_bounds part declares the placement aura used by
-    IDE/front-panel/container layout; its top-left snaps to the grid and its
-    width is grid controlled, while its height follows body plus aura padding.
+    IDE/front-panel/container layout; its top-left and top-right snap to the
+    grid and its width is grid-pitch controlled, while its height follows body
+    plus aura padding.
     control_body and indicator_body describe the centered visible body inside
     that aura. The aura is not focus, selection, or a rendered frame.
   </desc>
@@ -30,13 +31,13 @@
         --frog-numeric-label-font-size: 12px;
 
         --frog-numeric-caption-display: inline;
-        --frog-numeric-caption-fill: #111827;
+        --frog-numeric-caption-fill: #2B3033;
         --frog-numeric-caption-font-family: system-ui, Segoe UI, Arial, sans-serif;
         --frog-numeric-caption-font-size: 20px;
         --frog-numeric-caption-font-weight: 400;
 
         --frog-numeric-value-face-fill: #ffffff;
-        --frog-numeric-value-face-stroke: #94a3b8;
+        --frog-numeric-value-face-stroke: #A8ABAE;
         --frog-numeric-value-face-stroke-width: 1px;
         --frog-numeric-value-face-width: 73px;
         --frog-numeric-value-face-transform: none;
@@ -48,12 +49,12 @@
         --frog-numeric-text-font-size: 13px;
 
         --frog-numeric-spinner-display: inline;
-        --frog-numeric-spinner-fill: #edf2f7;
-        --frog-numeric-spinner-stroke: #334e68;
-        --frog-numeric-spinner-border: #94a3b8;
-        --frog-numeric-spinner-symbol: #334e68;
-        --frog-numeric-spinner-fill-pressed: #bfdbfe;
-        --frog-numeric-spinner-stroke-pressed: #1e40af;
+        --frog-numeric-spinner-fill: #DDE1E4;
+        --frog-numeric-spinner-stroke: #2B3033;
+        --frog-numeric-spinner-border: #A8ABAE;
+        --frog-numeric-spinner-symbol: #2B3033;
+        --frog-numeric-spinner-fill-pressed: #D2D4D5;
+        --frog-numeric-spinner-stroke-pressed: #2B3033;
         --frog-numeric-spinner-transform: none;
         --frog-numeric-focus-display: none;
         --frog-numeric-focus-stroke: #2f80ed;

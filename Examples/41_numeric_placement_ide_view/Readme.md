@@ -14,7 +14,7 @@
 <h2>Overview</h2>
 
 <p>
-Reviewed: <code>2026-06-08</code>. This example is a C++ browser-host IDE view
+Reviewed: <code>2026-06-09</code>. This example is a C++ browser-host IDE view
 for the Default Numeric widget. It is intentionally separated from
 <code>Examples/05_bounded_ui_accumulator</code>: Example 05 remains the
 execution slice, while Example 41 shows the 16px placement grid and the
@@ -39,6 +39,7 @@ is not <code>control_body</code> / <code>indicator_body</code>, and it is not
   <li><code>canvas.grid.visible=true</code> with <code>canvas.grid.pitch=16</code>,</li>
   <li><code>canvas.presentation_mode=ide_view</code>,</li>
   <li><code>layout.origin=placement_bounds.top_left</code> and <code>layout.bounds_ref=placement_bounds</code>,</li>
+  <li>selection body aura rendered from <code>placement_bounds</code>, with its top-left and top-right corners on the grid,</li>
   <li>right-side Numeric increment/decrement buttons,</li>
   <li>left-side Numeric increment/decrement buttons,</li>
   <li>hidden Numeric increment/decrement buttons,</li>
@@ -76,6 +77,8 @@ Implementations/Reference/ContractEmitter/examples/
   canvas.grid.pitch: 16
   canvas.grid.origin: { x: 0, y: 0 }
   canvas.grid.snap: placement_bounds
+  canvas.grid.snap_edges: [placement_bounds.top_left, placement_bounds.top_right]
+  canvas.grid.width_quantization: grid_pitch_multiple
   canvas.presentation_mode: ide_view
   canvas.selected_widget_id: ctrl_input_left
 
@@ -95,6 +98,10 @@ ctrl_input_plain:
 <p>
 Each matching indicator keeps the same <code>placement_bounds</code> size. The
 visible body sits inside the aura with the default uniform 4px band. The
+top-left and top-right corners of each main Numeric placement aura are grid
+points; the default <code>96px</code> width is six <code>16px</code> grid
+intervals, and manual horizontal resizing must move point-to-point on that
+grid. The
 selected widget is a source-level view default so visual validation can inspect
 selection without clicking first; clicking any Numeric widget in the C++ host
 moves the selection overlay.

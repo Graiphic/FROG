@@ -326,12 +326,12 @@
         "shape": [
           10
         ],
-        "style_array_region_border_color": "#64748b",
+        "style_array_region_border_color": "#A8ABAE",
         "style_array_region_border_width": "0px",
-        "style_array_region_fill_color": "#ffffff",
-        "style_selection_face_border_color": "#2563eb",
+        "style_array_region_fill_color": "#EEF4F6",
+        "style_selection_face_border_color": "#00ADEF",
         "style_selection_face_border_width": "1px",
-        "style_selection_face_fill_color": "#dbeafe",
+        "style_selection_face_fill_color": "#E0E4E6",
         "view_shape": [
           10
         ],

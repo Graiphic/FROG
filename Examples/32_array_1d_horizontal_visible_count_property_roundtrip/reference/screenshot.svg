@@ -10,13 +10,13 @@
     .text { font: 15px Arial, sans-serif; fill: #102a43; }
     .small { font: 13px Arial, sans-serif; fill: #38506b; }
     .badge { fill: #ffffff; stroke: #cad6e4; stroke-width: 1; }
-    .frame { fill: #eef3f8; stroke: #8aa2c0; stroke-width: 1; }
-    .cell { fill: #ffffff; stroke: #a9b9cc; stroke-width: 1; }
-    .indicator { fill: #edf2f7; stroke: #a9b9cc; stroke-width: 1; }
-    .selected { fill: none; stroke: #1f5fff; stroke-width: 2; }
-    .published { fill: none; stroke: #00a651; stroke-width: 2; }
+    .frame { fill: #EEF4F6; stroke: #A8ABAE; stroke-width: 1; }
+    .cell { fill: #ffffff; stroke: #A8ABAE; stroke-width: 1; }
+    .indicator { fill: #E8EBED; stroke: #A8ABAE; stroke-width: 1; }
+    .selected { fill: none; stroke: #00ADEF; stroke-width: 2; }
+    .published { fill: none; stroke: #00ADEF; stroke-width: 2; }
     .thumb { fill: #9aacbf; }
-    .button { fill: #f7fbff; stroke: #8aa2c0; stroke-width: 1; }
+    .button { fill: #DDE1E4; stroke: #A8ABAE; stroke-width: 1; }
   </style>
   <rect class="page" x="0" y="0" width="1100" height="720"/>
   <text class="title" x="32" y="50">Array 1D Horizontal Visible Count Property Roundtrip</text>

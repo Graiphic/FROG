@@ -262,6 +262,43 @@ uniform aura band.
 </p>
 
 <p>
+The Array widget also owns its own placement aura as a widget. That Array aura
+is the external placement envelope of the complete array container: index
+display, element viewport, scrollbars, frame, and container background. It is
+not the internal element grid, and it is not any contained element widget aura.
+In an IDE view, selecting the Array widget highlights that complete Array
+placement envelope. Selecting or hovering a cell highlights the cell placement
+surface inside the Array. These two overlays must remain distinct.
+</p>
+
+<p>
+The Array caption/label surface follows the same authoring rule as Numeric:
+the label may have its own IDE aura above the widget body aura, and the two
+auras may touch at the shared edge without redefining the Array body bounds.
+The Array body aura remains the grid-snapped top-left placement reference for
+the widget as a whole.
+</p>
+
+<p>
+Numeric-backed Array controls and indicators keep a visible role distinction by
+source-owned style: editable control cells use the white Default Numeric value
+face and visible increment/decrement commands, while read-only indicator cells
+use the Default Numeric indicator gray <code>#E8EBED</code> and hide those
+commands. Both postures keep the compact Numeric value face border visible with
+the reviewed gray <code>#A8ABAE</code> at <code>1px</code>; this border belongs
+to <code>element.props.style.value_face.*</code>, not to an Array-local fake
+frame. The reviewed Array container body fill for Numeric-backed examples is
+the pale gray-blue <code>#EEF4F6</code>; the index value surface remains white
+inside that container. The Array frame/region border uses
+<code>#A8ABAE</code> at the declared width, and scrollbar/button helpers use
+the same reviewed neutral palette (<code>#DDE1E4</code> faces,
+<code>#A8ABAE</code> borders/thumbs) unless the source explicitly declares a
+different skin. The runtime must read these properties from the
+source/realization contract rather than infer colors from a hardcoded Array
+mode.
+</p>
+
+<p>
 When the array cell intentionally wraps a contained widget with extra breathing
 room, <code>element.layout.padding</code> defines the source-owned
 space between the repeated cell bounds and the contained widget instance. This

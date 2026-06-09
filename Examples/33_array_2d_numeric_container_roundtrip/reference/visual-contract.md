@@ -3,7 +3,7 @@
 Example 33 records the accepted browser-host reference surface for
 Array 2D Numeric Container Roundtrip.
 
-Reviewed 2026-06-08.
+Reviewed 2026-06-09.
 
 ## Accepted Visible Surface
 

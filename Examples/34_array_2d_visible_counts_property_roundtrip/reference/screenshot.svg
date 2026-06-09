@@ -3,7 +3,7 @@
   <desc id="desc">Text-safe public visual reference for the accepted browser-host state of Example 34, showing Numeric U8 visible row and column controls driving 2D Array container and indicator viewport counts.</desc>
   <defs>
     <style>
-      .page{fill:#f4f7fa}.panel{fill:#fff}.ink{fill:#0f2238;font-family:Arial,Helvetica,sans-serif}.muted{fill:#41566f}.badge{fill:#fff;stroke:#c8d5e4}.array-bg{fill:#eef4fb;stroke:#8ba6c4}.index-bg{fill:#f6f9fc;stroke:#8ba6c4}.cell{fill:#fff;stroke:#a9bcd1}.cell-ind{fill:#edf2f7;stroke:#a9bcd1}.button{fill:#f4f8fc;stroke:#9eb5cc}.track{fill:#e9f0f7;stroke:#9eb5cc}.thumb{fill:#9fb2c7}.select-blue{fill:none;stroke:#1f66ff;stroke-width:2}.select-green{fill:none;stroke:#00a650;stroke-width:2}.small{font-size:12px}.med{font-size:14px}.label{font-size:15px;font-weight:700}.title{font-size:26px;font-weight:700}
+      .page{fill:#FFFFFF}.panel{fill:#fff}.ink{fill:#2B3033;font-family:Arial,Helvetica,sans-serif}.muted{fill:#2B3033}.badge{fill:#fff;stroke:#A8ABAE}.array-bg{fill:#EEF4F6;stroke:#A8ABAE}.index-bg{fill:#FFFFFF;stroke:#A8ABAE}.cell{fill:#fff;stroke:#A8ABAE}.cell-ind{fill:#E8EBED;stroke:#A8ABAE}.button{fill:#DDE1E4;stroke:#A8ABAE}.track{fill:#DDE1E4;stroke:#A8ABAE}.thumb{fill:#A8ABAE}.select-blue{fill:none;stroke:#00ADEF;stroke-width:2}.select-green{fill:none;stroke:#00ADEF;stroke-width:2}.small{font-size:12px}.med{font-size:14px}.label{font-size:15px;font-weight:700}.title{font-size:26px;font-weight:700}
     </style>
   </defs>
   <rect class="page" x="0" y="0" width="900" height="520"/>
