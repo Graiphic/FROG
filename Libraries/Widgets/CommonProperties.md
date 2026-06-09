@@ -74,17 +74,17 @@ browser-hosted example.
     <tr>
       <td>Bounds</td>
       <td><code>layout.x</code>, <code>layout.y</code>, <code>layout.width</code>, <code>layout.height</code></td>
-      <td>Source-owned widget rectangle in the front-panel coordinate space.</td>
+      <td>Source-owned widget <code>placement_bounds</code> rectangle in the parent coordinate space.</td>
     </tr>
     <tr>
       <td>Position</td>
       <td><code>layout.x</code>, <code>layout.y</code></td>
-      <td>Source-owned left/top placement. Hosts may expose this as a property-node alias for bounds position.</td>
+      <td>Source-owned top-left placement of <code>placement_bounds</code>. Hosts may expose this as a property-node alias for bounds position.</td>
     </tr>
     <tr>
       <td>Size</td>
       <td><code>layout.width</code>, <code>layout.height</code></td>
-      <td>Source-owned widget size. Resizing must not change semantic value unless the widget class explicitly says so.</td>
+      <td>Source-owned <code>placement_bounds</code> size. Resizing must not change semantic value unless the widget class explicitly says so.</td>
     </tr>
     <tr>
       <td>Label</td>

@@ -2,6 +2,8 @@
 
 This example demonstrates a horizontal one-dimensional Array container whose repeated cells instantiate the Default Numeric widget realization, plus a Numeric U8 control that drives the Array viewport visible-cell count through an explicit property-write node.
 
+Reviewed 2026-06-08.
+
 The Array owns rank, shape, index display, horizontal viewport, scrolling, insertion/materialization, and repeated-cell layout. The Numeric U8 control owns the requested visible-cell count as front-panel state until `Execute` consumes it and writes `numeric_array.viewport.visible_counts[1]` and `published_array.viewport.visible_counts[1]`. The Numeric element owns per-cell value editing and value display. The concrete numeric representation and default value are source-owned through `element.props.data_type.representation = u16`, `element.props.data_type.named_numeric_size = U16`, and `element.default_value = 0`; the `.wfrog` package resolves Default Array and Default Numeric assets without owning semantic defaults.
 
 ## Runtime Boundary
@@ -11,15 +13,14 @@ Example 32 is a post-public-boundary widget progression example. Graiphic privat
 ## Validation Notes
 
 - The Array is a container widget, not a hardcoded numeric grid.
+- The front panel declares the visible 16 px placement grid through `front_panel.canvas.grid` (`visible = true`, `snap = placement_bounds`); the runtime only renders that source-owned calibration.
 - The visible-cell count is not a runtime shortcut: `.frog` declares the Numeric U8 value node and the horizontal Array property-write nodes.
 - Each visible cell references the Default Numeric realization through `element.template_ref` and `element.asset_ref`.
 - The standalone `visible_cell_count` control references the same Default Numeric realization and uses `u8` / `U8` as a source-owned numeric representation.
 - Each visible Numeric cell declares its source-owned representation as `u16` / `U16`; the private runtime must not infer another numeric type from the SVG or host widget.
-- The example validates both Numeric integration postures inside an Array:
-  - control cells use `element.layout.fit_part = control_body` with `element.props.display.increment_buttons_visible = true`;
-  - indicator cells use `element.layout.fit_part = indicator_body` with `element.props.display.increment_buttons_visible = false`.
-- Both postures keep the same Array frame, border width, and padding law. The posture changes only which published Numeric part is fitted into each repeated cell.
-- `element.layout.boundary_policy = superpose_adjacent_widget_bounds` declares that repeated Numeric cells share their adjacent published bounds. The runtime must not add Array-local separator lines, fake cell shells, or geometry-changing selection borders around the contained Numeric widgets.
+- The example validates the reviewed Numeric integration posture inside an Array: control and indicator cells both use `element.layout.fit_part = placement_bounds`.
+- The Array cell is the contained Numeric aura (`96x32`) and `element.layout.padding = 0`; the Numeric body stays centered inside that aura by the Numeric realization law.
+- `element.layout.boundary_policy = contained_widget_placement_bounds` declares that each Array cell respects the contained Numeric widget placement bounds. The runtime must not add Array-local fake shells or geometry-changing selection borders around the contained Numeric widgets; hover/selection belongs to the Array cell.
 - New numeric elements materialize from `element.default_value = 0`.
 - `style.frame.*` styles the Array element viewport container. The visible index display is a neighboring Array subcontainer with its own `style.index_display.*` surface, separated from the element viewport by source-owned geometry. `element.props.style.frame.*` styles each contained Numeric widget frame. These are intentionally separate surfaces.
 - `style.index_display.step_gap` and `style.index_display.value_gap` keep the Array indexer proportions source-owned instead of hardcoded in the runtime host.

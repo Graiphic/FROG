@@ -287,49 +287,49 @@ They are traceability metadata only; they are not FROG language versions and the
     </tr>
     <tr>
       <td><code>29_array_1d_numeric_container_roundtrip</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-07">2026-06-07</time></td>
       <td>1D Array container with cells realized as Default Numeric widget instances and a read-only Array/Numeric indicator</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>30_array_1d_horizontal_numeric_container_roundtrip</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-07">2026-06-07</time></td>
       <td>1D horizontal Array container with cells realized as Default Numeric widget instances and a read-only horizontal Array/Numeric indicator</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>31_array_1d_visible_count_property_roundtrip</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-07">2026-06-07</time></td>
       <td>1D Array container whose visible cell count is driven by a Numeric U8 property-write control consumed on Execute</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>32_array_1d_horizontal_visible_count_property_roundtrip</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-07">2026-06-07</time></td>
       <td>1D horizontal Array container whose visible column count is driven by a Numeric U8 property-write control consumed on Execute</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>33_array_2d_numeric_container_roundtrip</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-07">2026-06-07</time></td>
       <td>2D Array container with cells realized as Default Numeric widget instances and a read-only 2D Array/Numeric indicator</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>34_array_2d_visible_counts_property_roundtrip</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-07">2026-06-07</time></td>
       <td>2D Array container whose visible row and column counts are driven by Numeric U8 property-write controls consumed on Execute, including visible counts beyond the current materialized shape</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
     <tr>
       <td><code>35_array_dimension_count_property_roundtrip</code></td>
-      <td><time datetime="2026-06-01">2026-06-01</time></td>
+      <td><time datetime="2026-06-07">2026-06-07</time></td>
       <td>Numeric Array container whose active N-dimensional rank and visible row/column counts are driven by Numeric U8 property-write controls consumed on Execute</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
@@ -368,6 +368,13 @@ They are traceability metadata only; they are not FROG language versions and the
       <td>Array container whose cells are Default Ring widgets while N-dimensional rank and visible row/column counts remain driven by Numeric U8 property-write controls consumed on Execute</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
+    </tr>
+    <tr>
+      <td><code>41_numeric_placement_ide_view</code></td>
+      <td><time datetime="2026-06-08">2026-06-08</time></td>
+      <td>IDE-view Numeric placement witness showing the 16px grid, placement aura, label aura, and right/left/hidden increment-decrement postures</td>
+      <td><code>main.frog</code> + <code>ui/numeric_ide_panel.wfrog</code></td>
+      <td>C++ browser-host calibration surface only: Example 05 remains the executable Numeric accumulator slice</td>
     </tr>
   </tbody>
 </table>

@@ -411,6 +411,74 @@ Canvas and layout intent:
 Likewise, widget <code>layout</code> fields define source-owned placement intent, not executable graph behavior.
 </p>
 
+<h3>11.1 Canonical placement grid and origin</h3>
+
+<p>
+When a front panel serializes widget geometry in <code>.frog</code>, the
+canonical coordinate space is <code>panel_pixels</code>: <code>x</code>
+increases to the right, <code>y</code> increases downward, and the canvas
+origin <code>0,0</code> is the top-left of the front-panel canvas.
+</p>
+
+<p>
+The optional <code>canvas.grid</code> object declares the design grid used for
+placement, inspection, resize snapping, and container-cell calibration.
+If omitted, the active standard widget profile uses a hidden ordinary host
+grid, a <code>16px</code> pitch, an origin of
+<code>{ "x": 0, "y": 0 }</code>, and <code>placement_bounds</code> snapping.
+Examples that calibrate widget placement SHOULD set
+<code>canvas.grid.visible</code> to <code>true</code>.
+</p>
+
+<pre><code>"canvas": {
+  "width": 460,
+  "height": 170,
+  "coordinate_space": "panel_pixels",
+  "grid": {
+    "visible": true,
+    "pitch": 16,
+    "origin": { "x": 0, "y": 0 },
+    "snap": "placement_bounds"
+  }
+}</code></pre>
+
+<p>
+For a widget instance, <code>layout.x</code> and <code>layout.y</code> are the
+coordinates of the widget placement aura inside its parent coordinate space.
+By default, that aura is <code>placement_bounds</code> and the serialized
+origin is <code>placement_bounds.top_left</code>.
+</p>
+
+<pre><code>"layout": {
+  "x": 32,
+  "y": 48,
+  "width": 112,
+  "height": 64,
+  "origin": "placement_bounds.top_left",
+  "bounds_ref": "placement_bounds"
+}</code></pre>
+
+<p>
+The short form remains legal when defaults apply:
+</p>
+
+<pre><code>"layout": {
+  "x": 32,
+  "y": 48,
+  "width": 112,
+  "height": 64
+}</code></pre>
+
+<p>
+For top-level widgets, the parent coordinate space is the front-panel canvas.
+For contained widgets, the parent coordinate space is the container-owned
+placement surface, such as an Array element cell. IDEs MAY expose bottom-left,
+center, or edge handles to users, but canonical <code>.frog</code> source MUST
+serialize the resolved placement back to <code>placement_bounds.top_left</code>
+unless a future profile explicitly defines another anchor and its conversion
+law.
+</p>
+
 <p>
 A runtime or host MAY adapt authored layout intent to platform constraints, accessibility requirements, or rendering capabilities, but it MUST preserve the authored source meaning of composition and identity.
 </p>

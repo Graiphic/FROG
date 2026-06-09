@@ -34,6 +34,7 @@
   <li><a href="#numeric-class-versus-realization">3. Numeric Class versus Realization</a></li>
   <li><a href="#label-caption-and-value-text-posture">4. Label, Caption, and Value Text Posture</a></li>
   <li><a href="#common-family-posture">5. Common Family Posture</a></li>
+  <li><a href="#placement-grid-and-resize-posture">5.1 Placement Grid and Resize Posture</a></li>
   <li><a href="#numeric-representation-model">6. Numeric Representation Model</a></li>
   <li><a href="#public-visual-part-model">7. Public Visual Part Model</a></li>
   <li><a href="#standard-property-surface">8. Standard Property Surface</a></li>
@@ -124,8 +125,8 @@ The realization owns:
 <ul>
   <li>the visible text box or numeric face geometry,</li>
   <li>increment/decrement button embodiment,</li>
-  <li>radix badge placement,</li>
-  <li>unit-label placement,</li>
+  <li>optional radix surfaces when a realization variant explicitly publishes them,</li>
+  <li>inline unit text rendered through <code>text_value</code> formatting when units are enabled,</li>
   <li>SVG assets or host-native drawing resources,</li>
   <li>state maps,</li>
   <li>style application,</li>
@@ -178,11 +179,57 @@ value / text_value
   <li>representation surface: <code>representation.*</code></li>
   <li>data-entry surface: <code>data_entry.*</code></li>
   <li>display-format surface: <code>display.*</code></li>
-  <li>unit-label surface: <code>unit_label.*</code></li>
+  <li>optional inline unit text rendered through the chosen value-text formatting</li>
   <li>interaction surface: <code>interaction.*</code></li>
   <li>portable style surface: <code>style.*</code></li>
   <li>portable realization-selection surface: <code>realization.*</code></li>
 </ul>
+
+<hr/>
+
+<h2 id="placement-grid-and-resize-posture">5.1 Placement Grid and Resize Posture</h2>
+
+<p>
+Numeric widgets participate in the shared FROG placement grid defined in
+<a href="./PlacementGrid.md"><code>PlacementGrid.md</code></a>. The widget
+remains autonomous: its skin, value face, spinner, text anchors, and resize
+constraints are Numeric realization concerns. The front panel, IDE, and
+container widgets consume the Numeric placement aura instead of inventing
+runtime-private bounds.
+</p>
+
+<p>
+The following placement law is specific to the Numeric family and the reviewed
+Default Numeric compact realization. Other widget families must define their own
+body, aura padding, resize, and focus-ring law instead of inheriting Numeric
+dimensions.
+</p>
+
+<ul>
+  <li>Default front-panel grid pitch: <code>16px</code> at 100% design zoom.</li>
+  <li>Width may be resized manually to fit expected value display range.</li>
+  <li>Height may grow from font size and display comfort requirements.</li>
+  <li>Final placement bounds snap to the common grid.</li>
+  <li>The top-left of the placement aura snaps to the common grid.</li>
+  <li>Horizontal resizing moves the aura width from grid point to grid point while keeping the declared uniform aura band around the main body.</li>
+  <li>The distance between the visible skin and the placement aura remains declared and uniform for a given placement posture.</li>
+  <li>The value face, control body, indicator body, and focus ring are stretchable surfaces.</li>
+  <li>The increment/decrement spinner follows the source-owned side declaration: <code>display.increment_buttons_side</code>. It may be placed on the right, placed on the left, or hidden through <code>display.increment_buttons_visible</code>.</li>
+  <li>The rendered value text stays right-aligned and vertically centered unless a source-owned style overrides it. Inline unit text, when enabled, is part of this rendered value text.</li>
+  <li>The default caption anchor is high enough above <code>placement_bounds</code> that the IDE label aura does not overlap the body placement aura.</li>
+</ul>
+
+<p>
+The placement aura is not the runtime focus ring and it is not the visible
+body. When a Numeric is contained by Array, the Array cell consumes the Numeric
+placement posture. Array hover and selection cover the cell; the Numeric focus
+ring appears only when the Numeric itself has editing focus. In an IDE view,
+the host renders the selection aura from <code>placement_bounds</code>.
+<code>control_body</code> and <code>indicator_body</code> describe the centered
+visible body inside that aura. A label aura may be derived from
+<code>caption</code>. These auras are runtime/IDE overlays, not additional SVG
+public parts.
+</p>
 
 <hr/>
 
@@ -258,26 +305,38 @@ When the active representation is fixed-point, the following additional members 
 
 <ul>
   <li><code>root</code></li>
+  <li><code>placement_bounds</code> - invisible placement aura: top-left grid-snapped, width grid-controlled, height equal to body plus declared aura band; not focus and not the visible body.</li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
-  <li><code>control_body</code> when present — compact bounds for embedding the numeric control face as a contained element.</li>
-  <li><code>indicator_body</code> when present — compact bounds for embedding the numeric indicator face as a contained element.</li>
+  <li><code>control_body</code> when present — centered main body bounds for the numeric control face.</li>
+  <li><code>indicator_body</code> when present — centered main body bounds for the numeric indicator face.</li>
   <li><code>value_face</code></li>
   <li><code>text_value</code></li>
   <li><code>spinner</code> when present</li>
   <li><code>increment_up</code> when present</li>
   <li><code>increment_down</code> when present</li>
-  <li><code>radix_badge</code> when present</li>
-  <li><code>unit_label</code> when present</li>
-  <li><code>focus_ring</code> when present</li>
+  <li><code>focus_ring</code> when present - widget focus interaction state, not placement aura and not Array cell selection.</li>
 </ul>
 
 <p>
-When the Default Numeric realization is embedded as a contained element, hosts should align to
-<code>control_body</code> or <code>indicator_body</code> and preserve the published compact proportions:
-value face width, value-to-spinner gap, spinner width, separated increment/decrement button height,
-and the vertical button gap.
+The default compact Numeric realization intentionally has no separate public
+<code>frame</code> part: the visible one-pixel border belongs to
+<code>value_face</code>. Radix surfaces remain possible for future variants,
+but they are not public parts of the reviewed compact default skin. Unit text
+for the compact default is rendered inline inside <code>text_value</code>, not
+as a separate <code>unit_label</code> part.
+</p>
+
+<p>
+When the Default Numeric realization is embedded as a contained element, hosts
+should align the cell to <code>placement_bounds</code> and preserve the
+published compact proportions: the uniform aura band, value face width,
+value-to-spinner gap, spinner width, separated increment/decrement button
+height, and the vertical button gap.
+For the reviewed compact default this is <code>73 x 24</code> for
+<code>value_face</code>, <code>2px</code> value-to-spinner gap,
+<code>13 x 11</code> for each increment/decrement button, and a
+<code>2px</code> vertical button gap.
 Those proportions are realization-owned geometry, not runtime-local widget drawing rules.
 The default compact increment/decrement buttons intentionally share the same separated-button proportion
 as the Default Array index display, mirrored to the right of the numeric value face.
@@ -306,7 +365,7 @@ A <code>.frog</code> widget instance or a source-owned container such as <code>f
 The Default <code>.wfrog</code> realization may publish the parts needed to display and edit the value, but it must not become the owner of the semantic default.
 </p>
 
-<h3>8.2 Label, caption, and unit label</h3>
+<h3>8.2 Label, caption, and inline unit text</h3>
 
 <ul>
   <li><code>label.visible : bool</code></li>
@@ -317,9 +376,6 @@ The Default <code>.wfrog</code> realization may publish the parts needed to disp
   <li><code>caption.placement : enum</code></li>
   <li><code>caption.padding : length</code></li>
   <li><code>caption.style.*</code></li>
-  <li><code>unit_label.visible : bool</code></li>
-  <li><code>unit_label.text : string</code></li>
-  <li><code>unit_label.style.*</code></li>
 </ul>
 
 <h3>8.3 Interaction</h3>
@@ -350,6 +406,9 @@ The Default <code>.wfrog</code> realization may publish the parts needed to disp
   <li><code>display.precision_digits : u32</code></li>
   <li><code>display.radix_visible : bool</code></li>
   <li><code>display.increment_buttons_visible : bool</code></li>
+  <li><code>display.increment_buttons_side : enum</code> - <code>right</code> or <code>left</code> when increment/decrement buttons are visible.</li>
+  <li><code>display.unit_visible : bool</code> - when supported by the realization, render the unit inside <code>text_value</code>.</li>
+  <li><code>display.unit_suffix : string</code> - optional unit suffix included in the formatted value text.</li>
   <li><code>display.text_width_chars : u32</code></li>
 </ul>
 
@@ -364,7 +423,6 @@ The Default <code>.wfrog</code> realization may publish the parts needed to disp
 <h3>8.7 Style and realization</h3>
 
 <ul>
-  <li><code>style.frame.*</code></li>
   <li><code>style.value_face.*</code></li>
   <li><code>style.text_value.*</code></li>
   <li><code>style.spinner.*</code></li>
@@ -455,8 +513,6 @@ The default numeric realization SHOULD support a rectangular SVG template with:
   <li>a value face,</li>
   <li>dynamic value text,</li>
   <li>optional increment/decrement buttons,</li>
-  <li>optional radix badge,</li>
-  <li>optional unit label,</li>
   <li>label and caption surfaces,</li>
   <li>focus-ring posture.</li>
 </ul>
@@ -540,5 +596,5 @@ The numeric widget family defines the intrinsic standardized numeric baseline of
 </ul>
 
 <p>
-It standardizes numeric value, representation, data-entry limits, display format, optional unit and radix surfaces, optional increment/decrement interaction, and a realization-ready public part model while preserving the class-versus-realization boundary.
+It standardizes numeric value, representation, data-entry limits, display format, optional increment/decrement interaction, and a realization-ready public part model while preserving the class-versus-realization boundary. Optional unit and radix surfaces are variant-level extensions unless the selected realization publishes them explicitly.
 </p>

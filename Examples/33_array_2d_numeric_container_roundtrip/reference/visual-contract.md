@@ -3,6 +3,8 @@
 Example 33 records the accepted browser-host reference surface for
 Array 2D Numeric Container Roundtrip.
 
+Reviewed 2026-06-08.
+
 ## Accepted Visible Surface
 
 - `numeric_array`: control `frog.widgets.array_control` containing repeated Default Numeric control widgets.
@@ -28,9 +30,10 @@ Array 2D Numeric Container Roundtrip.
   `element.template_ref` and `element.asset_ref`.
 - Control cells keep Numeric increment/decrement controls visible.
 - Indicator cells are read-only and use source-owned grey styling.
-- `element.layout.boundary_policy = superpose_adjacent_widget_bounds` means
-  adjacent contained Numeric widgets share their published bounds instead of
-  receiving Array-local fake cell shells.
+- Control and indicator cells both fit the contained Numeric `placement_bounds` aura (`96x32`).
+- `element.layout.boundary_policy = contained_widget_placement_bounds` means
+  each Array cell respects the contained Numeric widget placement bounds instead
+  of receiving Array-local fake cell shells.
 
 ## Accepted Asset And Part Evidence
 
@@ -38,9 +41,7 @@ Array 2D Numeric Container Roundtrip.
 - Contained widget asset consumed: `asset:numeric_rectangular_svg`.
 - Runtime overlays align to Default Array `index_display`, `element_region`,
   `element_slot`, and scrollbar parts.
-- Contained Numeric element overlays align to Default Numeric `control_body`,
-  `indicator_body`, `value_face`, `text_value`, `increment_up`, and
-  `increment_down` parts.
+- Contained Numeric element overlays align to Default Numeric `placement_bounds`; the visible body still uses `control_body` / `indicator_body`, `value_face`, `text_value`, `increment_up`, and `increment_down` internally.
 
 ## Accepted Data Posture
 

@@ -1,147 +1,148 @@
 {
-  "artifact_kind": "frog_ui_object_realization",
-  "artifact_governance_ref": {
-    "path": "Versioning/Readme.md"
-  },
-  "example_ref": {
-    "example_id": "05_bounded_ui_accumulator",
-    "source_path": "Examples/05_bounded_ui_accumulator/main.frog",
-    "fir_path": "Examples/05_bounded_ui_accumulator/main.fir.json",
-    "lowering_path": "Examples/05_bounded_ui_accumulator/main.lowering.json",
-    "ui_package_path": "Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog"
-  },
-  "realization_scope": {
-    "kind": "derived_host_projection",
-    "host_family": "reference_host_runtime_ui_binding",
-    "ui_host_kind": "reference_browser_host",
-    "semantic_authority_owned_here": false,
-    "widget_contract_authority_owned_here": false,
-    "execution_authority_owned_here": false,
-    "purpose": "Expose one concrete browser-host projection for the published Example 05 front-panel slice without redefining source, FIR, lowering, widget-contract meaning, or runtime-family contract ownership."
-  },
-  "ownership_boundary": {
-    "semantic_authority": "canonical_source_and_execution_facing_artifacts",
-    "semantic_authority_refs": [
-      "Examples/05_bounded_ui_accumulator/main.frog",
-      "Examples/05_bounded_ui_accumulator/main.fir.json",
-      "Examples/05_bounded_ui_accumulator/main.lowering.json"
-    ],
-    "widget_contract_authority": "published_widget_contracts_and_ui_package",
-    "widget_contract_authority_refs": [
-      "Libraries/Widgets/Numeric.md",
-      "Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog"
-    ],
-    "host_realization_authority": "this_file",
-    "notes": [
-      "This file is downstream from canonical source-owned and execution-facing meaning.",
-      "This file must not redefine executable semantics, FIR structure, lowering obligations, or backend-contract meaning.",
-      "This file may define concrete host widgets, layout, styling, and host-private realization metadata.",
-      "This file describes the currently published browser-host projection used by the visible Example 05 runtime slice.",
-      "Widget class names in this file must remain aligned with the published widget surface used by the example corridor.",
-      "If this file diverges from the canonical source, FIR, lowering, emitted contract, or published UI package, those upstream artifacts win."
-    ]
-  },
-  "host_runtime_model": {
-    "rendering_model": "immediate_value_and_property_application",
-    "value_binding_model": "widget_value",
-    "reference_binding_model": "widget_reference",
-    "property_write_surface": [
-      "foreground_color"
-    ]
-  },
-  "window": {
-    "id": "main_window",
-    "title": "Bounded UI Accumulator",
-    "width": 500,
-    "height": 170,
-    "resizable": false,
-    "background": "#F5F7FA"
-  },
-  "objects": [
-    {
-      "object_id": "ctrl_input",
-      "widget_id": "ctrl_input",
-      "widget_class": "frog.widgets.numeric_control",
-      "role": "control",
-      "layout": {
-        "x": 20,
-        "y": 24,
-        "width": 220,
-        "height": 88
-      },
-      "canonical_alignment": {
-        "value_type": "u16",
-        "value_mode": "widget_value",
-        "reference_mode": true,
-        "label": "Input",
-        "package_asset_ref": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
-      },
-      "host_realization": {
-        "host_class": "reference.numeric_spinbox",
-        "visual": {
-          "caption_text": "Input",
-          "foreground_color": "#5B9BD5",
-          "text_color": "#1F2937",
-          "font_family": "default_sans",
-          "font_size": 12,
-          "border_radius": 4
-        },
-        "value_constraints": {
-          "minimum": 0,
-          "maximum": 65535,
-          "step": 1,
-          "default_value": 3
-        }
-      },
-      "runtime_binding": {
-        "widget_value_binding": true,
-        "widget_reference_binding": true,
-        "supported_members": [
-          "foreground_color"
-        ],
-        "public_input_id": "input_value"
-      }
-    },
-    {
-      "object_id": "ind_result",
-      "widget_id": "ind_result",
-      "widget_class": "frog.widgets.numeric_indicator",
-      "role": "indicator",
-      "layout": {
-        "x": 260,
-        "y": 24,
-        "width": 220,
-        "height": 88
-      },
-      "canonical_alignment": {
-        "value_type": "u16",
-        "value_mode": "widget_value",
-        "reference_mode": true,
-        "label": "Accumulated result",
-        "package_asset_ref": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
-      },
-      "host_realization": {
-        "host_class": "reference.numeric_display",
-        "visual": {
-          "caption_text": "Accumulated result",
-          "foreground_color": "#70AD47",
-          "text_color": "#1F2937",
-          "font_family": "default_sans",
-          "font_size": 12,
-          "border_radius": 4
-        },
-        "value_constraints": {
-          "default_value": 0
-        }
-      },
-      "runtime_binding": {
-        "widget_value_binding": true,
-        "widget_reference_binding": true,
-        "supported_members": [
-          "foreground_color"
-        ],
-        "public_output_id": "result"
-      }
-    }
-  ]
+    "artifact_kind":  "frog_ui_object_realization",
+    "artifact_governance_ref":  {
+                                    "path":  "Versioning/Readme.md"
+                                },
+    "example_ref":  {
+                        "example_id":  "05_bounded_ui_accumulator",
+                        "source_path":  "Examples/05_bounded_ui_accumulator/main.frog",
+                        "fir_path":  "Examples/05_bounded_ui_accumulator/main.fir.json",
+                        "lowering_path":  "Examples/05_bounded_ui_accumulator/main.lowering.json",
+                        "ui_package_path":  "Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog"
+                    },
+    "realization_scope":  {
+                              "kind":  "derived_host_projection",
+                              "host_family":  "reference_host_runtime_ui_binding",
+                              "ui_host_kind":  "reference_browser_host",
+                              "semantic_authority_owned_here":  false,
+                              "widget_contract_authority_owned_here":  false,
+                              "execution_authority_owned_here":  false,
+                              "purpose":  "Expose one concrete browser-host projection for the published Example 05 front-panel slice without redefining source, FIR, lowering, widget-contract meaning, or runtime-family contract ownership."
+                          },
+    "ownership_boundary":  {
+                               "semantic_authority":  "canonical_source_and_execution_facing_artifacts",
+                               "semantic_authority_refs":  [
+                                                               "Examples/05_bounded_ui_accumulator/main.frog",
+                                                               "Examples/05_bounded_ui_accumulator/main.fir.json",
+                                                               "Examples/05_bounded_ui_accumulator/main.lowering.json"
+                                                           ],
+                               "widget_contract_authority":  "published_widget_contracts_and_ui_package",
+                               "widget_contract_authority_refs":  [
+                                                                      "Libraries/Widgets/Numeric.md",
+                                                                      "Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog"
+                                                                  ],
+                               "host_realization_authority":  "this_file",
+                               "notes":  [
+                                             "This file is downstream from canonical source-owned and execution-facing meaning.",
+                                             "This file must not redefine executable semantics, FIR structure, lowering obligations, or backend-contract meaning.",
+                                             "This file may define concrete host widgets, layout, styling, and host-private realization metadata.",
+                                             "This file describes the currently published browser-host projection used by the visible Example 05 runtime slice.",
+                                             "Widget class names in this file must remain aligned with the published widget surface used by the example corridor.",
+                                             "If this file diverges from the canonical source, FIR, lowering, emitted contract, or published UI package, those upstream artifacts win."
+                                         ]
+                           },
+    "host_runtime_model":  {
+                               "rendering_model":  "immediate_value_and_property_application",
+                               "value_binding_model":  "widget_value",
+                               "reference_binding_model":  "widget_reference",
+                               "property_write_surface":  [
+                                                              "foreground_color"
+                                                          ]
+                           },
+    "window":  {
+                   "id":  "main_window",
+                   "title":  "Bounded UI Accumulator",
+                   "width":  500,
+                   "height":  128,
+                   "resizable":  false,
+                   "background":  "#F5F7FA"
+               },
+    "objects":  [
+                    {
+                        "object_id":  "ctrl_input",
+                        "widget_id":  "ctrl_input",
+                        "widget_class":  "frog.widgets.numeric_control",
+                        "role":  "control",
+                        "layout":  {
+                                       "x":  32,
+                                       "y":  32,
+                                       "width":  96,
+                                       "height":  32
+                                   },
+                        "canonical_alignment":  {
+                                                    "value_type":  "u16",
+                                                    "value_mode":  "widget_value",
+                                                    "reference_mode":  true,
+                                                    "label":  "Input",
+                                                    "package_asset_ref":  "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+                                                },
+                        "host_realization":  {
+                                                 "host_class":  "reference.numeric_control_default",
+                                                 "visual":  {
+                                                                "caption_text":  "Input",
+                                                                "foreground_color":  "#5B9BD5",
+                                                                "text_color":  "#1F2937",
+                                                                "font_family":  "default_sans",
+                                                                "font_size":  12,
+                                                                "border_radius":  4
+                                                            },
+                                                 "value_constraints":  {
+                                                                           "minimum":  0,
+                                                                           "maximum":  65535,
+                                                                           "step":  1,
+                                                                           "default_value":  0
+                                                                       }
+                                             },
+                        "runtime_binding":  {
+                                                "widget_value_binding":  true,
+                                                "widget_reference_binding":  true,
+                                                "supported_members":  [
+                                                                          "foreground_color"
+                                                                      ],
+                                                "public_input_id":  "input_value"
+                                            }
+                    },
+                    {
+                        "object_id":  "ind_result",
+                        "widget_id":  "ind_result",
+                        "widget_class":  "frog.widgets.numeric_indicator",
+                        "role":  "indicator",
+                        "layout":  {
+                                       "x":  288,
+                                       "y":  32,
+                                       "width":  96,
+                                       "height":  32
+                                   },
+                        "canonical_alignment":  {
+                                                    "value_type":  "u16",
+                                                    "value_mode":  "widget_value",
+                                                    "reference_mode":  true,
+                                                    "label":  "Accumulated result",
+                                                    "package_asset_ref":  "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+                                                },
+                        "host_realization":  {
+                                                 "host_class":  "reference.numeric_indicator_default",
+                                                 "visual":  {
+                                                                "caption_text":  "Accumulated result",
+                                                                "foreground_color":  "#70AD47",
+                                                                "text_color":  "#1F2937",
+                                                                "font_family":  "default_sans",
+                                                                "font_size":  12,
+                                                                "border_radius":  4,
+                                                                "fill_color":  "#e9edf2"
+                                                            },
+                                                 "value_constraints":  {
+                                                                           "default_value":  0
+                                                                       }
+                                             },
+                        "runtime_binding":  {
+                                                "widget_value_binding":  true,
+                                                "widget_reference_binding":  true,
+                                                "supported_members":  [
+                                                                          "foreground_color"
+                                                                      ],
+                                                "public_output_id":  "result"
+                                            }
+                    }
+                ]
 }

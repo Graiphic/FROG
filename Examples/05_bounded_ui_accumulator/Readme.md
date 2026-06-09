@@ -22,6 +22,15 @@ It combines standardized numeric widgets, .frog-owned front-panel instances, nat
 For input <code>3</code>, the bounded accumulator executes five iterations and publishes the expected result <code>15</code>.
 </p>
 
+<p>
+Reviewed: <code>2026-06-08</code>. Example 05 is the executable Numeric
+front-panel slice. Its source keeps <code>placement_bounds</code> layout syntax
+and the shared <code>canvas.grid.pitch=16</code> rule, but
+<code>canvas.grid.visible=false</code> because this is a runtime execution view,
+not an IDE calibration view. The IDE/grid/aura Numeric posture witness is
+published separately in <code>Examples/41_numeric_placement_ide_view</code>.
+</p>
+
 <hr/>
 
 <h2>Bounded LabVIEW-Like Closure</h2>
@@ -38,6 +47,7 @@ The Example 05 closure is intentionally bounded and explicit:
 
 .frog front panel
   -&gt; panel_pixels layout
+  -&gt; hidden execution grid with 16px placement law declared by canvas.grid
   -&gt; Default Numeric realization SVG skin
   -&gt; caption_text / value_face / text_value / increment overlays
 
@@ -124,9 +134,9 @@ It declares:
 </p>
 
 <ul>
-  <li><code>main_panel</code> as a <code>500x170</code> panel in <code>panel_pixels</code>,</li>
-  <li><code>ctrl_input</code> as a <code>frog.widgets.numeric_control</code> at <code>x=20</code>, <code>y=24</code>, <code>width=220</code>, <code>height=88</code>,</li>
-  <li><code>ind_result</code> as a <code>frog.widgets.numeric_indicator</code> at <code>x=260</code>, <code>y=24</code>, <code>width=220</code>, <code>height=88</code>,</li>
+  <li><code>main_panel</code> as a <code>500x128</code> execution panel in <code>panel_pixels</code>,</li>
+  <li><code>ctrl_input</code> as a <code>frog.widgets.numeric_control</code> at <code>x=32</code>, <code>y=32</code>, <code>width=96</code>, <code>height=32</code>,</li>
+  <li><code>ind_result</code> as a <code>frog.widgets.numeric_indicator</code> at <code>x=288</code>, <code>y=32</code>, <code>width=96</code>, <code>height=32</code>,</li>
   <li>SVG asset references for both numeric widgets.</li>
 </ul>
 

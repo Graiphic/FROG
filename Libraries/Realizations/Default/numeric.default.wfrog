@@ -87,9 +87,9 @@
       ],
       "supported_parts": [
         "root",
+        "placement_bounds",
         "label",
         "caption",
-        "frame",
         "control_body",
         "indicator_body",
         "value_face",
@@ -97,8 +97,6 @@
         "spinner",
         "increment_up",
         "increment_down",
-        "radix_badge",
-        "unit_label",
         "focus_ring"
       ],
       "supported_visual_states": [
@@ -127,14 +125,12 @@
       ],
       "supported_parts": [
         "root",
+        "placement_bounds",
         "label",
         "caption",
-        "frame",
         "indicator_body",
         "value_face",
         "text_value",
-        "radix_badge",
-        "unit_label",
         "focus_ring"
       ],
       "supported_visual_states": [
@@ -164,9 +160,10 @@
         "layout_source": "front_panel_layout_rectangle",
         "scales_to_layout": true,
         "supports_spinner_cluster": true,
-        "supports_caption": true,
-        "supports_unit_label": true,
-        "supports_radix_badge": true
+        "supports_increment_buttons_side": true,
+        "supports_increment_buttons_hidden": true,
+        "supports_inline_unit_text_value": true,
+        "supports_caption": true
       },
       "fallback": "host_rectangle_numeric"
     }
@@ -198,6 +195,17 @@
       "binding_selector": "[data-frog-part='root']"
     },
     {
+      "part": "placement_bounds",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='placement_bounds']",
+      "semantic_members": [
+        "layout.placement_bounds.*",
+        "layout.grid.*",
+        "layout.resize.*"
+      ],
+      "placement_role": "grid_snapped_widget_aura_not_focus_not_selection"
+    },
+    {
       "part": "label",
       "binding_kind": "svg_text_or_metadata",
       "binding_selector": "[data-frog-part='label']",
@@ -209,12 +217,6 @@
       "binding_selector": "[data-frog-part='caption']",
       "semantic_member": "caption.text",
       "style_binding_group": "style.caption"
-    },
-    {
-      "part": "frame",
-      "binding_kind": "svg_shape",
-      "binding_selector": "[data-frog-part='frame']",
-      "style_binding_group": "style.frame"
     },
     {
       "part": "value_face",
@@ -233,7 +235,8 @@
       "part": "spinner",
       "binding_kind": "svg_group_or_host_spinner",
       "binding_selector": "[data-frog-part='spinner']",
-      "visibility_member": "display.increment_buttons_visible"
+      "visibility_member": "display.increment_buttons_visible",
+      "side_member": "display.increment_buttons_side"
     },
     {
       "part": "increment_up",
@@ -246,19 +249,6 @@
       "binding_kind": "svg_group_or_host_button",
       "binding_selector": "[data-frog-part='increment_down']",
       "method_member": "decrement()"
-    },
-    {
-      "part": "radix_badge",
-      "binding_kind": "svg_text_or_host_badge",
-      "binding_selector": "[data-frog-part='radix_badge']",
-      "visibility_member": "display.radix_visible"
-    },
-    {
-      "part": "unit_label",
-      "binding_kind": "svg_text_or_host_text",
-      "binding_selector": "[data-frog-part='unit_label']",
-      "semantic_member": "unit_label.text",
-      "visibility_member": "unit_label.visible"
     },
     {
       "part": "focus_ring",
@@ -388,29 +378,14 @@
       "target_operation": "set_visibility"
     },
     {
-      "member": "display.radix_visible",
-      "target_part": "radix_badge",
-      "target_operation": "set_visibility"
-    },
-    {
-      "member": "unit_label.text",
-      "target_part": "unit_label",
-      "target_operation": "set_text_content"
-    },
-    {
-      "member": "unit_label.visible",
-      "target_part": "unit_label",
-      "target_operation": "set_visibility"
+      "member": "display.increment_buttons_side",
+      "target_part": "spinner",
+      "target_operation": "position_increment_decrement_cluster"
     },
     {
       "member": "style.caption.*",
       "target_part": "caption",
       "target_operation": "apply_caption_style"
-    },
-    {
-      "member": "style.frame.*",
-      "target_part": "frame",
-      "target_operation": "apply_frame_style"
     },
     {
       "member": "style.value_face.*",
@@ -441,6 +416,16 @@
       "member": "style.focus_ring.*",
       "target_part": "focus_ring",
       "target_operation": "apply_focus_ring_style"
+    },
+    {
+      "member": "layout.placement_bounds.*",
+      "target_part": "placement_bounds",
+      "target_operation": "publish_grid_snapped_placement_aura"
+    },
+    {
+      "member": "layout.grid.*",
+      "target_part": "placement_bounds",
+      "target_operation": "publish_grid_snap_policy"
     }
   ],
   "anchors": [
@@ -457,11 +442,11 @@
       "anchor_kind": "text_anchor"
     },
     {
-      "id": "frog.realizations.default.numeric.text_value.center",
+      "id": "frog.realizations.default.numeric.text_value.right_center",
       "target_part": "text_value",
-      "source_selector": "[data-frog-anchor='text_value.center']",
+      "source_selector": "[data-frog-anchor='text_value.right_center']",
       "anchor_kind": "text_anchor",
-      "default_horizontal_alignment": "center",
+      "default_horizontal_alignment": "right",
       "default_vertical_alignment": "middle"
     }
   ],
@@ -475,17 +460,42 @@
       "posture": "labview_like_value_face_plus_array_indexer_style_vertical_increment_decrement",
       "view_box_width": 220,
       "view_box_height": 88,
-      "body_height": 30,
-      "value_face_width": 74,
-      "value_to_spinner_gap": 4,
-      "spinner_width": 16,
-      "spinner_button_height": 14,
+      "placement_grid_pitch": 16,
+      "placement_bounds_part": "placement_bounds",
+      "placement_bounds_x": 16,
+      "placement_bounds_y": 48,
+      "placement_bounds_width": 96,
+      "placement_bounds_height": 32,
+      "placement_bounds_posture": "widget_aura_with_grid_snapped_top_left_and_grid_controlled_width_not_focus_or_selection",
+      "placement_aura_padding": 4,
+      "placement_aura_padding_rule": "uniform band around the main body; top_left snaps to the common grid; width changes point_to_point on the grid; height follows body plus the uniform band",
+      "body_x": 20,
+      "body_y": 52,
+      "body_height": 24,
+      "value_face_width": 73,
+      "value_to_spinner_gap": 2,
+      "spinner_width": 13,
+      "spinner_button_height": 11,
       "spinner_button_gap": 2,
-      "control_body_width": 94,
-      "indicator_body_width": 74,
+      "control_body_width": 88,
+      "hidden_buttons_value_face_width": 88,
+      "indicator_body_width": 88,
+      "ide_placement_aura_part": "placement_bounds",
+      "ide_body_alignment_parts": [
+        "control_body",
+        "indicator_body"
+      ],
+      "ide_label_aura_part": "caption",
+      "ide_aura_posture": "host_overlay_aligned_to_placement_bounds; body parts stay centered inside the aura and are not the aura",
+      "focus_ring_posture": "widget_focus_interaction_part_not_placement_aura_not_ide_selection",
+      "default_control_value_face_fill_color": "#ffffff",
+      "default_indicator_value_face_fill_color": "#e9edf2",
       "default_label_anchor_x": 18,
       "default_caption_anchor_x": 18,
-      "proportionality_rule": "hosts must preserve these part ratios when embedding the Default Numeric SVG as an Array element or other contained widget surface; the increment/decrement buttons use the same separated-button proportion as the Default Array index display, mirrored to the right of the value face"
+      "default_caption_anchor_y": 38,
+      "caption_aura_posture": "caption sits above placement_bounds with enough separation that the label aura does not overlap the body aura",
+      "resize_rule": "horizontal resizing changes placement_bounds.width point_to_point_on_the_grid; the visible body keeps a uniform aura padding; spinner stays inside the body on display_increment_buttons_side; hidden_spinner_allows_value_face_to_expand_to_control_body; vertical size follows text/font comfort plus the same aura padding",
+      "proportionality_rule": "hosts must preserve these part ratios when embedding the Default Numeric SVG as an Array element or other contained widget surface; the increment/decrement buttons use the same separated-button proportion as the Default Array index display and may be mirrored to the left of the value face"
     },
     "numeric_representation_surface": {
       "posture": "representation_is_source_owned_and_runtime_interpreted",
@@ -612,6 +622,10 @@
     "all declared public parts must exist in the numeric class law",
     "resources must resolve relative to this package file",
     "resource SVG templates should expose data-frog-part markers for declared parts",
+    "default compact numeric templates must not publish separate frame, unit_label, radix_badge, or radix_text parts; value_face owns the compact visible border",
+    "compact numeric unit text must be rendered inline through text_value rather than through a separate unit_label public part",
+    "placement_bounds must be present as a non-rendered public placement aura and must not be confused with focus_ring, IDE selection handles, or Array cell selection",
+    "IDE placement aura must be a runtime/IDE overlay aligned to placement_bounds; control_body and indicator_body describe the centered visible body and must not be treated as the aura",
     "property bindings must target public numeric members declared by class law",
     "semantic default_value must come from the numeric class/source instance or containing widget model",
     "numeric representation must come from source-owned data_type.representation or its documented compatibility alias",

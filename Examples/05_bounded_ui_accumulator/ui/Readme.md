@@ -67,22 +67,27 @@ The current Example 05 front panel is:
 
 <pre><code>main_panel:
   width: 500
-  height: 170
+  height: 128
+  canvas.grid.visible: false
+  canvas.grid.pitch: 16
+  canvas.presentation_mode: execution
 
 ctrl_input:
   class_ref: frog.widgets.numeric_control
-  x: 20
-  y: 24
-  width: 220
-  height: 88
+  x: 32
+  y: 32
+  width: 96
+  height: 32
+  display.increment_buttons_side: right
   visual.asset_ref: asset:numeric_rectangular_svg
 
 ind_result:
   class_ref: frog.widgets.numeric_indicator
-  x: 260
-  y: 24
-  width: 220
-  height: 88
+  x: 288
+  y: 32
+  width: 96
+  height: 32
+  style.value_face.fill_color: #e9edf2
   visual.asset_ref: asset:numeric_rectangular_svg
 </code></pre>
 
@@ -109,12 +114,14 @@ Each SVG includes these realization markers:
 
 <ul>
   <li><code>caption_text</code></li>
+  <li><code>placement_bounds</code></li>
+  <li><code>control_body</code></li>
+  <li><code>indicator_body</code></li>
   <li><code>value_face</code></li>
   <li><code>text_value</code></li>
   <li><code>increment_up</code></li>
   <li><code>increment_down</code></li>
-  <li><code>unit_label</code></li>
-  <li><code>radix_badge</code></li>
+  <li><code>focus_ring</code></li>
 </ul>
 
 <p>
@@ -135,7 +142,7 @@ The C++ browser-host runtime consumes this package by:
   <li>using panel <code>width</code>, <code>height</code>, and <code>coordinate_space</code>,</li>
   <li>placing each widget using <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code>,</li>
   <li>resolving <code>visual.asset_ref</code> to an SVG asset route,</li>
-  <li>using <code>caption_text</code>, <code>value_face</code>, <code>text_value</code>, <code>increment_up</code>, and <code>increment_down</code> for overlays,</li>
+  <li>using <code>placement_bounds</code>, <code>caption_text</code>, <code>value_face</code>, <code>text_value</code>, <code>increment_up</code>, and <code>increment_down</code> for placement and overlays,</li>
   <li>applying contract-driven property writes such as <code>foreground_color</code>,</li>
   <li>binding <code>ctrl_input.value</code> to <code>input_value</code>,</li>
   <li>publishing <code>result</code> to <code>ind_result.value</code>.</li>

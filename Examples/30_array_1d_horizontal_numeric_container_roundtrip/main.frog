@@ -143,7 +143,16 @@
     "canvas": {
       "width": 780,
       "height": 300,
-      "units": "px"
+      "coordinate_space": "panel_pixels",
+      "grid": {
+        "visible": true,
+        "pitch": 16,
+        "origin": {
+          "x": 0,
+          "y": 0
+        },
+        "snap": "placement_bounds"
+      }
     },
     "package_refs": [
       "./ui/array_panel.wfrog"
@@ -214,7 +223,7 @@
           "viewport.column_offset": 0,
           "viewport.row_count": 1,
           "viewport.column_count": 6,
-          "viewport.row_height": 30,
+          "viewport.row_height": 32,
           "viewport.column_width": 96,
           "viewport.cell_padding_inline": "0px",
           "viewport.scrollbar_gap": 6,
@@ -438,9 +447,12 @@
           "element.asset_ref": "asset:numeric_rectangular_svg",
           "element.default_value": 0,
           "element.cell_width": 96,
-          "element.cell_height": 30,
-          "element.layout.fit_part": "control_body",
-          "element.layout.boundary_policy": "superpose_adjacent_widget_bounds",
+          "element.cell_height": 32,
+          "element.layout.padding": 0,
+          "element.layout.grid_pitch": 16,
+          "element.layout.snap_policy": "snap_cell_to_grid",
+          "element.layout.fit_part": "placement_bounds",
+          "element.layout.boundary_policy": "contained_widget_placement_bounds",
           "element.props.caption.visible": false,
           "element.props.label.visible": false,
           "element.props.display.increment_buttons_visible": true,
@@ -540,8 +552,8 @@
           "viewport.column_offset": 0,
           "viewport.row_count": 1,
           "viewport.column_count": 6,
-          "viewport.row_height": 30,
-          "viewport.column_width": 74,
+          "viewport.row_height": 32,
+          "viewport.column_width": 96,
           "viewport.cell_padding_inline": "0px",
           "viewport.scrollbar_gap": 6,
           "index_display.visible": true,
@@ -763,10 +775,13 @@
           "element.template_ref": "frog.realizations.default.numeric_indicator",
           "element.asset_ref": "asset:numeric_rectangular_svg",
           "element.default_value": 0,
-          "element.cell_width": 74,
-          "element.cell_height": 30,
-          "element.layout.fit_part": "indicator_body",
-          "element.layout.boundary_policy": "superpose_adjacent_widget_bounds",
+          "element.cell_width": 96,
+          "element.cell_height": 32,
+          "element.layout.padding": 0,
+          "element.layout.grid_pitch": 16,
+          "element.layout.snap_policy": "snap_cell_to_grid",
+          "element.layout.fit_part": "placement_bounds",
+          "element.layout.boundary_policy": "contained_widget_placement_bounds",
           "element.props.caption.visible": false,
           "element.props.label.visible": false,
           "element.props.display.increment_buttons_visible": false,
@@ -799,7 +814,7 @@
     "host_binding_ref": "array_runtime_host_default",
     "documentation": {
       "title": "Array 1D Horizontal Numeric Container Roundtrip",
-      "summary": "A one-dimensional Array can act as a widget container. This example binds the Array element template to the Default Numeric widget so each visible cell behaves as a Numeric element inside the Array viewport.",
+      "summary": "Reviewed 2026-06-08. A one-dimensional Array can act as a widget container. This example binds the Array element template to the Default Numeric widget so each visible cell behaves as a Numeric element inside the Array viewport.",
       "sections": [
         {
           "title": "Array container",

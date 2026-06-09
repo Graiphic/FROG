@@ -1,0 +1,77 @@
+{
+    "format":  "frog.wfrog",
+    "kind":  "widget_realization_package",
+    "package_id":  "example41.numeric_placement_ide_panel",
+    "reviewed_date":  "2026-06-08",
+    "title":  "Example 41 Default Numeric IDE placement realization package",
+    "artifact_governance_ref":  {
+                                    "path":  "Versioning/Readme.md"
+                                },
+    "source_ref":  {
+                       "example_id":  "41_numeric_placement_ide_view",
+                       "source_path":  "Examples/41_numeric_placement_ide_view/main.frog",
+                       "fir_path":  "Examples/41_numeric_placement_ide_view/main.fir.json",
+                       "lowering_path":  "Examples/41_numeric_placement_ide_view/main.lowering.json"
+                   },
+    "ownership_boundary":  {
+                               "owns":  [
+                                            "Default Numeric realization references",
+                                            "Default Numeric SVG asset references",
+                                            "reference host binding requirements"
+                                        ],
+                               "does_not_own":  [
+                                                    "canonical source semantics",
+                                                    "front-panel widget instance layout",
+                                                    "front-panel widget instance visual customization",
+                                                    "front-panel widget values",
+                                                    "FIR/lowering/runtime behavior",
+                                                    "numeric widget law"
+                                                ]
+                           },
+    "widget_classes":  [
+                           {
+                               "class_id":  "frog.widgets.numeric_control",
+                               "role":  "control",
+                               "value_type":  "u16"
+                           },
+                           {
+                               "class_id":  "frog.widgets.numeric_indicator",
+                               "role":  "indicator",
+                               "value_type":  "u16"
+                           }
+                       ],
+    "host_bindings":  [
+                          {
+                              "binding_id":  "reference_host_default",
+                              "host_family":  "reference_browser_host",
+                              "target":  "reference_browser_host",
+                              "required_capabilities":  [
+                                                            "window",
+                                                            "basic_widget_rendering",
+                                                            "property_write",
+                                                            "widget_value_binding",
+                                                            "widget_reference_binding"
+                                                        ]
+                          }
+                      ],
+    "realization_refs":  [
+                             {
+                                 "package_ref":  "Libraries/Realizations/Default/numeric.default.wfrog",
+                                 "target_classes":  [
+                                                        "frog.widgets.numeric_control",
+                                                        "frog.widgets.numeric_indicator"
+                                                    ]
+                             }
+                         ],
+    "svg_assets":  [
+                       {
+                           "asset_id":  "numeric_rectangular_svg",
+                           "kind":  "svg",
+                           "path":  "../../../Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+                           "target_classes":  [
+                                                  "frog.widgets.numeric_control",
+                                                  "frog.widgets.numeric_indicator"
+                                              ]
+                       }
+                   ]
+}

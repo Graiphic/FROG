@@ -3,6 +3,7 @@
     "kind":  "widget_realization_package",
     "package_id":  "example33.array_2d_numeric_container_panel",
     "title":  "Example 33 Default Array + Numeric realization package",
+    "reviewed_date":  "2026-06-08",
     "artifact_governance_ref":  {
                                     "path":  "Versioning/Readme.md"
                                 },

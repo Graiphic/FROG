@@ -2,6 +2,8 @@
 
 This example demonstrates an N-dimensional Array container whose dimension count is controlled by a Numeric U8 control through explicit diagram property writes. Two additional Numeric U8 controls continue to command visible row and column counts for the active Array view.
 
+Reviewed 2026-06-08.
+
 The Array owns the N-dimensional rank posture, source-owned explicit/default shape profiles, one index display per active dimension, viewport, scrolling, insertion/materialization posture, and repeated-cell layout. Rank 1 renders as one visible axis; rank 2 renders as a matrix; rank 3 or higher renders the last two dimensions as the visible matrix and exposes every leading dimension through stacked index displays. The Numeric U8 controls are front-panel values until Execute consumes them and writes the Array rank/display/viewport properties. The Numeric element owns per-cell value editing and value display.
 
 ## Runtime Boundary
@@ -11,6 +13,7 @@ Example 35 is a post-public-boundary widget progression example. Graiphic privat
 ## Validation Notes
 
 - The Array is a container widget, not a hardcoded numeric grid.
+- The front panel declares the visible 16 px placement grid through `front_panel.canvas.grid` (`visible = true`, `snap = placement_bounds`); the runtime only renders that source-owned calibration.
 - The dimension count is a source-owned Numeric U8 control that writes `dimensions.rank` and the matching `index_display.rank` mirror on Execute.
 - This slice commands the widget's active Array dimension count across source-owned explicit profiles and a default N-dimensional leading-singleton/trailing-matrix profile, not a fixed 1D/2D/3D-only switch.
 - Ranks above 2 keep the last two dimensions as the visible matrix and expose every leading dimension through stacked index displays.

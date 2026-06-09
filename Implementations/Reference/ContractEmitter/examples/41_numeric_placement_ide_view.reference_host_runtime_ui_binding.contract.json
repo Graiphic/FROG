@@ -4,12 +4,12 @@
                                     "path":  "Versioning/Readme.md"
                                 },
     "backend_family":  "reference_host_runtime_ui_binding",
-    "example_id":  "05_bounded_ui_accumulator",
+    "example_id":  "41_numeric_placement_ide_view",
     "artifact_refs":  {
-                          "source_path":  "Examples/05_bounded_ui_accumulator/main.frog",
-                          "fir_path":  "Examples/05_bounded_ui_accumulator/main.fir.json",
-                          "lowering_path":  "Examples/05_bounded_ui_accumulator/main.lowering.json",
-                          "wfrog_path":  "Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog"
+                          "source_path":  "Examples/41_numeric_placement_ide_view/main.frog",
+                          "fir_path":  "Examples/41_numeric_placement_ide_view/main.fir.json",
+                          "lowering_path":  "Examples/41_numeric_placement_ide_view/main.lowering.json",
+                          "wfrog_path":  "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog"
                       },
     "producer":  {
                      "implementation":  "FROG Reference ContractEmitter",
@@ -18,25 +18,25 @@
                  },
     "compatibility":  "family_specific",
     "source_ref":  {
-                       "example_id":  "05_bounded_ui_accumulator",
-                       "path":  "Examples/05_bounded_ui_accumulator/main.frog",
+                       "example_id":  "41_numeric_placement_ide_view",
+                       "path":  "Examples/41_numeric_placement_ide_view/main.frog",
                        "entry_unit":  "main"
                    },
     "derived_from":  {
-                         "fir_path":  "Examples/05_bounded_ui_accumulator/main.fir.json",
-                         "lowering_path":  "Examples/05_bounded_ui_accumulator/main.lowering.json",
-                         "ui_package_path":  "Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog"
+                         "fir_path":  "Examples/41_numeric_placement_ide_view/main.fir.json",
+                         "lowering_path":  "Examples/41_numeric_placement_ide_view/main.lowering.json",
+                         "ui_package_path":  "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog"
                      },
     "ownership_boundary":  {
                                "semantic_authority":  "canonical_source_and_execution_facing_artifacts",
                                "semantic_authority_refs":  [
-                                                               "Examples/05_bounded_ui_accumulator/main.frog",
-                                                               "Examples/05_bounded_ui_accumulator/main.fir.json",
-                                                               "Examples/05_bounded_ui_accumulator/main.lowering.json"
+                                                               "Examples/41_numeric_placement_ide_view/main.frog",
+                                                               "Examples/41_numeric_placement_ide_view/main.fir.json",
+                                                               "Examples/41_numeric_placement_ide_view/main.lowering.json"
                                                            ],
                                "ui_package_authority":  "published_widget_realization_package",
                                "ui_package_authority_refs":  [
-                                                                 "Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog"
+                                                                 "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog"
                                                              ],
                                "contract_authority":  "this_file",
                                "notes":  [
@@ -90,7 +90,7 @@
                                     },
                       "ui_bindings":  {
                                           "package_refs":  [
-                                                               "Examples/05_bounded_ui_accumulator/ui/accumulator_panel.wfrog"
+                                                               "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog"
                                                            ],
                                           "widgets":  [
                                                           {
@@ -111,6 +111,44 @@
                                                               "binding":  {
                                                                               "mode":  "widget_value",
                                                                               "public_output_id":  "result"
+                                                                          }
+                                                          },
+                                                          {
+                                                              "widget_id":  "ctrl_input_left",
+                                                              "widget_class":  "frog.widgets.numeric_control",
+                                                              "value_type":  "u16",
+                                                              "role":  "control",
+                                                              "binding":  {
+                                                                              "mode":  "visual_witness",
+                                                                              "public_input_id":  "input_value_left"
+                                                                          }
+                                                          },
+                                                          {
+                                                              "widget_id":  "ind_result_2",
+                                                              "widget_class":  "frog.widgets.numeric_indicator",
+                                                              "value_type":  "u16",
+                                                              "role":  "indicator",
+                                                              "binding":  {
+                                                                              "mode":  "visual_witness"
+                                                                          }
+                                                          },
+                                                          {
+                                                              "widget_id":  "ctrl_input_plain",
+                                                              "widget_class":  "frog.widgets.numeric_control",
+                                                              "value_type":  "u16",
+                                                              "role":  "control",
+                                                              "binding":  {
+                                                                              "mode":  "visual_witness",
+                                                                              "public_input_id":  "input_value_plain"
+                                                                          }
+                                                          },
+                                                          {
+                                                              "widget_id":  "ind_result_3",
+                                                              "widget_class":  "frog.widgets.numeric_indicator",
+                                                              "value_type":  "u16",
+                                                              "role":  "indicator",
+                                                              "binding":  {
+                                                                              "mode":  "visual_witness"
                                                                           }
                                                           }
                                                       ],

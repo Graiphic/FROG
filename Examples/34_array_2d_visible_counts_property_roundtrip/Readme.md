@@ -2,6 +2,8 @@
 
 This example demonstrates a two-dimensional Array container whose visible row and column counts are controlled by two Numeric U8 controls through explicit diagram property writes.
 
+Reviewed 2026-06-08.
+
 The Array owns rank, matrix shape, index displays, viewport, scrolling, insertion/materialization posture, and repeated-cell layout. The Numeric U8 controls are front-panel values until Execute consumes them and writes the Array viewport properties. The Numeric element owns per-cell value editing and value display.
 
 ## Runtime Boundary
@@ -11,6 +13,7 @@ Example 34 is a post-public-boundary widget progression example. Graiphic privat
 ## Validation Notes
 
 - The Array is a container widget, not a hardcoded numeric grid.
+- The front panel declares the visible 16 px placement grid through `front_panel.canvas.grid` (`visible = true`, `snap = placement_bounds`); the runtime only renders that source-owned calibration.
 - The visible row and visible column counts are source-owned Numeric U8 controls.
 - Execute wires the controls through explicit property-write nodes to `viewport.visible_counts[0]` and `viewport.visible_counts[1]`.
 - Visible counts are viewport display properties. They may exceed the currently materialized semantic shape without forcing data materialization.

@@ -1,14 +1,14 @@
 {
     "spec_version":  "0.1",
     "metadata":  {
-                     "name":  "05_bounded_ui_accumulator",
-                     "summary":  "Bounded front-panel accumulation example with .frog-owned executable numeric control and indicator instances backed by Default Numeric .wfrog realization assets.",
-                     "description":  "Reads one u16 numeric control value from the .frog front panel, exposes that value through the example public input surface, executes a bounded loop of exactly five iterations, carries explicit state through frog.core.delay initialized to 0, and writes the final accumulated value both to one public output and to one u16 numeric indicator. The .frog source owns program meaning, front-panel widget instances, layout, binding, and per-instance appearance. The .wfrog package owns the published Default Numeric widget realization, host requirements, and SVG asset references consumed by the runtimes.",
+                     "name":  "41_numeric_placement_ide_view",
+                     "summary":  "IDE-view calibration example for Default Numeric placement grid, placement aura, label aura, and compact control/indicator postures.",
+                     "description":  "Publishes a source-owned IDE/calibration view of the Default Numeric control and indicator postures. It keeps the same placement coordinates as execution surfaces, shows the common 16px grid, and lets the C++ reference browser host render source-declared placement aura selection overlays. Execution semantics remain the bounded accumulator shape only to reuse the existing C++ Slice 05 runtime family; this example is reviewed as an IDE/placement witness rather than an applicative execution slice.",
                      "author":  "Graiphic",
                      "program_version":  "0.1.0",
                      "review":  {
                                     "last_reviewed":  "2026-06-08",
-                                    "review_scope":  "Default Numeric execution posture with placement_bounds layout syntax; IDE grid/aura calibration is isolated in Example 41."
+                                    "review_scope":  "Default Numeric IDE grid, placement_bounds aura, label aura, centered control/indicator bodies, and button-side postures."
                                 },
                      "tags":  [
                                   "example",
@@ -24,7 +24,10 @@
                                   "property_write",
                                   "foreground_color",
                                   "wfrog",
-                                  "widget_realization_package"
+                                  "widget_realization_package",
+                                  "ide_view",
+                                  "placement_grid",
+                                  "placement_aura"
                               ],
                      "is_example":  true,
                      "license":  "Apache-2.0"
@@ -294,10 +297,10 @@
     "front_panel":  {
                         "canvas":  {
                                        "width":  500,
-                                       "height":  128,
+                                       "height":  240,
                                        "coordinate_space":  "panel_pixels",
                                        "grid":  {
-                                                    "visible":  false,
+                                                    "visible":  true,
                                                     "pitch":  16,
                                                     "origin":  {
                                                                    "x":  0,
@@ -305,10 +308,17 @@
                                                                },
                                                     "snap":  "placement_bounds"
                                                 },
-                                       "presentation_mode":  "execution"
+                                       "presentation_mode":  "ide_view",
+                                       "selected_widget_id":  "ctrl_input_left",
+                                       "selection_overlay":  {
+                                                                 "visible_on_selection":  true,
+                                                                 "body_aura":  "control_body_or_indicator_body",
+                                                                 "label_aura":  "caption",
+                                                                 "source":  "runtime_overlay_from_svg_parts"
+                                                             }
                                    },
                         "package_refs":  [
-                                             "./ui/accumulator_panel.wfrog"
+                                             "./ui/numeric_ide_panel.wfrog"
                                          ],
                         "widgets":  [
                                         {
@@ -474,10 +484,308 @@
                                                                                       "foreground_color"
                                                                                   ]
                                                         }
+                                        },
+                                        {
+                                            "id":  "ctrl_input_left",
+                                            "role":  "control",
+                                            "class_ref":  "frog.widgets.numeric_control",
+                                            "instance_ref":  "ctrl_input_left",
+                                            "value_type":  "u16",
+                                            "layout":  {
+                                                           "x":  32,
+                                                           "y":  96,
+                                                           "width":  96,
+                                                           "height":  32,
+                                                           "origin":  "placement_bounds.top_left",
+                                                           "bounds_ref":  "placement_bounds"
+                                                       },
+                                            "props":  {
+                                                          "value":  0,
+                                                          "label":  "Input_2",
+                                                          "caption.text":  "Input_2",
+                                                          "caption.visible":  true,
+                                                          "caption.anchor.x":  18,
+                                                          "caption.anchor.y":  38,
+                                                          "caption.align.horizontal":  "left",
+                                                          "representation.kind":  "uint16",
+                                                          "binding.public_input_id":  "input_value_left",
+                                                          "data_entry.minimum":  0,
+                                                          "data_entry.maximum":  65535,
+                                                          "data_entry.increment_step":  1,
+                                                          "display.increment_buttons_visible":  true,
+                                                          "display.increment_buttons_side":  "left",
+                                                          "style.caption.text_color":  "#111827",
+                                                          "style.caption.font_family":  "system-ui, Segoe UI, Arial, sans-serif",
+                                                          "style.caption.font_size":  "12px",
+                                                          "style.caption.font_weight":  "400",
+                                                          "style.text_value.color":  "#111827",
+                                                          "style.text_value.font_family":  "Segoe UI, Arial, sans-serif",
+                                                          "style.text_value.font_size":  "13px",
+                                                          "style.text_value.font_weight":  "400",
+                                                          "style.value_face.fill_color":  "#ffffff",
+                                                          "style.value_face.border_color":  "#94a3b8",
+                                                          "style.value_face.border_width":  "1px",
+                                                          "style.increment_button.fill_color.normal":  "#edf2f7",
+                                                          "style.increment_button.fill_color.pressed":  "#bfdbfe",
+                                                          "style.increment_button.border_color.normal":  "#94a3b8",
+                                                          "style.increment_button.border_color.pressed":  "#2563eb",
+                                                          "style.increment_button.symbol_color.normal":  "#334e68",
+                                                          "style.increment_button.symbol_color.pressed":  "#1e40af",
+                                                          "label_color":  "#111827",
+                                                          "visible":  true,
+                                                          "enabled":  true,
+                                                          "foreground_color":  "#D8D8D8"
+                                                      },
+                                            "parts":  {
+                                                          "root":  {
+
+                                                                   },
+                                                          "placement_bounds":  {
+
+                                                                               },
+                                                          "caption":  {
+
+                                                                      },
+                                                          "control_body":  {
+
+                                                                           },
+                                                          "value_face":  {
+
+                                                                         },
+                                                          "text_value":  {
+
+                                                                         },
+                                                          "spinner":  {
+
+                                                                      },
+                                                          "increment_up":  {
+
+                                                                           },
+                                                          "increment_down":  {
+
+                                                                             }
+                                                      },
+                                            "visual":  {
+                                                           "asset_ref":  "asset:numeric_rectangular_svg"
+                                                       },
+                                            "binding":  {
+                                                            "mode":  "widget_value",
+                                                            "public_input_id":  "input_value_left",
+                                                            "widget_reference":  true
+                                                        }
+                                        },
+                                        {
+                                            "id":  "ind_result_2",
+                                            "role":  "indicator",
+                                            "class_ref":  "frog.widgets.numeric_indicator",
+                                            "instance_ref":  "ind_result_2",
+                                            "value_type":  "u16",
+                                            "layout":  {
+                                                           "x":  288,
+                                                           "y":  96,
+                                                           "width":  96,
+                                                           "height":  32,
+                                                           "origin":  "placement_bounds.top_left",
+                                                           "bounds_ref":  "placement_bounds"
+                                                       },
+                                            "props":  {
+                                                          "value":  0,
+                                                          "label":  "Accumulated result_2",
+                                                          "caption.text":  "Accumulated result_2",
+                                                          "caption.visible":  true,
+                                                          "caption.anchor.x":  18,
+                                                          "caption.anchor.y":  38,
+                                                          "caption.align.horizontal":  "left",
+                                                          "representation.kind":  "uint16",
+                                                          "display.increment_buttons_visible":  false,
+                                                          "style.caption.text_color":  "#111827",
+                                                          "style.caption.font_family":  "system-ui, Segoe UI, Arial, sans-serif",
+                                                          "style.caption.font_size":  "12px",
+                                                          "style.caption.font_weight":  "400",
+                                                          "style.text_value.color":  "#111827",
+                                                          "style.text_value.font_family":  "Segoe UI, Arial, sans-serif",
+                                                          "style.text_value.font_size":  "13px",
+                                                          "style.text_value.font_weight":  "400",
+                                                          "style.value_face.fill_color":  "#e9edf2",
+                                                          "style.value_face.border_color":  "#94a3b8",
+                                                          "style.value_face.border_width":  "1px",
+                                                          "label_color":  "#111827",
+                                                          "visible":  true,
+                                                          "enabled":  true,
+                                                          "foreground_color":  "#D8D8D8"
+                                                      },
+                                            "parts":  {
+                                                          "root":  {
+
+                                                                   },
+                                                          "placement_bounds":  {
+
+                                                                               },
+                                                          "caption":  {
+
+                                                                      },
+                                                          "indicator_body":  {
+
+                                                                             },
+                                                          "value_face":  {
+
+                                                                         },
+                                                          "text_value":  {
+
+                                                                         }
+                                                      },
+                                            "visual":  {
+                                                           "asset_ref":  "asset:numeric_rectangular_svg"
+                                                       },
+                                            "binding":  {
+                                                            "mode":  "widget_value",
+                                                            "widget_reference":  true
+                                                        }
+                                        },
+                                        {
+                                            "id":  "ctrl_input_plain",
+                                            "role":  "control",
+                                            "class_ref":  "frog.widgets.numeric_control",
+                                            "instance_ref":  "ctrl_input_plain",
+                                            "value_type":  "u16",
+                                            "layout":  {
+                                                           "x":  32,
+                                                           "y":  160,
+                                                           "width":  96,
+                                                           "height":  32,
+                                                           "origin":  "placement_bounds.top_left",
+                                                           "bounds_ref":  "placement_bounds"
+                                                       },
+                                            "props":  {
+                                                          "value":  0,
+                                                          "label":  "Input_3",
+                                                          "caption.text":  "Input_3",
+                                                          "caption.visible":  true,
+                                                          "caption.anchor.x":  18,
+                                                          "caption.anchor.y":  38,
+                                                          "caption.align.horizontal":  "left",
+                                                          "representation.kind":  "uint16",
+                                                          "binding.public_input_id":  "input_value_plain",
+                                                          "data_entry.minimum":  0,
+                                                          "data_entry.maximum":  65535,
+                                                          "data_entry.increment_step":  1,
+                                                          "display.increment_buttons_visible":  false,
+                                                          "style.caption.text_color":  "#111827",
+                                                          "style.caption.font_family":  "system-ui, Segoe UI, Arial, sans-serif",
+                                                          "style.caption.font_size":  "12px",
+                                                          "style.caption.font_weight":  "400",
+                                                          "style.text_value.color":  "#111827",
+                                                          "style.text_value.font_family":  "Segoe UI, Arial, sans-serif",
+                                                          "style.text_value.font_size":  "13px",
+                                                          "style.text_value.font_weight":  "400",
+                                                          "style.value_face.fill_color":  "#ffffff",
+                                                          "style.value_face.border_color":  "#94a3b8",
+                                                          "style.value_face.border_width":  "1px",
+                                                          "label_color":  "#111827",
+                                                          "visible":  true,
+                                                          "enabled":  true,
+                                                          "foreground_color":  "#D8D8D8"
+                                                      },
+                                            "parts":  {
+                                                          "root":  {
+
+                                                                   },
+                                                          "placement_bounds":  {
+
+                                                                               },
+                                                          "caption":  {
+
+                                                                      },
+                                                          "control_body":  {
+
+                                                                           },
+                                                          "value_face":  {
+
+                                                                         },
+                                                          "text_value":  {
+
+                                                                         }
+                                                      },
+                                            "visual":  {
+                                                           "asset_ref":  "asset:numeric_rectangular_svg"
+                                                       },
+                                            "binding":  {
+                                                            "mode":  "widget_value",
+                                                            "public_input_id":  "input_value_plain",
+                                                            "widget_reference":  true
+                                                        }
+                                        },
+                                        {
+                                            "id":  "ind_result_3",
+                                            "role":  "indicator",
+                                            "class_ref":  "frog.widgets.numeric_indicator",
+                                            "instance_ref":  "ind_result_3",
+                                            "value_type":  "u16",
+                                            "layout":  {
+                                                           "x":  288,
+                                                           "y":  160,
+                                                           "width":  96,
+                                                           "height":  32,
+                                                           "origin":  "placement_bounds.top_left",
+                                                           "bounds_ref":  "placement_bounds"
+                                                       },
+                                            "props":  {
+                                                          "value":  0,
+                                                          "label":  "Accumulated result_3",
+                                                          "caption.text":  "Accumulated result_3",
+                                                          "caption.visible":  true,
+                                                          "caption.anchor.x":  18,
+                                                          "caption.anchor.y":  38,
+                                                          "caption.align.horizontal":  "left",
+                                                          "representation.kind":  "uint16",
+                                                          "display.increment_buttons_visible":  false,
+                                                          "style.caption.text_color":  "#111827",
+                                                          "style.caption.font_family":  "system-ui, Segoe UI, Arial, sans-serif",
+                                                          "style.caption.font_size":  "12px",
+                                                          "style.caption.font_weight":  "400",
+                                                          "style.text_value.color":  "#111827",
+                                                          "style.text_value.font_family":  "Segoe UI, Arial, sans-serif",
+                                                          "style.text_value.font_size":  "13px",
+                                                          "style.text_value.font_weight":  "400",
+                                                          "style.value_face.fill_color":  "#e9edf2",
+                                                          "style.value_face.border_color":  "#94a3b8",
+                                                          "style.value_face.border_width":  "1px",
+                                                          "label_color":  "#111827",
+                                                          "visible":  true,
+                                                          "enabled":  true,
+                                                          "foreground_color":  "#D8D8D8"
+                                                      },
+                                            "parts":  {
+                                                          "root":  {
+
+                                                                   },
+                                                          "placement_bounds":  {
+
+                                                                               },
+                                                          "caption":  {
+
+                                                                      },
+                                                          "indicator_body":  {
+
+                                                                             },
+                                                          "value_face":  {
+
+                                                                         },
+                                                          "text_value":  {
+
+                                                                         }
+                                                      },
+                                            "visual":  {
+                                                           "asset_ref":  "asset:numeric_rectangular_svg"
+                                                       },
+                                            "binding":  {
+                                                            "mode":  "widget_value",
+                                                            "widget_reference":  true
+                                                        }
                                         }
                                     ],
                         "panel_id":  "main_panel",
-                        "title":  "Bounded UI Accumulator",
+                        "title":  "Numeric Placement IDE View",
                         "class_ref":  "frog.widgets.panel",
                         "host_binding_ref":  "reference_host_default"
                     }

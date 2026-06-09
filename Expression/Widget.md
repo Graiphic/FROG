@@ -580,6 +580,17 @@ When omitted, tools MAY treat <code>id</code> as the effective instance referenc
 Its detailed interpretation belongs normatively to <code>Front panel.md</code>.
 </p>
 
+<p>
+For front-panel widget instances, <code>layout.x</code> and
+<code>layout.y</code> are the canonical coordinates of the widget
+<code>placement_bounds</code> origin in the parent coordinate space. In the
+standard v0.1 placement model, that origin is
+<code>placement_bounds.top_left</code>. <code>layout.width</code> and
+<code>layout.height</code> describe the same placement-bounds rectangle, not
+the raw SVG viewBox, not an IDE selection overlay, and not a runtime-private
+host control rectangle.
+</p>
+
 <h3>11.7 <code>props</code></h3>
 
 <ul>

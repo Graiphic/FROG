@@ -1,0 +1,100 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "41_numeric_placement_ide_view",
+    "path": "Examples/41_numeric_placement_ide_view/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "bounded_stateful_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "input_value",
+            "type": "u16"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "type": "u16"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "ctrl_input",
+            "mode": "widget_value",
+            "public_input_id": "input_value"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "ind_result",
+            "mode": "widget_value",
+            "public_output_id": "result"
+          }
+        ],
+        "reference_writes": [
+          {
+            "widget_id": "ctrl_input",
+            "member": "foreground_color",
+            "value_type": "frog.color.rgba8",
+            "value_literal": "#5B9BD5"
+          },
+          {
+            "widget_id": "ind_result",
+            "member": "foreground_color",
+            "value_type": "frog.color.rgba8",
+            "value_literal": "#70AD47"
+          }
+        ]
+      },
+      "state_model": {
+        "explicit_state": true,
+        "carrier": {
+          "primitive": "frog.core.delay",
+          "state_id": "accumulator_state",
+          "type": "u16",
+          "initial_value": 0
+        },
+        "commit_rule": "state_next becomes state_current at the loop iteration commit point"
+      },
+      "execution_model": {
+        "structure": "for_loop",
+        "iteration_count": 5,
+        "iteration_variable": "i",
+        "body_rule": {
+          "kind": "accumulate_with_explicit_state",
+          "expression": "state_next = state_current + input_value"
+        },
+        "final_result_rule": "state_current after the final commit is the published result"
+      },
+      "publications": [
+        {
+          "target": "public_output.result",
+          "source": "state_current"
+        },
+        {
+          "target": "widget.ind_result.value",
+          "source": "state_current"
+        }
+      ],
+      "notes": [
+        "This FIR is execution-facing and remains downstream from canonical source.",
+        "The widget package remains authoritative for panel realization, assets, and host binding details.",
+        "The lowering published for Example 05 must remain a compatible projection of this FIR."
+      ]
+    }
+  ]
+}

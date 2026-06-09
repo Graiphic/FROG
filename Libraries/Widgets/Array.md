@@ -245,21 +245,20 @@ and element realization parts.
 </p>
 
 <p>
-When a contained widget realization publishes a compact embedding part, the
-array may fit the repeated cell to that published part through
-<code>element.layout.fit_part</code>. This is still composition of the contained
-widget realization; it is not permission to redraw the element as an array-local
-surrogate.
+When a contained widget realization publishes <code>placement_bounds</code>, the
+array cell uses those placement bounds as the repeated element surface. This is
+the reviewed Default posture for widget-backed cells. The visible widget body
+remains inside that cell according to the contained widget aura law; Array does
+not invent a second inset or redraw the element as an array-local surrogate.
 </p>
 
 <p>
-The array container may use different contained-widget fitting postures without
-changing its own frame law. For example, a Numeric element may be fitted to its
-published <code>control_body</code> part when increment/decrement buttons are
-visible, or to its published <code>indicator_body</code> part when those buttons
-are hidden. In both cases the Array frame, padding, and border thickness remain
-Array instance properties; only the contained Numeric part selected by
-<code>element.layout.fit_part</code> changes.
+The array container may use explicit contained-widget fitting postures only
+when the source intentionally opts out of the placement-bounds policy. For the
+reviewed Default Numeric compact realization, both controls and indicators use
+<code>placement_bounds</code>: the cell is <code>96x32</code>, the visible body
+is <code>88x24</code>, and the contained Numeric body stays centered by its own
+uniform aura band.
 </p>
 
 <p>
@@ -268,8 +267,19 @@ room, <code>element.layout.padding</code> defines the source-owned
 space between the repeated cell bounds and the contained widget instance. This
 padding must be consumed as layout geometry; it must not be replaced by a
 runtime-local fake border or duplicated element skin. Border-sharing repeated
-widgets may keep this value at <code>0</code> so neighboring element widgets
-touch or visually share their adjacent borders.
+widgets keep this value at <code>0</code> when
+<code>element.layout.boundary_policy=contained_widget_placement_bounds</code>;
+the apparent breathing room is already the contained widget's aura.
+</p>
+
+<p>
+Widget-backed cells follow the shared placement-grid law documented in
+<a href="./PlacementGrid.md"><code>PlacementGrid.md</code></a>. The contained
+widget remains autonomous and may resize according to its own law, but the
+Array element cell is the contained widget placement surface inside the Array.
+Cell hover, preselection, and selection belong to the Array cell. A contained
+widget focus ring is shown only when that contained widget itself receives
+focus for editing.
 </p>
 
 <ul>
@@ -280,9 +290,11 @@ touch or visually share their adjacent borders.
   <li><code>element.role</code></li>
   <li><code>element.template_ref</code></li>
   <li><code>element.default_value</code></li>
-  <li><code>element.layout.padding</code> - optional source-owned inset between the array cell bounds and the contained widget instance.</li>
-  <li><code>element.layout.fit_part</code> — optional contained-widget public part used as the repeated-cell fitting bounds.</li>
-  <li><code>element.layout.boundary_policy</code> - optional source-owned posture for contained-widget boundary sharing; the Default realization supports <code>superpose_adjacent_widget_bounds</code> when padding and gaps are zero.</li>
+  <li><code>element.layout.padding</code> - optional source-owned inset between the array cell bounds and the contained widget instance; must be <code>0</code> for reviewed <code>contained_widget_placement_bounds</code> cells because the cell already is the contained widget aura.</li>
+  <li><code>element.layout.grid_pitch</code> - optional source-owned placement-grid pitch for widget-backed cells; the reviewed Default posture uses <code>16px</code>.</li>
+  <li><code>element.layout.snap_policy</code> - optional placement sizing policy; widget-backed cells should snap the placement surface to the common grid.</li>
+  <li><code>element.layout.fit_part</code> — optional contained-widget public part used as the repeated-cell fitting bounds; reviewed widget-backed cells use <code>placement_bounds</code>.</li>
+  <li><code>element.layout.boundary_policy</code> - optional source-owned posture for contained-widget boundary handling; the Default realization supports <code>contained_widget_placement_bounds</code> for grid-snapped widget-backed cells.</li>
   <li><code>dimensions.rank</code></li>
   <li><code>dimensions.shape[]</code></li>
   <li><code>dimensions.index_base</code></li>

@@ -2,6 +2,7 @@
   "format": "frog.wfrog",
   "kind": "widget_realization_package",
   "package_id": "example05.accumulator_panel",
+  "reviewed_date": "2026-06-08",
   "title": "Example 05 Default Numeric realization package",
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"

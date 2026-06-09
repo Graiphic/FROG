@@ -1,4 +1,4 @@
-﻿{
+{
     "example_id":  "33_array_2d_numeric_container_roundtrip",
     "title":  "Array 2D Numeric Container Roundtrip",
     "snapshot_role":  "accepted_public_reference_snapshot",
@@ -24,9 +24,9 @@
     "container_contract":  {
                                "element_template_ref":  "Default Numeric",
                                "element_asset_ref":  "asset:numeric_rectangular_svg",
-                               "boundary_policy":  "superpose_adjacent_widget_bounds",
-                               "control_cells":  "fit Default Numeric control_body with increment/decrement controls visible",
-                               "indicator_cells":  "fit Default Numeric indicator_body with read-only grey style",
+                               "boundary_policy":  "contained_widget_placement_bounds",
+                               "control_cells":  "fit Default Numeric placement_bounds with increment/decrement controls visible",
+                               "indicator_cells":  "fit Default Numeric placement_bounds with read-only grey style",
                                "selection_rule":  "Selection and editing must not change cell or Array layout dimensions."
                            },
     "source_owned_properties":  [
@@ -50,7 +50,7 @@
                                 ],
     "validation_notes":  [
                              "The Array is a container widget, not a hardcoded numeric grid.",
-                             "Repeated cells consume the Default Numeric realization rather than local fake cells.",
+                             "Repeated cells consume the Default Numeric realization and respect its placement bounds rather than using local fake cells.",
                              "Control and indicator postures differ in interactivity while preserving the same geometry law.",
                              "Runtime overlays must align to Default Array and Default Numeric published parts.",
                              "No local Example SVG skin is duplicated."

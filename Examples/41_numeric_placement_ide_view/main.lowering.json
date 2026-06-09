@@ -1,0 +1,98 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "41_numeric_placement_ide_view",
+    "path": "Examples/41_numeric_placement_ide_view/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/41_numeric_placement_ide_view/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "purpose": "make the bounded example corridor consumable by runtime families and by future compiler-family paths",
+    "backend_family_target": "reference_host_runtime_ui_binding",
+    "compiler_family_targets": [
+      "llvm_oriented_native_path"
+    ]
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "bounded_accumulator_kernel_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "input_value",
+            "type": "u16"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "type": "u16"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "ctrl_input",
+            "mode": "widget_value",
+            "public_input_id": "input_value"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "ind_result",
+            "mode": "widget_value",
+            "public_output_id": "result"
+          }
+        ],
+        "reference_writes": [
+          {
+            "widget_id": "ctrl_input",
+            "member": "foreground_color",
+            "value_type": "frog.color.rgba8",
+            "value_literal": "#5B9BD5"
+          },
+          {
+            "widget_id": "ind_result",
+            "member": "foreground_color",
+            "value_type": "frog.color.rgba8",
+            "value_literal": "#70AD47"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "initial_state": 0,
+        "state_type": "u16",
+        "iteration_count": 5,
+        "iteration_body": [
+          {
+            "op": "add",
+            "dst": "state_next",
+            "src": [
+              "state_current",
+              "input_value"
+            ]
+          }
+        ],
+        "commit_rule": "state_current <- state_next after each iteration",
+        "final_publication": [
+          {
+            "target": "public_output.result",
+            "source": "state_current"
+          },
+          {
+            "target": "widget.ind_result.value",
+            "source": "state_current"
+          }
+        ]
+      }
+    }
+  ]
+}
