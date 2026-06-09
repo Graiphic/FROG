@@ -1062,6 +1062,28 @@
               ]
             },
             {
+              "key": "examples/41_numeric_placement_ide_view/",
+              "title": "41 numeric placement ide view",
+              "path": "/Examples/41_numeric_placement_ide_view/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/41_numeric_placement_ide_view/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/41_numeric_placement_ide_view/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "examples/41_numeric_placement_ide_view/ui/",
+                  "title": "ui",
+                  "path": "/Examples/41_numeric_placement_ide_view/ui/Readme.md",
+                  "kind": "category",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -1935,6 +1957,13 @@
                   "key": "libraries/widgets/picture.md",
                   "title": "Picture",
                   "path": "/Libraries/Widgets/Picture.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
+                  "key": "libraries/widgets/placementgrid.md",
+                  "title": "PlacementGrid",
+                  "path": "/Libraries/Widgets/PlacementGrid.md",
                   "kind": "page",
                   "children": []
                 },
@@ -5126,6 +5155,9 @@
     "/Examples/39_array_enum_container_dimension_count_roundtrip/Readme.md",
     "/Examples/40_array_ring_container_dimension_count_roundtrip/main.frog",
     "/Examples/40_array_ring_container_dimension_count_roundtrip/Readme.md",
+    "/Examples/41_numeric_placement_ide_view/main.frog",
+    "/Examples/41_numeric_placement_ide_view/ui/Readme.md",
+    "/Examples/41_numeric_placement_ide_view/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
@@ -5248,6 +5280,7 @@
     "/Libraries/Widgets/Numeric.md",
     "/Libraries/Widgets/Path.md",
     "/Libraries/Widgets/Picture.md",
+    "/Libraries/Widgets/PlacementGrid.md",
     "/Libraries/Widgets/Ring.md",
     "/Libraries/Widgets/Splitter.md",
     "/Libraries/Widgets/String.md",
