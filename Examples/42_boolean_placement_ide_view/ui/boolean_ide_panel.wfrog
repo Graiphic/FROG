@@ -1,22 +1,17 @@
 {
   "format": "frog.wfrog",
   "kind": "widget_realization_package",
-  "package_id": "example06.boolean_panel",
-  "title": "Example 06 Default Boolean value realization package",
+  "package_id": "example42.boolean_placement_ide_panel",
+  "title": "Example 42 Default Boolean IDE placement realization package",
   "reviewed_date": "2026-06-10",
-  "review": {
-    "last_reviewed": "2026-06-10",
-    "scope": "Example 06 clean Boolean square/round SVG state_face and placement_bounds contract",
-    "visible_runtime_fact": "Reviewed 2026-06-10"
-  },
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },
   "source_ref": {
-    "example_id": "06_boolean_value_roundtrip",
-    "source_path": "Examples/06_boolean_value_roundtrip/main.frog",
-    "fir_path": "Examples/06_boolean_value_roundtrip/main.fir.json",
-    "lowering_path": "Examples/06_boolean_value_roundtrip/main.lowering.json"
+    "example_id": "42_boolean_placement_ide_view",
+    "source_path": "Examples/42_boolean_placement_ide_view/main.frog",
+    "fir_path": "Examples/42_boolean_placement_ide_view/main.fir.json",
+    "lowering_path": "Examples/42_boolean_placement_ide_view/main.lowering.json"
   },
   "ownership_boundary": {
     "owns": [
@@ -53,6 +48,10 @@
         "window",
         "basic_widget_rendering",
         "widget_value_binding"
+      ],
+      "optional_capabilities": [
+        "ide_selection_overlay",
+        "placement_grid"
       ]
     }
   ],
@@ -156,13 +155,19 @@
       "asset_id": "boolean_rectangular_svg",
       "kind": "svg",
       "path": "../../../Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg",
-      "target_class": "frog.widgets.boolean_control"
+      "target_classes": [
+        "frog.widgets.boolean_control",
+        "frog.widgets.boolean_indicator"
+      ]
     },
     {
       "asset_id": "boolean_circular_svg",
       "kind": "svg",
       "path": "../../../Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg",
-      "target_class": "frog.widgets.boolean_indicator"
+      "target_classes": [
+        "frog.widgets.boolean_control",
+        "frog.widgets.boolean_indicator"
+      ]
     }
   ]
 }

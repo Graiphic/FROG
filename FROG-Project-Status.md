@@ -301,6 +301,8 @@ The progression is intentionally staged:
 <code>Examples/05_bounded_ui_accumulator/</code> remains the primary applicative vertical-slice anchor because it combines source, front-panel package, FIR, lowering, backend contract, runtime-family acceptance, Python/Rust/C/C++ reference-consumer posture, and an LLVM-oriented native proof path.
 Examples <code>01</code> through <code>04</code> are smaller executable proof slices used to keep individual concerns inspectable before they are combined in Example <code>05</code>.
 Examples <code>06</code> through <code>15</code> are current widget-focused public reference runtime slices used to keep Boolean, String, Enum, Path, and Button front-panel behavior honest across C++, Python, and Rust.
+Example <code>42</code> is a public Boolean IDE/calibration view for the Default Boolean <code>placement_bounds</code> aura, <code>state_face</code> surface, square/round skins, oval/rectangular resizing, and optional centered On/Off text.
+Example <code>43</code> is the matching Boolean Array IDE/calibration view: square Boolean control cells, round Boolean indicator cells, and contained-widget <code>placement_bounds</code> cells on a visible review grid.
 Runtime development for examples beyond Example <code>15</code> continues in Graiphic's proprietary runtime repository unless explicitly promoted later as public reference material.
 </p>
 

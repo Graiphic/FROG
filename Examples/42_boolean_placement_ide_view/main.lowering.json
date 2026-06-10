@@ -1,0 +1,76 @@
+{
+  "artifact_kind": "frog_lowered_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "42_boolean_placement_ide_view",
+    "path": "Examples/42_boolean_placement_ide_view/main.frog",
+    "entry_unit": "main"
+  },
+  "fir_ref": {
+    "path": "Examples/42_boolean_placement_ide_view/main.fir.json",
+    "unit_id": "main"
+  },
+  "lowering_intent": {
+    "purpose": "make the Boolean IDE placement witness consumable by the reference host runtime while preserving the Boolean value roundtrip corridor",
+    "backend_family_target": "reference_host_runtime_ui_binding",
+    "compiler_family_targets": [
+      "llvm_native_kernel_bridge"
+    ]
+  },
+  "lowered_units": [
+    {
+      "unit_id": "main",
+      "kind": "boolean_value_roundtrip_kernel_with_ui_bindings",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "input_value",
+            "type": "bool"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "type": "bool"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "bool_input",
+            "mode": "widget_value",
+            "public_input_id": "input_value",
+            "value_type": "bool"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "bool_result",
+            "mode": "widget_value",
+            "public_output_id": "result",
+            "value_type": "bool"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "copy",
+        "dst": "result",
+        "type": "bool",
+        "src": "input_value",
+        "final_publication": [
+          {
+            "target": "public_output.result",
+            "source": "input_value"
+          },
+          {
+            "target": "widget.bool_result.value",
+            "source": "input_value"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "artifact_kind": "frog_backend_contract",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "backend_family": "reference_host_runtime_ui_binding",
+  "example_id": "42_boolean_placement_ide_view",
+  "artifact_refs": {
+    "source_path": "Examples/42_boolean_placement_ide_view/main.frog",
+    "fir_path": "Examples/42_boolean_placement_ide_view/main.fir.json",
+    "lowering_path": "Examples/42_boolean_placement_ide_view/main.lowering.json",
+    "wfrog_path": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog"
+  },
+  "producer": {
+    "implementation": "FROG Reference ContractEmitter",
+    "implementation_kind": "non_normative_reference_emitter",
+    "version_governance_ref": "Versioning/Readme.md"
+  },
+  "compatibility": "family_specific",
+  "source_ref": {
+    "example_id": "42_boolean_placement_ide_view",
+    "path": "Examples/42_boolean_placement_ide_view/main.frog",
+    "entry_unit": "main"
+  },
+  "derived_from": {
+    "fir_path": "Examples/42_boolean_placement_ide_view/main.fir.json",
+    "lowering_path": "Examples/42_boolean_placement_ide_view/main.lowering.json",
+    "ui_package_path": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog"
+  },
+  "ownership_boundary": {
+    "semantic_authority": "canonical_source_and_execution_facing_artifacts",
+    "semantic_authority_refs": [
+      "Examples/42_boolean_placement_ide_view/main.frog",
+      "Examples/42_boolean_placement_ide_view/main.fir.json",
+      "Examples/42_boolean_placement_ide_view/main.lowering.json"
+    ],
+    "ui_package_authority": "published_widget_realization_package",
+    "ui_package_authority_refs": [
+      "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog"
+    ],
+    "contract_authority": "this_file",
+    "notes": [
+      "This contract is downstream from canonical source, FIR, lowering, and the published UI package.",
+      "This contract must not redefine source semantics.",
+      "If this file diverges from the canonical execution-facing artifacts, those upstream artifacts win.",
+      "Example 42 is an IDE placement witness. Extra Boolean widgets in the source front panel are visual calibration instances."
+    ]
+  },
+  "assumptions": {
+    "runtime_family": {
+      "name": "reference_host_runtime_ui_binding",
+      "host_model": "single_process_host_runtime",
+      "ui_binding": {
+        "widget_value_binding": true,
+        "widget_reference_binding": false
+      }
+    },
+    "scheduling": {
+      "family_rule": "deterministic_step_execution",
+      "parallelism_claim": "none"
+    },
+    "execution_start": {
+      "input_binding_complete": true,
+      "ui_host_available": true,
+      "initial_state_materialized": true
+    },
+    "boolean_behavior": {
+      "value_domain": "bool",
+      "operation": "copy"
+    }
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "boolean_value_roundtrip_ui_unit",
+      "public_io": {
+        "inputs": [
+          {
+            "id": "input_value",
+            "type": "bool",
+            "binding_origin": "widget.bool_input.value"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "type": "bool",
+            "binding_target": "widget.bool_result.value"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "package_refs": [
+          "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog"
+        ],
+        "widgets": [
+          {
+            "widget_id": "bool_input",
+            "widget_class": "frog.widgets.boolean_control",
+            "value_type": "bool",
+            "role": "control",
+            "binding": {
+              "mode": "widget_value",
+              "public_input_id": "input_value"
+            }
+          },
+          {
+            "widget_id": "bool_result",
+            "widget_class": "frog.widgets.boolean_indicator",
+            "value_type": "bool",
+            "role": "indicator",
+            "binding": {
+              "mode": "widget_value",
+              "public_output_id": "result"
+            }
+          }
+        ],
+        "control_bindings": [
+          {
+            "widget_id": "bool_input",
+            "mode": "widget_value",
+            "public_input_id": "input_value",
+            "value_type": "bool"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "bool_result",
+            "mode": "widget_value",
+            "public_output_id": "result",
+            "value_type": "bool"
+          }
+        ]
+      },
+      "execution_kernel": {
+        "operation": "copy",
+        "src": "input_value",
+        "dst": "result",
+        "type": "bool"
+      },
+      "effects": [],
+      "publications": [
+        {
+          "target": "public_output.result",
+          "source": "input_value"
+        },
+        {
+          "target": "widget.bool_result.value",
+          "source": "input_value"
+        }
+      ]
+    }
+  ],
+  "unsupported": [],
+  "diagnostics": []
+}

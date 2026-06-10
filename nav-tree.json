@@ -1084,6 +1084,50 @@
               ]
             },
             {
+              "key": "examples/42_boolean_placement_ide_view/",
+              "title": "42 boolean placement ide view",
+              "path": "/Examples/42_boolean_placement_ide_view/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/42_boolean_placement_ide_view/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/42_boolean_placement_ide_view/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "examples/42_boolean_placement_ide_view/ui/",
+                  "title": "ui",
+                  "path": "/Examples/42_boolean_placement_ide_view/ui/Readme.md",
+                  "kind": "category",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "key": "examples/43_array_boolean_container_ide_view/",
+              "title": "43 array boolean container ide view",
+              "path": "/Examples/43_array_boolean_container_ide_view/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/43_array_boolean_container_ide_view/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/43_array_boolean_container_ide_view/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "examples/43_array_boolean_container_ide_view/ui/",
+                  "title": "ui",
+                  "path": "/Examples/43_array_boolean_container_ide_view/ui/Readme.md",
+                  "kind": "category",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -5158,6 +5202,12 @@
     "/Examples/41_numeric_placement_ide_view/main.frog",
     "/Examples/41_numeric_placement_ide_view/ui/Readme.md",
     "/Examples/41_numeric_placement_ide_view/Readme.md",
+    "/Examples/42_boolean_placement_ide_view/main.frog",
+    "/Examples/42_boolean_placement_ide_view/ui/Readme.md",
+    "/Examples/42_boolean_placement_ide_view/Readme.md",
+    "/Examples/43_array_boolean_container_ide_view/main.frog",
+    "/Examples/43_array_boolean_container_ide_view/ui/Readme.md",
+    "/Examples/43_array_boolean_container_ide_view/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",

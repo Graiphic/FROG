@@ -211,7 +211,8 @@ Examples/36_array_string_container_dimension_count_roundtrip/ui/array_panel.wfro
 Examples/37_array_path_container_dimension_count_roundtrip/ui/array_panel.wfrog
 Examples/38_array_boolean_container_dimension_count_roundtrip/ui/array_panel.wfrog
 Examples/39_array_enum_container_dimension_count_roundtrip/ui/array_panel.wfrog
-Examples/40_array_ring_container_dimension_count_roundtrip/ui/array_panel.wfrog</code></pre>
+Examples/40_array_ring_container_dimension_count_roundtrip/ui/array_panel.wfrog
+Examples/43_array_boolean_container_ide_view/ui/array_panel.wfrog</code></pre>
 
 <p>
 The <code>.wfrog</code> package resolves Default realization assets and host
@@ -226,7 +227,7 @@ indices, or diagram behavior.
   <li>Default Numeric SVG: <code>Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg</code></li>
   <li>Default String package/SVG for widget-backed cells: <code>Libraries/Realizations/Default/string.default.wfrog</code> and <code>Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg</code></li>
   <li>Default Path package/SVG for widget-backed cells: <code>Libraries/Realizations/Default/path.default.wfrog</code> and <code>Libraries/Realizations/Default/assets/path/templates/path_rectangular_field.svg</code></li>
-  <li>Default Boolean package/SVG for widget-backed cells: <code>Libraries/Realizations/Default/boolean.default.wfrog</code> and <code>Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg</code></li>
+  <li>Default Boolean package/SVGs for widget-backed cells: <code>Libraries/Realizations/Default/boolean.default.wfrog</code>, <code>Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg</code>, and <code>Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg</code></li>
   <li>Default Enum package/SVG/dropdown SVG for widget-backed cells: <code>Libraries/Realizations/Default/enum.default.wfrog</code>, <code>Libraries/Realizations/Default/assets/enum/templates/enum_rectangular_ring.svg</code>, and <code>Libraries/Realizations/Default/assets/enum/templates/enum_dropdown_list.svg</code></li>
   <li>Default Ring package/SVG/dropdown SVG for widget-backed cells: <code>Libraries/Realizations/Default/ring.default.wfrog</code>, <code>Libraries/Realizations/Default/assets/ring/templates/ring_rectangular.svg</code>, and <code>Libraries/Realizations/Default/assets/ring/templates/ring_dropdown_list.svg</code></li>
 </ul>
@@ -251,7 +252,9 @@ indices, or diagram behavior.
 <p>
 The current Array examples are post-public-runtime-boundary widget progression
 examples. They contain public source, FIR, lowering, Default realization
-references, and native manifest proof material. Runtime implementation for
+references, and native manifest proof material. IDE companion examples may
+reuse an executable slice's native manifest when they exist only to review
+placement, grid, aura, or realization composition. Runtime implementation for
 these slices continues in <code>Graiphic/FROG-Runtime</code> unless explicitly
 promoted later.
 </p>
@@ -269,9 +272,10 @@ promoted later.
   <li>Example 35: current N-dimensional Array container property-write posture where Numeric U8 controls drive <code>dimensions.rank</code>, <code>index_display.rank</code>, and the visible row/column counts on <code>Execute</code>.</li>
   <li>Example 36: current N-dimensional Array container posture with repeated Default String element widgets.</li>
   <li>Example 37: current N-dimensional Array container posture with repeated Default Path element widgets.</li>
-  <li>Example 38: current N-dimensional Array container posture with repeated Default Boolean element widgets.</li>
+  <li>Example 38: current N-dimensional Array container posture with repeated Default Boolean element widgets; the control Array uses square <code>asset:boolean_rectangular_svg</code> cells, the indicator Array uses round <code>asset:boolean_circular_svg</code> cells, and both fit the contained Boolean <code>placement_bounds</code> aura.</li>
   <li>Example 39: current N-dimensional Array container posture with repeated Default Enum element widgets.</li>
   <li>Example 40: current N-dimensional Array container posture with repeated Default Ring element widgets.</li>
+  <li>Example 43: IDE/review companion for Example 38; it turns on the placement grid and validates the same square/round Boolean Array posture without introducing a new native Boolean kernel.</li>
 </ul>
 
 <p>

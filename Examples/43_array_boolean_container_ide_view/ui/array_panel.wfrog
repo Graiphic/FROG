@@ -1,16 +1,16 @@
 {
   "format": "frog.wfrog",
   "kind": "widget_realization_package",
-  "package_id": "example38.array_boolean_container_dimension_count_panel",
-  "title": "Example 38 Default Array + Boolean element dimension-count property realization package",
+  "package_id": "example43.array_boolean_container_ide_panel",
+  "title": "Example 43 Default Array + Boolean element IDE placement realization package",
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },
   "source_ref": {
-    "example_id": "38_array_boolean_container_dimension_count_roundtrip",
-    "source_path": "Examples/38_array_boolean_container_dimension_count_roundtrip/main.frog",
-    "fir_path": "Examples/38_array_boolean_container_dimension_count_roundtrip/main.fir.json",
-    "lowering_path": "Examples/38_array_boolean_container_dimension_count_roundtrip/main.lowering.json"
+    "example_id": "43_array_boolean_container_ide_view",
+    "source_path": "Examples/43_array_boolean_container_ide_view/main.frog",
+    "fir_path": "Examples/43_array_boolean_container_ide_view/main.fir.json",
+    "lowering_path": "Examples/43_array_boolean_container_ide_view/main.lowering.json"
   },
   "ownership_boundary": {
     "owns": [
@@ -202,6 +202,7 @@
     "Boolean Array cells can bind either asset:boolean_rectangular_svg or asset:boolean_circular_svg through source-owned element.asset_ref.",
     "The .frog source owns Array rank, explicit/default N-dimensional shape profiles, boolean elements, selected element, viewport, dimension-rank property writes, index-display rank mirrors, visible row/column property writes, layout, boolean element default value, and visual overrides.",
     "The .wfrog package resolves Default realization assets and declares host capabilities for N-dimensional Boolean element widget template rendering and Numeric U8 property-control rendering.",
+    "This IDE view keeps the Example 38 Boolean Array execution corridor but turns the placement grid on for visual review.",
     "Reviewed 2026-06-10."
   ]
 }

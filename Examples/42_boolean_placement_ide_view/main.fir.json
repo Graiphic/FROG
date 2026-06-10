@@ -1,0 +1,74 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "42_boolean_placement_ide_view",
+    "path": "Examples/42_boolean_placement_ide_view/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "boolean_value_roundtrip_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "input_value",
+            "type": "bool"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "type": "bool"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "bool_input",
+            "mode": "widget_value",
+            "public_input_id": "input_value",
+            "value_type": "bool"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "bool_result",
+            "mode": "widget_value",
+            "public_output_id": "result",
+            "value_type": "bool"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "single_value_copy",
+        "body_rule": {
+          "kind": "copy_widget_value_to_output",
+          "expression": "result = input_value"
+        }
+      },
+      "publications": [
+        {
+          "target": "public_output.result",
+          "source": "input_value"
+        },
+        {
+          "target": "widget.bool_result.value",
+          "source": "input_value"
+        }
+      ],
+      "notes": [
+        "This FIR keeps the Boolean roundtrip corridor available while Example 42 is reviewed as an IDE placement witness.",
+        "Additional source-owned Boolean widgets in the front panel are visual calibration instances, not public IO."
+      ]
+    }
+  ]
+}

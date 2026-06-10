@@ -350,8 +350,8 @@ They are traceability metadata only; they are not FROG language versions and the
     </tr>
     <tr>
       <td><code>38_array_boolean_container_dimension_count_roundtrip</code></td>
-      <td><time datetime="2026-06-07">2026-06-07</time></td>
-      <td>Array container whose cells are Default Boolean widgets while N-dimensional rank and visible row/column counts remain driven by Numeric U8 property-write controls consumed on Execute</td>
+      <td><time datetime="2026-06-10">2026-06-10</time></td>
+      <td>Array container whose control cells are square Default Boolean widgets and indicator cells are round Default Boolean widgets while N-dimensional rank and visible row/column counts remain driven by Numeric U8 property-write controls consumed on Execute</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code> unless explicitly promoted later</td>
     </tr>
@@ -375,6 +375,20 @@ They are traceability metadata only; they are not FROG language versions and the
       <td>IDE-view Numeric placement witness showing the 16px grid, placement aura, label aura, and right/left/hidden increment-decrement postures</td>
       <td><code>main.frog</code> + <code>ui/numeric_ide_panel.wfrog</code></td>
       <td>C++ browser-host calibration surface only: Example 05 remains the executable Numeric accumulator slice</td>
+    </tr>
+    <tr>
+      <td><code>42_boolean_placement_ide_view</code></td>
+      <td><time datetime="2026-06-10">2026-06-10</time></td>
+      <td>IDE-view Boolean placement witness showing square/rectangular and round/oval Default Boolean skins, placement aura, state face, and optional centered state text</td>
+      <td><code>main.frog</code> + <code>ui/boolean_ide_panel.wfrog</code></td>
+      <td>C++ browser-host calibration surface only: Example 06 remains the executable Boolean value roundtrip slice</td>
+    </tr>
+    <tr>
+      <td><code>43_array_boolean_container_ide_view</code></td>
+      <td><time datetime="2026-06-10">2026-06-10</time></td>
+      <td>IDE-view Array + Boolean placement witness showing square Boolean control cells, round Boolean indicator cells, contained-widget placement-bound cells, and the visible review grid</td>
+      <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
+      <td>C++ browser-host calibration surface only: Example 38 remains the executable Boolean Array dimension-count slice</td>
     </tr>
   </tbody>
 </table>

@@ -1,0 +1,240 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "42_boolean_placement_ide_view",
+    "summary": "IDE-view calibration example for Default Boolean square/round skins, placement aura, grid posture, and state text.",
+    "description": "Publishes a source-owned IDE/calibration view of the Default Boolean control and indicator postures. It shows square, rectangular, round, and oval outcomes from the same Boolean widget family and uses placement_bounds as the aura selected by the IDE.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "review": {
+      "last_reviewed": "2026-06-10",
+      "review_scope": "Default Boolean IDE grid, placement_bounds aura, state_face skin variants, and optional centered state text."
+    },
+    "tags": [
+      "example",
+      "ui",
+      "widget_value",
+      "boolean",
+      "widget_reference",
+      "wfrog",
+      "widget_realization_package",
+      "ide_view",
+      "placement_grid",
+      "placement_aura"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "input_value",
+        "type": "bool",
+        "binding_origin": "widget.bool_input.value"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "result",
+        "type": "bool"
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "bool_input_value",
+        "kind": "widget_value",
+        "widget": "bool_input"
+      },
+      {
+        "id": "bool_result_value",
+        "kind": "widget_value",
+        "widget": "bool_result"
+      },
+      {
+        "id": "output_result",
+        "kind": "interface_output",
+        "interface_port": "result"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "bool_input_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "bool_result_value",
+          "port": "value"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "bool_input_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "output_result",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 400,
+      "height": 288,
+      "coordinate_space": "panel_pixels",
+      "presentation_mode": "ide_view",
+      "selected_widget_id": "bool_input",
+      "grid": {
+        "visible": true,
+        "pitch": 16,
+        "origin": {
+          "x": 0,
+          "y": 0
+        },
+        "snap": "placement_bounds",
+        "snap_edges": [
+          "placement_bounds.top_left",
+          "placement_bounds.top_right"
+        ],
+        "width_quantization": "grid_pitch_multiple"
+      }
+    },
+    "package_refs": [
+      "./ui/boolean_ide_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "bool_input",
+        "role": "control",
+        "class_ref": "frog.widgets.boolean_control",
+        "instance_ref": "bool_input",
+        "value_type": "bool",
+        "layout": {
+          "x": 32,
+          "y": 64,
+          "width": 80,
+          "height": 80,
+          "origin": "placement_bounds.top_left",
+          "bounds_ref": "placement_bounds"
+        },
+        "props": {
+          "value": true,
+          "label.text": "Square Boolean control",
+          "caption.text": "Square control",
+          "caption.visible": true,
+          "state_text.visible": true,
+          "state_text.true_text": "On",
+          "state_text.false_text": "Off",
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:boolean_rectangular_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "input_value"
+        }
+      },
+      {
+        "id": "bool_result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.boolean_indicator",
+        "instance_ref": "bool_result",
+        "value_type": "bool",
+        "layout": {
+          "x": 192,
+          "y": 64,
+          "width": 80,
+          "height": 80,
+          "origin": "placement_bounds.top_left",
+          "bounds_ref": "placement_bounds"
+        },
+        "props": {
+          "value": true,
+          "label.text": "Round Boolean indicator",
+          "caption.text": "Round indicator",
+          "caption.visible": true,
+          "state_text.visible": false,
+          "realization.variant": "circular"
+        },
+        "visual": {
+          "asset_ref": "asset:boolean_circular_svg"
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "result"
+        }
+      },
+      {
+        "id": "bool_oval_control",
+        "role": "control",
+        "class_ref": "frog.widgets.boolean_control",
+        "instance_ref": "bool_oval_control",
+        "value_type": "bool",
+        "layout": {
+          "x": 32,
+          "y": 192,
+          "width": 112,
+          "height": 80,
+          "origin": "placement_bounds.top_left",
+          "bounds_ref": "placement_bounds"
+        },
+        "props": {
+          "value": false,
+          "label.text": "Oval Boolean control",
+          "caption.text": "Oval control",
+          "caption.visible": true,
+          "state_text.visible": true,
+          "state_text.true_text": "On",
+          "state_text.false_text": "Off",
+          "realization.variant": "circular"
+        },
+        "visual": {
+          "asset_ref": "asset:boolean_circular_svg"
+        },
+        "binding": {
+          "mode": "widget_value"
+        }
+      },
+      {
+        "id": "bool_rect_indicator",
+        "role": "indicator",
+        "class_ref": "frog.widgets.boolean_indicator",
+        "instance_ref": "bool_rect_indicator",
+        "value_type": "bool",
+        "layout": {
+          "x": 192,
+          "y": 192,
+          "width": 112,
+          "height": 80,
+          "origin": "placement_bounds.top_left",
+          "bounds_ref": "placement_bounds"
+        },
+        "props": {
+          "value": false,
+          "label.text": "Rectangular Boolean indicator",
+          "caption.text": "Rect indicator",
+          "caption.visible": true,
+          "state_text.visible": false,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:boolean_rectangular_svg"
+        },
+        "binding": {
+          "mode": "widget_value"
+        }
+      }
+    ],
+    "panel_id": "main_panel",
+    "title": "Boolean Placement IDE View",
+    "class_ref": "frog.widgets.panel",
+    "host_binding_ref": "reference_host_default"
+  }
+}

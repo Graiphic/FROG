@@ -1,10 +1,14 @@
 # Example 38 - Boolean Array Dimension Count Property Roundtrip
 
-Reviewed 2026-06-07.
+Reviewed 2026-06-10.
 
 This example demonstrates an N-dimensional Array container whose dimension count is controlled by a Numeric U8 control through explicit diagram property writes. Two additional Numeric U8 controls continue to command visible row and column counts for the active Array view.
 
 The Array owns the N-dimensional rank posture, source-owned explicit/default shape profiles, one index display per active dimension, viewport, scrolling, insertion/materialization posture, and repeated-cell layout. Rank 1 renders as one visible axis; rank 2 renders as a matrix; rank 3 or higher renders the last two dimensions as the visible matrix and exposes every leading dimension through stacked index displays. The Numeric U8 controls are front-panel values until Execute consumes them and writes the Array rank/display/viewport properties. The Boolean element owns per-cell true/false state, state text, and control/indicator behavior through the Default Boolean realization.
+
+The control Array uses square Default Boolean cells through `asset:boolean_rectangular_svg`.
+The indicator Array uses round Default Boolean cells through `asset:boolean_circular_svg`.
+Both use `element.layout.fit_part = placement_bounds` and `element.layout.boundary_policy = contained_widget_placement_bounds`, so each Array cell is the contained Boolean placement aura rather than a runtime-invented shell.
 
 ## Runtime Boundary
 
@@ -20,8 +24,8 @@ Example 38 is a post-public-boundary widget progression example. Graiphic privat
 - Execute wires the row and column controls through explicit property-write nodes to `viewport.visible_counts[0]` and `viewport.visible_counts[1]`.
 - In rank 1, the visible column count is intentionally collapsed to one visual column; in rank 2 or higher, row/column counts control the visible projection of the last two semantic dimensions.
 - Visible counts are viewport display properties. They may exceed the currently materialized semantic shape without forcing data materialization.
-- Each visible cell references the Default Boolean realization through `element.template_ref` and `element.asset_ref`.
-- Runtime overlays must align to Default Array `index_display`, `element_region`, `element_slot`, and scrollbar parts, plus the Default Boolean `inner_face` part.
+- Each visible cell references the Default Boolean realization through `element.template_ref` and source-owned `element.asset_ref`.
+- Runtime overlays must align to Default Array `index_display`, `element_region`, `element_slot`, and scrollbar parts. Boolean cells fit the Default Boolean `placement_bounds` aura and render the visible value through `state_face`.
 - No local Example SVG skin is duplicated.
 - Runtime-family validation for this post-boundary example must preserve the same source-owned N-dimensional rank, index-display wrapping, final-two-dimensions projection, visible row/column command semantics, and Boolean cell roundtrip across the private hosts that implement this slice.
 

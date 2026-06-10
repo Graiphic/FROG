@@ -4,16 +4,16 @@
     "path": "Versioning/Readme.md"
   },
   "source_ref": {
-    "example_id": "38_array_boolean_container_dimension_count_roundtrip",
-    "path": "Examples/38_array_boolean_container_dimension_count_roundtrip/main.frog",
+    "example_id": "43_array_boolean_container_ide_view",
+    "path": "Examples/43_array_boolean_container_ide_view/main.frog",
     "entry_unit": "main"
   },
   "fir_ref": {
-    "path": "Examples/38_array_boolean_container_dimension_count_roundtrip/main.fir.json",
+    "path": "Examples/43_array_boolean_container_ide_view/main.fir.json",
     "unit_id": "main"
   },
   "lowering_intent": {
-    "summary": "make one post-boundary Array dynamic dimension-count property example consumable through a manifest-declared LLVM/native Boolean proof boundary plus Default Array, Default Numeric, and Default Boolean realizations",
+    "summary": "make one IDE-view Boolean Array placement example consumable through the Example 38 manifest-declared LLVM/native Boolean proof boundary plus Default Array, Default Numeric, and Default Boolean realizations",
     "backend_family_target": "llvm_native_kernel",
     "capability_targets": [
       "native_kernel_manifest",
@@ -38,7 +38,7 @@
   "lowered_units": [
     {
       "unit_id": "main",
-      "kind": "array_dynamic_dimension_count_boolean_element_property_roundtrip_with_ui_bindings",
+      "kind": "array_dynamic_dimension_count_boolean_element_ide_view_with_ui_bindings",
       "public_io": {
         "inputs": [
           {

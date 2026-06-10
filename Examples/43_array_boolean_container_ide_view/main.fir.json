@@ -4,12 +4,12 @@
     "path": "Versioning/Readme.md"
   },
   "source_ref": {
-    "example_id": "38_array_boolean_container_dimension_count_roundtrip",
-    "path": "Examples/38_array_boolean_container_dimension_count_roundtrip/main.frog",
+    "example_id": "43_array_boolean_container_ide_view",
+    "path": "Examples/43_array_boolean_container_ide_view/main.frog",
     "entry_unit": "main"
   },
   "unit_id": "main",
-  "summary": "FIR for Example 38 Boolean Array dynamic dimension-count property roundtrip with visible row/column property writes.",
+  "summary": "FIR for Example 43 Boolean Array IDE placement view with square control cells and round indicator cells.",
   "interfaces": {
     "inputs": [
       {
@@ -51,7 +51,7 @@
   },
   "front_panel": {
     "package_refs": [
-      "Examples/38_array_boolean_container_dimension_count_roundtrip/ui/array_panel.wfrog"
+      "Examples/43_array_boolean_container_ide_view/ui/array_panel.wfrog"
     ],
     "widgets": [
       {

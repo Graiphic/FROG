@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 128 120"
+     role="img"
+     aria-label="Review overlay for FROG default boolean round LED SVG parts"
+     data-frog-review-only="true">
+  <title>Boolean Round LED Semantic Part Review Overlay</title>
+  <desc>Colorized review-only overlay for the public Boolean SVG parts.</desc>
+  <g id="root" data-frog-part="root">
+    <rect x="0" y="0" width="128" height="120" fill="#f8fafc" stroke="#94a3b8" stroke-dasharray="4 3"/>
+    <text data-frog-part="label" x="16" y="24" fill="#7c3aed" font-family="Segoe UI, Arial, sans-serif" font-size="9">label/caption anchor</text>
+    <rect data-frog-part="placement_bounds" x="16" y="32" width="72" height="72" fill="rgba(14,165,233,0.08)" stroke="#00ADEF" stroke-width="1"/>
+    <ellipse data-frog-part="state_face" cx="52" cy="68" rx="28" ry="28" fill="#4A8DBC" stroke="#A8ABAE" stroke-width="1"/>
+    <ellipse data-frog-part="focus_ring" cx="52" cy="68" rx="28" ry="28" fill="none" stroke="#f97316" stroke-width="2" stroke-dasharray="3 2"/>
+    <text data-frog-part="state_text" x="52" y="68" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="13">On</text>
+  </g>
+</svg>

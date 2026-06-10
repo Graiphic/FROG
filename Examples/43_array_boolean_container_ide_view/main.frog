@@ -1,9 +1,9 @@
 {
   "spec_version": "0.1",
   "metadata": {
-    "name": "38_array_boolean_container_dimension_count_roundtrip",
-    "summary": "Boolean Array dynamic dimension-count property roundtrip using square Boolean control cells, round Boolean indicator cells, one Numeric U8 dimension control, and two Numeric U8 visible row/column controls.",
-    "description": "Places Numeric U8 controls for dimensions and visible row/column counts around an Array control with square Default Boolean cells and an Array indicator with round Default Boolean cells. Execute consumes the selected Boolean cell through the native Boolean manifest corridor, while dimensions.rank, index_display.rank, and viewport.visible_counts keep the same N-dimensional behavior validated by the Numeric Array example.",
+    "name": "43_array_boolean_container_ide_view",
+    "summary": "Boolean Array IDE placement view using square Boolean control cells, round Boolean indicator cells, and the visible placement grid.",
+    "description": "Places the same Boolean Array control/indicator pair as Example 38 on an IDE calibration surface. The control Array uses square Default Boolean cells, the indicator Array uses round Default Boolean cells, and the visible grid documents the Array-as-container posture without changing the C++ Boolean Array execution corridor.",
     "author": "Graiphic",
     "program_version": "0.1.0",
     "review": {
@@ -43,7 +43,9 @@
       "boolean_array_container",
       "boolean_square_cells",
       "boolean_round_cells",
-      "placement_bounds_cell_aura"
+      "placement_bounds_cell_aura",
+      "ide_view",
+      "placement_grid"
     ],
     "is_example": true,
     "license": "Apache-2.0"
@@ -344,7 +346,24 @@
     "canvas": {
       "width": 1120,
       "height": 410,
-      "units": "px"
+      "units": "px",
+      "coordinate_space": "panel_pixels",
+      "presentation_mode": "ide_view",
+      "selected_widget_id": "boolean_array",
+      "grid": {
+        "visible": true,
+        "pitch": 16,
+        "origin": {
+          "x": 0,
+          "y": 0
+        },
+        "snap": "placement_bounds",
+        "snap_edges": [
+          "placement_bounds.top_left",
+          "placement_bounds.top_right"
+        ],
+        "width_quantization": "grid_pitch_multiple"
+      }
     },
     "package_refs": [
       "./ui/array_panel.wfrog"
@@ -358,8 +377,8 @@
         "value_type": "u8",
         "layout": {
           "x": 32,
-          "y": 28,
-          "width": 150,
+          "y": 32,
+          "width": 144,
           "height": 62
         },
         "props": {
@@ -423,9 +442,9 @@
         "instance_ref": "visible_row_count",
         "value_type": "u8",
         "layout": {
-          "x": 202,
-          "y": 28,
-          "width": 150,
+          "x": 208,
+          "y": 32,
+          "width": 144,
           "height": 62
         },
         "props": {
@@ -489,9 +508,9 @@
         "instance_ref": "visible_column_count",
         "value_type": "u8",
         "layout": {
-          "x": 372,
-          "y": 28,
-          "width": 150,
+          "x": 384,
+          "y": 32,
+          "width": 144,
           "height": 62
         },
         "props": {
@@ -1906,12 +1925,12 @@
       }
     ],
     "panel_id": "main_panel",
-    "title": "Boolean Array Dimension Count Property Roundtrip",
+    "title": "Boolean Array IDE Placement View",
     "class_ref": "frog.widgets.panel",
     "host_binding_ref": "array_runtime_host_default",
     "documentation": {
-      "title": "Boolean Array Dimension Count Property Roundtrip",
-      "summary": "A Numeric U8 control writes Array dimensions.rank and index_display.rank while two Numeric U8 controls continue to write visible row and column counts. The Array adapts as an N-dimensional widget and each visible cell instantiates a Default Boolean widget.",
+      "title": "Boolean Array IDE Placement View",
+      "summary": "An IDE calibration surface for the Boolean Array container. The Array control instantiates square Default Boolean cells, the Array indicator instantiates round Default Boolean cells, and the grid is visible only as a placement/review aid.",
       "sections": [
         {
           "title": "Dimension property",
@@ -1926,8 +1945,8 @@
           "body": "Each visible cell instantiates a Boolean element template. Control cells toggle true/false directly; indicator cells are read-only and visually greyed."
         },
         {
-          "title": "Execute",
-          "body": "Execute consumes the selected Boolean element value through the native manifest corridor and publishes the value and matrix records to the read-only Array indicator."
+          "title": "IDE placement",
+          "body": "The visible grid is a review surface. The source still owns Array placement, contained widget skin choice, cell dimensions, and execution wiring."
         }
       ]
     }

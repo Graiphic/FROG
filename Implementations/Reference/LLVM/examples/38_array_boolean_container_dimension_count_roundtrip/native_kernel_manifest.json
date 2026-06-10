@@ -71,6 +71,7 @@
     "The native kernel remains the selected Boolean proof boundary; Array rank, index-display rank, visible row count, visible column count, and record publication are declared in source/FIR/lowering and consumed by the runtime host.",
     "The example reuses the N-dimensional Array posture from Example 35 while changing only the contained element widget to Boolean.",
     "The dimension-count command remains a Numeric U8 front-panel value consumed on Execute through explicit property-write flow targeting dimensions.rank and index_display.rank on both the control and indicator.",
-    "Reviewed 2026-06-07."
+    "Kernel ABI reviewed 2026-06-07; the 2026-06-10 C++-first visual refresh keeps this Boolean proof kernel while updating the Array/Boolean realization contract to source-owned square control cells, round indicator cells, and contained-widget placement_bounds sizing.",
+    "Example 43 is an IDE placement companion for this manifest and does not introduce a second Boolean Array native kernel."
   ]
 }

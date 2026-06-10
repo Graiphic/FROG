@@ -154,7 +154,9 @@ The boolean family follows these architectural rules:
   <li><code>label.text</code> is class-owned logical widget-name text.</li>
   <li><code>caption.text</code> is class-owned front-panel display caption text.</li>
   <li><code>state_text.true_text</code> and <code>state_text.false_text</code> are optional state text surfaces, not the semantic source of the boolean value.</li>
-  <li><code>outer_face</code> and <code>inner_face</code> are stable public visual parts, not runtime-private decorations.</li>
+  <li><code>state_face</code> is the single public visual Boolean value surface.</li>
+  <li><code>placement_bounds</code> is the non-rendered placement aura used by IDEs and container widgets.</li>
+  <li>The control click edits the Boolean control value. It does not execute a diagram by itself; execution remains an explicit host action unless an event structure is declared later.</li>
 </ul>
 
 <hr/>
@@ -162,20 +164,28 @@ The boolean family follows these architectural rules:
 <h2 id="public-visual-part-model">6. Public Visual Part Model</h2>
 
 <ul>
-  <li><code>root</code> — root widget surface and hit-test container,</li>
-  <li><code>label</code> — structural label surface when displayed by tooling or host,</li>
-  <li><code>caption</code> — front-panel user-facing caption surface,</li>
-  <li><code>outer_face</code> — outside boolean visual structure, frame, or body,</li>
-  <li><code>inner_face</code> — inside boolean state surface or state marker,</li>
-  <li><code>state_text</code> — optional internal true/false text surface,</li>
-  <li><code>focus_ring</code> — optional focus visualization surface,</li>
-  <li><code>frame</code> — optional outer frame surface when a realization separates frame from outer face.</li>
+  <li><code>root</code> - root widget surface and hit-test container,</li>
+  <li><code>label</code> - structural label surface when displayed by tooling or host,</li>
+  <li><code>caption</code> - front-panel user-facing caption surface,</li>
+  <li><code>placement_bounds</code> - non-rendered placement aura for IDE selection, sizing, and container fit,</li>
+  <li><code>state_face</code> - visible true/false Boolean value face,</li>
+  <li><code>state_text</code> - optional internal true/false text surface,</li>
+  <li><code>focus_ring</code> - optional focus visualization surface following <code>state_face</code>.</li>
 </ul>
 
 <p>
 For the Default Boolean realization, <code>focus_ring</code> follows the visible
-<code>inner_face</code> boundary. It is a styleable outline, not a larger host
-or IDE selection envelope.
+<code>state_face</code> boundary. It is a styleable outline, not the larger
+<code>placement_bounds</code> aura and not an IDE selection envelope.
+</p>
+
+<p>
+The Default Boolean realization uses a Boolean-specific placement law:
+<code>placement_bounds</code> is a 72 x 72 source-unit aura, the default
+<code>state_face</code> body is 56 x 56 source units, and the nominal skin
+band is 8 source units on each side. That proportion belongs to this
+realization. It must not be generalized to Numeric, String, Enum, Ring, Array,
+or future widgets without their own review.
 </p>
 
 <hr/>
@@ -244,49 +254,28 @@ or IDE selection envelope.
   <li><code>interaction.pressed : bool</code> — readable transient pressed posture for controls when exposed.</li>
 </ul>
 
-<h3>7.6 Outer-face style properties</h3>
+<h3>7.6 State-face style properties</h3>
 
 <ul>
-  <li><code>style.outer.fill_color.true : frog.color.rgba8</code></li>
-  <li><code>style.outer.fill_color.false : frog.color.rgba8</code></li>
-  <li><code>style.outer.border_color.true : frog.color.rgba8</code></li>
-  <li><code>style.outer.border_color.false : frog.color.rgba8</code></li>
-  <li><code>style.outer.border_width : length</code></li>
-  <li><code>style.outer.corner_radius : length</code></li>
-  <li><code>style.outer.opacity : number</code></li>
-</ul>
-
-<h3>7.7 Inner-face style properties</h3>
-
-<ul>
-  <li><code>style.inner.visible.true : bool</code></li>
-  <li><code>style.inner.visible.false : bool</code></li>
-  <li><code>style.inner.fill_color.true : frog.color.rgba8</code></li>
-  <li><code>style.inner.fill_color.false : frog.color.rgba8</code></li>
-  <li><code>style.inner.border_color.true : frog.color.rgba8</code></li>
-  <li><code>style.inner.border_color.false : frog.color.rgba8</code></li>
-  <li><code>style.inner.border_width : length</code></li>
-  <li><code>style.inner.inset : length</code></li>
-  <li><code>style.inner.corner_radius : length</code></li>
-  <li><code>style.inner.opacity : number</code></li>
-</ul>
-
-<h3>7.8 Optional frame style properties</h3>
-
-<ul>
-  <li><code>style.frame.visible : bool</code></li>
-  <li><code>style.frame.fill_color : frog.color.rgba8</code></li>
-  <li><code>style.frame.opacity : number</code></li>
+  <li><code>style.state_face.fill_color.true : frog.color.rgba8</code></li>
+  <li><code>style.state_face.fill_color.false : frog.color.rgba8</code></li>
+  <li><code>style.state_face.fill_color.hover_true : frog.color.rgba8</code></li>
+  <li><code>style.state_face.fill_color.hover_false : frog.color.rgba8</code></li>
+  <li><code>style.state_face.fill_color.pressed_true : frog.color.rgba8</code></li>
+  <li><code>style.state_face.fill_color.pressed_false : frog.color.rgba8</code></li>
+  <li><code>style.state_face.border_color.true : frog.color.rgba8</code></li>
+  <li><code>style.state_face.border_color.false : frog.color.rgba8</code></li>
+  <li><code>style.state_face.border_width : length</code></li>
 </ul>
 
 <p>
-The optional <code>frame</code> part is for realizations that separate an outer
-bezel, shadow, or surrounding frame from <code>outer_face</code>. The Default
-Boolean baseline keeps it invisible unless a source instance or realization
-default explicitly enables it.
+The Default Boolean realization deliberately does not publish <code>outer_face</code>,
+<code>inner_face</code>, or <code>frame</code>. Alternate skins may change the
+shape, proportions, and colors of <code>state_face</code> while preserving the
+same Boolean class semantics.
 </p>
 
-<h3>7.9 Focus and disabled style properties</h3>
+<h3>7.7 Focus and disabled style properties</h3>
 
 <ul>
   <li><code>style.focus_ring.visible : bool</code></li>
@@ -295,7 +284,7 @@ default explicitly enables it.
   <li><code>style.disabled.opacity : number</code></li>
 </ul>
 
-<h3>7.10 Realization-selection properties</h3>
+<h3>7.8 Realization-selection properties</h3>
 
 <ul>
   <li><code>realization.family : string</code></li>
