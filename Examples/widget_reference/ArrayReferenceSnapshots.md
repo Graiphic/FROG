@@ -69,3 +69,15 @@ runtime source and they do not redefine the FROG language specification.
     <li><a href="../34_array_2d_visible_counts_property_roundtrip/reference/artifact-index.json">Artifact hash index</a></li>
   </ul>
 </section>
+
+<section>
+  <h3>Example 35: Numeric Array dimension-count property write</h3>
+  <p>
+    Example 35 is documented as the current Numeric-backed N-dimensional Array
+    dimension-count slice, but no complete public <code>reference/</code>
+    package is published yet. When published, it must include the accepted
+    screenshot, accepted state JSON, visual contract, machine-readable visual
+    contract, and artifact hash index following
+    <a href="../example_reference_snapshot_standard.md">the reference snapshot standard</a>.
+  </p>
+</section>

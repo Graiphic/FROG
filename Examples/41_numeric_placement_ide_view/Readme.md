@@ -117,3 +117,16 @@ contract family only so the current C++ browser host can load the same Numeric
 runtime surface. It does not define a new execution semantics, a new native
 kernel, or a new widget class.
 </p>
+
+<hr/>
+
+<h2>Reference Snapshot</h2>
+
+<p>
+No public <code>reference/</code> package is published yet for this IDE view.
+When published, it must follow
+<a href="../example_reference_snapshot_standard.md">the example reference snapshot standard</a>
+and capture the accepted browser-host grid, placement aura, label aura,
+right/left/hidden increment-decrement postures, indicator styling, and current
+state JSON from the same accepted C++ host session.
+</p>

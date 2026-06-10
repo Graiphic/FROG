@@ -5,7 +5,7 @@
 <h1 align="center">Numeric Widget Example Reference</h1>
 
 <p align="center">
-  <strong>Current Example 05 numeric control and indicator proof surface</strong><br/>
+  <strong>Current Example 05 execution surface and Example 41 placement/IDE surface</strong><br/>
   <em>FROG - Free Open Graphical Language</em>
 </p>
 
@@ -14,9 +14,15 @@
 <h2>Scope</h2>
 
 <p>
-The stabilized numeric slice is <code>Examples/05_bounded_ui_accumulator</code>.
-It proves one <code>frog.widgets.numeric_control</code> and one <code>frog.widgets.numeric_indicator</code>
-inside a bounded accumulator corridor.
+The stabilized executable numeric slice is
+<code>Examples/05_bounded_ui_accumulator</code>. It proves one
+<code>frog.widgets.numeric_control</code> and one
+<code>frog.widgets.numeric_indicator</code> inside a bounded accumulator
+corridor. The current placement and IDE-calibration witness is
+<code>Examples/41_numeric_placement_ide_view</code>; it shows the 16px
+placement grid, <code>placement_bounds</code> aura, right/left/hidden
+increment-decrement postures, and the distinction between placement aura,
+selection overlay, and <code>focus_ring</code>.
 </p>
 
 <pre><code>input_value : u16
@@ -55,7 +61,7 @@ Current instance-level properties proven by the example include:
   <li><code>representation.kind = uint16</code></li>
   <li><code>data_entry.minimum</code>, <code>data_entry.maximum</code>, and <code>data_entry.increment_step</code> on the control</li>
   <li><code>display.increment_buttons_visible</code> on the control and indicator</li>
-  <li><code>style.frame.border_color = transparent</code></li>
+  <li><code>layout.origin = placement_bounds.top_left</code> and <code>layout.bounds_ref = placement_bounds</code> when placement/aura behavior is being inspected</li>
   <li><code>style.increment_button.*</code> colors for normal and pressed states</li>
   <li><code>foreground_color</code> as the property-write surface used by the diagram</li>
 </ul>
@@ -89,9 +95,9 @@ Current instance-level properties proven by the example include:
       <td>Use the published increment parts and expose normal/pressed states without recoding a separate widget shell.</td>
     </tr>
     <tr>
-      <td>Frame</td>
-      <td><code>style.frame.border_color</code></td>
-      <td>Respect transparent frame requests so invisible frames do not create unwanted hover or layout behavior.</td>
+      <td>Placement aura</td>
+      <td><code>layout.placement_bounds.*</code>, <code>layout.grid.*</code>, <code>canvas.grid.*</code> when an IDE or container declares grid inspection</td>
+      <td>Use <code>placement_bounds</code> as the portable placement/containment rectangle. It is not focus, not a rendered frame, and not Array cell selection.</td>
     </tr>
     <tr>
       <td>Data limits</td>
@@ -103,9 +109,20 @@ Current instance-level properties proven by the example include:
 
 <p>
 The Default Numeric SVG currently exposes these public parts:
-<code>caption</code>, <code>focus_ring</code>, <code>frame</code>, <code>increment_down</code>,
-<code>increment_up</code>, <code>label</code>, <code>radix_badge</code>, <code>root</code>,
-<code>spinner</code>, <code>text_value</code>, <code>unit_label</code>, and <code>value_face</code>.
+<code>root</code>, <code>placement_bounds</code>, <code>label</code>,
+<code>caption</code>, <code>focus_ring</code>, <code>control_body</code>,
+<code>indicator_body</code>, <code>value_face</code>, <code>text_value</code>,
+<code>spinner</code>, <code>increment_up</code>, and
+<code>increment_down</code>.
+</p>
+
+<p>
+The compact Default Numeric SVG intentionally does not publish separate
+<code>frame</code>, <code>radix_badge</code>, <code>radix_text</code>, or
+<code>unit_label</code> parts. The visible compact border belongs to
+<code>value_face</code>. Unit text for this compact posture is rendered inline
+through <code>text_value</code>; radix/unit variants may publish additional
+parts only when a future realization explicitly declares them.
 </p>
 
 <hr/>
@@ -168,3 +185,15 @@ It does not consume LLVM directly as a runtime dependency.
   <li>The C++ standard CLI, C++ native-kernel CLI, Python runtime, and Rust runtime must all produce the same result for equivalent inputs.</li>
   <li>Overflow must produce the published diagnostic: <code>final_state must remain in the u16 domain.</code></li>
 </ul>
+
+<h2>Reference Snapshots</h2>
+
+<p>
+No standalone public <code>reference/</code> package is currently published for
+Example 05 or Example 41. Example 05 remains the executable Numeric baseline,
+while Example 41 is the IDE/placement calibration witness. When a public
+snapshot is published for either page, it must follow
+<a href="../example_reference_snapshot_standard.md">the example reference snapshot standard</a>
+and include the accepted screenshot, accepted public state, visual contract,
+machine-readable contract, and artifact hash index.
+</p>
