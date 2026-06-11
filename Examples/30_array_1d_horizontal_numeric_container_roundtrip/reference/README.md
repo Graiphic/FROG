@@ -1,15 +1,11 @@
 # Example 30 Reference Snapshot
 
-This directory records the accepted public reference snapshot for Example 30,
-`Array 1D Horizontal Numeric Container Roundtrip`.
+This directory records the accepted public reference snapshot for Example 30, `Array 1D Horizontal Numeric Container Roundtrip`.
 
-The snapshot documents the visible C++-accepted state of the horizontal
-one-dimensional Array container example. It is evidence for the public example
-dossier, not runtime source truth and not a promotion of Graiphic private
-runtime implementation code into the public repository.
+The snapshot is browser-host evidence for the public example dossier. It is not runtime source truth, it does not publish Graiphic private runtime internals, and it does not redefine the public FROG specification.
 
 <p align="center">
-  <img src="./screenshot.png" alt="Accepted Example 30 horizontal Array container snapshot" width="720" />
+  <img src="./screenshot.png" alt="Accepted Example 30 Array 1D Horizontal Numeric Container Roundtrip snapshot" width="760" />
 </p>
 
 ## Reference Snapshot Links
@@ -22,22 +18,12 @@ runtime implementation code into the public repository.
 
 ## Files
 
-- `screenshot.png` - accepted browser-host visual state.
-- `state.accepted.json` - accepted public runtime snapshot.
+- `screenshot.png` - accepted C++ browser-host visual state.
+- `state.accepted.json` - accepted public runtime snapshot from `/state.json`.
 - `visual-contract.md` - human-readable appearance and interaction contract.
 - `visual-contract.json` - machine-readable visual contract summary.
 - `artifact-index.json` - relative artifact paths and hashes for traceability.
 
 ## Boundary
 
-The source of truth remains:
-
-- `../main.frog`
-- `../main.fir.json`
-- `../main.lowering.json`
-- `../ui/array_panel.wfrog`
-- `../../Implementations/Reference/LLVM/examples/30_array_1d_horizontal_numeric_container_roundtrip/native_kernel_manifest.json`
-- `../../Libraries/Realizations/Default/array.default.wfrog`
-- `../../Libraries/Realizations/Default/numeric.default.wfrog`
-
-The snapshot describes what was accepted, not a generalized runtime claim.
+The source of truth remains the .frog source, FIR/lowering artifacts, .wfrog realization references, Default SVG realization assets, and native or host manifest artifacts listed in `artifact-index.json`. The snapshot describes what was accepted for this example; it is not a generalized runtime completeness claim.

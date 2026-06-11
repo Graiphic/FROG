@@ -11,7 +11,7 @@
     "kernel_id": "example33_array_2d_numeric_container_roundtrip_kernel",
     "output_id": "selected_element_value",
     "output_type": "u16",
-    "path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Implementations\\Reference\\LLVM\\examples\\33_array_2d_numeric_container_roundtrip\\native_kernel_manifest.json",
+    "path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Implementations\\Reference\\LLVM\\examples\\33_array_2d_numeric_container_roundtrip\\native_kernel_manifest.json",
     "source_artifact": "Implementations/Reference/LLVM/examples/33_array_2d_numeric_container_roundtrip/kernel.ll",
     "source_lowered_unit": "Examples/33_array_2d_numeric_container_roundtrip/main.lowering.json"
   },
@@ -422,7 +422,7 @@
   "runtime_family": "graiphic_private_runtime_cpp",
   "source_ref": {
     "example_id": "33_array_2d_numeric_container_roundtrip",
-    "path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\33_array_2d_numeric_container_roundtrip\\main.frog"
+    "path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\33_array_2d_numeric_container_roundtrip\\main.frog"
   },
   "ui_runtime": {
     "array_control": {
@@ -435,7 +435,7 @@
       },
       "role": "control",
       "runtime": {
-        "asset_path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\33_array_2d_numeric_container_roundtrip\\ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\33_array_2d_numeric_container_roundtrip\\ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
         "asset_ref": "asset:array_shell_svg",
         "behavior": {
           "editable_elements": true,
@@ -839,6 +839,11 @@
             "value": 0
           }
         ],
+        "first_indices": [
+          0,
+          0
+        ],
+        "index_display_rank": 2,
         "layer_offset": 0,
         "materialized_control_cell_count": 0,
         "max_column_offset": 3,
@@ -899,6 +904,8 @@
         ]
       },
       "value": {
+        "selected_element_defined": true,
+        "selected_element_display": "3",
         "selected_element_id": "r2c1",
         "selected_element_value": 3,
         "selected_indices": [
@@ -918,7 +925,7 @@
       },
       "role": "indicator",
       "runtime": {
-        "asset_path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\33_array_2d_numeric_container_roundtrip\\ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\33_array_2d_numeric_container_roundtrip\\ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
         "asset_ref": "asset:array_shell_svg",
         "behavior": {
           "editable_elements": false,
@@ -929,6 +936,11 @@
         },
         "column_offset": 0,
         "data_type_representation": "u16",
+        "first_indices": [
+          0,
+          0
+        ],
+        "index_display_rank": 2,
         "layer_offset": 0,
         "materialized_indicator_cell_count": 0,
         "max_column_offset": 3,
@@ -978,11 +990,14 @@
     },
     "diagram_dataflow": {
       "array_records_declared": true,
+      "dimension_count_property_write_consumed_on_execute": false,
+      "dimension_count_property_write_declared": false,
       "native_kernel_reads_selected_element_value": true,
       "published_array_records_declared": true,
       "visible_count_property_write_consumed_on_execute": false,
       "visible_count_property_write_declared": false
     },
+    "dimension_count_control": null,
     "panel": {
       "documentation": {
         "sections": [
@@ -999,12 +1014,27 @@
             "title": "Execute"
           }
         ],
-        "summary": "A two-dimensional Array can act as a widget container. This example binds each visible Array cell to the Default Numeric widget so the Array manages dimensions and scrolling while the contained Numeric widgets keep their own control/indicator posture.",
+        "summary": "Reviewed 2026-06-11. A two-dimensional Array can act as a widget container. This example binds each visible Array cell to the Default Numeric widget so the Array manages dimensions and scrolling while the contained Numeric widgets keep their own control/indicator posture.",
         "title": "Array 2D Numeric Container Roundtrip"
       },
       "layout": {
+        "coordinate_space": "panel_pixels",
+        "grid": {
+          "origin": {
+            "x": 0,
+            "y": 0
+          },
+          "pitch": 16,
+          "snap": "placement_bounds",
+          "snap_edges": [
+            "placement_bounds.top_left",
+            "placement_bounds.top_right"
+          ],
+          "visible": false,
+          "width_quantization": "grid_pitch_multiple"
+        },
         "height": 330,
-        "units": "px",
+        "presentation_mode": "execution",
         "width": 900
       },
       "panel_id": "main_panel",
@@ -1012,6 +1042,16 @@
     },
     "realization": {
       "default_array_asset_consumed": true,
+      "default_boolean_circular_element_asset_consumed": false,
+      "default_boolean_element_asset_consumed": false,
+      "default_boolean_rectangular_element_asset_consumed": false,
+      "default_enum_dropdown_asset_consumed": false,
+      "default_enum_element_asset_consumed": false,
+      "default_numeric_element_asset_consumed": true,
+      "default_path_element_asset_consumed": false,
+      "default_ring_dropdown_asset_consumed": false,
+      "default_ring_element_asset_consumed": false,
+      "default_string_element_asset_consumed": false,
       "host_overlay_alignment_parts": [
         "index_display",
         "element_region",
@@ -1019,7 +1059,7 @@
         "vertical_scrollbar",
         "horizontal_scrollbar"
       ],
-      "wfrog_path": "C:\\Users\\youss\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\33_array_2d_numeric_container_roundtrip\\ui\\array_panel.wfrog"
+      "wfrog_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\33_array_2d_numeric_container_roundtrip\\ui\\array_panel.wfrog"
     },
     "visible_count_control": null,
     "visible_count_controls": null

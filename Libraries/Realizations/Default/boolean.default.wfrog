@@ -4,7 +4,7 @@
   "publication_role": "default_boolean_realization_manifest",
   "package_id": "frog.realizations.default.boolean",
   "title": "Default Boolean realization package",
-  "reviewed_date": "2026-06-10",
+  "reviewed_date": "2026-06-11",
   "metadata": {
     "namespace": "frog.realizations.default.boolean",
     "summary": "Machine-readable default realization manifest for standardized Boolean control and indicator widgets.",
@@ -239,15 +239,15 @@
       "role": "default Boolean placement aura"
     },
     "state_face": {
-      "x": 24,
-      "y": 40,
-      "width": 56,
-      "height": 56,
+      "x": 20,
+      "y": 36,
+      "width": 64,
+      "height": 64,
       "role": "default Boolean visible value body"
     },
     "aura_band": {
-      "source_units": 8,
-      "description": "Default Boolean keeps a uniform 8 source-unit band between placement_bounds and state_face. Host resizing scales the skin; the runtime must not invent a different Boolean aura."
+      "source_units": 4,
+      "description": "Default Boolean keeps the same standard as Default Numeric: a uniform 4 source-unit band between placement_bounds and state_face. Host resizing scales the skin; the runtime must not invent a different Boolean aura."
     }
   },
   "validation_rules": [
@@ -255,6 +255,6 @@
     "The SVG must not publish outer_face, inner_face, or frame as public Boolean parts.",
     "The runtime must bind state colors through style.state_face.* and never hardcode true/false colors outside defaults.",
     "IDE selection aura is represented by placement_bounds; focus_ring remains a state_face outline.",
-    "Default Boolean placement_bounds is 72x72 source units, state_face is 56x56 source units, and the nominal Boolean aura band is 8 source units."
+    "Default Boolean placement_bounds is 72x72 source units, state_face is 64x64 source units, and the nominal Boolean aura band is 4 source units, matching the Default Numeric aura standard without shrinking the accepted Boolean outer footprint."
   ]
 }

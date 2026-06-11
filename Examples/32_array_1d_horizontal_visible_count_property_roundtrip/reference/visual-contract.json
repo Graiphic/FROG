@@ -1,68 +1,32 @@
-﻿{
-    "example_id":  "32_array_1d_horizontal_visible_count_property_roundtrip",
-    "title":  "Array 1D Horizontal Visible Count Property Roundtrip",
-    "snapshot_role":  "accepted_public_reference_snapshot",
-    "runtime_scope":  {
-                          "accepted_runtime":  "C++ Graiphic private runtime",
-                          "python_runtime":  "deferred",
-                          "rust_runtime":  "deferred"
-                      },
-    "visible_surface":  [
-                            {
-                                "role":  "control",
-                                "semantic_value":  "requested horizontal visible cell count",
-                                "widget_id":  "visible_item_count",
-                                "class_id":  "frog.widgets.numeric_control"
-                            },
-                            {
-                                "role":  "control",
-                                "semantic_value":  "editable horizontal 1D numeric Array",
-                                "widget_id":  "numeric_array",
-                                "class_id":  "frog.widgets.array_control"
-                            },
-                            {
-                                "role":  "indicator",
-                                "semantic_value":  "read-only published horizontal 1D numeric Array",
-                                "widget_id":  "published_array",
-                                "class_id":  "frog.widgets.array_indicator"
-                            }
-                        ],
-    "property_write_contract":  {
-                                    "trigger":  "Execute",
-                                    "input_widget":  "visible_item_count",
-                                    "input_type":  "u8",
-                                    "targets":  [
-                                                    "numeric_array.viewport.visible_counts[1]",
-                                                    "published_array.viewport.visible_counts[1]"
-                                                ],
-                                    "visible_count_rule":  "Visible counts are viewport display properties and may exceed the currently materialized semantic shape.",
-                                    "local_edit_rule":  "Numeric control edits update front-panel state only until Execute consumes the value.",
-                                    "design_time_boundary":  "Immediate IDE live-edit behavior is intentionally out of scope for this execution-mode example."
-                                },
-    "source_owned_properties":  [
-                                    "rank",
-                                    "shape",
-                                    "element.default_value",
-                                    "viewport.first_indices[]",
-                                    "viewport.visible_counts[]",
-                                    "style.frame.*",
-                                    "style.index_display.*",
-                                    "style.scrollbar.*",
-                                    "element.class_id",
-                                    "element.template_ref",
-                                    "element.props.*",
-                                    "property_write.targets[]"
-                                ],
-    "consumed_default_assets":  [
-                                    "asset:array_shell_svg",
-                                    "asset:numeric_rectangular_svg"
-                                ],
-    "validation_notes":  [
-                             "The Array is a container widget, not a hardcoded numeric grid.",
-                             "The horizontal visible-count property is written by diagram flow on Execute.",
-                             "Changing Visible cells without Execute must not resize the Array viewport.",
-                             "Visible counts may exceed materialized shape without showing a browser validation limit.",
-                             "Runtime overlays must align to Default Array and Default Numeric published parts.",
-                             "No local Example SVG skin is duplicated."
-                         ]
+{
+  "example_id": "32_array_1d_horizontal_visible_count_property_roundtrip",
+  "accepted_date": "2026-06-11",
+  "runtime_family": "graiphic_private_runtime_cpp",
+  "screenshot": {
+    "file": "screenshot.png",
+    "width": 920,
+    "height": 760
+  },
+  "visual_validation": {
+    "browser_host": "ephemeral C++ browser host",
+    "state_route": "ephemeral /state.json captured on 2026-06-11",
+    "route_checked": true,
+    "real_browser_visual_check": true
+  },
+  "public_boundary": "reference snapshot evidence only; no private runtime source is published here",
+  "widgets": [
+    "frog.widgets.array_control",
+    "frog.widgets.array_indicator",
+    "frog.widgets.numeric_control",
+    "frog.widgets.numeric_indicator"
+  ],
+  "accepted_palette": {
+    "array_body": "#EEF4F6",
+    "helper_background": "#ffffff",
+    "helper_fill": "#DDE1E4",
+    "border": "#A8ABAE",
+    "selection_aura": "#00ADEF",
+    "numeric_indicator_face": "#E8EBED"
+  },
+  "contained_widget_rule": "Array cell bounds equal the contained Numeric placement aura; no Array-local fake shell."
 }

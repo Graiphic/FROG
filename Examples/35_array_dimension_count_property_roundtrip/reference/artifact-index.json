@@ -1,0 +1,76 @@
+{
+  "example_id": "35_array_dimension_count_property_roundtrip",
+  "snapshot_role": "accepted_public_reference_snapshot",
+  "accepted_date": "2026-06-11",
+  "runtime_family": "graiphic_private_runtime_cpp",
+  "artifacts": [
+    {
+      "path": "Examples/35_array_dimension_count_property_roundtrip/Readme.md",
+      "sha256": "ca6a7487197ae3a65b76825304a28edec1fef36f9b51e6a7742761fb0880766e"
+    },
+    {
+      "path": "Examples/35_array_dimension_count_property_roundtrip/main.frog",
+      "sha256": "6d1ff65aac8cd84b4220174bec07b685cd425a6da4f71befd909318131674645"
+    },
+    {
+      "path": "Examples/35_array_dimension_count_property_roundtrip/main.fir.json",
+      "sha256": "8768daf1b7aac3c9eb4b29fdcef78c99546780f1c8a4959ff616cafb6f0bc9b7"
+    },
+    {
+      "path": "Examples/35_array_dimension_count_property_roundtrip/main.lowering.json",
+      "sha256": "55aa7e8e522865898f98f57a166bcb16ec712cdb5e924a167acc375a99b66cc4"
+    },
+    {
+      "path": "Examples/35_array_dimension_count_property_roundtrip/ui/array_panel.wfrog",
+      "sha256": "a89b058c079a505393fe47a4f75ed011b89eb4835a622c398a0ff388016dc8f4"
+    },
+    {
+      "path": "Implementations/Reference/LLVM/examples/35_array_dimension_count_property_roundtrip/kernel.ll",
+      "sha256": "9ec522871776cc5de114309f81eb6f1ff368d5d617647994c2a6ad4c9d3e0367"
+    },
+    {
+      "path": "Implementations/Reference/LLVM/examples/35_array_dimension_count_property_roundtrip/native_kernel_manifest.json",
+      "sha256": "fb97e82164addb7658cc40753150a6cc49be85a1ec2792c505ed6cb28130f764"
+    },
+    {
+      "path": "Libraries/Realizations/Default/array.default.wfrog",
+      "sha256": "d854d3743a980b4d0667e1d021bf787d1c7dba90ed12ac31efbfe6fe2eb6a83b"
+    },
+    {
+      "path": "Libraries/Realizations/Default/numeric.default.wfrog",
+      "sha256": "c4f810843044865a8f05f8821f2552cd5338c610c3845d70ed6c2da219a00365"
+    },
+    {
+      "path": "Libraries/Realizations/Default/boolean.default.wfrog",
+      "sha256": "95f1fced566d96124ab73e8209cef9b1994759d43cf4c240689c07eac73f84da"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+      "sha256": "15ea437aa4019ad2008e7d52519d08049244276bf56647816fec4acda502eca7"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg",
+      "sha256": "c1d070ea90401743469b65c375412a029ff6e0635f40b3eebb64d793c4eeffbe"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg",
+      "sha256": "130798a3f2cf32cc25dcf216218159c9c49e59368baf0f7f30b6d34146e7bb71"
+    },
+    {
+      "path": "Examples/35_array_dimension_count_property_roundtrip/reference/screenshot.png",
+      "sha256": "ebdbf8e43c96f2a04e11e551bb4f2d0f5bbbfa97062301395d4f87f0dc03d5a0"
+    },
+    {
+      "path": "Examples/35_array_dimension_count_property_roundtrip/reference/state.accepted.json",
+      "sha256": "2be48a494b5ba14e508ae0c9f09cc8c6134cdb47852f0e9e7ae86d3283cfb325"
+    },
+    {
+      "path": "Examples/35_array_dimension_count_property_roundtrip/reference/visual-contract.md",
+      "sha256": "f678d9b8bf93211fb71ee0ea9f9fcd3fde0050eae9c4caf0a8dc044532afa9ed"
+    },
+    {
+      "path": "Examples/35_array_dimension_count_property_roundtrip/reference/visual-contract.json",
+      "sha256": "98bdf399e659b78620c0b9f7f370732e82fce4a0a6c456e866f46c101c7c9938"
+    }
+  ]
+}

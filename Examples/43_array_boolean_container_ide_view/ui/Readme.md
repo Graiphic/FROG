@@ -1,6 +1,6 @@
 # Example 43 UI Package
 
-Reviewed 2026-06-10.
+Reviewed 2026-06-11.
 
 `array_panel.wfrog` resolves the Default Array, Default Numeric, and Default
 Boolean realizations used by the Boolean Array IDE placement view.

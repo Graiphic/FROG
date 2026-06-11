@@ -2,7 +2,7 @@
 
 This example demonstrates a horizontal one-dimensional Array container whose repeated cells instantiate the Default Numeric widget realization.
 
-Reviewed 2026-06-09.
+Reviewed 2026-06-11.
 
 The Array owns rank, shape, index display, horizontal viewport, scrolling, insertion/materialization, and repeated-cell layout. The Numeric element owns per-cell value editing and value display. The concrete numeric representation and default value are source-owned through `element.props.data_type.representation = u16`, `element.props.data_type.named_numeric_size = U16`, and `element.default_value = 0`; the `.wfrog` package resolves Default Array and Default Numeric assets without owning semantic defaults.
 

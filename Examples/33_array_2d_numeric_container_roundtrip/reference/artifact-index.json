@@ -1,72 +1,76 @@
 {
   "example_id": "33_array_2d_numeric_container_roundtrip",
   "snapshot_role": "accepted_public_reference_snapshot",
-  "example_source_artifacts": [
+  "accepted_date": "2026-06-11",
+  "runtime_family": "graiphic_private_runtime_cpp",
+  "artifacts": [
     {
-      "sha256": "f76b04dec71fdea00b75aed281fca52f0b64bebd9be0ed20293d1715d9c6b536",
-      "path": "Examples/33_array_2d_numeric_container_roundtrip/Readme.md"
+      "path": "Examples/33_array_2d_numeric_container_roundtrip/Readme.md",
+      "sha256": "955fbc76c2b8ea9cb5c2fd30aaa05b6d1421fdaf56d0fd95fc812f76bb573c7f"
     },
     {
-      "sha256": "040d346138370233a5bbbbfad044975782f24dd11a6f4436441511dd5bad8d34",
-      "path": "Examples/33_array_2d_numeric_container_roundtrip/main.fir.json"
+      "path": "Examples/33_array_2d_numeric_container_roundtrip/main.frog",
+      "sha256": "0e89b96b2c4b844d942feb8ecdc5dbe8a6f2a2ac6f08360a2f08928a02bc5485"
     },
     {
-      "sha256": "c6a35bc520b8b13fb8b8d655d3e58581e2736d3b6271cf3f02e4d011fe879332",
-      "path": "Examples/33_array_2d_numeric_container_roundtrip/main.frog"
+      "path": "Examples/33_array_2d_numeric_container_roundtrip/main.fir.json",
+      "sha256": "040d346138370233a5bbbbfad044975782f24dd11a6f4436441511dd5bad8d34"
     },
     {
-      "sha256": "23b6343600b60ecbe3a5a337f67bf3a4b411b906936c937216981fb01127aa18",
-      "path": "Examples/33_array_2d_numeric_container_roundtrip/main.lowering.json"
+      "path": "Examples/33_array_2d_numeric_container_roundtrip/main.lowering.json",
+      "sha256": "23b6343600b60ecbe3a5a337f67bf3a4b411b906936c937216981fb01127aa18"
     },
     {
-      "sha256": "826a897fb291e4e5afaa426b05ae568c565753ed5434bb40db3fbf647417a3e4",
-      "path": "Examples/33_array_2d_numeric_container_roundtrip/ui/array_panel.wfrog"
-    }
-  ],
-  "backend_artifacts": [
-    {
-      "sha256": "a01b9c8da122c15fe2abdc7b77cd003c8e145695a0967daa68678ce56b4df598",
-      "path": "Implementations/Reference/LLVM/examples/33_array_2d_numeric_container_roundtrip/kernel.ll"
+      "path": "Examples/33_array_2d_numeric_container_roundtrip/ui/array_panel.wfrog",
+      "sha256": "790a622d96617959b285755117bfdcdadbd69423ffceab6f076911d0cf9b7670"
     },
     {
-      "sha256": "afa979d234fb0bb6262c57c0f25fa0cf9ec4f49ee3361afaa1742d6da9d96ccd",
-      "path": "Implementations/Reference/LLVM/examples/33_array_2d_numeric_container_roundtrip/native_kernel_manifest.json"
-    }
-  ],
-  "default_realization_artifacts": [
-    {
-      "sha256": "77eea10878960fd6a1f47a41453f4b078acf914bed86392eea246cf4466b28d3",
-      "path": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg"
+      "path": "Implementations/Reference/LLVM/examples/33_array_2d_numeric_container_roundtrip/kernel.ll",
+      "sha256": "a01b9c8da122c15fe2abdc7b77cd003c8e145695a0967daa68678ce56b4df598"
     },
     {
-      "sha256": "fca3f717f1aec4259ec7e94563708ae77503a3b72c54442666bfac27e5443204",
-      "path": "Libraries/Realizations/Default/array.default.wfrog"
+      "path": "Implementations/Reference/LLVM/examples/33_array_2d_numeric_container_roundtrip/native_kernel_manifest.json",
+      "sha256": "afa979d234fb0bb6262c57c0f25fa0cf9ec4f49ee3361afaa1742d6da9d96ccd"
     },
     {
-      "sha256": "4bb2e6c91c866a1e551791ecae663fdaedea2854d8b6dbccb4eac58f496661d4",
-      "path": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+      "path": "Libraries/Realizations/Default/array.default.wfrog",
+      "sha256": "d854d3743a980b4d0667e1d021bf787d1c7dba90ed12ac31efbfe6fe2eb6a83b"
     },
     {
-      "sha256": "31c9b99d874b92c3332159fd14745822c1a2f07d9f30e7a96300d5c35a7b1496",
-      "path": "Libraries/Realizations/Default/numeric.default.wfrog"
-    }
-  ],
-  "snapshot_artifacts": [
-    {
-      "sha256": "1a9f770941cc9c6ca19d146e16fbc80e161756222d4da2fd5b2e07c8411ef5b0",
-      "path": "Examples/33_array_2d_numeric_container_roundtrip/reference/screenshot.svg"
+      "path": "Libraries/Realizations/Default/numeric.default.wfrog",
+      "sha256": "c4f810843044865a8f05f8821f2552cd5338c610c3845d70ed6c2da219a00365"
     },
     {
-      "sha256": "5f9d14270daa7a72c208c38c5310448436be4e8e85903b1ca2e398c1357ef53a",
-      "path": "Examples/33_array_2d_numeric_container_roundtrip/reference/state.accepted.json"
+      "path": "Libraries/Realizations/Default/boolean.default.wfrog",
+      "sha256": "95f1fced566d96124ab73e8209cef9b1994759d43cf4c240689c07eac73f84da"
     },
     {
-      "sha256": "72e5502b4c09f2bc6993aef647872e9eb10ab0514507430eb7b98dc078daa01e",
-      "path": "Examples/33_array_2d_numeric_container_roundtrip/reference/visual-contract.md"
+      "path": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+      "sha256": "15ea437aa4019ad2008e7d52519d08049244276bf56647816fec4acda502eca7"
     },
     {
-      "sha256": "f75030d9581ce5ca2417d054e8bb1df3d7f4222af7288f95caad2a8dfd6cf6d2",
-      "path": "Examples/33_array_2d_numeric_container_roundtrip/reference/visual-contract.json"
+      "path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg",
+      "sha256": "c1d070ea90401743469b65c375412a029ff6e0635f40b3eebb64d793c4eeffbe"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg",
+      "sha256": "130798a3f2cf32cc25dcf216218159c9c49e59368baf0f7f30b6d34146e7bb71"
+    },
+    {
+      "path": "Examples/33_array_2d_numeric_container_roundtrip/reference/screenshot.png",
+      "sha256": "b8c6184a4ac18f848271fb838774355ab86e68ca95a6f7075e27ba0ac4c401c5"
+    },
+    {
+      "path": "Examples/33_array_2d_numeric_container_roundtrip/reference/state.accepted.json",
+      "sha256": "345bd8fc42b8b6052aa43c4dc1e080f28ad3839e9489c8cf0f02a92f5715b6d1"
+    },
+    {
+      "path": "Examples/33_array_2d_numeric_container_roundtrip/reference/visual-contract.md",
+      "sha256": "0e326bad3e64596848b866e73be699aaa5a30fdcfeadc5e8cb632707cfc5dadf"
+    },
+    {
+      "path": "Examples/33_array_2d_numeric_container_roundtrip/reference/visual-contract.json",
+      "sha256": "9e1a17ec1bb4f1ae36e16fc17a15eae47c96795c67a747ea5a2ee9ed628f5c14"
     }
   ]
 }

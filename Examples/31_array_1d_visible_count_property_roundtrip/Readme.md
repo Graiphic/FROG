@@ -2,7 +2,7 @@
 
 This example demonstrates a one-dimensional Array container whose repeated cells instantiate the Default Numeric widget realization, plus a Numeric U8 control that drives the Array viewport visible-cell count through an explicit property-write node.
 
-Reviewed 2026-06-09.
+Reviewed 2026-06-11.
 
 The Array owns rank, shape, index display, viewport, scrolling, insertion/materialization, and repeated-cell layout. The Numeric U8 control owns the requested visible-cell count as front-panel state until `Execute` consumes it and writes `numeric_array.viewport.visible_counts[0]` and `published_array.viewport.visible_counts[0]`. The Numeric element owns per-cell value editing and value display. The concrete numeric representation and default value are source-owned through `element.props.data_type.representation = u16`, `element.props.data_type.named_numeric_size = U16`, and `element.default_value = 0`; the `.wfrog` package resolves Default Array and Default Numeric assets without owning semantic defaults.
 

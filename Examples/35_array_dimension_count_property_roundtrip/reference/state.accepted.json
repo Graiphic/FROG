@@ -1,0 +1,1142 @@
+{
+  "native_kernel_manifest": {
+    "abi": "frog_u16_to_result_status_outptr",
+    "artifact_library": "frog_example35_array_dimension_count_property_kernel.dll",
+    "backend_artifact_kind": "native_dynamic_library",
+    "backend_family": "llvm",
+    "entry_invoked_by_runtime": false,
+    "entry_symbol": "frog_example35_run",
+    "input_id": "element_value",
+    "input_type": "u16",
+    "kernel_id": "example35_array_dimension_count_property_roundtrip_kernel",
+    "output_id": "selected_element_value",
+    "output_type": "u16",
+    "path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Implementations\\Reference\\LLVM\\examples\\35_array_dimension_count_property_roundtrip\\native_kernel_manifest.json",
+    "source_artifact": "Implementations/Reference/LLVM/examples/35_array_dimension_count_property_roundtrip/kernel.ll",
+    "source_lowered_unit": "Examples/35_array_dimension_count_property_roundtrip/main.lowering.json"
+  },
+  "outputs": {
+    "public": {
+      "native_error_code": 0,
+      "native_ok": true,
+      "published_array_records": [
+        {
+          "column": 0,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r0c0",
+          "indices": [
+            0,
+            0
+          ],
+          "row": 0,
+          "value": 0
+        },
+        {
+          "column": 1,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r0c1",
+          "indices": [
+            0,
+            1
+          ],
+          "row": 0,
+          "value": 0
+        },
+        {
+          "column": 2,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r0c2",
+          "indices": [
+            0,
+            2
+          ],
+          "row": 0,
+          "value": 0
+        },
+        {
+          "column": 3,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r0c3",
+          "indices": [
+            0,
+            3
+          ],
+          "row": 0,
+          "value": 0
+        },
+        {
+          "column": 4,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r0c4",
+          "indices": [
+            0,
+            4
+          ],
+          "row": 0,
+          "value": 0
+        },
+        {
+          "column": 5,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r0c5",
+          "indices": [
+            0,
+            5
+          ],
+          "row": 0,
+          "value": 0
+        },
+        {
+          "column": 0,
+          "defined": true,
+          "display": "2",
+          "enabled": true,
+          "id": "r1c0",
+          "indices": [
+            1,
+            0
+          ],
+          "row": 1,
+          "value": 2
+        },
+        {
+          "column": 1,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r1c1",
+          "indices": [
+            1,
+            1
+          ],
+          "row": 1,
+          "value": 0
+        },
+        {
+          "column": 2,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r1c2",
+          "indices": [
+            1,
+            2
+          ],
+          "row": 1,
+          "value": 0
+        },
+        {
+          "column": 3,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r1c3",
+          "indices": [
+            1,
+            3
+          ],
+          "row": 1,
+          "value": 0
+        },
+        {
+          "column": 4,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r1c4",
+          "indices": [
+            1,
+            4
+          ],
+          "row": 1,
+          "value": 0
+        },
+        {
+          "column": 5,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r1c5",
+          "indices": [
+            1,
+            5
+          ],
+          "row": 1,
+          "value": 0
+        },
+        {
+          "column": 0,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r2c0",
+          "indices": [
+            2,
+            0
+          ],
+          "row": 2,
+          "value": 0
+        },
+        {
+          "column": 1,
+          "defined": true,
+          "display": "3",
+          "enabled": true,
+          "id": "r2c1",
+          "indices": [
+            2,
+            1
+          ],
+          "row": 2,
+          "value": 3
+        },
+        {
+          "column": 2,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r2c2",
+          "indices": [
+            2,
+            2
+          ],
+          "row": 2,
+          "value": 0
+        },
+        {
+          "column": 3,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r2c3",
+          "indices": [
+            2,
+            3
+          ],
+          "row": 2,
+          "value": 0
+        },
+        {
+          "column": 4,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r2c4",
+          "indices": [
+            2,
+            4
+          ],
+          "row": 2,
+          "value": 0
+        },
+        {
+          "column": 5,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r2c5",
+          "indices": [
+            2,
+            5
+          ],
+          "row": 2,
+          "value": 0
+        },
+        {
+          "column": 0,
+          "defined": true,
+          "display": "4",
+          "enabled": true,
+          "id": "r3c0",
+          "indices": [
+            3,
+            0
+          ],
+          "row": 3,
+          "value": 4
+        },
+        {
+          "column": 1,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r3c1",
+          "indices": [
+            3,
+            1
+          ],
+          "row": 3,
+          "value": 0
+        },
+        {
+          "column": 2,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r3c2",
+          "indices": [
+            3,
+            2
+          ],
+          "row": 3,
+          "value": 0
+        },
+        {
+          "column": 3,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r3c3",
+          "indices": [
+            3,
+            3
+          ],
+          "row": 3,
+          "value": 0
+        },
+        {
+          "column": 4,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r3c4",
+          "indices": [
+            3,
+            4
+          ],
+          "row": 3,
+          "value": 0
+        },
+        {
+          "column": 5,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r3c5",
+          "indices": [
+            3,
+            5
+          ],
+          "row": 3,
+          "value": 0
+        },
+        {
+          "column": 0,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r4c0",
+          "indices": [
+            4,
+            0
+          ],
+          "row": 4,
+          "value": 0
+        },
+        {
+          "column": 1,
+          "defined": true,
+          "display": "5",
+          "enabled": true,
+          "id": "r4c1",
+          "indices": [
+            4,
+            1
+          ],
+          "row": 4,
+          "value": 5
+        },
+        {
+          "column": 2,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r4c2",
+          "indices": [
+            4,
+            2
+          ],
+          "row": 4,
+          "value": 0
+        },
+        {
+          "column": 3,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r4c3",
+          "indices": [
+            4,
+            3
+          ],
+          "row": 4,
+          "value": 0
+        },
+        {
+          "column": 4,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r4c4",
+          "indices": [
+            4,
+            4
+          ],
+          "row": 4,
+          "value": 0
+        },
+        {
+          "column": 5,
+          "defined": true,
+          "display": "0",
+          "enabled": true,
+          "id": "r4c5",
+          "indices": [
+            4,
+            5
+          ],
+          "row": 4,
+          "value": 0
+        }
+      ],
+      "selected_element_id": "r2c1",
+      "selected_element_value": 3,
+      "selected_indices": [
+        2,
+        1
+      ]
+    }
+  },
+  "runtime_family": "graiphic_private_runtime_cpp",
+  "source_ref": {
+    "example_id": "35_array_dimension_count_property_roundtrip",
+    "path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\35_array_dimension_count_property_roundtrip\\main.frog"
+  },
+  "ui_runtime": {
+    "array_control": {
+      "class_ref": "frog.widgets.array_control",
+      "layout": {
+        "height": 238,
+        "width": 390,
+        "x": 32,
+        "y": 122
+      },
+      "role": "control",
+      "runtime": {
+        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\35_array_dimension_count_property_roundtrip\\ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+        "asset_ref": "asset:array_shell_svg",
+        "behavior": {
+          "editable_elements": true,
+          "editing_allow_during_execution": true,
+          "index_display_enabled": true,
+          "selection_scrolling_enabled": true,
+          "smooth_scrolling_enabled": true
+        },
+        "column_offset": 0,
+        "data_type_representation": "u16",
+        "element_count": 30,
+        "elements": [
+          {
+            "column": 0,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r0c0",
+            "indices": [
+              0,
+              0
+            ],
+            "row": 0,
+            "value": 0
+          },
+          {
+            "column": 1,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r0c1",
+            "indices": [
+              0,
+              1
+            ],
+            "row": 0,
+            "value": 0
+          },
+          {
+            "column": 2,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r0c2",
+            "indices": [
+              0,
+              2
+            ],
+            "row": 0,
+            "value": 0
+          },
+          {
+            "column": 3,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r0c3",
+            "indices": [
+              0,
+              3
+            ],
+            "row": 0,
+            "value": 0
+          },
+          {
+            "column": 4,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r0c4",
+            "indices": [
+              0,
+              4
+            ],
+            "row": 0,
+            "value": 0
+          },
+          {
+            "column": 5,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r0c5",
+            "indices": [
+              0,
+              5
+            ],
+            "row": 0,
+            "value": 0
+          },
+          {
+            "column": 0,
+            "defined": true,
+            "display": "2",
+            "enabled": true,
+            "id": "r1c0",
+            "indices": [
+              1,
+              0
+            ],
+            "row": 1,
+            "value": 2
+          },
+          {
+            "column": 1,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r1c1",
+            "indices": [
+              1,
+              1
+            ],
+            "row": 1,
+            "value": 0
+          },
+          {
+            "column": 2,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r1c2",
+            "indices": [
+              1,
+              2
+            ],
+            "row": 1,
+            "value": 0
+          },
+          {
+            "column": 3,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r1c3",
+            "indices": [
+              1,
+              3
+            ],
+            "row": 1,
+            "value": 0
+          },
+          {
+            "column": 4,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r1c4",
+            "indices": [
+              1,
+              4
+            ],
+            "row": 1,
+            "value": 0
+          },
+          {
+            "column": 5,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r1c5",
+            "indices": [
+              1,
+              5
+            ],
+            "row": 1,
+            "value": 0
+          },
+          {
+            "column": 0,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r2c0",
+            "indices": [
+              2,
+              0
+            ],
+            "row": 2,
+            "value": 0
+          },
+          {
+            "column": 1,
+            "defined": true,
+            "display": "3",
+            "enabled": true,
+            "id": "r2c1",
+            "indices": [
+              2,
+              1
+            ],
+            "row": 2,
+            "value": 3
+          },
+          {
+            "column": 2,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r2c2",
+            "indices": [
+              2,
+              2
+            ],
+            "row": 2,
+            "value": 0
+          },
+          {
+            "column": 3,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r2c3",
+            "indices": [
+              2,
+              3
+            ],
+            "row": 2,
+            "value": 0
+          },
+          {
+            "column": 4,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r2c4",
+            "indices": [
+              2,
+              4
+            ],
+            "row": 2,
+            "value": 0
+          },
+          {
+            "column": 5,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r2c5",
+            "indices": [
+              2,
+              5
+            ],
+            "row": 2,
+            "value": 0
+          },
+          {
+            "column": 0,
+            "defined": true,
+            "display": "4",
+            "enabled": true,
+            "id": "r3c0",
+            "indices": [
+              3,
+              0
+            ],
+            "row": 3,
+            "value": 4
+          },
+          {
+            "column": 1,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r3c1",
+            "indices": [
+              3,
+              1
+            ],
+            "row": 3,
+            "value": 0
+          },
+          {
+            "column": 2,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r3c2",
+            "indices": [
+              3,
+              2
+            ],
+            "row": 3,
+            "value": 0
+          },
+          {
+            "column": 3,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r3c3",
+            "indices": [
+              3,
+              3
+            ],
+            "row": 3,
+            "value": 0
+          },
+          {
+            "column": 4,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r3c4",
+            "indices": [
+              3,
+              4
+            ],
+            "row": 3,
+            "value": 0
+          },
+          {
+            "column": 5,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r3c5",
+            "indices": [
+              3,
+              5
+            ],
+            "row": 3,
+            "value": 0
+          },
+          {
+            "column": 0,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r4c0",
+            "indices": [
+              4,
+              0
+            ],
+            "row": 4,
+            "value": 0
+          },
+          {
+            "column": 1,
+            "defined": true,
+            "display": "5",
+            "enabled": true,
+            "id": "r4c1",
+            "indices": [
+              4,
+              1
+            ],
+            "row": 4,
+            "value": 5
+          },
+          {
+            "column": 2,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r4c2",
+            "indices": [
+              4,
+              2
+            ],
+            "row": 4,
+            "value": 0
+          },
+          {
+            "column": 3,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r4c3",
+            "indices": [
+              4,
+              3
+            ],
+            "row": 4,
+            "value": 0
+          },
+          {
+            "column": 4,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r4c4",
+            "indices": [
+              4,
+              4
+            ],
+            "row": 4,
+            "value": 0
+          },
+          {
+            "column": 5,
+            "defined": true,
+            "display": "0",
+            "enabled": true,
+            "id": "r4c5",
+            "indices": [
+              4,
+              5
+            ],
+            "row": 4,
+            "value": 0
+          }
+        ],
+        "first_indices": [
+          0,
+          0
+        ],
+        "index_display_rank": 2,
+        "layer_offset": 0,
+        "materialized_control_cell_count": 0,
+        "max_column_offset": 3,
+        "max_layer_offset": 0,
+        "max_row_offset": 2,
+        "pending_control_edit_count": 0,
+        "published_parts": [
+          "root",
+          "label",
+          "caption",
+          "frame",
+          "index_display",
+          "element_region",
+          "element_slot",
+          "selection_face",
+          "active_element",
+          "edit_overlay",
+          "vertical_scrollbar",
+          "horizontal_scrollbar",
+          "focus_ring"
+        ],
+        "rank": 2,
+        "row_offset": 0,
+        "selection_mode": "single_element",
+        "selection_patch_policy": "front_panel_state_without_program_read",
+        "shape": [
+          5,
+          6
+        ],
+        "style_array_region_border_color": "#A8ABAE",
+        "style_array_region_border_width": "0px",
+        "style_array_region_fill_color": "#EEF4F6",
+        "style_selection_face_border_color": "#00ADEF",
+        "style_selection_face_border_width": "1px",
+        "style_selection_face_fill_color": "#E0E4E6",
+        "view_shape": [
+          5,
+          6
+        ],
+        "visible_counts": [
+          3,
+          3
+        ],
+        "visible_items": {
+          "horizontal_lines_visible": false,
+          "horizontal_scrollbar_visible": true,
+          "index_display_visible": true,
+          "vertical_lines_visible": false,
+          "vertical_scrollbar_visible": true
+        },
+        "visual_shape": [
+          5,
+          6
+        ],
+        "visual_view_shape": [
+          5,
+          6
+        ]
+      },
+      "value": {
+        "selected_element_defined": true,
+        "selected_element_display": "3",
+        "selected_element_id": "r2c1",
+        "selected_element_value": 3,
+        "selected_indices": [
+          2,
+          1
+        ]
+      },
+      "widget_id": "numeric_array"
+    },
+    "array_indicator": {
+      "class_ref": "frog.widgets.array_indicator",
+      "layout": {
+        "height": 238,
+        "width": 365,
+        "x": 468,
+        "y": 122
+      },
+      "role": "indicator",
+      "runtime": {
+        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\35_array_dimension_count_property_roundtrip\\ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+        "asset_ref": "asset:array_shell_svg",
+        "behavior": {
+          "editable_elements": false,
+          "editing_allow_during_execution": true,
+          "index_display_enabled": false,
+          "selection_scrolling_enabled": true,
+          "smooth_scrolling_enabled": true
+        },
+        "column_offset": 0,
+        "data_type_representation": "u16",
+        "first_indices": [
+          0,
+          0
+        ],
+        "index_display_rank": 2,
+        "layer_offset": 0,
+        "materialized_indicator_cell_count": 0,
+        "max_column_offset": 3,
+        "max_layer_offset": 0,
+        "max_row_offset": 2,
+        "published_indicator_edit_count": 0,
+        "rank": 2,
+        "row_offset": 0,
+        "selection_patch_policy": "native_execution_result_only",
+        "shape": [
+          5,
+          6
+        ],
+        "view_shape": [
+          5,
+          6
+        ],
+        "visible_counts": [
+          3,
+          3
+        ],
+        "visible_items": {
+          "horizontal_lines_visible": false,
+          "horizontal_scrollbar_visible": true,
+          "index_display_visible": true,
+          "vertical_lines_visible": false,
+          "vertical_scrollbar_visible": true
+        },
+        "visual_shape": [
+          5,
+          6
+        ],
+        "visual_view_shape": [
+          5,
+          6
+        ]
+      },
+      "value": {
+        "selected_element_id": "r2c1",
+        "selected_element_value": 3,
+        "selected_indices": [
+          2,
+          1
+        ]
+      },
+      "widget_id": "published_array"
+    },
+    "diagram_dataflow": {
+      "array_records_declared": true,
+      "dimension_count_property_write_consumed_on_execute": true,
+      "dimension_count_property_write_declared": true,
+      "native_kernel_reads_selected_element_value": true,
+      "published_array_records_declared": true,
+      "visible_count_property_write_consumed_on_execute": true,
+      "visible_count_property_write_declared": true
+    },
+    "dimension_count_control": {
+      "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\35_array_dimension_count_property_roundtrip\\ui\\../../../Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+      "asset_ref": "asset:numeric_rectangular_svg",
+      "class_ref": "frog.widgets.numeric_control",
+      "data_type_representation": "u8",
+      "layout": {
+        "bounds_ref": "placement_bounds",
+        "height": 32,
+        "origin": "placement_bounds.top_left",
+        "width": 96,
+        "x": 32,
+        "y": 32
+      },
+      "named_numeric_size": "U8",
+      "property_write_member": "dimensions.rank",
+      "property_write_targets": [
+        "numeric_array.dimensions.rank",
+        "published_array.dimensions.rank",
+        "numeric_array.index_display.rank",
+        "published_array.index_display.rank"
+      ],
+      "role": "control",
+      "value": 2,
+      "widget_id": "dimension_count"
+    },
+    "panel": {
+      "documentation": {
+        "sections": [
+          {
+            "body": "Execute consumes Dimensions, then writes numeric_array.dimensions.rank / published_array.dimensions.rank and their index_display.rank mirrors. The widget creates the requested N-dimensional shape from explicit profiles and the default leading-singleton trailing-matrix policy.",
+            "title": "Dimension property"
+          },
+          {
+            "body": "Execute consumes Visible rows and Visible columns, then writes numeric_array.viewport.visible_counts[0]/[1] and published_array.viewport.visible_counts[0]/[1].",
+            "title": "Visible-count properties"
+          },
+          {
+            "body": "Each visible cell instantiates a Numeric element template. Control cells keep increment/decrement buttons; indicator cells are read-only and visually greyed.",
+            "title": "Numeric element"
+          },
+          {
+            "body": "Execute consumes the selected Numeric element value through the native manifest corridor and publishes the value and matrix records to the read-only Array indicator.",
+            "title": "Execute"
+          }
+        ],
+        "summary": "Reviewed 2026-06-11. A Numeric U8 control writes Array dimensions.rank and index_display.rank while two Numeric U8 controls continue to write visible row and column counts. The Array adapts as an N-dimensional widget: every dimension owns an index display and the last two dimensions form the visible matrix whose cells instantiate Default Numeric widgets.",
+        "title": "Numeric Array Dimension Count Property Roundtrip"
+      },
+      "layout": {
+        "coordinate_space": "panel_pixels",
+        "grid": {
+          "origin": {
+            "x": 0,
+            "y": 0
+          },
+          "pitch": 16,
+          "snap": "placement_bounds",
+          "snap_edges": [
+            "placement_bounds.top_left",
+            "placement_bounds.top_right"
+          ],
+          "visible": false,
+          "width_quantization": "grid_pitch_multiple"
+        },
+        "height": 410,
+        "presentation_mode": "execution",
+        "width": 920
+      },
+      "panel_id": "main_panel",
+      "title": "Numeric Array Dimension Count Property Roundtrip"
+    },
+    "realization": {
+      "default_array_asset_consumed": true,
+      "default_boolean_circular_element_asset_consumed": false,
+      "default_boolean_element_asset_consumed": false,
+      "default_boolean_rectangular_element_asset_consumed": false,
+      "default_enum_dropdown_asset_consumed": false,
+      "default_enum_element_asset_consumed": false,
+      "default_numeric_element_asset_consumed": true,
+      "default_path_element_asset_consumed": false,
+      "default_ring_dropdown_asset_consumed": false,
+      "default_ring_element_asset_consumed": false,
+      "default_string_element_asset_consumed": false,
+      "host_overlay_alignment_parts": [
+        "index_display",
+        "element_region",
+        "element_slot",
+        "vertical_scrollbar",
+        "horizontal_scrollbar"
+      ],
+      "wfrog_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\35_array_dimension_count_property_roundtrip\\ui\\array_panel.wfrog"
+    },
+    "visible_count_control": null,
+    "visible_count_controls": {
+      "column": {
+        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\35_array_dimension_count_property_roundtrip\\ui\\../../../Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+        "asset_ref": "asset:numeric_rectangular_svg",
+        "class_ref": "frog.widgets.numeric_control",
+        "data_type_representation": "u8",
+        "layout": {
+          "bounds_ref": "placement_bounds",
+          "height": 32,
+          "origin": "placement_bounds.top_left",
+          "width": 96,
+          "x": 384,
+          "y": 32
+        },
+        "named_numeric_size": "U8",
+        "property_write_member": "viewport.visible_counts[1]",
+        "property_write_targets": [
+          "numeric_array.viewport.visible_counts[1]",
+          "published_array.viewport.visible_counts[1]"
+        ],
+        "role": "control",
+        "value": 3,
+        "widget_id": "visible_column_count"
+      },
+      "row": {
+        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\35_array_dimension_count_property_roundtrip\\ui\\../../../Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+        "asset_ref": "asset:numeric_rectangular_svg",
+        "class_ref": "frog.widgets.numeric_control",
+        "data_type_representation": "u8",
+        "layout": {
+          "bounds_ref": "placement_bounds",
+          "height": 32,
+          "origin": "placement_bounds.top_left",
+          "width": 96,
+          "x": 208,
+          "y": 32
+        },
+        "named_numeric_size": "U8",
+        "property_write_member": "viewport.visible_counts[0]",
+        "property_write_targets": [
+          "numeric_array.viewport.visible_counts[0]",
+          "published_array.viewport.visible_counts[0]"
+        ],
+        "role": "control",
+        "value": 3,
+        "widget_id": "visible_row_count"
+      }
+    }
+  }
+}

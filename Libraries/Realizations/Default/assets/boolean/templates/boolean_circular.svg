@@ -69,16 +69,16 @@
              data-frog-part="state_face"
              cx="52"
              cy="68"
-             rx="28"
-             ry="28"
+             rx="32"
+             ry="32"
              data-frog-bind="value style.state_face.*" />
 
     <ellipse id="focus_ring"
              data-frog-part="focus_ring"
              cx="52"
              cy="68"
-             rx="28"
-             ry="28"
+             rx="32"
+             ry="32"
              data-frog-bind="interaction.focused style.focus_ring.*" />
 
     <text id="state_text"

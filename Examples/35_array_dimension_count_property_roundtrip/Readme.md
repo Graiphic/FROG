@@ -2,7 +2,7 @@
 
 This example demonstrates an N-dimensional Array container whose dimension count is controlled by a Numeric U8 control through explicit diagram property writes. Two additional Numeric U8 controls continue to command visible row and column counts for the active Array view.
 
-Reviewed 2026-06-09.
+Reviewed 2026-06-11.
 
 The Array owns the N-dimensional rank posture, source-owned explicit/default shape profiles, one index display per active dimension, viewport, scrolling, insertion/materialization posture, and repeated-cell layout. Rank 1 renders as one visible axis; rank 2 renders as a matrix; rank 3 or higher renders the last two dimensions as the visible matrix and exposes every leading dimension through stacked index displays. The Numeric U8 controls are front-panel values until Execute consumes them and writes the Array rank/display/viewport properties. The Numeric element owns per-cell value editing and value display.
 
@@ -30,4 +30,7 @@ Example 35 is a post-public-boundary widget progression example. Graiphic privat
 
 ## Reference Snapshot
 
-The public reference package may be published under `reference/` after the snapshot, public state, visual contract, and artifact hash index are prepared from an accepted browser-host state.
+The accepted C++ browser-host reference package is published under
+[`reference/`](./reference/). It contains the accepted screenshot, runtime
+state snapshot, visual contract, and artifact hash index for the source,
+lowering, native manifest, and Default realization assets.

@@ -1,0 +1,80 @@
+{
+  "example_id": "06_boolean_value_roundtrip",
+  "snapshot_role": "accepted_public_reference_snapshot",
+  "accepted_date": "2026-06-11",
+  "runtime_family": "graiphic_private_runtime_cpp",
+  "artifacts": [
+    {
+      "path": "Examples/06_boolean_value_roundtrip/Readme.md",
+      "sha256": "04c132ca74f0821f952bd52d3fd1979ffa6a040a4f2d7721b4d1cdd3a18dc8eb"
+    },
+    {
+      "path": "Examples/06_boolean_value_roundtrip/main.frog",
+      "sha256": "07f96de2f4e814b8a1f1deee3c09308d21cd479b33ba8bb443b5f11e3bfe1c3e"
+    },
+    {
+      "path": "Examples/06_boolean_value_roundtrip/main.fir.json",
+      "sha256": "4df7f2ecca47b48ad082794e2f4e9303beab0ea6bd512351f3dbb6b8715867e9"
+    },
+    {
+      "path": "Examples/06_boolean_value_roundtrip/main.lowering.json",
+      "sha256": "c19e22db727886530cca19044819d4b729ecd2cbb46d06944ab312c7f23cc092"
+    },
+    {
+      "path": "Examples/06_boolean_value_roundtrip/ui/boolean_panel.wfrog",
+      "sha256": "359526f14ab63c5f1927fe12751703d3a8a7b1c082db83859636dba1e3b2eedf"
+    },
+    {
+      "path": "Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/kernel.ll",
+      "sha256": "3eb9e8e5edffa42c9e552f1ae7dfe348ef39da918fd200846582a2f4d5bcd340"
+    },
+    {
+      "path": "Implementations/Reference/LLVM/examples/06_boolean_value_roundtrip/native_kernel_manifest.json",
+      "sha256": "4da1556210e38a3cccb9c08eccfb93600f72a0429775572a560c1eaf51cb4fda"
+    },
+    {
+      "path": "Implementations/Reference/ContractEmitter/examples/06_boolean_value_roundtrip.reference_host_runtime_ui_binding.contract.json",
+      "sha256": "41507f463d146053736635891a141facf6faaeb8eea693c44e414a6d67ce8522"
+    },
+    {
+      "path": "Libraries/Realizations/Default/array.default.wfrog",
+      "sha256": "d854d3743a980b4d0667e1d021bf787d1c7dba90ed12ac31efbfe6fe2eb6a83b"
+    },
+    {
+      "path": "Libraries/Realizations/Default/numeric.default.wfrog",
+      "sha256": "c4f810843044865a8f05f8821f2552cd5338c610c3845d70ed6c2da219a00365"
+    },
+    {
+      "path": "Libraries/Realizations/Default/boolean.default.wfrog",
+      "sha256": "95f1fced566d96124ab73e8209cef9b1994759d43cf4c240689c07eac73f84da"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+      "sha256": "15ea437aa4019ad2008e7d52519d08049244276bf56647816fec4acda502eca7"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg",
+      "sha256": "c1d070ea90401743469b65c375412a029ff6e0635f40b3eebb64d793c4eeffbe"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg",
+      "sha256": "130798a3f2cf32cc25dcf216218159c9c49e59368baf0f7f30b6d34146e7bb71"
+    },
+    {
+      "path": "Examples/06_boolean_value_roundtrip/reference/screenshot.png",
+      "sha256": "281d0346a91e6211e5173fd09a6e9f9169da1d90c395176e3c3733f68771659c"
+    },
+    {
+      "path": "Examples/06_boolean_value_roundtrip/reference/state.accepted.json",
+      "sha256": "7f50c197d9f038dfb5f9578a905fde942cdada07e0473491344658f9a1a798cc"
+    },
+    {
+      "path": "Examples/06_boolean_value_roundtrip/reference/visual-contract.md",
+      "sha256": "6b8258f7c37b0019ca6f854769acb78111ca609663e64877530d28784c93f457"
+    },
+    {
+      "path": "Examples/06_boolean_value_roundtrip/reference/visual-contract.json",
+      "sha256": "104d31dc8906c63e611d98aa024fa62ea9bfe555898b8a1261bd20bc29691132"
+    }
+  ]
+}

@@ -1412,7 +1412,7 @@
                         "host_binding_ref":  "array_runtime_host_default",
                         "documentation":  {
                                               "title":  "Array 2D Numeric Container Roundtrip",
-                                              "summary":  "Reviewed 2026-06-09. A two-dimensional Array can act as a widget container. This example binds each visible Array cell to the Default Numeric widget so the Array manages dimensions and scrolling while the contained Numeric widgets keep their own control/indicator posture.",
+                                              "summary":  "Reviewed 2026-06-11. A two-dimensional Array can act as a widget container. This example binds each visible Array cell to the Default Numeric widget so the Array manages dimensions and scrolling while the contained Numeric widgets keep their own control/indicator posture.",
                                               "sections":  [
                                                                {
                                                                    "title":  "Array container",

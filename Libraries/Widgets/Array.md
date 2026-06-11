@@ -299,6 +299,18 @@ mode.
 </p>
 
 <p>
+The neutral Array shell palette is not an example-only override. It is the
+Default Array skin published through
+<code>Libraries/Realizations/Default/array.default.wfrog</code>
+<code>default_widget_properties</code> for Array controls and indicators:
+container/body fill <code>#EEF4F6</code>, white index value surfaces,
+<code>#A8ABAE</code> frame/index/scrollbar borders, <code>#DDE1E4</code>
+helper button faces, and <code>#00ADEF</code> selection/focus accents. Reused
+Array examples should inherit that default posture and only override it when
+the source intentionally declares a different skin.
+</p>
+
+<p>
 When the array cell intentionally wraps a contained widget with extra breathing
 room, <code>element.layout.padding</code> defines the source-owned
 space between the repeated cell bounds and the contained widget instance. This

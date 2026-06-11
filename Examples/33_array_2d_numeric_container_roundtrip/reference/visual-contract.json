@@ -1,58 +1,32 @@
 {
-    "example_id":  "33_array_2d_numeric_container_roundtrip",
-    "title":  "Array 2D Numeric Container Roundtrip",
-    "snapshot_role":  "accepted_public_reference_snapshot",
-    "runtime_scope":  {
-                          "accepted_runtime":  "C++ Graiphic private runtime",
-                          "python_runtime":  "deferred",
-                          "rust_runtime":  "deferred"
-                      },
-    "visible_surface":  [
-                            {
-                                "role":  "control",
-                                "semantic_value":  "editable 2D numeric Array with repeated Default Numeric control widgets",
-                                "widget_id":  "numeric_array",
-                                "class_id":  "frog.widgets.array_control"
-                            },
-                            {
-                                "role":  "indicator",
-                                "semantic_value":  "read-only published 2D numeric Array with repeated Default Numeric indicator widgets",
-                                "widget_id":  "published_array",
-                                "class_id":  "frog.widgets.array_indicator"
-                            }
-                        ],
-    "container_contract":  {
-                               "element_template_ref":  "Default Numeric",
-                               "element_asset_ref":  "asset:numeric_rectangular_svg",
-                               "boundary_policy":  "contained_widget_placement_bounds",
-                               "control_cells":  "fit Default Numeric placement_bounds with increment/decrement controls visible",
-                               "indicator_cells":  "fit Default Numeric placement_bounds with read-only grey style",
-                               "selection_rule":  "Selection and editing must not change cell or Array layout dimensions."
-                           },
-    "source_owned_properties":  [
-                                    "rank",
-                                    "shape",
-                                    "element.default_value",
-                                    "viewport.first_indices[]",
-                                    "viewport.visible_counts[]",
-                                    "style.frame.*",
-                                    "style.index_display.*",
-                                    "style.scrollbar.*",
-                                    "element.class_id",
-                                    "element.template_ref",
-                                    "element.asset_ref",
-                                    "element.props.*",
-                                    "selected_indices[]"
-                                ],
-    "consumed_default_assets":  [
-                                    "asset:array_shell_svg",
-                                    "asset:numeric_rectangular_svg"
-                                ],
-    "validation_notes":  [
-                             "The Array is a container widget, not a hardcoded numeric grid.",
-                             "Repeated cells consume the Default Numeric realization and respect its placement bounds rather than using local fake cells.",
-                             "Control and indicator postures differ in interactivity while preserving the same geometry law.",
-                             "Runtime overlays must align to Default Array and Default Numeric published parts.",
-                             "No local Example SVG skin is duplicated."
-                         ]
+  "example_id": "33_array_2d_numeric_container_roundtrip",
+  "accepted_date": "2026-06-11",
+  "runtime_family": "graiphic_private_runtime_cpp",
+  "screenshot": {
+    "file": "screenshot.png",
+    "width": 920,
+    "height": 720
+  },
+  "visual_validation": {
+    "browser_host": "ephemeral C++ browser host",
+    "state_route": "ephemeral /state.json captured on 2026-06-11",
+    "route_checked": true,
+    "real_browser_visual_check": true
+  },
+  "public_boundary": "reference snapshot evidence only; no private runtime source is published here",
+  "widgets": [
+    "frog.widgets.array_control",
+    "frog.widgets.array_indicator",
+    "frog.widgets.numeric_control",
+    "frog.widgets.numeric_indicator"
+  ],
+  "accepted_palette": {
+    "array_body": "#EEF4F6",
+    "helper_background": "#ffffff",
+    "helper_fill": "#DDE1E4",
+    "border": "#A8ABAE",
+    "selection_aura": "#00ADEF",
+    "numeric_indicator_face": "#E8EBED"
+  },
+  "contained_widget_rule": "Array cell bounds equal the contained Numeric placement aura; no Array-local fake shell."
 }

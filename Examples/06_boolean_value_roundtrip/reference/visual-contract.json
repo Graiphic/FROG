@@ -1,0 +1,30 @@
+{
+  "example_id": "06_boolean_value_roundtrip",
+  "accepted_date": "2026-06-11",
+  "runtime_family": "graiphic_private_runtime_cpp",
+  "screenshot": {
+    "file": "screenshot.png",
+    "width": 900,
+    "height": 889
+  },
+  "visual_validation": {
+    "browser_host": "http://127.0.0.1:59406/",
+    "state_route": "http://127.0.0.1:59406/state.json",
+    "route_checked": true,
+    "real_browser_visual_check": true
+  },
+  "public_boundary": "reference snapshot evidence only; no private runtime source is published here",
+  "widgets": [
+    "frog.widgets.boolean_control",
+    "frog.widgets.boolean_indicator"
+  ],
+  "boolean_aura": {
+    "placement_bounds": "72x72",
+    "state_face": "64x64",
+    "uniform_band_px": 4
+  },
+  "skins": [
+    "asset:boolean_rectangular_svg",
+    "asset:boolean_circular_svg"
+  ]
+}

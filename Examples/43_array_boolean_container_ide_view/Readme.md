@@ -1,6 +1,6 @@
 # Example 43 - Boolean Array IDE Placement View
 
-Reviewed 2026-06-10.
+Reviewed 2026-06-11.
 
 This example is the IDE/review companion for Example 38. It keeps the same
 Boolean Array source-owned contract while turning the placement grid on so the
@@ -36,3 +36,11 @@ The C++ reference host runs this view with the same native Boolean Array
 identity corridor as Example 38. This example does not introduce a new Boolean
 kernel; it exists to validate Array + Boolean widget integration under an IDE
 placement view.
+
+## Reference Snapshot
+
+The accepted C++ browser-host reference package is published under
+[`reference/`](./reference/). It contains the accepted IDE screenshot, runtime
+state snapshot, visual contract, and artifact hash index for the source,
+lowering, host/native contract, Default Array realization, and Default Boolean
+realization assets.

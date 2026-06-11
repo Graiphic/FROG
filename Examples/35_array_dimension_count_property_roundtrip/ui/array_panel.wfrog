@@ -3,7 +3,7 @@
   "kind": "widget_realization_package",
   "package_id": "example35.array_dimension_count_property_panel",
   "title": "Example 35 Default Array + Numeric dimension-count property realization package",
-  "reviewed_date": "2026-06-09",
+  "reviewed_date": "2026-06-11",
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },

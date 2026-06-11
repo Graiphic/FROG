@@ -38,7 +38,7 @@ Validated examples may include a <code>reference/</code> directory:
 <pre><code>Examples/&lt;NN_example_name&gt;/
   reference/
     README.md
-    screenshot.png
+    screenshot.png or screenshot.svg
     state.accepted.json
     visual-contract.md
     visual-contract.json
@@ -67,8 +67,8 @@ that already exist in the example dossier.
       <td>Explains the snapshot boundary, embeds the accepted screenshot directly, and links the accepted artifacts.</td>
     </tr>
     <tr>
-      <td><code>screenshot.png</code></td>
-      <td>Browser-host capture of the accepted visible state.</td>
+      <td><code>screenshot.png</code> or <code>screenshot.svg</code></td>
+      <td>Browser-host capture of the accepted visible state. PNG is the default; an SVG wrapper is acceptable when the snapshot is intentionally stored as a text-safe embedded-image artifact.</td>
     </tr>
     <tr>
       <td><code>state.accepted.json</code></td>
@@ -113,6 +113,7 @@ not make the private runtime mandatory for independent FROG implementations.
 <ul>
   <li>Reference files link to existing source artifacts instead of copying them.</li>
   <li>The snapshot README should show the accepted screenshot inline so a GitHub reader can see the visual state without browsing for the image file.</li>
+  <li>Only one screenshot file should be treated as canonical by the snapshot README and artifact index. Historical alternate screenshot files may exist, but the README link defines the accepted current reference.</li>
   <li>The snapshot README should provide clear named links to the screenshot, accepted state JSON, visual contract, machine-readable visual contract, and artifact index.</li>
   <li><code>artifact-index.json</code> records relative paths and stable hashes for traceability.</li>
   <li>Generated screenshots and accepted state files are refreshed only after the example has been visually accepted at its stated validation level.</li>

@@ -3,11 +3,11 @@
   "kind": "widget_realization_package",
   "package_id": "example06.boolean_panel",
   "title": "Example 06 Default Boolean value realization package",
-  "reviewed_date": "2026-06-10",
+  "reviewed_date": "2026-06-11",
   "review": {
-    "last_reviewed": "2026-06-10",
+    "last_reviewed": "2026-06-11",
     "scope": "Example 06 clean Boolean square/round SVG state_face and placement_bounds contract",
-    "visible_runtime_fact": "Reviewed 2026-06-10"
+    "visible_runtime_fact": "Reviewed 2026-06-11"
   },
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"

@@ -1845,7 +1845,7 @@
     "host_binding_ref": "array_runtime_host_default",
     "documentation": {
       "title": "Numeric Array Dimension Count Property Roundtrip",
-      "summary": "Reviewed 2026-06-09. A Numeric U8 control writes Array dimensions.rank and index_display.rank while two Numeric U8 controls continue to write visible row and column counts. The Array adapts as an N-dimensional widget: every dimension owns an index display and the last two dimensions form the visible matrix whose cells instantiate Default Numeric widgets.",
+      "summary": "Reviewed 2026-06-11. A Numeric U8 control writes Array dimensions.rank and index_display.rank while two Numeric U8 controls continue to write visible row and column counts. The Array adapts as an N-dimensional widget: every dimension owns an index display and the last two dimensions form the visible matrix whose cells instantiate Default Numeric widgets.",
       "sections": [
         {
           "title": "Dimension property",

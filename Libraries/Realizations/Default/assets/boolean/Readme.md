@@ -78,10 +78,10 @@ The production assets intentionally do not publish <code>outer_face</code>,
 <p>
 Both production SVGs use the same default geometry contract:
 <code>placement_bounds</code> is 72 x 72 source units, <code>state_face</code>
-is 56 x 56 source units, and the nominal aura band is 8 source units around
-the visible Boolean body. The review overlays colorize those sections for
-human inspection only; runtime binding continues to use the production SVG
-parts above.
+is 64 x 64 source units, and the nominal aura band is 4 source units around
+the visible Boolean body. This matches the Default Numeric aura standard.
+The review overlays colorize those sections for human inspection only; runtime
+binding continues to use the production SVG parts above.
 </p>
 
 <hr/>

@@ -7,9 +7,9 @@
     "author": "Graiphic",
     "program_version": "0.1.0",
     "review": {
-      "last_reviewed": "2026-06-10",
+      "last_reviewed": "2026-06-11",
       "scope": "Example 06 clean Boolean state_face/placement_bounds SVG contract and C++ browser-host rendering",
-      "visible_runtime_fact": "Reviewed 2026-06-10",
+      "visible_runtime_fact": "Reviewed 2026-06-11",
       "public_posture": "Review evidence is public; Graiphic runtime implementation code remains outside the public publication scope."
     },
     "tags": [

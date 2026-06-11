@@ -1,77 +1,32 @@
 {
   "example_id": "29_array_1d_numeric_container_roundtrip",
-  "snapshot_role": "accepted_public_visual_reference",
-  "validation_level": "post_public_runtime_boundary_cpp_accepted",
-  "host": {
-    "surface": "browser_host",
-    "runtime_family": "graiphic_private_runtime_cpp"
+  "accepted_date": "2026-06-11",
+  "runtime_family": "graiphic_private_runtime_cpp",
+  "screenshot": {
+    "file": "screenshot.png",
+    "width": 920,
+    "height": 720
   },
-  "title": "Array 1D Numeric Container Roundtrip",
-  "widget_family": "Array",
-  "summary": "1D Array container control-to-indicator roundtrip using Default Array cells that instantiate Default Numeric element widgets.",
+  "visual_validation": {
+    "browser_host": "ephemeral C++ browser host",
+    "state_route": "ephemeral /state.json captured on 2026-06-11",
+    "route_checked": true,
+    "real_browser_visual_check": true
+  },
+  "public_boundary": "reference snapshot evidence only; no private runtime source is published here",
   "widgets": [
-    {
-      "id": "numeric_array",
-      "class_ref": "frog.widgets.array_control",
-      "role": "control",
-      "label": null,
-      "layout": {
-        "x": 32,
-        "y": 34,
-        "width": 230,
-        "height": 270
-      },
-      "asset_ref": null,
-      "published_part": null
-    },
-    {
-      "id": "published_array",
-      "class_ref": "frog.widgets.array_indicator",
-      "role": "indicator",
-      "label": null,
-      "layout": {
-        "x": 300,
-        "y": 34,
-        "width": 230,
-        "height": 270
-      },
-      "asset_ref": null,
-      "published_part": null
-    }
+    "frog.widgets.array_control",
+    "frog.widgets.array_indicator",
+    "frog.widgets.numeric_control",
+    "frog.widgets.numeric_indicator"
   ],
-  "required_surfaces": {
-    "source_owned": [
-      "diagram logic",
-      "widget instance ids",
-      "bindings",
-      "labels",
-      "layout",
-      "initial values",
-      "instance visual overrides"
-    ],
-    "wfrog_owned": [
-      "realization package references",
-      "Default asset ids",
-      "supported widget classes",
-      "host capability declarations"
-    ],
-    "default_svg_owned": [
-      "public data-frog parts",
-      "published anchors",
-      "published bindings",
-      "default visual behavior"
-    ],
-    "runtime_owned": [
-      "host interaction overlays aligned to published parts",
-      "manifest-backed execution orchestration"
-    ]
+  "accepted_palette": {
+    "array_body": "#EEF4F6",
+    "helper_background": "#ffffff",
+    "helper_fill": "#DDE1E4",
+    "border": "#A8ABAE",
+    "selection_aura": "#00ADEF",
+    "numeric_indicator_face": "#E8EBED"
   },
-  "consumed_asset_refs": [
-    "asset:array_shell_svg"
-  ],
-  "consumed_published_parts": [],
-  "notes": [
-    "Snapshot evidence is public example documentation, not private runtime source truth.",
-    "No HTML/CSS fallback widget may be considered valid without the Default SVG-backed surface."
-  ]
+  "contained_widget_rule": "Array cell bounds equal the contained Numeric placement aura; no Array-local fake shell."
 }

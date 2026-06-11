@@ -1,0 +1,40 @@
+{
+  "example_id": "43_array_boolean_container_ide_view",
+  "accepted_date": "2026-06-11",
+  "runtime_family": "graiphic_private_runtime_cpp",
+  "screenshot": {
+    "file": "screenshot.png",
+    "width": 1180,
+    "height": 1102
+  },
+  "visual_validation": {
+    "browser_host": "http://127.0.0.1:59443/",
+    "state_route": "http://127.0.0.1:59443/state.json",
+    "route_checked": true,
+    "real_browser_visual_check": true
+  },
+  "public_boundary": "reference snapshot evidence only; no private runtime source is published here",
+  "widgets": [
+    "frog.widgets.array_control",
+    "frog.widgets.array_indicator",
+    "frog.widgets.boolean_control",
+    "frog.widgets.boolean_indicator",
+    "frog.widgets.numeric_control"
+  ],
+  "boolean_aura": {
+    "placement_bounds": "72x72",
+    "state_face": "64x64",
+    "uniform_band_px": 4
+  },
+  "skins": [
+    "asset:boolean_rectangular_svg",
+    "asset:boolean_circular_svg"
+  ],
+  "accepted_palette": {
+    "array_body": "#EEF4F6",
+    "helper_background": "#ffffff",
+    "helper_fill": "#DDE1E4",
+    "border": "#A8ABAE",
+    "selection_aura": "#00ADEF"
+  }
+}

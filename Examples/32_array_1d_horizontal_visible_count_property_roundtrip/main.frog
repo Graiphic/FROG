@@ -937,7 +937,7 @@
     "host_binding_ref": "array_runtime_host_default",
     "documentation": {
       "title": "Array 1D Horizontal Visible Count Property Roundtrip",
-      "summary": "Reviewed 2026-06-09. A Numeric U8 control writes the visible-cell count of a horizontal one-dimensional Array through an explicit diagram property node. The Array still acts as a widget container whose visible cells instantiate Default Numeric widgets.",
+      "summary": "Reviewed 2026-06-11. A Numeric U8 control writes the visible-cell count of a horizontal one-dimensional Array through an explicit diagram property node. The Array still acts as a widget container whose visible cells instantiate Default Numeric widgets.",
       "sections": [
         {
           "title": "Visible-count property",

@@ -1,55 +1,22 @@
 # Example 31 Visual Contract
 
-Example 31 records the accepted browser-host reference surface for
-`Array 1D Visible Count Property Roundtrip`.
+Example 31 records the accepted browser-host reference surface for `Array 1D Visible Count Property Roundtrip`.
 
 ## Accepted Visible Surface
 
-- `visible_cell_count`: Numeric U8 control that requests the Array visible-cell count.
-- `numeric_array`: control `frog.widgets.array_control`.
-- `published_array`: indicator `frog.widgets.array_indicator`.
-
-## Source-Owned Geometry And Style
-
-- `.frog` owns diagram logic, widget instance ids, bindings, labels, layout,
-  initial values, property-write nodes, and instance-level visual overrides.
-- `.wfrog` resolves realization packages, Default asset ids, supported widget
-  classes, and host capability declarations.
-- Default SVG assets own reusable visual grammar, public parts, internal
-  geometry, internal anchors, and default visual behavior.
-- Runtime overlays may exist only to provide host interaction and must align to
-  published SVG parts and source-owned instance properties.
-- Selection, editing, scrolling, and execution affordances must not change the
-  published widget layout dimensions.
-
-## Accepted Property-Write Posture
-
-- The visible-count Numeric control can be edited without changing the Array viewport.
-- `Execute` consumes the Numeric U8 value and writes
-  `numeric_array.viewport.visible_counts[0]` and
-  `published_array.viewport.visible_counts[0]`.
-- The Array viewport update is diagram-owned behavior, not an immediate
-  design-time host resize.
-- This example is execution-mode evidence. IDE live-edit behavior belongs to
-  a separate design-time host boundary.
-
-## Accepted Asset And Part Evidence
-
-- Asset reference consumed: `asset:array_shell_svg`.
-- Contained widget asset consumed: `asset:numeric_rectangular_svg`.
-- Runtime overlays align to Default Array `element_region` / `element_slot`
-  parts and Default Numeric `value_face`, `text_value`, `increment_up`, and
-  `increment_down` parts.
+- Captured from the C++ browser host on 2026-06-11 after real browser visual validation.
+- The snapshot is public evidence only; source truth remains the owning `.frog`, `.wfrog`, FIR/lowering, Default realization packages, and native/host manifests.
+- Array shell uses the accepted LabVIEW NXG-like neutral palette: container body `#EEF4F6`, helper/index background `#ffffff`, borders and scrollbar thumb `#A8ABAE`, helper button fill `#DDE1E4`, and selection/aura blue `#00ADEF`.
+- Visible cells instantiate the Default Numeric widget; they are not hardcoded array cells.
+- Array cell bounds equal the contained Numeric placement aura. The cell must not add local padding or fake borders around the contained Numeric widget.
+- Numeric control cells use the white editable value face and visible increment/decrement controls; Numeric indicator cells use the accepted indicator gray `#E8EBED` and hide increment/decrement controls.
+- Property helper controls, when present, are Default Numeric U8 widgets using the accepted 96 x 32 placement-bounds posture.
 
 ## Accepted Data Posture
 
-- The accepted state is stored in `state.accepted.json`.
-- Public outputs, UI widget values, native manifest status, and consumed assets
-  are inspectable without exposing private runtime implementation code.
+- The accepted public state is stored in `state.accepted.json`.
+- Public outputs, UI widget values, diagnostics, consumed assets, and source-owned visual properties remain inspectable without exposing private runtime implementation code.
 
 ## Inspection Notes
 
-This snapshot was captured from the C++ Graiphic private runtime browser host
-for a post-public-runtime-boundary widget progression example. It is evidence
-for the example and widget realization surface, not a claim that every possible
-runtime host behavior has been generalized.
+This snapshot was captured from the C++ Graiphic private runtime browser host for a repository-visible widget progression example. It is evidence for the example and widget realization surface, not a claim that every possible runtime host behavior has been generalized.

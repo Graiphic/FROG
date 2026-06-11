@@ -2,7 +2,7 @@
 
 This example demonstrates a two-dimensional Array container whose repeated cells instantiate the Default Numeric widget realization.
 
-Reviewed 2026-06-09.
+Reviewed 2026-06-11.
 
 The Array owns rank, matrix shape, index displays, viewport, scrolling, insertion/materialization posture, and repeated-cell layout. The Numeric element owns per-cell value editing and value display. Control cells keep increment/decrement controls visible; indicator cells are read-only and use source-owned grey styling to show that they are not editable.
 

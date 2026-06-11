@@ -21,7 +21,7 @@ to the public output <code>result</code>.
 </p>
 
 <p>
-Reviewed <time datetime="2026-06-10">2026-06-10</time>: the Boolean example now
+Reviewed <time datetime="2026-06-11">2026-06-11</time>: the Boolean example now
 uses the minimal Default Boolean SVG contract:
 <code>root</code>, <code>label</code>, <code>caption</code>,
 <code>placement_bounds</code>, <code>state_face</code>,
@@ -54,6 +54,17 @@ widget family, not separate widget classes.
 bool_input:  x=56,  y=56, width=72, height=72, bounds_ref=placement_bounds
 bool_result: x=224, y=56, width=72, height=72, bounds_ref=placement_bounds
 </code></pre>
+
+<hr/>
+
+<h2>Reference Snapshot</h2>
+
+<p>
+The accepted C++ browser-host reference package is published under
+<a href="./reference/">reference/</a>. It contains the accepted screenshot,
+runtime state snapshot, visual contract, and artifact hash index for the source,
+lowering, native manifest, and Default Boolean realization assets.
+</p>
 
 <p>
 The layout coordinates refer to each widget's <code>placement_bounds</code>

@@ -1,0 +1,145 @@
+{
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "artifact_kind": "frog_runtime_execution_result",
+  "contract_ref": {
+    "backend_family": "reference_host_runtime_ui_binding",
+    "source_ref": {
+      "entry_unit": "main",
+      "example_id": "06_boolean_value_roundtrip",
+      "path": "Examples/06_boolean_value_roundtrip/main.frog"
+    },
+    "unit_ids": [
+      "main"
+    ]
+  },
+  "diagnostics": [],
+  "execution_summary": {
+    "executed_unit": "main",
+    "input_value": false,
+    "mode": "boolean_value_roundtrip",
+    "operation": "copy",
+    "result": false
+  },
+  "outputs": {
+    "public": {
+      "result": false
+    },
+    "ui": {
+      "bool_input": false,
+      "bool_result": false
+    }
+  },
+  "status": "ok",
+  "ui_runtime": {
+    "panel": {
+      "class_ref": "frog.widgets.panel",
+      "layout": {
+        "coordinate_space": "panel_pixels",
+        "height": 160,
+        "width": 360
+      },
+      "panel_id": "main_panel",
+      "title": "Boolean Value Roundtrip"
+    },
+    "widgets": [
+      {
+        "class_ref": "frog.widgets.boolean_control",
+        "layout": {
+          "bounds_ref": "placement_bounds",
+          "height": 72,
+          "origin": "placement_bounds.top_left",
+          "width": 72,
+          "x": 56,
+          "y": 56
+        },
+        "role": "control",
+        "runtime": {
+          "asset_ref": "asset:boolean_rectangular_svg",
+          "caption.align.horizontal": "left",
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 24,
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "12px",
+          "caption.style.font_weight": "400",
+          "caption.style.text_color": "#2B3033",
+          "caption.text": "Square control",
+          "caption.visible": true,
+          "label.text": "Boolean value control",
+          "realization.variant": "rectangular",
+          "state_text.false_text": "Off",
+          "state_text.style.font_size": "13px",
+          "state_text.style.font_weight": "400",
+          "state_text.style.text_color.false": "#2B3033",
+          "state_text.style.text_color.true": "#ffffff",
+          "state_text.true_text": "On",
+          "state_text.visible": true,
+          "style.focus_ring.color": "#00ADEF",
+          "style.focus_ring.visible": true,
+          "style.focus_ring.width": "1px",
+          "style.state_face.border_color.false": "#A8ABAE",
+          "style.state_face.border_color.hover_false": "#8E9297",
+          "style.state_face.border_color.hover_true": "#8E9297",
+          "style.state_face.border_color.pressed_false": "#00ADEF",
+          "style.state_face.border_color.pressed_true": "#00ADEF",
+          "style.state_face.border_color.true": "#A8ABAE",
+          "style.state_face.border_width": "1px",
+          "style.state_face.fill_color.false": "#ffffff",
+          "style.state_face.fill_color.hover_false": "#f7fafc",
+          "style.state_face.fill_color.hover_true": "#5B9CC7",
+          "style.state_face.fill_color.pressed_false": "#e8edf2",
+          "style.state_face.fill_color.pressed_true": "#3F7FA9",
+          "style.state_face.fill_color.true": "#4A8DBC",
+          "style.transition.duration_ms": 120,
+          "style.transition.timing": "ease-out",
+          "value": false
+        },
+        "widget_id": "bool_input"
+      },
+      {
+        "class_ref": "frog.widgets.boolean_indicator",
+        "layout": {
+          "bounds_ref": "placement_bounds",
+          "height": 72,
+          "origin": "placement_bounds.top_left",
+          "width": 72,
+          "x": 224,
+          "y": 56
+        },
+        "role": "indicator",
+        "runtime": {
+          "asset_ref": "asset:boolean_circular_svg",
+          "caption.align.horizontal": "left",
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 24,
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "12px",
+          "caption.style.font_weight": "400",
+          "caption.style.text_color": "#2B3033",
+          "caption.text": "Round indicator",
+          "caption.visible": true,
+          "label.text": "Boolean value result",
+          "realization.variant": "circular",
+          "state_text.false_text": "Off",
+          "state_text.style.font_size": "13px",
+          "state_text.style.font_weight": "400",
+          "state_text.style.text_color.false": "#2B3033",
+          "state_text.style.text_color.true": "#ffffff",
+          "state_text.true_text": "On",
+          "state_text.visible": false,
+          "style.focus_ring.color": "#00ADEF",
+          "style.focus_ring.visible": false,
+          "style.focus_ring.width": "1px",
+          "style.state_face.border_color.false": "#A8ABAE",
+          "style.state_face.border_color.true": "#A8ABAE",
+          "style.state_face.border_width": "1px",
+          "style.state_face.fill_color.false": "#ffffff",
+          "style.state_face.fill_color.true": "#4A8DBC",
+          "value": false
+        },
+        "widget_id": "bool_result"
+      }
+    ]
+  }
+}

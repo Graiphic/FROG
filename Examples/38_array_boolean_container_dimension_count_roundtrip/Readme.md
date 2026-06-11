@@ -1,6 +1,6 @@
 # Example 38 - Boolean Array Dimension Count Property Roundtrip
 
-Reviewed 2026-06-10.
+Reviewed 2026-06-11.
 
 This example demonstrates an N-dimensional Array container whose dimension count is controlled by a Numeric U8 control through explicit diagram property writes. Two additional Numeric U8 controls continue to command visible row and column counts for the active Array view.
 
@@ -31,4 +31,7 @@ Example 38 is a post-public-boundary widget progression example. Graiphic privat
 
 ## Reference Snapshot
 
-The public reference package may be published under `reference/` after the snapshot, public state, visual contract, and artifact hash index are prepared from an accepted browser-host state.
+The accepted C++ browser-host reference package is published under
+[`reference/`](./reference/). It contains the accepted screenshot, runtime
+state snapshot, visual contract, and artifact hash index for the source,
+lowering, native manifest, and Default realization assets.

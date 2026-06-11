@@ -115,6 +115,27 @@ selection/manipulation affordances.
 
 <hr/>
 
+<h2>Placement Aura Band Rule</h2>
+
+<p>
+SVG-backed Default widgets should declare <code>placement_bounds</code> as the
+portable placement aura and a main visible body part inside it. The adopted
+default band between <code>placement_bounds</code> and the main body is uniform
+<code>4px</code> / <code>4 source units</code> at 1:1 scale. Widget dimensions
+remain family-specific: a different aura rectangle is normal, but a different
+band thickness must be explicitly declared in the widget class law, Default
+realization manifest, and validation evidence.
+</p>
+
+<p>
+The placement aura is not <code>focus_ring</code>, not a value surface, and not
+Array cell selection. Container widgets consume <code>placement_bounds</code>
+for contained-widget sizing unless a widget-specific contract declares another
+portable fit part.
+</p>
+
+<hr/>
+
 <h2>Public Property Table Shape</h2>
 
 <p>

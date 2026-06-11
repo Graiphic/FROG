@@ -7,7 +7,7 @@
     "author": "Graiphic",
     "program_version": "0.1.0",
     "review": {
-      "last_reviewed": "2026-06-10",
+      "last_reviewed": "2026-06-11",
       "review_scope": "Default Boolean IDE grid, placement_bounds aura, state_face skin variants, and optional centered state text."
     },
     "tags": [

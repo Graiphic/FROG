@@ -108,7 +108,7 @@ The current published widget layer includes detailed class-law baselines for the
   <li>Widget documents define public widget class law.</li>
   <li>Default realization documents and manifests define default embodiment.</li>
   <li>SVG assets are templates or subobject resources. They own published visual geometry, anchors, and skin parts, but they do not own widget values or diagram semantics.</li>
-  <li>Placement bounds are the widget aura used by IDEs, front panels, and container widgets. They snap to the common grid defined in <a href="./PlacementGrid.md"><code>PlacementGrid.md</code></a>.</li>
+  <li>Placement bounds are the widget aura used by IDEs, front panels, and container widgets. The adopted default band between the aura and the main visible body is uniform <code>4px</code> at 1:1 scale unless a widget class explicitly declares another band. Placement bounds snap to the common grid defined in <a href="./PlacementGrid.md"><code>PlacementGrid.md</code></a> only when source or container policy declares snap.</li>
   <li>Runtime implementations consume these surfaces; they do not define the standard.</li>
   <li>Host-native widgets may replace SVG-backed rendering when they preserve public parts, value posture, property/method/event surfaces, and realization-private boundaries.</li>
 </ul>

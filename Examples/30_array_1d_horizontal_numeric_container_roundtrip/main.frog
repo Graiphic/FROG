@@ -820,7 +820,7 @@
     "host_binding_ref": "array_runtime_host_default",
     "documentation": {
       "title": "Array 1D Horizontal Numeric Container Roundtrip",
-      "summary": "Reviewed 2026-06-09. A one-dimensional Array can act as a widget container. This example binds the Array element template to the Default Numeric widget so each visible cell behaves as a Numeric element inside the Array viewport.",
+      "summary": "Reviewed 2026-06-11. A one-dimensional Array can act as a widget container. This example binds the Array element template to the Default Numeric widget so each visible cell behaves as a Numeric element inside the Array viewport.",
       "sections": [
         {
           "title": "Array container",

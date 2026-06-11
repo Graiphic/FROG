@@ -67,18 +67,18 @@
 
     <rect id="state_face"
           data-frog-part="state_face"
-          x="24"
-          y="40"
-          width="56"
-          height="56"
+          x="20"
+          y="36"
+          width="64"
+          height="64"
           data-frog-bind="value style.state_face.*" />
 
     <rect id="focus_ring"
           data-frog-part="focus_ring"
-          x="24"
-          y="40"
-          width="56"
-          height="56"
+          x="20"
+          y="36"
+          width="64"
+          height="64"
           data-frog-bind="interaction.focused style.focus_ring.*" />
 
     <text id="state_text"

@@ -203,6 +203,6 @@
     "The .frog source owns Array rank, explicit/default N-dimensional shape profiles, boolean elements, selected element, viewport, dimension-rank property writes, index-display rank mirrors, visible row/column property writes, layout, boolean element default value, and visual overrides.",
     "The .wfrog package resolves Default realization assets and declares host capabilities for N-dimensional Boolean element widget template rendering and Numeric U8 property-control rendering.",
     "This IDE view keeps the Example 38 Boolean Array execution corridor but turns the placement grid on for visual review.",
-    "Reviewed 2026-06-10."
+    "Reviewed 2026-06-11."
   ]
 }

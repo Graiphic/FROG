@@ -1,0 +1,32 @@
+{
+  "example_id": "35_array_dimension_count_property_roundtrip",
+  "accepted_date": "2026-06-11",
+  "runtime_family": "graiphic_private_runtime_cpp",
+  "screenshot": {
+    "file": "screenshot.png",
+    "width": 980,
+    "height": 820
+  },
+  "visual_validation": {
+    "browser_host": "ephemeral C++ browser host",
+    "state_route": "ephemeral /state.json captured on 2026-06-11",
+    "route_checked": true,
+    "real_browser_visual_check": true
+  },
+  "public_boundary": "reference snapshot evidence only; no private runtime source is published here",
+  "widgets": [
+    "frog.widgets.array_control",
+    "frog.widgets.array_indicator",
+    "frog.widgets.numeric_control",
+    "frog.widgets.numeric_indicator"
+  ],
+  "accepted_palette": {
+    "array_body": "#EEF4F6",
+    "helper_background": "#ffffff",
+    "helper_fill": "#DDE1E4",
+    "border": "#A8ABAE",
+    "selection_aura": "#00ADEF",
+    "numeric_indicator_face": "#E8EBED"
+  },
+  "contained_widget_rule": "Array cell bounds equal the contained Numeric placement aura; no Array-local fake shell."
+}

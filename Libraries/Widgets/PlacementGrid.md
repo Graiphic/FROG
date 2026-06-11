@@ -34,6 +34,7 @@ inspection.
   <li>When the grid is rendered, ordinary grid-dot centers are located at <code>grid.origin + n * grid.pitch</code>. Renderers must not center repeated background tiles in a way that shifts visible dots by half a pitch from the source coordinate system.</li>
   <li>When the grid is visible, the <code>0,0</code> origin point must render with a stronger visual marker than ordinary grid points. The default marker is a point twice the standard grid-dot radius, not a large decorative target.</li>
   <li>A widget's canonical placement origin is the top-left corner of its <code>placement_bounds</code>.</li>
+  <li>The adopted default aura band is uniform <code>4px</code> / <code>4 source units</code> at 1:1 scale between <code>placement_bounds</code> and the widget's main visible body. Widget dimensions remain family-specific; a different aura band is allowed only when the widget class law and Default realization manifest declare it explicitly.</li>
   <li>The grid is a shared placement reference and optional snap policy. It is not a universal hidden constraint on every widget instance.</li>
   <li>When a source declares grid snap, the declared edge such as <code>placement_bounds.top_left</code> snaps to the grid.</li>
   <li>For horizontally resizable widgets, a source may also declare that <code>placement_bounds.top_right</code> snaps to the grid. Equivalently, <code>layout.width</code> is quantized as an integer multiple of <code>canvas.grid.pitch</code> for that declared posture.</li>
@@ -55,10 +56,11 @@ layout coordinates.
 
 <p>
 This document defines the common placement vocabulary. It does not assign one
-universal aura size to every widget family. Each widget definition and Default
-realization manifest must publish its own body, aura padding, resize, and
-focus-ring law. The Default Numeric rule below is the first reviewed widget law,
-not a template dimension to copy blindly to other widgets.
+universal aura rectangle to every widget family. Each widget definition and
+Default realization manifest must publish its own body, aura dimensions,
+resize, and focus-ring law. The adopted default aura band is <code>4px</code>
+at 1:1 scale; any different band is an explicit widget-class exception, not a
+runtime guess.
 </p>
 
 <hr/>
@@ -195,12 +197,14 @@ over <code>placement_bounds</code>.
 
 <p>
 The placement bounds are the portable aura. They are a declared band around the
-widget's main body. The band is uniform for a given posture. When snap is
-declared, the aura edges named by the source or container policy align to the
-common grid. For horizontally resizable widgets, a declared width quantization
-policy moves the aura width from grid point to grid point. The visible body
-remains centered within that band and resizes according to the widget class and
-realization law.
+widget's main body. The adopted default band is uniform <code>4px</code> /
+<code>4 source units</code> at 1:1 scale for reviewed Default widgets. A widget
+may declare a different band only as an explicit class-law and realization
+contract. When snap is declared, the aura edges named by the source or
+container policy align to the common grid. For horizontally resizable widgets,
+a declared width quantization policy moves the aura width from grid point to
+grid point. The visible body remains centered within that band and resizes
+according to the widget class and realization law.
 </p>
 
 <hr/>
@@ -239,7 +243,7 @@ skin parts.
 
 <p>
 The Default Numeric realization is the first reviewed placement-grid witness.
-Its compact control posture declares a 4px uniform aura band around the main
+Its compact control posture uses the adopted 4px uniform aura band around the main
 body. The compact default aura is 96x32; the visible control body is 88x24 and
 is centered inside that aura. The value face and optional increment/decrement
 buttons are the visible skin. Width may be resized manually. In IDE/calibration
@@ -254,6 +258,25 @@ stays right-aligned and vertically centered.
 When a Numeric is hosted as an Array element, the Array cell owns hover and
 selection. The Numeric focus ring remains a Numeric runtime focus state and
 must not be used to represent Array cell selection.
+</p>
+
+<hr/>
+
+<h2>Default Boolean Placement Law</h2>
+
+<p>
+The Default Boolean square/circular posture uses the adopted 4px uniform aura
+band around <code>state_face</code>. Its default placement aura is 72x72; the
+visible default state face is 64x64 and is centered inside that aura. Square,
+rectangle, circle, and oval are size/skin postures of the same Boolean widget
+family. <code>focus_ring</code> follows <code>state_face</code> and is not the
+placement aura.
+</p>
+
+<p>
+When a Boolean is hosted as an Array element, the Array cell fits the contained
+Boolean <code>placement_bounds</code>. The visible Boolean value remains
+<code>state_face</code> inside that cell.
 </p>
 
 <hr/>

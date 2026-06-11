@@ -1,18 +1,20 @@
 {
   "example_id": "29_array_1d_numeric_container_roundtrip",
   "snapshot_role": "accepted_public_reference_snapshot",
-  "example_source_artifacts": [
+  "accepted_date": "2026-06-11",
+  "runtime_family": "graiphic_private_runtime_cpp",
+  "artifacts": [
     {
       "path": "Examples/29_array_1d_numeric_container_roundtrip/Readme.md",
-      "sha256": "feede899b863130388c7a1832004ec6ddc28029c2340ac7357dcdf64c5e8fccf"
+      "sha256": "1c91a7e99b92f6e22b660b0b2de9813df92c2ad5da8fb2a9fcfb99768c031a64"
+    },
+    {
+      "path": "Examples/29_array_1d_numeric_container_roundtrip/main.frog",
+      "sha256": "eaee2d90ac9a64879f88bfe6dbd02ebacfa524ea99504044fcc6790f9ac852cb"
     },
     {
       "path": "Examples/29_array_1d_numeric_container_roundtrip/main.fir.json",
       "sha256": "95fc64d2cce955bd90e89fe9f561cc1fec157c99a4cfd75d7b4ce7a0dfd66dfc"
-    },
-    {
-      "path": "Examples/29_array_1d_numeric_container_roundtrip/main.frog",
-      "sha256": "90718023bfd67324a43fca1947ff2527e76a2567c7819c444cf9d3ef1b92eaae"
     },
     {
       "path": "Examples/29_array_1d_numeric_container_roundtrip/main.lowering.json",
@@ -20,10 +22,8 @@
     },
     {
       "path": "Examples/29_array_1d_numeric_container_roundtrip/ui/array_panel.wfrog",
-      "sha256": "64b7e3d7d51f6112c9216e33db2a29a9d10f7c1d657b70848735db1d1a48782b"
-    }
-  ],
-  "backend_artifacts": [
+      "sha256": "fac5471d75a8d8630d9b27c0fffa6ec53344822c85ab5f109dfe75bee16c4ce6"
+    },
     {
       "path": "Implementations/Reference/LLVM/examples/29_array_1d_numeric_container_roundtrip/kernel.ll",
       "sha256": "cf2e9abc94790180f96be4a4e19ff0d8279b977b089f1b080178b8a16c798b07"
@@ -31,34 +31,46 @@
     {
       "path": "Implementations/Reference/LLVM/examples/29_array_1d_numeric_container_roundtrip/native_kernel_manifest.json",
       "sha256": "97c673411fc1004f3f529c29217b37791219cf2a04bfcc6afee3ad1f32dde5ae"
-    }
-  ],
-  "default_realization_artifacts": [
-    {
-      "path": "Examples/29_array_1d_numeric_container_roundtrip/ui/../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
-      "sha256": "77eea10878960fd6a1f47a41453f4b078acf914bed86392eea246cf4466b28d3"
     },
     {
       "path": "Libraries/Realizations/Default/array.default.wfrog",
-      "sha256": "fca3f717f1aec4259ec7e94563708ae77503a3b72c54442666bfac27e5443204"
-    }
-  ],
-  "snapshot_artifacts": [
+      "sha256": "d854d3743a980b4d0667e1d021bf787d1c7dba90ed12ac31efbfe6fe2eb6a83b"
+    },
     {
-      "path": "Examples/29_array_1d_numeric_container_roundtrip/reference/screenshot.svg",
-      "sha256": "c3e168af923e7e13ce5faa59e350172302080d98009df71e49d53a5e7716134d"
+      "path": "Libraries/Realizations/Default/numeric.default.wfrog",
+      "sha256": "c4f810843044865a8f05f8821f2552cd5338c610c3845d70ed6c2da219a00365"
+    },
+    {
+      "path": "Libraries/Realizations/Default/boolean.default.wfrog",
+      "sha256": "95f1fced566d96124ab73e8209cef9b1994759d43cf4c240689c07eac73f84da"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+      "sha256": "15ea437aa4019ad2008e7d52519d08049244276bf56647816fec4acda502eca7"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg",
+      "sha256": "c1d070ea90401743469b65c375412a029ff6e0635f40b3eebb64d793c4eeffbe"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg",
+      "sha256": "130798a3f2cf32cc25dcf216218159c9c49e59368baf0f7f30b6d34146e7bb71"
+    },
+    {
+      "path": "Examples/29_array_1d_numeric_container_roundtrip/reference/screenshot.png",
+      "sha256": "49a7de9119913a67d9aa435cdb9e524ee9017521bd599cc96dc8e88f6be27f6f"
     },
     {
       "path": "Examples/29_array_1d_numeric_container_roundtrip/reference/state.accepted.json",
-      "sha256": "640916871540273eff3ff0435ba790eed8dc1f4ff0610d1d3ca6dcb5b7c12169"
+      "sha256": "92d0dce73ecfdaef40e35c51ac88e30d0f67d0622bedba1d07ff3eb183f17c1e"
     },
     {
       "path": "Examples/29_array_1d_numeric_container_roundtrip/reference/visual-contract.md",
-      "sha256": "5450f561275de6813618fcb85a57844de32bfd140fe159b6bdaebfc541827afa"
+      "sha256": "6f0f10ad9615ab003f2d67cef74d0d451acfae7c6cbcc0c3c6208f1266c19e4a"
     },
     {
       "path": "Examples/29_array_1d_numeric_container_roundtrip/reference/visual-contract.json",
-      "sha256": "75d992c1a509c429aa54c3194d636ccba7b7234b13c45a56f3076d71f887b51f"
+      "sha256": "8162711a19b9f12d372e4aeaee313adafe9b9c8acb4a831f3ff2f9e2d7086a62"
     }
   ]
 }

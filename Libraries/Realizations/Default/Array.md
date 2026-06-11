@@ -126,6 +126,17 @@ plus the neighboring index-display subcontainer when it is visible.
 
 <pre><code>Libraries/Realizations/Default/array.default.wfrog</code></pre>
 
+<p>
+The manifest publishes the Default Array shell palette through
+<code>default_widget_properties</code> for Array controls and indicators. That
+palette is the baseline for placed Array widgets: pale container fill
+<code>#EEF4F6</code>, white index value surfaces, neutral
+<code>#A8ABAE</code> borders/thumbs, <code>#DDE1E4</code> helper button faces,
+and <code>#00ADEF</code> selection/focus accents. Element widgets keep their own
+role-specific skin inside the Array cell; Array does not recolor contained
+widgets to simulate control or indicator state.
+</p>
+
 <hr/>
 
 <h2>4. Public Parts Realized</h2>

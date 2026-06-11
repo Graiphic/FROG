@@ -2,7 +2,7 @@
 
 This example demonstrates a two-dimensional Array container whose visible row and column counts are controlled by two Numeric U8 controls through explicit diagram property writes.
 
-Reviewed 2026-06-09.
+Reviewed 2026-06-11.
 
 The Array owns rank, matrix shape, index displays, viewport, scrolling, insertion/materialization posture, and repeated-cell layout. The Numeric U8 controls are front-panel values until Execute consumes them and writes the Array viewport properties. The Numeric element owns per-cell value editing and value display.
 

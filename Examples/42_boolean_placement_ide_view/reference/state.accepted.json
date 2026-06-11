@@ -1,0 +1,257 @@
+{
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "artifact_kind": "frog_runtime_execution_result",
+  "contract_ref": {
+    "backend_family": "reference_host_runtime_ui_binding",
+    "source_ref": {
+      "entry_unit": "main",
+      "example_id": "42_boolean_placement_ide_view",
+      "path": "Examples/42_boolean_placement_ide_view/main.frog"
+    },
+    "unit_ids": [
+      "main"
+    ]
+  },
+  "diagnostics": [],
+  "execution_summary": {
+    "executed_unit": "main",
+    "input_value": true,
+    "mode": "boolean_value_roundtrip",
+    "operation": "copy",
+    "result": true
+  },
+  "outputs": {
+    "public": {
+      "result": true
+    },
+    "ui": {
+      "bool_input": true,
+      "bool_result": true
+    }
+  },
+  "status": "ok",
+  "ui_runtime": {
+    "panel": {
+      "class_ref": "frog.widgets.panel",
+      "layout": {
+        "coordinate_space": "panel_pixels",
+        "grid": {
+          "origin": {
+            "x": 0,
+            "y": 0
+          },
+          "pitch": 16,
+          "snap": "placement_bounds",
+          "snap_edges": [
+            "placement_bounds.top_left",
+            "placement_bounds.top_right"
+          ],
+          "visible": true,
+          "width_quantization": "grid_pitch_multiple"
+        },
+        "height": 288,
+        "presentation_mode": "ide_view",
+        "selected_widget_id": "bool_input",
+        "width": 400
+      },
+      "panel_id": "main_panel",
+      "title": "Boolean Placement IDE View"
+    },
+    "widgets": [
+      {
+        "class_ref": "frog.widgets.boolean_control",
+        "layout": {
+          "bounds_ref": "placement_bounds",
+          "height": 80,
+          "origin": "placement_bounds.top_left",
+          "width": 80,
+          "x": 32,
+          "y": 64
+        },
+        "role": "control",
+        "runtime": {
+          "asset_ref": "asset:boolean_rectangular_svg",
+          "caption.align.horizontal": "left",
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 24,
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "12px",
+          "caption.style.font_weight": "400",
+          "caption.style.text_color": "#2B3033",
+          "caption.text": "Square control",
+          "caption.visible": true,
+          "label.text": "Square Boolean control",
+          "realization.variant": "rectangular",
+          "state_text.false_text": "Off",
+          "state_text.style.font_size": "13px",
+          "state_text.style.font_weight": "400",
+          "state_text.style.text_color.false": "#2B3033",
+          "state_text.style.text_color.true": "#ffffff",
+          "state_text.true_text": "On",
+          "state_text.visible": true,
+          "style.focus_ring.color": "#00ADEF",
+          "style.focus_ring.visible": true,
+          "style.focus_ring.width": "1px",
+          "style.state_face.border_color.false": "#A8ABAE",
+          "style.state_face.border_color.hover_false": "#8E9297",
+          "style.state_face.border_color.hover_true": "#8E9297",
+          "style.state_face.border_color.pressed_false": "#00ADEF",
+          "style.state_face.border_color.pressed_true": "#00ADEF",
+          "style.state_face.border_color.true": "#A8ABAE",
+          "style.state_face.border_width": "1px",
+          "style.state_face.fill_color.false": "#ffffff",
+          "style.state_face.fill_color.hover_false": "#f7fafc",
+          "style.state_face.fill_color.hover_true": "#5B9CC7",
+          "style.state_face.fill_color.pressed_false": "#e8edf2",
+          "style.state_face.fill_color.pressed_true": "#3F7FA9",
+          "style.state_face.fill_color.true": "#4A8DBC",
+          "style.transition.duration_ms": 120,
+          "style.transition.timing": "ease-out",
+          "value": true
+        },
+        "widget_id": "bool_input"
+      },
+      {
+        "class_ref": "frog.widgets.boolean_control",
+        "layout": {
+          "bounds_ref": "placement_bounds",
+          "height": 80,
+          "origin": "placement_bounds.top_left",
+          "width": 112,
+          "x": 32,
+          "y": 192
+        },
+        "role": "control",
+        "runtime": {
+          "asset_ref": "asset:boolean_circular_svg",
+          "caption.align.horizontal": "left",
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 24,
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "12px",
+          "caption.style.font_weight": "400",
+          "caption.style.text_color": "#2B3033",
+          "caption.text": "Oval control",
+          "caption.visible": true,
+          "label.text": "Oval Boolean control",
+          "realization.variant": "circular",
+          "state_text.false_text": "Off",
+          "state_text.style.font_size": "13px",
+          "state_text.style.font_weight": "400",
+          "state_text.style.text_color.false": "#2B3033",
+          "state_text.style.text_color.true": "#ffffff",
+          "state_text.true_text": "On",
+          "state_text.visible": true,
+          "style.focus_ring.color": "#00ADEF",
+          "style.focus_ring.visible": true,
+          "style.focus_ring.width": "1px",
+          "style.state_face.border_color.false": "#A8ABAE",
+          "style.state_face.border_color.hover_false": "#8E9297",
+          "style.state_face.border_color.hover_true": "#8E9297",
+          "style.state_face.border_color.pressed_false": "#00ADEF",
+          "style.state_face.border_color.pressed_true": "#00ADEF",
+          "style.state_face.border_color.true": "#A8ABAE",
+          "style.state_face.border_width": "1px",
+          "style.state_face.fill_color.false": "#ffffff",
+          "style.state_face.fill_color.hover_false": "#f7fafc",
+          "style.state_face.fill_color.hover_true": "#5B9CC7",
+          "style.state_face.fill_color.pressed_false": "#e8edf2",
+          "style.state_face.fill_color.pressed_true": "#3F7FA9",
+          "style.state_face.fill_color.true": "#4A8DBC",
+          "style.transition.duration_ms": 120,
+          "style.transition.timing": "ease-out",
+          "value": false
+        },
+        "widget_id": "bool_oval_control"
+      },
+      {
+        "class_ref": "frog.widgets.boolean_indicator",
+        "layout": {
+          "bounds_ref": "placement_bounds",
+          "height": 80,
+          "origin": "placement_bounds.top_left",
+          "width": 112,
+          "x": 192,
+          "y": 192
+        },
+        "role": "indicator",
+        "runtime": {
+          "asset_ref": "asset:boolean_rectangular_svg",
+          "caption.align.horizontal": "left",
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 24,
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "12px",
+          "caption.style.font_weight": "400",
+          "caption.style.text_color": "#2B3033",
+          "caption.text": "Rect indicator",
+          "caption.visible": true,
+          "label.text": "Rectangular Boolean indicator",
+          "realization.variant": "rectangular",
+          "state_text.false_text": "Off",
+          "state_text.style.font_size": "13px",
+          "state_text.style.font_weight": "400",
+          "state_text.style.text_color.false": "#2B3033",
+          "state_text.style.text_color.true": "#ffffff",
+          "state_text.true_text": "On",
+          "state_text.visible": false,
+          "style.focus_ring.color": "#00ADEF",
+          "style.focus_ring.visible": false,
+          "style.focus_ring.width": "1px",
+          "style.state_face.border_color.false": "#A8ABAE",
+          "style.state_face.border_color.true": "#A8ABAE",
+          "style.state_face.border_width": "1px",
+          "style.state_face.fill_color.false": "#ffffff",
+          "style.state_face.fill_color.true": "#4A8DBC",
+          "value": false
+        },
+        "widget_id": "bool_rect_indicator"
+      },
+      {
+        "class_ref": "frog.widgets.boolean_indicator",
+        "layout": {
+          "bounds_ref": "placement_bounds",
+          "height": 80,
+          "origin": "placement_bounds.top_left",
+          "width": 80,
+          "x": 192,
+          "y": 64
+        },
+        "role": "indicator",
+        "runtime": {
+          "asset_ref": "asset:boolean_circular_svg",
+          "caption.align.horizontal": "left",
+          "caption.anchor.x": 16,
+          "caption.anchor.y": 24,
+          "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+          "caption.style.font_size": "12px",
+          "caption.style.font_weight": "400",
+          "caption.style.text_color": "#2B3033",
+          "caption.text": "Round indicator",
+          "caption.visible": true,
+          "label.text": "Round Boolean indicator",
+          "realization.variant": "circular",
+          "state_text.false_text": "Off",
+          "state_text.style.font_size": "13px",
+          "state_text.style.font_weight": "400",
+          "state_text.style.text_color.false": "#2B3033",
+          "state_text.style.text_color.true": "#ffffff",
+          "state_text.true_text": "On",
+          "state_text.visible": false,
+          "style.focus_ring.color": "#00ADEF",
+          "style.focus_ring.visible": false,
+          "style.focus_ring.width": "1px",
+          "style.state_face.border_color.false": "#A8ABAE",
+          "style.state_face.border_color.true": "#A8ABAE",
+          "style.state_face.border_width": "1px",
+          "style.state_face.fill_color.false": "#ffffff",
+          "style.state_face.fill_color.true": "#4A8DBC",
+          "value": true
+        },
+        "widget_id": "bool_result"
+      }
+    ]
+  }
+}

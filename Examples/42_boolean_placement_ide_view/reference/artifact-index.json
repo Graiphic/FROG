@@ -1,0 +1,72 @@
+{
+  "example_id": "42_boolean_placement_ide_view",
+  "snapshot_role": "accepted_public_reference_snapshot",
+  "accepted_date": "2026-06-11",
+  "runtime_family": "graiphic_private_runtime_cpp",
+  "artifacts": [
+    {
+      "path": "Examples/42_boolean_placement_ide_view/Readme.md",
+      "sha256": "e3143b94f08bf04c242beb5ff439245f2f6dd5a134e26f71f8ff1d3adb204cab"
+    },
+    {
+      "path": "Examples/42_boolean_placement_ide_view/main.frog",
+      "sha256": "c653806249b412187d75980975e46291b94f05a7b2d6a3e94c99855395bc9b22"
+    },
+    {
+      "path": "Examples/42_boolean_placement_ide_view/main.fir.json",
+      "sha256": "b8244d5176e31f2d445d235cd096033c0e2e0bcc59552cc65f2b6435ad1f3d1f"
+    },
+    {
+      "path": "Examples/42_boolean_placement_ide_view/main.lowering.json",
+      "sha256": "ac3b437a04ddd887e17754b3b29b7bee71f8159905fef5d888595edfd592acec"
+    },
+    {
+      "path": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+      "sha256": "12d464d34824c78c1bb1a8114fde1d3288f3d56c0fa1a9ad1adb215ab1f5d58d"
+    },
+    {
+      "path": "Implementations/Reference/ContractEmitter/examples/42_boolean_placement_ide_view.reference_host_runtime_ui_binding.contract.json",
+      "sha256": "5b2e12274e575e835c1cd88af734aff1132e36defc861e89458fd212dffb80f4"
+    },
+    {
+      "path": "Libraries/Realizations/Default/array.default.wfrog",
+      "sha256": "d854d3743a980b4d0667e1d021bf787d1c7dba90ed12ac31efbfe6fe2eb6a83b"
+    },
+    {
+      "path": "Libraries/Realizations/Default/numeric.default.wfrog",
+      "sha256": "c4f810843044865a8f05f8821f2552cd5338c610c3845d70ed6c2da219a00365"
+    },
+    {
+      "path": "Libraries/Realizations/Default/boolean.default.wfrog",
+      "sha256": "95f1fced566d96124ab73e8209cef9b1994759d43cf4c240689c07eac73f84da"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+      "sha256": "15ea437aa4019ad2008e7d52519d08049244276bf56647816fec4acda502eca7"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg",
+      "sha256": "c1d070ea90401743469b65c375412a029ff6e0635f40b3eebb64d793c4eeffbe"
+    },
+    {
+      "path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg",
+      "sha256": "130798a3f2cf32cc25dcf216218159c9c49e59368baf0f7f30b6d34146e7bb71"
+    },
+    {
+      "path": "Examples/42_boolean_placement_ide_view/reference/screenshot.png",
+      "sha256": "b6125e74f1a0d4762e8be6ae1a73bd7dfe7f2d5a48238817728ced15e3307a0d"
+    },
+    {
+      "path": "Examples/42_boolean_placement_ide_view/reference/state.accepted.json",
+      "sha256": "ec543fd67d1e69c3cd9454955d958915fceb2a12ce5eea87632093849b2a0744"
+    },
+    {
+      "path": "Examples/42_boolean_placement_ide_view/reference/visual-contract.md",
+      "sha256": "c20999157ebcd410ac2cc22ca221f392559a57a10f68f4dcb88d9ee08c19f36f"
+    },
+    {
+      "path": "Examples/42_boolean_placement_ide_view/reference/visual-contract.json",
+      "sha256": "7acb00721a69352498291efb0ab56aec58b80ba0cea61073e2ec97cae8d5d2d4"
+    }
+  ]
+}

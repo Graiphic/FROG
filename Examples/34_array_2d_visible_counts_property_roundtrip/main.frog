@@ -1643,7 +1643,7 @@
     "host_binding_ref": "array_runtime_host_default",
     "documentation": {
       "title": "Array 2D Visible Counts Property Roundtrip",
-      "summary": "Reviewed 2026-06-09. Two Numeric U8 controls write the visible row and visible column counts of a two-dimensional Array through explicit diagram property nodes. The Array remains a widget container whose visible cells instantiate Default Numeric widgets.",
+      "summary": "Reviewed 2026-06-11. Two Numeric U8 controls write the visible row and visible column counts of a two-dimensional Array through explicit diagram property nodes. The Array remains a widget container whose visible cells instantiate Default Numeric widgets.",
       "sections": [
         {
           "title": "Visible-count properties",
