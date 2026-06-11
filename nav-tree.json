@@ -323,6 +323,21 @@
                   "children": []
                 },
                 {
+                  "key": "examples/06_boolean_value_roundtrip/reference/",
+                  "title": "reference",
+                  "path": "/Examples/06_boolean_value_roundtrip/reference/README.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "examples/06_boolean_value_roundtrip/reference/visual-contract.md",
+                      "title": "visual-contract",
+                      "path": "/Examples/06_boolean_value_roundtrip/reference/visual-contract.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
+                },
+                {
                   "key": "examples/06_boolean_value_roundtrip/ui/",
                   "title": "ui",
                   "path": "/Examples/06_boolean_value_roundtrip/ui/Readme.md",
@@ -983,6 +998,21 @@
                   "path": "/Examples/35_array_dimension_count_property_roundtrip/main.frog",
                   "kind": "code",
                   "children": []
+                },
+                {
+                  "key": "examples/35_array_dimension_count_property_roundtrip/reference/",
+                  "title": "reference",
+                  "path": "/Examples/35_array_dimension_count_property_roundtrip/reference/README.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "examples/35_array_dimension_count_property_roundtrip/reference/visual-contract.md",
+                      "title": "visual-contract",
+                      "path": "/Examples/35_array_dimension_count_property_roundtrip/reference/visual-contract.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
                 }
               ]
             },
@@ -1028,6 +1058,21 @@
                   "path": "/Examples/38_array_boolean_container_dimension_count_roundtrip/main.frog",
                   "kind": "code",
                   "children": []
+                },
+                {
+                  "key": "examples/38_array_boolean_container_dimension_count_roundtrip/reference/",
+                  "title": "reference",
+                  "path": "/Examples/38_array_boolean_container_dimension_count_roundtrip/reference/README.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "examples/38_array_boolean_container_dimension_count_roundtrip/reference/visual-contract.md",
+                      "title": "visual-contract",
+                      "path": "/Examples/38_array_boolean_container_dimension_count_roundtrip/reference/visual-contract.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
                 }
               ]
             },
@@ -1097,6 +1142,21 @@
                   "children": []
                 },
                 {
+                  "key": "examples/42_boolean_placement_ide_view/reference/",
+                  "title": "reference",
+                  "path": "/Examples/42_boolean_placement_ide_view/reference/README.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "examples/42_boolean_placement_ide_view/reference/visual-contract.md",
+                      "title": "visual-contract",
+                      "path": "/Examples/42_boolean_placement_ide_view/reference/visual-contract.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
+                },
+                {
                   "key": "examples/42_boolean_placement_ide_view/ui/",
                   "title": "ui",
                   "path": "/Examples/42_boolean_placement_ide_view/ui/Readme.md",
@@ -1117,6 +1177,21 @@
                   "path": "/Examples/43_array_boolean_container_ide_view/main.frog",
                   "kind": "code",
                   "children": []
+                },
+                {
+                  "key": "examples/43_array_boolean_container_ide_view/reference/",
+                  "title": "reference",
+                  "path": "/Examples/43_array_boolean_container_ide_view/reference/README.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "examples/43_array_boolean_container_ide_view/reference/visual-contract.md",
+                      "title": "visual-contract",
+                      "path": "/Examples/43_array_boolean_container_ide_view/reference/visual-contract.md",
+                      "kind": "page",
+                      "children": []
+                    }
+                  ]
                 },
                 {
                   "key": "examples/43_array_boolean_container_ide_view/ui/",
@@ -1706,28 +1781,6 @@
                     },
                     {
                       "key": "libraries/realizations/default/assets/",
-                      "title": "Assets",
-                      "path": "/Libraries/Realizations/Default/Assets/Readme.md",
-                      "kind": "category",
-                      "children": [
-                        {
-                          "key": "libraries/realizations/default/assets/naming.md",
-                          "title": "Naming",
-                          "path": "/Libraries/Realizations/Default/Assets/Naming.md",
-                          "kind": "page",
-                          "children": []
-                        },
-                        {
-                          "key": "libraries/realizations/default/assets/ring/",
-                          "title": "ring",
-                          "path": "/Libraries/Realizations/Default/Assets/ring/Readme.md",
-                          "kind": "category",
-                          "children": []
-                        }
-                      ]
-                    },
-                    {
-                      "key": "libraries/realizations/default/assets/",
                       "title": "assets",
                       "path": null,
                       "kind": "category",
@@ -1862,6 +1915,28 @@
                           "key": "libraries/realizations/default/assets/tree/",
                           "title": "tree",
                           "path": "/Libraries/Realizations/Default/assets/tree/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "key": "libraries/realizations/default/assets/",
+                      "title": "Assets",
+                      "path": "/Libraries/Realizations/Default/Assets/Readme.md",
+                      "kind": "category",
+                      "children": [
+                        {
+                          "key": "libraries/realizations/default/assets/naming.md",
+                          "title": "Naming",
+                          "path": "/Libraries/Realizations/Default/Assets/Naming.md",
+                          "kind": "page",
+                          "children": []
+                        },
+                        {
+                          "key": "libraries/realizations/default/assets/ring/",
+                          "title": "ring",
+                          "path": "/Libraries/Realizations/Default/Assets/ring/Readme.md",
                           "kind": "category",
                           "children": []
                         }
@@ -5100,6 +5175,8 @@
     "/Examples/05_bounded_ui_accumulator/ui/Readme.md",
     "/Examples/05_bounded_ui_accumulator/Readme.md",
     "/Examples/06_boolean_value_roundtrip/main.frog",
+    "/Examples/06_boolean_value_roundtrip/reference/visual-contract.md",
+    "/Examples/06_boolean_value_roundtrip/reference/README.md",
     "/Examples/06_boolean_value_roundtrip/ui/Readme.md",
     "/Examples/06_boolean_value_roundtrip/Readme.md",
     "/Examples/07_string_value_roundtrip/main.frog",
@@ -5188,12 +5265,16 @@
     "/Examples/34_array_2d_visible_counts_property_roundtrip/reference/README.md",
     "/Examples/34_array_2d_visible_counts_property_roundtrip/Readme.md",
     "/Examples/35_array_dimension_count_property_roundtrip/main.frog",
+    "/Examples/35_array_dimension_count_property_roundtrip/reference/visual-contract.md",
+    "/Examples/35_array_dimension_count_property_roundtrip/reference/README.md",
     "/Examples/35_array_dimension_count_property_roundtrip/Readme.md",
     "/Examples/36_array_string_container_dimension_count_roundtrip/main.frog",
     "/Examples/36_array_string_container_dimension_count_roundtrip/Readme.md",
     "/Examples/37_array_path_container_dimension_count_roundtrip/main.frog",
     "/Examples/37_array_path_container_dimension_count_roundtrip/Readme.md",
     "/Examples/38_array_boolean_container_dimension_count_roundtrip/main.frog",
+    "/Examples/38_array_boolean_container_dimension_count_roundtrip/reference/visual-contract.md",
+    "/Examples/38_array_boolean_container_dimension_count_roundtrip/reference/README.md",
     "/Examples/38_array_boolean_container_dimension_count_roundtrip/Readme.md",
     "/Examples/39_array_enum_container_dimension_count_roundtrip/main.frog",
     "/Examples/39_array_enum_container_dimension_count_roundtrip/Readme.md",
@@ -5203,9 +5284,13 @@
     "/Examples/41_numeric_placement_ide_view/ui/Readme.md",
     "/Examples/41_numeric_placement_ide_view/Readme.md",
     "/Examples/42_boolean_placement_ide_view/main.frog",
+    "/Examples/42_boolean_placement_ide_view/reference/visual-contract.md",
+    "/Examples/42_boolean_placement_ide_view/reference/README.md",
     "/Examples/42_boolean_placement_ide_view/ui/Readme.md",
     "/Examples/42_boolean_placement_ide_view/Readme.md",
     "/Examples/43_array_boolean_container_ide_view/main.frog",
+    "/Examples/43_array_boolean_container_ide_view/reference/visual-contract.md",
+    "/Examples/43_array_boolean_container_ide_view/reference/README.md",
     "/Examples/43_array_boolean_container_ide_view/ui/Readme.md",
     "/Examples/43_array_boolean_container_ide_view/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
@@ -5288,9 +5373,6 @@
     "/Libraries/Realizations/Default/Table.md",
     "/Libraries/Realizations/Default/Tree.md",
     "/Libraries/Realizations/Default/Validation.md",
-    "/Libraries/Realizations/Default/Assets/Naming.md",
-    "/Libraries/Realizations/Default/Assets/ring/Readme.md",
-    "/Libraries/Realizations/Default/Assets/Readme.md",
     "/Libraries/Realizations/Default/assets/array/Readme.md",
     "/Libraries/Realizations/Default/assets/boolean/Readme.md",
     "/Libraries/Realizations/Default/assets/button/Readme.md",
@@ -5310,6 +5392,9 @@
     "/Libraries/Realizations/Default/assets/tab/Readme.md",
     "/Libraries/Realizations/Default/assets/table/Readme.md",
     "/Libraries/Realizations/Default/assets/tree/Readme.md",
+    "/Libraries/Realizations/Default/Assets/Naming.md",
+    "/Libraries/Realizations/Default/Assets/ring/Readme.md",
+    "/Libraries/Realizations/Default/Assets/Readme.md",
     "/Libraries/Realizations/Default/Examples/Button%20default%20realization.wfrog.md",
     "/Libraries/Realizations/Default/Examples/Button%20package%20and%20assets%20example.md",
     "/Libraries/Realizations/Default/Examples/Numeric%20control%20default%20realization.wfrog.md",
