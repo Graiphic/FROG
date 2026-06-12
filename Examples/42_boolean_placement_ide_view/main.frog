@@ -103,7 +103,22 @@
           "placement_bounds.top_right"
         ],
         "width_quantization": "grid_pitch_multiple"
-      }
+      },
+      "ide.style.aura.selected.border_color": "#00ADEF",
+      "ide.style.aura.selected.fill_color": "rgba(14,165,233,0.025)",
+      "ide.style.aura.selected.border_width": "1px",
+      "ide.style.aura.hover.border_color": "rgba(0,173,239,0.42)",
+      "ide.style.aura.hover.fill_color": "rgba(14,165,233,0.012)",
+      "ide.style.aura.hover.border_width": "2px",
+      "ide.style.aura.hover_dimmed.border_color": "rgba(0,173,239,0.28)",
+      "ide.style.aura.hover_dimmed.fill_color": "rgba(14,165,233,0.006)",
+      "ide.style.aura.hover_dimmed.border_width": "2px",
+      "ide.style.label.selected.fill_color": "rgba(255,255,255,0.9)",
+      "ide.style.label.hover.fill_color": "rgba(255,255,255,0.72)",
+      "ide.style.label.hover_dimmed.fill_color": "rgba(255,255,255,0.55)",
+      "ide.style.cell.hover.border_color": "rgba(0,173,239,0.42)",
+      "ide.style.cell.hover.border_width": "2px",
+      "ide.style.cell.selected.border_width": "1px"
     },
     "package_refs": [
       "./ui/boolean_ide_panel.wfrog"

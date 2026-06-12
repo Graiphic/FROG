@@ -8,8 +8,8 @@
     "height": 1102
   },
   "visual_validation": {
-    "browser_host": "http://127.0.0.1:59443/",
-    "state_route": "http://127.0.0.1:59443/state.json",
+    "browser_host": "http://127.0.0.1:57643/",
+    "state_route": "http://127.0.0.1:57643/state.json",
     "route_checked": true,
     "real_browser_visual_check": true
   },
@@ -25,6 +25,40 @@
     "placement_bounds": "72x72",
     "state_face": "64x64",
     "uniform_band_px": 4
+  },
+  "ide_selection": {
+    "front_panel_widgets_selectable": true,
+    "numeric_property_controls": "Default Numeric placement aura",
+    "array_widgets": "Split Array placement aura: body/frame/scrollbars without index display, plus index display aura",
+    "array_cell_selection": "Cell aura disables the front-panel Array aura while active",
+    "hover_preview": "Same aura geometry as selected, lighter blue, heavier stroke",
+    "selected_state": "Confirmed #00ADEF aura with thinner stroke",
+    "clear_selection": "Clicking outside IDE-selectable widgets clears the current IDE selection",
+    "style_token_source": "front_panel.canvas ide.style.* tokens in main.frog"
+  },
+  "ide_style_tokens": {
+    "selected_aura": {
+      "border_color": "#00ADEF",
+      "fill_color": "rgba(14,165,233,0.025)",
+      "border_width": "1px"
+    },
+    "hover_aura": {
+      "border_color": "rgba(0,173,239,0.42)",
+      "fill_color": "rgba(14,165,233,0.012)",
+      "border_width": "2px"
+    },
+    "hover_dimmed_aura": {
+      "border_color": "rgba(0,173,239,0.28)",
+      "fill_color": "rgba(14,165,233,0.006)",
+      "border_width": "2px"
+    },
+    "cell_hover": {
+      "border_color": "rgba(0,173,239,0.42)",
+      "border_width": "2px"
+    },
+    "cell_selected": {
+      "border_width": "1px"
+    }
   },
   "skins": [
     "asset:boolean_rectangular_svg",

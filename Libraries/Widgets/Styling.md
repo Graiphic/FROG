@@ -272,6 +272,26 @@ They are therefore valid candidates for:
 Portable style does not expose realization-private internals such as raw layer names, SVG element ids, or runtime-private render handles.
 </p>
 
+<p>
+Design-time interaction styling follows the same rule. IDE hover,
+preselection, selected-widget aura, selected-cell aura, label highlight, and
+equivalent editor overlays may be rendered by a host, but their reusable colors,
+fills, and stroke widths must be declared as source-owned or realization-owned
+style tokens. A runtime may expose those values as host CSS variables or native
+theme variables while rendering, but the accepted visual colors must not live
+only as private runtime constants.
+</p>
+
+<p>
+For current front-panel IDE/calibration examples, the portable source posture is
+to declare these values on the canvas using explicit tokens such as
+<code>ide.style.aura.selected.*</code>, <code>ide.style.aura.hover.*</code>,
+<code>ide.style.label.*</code>, and <code>ide.style.cell.*</code>. The exact
+token set may evolve, but the ownership boundary is stable: geometry and
+selection behavior are widget/container contracts; color, fill, opacity, and
+stroke-width styling are editable skin/theme tokens.
+</p>
+
 <hr/>
 
 <h2 id="realization-selection-surface">8. Realization-Selection Surface</h2>

@@ -136,6 +136,27 @@ portable fit part.
 
 <hr/>
 
+<h2>Design-Time Aura Style Token Rule</h2>
+
+<p>
+IDE hover, preselection, selected-widget aura, selected-cell aura, label
+highlight, and equivalent design-time overlays are host-rendered views of
+declared widget/container geometry. Their reusable colors, fills, opacity, and
+stroke widths must be source-owned or realization-owned style tokens, not
+runtime-private constants.
+</p>
+
+<p>
+Widget documents that expose IDE/calibration behavior should name the relevant
+tokens, such as <code>ide.style.aura.selected.*</code>,
+<code>ide.style.aura.hover.*</code>, <code>ide.style.label.*</code>, and
+<code>ide.style.cell.*</code>, or the family-specific equivalents. Runtime
+hosts may map those tokens to CSS variables or native rendering variables, but
+changing the visual palette must not require changing runtime source code.
+</p>
+
+<hr/>
+
 <h2>Public Property Table Shape</h2>
 
 <p>

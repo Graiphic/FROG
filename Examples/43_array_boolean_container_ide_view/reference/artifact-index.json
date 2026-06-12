@@ -1,68 +1,68 @@
-{
-  "example_id": "43_array_boolean_container_ide_view",
-  "snapshot_role": "accepted_public_reference_snapshot",
-  "accepted_date": "2026-06-11",
-  "runtime_family": "graiphic_private_runtime_cpp",
-  "artifacts": [
-    {
-      "path": "Examples/43_array_boolean_container_ide_view/Readme.md",
-      "sha256": "bf17b59dfbd81393f6cb7440eb638ece8207bccbd2d5788e7d9cf8e8467ae51c"
-    },
-    {
-      "path": "Examples/43_array_boolean_container_ide_view/main.frog",
-      "sha256": "e6f96ab5773801cd0d48ead2c947fbefffd371e4f391169ed3d958b862fb20e7"
-    },
-    {
-      "path": "Examples/43_array_boolean_container_ide_view/main.fir.json",
-      "sha256": "d8e6fe6f0b43b5557aabe5a5dbb4b673662b000da488145e3fab62fd8a4ce1a2"
-    },
-    {
-      "path": "Examples/43_array_boolean_container_ide_view/main.lowering.json",
-      "sha256": "18fceb6b2380059e233407d4dfcbd5a5a9ff4214016a2bc51e014d916e039fad"
-    },
-    {
-      "path": "Examples/43_array_boolean_container_ide_view/ui/array_panel.wfrog",
-      "sha256": "f223f8017ab10d5a3bb8d9e432ff905a1ab2574450ab3fd903b047519842d598"
-    },
-    {
-      "path": "Libraries/Realizations/Default/array.default.wfrog",
-      "sha256": "d854d3743a980b4d0667e1d021bf787d1c7dba90ed12ac31efbfe6fe2eb6a83b"
-    },
-    {
-      "path": "Libraries/Realizations/Default/numeric.default.wfrog",
-      "sha256": "c4f810843044865a8f05f8821f2552cd5338c610c3845d70ed6c2da219a00365"
-    },
-    {
-      "path": "Libraries/Realizations/Default/boolean.default.wfrog",
-      "sha256": "95f1fced566d96124ab73e8209cef9b1994759d43cf4c240689c07eac73f84da"
-    },
-    {
-      "path": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
-      "sha256": "15ea437aa4019ad2008e7d52519d08049244276bf56647816fec4acda502eca7"
-    },
-    {
-      "path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg",
-      "sha256": "c1d070ea90401743469b65c375412a029ff6e0635f40b3eebb64d793c4eeffbe"
-    },
-    {
-      "path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg",
-      "sha256": "130798a3f2cf32cc25dcf216218159c9c49e59368baf0f7f30b6d34146e7bb71"
-    },
-    {
-      "path": "Examples/43_array_boolean_container_ide_view/reference/screenshot.png",
-      "sha256": "c55699e3ded6c46e69df13459ec8f44f896937113eb2dc748b937dd804b928f7"
-    },
-    {
-      "path": "Examples/43_array_boolean_container_ide_view/reference/state.accepted.json",
-      "sha256": "c527f641813364f7ce8a406afc28df38b20fa69d7d7d33096d1a44b7d6e533f0"
-    },
-    {
-      "path": "Examples/43_array_boolean_container_ide_view/reference/visual-contract.md",
-      "sha256": "c0f3dc6628e0ff83e97a00fdafff10ef466e3579ee6406c633f3cf8492f493f1"
-    },
-    {
-      "path": "Examples/43_array_boolean_container_ide_view/reference/visual-contract.json",
-      "sha256": "a17fe67fa4959f341c35513d6a6cb07d9fc30b9cfd176b315693f1da25ae4688"
-    }
-  ]
+﻿{
+    "example_id":  "43_array_boolean_container_ide_view",
+    "snapshot_role":  "accepted_public_reference_snapshot",
+    "accepted_date":  "2026-06-11",
+    "runtime_family":  "graiphic_private_runtime_cpp",
+    "artifacts":  [
+                      {
+                          "path":  "Examples/43_array_boolean_container_ide_view/Readme.md",
+                          "sha256":  "2873fbcbf83fe0650ad678bf2144d8d2114747d56e29767133e2dfa7ab551d91"
+                      },
+                      {
+                          "path":  "Examples/43_array_boolean_container_ide_view/main.frog",
+                          "sha256":  "6f5132acf95703d5992443fb1211189fec7cee0878140ed50626410d54e62500"
+                      },
+                      {
+                          "path":  "Examples/43_array_boolean_container_ide_view/main.fir.json",
+                          "sha256":  "d8e6fe6f0b43b5557aabe5a5dbb4b673662b000da488145e3fab62fd8a4ce1a2"
+                      },
+                      {
+                          "path":  "Examples/43_array_boolean_container_ide_view/main.lowering.json",
+                          "sha256":  "18fceb6b2380059e233407d4dfcbd5a5a9ff4214016a2bc51e014d916e039fad"
+                      },
+                      {
+                          "path":  "Examples/43_array_boolean_container_ide_view/ui/array_panel.wfrog",
+                          "sha256":  "f223f8017ab10d5a3bb8d9e432ff905a1ab2574450ab3fd903b047519842d598"
+                      },
+                      {
+                          "path":  "Libraries/Realizations/Default/array.default.wfrog",
+                          "sha256":  "d854d3743a980b4d0667e1d021bf787d1c7dba90ed12ac31efbfe6fe2eb6a83b"
+                      },
+                      {
+                          "path":  "Libraries/Realizations/Default/numeric.default.wfrog",
+                          "sha256":  "c4f810843044865a8f05f8821f2552cd5338c610c3845d70ed6c2da219a00365"
+                      },
+                      {
+                          "path":  "Libraries/Realizations/Default/boolean.default.wfrog",
+                          "sha256":  "95f1fced566d96124ab73e8209cef9b1994759d43cf4c240689c07eac73f84da"
+                      },
+                      {
+                          "path":  "Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+                          "sha256":  "15ea437aa4019ad2008e7d52519d08049244276bf56647816fec4acda502eca7"
+                      },
+                      {
+                          "path":  "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg",
+                          "sha256":  "c1d070ea90401743469b65c375412a029ff6e0635f40b3eebb64d793c4eeffbe"
+                      },
+                      {
+                          "path":  "Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg",
+                          "sha256":  "130798a3f2cf32cc25dcf216218159c9c49e59368baf0f7f30b6d34146e7bb71"
+                      },
+                      {
+                          "path":  "Examples/43_array_boolean_container_ide_view/reference/screenshot.png",
+                          "sha256":  "9d89d0e235717ee18e40fb6864de77b80f4a51e7efb8127b7985c265f96ea41f"
+                      },
+                      {
+                          "path":  "Examples/43_array_boolean_container_ide_view/reference/state.accepted.json",
+                          "sha256":  "681cf879a1ab7e09a62694b4eddf2d6ff8decf6855337e1fcb0229e03639c377"
+                      },
+                      {
+                          "path":  "Examples/43_array_boolean_container_ide_view/reference/visual-contract.md",
+                          "sha256":  "9d06ace16923b870c68e4a59e7cbc10ac18fd4e7a397db34d8950d79fc10b2e9"
+                      },
+                      {
+                          "path":  "Examples/43_array_boolean_container_ide_view/reference/visual-contract.json",
+                          "sha256":  "d958266c9cd32049ee6ac56d31f629c2f726933a971e5cfd472b1ae725d5484f"
+                      }
+                  ]
 }

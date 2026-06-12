@@ -430,12 +430,12 @@
       "layout": {
         "height": 238,
         "width": 390,
-        "x": 32,
-        "y": 122
+        "x": 29,
+        "y": 127
       },
       "role": "control",
       "runtime": {
-        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\43_array_boolean_container_ide_view\\./ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\43_array_boolean_container_ide_view\\ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
         "asset_ref": "asset:array_shell_svg",
         "behavior": {
           "editable_elements": true,
@@ -451,7 +451,7 @@
           {
             "column": 0,
             "defined": true,
-            "display": "TRUE",
+            "display": "FALSE",
             "enabled": true,
             "id": "r0c0",
             "indices": [
@@ -459,7 +459,7 @@
               0
             ],
             "row": 0,
-            "value": true
+            "value": false
           },
           {
             "column": 1,
@@ -477,7 +477,7 @@
           {
             "column": 2,
             "defined": true,
-            "display": "TRUE",
+            "display": "FALSE",
             "enabled": true,
             "id": "r0c2",
             "indices": [
@@ -485,7 +485,7 @@
               2
             ],
             "row": 0,
-            "value": true
+            "value": false
           },
           {
             "column": 3,
@@ -529,7 +529,7 @@
           {
             "column": 0,
             "defined": true,
-            "display": "FALSE",
+            "display": "TRUE",
             "enabled": true,
             "id": "r1c0",
             "indices": [
@@ -537,7 +537,7 @@
               0
             ],
             "row": 1,
-            "value": false
+            "value": true
           },
           {
             "column": 1,
@@ -555,7 +555,7 @@
           {
             "column": 2,
             "defined": true,
-            "display": "TRUE",
+            "display": "FALSE",
             "enabled": true,
             "id": "r1c2",
             "indices": [
@@ -563,7 +563,7 @@
               2
             ],
             "row": 1,
-            "value": true
+            "value": false
           },
           {
             "column": 3,
@@ -849,7 +849,7 @@
         "max_column_offset": 3,
         "max_layer_offset": 0,
         "max_row_offset": 2,
-        "pending_control_edit_count": 6,
+        "pending_control_edit_count": 0,
         "published_parts": [
           "root",
           "label",
@@ -906,11 +906,11 @@
       "value": {
         "selected_element_defined": true,
         "selected_element_display": "TRUE",
-        "selected_element_id": "r0c0",
+        "selected_element_id": "r1c1",
         "selected_element_value": true,
         "selected_indices": [
-          0,
-          0
+          1,
+          1
         ]
       },
       "widget_id": "boolean_array"
@@ -920,12 +920,12 @@
       "layout": {
         "height": 238,
         "width": 365,
-        "x": 628,
-        "y": 122
+        "x": 621,
+        "y": 127
       },
       "role": "indicator",
       "runtime": {
-        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\43_array_boolean_container_ide_view\\./ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\43_array_boolean_container_ide_view\\ui\\../../../Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
         "asset_ref": "asset:array_shell_svg",
         "behavior": {
           "editable_elements": false,
@@ -998,7 +998,7 @@
       "visible_count_property_write_declared": true
     },
     "dimension_count_control": {
-      "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\43_array_boolean_container_ide_view\\./ui\\../../../Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+      "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\43_array_boolean_container_ide_view\\ui\\../../../Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
       "asset_ref": "asset:numeric_rectangular_svg",
       "class_ref": "frog.widgets.numeric_control",
       "data_type_representation": "u8",
@@ -1061,7 +1061,22 @@
           "visible": true,
           "width_quantization": "grid_pitch_multiple"
         },
-        "height": 410,
+        "height": 460,
+        "ide.style.aura.hover.border_color": "rgba(0,173,239,0.42)",
+        "ide.style.aura.hover.border_width": "2px",
+        "ide.style.aura.hover.fill_color": "rgba(14,165,233,0.012)",
+        "ide.style.aura.hover_dimmed.border_color": "rgba(0,173,239,0.28)",
+        "ide.style.aura.hover_dimmed.border_width": "2px",
+        "ide.style.aura.hover_dimmed.fill_color": "rgba(14,165,233,0.006)",
+        "ide.style.aura.selected.border_color": "#00ADEF",
+        "ide.style.aura.selected.border_width": "1px",
+        "ide.style.aura.selected.fill_color": "rgba(14,165,233,0.025)",
+        "ide.style.cell.hover.border_color": "rgba(0,173,239,0.42)",
+        "ide.style.cell.hover.border_width": "2px",
+        "ide.style.cell.selected.border_width": "1px",
+        "ide.style.label.hover.fill_color": "rgba(255,255,255,0.72)",
+        "ide.style.label.hover_dimmed.fill_color": "rgba(255,255,255,0.55)",
+        "ide.style.label.selected.fill_color": "rgba(255,255,255,0.9)",
         "presentation_mode": "ide_view",
         "selected_widget_id": "boolean_array",
         "units": "px",
@@ -1089,12 +1104,12 @@
         "vertical_scrollbar",
         "horizontal_scrollbar"
       ],
-      "wfrog_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\43_array_boolean_container_ide_view\\./ui/array_panel.wfrog"
+      "wfrog_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\43_array_boolean_container_ide_view\\ui\\array_panel.wfrog"
     },
     "visible_count_control": null,
     "visible_count_controls": {
       "column": {
-        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\43_array_boolean_container_ide_view\\./ui\\../../../Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\43_array_boolean_container_ide_view\\ui\\../../../Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
         "asset_ref": "asset:numeric_rectangular_svg",
         "class_ref": "frog.widgets.numeric_control",
         "data_type_representation": "u8",
@@ -1117,7 +1132,7 @@
         "widget_id": "visible_column_count"
       },
       "row": {
-        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\43_array_boolean_container_ide_view\\./ui\\../../../Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+        "asset_path": "C:\\Users\\ymenj\\TDF Dropbox\\1_Graiphic\\3 - Services et Etudes\\5_FROG\\Source\\FROG\\Examples\\43_array_boolean_container_ide_view\\ui\\../../../Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
         "asset_ref": "asset:numeric_rectangular_svg",
         "class_ref": "frog.widgets.numeric_control",
         "data_type_representation": "u8",
