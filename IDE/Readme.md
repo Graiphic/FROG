@@ -76,6 +76,11 @@ an IDE MAY provide guided, configurable, task-oriented insertion experiences for
 This document defines how a conforming FROG IDE is organized as an authoring, discoverability, observability, debugging, inspection, and transport environment without making the language dependent on one particular editor implementation.
 </p>
 
+<p>
+<code>IDE/</code> defines IDE-facing architecture for conforming tools.
+Proprietary IDE implementations may exist and do not redefine the FROG language.
+</p>
+
 <pre><code>Repository architecture around IDE/
 
 Expression/   -&gt; canonical source form
