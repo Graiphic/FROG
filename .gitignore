@@ -10,4 +10,5 @@ b/
 **/__pycache__/
 *.pyc
 Implementations/Reference/Runtime/rust/target/
+Implementations/Reference/Runtime/cpp/build-codex*/
 Implementations/Reference/LLVM/examples/**/*.exe

@@ -2,7 +2,7 @@
     "format":  "frog.wfrog",
     "kind":  "widget_realization_package",
     "package_id":  "example41.numeric_placement_ide_panel",
-    "reviewed_date":  "2026-06-09",
+    "reviewed_date":  "2026-06-12",
     "title":  "Example 41 Default Numeric IDE placement realization package",
     "artifact_governance_ref":  {
                                     "path":  "Versioning/Readme.md"

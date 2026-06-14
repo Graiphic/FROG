@@ -56,8 +56,8 @@ This document defines the standardized baseline for enum widgets in FROG.
 
 <p>
 Latest Enum widget review:
-<time datetime="2026-06-06">2026-06-06</time>. The reviewed Default posture
-keeps the closed selector SVG semantic, publishes optional increment/decrement
+<time datetime="2026-06-12">2026-06-12</time>. The reviewed Default posture
+keeps the compact value SVG semantic, publishes optional increment/decrement
 command parts for LabVIEW-like item stepping, and publishes a separate dropdown
 list SVG skin for the host-rendered item popup.
 </p>
@@ -98,7 +98,11 @@ An enum class is not the same thing as a dropdown widget, ring widget, popup men
 
 <p>
 The class owns selected enum value semantics, the legal item set, the representation posture, the control-versus-indicator distinction, properties, methods, events, and public parts.
-The realization owns visual embodiment, popup layout, selector affordances, optional increment/decrement affordances, dropdown/list surfaces, accepted reusable default style values, and SVG or host-native resources. The reviewed Default Enum posture does not publish digital display or text-overflow marker parts.
+The realization owns visual embodiment, popup layout, optional increment/decrement affordances, dropdown/list surfaces, accepted reusable default style values, and SVG or host-native resources. The reviewed Default Enum posture does not publish digital display, selector face/arrow, or text-overflow marker parts.
+</p>
+
+<p>
+Enum and Ring may share the same compact finite-choice visual posture and runtime rendering helpers. They remain separate widget classes because their terminal values are different: Enum publishes an item identity from a typed enum domain, while Ring publishes a source-declared scalar item value.
 </p>
 
 <hr/>
@@ -171,11 +175,11 @@ from collapsing into one ambiguous field.
 
 <ul>
   <li><code>root</code></li>
+  <li><code>placement_bounds</code> when a realization publishes a placement aura</li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
   <li><code>value_face</code></li>
   <li><code>value_display</code></li>
-  <li><code>selector_face</code></li>
   <li><code>focus_ring</code></li>
   <li><code>spinner</code> when a realization exposes increment/decrement commands</li>
   <li><code>increment_up</code> when a realization exposes increment/decrement commands</li>
@@ -183,13 +187,21 @@ from collapsing into one ambiguous field.
 </ul>
 
 <p>
-The selector arrow is an internal detail of <code>selector_face</code> in the
-Default realization. The <code>focus_ring</code> is public so focus geometry is
-owned by the SVG skin and not invented by runtime code. In the Default
+<code>placement_bounds</code> is a placement aura part, not a visible widget
+face, focus ring, or selection overlay. IDE hosts, grid-aware layout, and Array
+containment MAY consume it as the widget footprint when the realization
+publishes it. Internal visible parts such as <code>value_face</code>,
+<code>spinner</code>, <code>increment_up</code>, and
+<code>increment_down</code> must not be substituted for the placement footprint.
+</p>
+
+<p>
+The <code>focus_ring</code> is public so focus geometry is owned by the SVG skin
+and not invented by runtime code. In the Default
 rectangular-ring realization, <code>focus_ring</code> follows
-<code>value_face</code> only; it does not enclose <code>selector_face</code>,
-<code>spinner</code>, <code>increment_up</code>, or
-<code>increment_down</code>. The closed selector SVG does not expose popup rows
+<code>value_face</code> only; it does not enclose <code>spinner</code>,
+<code>increment_up</code>, or
+<code>increment_down</code>. The compact value SVG does not expose popup rows
 as public parts. When a realization publishes a host dropdown surface, that surface
 MAY carry its own skin parts such as <code>list_panel</code>,
 <code>option_row</code>, and <code>option_text</code>; hidden value state
@@ -246,7 +258,6 @@ realization contract.
 
 <ul>
   <li><code>display.value_text_visible : bool</code></li>
-  <li><code>display.selector_visible : bool</code></li>
   <li><code>display.increment_buttons_visible : bool</code></li>
   <li><code>display.text_width_chars : u32</code></li>
 </ul>
@@ -283,7 +294,6 @@ realization contract.
 <ul>
   <li><code>style.value_face.*</code></li>
   <li><code>style.value_display.*</code></li>
-  <li><code>style.selector_face.*</code></li>
   <li><code>style.focus_ring.*</code></li>
   <li><code>style.increment_button.*</code> when a realization exposes increment/decrement command parts</li>
   <li><code>style.dropdown.*</code> when a host exposes a popup/dropdown selector surface or dropdown SVG skin</li>
@@ -377,31 +387,31 @@ They must not create hidden runtime-only enum values.
 <h2 id="default-realization-posture">12. Default Realization Posture</h2>
 
 <p>
-The Default realization should expose a rectangular enum selector template with
-a value face, visible selected-item text, selector affordance, caption, and
-label surfaces. A control realization MAY expose LabVIEW-like increment and
-decrement command parts as <code>spinner</code>, <code>increment_up</code>, and
+The Default realization should expose a rectangular enum value template with
+a value face, visible selected-item text, caption, and label surfaces. A control
+realization MAY expose LabVIEW-like increment and decrement command parts as
+<code>spinner</code>, <code>increment_up</code>, and
 <code>increment_down</code>, controlled by
 <code>display.increment_buttons_visible</code>. Popup/dropdown option
 interaction is host-owned for the current baseline, but the visible dropdown
 panel, row, and option text skin are published through a separate SVG template.
-The selector arrow remains an internal detail of <code>selector_face</code>.
 </p>
 
 <p>
 Popup/dropdown layout must be declared by the realization manifest, not inferred
 from runtime-specific widget knowledge. The Default realization declares that
 its dropdown host surface anchors to <code>value_face</code>, measures
-<code>outer_width</code> with a declared source-width outset, centers the popup
-under the body, and excludes <code>selector_face</code> from the popup width.
+<code>outer_width</code> with a declared source-width outset, and centers the
+popup under the body.
 </p>
 
 <p>
-The Default closed selector also declares the selector spacing in the SVG skin:
-<code>selector_face</code> is anchored to <code>value_face.right</code> with a
-fixed source-unit gap. This keeps body width changes proportional: the dropdown
-width follows the body width, and the selector face must shift by the same
-source delta so the visual gap is preserved.
+When the Default posture is embedded in Array, the popup/list surface remains a
+host overlay and may be reparented to the Array overlay layer so it renders
+above repeated cells instead of being clipped by a cell. This does not make the
+popup a public part of the closed widget. The Default realization sets
+<code>data_entry.increment_wrap=true</code>, so visual increment/decrement
+commands wrap circularly unless source-owned properties request clamping.
 </p>
 
 <hr/>

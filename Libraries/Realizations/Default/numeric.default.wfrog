@@ -499,6 +499,59 @@
       "resize_rule": "horizontal resizing changes placement_bounds.width while the visible body keeps a uniform aura padding; source_or_container_policy_may_quantize_width_point_to_point_on_the_grid; spinner stays inside the body on display_increment_buttons_side; hidden_spinner_allows_value_face_to_expand_to_control_body; vertical size follows text/font comfort plus the same aura padding",
       "proportionality_rule": "hosts must preserve these part ratios when embedding the Default Numeric SVG as an Array element or other contained widget surface; the increment/decrement buttons use the same separated-button proportion as the Default Array index display and may be mirrored to the left of the value face"
     },
+    "usage_profiles": [
+      {
+        "id": "frog.realizations.default.numeric.profile.compact_u8_control",
+        "name": "Default compact Numeric U8 control",
+        "target_class": "frog.widgets.numeric_control",
+        "is_widget_class": false,
+        "source_posture": "ordinary_numeric_control_with_default_compact_u8_defaults",
+        "purpose": "front-panel Numeric controls such as Array dimension count and visible row/column count",
+        "layout": {
+          "origin": "placement_bounds.top_left",
+          "bounds_ref": "placement_bounds",
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "data_type.representation": "u8",
+          "data_type.named_numeric_size": "U8",
+          "caption.anchor.x": 18,
+          "caption.anchor.y": 38,
+          "style.caption.text_color": "#2B3033",
+          "style.caption.font_weight": "400",
+          "style.text_value.color": "#2B3033",
+          "style.text_value.font_size": "13px",
+          "style.value_face.fill_color": "#ffffff",
+          "style.value_face.border_color": "#A8ABAE",
+          "style.value_face.border_width": "1px",
+          "style.increment_button.fill_color.normal": "#DDE1E4",
+          "style.increment_button.fill_color.hover": "#E0E4E6",
+          "style.increment_button.fill_color.pressed": "#D2D4D5",
+          "style.increment_button.border_color.normal": "#A8ABAE",
+          "style.increment_button.border_color.hover": "#8E9297",
+          "style.increment_button.border_color.pressed": "#00ADEF",
+          "style.increment_button.symbol_color.normal": "#2B3033",
+          "style.increment_button.symbol_color.hover": "#2B3033",
+          "style.increment_button.symbol_color.pressed": "#2B3033"
+        },
+        "allowed_instance_overrides": [
+          "id",
+          "instance_ref",
+          "value",
+          "label",
+          "caption.text",
+          "layout.x",
+          "layout.y",
+          "binding"
+        ],
+        "must_not_define": [
+          "style.frame.*",
+          "bespoke numeric widget class",
+          "runtime-private mini-control geometry"
+        ]
+      }
+    ],
     "numeric_representation_surface": {
       "posture": "representation_is_source_owned_and_runtime_interpreted",
       "canonical_members": [

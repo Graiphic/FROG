@@ -4,9 +4,9 @@
   "package_id": "example08.enum_panel",
   "title": "Example 08 Default Enum realization package",
   "review": {
-    "last_reviewed": "2026-06-06",
-    "scope": "Example 08 Enum closed selector skin, optional increment/decrement command parts, dropdown list SVG skin, default widget properties, dropdown host-surface layout, and C++ browser-host rendering.",
-    "visible_runtime_fact": "Reviewed 2026-06-06"
+    "last_reviewed": "2026-06-12",
+    "scope": "Example 08 Enum compact value skin, optional increment/decrement command parts, dropdown list SVG skin, default widget properties, dropdown host-surface layout, and C++ browser-host rendering.",
+    "visible_runtime_fact": "Reviewed 2026-06-12"
   },
   "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
@@ -78,15 +78,14 @@
         "popup_asset_ref": "asset:enum_dropdown_list_svg"
       },
       "props": {
-        "display.selector_visible": true,
         "display.increment_buttons_visible": true,
-        "data_entry.increment_wrap": false,
-        "style.scale.reference_width": 260,
-        "style.scale.reference_height": 110,
+        "data_entry.increment_wrap": true,
+        "style.scale.reference_width": 200,
+        "style.scale.reference_height": 130,
         "style.value_face.fill_color": "#ffffff",
         "style.value_face.fill_color.hover": "#eef6ff",
-        "style.value_face.border_color": "#64748b",
-        "style.value_face.border_color.hover": "#64748b",
+        "style.value_face.border_color": "#A8ABAE",
+        "style.value_face.border_color.hover": "#8E9297",
         "style.value_face.border_width": "1px",
         "style.value_display.color": "#111827",
         "style.value_display.font_size": "16px",
@@ -96,19 +95,6 @@
         "style.value_display.vertical_offset_mode": "scale_with_widget",
         "style.value_display.padding_inline": "8px",
         "style.value_display.padding_inline_mode": "scale_with_widget",
-        "style.selector_face.fill_color": "#f1f5f9",
-        "style.selector_face.fill_color.hover": "#60a5fa",
-        "style.selector_face.border_color": "#64748b",
-        "style.selector_face.border_color.hover": "#2563eb",
-        "style.selector_face.border_width": "1px",
-        "style.selector_face.border_width_mode": "scale_with_widget",
-        "style.selector_face.border_radius": "1px",
-        "style.selector_face.border_radius_mode": "scale_with_widget",
-        "style.selector_face.symbol_color": "#111827",
-        "style.selector_face.symbol_color.hover": "#ffffff",
-        "style.selector_face.symbol_width": "10px",
-        "style.selector_face.symbol_height": "7px",
-        "style.selector_face.symbol_size_mode": "scale_with_widget",
         "style.increment_button.fill_color.normal": "#edf2f7",
         "style.increment_button.fill_color.hover": "#dbeafe",
         "style.increment_button.fill_color.pressed": "#bfdbfe",
@@ -149,11 +135,10 @@
         "asset_ref": "asset:enum_rectangular_ring_svg"
       },
       "props": {
-        "display.selector_visible": false,
-        "style.scale.reference_width": 260,
-        "style.scale.reference_height": 110,
-        "style.value_face.fill_color": "#f8fafc",
-        "style.value_face.border_color": "#64748b",
+        "style.scale.reference_width": 200,
+        "style.scale.reference_height": 130,
+        "style.value_face.fill_color": "#E8EBED",
+        "style.value_face.border_color": "#A8ABAE",
         "style.value_face.border_width": "1px",
         "style.value_display.color": "#111827",
         "style.value_display.font_size": "16px",
@@ -163,10 +148,6 @@
         "style.value_display.vertical_offset_mode": "scale_with_widget",
         "style.value_display.padding_inline": "8px",
         "style.value_display.padding_inline_mode": "scale_with_widget",
-        "style.selector_face.fill_color": "transparent",
-        "style.selector_face.border_color": "transparent",
-        "style.selector_face.border_width": "0px",
-        "style.selector_face.symbol_color": "transparent",
         "interaction.enabled": false,
         "interaction.read_only": true,
         "realization.variant": "rectangular_ring"
@@ -220,8 +201,8 @@
         "height": "repeated_part_stack",
         "outer_box_stroke_width_property": "style.value_face.border_width",
         "outer_box_stroke_width_mode_property": "style.value_face.border_width_mode",
-        "excluded_parts": [
-          "selector_face"
+        "included_parts": [
+          "value_face"
         ]
       }
     }

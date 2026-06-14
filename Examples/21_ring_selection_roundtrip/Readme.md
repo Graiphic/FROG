@@ -12,9 +12,9 @@
 <hr/>
 
 <p>
-Reviewed 2026-06-06: the example consumes the Default Ring closed selector SVG,
+Reviewed 2026-06-12: the example consumes the Default Ring compact value SVG,
 optional increment/decrement command parts, and dropdown list SVG skin. The
-dropdown list aligns to the value face only, not the selector arrow, the Ring
+dropdown list aligns to the value face only, the Ring
 value face uses a 1px border, and the visible selected-item text is vertically
 aligned through source-owned <code>style.value_display.vertical_offset</code>.
 </p>
@@ -31,7 +31,10 @@ The accepted Ring control posture exposes the LabVIEW-like increment/decrement
 command as semantic skin parts: <code>spinner</code>,
 <code>increment_up</code>, and <code>increment_down</code>.
 <code>display.increment_decrement_visible</code> controls whether that command
-is shown.
+is shown. The reviewed Default posture sets
+<code>data_entry.increment_wrap=true</code>, so stepping beyond the first or
+last enabled item wraps circularly through the declared item order unless the
+source explicitly disables wrapping.
 </p>
 
 <hr/>
@@ -61,7 +64,7 @@ proof and updates the read-only Ring indicator.
 <ul>
   <li><code>.frog</code> owns the Ring instances, item ids, item labels, numeric item values, selected value, representation, captions, layout, bindings, and instance-level style overrides.</li>
   <li><code>.wfrog</code> references the Default Ring realization package, SVG assets, host capability declarations, dropdown host-surface layout, and reusable default widget properties.</li>
-  <li>The Default Ring closed selector SVG publishes <code>root</code>, <code>label</code>, <code>caption</code>, <code>value_face</code>, <code>value_display</code>, <code>selector_face</code>, <code>spinner</code>, <code>increment_up</code>, and <code>increment_down</code>. The arrow glyph is a private detail owned by <code>selector_face</code>, not a public part.</li>
+  <li>The Default Ring compact value SVG publishes <code>root</code>, <code>label</code>, <code>caption</code>, <code>value_face</code>, <code>value_display</code>, <code>spinner</code>, <code>increment_up</code>, and <code>increment_down</code>. No public selector-face or selector-arrow part is exposed.</li>
   <li>The Default Ring dropdown SVG publishes <code>root</code>, <code>list_panel</code>, <code>option_row</code>, <code>option_label</code>, and <code>option_selection_face</code>.</li>
   <li>The runtime consumes the manifest-backed native <code>u16</code> artifact and binds host overlays to the published SVG parts.</li>
 </ul>
@@ -71,7 +74,7 @@ proof and updates the read-only Ring indicator.
 <h2>Ring Versus Enum</h2>
 
 <p>
-Ring and Enum may share a compact selector visual posture, but they are not the
+Ring and Enum may share a compact value visual posture, but they are not the
 same widget class. An Enum owns a typed symbolic domain and an explicit integer
 representation. A Ring owns a source-defined list of display strings and values.
 Its LabVIEW-like default posture publishes the selected numeric value while the

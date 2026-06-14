@@ -4,9 +4,9 @@
   "publication_role": "default_enum_realization_manifest",
   "version_governance_ref": "../../../Versioning/Readme.md",
   "publication_review": {
-    "last_reviewed": "2026-06-06",
-    "scope": "Default Enum closed selector SVG, optional increment/decrement command parts, dropdown list SVG skin, dropdown host-surface layout, and semantic public parts.",
-    "public_posture": "Publishes the closed selector skin, popup list skin, reusable default widget properties, popup layout contract, supported semantic parts, and review date; runtime implementation code remains outside the public publication scope."
+    "last_reviewed": "2026-06-12",
+    "scope": "Default Enum compact value SVG, placement aura, optional increment/decrement command parts, dropdown list SVG skin, dropdown host-surface layout, semantic public parts, and shared compact finite-choice visual posture with Default Ring.",
+    "public_posture": "Publishes the compact value skin, popup list skin, reusable default widget properties, popup layout contract, supported semantic parts, and review date; visual posture may share host rendering code with Default Ring, but Enum value semantics remain the Enum widget class law."
   },
   "package": {
     "id": "frog.realizations.default.enum",
@@ -85,12 +85,12 @@
       "default_variant": "rectangular_ring",
       "supported_parts": [
         "root",
+        "placement_bounds",
         "label",
         "caption",
         "value_face",
         "focus_ring",
         "value_display",
-        "selector_face",
         "spinner",
         "increment_up",
         "increment_down"
@@ -110,6 +110,7 @@
       "default_variant": "rectangular_ring",
       "supported_parts": [
         "root",
+        "placement_bounds",
         "label",
         "caption",
         "value_face",
@@ -166,15 +167,14 @@
         "popup_resource_ref": "frog.realizations.default.enum.assets.dropdown_list_svg"
       },
       "props": {
-        "display.selector_visible": true,
         "display.increment_buttons_visible": true,
-        "data_entry.increment_wrap": false,
-        "style.scale.reference_width": 260,
-        "style.scale.reference_height": 110,
+        "data_entry.increment_wrap": true,
+        "style.scale.reference_width": 200,
+        "style.scale.reference_height": 130,
         "style.value_face.fill_color": "#ffffff",
         "style.value_face.fill_color.hover": "#eef6ff",
-        "style.value_face.border_color": "#64748b",
-        "style.value_face.border_color.hover": "#64748b",
+        "style.value_face.border_color": "#A8ABAE",
+        "style.value_face.border_color.hover": "#8E9297",
         "style.value_face.border_width": "1px",
         "style.value_display.color": "#111827",
         "style.value_display.font_size": "16px",
@@ -184,19 +184,6 @@
         "style.value_display.vertical_offset_mode": "scale_with_widget",
         "style.value_display.padding_inline": "8px",
         "style.value_display.padding_inline_mode": "scale_with_widget",
-        "style.selector_face.fill_color": "#f1f5f9",
-        "style.selector_face.fill_color.hover": "#60a5fa",
-        "style.selector_face.border_color": "#64748b",
-        "style.selector_face.border_color.hover": "#2563eb",
-        "style.selector_face.border_width": "1px",
-        "style.selector_face.border_width_mode": "scale_with_widget",
-        "style.selector_face.border_radius": "1px",
-        "style.selector_face.border_radius_mode": "scale_with_widget",
-        "style.selector_face.symbol_color": "#111827",
-        "style.selector_face.symbol_color.hover": "#ffffff",
-        "style.selector_face.symbol_width": "10px",
-        "style.selector_face.symbol_height": "7px",
-        "style.selector_face.symbol_size_mode": "scale_with_widget",
         "style.focus_ring.color": "#2563eb",
         "style.focus_ring.width": "2px",
         "style.increment_button.fill_color.normal": "#edf2f7",
@@ -239,11 +226,10 @@
         "resource_ref": "frog.realizations.default.enum.assets.rectangular_ring_svg"
       },
       "props": {
-        "display.selector_visible": false,
-        "style.scale.reference_width": 260,
-        "style.scale.reference_height": 110,
-        "style.value_face.fill_color": "#f8fafc",
-        "style.value_face.border_color": "#64748b",
+        "style.scale.reference_width": 200,
+        "style.scale.reference_height": 130,
+        "style.value_face.fill_color": "#E8EBED",
+        "style.value_face.border_color": "#A8ABAE",
         "style.value_face.border_width": "1px",
         "style.value_display.color": "#111827",
         "style.value_display.font_size": "16px",
@@ -253,10 +239,6 @@
         "style.value_display.vertical_offset_mode": "scale_with_widget",
         "style.value_display.padding_inline": "8px",
         "style.value_display.padding_inline_mode": "scale_with_widget",
-        "style.selector_face.fill_color": "transparent",
-        "style.selector_face.border_color": "transparent",
-        "style.selector_face.border_width": "0px",
-        "style.selector_face.symbol_color": "transparent",
         "style.focus_ring.color": "#2563eb",
         "style.focus_ring.width": "2px",
         "interaction.enabled": false,
@@ -292,13 +274,24 @@
         "height": "repeated_part_stack",
         "outer_box_stroke_width_property": "style.value_face.border_width",
         "outer_box_stroke_width_mode_property": "style.value_face.border_width_mode",
-        "excluded_parts": [
-          "selector_face"
+        "included_parts": [
+          "value_face"
         ]
       }
     }
   ],
   "part_bindings": [
+    {
+      "part": "placement_bounds",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='placement_bounds']",
+      "semantic_members": [
+        "layout.placement_bounds.*",
+        "layout.grid.*",
+        "layout.resize.*"
+      ],
+      "placement_role": "widget_placement_aura_not_focus_not_selection_optional_grid_snap_policy"
+    },
     {
       "part": "label",
       "semantic_member": "label.text"
@@ -319,7 +312,7 @@
       "part": "focus_ring",
       "binding_kind": "svg_shape",
       "binding_selector": "[data-frog-part='focus_ring']",
-      "geometry_contract": "same_outer_bounds_as_value_face; excludes selector_face, spinner, increment_up, and increment_down",
+      "geometry_contract": "same_outer_bounds_as_value_face; excludes spinner, increment_up, and increment_down",
       "style_binding_group": "style.focus_ring",
       "state_sensitive": true
     },
@@ -435,6 +428,16 @@
       "member": "style.focus_ring.*",
       "target_part": "focus_ring",
       "target_operation": "apply_focus_ring_style"
+    },
+    {
+      "member": "layout.placement_bounds.*",
+      "target_part": "placement_bounds",
+      "target_operation": "publish_placement_aura"
+    },
+    {
+      "member": "layout.grid.*",
+      "target_part": "placement_bounds",
+      "target_operation": "publish_grid_snap_policy"
     }
   ],
   "anchors": [
@@ -464,14 +467,47 @@
   "host_hints": {
     "preferred_host_kind": "svg_template_host_or_host_native_single_selector",
     "popup_posture": "host_may_provide_native_popup_for_item_selection",
-    "style_property_source": ".frog instance props overriding Default realization values"
+    "style_property_source": ".frog instance props overriding Default realization values",
+    "default_compact_geometry": {
+      "posture": "labview_like_value_face_plus_array_indexer_style_vertical_increment_decrement",
+      "view_box_width": 200,
+      "view_box_height": 130,
+      "placement_grid_pitch": 16,
+      "placement_bounds_part": "placement_bounds",
+      "placement_bounds_x": 0,
+      "placement_bounds_y": 72,
+      "placement_bounds_width": 176,
+      "placement_bounds_height": 38,
+      "placement_bounds_posture": "widget_aura_with_optional_grid_snap_policy_not_focus_or_selection",
+      "placement_aura_padding": 4,
+      "placement_aura_padding_rule": "uniform band around the compact enum body; top_left and top_right snap to the common grid only when source_or_container_policy_declares_snap; Array cells consume placement_bounds, not value_face or spinner geometry",
+      "body_height": 30,
+      "value_face_x": 24,
+      "value_face_y": 76,
+      "value_face_width": 148,
+      "value_face_height": 30,
+      "spinner_x": 4,
+      "spinner_width": 16,
+      "spinner_button_height": 14,
+      "spinner_button_gap": 2,
+      "default_control_value_face_fill_color": "#ffffff",
+      "default_indicator_value_face_fill_color": "#E8EBED",
+      "default_value_face_border_color": "#A8ABAE",
+      "default_value_face_border_width": "1px",
+      "focus_ring_posture": "widget_focus_interaction_part_not_placement_aura_not_ide_selection",
+      "proportionality_rule": "hosts must preserve placement_bounds as the contained-widget footprint when embedding the Default Enum SVG in Array cells; hidden increment/decrement buttons allow value_face to expand over the compact body without changing placement_bounds"
+    }
   },
   "validation_expectations": [
     "target classes must exist in Libraries/Widgets/Enum.md",
     "value must resolve to a declared item unless undefined runtime values are explicitly allowed",
     "items must preserve stable ids",
     "accepted visual defaults are manifest data merged before source-owned instance overrides, not runtime constants",
-    "focus_ring covers only the value_face outer boundary; selector and increment/decrement command parts keep their own geometry and are not enclosed by focus.",
-    "increment/decrement commands must navigate the declared items[] order and honor display.increment_buttons_visible"
+    "placement_bounds must be present as a non-rendered public placement aura and must not be confused with focus_ring, dropdown selection, or Array cell selection",
+    "Array cells embedding Default Enum consume placement_bounds as the cell footprint; control_body, value_face, spinner, increment_up, and increment_down are internal widget parts, not the cell boundary",
+    "Default Enum and Default Ring may share compact visual posture, placement geometry, increment/decrement affordances, popup skin posture, and Array containment law; they must not share terminal value semantics.",
+    "focus_ring covers only the value_face outer boundary; increment/decrement command parts keep their own geometry and are not enclosed by focus.",
+    "increment/decrement commands must navigate the declared items[] order, honor display.increment_buttons_visible, and honor data_entry.increment_wrap; the Default posture sets increment_wrap true for circular next/previous item stepping",
+    "when embedded in Array, the dropdown host surface must render as an Array overlay above the viewport and must not be clipped by the repeated cell box; hover and pressed button states must remain visible on increment_up and increment_down"
   ]
 }

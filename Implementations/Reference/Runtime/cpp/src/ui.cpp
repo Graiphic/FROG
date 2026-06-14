@@ -236,6 +236,10 @@ std::string format_css_px(double value) {
     return text + "px";
 }
 
+std::string numeric_translate_x_css(double delta) {
+    return delta != 0.0 ? "translate(" + format_css_px(delta) + ",0)" : "none";
+}
+
 std::string scale_css_px_length(const std::string& value, double scale) {
     const auto number = value.substr(0, value.size() - 2);
     return format_css_px(std::stod(number) * scale);
@@ -566,6 +570,39 @@ std::string svg_dropdown_style(double x, double y, double width, double height, 
     style << "top:" << css_percent(pct(y + height, geometry.view_height)) << ";";
     style << "width:" << css_percent(pct(width, geometry.view_width)) << ";";
     return style.str();
+}
+
+double choice_widget_body_left(const SvgGeometry& geometry) {
+    double left = geometry.value_face_x;
+    if (geometry.increment_up_width > 0.0 && geometry.increment_up_height > 0.0) {
+        left = std::min(left, geometry.increment_up_x);
+    }
+    if (geometry.increment_down_width > 0.0 && geometry.increment_down_height > 0.0) {
+        left = std::min(left, geometry.increment_down_x);
+    }
+    return left;
+}
+
+double choice_widget_body_right(const SvgGeometry& geometry) {
+    double right = geometry.value_face_x + geometry.value_face_width;
+    if (geometry.increment_up_width > 0.0 && geometry.increment_up_height > 0.0) {
+        right = std::max(right, geometry.increment_up_x + geometry.increment_up_width);
+    }
+    if (geometry.increment_down_width > 0.0 && geometry.increment_down_height > 0.0) {
+        right = std::max(right, geometry.increment_down_x + geometry.increment_down_width);
+    }
+    return right;
+}
+
+double choice_widget_value_face_delta(const SvgGeometry& geometry, bool increment_visible) {
+    return increment_visible ? 0.0 : choice_widget_body_left(geometry) - geometry.value_face_x;
+}
+
+double choice_widget_value_face_width(const SvgGeometry& geometry, bool increment_visible) {
+    if (increment_visible) {
+        return geometry.value_face_width;
+    }
+    return std::max(1.0, choice_widget_body_right(geometry) - choice_widget_body_left(geometry));
 }
 
 double widget_style_scale(const Object& properties, std::int64_t width, std::int64_t height) {
@@ -1082,26 +1119,26 @@ std::string render_path_widget(const WidgetState& widget) {
 
 SvgGeometry load_enum_svg_geometry(const WidgetState& widget) {
     SvgGeometry geometry;
-    geometry.view_width = 380.0;
-    geometry.view_height = 150.0;
+    geometry.view_width = 200.0;
+    geometry.view_height = 130.0;
     geometry.caption_x = 16.0;
     geometry.caption_y = 46.0;
-    geometry.value_face_x = 22.0;
-    geometry.value_face_y = 82.0;
-    geometry.value_face_width = 214.0;
-    geometry.value_face_height = 28.0;
-    geometry.selector_face_x = 246.0;
-    geometry.selector_face_y = 82.0;
-    geometry.selector_face_width = 24.0;
-    geometry.selector_face_height = 28.0;
-    geometry.increment_up_x = 278.0;
-    geometry.increment_up_y = 82.0;
-    geometry.increment_up_width = 24.0;
-    geometry.increment_up_height = 13.0;
-    geometry.increment_down_x = 278.0;
-    geometry.increment_down_y = 97.0;
-    geometry.increment_down_width = 24.0;
-    geometry.increment_down_height = 13.0;
+    geometry.value_face_x = 24.0;
+    geometry.value_face_y = 76.0;
+    geometry.value_face_width = 148.0;
+    geometry.value_face_height = 30.0;
+    geometry.selector_face_x = 0.0;
+    geometry.selector_face_y = 0.0;
+    geometry.selector_face_width = 0.0;
+    geometry.selector_face_height = 0.0;
+    geometry.increment_up_x = 4.0;
+    geometry.increment_up_y = 76.0;
+    geometry.increment_up_width = 16.0;
+    geometry.increment_up_height = 14.0;
+    geometry.increment_down_x = 4.0;
+    geometry.increment_down_y = 92.0;
+    geometry.increment_down_width = 16.0;
+    geometry.increment_down_height = 14.0;
     if (widget.asset_path.empty() || !std::filesystem::exists(widget.asset_path)) {
         return geometry;
     }
@@ -1113,10 +1150,6 @@ SvgGeometry load_enum_svg_geometry(const WidgetState& widget) {
     geometry.value_face_y = svg_attribute_double(svg, "value_face", "y", geometry.value_face_y);
     geometry.value_face_width = svg_attribute_double(svg, "value_face", "width", geometry.value_face_width);
     geometry.value_face_height = svg_attribute_double(svg, "value_face", "height", geometry.value_face_height);
-    geometry.selector_face_x = svg_attribute_double(svg, "selector_face", "x", geometry.selector_face_x);
-    geometry.selector_face_y = svg_attribute_double(svg, "selector_face", "y", geometry.selector_face_y);
-    geometry.selector_face_width = svg_attribute_double(svg, "selector_face", "width", geometry.selector_face_width);
-    geometry.selector_face_height = svg_attribute_double(svg, "selector_face", "height", geometry.selector_face_height);
     geometry.increment_up_x = svg_child_rect_attribute_double(svg, "increment_up", "x", geometry.increment_up_x);
     geometry.increment_up_y = svg_child_rect_attribute_double(svg, "increment_up", "y", geometry.increment_up_y);
     geometry.increment_up_width = svg_child_rect_attribute_double(svg, "increment_up", "width", geometry.increment_up_width);
@@ -1187,9 +1220,9 @@ std::string render_enum_skin(const WidgetState& widget) {
     const bool frame_visible = property_bool(widget.properties, "style.frame.visible", false) ||
                                (frame_stroke != "transparent" && frame_stroke_width != "0" && frame_stroke_width != "0px");
     const auto value_face_fill = safe_css_color(property_string(widget.properties, "style.value_face.fill_color", "#ffffff"), "#ffffff");
-    const auto value_face_stroke = safe_css_color(property_string(widget.properties, "style.value_face.border_color", "#64748b"), "#64748b");
+    const auto value_face_stroke = safe_css_color(property_string(widget.properties, "style.value_face.border_color", "#A8ABAE"), "#A8ABAE");
     const auto value_face_stroke_width = safe_css_length(property_string(widget.properties, "style.value_face.border_width", "2px"), "2px");
-    const bool selector_visible = property_bool(widget.properties, "display.selector_visible", widget.role == "control");
+    const bool selector_visible = false;
     const bool increment_visible = property_bool(widget.properties, "display.increment_buttons_visible", false);
     const bool digital_visible = property_bool(widget.properties, "display.digital_display_visible", false);
     const bool overflow_visible = property_bool(widget.properties, "display.text_overflow_visible", false);
@@ -1200,6 +1233,9 @@ std::string render_enum_skin(const WidgetState& widget) {
         safe_css_length(property_string(widget.properties, "style.selector_face.border_width", "1px"), "1px");
     const auto selector_symbol =
         safe_css_color(property_string(widget.properties, "style.selector_face.symbol_color", "#111827"), "#111827");
+    const auto geometry = load_enum_svg_geometry(widget);
+    const auto value_face_delta = choice_widget_value_face_delta(geometry, increment_visible);
+    const auto value_face_width = choice_widget_value_face_width(geometry, increment_visible);
     std::ostringstream style;
     style << "--frog-enum-label-display:none;";
     style << "--frog-enum-caption-display:none;";
@@ -1211,6 +1247,8 @@ std::string render_enum_skin(const WidgetState& widget) {
     style << "--frog-enum-value-face-fill:" << html_escape(value_face_fill) << ";";
     style << "--frog-enum-value-face-stroke:" << html_escape(value_face_stroke) << ";";
     style << "--frog-enum-value-face-stroke-width:" << html_escape(value_face_stroke_width) << ";";
+    style << "--frog-enum-value-face-transform:" << numeric_translate_x_css(value_face_delta) << ";";
+    style << "--frog-enum-value-face-width:" << format_css_px(value_face_width) << ";";
     style << "--frog-enum-selector-display:" << (selector_visible ? "inline" : "none") << ";";
     style << "--frog-enum-selector-fill:" << html_escape(selector_fill) << ";";
     style << "--frog-enum-selector-stroke:" << html_escape(selector_stroke) << ";";
@@ -1254,7 +1292,7 @@ std::string render_enum_widget(const WidgetState& widget) {
     const auto text_padding_inline = maybe_scaled_css_length(
         widget.properties, "style.value_display.padding_inline", "style.value_display.padding_inline_mode", "8px", style_scale);
     const auto route = asset_route(widget);
-    const bool selector_visible = property_bool(widget.properties, "display.selector_visible", is_control);
+    const bool selector_visible = false;
     const bool interaction_enabled = property_bool(widget.properties, "interaction.enabled", true);
     const auto selector_fill =
         safe_css_color(property_string(widget.properties, "style.selector_face.fill_color", "#f1f5f9"), "#f1f5f9");
@@ -1311,16 +1349,19 @@ std::string render_enum_widget(const WidgetState& widget) {
         widget.properties, "style.dropdown.option.padding_inline", "style.dropdown.option.padding_inline_mode", text_padding_inline, style_scale);
     const auto dropdown_option_height = maybe_scaled_css_length(
         widget.properties, "style.dropdown.option.height", "style.dropdown.option.height_mode", "28px", style_scale);
+    const bool increment_visible = property_bool(widget.properties, "display.increment_buttons_visible", false);
+    const auto value_face_delta = choice_widget_value_face_delta(geometry, increment_visible);
+    const auto value_face_width = choice_widget_value_face_width(geometry, increment_visible);
     const auto value_style = svg_box_style(
-        geometry.value_face_x,
+        geometry.value_face_x + value_face_delta,
         geometry.value_face_y,
-        geometry.value_face_width,
+        value_face_width,
         geometry.value_face_height,
         geometry);
     const auto dropdown_style = svg_dropdown_style(
-        geometry.value_face_x,
+        geometry.value_face_x + value_face_delta,
         geometry.value_face_y,
-        geometry.value_face_width,
+        value_face_width,
         geometry.value_face_height,
         geometry);
     const auto selector_style = svg_box_style(
@@ -1330,7 +1371,6 @@ std::string render_enum_widget(const WidgetState& widget) {
         geometry.selector_face_height,
         geometry);
     const bool digital_visible = property_bool(widget.properties, "display.digital_display_visible", false);
-    const bool increment_visible = property_bool(widget.properties, "display.increment_buttons_visible", false);
     const bool overflow_visible = property_bool(widget.properties, "display.text_overflow_visible", false);
 
     std::ostringstream html;
@@ -1413,7 +1453,7 @@ std::string render_enum_widget(const WidgetState& widget) {
             html << "></button>";
         }
         html << "<select id='" << html_escape(widget.widget_id) << "_value' name='mode_value'";
-        html << " class='enum-select-state' data-frog-part='value_state' aria-hidden='true' tabindex='-1'";
+        html << " class='enum-select-state' data-frog-internal-part='value_state' aria-hidden='true' tabindex='-1'";
         html << " aria-label='" << html_escape(label) << "'";
         html << " onchange=\"frogUpdateEnumDisplay(this,'" << html_escape(widget.widget_id) << "_display')\"";
         html << " oninput=\"frogUpdateEnumDisplay(this,'" << html_escape(widget.widget_id) << "_display')\"";

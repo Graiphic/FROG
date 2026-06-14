@@ -23,10 +23,10 @@
 <h2>Purpose</h2>
 
 <p>
-This default realization publishes a compact selector embodiment for the FROG
+This default realization publishes a compact value embodiment for the FROG
 Ring widget family. It provides a rectangular value face, selected-item display,
-selector affordance, optional increment/decrement command, and a dropdown
-host-surface skin for option rows.
+optional increment/decrement command, and a dropdown host-surface skin for
+option rows.
 </p>
 
 <p>
@@ -35,17 +35,24 @@ value semantics, item identity, numeric item values, FIR semantics, backend
 lowering, runtime-private host handles, or IDE-private item editing behavior.
 </p>
 
+<p>
+This visual posture intentionally matches the Default Enum compact posture.
+Hosts may share internal rendering and layout code for the two realizations, but
+must keep Ring value semantics separate from Enum value semantics.
+</p>
+
 <hr/>
 
 <h2>Public Parts Realized</h2>
 
 <ul>
   <li><code>root</code></li>
+  <li><code>placement_bounds</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
   <li><code>value_face</code></li>
   <li><code>value_display</code></li>
-  <li><code>selector_face</code></li>
+  <li><code>focus_ring</code></li>
   <li><code>spinner</code></li>
   <li><code>increment_up</code></li>
   <li><code>increment_down</code></li>
@@ -56,9 +63,11 @@ lowering, runtime-private host handles, or IDE-private item editing behavior.
 </ul>
 
 <p>
-The visible arrow inside the selector is a realization detail owned by
-<code>selector_face</code>. It is named in SVG as a detail so hosts can style it,
-but it is not a public semantic part.
+<code>placement_bounds</code> is the invisible placement aura consumed by IDE,
+grid, and Array containment policies. The Default compact Ring aura is
+<code>176 x 38</code> source units inside the <code>200 x 130</code> SVG
+viewBox, with a uniform 4-unit band around the compact body. It is not focus,
+selection, a dropdown row, or a visible decoration.
 </p>
 
 <p>
@@ -85,7 +94,6 @@ LabVIEW-like next/previous item command without replacing the selector.
 <ul>
   <li><code>value_face</code> anchors the selected value body.</li>
   <li><code>value_display</code> anchors selected item text and consumes Default-supplied or source-overridden text style members such as <code>style.value_display.vertical_offset</code>.</li>
-  <li><code>selector_face</code> anchors the open-selector affordance.</li>
   <li><code>spinner</code>, <code>increment_up</code>, and <code>increment_down</code> anchor the optional next/previous item command.</li>
   <li><code>list_panel</code> anchors the dropdown host overlay for visible options.</li>
   <li><code>option_row</code>, <code>option_label</code>, and <code>option_selection_face</code> publish option-row grammar.</li>
@@ -101,15 +109,32 @@ bindings.
 The accepted Ring appearance is published as reusable
 <code>default_widget_properties</code> in <code>ring.default.wfrog</code>.
 That includes the one-pixel value-face border, value text vertical offset,
-selector styling, popup styling, and dropdown asset posture. Hosts apply these
+popup styling, and dropdown asset posture. Hosts apply these
 defaults by widget class and role before any source-owned <code>.frog</code>
 instance overrides.
 </p>
 
 <p>
 The dropdown host surface is declared in the manifest. Its width is anchored to
-<code>value_face</code> only, not the selector face, so changing the main value
-body width changes the dropdown width by the same amount.
+<code>value_face</code>, so changing the main value body width changes the
+dropdown width by the same amount.
+</p>
+
+<p>
+When a Default Ring widget is embedded in an Array cell, the cell footprint is
+<code>placement_bounds</code>. The Array must not infer cell size from
+<code>value_face</code>, <code>spinner</code>, <code>increment_up</code>, or
+<code>increment_down</code>.
+</p>
+
+<p>
+Inside Array containment, the opened Ring item list is hosted by the Array as a
+floating overlay surface above the viewport. It still consumes the dropdown SVG
+skin and host-surface binding declared here; it is not allowed to be clipped by
+the repeated cell box. Increment/decrement hover and pressed visual states must
+continue to style the same semantic button parts, and the Default posture uses
+<code>data_entry.increment_wrap=true</code> for circular next/previous item
+stepping.
 </p>
 
 <p>

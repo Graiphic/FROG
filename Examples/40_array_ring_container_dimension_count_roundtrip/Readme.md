@@ -1,6 +1,6 @@
 ﻿# Example 40 - Ring Array Dimension Count Property Roundtrip
 
-Reviewed 2026-06-07.
+Reviewed 2026-06-12.
 
 This example demonstrates an N-dimensional Array container whose dimension count is controlled by a Numeric U8 control through explicit diagram property writes. Two additional Numeric U8 controls continue to command visible row and column counts for the active Array view.
 
@@ -14,6 +14,7 @@ Example 40 is a post-public-boundary widget progression example. Graiphic privat
 
 - The Array is a container widget, not a hardcoded numeric grid.
 - The dimension count is a source-owned Numeric U8 control that writes `dimensions.rank` and the matching `index_display.rank` mirror on Execute.
+- The dimension, visible row, and visible column controls are ordinary `frog.widgets.numeric_control` instances using `frog.realizations.default.numeric.profile.compact_u8_control`; they must not use bespoke mini-control geometry or local colors.
 - This slice commands the widget's active Array dimension count across source-owned explicit profiles and a default N-dimensional leading-singleton/trailing-matrix profile, not a fixed 1D/2D/3D-only switch.
 - Ranks above 2 keep the last two dimensions as the visible matrix and expose every leading dimension through stacked index displays.
 - The index-display container must wrap the active number of index displays using the source-owned index-display box size, gap, border, and padding.
@@ -21,7 +22,10 @@ Example 40 is a post-public-boundary widget progression example. Graiphic privat
 - In rank 1, the visible column count is intentionally collapsed to one visual column; in rank 2 or higher, row/column counts control the visible projection of the last two semantic dimensions.
 - Visible counts are viewport display properties. They may exceed the currently materialized semantic shape without forcing data materialization.
 - Each visible cell references the Default Ring realization through `element.template_ref` and `element.asset_ref`.
-- Runtime overlays must align to Default Array `index_display`, `element_region`, `element_slot`, and scrollbar parts, plus the Default Ring `value_face` part.
+- Runtime overlays must align to Default Array `index_display`, `element_region`, `element_slot`, and scrollbar parts. Ring cells consume the child widget's `placement_bounds` aura as the Array cell footprint, exactly like the Default Numeric Array path. `value_face`, `spinner`, `increment_up`, and `increment_down` remain internal Ring widget parts and must not be used as the cell boundary. No selector-face or selector-arrow part is exposed.
+- The Default Ring compact Array footprint is the non-rendered `placement_bounds` rectangle (`176 x 38` source units) with a uniform 4-unit aura band around the visible body. Control and indicator variants share the same cell footprint; the indicator changes visual fill, not layout law.
+- Ring increment/decrement hover and pressed states must survive Array containment because the buttons remain the child widget's semantic `increment_up` / `increment_down` parts. The reviewed Default posture also keeps `data_entry.increment_wrap=true`, so contained Ring stepping wraps circularly through enabled items.
+- The opened Ring item list is an Array-host overlay surface. It must render above the Array viewport and cells, use the dropdown SVG skin, and must not be clipped by the repeated cell box.
 - No local Example SVG skin is duplicated.
 - Runtime-family validation for this post-boundary example must preserve the same source-owned N-dimensional rank, index-display wrapping, final-two-dimensions projection, visible row/column command semantics, and Ring cell roundtrip across the private hosts that implement this slice.
 

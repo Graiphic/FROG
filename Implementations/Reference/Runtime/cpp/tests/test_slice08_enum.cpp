@@ -1,7 +1,9 @@
 #include <cassert>
+#include <cmath>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <regex>
 #include <sstream>
 #include <string>
 
@@ -33,11 +35,28 @@ std::string read_text(const std::filesystem::path& path) {
 }
 
 void assert_contains(const std::string& haystack, const std::string& needle) {
-    assert(haystack.find(needle) != std::string::npos);
+    if (haystack.find(needle) == std::string::npos) {
+        std::cerr << "Missing expected HTML fragment: " << needle << std::endl;
+        assert(false);
+    }
 }
 
 void assert_not_contains(const std::string& haystack, const std::string& needle) {
-    assert(haystack.find(needle) == std::string::npos);
+    if (haystack.find(needle) != std::string::npos) {
+        std::cerr << "Unexpected HTML fragment: " << needle << std::endl;
+        assert(false);
+    }
+}
+
+double svg_id_attribute_f64(const std::string& svg, const std::string& id, const std::string& attribute) {
+    const std::regex element_pattern("<[^>]*id=\"" + id + "\"[^>]*>");
+    std::smatch element_match;
+    assert(std::regex_search(svg, element_match, element_pattern));
+    const std::regex attribute_pattern(attribute + "=\"([-+]?[0-9]*\\.?[0-9]+)\"");
+    std::smatch attribute_match;
+    const auto element = element_match.str();
+    assert(std::regex_search(element, attribute_match, attribute_pattern));
+    return std::stod(attribute_match[1].str());
 }
 
 void test_enum_runtime_core_consumes_frog_instance_and_wfrog_assets() {
@@ -56,11 +75,25 @@ void test_enum_runtime_core_consumes_frog_instance_and_wfrog_assets() {
 
     const auto enum_svg = read_text(runtime.asset_map.at("enum_rectangular_ring_svg"));
     assert_contains(enum_svg, "data-frog-template=\"frog.realizations.default.enum.rectangular_ring\"");
+    assert_contains(enum_svg, "data-frog-part=\"placement_bounds\"");
     assert_contains(enum_svg, "data-frog-part=\"value_display\"");
-    assert_contains(enum_svg, "data-frog-part=\"selector_face\"");
-    assert_contains(enum_svg, "--frog-enum-frame-display");
-    assert_contains(enum_svg, "--frog-enum-selector-display");
+    assert_contains(enum_svg, "data-frog-part=\"focus_ring\"");
+    assert_contains(enum_svg, "data-frog-part=\"increment_up\"");
+    assert_contains(enum_svg, "data-frog-part=\"increment_down\"");
     assert_contains(enum_svg, "data-frog-anchor=\"value_display.left_center\"");
+    assert_not_contains(enum_svg, "data-frog-part=\"selector_face\"");
+    assert_not_contains(enum_svg, "data-frog-part=\"selector_arrow\"");
+    assert_not_contains(enum_svg, "data-frog-part=\"frame\"");
+    assert_not_contains(enum_svg, "data-frog-part=\"digital_display\"");
+    assert_not_contains(enum_svg, "data-frog-part=\"text_overflow_marker\"");
+
+    const auto value_face_x = svg_id_attribute_f64(enum_svg, "value_face", "x");
+    const auto value_face_width = svg_id_attribute_f64(enum_svg, "value_face", "width");
+    const auto placement_bounds_x = svg_id_attribute_f64(enum_svg, "placement_bounds", "x");
+    const auto placement_bounds_width = svg_id_attribute_f64(enum_svg, "placement_bounds", "width");
+    assert(std::abs(value_face_x - placement_bounds_x - 24.0) < 0.001);
+    assert(std::abs(placement_bounds_width - 176.0) < 0.001);
+    assert(std::abs(value_face_width - 148.0) < 0.001);
 }
 
 void test_headless_enum_roundtrip() {
@@ -79,7 +112,7 @@ void test_enum_browser_ui_surface() {
 
     assert_contains(html, "Enum Mode Roundtrip");
     assert_contains(html, "class='front-panel'");
-    assert_contains(html, "style='width:620px;height:180px;'");
+    assert_contains(html, "style='width:500px;height:200px;'");
     assert_contains(html, "data-panel-id='main_panel'");
     assert_contains(html, "C++ reference runtime");
     assert_contains(html, "enum contract executor");
@@ -94,11 +127,11 @@ void test_enum_browser_ui_surface() {
     assert_contains(html, "data-asset-route='/asset/enum_rectangular_ring_svg'");
     assert_contains(html, "class='enum-skin'");
     assert_contains(html, "data-frog-visual-law='wfrog-realization-state-map'");
-    assert_contains(html, "data-frog-selector-visible='true'");
     assert_contains(html, "data-frog-selector-visible='false'");
+    assert_contains(html, "data-frog-increment-buttons-visible='true'");
+    assert_contains(html, "data-frog-increment-buttons-visible='false'");
     assert_contains(html, "name='mode_value'");
     assert_contains(html, "class='enum-value-display-overlay enum-display-button'");
-    assert_contains(html, "class='enum-selector-overlay enum-selector-button'");
     assert_contains(html, "class='enum-select-state'");
     assert_contains(html, "class='enum-dropdown'");
     assert_contains(html, "class='enum-dropdown-option'");
@@ -113,9 +146,13 @@ void test_enum_browser_ui_surface() {
     assert_contains(html, "--frog-enum-selector-symbol-height:7px");
     assert_contains(html, "--frog-enum-dropdown-fill:#ffffff");
     assert_contains(html, "--frog-enum-dropdown-border:#64748b");
-    assert_contains(html, "--frog-enum-dropdown-option-hover-fill:#2563eb");
-    assert_contains(html, "--frog-enum-dropdown-option-selected-fill:#1d4ed8");
+    assert_contains(html, "--frog-enum-dropdown-option-hover-fill:#dbeafe");
+    assert_contains(html, "--frog-enum-dropdown-option-selected-fill:#3b6db5");
     assert_contains(html, "--frog-enum-dropdown-option-font-style:normal");
+    assert_contains(html, "--frog-enum-value-face-transform:none;");
+    assert_contains(html, "--frog-enum-value-face-transform:translate(-20px,0);");
+    assert_contains(html, "--frog-enum-value-face-width:148px;");
+    assert_contains(html, "--frog-enum-value-face-width:168px;");
     assert_contains(html, "border-width:var(--frog-enum-selector-stroke-width)");
     assert_contains(html, "padding:0 var(--frog-enum-text-padding-inline)");
     assert_contains(html, "data-svg-anchor='value_display.left_center'");
@@ -125,6 +162,9 @@ void test_enum_browser_ui_surface() {
     assert_contains(html, "onclick=\"frogToggleEnumDropdown('mode_input_dropdown','mode_input_display')\"");
     assert_contains(html, "function frogToggleEnumDropdown");
     assert_contains(html, "function frogSelectEnumOption");
+    assert_not_contains(html, "class='enum-selector-overlay enum-selector-button'");
+    assert_not_contains(html, "data-frog-digital-display-visible='true'");
+    assert_not_contains(html, "data-frog-text-overflow-visible='true'");
     assert_contains(html, "<option value='idle'");
     assert_contains(html, "<option value='run' selected");
     assert_contains(html, "<option value='fault'");

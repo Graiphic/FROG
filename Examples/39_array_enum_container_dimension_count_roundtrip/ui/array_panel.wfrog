@@ -114,6 +114,18 @@
                                                     ]
                              }
                          ],
+    "usage_profile_refs":  [
+                               {
+                                   "profile_ref":  "frog.realizations.default.numeric.profile.compact_u8_control",
+                                   "package_ref":  "Libraries/Realizations/Default/numeric.default.wfrog",
+                                   "applies_to":  [
+                                                      "dimension_count",
+                                                      "visible_row_count",
+                                                      "visible_column_count"
+                                                  ],
+                                   "posture":  "ordinary frog.widgets.numeric_control instances using the Default compact U8 Numeric control profile"
+                               }
+                           ],
     "svg_assets":  [
                        {
                            "asset_id":  "array_shell_svg",
@@ -201,7 +213,7 @@
                   "This package references the Default Array, Default Numeric, and Default Enum realizations instead of duplicating local SVG skins.",
                   "The .frog source owns Array rank, explicit/default N-dimensional shape profiles, Enum item-id elements, selected element, viewport, dimension-rank property writes, index-display rank mirrors, visible row/column property writes, layout, element default value, and visual overrides.",
                   "The .wfrog package resolves Default realization assets and declares host capabilities for N-dimensional Enum element widget template rendering and Numeric U8 property-control rendering.",
-                  "Reviewed 2026-06-07."
+                  "Reviewed 2026-06-12."
               ],
     "host_surface_bindings":  [
                                   {
@@ -230,8 +242,8 @@
                                                      "height":  "repeated_part_stack",
                                                      "outer_box_stroke_width_property":  "style.value_face.border_width",
                                                      "outer_box_stroke_width_mode_property":  "style.value_face.border_width_mode",
-                                                     "excluded_parts":  [
-                                                                            "selector_face"
+                                                     "included_parts":  [
+                                                                            "value_face"
                                                                         ]
                                                  }
                                   }

@@ -7,8 +7,8 @@
                      "author":  "Graiphic",
                      "program_version":  "0.1.0",
                      "review":  {
-                                    "last_reviewed":  "2026-06-09",
-                                    "review_scope":  "Default Numeric IDE grid, placement_bounds aura, label aura, centered control/indicator bodies, and button-side postures."
+                                    "last_reviewed":  "2026-06-12",
+                                    "review_scope":  "Default Numeric IDE grid, placement_bounds aura, label aura, centered control/indicator bodies, button-side postures, and standardized light-hover/strong-selected aura states."
                                 },
                      "tags":  [
                                   "example",

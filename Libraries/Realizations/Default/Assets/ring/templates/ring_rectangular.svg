@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 380 150"
+     viewBox="0 0 200 130"
      role="img"
      aria-label="FROG default ring rectangular realization template"
      data-frog-template="frog.realizations.default.ring.rectangular"
@@ -10,11 +10,9 @@
   <style>
     #label_text { display: var(--frog-ring-label-display, none); }
     #caption_text { display: var(--frog-ring-caption-display, inline); }
-    #value_face { fill: var(--frog-ring-value-face-fill, #ffffff); stroke: var(--frog-ring-value-face-stroke, #64748b); stroke-width: var(--frog-ring-value-face-stroke-width, 1); vector-effect: non-scaling-stroke; }
-    #focus_ring { display: var(--frog-ring-focus-display, none); fill: none; stroke: var(--frog-ring-focus-stroke, #2563eb); stroke-width: var(--frog-ring-focus-stroke-width, 2px); vector-effect: non-scaling-stroke; }
+    #value_face { fill: var(--frog-ring-value-face-fill, #ffffff); stroke: var(--frog-ring-value-face-stroke, #A8ABAE); stroke-width: var(--frog-ring-value-face-stroke-width, 1); width: var(--frog-ring-value-face-width, 148px); transform: var(--frog-ring-value-face-transform, none); vector-effect: non-scaling-stroke; }
+    #focus_ring { display: var(--frog-ring-focus-display, none); fill: none; stroke: var(--frog-ring-focus-stroke, #2563eb); stroke-width: var(--frog-ring-focus-stroke-width, 2px); width: var(--frog-ring-value-face-width, 148px); transform: var(--frog-ring-value-face-transform, none); vector-effect: non-scaling-stroke; }
     #value_display { fill: var(--frog-ring-value-display-color, #111827); }
-    #selector_face { display: var(--frog-ring-selector-display, inline); fill: var(--frog-ring-selector-fill, #f1f5f9); stroke: var(--frog-ring-selector-stroke, #64748b); stroke-width: var(--frog-ring-selector-stroke-width, 1); vector-effect: non-scaling-stroke; }
-    #selector_arrow { display: var(--frog-ring-selector-display, inline); fill: var(--frog-ring-selector-symbol, #111827); stroke: none; }
     #spinner { display: var(--frog-ring-spinner-display, none); }
     #increment_up rect,
     #increment_down rect { fill: var(--frog-ring-spinner-fill, #edf2f7); stroke: var(--frog-ring-spinner-border, #94a3b8); stroke-width: 1; vector-effect: non-scaling-stroke; }
@@ -22,6 +20,18 @@
     #increment_down path { fill: var(--frog-ring-spinner-symbol, #334e68); stroke: none; }
   </style>
   <g data-frog-part="root">
+    <rect id="placement_bounds"
+          data-frog-part="placement_bounds"
+          data-frog-role="placement_aura"
+          data-frog-bind="layout.placement_bounds.* layout.grid.*"
+          x="0"
+          y="72"
+          width="176"
+          height="38"
+          fill="none"
+          stroke="none"
+          pointer-events="none" />
+
     <text id="label_text"
           data-frog-part="label"
           data-frog-member="label.text"
@@ -46,21 +56,21 @@
           data-frog-part="value_face"
           data-frog-anchor="value_face.bounds"
           data-frog-bind="style.value_face.* data_entry.* interaction.*"
-          x="22"
+          x="24"
           y="76"
-          width="214"
+          width="148"
           height="30"
           fill="#ffffff"
-          stroke="#64748b"
+          stroke="#A8ABAE"
           stroke-width="1"/>
     <rect id="focus_ring"
           data-frog-part="focus_ring"
           data-frog-role="keyboard_focus_boundary"
           data-frog-anchor="focus_ring.bounds"
           data-frog-bind="interaction.focused style.focus_ring.*"
-          x="22"
+          x="24"
           y="76"
-          width="214"
+          width="148"
           height="30"
           rx="0"/>
     <g id="spinner"
@@ -72,8 +82,8 @@
          data-frog-states="normal pressed"
          data-frog-state-law="normal-pressed-color-only"
          data-frog-bind="style.increment_button.*">
-        <rect x="2" y="76" width="16" height="14" rx="1"/>
-        <path d="M7 84 L13 84 L10 81 Z"/>
+        <rect x="4" y="76" width="16" height="14" rx="1"/>
+        <path d="M9 84 L15 84 L12 81 Z"/>
       </g>
       <g id="increment_down"
          data-frog-part="increment_down"
@@ -81,8 +91,8 @@
          data-frog-states="normal pressed"
          data-frog-state-law="normal-pressed-color-only"
          data-frog-bind="style.increment_button.*">
-        <rect x="2" y="92" width="16" height="14" rx="1"/>
-        <path d="M7 98 L13 98 L10 101 Z"/>
+        <rect x="4" y="92" width="16" height="14" rx="1"/>
+        <path d="M9 98 L15 98 L12 101 Z"/>
       </g>
     </g>
     <text id="value_display"
@@ -95,24 +105,5 @@
           font-size="15"
           font-family="Inter, Arial, sans-serif"
           fill="#111827">Standby</text>
-    <rect id="selector_face"
-          data-frog-part="selector_face"
-          data-frog-anchor="selector_face.bounds"
-          data-frog-layout-anchor-part="value_face"
-          data-frog-layout-anchor-edge="right"
-          data-frog-layout-gap-units="0"
-          data-frog-bind="display.selector_visible interaction.opened style.selector_face.*"
-          x="236"
-          y="76"
-          width="28"
-          height="30"
-          fill="#f1f5f9"
-          stroke="#64748b"
-          stroke-width="1"/>
-    <path id="selector_arrow"
-          data-frog-detail="selector_arrow"
-          data-frog-owner-part="selector_face"
-          d="M246 88 L254 88 L250 94 Z"
-          fill="#111827"/>
   </g>
 </svg>

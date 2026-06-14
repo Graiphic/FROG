@@ -7,9 +7,9 @@
     "author": "Graiphic",
     "program_version": "0.1.0",
     "review": {
-      "last_reviewed": "2026-06-06",
-      "scope": "Example 21 Ring semantic SVG parts, optional increment/decrement command parts, dropdown list SVG skin, value-face dropdown width, 1px value-face border, and value-display vertical alignment.",
-      "visible_runtime_fact": "Reviewed 2026-06-06"
+      "last_reviewed": "2026-06-12",
+      "scope": "Example 21 Ring compact value skin, optional increment/decrement command parts, dropdown list SVG skin, value-face dropdown width, 1px value-face border, and value-display vertical alignment.",
+      "visible_runtime_fact": "Reviewed 2026-06-12"
     },
     "tags": [
       "example",
@@ -88,7 +88,7 @@
   },
   "front_panel": {
     "canvas": {
-      "width": 690,
+      "width": 520,
       "height": 230,
       "coordinate_space": "panel_pixels"
     },
@@ -105,8 +105,8 @@
         "layout": {
           "x": 32,
           "y": 36,
-          "width": 290,
-          "height": 120
+          "width": 200,
+          "height": 130
         },
         "props": {
           "label.text": "Mode ring",
@@ -167,35 +167,27 @@
           "data_entry.response_to_value_outside_limits": "ignore",
           "display.digital_display_visible": false,
           "display.increment_decrement_visible": true,
-          "data_entry.increment_wrap": false,
+          "data_entry.increment_wrap": true,
           "display.format.type": "unsigned_decimal",
           "display.format.string": "%u",
           "display.format.advanced_editing": false,
-          "display.selector_visible": true,
           "display.popup_max_visible_items": 6,
           "display.text_overflow_visible": false,
-          "style.scale.reference_width": 290,
-          "style.scale.reference_height": 120,
+          "style.scale.reference_width": 200,
+          "style.scale.reference_height": 130,
           "style.frame.fill_color": "transparent",
           "style.frame.border_color": "transparent",
           "style.frame.border_width": "0px",
           "style.value_face.fill_color": "#ffffff",
           "style.value_face.fill_color.hover": "#eef6ff",
-          "style.value_face.border_color": "#64748b",
-          "style.value_face.border_color.hover": "#475569",
+          "style.value_face.border_color": "#A8ABAE",
+          "style.value_face.border_color.hover": "#8E9297",
           "style.value_face.border_width": "1px",
           "style.value_display.color": "#111827",
           "style.value_display.font_size": "15px",
           "style.value_display.font_weight": "400",
           "style.value_display.vertical_offset": "-2px",
           "style.value_display.padding_inline": "9px",
-          "style.selector_face.fill_color": "#f1f5f9",
-          "style.selector_face.fill_color.hover": "#dbeafe",
-          "style.selector_face.border_color": "#64748b",
-          "style.selector_face.border_color.hover": "#2563eb",
-          "style.selector_face.border_width": "1px",
-          "style.selector_face.symbol_color": "#111827",
-          "style.selector_face.symbol_color.hover": "#1d4ed8",
           "style.increment_button.fill_color.normal": "#edf2f7",
           "style.increment_button.fill_color.hover": "#dbeafe",
           "style.increment_button.fill_color.pressed": "#bfdbfe",
@@ -244,10 +236,10 @@
         "instance_ref": "selected_ring",
         "value_type": "u16",
         "layout": {
-          "x": 370,
+          "x": 280,
           "y": 36,
-          "width": 290,
-          "height": 120
+          "width": 200,
+          "height": 130
         },
         "props": {
           "label.text": "Selected mode ring",
@@ -311,26 +303,21 @@
           "display.format.type": "unsigned_decimal",
           "display.format.string": "%u",
           "display.format.advanced_editing": false,
-          "display.selector_visible": false,
           "display.popup_max_visible_items": 0,
           "display.text_overflow_visible": false,
-          "style.scale.reference_width": 290,
-          "style.scale.reference_height": 120,
+          "style.scale.reference_width": 200,
+          "style.scale.reference_height": 130,
           "style.frame.fill_color": "transparent",
           "style.frame.border_color": "transparent",
           "style.frame.border_width": "0px",
-          "style.value_face.fill_color": "#f8fafc",
-          "style.value_face.border_color": "#64748b",
+          "style.value_face.fill_color": "#E8EBED",
+          "style.value_face.border_color": "#A8ABAE",
           "style.value_face.border_width": "1px",
           "style.value_display.color": "#111827",
           "style.value_display.font_size": "15px",
           "style.value_display.font_weight": "400",
           "style.value_display.vertical_offset": "-2px",
           "style.value_display.padding_inline": "9px",
-          "style.selector_face.fill_color": "transparent",
-          "style.selector_face.border_color": "transparent",
-          "style.selector_face.border_width": "0px",
-          "style.selector_face.symbol_color": "transparent",
           "style.focus_ring.color": "#2563eb",
           "style.focus_ring.width": "2px",
           "interaction.visible": true,
@@ -354,7 +341,7 @@
     "host_binding_ref": "ring_runtime_host_default",
     "documentation": {
       "title": "Ring legend",
-      "summary": "A Ring is a compact finite-choice selector. It displays item text while publishing one selected numeric item value without becoming an Enum domain.",
+      "summary": "A Ring is a compact finite-choice value widget. It displays item text while publishing one selected numeric item value without becoming an Enum domain.",
       "legend": [
         {
           "label": "Ring control",
@@ -369,7 +356,7 @@
           "description": "The .frog instance owns item ids, labels, numeric values, enabled flags, selected id/value, and intentional visual overrides over the Default Ring posture."
         }
       ],
-      "note": "The runtime may provide host overlays for the selector and popup, but they must align to the Default Ring SVG parts and consume .frog-owned item data merged with .wfrog Default style data."
+      "note": "The runtime may provide host overlays for the value surface and popup, but they must align to the Default Ring SVG parts and consume .frog-owned item data merged with .wfrog Default style data."
     }
   }
 }

@@ -11,12 +11,15 @@
 
 <hr/>
 
+Reviewed 2026-06-12.
+
 <h2>Scope</h2>
 
 <p>
 The stabilized Enum slice is <code>Examples/08_enum_value_roundtrip</code>.
 It proves one <code>frog.widgets.enum_control</code> and one
-<code>frog.widgets.enum_indicator</code> over the <code>example08.mode</code> enum domain.
+<code>frog.widgets.enum_indicator</code> over the <code>example08.mode</code>
+enum domain.
 </p>
 
 <pre><code>mode_input.value
@@ -25,104 +28,66 @@ It proves one <code>frog.widgets.enum_control</code> and one
 </code></pre>
 
 <p>
-The current enum items are <code>idle</code>, <code>run</code>, and <code>fault</code>,
-with display text <code>Idle</code>, <code>Run</code>, and <code>Fault</code>.
+Enum represents a closed typed symbolic set. It is distinct from Ring even when
+the two widgets share a compact visual realization: Enum publishes item identity
+from a named enum domain, while Ring maps visible strings to scalar numeric
+values.
+</p>
+
+<p>
+The intended implementation direction is shared UI, separate value contract:
+same compact skin, increment/decrement commands, dropdown host surface, aura, and
+Array containment rules; different terminal value semantics.
 </p>
 
 <hr/>
 
-<h2>FROG-Owned Instance Data</h2>
+<h2>Source-Owned Instance Data</h2>
 
 <ul>
   <li><code>Examples/08_enum_value_roundtrip/main.frog</code></li>
-  <li>front panel canvas: <code>620 x 180</code> panel pixels</li>
   <li>control widget: <code>mode_input</code>, <code>frog.widgets.enum_control</code></li>
   <li>indicator widget: <code>mode_result</code>, <code>frog.widgets.enum_indicator</code></li>
-  <li>widget layout, enum item vocabulary, caption placement, selector visibility, dropdown styling, and binding live in <code>.frog</code></li>
-</ul>
-
-<p>
-Current instance-level properties proven by the example include:
-</p>
-
-<ul>
-  <li><code>items[].id</code>, <code>items[].text</code>, <code>items[].numeric_value</code>, and <code>items[].enabled</code></li>
-  <li><code>display.selector_visible</code> true on the control and false on the indicator</li>
-  <li><code>style.value_face.*</code> and <code>style.value_display.*</code></li>
-  <li><code>style.selector_face.*</code> including hover fill, border, symbol color, symbol size, radius, and border width</li>
-  <li><code>style.dropdown.*</code> including option fill, text, hover, selected, font, padding, and height</li>
-  <li><code>style.scale.reference_width</code> and <code>style.scale.reference_height</code> for scalable geometry</li>
-  <li><code>interaction.enabled</code> and <code>interaction.read_only</code></li>
+  <li>enum item ids, display text, numeric values, enabled posture, selected value, caption placement, widget layout, and style overrides live in <code>.frog</code></li>
 </ul>
 
 <hr/>
 
-<h2>Published Parts And Configurable Properties</h2>
+<h2>Published Parts</h2>
 
 <table>
   <thead>
     <tr>
-      <th>Surface</th>
-      <th>Current source properties</th>
-      <th>Runtime obligation</th>
+      <th>Part</th>
+      <th>Purpose</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>Caption</td>
-      <td><code>caption.text</code>, <code>caption.anchor.x/y</code>, <code>caption.align.horizontal</code></td>
-      <td>Place labels from the source instance and keep them aligned with the enum field.</td>
-    </tr>
-    <tr>
-      <td>Enum domain</td>
-      <td><code>items[].id</code>, <code>items[].text</code>, <code>items[].numeric_value</code>, <code>items[].enabled</code></td>
-      <td>Preserve item order, selected value, enabled state, and public id/numeric mapping.</td>
-    </tr>
-    <tr>
-      <td>Value field</td>
-      <td><code>style.value_face.*</code>, <code>style.value_display.*</code></td>
-      <td>Keep the selected text vertically centered and scaled from the declared reference geometry.</td>
-    </tr>
-    <tr>
-      <td>Selector button</td>
-      <td><code>display.selector_visible</code>, <code>style.selector_face.*</code></td>
-      <td>Render the button as a published SVG selector part, with normal and hover states from source properties.</td>
-    </tr>
-    <tr>
-      <td>Dropdown</td>
-      <td><code>style.dropdown.*</code>, <code>style.dropdown.option.*</code></td>
-      <td>Use the declared colors, borders, fonts, option height, hover color, and selected color; dropdown width follows the value field.</td>
-    </tr>
-    <tr>
-      <td>Scalable sizing</td>
-      <td><code>style.scale.reference_width</code>, <code>style.scale.reference_height</code>, <code>*_mode = scale_with_widget</code></td>
-      <td>Scale offsets, padding, borders, and selector symbol dimensions predictably when the IDE resizes the widget.</td>
-    </tr>
+    <tr><td><code>root</code></td><td>SVG template root.</td></tr>
+    <tr><td><code>placement_bounds</code></td><td>Invisible placement aura consumed by IDE/grid/Array placement. This is not focus or selection.</td></tr>
+    <tr><td><code>label</code>, <code>caption</code></td><td>Text surfaces owned by source/widget placement.</td></tr>
+    <tr><td><code>value_face</code></td><td>Visible selected-value body.</td></tr>
+    <tr><td><code>value_display</code></td><td>Visible selected item text.</td></tr>
+    <tr><td><code>focus_ring</code></td><td>Focus boundary around <code>value_face</code> only.</td></tr>
+    <tr><td><code>spinner</code>, <code>increment_up</code>, <code>increment_down</code></td><td>Optional LabVIEW-like next/previous item command surfaces.</td></tr>
   </tbody>
 </table>
 
 <p>
-The Default Enum SVG currently exposes these public parts:
-<code>caption</code>, <code>digital_display</code>, <code>focus_ring</code>, <code>frame</code>,
-<code>increment_down</code>, <code>increment_up</code>, <code>label</code>, <code>root</code>,
-<code>selector_arrow</code>, <code>selector_face</code>, <code>text_overflow_marker</code>,
-<code>value_display</code>, and <code>value_face</code>.
+The Default Enum compact SVG does not publish a selector face or selector arrow.
+Any opened popup/dropdown is a host surface backed by the dropdown SVG skin and
+anchored to <code>value_face</code>.
 </p>
 
 <hr/>
 
-<h2>WFROG-Owned Realization Data</h2>
-
-<p>
-The example package is:
-</p>
-
-<pre><code>Examples/08_enum_value_roundtrip/ui/enum_panel.wfrog</code></pre>
+<h2>Placement Contract</h2>
 
 <ul>
-  <li>Default package: <code>Libraries/Realizations/Default/enum.default.wfrog</code></li>
-  <li>SVG asset: <code>Libraries/Realizations/Default/assets/enum/templates/enum_rectangular_ring.svg</code></li>
-  <li>asset id consumed by runtimes: <code>enum_rectangular_ring_svg</code></li>
+  <li>The compact SVG viewBox is <code>200 x 130</code>.</li>
+  <li><code>placement_bounds</code> is <code>176 x 38</code> source units and carries the uniform 4-unit placement aura around the compact body.</li>
+  <li>Array cells consume <code>placement_bounds</code> as the contained widget footprint, exactly like Default Numeric. They must not size themselves from <code>value_face</code>, <code>spinner</code>, or focus/selection overlays.</li>
+  <li>Control and indicator variants share the same placement footprint. Indicator posture changes fill/style, not the cell boundary.</li>
 </ul>
 
 <hr/>
@@ -130,31 +95,8 @@ The example package is:
 <h2>Runtime Expectations</h2>
 
 <ul>
-  <li>The selector button is a published part of the Enum realization, not a runtime-private decoration.</li>
-  <li>The dropdown width aligns with the value display, not with the selector button area.</li>
-  <li>Normal, hover, and selected dropdown colors are instance-configurable through <code>.frog</code>.</li>
-  <li>The value text baseline and vertical offset are driven by instance properties.</li>
-  <li>The runtime must reject fallback markers such as <code>enum-card</code> and hidden hand-built select shells.</li>
-</ul>
-
-<hr/>
-
-<h2>Native Kernel Posture</h2>
-
-<ul>
-  <li>native manifest: <code>Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/native_kernel_manifest.json</code></li>
-  <li>LLVM kernel: <code>Implementations/Reference/LLVM/examples/08_enum_value_roundtrip/kernel.ll</code></li>
-  <li>native ABI entry: <code>frog_example08_run</code></li>
-  <li>runtime languages validated: C++, Python, Rust</li>
-</ul>
-
-<hr/>
-
-<h2>Validation Notes</h2>
-
-<ul>
-  <li>The example must test at least one non-default item such as <code>fault</code>.</li>
-  <li>The dropdown must preserve item order and selected item publication.</li>
-  <li>The indicator must show the selected value without exposing an interactive selector.</li>
-  <li>There must be no local duplicated Enum SVG under the example directory.</li>
+  <li>The selected value must resolve to a declared enum item unless the source explicitly allows undefined values.</li>
+  <li>Increment/decrement commands navigate the declared item order and honor <code>display.increment_buttons_visible</code>.</li>
+  <li>The focus ring covers <code>value_face</code> only and never encloses increment/decrement buttons.</li>
+  <li>The runtime must reject hidden hand-built selector shells or local duplicated SVG skins for this example.</li>
 </ul>

@@ -39,7 +39,7 @@
 <p>
 The Ring family defines compact finite-choice widgets for FROG front panels.
 A Ring exposes one selected item from a source-owned item list while displaying
-the selected item through a compact selector surface.
+the selected item through a compact value surface.
 </p>
 
 <p>
@@ -50,6 +50,13 @@ source-declared values. The LabVIEW-like default posture is numeric: the Ring
 shows text but publishes the selected item's numeric value. A Ring realization
 may look similar to an enum ring or dropdown, but it does not define a typed enum
 domain.
+</p>
+
+<p>
+Ring and Enum may share the same compact finite-choice SVG posture, Array
+containment law, increment/decrement affordances, and runtime rendering helper.
+They must not share terminal value semantics: Ring publishes the selected item
+value, while Enum publishes selected enum identity.
 </p>
 
 <hr/>
@@ -183,11 +190,11 @@ labels as identity.
 
 <ul>
   <li><code>root</code></li>
+  <li><code>placement_bounds</code> when a realization publishes a placement aura</li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
   <li><code>value_face</code></li>
   <li><code>value_display</code></li>
-  <li><code>selector_face</code></li>
   <li><code>focus_ring</code></li>
   <li><code>spinner</code> when a realization exposes increment/decrement commands</li>
   <li><code>increment_up</code> when a realization exposes increment/decrement commands</li>
@@ -199,12 +206,20 @@ labels as identity.
 </ul>
 
 <p>
-The selector arrow is a realization detail owned by <code>selector_face</code>,
-not a public semantic part. The <code>focus_ring</code> is public so the SVG
-skin owns focus geometry. In the Default rectangular realization,
+<code>placement_bounds</code> is a placement aura part, not a visible widget
+face, focus ring, or selection overlay. IDE hosts, grid-aware layout, and Array
+containment MAY consume it as the widget footprint when the realization
+publishes it. Internal visible parts such as <code>value_face</code>,
+<code>spinner</code>, <code>increment_up</code>, and
+<code>increment_down</code> must not be substituted for the placement footprint.
+</p>
+
+<p>
+The <code>focus_ring</code> is public so the SVG skin owns focus geometry. In
+the Default rectangular realization,
 <code>focus_ring</code> follows <code>value_face</code> only; it does not
-enclose <code>selector_face</code>, <code>spinner</code>,
-<code>increment_up</code>, or <code>increment_down</code>. Native handles,
+enclose <code>spinner</code>, <code>increment_up</code>, or
+<code>increment_down</code>. Native handles,
 popup caches, and other host-private interaction affordances remain runtime or
 realization-private unless a concrete Ring behavior explicitly promotes them
 later.
@@ -268,7 +283,6 @@ families shown by LabVIEW without copying LabVIEW internals:
 <h3>Display and interaction</h3>
 
 <ul>
-  <li><code>display.selector_visible : bool</code></li>
   <li><code>display.digital_display_visible : bool</code></li>
   <li><code>display.increment_decrement_visible : bool</code></li>
   <li><code>display.popup_max_visible_items : u32</code></li>
@@ -319,7 +333,6 @@ families shown by LabVIEW without copying LabVIEW internals:
   <li><code>style.value_face.*</code></li>
   <li><code>style.value_display.*</code></li>
   <li><code>style.value_display.vertical_offset : signed px length</code></li>
-  <li><code>style.selector_face.*</code></li>
   <li><code>style.focus_ring.*</code></li>
   <li><code>style.increment_button.*</code> when a realization exposes increment/decrement command parts</li>
   <li><code>style.popup.*</code></li>
@@ -347,7 +360,9 @@ families shown by LabVIEW without copying LabVIEW internals:
   <li>In the LabVIEW-like default posture, Ring controls publish the selected item value to the diagram and use the selected item id for UI identity.</li>
   <li><code>items[].value</code>, <code>data_type.representation</code>, data-entry limits, display-format posture, undefined-value policy, disabled-item posture, and optional digital/increment surfaces must be source-owned properties when used.</li>
   <li>The visible selector must consume a realization asset and published parts.</li>
-  <li>Runtime overlays must align to <code>value_face</code>, <code>value_display</code>, <code>selector_face</code>, optional increment/decrement parts, and <code>list_panel</code>.</li>
+  <li>Runtime overlays must align to <code>value_face</code>, <code>value_display</code>, optional increment/decrement parts, and <code>list_panel</code>.</li>
   <li>Visual values such as colors, borders, thickness, text, hover, and selected states must come from source-owned properties or the Default realization.</li>
+  <li>When the Default posture is embedded in Array, popup/list surfaces remain host overlays above the Array viewport and must not be clipped by repeated cells.</li>
+  <li>The Default realization sets <code>data_entry.increment_wrap=true</code>, so visual increment/decrement commands wrap circularly unless source-owned properties request clamping.</li>
   <li>Ring must not be treated as Enum unless the source explicitly uses an Enum widget class.</li>
 </ul>

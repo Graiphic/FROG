@@ -112,7 +112,29 @@ must not be used as the placement aura.
 
 <hr/>
 
-<h2>6. Summary</h2>
+<h2>6. Default Compact U8 Control Profile</h2>
+
+<p>
+The Default Numeric realization also names one standard compact U8 control posture:
+<code>frog.realizations.default.numeric.profile.compact_u8_control</code>.
+This is not a separate widget class or a new widget concept. It is an ordinary
+<code>frog.widgets.numeric_control</code> using the Default Numeric SVG, the
+<code>96 x 32</code> <code>placement_bounds</code> posture, U8 representation,
+the standard caption anchor, and the accepted LabVIEW NXG-like neutral palette.
+</p>
+
+<p>
+Examples and containers that need compact Numeric controls such as Array
+dimension count, visible row count, or visible column count must use this
+profile rather than inventing a bespoke mini numeric surface. Instance-local
+data may change the widget id, label text, value, binding, and placement
+coordinates. It must not reintroduce a separate frame, private mini-control
+geometry, or local colors that diverge from the Default Numeric palette.
+</p>
+
+<hr/>
+
+<h2>7. Summary</h2>
 
 <p>
 The default numeric realization provides one inspectable SVG-backed baseline for numeric controls and indicators while keeping the class law in <code>Libraries/Widgets/Numeric.md</code>.

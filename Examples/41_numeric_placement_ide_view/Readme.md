@@ -14,7 +14,7 @@
 <h2>Overview</h2>
 
 <p>
-Reviewed: <code>2026-06-09</code>. This example is a C++ browser-host IDE view
+Reviewed: <code>2026-06-12</code>. This example is a C++ browser-host IDE view
 for the Default Numeric widget. It is intentionally separated from
 <code>Examples/05_bounded_ui_accumulator</code>: Example 05 remains the
 execution slice, while Example 41 shows the 16px placement grid and the

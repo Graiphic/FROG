@@ -25,13 +25,13 @@
 <h2>1. Published Assets</h2>
 
 <ul>
-  <li><code>templates/enum_rectangular_ring.svg</code> - closed rectangular ring-like enum selector template.</li>
+  <li><code>templates/enum_rectangular_ring.svg</code> - compact rectangular enum value template.</li>
   <li><code>templates/enum_dropdown_list.svg</code> - opened dropdown list skin used by the host surface.</li>
 </ul>
 
 <hr/>
 
-<h2>2. Closed Selector Markers</h2>
+<h2>2. Closed Value Markers</h2>
 
 <ul>
   <li><code>root</code></li>
@@ -39,23 +39,16 @@
   <li><code>caption</code></li>
   <li><code>value_face</code></li>
   <li><code>value_display</code></li>
-  <li><code>selector_face</code></li>
   <li><code>focus_ring</code></li>
+  <li><code>spinner</code> when increment/decrement is shown</li>
+  <li><code>increment_up</code> when increment/decrement is shown</li>
+  <li><code>increment_down</code> when increment/decrement is shown</li>
 </ul>
 
 <p>
-The selector arrow is an internal detail of <code>selector_face</code>, not a
-separate public part. The <code>focus_ring</code> is public so the SVG owns the
-closed selector focus boundary while the runtime only toggles and styles it.
-</p>
-
-<p>
-The selector face declares its body-relative spacing with
-<code>data-frog-layout-anchor-part="value_face"</code>,
-<code>data-frog-layout-anchor-edge="right"</code>, and
-<code>data-frog-layout-gap-units="3.959"</code>. If the value body width is
-changed, the selector face and arrow must move by the same source delta so this
-gap remains intact.
+The closed value skin no longer publishes a selector face or arrow. The
+<code>focus_ring</code> is public so the SVG owns the closed value focus
+boundary while the runtime only toggles and styles it.
 </p>
 
 <h2>3. Dropdown List Markers</h2>
@@ -78,6 +71,5 @@ dropdown SVG so the runtime can repeat <code>option_row</code> and
 Dropdown placement and sizing are declared in the realization
 <code>.wfrog</code>, not in runtime-specific code. The Default Enum dropdown
 surface anchors to <code>value_face</code>, uses its outer width with a
-declared source-width outset, centers under the body, and excludes
-<code>selector_face</code> from popup width measurement.
+declared source-width outset, and centers under the body.
 </p>
