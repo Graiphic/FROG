@@ -314,6 +314,105 @@ def execute_example15_contract(
     return runtime.execute(value)
 
 
+def execute_contract_runtime(args: argparse.Namespace) -> dict[str, object]:
+    """Compatibility entry point used by the Python runtime parity tests."""
+    if wants_example06(getattr(args, "example", None)) or is_example06_contract(getattr(args, "contract", None)):
+        return execute_example06_contract(
+            getattr(args, "input_value", None),
+            contract_path=getattr(args, "contract", None),
+            wfrog_path=getattr(args, "wfrog", None),
+            native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
+            native_kernel_library=getattr(args, "native_kernel_library", None),
+        )
+    if wants_example07(getattr(args, "example", None)) or is_example07_contract(getattr(args, "contract", None)):
+        return execute_example07_contract(
+            getattr(args, "input_value", None),
+            contract_path=getattr(args, "contract", None),
+            wfrog_path=getattr(args, "wfrog", None),
+            native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
+            native_kernel_library=getattr(args, "native_kernel_library", None),
+        )
+    if wants_example08(getattr(args, "example", None)) or is_example08_contract(getattr(args, "contract", None)):
+        return execute_example08_contract(
+            getattr(args, "input_value", None),
+            contract_path=getattr(args, "contract", None),
+            wfrog_path=getattr(args, "wfrog", None),
+            native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
+            native_kernel_library=getattr(args, "native_kernel_library", None),
+        )
+    if wants_example09(getattr(args, "example", None)) or is_example09_contract(getattr(args, "contract", None)):
+        return execute_example09_contract(
+            getattr(args, "input_value", None),
+            contract_path=getattr(args, "contract", None),
+            wfrog_path=getattr(args, "wfrog", None),
+            native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
+            native_kernel_library=getattr(args, "native_kernel_library", None),
+        )
+    if wants_example10(getattr(args, "example", None)) or is_example10_contract(getattr(args, "contract", None)):
+        return execute_example10_contract(
+            getattr(args, "input_value", None),
+            contract_path=getattr(args, "contract", None),
+            wfrog_path=getattr(args, "wfrog", None),
+            native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
+            native_kernel_library=getattr(args, "native_kernel_library", None),
+        )
+    if wants_example11(getattr(args, "example", None)) or is_example11_contract(getattr(args, "contract", None)):
+        return execute_example11_contract(
+            getattr(args, "input_value", None),
+            contract_path=getattr(args, "contract", None),
+            wfrog_path=getattr(args, "wfrog", None),
+            native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
+            native_kernel_library=getattr(args, "native_kernel_library", None),
+        )
+    if wants_example12(getattr(args, "example", None)) or is_example12_contract(getattr(args, "contract", None)):
+        return execute_example12_contract(
+            getattr(args, "input_value", None),
+            contract_path=getattr(args, "contract", None),
+            wfrog_path=getattr(args, "wfrog", None),
+            native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
+            native_kernel_library=getattr(args, "native_kernel_library", None),
+        )
+    if wants_example13(getattr(args, "example", None)) or is_example13_contract(getattr(args, "contract", None)):
+        return execute_example13_contract(
+            getattr(args, "input_value", None),
+            contract_path=getattr(args, "contract", None),
+            wfrog_path=getattr(args, "wfrog", None),
+            native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
+            native_kernel_library=getattr(args, "native_kernel_library", None),
+        )
+    if wants_example14(getattr(args, "example", None)) or is_example14_contract(getattr(args, "contract", None)):
+        return execute_example14_contract(
+            getattr(args, "input_value", None),
+            contract_path=getattr(args, "contract", None),
+            wfrog_path=getattr(args, "wfrog", None),
+            native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
+            native_kernel_library=getattr(args, "native_kernel_library", None),
+        )
+    if wants_example15(getattr(args, "example", None)) or is_example15_contract(getattr(args, "contract", None)):
+        return execute_example15_contract(
+            getattr(args, "input_value", None),
+            contract_path=getattr(args, "contract", None),
+            wfrog_path=getattr(args, "wfrog", None),
+            native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
+            native_kernel_library=getattr(args, "native_kernel_library", None),
+        )
+    if getattr(args, "native_kernel_manifest", None) is not None and getattr(args, "native_kernel_library", None) is not None:
+        bridge = load_native_kernel_bridge(args.native_kernel_manifest, args.native_kernel_library)
+        runtime = Slice05RuntimeCore(
+            contract_path=getattr(args, "contract", None) or default_contract_path(),
+            wfrog_path=getattr(args, "wfrog", None) or default_wfrog_path(),
+        )
+        return runtime.execute_with_native_kernel_bridge(
+            bridge,
+            control_value=int(getattr(args, "input_value", None) or 3),
+        )
+    return execute_contract(
+        int(getattr(args, "input_value", None) or 3),
+        contract_path=getattr(args, "contract", None) or default_contract_path(),
+        wfrog_path=getattr(args, "wfrog", None) or default_wfrog_path(),
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Python reference runtime family for published FROG examples.")
     subparsers = parser.add_subparsers(dest="command", required=False)
@@ -339,102 +438,7 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.command in {None, "run"}:
-        if wants_example06(getattr(args, "example", None)) or is_example06_contract(getattr(args, "contract", None)):
-            artifact = execute_example06_contract(
-                getattr(args, "input_value", None),
-                contract_path=getattr(args, "contract", None),
-                wfrog_path=getattr(args, "wfrog", None),
-                native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
-                native_kernel_library=getattr(args, "native_kernel_library", None),
-            )
-        elif wants_example07(getattr(args, "example", None)) or is_example07_contract(getattr(args, "contract", None)):
-            artifact = execute_example07_contract(
-                getattr(args, "input_value", None),
-                contract_path=getattr(args, "contract", None),
-                wfrog_path=getattr(args, "wfrog", None),
-                native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
-                native_kernel_library=getattr(args, "native_kernel_library", None),
-            )
-        elif wants_example08(getattr(args, "example", None)) or is_example08_contract(getattr(args, "contract", None)):
-            artifact = execute_example08_contract(
-                getattr(args, "input_value", None),
-                contract_path=getattr(args, "contract", None),
-                wfrog_path=getattr(args, "wfrog", None),
-                native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
-                native_kernel_library=getattr(args, "native_kernel_library", None),
-            )
-        elif wants_example09(getattr(args, "example", None)) or is_example09_contract(getattr(args, "contract", None)):
-            artifact = execute_example09_contract(
-                getattr(args, "input_value", None),
-                contract_path=getattr(args, "contract", None),
-                wfrog_path=getattr(args, "wfrog", None),
-                native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
-                native_kernel_library=getattr(args, "native_kernel_library", None),
-            )
-        elif wants_example10(getattr(args, "example", None)) or is_example10_contract(getattr(args, "contract", None)):
-            artifact = execute_example10_contract(
-                getattr(args, "input_value", None),
-                contract_path=getattr(args, "contract", None),
-                wfrog_path=getattr(args, "wfrog", None),
-                native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
-                native_kernel_library=getattr(args, "native_kernel_library", None),
-            )
-        elif wants_example11(getattr(args, "example", None)) or is_example11_contract(getattr(args, "contract", None)):
-            artifact = execute_example11_contract(
-                getattr(args, "input_value", None),
-                contract_path=getattr(args, "contract", None),
-                wfrog_path=getattr(args, "wfrog", None),
-                native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
-                native_kernel_library=getattr(args, "native_kernel_library", None),
-            )
-        elif wants_example12(getattr(args, "example", None)) or is_example12_contract(getattr(args, "contract", None)):
-            artifact = execute_example12_contract(
-                getattr(args, "input_value", None),
-                contract_path=getattr(args, "contract", None),
-                wfrog_path=getattr(args, "wfrog", None),
-                native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
-                native_kernel_library=getattr(args, "native_kernel_library", None),
-            )
-        elif wants_example13(getattr(args, "example", None)) or is_example13_contract(getattr(args, "contract", None)):
-            artifact = execute_example13_contract(
-                getattr(args, "input_value", None),
-                contract_path=getattr(args, "contract", None),
-                wfrog_path=getattr(args, "wfrog", None),
-                native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
-                native_kernel_library=getattr(args, "native_kernel_library", None),
-            )
-        elif wants_example14(getattr(args, "example", None)) or is_example14_contract(getattr(args, "contract", None)):
-            artifact = execute_example14_contract(
-                getattr(args, "input_value", None),
-                contract_path=getattr(args, "contract", None),
-                wfrog_path=getattr(args, "wfrog", None),
-                native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
-                native_kernel_library=getattr(args, "native_kernel_library", None),
-            )
-        elif wants_example15(getattr(args, "example", None)) or is_example15_contract(getattr(args, "contract", None)):
-            artifact = execute_example15_contract(
-                getattr(args, "input_value", None),
-                contract_path=getattr(args, "contract", None),
-                wfrog_path=getattr(args, "wfrog", None),
-                native_kernel_manifest=getattr(args, "native_kernel_manifest", None),
-                native_kernel_library=getattr(args, "native_kernel_library", None),
-            )
-        elif args.native_kernel_manifest is not None and args.native_kernel_library is not None:
-            bridge = load_native_kernel_bridge(args.native_kernel_manifest, args.native_kernel_library)
-            runtime = Slice05RuntimeCore(
-                contract_path=getattr(args, "contract", None) or default_contract_path(),
-                wfrog_path=getattr(args, "wfrog", None) or default_wfrog_path(),
-            )
-            artifact = runtime.execute_with_native_kernel_bridge(
-                bridge,
-                control_value=int(getattr(args, "input_value", None) or 3),
-            )
-        else:
-            artifact = execute_contract(
-                int(getattr(args, "input_value", None) or 3),
-                contract_path=getattr(args, "contract", None) or default_contract_path(),
-                wfrog_path=getattr(args, "wfrog", None) or default_wfrog_path(),
-            )
+        artifact = execute_contract_runtime(args)
         print(json.dumps(artifact, indent=2))
         return 0
 

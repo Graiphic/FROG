@@ -10,6 +10,7 @@ import webbrowser
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Dict, Optional
 
 try:
@@ -352,8 +353,27 @@ def css_px(value: int | float) -> str:
     return f"{int(round(float(value)))}px"
 
 
+def css_px_compact(value: int | float) -> str:
+    text = f"{float(value):.3f}".rstrip("0").rstrip(".")
+    return f"{text}px"
+
+
+def css_px_number_from_length(value: object) -> float | None:
+    text = str(value if value is not None else "").strip()
+    if not re.fullmatch(r"[0-9]+(\.[0-9]+)?px", text):
+        return None
+    try:
+        return float(text[:-2])
+    except ValueError:
+        return None
+
+
 def css_percent(value: int | float) -> str:
     return f"{float(value):.6g}%"
+
+
+def svg_number(value: int | float) -> str:
+    return f"{float(value):.6g}"
 
 
 def pct(value: float, total: float) -> float:
@@ -372,6 +392,24 @@ def svg_attribute(svg: str, element_id: str, attribute: str) -> str | None:
 
 def svg_attribute_float(svg: str, element_id: str, attribute: str, fallback: float) -> float:
     value = svg_attribute(svg, element_id, attribute)
+    if value is None:
+        return fallback
+    try:
+        return float(value)
+    except ValueError:
+        return fallback
+
+
+def svg_part_attribute(svg: str, part: str, attribute: str) -> str | None:
+    tag_match = re.search(rf"<[^>]*\bdata-frog-part=[\"']{re.escape(part)}[\"'][^>]*>", svg)
+    if not tag_match:
+        return None
+    attr_match = re.search(rf"\b{re.escape(attribute)}=[\"']([^\"']*)[\"']", tag_match.group(0))
+    return attr_match.group(1) if attr_match else None
+
+
+def svg_part_attribute_float(svg: str, part: str, attribute: str, fallback: float) -> float:
+    value = svg_part_attribute(svg, part, attribute)
     if value is None:
         return fallback
     try:
@@ -402,6 +440,34 @@ def svg_child_rect_attribute_float(svg: str, group_id: str, attribute: str, fall
         return float(value)
     except ValueError:
         return fallback
+
+
+def scoped_inline_svg_asset(asset_path: Path, widget_id: str, force_non_uniform_scaling: bool = False) -> str:
+    svg = asset_path.read_text(encoding="utf-8")
+    if force_non_uniform_scaling and "preserveAspectRatio" not in svg[:256]:
+        svg = re.sub(r"<svg\b([^>]*)>", r"<svg\1 preserveAspectRatio='none'>", svg, count=1)
+    return svg
+
+
+def numeric_crop_bounds_for_part(widget_state: Any, geometry: dict[str, float], crop_part: str) -> dict[str, float] | None:
+    if crop_part != "placement_bounds":
+        return None
+    asset_path = getattr(widget_state, "asset_path", None)
+    if asset_path is not None and asset_path.exists():
+        svg = asset_path.read_text(encoding="utf-8")
+        x = svg_part_attribute_float(svg, "placement_bounds", "x", 0.0)
+        y = svg_part_attribute_float(svg, "placement_bounds", "y", 0.0)
+        width = svg_part_attribute_float(svg, "placement_bounds", "width", geometry["view_width"])
+        height = svg_part_attribute_float(svg, "placement_bounds", "height", geometry["view_height"])
+        return {
+            "x": x,
+            "y": y,
+            "width": max(width, 1.0),
+            "height": max(height, 1.0),
+            "view_width": geometry["view_width"],
+            "view_height": geometry["view_height"],
+        }
+    return None
 
 
 def load_numeric_svg_geometry(asset_path: Path | None) -> dict[str, float]:
@@ -1536,6 +1602,7 @@ class EnumRuntimeCore:
             "caption.text": props.get("caption.text", widget_id),
             "items": enum_items_from_props(props, widget_id),
             "asset_ref": visual.get("asset_ref"),
+            "popup_asset_ref": visual.get("popup_asset_ref"),
             "realization.variant": props.get("realization.variant", "rectangular_ring"),
         }
         for key in [
@@ -1552,6 +1619,7 @@ class EnumRuntimeCore:
             "display.increment_buttons_visible",
             "display.selector_visible",
             "display.text_overflow_visible",
+            "data_entry.increment_wrap",
             "style.scale.reference_width",
             "style.scale.reference_height",
             "style.frame.fill_color",
@@ -1570,6 +1638,15 @@ class EnumRuntimeCore:
             "style.value_display.vertical_offset_mode",
             "style.value_display.padding_inline",
             "style.value_display.padding_inline_mode",
+            "style.increment_button.fill_color.normal",
+            "style.increment_button.fill_color.hover",
+            "style.increment_button.fill_color.pressed",
+            "style.increment_button.border_color.normal",
+            "style.increment_button.border_color.hover",
+            "style.increment_button.border_color.pressed",
+            "style.increment_button.symbol_color.normal",
+            "style.increment_button.symbol_color.hover",
+            "style.increment_button.symbol_color.pressed",
             "style.selector_face.fill_color",
             "style.selector_face.fill_color.hover",
             "style.selector_face.border_color",
@@ -1783,10 +1860,16 @@ def load_enum_svg_geometry(asset_path: Path | None) -> dict[str, float]:
         "value_face_y": 82.0,
         "value_face_width": 214.0,
         "value_face_height": 28.0,
-        "selector_face_x": 246.0,
-        "selector_face_y": 82.0,
-        "selector_face_width": 24.0,
-        "selector_face_height": 28.0,
+        "increment_up_x": 246.0,
+        "increment_up_y": 82.0,
+        "increment_up_width": 30.0,
+        "increment_up_height": 13.0,
+        "increment_down_x": 246.0,
+        "increment_down_y": 97.0,
+        "increment_down_width": 30.0,
+        "increment_down_height": 13.0,
+        "state_text_x": 80.0,
+        "state_text_y": 48.0,
     }
     if asset_path is None or not asset_path.exists():
         return geometry
@@ -1805,14 +1888,20 @@ def load_enum_svg_geometry(asset_path: Path | None) -> dict[str, float]:
                 pass
     geometry["caption_x"] = svg_attribute_float(svg, "caption_text", "x", geometry["caption_x"])
     geometry["caption_y"] = svg_attribute_float(svg, "caption_text", "y", geometry["caption_y"])
+    geometry["state_text_x"] = svg_part_attribute_float(svg, "state_text", "x", geometry["state_text_x"])
+    geometry["state_text_y"] = svg_part_attribute_float(svg, "state_text", "y", geometry["state_text_y"])
     geometry["value_face_x"] = svg_attribute_float(svg, "value_face", "x", geometry["value_face_x"])
     geometry["value_face_y"] = svg_attribute_float(svg, "value_face", "y", geometry["value_face_y"])
     geometry["value_face_width"] = svg_attribute_float(svg, "value_face", "width", geometry["value_face_width"])
     geometry["value_face_height"] = svg_attribute_float(svg, "value_face", "height", geometry["value_face_height"])
-    geometry["selector_face_x"] = svg_attribute_float(svg, "selector_face", "x", geometry["selector_face_x"])
-    geometry["selector_face_y"] = svg_attribute_float(svg, "selector_face", "y", geometry["selector_face_y"])
-    geometry["selector_face_width"] = svg_attribute_float(svg, "selector_face", "width", geometry["selector_face_width"])
-    geometry["selector_face_height"] = svg_attribute_float(svg, "selector_face", "height", geometry["selector_face_height"])
+    geometry["increment_up_x"] = svg_child_rect_attribute_float(svg, "increment_up", "x", geometry["increment_up_x"])
+    geometry["increment_up_y"] = svg_child_rect_attribute_float(svg, "increment_up", "y", geometry["increment_up_y"])
+    geometry["increment_up_width"] = svg_child_rect_attribute_float(svg, "increment_up", "width", geometry["increment_up_width"])
+    geometry["increment_up_height"] = svg_child_rect_attribute_float(svg, "increment_up", "height", geometry["increment_up_height"])
+    geometry["increment_down_x"] = svg_child_rect_attribute_float(svg, "increment_down", "x", geometry["increment_down_x"])
+    geometry["increment_down_y"] = svg_child_rect_attribute_float(svg, "increment_down", "y", geometry["increment_down_y"])
+    geometry["increment_down_width"] = svg_child_rect_attribute_float(svg, "increment_down", "width", geometry["increment_down_width"])
+    geometry["increment_down_height"] = svg_child_rect_attribute_float(svg, "increment_down", "height", geometry["increment_down_height"])
     return geometry
 
 
@@ -1824,13 +1913,78 @@ def svg_dropdown_style(x: float, y: float, width: float, height: float, geometry
     )
 
 
+def load_enum_dropdown_svg_geometry() -> dict[str, Any]:
+    return {
+        "panel_part": "list_panel",
+        "option_row_part": "option_row",
+        "option_text_part": "option_text",
+        "panel_x": 0.5,
+        "panel_y": 0.5,
+        "option_row_x": 1.0,
+        "option_row_y": 1.0,
+        "option_row_height": 28.0,
+    }
+
+
+def render_enum_dropdown_panel_skin(
+    popup_asset_ref: object,
+    geometry: dict[str, Any],
+    item_count: int,
+    option_height: float,
+    dropdown_width: float,
+    *,
+    border_only: bool = False,
+) -> str:
+    row_count = max(1, item_count)
+    view_height = max(float(geometry["panel_y"]) * 2.0 + (row_count * option_height), option_height)
+    panel_height = max(0.0, view_height - (float(geometry["panel_y"]) * 2.0))
+    panel_width = max(0.0, dropdown_width - (float(geometry["panel_x"]) * 2.0))
+    source = str(popup_asset_ref) if popup_asset_ref else "runtime:fallback"
+    classes = "enum-dropdown-panel-skin enum-dropdown-border-skin" if border_only else "enum-dropdown-panel-skin"
+    fill = "none" if border_only else "var(--frog-enum-dropdown-fill)"
+    return (
+        f"<svg class='{classes}' aria-hidden='true' data-frog-template-source='{html.escape(source)}'"
+        " data-frog-host-surface='dropdown'"
+        " preserveAspectRatio='none'"
+        f" viewBox='0 0 {svg_number(dropdown_width)} {svg_number(view_height)}'>"
+        "<g data-frog-part='root'>"
+        f"<rect data-frog-part='{html.escape(str(geometry['panel_part']))}'"
+        f" x='{svg_number(float(geometry['panel_x']))}' y='{svg_number(float(geometry['panel_y']))}'"
+        f" width='{svg_number(panel_width)}' height='{svg_number(panel_height)}'"
+        f" style='fill:{fill};stroke:var(--frog-enum-dropdown-border);stroke-width:var(--frog-enum-dropdown-border-width);vector-effect:non-scaling-stroke;'/>"
+        "</g></svg>"
+    )
+
+
+def render_enum_dropdown_option_skin(
+    popup_asset_ref: object,
+    item: dict[str, Any],
+    geometry: dict[str, Any],
+    option_height: float,
+    dropdown_width: float,
+) -> str:
+    source = str(popup_asset_ref) if popup_asset_ref else "runtime:fallback"
+    return (
+        f"<svg class='enum-dropdown-option-skin' aria-hidden='true' data-frog-template-source='{html.escape(source)}'"
+        " data-frog-host-surface='dropdown'"
+        " preserveAspectRatio='none'"
+        f" viewBox='0 0 {svg_number(dropdown_width)} {svg_number(option_height)}'>"
+        f"<g data-frog-part='root' data-enum-value='{html.escape(str(item['id']))}'>"
+        f"<rect data-frog-part='{html.escape(str(geometry['option_row_part']))}'"
+        f" x='{svg_number(float(geometry['option_row_x']))}' y='0'"
+        f" width='{svg_number(max(0.0, dropdown_width - (float(geometry['option_row_x']) * 2.0)))}'"
+        f" height='{svg_number(option_height)}' style='fill:var(--frog-enum-dropdown-option-current-fill);'/>"
+        "</g></svg>"
+    )
+
+
 def render_enum_skin(asset_path: Path | None, runtime: dict[str, Any]) -> str:
     if asset_path is None or not asset_path.exists():
         return "<div class='enum-skin missing-skin'></div>"
     frame_stroke = safe_css_color(runtime.get("style.frame.border_color"), "transparent")
     frame_stroke_width = safe_css_length(runtime.get("style.frame.border_width"), "0px")
     frame_visible = frame_stroke != "transparent" and frame_stroke_width not in {"0", "0px"}
-    selector_visible = runtime_bool(runtime, "display.selector_visible", True)
+    selector_visible = runtime_bool(runtime, "display.selector_visible", False)
     style = (
         "--frog-enum-label-display:none;"
         "--frog-enum-caption-display:none;"
@@ -1854,6 +2008,96 @@ def render_enum_skin(asset_path: Path | None, runtime: dict[str, Any]) -> str:
     return f"<div class='enum-skin' aria-hidden='true' style='{style}'>{asset_path.read_text(encoding='utf-8')}</div>"
 
 
+def artifact_links_css() -> str:
+    return """.artifact-links{margin-top:14px;display:grid;gap:8px;max-width:820px;}
+.artifact-links h2{margin:0;font-size:15px;color:#102a43;}
+.artifact-links-note{margin:0;color:#52606d;font-size:12px;line-height:1.35;}
+.artifact-file{border:1px solid #d9e2ec;background:#ffffff;}
+.artifact-file summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;cursor:pointer;list-style:none;}
+.artifact-file summary::-webkit-details-marker{display:none;}
+.artifact-file-title{display:grid;gap:2px;min-width:0;}
+.artifact-file-name{font-size:13px;font-weight:700;color:#102a43;line-height:1.25;}
+.artifact-file-description{font-size:12px;line-height:1.35;color:#52606d;}
+.artifact-raw-link{font-size:12px;color:#0b63ce;text-decoration:underline;}
+.artifact-file pre{margin:0;border-top:1px solid #d9e2ec;background:#0f172a;color:#dbeafe;padding:12px;max-height:420px;overflow:auto;font-size:12px;line-height:1.45;tab-size:2;}
+.artifact-file code{font-family:Consolas,'Cascadia Mono','Courier New',monospace;white-space:pre;}
+.artifact-load-error code{color:#fecdd3;}"""
+
+
+def artifact_links_html() -> str:
+    return """<section class="artifact-links" aria-label="Source and execution artifacts">
+<h2>Source and execution artifacts</h2>
+<p class="artifact-links-note">Closed by default. Open an artifact to inspect its formatted contents in place; the raw route remains available.</p>
+<details class="artifact-file" data-artifact-url="/state.json"><summary><span class="artifact-file-title"><span class="artifact-file-name">state.json</span><span class="artifact-file-description">Runtime snapshot: public values, consumed assets, native manifest state, and widget diagnostics.</span></span><a class="artifact-raw-link" href="/state.json" onclick="event.stopPropagation()">raw</a></summary><pre><code>Open to load...</code></pre></details>
+<details class="artifact-file" data-artifact-url="/main.frog"><summary><span class="artifact-file-title"><span class="artifact-file-name">main.frog</span><span class="artifact-file-description">Canonical .frog source: diagram logic, front-panel instances, layout, bindings, labels, and instance visual overrides.</span></span><a class="artifact-raw-link" href="/main.frog" onclick="event.stopPropagation()">raw</a></summary><pre><code>Open to load...</code></pre></details>
+<details class="artifact-file" data-artifact-url="/panel.wfrog"><summary><span class="artifact-file-title"><span class="artifact-file-name">panel.wfrog</span><span class="artifact-file-description">Example .wfrog package: realization references, Default asset ids, and host capabilities.</span></span><a class="artifact-raw-link" href="/panel.wfrog" onclick="event.stopPropagation()">raw</a></summary><pre><code>Open to load...</code></pre></details>
+<details class="artifact-file" data-artifact-url="/main.fir.json"><summary><span class="artifact-file-title"><span class="artifact-file-name">main.fir.json</span><span class="artifact-file-description">FIR view derived from the .frog source.</span></span><a class="artifact-raw-link" href="/main.fir.json" onclick="event.stopPropagation()">raw</a></summary><pre><code>Open to load...</code></pre></details>
+<details class="artifact-file" data-artifact-url="/main.lowering.json"><summary><span class="artifact-file-title"><span class="artifact-file-name">main.lowering.json</span><span class="artifact-file-description">Lowering view consumed by the backend/native manifest corridor.</span></span><a class="artifact-raw-link" href="/main.lowering.json" onclick="event.stopPropagation()">raw</a></summary><pre><code>Open to load...</code></pre></details>
+</section>
+<script>
+(function(){
+  const connect = () => document.querySelectorAll('details[data-artifact-url]').forEach((details) => {
+    if (details.dataset.connected === 'true') return;
+    details.dataset.connected = 'true';
+    details.addEventListener('toggle', async () => {
+      if (!details.open || details.dataset.loaded === 'true') return;
+      const code = details.querySelector('code');
+      code.textContent = 'Loading...';
+      try {
+        const response = await fetch(details.dataset.artifactUrl, {cache:'no-store'});
+        const text = await response.text();
+        if (!response.ok) throw new Error(response.status + ' ' + text);
+        code.textContent = text;
+        details.dataset.loaded = 'true';
+      } catch (error) {
+        details.classList.add('artifact-load-error');
+        code.textContent = String(error);
+      }
+    });
+  });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', connect); else connect();
+})();
+</script>"""
+
+
+def source_path_from_contract(contract: dict[str, Any]) -> Path:
+    source_ref = contract.get("source_ref", {})
+    source_path = source_ref.get("path") if isinstance(source_ref, dict) else None
+    if not isinstance(source_path, str) or not source_path:
+        raise RuntimeError("Runtime contract must expose source_ref.path before serving source artifacts.")
+    candidate = Path(source_path)
+    return candidate.resolve() if candidate.is_absolute() else (repo_root() / candidate).resolve()
+
+
+def maybe_serve_example_artifact(handler: BaseHTTPRequestHandler, frog_source_path: Path, wfrog_path: Path) -> bool:
+    path = urllib.parse.urlparse(handler.path).path
+    if path == "/main.frog":
+        artifact_path = frog_source_path
+    elif path == "/panel.wfrog":
+        artifact_path = wfrog_path
+    elif path == "/main.fir.json":
+        artifact_path = frog_source_path.parent / "main.fir.json"
+    elif path == "/main.lowering.json":
+        artifact_path = frog_source_path.parent / "main.lowering.json"
+    else:
+        return False
+    if not artifact_path.exists():
+        body = b"missing source artifact"
+        handler.send_response(404)
+        handler.send_header("Content-Type", "text/plain; charset=utf-8")
+        handler.send_header("Content-Length", str(len(body)))
+        handler.end_headers()
+        handler.wfile.write(body)
+        return True
+    body = artifact_path.read_bytes()
+    handler.send_response(200)
+    handler.send_header("Content-Type", "application/json; charset=utf-8")
+    handler.send_header("Content-Length", str(len(body)))
+    handler.end_headers()
+    handler.wfile.write(body)
+    return True
+
+
 def render_enum_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
     layout = widget["layout"]
     runtime = widget["runtime"]
@@ -1862,7 +2106,10 @@ def render_enum_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
     items = runtime.get("items", [])
     selected_id = runtime_string(runtime, "value", "")
     selected = enum_item_by_id(items, selected_id, f"{widget['widget_id']}.value")
-    selector_visible = runtime_bool(runtime, "display.selector_visible", is_control)
+    selector_visible = runtime_bool(runtime, "display.selector_visible", False)
+    increment_buttons_visible = runtime_bool(runtime, "display.increment_buttons_visible", False)
+    increment_wrap = runtime_bool(runtime, "data_entry.increment_wrap", True)
+    dropdown_geometry = load_enum_dropdown_svg_geometry()
 
     value_style = svg_box_style(
         geometry["value_face_x"],
@@ -1871,11 +2118,18 @@ def render_enum_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
         geometry["value_face_height"],
         geometry,
     )
-    selector_style = svg_box_style(
-        geometry["selector_face_x"],
-        geometry["selector_face_y"],
-        geometry["selector_face_width"],
-        geometry["selector_face_height"],
+    increment_up_style = svg_box_style(
+        geometry["increment_up_x"],
+        geometry["increment_up_y"],
+        geometry["increment_up_width"],
+        geometry["increment_up_height"],
+        geometry,
+    )
+    increment_down_style = svg_box_style(
+        geometry["increment_down_x"],
+        geometry["increment_down_y"],
+        geometry["increment_down_width"],
+        geometry["increment_down_height"],
         geometry,
     )
     dropdown_style = svg_dropdown_style(
@@ -1888,19 +2142,24 @@ def render_enum_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
     text_color = html.escape(safe_css_color(runtime.get("style.value_display.color"), "#111827"))
     text_size = html.escape(safe_css_length(runtime.get("style.value_display.font_size"), "16px"))
     text_weight = html.escape(safe_css_font_weight(runtime.get("style.value_display.font_weight"), "400"))
-    text_offset = html.escape(safe_css_length(runtime.get("style.value_display.vertical_offset"), "0px"))
+    text_offset = html.escape(safe_css_signed_length(runtime.get("style.value_display.vertical_offset"), "0px"))
     text_padding = html.escape(safe_css_length(runtime.get("style.value_display.padding_inline"), "8px"))
     selector_fill = safe_css_color(runtime.get("style.selector_face.fill_color"), "#f1f5f9")
     selector_stroke = safe_css_color(runtime.get("style.selector_face.border_color"), "#64748b")
     selector_symbol = safe_css_color(runtime.get("style.selector_face.symbol_color"), "#111827")
     dropdown_option_font_size = safe_css_length(runtime.get("style.dropdown.option.font_size"), text_size)
+    dropdown_option_height = safe_css_length(runtime.get("style.dropdown.option.height"), "28px")
+    dropdown_option_height_value = css_px_number_from_length(dropdown_option_height) or float(dropdown_geometry["option_row_height"])
+    dropdown_width_value = float(geometry["value_face_width"])
     attrs = (
         f" data-widget-id='{html.escape(widget['widget_id'])}'"
         f" data-class-ref='{html.escape(widget['class_ref'])}'"
         f" data-role='{html.escape(widget['role'])}'"
         " data-frog-visual-law='wfrog-realization-state-map'"
         f" data-frog-selector-visible='{'true' if selector_visible else 'false'}'"
+        f" data-frog-increment-buttons-visible='{'true' if increment_buttons_visible else 'false'}'"
         f" data-asset-route='{html.escape(asset_url(runtime.get('asset_ref')))}'"
+        f" data-popup-asset-route='{html.escape(asset_url(runtime.get('popup_asset_ref')))}'"
     )
     style = (
         f"position:absolute;left:{layout['x']}px;top:{layout['y']}px;width:{layout['width']}px;height:{layout['height']}px;"
@@ -1934,7 +2193,17 @@ def render_enum_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
         f"--frog-enum-dropdown-option-font-weight:{html.escape(safe_css_font_weight(runtime.get('style.dropdown.option.font_weight'), '400'))};"
         f"--frog-enum-dropdown-option-font-style:{html.escape(safe_css_font_style(runtime.get('style.dropdown.option.font_style'), 'normal'))};"
         f"--frog-enum-dropdown-option-padding-inline:{html.escape(safe_css_length(runtime.get('style.dropdown.option.padding_inline'), text_padding))};"
-        f"--frog-enum-dropdown-option-height:{html.escape(safe_css_length(runtime.get('style.dropdown.option.height'), '28px'))};"
+        f"--frog-enum-dropdown-option-height:{html.escape(dropdown_option_height)};"
+        f"--frog-enum-spinner-display:{'inline' if increment_buttons_visible else 'none'};"
+        f"--frog-enum-spinner-fill:{html.escape(safe_css_color(runtime.get('style.increment_button.fill_color.normal'), '#edf2f7'))};"
+        f"--frog-enum-spinner-fill-hover:{html.escape(safe_css_color(runtime.get('style.increment_button.fill_color.hover'), '#dbeafe'))};"
+        f"--frog-enum-spinner-fill-pressed:{html.escape(safe_css_color(runtime.get('style.increment_button.fill_color.pressed'), '#bfdbfe'))};"
+        f"--frog-enum-spinner-border:{html.escape(safe_css_color(runtime.get('style.increment_button.border_color.normal'), '#94a3b8'))};"
+        f"--frog-enum-spinner-border-hover:{html.escape(safe_css_color(runtime.get('style.increment_button.border_color.hover'), '#64748b'))};"
+        f"--frog-enum-spinner-border-pressed:{html.escape(safe_css_color(runtime.get('style.increment_button.border_color.pressed'), '#2563eb'))};"
+        f"--frog-enum-spinner-symbol:{html.escape(safe_css_color(runtime.get('style.increment_button.symbol_color.normal'), '#334e68'))};"
+        f"--frog-enum-spinner-symbol-hover:{html.escape(safe_css_color(runtime.get('style.increment_button.symbol_color.hover'), '#1d4ed8'))};"
+        f"--frog-enum-spinner-symbol-pressed:{html.escape(safe_css_color(runtime.get('style.increment_button.symbol_color.pressed'), '#1e40af'))};"
     )
     caption = html.escape(runtime_string(runtime, "caption.text", widget["widget_id"]))
     caption_overlay = (
@@ -1957,8 +2226,12 @@ def render_enum_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
             )
             dropdown_options.append(
                 "<button type='button' class='enum-dropdown-option' role='option'"
-                f" data-enum-value='{html.escape(item['id'])}' aria-selected='{'true' if is_selected else 'false'}'{disabled}"
-                f" onclick=\"frogSelectEnumOption(this,'{value_id}','{display_id}','{dropdown_id}')\">{html.escape(item['text'])}</button>"
+                f" data-frog-part='option_row' data-enum-value='{html.escape(item['id'])}'"
+                f" data-enum-text='{html.escape(item['text'])}' aria-label='{html.escape(item['text'])}'"
+                f" aria-selected='{'true' if is_selected else 'false'}'{disabled}"
+                f" onclick=\"frogSelectEnumOption(this,'{value_id}','{display_id}','{dropdown_id}')\">"
+                f"{render_enum_dropdown_option_skin(runtime.get('popup_asset_ref'), item, dropdown_geometry, dropdown_option_height_value, dropdown_width_value)}"
+                f"<span class='enum-dropdown-option-label' data-frog-part='option_text'>{html.escape(item['text'])}</span></button>"
             )
         value_overlay = (
             f"<button id='{display_id}' type='button' class='enum-value-display-overlay enum-display-button'"
@@ -1967,23 +2240,37 @@ def render_enum_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
             f" onclick=\"frogToggleEnumDropdown('{dropdown_id}','{display_id}')\""
             f" style='{value_style}color:{text_color};font-size:{text_size};font-weight:{text_weight};--frog-enum-text-vertical-offset:{text_offset};'>{html.escape(selected['text'])}</button>"
         )
-        selector_overlay = ""
-        if selector_visible:
-            selector_overlay = (
-                "<button type='button' class='enum-selector-overlay enum-selector-button' data-frog-part='selector_face'"
-                f" aria-label='Open {caption}' aria-haspopup='listbox' aria-expanded='false' aria-controls='{dropdown_id}'"
-                f" onclick=\"frogToggleEnumDropdown('{dropdown_id}','{display_id}')\" style='{selector_style}'></button>"
+        step_overlays = ""
+        if increment_buttons_visible:
+            step_overlays = (
+                "<button type='button' class='enum-step-overlay enum-increment' data-frog-part='increment_up'"
+                " data-frog-method='increment' data-frog-button-state-law='normal-pressed'"
+                f" aria-label='Increment {caption}' onclick=\"frogStepEnum('{value_id}','{display_id}',1,{'true' if increment_wrap else 'false'})\""
+                f" style='{increment_up_style}'></button>"
+                "<button type='button' class='enum-step-overlay enum-decrement' data-frog-part='increment_down'"
+                " data-frog-method='decrement' data-frog-button-state-law='normal-pressed'"
+                f" aria-label='Decrement {caption}' onclick=\"frogStepEnum('{value_id}','{display_id}',-1,{'true' if increment_wrap else 'false'})\""
+                f" style='{increment_down_style}'></button>"
             )
         hidden_select = (
             f"<select id='{value_id}' name='mode_value' class='enum-select-state' data-frog-part='value_state'"
             f" aria-hidden='true' tabindex='-1' onchange=\"frogUpdateEnumDisplay(this,'{display_id}')\""
             f" oninput=\"frogUpdateEnumDisplay(this,'{display_id}')\" hidden>{''.join(options)}</select>"
         )
-        dropdown = f"<div id='{dropdown_id}' class='enum-dropdown' data-frog-part='dropdown' role='listbox' aria-label='{caption} options' hidden style='{dropdown_style}'>{''.join(dropdown_options)}</div>"
-        body = f"{skin}{caption_overlay}{value_overlay}{selector_overlay}{hidden_select}{dropdown}"
+        dropdown = (
+            f"<div id='{dropdown_id}' class='enum-dropdown' data-frog-part='list_panel'"
+            f" data-frog-host-surface='dropdown' data-popup-asset-route='{html.escape(asset_url(runtime.get('popup_asset_ref')))}'"
+            f" role='listbox' aria-label='{caption} options' hidden style='{dropdown_style}height:{css_px_compact(dropdown_option_height_value * max(1, len(items)))};'>"
+            f"{render_enum_dropdown_panel_skin(runtime.get('popup_asset_ref'), dropdown_geometry, len(items), dropdown_option_height_value, dropdown_width_value)}"
+            "<div class='enum-dropdown-options'>"
+            f"{''.join(dropdown_options)}</div>"
+            f"{render_enum_dropdown_panel_skin(runtime.get('popup_asset_ref'), dropdown_geometry, len(items), dropdown_option_height_value, dropdown_width_value, border_only=True)}"
+            "</div>"
+        )
+        body = f"{skin}{caption_overlay}{value_overlay}{step_overlays}{hidden_select}{dropdown}"
     else:
         body = (
-            f"{skin}{caption_overlay}<output class='enum-value-overlay enum-indicator-value'"
+            f"{skin}{caption_overlay}<output class='enum-value-display-overlay enum-indicator-value'"
             " data-frog-part='value_display' data-svg-anchor='value_display.left_center'"
             f" style='{value_style}color:{text_color};font-size:{text_size};font-weight:{text_weight};--frog-enum-text-vertical-offset:{text_offset};'>{html.escape(selected['text'])}</output>"
         )
@@ -1993,7 +2280,9 @@ def render_enum_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
 def render_boolean_widget(widget: dict[str, Any]) -> str:
     layout = widget["layout"]
     runtime = widget["runtime"]
-    geometry = {"view_width": 160.0, "view_height": 80.0, "caption_x": 8.0, "caption_y": 15.0}
+    asset_path_value = widget.get("asset_path") or runtime.get("asset_path")
+    asset_path = Path(str(asset_path_value)) if asset_path_value else None
+    geometry = load_numeric_svg_geometry(asset_path)
     is_control = widget["role"] == "control"
     value = bool(runtime["value"])
     visual_state = "true" if value else "false"
@@ -2003,24 +2292,31 @@ def render_boolean_widget(widget: dict[str, Any]) -> str:
     variant = runtime_string(runtime, "realization.variant", "circular" if widget["class_ref"].endswith("indicator") else "rectangular")
     next_value = "false" if value else "true"
     state_text_visible = runtime_bool(runtime, "state_text.visible", True)
-    frame_visible = runtime_bool(runtime, "style.frame.visible", True)
     focus_visible = runtime_bool(runtime, "style.focus_ring.visible", False)
+    source_crop_part = runtime_string(runtime, "realization.crop_part")
+    layout_bounds_ref = runtime_string(layout, "bounds_ref")
+    layout_origin = runtime_string(layout, "origin")
+    crop_part = source_crop_part or ("placement_bounds" if layout_bounds_ref == "placement_bounds" or layout_origin == "placement_bounds.top_left" else "")
+    crop_bounds = numeric_crop_bounds_for_part(
+        SimpleNamespace(asset_path=asset_path, properties=runtime, role=widget["role"]),
+        geometry,
+        crop_part,
+    )
 
-    false_fill = state_property(runtime, "style.inner.fill_color", "false", "#ffffff")
-    true_fill = state_property(runtime, "style.inner.fill_color", "true", "#8bd86f")
+    false_fill = state_property(runtime, "style.state_face.fill_color", "false", "#ffffff")
+    true_fill = state_property(runtime, "style.state_face.fill_color", "true", "#4A8DBC")
     state_fill = true_fill if value else false_fill
-    hover_fill = state_property(runtime, "style.inner.fill_color", hover_state, "#9be884" if value else "#eef6ff")
-    pressed_fill = state_property(runtime, "style.inner.fill_color", pressed_state, "#6fc657" if value else "#dbeafe")
-    false_border = state_property(runtime, "style.outer.border_color", "false", "#111827")
-    true_border = state_property(runtime, "style.outer.border_color", "true", "#184a24")
+    hover_fill = state_property(runtime, "style.state_face.fill_color", hover_state, "#5B9CC7" if value else "#f7fafc")
+    pressed_fill = state_property(runtime, "style.state_face.fill_color", pressed_state, "#3F7FA9" if value else "#e8edf2")
+    false_border = state_property(runtime, "style.state_face.border_color", "false", "#A8ABAE")
+    true_border = state_property(runtime, "style.state_face.border_color", "true", false_border)
     state_border = true_border if value else false_border
-    hover_border = state_property(runtime, "style.outer.border_color", hover_state, "#166534" if value else "#2563eb")
-    pressed_border = state_property(runtime, "style.outer.border_color", pressed_state, "#14532d" if value else "#1d4ed8")
-    false_inner_border = state_property(runtime, "style.inner.border_color", "false", false_border)
-    true_inner_border = state_property(runtime, "style.inner.border_color", "true", true_border)
-    state_inner_border = true_inner_border if value else false_inner_border
-    hover_inner_border = state_property(runtime, "style.inner.border_color", hover_state, hover_border)
-    pressed_inner_border = state_property(runtime, "style.inner.border_color", pressed_state, pressed_border)
+    false_hover_border = state_property(runtime, "style.state_face.border_color", "hover_false", "#8E9297")
+    true_hover_border = state_property(runtime, "style.state_face.border_color", "hover_true", "#8E9297")
+    hover_border = true_hover_border if value else false_hover_border
+    false_pressed_border = state_property(runtime, "style.state_face.border_color", "pressed_false", "#00ADEF")
+    true_pressed_border = state_property(runtime, "style.state_face.border_color", "pressed_true", "#00ADEF")
+    pressed_border = true_pressed_border if value else false_pressed_border
     false_text_color = state_property(runtime, "state_text.style.text_color", "false", "#111827")
     true_text_color = state_property(runtime, "state_text.style.text_color", "true", "#0b3d19")
     text_color = true_text_color if value else false_text_color
@@ -2035,13 +2331,8 @@ def render_boolean_widget(widget: dict[str, Any]) -> str:
     )
     text_size = safe_css_length(runtime.get("state_text.style.font_size"), "18px")
     text_weight = safe_css_font_weight(runtime.get("state_text.style.font_weight"), "400")
-
-    inner_left = runtime_string(runtime, "style.inner.left", "52px" if variant == "circular" else "18px")
-    inner_top = runtime_string(runtime, "style.inner.top", "23px" if variant == "circular" else "31px")
-    inner_width = runtime_string(runtime, "style.inner.width", "56px" if variant == "circular" else "124px")
-    inner_height = runtime_string(runtime, "style.inner.height", "56px" if variant == "circular" else "34px")
-    inner_border_width = safe_css_length(runtime.get("style.inner.border_width"), "2px")
-    focus_color = safe_css_color(runtime.get("style.focus_ring.color"), "#2563eb")
+    state_border_width = safe_css_length(runtime.get("style.state_face.border_width"), "1px")
+    focus_color = safe_css_color(runtime.get("style.focus_ring.color"), "#00ADEF")
     focus_width = safe_css_length(runtime.get("style.focus_ring.width"), "3px") if focus_visible else "0px"
     transition_ms = runtime_string(runtime, "style.transition.duration_ms", "120")
     transition_timing = runtime_string(runtime, "style.transition.timing", "ease-out")
@@ -2056,8 +2347,18 @@ def render_boolean_widget(widget: dict[str, Any]) -> str:
         f" data-current-value='{'true' if value else 'false'}'"
         f" data-frog-fill-false='{html.escape(false_fill)}'"
         f" data-frog-fill-true='{html.escape(true_fill)}'"
-        f" data-frog-inner-border-false='{html.escape(false_inner_border)}'"
-        f" data-frog-inner-border-true='{html.escape(true_inner_border)}'"
+        f" data-frog-hover-fill-false='{html.escape(state_property(runtime, 'style.state_face.fill_color', 'hover_false', '#f7fafc'))}'"
+        f" data-frog-hover-fill-true='{html.escape(state_property(runtime, 'style.state_face.fill_color', 'hover_true', '#5B9CC7'))}'"
+        f" data-frog-pressed-fill-false='{html.escape(state_property(runtime, 'style.state_face.fill_color', 'pressed_false', '#e8edf2'))}'"
+        f" data-frog-pressed-fill-true='{html.escape(state_property(runtime, 'style.state_face.fill_color', 'pressed_true', '#3F7FA9'))}'"
+        f" data-frog-state-border-false='{html.escape(false_border)}'"
+        f" data-frog-state-border-true='{html.escape(true_border)}'"
+        f" data-frog-hover-state-border-false='{html.escape(false_hover_border)}'"
+        f" data-frog-hover-state-border-true='{html.escape(true_hover_border)}'"
+        f" data-frog-pressed-state-border-false='{html.escape(false_pressed_border)}'"
+        f" data-frog-pressed-state-border-true='{html.escape(true_pressed_border)}'"
+        f" data-frog-inner-border-false='{html.escape(false_border)}'"
+        f" data-frog-inner-border-true='{html.escape(true_border)}'"
         f" data-frog-text-color-false='{html.escape(false_text_color)}'"
         f" data-frog-text-color-true='{html.escape(true_text_color)}'"
         f" data-frog-text-false='{html.escape(false_state_text)}'"
@@ -2069,40 +2370,77 @@ def render_boolean_widget(widget: dict[str, Any]) -> str:
         f" data-frog-pressed-state='{pressed_state}'"
         f" data-frog-transition-state='{transition_state}'"
         f" data-frog-state-text-visible='{'true' if state_text_visible else 'false'}'"
-        f" data-frog-frame-visible='{'true' if frame_visible else 'false'}'"
     )
+    if crop_part:
+        attrs += f" data-realization-crop-part='{html.escape(crop_part)}'"
+    if crop_part == "placement_bounds":
+        attrs += " data-layout-bounds-ref='placement_bounds'"
     style = (
         f"position:absolute;left:{layout['x']}px;top:{layout['y']}px;"
         f"width:{layout['width']}px;height:{layout['height']}px;"
         f"--boolean-fill:{state_fill};--boolean-hover-fill:{hover_fill};--boolean-pressed-fill:{pressed_fill};"
         f"--boolean-border:{state_border};--boolean-hover-border:{hover_border};--boolean-pressed-border:{pressed_border};"
-        f"--boolean-inner-border:{state_inner_border};--boolean-hover-inner-border:{hover_inner_border};--boolean-pressed-inner-border:{pressed_inner_border};"
-        f"--boolean-inner-left:{inner_left};--boolean-inner-top:{inner_top};--boolean-inner-width:{inner_width};--boolean-inner-height:{inner_height};"
-        f"--boolean-inner-border-width:{inner_border_width};"
+        f"--boolean-state-border:{state_border};--boolean-hover-state-border:{hover_border};--boolean-pressed-state-border:{pressed_border};"
+        f"--boolean-inner-border:{state_border};--boolean-hover-inner-border:{hover_border};--boolean-pressed-inner-border:{pressed_border};"
+        f"--boolean-state-border-width:{state_border_width};"
         f"--boolean-text:{text_color};--boolean-text-font-size:{text_size};--boolean-text-font-weight:{text_weight};"
         f"--boolean-caption-color:{caption_color};--boolean-caption-font-size:{caption_size};--boolean-caption-font-weight:{caption_weight};--boolean-caption-font-family:{caption_family};"
         f"--boolean-focus-color:{focus_color};--boolean-focus-width:{focus_width};"
         f"--boolean-transition:{transition_ms}ms {transition_timing};--boolean-pressed-inset:{pressed_inset};"
     )
-    skin = (
-        f"<span class='boolean-state-face' data-frog-part='inner_face' aria-hidden='true'></span>"
-        f"<img class='boolean-skin' src='{html.escape(asset_url(runtime.get('asset_ref')))}' alt='' aria-hidden='true'>"
-    )
+    if crop_bounds is not None:
+        scale_x = float(layout_int(layout, "width", 160)) / crop_bounds["width"] if crop_bounds["width"] > 0 else 1.0
+        scale_y = float(layout_int(layout, "height", 80)) / crop_bounds["height"] if crop_bounds["height"] > 0 else 1.0
+        style += (
+            f"--frog-boolean-svg-left:{css_px_compact(-crop_bounds['x'] * scale_x)};"
+            f"--frog-boolean-svg-top:{css_px_compact(-crop_bounds['y'] * scale_y)};"
+            f"--frog-boolean-svg-width:{css_px_compact(crop_bounds['view_width'] * scale_x)};"
+            f"--frog-boolean-svg-height:{css_px_compact(crop_bounds['view_height'] * scale_y)};"
+        )
+    if asset_path is not None and asset_path.exists():
+        skin = f"<div class='boolean-skin' aria-hidden='true'>{scoped_inline_svg_asset(asset_path, widget['widget_id'], force_non_uniform_scaling=crop_bounds is not None)}</div>"
+    else:
+        skin = "<div class='boolean-skin missing-skin'></div>"
+    caption_style = caption_anchor_style(runtime, geometry)
+    if crop_bounds is not None:
+        caption_style = svg_anchor_style(
+            runtime_number(runtime, "caption.anchor.x", geometry["caption_x"]) - crop_bounds["x"],
+            runtime_number(runtime, "caption.anchor.y", geometry["caption_y"]) - crop_bounds["y"],
+            {"view_width": crop_bounds["width"], "view_height": crop_bounds["height"]},
+        )
+        align = runtime_string(runtime, "caption.align.horizontal", "left")
+        caption_style += f"transform:{caption_transform_for_align(align)};text-align:{caption_text_align(align)};"
+        if not runtime_bool(runtime, "caption.visible", True):
+            caption_style += "display:none;"
     overlays = (
         "<span class='boolean-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor'"
-        f" style='{caption_anchor_style(runtime, geometry)}'>{html.escape(runtime_string(runtime, 'caption.text', widget['widget_id']))}</span>"
+        f" style='{caption_style}'>{html.escape(runtime_string(runtime, 'caption.text', widget['widget_id']))}</span>"
     )
     if state_text_visible:
         text = true_state_text if value else false_state_text
-        state_x = runtime_number(runtime, "state_text.anchor.x", 80.0)
-        state_y = runtime_number(runtime, "state_text.anchor.y", 50.0)
-        state_style = f"left:{css_percent(pct(state_x, geometry['view_width']))};top:{css_percent(pct(state_y, geometry['view_height']))};"
+        state_x = runtime_number(runtime, "state_text.anchor.x", geometry.get("state_text_x", 80.0))
+        state_y = runtime_number(runtime, "state_text.anchor.y", geometry.get("state_text_y", 50.0))
+        if crop_bounds is not None:
+            state_style = svg_anchor_style(
+                state_x - crop_bounds["x"],
+                state_y - crop_bounds["y"],
+                {"view_width": crop_bounds["width"], "view_height": crop_bounds["height"]},
+            )
+        else:
+            state_style = f"left:{css_percent(pct(state_x, geometry['view_width']))};top:{css_percent(pct(state_y, geometry['view_height']))};"
         overlays += f"<span class='boolean-state-overlay' data-frog-part='state_text' data-svg-anchor='state_text.center' style='{state_style}'>{html.escape(text)}</span>"
 
     if is_control:
+        form_input_name = runtime_string(runtime, "binding.public_input_id", "input_value" if widget["widget_id"] == "bool_input" else "")
+        hidden_state_input = (
+            f"<input type='hidden' id='{html.escape(widget['widget_id'])}__value' name='{html.escape(form_input_name)}' value='{'true' if value else 'false'}' data-frog-boolean-state-input='{html.escape(widget['widget_id'])}'>"
+            if form_input_name
+            else ""
+        )
         return (
-            f"<button class='frog-widget boolean-widget boolean-control' type='submit' name='input_value' value='{next_value}'"
+            f"<button class='frog-widget boolean-widget boolean-control' type='button' data-frog-local-toggle='true'"
             f" data-toggle-target='{next_value}' aria-pressed='{'true' if value else 'false'}'{attrs} style='{style}'>{skin}{overlays}</button>"
+            f"{hidden_state_input}"
         )
     return f"<section class='frog-widget boolean-widget boolean-indicator' aria-readonly='true'{attrs} style='{style}'>{skin}{overlays}</section>"
 
@@ -2967,7 +3305,13 @@ class BooleanBrowserUiRuntime:
             error_block = "<div class='diagnostic error'>" + html.escape(self.last_error) + "</div>"
         uses_native_kernel = self.native_kernel_bridge is not None
 
-        rendered_widgets = "".join(render_boolean_widget(widget) for widget in widgets)
+        rendered_widgets = "".join(
+            render_boolean_widget({
+                **widget,
+                "asset_path": self.runtime.asset_map.get(str(widget["runtime"].get("asset_ref", "")).split(":", 1)[-1]),
+            })
+            for widget in widgets
+        )
         return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -2981,26 +3325,24 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 .runtime-facts div{{display:flex;gap:6px;align-items:baseline;padding:6px 8px;border:1px solid #d9e2ec;border-radius:6px;background:#ffffff;}}
 .runtime-facts dt{{margin:0;color:#52606d;font-size:11px;font-weight:700;text-transform:uppercase;}}
 .runtime-facts dd{{margin:0;color:#1f2933;font-size:12px;font-weight:600;}}
-.front-panel{{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:hidden;}}
+.front-panel{{position:relative;background:#ffffff;border-radius:10px;box-shadow:0 4px 14px rgba(15,23,42,0.08);overflow:visible;}}
 .frog-widget{{position:absolute;box-sizing:border-box;}}
 .boolean-widget{{border:0;padding:0;background:transparent;font:inherit;color:inherit;overflow:visible;}}
 .boolean-control{{cursor:pointer;}}
 .boolean-indicator{{pointer-events:none;}}
-.boolean-skin{{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}}
+.boolean-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:2;overflow:hidden;}}
+.boolean-skin svg{{position:absolute;left:var(--frog-boolean-svg-left,0);top:var(--frog-boolean-svg-top,0);width:var(--frog-boolean-svg-width,100%);height:var(--frog-boolean-svg-height,100%);display:block;overflow:visible;}}
+.boolean-skin [data-frog-part='state_face']{{fill:var(--boolean-fill)!important;stroke:var(--boolean-state-border)!important;stroke-width:var(--boolean-state-border-width)!important;transition:fill var(--boolean-transition),stroke var(--boolean-transition);}}
+.boolean-control:hover .boolean-skin [data-frog-part='state_face']{{fill:var(--boolean-hover-fill)!important;stroke:var(--boolean-hover-state-border)!important;}}
+.boolean-control:active .boolean-skin [data-frog-part='state_face']{{fill:var(--boolean-pressed-fill)!important;stroke:var(--boolean-pressed-state-border)!important;}}
+.boolean-widget:focus-visible .boolean-skin [data-frog-part='focus_ring'],.boolean-widget[data-frog-focus-visible='true'] .boolean-skin [data-frog-part='focus_ring']{{display:inline!important;stroke:var(--boolean-focus-color)!important;stroke-width:var(--boolean-focus-width)!important;opacity:1!important;}}
 .boolean-caption-overlay{{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--boolean-caption-font-size);font-weight:var(--boolean-caption-font-weight);font-family:var(--boolean-caption-font-family);line-height:1;color:var(--boolean-caption-color);white-space:nowrap;pointer-events:none;z-index:3;}}
-.boolean-state-face{{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:var(--boolean-inner-border-width) solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}}
-.boolean-widget[data-realization-variant='circular'] .boolean-state-face{{border-radius:50%;}}
-.boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{{box-shadow:none;}}
-.boolean-control:hover .boolean-state-face{{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-inner-border);box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 2px 5px rgba(15,23,42,.18);}}
-.boolean-control[data-frog-frame-visible='false']:hover .boolean-state-face{{box-shadow:none;}}
-.boolean-control:active .boolean-state-face{{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-inner-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}}
-.boolean-control[data-frog-frame-visible='false']:active .boolean-state-face{{box-shadow:none;}}
-.boolean-control:focus-visible .boolean-state-face{{outline:var(--boolean-focus-width) solid var(--boolean-focus-color);}}
 .boolean-state-overlay{{position:absolute;transform:translate(-50%,-50%);text-align:center;font-size:var(--boolean-text-font-size);font-weight:var(--boolean-text-font-weight);line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;white-space:nowrap;}}
 .actions{{margin-top:16px;display:flex;gap:12px;align-items:center;}}
 .state-link{{font-size:16px;}}
 .diagnostic{{margin:12px 0;padding:10px 12px;border-radius:6px;}}
 .diagnostic.error{{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;}}
+{artifact_links_css()}
 </style>
 </head>
 <body>
@@ -3016,8 +3358,32 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
   <div class="front-panel" data-panel-id="{html.escape(panel['panel_id'])}" data-coordinate-space="panel_pixels" data-runtime-language="python" data-compiler-backend="{'llvm' if uses_native_kernel else 'none'}" data-execution-path="{'native_kernel_bridge' if uses_native_kernel else 'python_boolean_contract_executor'}" style="width:{panel_layout['width']}px;height:{panel_layout['height']}px;">
     {rendered_widgets}
   </div>
-  <div class="actions"><a class="state-link" href="/state.json">state.json</a></div>
+  <div class="actions"><button type="submit">Execute</button></div>
 </form>
+{artifact_links_html()}
+<script>
+(() => {{
+  const valueForState = (button, key, value) => button.dataset[key + (value ? "True" : "False")] || "";
+  const textForState = (button, value) => valueForState(button, "frogText", value);
+  const applyBooleanState = (button, next) => {{
+    button.dataset.currentValue = next ? "true" : "false";
+    button.dataset.toggleTarget = next ? "false" : "true";
+    button.setAttribute("aria-pressed", next ? "true" : "false");
+    button.style.setProperty("--boolean-fill", valueForState(button, "frogFill", next));
+    button.style.setProperty("--boolean-state-border", valueForState(button, "frogStateBorder", next));
+    button.style.setProperty("--boolean-text", valueForState(button, "frogTextColor", next));
+    const input = document.querySelector(`[data-frog-boolean-state-input="${{button.dataset.widgetId}}"]`);
+    if (input) input.value = next ? "true" : "false";
+    button.querySelectorAll("[data-frog-part='state_text']").forEach((stateText) => {{
+      stateText.textContent = textForState(button, next);
+      stateText.style.color = valueForState(button, "frogTextColor", next);
+    }});
+  }};
+  document.querySelectorAll("[data-frog-local-toggle='true']").forEach((button) => {{
+    button.addEventListener("click", () => applyBooleanState(button, button.dataset.toggleTarget === "true"));
+  }});
+}})();
+</script>
 </body>
 </html>
 """
@@ -3332,22 +3698,30 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 .enum-widget{{font-family:Segoe UI,Arial,sans-serif;overflow:visible;}}
 .enum-skin{{position:absolute;inset:0;width:100%;height:100%;display:block;}}
 .enum-skin svg{{width:100%;height:100%;display:block;}}
-.enum-skin #label_text,.enum-skin #caption_text,.enum-skin #value_display{{display:none;}}
+.enum-skin #label_text,.enum-skin #caption_text,.enum-skin #value_display,.enum-skin [data-frog-part='label'],.enum-skin [data-frog-part='caption'],.enum-skin [data-frog-part='value_display']{{display:none!important;}}
 .enum-caption-overlay{{position:absolute;transform:translateY(-50%);font-size:var(--frog-enum-caption-font-size);font-weight:var(--frog-enum-caption-font-weight);font-family:var(--frog-enum-caption-font-family);color:var(--frog-enum-caption-color);line-height:1;white-space:nowrap;pointer-events:none;}}
 .enum-value-overlay{{position:absolute;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;line-height:normal;border:0;background:transparent;}}
 .enum-value-display-overlay{{position:absolute;box-sizing:border-box;display:flex;align-items:center;padding:0 var(--frog-enum-text-padding-inline);font-family:Segoe UI,Arial,sans-serif;line-height:normal;transform:translateY(var(--frog-enum-text-vertical-offset));z-index:3;}}
 .enum-widget .enum-display-button{{border:0;background:transparent;text-align:left;justify-content:flex-start;appearance:none;cursor:pointer;}}
 .enum-widget .enum-display-button:focus,.enum-widget .enum-display-button:focus-visible,.enum-widget .enum-display-button:active{{outline:0;box-shadow:none;}}
 .enum-select-state{{display:none;}}
+.enum-step-overlay{{position:absolute;box-sizing:border-box;padding:0;border:0;border-radius:0;background:transparent;color:transparent;cursor:pointer;display:block;z-index:5;}}
+.enum-step-overlay:focus{{outline:0;}}
 .enum-selector-overlay{{position:absolute;box-sizing:border-box;display:flex;align-items:center;justify-content:center;border-style:solid;border-width:var(--frog-enum-selector-stroke-width);border-radius:var(--frog-enum-selector-radius);}}
 .enum-selector-overlay::after{{content:'';width:0;height:0;border-left:calc(var(--frog-enum-selector-symbol-width) / 2) solid transparent;border-right:calc(var(--frog-enum-selector-symbol-width) / 2) solid transparent;border-top:var(--frog-enum-selector-symbol-height) solid currentColor;}}
 .enum-control:has(.enum-display-button:hover) .enum-skin #value_face,.enum-control:has(.enum-dropdown:not([hidden])) .enum-skin #value_face{{fill:var(--frog-enum-value-hover-fill) !important;}}
 .enum-indicator-value{{display:flex;align-items:center;padding:0 var(--frog-enum-text-padding-inline);pointer-events:none;line-height:normal;transform:translateY(var(--frog-enum-text-vertical-offset));}}
 .enum-dropdown{{position:absolute;box-sizing:border-box;z-index:30;background:var(--frog-enum-dropdown-fill);border:var(--frog-enum-dropdown-border-width) solid var(--frog-enum-dropdown-border);}}
 .enum-dropdown[hidden]{{display:none;}}
-.enum-dropdown-option{{width:100%;min-height:var(--frog-enum-dropdown-option-height);display:flex;align-items:center;justify-content:flex-start;padding:0 var(--frog-enum-dropdown-option-padding-inline);border:0;border-radius:0;background:var(--frog-enum-dropdown-option-fill);color:var(--frog-enum-dropdown-option-text);font-family:var(--frog-enum-dropdown-option-font-family);font-size:var(--frog-enum-dropdown-option-font-size);font-weight:var(--frog-enum-dropdown-option-font-weight);font-style:var(--frog-enum-dropdown-option-font-style);text-align:left;cursor:pointer;}}
-.enum-dropdown-option:hover,.enum-dropdown-option:focus{{background:var(--frog-enum-dropdown-option-hover-fill);color:var(--frog-enum-dropdown-option-hover-text);outline:0;}}
-.enum-dropdown-option[aria-selected='true']{{background:var(--frog-enum-dropdown-option-selected-fill);color:var(--frog-enum-dropdown-option-selected-text);}}
+.enum-dropdown-panel-skin{{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}}
+.enum-dropdown-border-skin{{z-index:2;}}
+.enum-dropdown-options{{position:absolute;inset:0;z-index:1;}}
+.enum-dropdown-option{{position:relative;width:100%;height:var(--frog-enum-dropdown-option-height);min-height:var(--frog-enum-dropdown-option-height);display:flex;align-items:center;justify-content:flex-start;padding:0 var(--frog-enum-dropdown-option-padding-inline);border:0;border-radius:0;background:transparent;color:var(--frog-enum-dropdown-option-text);font-family:var(--frog-enum-dropdown-option-font-family);font-size:var(--frog-enum-dropdown-option-font-size);font-weight:var(--frog-enum-dropdown-option-font-weight);font-style:var(--frog-enum-dropdown-option-font-style);text-align:left;cursor:pointer;}}
+.enum-dropdown-option:hover,.enum-dropdown-option:focus{{--frog-enum-dropdown-option-current-fill:var(--frog-enum-dropdown-option-hover-fill);color:var(--frog-enum-dropdown-option-hover-text);outline:0;}}
+.enum-dropdown-option[aria-selected='true']{{--frog-enum-dropdown-option-current-fill:var(--frog-enum-dropdown-option-selected-fill);color:var(--frog-enum-dropdown-option-selected-text);}}
+.enum-dropdown-option:not(:hover):not(:focus):not([aria-selected='true']){{--frog-enum-dropdown-option-current-fill:var(--frog-enum-dropdown-option-fill);}}
+.enum-dropdown-option-skin{{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}}
+.enum-dropdown-option-label{{position:relative;z-index:1;}}
 .enum-widget .enum-selector-button{{padding:0;border-style:solid;border-width:var(--frog-enum-selector-stroke-width);border-radius:var(--frog-enum-selector-radius);font-weight:400;cursor:pointer;appearance:none;z-index:4;background:var(--frog-enum-selector-fill);border-color:var(--frog-enum-selector-stroke);color:var(--frog-enum-selector-symbol);}}
 .enum-widget .enum-selector-button:hover{{background:var(--frog-enum-selector-hover-fill);border-color:var(--frog-enum-selector-hover-stroke);color:var(--frog-enum-selector-hover-symbol);}}
 .enum-widget .enum-selector-button:focus,.enum-widget .enum-selector-button:focus-visible,.enum-widget .enum-selector-button:active{{outline:0;box-shadow:none;}}
@@ -3362,6 +3736,7 @@ function frogCloseOtherEnumDropdowns(menuId){{document.querySelectorAll('.enum-d
 function frogToggleEnumDropdown(menuId,displayId){{const menu=document.getElementById(menuId);const display=document.getElementById(displayId);if(!menu){{return;}}frogCloseOtherEnumDropdowns(menuId);menu.hidden=!menu.hidden;if(display){{display.setAttribute('aria-expanded',menu.hidden?'false':'true');}}}}
 function frogUpdateEnumDisplay(select,displayId){{const d=document.getElementById(displayId);if(!d){{return;}}const o=select.options[select.selectedIndex];if(o){{d.textContent=o.textContent;}}const menu=document.getElementById(select.id.replace('_value','_dropdown'));if(menu){{menu.querySelectorAll('.enum-dropdown-option').forEach(function(option){{option.setAttribute('aria-selected',option.getAttribute('data-enum-value')===select.value?'true':'false');}});}}}}
 function frogSelectEnumOption(option,selectId,displayId,menuId){{const s=document.getElementById(selectId);const d=document.getElementById(displayId);if(!s||!option){{return;}}const value=option.getAttribute('data-enum-value');s.value=value;if(d){{d.textContent=option.textContent;}}frogUpdateEnumDisplay(s,displayId);frogCloseEnumDropdown(menuId,displayId);s.dispatchEvent(new Event('input',{{bubbles:true}}));s.dispatchEvent(new Event('change',{{bubbles:true}}));}}
+function frogStepEnum(selectId,displayId,delta,wrap){{const s=document.getElementById(selectId);if(!s||!s.options.length){{return;}}let enabled=[];for(let i=0;i<s.options.length;i++){{if(!s.options[i].disabled){{enabled.push(i);}}}}if(!enabled.length){{return;}}let current=enabled.indexOf(s.selectedIndex);if(current<0){{current=0;}}let next=current+delta;if(wrap){{next=(next%enabled.length+enabled.length)%enabled.length;}}else{{next=Math.max(0,Math.min(enabled.length-1,next));}}s.selectedIndex=enabled[next];frogUpdateEnumDisplay(s,displayId);s.dispatchEvent(new Event('input',{{bubbles:true}}));s.dispatchEvent(new Event('change',{{bubbles:true}}));}}
 document.addEventListener('click',function(event){{if(!event.target.closest('.enum-widget')){{document.querySelectorAll('.enum-dropdown').forEach(function(m){{m.hidden=true;}});document.querySelectorAll('.enum-display-button,.enum-selector-button').forEach(function(b){{b.setAttribute('aria-expanded','false');}});}}}});
 </script>
 </head>
@@ -3380,6 +3755,7 @@ document.addEventListener('click',function(event){{if(!event.target.closest('.en
   </div>
   <div class="actions"><button type="submit">Run Example 08</button><a class="state-link" href="/state.json">state.json</a></div>
 </form>
+{artifact_links_html()}
 </body>
 </html>
 """
@@ -3404,6 +3780,8 @@ document.addEventListener('click',function(event){{if(!event.target.closest('.en
             return
         if path == "/state.json":
             self._serve_bytes(handler, json.dumps(self.state_snapshot(), indent=2).encode("utf-8"), "application/json; charset=utf-8")
+            return
+        if maybe_serve_example_artifact(handler, source_path_from_contract(self.runtime.contract), self.runtime.wfrog_path):
             return
         if path.startswith("/asset/"):
             asset_id = path.split("/", 2)[2]
