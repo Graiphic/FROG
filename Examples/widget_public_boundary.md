@@ -19,6 +19,7 @@ not semantic owners of FROG.
   <li><code>.wfrog</code> packages publish realization references, Default asset ids, supported classes, and host capability declarations. They are not example-specific front-panel source.</li>
   <li>Default realization assets own reusable SVG templates, public parts, public anchors, public bindings, internal geometry, and default visual behavior.</li>
   <li>Runtime implementations consume validated source-derived artifacts, backend contracts, native manifests, ABI surfaces, <code>.wfrog</code> packages, and published realization assets. They do not redefine the widget class law.</li>
+  <li>A visible skin surface should have one public owner. When a Default SVG part or realization resource owns a border, fill, popup panel, row face, selection face, or equivalent visual surface, a runtime host may position and bind that surface, but should not recreate the same surface as an independent host-only border or fill.</li>
 </ul>
 
 <h2>Public Fidelity Expectation</h2>
@@ -38,6 +39,7 @@ The public expectation is architectural, not a Graiphic internal QA checklist:
   <li>front-panel intent is visible in source-owned data,</li>
   <li>realization references resolve through published <code>.wfrog</code> packages,</li>
   <li>Default SVG assets expose public parts, anchors, bindings, or equivalent published markers where the realization requires them,</li>
+  <li>host rendering preserves realization ownership of visible skin surfaces rather than layering independent duplicate borders or fills over the same part,</li>
   <li>runtime snapshots and diagnostics remain supporting evidence rather than the user-facing widget itself,</li>
   <li>native-backed examples consume manifests and ABI artifacts rather than treating LLVM as the runtime identity.</li>
 </ul>
