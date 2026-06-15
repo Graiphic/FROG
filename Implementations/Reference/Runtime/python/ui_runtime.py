@@ -1942,6 +1942,8 @@ def render_enum_dropdown_panel_skin(
     source = str(popup_asset_ref) if popup_asset_ref else "runtime:fallback"
     classes = "enum-dropdown-panel-skin enum-dropdown-border-skin" if border_only else "enum-dropdown-panel-skin"
     fill = "none" if border_only else "var(--frog-enum-dropdown-fill)"
+    stroke = "var(--frog-enum-dropdown-border)" if border_only else "none"
+    stroke_width = "var(--frog-enum-dropdown-border-width)" if border_only else "0"
     return (
         f"<svg class='{classes}' aria-hidden='true' data-frog-template-source='{html.escape(source)}'"
         " data-frog-host-surface='dropdown'"
@@ -1951,7 +1953,7 @@ def render_enum_dropdown_panel_skin(
         f"<rect data-frog-part='{html.escape(str(geometry['panel_part']))}'"
         f" x='{svg_number(float(geometry['panel_x']))}' y='{svg_number(float(geometry['panel_y']))}'"
         f" width='{svg_number(panel_width)}' height='{svg_number(panel_height)}'"
-        f" style='fill:{fill};stroke:var(--frog-enum-dropdown-border);stroke-width:var(--frog-enum-dropdown-border-width);vector-effect:non-scaling-stroke;'/>"
+        f" style='fill:{fill};stroke:{stroke};stroke-width:{stroke_width};vector-effect:non-scaling-stroke;'/>"
         "</g></svg>"
     )
 
@@ -3711,7 +3713,7 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 .enum-selector-overlay::after{{content:'';width:0;height:0;border-left:calc(var(--frog-enum-selector-symbol-width) / 2) solid transparent;border-right:calc(var(--frog-enum-selector-symbol-width) / 2) solid transparent;border-top:var(--frog-enum-selector-symbol-height) solid currentColor;}}
 .enum-control:has(.enum-display-button:hover) .enum-skin #value_face,.enum-control:has(.enum-dropdown:not([hidden])) .enum-skin #value_face{{fill:var(--frog-enum-value-hover-fill) !important;}}
 .enum-indicator-value{{display:flex;align-items:center;padding:0 var(--frog-enum-text-padding-inline);pointer-events:none;line-height:normal;transform:translateY(var(--frog-enum-text-vertical-offset));}}
-.enum-dropdown{{position:absolute;box-sizing:border-box;z-index:30;background:var(--frog-enum-dropdown-fill);border:var(--frog-enum-dropdown-border-width) solid var(--frog-enum-dropdown-border);}}
+.enum-dropdown{{position:absolute;box-sizing:border-box;z-index:30;background:transparent;border:0;}}
 .enum-dropdown[hidden]{{display:none;}}
 .enum-dropdown-panel-skin{{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}}
 .enum-dropdown-border-skin{{z-index:2;}}
