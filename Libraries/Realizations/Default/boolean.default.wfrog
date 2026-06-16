@@ -209,7 +209,7 @@
   "part_bindings": [
     {
       "part": "placement_bounds",
-      "role": "ide_placement_aura",
+      "role": "placement_bounds",
       "geometry_contract": "The IDE may use this non-rendered rect as the placement aura. It is not the focus ring and it is not a value surface."
     },
     {
@@ -231,6 +231,17 @@
   ],
   "default_geometry_contract": {
     "coordinate_space": "svg_source_units",
+    "placement_vocabulary": {
+      "placement_bounds_part": "placement_bounds",
+      "main_body_concept": "main_body",
+      "main_body_parts": [
+        "state_face"
+      ],
+      "aura_band_name": "aura_band",
+      "aura_band_source_units": 4,
+      "focus_ring_part": "focus_ring",
+      "part_names_are_mappings": true
+    },
     "placement_bounds": {
       "x": 16,
       "y": 32,
@@ -247,14 +258,14 @@
     },
     "aura_band": {
       "source_units": 4,
-      "description": "Default Boolean keeps the same standard as Default Numeric: a uniform 4 source-unit band between placement_bounds and state_face. Host resizing scales the skin; the runtime must not invent a different Boolean aura."
+      "description": "Default Boolean keeps the same standard vocabulary as other reviewed widgets: a uniform 4 source-unit aura_band between placement_bounds and main_body. The concrete SVG mapping for main_body is state_face. Host resizing scales the skin; the runtime must not invent a different Boolean aura."
     }
   },
   "validation_rules": [
     "A Boolean widget remains frog.widgets.boolean_control or frog.widgets.boolean_indicator regardless of square, round, or oval skin.",
     "The SVG must not publish outer_face, inner_face, or frame as public Boolean parts.",
     "The runtime must bind state colors through style.state_face.* and never hardcode true/false colors outside defaults.",
-    "IDE selection aura is represented by placement_bounds; focus_ring remains a state_face outline.",
-    "Default Boolean placement_bounds is 72x72 source units, state_face is 64x64 source units, and the nominal Boolean aura band is 4 source units, matching the Default Numeric aura standard without shrinking the accepted Boolean outer footprint."
+    "IDE selection aura is represented by placement_bounds; focus_ring remains a main_body/state_face outline.",
+    "Default Boolean placement_bounds is 72x72 source units, main_body maps to state_face at 64x64 source units, and the nominal Boolean aura_band is 4 source units, matching the shared aura standard without shrinking the accepted Boolean outer footprint."
   ]
 }

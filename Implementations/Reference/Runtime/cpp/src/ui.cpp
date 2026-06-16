@@ -572,7 +572,7 @@ std::string svg_dropdown_style(double x, double y, double width, double height, 
     return style.str();
 }
 
-double choice_widget_body_left(const SvgGeometry& geometry) {
+double choice_widget_main_body_left(const SvgGeometry& geometry) {
     double left = geometry.value_face_x;
     if (geometry.increment_up_width > 0.0 && geometry.increment_up_height > 0.0) {
         left = std::min(left, geometry.increment_up_x);
@@ -583,7 +583,7 @@ double choice_widget_body_left(const SvgGeometry& geometry) {
     return left;
 }
 
-double choice_widget_body_right(const SvgGeometry& geometry) {
+double choice_widget_main_body_right(const SvgGeometry& geometry) {
     double right = geometry.value_face_x + geometry.value_face_width;
     if (geometry.increment_up_width > 0.0 && geometry.increment_up_height > 0.0) {
         right = std::max(right, geometry.increment_up_x + geometry.increment_up_width);
@@ -595,14 +595,14 @@ double choice_widget_body_right(const SvgGeometry& geometry) {
 }
 
 double choice_widget_value_face_delta(const SvgGeometry& geometry, bool increment_visible) {
-    return increment_visible ? 0.0 : choice_widget_body_left(geometry) - geometry.value_face_x;
+    return increment_visible ? 0.0 : choice_widget_main_body_left(geometry) - geometry.value_face_x;
 }
 
 double choice_widget_value_face_width(const SvgGeometry& geometry, bool increment_visible) {
     if (increment_visible) {
         return geometry.value_face_width;
     }
-    return std::max(1.0, choice_widget_body_right(geometry) - choice_widget_body_left(geometry));
+    return std::max(1.0, choice_widget_main_body_right(geometry) - choice_widget_main_body_left(geometry));
 }
 
 double widget_style_scale(const Object& properties, std::int64_t width, std::int64_t height) {
@@ -1317,38 +1317,38 @@ std::string render_enum_widget(const WidgetState& widget) {
     const auto value_hover_fill =
         safe_css_color(property_string(widget.properties, "style.value_face.fill_color.hover", "transparent"), "transparent");
     const auto dropdown_fill =
-        safe_css_color(property_string(widget.properties, "style.dropdown.fill_color", "#ffffff"), "#ffffff");
+        safe_css_color(property_string(widget.properties, "style.popup.fill_color", "#ffffff"), "#ffffff");
     const auto dropdown_border =
-        safe_css_color(property_string(widget.properties, "style.dropdown.border_color", "#64748b"), "#64748b");
+        safe_css_color(property_string(widget.properties, "style.popup.border_color", "#64748b"), "#64748b");
     const auto dropdown_border_width = maybe_scaled_css_length(
-        widget.properties, "style.dropdown.border_width", "style.dropdown.border_width_mode", "1px", style_scale);
+        widget.properties, "style.popup.border_width", "style.popup.border_width_mode", "1px", style_scale);
     const auto dropdown_option_fill =
-        safe_css_color(property_string(widget.properties, "style.dropdown.option.fill_color", "#ffffff"), "#ffffff");
+        safe_css_color(property_string(widget.properties, "style.popup.option.fill_color", "#ffffff"), "#ffffff");
     const auto dropdown_option_text =
-        safe_css_color(property_string(widget.properties, "style.dropdown.option.text_color", text_color), text_color);
+        safe_css_color(property_string(widget.properties, "style.popup.option.text_color", text_color), text_color);
     const auto dropdown_option_hover_fill = safe_css_color(
-        property_string(widget.properties, "style.dropdown.option.hover_fill_color", "#2563eb"), "#2563eb");
+        property_string(widget.properties, "style.popup.option.hover_fill_color", "#2563eb"), "#2563eb");
     const auto dropdown_option_hover_text = safe_css_color(
-        property_string(widget.properties, "style.dropdown.option.hover_text_color", "#ffffff"), "#ffffff");
+        property_string(widget.properties, "style.popup.option.hover_text_color", "#ffffff"), "#ffffff");
     const auto dropdown_option_selected_fill = safe_css_color(
-        property_string(widget.properties, "style.dropdown.option.selected_fill_color", dropdown_option_hover_fill),
+        property_string(widget.properties, "style.popup.option.selected_fill_color", dropdown_option_hover_fill),
         dropdown_option_hover_fill);
     const auto dropdown_option_selected_text = safe_css_color(
-        property_string(widget.properties, "style.dropdown.option.selected_text_color", dropdown_option_hover_text),
+        property_string(widget.properties, "style.popup.option.selected_text_color", dropdown_option_hover_text),
         dropdown_option_hover_text);
     const auto dropdown_option_font_size = maybe_scaled_css_length(
-        widget.properties, "style.dropdown.option.font_size", "style.dropdown.option.font_size_mode", text_size, style_scale);
+        widget.properties, "style.popup.option.font_size", "style.popup.option.font_size_mode", text_size, style_scale);
     const auto dropdown_option_font_weight =
-        safe_css_font_weight(property_string(widget.properties, "style.dropdown.option.font_weight", text_weight), text_weight);
+        safe_css_font_weight(property_string(widget.properties, "style.popup.option.font_weight", text_weight), text_weight);
     const auto dropdown_option_font_style =
-        safe_css_font_style(property_string(widget.properties, "style.dropdown.option.font_style", "normal"), "normal");
+        safe_css_font_style(property_string(widget.properties, "style.popup.option.font_style", "normal"), "normal");
     const auto dropdown_option_font_family = safe_css_font_family(
-        property_string(widget.properties, "style.dropdown.option.font_family", "Segoe UI,Arial,sans-serif"),
+        property_string(widget.properties, "style.popup.option.font_family", "Segoe UI,Arial,sans-serif"),
         "Segoe UI,Arial,sans-serif");
     const auto dropdown_option_padding_inline = maybe_scaled_css_length(
-        widget.properties, "style.dropdown.option.padding_inline", "style.dropdown.option.padding_inline_mode", text_padding_inline, style_scale);
+        widget.properties, "style.popup.option.padding_inline", "style.popup.option.padding_inline_mode", text_padding_inline, style_scale);
     const auto dropdown_option_height = maybe_scaled_css_length(
-        widget.properties, "style.dropdown.option.height", "style.dropdown.option.height_mode", "28px", style_scale);
+        widget.properties, "style.popup.option.height", "style.popup.option.height_mode", "28px", style_scale);
     const bool increment_visible = property_bool(widget.properties, "display.increment_buttons_visible", false);
     const auto value_face_delta = choice_widget_value_face_delta(geometry, increment_visible);
     const auto value_face_width = choice_widget_value_face_width(geometry, increment_visible);
@@ -1550,21 +1550,21 @@ std::string render_boolean_widget(const WidgetState& widget) {
     const auto caption_family = safe_css_font_family(
         property_string(widget.properties, "caption.style.font_family", "system-ui, Segoe UI, Arial, sans-serif"),
         "system-ui, Segoe UI, Arial, sans-serif");
-    const std::string false_fill = state_property(widget.properties, "style.inner.fill_color", "false", "#ffffff");
-    const std::string true_fill = state_property(widget.properties, "style.inner.fill_color", "true", "#8bd86f");
+    const std::string false_fill = state_property(widget.properties, "style.state_face.fill_color", "false", "#ffffff");
+    const std::string true_fill = state_property(widget.properties, "style.state_face.fill_color", "true", "#4A8DBC");
     const std::string state_fill = value ? true_fill : false_fill;
-    const std::string hover_fill = state_property(widget.properties, "style.inner.fill_color", hover_state, value ? "#9be884" : "#eef6ff");
-    const std::string pressed_fill = state_property(widget.properties, "style.inner.fill_color", pressed_state, value ? "#6fc657" : "#dbeafe");
-    const std::string false_border = state_property(widget.properties, "style.outer.border_color", "false", "#111827");
-    const std::string true_border = state_property(widget.properties, "style.outer.border_color", "true", "#184a24");
+    const std::string hover_fill = state_property(widget.properties, "style.state_face.fill_color", hover_state, value ? "#5B9CC7" : "#f7fafc");
+    const std::string pressed_fill = state_property(widget.properties, "style.state_face.fill_color", pressed_state, value ? "#3F7FA9" : "#e8edf2");
+    const std::string false_border = state_property(widget.properties, "style.state_face.border_color", "false", "#A8ABAE");
+    const std::string true_border = state_property(widget.properties, "style.state_face.border_color", "true", false_border);
     const std::string state_border = value ? true_border : false_border;
-    const std::string hover_border = state_property(widget.properties, "style.outer.border_color", hover_state, value ? "#166534" : "#2563eb");
-    const std::string pressed_border = state_property(widget.properties, "style.outer.border_color", pressed_state, value ? "#14532d" : "#1d4ed8");
-    const std::string false_inner_border = state_property(widget.properties, "style.inner.border_color", "false", false_border);
-    const std::string true_inner_border = state_property(widget.properties, "style.inner.border_color", "true", true_border);
-    const std::string state_inner_border = value ? true_inner_border : false_inner_border;
-    const std::string hover_inner_border = state_property(widget.properties, "style.inner.border_color", hover_state, hover_border);
-    const std::string pressed_inner_border = state_property(widget.properties, "style.inner.border_color", pressed_state, pressed_border);
+    const std::string hover_border = state_property(widget.properties, "style.state_face.border_color", hover_state, "#8E9297");
+    const std::string pressed_border = state_property(widget.properties, "style.state_face.border_color", pressed_state, "#00ADEF");
+    const std::string false_state_face_border = false_border;
+    const std::string true_state_face_border = true_border;
+    const std::string state_face_border = state_border;
+    const std::string hover_state_face_border = hover_border;
+    const std::string pressed_state_face_border = pressed_border;
     const std::string false_text_color = state_property(widget.properties, "state_text.style.text_color", "false", "#111827");
     const std::string true_text_color = state_property(widget.properties, "state_text.style.text_color", "true", "#0b3d19");
     const std::string text_color = value ? true_text_color : false_text_color;
@@ -1578,11 +1578,11 @@ std::string render_boolean_widget(const WidgetState& widget) {
     const bool focus_visible = property_bool(widget.properties, "style.focus_ring.visible", false);
     const std::string text_size = safe_css_length(property_string(widget.properties, "state_text.style.font_size", "18px"), "18px");
     const std::string text_weight = safe_css_font_weight(property_string(widget.properties, "state_text.style.font_weight", "400"), "400");
-    const std::string inner_left = property_string(widget.properties, "style.inner.left", variant == "circular" ? "52px" : "18px");
-    const std::string inner_top = property_string(widget.properties, "style.inner.top", variant == "circular" ? "23px" : "31px");
-    const std::string inner_width = property_string(widget.properties, "style.inner.width", variant == "circular" ? "56px" : "124px");
-    const std::string inner_height = property_string(widget.properties, "style.inner.height", variant == "circular" ? "56px" : "34px");
-    const std::string inner_border_width = safe_css_length(property_string(widget.properties, "style.inner.border_width", "2px"), "2px");
+    const std::string state_face_left = property_string(widget.properties, "style.state_face.left", "4px");
+    const std::string state_face_top = property_string(widget.properties, "style.state_face.top", "4px");
+    const std::string state_face_width = property_string(widget.properties, "style.state_face.width", "64px");
+    const std::string state_face_height = property_string(widget.properties, "style.state_face.height", "64px");
+    const std::string state_face_border_width = safe_css_length(property_string(widget.properties, "style.state_face.border_width", "1px"), "1px");
     const std::string focus_color = safe_css_color(property_string(widget.properties, "style.focus_ring.color", "#2563eb"), "#2563eb");
     const std::string focus_width = focus_visible
         ? safe_css_length(property_string(widget.properties, "style.focus_ring.width", "3px"), "3px")
@@ -1608,8 +1608,8 @@ std::string render_boolean_widget(const WidgetState& widget) {
     html << " data-current-value='" << (value ? "true" : "false") << "'";
     html << " data-frog-fill-false='" << html_escape(false_fill) << "'";
     html << " data-frog-fill-true='" << html_escape(true_fill) << "'";
-    html << " data-frog-inner-border-false='" << html_escape(false_inner_border) << "'";
-    html << " data-frog-inner-border-true='" << html_escape(true_inner_border) << "'";
+    html << " data-frog-state-face-border-false='" << html_escape(false_state_face_border) << "'";
+    html << " data-frog-state-face-border-true='" << html_escape(true_state_face_border) << "'";
     html << " data-frog-text-color-false='" << html_escape(false_text_color) << "'";
     html << " data-frog-text-color-true='" << html_escape(true_text_color) << "'";
     html << " data-frog-text-false='" << html_escape(false_state_text) << "'";
@@ -1630,14 +1630,14 @@ std::string render_boolean_widget(const WidgetState& widget) {
          << "--boolean-border:" << html_escape(state_border) << ";"
          << "--boolean-hover-border:" << html_escape(hover_border) << ";"
          << "--boolean-pressed-border:" << html_escape(pressed_border) << ";"
-         << "--boolean-inner-border:" << html_escape(state_inner_border) << ";"
-         << "--boolean-hover-inner-border:" << html_escape(hover_inner_border) << ";"
-         << "--boolean-pressed-inner-border:" << html_escape(pressed_inner_border) << ";"
-         << "--boolean-inner-left:" << html_escape(inner_left) << ";"
-         << "--boolean-inner-top:" << html_escape(inner_top) << ";"
-         << "--boolean-inner-width:" << html_escape(inner_width) << ";"
-         << "--boolean-inner-height:" << html_escape(inner_height) << ";"
-         << "--boolean-inner-border-width:" << html_escape(inner_border_width) << ";"
+         << "--boolean-state-face-border:" << html_escape(state_face_border) << ";"
+         << "--boolean-hover-state-face-border:" << html_escape(hover_state_face_border) << ";"
+         << "--boolean-pressed-state-face-border:" << html_escape(pressed_state_face_border) << ";"
+         << "--boolean-state-face-left:" << html_escape(state_face_left) << ";"
+         << "--boolean-state-face-top:" << html_escape(state_face_top) << ";"
+         << "--boolean-state-face-width:" << html_escape(state_face_width) << ";"
+         << "--boolean-state-face-height:" << html_escape(state_face_height) << ";"
+         << "--boolean-state-face-border-width:" << html_escape(state_face_border_width) << ";"
          << "--boolean-text:" << html_escape(text_color) << ";"
          << "--boolean-text-font-size:" << html_escape(text_size) << ";"
          << "--boolean-text-font-weight:" << html_escape(text_weight) << ";"
@@ -1654,7 +1654,7 @@ std::string render_boolean_widget(const WidgetState& widget) {
     }
     html << "'>";
 
-    html << "<span class='boolean-state-face' data-frog-part='inner_face' aria-hidden='true'></span>";
+    html << "<span class='boolean-state-face' data-frog-part='state_face' aria-hidden='true'></span>";
     if (!route.empty()) {
         html << "<img class='boolean-skin' src='" << html_escape(route) << "' alt='' aria-hidden='true' />";
     } else {
@@ -1976,7 +1976,7 @@ std::string button_widget_script() {
     indicator.dataset.frogPressedState = value ? "pressed_true" : "pressed_false";
     indicator.dataset.frogTransitionState = value ? "transition_false_to_true" : "transition_true_to_false";
     indicator.style.setProperty("--boolean-fill", indicatorProperty("frogFill", value));
-    indicator.style.setProperty("--boolean-inner-border", indicatorProperty("frogInnerBorder", value));
+    indicator.style.setProperty("--boolean-state-face-border", indicatorProperty("frogStateFaceBorder", value));
     indicator.style.setProperty("--boolean-text", indicatorProperty("frogTextColor", value));
     if (stateText) {
       stateText.textContent = indicatorProperty("frogText", value);
@@ -2508,12 +2508,12 @@ std::string BooleanBrowserUiRuntime::render_html() const {
             ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}"
             ".missing-skin{background:#e5e7eb;border:1px solid #9ca3af;border-radius:6px;}"
             ".boolean-caption-overlay{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--boolean-caption-font-size);font-weight:var(--boolean-caption-font-weight);font-family:var(--boolean-caption-font-family);line-height:1;color:var(--boolean-caption-color);white-space:nowrap;pointer-events:none;z-index:3;}"
-            ".boolean-state-face{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:var(--boolean-inner-border-width) solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
+            ".boolean-state-face{position:absolute;left:var(--boolean-state-face-left);top:var(--boolean-state-face-top);width:var(--boolean-state-face-width);height:var(--boolean-state-face-height);border:var(--boolean-state-face-border-width) solid var(--boolean-state-face-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
             ".boolean-widget[data-realization-variant='circular'] .boolean-state-face{border-radius:50%;}"
             ".boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{box-shadow:none;}"
-            ".boolean-control:hover .boolean-state-face{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-inner-border);box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 2px 5px rgba(15,23,42,.18);}"
+            ".boolean-control:hover .boolean-state-face{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-state-face-border);box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 2px 5px rgba(15,23,42,.18);}"
             ".boolean-control[data-frog-frame-visible='false']:hover .boolean-state-face{box-shadow:none;}"
-            ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-inner-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}"
+            ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-state-face-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}"
             ".boolean-control[data-frog-frame-visible='false']:active .boolean-state-face{box-shadow:none;}"
             ".boolean-control:focus-visible .boolean-state-face{outline:var(--boolean-focus-width) solid var(--boolean-focus-color);}"
             ".boolean-state-overlay{position:absolute;transform:translate(-50%,-50%);text-align:center;font-size:var(--boolean-text-font-size);font-weight:var(--boolean-text-font-weight);line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;white-space:nowrap;}"
@@ -3444,7 +3444,7 @@ std::string ButtonBrowserUiRuntime::render_html() const {
             ".boolean-indicator{pointer-events:none;}"
             ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}"
             ".boolean-caption-overlay{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--boolean-caption-font-size);font-weight:var(--boolean-caption-font-weight);font-family:var(--boolean-caption-font-family);line-height:1;color:var(--boolean-caption-color);white-space:nowrap;pointer-events:none;z-index:3;}"
-            ".boolean-state-face{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:var(--boolean-inner-border-width) solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
+            ".boolean-state-face{position:absolute;left:var(--boolean-state-face-left);top:var(--boolean-state-face-top);width:var(--boolean-state-face-width);height:var(--boolean-state-face-height);border:var(--boolean-state-face-border-width) solid var(--boolean-state-face-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
             ".boolean-widget[data-realization-variant='circular'] .boolean-state-face{border-radius:50%;}"
             ".boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{box-shadow:none;}"
             ".boolean-state-overlay{position:absolute;transform:translate(-50%,-50%);text-align:center;font-size:var(--boolean-text-font-size);font-weight:var(--boolean-text-font-weight);line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;white-space:nowrap;}"

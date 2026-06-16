@@ -195,25 +195,25 @@
         "style.increment_button.symbol_color.normal": "#334e68",
         "style.increment_button.symbol_color.hover": "#1d4ed8",
         "style.increment_button.symbol_color.pressed": "#1e40af",
-        "style.dropdown.fill_color": "#ffffff",
-        "style.dropdown.border_color": "#64748b",
-        "style.dropdown.border_width": "1px",
-        "style.dropdown.border_width_mode": "scale_with_widget",
-        "style.dropdown.option.fill_color": "#ffffff",
-        "style.dropdown.option.text_color": "#111827",
-        "style.dropdown.option.hover_fill_color": "#dbeafe",
-        "style.dropdown.option.hover_text_color": "#111827",
-        "style.dropdown.option.selected_fill_color": "#3b6db5",
-        "style.dropdown.option.selected_text_color": "#ffffff",
-        "style.dropdown.option.font_family": "Segoe UI,Arial,sans-serif",
-        "style.dropdown.option.font_size": "14px",
-        "style.dropdown.option.font_size_mode": "scale_with_widget",
-        "style.dropdown.option.font_weight": "400",
-        "style.dropdown.option.font_style": "normal",
-        "style.dropdown.option.padding_inline": "7px",
-        "style.dropdown.option.padding_inline_mode": "scale_with_widget",
-        "style.dropdown.option.height": "24px",
-        "style.dropdown.option.height_mode": "scale_with_widget",
+        "style.popup.fill_color": "#ffffff",
+        "style.popup.border_color": "#64748b",
+        "style.popup.border_width": "1px",
+        "style.popup.border_width_mode": "scale_with_widget",
+        "style.popup.option.fill_color": "#ffffff",
+        "style.popup.option.text_color": "#111827",
+        "style.popup.option.hover_fill_color": "#dbeafe",
+        "style.popup.option.hover_text_color": "#111827",
+        "style.popup.option.selected_fill_color": "#3b6db5",
+        "style.popup.option.selected_text_color": "#ffffff",
+        "style.popup.option.font_family": "Segoe UI,Arial,sans-serif",
+        "style.popup.option.font_size": "14px",
+        "style.popup.option.font_size_mode": "scale_with_widget",
+        "style.popup.option.font_weight": "400",
+        "style.popup.option.font_style": "normal",
+        "style.popup.option.padding_inline": "7px",
+        "style.popup.option.padding_inline_mode": "scale_with_widget",
+        "style.popup.option.height": "24px",
+        "style.popup.option.height_mode": "scale_with_widget",
         "interaction.enabled": true,
         "interaction.read_only": false,
         "realization.variant": "rectangular_ring"
@@ -290,7 +290,7 @@
         "layout.grid.*",
         "layout.resize.*"
       ],
-      "placement_role": "widget_placement_aura_not_focus_not_selection_optional_grid_snap_policy"
+      "placement_role": "widget_placement_bounds_not_focus_not_selection_optional_grid_snap_policy"
     },
     {
       "part": "label",
@@ -432,7 +432,7 @@
     {
       "member": "layout.placement_bounds.*",
       "target_part": "placement_bounds",
-      "target_operation": "publish_placement_aura"
+      "target_operation": "publish_placement_bounds"
     },
     {
       "member": "layout.grid.*",
@@ -473,14 +473,32 @@
       "view_box_width": 200,
       "view_box_height": 130,
       "placement_grid_pitch": 16,
+      "placement_vocabulary": {
+        "placement_bounds_part": "placement_bounds",
+        "main_body_concept": "main_body",
+        "main_body_parts_when_increment_visible": [
+          "spinner",
+          "increment_up",
+          "increment_down",
+          "value_face"
+        ],
+        "main_body_parts_when_increment_hidden": [
+          "value_face"
+        ],
+        "aura_band_name": "aura_band",
+        "aura_band_source_units": 4,
+        "focus_ring_part": "focus_ring",
+        "focus_body_part": "value_face",
+        "part_names_are_mappings": true
+      },
       "placement_bounds_part": "placement_bounds",
       "placement_bounds_x": 0,
       "placement_bounds_y": 72,
       "placement_bounds_width": 176,
       "placement_bounds_height": 38,
-      "placement_bounds_posture": "widget_aura_with_optional_grid_snap_policy_not_focus_or_selection",
-      "placement_aura_padding": 4,
-      "placement_aura_padding_rule": "uniform band around the compact enum body; top_left and top_right snap to the common grid only when source_or_container_policy_declares_snap; Array cells consume placement_bounds, not value_face or spinner geometry",
+      "placement_bounds_posture": "placement_bounds_with_optional_grid_snap_policy_not_focus_ring_or_ide_selection",
+      "aura_band_source_units": 4,
+      "aura_band_rule": "uniform aura_band around Enum main_body; top_left and top_right snap to the common grid only when source_or_container_policy_declares_snap; Array cells consume placement_bounds, not main_body, value_face, or spinner geometry",
       "body_height": 30,
       "value_face_x": 24,
       "value_face_y": 76,
@@ -494,7 +512,7 @@
       "default_indicator_value_face_fill_color": "#E8EBED",
       "default_value_face_border_color": "#A8ABAE",
       "default_value_face_border_width": "1px",
-      "focus_ring_posture": "widget_focus_interaction_part_not_placement_aura_not_ide_selection",
+      "focus_ring_posture": "widget_focus_interaction_part_not_placement_bounds_not_ide_selection",
       "proportionality_rule": "hosts must preserve placement_bounds as the contained-widget footprint when embedding the Default Enum SVG in Array cells; hidden increment/decrement buttons allow value_face to expand over the compact body without changing placement_bounds"
     }
   },

@@ -190,9 +190,13 @@ from collapsing into one ambiguous field.
 <code>placement_bounds</code> is a placement aura part, not a visible widget
 face, focus ring, or selection overlay. IDE hosts, grid-aware layout, and Array
 containment MAY consume it as the widget footprint when the realization
-publishes it. Internal visible parts such as <code>value_face</code>,
-<code>spinner</code>, <code>increment_up</code>, and
-<code>increment_down</code> must not be substituted for the placement footprint.
+publishes it. Enum uses the shared vocabulary: <code>main_body</code> is the
+compact visible choice body inside that aura, and <code>aura_band</code> is the
+declared uniform spacing between them. Internal visible SVG parts such as
+<code>value_face</code>, <code>spinner</code>, <code>increment_up</code>, and
+<code>increment_down</code> are concrete mappings that compose
+<code>main_body</code>; they must not be substituted for the placement
+footprint.
 </p>
 
 <p>
@@ -296,7 +300,7 @@ realization contract.
   <li><code>style.value_display.*</code></li>
   <li><code>style.focus_ring.*</code></li>
   <li><code>style.increment_button.*</code> when a realization exposes increment/decrement command parts</li>
-  <li><code>style.dropdown.*</code> when a host exposes a popup/dropdown selector surface or dropdown SVG skin</li>
+  <li><code>style.popup.*</code> when a host exposes a popup/dropdown selector surface or dropdown SVG skin</li>
   <li><code>realization.family : string</code></li>
   <li><code>realization.variant : string</code></li>
   <li><code>realization.skin_id : string</code></li>

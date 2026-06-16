@@ -87,8 +87,12 @@ The rectangular variant is the initial default numeric realization variant.
 
 <p>
 The template is intended to be interpreted by an IDE or runtime through published part markers and property bindings.
-Its compact control body uses a LabVIEW NXG-like 24 unit body centered in a 96 x 32 placement aura inside a compact 220 x 88 viewBox: a 73 unit value face, a 2 unit value-to-button gap,
-13 x 11 increment/decrement button surfaces separated by a 2 unit vertical gap, and a uniform 4 unit aura band around the main body.
+Its compact control body uses a LabVIEW NXG-like 24 unit <code>main_body</code>
+centered in a 96 x 32 <code>placement_bounds</code> aura inside a compact
+220 x 88 viewBox: a 73 unit value face, a 2 unit value-to-button gap,
+13 x 11 increment/decrement button surfaces separated by a 2 unit vertical
+gap, and a uniform 4 unit <code>aura_band</code> around
+<code>main_body</code>.
 The default caption anchor is positioned above the placement aura so the IDE
 label aura remains visually separated from the body aura.
 The button cluster can be placed on the right, placed on the left, or hidden through source-owned display properties.
@@ -99,15 +103,15 @@ The compact default does not publish a separate frame, radix badge, or unit labe
 the visible value border belongs to <code>value_face</code>, future unit text is rendered inline through <code>text_value</code>, and
 <code>placement_bounds</code> is the invisible placement aura. Its top-left
 corner is the canonical placement origin, its width and height are the portable
-layout rectangle, and its height follows the main body plus the declared
-uniform aura band. When source or container policy declares grid snap, this same
+layout rectangle, and its height follows <code>main_body</code> plus the declared
+uniform <code>aura_band</code>. When source or container policy declares grid snap, this same
 <code>placement_bounds</code> rectangle supplies the top-left/top-right edges
 and width used for snap and quantization. IDE hosts render the selection aura
 from <code>placement_bounds</code>; the
 <code>control_body</code> and <code>indicator_body</code> parts describe the
-visible body centered inside that aura. Those overlays are not additional SVG
-parts. The <code>focus_ring</code> remains the widget focus interaction part and
-must not be used as the placement aura.
+Numeric mappings to <code>main_body</code>. Those overlays are not additional
+SVG parts. The <code>focus_ring</code> remains the widget focus interaction
+part and must not be used as the placement aura.
 </p>
 
 <hr/>

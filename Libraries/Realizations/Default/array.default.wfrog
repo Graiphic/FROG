@@ -136,6 +136,26 @@
       "fallback": "host_rectangle_array_view"
     }
   ],
+  "placement_vocabulary": {
+    "placement_bounds_part": "frame",
+    "main_body_concept": "main_body",
+    "main_body_parts": [
+      "frame",
+      "index_display",
+      "element_region",
+      "horizontal_scrollbar",
+      "vertical_scrollbar"
+    ],
+    "aura_band_name": "aura_band",
+    "aura_band_source_units": 4,
+    "focus_part": "focus_ring",
+    "array_cell_bounds": "contained_widget.placement_bounds",
+    "notes": [
+      "Array owns placement_bounds as a widget-level placement surface for its complete visible container.",
+      "Widget-backed Array cells consume the contained widget placement_bounds; Array does not invent a second cell skin around the contained widget.",
+      "Array cell hover/selection is Array-owned and distinct from any contained widget focus_ring."
+    ]
+  },
   "resources": [
     {
       "id": "frog.realizations.default.array.assets.shell_svg",
@@ -464,16 +484,16 @@
     "composition_posture": "assemble_subobject_assets_into_shell_slots",
     "element_rendering_posture": "host_instantiates_element_template_per_visible_cell",
     "element_default_value_posture": "semantic_default_value_comes_from_frog_element_model_not_realization",
-    "element_cell_sizing_posture": "for_widget_backed_cells_the_array_cell_is_the_contained_widget_placement_bounds; explicit source_owned_cell_dimensions_must_match_that_aura_for_the_selected_widget_posture",
+    "element_cell_sizing_posture": "for_widget_backed_cells_the_array_cell_is_the_contained_widget_placement_bounds; explicit source_owned_cell_dimensions_must_match_those_placement_bounds_for_the_selected_widget_posture",
     "grid_placement_posture": "array_element_cells_follow_the_common_16px_widget_placement_grid_when_hosting_widgets",
     "frame_layout_posture": "array_element_viewport_frame_uses_source_owned_style_frame_properties_and_stays_visually_separate_from_neighboring_index_display_subcontainer",
     "index_display_spacing_posture": "arrow_gap_and_value_gap_are_source_owned_style_index_display_properties",
     "index_display_container_posture": "visible_index_display_may_have_its_own_source_owned_subcontainer_fill_border_and_padding",
-    "array_widget_placement_aura_posture": "Array widget selection aura is the external placement envelope of the complete container including index_display, element_region, scrollbars, frame, and container background; it is distinct from internal cell selection and contained widget placement_bounds",
-    "array_label_aura_posture": "caption/label may render a separate IDE aura above the Array body aura; the Array body aura stays the grid-snapped placement reference for the whole widget",
+    "array_widget_placement_bounds_posture": "Array widget selection overlays align to the Array placement_bounds: the external placement envelope of the complete container including index_display, element_region, scrollbars, frame, and container background; this is distinct from internal cell selection and contained widget placement_bounds",
+    "array_label_bounds_posture": "caption/label may render a separate IDE label-bounds overlay above the Array body placement_bounds; the Array body placement_bounds stay the grid-snapped placement reference for the whole widget when source/container policy declares snap",
     "element_fit_part_posture": "reviewed_widget_backed_cells_fit_to_contained_widget_placement_bounds; other fit parts are opt_in_variant_postures_not_the_default",
-    "element_padding_posture": "contained_widget_placement_bounds_cells_use_zero_array_padding_because_the_contained_widget_aura_already_provides_the_band_around_its_body",
-    "contained_widget_boundary_posture": "widget_backed_cells_respect_the_contained_widget_placement_aura; hover and selection belong to the array cell, not to the contained widget focus ring",
+    "element_padding_posture": "contained_widget_placement_bounds_cells_use_zero_array_padding_because_the_contained_widget_aura_band_already_provides_the_band_around_its_main_body",
+    "contained_widget_boundary_posture": "widget_backed_cells_respect_the_contained_widget_placement_bounds; hover and selection belong to the array cell, not to the contained widget focus_ring",
     "numeric_control_indicator_color_posture": "reviewed Default Numeric-backed Array controls use white editable value faces with increment/decrement controls; indicators use the Default Numeric indicator gray #E8EBED and hide increment/decrement controls; both keep the compact Numeric value_face border #A8ABAE at 1px; reviewed Array container body fill is #EEF4F6 with white index value surfaces; Array frame/region borders and scrollbar helper borders/thumbs use #A8ABAE with #DDE1E4 helper faces unless source overrides them",
     "virtualization_posture": "allowed_if_public_viewport_state_is_preserved"
   },
@@ -486,14 +506,14 @@
     "element default value must be provided by source-owned element model when materialization is allowed",
     "element widget overlays must align to Array element_region and element_slot parts",
     "array frame styling must remain source-owned, stay separate from visible index display subcontainers, and stay separate from contained widget frame styling",
-    "Array widget selection aura must cover the complete Array placement envelope, not only element_region, not only visible cells, and not any contained widget focus ring",
-    "Array caption/label aura must remain separate from the Array body placement aura while preserving the shared grid law",
+    "Array widget selection overlays must align to the complete Array placement_bounds, not only element_region, not only visible cells, and not any contained widget focus_ring",
+    "Array caption/label bounds must remain separate from the Array body placement_bounds while preserving the shared grid law",
     "index display container fill, border, padding, arrow spacing, and value spacing must remain source-owned and aligned to the published index_display part",
     "index display frame, separator, arrow, and text details must remain data-frog-detail internals rather than additional public data-frog-part entries",
     "element fit parts must be published by the contained widget realization when used; reviewed widget-backed cells use placement_bounds",
     "element layout padding must remain source-owned and must inset the contained widget instance rather than create an array-local surrogate visual; reviewed contained_widget_placement_bounds cells use padding 0",
-    "widget-backed element cell size must come from the contained widget placement bounds or explicit source-owned cell dimensions that match that aura",
-    "widget-backed element cells must respect contained-widget placement bounds and the common grid/aura law documented in Libraries/Widgets/PlacementGrid.md",
+    "widget-backed element cell size must come from the contained widget placement_bounds or explicit source-owned cell dimensions that match those placement_bounds",
+    "widget-backed element cells must respect contained-widget placement_bounds, main_body, and aura_band law documented in Libraries/Widgets/PlacementGrid.md",
     "Numeric-backed Array controls and indicators must keep distinct source-owned value-face fills so editability is visible without hardcoded runtime heuristics",
     "Numeric-backed Array cells must keep the contained Numeric value_face border visible via element.props.style.value_face.* rather than an Array-local fake frame",
     "Numeric-backed Array examples must keep reviewed frame/region, scrollbar, helper, and selection colors source-owned rather than mixing legacy green or blue-gray runtime defaults",

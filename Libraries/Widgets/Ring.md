@@ -209,9 +209,13 @@ labels as identity.
 <code>placement_bounds</code> is a placement aura part, not a visible widget
 face, focus ring, or selection overlay. IDE hosts, grid-aware layout, and Array
 containment MAY consume it as the widget footprint when the realization
-publishes it. Internal visible parts such as <code>value_face</code>,
-<code>spinner</code>, <code>increment_up</code>, and
-<code>increment_down</code> must not be substituted for the placement footprint.
+publishes it. Ring uses the shared vocabulary: <code>main_body</code> is the
+compact visible choice body inside that aura, and <code>aura_band</code> is the
+declared uniform spacing between them. Internal visible SVG parts such as
+<code>value_face</code>, <code>spinner</code>, <code>increment_up</code>, and
+<code>increment_down</code> are concrete mappings that compose
+<code>main_body</code>; they must not be substituted for the placement
+footprint.
 </p>
 
 <p>

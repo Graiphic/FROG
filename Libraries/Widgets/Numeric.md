@@ -201,7 +201,7 @@ runtime-private bounds.
 <p>
 The following placement law is specific to the Numeric family and the reviewed
 Default Numeric compact realization. Other widget families must define their own
-body, aura padding, resize, and focus-ring law instead of inheriting Numeric
+body, <code>aura_band</code>, resize, and focus-ring law instead of inheriting Numeric
 dimensions.
 </p>
 
@@ -212,7 +212,7 @@ dimensions.
   <li>The default compact proportions are designed to align cleanly to the common grid, but grid snap is a source-owned placement policy rather than an intrinsic Numeric class requirement.</li>
   <li>When the front panel or containing widget declares snap, the top-left of the placement aura snaps to the common grid.</li>
   <li>When the front panel or containing widget declares top-right snap or width quantization, the top-right of the Numeric placement aura also snaps to the common grid and <code>layout.width</code> is quantized as an integer multiple of <code>canvas.grid.pitch</code>.</li>
-  <li>When horizontal resize is grid-quantized, the aura width moves from grid point to grid point while keeping the declared uniform aura band around the main body.</li>
+  <li>When horizontal resize is grid-quantized, the aura width moves from grid point to grid point while keeping the declared uniform <code>aura_band</code> around <code>main_body</code>.</li>
   <li>The distance between the visible skin and the placement aura remains declared and uniform for a given placement posture.</li>
   <li>The value face, control body, indicator body, and focus ring are stretchable surfaces.</li>
   <li>The increment/decrement spinner follows the source-owned side declaration: <code>display.increment_buttons_side</code>. It may be placed on the right, placed on the left, or hidden through <code>display.increment_buttons_visible</code>.</li>
@@ -221,13 +221,14 @@ dimensions.
 </ul>
 
 <p>
-The placement aura is not the runtime focus ring and it is not the visible
-body. When a Numeric is contained by Array, the Array cell consumes the Numeric
-placement posture. Array hover and selection cover the cell; the Numeric focus
-ring appears only when the Numeric itself has editing focus. In an IDE view,
-the host renders the selection aura from <code>placement_bounds</code>.
-<code>control_body</code> and <code>indicator_body</code> describe the centered
-visible body inside that aura. A label aura may be derived from
+The placement aura is not the runtime focus ring and it is not
+<code>main_body</code>. When a Numeric is contained by Array, the Array cell
+consumes the Numeric placement posture. Array hover and selection cover the
+cell; the Numeric focus ring appears only when the Numeric itself has editing
+focus. In an IDE view, the host renders the selection aura from
+<code>placement_bounds</code>. <code>control_body</code> and
+<code>indicator_body</code> are the Numeric SVG mappings to the shared
+<code>main_body</code> vocabulary. A label aura may be derived from
 <code>caption</code>. These auras are runtime/IDE overlays, not additional SVG
 public parts.
 </p>
@@ -316,11 +317,11 @@ When the active representation is fixed-point, the following additional members 
 
 <ul>
   <li><code>root</code></li>
-  <li><code>placement_bounds</code> - invisible placement aura: portable placement and containment rectangle, height equal to body plus declared aura band; not focus and not the visible body. Top-left/top-right snap and grid-controlled width apply when source or container policy declares them.</li>
+  <li><code>placement_bounds</code> - invisible placement aura: portable placement and containment rectangle, height equal to <code>main_body</code> plus declared <code>aura_band</code>; not focus and not the visible body. Top-left/top-right snap and grid-controlled width apply when source or container policy declares them.</li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>control_body</code> when present — centered main body bounds for the numeric control face.</li>
-  <li><code>indicator_body</code> when present — centered main body bounds for the numeric indicator face.</li>
+  <li><code>control_body</code> when present - Numeric control mapping to <code>main_body</code>.</li>
+  <li><code>indicator_body</code> when present - Numeric indicator mapping to <code>main_body</code>.</li>
   <li><code>value_face</code></li>
   <li><code>text_value</code></li>
   <li><code>spinner</code> when present</li>

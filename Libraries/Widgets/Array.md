@@ -112,14 +112,15 @@ editing and display behavior.
 
 <p>
 For widget-backed arrays, each visible cell is a composition boundary whose
-size is the contained widget fitting bounds unless the source declares an
-explicit cell size. The Array owns the outer collection frame, index displays,
-viewport, scrolling, and materialization; the contained widget owns the visible
-cell body and its own published frame. When source-owned padding and gaps are
-zero, neighboring contained widget instances may touch or visually superpose
-their adjacent published bounds. The runtime must not insert array-local
-separator lines, fake per-cell shells, or extra borders between contained
-widgets.
+default size is the contained widget <code>placement_bounds</code> unless the
+source declares an explicit cell size. The Array owns the outer collection
+frame, index displays, viewport, scrolling, and materialization; the contained
+widget owns its visible <code>main_body</code>, its declared
+<code>aura_band</code>, and its own published skin parts. When source-owned
+padding and gaps are zero, neighboring contained widget instances may touch or
+visually superpose their adjacent <code>placement_bounds</code>. The runtime
+must not insert array-local separator lines, fake per-cell shells, or extra
+borders between contained widgets.
 </p>
 
 <p>
@@ -248,8 +249,9 @@ and element realization parts.
 When a contained widget realization publishes <code>placement_bounds</code>, the
 array cell uses those placement bounds as the repeated element surface. This is
 the reviewed Default posture for widget-backed cells. The visible widget body
-remains inside that cell according to the contained widget aura law; Array does
-not invent a second inset or redraw the element as an array-local surrogate.
+remains inside that cell according to the contained widget
+<code>aura_band</code> law; Array does not invent a second inset or redraw the
+element as an array-local surrogate.
 </p>
 
 <p>
@@ -262,21 +264,23 @@ uniform aura band.
 </p>
 
 <p>
-The Array widget also owns its own placement aura as a widget. That Array aura
-is the external placement envelope of the complete array container: index
-display, element viewport, scrollbars, frame, and container background. It is
-not the internal element grid, and it is not any contained element widget aura.
-In an IDE view, selecting the Array widget highlights that complete Array
-placement envelope. Selecting or hovering a cell highlights the cell placement
-surface inside the Array. These two overlays must remain distinct.
+The Array widget also owns its own <code>placement_bounds</code> as a widget.
+Those Array <code>placement_bounds</code> are the external placement envelope of
+the complete array container: index display, element viewport, scrollbars,
+frame, and container background. They are not the internal element grid, and
+they are not any contained element widget <code>placement_bounds</code>. In an
+IDE view, selecting the Array widget highlights that complete Array placement
+surface. Selecting or hovering a cell highlights the cell placement surface
+inside the Array. These two overlays must remain distinct.
 </p>
 
 <p>
 The Array caption/label surface follows the same authoring rule as Numeric:
-the label may have its own IDE aura above the widget body aura, and the two
-auras may touch at the shared edge without redefining the Array body bounds.
-The Array body aura remains the grid-snapped top-left placement reference for
-the widget as a whole.
+the label may have its own IDE label bounds above the Array body
+<code>placement_bounds</code>, and the two editor overlays may touch at the
+shared edge without redefining the Array body bounds. The Array body
+<code>placement_bounds</code> remain the grid-snapped top-left placement
+reference for the widget as a whole when source/container policy declares snap.
 </p>
 
 <p>
@@ -318,7 +322,8 @@ padding must be consumed as layout geometry; it must not be replaced by a
 runtime-local fake border or duplicated element skin. Border-sharing repeated
 widgets keep this value at <code>0</code> when
 <code>element.layout.boundary_policy=contained_widget_placement_bounds</code>;
-the apparent breathing room is already the contained widget's aura.
+the apparent breathing room is already the contained widget's
+<code>aura_band</code> inside its <code>placement_bounds</code>.
 </p>
 
 <p>
@@ -339,10 +344,10 @@ focus for editing.
   <li><code>element.role</code></li>
   <li><code>element.template_ref</code></li>
   <li><code>element.default_value</code></li>
-  <li><code>element.layout.padding</code> - optional source-owned inset between the array cell bounds and the contained widget instance; must be <code>0</code> for reviewed <code>contained_widget_placement_bounds</code> cells because the cell already is the contained widget aura.</li>
+  <li><code>element.layout.padding</code> - optional source-owned inset between the array cell bounds and the contained widget instance; must be <code>0</code> for reviewed <code>contained_widget_placement_bounds</code> cells because the cell already is the contained widget <code>placement_bounds</code>.</li>
   <li><code>element.layout.grid_pitch</code> - optional source-owned placement-grid pitch for widget-backed cells; the reviewed Default posture uses <code>16px</code>.</li>
   <li><code>element.layout.snap_policy</code> - optional placement sizing policy; widget-backed cells should snap the placement surface to the common grid.</li>
-  <li><code>element.layout.fit_part</code> — optional contained-widget public part used as the repeated-cell fitting bounds; reviewed widget-backed cells use <code>placement_bounds</code>.</li>
+  <li><code>element.layout.fit_part</code> — optional contained-widget public part used as the repeated-cell bounds; reviewed widget-backed cells use <code>placement_bounds</code>.</li>
   <li><code>element.layout.boundary_policy</code> - optional source-owned posture for contained-widget boundary handling; the Default realization supports <code>contained_widget_placement_bounds</code> for grid-snapped widget-backed cells.</li>
   <li><code>dimensions.rank</code></li>
   <li><code>dimensions.shape[]</code></li>

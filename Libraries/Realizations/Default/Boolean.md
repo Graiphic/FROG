@@ -65,7 +65,7 @@ frog.widgets.boolean_indicator
   <li><code>label</code></li>
   <li><code>caption</code></li>
   <li><code>placement_bounds</code> - non-rendered IDE/container placement aura.</li>
-  <li><code>state_face</code> - visible true/false state surface.</li>
+  <li><code>state_face</code> - Boolean SVG mapping to <code>main_body</code>, the visible true/false state surface.</li>
   <li><code>state_text</code> - optional centered On/Off text.</li>
   <li><code>focus_ring</code> - optional focus outline following <code>state_face</code>.</li>
 </ul>
@@ -107,9 +107,10 @@ surface. The aura is not the keyboard focus ring and is not a value surface.
 <p>
 The Default Boolean skin uses this source geometry by default:
 <code>placement_bounds = 72 x 72</code>, <code>state_face = 64 x 64</code>,
-with a uniform 4 source-unit band between them. This matches the Default
-Numeric aura standard. Resizing a rectangular, square, oval, or circular
-Boolean scales that skin. The runtime may expose the
+with a uniform 4 source-unit <code>aura_band</code> between
+<code>placement_bounds</code> and <code>main_body</code>. This matches the
+Default Numeric aura standard. Resizing a rectangular, square, oval, or
+circular Boolean scales that skin. The runtime may expose the
 placement aura in IDE view, but it must not replace it with a hardcoded shape.
 </p>
 

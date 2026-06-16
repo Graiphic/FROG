@@ -63,7 +63,7 @@
           y="32"
           width="72"
           height="72"
-          data-frog-role="ide_placement_aura" />
+          data-frog-role="placement_bounds" />
 
     <ellipse id="state_face"
              data-frog-part="state_face"

@@ -93,7 +93,10 @@ Hosts apply those defaults by widget class and role before any source-owned
 <code>placement_bounds</code> is the invisible placement aura consumed by IDE,
 grid, and Array containment policies. The Default compact Enum aura is
 <code>176 x 38</code> source units inside the <code>200 x 130</code> SVG
-viewBox, with a uniform 4-unit band around the compact body. It is not focus,
+viewBox, with a uniform 4-unit <code>aura_band</code> around the compact
+<code>main_body</code>. <code>value_face</code>, <code>spinner</code>,
+<code>increment_up</code>, and <code>increment_down</code> are concrete SVG
+mappings that compose that Enum <code>main_body</code>. The aura is not focus,
 selection, a dropdown row, or a visible decoration.
 </p>
 

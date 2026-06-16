@@ -119,8 +119,19 @@ selection/manipulation affordances.
 
 <p>
 SVG-backed Default widgets should declare <code>placement_bounds</code> as the
-portable placement aura and a main visible body part inside it. The adopted
-default band between <code>placement_bounds</code> and the main body is uniform
+portable placement aura and a <code>main_body</code> mapping inside it. This is
+the common vocabulary for every widget family: <code>placement_bounds</code>
+places and contains the widget, <code>main_body</code> names the primary visible
+body, <code>aura_band</code> names the spacing between them, and
+<code>focus_ring</code> remains a focus-state outline. Concrete SVG part names
+such as <code>value_face</code>, <code>state_face</code>, or <code>face</code>
+may map to <code>main_body</code>, but they are not alternate placement
+concepts.
+</p>
+
+<p>
+The adopted default <code>aura_band</code> between
+<code>placement_bounds</code> and <code>main_body</code> is uniform
 <code>4px</code> / <code>4 source units</code> at 1:1 scale. Widget dimensions
 remain family-specific: a different aura rectangle is normal, but a different
 band thickness must be explicitly declared in the widget class law, Default

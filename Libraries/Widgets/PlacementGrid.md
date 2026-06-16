@@ -34,7 +34,9 @@ inspection.
   <li>When the grid is rendered, ordinary grid-dot centers are located at <code>grid.origin + n * grid.pitch</code>. Renderers must not center repeated background tiles in a way that shifts visible dots by half a pitch from the source coordinate system.</li>
   <li>When the grid is visible, the <code>0,0</code> origin point must render with a stronger visual marker than ordinary grid points. The default marker is a point twice the standard grid-dot radius, not a large decorative target.</li>
   <li>A widget's canonical placement origin is the top-left corner of its <code>placement_bounds</code>.</li>
-  <li>The adopted default aura band is uniform <code>4px</code> / <code>4 source units</code> at 1:1 scale between <code>placement_bounds</code> and the widget's main visible body. Widget dimensions remain family-specific; a different aura band is allowed only when the widget class law and Default realization manifest declare it explicitly.</li>
+  <li>All widget families use the same placement vocabulary: <code>placement_bounds</code> is the placement aura, <code>main_body</code> is the primary visible widget body inside that aura, <code>aura_band</code> is the spacing between them, and <code>focus_ring</code> is a focus-state outline rather than a placement surface.</li>
+  <li>Widget-specific SVG part names such as <code>value_face</code>, <code>state_face</code>, or <code>face</code> are concrete mappings to <code>main_body</code>; they are not alternate placement concepts.</li>
+  <li>The adopted default <code>aura_band</code> is uniform <code>4px</code> / <code>4 source units</code> at 1:1 scale between <code>placement_bounds</code> and the widget's <code>main_body</code>. Widget dimensions remain family-specific; a different aura band is allowed only when the widget class law and Default realization manifest declare it explicitly.</li>
   <li>The grid is a shared placement reference and optional snap policy. It is not a universal hidden constraint on every widget instance.</li>
   <li>When a source declares grid snap, the declared edge such as <code>placement_bounds.top_left</code> snaps to the grid.</li>
   <li>For horizontally resizable widgets, a source may also declare that <code>placement_bounds.top_right</code> snaps to the grid. Equivalently, <code>layout.width</code> is quantized as an integer multiple of <code>canvas.grid.pitch</code> for that declared posture.</li>
@@ -57,10 +59,10 @@ layout coordinates.
 <p>
 This document defines the common placement vocabulary. It does not assign one
 universal aura rectangle to every widget family. Each widget definition and
-Default realization manifest must publish its own body, aura dimensions,
-resize, and focus-ring law. The adopted default aura band is <code>4px</code>
-at 1:1 scale; any different band is an explicit widget-class exception, not a
-runtime guess.
+Default realization manifest must publish its own <code>placement_bounds</code>,
+<code>main_body</code> mapping, dimensions, resize law, and focus-ring law. The
+adopted default <code>aura_band</code> is <code>4px</code> at 1:1 scale; any
+different band is an explicit widget-class exception, not a runtime guess.
 </p>
 
 <hr/>
@@ -188,7 +190,7 @@ over <code>placement_bounds</code>.
 <ul>
   <li><strong>Skin bounds</strong> - the visible and interactive realization surface of the widget.</li>
   <li><strong>Placement bounds</strong> - the widget aura used to place, select, resize, or contain the widget. It is the portable layout and containment rectangle. Its edges snap to the grid only when source or container policy declares snap; its height follows the widget body plus the declared aura band.</li>
-  <li><strong>Main body</strong> - the visible core body of the widget, such as <code>control_body</code> or <code>indicator_body</code>. It sits inside <code>placement_bounds</code> with the widget's declared aura padding. It is not the aura.</li>
+  <li><strong>Main body</strong> - the visible core body of the widget, such as <code>control_body</code> or <code>indicator_body</code>. It sits inside <code>placement_bounds</code> with the widget's declared <code>aura_band</code>. It is not the aura.</li>
   <li><strong>Label aura</strong> - an IDE overlay aligned to the caption/label anchor. It is derived from <code>caption</code> or equivalent label parts.</li>
   <li><strong>Focus ring</strong> - a runtime interaction state owned by the focused widget skin.</li>
   <li><strong>IDE selection overlay</strong> - an editor-only overlay with handles; it is not a runtime widget part.</li>
@@ -231,7 +233,7 @@ skin parts.
 </p>
 
 <pre><code>contained widget skin
- declared aura padding
+ declared aura_band
  optional grid snap policy
 = contained widget placement bounds
 = Array element cell when hosted by Array

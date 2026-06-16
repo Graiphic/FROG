@@ -17,7 +17,7 @@
           width="237"
           height="71"
           style="fill: var(--frog-enum-dropdown-fill, #ffffff); stroke: var(--frog-enum-dropdown-border, #64748b); stroke-width: var(--frog-enum-dropdown-border-width, 1px); vector-effect: non-scaling-stroke;"
-          data-frog-bind="items[] interaction.opened style.dropdown.*" />
+          data-frog-bind="items[] interaction.opened style.popup.*" />
 
     <g id="option_template"
        data-frog-template-part="option_template"
@@ -29,7 +29,7 @@
             width="236"
             height="24"
             style="fill: var(--frog-enum-dropdown-option-fill, #ffffff);"
-            data-frog-bind="items[] selected.* style.dropdown.option.*" />
+            data-frog-bind="items[] selected.* style.popup.option.*" />
 
       <text id="option_text"
             data-frog-part="option_text"
@@ -38,7 +38,7 @@
             y="13"
             dominant-baseline="middle"
             style="fill: var(--frog-enum-dropdown-option-text, #111827); font-family: var(--frog-enum-dropdown-option-font-family, Segoe UI, Arial, sans-serif); font-size: var(--frog-enum-dropdown-option-font-size, 14px); font-weight: var(--frog-enum-dropdown-option-font-weight, 400); font-style: var(--frog-enum-dropdown-option-font-style, normal);"
-            data-frog-bind="items[].text selected.* style.dropdown.option.*">Item</text>
+            data-frog-bind="items[].text selected.* style.popup.option.*">Item</text>
     </g>
   </g>
 </svg>

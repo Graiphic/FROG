@@ -154,8 +154,9 @@ The boolean family follows these architectural rules:
   <li><code>label.text</code> is class-owned logical widget-name text.</li>
   <li><code>caption.text</code> is class-owned front-panel display caption text.</li>
   <li><code>state_text.true_text</code> and <code>state_text.false_text</code> are optional state text surfaces, not the semantic source of the boolean value.</li>
-  <li><code>state_face</code> is the single public visual Boolean value surface.</li>
+  <li><code>state_face</code> is the Boolean SVG mapping to the shared <code>main_body</code> vocabulary.</li>
   <li><code>placement_bounds</code> is the non-rendered placement aura used by IDEs and container widgets.</li>
+  <li><code>aura_band</code> is the uniform spacing between <code>placement_bounds</code> and <code>main_body</code>.</li>
   <li>The control click edits the Boolean control value. It does not execute a diagram by itself; execution remains an explicit host action unless an event structure is declared later.</li>
 </ul>
 
@@ -168,7 +169,7 @@ The boolean family follows these architectural rules:
   <li><code>label</code> - structural label surface when displayed by tooling or host,</li>
   <li><code>caption</code> - front-panel user-facing caption surface,</li>
   <li><code>placement_bounds</code> - non-rendered placement aura for IDE selection, sizing, and container fit,</li>
-  <li><code>state_face</code> - visible true/false Boolean value face,</li>
+  <li><code>state_face</code> - Boolean mapping to <code>main_body</code>, the visible true/false value face,</li>
   <li><code>state_text</code> - optional internal true/false text surface,</li>
   <li><code>focus_ring</code> - optional focus visualization surface following <code>state_face</code>.</li>
 </ul>
@@ -180,12 +181,13 @@ For the Default Boolean realization, <code>focus_ring</code> follows the visible
 </p>
 
 <p>
-The Default Boolean realization uses a Boolean-specific placement law:
-<code>placement_bounds</code> is a 72 x 72 source-unit aura, the default
-<code>state_face</code> body is 56 x 56 source units, and the nominal skin
-band is 8 source units on each side. That proportion belongs to this
-realization. It must not be generalized to Numeric, String, Enum, Ring, Array,
-or future widgets without their own review.
+The Default Boolean realization uses the shared placement vocabulary:
+<code>placement_bounds</code> is a 72 x 72 source-unit aura,
+<code>state_face</code> is the Boolean mapping to a 64 x 64
+<code>main_body</code>, and <code>aura_band</code> is 4 source units on each
+side. That proportion belongs to this realization. It must not be generalized
+to Numeric, String, Enum, Ring, Array, or future widgets without their own
+review.
 </p>
 
 <hr/>

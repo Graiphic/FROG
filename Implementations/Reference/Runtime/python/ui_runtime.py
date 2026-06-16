@@ -1660,25 +1660,25 @@ class EnumRuntimeCore:
             "style.selector_face.symbol_width",
             "style.selector_face.symbol_height",
             "style.selector_face.symbol_size_mode",
-            "style.dropdown.fill_color",
-            "style.dropdown.border_color",
-            "style.dropdown.border_width",
-            "style.dropdown.border_width_mode",
-            "style.dropdown.option.fill_color",
-            "style.dropdown.option.text_color",
-            "style.dropdown.option.hover_fill_color",
-            "style.dropdown.option.hover_text_color",
-            "style.dropdown.option.selected_fill_color",
-            "style.dropdown.option.selected_text_color",
-            "style.dropdown.option.font_family",
-            "style.dropdown.option.font_size",
-            "style.dropdown.option.font_size_mode",
-            "style.dropdown.option.font_weight",
-            "style.dropdown.option.font_style",
-            "style.dropdown.option.padding_inline",
-            "style.dropdown.option.padding_inline_mode",
-            "style.dropdown.option.height",
-            "style.dropdown.option.height_mode",
+            "style.popup.fill_color",
+            "style.popup.border_color",
+            "style.popup.border_width",
+            "style.popup.border_width_mode",
+            "style.popup.option.fill_color",
+            "style.popup.option.text_color",
+            "style.popup.option.hover_fill_color",
+            "style.popup.option.hover_text_color",
+            "style.popup.option.selected_fill_color",
+            "style.popup.option.selected_text_color",
+            "style.popup.option.font_family",
+            "style.popup.option.font_size",
+            "style.popup.option.font_size_mode",
+            "style.popup.option.font_weight",
+            "style.popup.option.font_style",
+            "style.popup.option.padding_inline",
+            "style.popup.option.padding_inline_mode",
+            "style.popup.option.height",
+            "style.popup.option.height_mode",
             "interaction.enabled",
             "interaction.read_only",
             "visible",
@@ -1932,20 +1932,14 @@ def render_enum_dropdown_panel_skin(
     item_count: int,
     option_height: float,
     dropdown_width: float,
-    *,
-    border_only: bool = False,
 ) -> str:
     row_count = max(1, item_count)
     view_height = max(float(geometry["panel_y"]) * 2.0 + (row_count * option_height), option_height)
     panel_height = max(0.0, view_height - (float(geometry["panel_y"]) * 2.0))
     panel_width = max(0.0, dropdown_width - (float(geometry["panel_x"]) * 2.0))
     source = str(popup_asset_ref) if popup_asset_ref else "runtime:fallback"
-    classes = "enum-dropdown-panel-skin enum-dropdown-border-skin" if border_only else "enum-dropdown-panel-skin"
-    fill = "none" if border_only else "var(--frog-enum-dropdown-fill)"
-    stroke = "var(--frog-enum-dropdown-border)" if border_only else "none"
-    stroke_width = "var(--frog-enum-dropdown-border-width)" if border_only else "0"
     return (
-        f"<svg class='{classes}' aria-hidden='true' data-frog-template-source='{html.escape(source)}'"
+        f"<svg class='enum-dropdown-panel-skin' aria-hidden='true' data-frog-template-source='{html.escape(source)}'"
         " data-frog-host-surface='dropdown'"
         " preserveAspectRatio='none'"
         f" viewBox='0 0 {svg_number(dropdown_width)} {svg_number(view_height)}'>"
@@ -1953,7 +1947,7 @@ def render_enum_dropdown_panel_skin(
         f"<rect data-frog-part='{html.escape(str(geometry['panel_part']))}'"
         f" x='{svg_number(float(geometry['panel_x']))}' y='{svg_number(float(geometry['panel_y']))}'"
         f" width='{svg_number(panel_width)}' height='{svg_number(panel_height)}'"
-        f" style='fill:{fill};stroke:{stroke};stroke-width:{stroke_width};vector-effect:non-scaling-stroke;'/>"
+        " style='fill:var(--frog-enum-dropdown-fill);stroke:var(--frog-enum-dropdown-border);stroke-width:var(--frog-enum-dropdown-border-width);vector-effect:non-scaling-stroke;'/>"
         "</g></svg>"
     )
 
@@ -2149,8 +2143,8 @@ def render_enum_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
     selector_fill = safe_css_color(runtime.get("style.selector_face.fill_color"), "#f1f5f9")
     selector_stroke = safe_css_color(runtime.get("style.selector_face.border_color"), "#64748b")
     selector_symbol = safe_css_color(runtime.get("style.selector_face.symbol_color"), "#111827")
-    dropdown_option_font_size = safe_css_length(runtime.get("style.dropdown.option.font_size"), text_size)
-    dropdown_option_height = safe_css_length(runtime.get("style.dropdown.option.height"), "28px")
+    dropdown_option_font_size = safe_css_length(runtime.get("style.popup.option.font_size"), text_size)
+    dropdown_option_height = safe_css_length(runtime.get("style.popup.option.height"), "28px")
     dropdown_option_height_value = css_px_number_from_length(dropdown_option_height) or float(dropdown_geometry["option_row_height"])
     dropdown_width_value = float(geometry["value_face_width"])
     attrs = (
@@ -2181,20 +2175,20 @@ def render_enum_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
         f"--frog-enum-selector-hover-symbol:{html.escape(safe_css_color(runtime.get('style.selector_face.symbol_color.hover'), selector_symbol))};"
         f"--frog-enum-value-hover-fill:{html.escape(safe_css_color(runtime.get('style.value_face.fill_color.hover'), 'transparent'))};"
         f"--frog-enum-text-padding-inline:{text_padding};"
-        f"--frog-enum-dropdown-fill:{html.escape(safe_css_color(runtime.get('style.dropdown.fill_color'), '#ffffff'))};"
-        f"--frog-enum-dropdown-border:{html.escape(safe_css_color(runtime.get('style.dropdown.border_color'), '#64748b'))};"
-        f"--frog-enum-dropdown-border-width:{html.escape(safe_css_length(runtime.get('style.dropdown.border_width'), '1px'))};"
-        f"--frog-enum-dropdown-option-fill:{html.escape(safe_css_color(runtime.get('style.dropdown.option.fill_color'), '#ffffff'))};"
-        f"--frog-enum-dropdown-option-text:{html.escape(safe_css_color(runtime.get('style.dropdown.option.text_color'), '#111827'))};"
-        f"--frog-enum-dropdown-option-hover-fill:{html.escape(safe_css_color(runtime.get('style.dropdown.option.hover_fill_color'), '#2563eb'))};"
-        f"--frog-enum-dropdown-option-hover-text:{html.escape(safe_css_color(runtime.get('style.dropdown.option.hover_text_color'), '#ffffff'))};"
-        f"--frog-enum-dropdown-option-selected-fill:{html.escape(safe_css_color(runtime.get('style.dropdown.option.selected_fill_color'), '#2563eb'))};"
-        f"--frog-enum-dropdown-option-selected-text:{html.escape(safe_css_color(runtime.get('style.dropdown.option.selected_text_color'), '#ffffff'))};"
-        f"--frog-enum-dropdown-option-font-family:{html.escape(safe_css_font_family(runtime.get('style.dropdown.option.font_family'), 'Segoe UI,Arial,sans-serif'))};"
+        f"--frog-enum-dropdown-fill:{html.escape(safe_css_color(runtime.get('style.popup.fill_color'), '#ffffff'))};"
+        f"--frog-enum-dropdown-border:{html.escape(safe_css_color(runtime.get('style.popup.border_color'), '#64748b'))};"
+        f"--frog-enum-dropdown-border-width:{html.escape(safe_css_length(runtime.get('style.popup.border_width'), '1px'))};"
+        f"--frog-enum-dropdown-option-fill:{html.escape(safe_css_color(runtime.get('style.popup.option.fill_color'), '#ffffff'))};"
+        f"--frog-enum-dropdown-option-text:{html.escape(safe_css_color(runtime.get('style.popup.option.text_color'), '#111827'))};"
+        f"--frog-enum-dropdown-option-hover-fill:{html.escape(safe_css_color(runtime.get('style.popup.option.hover_fill_color'), '#2563eb'))};"
+        f"--frog-enum-dropdown-option-hover-text:{html.escape(safe_css_color(runtime.get('style.popup.option.hover_text_color'), '#ffffff'))};"
+        f"--frog-enum-dropdown-option-selected-fill:{html.escape(safe_css_color(runtime.get('style.popup.option.selected_fill_color'), '#2563eb'))};"
+        f"--frog-enum-dropdown-option-selected-text:{html.escape(safe_css_color(runtime.get('style.popup.option.selected_text_color'), '#ffffff'))};"
+        f"--frog-enum-dropdown-option-font-family:{html.escape(safe_css_font_family(runtime.get('style.popup.option.font_family'), 'Segoe UI,Arial,sans-serif'))};"
         f"--frog-enum-dropdown-option-font-size:{html.escape(dropdown_option_font_size)};"
-        f"--frog-enum-dropdown-option-font-weight:{html.escape(safe_css_font_weight(runtime.get('style.dropdown.option.font_weight'), '400'))};"
-        f"--frog-enum-dropdown-option-font-style:{html.escape(safe_css_font_style(runtime.get('style.dropdown.option.font_style'), 'normal'))};"
-        f"--frog-enum-dropdown-option-padding-inline:{html.escape(safe_css_length(runtime.get('style.dropdown.option.padding_inline'), text_padding))};"
+        f"--frog-enum-dropdown-option-font-weight:{html.escape(safe_css_font_weight(runtime.get('style.popup.option.font_weight'), '400'))};"
+        f"--frog-enum-dropdown-option-font-style:{html.escape(safe_css_font_style(runtime.get('style.popup.option.font_style'), 'normal'))};"
+        f"--frog-enum-dropdown-option-padding-inline:{html.escape(safe_css_length(runtime.get('style.popup.option.padding_inline'), text_padding))};"
         f"--frog-enum-dropdown-option-height:{html.escape(dropdown_option_height)};"
         f"--frog-enum-spinner-display:{'inline' if increment_buttons_visible else 'none'};"
         f"--frog-enum-spinner-fill:{html.escape(safe_css_color(runtime.get('style.increment_button.fill_color.normal'), '#edf2f7'))};"
@@ -2266,7 +2260,6 @@ def render_enum_widget(widget: dict[str, Any], asset_path: Path | None) -> str:
             f"{render_enum_dropdown_panel_skin(runtime.get('popup_asset_ref'), dropdown_geometry, len(items), dropdown_option_height_value, dropdown_width_value)}"
             "<div class='enum-dropdown-options'>"
             f"{''.join(dropdown_options)}</div>"
-            f"{render_enum_dropdown_panel_skin(runtime.get('popup_asset_ref'), dropdown_geometry, len(items), dropdown_option_height_value, dropdown_width_value, border_only=True)}"
             "</div>"
         )
         body = f"{skin}{caption_overlay}{value_overlay}{step_overlays}{hidden_select}{dropdown}"
@@ -3716,7 +3709,6 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 .enum-dropdown{{position:absolute;box-sizing:border-box;z-index:30;background:transparent;border:0;}}
 .enum-dropdown[hidden]{{display:none;}}
 .enum-dropdown-panel-skin{{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}}
-.enum-dropdown-border-skin{{z-index:2;}}
 .enum-dropdown-options{{position:absolute;inset:0;z-index:1;}}
 .enum-dropdown-option{{position:relative;width:100%;height:var(--frog-enum-dropdown-option-height);min-height:var(--frog-enum-dropdown-option-height);display:flex;align-items:center;justify-content:flex-start;padding:0 var(--frog-enum-dropdown-option-padding-inline);border:0;border-radius:0;background:transparent;color:var(--frog-enum-dropdown-option-text);font-family:var(--frog-enum-dropdown-option-font-family);font-size:var(--frog-enum-dropdown-option-font-size);font-weight:var(--frog-enum-dropdown-option-font-weight);font-style:var(--frog-enum-dropdown-option-font-style);text-align:left;cursor:pointer;}}
 .enum-dropdown-option:hover,.enum-dropdown-option:focus{{--frog-enum-dropdown-option-current-fill:var(--frog-enum-dropdown-option-hover-fill);color:var(--frog-enum-dropdown-option-hover-text);outline:0;}}

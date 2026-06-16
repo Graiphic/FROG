@@ -22,7 +22,7 @@
   <g data-frog-part="root">
     <rect id="placement_bounds"
           data-frog-part="placement_bounds"
-          data-frog-role="placement_aura"
+          data-frog-role="placement_bounds"
           data-frog-bind="layout.placement_bounds.* layout.grid.*"
           x="0"
           y="72"

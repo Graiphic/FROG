@@ -121,6 +121,16 @@ dropdown width by the same amount.
 </p>
 
 <p>
+Default Ring uses the shared placement vocabulary: <code>placement_bounds</code>
+is the invisible placement aura, <code>main_body</code> is the compact visible
+choice body inside that aura, and <code>aura_band</code> is the uniform spacing
+between them. <code>value_face</code>, <code>spinner</code>,
+<code>increment_up</code>, and <code>increment_down</code> are concrete SVG
+mappings that compose the Ring <code>main_body</code>; they are not alternate
+placement concepts.
+</p>
+
+<p>
 When a Default Ring widget is embedded in an Array cell, the cell footprint is
 <code>placement_bounds</code>. The Array must not infer cell size from
 <code>value_face</code>, <code>spinner</code>, <code>increment_up</code>, or

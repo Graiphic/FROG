@@ -1,5 +1,6 @@
 #include "contract.hpp"
 
+#include <cstdlib>
 #include <set>
 #include <stdexcept>
 
@@ -257,14 +258,28 @@ FrontPanel parse_front_panel(const Value& value) {
 } // namespace
 
 std::filesystem::path find_repo_root(const std::filesystem::path& start) {
+    if (const char* spec_root = std::getenv("FROG_SPEC_ROOT"); spec_root != nullptr && spec_root[0] != '\0') {
+        auto configured = std::filesystem::absolute(std::filesystem::path(spec_root));
+        if (std::filesystem::is_directory(configured / "Examples") && std::filesystem::is_directory(configured / "Libraries")) {
+            return configured;
+        }
+        throw std::runtime_error("FROG_SPEC_ROOT must point to a FROG specification repository with Examples and Libraries directories.");
+    }
     auto current = std::filesystem::absolute(start);
-    for (auto candidate = current; !candidate.empty(); candidate = candidate.parent_path()) {
+    for (auto candidate = current; !candidate.empty();) {
         if (std::filesystem::is_directory(candidate / "Examples") && std::filesystem::is_directory(candidate / "Implementations")) {
             return candidate;
         }
-        if (candidate == candidate.root_path()) {
+        const auto sibling_spec_repo = candidate / "FROG";
+        if (std::filesystem::is_directory(sibling_spec_repo / "Examples") &&
+            std::filesystem::is_directory(sibling_spec_repo / "Implementations")) {
+            return sibling_spec_repo;
+        }
+        const auto parent = candidate.parent_path();
+        if (candidate == candidate.root_path() || parent == candidate) {
             break;
         }
+        candidate = parent;
     }
     throw std::runtime_error("Unable to locate the repository root from the current path.");
 }
