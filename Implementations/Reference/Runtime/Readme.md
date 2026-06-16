@@ -11,6 +11,27 @@
 
 <hr/>
 
+<h2>Deprecated Runtime Surface</h2>
+
+<p>
+<strong>Status as of 2026-06-17: this public in-repository runtime surface is deprecated.</strong>
+It is retained only as historical reference material for the public specification
+repository. Active runtime implementation, browser-host validation, widget visual
+work, and C++/Python/Rust parity work now happen in the private
+<code>Graiphic/FROG-Runtime</code> repository.
+</p>
+
+<p>
+Do not use this directory as the launch target for current widget examples.
+Do not patch this runtime to fix active visual behavior unless Graiphic explicitly
+promotes a new public runtime surface. The public <code>FROG</code> repository remains
+the source of language/specification material, examples, manifests, Default
+realizations, SVG assets, and public documentation; the active executable runtime
+is <code>FROG-Runtime</code>.
+</p>
+
+<hr/>
+
 <h2>Overview</h2>
 
 <p>

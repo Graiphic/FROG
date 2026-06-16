@@ -25,10 +25,11 @@ New examples should follow the
 That document defines the shared public organization for widget, operator,
 structure, library, compiler, and conformance examples without publishing
 Graiphic's internal validation recipe.
-Accepted examples may also publish a small
-<a href="./example_reference_snapshot_standard.md">Example Reference Snapshot</a>
-that records the accepted screenshot, public runtime snapshot, visual contract,
-and source/artifact hash index without duplicating source truth.
+Accepted visual examples may publish a small
+<a href="./example_reference_snapshot_standard.md">screenshot-only public capture</a>.
+As of 2026-06-17, public example publication is limited to readable screenshots;
+runtime state snapshots, visual contracts, hash indexes, and internal validation
+evidence stay out of the public example surface.
 </p>
 
 <hr/>
@@ -36,7 +37,8 @@ and source/artifact hash index without duplicating source truth.
 <h2>Public Runtime Boundary</h2>
 
 <p>
-Examples <code>01</code> through <code>15</code> define the current public reference runtime closure.
+Examples <code>01</code> through <code>15</code> define the historical public reference runtime closure.
+As of 2026-06-17, the in-repository public runtime copy is deprecated and retained as historical reference material only.
 </p>
 
 <p>
@@ -45,7 +47,7 @@ They should not be interpreted as a commitment to publish Graiphic's production 
 </p>
 
 <p>
-Production-grade runtime development for future FROG execution surfaces continues in Graiphic proprietary repositories, including <code>Graiphic/FROG-Runtime</code>, while preserving the public contracts required for independent implementations.
+Current runtime development and validation continue in Graiphic proprietary repositories, including <code>Graiphic/FROG-Runtime</code>, while preserving the public contracts required for independent implementations.
 </p>
 
 <h2>Browser-Hosted Inspection Surface</h2>
@@ -62,11 +64,11 @@ Other front-panel hosts may expose the same source, realization, FIR, lowering, 
 </p>
 
 <p>
-When a widget-facing example is accepted, a <code>reference/</code> directory
-may preserve the visible browser-host state and visual contract as public
-evidence. The snapshot is subordinate to the owning source and artifacts; it is
-not a private runtime recipe and it does not redefine the example's validation
-boundary.
+When a widget-facing example is accepted, the public repository may preserve a
+readable screenshot of the accepted browser-host state. Older
+<code>reference/</code> directories are historical archives; new public example
+updates should not add public accepted-state JSON, visual contracts, artifact
+hash indexes, or private validation evidence.
 </p>
 
 <hr/>
@@ -76,16 +78,15 @@ boundary.
 <p>
 Last worked dates use ISO 8601 format and record the latest known public example-dossier work date.
 They are traceability metadata only; they are not FROG language versions and they do not redefine the validation boundary.
-The example name links to the example dossier. When present, the reference
-snapshot link opens the accepted screenshot, state snapshot, visual contract,
-and artifact hash index for that example.
+The example name links to the example dossier. When present, the capture link
+opens the public screenshot for that example.
 </p>
 
 <table>
   <thead>
     <tr>
       <th>Example</th>
-      <th>Reference</th>
+      <th>Capture</th>
       <th>Last worked</th>
       <th>Focus</th>
       <th>Starts at</th>
@@ -135,7 +136,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./06_boolean_value_roundtrip/"><code>06_boolean_value_roundtrip</code></a></td>
-      <td><a href="./06_boolean_value_roundtrip/reference/">snapshot</a></td>
+      <td><a href="./06_boolean_value_roundtrip/reference/screenshot.png">capture</a></td>
       <td><time datetime="2026-06-11">2026-06-11</time></td>
       <td>Boolean control/indicator value roundtrip</td>
       <td><code>main.frog</code> + <code>ui/boolean_panel.wfrog</code></td>
@@ -295,7 +296,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./26_array_numeric_selection_roundtrip/"><code>26_array_numeric_selection_roundtrip</code></a></td>
-      <td><a href="./26_array_numeric_selection_roundtrip/reference/">snapshot</a></td>
+      <td><a href="./26_array_numeric_selection_roundtrip/reference/screenshot.svg">capture</a></td>
       <td><time datetime="2026-06-04">2026-06-04</time></td>
       <td>Deprecated historical 2D rigid Array numeric selected-element milestone retained for regression and traceability</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
@@ -303,7 +304,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./27_array_1d_vertical_numeric_selection_roundtrip/"><code>27_array_1d_vertical_numeric_selection_roundtrip</code></a></td>
-      <td><a href="./27_array_1d_vertical_numeric_selection_roundtrip/reference/">snapshot</a></td>
+      <td><a href="./27_array_1d_vertical_numeric_selection_roundtrip/reference/screenshot.svg">capture</a></td>
       <td><time datetime="2026-06-04">2026-06-04</time></td>
       <td>Deprecated historical 1D vertical rigid Array numeric selected-element milestone retained for regression and traceability</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
@@ -311,7 +312,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./28_array_3d_numeric_selection_roundtrip/"><code>28_array_3d_numeric_selection_roundtrip</code></a></td>
-      <td><a href="./28_array_3d_numeric_selection_roundtrip/reference/">snapshot</a></td>
+      <td><a href="./28_array_3d_numeric_selection_roundtrip/reference/screenshot.svg">capture</a></td>
       <td><time datetime="2026-06-04">2026-06-04</time></td>
       <td>Deprecated historical 3D rigid Array numeric selected-element milestone retained for regression and traceability</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
@@ -319,7 +320,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./29_array_1d_numeric_container_roundtrip/"><code>29_array_1d_numeric_container_roundtrip</code></a></td>
-      <td><a href="./29_array_1d_numeric_container_roundtrip/reference/">snapshot</a></td>
+      <td><a href="./29_array_1d_numeric_container_roundtrip/reference/screenshot.png">capture</a></td>
       <td><time datetime="2026-06-11">2026-06-11</time></td>
       <td>1D Array container with cells realized as Default Numeric widget instances and a read-only Array/Numeric indicator</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
@@ -327,7 +328,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./30_array_1d_horizontal_numeric_container_roundtrip/"><code>30_array_1d_horizontal_numeric_container_roundtrip</code></a></td>
-      <td><a href="./30_array_1d_horizontal_numeric_container_roundtrip/reference/">snapshot</a></td>
+      <td><a href="./30_array_1d_horizontal_numeric_container_roundtrip/reference/screenshot.png">capture</a></td>
       <td><time datetime="2026-06-11">2026-06-11</time></td>
       <td>1D horizontal Array container with cells realized as Default Numeric widget instances and a read-only horizontal Array/Numeric indicator</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
@@ -335,7 +336,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./31_array_1d_visible_count_property_roundtrip/"><code>31_array_1d_visible_count_property_roundtrip</code></a></td>
-      <td><a href="./31_array_1d_visible_count_property_roundtrip/reference/">snapshot</a></td>
+      <td><a href="./31_array_1d_visible_count_property_roundtrip/reference/screenshot.png">capture</a></td>
       <td><time datetime="2026-06-11">2026-06-11</time></td>
       <td>1D Array container whose visible cell count is driven by a Numeric U8 property-write control consumed on Execute</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
@@ -343,7 +344,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./32_array_1d_horizontal_visible_count_property_roundtrip/"><code>32_array_1d_horizontal_visible_count_property_roundtrip</code></a></td>
-      <td><a href="./32_array_1d_horizontal_visible_count_property_roundtrip/reference/">snapshot</a></td>
+      <td><a href="./32_array_1d_horizontal_visible_count_property_roundtrip/reference/screenshot.png">capture</a></td>
       <td><time datetime="2026-06-11">2026-06-11</time></td>
       <td>1D horizontal Array container whose visible column count is driven by a Numeric U8 property-write control consumed on Execute</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
@@ -351,7 +352,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./33_array_2d_numeric_container_roundtrip/"><code>33_array_2d_numeric_container_roundtrip</code></a></td>
-      <td><a href="./33_array_2d_numeric_container_roundtrip/reference/">snapshot</a></td>
+      <td><a href="./33_array_2d_numeric_container_roundtrip/reference/screenshot.png">capture</a></td>
       <td><time datetime="2026-06-11">2026-06-11</time></td>
       <td>2D Array container with cells realized as Default Numeric widget instances and a read-only 2D Array/Numeric indicator</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
@@ -359,7 +360,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./34_array_2d_visible_counts_property_roundtrip/"><code>34_array_2d_visible_counts_property_roundtrip</code></a></td>
-      <td><a href="./34_array_2d_visible_counts_property_roundtrip/reference/">snapshot</a></td>
+      <td><a href="./34_array_2d_visible_counts_property_roundtrip/reference/screenshot.png">capture</a></td>
       <td><time datetime="2026-06-11">2026-06-11</time></td>
       <td>2D Array container whose visible row and column counts are driven by Numeric U8 property-write controls consumed on Execute, including visible counts beyond the current materialized shape</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
@@ -367,7 +368,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./35_array_dimension_count_property_roundtrip/"><code>35_array_dimension_count_property_roundtrip</code></a></td>
-      <td><a href="./35_array_dimension_count_property_roundtrip/reference/">snapshot</a></td>
+      <td><a href="./35_array_dimension_count_property_roundtrip/reference/screenshot.png">capture</a></td>
       <td><time datetime="2026-06-11">2026-06-11</time></td>
       <td>Numeric Array container whose active N-dimensional rank and visible row/column counts are driven by Numeric U8 property-write controls consumed on Execute</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
@@ -391,7 +392,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./38_array_boolean_container_dimension_count_roundtrip/"><code>38_array_boolean_container_dimension_count_roundtrip</code></a></td>
-      <td><a href="./38_array_boolean_container_dimension_count_roundtrip/reference/">snapshot</a></td>
+      <td><a href="./38_array_boolean_container_dimension_count_roundtrip/reference/screenshot.png">capture</a></td>
       <td><time datetime="2026-06-11">2026-06-11</time></td>
       <td>Array container whose control cells are square Default Boolean widgets and indicator cells are round Default Boolean widgets while N-dimensional rank and visible row/column counts remain driven by Numeric U8 property-write controls consumed on Execute</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
@@ -423,7 +424,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./42_boolean_placement_ide_view/"><code>42_boolean_placement_ide_view</code></a></td>
-      <td><a href="./42_boolean_placement_ide_view/reference/">snapshot</a></td>
+      <td><a href="./42_boolean_placement_ide_view/reference/screenshot.png">capture</a></td>
       <td><time datetime="2026-06-11">2026-06-11</time></td>
       <td>IDE-view Boolean placement witness showing square/rectangular and round/oval Default Boolean skins, placement aura, state face, and optional centered state text</td>
       <td><code>main.frog</code> + <code>ui/boolean_ide_panel.wfrog</code></td>
@@ -431,7 +432,7 @@ and artifact hash index for that example.
     </tr>
     <tr>
       <td><a href="./43_array_boolean_container_ide_view/"><code>43_array_boolean_container_ide_view</code></a></td>
-      <td><a href="./43_array_boolean_container_ide_view/reference/">snapshot</a></td>
+      <td><a href="./43_array_boolean_container_ide_view/reference/screenshot.png">capture</a></td>
       <td><time datetime="2026-06-11">2026-06-11</time></td>
       <td>IDE-view Array + Boolean placement witness showing square Boolean control cells, round Boolean indicator cells, contained-widget placement-bound cells, and the visible review grid</td>
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
@@ -972,11 +973,11 @@ A fresh clone needs the following local tools before the numbered example corrid
     </tr>
     <tr>
       <td><code>CMake</code> + a C++ toolchain</td>
-      <td>C++ runtime-family validation for the current widget examples.</td>
+      <td>Historical public runtime builds only. Current widget runtime validation uses Graiphic private runtime infrastructure.</td>
     </tr>
     <tr>
       <td><code>Cargo</code> / Rust toolchain</td>
-      <td>Rust runtime-family validation for the current widget examples.</td>
+      <td>Historical public runtime builds only. Current Rust parity work uses Graiphic private runtime infrastructure.</td>
     </tr>
     <tr>
       <td><code>clang</code></td>
@@ -993,14 +994,10 @@ Minimal setup for the Python-backed reference checks:
 python Implementations/Reference/check_reference_workspace.py --include-pytest</code></pre>
 
 <p>
-Runtime-family validation adds the current C++ and Rust surfaces:
+The in-repository public runtime copy is historical and should not be used for
+current widget launch or validation. Current runtime-family validation is owned
+by Graiphic private runtime infrastructure.
 </p>
-
-<pre><code>cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
-cmake --build build/frog_runtime_cpp
-ctest --test-dir build/frog_runtime_cpp --output-on-failure
-
-cargo test --manifest-path Implementations/Reference/Runtime/rust/Cargo.toml</code></pre>
 
 <p>
 Widget examples are framed by the
@@ -1030,7 +1027,7 @@ including which properties are owned by <code>.frog</code>, which realization pa
 <h2>Reference Checks</h2>
 
 <p>
-The current reference workspace check across the numbered examples is:
+The public repository workspace check across the numbered examples is:
 </p>
 
 <pre><code>python Implementations/Reference/check_reference_workspace.py</code></pre>

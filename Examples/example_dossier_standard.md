@@ -201,6 +201,25 @@ defines that interaction as the execution event.
 
 <hr/>
 
+<h2>Public Screenshots</h2>
+
+<p>
+As of 2026-06-17, public visual evidence for examples is screenshot-only.
+When a browser-hosted example needs public evidence, the repository may publish
+readable screenshots of the accepted state, following
+<a href="./example_reference_snapshot_standard.md">the screenshot publication
+rule</a>.
+</p>
+
+<p>
+Do not add new public accepted-state JSON, visual-contract files, artifact hash
+indexes, runtime evidence packages, or internal validation recipes to example
+directories. Those details belong in private validation context when they are
+needed for Graiphic work.
+</p>
+
+<hr/>
+
 <h2>Example Families</h2>
 
 <p>

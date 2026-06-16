@@ -2,149 +2,83 @@
   <img src="../FROG logo.svg" alt="FROG logo" width="140" />
 </p>
 
-<h1 align="center">FROG Example Reference Snapshot Standard</h1>
+<h1 align="center">FROG Example Screenshot Publication Rule</h1>
 
 <p align="center">
-  <strong>Public accepted-state evidence for repository-visible examples</strong><br/>
+  <strong>Public screenshot-only evidence for repository-visible examples</strong><br/>
   <em>FROG - Free Open Graphical Language</em>
 </p>
 
 <hr/>
 
-<h2>Purpose</h2>
+<h2>Status</h2>
 
 <p>
-An example reference snapshot records the public accepted state of a visible
-example at a specific validation checkpoint. It helps readers inspect what was
-accepted without relying on chat memory, private runtime code, or local browser
-state.
+This file keeps its historical name so older repository links continue to work.
+As of 2026-06-17, the former public reference snapshot package standard is
+deprecated for new work.
 </p>
 
 <p>
-The snapshot is evidence, not source truth. The source remains the owning
+New public example publication is screenshot-only. A public example may expose
+one or more readable browser-host screenshots, but it must not add public
+accepted-state JSON, visual-contract files, artifact hash indexes, private
+runtime evidence, or internal validation recipes.
+</p>
+
+<hr/>
+
+<h2>Public Shape</h2>
+
+<p>
+When a visual example needs public evidence, publish the smallest useful image
+artifact:
+</p>
+
+<pre><code>Examples/&lt;NN_example_name&gt;/
+  reference/
+    screenshot.png
+</code></pre>
+
+<p>
+PNG is the preferred public format. A text-safe SVG wrapper may be used only
+when it exists already or when the image publication route requires it, but the
+visible result must still be inspected as an image through the public
+repository path.
+</p>
+
+<p>
+Older <code>reference/</code> directories may still contain historical
+<code>state.accepted.json</code>, visual-contract, or artifact-index files.
+They are historical archives and are not the publication model for new or
+refreshed examples.
+</p>
+
+<hr/>
+
+<h2>Screenshot Rules</h2>
+
+<ul>
+  <li>The screenshot must come from the accepted browser-host state after the latest relevant build or launch.</li>
+  <li>The screenshot must be opened and visually inspected through the public repository path before closure.</li>
+  <li>The screenshot must be readable, representative, and useful for later human comparison.</li>
+  <li>The screenshot must not show stale hosts, error pages, raw CSS/JS leakage, clipped widget surfaces, or degraded compression.</li>
+  <li>If the example changes later, refresh the screenshot or clearly leave the old image as historical.</li>
+</ul>
+
+<hr/>
+
+<h2>Boundary</h2>
+
+<p>
+The screenshot is evidence, not source truth. The source remains the owning
 <code>.frog</code>, directly referenced <code>.wfrog</code> packages, FIR,
 lowering, backend manifest material, Default realization assets, and public
 library contracts.
 </p>
 
-<hr/>
-
-<h2>Directory Shape</h2>
-
 <p>
-Validated examples may include a <code>reference/</code> directory:
-</p>
-
-<pre><code>Examples/&lt;NN_example_name&gt;/
-  reference/
-    README.md
-    screenshot.png or screenshot.svg
-    state.accepted.json
-    visual-contract.md
-    visual-contract.json
-    artifact-index.json
-</code></pre>
-
-<p>
-The directory is intentionally small. It should not duplicate source artifacts
-that already exist in the example dossier.
-</p>
-
-<hr/>
-
-<h2>Required Files</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>File</th>
-      <th>Role</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>README.md</code></td>
-      <td>Explains the snapshot boundary, embeds the accepted screenshot directly, and links the accepted artifacts.</td>
-    </tr>
-    <tr>
-      <td><code>screenshot.png</code> or <code>screenshot.svg</code></td>
-      <td>Browser-host capture of the accepted visible state. PNG is the default; an SVG wrapper is acceptable when the snapshot is intentionally stored as a text-safe embedded-image artifact.</td>
-    </tr>
-    <tr>
-      <td><code>state.accepted.json</code></td>
-      <td>Accepted public runtime snapshot, including visible values, consumed assets, diagnostics, and artifact state exposed by the example.</td>
-    </tr>
-    <tr>
-      <td><code>visual-contract.md</code></td>
-      <td>Human-readable appearance contract: widget posture, important dimensions, visible states, labels, borders, spacing, and source-owned customization surfaces.</td>
-    </tr>
-    <tr>
-      <td><code>visual-contract.json</code></td>
-      <td>Machine-readable summary of the same visible contract, suitable for future regression tooling.</td>
-    </tr>
-    <tr>
-      <td><code>artifact-index.json</code></td>
-      <td>Relative paths and hashes for the source, realization, FIR, lowering, manifest, and fixture artifacts that define the accepted example.</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr/>
-
-<h2>Public Boundary</h2>
-
-<p>
-Reference snapshots are public example evidence. They must not contain
-Graiphic proprietary runtime source, internal validation recipes, private IDE
-implementation plans, private task notes, or private runtime roadmap details.
-</p>
-
-<p>
-For post-public-runtime-boundary examples, a snapshot may show an accepted
-browser-host surface produced by Graiphic private runtime work. That does not
-promote the private runtime implementation into the public repository and does
-not make the private runtime mandatory for independent FROG implementations.
-</p>
-
-<hr/>
-
-<h2>Artifact Rules</h2>
-
-<ul>
-  <li>Reference files link to existing source artifacts instead of copying them.</li>
-  <li>The snapshot README should show the accepted screenshot inline so a GitHub reader can see the visual state without browsing for the image file.</li>
-  <li>Only one screenshot file should be treated as canonical by the snapshot README and artifact index. Historical alternate screenshot files may exist, but the README link defines the accepted current reference.</li>
-  <li>The snapshot README should provide clear named links to the screenshot, accepted state JSON, visual contract, machine-readable visual contract, and artifact index.</li>
-  <li><code>artifact-index.json</code> records relative paths and stable hashes for traceability.</li>
-  <li>Generated screenshots and accepted state files are refreshed only after the example has been visually accepted at its stated validation level.</li>
-  <li>If the example changes later, the snapshot must either be refreshed or clearly marked as historical.</li>
-  <li>A snapshot must not overclaim generalized runtime completeness beyond the example's README boundary.</li>
-</ul>
-
-<hr/>
-
-<h2>Visual Contract Rules</h2>
-
-<p>
-The visual contract describes the accepted appearance in engineering terms:
-which widget classes appear, which Default realization assets are consumed,
-which parts are visible, which state surfaces matter, and which properties are
-source-owned or realization-published.
-</p>
-
-<p>
-It should include the surfaces that would make a regression obvious: labels,
-index displays, frames, padding, repeated cell posture, scrollbars, selections,
-disabled cells, hover or pressed states, and control/indicator differences when
-those surfaces are relevant to the example.
-</p>
-
-<hr/>
-
-<h2>Acceptance Note</h2>
-
-<p>
-The presence of a reference snapshot means only that the visible example state
-was accepted at the boundary documented by that example. It does not redefine
-FROG semantics, widget class law, or runtime architecture.
+Screenshots must not publish Graiphic proprietary runtime source, private IDE
+implementation plans, private task notes, internal validation recipes, or
+runtime roadmap details.
 </p>
