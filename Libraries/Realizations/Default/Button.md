@@ -31,7 +31,7 @@ This document describes the default realization posture for <code>frog.widgets.b
 
 <p>
 The class law belongs to <code>Libraries/Widgets/Button.md</code>.
-This document describes how the default realization family can embody that law through SVG template resources, state-specific overrides, part bindings, state maps, and realization variants.
+This document describes how the default realization family can embody that law through one semantic SVG template resource, part bindings, state maps, and realization variants.
 </p>
 
 <hr/>
@@ -56,11 +56,9 @@ This document describes how the default realization family can embody that law t
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
-  <li><code>face</code></li>
-  <li><code>state_face</code></li>
+  <li><code>placement_bounds</code></li>
+  <li><code>button_face</code></li>
   <li><code>state_text</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
 
 <hr/>
@@ -69,26 +67,21 @@ This document describes how the default realization family can embody that law t
 
 <ul>
   <li><code>assets/button/templates/button_rectangular.svg</code></li>
-  <li><code>assets/button/states/button_false.svg</code></li>
-  <li><code>assets/button/states/button_true.svg</code></li>
-  <li><code>assets/button/states/button_hover_false.svg</code></li>
-  <li><code>assets/button/states/button_hover_true.svg</code></li>
-  <li><code>assets/button/states/button_transition_false_to_true.svg</code></li>
-  <li><code>assets/button/states/button_transition_true_to_false.svg</code></li>
 </ul>
 
 <p>
-The state-specific files are optional realization overrides.
-They do not redefine button semantics.
+The default button realization uses one parameterized SVG template.
+True/false, hover, pressed, disabled, and transition visuals are expressed through properties and style bindings, not separate default SVG skins.
 </p>
 
 <p>
 The rectangular Button template is accepted for the bounded
 <code>Examples/10_button_press_to_boolean</code> corridor as of 2026-05-15 and
 is reused by the bounded switch corridors. That acceptance covers the
-SVG-published public parts, configurable face and state-text styling, hover and
-pressed state visuals, and host overlay alignment to the published
-<code>face</code> part. It remains a Default realization asset acceptance, not
+SVG-published public parts, configurable <code>button_face</code> and state-text styling, hover and
+pressed state visuals, placement aura semantics through <code>placement_bounds</code>,
+and host overlay alignment to the published <code>button_face</code> part.
+It remains a Default realization asset acceptance, not
 a runtime-defined HTML/CSS skin.
 </p>
 

@@ -93,8 +93,8 @@ void test_browser_ui_runtime_uses_llvm_button_kernel_bridge() {
     assert_contains(html, "data-asset-route='/asset/button_rectangular_svg'");
     assert_contains(html, "data-asset-route='/asset/boolean_circular_svg'");
     assert_contains(html, "class='button-press-overlay' type='button'");
-    assert_contains(html, "data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='trigger_pressed'");
-    assert_contains(html, "data-frog-host-overlay='input' data-frog-align-to-part='face'");
+    assert_contains(html, "data-frog-part='button_face' data-frog-event='pressed' data-frog-public-input-id='trigger_pressed'");
+    assert_contains(html, "data-frog-host-overlay='input' data-frog-align-to-part='button_face'");
     assert_contains(html, "fetch(\"/event\"");
     assert_contains(html, "pointerdown");
     assert_contains(html, "pointerup");

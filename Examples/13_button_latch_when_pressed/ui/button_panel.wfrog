@@ -3,7 +3,12 @@
   "kind": "widget_realization_package",
   "package_id": "example13.button_panel",
   "title": "Example 13 Default Button latch-when-pressed and Boolean realization package",
-  "artifact_governance_ref": {
+  "reviewed_date": "2026-06-16",
+  "review": {
+    "last_reviewed": "2026-06-16",
+    "scope": "Default Button rectangular button_face SVG skin and Boolean state_face indicator vocabulary for this example",
+    "visible_runtime_fact": "Reviewed 2026-06-16"
+  },  "artifact_governance_ref": {
     "path": "Versioning/Readme.md"
   },
   "source_ref": {

@@ -1,6 +1,10 @@
 <h1>Example 13 - Button Latch When Pressed</h1>
 
 <p>
+Reviewed 2026-06-16: this example consumes the Default Button rectangular semantic SVG skin, its published <code>button_face</code> part, and the current Boolean <code>state_face</code> indicator vocabulary in the C++ browser-host rendering path.
+</p>
+
+<p>
 Example 13 is a bounded Button widget acceptance slice for
 <code>behavior.mechanical_action=latch_when_pressed</code>.
 It uses one Button control labelled <code>Trigger</code> and one read-only
@@ -21,7 +25,7 @@ trigger_button.value -&gt; public output latched</code></pre>
 The visible UI must consume the Default Button SVG and Default Boolean SVG
 assets through the <code>.frog</code> instance data and the
 <code>.wfrog</code> realization package. The runtime may provide host input
-overlays, but those overlays must align to the SVG-published Button face part
+overlays, but those overlays must align to the SVG-published Button <code>button_face</code> part
 and must not define a fallback Button visual.
 </p>
 

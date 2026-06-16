@@ -106,11 +106,11 @@ void test_latch_runtime_core_consumes_source_and_default_assets(const LatchSpec&
     assert(runtime.widgets.at("trigger_button").properties.at("state_text.false_text").as_string() == "OFF");
     assert(runtime.widgets.at("trigger_button").properties.at("state_text.true_text").as_string() == "ON");
     assert(runtime.widgets.at("trigger_button").properties.at("state_text.style.font_weight").as_string() == "400");
-    assert(runtime.widgets.at("trigger_button").properties.at("style.face.fill_color.false").as_string() == "#e2e8f0");
-    assert(runtime.widgets.at("trigger_button").properties.at("style.face.fill_color.true").as_string() == "#cbd5e1");
-    assert(runtime.widgets.at("trigger_button").properties.at("style.face.fill_color.hover_false").as_string() == "#f1f5f9");
-    assert(runtime.widgets.at("trigger_button").properties.at("style.face.fill_color.hover_true").as_string() == "#dbeafe");
-    assert(runtime.widgets.at("trigger_button").properties.at("style.face.border_width").as_string() == "1px");
+    assert(runtime.widgets.at("trigger_button").properties.at("style.button_face.fill_color.false").as_string() == "#e2e8f0");
+    assert(runtime.widgets.at("trigger_button").properties.at("style.button_face.fill_color.true").as_string() == "#cbd5e1");
+    assert(runtime.widgets.at("trigger_button").properties.at("style.button_face.fill_color.hover_false").as_string() == "#f1f5f9");
+    assert(runtime.widgets.at("trigger_button").properties.at("style.button_face.fill_color.hover_true").as_string() == "#dbeafe");
+    assert(runtime.widgets.at("trigger_button").properties.at("style.button_face.border_width").as_string() == "1px");
     assert(runtime.widgets.at("trigger_button").properties.at("style.pressed.inset").as_string() == "0px");
     assert(runtime.widgets.at("trigger_button").properties.at("style.pressed.apply_when_value_true").as_bool());
     assert(!runtime.widgets.at("trigger_button").properties.at("style.pressed.apply_while_active").as_bool());
@@ -136,10 +136,13 @@ void test_latch_runtime_core_consumes_source_and_default_assets(const LatchSpec&
     const auto button_svg = read_text(runtime.asset_map.at("button_rectangular_svg"));
     assert_contains(button_svg, "data-frog-template=\"frog.realizations.default.button.rectangular\"");
     assert_contains(button_svg, "data-frog-target-class=\"frog.widgets.button\"");
-    assert_contains(button_svg, "data-frog-part=\"face\"");
-    assert_contains(button_svg, "data-frog-part=\"state_face\"");
-    assert_contains(button_svg, "data-frog-anchor=\"face.bounds\"");
-    assert_contains(button_svg, "data-frog-bind=\"style.face.*\"");
+    assert_contains(button_svg, "data-frog-part=\"placement_bounds\"");
+    assert_contains(button_svg, "data-frog-part=\"button_face\"");
+    assert_not_contains(button_svg, "data-frog-part=\"face\"");
+    assert_not_contains(button_svg, "data-frog-part=\"state_face\"");
+    assert_not_contains(button_svg, "data-frog-part=\"focus_ring\"");
+    assert_contains(button_svg, "data-frog-anchor=\"button_face.bounds\"");
+    assert_contains(button_svg, "data-frog-bind=\"value style.button_face.*\"");
 }
 
 void test_headless_latch_roundtrip(const LatchSpec& spec) {
@@ -280,8 +283,8 @@ void test_latch_browser_ui_surface(const LatchSpec& spec) {
     assert_contains(html, "data-frog-button-face-fill-true='#cbd5e1'");
     assert_contains(html, "data-frog-button-face-hover-fill-false='#f1f5f9'");
     assert_contains(html, "data-frog-button-face-hover-fill-true='#dbeafe'");
-    assert_contains(html, "data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='trigger_value'");
-    assert_contains(html, "data-frog-host-overlay='input' data-frog-align-to-part='face'");
+    assert_contains(html, "data-frog-part='button_face' data-frog-event='pressed' data-frog-public-input-id='trigger_value'");
+    assert_contains(html, "data-frog-host-overlay='input' data-frog-align-to-part='button_face'");
     assert_contains(html, "name='trigger_value' value='true'");
     assert_contains(html, "aria-pressed='false'");
     assert_contains(html, "--frog-button-face-fill:#e2e8f0;");

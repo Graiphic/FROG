@@ -26,12 +26,6 @@
 
 <ul>
   <li><code>templates/button_rectangular.svg</code> — parameterized rectangular button template.</li>
-  <li><code>states/button_false.svg</code> — false-state override.</li>
-  <li><code>states/button_true.svg</code> — true-state override.</li>
-  <li><code>states/button_hover_false.svg</code> — hover-false override.</li>
-  <li><code>states/button_hover_true.svg</code> — hover-true override.</li>
-  <li><code>states/button_transition_false_to_true.svg</code> — optional transition override.</li>
-  <li><code>states/button_transition_true_to_false.svg</code> — optional transition override.</li>
 </ul>
 
 <hr/>
@@ -42,15 +36,13 @@
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
-  <li><code>face</code></li>
-  <li><code>state_face</code></li>
+  <li><code>placement_bounds</code></li>
+  <li><code>button_face</code></li>
   <li><code>state_text</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
 
 <p>
-The rectangular template also publishes the placement anchors <code>label.anchor</code>, <code>caption.anchor</code>, <code>state_text.center</code>, and the host overlay alignment surface <code>face.bounds</code>.
-Its default visible skin is a single bordered rectangular <code>face</code>; <code>frame</code> and <code>state_face</code> remain published parts but are transparent by default.
+The rectangular template also publishes the placement anchors <code>label.anchor</code>, <code>caption.anchor</code>, <code>button_face.bounds</code>, and <code>state_text.center</code>.
+Its default visible skin is a single bordered rectangular <code>button_face</code> centered inside the non-visible <code>placement_bounds</code> aura.
 Button examples should consume these Default assets through a <code>.wfrog</code> package reference instead of copying local SVG skins.
 </p>

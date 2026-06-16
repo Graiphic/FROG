@@ -2198,6 +2198,15 @@ Value Slice10ButtonRuntimeCore::execution_artifact() const {
         copy_property("style.frame.border_color");
         copy_property("style.frame.border_width");
         copy_property("style.frame.visible");
+        copy_property("style.button_face.fill_color.false");
+        copy_property("style.button_face.fill_color.true");
+        copy_property("style.button_face.fill_color.hover_false");
+        copy_property("style.button_face.fill_color.hover_true");
+        copy_property("style.button_face.fill_color.pressed_false");
+        copy_property("style.button_face.fill_color.pressed_true");
+        copy_property("style.button_face.border_color.false");
+        copy_property("style.button_face.border_color.true");
+        copy_property("style.button_face.border_width");
         copy_property("style.face.fill_color.false");
         copy_property("style.face.fill_color.true");
         copy_property("style.face.fill_color.hover_false");

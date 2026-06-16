@@ -128,7 +128,7 @@ and artifact hash index for that example.
     <tr>
       <td><a href="./05_bounded_ui_accumulator/"><code>05_bounded_ui_accumulator</code></a></td>
       <td><code>pending</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-16">2026-06-16</time></td>
       <td>Full bounded UI accumulator corridor</td>
       <td><code>main.frog</code> + <code>ui/accumulator_panel.wfrog</code></td>
       <td><code>FIR → lowering → contract → runtime acceptance → LLVM module/native proof</code></td>
@@ -152,7 +152,7 @@ and artifact hash index for that example.
     <tr>
       <td><a href="./08_enum_value_roundtrip/"><code>08_enum_value_roundtrip</code></a></td>
       <td><code>pending</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-16">2026-06-16</time></td>
       <td>Enum control/indicator mode roundtrip</td>
       <td><code>main.frog</code> + <code>ui/enum_panel.wfrog</code></td>
       <td><code>FIR → lowering → contract → LLVM native manifest → C++/Python/Rust runtime bridge → Default Enum realization</code></td>
@@ -168,7 +168,7 @@ and artifact hash index for that example.
     <tr>
       <td><a href="./10_button_press_to_boolean/"><code>10_button_press_to_boolean</code></a></td>
       <td><code>pending</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-16">2026-06-16</time></td>
       <td>Button <code>switch_until_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
       <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
@@ -176,7 +176,7 @@ and artifact hash index for that example.
     <tr>
       <td><a href="./11_button_switch_when_pressed/"><code>11_button_switch_when_pressed</code></a></td>
       <td><code>pending</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-16">2026-06-16</time></td>
       <td>Button <code>switch_when_pressed</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
       <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
@@ -184,7 +184,7 @@ and artifact hash index for that example.
     <tr>
       <td><a href="./12_button_switch_when_released/"><code>12_button_switch_when_released</code></a></td>
       <td><code>pending</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-16">2026-06-16</time></td>
       <td>Button <code>switch_when_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
       <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
@@ -192,7 +192,7 @@ and artifact hash index for that example.
     <tr>
       <td><a href="./13_button_latch_when_pressed/"><code>13_button_latch_when_pressed</code></a></td>
       <td><code>pending</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-16">2026-06-16</time></td>
       <td>Button <code>latch_when_pressed</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
       <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
@@ -200,7 +200,7 @@ and artifact hash index for that example.
     <tr>
       <td><a href="./14_button_latch_when_released/"><code>14_button_latch_when_released</code></a></td>
       <td><code>pending</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-16">2026-06-16</time></td>
       <td>Button <code>latch_when_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
       <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>
@@ -208,7 +208,7 @@ and artifact hash index for that example.
     <tr>
       <td><a href="./15_button_latch_until_released/"><code>15_button_latch_until_released</code></a></td>
       <td><code>pending</code></td>
-      <td><time datetime="2026-05-30">2026-05-30</time></td>
+      <td><time datetime="2026-06-16">2026-06-16</time></td>
       <td>Button <code>latch_until_released</code> mechanical action</td>
       <td><code>main.frog</code> + <code>ui/button_panel.wfrog</code></td>
       <td>Current public reference runtime closure: <code>FIR -> lowering -> contract -> LLVM native manifest -> C++/Python/Rust runtime bridge -> Default Button/Boolean realization</code></td>

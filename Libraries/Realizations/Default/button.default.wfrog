@@ -14,19 +14,16 @@
   },
   "ownership_boundary": {
     "owns": [
-      "default button realization record",
       "button realization variant declarations",
       "button realization resource references",
       "button part bindings",
-      "button state maps",
-      "button anchors and overlay alignment surfaces",
-      "button mechanical-action realization posture",
-      "button host hints",
+      "button visual state maps",
+      "button host overlay alignment surfaces",
       "button realization validation expectations"
     ],
     "does_not_own": [
       "button widget class law",
-      "button value semantics",
+      "button boolean value semantics",
       "button mechanical-action semantics",
       "canonical .frog source",
       "frog.ui primitive semantics",
@@ -62,13 +59,7 @@
       "frog.realizations.default.button.rectangular"
     ],
     "resources": [
-      "frog.realizations.default.button.assets.rectangular_template_svg",
-      "frog.realizations.default.button.assets.state.false_svg",
-      "frog.realizations.default.button.assets.state.true_svg",
-      "frog.realizations.default.button.assets.state.hover_false_svg",
-      "frog.realizations.default.button.assets.state.hover_true_svg",
-      "frog.realizations.default.button.assets.state.transition_false_to_true_svg",
-      "frog.realizations.default.button.assets.state.transition_true_to_false_svg"
+      "frog.realizations.default.button.assets.rectangular_template_svg"
     ]
   },
   "realizations": [
@@ -85,11 +76,9 @@
         "root",
         "label",
         "caption",
-        "frame",
-        "face",
-        "state_face",
-        "state_text",
-        "focus_ring"
+        "placement_bounds",
+        "button_face",
+        "state_text"
       ],
       "supported_visual_states": [
         "false",
@@ -100,8 +89,6 @@
         "pressed_true",
         "disabled_false",
         "disabled_true",
-        "focused_false",
-        "focused_true",
         "transition_false_to_true",
         "transition_true_to_false"
       ],
@@ -115,7 +102,6 @@
       ],
       "fallbacks": {
         "missing_state_override": "parameterized_rectangular_template",
-        "missing_focus_ring": "host_native_focus_ring",
         "missing_caption": "host_external_caption_region",
         "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
       }
@@ -129,12 +115,15 @@
       "resource_ref": "frog.realizations.default.button.assets.rectangular_template_svg",
       "geometry_posture": {
         "shape_family": "rectangular_button",
-        "layout_source": "front_panel_layout_rectangle",
+        "layout_source": "placement_bounds",
         "scales_to_layout": true,
         "supports_caption": true,
         "supports_state_text_centering": true,
         "supports_host_input_overlay": true,
-        "host_input_overlay_alignment_part": "face"
+        "placement_bounds_part": "placement_bounds",
+        "visible_body_part": "button_face",
+        "host_input_overlay_alignment_part": "button_face",
+        "aura_band_units": 4
       },
       "fallback": "host_button_only_when_svg_resource_is_missing"
     }
@@ -154,54 +143,6 @@
         "member_attribute": "data-frog-member",
         "anchor_attribute": "data-frog-anchor"
       }
-    },
-    {
-      "id": "frog.realizations.default.button.assets.state.false_svg",
-      "kind": "svg",
-      "path": "./assets/button/states/button_false.svg",
-      "target_class": "frog.widgets.button",
-      "target_state": "false",
-      "override_posture": "optional_state_resource"
-    },
-    {
-      "id": "frog.realizations.default.button.assets.state.true_svg",
-      "kind": "svg",
-      "path": "./assets/button/states/button_true.svg",
-      "target_class": "frog.widgets.button",
-      "target_state": "true",
-      "override_posture": "optional_state_resource"
-    },
-    {
-      "id": "frog.realizations.default.button.assets.state.hover_false_svg",
-      "kind": "svg",
-      "path": "./assets/button/states/button_hover_false.svg",
-      "target_class": "frog.widgets.button",
-      "target_state": "hover_false",
-      "override_posture": "optional_state_resource"
-    },
-    {
-      "id": "frog.realizations.default.button.assets.state.hover_true_svg",
-      "kind": "svg",
-      "path": "./assets/button/states/button_hover_true.svg",
-      "target_class": "frog.widgets.button",
-      "target_state": "hover_true",
-      "override_posture": "optional_state_resource"
-    },
-    {
-      "id": "frog.realizations.default.button.assets.state.transition_false_to_true_svg",
-      "kind": "svg",
-      "path": "./assets/button/states/button_transition_false_to_true.svg",
-      "target_class": "frog.widgets.button",
-      "target_state": "transition_false_to_true",
-      "override_posture": "optional_transition_resource"
-    },
-    {
-      "id": "frog.realizations.default.button.assets.state.transition_true_to_false_svg",
-      "kind": "svg",
-      "path": "./assets/button/states/button_transition_true_to_false.svg",
-      "target_class": "frog.widgets.button",
-      "target_state": "transition_true_to_false",
-      "override_posture": "optional_transition_resource"
     }
   ],
   "part_bindings": [
@@ -227,25 +168,19 @@
       "placement_role": "front_panel_caption"
     },
     {
-      "part": "frame",
-      "binding_kind": "svg_shape",
-      "binding_selector": "[data-frog-part='frame']",
-      "style_binding_group": "style.frame"
+      "part": "placement_bounds",
+      "binding_kind": "svg_geometry",
+      "binding_selector": "[data-frog-part='placement_bounds']",
+      "semantic_member": "layout.placement_bounds",
+      "placement_role": "uniform_aura_around_visible_body"
     },
     {
-      "part": "face",
+      "part": "button_face",
       "binding_kind": "svg_shape_or_host_input_overlay_alignment",
-      "binding_selector": "[data-frog-part='face']",
-      "style_binding_group": "style.face",
+      "binding_selector": "[data-frog-part='button_face']",
+      "style_binding_group": "style.button_face",
       "state_sensitive": true,
       "host_overlay_role": "input_hit_area"
-    },
-    {
-      "part": "state_face",
-      "binding_kind": "svg_shape",
-      "binding_selector": "[data-frog-part='state_face']",
-      "style_binding_group": "style.state_face",
-      "state_sensitive": true
     },
     {
       "part": "state_text",
@@ -257,13 +192,6 @@
       ],
       "visibility_member": "state_text.visible",
       "placement_role": "internal_state_text"
-    },
-    {
-      "part": "focus_ring",
-      "binding_kind": "svg_shape",
-      "binding_selector": "[data-frog-part='focus_ring']",
-      "style_binding_group": "style.focus_ring",
-      "state_sensitive": true
     }
   ],
   "property_bindings": [
@@ -278,59 +206,14 @@
       "target_operation": "set_visibility"
     },
     {
-      "member": "caption.text",
+      "member": "caption.*",
       "target_part": "caption",
-      "target_operation": "set_text_content"
-    },
-    {
-      "member": "caption.visible",
-      "target_part": "caption",
-      "target_operation": "set_visibility"
-    },
-    {
-      "member": "caption.anchor.x",
-      "target_part": "caption",
-      "target_operation": "set_anchor_x"
-    },
-    {
-      "member": "caption.anchor.y",
-      "target_part": "caption",
-      "target_operation": "set_anchor_y"
-    },
-    {
-      "member": "caption.align.horizontal",
-      "target_part": "caption",
-      "target_operation": "set_text_anchor_alignment"
-    },
-    {
-      "member": "caption.style.text_color",
-      "target_part": "caption",
-      "target_operation": "set_text_fill"
-    },
-    {
-      "member": "caption.style.font_family",
-      "target_part": "caption",
-      "target_operation": "set_font_family"
-    },
-    {
-      "member": "caption.style.font_size",
-      "target_part": "caption",
-      "target_operation": "set_font_size"
-    },
-    {
-      "member": "caption.style.font_weight",
-      "target_part": "caption",
-      "target_operation": "set_font_weight"
+      "target_operation": "apply_caption"
     },
     {
       "member": "value",
-      "target_part": "state_face",
-      "target_operation": "resolve_button_state"
-    },
-    {
-      "member": "state_text.visible",
-      "target_part": "state_text",
-      "target_operation": "set_visibility"
+      "target_part": "button_face",
+      "target_operation": "resolve_button_visual_state"
     },
     {
       "member": "state_text.*",
@@ -343,28 +226,13 @@
       "target_operation": "apply_text_style"
     },
     {
-      "member": "style.frame.*",
-      "target_part": "frame",
-      "target_operation": "apply_frame_style"
-    },
-    {
-      "member": "style.face.*",
-      "target_part": "face",
-      "target_operation": "apply_face_style"
-    },
-    {
-      "member": "style.state_face.*",
-      "target_part": "state_face",
-      "target_operation": "apply_state_face_style"
-    },
-    {
-      "member": "style.focus_ring.*",
-      "target_part": "focus_ring",
-      "target_operation": "apply_focus_ring_style"
+      "member": "style.button_face.*",
+      "target_part": "button_face",
+      "target_operation": "apply_button_face_style"
     },
     {
       "member": "style.pressed.inset",
-      "target_part": "face",
+      "target_part": "button_face",
       "target_operation": "apply_pressed_transform"
     },
     {
@@ -384,14 +252,14 @@
       "value_condition": {
         "value": false
       },
-      "resource_ref": "frog.realizations.default.button.assets.state.false_svg"
+      "style_binding_group": "style.button_face.false"
     },
     {
       "state": "true",
       "value_condition": {
         "value": true
       },
-      "resource_ref": "frog.realizations.default.button.assets.state.true_svg"
+      "style_binding_group": "style.button_face.true"
     },
     {
       "state": "hover_false",
@@ -399,8 +267,7 @@
         "value": false,
         "interaction.hovered": true
       },
-      "inherits": "false",
-      "resource_ref": "frog.realizations.default.button.assets.state.hover_false_svg"
+      "inherits": "false"
     },
     {
       "state": "hover_true",
@@ -408,26 +275,23 @@
         "value": true,
         "interaction.hovered": true
       },
-      "inherits": "true",
-      "resource_ref": "frog.realizations.default.button.assets.state.hover_true_svg"
+      "inherits": "true"
     },
     {
-      "state": "transition_false_to_true",
-      "transition_condition": {
-        "from": false,
-        "to": true
+      "state": "pressed_false",
+      "value_condition": {
+        "value": false,
+        "interaction.pressed": true
       },
-      "resource_ref": "frog.realizations.default.button.assets.state.transition_false_to_true_svg",
-      "optional": true
+      "inherits": "false"
     },
     {
-      "state": "transition_true_to_false",
-      "transition_condition": {
-        "from": true,
-        "to": false
+      "state": "pressed_true",
+      "value_condition": {
+        "value": true,
+        "interaction.pressed": true
       },
-      "resource_ref": "frog.realizations.default.button.assets.state.transition_true_to_false_svg",
-      "optional": true
+      "inherits": "true"
     }
   ],
   "mechanical_action_model": {
@@ -497,8 +361,17 @@
       "target_part": "caption",
       "source_selector": "[data-frog-anchor='caption.anchor']",
       "anchor_kind": "text_anchor",
-      "default_horizontal_alignment": "start",
+      "default_horizontal_alignment": "center",
       "default_vertical_alignment": "baseline"
+    },
+    {
+      "id": "frog.realizations.default.button.button_face.bounds",
+      "target_part": "button_face",
+      "source_selector": "[data-frog-anchor='button_face.bounds']",
+      "anchor_kind": "part_bounds",
+      "default_horizontal_alignment": "stretch",
+      "default_vertical_alignment": "stretch",
+      "host_overlay_alignment": true
     },
     {
       "id": "frog.realizations.default.button.state_text.center",
@@ -507,35 +380,18 @@
       "anchor_kind": "text_anchor",
       "default_horizontal_alignment": "center",
       "default_vertical_alignment": "middle"
-    },
-    {
-      "id": "frog.realizations.default.button.face.bounds",
-      "target_part": "face",
-      "source_selector": "[data-frog-anchor='face.bounds']",
-      "anchor_kind": "part_bounds",
-      "default_horizontal_alignment": "stretch",
-      "default_vertical_alignment": "stretch",
-      "host_overlay_alignment": true
-    },
-    {
-      "id": "frog.realizations.default.button.state_face.bounds",
-      "target_part": "state_face",
-      "source_selector": "[data-frog-anchor='state_face.bounds']",
-      "anchor_kind": "part_bounds",
-      "default_horizontal_alignment": "stretch",
-      "default_vertical_alignment": "stretch"
     }
   ],
   "host_hints": {
     "preferred_host_kind": "svg_template_host",
     "resize_posture": "scale_template_to_front_panel_layout_rectangle",
     "text_rendering_posture": "host_may_replace_template_text_content",
-    "state_rendering_posture": "resolve_state_map_before_render",
+    "state_rendering_posture": "parameterized_single_svg_template",
     "style_application_posture": "apply_property_bindings_before_render",
     "input_overlay_posture": {
       "host_overlay_allowed": true,
-      "target_part": "face",
-      "alignment_anchor": "frog.realizations.default.button.face.bounds",
+      "target_part": "button_face",
+      "alignment_anchor": "frog.realizations.default.button.button_face.bounds",
       "overlay_must_not_replace_svg_visual": true
     },
     "accessibility_posture": {
@@ -548,8 +404,8 @@
   "validation_expectations": [
     "target class must exist in Libraries/Widgets/Button.md",
     "all declared public parts must exist in the button class law",
-    "resources must resolve relative to this package file",
-    "optional state resources may fall back to the rectangular template when unavailable",
+    "the default realization must be a single parameterized rectangular SVG template",
+    "state-specific SVG resources must not be required for the default button",
     "button value semantics and mechanical-action semantics must remain owned by the button class law",
     "SVG resources must not become semantic owners of button value or mechanical action",
     "property bindings must target public button members declared by class law",

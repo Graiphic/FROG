@@ -100,6 +100,57 @@ std::string html_escape(const std::string& input) {
     return out;
 }
 
+std::optional<std::string> source_review_last_reviewed(const std::filesystem::path& source_path) {
+    try {
+        const auto source = frog::json::parse_file(source_path);
+        if (!source.is_object()) {
+            return std::nullopt;
+        }
+        const auto& root = source.as_object();
+        const auto metadata_it = root.find("metadata");
+        if (metadata_it == root.end() || !metadata_it->second.is_object()) {
+            return std::nullopt;
+        }
+        const auto& metadata = metadata_it->second.as_object();
+        const auto review_it = metadata.find("review");
+        if (review_it == metadata.end() || !review_it->second.is_object()) {
+            return std::nullopt;
+        }
+        const auto& review = review_it->second.as_object();
+        const auto last_reviewed_it = review.find("last_reviewed");
+        if (last_reviewed_it == review.end() || !last_reviewed_it->second.is_string()) {
+            return std::nullopt;
+        }
+        const auto& last_reviewed = last_reviewed_it->second.as_string();
+        if (last_reviewed.empty()) {
+            return std::nullopt;
+        }
+        return last_reviewed;
+    } catch (...) {
+        return std::nullopt;
+    }
+}
+
+std::string source_review_runtime_fact_html(const std::filesystem::path& source_path) {
+    const auto last_reviewed = source_review_last_reviewed(source_path);
+    if (!last_reviewed.has_value()) {
+        return "";
+    }
+    return "<div><dt>Reviewed</dt><dd>" + html_escape(*last_reviewed) + "</dd></div>";
+}
+
+std::filesystem::path resolve_repo_relative_path(const std::filesystem::path& anchor, const std::string& path) {
+    const std::filesystem::path candidate(path);
+    if (candidate.is_absolute()) {
+        return candidate;
+    }
+    return find_repo_root(anchor) / candidate;
+}
+
+std::filesystem::path source_path_from_contract(const std::filesystem::path& anchor, const BackendContract& contract) {
+    return resolve_repo_relative_path(anchor, contract.source_ref.path);
+}
+
 std::string property_string(const Object& properties, const std::string& key, const std::string& fallback = "") {
     const auto it = properties.find(key);
     if (it == properties.end() || !it->second.is_string()) {
@@ -1701,10 +1752,10 @@ ButtonSvgGeometry load_button_svg_geometry(const WidgetState& widget) {
     parse_button_viewbox(svg, geometry);
     geometry.caption_x = svg_part_attribute_double(svg, "caption", "x", geometry.caption_x);
     geometry.caption_y = svg_part_attribute_double(svg, "caption", "y", geometry.caption_y);
-    geometry.face_x = svg_part_attribute_double(svg, "face", "x", geometry.face_x);
-    geometry.face_y = svg_part_attribute_double(svg, "face", "y", geometry.face_y);
-    geometry.face_width = svg_part_attribute_double(svg, "face", "width", geometry.face_width);
-    geometry.face_height = svg_part_attribute_double(svg, "face", "height", geometry.face_height);
+    geometry.face_x = svg_part_attribute_double(svg, "button_face", "x", svg_part_attribute_double(svg, "face", "x", geometry.face_x));
+    geometry.face_y = svg_part_attribute_double(svg, "button_face", "y", svg_part_attribute_double(svg, "face", "y", geometry.face_y));
+    geometry.face_width = svg_part_attribute_double(svg, "button_face", "width", svg_part_attribute_double(svg, "face", "width", geometry.face_width));
+    geometry.face_height = svg_part_attribute_double(svg, "button_face", "height", svg_part_attribute_double(svg, "face", "height", geometry.face_height));
     geometry.state_text_x = svg_part_attribute_double(svg, "state_text", "x", geometry.state_text_x);
     geometry.state_text_y = svg_part_attribute_double(svg, "state_text", "y", geometry.state_text_y);
     return geometry;
@@ -1748,6 +1799,24 @@ std::string inline_svg_asset(const WidgetState& widget) {
     return read_text_file(widget.asset_path);
 }
 
+std::string button_state_property(
+    const Object& properties,
+    const std::string& primary_key,
+    const std::string& legacy_key,
+    const std::string& state,
+    const std::string& fallback) {
+    const auto legacy_value = state_property(properties, legacy_key, state, fallback);
+    return state_property(properties, primary_key, state, legacy_value);
+}
+
+std::string button_property_string(
+    const Object& properties,
+    const std::string& primary_key,
+    const std::string& legacy_key,
+    const std::string& fallback) {
+    return property_string(properties, primary_key, property_string(properties, legacy_key, fallback));
+}
+
 std::string render_button_widget(const WidgetState& widget) {
     const auto geometry = load_button_svg_geometry(widget);
     const auto x = layout_i64(widget.layout, "x", 0);
@@ -1770,39 +1839,17 @@ std::string render_button_widget(const WidgetState& widget) {
     const std::string route = asset_route(widget);
     const auto input_id = property_string(widget.properties, "binding.public_input_id", "");
 
-    const auto frame_fill = safe_css_color(property_string(widget.properties, "style.frame.fill_color", "transparent"), "transparent");
-    const auto frame_stroke = safe_css_color(property_string(widget.properties, "style.frame.border_color", "transparent"), "transparent");
-    const auto frame_width = safe_css_length(property_string(widget.properties, "style.frame.border_width", "0px"), "0px");
-    const auto face_fill_false = safe_css_color(state_property(widget.properties, "style.face.fill_color", "false", "#e2e8f0"), "#e2e8f0");
-    const auto face_fill_true = safe_css_color(state_property(widget.properties, "style.face.fill_color", "true", face_fill_false), face_fill_false);
+    const auto face_fill_false = safe_css_color(button_state_property(widget.properties, "style.button_face.fill_color", "style.face.fill_color", "false", "#e2e8f0"), "#e2e8f0");
+    const auto face_fill_true = safe_css_color(button_state_property(widget.properties, "style.button_face.fill_color", "style.face.fill_color", "true", face_fill_false), face_fill_false);
     const auto face_fill = value ? face_fill_true : face_fill_false;
-    const auto face_hover_fill_false = safe_css_color(state_property(widget.properties, "style.face.fill_color", "hover_false", face_fill_false), face_fill_false);
-    const auto face_hover_fill_true = safe_css_color(state_property(widget.properties, "style.face.fill_color", "hover_true", face_fill_true), face_fill_true);
+    const auto face_hover_fill_false = safe_css_color(button_state_property(widget.properties, "style.button_face.fill_color", "style.face.fill_color", "hover_false", face_fill_false), face_fill_false);
+    const auto face_hover_fill_true = safe_css_color(button_state_property(widget.properties, "style.button_face.fill_color", "style.face.fill_color", "hover_true", face_fill_true), face_fill_true);
     const auto face_hover_fill = value ? face_hover_fill_true : face_hover_fill_false;
-    const auto face_pressed_fill_false = safe_css_color(state_property(widget.properties, "style.face.fill_color", "pressed_false", face_fill_false), face_fill_false);
-    const auto face_pressed_fill_true = safe_css_color(state_property(widget.properties, "style.face.fill_color", "pressed_true", face_fill_true), face_fill_true);
+    const auto face_pressed_fill_false = safe_css_color(button_state_property(widget.properties, "style.button_face.fill_color", "style.face.fill_color", "pressed_false", face_fill_false), face_fill_false);
+    const auto face_pressed_fill_true = safe_css_color(button_state_property(widget.properties, "style.button_face.fill_color", "style.face.fill_color", "pressed_true", face_fill_true), face_fill_true);
     const auto face_pressed_fill = value ? face_pressed_fill_true : face_pressed_fill_false;
-    const auto face_stroke = safe_css_color(state_property(widget.properties, "style.face.border_color", visual_state, "#334155"), "#334155");
-    const auto face_stroke_width = safe_css_length(property_string(widget.properties, "style.face.border_width", "1px"), "1px");
-    const auto state_face_fill_false = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", "false", "transparent"), "transparent");
-    const auto state_face_fill_true = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", "true", state_face_fill_false), state_face_fill_false);
-    const auto state_face_fill = value ? state_face_fill_true : state_face_fill_false;
-    const auto state_face_hover_fill_false = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", "hover_false", state_face_fill_false), state_face_fill_false);
-    const auto state_face_hover_fill_true = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", "hover_true", state_face_fill_true), state_face_fill_true);
-    const auto state_face_hover_fill = value ? state_face_hover_fill_true : state_face_hover_fill_false;
-    const auto state_face_pressed_fill_false = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", "pressed_false", state_face_fill_false), state_face_fill_false);
-    const auto state_face_pressed_fill_true = safe_css_color(state_property(widget.properties, "style.state_face.fill_color", "pressed_true", state_face_fill_true), state_face_fill_true);
-    const auto state_face_pressed_fill = value ? state_face_pressed_fill_true : state_face_pressed_fill_false;
-    const auto state_face_stroke_false = safe_css_color(state_property(widget.properties, "style.state_face.border_color", "false", "transparent"), "transparent");
-    const auto state_face_stroke_true = safe_css_color(state_property(widget.properties, "style.state_face.border_color", "true", state_face_stroke_false), state_face_stroke_false);
-    const auto state_face_stroke = value ? state_face_stroke_true : state_face_stroke_false;
-    const auto state_face_hover_stroke_false = safe_css_color(state_property(widget.properties, "style.state_face.border_color", "hover_false", state_face_stroke_false), state_face_stroke_false);
-    const auto state_face_hover_stroke_true = safe_css_color(state_property(widget.properties, "style.state_face.border_color", "hover_true", state_face_stroke_true), state_face_stroke_true);
-    const auto state_face_hover_stroke = value ? state_face_hover_stroke_true : state_face_hover_stroke_false;
-    const auto state_face_pressed_stroke_false = safe_css_color(state_property(widget.properties, "style.state_face.border_color", "pressed_false", state_face_stroke_false), state_face_stroke_false);
-    const auto state_face_pressed_stroke_true = safe_css_color(state_property(widget.properties, "style.state_face.border_color", "pressed_true", state_face_stroke_true), state_face_stroke_true);
-    const auto state_face_pressed_stroke = value ? state_face_pressed_stroke_true : state_face_pressed_stroke_false;
-    const auto state_face_stroke_width = safe_css_length(property_string(widget.properties, "style.state_face.border_width", "0px"), "0px");
+    const auto face_stroke = safe_css_color(button_state_property(widget.properties, "style.button_face.border_color", "style.face.border_color", visual_state, "#334155"), "#334155");
+    const auto face_stroke_width = safe_css_length(button_property_string(widget.properties, "style.button_face.border_width", "style.face.border_width", "1px"), "1px");
     const auto caption_size = safe_css_length(property_string(widget.properties, "caption.style.font_size", "18px"), "18px");
     const auto caption_weight = safe_css_font_weight(property_string(widget.properties, "caption.style.font_weight", "600"), "600");
     const auto caption_family = safe_css_font_family(
@@ -1813,10 +1860,6 @@ std::string render_button_widget(const WidgetState& widget) {
     const auto text_color = value ? true_text_color : false_text_color;
     const auto text_size = safe_css_length(property_string(widget.properties, "state_text.style.font_size", "20px"), "20px");
     const auto text_weight = safe_css_font_weight(property_string(widget.properties, "state_text.style.font_weight", "400"), "400");
-    const auto focus_color = safe_css_color(property_string(widget.properties, "style.focus_ring.color", "#2563eb"), "#2563eb");
-    const auto focus_width = property_bool(widget.properties, "style.focus_ring.visible", true)
-        ? safe_css_length(property_string(widget.properties, "style.focus_ring.width", "3px"), "3px")
-        : "0px";
     const auto pressed_inset = safe_css_length(property_string(widget.properties, "style.pressed.inset", "2px"), "2px");
     const bool pressed_applies_when_value_true = property_bool(widget.properties, "style.pressed.apply_when_value_true", false);
     const bool pressed_applies_while_active = property_bool(widget.properties, "style.pressed.apply_while_active", true);
@@ -1864,43 +1907,19 @@ std::string render_button_widget(const WidgetState& widget) {
     html << " data-frog-button-face-hover-fill-true='" << html_escape(face_hover_fill_true) << "'";
     html << " data-frog-button-face-pressed-fill-false='" << html_escape(face_pressed_fill_false) << "'";
     html << " data-frog-button-face-pressed-fill-true='" << html_escape(face_pressed_fill_true) << "'";
-    html << " data-frog-button-state-face-fill-false='" << html_escape(state_face_fill_false) << "'";
-    html << " data-frog-button-state-face-fill-true='" << html_escape(state_face_fill_true) << "'";
-    html << " data-frog-button-state-face-hover-fill-false='" << html_escape(state_face_hover_fill_false) << "'";
-    html << " data-frog-button-state-face-hover-fill-true='" << html_escape(state_face_hover_fill_true) << "'";
-    html << " data-frog-button-state-face-pressed-fill-false='" << html_escape(state_face_pressed_fill_false) << "'";
-    html << " data-frog-button-state-face-pressed-fill-true='" << html_escape(state_face_pressed_fill_true) << "'";
-    html << " data-frog-button-state-face-stroke-false='" << html_escape(state_face_stroke_false) << "'";
-    html << " data-frog-button-state-face-stroke-true='" << html_escape(state_face_stroke_true) << "'";
-    html << " data-frog-button-state-face-hover-stroke-false='" << html_escape(state_face_hover_stroke_false) << "'";
-    html << " data-frog-button-state-face-hover-stroke-true='" << html_escape(state_face_hover_stroke_true) << "'";
-    html << " data-frog-button-state-face-pressed-stroke-false='" << html_escape(state_face_pressed_stroke_false) << "'";
-    html << " data-frog-button-state-face-pressed-stroke-true='" << html_escape(state_face_pressed_stroke_true) << "'";
     html << " style='position:absolute;left:" << css_px(x) << ";top:" << css_px(y)
          << ";width:" << css_px(width) << ";height:" << css_px(height) << ";"
-         << "--frog-button-frame-fill:" << html_escape(frame_fill) << ";"
-         << "--frog-button-frame-stroke:" << html_escape(frame_stroke) << ";"
-         << "--frog-button-frame-stroke-width:" << html_escape(frame_width) << ";"
          << "--frog-button-face-fill:" << html_escape(face_fill) << ";"
          << "--frog-button-face-hover-fill:" << html_escape(face_hover_fill) << ";"
          << "--frog-button-face-pressed-fill:" << html_escape(face_pressed_fill) << ";"
          << "--frog-button-face-stroke:" << html_escape(face_stroke) << ";"
          << "--frog-button-face-stroke-width:" << html_escape(face_stroke_width) << ";"
-         << "--frog-button-state-face-fill:" << html_escape(state_face_fill) << ";"
-         << "--frog-button-state-face-hover-fill:" << html_escape(state_face_hover_fill) << ";"
-         << "--frog-button-state-face-pressed-fill:" << html_escape(state_face_pressed_fill) << ";"
-         << "--frog-button-state-face-stroke:" << html_escape(state_face_stroke) << ";"
-         << "--frog-button-state-face-hover-stroke:" << html_escape(state_face_hover_stroke) << ";"
-         << "--frog-button-state-face-pressed-stroke:" << html_escape(state_face_pressed_stroke) << ";"
-         << "--frog-button-state-face-stroke-width:" << html_escape(state_face_stroke_width) << ";"
          << "--frog-button-caption-font-size:" << html_escape(caption_size) << ";"
          << "--frog-button-caption-font-weight:" << html_escape(caption_weight) << ";"
          << "--frog-button-caption-font-family:" << html_escape(caption_family) << ";"
          << "--frog-button-state-text-fill:" << html_escape(text_color) << ";"
          << "--frog-button-state-text-font-size:" << html_escape(text_size) << ";"
          << "--frog-button-state-text-font-weight:" << html_escape(text_weight) << ";"
-         << "--frog-button-focus-color:" << html_escape(focus_color) << ";"
-         << "--frog-button-focus-width:" << html_escape(focus_width) << ";"
          << "--frog-button-pressed-inset:" << html_escape(pressed_inset) << ";"
          << "--frog-button-transition:" << html_escape(transition_ms) << "ms " << html_escape(transition_timing) << ";";
     if (!property_bool(widget.properties, "visible", true)) {
@@ -1918,8 +1937,8 @@ std::string render_button_widget(const WidgetState& widget) {
     html << " name='" << html_escape(input_id) << "' value='true'";
     html << " aria-label='" << html_escape(caption) << "'";
     html << " aria-pressed='" << (physical_pressed ? "true" : "false") << "'";
-    html << " data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='" << html_escape(input_id) << "'";
-    html << " data-frog-host-overlay='input' data-frog-align-to-part='face'";
+    html << " data-frog-part='button_face' data-frog-event='pressed' data-frog-public-input-id='" << html_escape(input_id) << "'";
+    html << " data-frog-host-overlay='input' data-frog-align-to-part='button_face'";
     html << " style='" << button_box_style(geometry.face_x, geometry.face_y, geometry.face_width, geometry.face_height, geometry) << "'>";
     html << "</button></div>";
     return html.str();
@@ -1929,7 +1948,7 @@ std::string button_widget_script() {
     return R"FROGJS(<script>
 (() => {
   const form = document.querySelector("form[action='/run']");
-  const overlay = document.querySelector(".button-press-overlay[data-frog-part='face'][data-frog-host-overlay='input']");
+  const overlay = document.querySelector(".button-press-overlay[data-frog-part='button_face'][data-frog-host-overlay='input']");
   const buttonWidget = overlay ? overlay.closest(".button-widget[data-class-ref='frog.widgets.button']") : null;
   const indicator = document.querySelector(".boolean-indicator[data-class-ref='frog.widgets.boolean_indicator']");
   const readButton = document.querySelector(".program-read-action[data-frog-event='read']");
@@ -1939,7 +1958,7 @@ std::string button_widget_script() {
   }
 
   const buttonStateText = buttonWidget.querySelector(".button-state-overlay[data-frog-part='state_text']");
-  const stateText = indicator.querySelector("[data-frog-part='state_text']");
+  const stateText = indicator.querySelector(".boolean-state-overlay[data-frog-part='state_text']");
   const inputId = overlay.dataset.frogPublicInputId || overlay.name || "";
   const mechanicalAction = buttonWidget.dataset.frogMechanicalAction || "";
   const latchAction = mechanicalAction === "latch_when_pressed" ||
@@ -1993,12 +2012,6 @@ std::string button_widget_script() {
     buttonWidget.style.setProperty("--frog-button-face-fill", buttonProperty("frogButtonFaceFill", value));
     buttonWidget.style.setProperty("--frog-button-face-hover-fill", buttonProperty("frogButtonFaceHoverFill", value));
     buttonWidget.style.setProperty("--frog-button-face-pressed-fill", buttonProperty("frogButtonFacePressedFill", value));
-    buttonWidget.style.setProperty("--frog-button-state-face-fill", buttonProperty("frogButtonStateFaceFill", value));
-    buttonWidget.style.setProperty("--frog-button-state-face-hover-fill", buttonProperty("frogButtonStateFaceHoverFill", value));
-    buttonWidget.style.setProperty("--frog-button-state-face-pressed-fill", buttonProperty("frogButtonStateFacePressedFill", value));
-    buttonWidget.style.setProperty("--frog-button-state-face-stroke", buttonProperty("frogButtonStateFaceStroke", value));
-    buttonWidget.style.setProperty("--frog-button-state-face-hover-stroke", buttonProperty("frogButtonStateFaceHoverStroke", value));
-    buttonWidget.style.setProperty("--frog-button-state-face-pressed-stroke", buttonProperty("frogButtonStateFacePressedStroke", value));
     buttonWidget.style.setProperty("--frog-button-state-text-fill", buttonProperty("frogStateTextColor", value));
     if (buttonStateText) {
       buttonStateText.textContent = buttonProperty("frogStateText", value);
@@ -3425,17 +3438,11 @@ std::string ButtonBrowserUiRuntime::render_html() const {
             ".button-widget{overflow:visible;}"
             ".button-skin{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;}"
             ".button-skin svg{width:100%;height:100%;display:block;}"
-            ".button-skin [data-frog-part='label'],.button-skin [data-frog-part='caption'],.button-skin [data-frog-part='state_text']{display:none!important;}"
-            ".button-skin [data-frog-part='frame']{fill:var(--frog-button-frame-fill)!important;stroke:var(--frog-button-frame-stroke)!important;stroke-width:var(--frog-button-frame-stroke-width)!important;}"
-            ".button-skin [data-frog-part='face']{fill:var(--frog-button-face-fill)!important;stroke:var(--frog-button-face-stroke)!important;stroke-width:var(--frog-button-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}"
-            ".button-skin [data-frog-part='state_face']{fill:var(--frog-button-state-face-fill)!important;stroke:var(--frog-button-state-face-stroke)!important;stroke-width:var(--frog-button-state-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}"
-            ".button-skin [data-frog-part='focus_ring']{display:none!important;stroke:var(--frog-button-focus-color)!important;stroke-width:var(--frog-button-focus-width)!important;}"
-            ".button-widget[data-frog-hover-applies-when-value-false-only='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='face'],.button-widget[data-frog-hover-applies-when-value-false-only='true'][data-current-value='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='face']{fill:var(--frog-button-face-hover-fill)!important;}"
-            ".button-widget[data-frog-hover-applies-when-value-false-only='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face'],.button-widget[data-frog-hover-applies-when-value-false-only='true'][data-current-value='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face']{fill:var(--frog-button-state-face-hover-fill)!important;stroke:var(--frog-button-state-face-hover-stroke)!important;}"
-            ".button-widget[data-frog-pressed-applies-while-active='true']:has(.button-press-overlay:active) .button-skin [data-frog-part='face'],.button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-skin [data-frog-part='face']{fill:var(--frog-button-face-pressed-fill)!important;transform:translateY(var(--frog-button-pressed-inset));}"
-            ".button-widget[data-frog-pressed-applies-while-active='true']:has(.button-press-overlay:active) .button-skin [data-frog-part='state_face'],.button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-skin [data-frog-part='state_face']{fill:var(--frog-button-state-face-pressed-fill)!important;stroke:var(--frog-button-state-face-pressed-stroke)!important;transform:translateY(var(--frog-button-pressed-inset));}"
+            ".button-skin [data-frog-part='label'],.button-skin [data-frog-part='caption'],.button-skin [data-frog-part='state_text'],.button-skin [data-frog-part='placement_bounds']{display:none!important;}"
+            ".button-skin [data-frog-part='button_face']{fill:var(--frog-button-face-fill)!important;stroke:var(--frog-button-face-stroke)!important;stroke-width:var(--frog-button-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}"
+            ".button-widget[data-frog-hover-applies-when-value-false-only='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='button_face'],.button-widget[data-frog-hover-applies-when-value-false-only='true'][data-current-value='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='button_face']{fill:var(--frog-button-face-hover-fill)!important;}"
+            ".button-widget[data-frog-pressed-applies-while-active='true']:has(.button-press-overlay:active) .button-skin [data-frog-part='button_face'],.button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-skin [data-frog-part='button_face']{fill:var(--frog-button-face-pressed-fill)!important;transform:translateY(var(--frog-button-pressed-inset));}"
             ".button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-state-overlay{transform:translate(-50%,calc(-50% + var(--frog-button-pressed-inset)));}"
-            ".button-widget:has(.button-press-overlay:focus-visible) .button-skin [data-frog-part='focus_ring']{display:inline!important;}"
             ".button-caption-overlay{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:var(--frog-button-caption-font-size);font-weight:var(--frog-button-caption-font-weight);font-family:var(--frog-button-caption-font-family);line-height:1;white-space:nowrap;pointer-events:none;z-index:3;}"
             ".button-state-overlay{position:absolute;transform:translate(-50%,-50%);font-size:var(--frog-button-state-text-font-size);font-weight:var(--frog-button-state-text-font-weight);line-height:1;color:var(--frog-button-state-text-fill);pointer-events:none;z-index:6;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}"
             ".button-press-overlay{position:absolute;box-sizing:border-box;margin:0;padding:0;border:0;background:transparent;cursor:pointer;appearance:none;z-index:5;}"
@@ -3496,6 +3503,7 @@ std::string ButtonBrowserUiRuntime::render_html() const {
         html << "none for Example 10";
     }
     html << "</dd></div>";
+    html << source_review_runtime_fact_html(source_path_from_contract(core.contract_path, core.contract));
     html << "</dl>";
     html << diagnostics;
     html << render_button_mechanical_action_diagram(mechanical_action);

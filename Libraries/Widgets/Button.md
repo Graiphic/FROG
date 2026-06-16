@@ -186,17 +186,16 @@ Runtimes MUST NOT accept a mechanical action unless the corresponding event timi
   <li><code>root</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
-  <li><code>face</code></li>
-  <li><code>state_face</code></li>
+  <li><code>placement_bounds</code></li>
+  <li><code>button_face</code></li>
   <li><code>state_text</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
 
 <p>
 Default SVG realizations SHOULD publish stable anchors for external text placement, internal state text placement, and host input overlays.
-The rectangular default realization publishes <code>label.anchor</code>, <code>caption.anchor</code>, <code>state_text.center</code>, and <code>face.bounds</code>.
-Host overlays for input handling MAY align to <code>face.bounds</code>, but they MUST NOT replace the SVG-owned visible button skin.
+The rectangular default realization publishes <code>label.anchor</code>, <code>caption.anchor</code>, <code>button_face.bounds</code>, and <code>state_text.center</code>.
+The <code>placement_bounds</code> part declares the uniform placement aura around the visible button face; it is not a rendered focus ring or a decorative frame.
+Host overlays for input handling MAY align to <code>button_face.bounds</code>, but they MUST NOT replace the SVG-owned visible button skin.
 </p>
 
 <hr/>
@@ -251,10 +250,7 @@ Host overlays for input handling MAY align to <code>face.bounds</code>, but they
 <h3>7.5 Style and realization</h3>
 
 <ul>
-  <li><code>style.frame.*</code></li>
-  <li><code>style.face.*</code></li>
-  <li><code>style.state_face.*</code></li>
-  <li><code>style.focus_ring.*</code></li>
+  <li><code>style.button_face.*</code></li>
   <li><code>style.disabled.opacity : number</code></li>
   <li><code>realization.family : string</code></li>
   <li><code>realization.variant : string</code></li>
@@ -314,7 +310,8 @@ Host overlays for input handling MAY align to <code>face.bounds</code>, but they
 <h2 id="default-svg-realization-posture">9. Default SVG Realization Posture</h2>
 
 <p>
-The default realization SHOULD support a parameterized rectangular SVG template, state-dependent color application, caption and internal state-text rendering, a single visible rectangular face with configurable border, optional frame / state-face surfaces for advanced realizations, and focus ring display.
+The default realization SHOULD support one parameterized rectangular SVG template, state-dependent color application, caption and internal state-text rendering, one visible rectangular <code>button_face</code> with configurable border, and one non-visible <code>placement_bounds</code> aura.
+The default realization SHOULD NOT require separate SVG resources for ordinary true/false/hover/pressed visual states.
 </p>
 
 <p>
@@ -332,11 +329,12 @@ Example sources may provide instance-level values, labels, layout, bindings, and
 <h2 id="state-resource-override-posture">10. State Resource Override Posture</h2>
 
 <p>
-The default button realization may be driven by one parameterized template SVG and may also publish optional state-specific SVG overrides.
+The default button realization is driven by one parameterized template SVG.
+State changes are expressed through <code>value</code>, interaction state, <code>style.button_face.*</code>, and <code>state_text.*</code> bindings.
 </p>
 
 <p>
-The initial state-specific override names are:
+The initial visual state names are:
 </p>
 
 <ul>
@@ -349,7 +347,8 @@ The initial state-specific override names are:
 </ul>
 
 <p>
-Additional visual states such as <code>pressed_false</code>, <code>pressed_true</code>, <code>disabled_false</code>, <code>disabled_true</code>, <code>focused_false</code>, and <code>focused_true</code> may be represented by parameter binding or later explicit override assets.
+Additional visual states such as <code>pressed_false</code>, <code>pressed_true</code>, <code>disabled_false</code>, and <code>disabled_true</code> are represented by parameter binding in the default realization.
+A later realization family MAY introduce richer assets, but the default button skin remains a single semantic SVG template.
 </p>
 
 <hr/>
@@ -386,5 +385,5 @@ The standardized button defines the intrinsic command-oriented action widget of 
 </ul>
 
 <p>
-The button is a stateful command control with explicit mechanical-action behavior, event posture, internal state text, shared <code>label</code> / <code>caption</code> convention, and default SVG realization support with optional state-specific overrides.
+The button is a stateful command control with explicit mechanical-action behavior, event posture, internal state text, shared <code>label</code> / <code>caption</code> convention, and default SVG realization support through one parameterized semantic skin.
 </p>
