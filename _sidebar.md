@@ -163,6 +163,8 @@
     - [reference](/Examples/43_array_boolean_container_ide_view/reference/README.md)
       - [visual-contract](/Examples/43_array_boolean_container_ide_view/reference/visual-contract.md)
     - [ui](/Examples/43_array_boolean_container_ide_view/ui/Readme.md)
+  - [44 array button container dimension count roundtrip](/Examples/44_array_button_container_dimension_count_roundtrip/Readme.md)
+    - [main.frog](/Examples/44_array_button_container_dimension_count_roundtrip/main.frog)
   - [compiler](/Examples/compiler/Readme.md)
     - [01 pure arithmetic](/Examples/compiler/01_pure_arithmetic.md)
     - [02 structured control](/Examples/compiler/02_structured_control.md)
