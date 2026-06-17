@@ -21,6 +21,9 @@ The stabilized Button slices now cover
 <code>frog.widgets.boolean_indicator</code> without duplicating local SVG
 skins under <code>Examples</code>. The six slices correspond to the six
 LabVIEW-like mechanical actions accepted for the Default Button realization.
+<code>Examples/44_array_button_container_dimension_count_roundtrip</code>
+extends the same Default Button realization into Array cells without
+introducing an Array-local Button shell.
 </p>
 
 <pre><code>Example 10:
@@ -68,9 +71,9 @@ Current instance-level properties proven by the example include:
 <ul>
   <li><code>caption.text</code>, caption anchors, caption font size, and caption visibility</li>
   <li><code>state_text.true_text</code>, <code>state_text.false_text</code>, <code>state_text.visible</code>, and <code>state_text.style.*</code></li>
-  <li><code>style.face.fill_color.*</code>, <code>style.face.border_color.*</code>, and <code>style.face.border_width</code></li>
+  <li><code>style.button_face.fill_color.*</code>, <code>style.button_face.border_color.*</code>, and <code>style.button_face.border_width</code></li>
   <li><code>style.pressed.inset</code> and hover/pressed visual states for the Button body</li>
-  <li><code>style.inner.*</code> state colors for the read-only Boolean indicator</li>
+  <li>Default Boolean indicator colors and state text inherited from <code>boolean.default.wfrog</code>, with only source-owned text/value overrides in the Button examples</li>
   <li><code>interaction.enabled</code> for the Button and read-only indicator behavior</li>
 </ul>
 
@@ -94,8 +97,8 @@ Current instance-level properties proven by the example include:
     </tr>
     <tr>
       <td>Button face</td>
-      <td><code>style.face.*</code>, <code>hover_*</code>, <code>pressed_*</code></td>
-      <td>Apply normal, hover, and pressed states through the SVG-published <code>face</code> part rather than through a hardcoded HTML shell.</td>
+      <td><code>style.button_face.*</code>, <code>hover_*</code>, <code>pressed_*</code></td>
+      <td>Apply normal, hover, and pressed states through the SVG-published <code>button_face</code> part rather than through a hardcoded HTML shell.</td>
     </tr>
     <tr>
       <td>Button state text</td>
@@ -109,16 +112,19 @@ Current instance-level properties proven by the example include:
     </tr>
     <tr>
       <td>Boolean indicator</td>
-      <td><code>style.inner.*</code>, <code>state_text.*</code></td>
-      <td>Render the read-only pressed result through the Default Boolean circular realization.</td>
+      <td><code>state_text.*</code> and Default Boolean style properties from <code>boolean.default.wfrog</code></td>
+      <td>Render the read-only result through the Default Boolean circular realization without local color/body overrides.</td>
     </tr>
   </tbody>
 </table>
 
 <p>
 The Default Button SVG template exposes these public parts:
-<code>caption</code>, <code>face</code>, <code>focus_ring</code>, <code>frame</code>,
-<code>label</code>, <code>root</code>, <code>state_face</code>, and <code>state_text</code>.
+<code>root</code>, <code>label</code>, <code>caption</code>,
+<code>placement_bounds</code>, <code>button_face</code>, and
+<code>state_text</code>. It intentionally does not expose <code>face</code>,
+<code>frame</code>, <code>state_face</code>, or <code>focus_ring</code> as
+public Button skin parts.
 </p>
 
 <hr/>
@@ -169,6 +175,8 @@ It owns only the realization references, SVG asset references, and host requirem
   <li>Normal, hover, pressed, text, border, and indicator colors are instance-configurable.</li>
   <li>The visible skins must come from Default Button and Boolean SVG assets, not from a hardcoded HTML card.</li>
   <li>The runtime must reject fallback markers that replace the Button or Boolean bodies with local HTML/CSS widgets.</li>
+  <li>When Button is hosted by Array, each cell is the contained Button <code>placement_bounds</code> aura. The Array runtime must instantiate <code>asset:button_rectangular_svg</code> and must not redraw Button cells as a generic Boolean rectangle.</li>
+  <li>Button-in-Array uses the same Button state text and mechanical interaction semantics as a standalone Button; source data may make indicator cells read-only, but the visual body still comes from the Button realization.</li>
 </ul>
 
 <hr/>
@@ -183,7 +191,7 @@ It owns only the realization references, SVG asset references, and host requirem
   <li>native manifest: <code>Implementations/Reference/LLVM/examples/14_button_latch_when_released/native_kernel_manifest.json</code></li>
   <li>native manifest: <code>Implementations/Reference/LLVM/examples/15_button_latch_until_released/native_kernel_manifest.json</code></li>
   <li>native ABI entries are example-specific and consumed through manifests by the runtime.</li>
-  <li>Examples 10-15 are accepted at the same C++/Python/Rust reference-runtime source level; local direct Python/Rust execution still depends on those toolchains being available.</li>
+  <li>Current active runtime validation is C++ first through the private <code>Graiphic/FROG-Runtime</code> repository. Python/Rust parity is aligned only when explicitly requested after C++ acceptance.</li>
 </ul>
 
 <hr/>

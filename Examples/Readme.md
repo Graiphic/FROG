@@ -438,6 +438,14 @@ opens the public screenshot for that example.
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>C++ browser-host calibration surface only: Example 38 remains the executable Boolean Array dimension-count slice</td>
     </tr>
+    <tr>
+      <td><a href="./44_array_button_container_dimension_count_roundtrip/"><code>44_array_button_container_dimension_count_roundtrip</code></a></td>
+      <td><code>pending</code></td>
+      <td><time datetime="2026-06-17">2026-06-17</time></td>
+      <td>Array container whose cells are Default rectangular Button widgets while N-dimensional rank and visible row/column counts remain driven by Numeric U8 property-write controls consumed on Execute</td>
+      <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
+      <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code></td>
+    </tr>
   </tbody>
 </table>
 

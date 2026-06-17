@@ -38,7 +38,7 @@ Array examples evolve.
   -&gt; public selected element output
 
 array element template
-  -&gt; Default Numeric/String/Path/Boolean/Enum/Ring widget realization
+  -&gt; Default Numeric/String/Path/Boolean/Enum/Ring/Button widget realization
   -&gt; repeated widget-backed cells inside the Array viewport</code></pre>
 
 <hr/>
@@ -57,7 +57,7 @@ instance data:
   <li>Selected element id, selected indices, and optional selected value output.</li>
   <li>Viewport first indices, visible counts, orientation, and scrollbar posture.</li>
   <li>Index display visibility, values, position, and style.</li>
-  <li>Element template binding, including the contained widget class such as Numeric, String, Path, Boolean, Enum, or Ring control/indicator classes for current widget-backed examples.</li>
+  <li>Element template binding, including the contained widget class such as Numeric, String, Path, Boolean, Enum, Ring, or Button control/indicator classes for current widget-backed examples.</li>
   <li>Contained widget properties such as numeric representation, string/path text behavior, Boolean state text, increment/decrement visibility, read-only posture, and default value.</li>
   <li>Labels, caption placement, layout, and instance-level visual overrides.</li>
 </ul>
@@ -104,7 +104,7 @@ initialized to <code>0</code>, matching the public Array class law.
     <tr>
       <td>Contained widget</td>
       <td><code>element.class_id</code>, <code>element.template_ref</code>, <code>element.layout.fit_part</code>, <code>element.props.*</code></td>
-      <td>Compose the declared Default widget realization inside each visible cell without replacing it with a runtime-local surrogate. The cell must size to the contained widget's effective visible fit part; it must not reserve hidden selector, spinner, popup, frame, or decorative geometry.</td>
+      <td>Compose the declared Default widget realization inside each visible cell without replacing it with a runtime-local surrogate. The cell must size to the contained widget's effective <code>placement_bounds</code> aura unless the widget contract explicitly names another fit part; it must not reserve hidden selector, spinner, popup, frame, or decorative geometry.</td>
     </tr>
     <tr>
       <td>Scrollbars</td>
