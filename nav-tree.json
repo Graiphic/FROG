@@ -1218,6 +1218,28 @@
               ]
             },
             {
+              "key": "examples/45_button_placement_ide_view/",
+              "title": "45 button placement ide view",
+              "path": "/Examples/45_button_placement_ide_view/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/45_button_placement_ide_view/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/45_button_placement_ide_view/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "examples/45_button_placement_ide_view/ui/",
+                  "title": "ui",
+                  "path": "/Examples/45_button_placement_ide_view/ui/Readme.md",
+                  "kind": "category",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -5310,6 +5332,9 @@
     "/Examples/43_array_boolean_container_ide_view/Readme.md",
     "/Examples/44_array_button_container_dimension_count_roundtrip/main.frog",
     "/Examples/44_array_button_container_dimension_count_roundtrip/Readme.md",
+    "/Examples/45_button_placement_ide_view/main.frog",
+    "/Examples/45_button_placement_ide_view/ui/Readme.md",
+    "/Examples/45_button_placement_ide_view/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
