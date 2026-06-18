@@ -1,0 +1,74 @@
+{
+  "artifact_kind": "frog_native_kernel_manifest",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "kernel": {
+    "id": "example45_button_placement_ide_view_kernel",
+    "source_lowered_unit": "Examples/45_button_placement_ide_view/main.lowering.json",
+    "backend": {
+      "family": "llvm",
+      "artifact_kind": "native_object_or_library",
+      "source_artifact": "Implementations/Reference/LLVM/examples/10_button_press_to_boolean/kernel.ll",
+      "artifact_library": {
+        "windows": "frog_example10_kernel.dll",
+        "linux": "libfrog_example10_kernel.so",
+        "macos": "libfrog_example10_kernel.dylib"
+      }
+    },
+    "entry": {
+      "symbol": "frog_example10_run",
+      "abi": "frog_bool_to_result_status_outptr"
+    },
+    "io": {
+      "inputs": [
+        {
+          "id": "trigger_pressed",
+          "type": "bool"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "pressed",
+          "type": "bool"
+        }
+      ]
+    },
+    "result_status_layout": {
+      "carrier": "out_parameter",
+      "c_signature": "void frog_example10_run(uint8_t trigger_pressed, FrogBoolRunResult* out_result)",
+      "fields": [
+        {
+          "id": "ok",
+          "type": "u8"
+        },
+        {
+          "id": "pressed",
+          "type": "u8",
+          "logical_type": "bool"
+        },
+        {
+          "id": "error_code",
+          "type": "u16"
+        }
+      ]
+    },
+    "error_model": {
+      "overflow": "not_applicable",
+      "error_codes": [
+        {
+          "code": 0,
+          "meaning": "no_error"
+        }
+      ]
+    }
+  },
+  "runtime_boundary": {
+    "reference": "Implementations/Reference/Runtime/KernelBridge.md",
+    "runtime_dependency_posture": "runtime_consumes_manifest_declared_kernel_not_llvm"
+  },
+  "validation_notes": [
+    "Example 45 is an IDE placement view for the same Button bool corridor as Example 10.",
+    "The runtime consumes the Example 45 source/lowering/UI contract while reusing the already validated native bool kernel ABI."
+  ]
+}

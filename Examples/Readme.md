@@ -446,6 +446,14 @@ opens the public screenshot for that example.
       <td><code>main.frog</code> + <code>ui/array_panel.wfrog</code></td>
       <td>Repository-visible post-boundary widget progression: public source/realization/example material only; runtime implementation continues in <code>Graiphic/FROG-Runtime</code></td>
     </tr>
+    <tr>
+      <td><a href="./45_button_placement_ide_view/"><code>45_button_placement_ide_view</code></a></td>
+      <td><a href="./45_button_placement_ide_view/reference/screenshot.png">capture</a></td>
+      <td><time datetime="2026-06-18">2026-06-18</time></td>
+      <td>IDE-view Button placement witness showing the Default rectangular Button placement_bounds aura, button_face visible body, 4px homogeneous aura band, state text centering, and Boolean indicator reference output</td>
+      <td><code>main.frog</code> + <code>ui/button_ide_panel.wfrog</code></td>
+      <td>C++ browser-host calibration surface only: Example 10 remains the executable Button bool kernel corridor</td>
+    </tr>
   </tbody>
 </table>
 

@@ -1,0 +1,77 @@
+{
+  "artifact_kind": "frog_fir_unit",
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "45_button_placement_ide_view",
+    "path": "Examples/45_button_placement_ide_view/main.frog",
+    "entry_unit": "main"
+  },
+  "front_panel_ref": {
+    "package_path": "Examples/45_button_placement_ide_view/ui/button_ide_panel.wfrog",
+    "panel_id": "main_panel"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "button_press_to_boolean_ui_unit",
+      "public_interface": {
+        "inputs": [
+          {
+            "id": "trigger_pressed",
+            "type": "bool",
+            "binding_origin": "widget.trigger_button.pressed"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "pressed",
+            "type": "bool"
+          }
+        ]
+      },
+      "ui_bindings": {
+        "control_bindings": [
+          {
+            "widget_id": "trigger_button",
+            "mode": "widget_event_value",
+            "event": "pressed",
+            "public_input_id": "trigger_pressed",
+            "value_type": "bool"
+          }
+        ],
+        "indicator_bindings": [
+          {
+            "widget_id": "pressed_indicator",
+            "mode": "widget_value",
+            "public_output_id": "pressed",
+            "value_type": "bool"
+          }
+        ]
+      },
+      "execution_model": {
+        "structure": "single_button_event_copy",
+        "body_rule": {
+          "kind": "copy_widget_event_to_output",
+          "expression": "pressed = trigger_pressed"
+        }
+      },
+      "publications": [
+        {
+          "target": "public_output.pressed",
+          "source": "trigger_pressed"
+        },
+        {
+          "target": "widget.pressed_indicator.value",
+          "source": "trigger_pressed"
+        }
+      ],
+      "notes": [
+        "This FIR is an IDE placement witness for the Default Button realization.",
+        "The Button control remains the same frog.widgets.button class; placement_bounds is the aura, button_face is the visible body.",
+        "The reference C++ closure consumes the existing native bool kernel corridor without making the runtime LLVM-only."
+      ]
+    }
+  ]
+}

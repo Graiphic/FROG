@@ -1,0 +1,102 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_package",
+  "package_id": "example45.button_placement_ide_panel",
+  "title": "Example 45 Default Button IDE placement realization package",
+  "reviewed_date": "2026-06-18",
+  "review": {
+    "last_reviewed": "2026-06-18",
+    "scope": "Default Button placement_bounds aura, button_face visible body, centered state_text, and Boolean indicator reference posture for the IDE view.",
+    "visible_runtime_fact": "Reviewed 2026-06-18"
+  },
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "45_button_placement_ide_view",
+    "source_path": "Examples/45_button_placement_ide_view/main.frog",
+    "fir_path": "Examples/45_button_placement_ide_view/main.fir.json",
+    "lowering_path": "Examples/45_button_placement_ide_view/main.lowering.json"
+  },
+  "ownership_boundary": {
+    "owns": [
+      "Default Button realization reference",
+      "Default Boolean realization reference",
+      "Default SVG asset references",
+      "reference host IDE selection and placement-grid capability requirements"
+    ],
+    "does_not_own": [
+      "canonical source semantics",
+      "front-panel widget instance layout",
+      "front-panel widget values",
+      "FIR/lowering/runtime behavior",
+      "button widget law",
+      "boolean widget law",
+      "IDE-private editing behavior"
+    ]
+  },
+  "widget_classes": [
+    {
+      "class_id": "frog.widgets.button",
+      "role": "control",
+      "value_type": "bool"
+    },
+    {
+      "class_id": "frog.widgets.boolean_indicator",
+      "role": "indicator",
+      "value_type": "bool"
+    }
+  ],
+  "host_bindings": [
+    {
+      "binding_id": "reference_host_default",
+      "host_family": "reference_browser_host",
+      "target": "reference_browser_host",
+      "required_capabilities": [
+        "window",
+        "basic_widget_rendering",
+        "widget_value_binding",
+        "button_press_binding",
+        "button_release_binding",
+        "svg_part_overlay_alignment"
+      ],
+      "optional_capabilities": [
+        "ide_selection_overlay",
+        "placement_grid"
+      ]
+    }
+  ],
+  "realization_refs": [
+    {
+      "package_ref": "Libraries/Realizations/Default/button.default.wfrog",
+      "target_classes": [
+        "frog.widgets.button"
+      ]
+    },
+    {
+      "package_ref": "Libraries/Realizations/Default/boolean.default.wfrog",
+      "target_classes": [
+        "frog.widgets.boolean_indicator"
+      ]
+    }
+  ],
+  "svg_assets": [
+    {
+      "asset_id": "button_rectangular_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/button/templates/button_rectangular.svg",
+      "target_class": "frog.widgets.button"
+    },
+    {
+      "asset_id": "boolean_circular_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg",
+      "target_class": "frog.widgets.boolean_indicator"
+    }
+  ],
+  "notes": [
+    "Button IDE placement uses placement_bounds as the portable aura and button_face as the visible command body.",
+    "The default aura band is 4 CSS px between placement_bounds and button_face.",
+    "The visible grid is a review surface; execution semantics remain source-owned and compatible with the Button bool kernel corridor."
+  ]
+}

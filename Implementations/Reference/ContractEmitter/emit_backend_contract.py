@@ -23,6 +23,7 @@ UI_PACKAGE_BY_EXAMPLE = {
     "13_button_latch_when_pressed": "button_panel.wfrog",
     "14_button_latch_when_released": "button_panel.wfrog",
     "15_button_latch_until_released": "button_panel.wfrog",
+    "45_button_placement_ide_view": "button_ide_panel.wfrog",
 }
 
 SCALAR_COPY_CONTRACT_SPECS: dict[str, dict[str, Any]] = {
