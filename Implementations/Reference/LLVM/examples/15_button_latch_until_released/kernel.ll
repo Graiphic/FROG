@@ -11,7 +11,8 @@
 
 define void @frog_example15_run(i8 %trigger_value, ptr %out_result) {
 entry:
-  %is_latched = icmp ne i8 %trigger_value, 0
+  %normalized_trigger = and i8 %trigger_value, 1
+  %is_latched = icmp ne i8 %normalized_trigger, 0
   %result = zext i1 %is_latched to i8
 
   %ok_ptr = getelementptr inbounds %FrogBoolRunResult, ptr %out_result, i32 0, i32 0
