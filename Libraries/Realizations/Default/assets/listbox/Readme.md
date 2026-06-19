@@ -27,12 +27,18 @@
 
 <ul>
   <li><code>root</code></li>
+  <li><code>placement_bounds</code></li>
+  <li><code>main_body</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
-  <li><code>frame</code></li>
   <li><code>item_region</code></li>
   <li><code>item_row</code></li>
+  <li><code>item_icon</code></li>
+  <li><code>item_label</code></li>
   <li><code>selection_face</code></li>
+  <li><code>hover_face</code></li>
+  <li><code>disabled_face</code></li>
   <li><code>vertical_scrollbar</code></li>
+  <li><code>horizontal_scrollbar</code></li>
   <li><code>focus_ring</code></li>
 </ul>

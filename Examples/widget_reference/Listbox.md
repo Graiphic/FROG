@@ -44,8 +44,9 @@ publishes the selected numeric value through the native proof corridor.
   </thead>
   <tbody>
     <tr><td>Items</td><td><code>item_region</code>, <code>item_row</code>, <code>item_icon</code>, <code>item_label</code></td></tr>
-    <tr><td>States</td><td><code>active_item</code>, <code>selection_face</code>, <code>hover_face</code>, <code>disabled_face</code></td></tr>
-    <tr><td>Viewport</td><td><code>vertical_scrollbar</code>, <code>horizontal_scrollbar</code>, <code>empty_state</code></td></tr>
+    <tr><td>Placement/body</td><td><code>placement_bounds</code>, <code>main_body</code>, <code>item_region</code></td></tr>
+    <tr><td>States</td><td><code>selection_face</code>, <code>hover_face</code>, <code>disabled_face</code></td></tr>
+    <tr><td>Viewport</td><td><code>vertical_scrollbar</code>, <code>horizontal_scrollbar</code></td></tr>
   </tbody>
 </table>
 

@@ -38,18 +38,17 @@ It does not define listbox value semantics, host-native list handles, item rende
 
 <ul>
   <li><code>root</code></li>
+  <li><code>placement_bounds</code></li>
+  <li><code>main_body</code></li>
   <li><code>label</code></li>
   <li><code>caption</code></li>
   <li><code>item_region</code></li>
   <li><code>item_row</code></li>
   <li><code>item_icon</code></li>
   <li><code>item_label</code></li>
-  <li><code>active_item</code></li>
   <li><code>selection_face</code></li>
   <li><code>hover_face</code></li>
   <li><code>disabled_face</code></li>
-  <li><code>empty_state</code></li>
-  <li><code>search_highlight</code></li>
   <li><code>vertical_scrollbar</code></li>
   <li><code>horizontal_scrollbar</code></li>
   <li><code>focus_ring</code></li>
@@ -64,11 +63,8 @@ It does not define listbox value semantics, host-native list handles, item rende
   <li><code>assets/listbox/subobjects/item_region.svg</code></li>
   <li><code>assets/listbox/subobjects/item_row.svg</code></li>
   <li><code>assets/listbox/subobjects/selection_face.svg</code></li>
-  <li><code>assets/listbox/subobjects/active_item.svg</code></li>
   <li><code>assets/listbox/subobjects/hover_face.svg</code></li>
   <li><code>assets/listbox/subobjects/disabled_face.svg</code></li>
-  <li><code>assets/listbox/subobjects/empty_state.svg</code></li>
-  <li><code>assets/listbox/subobjects/search_highlight.svg</code></li>
   <li><code>assets/listbox/subobjects/vertical_scrollbar.svg</code></li>
   <li><code>assets/listbox/subobjects/horizontal_scrollbar.svg</code></li>
 </ul>
@@ -78,20 +74,23 @@ It does not define listbox value semantics, host-native list handles, item rende
 <h2>Rendering Posture</h2>
 
 <ul>
+  <li><code>placement_bounds</code> is the Listbox aura used for placement and IDE/container selection.</li>
+  <li><code>main_body</code> groups the visible Listbox body, item region, and scrollbars inside the aura.</li>
   <li><code>item_region</code> anchors the visible item list.</li>
   <li><code>item_row</code> anchors each visible item row.</li>
   <li><code>item_icon</code> and <code>item_label</code> anchor optional icon and label rendering.</li>
   <li><code>selection_face</code> renders selected items.</li>
-  <li><code>active_item</code> renders keyboard-navigation focus.</li>
   <li><code>hover_face</code> renders pointer hover.</li>
   <li><code>disabled_face</code> renders disabled-item posture.</li>
-  <li><code>empty_state</code> renders empty list posture.</li>
-  <li><code>search_highlight</code> renders lightweight search match emphasis.</li>
   <li><code>vertical_scrollbar</code> renders source-configured viewport posture. The default thumb length policy is the visible-item ratio with a source-owned minimum height and source-owned inner padding.</li>
 </ul>
 
 <p>
 A runtime may layer host-managed interactive surfaces over the SVG template when those surfaces align to published parts and consume source-owned properties. The Default Listbox realization is not valid when its SVG resource is missing, and a host-native or HTML/CSS-only replacement must not be treated as the Default widget realization.
+</p>
+
+<p>
+The accepted default visual posture is declared through <code>default_widget_properties</code> in <code>listbox.default.wfrog</code>. Runtime hosts consume those defaults and source-owned overrides; they must not keep accepted Listbox colors, row height, scrollbar styling, symbol styling, selection styling, or focus styling as private runtime constants.
 </p>
 
 <p>

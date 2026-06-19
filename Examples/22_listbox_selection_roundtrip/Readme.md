@@ -35,8 +35,8 @@ manifest-backed native proof and updates the read-only Listbox indicator.
 
 <ul>
   <li><code>.frog</code> owns the Listbox instances, item ids, item labels, numeric item values, selected value, selection mode, viewport, captions, layout, bindings, and instance-level style overrides.</li>
-  <li><code>.wfrog</code> references the Default Listbox realization package, SVG asset, and host capability declarations.</li>
-  <li>The Default Listbox SVG asset publishes <code>item_region</code>, <code>item_row</code>, <code>item_icon</code>, <code>item_label</code>, <code>active_item</code>, <code>selection_face</code>, <code>hover_face</code>, <code>disabled_face</code>, <code>vertical_scrollbar</code>, <code>horizontal_scrollbar</code>, <code>caption</code>, <code>label</code>, and <code>focus_ring</code> parts.</li>
+  <li><code>.wfrog</code> references the Default Listbox realization package, SVG asset, host capability declarations, and reusable default widget properties for the accepted Listbox visual posture.</li>
+  <li>The Default Listbox SVG asset publishes <code>placement_bounds</code>, <code>main_body</code>, <code>item_region</code>, <code>item_row</code>, <code>item_icon</code>, <code>item_label</code>, <code>selection_face</code>, <code>hover_face</code>, <code>disabled_face</code>, <code>vertical_scrollbar</code>, <code>horizontal_scrollbar</code>, <code>caption</code>, <code>label</code>, and <code>focus_ring</code> parts.</li>
   <li>The runtime consumes the manifest-backed native <code>u16</code> artifact and binds host overlays to the published SVG parts.</li>
 </ul>
 

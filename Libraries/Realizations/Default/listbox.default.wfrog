@@ -59,11 +59,8 @@
       "frog.realizations.default.listbox.assets.item_region_svg",
       "frog.realizations.default.listbox.assets.item_row_svg",
       "frog.realizations.default.listbox.assets.selection_face_svg",
-      "frog.realizations.default.listbox.assets.active_item_svg",
       "frog.realizations.default.listbox.assets.hover_face_svg",
       "frog.realizations.default.listbox.assets.disabled_face_svg",
-      "frog.realizations.default.listbox.assets.empty_state_svg",
-      "frog.realizations.default.listbox.assets.search_highlight_svg",
       "frog.realizations.default.listbox.assets.vertical_scrollbar_svg",
       "frog.realizations.default.listbox.assets.horizontal_scrollbar_svg"
     ]
@@ -78,18 +75,17 @@
       ],
       "supported_parts": [
         "root",
+        "placement_bounds",
+        "main_body",
         "label",
         "caption",
         "item_region",
         "item_row",
         "item_icon",
         "item_label",
-        "active_item",
         "selection_face",
         "hover_face",
         "disabled_face",
-        "empty_state",
-        "search_highlight",
         "vertical_scrollbar",
         "horizontal_scrollbar",
         "focus_ring"
@@ -144,12 +140,6 @@
       "target_part": "selection_face"
     },
     {
-      "id": "frog.realizations.default.listbox.assets.active_item_svg",
-      "kind": "svg",
-      "path": "./assets/listbox/subobjects/active_item.svg",
-      "target_part": "active_item"
-    },
-    {
       "id": "frog.realizations.default.listbox.assets.hover_face_svg",
       "kind": "svg",
       "path": "./assets/listbox/subobjects/hover_face.svg",
@@ -160,18 +150,6 @@
       "kind": "svg",
       "path": "./assets/listbox/subobjects/disabled_face.svg",
       "target_part": "disabled_face"
-    },
-    {
-      "id": "frog.realizations.default.listbox.assets.empty_state_svg",
-      "kind": "svg",
-      "path": "./assets/listbox/subobjects/empty_state.svg",
-      "target_part": "empty_state"
-    },
-    {
-      "id": "frog.realizations.default.listbox.assets.search_highlight_svg",
-      "kind": "svg",
-      "path": "./assets/listbox/subobjects/search_highlight.svg",
-      "target_part": "search_highlight"
     },
     {
       "id": "frog.realizations.default.listbox.assets.vertical_scrollbar_svg",
@@ -186,11 +164,147 @@
       "target_part": "horizontal_scrollbar"
     }
   ],
+  "default_widget_properties": [
+    {
+      "class_id": "frog.widgets.listbox_control",
+      "role": "control",
+      "visual": {
+        "asset_ref": "asset:listbox_shell_svg"
+      },
+      "props": {
+        "caption.text": "Listbox",
+        "caption.visible": true,
+        "caption.anchor.x": 28,
+        "caption.anchor.y": 64,
+        "caption.align.horizontal": "left",
+        "caption.style.text_color": "#111827",
+        "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+        "caption.style.font_size": "14px",
+        "caption.style.font_weight": "600",
+        "viewport.row_height": 28.1,
+        "display.symbols_visible": true,
+        "display.vertical_scrollbar_visible": true,
+        "interaction.enabled": true,
+        "interaction.read_only": false,
+        "interaction.scroll.wheel_step_items": 1,
+        "style.item_region.fill_color": "#f8fafc",
+        "style.item_region.border_color": "#64748b",
+        "style.item_region.border_width": "1px",
+        "style.item_row.fill_color": "#ffffff",
+        "style.item_row.border_color": "#dbe3ec",
+        "style.item_row.border_width": "1px",
+        "style.item_row.hover_fill_color": "#eef6ff",
+        "style.item_row.disabled_fill_color": "#f1f5f9",
+        "style.item_row.disabled_text_color": "#94a3b8",
+        "style.selection_face.fill_color": "#dbeafe",
+        "style.selection_face.border_color": "#3b82f6",
+        "style.selection_face.border_width": "1px",
+        "style.item_label.text_color": "#2B3033",
+        "style.item_label.font_family": "Segoe UI, Arial, sans-serif",
+        "style.item_label.font_size": "14px",
+        "style.item_label.font_weight": "400",
+        "style.item_label.padding_inline": "10px",
+        "style.item_symbol.fill_color": "#60a5fa",
+        "style.item_symbol.border_color": "#2563eb",
+        "style.item_symbol.border_width": "1px",
+        "style.item_symbol.size": "12px",
+        "style.item_symbol.margin_right": "8px",
+        "style.scrollbar.track_fill_color": "#f8fafc",
+        "style.scrollbar.track_hover_fill_color": "#eef6ff",
+        "style.scrollbar.track_pressed_fill_color": "#dbeafe",
+        "style.scrollbar.thumb_fill_color": "#94a3b8",
+        "style.scrollbar.thumb_hover_fill_color": "#64748b",
+        "style.scrollbar.thumb_pressed_fill_color": "#475569",
+        "style.scrollbar.thumb_border_color": "#64748b",
+        "style.scrollbar.thumb_border_width": "0px",
+        "style.scrollbar.thumb_radius": "0px",
+        "style.scrollbar.thumb_min_height_percent": 12,
+        "style.scrollbar.inner_padding": "2px",
+        "style.scrollbar.border_color": "#64748b",
+        "style.scrollbar.border_width": "1px",
+        "style.scrollbar.border_radius": "0px",
+        "style.focus_ring.color": "#2563eb",
+        "style.focus_ring.width": "2px"
+      }
+    },
+    {
+      "class_id": "frog.widgets.listbox_indicator",
+      "role": "indicator",
+      "visual": {
+        "asset_ref": "asset:listbox_shell_svg"
+      },
+      "props": {
+        "caption.text": "Listbox",
+        "caption.visible": true,
+        "caption.anchor.x": 28,
+        "caption.anchor.y": 64,
+        "caption.align.horizontal": "left",
+        "caption.style.text_color": "#111827",
+        "caption.style.font_family": "Segoe UI, Arial, sans-serif",
+        "caption.style.font_size": "14px",
+        "caption.style.font_weight": "600",
+        "viewport.row_height": 28.1,
+        "display.symbols_visible": true,
+        "display.vertical_scrollbar_visible": true,
+        "interaction.enabled": false,
+        "interaction.read_only": true,
+        "interaction.scroll.wheel_step_items": 1,
+        "style.item_region.fill_color": "#f8fafc",
+        "style.item_region.border_color": "#64748b",
+        "style.item_region.border_width": "1px",
+        "style.item_row.fill_color": "#ffffff",
+        "style.item_row.border_color": "#dbe3ec",
+        "style.item_row.border_width": "1px",
+        "style.item_row.hover_fill_color": "#eef6ff",
+        "style.item_row.disabled_fill_color": "#f1f5f9",
+        "style.item_row.disabled_text_color": "#94a3b8",
+        "style.selection_face.fill_color": "#eef4ff",
+        "style.selection_face.border_color": "#94a3b8",
+        "style.selection_face.border_width": "1px",
+        "style.item_label.text_color": "#2B3033",
+        "style.item_label.font_family": "Segoe UI, Arial, sans-serif",
+        "style.item_label.font_size": "14px",
+        "style.item_label.font_weight": "400",
+        "style.item_label.padding_inline": "10px",
+        "style.item_symbol.fill_color": "#94a3b8",
+        "style.item_symbol.border_color": "#64748b",
+        "style.item_symbol.border_width": "1px",
+        "style.item_symbol.size": "12px",
+        "style.item_symbol.margin_right": "8px",
+        "style.scrollbar.track_fill_color": "#f8fafc",
+        "style.scrollbar.track_hover_fill_color": "#eef6ff",
+        "style.scrollbar.track_pressed_fill_color": "#dbeafe",
+        "style.scrollbar.thumb_fill_color": "#94a3b8",
+        "style.scrollbar.thumb_hover_fill_color": "#64748b",
+        "style.scrollbar.thumb_pressed_fill_color": "#475569",
+        "style.scrollbar.thumb_border_color": "#64748b",
+        "style.scrollbar.thumb_border_width": "0px",
+        "style.scrollbar.thumb_radius": "0px",
+        "style.scrollbar.thumb_min_height_percent": 12,
+        "style.scrollbar.inner_padding": "2px",
+        "style.scrollbar.border_color": "#64748b",
+        "style.scrollbar.border_width": "1px",
+        "style.scrollbar.border_radius": "0px",
+        "style.focus_ring.color": "#2563eb",
+        "style.focus_ring.width": "2px"
+      }
+    }
+  ],
   "part_bindings": [
     {
       "part": "root",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "placement_bounds",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='placement_bounds']"
+    },
+    {
+      "part": "main_body",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='main_body']"
     },
     {
       "part": "label",
@@ -223,11 +337,6 @@
       "binding_selector": "[data-frog-part='item_label']"
     },
     {
-      "part": "active_item",
-      "binding_kind": "svg_or_host_surface",
-      "binding_selector": "[data-frog-part='active_item']"
-    },
-    {
       "part": "selection_face",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='selection_face']"
@@ -241,16 +350,6 @@
       "part": "disabled_face",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='disabled_face']"
-    },
-    {
-      "part": "empty_state",
-      "binding_kind": "svg_or_host_surface",
-      "binding_selector": "[data-frog-part='empty_state']"
-    },
-    {
-      "part": "search_highlight",
-      "binding_kind": "svg_or_host_surface",
-      "binding_selector": "[data-frog-part='search_highlight']"
     },
     {
       "part": "vertical_scrollbar",
@@ -325,11 +424,6 @@
       "target_operation": "render_selection"
     },
     {
-      "member": "active.*",
-      "target_part": "active_item",
-      "target_operation": "render_active_item"
-    },
-    {
       "member": "hover.*",
       "target_part": "hover_face",
       "target_operation": "render_hover"
@@ -375,19 +469,9 @@
       "target_operation": "set_thumb_inner_padding"
     },
     {
-      "member": "search.*",
-      "target_part": "search_highlight",
-      "target_operation": "render_search_matches"
-    },
-    {
       "member": "filter.*",
       "target_part": "item_region",
       "target_operation": "apply_filter_view"
-    },
-    {
-      "member": "empty_state.*",
-      "target_part": "empty_state",
-      "target_operation": "render_empty_state"
     }
   ],
   "method_bindings": [
@@ -466,10 +550,6 @@
       "source_part": "selection_face"
     },
     {
-      "event": "active_item_changed",
-      "source_part": "active_item"
-    },
-    {
       "event": "item_activated",
       "source_part": "item_row"
     },
@@ -492,10 +572,6 @@
     {
       "event": "viewport_changed",
       "source_part": "item_region"
-    },
-    {
-      "event": "search_changed",
-      "source_part": "search_highlight"
     },
     {
       "event": "filter_changed",
@@ -528,16 +604,15 @@
   "composition": {
     "shell": "frog.realizations.default.listbox.assets.shell_svg",
     "layer_order": [
+      "placement_bounds",
+      "main_body",
       "item_region",
       "item_row",
       "disabled_face",
       "hover_face",
       "selection_face",
-      "active_item",
       "item_icon",
       "item_label",
-      "search_highlight",
-      "empty_state",
       "vertical_scrollbar",
       "horizontal_scrollbar",
       "focus_ring",
@@ -571,11 +646,6 @@
       },
       {
         "parent_part": "item_region",
-        "slot": "active_item",
-        "resource_ref": "frog.realizations.default.listbox.assets.active_item_svg"
-      },
-      {
-        "parent_part": "item_region",
         "slot": "hover_face",
         "resource_ref": "frog.realizations.default.listbox.assets.hover_face_svg"
       },
@@ -583,16 +653,6 @@
         "parent_part": "item_region",
         "slot": "disabled_face",
         "resource_ref": "frog.realizations.default.listbox.assets.disabled_face_svg"
-      },
-      {
-        "parent_part": "item_region",
-        "slot": "search_highlight",
-        "resource_ref": "frog.realizations.default.listbox.assets.search_highlight_svg"
-      },
-      {
-        "parent_part": "item_region",
-        "slot": "empty_state",
-        "resource_ref": "frog.realizations.default.listbox.assets.empty_state_svg"
       }
     ]
   },

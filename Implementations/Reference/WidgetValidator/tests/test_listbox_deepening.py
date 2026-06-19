@@ -12,19 +12,17 @@ DEFAULT_DIR = ROOT / "Libraries" / "Realizations" / "Default"
 
 EXPECTED_PARTS = {
     "root",
+    "placement_bounds",
+    "main_body",
     "label",
     "caption",
-    "frame",
     "item_region",
     "item_row",
     "item_icon",
     "item_label",
-    "active_item",
     "selection_face",
     "hover_face",
     "disabled_face",
-    "empty_state",
-    "search_highlight",
     "vertical_scrollbar",
     "horizontal_scrollbar",
     "focus_ring",
@@ -45,7 +43,8 @@ def test_listbox_widget_doc_defines_deepened_public_surface() -> None:
         "viewport.item_offset",
         "search.query",
         "filter.expression",
-        "empty_state",
+        "placement_bounds",
+        "main_body",
     ]:
         assert token in text
 
@@ -63,9 +62,7 @@ def test_listbox_manifest_declares_expected_parts_and_bindings() -> None:
     assert "items.*" in property_members
     assert "items.icon" in property_members
     assert "selection.*" in property_members
-    assert "active.*" in property_members
     assert "hover.*" in property_members
-    assert "search.*" in property_members
     assert "filter.*" in property_members
 
 

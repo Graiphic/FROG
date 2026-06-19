@@ -1,10 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 320" data-frog-template="frog.realizations.default.listbox.shell">
   <title>FROG Default Listbox Shell</title>
-  <desc>Default SVG-backed listbox widget realization with items, selection, active item, hover, disabled state, search highlight, scrollbars, label, caption, and focus surfaces.</desc>
+  <desc>Default SVG-backed listbox widget realization with placement bounds, item region, rows, selection, hover, disabled state, scrollbars, label, caption, and focus surfaces.</desc>
   <g data-frog-part="root">
     <text data-frog-part="label" data-frog-anchor="label.anchor" x="16" y="22" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">listbox_1</text>
     <text data-frog-part="caption" data-frog-anchor="caption.anchor" x="16" y="48" font-size="16" font-family="Inter, Arial, sans-serif" font-weight="600" fill="#111827">Listbox</text>
 
+    <rect data-frog-part="placement_bounds" x="24" y="74" width="394" height="232" rx="0" fill="none" stroke="#00adef" stroke-width="2" vector-effect="non-scaling-stroke" opacity="0"/>
+
+    <g data-frog-part="main_body">
     <g data-frog-part="item_region">
       <rect x="28" y="78" width="386" height="208" fill="#f8fafc" stroke="#64748b" stroke-width="1" vector-effect="non-scaling-stroke"/>
       <g data-frog-part="item_row">
@@ -13,13 +16,8 @@
         <text data-frog-part="item_label" x="74" y="99" font-size="12" font-family="Inter, Arial, sans-serif" fill="#111827">Item A</text>
       </g>
       <rect data-frog-part="selection_face" x="28" y="110" width="368" height="32" fill="#bfdbfe" stroke="#2563eb" vector-effect="non-scaling-stroke" opacity="0.55"/>
-      <rect data-frog-part="active_item" x="28" y="78" width="368" height="32" fill="none" stroke="#22c55e" stroke-width="2" vector-effect="non-scaling-stroke"/>
       <rect data-frog-part="hover_face" x="28" y="142" width="368" height="32" fill="#e0f2fe" stroke="#38bdf8" vector-effect="non-scaling-stroke" opacity="0.55"/>
       <rect data-frog-part="disabled_face" x="28" y="206" width="368" height="32" fill="#e5e7eb" opacity="0.66"/>
-      <g data-frog-part="search_highlight"><rect x="70" y="116" width="54" height="16" fill="#fde68a" opacity="0.72"/></g>
-      <g data-frog-part="empty_state" opacity="0">
-        <text x="150" y="174" font-size="13" font-family="Inter, Arial, sans-serif" fill="#64748b">No items</text>
-      </g>
     </g>
 
     <g data-frog-part="vertical_scrollbar">
@@ -30,6 +28,7 @@
     <g data-frog-part="horizontal_scrollbar">
       <rect x="30" y="286" width="360" height="16" rx="8" fill="#e2e8f0" stroke="#94a3b8" vector-effect="non-scaling-stroke"/>
       <rect x="78" y="289" width="120" height="10" rx="5" fill="#94a3b8"/>
+    </g>
     </g>
 
     <rect data-frog-part="focus_ring" x="26" y="76" width="390" height="212" rx="0" fill="none" stroke="#2f80ed" stroke-width="2" vector-effect="non-scaling-stroke" opacity="0"/>
