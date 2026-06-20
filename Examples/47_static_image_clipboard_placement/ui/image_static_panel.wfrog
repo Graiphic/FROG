@@ -1,0 +1,102 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_package",
+  "package_id": "example47.image_static_panel",
+  "title": "Example 47 Default Image Static realization package",
+  "reviewed_date": "2026-06-20",
+  "review": {
+    "last_reviewed": "2026-06-20",
+    "scope": "Default Image Static placement_bounds aura, media_region visible body, media_content host media surface, and source-owned media_ref.",
+    "visible_runtime_fact": "Reviewed 2026-06-20"
+  },
+  "artifact_governance_ref": {
+    "path": "Versioning/Readme.md"
+  },
+  "source_ref": {
+    "example_id": "47_static_image_clipboard_placement",
+    "source_path": "Examples/47_static_image_clipboard_placement/main.frog",
+    "fir_path": "Examples/47_static_image_clipboard_placement/main.fir.json",
+    "lowering_path": "Examples/47_static_image_clipboard_placement/main.lowering.json"
+  },
+  "ownership_boundary": {
+    "owns": [
+      "Default Image realization reference",
+      "Default SVG asset reference",
+      "reference host static media capability requirements"
+    ],
+    "does_not_own": [
+      "canonical source semantics",
+      "project media asset bytes",
+      "front-panel widget instance layout",
+      "FIR/lowering/runtime behavior",
+      "IDE-private clipboard import behavior"
+    ]
+  },
+  "widget_classes": [
+    {
+      "class_id": "frog.widgets.image_static",
+      "role": "support",
+      "value_type": "none"
+    }
+  ],
+  "host_bindings": [
+    {
+      "binding_id": "reference_host_default",
+      "host_family": "reference_browser_host",
+      "target": "reference_browser_host",
+      "required_capabilities": [
+        "window",
+        "basic_widget_rendering",
+        "static_media_rendering",
+        "project_media_asset_binding",
+        "svg_part_overlay_alignment",
+        "svg_style_property_binding"
+      ],
+      "optional_capabilities": [
+        "ide_selection_overlay",
+        "placement_grid"
+      ]
+    }
+  ],
+  "realization_refs": [
+    {
+      "package_ref": "Libraries/Realizations/Default/image.default.wfrog",
+      "target_classes": [
+        "frog.widgets.image_static"
+      ]
+    }
+  ],
+  "svg_assets": [
+    {
+      "asset_id": "image_static_rectangular_svg",
+      "kind": "svg",
+      "path": "../../../Libraries/Realizations/Default/Assets/image/templates/image_static_rectangular.svg",
+      "target_class": "frog.widgets.image_static"
+    }
+  ],
+  "default_widget_properties": [
+    {
+      "class_id": "frog.widgets.image_static",
+      "role": "support",
+      "visual": {
+        "asset_ref": "asset:image_static_rectangular_svg"
+      },
+      "props": {
+        "media.fit": "contain",
+        "media.preserve_aspect_ratio": true,
+        "layout.aura_band_px": 4,
+        "interaction.visible": true,
+        "interaction.enabled": false,
+        "interaction.read_only": true,
+        "style.media_region.fill_color": "transparent",
+        "style.media_region.border_color": "transparent",
+        "style.media_region.border_width": "0px"
+      }
+    }
+  ],
+  "notes": [
+    "Image Static uses placement_bounds as the portable aura and media_region as the visible body.",
+    "The default aura band is 4 CSS px between placement_bounds and media_region.",
+    "The runtime loads media from .frog media_ref; it must not hardcode image bytes or paths."
+  ]
+}

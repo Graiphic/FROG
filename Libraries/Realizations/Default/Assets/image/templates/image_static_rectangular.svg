@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 328 188"
+     role="img"
+     aria-label="FROG default static image realization template"
+     data-frog-template="frog.realizations.default.image_static.rectangular"
+     data-frog-target-class="frog.widgets.image_static"
+     data-frog-variant="rectangular">
+  <title>FROG Default Static Image Realization Template</title>
+  <desc>
+    Semantic SVG skin for a static pasted Image widget. placement_bounds is the
+    portable aura rectangle. media_region is the visible body. media_content is
+    host-rendered from media_ref.
+  </desc>
+
+  <defs>
+    <style>
+      :root {
+        --frog-image-region-fill: transparent;
+        --frog-image-region-stroke: transparent;
+        --frog-image-region-stroke-width: 0px;
+      }
+
+      #placement_bounds {
+        display: none;
+        fill: none;
+        stroke: none;
+      }
+
+      #media_region {
+        fill: var(--frog-image-region-fill);
+        stroke: var(--frog-image-region-stroke);
+        stroke-width: var(--frog-image-region-stroke-width);
+        vector-effect: non-scaling-stroke;
+      }
+
+      #media_content {
+        fill: none;
+        stroke: none;
+      }
+    </style>
+  </defs>
+
+  <g id="root" data-frog-part="root">
+    <rect id="placement_bounds"
+          data-frog-part="placement_bounds"
+          data-frog-role="placement_bounds"
+          data-frog-bind="layout.placement_bounds.* layout.grid.*"
+          x="0"
+          y="0"
+          width="328"
+          height="188"
+          pointer-events="none" />
+
+    <rect id="media_region"
+          data-frog-part="media_region"
+          data-frog-role="visible_body"
+          data-frog-anchor="media_region.bounds"
+          data-frog-bind="style.media_region.*"
+          x="4"
+          y="4"
+          width="320"
+          height="180"
+          rx="0" />
+
+    <rect id="media_content"
+          data-frog-part="media_content"
+          data-frog-member="media_ref"
+          data-frog-anchor="media_content.bounds"
+          data-frog-bind="media_ref media_type media.fit media.alt_text"
+          x="4"
+          y="4"
+          width="320"
+          height="180"
+          opacity="0"
+          pointer-events="none" />
+  </g>
+</svg>
+

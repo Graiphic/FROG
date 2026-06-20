@@ -462,6 +462,14 @@ opens the public screenshot for that example.
       <td><code>main.frog</code> + <code>ui/listbox_ide_panel.wfrog</code></td>
       <td>C++ browser-host calibration surface only: Example 22 remains the executable Listbox u16 selected-value kernel corridor</td>
     </tr>
+    <tr>
+      <td><a href="./47_static_image_clipboard_placement/"><code>47_static_image_clipboard_placement</code></a></td>
+      <td><a href="./47_static_image_clipboard_placement/reference/screenshot.png">capture</a></td>
+      <td><time datetime="2026-06-20">2026-06-20</time></td>
+      <td>Static Image widget placement witness for pasted/imported SVG media assets, source-owned media_ref, rectangular media_region, and 4px placement_bounds aura</td>
+      <td><code>main.frog</code> + <code>ui/image_static_panel.wfrog</code> + <code>assets/pasted_vector_frog_card.svg</code></td>
+      <td>C++ browser-host static media surface only: Picture remains the dataflow image widget family</td>
+    </tr>
   </tbody>
 </table>
 

@@ -1,0 +1,20 @@
+{
+  "artifact_kind": "frog_lowering",
+  "source_ref": {
+    "example_id": "47_static_image_clipboard_placement",
+    "path": "Examples/47_static_image_clipboard_placement/main.frog",
+    "entry_unit": "main"
+  },
+  "backend_family": "browser_host_static_media",
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "front_panel_static_media",
+      "execution_kernel": {
+        "operation": "none",
+        "reason": "Static Image widgets display source-owned media assets and do not publish a runtime value by default."
+      }
+    }
+  ]
+}
+

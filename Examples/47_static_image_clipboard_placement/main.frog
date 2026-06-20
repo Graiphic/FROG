@@ -1,0 +1,150 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "47_static_image_clipboard_placement",
+    "summary": "Static Image widget placement example for pasted SVG/bitmap media assets.",
+    "description": "Places static Image widgets on the front panel from source-owned media asset references. The example validates that a pasted SVG asset can be displayed and resized without making the runtime own a hardcoded media path.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "image",
+      "image_static",
+      "clipboard",
+      "static_media",
+      "svg",
+      "wfrog",
+      "widget_realization_package",
+      "post_public_runtime_boundary",
+      "ide_view",
+      "placement_aura",
+      "aura_band_4px"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0",
+    "review": {
+      "last_reviewed": "2026-06-20",
+      "reviewer": "Codex + Graiphic",
+      "review_scope": "Static Image widget media_ref, Default Image SVG parts, 4px placement_bounds aura, and browser-host rendering in the C++ private runtime.",
+      "visible_runtime_fact": "Reviewed 2026-06-20"
+    }
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": []
+  },
+  "diagram": {
+    "nodes": [],
+    "edges": []
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 820,
+      "height": 360,
+      "coordinate_space": "panel_pixels",
+      "presentation_mode": "ide_view",
+      "selected_widget_id": "pasted_vector_image",
+      "grid": {
+        "visible": true,
+        "pitch": 16,
+        "origin": {
+          "x": 0,
+          "y": 0
+        },
+        "snap": "placement_bounds",
+        "snap_edges": [
+          "placement_bounds.top_left"
+        ]
+      },
+      "ide.style.aura.selected.border_color": "#00ADEF",
+      "ide.style.aura.selected.fill_color": "rgba(14,165,233,0.025)",
+      "ide.style.aura.selected.border_width": "1px",
+      "ide.style.aura.hover.border_color": "rgba(0,173,239,0.42)",
+      "ide.style.aura.hover.fill_color": "rgba(14,165,233,0.012)",
+      "ide.style.aura.hover.border_width": "2px"
+    },
+    "package_refs": [
+      "./ui/image_static_panel.wfrog"
+    ],
+    "widgets": [
+      {
+        "id": "pasted_vector_image",
+        "role": "support",
+        "class_ref": "frog.widgets.image_static",
+        "instance_ref": "pasted_vector_image",
+        "layout": {
+          "x": 48,
+          "y": 48,
+          "width": 328,
+          "height": 188,
+          "origin": "placement_bounds.top_left",
+          "bounds_ref": "placement_bounds"
+        },
+        "props": {
+          "label.text": "Pasted vector image",
+          "label.visible": false,
+          "media_ref": "./assets/pasted_vector_frog_card.svg",
+          "media_type": "image/svg+xml",
+          "media.original_format": "svg",
+          "media.intrinsic_width": 320,
+          "media.intrinsic_height": 180,
+          "media.fit": "contain",
+          "media.preserve_aspect_ratio": true,
+          "media.alt_text": "Pasted FROG vector media sample",
+          "layout.aura_band_px": 4,
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "interaction.selected": true,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:image_static_rectangular_svg"
+        },
+        "binding": {
+          "mode": "static_media"
+        }
+      },
+      {
+        "id": "resized_vector_image",
+        "role": "support",
+        "class_ref": "frog.widgets.image_static",
+        "instance_ref": "resized_vector_image",
+        "layout": {
+          "x": 432,
+          "y": 80,
+          "width": 328,
+          "height": 124,
+          "origin": "placement_bounds.top_left",
+          "bounds_ref": "placement_bounds"
+        },
+        "props": {
+          "label.text": "Resized vector image",
+          "label.visible": false,
+          "media_ref": "./assets/pasted_vector_frog_card.svg",
+          "media_type": "image/svg+xml",
+          "media.original_format": "svg",
+          "media.intrinsic_width": 320,
+          "media.intrinsic_height": 180,
+          "media.fit": "contain",
+          "media.preserve_aspect_ratio": true,
+          "media.alt_text": "The same pasted SVG asset resized by layout",
+          "layout.aura_band_px": 4,
+          "interaction.visible": true,
+          "interaction.enabled": false,
+          "interaction.read_only": true,
+          "interaction.selected": false,
+          "realization.variant": "rectangular"
+        },
+        "visual": {
+          "asset_ref": "asset:image_static_rectangular_svg"
+        },
+        "binding": {
+          "mode": "static_media"
+        }
+      }
+    ]
+  }
+}
+

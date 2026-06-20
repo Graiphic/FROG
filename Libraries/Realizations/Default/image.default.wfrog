@@ -1,0 +1,195 @@
+{
+  "format": "frog.wfrog",
+  "kind": "widget_realization_library",
+  "publication_role": "default_image_static_realization_manifest",
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.image_static",
+    "name": "FROG Default Image Static Realization",
+    "namespace": "frog.realizations.default.image_static",
+    "family": "default",
+    "category": "support_media",
+    "role_posture": "support",
+    "summary": "Machine-readable default realization manifest for static pasted Image widgets."
+  },
+  "ownership_boundary": {
+    "owns": [
+      "default image static realization record",
+      "image static realization resource references",
+      "image static part bindings",
+      "image static property bindings",
+      "image static validation expectations"
+    ],
+    "does_not_own": [
+      "image static widget class law",
+      "canonical .frog source",
+      "project media asset bytes",
+      "IDE-private clipboard import policy",
+      "runtime-private selection handles"
+    ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Image.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
+    {
+      "class_id": "frog.widgets.image_static",
+      "role": "support",
+      "primary_value": {
+        "present": false
+      },
+      "media": {
+        "member": "media_ref",
+        "dynamic": false
+      }
+    }
+  ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.image_static"
+    ],
+    "variants": [
+      "frog.realizations.default.image_static.rectangular"
+    ],
+    "resources": [
+      "frog.realizations.default.image_static.assets.rectangular_svg"
+    ]
+  },
+  "realizations": [
+    {
+      "id": "frog.realizations.default.image_static",
+      "family": "default",
+      "target_class": "frog.widgets.image_static",
+      "variant_property": "realization.variant",
+      "default_variant": "rectangular",
+      "supported_variants": [
+        "rectangular"
+      ],
+      "supported_parts": [
+        "root",
+        "placement_bounds",
+        "media_region",
+        "media_content"
+      ],
+      "supported_visual_states": [
+        "normal",
+        "selected",
+        "hover",
+        "hidden"
+      ],
+      "fallbacks": {
+        "missing_media": "empty_media_region",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "frog.realizations.default.image_static.rectangular",
+      "variant": "rectangular",
+      "target_class": "frog.widgets.image_static",
+      "resource_ref": "frog.realizations.default.image_static.assets.rectangular_svg",
+      "geometry_posture": {
+        "shape_family": "rectangular_media_region",
+        "layout_source": "placement_bounds",
+        "scales_to_layout": true,
+        "placement_bounds_part": "placement_bounds",
+        "visible_body_part": "media_region",
+        "host_media_surface_part": "media_content",
+        "aura_band_units": 4
+      },
+      "fallback": "host_image_element"
+    }
+  ],
+  "resources": [
+    {
+      "id": "frog.realizations.default.image_static.assets.rectangular_svg",
+      "kind": "svg",
+      "path": "./Assets/image/templates/image_static_rectangular.svg",
+      "target_class": "frog.widgets.image_static",
+      "target_variant": "rectangular",
+      "template_markers": {
+        "template": "frog.realizations.default.image_static.rectangular",
+        "variant": "rectangular",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
+    }
+  ],
+  "part_bindings": [
+    {
+      "part": "root",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "placement_bounds",
+      "binding_kind": "svg_geometry",
+      "binding_selector": "[data-frog-part='placement_bounds']",
+      "semantic_member": "layout.placement_bounds",
+      "placement_role": "uniform_aura_around_visible_body"
+    },
+    {
+      "part": "media_region",
+      "binding_kind": "svg_geometry_or_host_surface",
+      "binding_selector": "[data-frog-part='media_region']",
+      "style_binding_group": "style.media_region",
+      "placement_role": "visible_media_body"
+    },
+    {
+      "part": "media_content",
+      "binding_kind": "host_media_surface",
+      "binding_selector": "[data-frog-part='media_content']",
+      "semantic_member": "media_ref",
+      "style_binding_group": "style.media_content"
+    }
+  ],
+  "property_bindings": [
+    {
+      "member": "media_ref",
+      "target_part": "media_content",
+      "target_operation": "set_media_source"
+    },
+    {
+      "member": "media_type",
+      "target_part": "media_content",
+      "target_operation": "set_media_type"
+    },
+    {
+      "member": "media.fit",
+      "target_part": "media_content",
+      "target_operation": "set_object_fit"
+    },
+    {
+      "member": "media.alt_text",
+      "target_part": "media_content",
+      "target_operation": "set_accessible_text"
+    },
+    {
+      "member": "style.media_region.*",
+      "target_part": "media_region",
+      "target_operation": "apply_region_style"
+    }
+  ],
+  "validation": {
+    "requires_real_browser_visual_check": true,
+    "required_public_parts": [
+      "root",
+      "placement_bounds",
+      "media_region",
+      "media_content"
+    ],
+    "forbidden_public_parts": [
+      "focus_ring",
+      "selection_handle",
+      "validation_marker",
+      "decorative_marker"
+    ],
+    "default_aura_band_px": 4
+  },
+  "reviewed_date": "2026-06-20"
+}

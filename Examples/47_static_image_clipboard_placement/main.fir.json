@@ -1,0 +1,21 @@
+{
+  "artifact_kind": "frog_fir",
+  "source_ref": {
+    "example_id": "47_static_image_clipboard_placement",
+    "path": "Examples/47_static_image_clipboard_placement/main.frog",
+    "entry_unit": "main"
+  },
+  "units": [
+    {
+      "unit_id": "main",
+      "kind": "front_panel_static_media",
+      "inputs": [],
+      "outputs": [],
+      "body": []
+    }
+  ],
+  "notes": [
+    "Static Image widgets are support/media objects. They do not require a computation graph by default."
+  ]
+}
+
