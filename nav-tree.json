@@ -1240,6 +1240,28 @@
               ]
             },
             {
+              "key": "examples/46_listbox_placement_ide_view/",
+              "title": "46 listbox placement ide view",
+              "path": "/Examples/46_listbox_placement_ide_view/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/46_listbox_placement_ide_view/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/46_listbox_placement_ide_view/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "examples/46_listbox_placement_ide_view/ui/",
+                  "title": "ui",
+                  "path": "/Examples/46_listbox_placement_ide_view/ui/Readme.md",
+                  "kind": "category",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -5335,6 +5357,9 @@
     "/Examples/45_button_placement_ide_view/main.frog",
     "/Examples/45_button_placement_ide_view/ui/Readme.md",
     "/Examples/45_button_placement_ide_view/Readme.md",
+    "/Examples/46_listbox_placement_ide_view/main.frog",
+    "/Examples/46_listbox_placement_ide_view/ui/Readme.md",
+    "/Examples/46_listbox_placement_ide_view/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
