@@ -1262,6 +1262,28 @@
               ]
             },
             {
+              "key": "examples/47_static_image_clipboard_placement/",
+              "title": "47 static image clipboard placement",
+              "path": "/Examples/47_static_image_clipboard_placement/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "examples/47_static_image_clipboard_placement/main.frog",
+                  "title": "main.frog",
+                  "path": "/Examples/47_static_image_clipboard_placement/main.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "examples/47_static_image_clipboard_placement/ui/",
+                  "title": "ui",
+                  "path": "/Examples/47_static_image_clipboard_placement/ui/Readme.md",
+                  "kind": "category",
+                  "children": []
+                }
+              ]
+            },
+            {
               "key": "examples/compiler/",
               "title": "compiler",
               "path": "/Examples/compiler/Readme.md",
@@ -1727,6 +1749,13 @@
                       "children": []
                     },
                     {
+                      "key": "libraries/realizations/default/image.md",
+                      "title": "Image",
+                      "path": "/Libraries/Realizations/Default/Image.md",
+                      "kind": "page",
+                      "children": []
+                    },
+                    {
                       "key": "libraries/realizations/default/label.md",
                       "title": "Label",
                       "path": "/Libraries/Realizations/Default/Label.md",
@@ -2100,6 +2129,13 @@
                   "key": "libraries/widgets/frame.md",
                   "title": "Frame",
                   "path": "/Libraries/Widgets/Frame.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
+                  "key": "libraries/widgets/image.md",
+                  "title": "Image",
+                  "path": "/Libraries/Widgets/Image.md",
                   "kind": "page",
                   "children": []
                 },
@@ -5360,6 +5396,9 @@
     "/Examples/46_listbox_placement_ide_view/main.frog",
     "/Examples/46_listbox_placement_ide_view/ui/Readme.md",
     "/Examples/46_listbox_placement_ide_view/Readme.md",
+    "/Examples/47_static_image_clipboard_placement/main.frog",
+    "/Examples/47_static_image_clipboard_placement/ui/Readme.md",
+    "/Examples/47_static_image_clipboard_placement/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
@@ -5424,6 +5463,7 @@
     "/Libraries/Realizations/Default/Decorations.md",
     "/Libraries/Realizations/Default/Enum.md",
     "/Libraries/Realizations/Default/Frame.md",
+    "/Libraries/Realizations/Default/Image.md",
     "/Libraries/Realizations/Default/Label.md",
     "/Libraries/Realizations/Default/Listbox.md",
     "/Libraries/Realizations/Default/Numeric.md",
@@ -5477,6 +5517,7 @@
     "/Libraries/Widgets/Decorations.md",
     "/Libraries/Widgets/Enum.md",
     "/Libraries/Widgets/Frame.md",
+    "/Libraries/Widgets/Image.md",
     "/Libraries/Widgets/Label.md",
     "/Libraries/Widgets/Listbox.md",
     "/Libraries/Widgets/Numeric.md",
