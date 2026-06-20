@@ -1,0 +1,202 @@
+{
+    "format":  "frog.wfrog",
+    "kind":  "widget_realization_package",
+    "package_id":  "example46.listbox_placement_ide_panel",
+    "title":  "Example 46 Default Listbox IDE placement realization package",
+    "artifact_governance_ref":  {
+                                    "path":  "Versioning/Readme.md"
+                                },
+    "source_ref":  {
+                       "example_id":  "46_listbox_placement_ide_view",
+                       "source_path":  "Examples/46_listbox_placement_ide_view/main.frog",
+                       "fir_path":  "Examples/46_listbox_placement_ide_view/main.fir.json",
+                       "lowering_path":  "Examples/46_listbox_placement_ide_view/main.lowering.json"
+                   },
+    "ownership_boundary":  {
+                               "owns":  [
+                                            "Default Listbox realization reference",
+                                            "Default SVG asset references",
+                                            "reference host IDE selection and placement-grid capability requirements"
+                                        ],
+                               "does_not_own":  [
+                                                    "canonical source semantics",
+                                                    "front-panel widget instance layout",
+                                                    "front-panel widget values",
+                                                    "FIR/lowering/runtime behavior",
+                                                    "listbox widget law",
+                                                    "IDE-private editing behavior"
+                                                ]
+                           },
+    "widget_classes":  [
+                           {
+                               "class_id":  "frog.widgets.listbox_control",
+                               "role":  "control",
+                               "value_type":  "u16"
+                           },
+                           {
+                               "class_id":  "frog.widgets.listbox_indicator",
+                               "role":  "indicator",
+                               "value_type":  "u16"
+                           }
+                       ],
+    "host_bindings":  [
+                          {
+                              "binding_id":  "listbox_runtime_host_default",
+                              "host_family":  "frog_conforming_listbox_runtime_host",
+                              "target":  "frog_conforming_listbox_runtime_host",
+                              "required_capabilities":  [
+                                                            "window",
+                                                            "basic_widget_rendering",
+                                                            "widget_value_binding",
+                                                            "listbox_selection_rendering",
+                                                            "listbox_state_patch_interaction",
+                                                            "svg_part_overlay_alignment",
+                                                            "svg_style_property_binding",
+                                                            "native_kernel_manifest"
+                                                        ],
+                              "optional_capabilities":  [
+                                                            "ide_selection_overlay",
+                                                            "placement_grid"
+                                                        ]
+                          }
+                      ],
+    "realization_refs":  [
+                             {
+                                 "package_ref":  "Libraries/Realizations/Default/listbox.default.wfrog",
+                                 "target_classes":  [
+                                                        "frog.widgets.listbox_control",
+                                                        "frog.widgets.listbox_indicator"
+                                                    ]
+                             }
+                         ],
+    "svg_assets":  [
+                       {
+                           "asset_id":  "listbox_shell_svg",
+                           "kind":  "svg",
+                           "path":  "../../../Libraries/Realizations/Default/assets/listbox/templates/listbox_shell.svg",
+                           "target_classes":  [
+                                                  "frog.widgets.listbox_control",
+                                                  "frog.widgets.listbox_indicator"
+                                              ]
+                       }
+                   ],
+    "default_widget_properties":  [
+                                      {
+                                          "class_id":  "frog.widgets.listbox_control",
+                                          "role":  "control",
+                                          "visual":  {
+                                                         "asset_ref":  "asset:listbox_shell_svg"
+                                                     },
+                                          "props":  {
+                                                        "viewport.row_height":  28.1,
+                                                        "display.symbols_visible":  true,
+                                                        "display.vertical_scrollbar_visible":  true,
+                                                        "interaction.enabled":  true,
+                                                        "interaction.read_only":  false,
+                                                        "interaction.scroll.wheel_step_items":  1,
+                                                        "style.item_region.fill_color":  "#f8fafc",
+                                                        "style.item_region.border_color":  "#64748b",
+                                                        "style.item_region.border_width":  "1px",
+                                                        "style.item_row.fill_color":  "#ffffff",
+                                                        "style.item_row.border_color":  "#dbe3ec",
+                                                        "style.item_row.border_width":  "1px",
+                                                        "style.item_row.hover_fill_color":  "#eef6ff",
+                                                        "style.item_row.disabled_fill_color":  "#f1f5f9",
+                                                        "style.item_row.disabled_text_color":  "#94a3b8",
+                                                        "style.selection_face.fill_color":  "#dbeafe",
+                                                        "style.selection_face.border_color":  "#3b82f6",
+                                                        "style.selection_face.border_width":  "1px",
+                                                        "style.item_label.text_color":  "#2B3033",
+                                                        "style.item_label.font_family":  "Segoe UI, Arial, sans-serif",
+                                                        "style.item_label.font_size":  "14px",
+                                                        "style.item_label.font_weight":  "400",
+                                                        "style.item_label.padding_inline":  "10px",
+                                                        "style.item_symbol.fill_color":  "#60a5fa",
+                                                        "style.item_symbol.border_color":  "#2563eb",
+                                                        "style.item_symbol.border_width":  "1px",
+                                                        "style.item_symbol.size":  "12px",
+                                                        "style.item_symbol.margin_right":  "8px",
+                                                        "style.scrollbar.track_fill_color":  "#f8fafc",
+                                                        "style.scrollbar.track_hover_fill_color":  "#eef6ff",
+                                                        "style.scrollbar.track_pressed_fill_color":  "#dbeafe",
+                                                        "style.scrollbar.thumb_fill_color":  "#94a3b8",
+                                                        "style.scrollbar.thumb_hover_fill_color":  "#64748b",
+                                                        "style.scrollbar.thumb_pressed_fill_color":  "#475569",
+                                                        "style.scrollbar.thumb_border_color":  "#64748b",
+                                                        "style.scrollbar.thumb_border_width":  "0px",
+                                                        "style.scrollbar.thumb_radius":  "0px",
+                                                        "style.scrollbar.thumb_min_height_percent":  12,
+                                                        "style.scrollbar.inner_padding":  "2px",
+                                                        "style.scrollbar.border_color":  "#64748b",
+                                                        "style.scrollbar.border_width":  "1px",
+                                                        "style.scrollbar.border_radius":  "0px",
+                                                        "style.focus_ring.color":  "#2563eb",
+                                                        "style.focus_ring.width":  "2px"
+                                                    }
+                                      },
+                                      {
+                                          "class_id":  "frog.widgets.listbox_indicator",
+                                          "role":  "indicator",
+                                          "visual":  {
+                                                         "asset_ref":  "asset:listbox_shell_svg"
+                                                     },
+                                          "props":  {
+                                                        "viewport.row_height":  28.1,
+                                                        "display.symbols_visible":  true,
+                                                        "display.vertical_scrollbar_visible":  true,
+                                                        "interaction.enabled":  false,
+                                                        "interaction.read_only":  true,
+                                                        "interaction.scroll.wheel_step_items":  1,
+                                                        "style.item_region.fill_color":  "#f8fafc",
+                                                        "style.item_region.border_color":  "#64748b",
+                                                        "style.item_region.border_width":  "1px",
+                                                        "style.item_row.fill_color":  "#ffffff",
+                                                        "style.item_row.border_color":  "#dbe3ec",
+                                                        "style.item_row.border_width":  "1px",
+                                                        "style.item_row.hover_fill_color":  "#eef6ff",
+                                                        "style.item_row.disabled_fill_color":  "#f1f5f9",
+                                                        "style.item_row.disabled_text_color":  "#94a3b8",
+                                                        "style.selection_face.fill_color":  "#eef4ff",
+                                                        "style.selection_face.border_color":  "#94a3b8",
+                                                        "style.selection_face.border_width":  "1px",
+                                                        "style.item_label.text_color":  "#2B3033",
+                                                        "style.item_label.font_family":  "Segoe UI, Arial, sans-serif",
+                                                        "style.item_label.font_size":  "14px",
+                                                        "style.item_label.font_weight":  "400",
+                                                        "style.item_label.padding_inline":  "10px",
+                                                        "style.item_symbol.fill_color":  "#94a3b8",
+                                                        "style.item_symbol.border_color":  "#64748b",
+                                                        "style.item_symbol.border_width":  "1px",
+                                                        "style.item_symbol.size":  "12px",
+                                                        "style.item_symbol.margin_right":  "8px",
+                                                        "style.scrollbar.track_fill_color":  "#f8fafc",
+                                                        "style.scrollbar.track_hover_fill_color":  "#eef6ff",
+                                                        "style.scrollbar.track_pressed_fill_color":  "#dbeafe",
+                                                        "style.scrollbar.thumb_fill_color":  "#94a3b8",
+                                                        "style.scrollbar.thumb_hover_fill_color":  "#64748b",
+                                                        "style.scrollbar.thumb_pressed_fill_color":  "#475569",
+                                                        "style.scrollbar.thumb_border_color":  "#64748b",
+                                                        "style.scrollbar.thumb_border_width":  "0px",
+                                                        "style.scrollbar.thumb_radius":  "0px",
+                                                        "style.scrollbar.thumb_min_height_percent":  12,
+                                                        "style.scrollbar.inner_padding":  "2px",
+                                                        "style.scrollbar.border_color":  "#64748b",
+                                                        "style.scrollbar.border_width":  "1px",
+                                                        "style.scrollbar.border_radius":  "0px",
+                                                        "style.focus_ring.color":  "#2563eb",
+                                                        "style.focus_ring.width":  "2px"
+                                                    }
+                                      }
+                                  ],
+    "reviewed_date":  "2026-06-19",
+    "review":  {
+                   "last_reviewed":  "2026-06-19",
+                   "scope":  "Default Listbox placement_bounds aura, main_body/item_region visible body, selection row, scrollbar, and control/indicator posture for the IDE view.",
+                   "visible_runtime_fact":  "Reviewed 2026-06-19"
+               },
+    "notes":  [
+                  "Listbox IDE placement uses placement_bounds as the portable aura and main_body/item_region as the visible body.",
+                  "The default aura band is 4 CSS px between placement_bounds and main_body/item_region.",
+                  "The visible grid is a review surface; execution semantics remain source-owned and compatible with the Example 22 u16 selected-value kernel corridor."
+              ]
+}

@@ -454,6 +454,14 @@ opens the public screenshot for that example.
       <td><code>main.frog</code> + <code>ui/button_ide_panel.wfrog</code></td>
       <td>C++ browser-host calibration surface only: Example 10 remains the executable Button bool kernel corridor</td>
     </tr>
+    <tr>
+      <td><a href="./46_listbox_placement_ide_view/"><code>46_listbox_placement_ide_view</code></a></td>
+      <td><code>pending</code></td>
+      <td><time datetime="2026-06-19">2026-06-19</time></td>
+      <td>IDE-view Listbox placement witness showing the Default Listbox placement_bounds aura, main_body/item_region visible body, 4px homogeneous aura band, selected row, disabled row, and scrollbar posture</td>
+      <td><code>main.frog</code> + <code>ui/listbox_ide_panel.wfrog</code></td>
+      <td>C++ browser-host calibration surface only: Example 22 remains the executable Listbox u16 selected-value kernel corridor</td>
+    </tr>
   </tbody>
 </table>
 
