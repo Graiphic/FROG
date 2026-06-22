@@ -1120,6 +1120,13 @@
                   "children": []
                 },
                 {
+                  "key": "examples/41_numeric_placement_ide_view/reference/",
+                  "title": "reference",
+                  "path": "/Examples/41_numeric_placement_ide_view/reference/README.md",
+                  "kind": "category",
+                  "children": []
+                },
+                {
                   "key": "examples/41_numeric_placement_ide_view/ui/",
                   "title": "ui",
                   "path": "/Examples/41_numeric_placement_ide_view/ui/Readme.md",
@@ -1272,6 +1279,13 @@
                   "title": "main.frog",
                   "path": "/Examples/47_static_image_clipboard_placement/main.frog",
                   "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "examples/47_static_image_clipboard_placement/reference/",
+                  "title": "reference",
+                  "path": "/Examples/47_static_image_clipboard_placement/reference/README.md",
+                  "kind": "category",
                   "children": []
                 },
                 {
@@ -5376,6 +5390,7 @@
     "/Examples/40_array_ring_container_dimension_count_roundtrip/main.frog",
     "/Examples/40_array_ring_container_dimension_count_roundtrip/Readme.md",
     "/Examples/41_numeric_placement_ide_view/main.frog",
+    "/Examples/41_numeric_placement_ide_view/reference/README.md",
     "/Examples/41_numeric_placement_ide_view/ui/Readme.md",
     "/Examples/41_numeric_placement_ide_view/Readme.md",
     "/Examples/42_boolean_placement_ide_view/main.frog",
@@ -5397,6 +5412,7 @@
     "/Examples/46_listbox_placement_ide_view/ui/Readme.md",
     "/Examples/46_listbox_placement_ide_view/Readme.md",
     "/Examples/47_static_image_clipboard_placement/main.frog",
+    "/Examples/47_static_image_clipboard_placement/reference/README.md",
     "/Examples/47_static_image_clipboard_placement/ui/Readme.md",
     "/Examples/47_static_image_clipboard_placement/Readme.md",
     "/Examples/compiler/01_pure_arithmetic.md",
