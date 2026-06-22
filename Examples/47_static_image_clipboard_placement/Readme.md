@@ -32,3 +32,14 @@ runtime-produced image buffers. Image Static is for pasted/imported front-panel
 media objects.
 </p>
 
+<h2>Reference Snapshot</h2>
+
+<p>
+A public screenshot-only reference is published in <code>reference/screenshot.png</code>.
+It records the accepted C++ private browser-host rendering of two
+<code>frog.widgets.image_static</code> instances sharing one source-owned SVG
+asset through <code>media_ref</code>. The reference is human comparison
+evidence only and does not publish private runtime state JSON or validation
+recipes.
+</p>
+

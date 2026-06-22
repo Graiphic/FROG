@@ -191,5 +191,16 @@
     ],
     "default_aura_band_px": 4
   },
+  "canonical_baseline_refs": [
+    {
+      "scope": "studio_static_image_baseline",
+      "example": "../../../Examples/47_static_image_clipboard_placement",
+      "screenshot": "../../../Examples/47_static_image_clipboard_placement/reference/screenshot.png",
+      "runtime_surface": "private_cpp_browser_host",
+      "validated_on": "2026-06-22",
+      "role": "Default Static Image media_ref, placement_bounds aura, media_region body, and media_content host surface witness for Studio and runtime alignment.",
+      "boundary": "Static Image is imported or pasted front-panel media; Picture/Screen remain data-driven image output widgets."
+    }
+  ],
   "reviewed_date": "2026-06-20"
 }

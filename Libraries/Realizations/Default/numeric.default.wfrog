@@ -684,6 +684,17 @@
       "caption_source": "caption.text"
     }
   },
+  "canonical_baseline_refs": [
+    {
+      "scope": "studio_numeric_baseline",
+      "example": "../../../Examples/41_numeric_placement_ide_view",
+      "screenshot": "../../../Examples/41_numeric_placement_ide_view/reference/screenshot.png",
+      "runtime_surface": "private_cpp_browser_host",
+      "validated_on": "2026-06-22",
+      "role": "Default Numeric control/indicator placement, aura, value face, and increment/decrement posture witness for Studio and runtime alignment.",
+      "boundary": "Reference evidence only; Numeric class law, source-owned instance data, and realization parts remain owned by their existing public documents."
+    }
+  ],
   "validation_expectations": [
     "target classes must exist in Libraries/Widgets/Numeric.md",
     "all declared public parts must exist in the numeric class law",

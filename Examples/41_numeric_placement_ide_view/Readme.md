@@ -123,10 +123,10 @@ kernel, or a new widget class.
 <h2>Reference Snapshot</h2>
 
 <p>
-No public <code>reference/</code> package is published yet for this IDE view.
-When published, it must follow
-<a href="../example_reference_snapshot_standard.md">the example reference snapshot standard</a>
-and capture the accepted browser-host grid, placement aura, label aura,
-right/left/hidden increment-decrement postures, indicator styling, and current
-state JSON from the same accepted C++ host session.
+A public screenshot-only reference is published in <code>reference/screenshot.png</code>.
+It was captured from the private C++ browser-host runtime and visually checked
+on <code>2026-06-22</code>. It records the accepted browser-host grid,
+placement aura, label aura, right/left/hidden increment-decrement postures, and
+indicator styling without publishing private runtime evidence or accepted-state
+JSON.
 </p>

@@ -416,8 +416,8 @@ opens the public screenshot for that example.
     </tr>
     <tr>
       <td><a href="./41_numeric_placement_ide_view/"><code>41_numeric_placement_ide_view</code></a></td>
-      <td><code>pending</code></td>
-      <td><time datetime="2026-06-08">2026-06-08</time></td>
+      <td><a href="./41_numeric_placement_ide_view/reference/screenshot.png">capture</a></td>
+      <td><time datetime="2026-06-22">2026-06-22</time></td>
       <td>IDE-view Numeric placement witness showing the 16px grid, placement aura, label aura, and right/left/hidden increment-decrement postures</td>
       <td><code>main.frog</code> + <code>ui/numeric_ide_panel.wfrog</code></td>
       <td>C++ browser-host calibration surface only: Example 05 remains the executable Numeric accumulator slice</td>
@@ -465,7 +465,7 @@ opens the public screenshot for that example.
     <tr>
       <td><a href="./47_static_image_clipboard_placement/"><code>47_static_image_clipboard_placement</code></a></td>
       <td><a href="./47_static_image_clipboard_placement/reference/screenshot.png">capture</a></td>
-      <td><time datetime="2026-06-20">2026-06-20</time></td>
+      <td><time datetime="2026-06-22">2026-06-22</time></td>
       <td>Static Image widget placement witness for pasted/imported SVG media assets, source-owned media_ref, rectangular media_region, and 4px placement_bounds aura</td>
       <td><code>main.frog</code> + <code>ui/image_static_panel.wfrog</code> + <code>assets/pasted_vector_frog_card.svg</code></td>
       <td>C++ browser-host static media surface only: Picture remains the dataflow image widget family</td>
