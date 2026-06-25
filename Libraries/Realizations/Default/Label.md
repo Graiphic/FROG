@@ -54,10 +54,8 @@ This realization defines how the Default family can embody the label through SVG
 
 <ul>
   <li><code>root</code></li>
-  <li><code>background</code></li>
-  <li><code>frame</code></li>
+  <li><code>placement_bounds</code></li>
   <li><code>text_surface</code></li>
-  <li><code>focus_ring</code></li>
 </ul>
 
 <hr/>
@@ -69,21 +67,16 @@ This realization defines how the Default family can embody the label through SVG
 </ul>
 
 <p>
-The SVG template provides geometry and anchors for the text surface.
-It does not own <code>text.value</code>.
-It uses square default corners and <code>preserveAspectRatio="none"</code> so
-the rectangular background and frame scale to the source-owned front-panel
-layout rectangle. The published <code>background</code>, <code>frame</code>,
-and <code>focus_ring</code> parts span the full template viewBox so the frame
-is the external Label border. Stroke-carrying parts use non-scaling strokes so
-border thickness remains consistent across horizontal and vertical scaling.
+The SVG template provides geometry and anchors for the placement aura and text
+surface. It does not own <code>text.value</code>. The published
+<code>placement_bounds</code> part is the IDE/runtime placement aura; selection
+and hover visuals are overlays aligned to that part, not a Label
+<code>focus_ring</code>.
 </p>
 
 <p>
-The visible external Label frame must be homogeneous: one source-owned
-<code>style.frame.border_width</code> value applies equally to the top, right,
-bottom, and left edges after any resize. Runtimes may use a host overlay for
-the visible frame only when that overlay is aligned to the published
-<code>frame</code> part and remains driven by the source-owned frame
-properties.
+The Default Label is deliberately text-only. If a front-panel author needs a
+visible rectangle, background, callout, or grouping surface, they should combine
+the Label with a decoration/frame widget rather than expanding the Label skin
+contract.
 </p>

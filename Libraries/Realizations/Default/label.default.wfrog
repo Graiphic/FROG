@@ -75,22 +75,18 @@
       ],
       "supported_parts": [
         "root",
-        "background",
-        "frame",
-        "text_surface",
-        "focus_ring"
+        "placement_bounds",
+        "text_surface"
       ],
       "supported_visual_states": [
         "normal",
-        "focused",
         "disabled",
         "hidden"
       ],
       "fallbacks": {
         "missing_variant": "rectangular",
-        "missing_background": "transparent_background",
-        "missing_frame": "frameless_label",
-        "missing_focus_ring": "host_native_focus_ring"
+        "missing_placement_bounds": "host_layout_rectangle",
+        "missing_text_surface": "host_text_label"
       }
     }
   ],
@@ -101,12 +97,13 @@
       "target_class": "frog.widgets.label",
       "resource_ref": "frog.realizations.default.label.assets.rectangular_svg",
       "geometry_posture": {
-        "shape_family": "rectangular_text_region",
-        "layout_source": "front_panel_layout_rectangle",
+        "shape_family": "static_text",
+        "layout_source": "placement_bounds",
         "scales_to_layout": true,
-        "supports_background": true,
-        "supports_frame": true,
-        "supports_dynamic_text": true
+        "supports_dynamic_text": true,
+        "placement_bounds_part": "placement_bounds",
+        "visible_text_part": "text_surface",
+        "aura_band_units": 4
       },
       "fallback": "host_text_label"
     }
@@ -131,20 +128,15 @@
   "part_bindings": [
     {
       "part": "root",
-      "binding_kind": "svg_element",
+      "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='root']"
     },
     {
-      "part": "background",
-      "binding_kind": "svg_shape",
-      "binding_selector": "[data-frog-part='background']",
-      "style_binding_group": "style.background"
-    },
-    {
-      "part": "frame",
-      "binding_kind": "svg_shape",
-      "binding_selector": "[data-frog-part='frame']",
-      "style_binding_group": "style.frame"
+      "part": "placement_bounds",
+      "binding_kind": "svg_geometry",
+      "binding_selector": "[data-frog-part='placement_bounds']",
+      "semantic_member": "layout.placement_bounds",
+      "placement_role": "uniform_aura_around_static_text_surface"
     },
     {
       "part": "text_surface",
@@ -152,24 +144,11 @@
       "binding_selector": "[data-frog-part='text_surface']",
       "semantic_member": "text.value",
       "style_binding_group": "style.text"
-    },
-    {
-      "part": "focus_ring",
-      "binding_kind": "svg_shape",
-      "binding_selector": "[data-frog-part='focus_ring']",
-      "style_binding_group": "style.focus_ring"
     }
   ],
   "state_maps": [
     {
       "state": "normal"
-    },
-    {
-      "state": "focused",
-      "value_condition": {
-        "interaction.focused": true
-      },
-      "inherits": "normal"
     },
     {
       "state": "disabled",
@@ -202,19 +181,9 @@
       "target_operation": "apply_text_style"
     },
     {
-      "member": "style.background.*",
-      "target_part": "background",
-      "target_operation": "apply_background_style"
-    },
-    {
-      "member": "style.frame.*",
-      "target_part": "frame",
-      "target_operation": "apply_frame_style"
-    },
-    {
-      "member": "style.focus_ring.*",
-      "target_part": "focus_ring",
-      "target_operation": "apply_focus_ring_style"
+      "member": "layout.placement_bounds.*",
+      "target_part": "placement_bounds",
+      "target_operation": "publish_placement_aura"
     }
   ],
   "anchors": [
@@ -229,9 +198,17 @@
   ],
   "host_hints": {
     "preferred_host_kind": "svg_template_host_or_host_native_text",
-    "resize_posture": "scale_template_to_front_panel_layout_rectangle",
+    "resize_posture": "scale_template_to_placement_bounds",
     "text_rendering_posture": "host_may_replace_template_text_content",
     "style_application_posture": "apply_property_bindings_before_render",
+    "default_static_geometry": {
+      "posture": "labview_like_static_text",
+      "placement_bounds_part": "placement_bounds",
+      "text_surface_part": "text_surface",
+      "aura_band_units": 4,
+      "default_text_inset": 4,
+      "selection_posture": "runtime_or_ide_overlay_aligned_to_placement_bounds_not_svg_focus_ring"
+    },
     "accessibility_posture": {
       "role": "text",
       "text_source": "text.value",
@@ -243,6 +220,8 @@
     "all declared public parts must exist in the label class law",
     "resources must resolve relative to this package file",
     "text.value must remain the semantic owner of visible support text",
-    "SVG-baked preview text must not be treated as semantic label content"
+    "SVG-baked preview text must not be treated as semantic label content",
+    "placement_bounds must be present as the non-rendered public placement aura",
+    "Label SVG templates must not publish background, frame, or focus_ring parts; use decoration/frame widgets for visible boxes"
   ]
 }

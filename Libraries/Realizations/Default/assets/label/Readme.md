@@ -31,23 +31,18 @@
 <hr/>
 
 <p>
-The published rectangular template uses square default corners and scales to
-the source-owned front-panel layout rectangle with
-<code>preserveAspectRatio="none"</code>. This keeps background and frame parts
-aligned to the Label instance bounds while the semantic text remains owned by
-<code>.frog</code> <code>text.value</code>. The published
-<code>background</code>, <code>frame</code>, and <code>focus_ring</code> parts
-span the full template viewBox so the frame is the external Label border.
-Stroke-carrying parts use non-scaling strokes so border thickness remains
-consistent across horizontal and vertical scaling.
+The published rectangular template is intentionally minimal. A Label is static
+support text, so the SVG publishes only the placement aura and the semantic
+text surface. The live text remains owned by <code>.frog</code>
+<code>text.value</code>; SVG preview text is never semantic content.
 </p>
 
 <p>
-The external Label frame has a strict uniform-border rule. A resized Label
-must still show the same visible border thickness on every edge. If a runtime
-uses a host-rendered frame for pixel fidelity, it must align that frame to the
-published <code>data-frog-part="frame"</code> geometry and source it from the
-same <code>style.frame.*</code> properties.
+The <code>placement_bounds</code> part is the IDE/runtime placement aura for
+the widget. The default aura band is 4 px. Selection and hover visuals are
+runtime/IDE overlays aligned to <code>placement_bounds</code>, not SVG-baked
+focus rings. If a visible rectangle is needed around text, use a decoration or
+frame widget with a Label instead of adding public Label skin parts.
 </p>
 
 <hr/>
@@ -56,8 +51,6 @@ same <code>style.frame.*</code> properties.
 
 <ul>
   <li><code>root</code></li>
-  <li><code>background</code></li>
-  <li><code>frame</code></li>
+  <li><code>placement_bounds</code></li>
   <li><code>text_surface</code></li>
-  <li><code>focus_ring</code></li>
 </ul>

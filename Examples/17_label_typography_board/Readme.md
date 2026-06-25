@@ -5,8 +5,12 @@
 <h1 align="center">Example 17 - Label Typography Board</h1>
 
 <p align="center">
-  <strong>.frog standalone Label support text + Default Label .wfrog realization asset + Graiphic private runtime</strong><br/>
+  <strong>.frog standalone static Label support text + Default Label .wfrog realization asset + Graiphic private runtime</strong><br/>
   <em>FROG - Free Open Graphical Language</em>
+</p>
+
+<p align="center">
+  <strong>Reviewed 2026-06-25</strong>
 </p>
 
 <hr/>
@@ -19,9 +23,10 @@ The front panel contains several Label widgets used as a title, subtitle, LabVIE
 </p>
 
 <p>
-The example intentionally keeps Label simple: a Label is support text on the front panel, not a scalar control or indicator.
+The example intentionally keeps Label simple: a Label is static support text on the front panel, not a scalar control or indicator.
 Visible text is owned by <code>.frog</code> instance property <code>text.value</code>.
 The <code>.wfrog</code> package references the Default Label realization and SVG asset.
+The SVG contract is minimal: <code>root</code>, <code>placement_bounds</code>, and <code>text_surface</code>.
 </p>
 
 <hr/>
@@ -56,9 +61,9 @@ Runtime implementation for this example continues in <code>Graiphic/FROG-Runtime
 <h2>Ownership</h2>
 
 <ul>
-  <li><code>.frog</code> owns Label widget instances, layout, text content, typography, backgrounds, frames, and alignment.</li>
+  <li><code>.frog</code> owns Label widget instances, placement_bounds, text content, typography, wrapping, and alignment.</li>
   <li><code>.wfrog</code> owns Default Label realization references, asset references, and host capability declarations.</li>
-  <li>The Default Label SVG owns reusable parts and anchors such as <code>background</code>, <code>frame</code>, <code>text_surface</code>, and <code>focus_ring</code>.</li>
+  <li>The Default Label SVG owns only <code>root</code>, <code>placement_bounds</code>, and <code>text_surface</code>.</li>
   <li>The runtime consumes source-owned instance properties and published SVG parts; it does not treat baked SVG preview text as semantic content.</li>
 </ul>
 
@@ -79,6 +84,6 @@ Runtime implementation for this example continues in <code>Graiphic/FROG-Runtime
 <h2>Expected UI</h2>
 
 <p>
-The first screen should display a compact white front panel with a large title, a subtitle, two bordered explanation rectangles, and smaller typography samples.
-Text must fit its Label rectangles, and all visible styling should come from <code>.frog</code> instance properties interpreted through the Default Label realization.
+The first screen should display a compact white front panel with a placement grid, a selected Label aura, a large title, a subtitle, explanatory static text, and smaller typography samples.
+Text must fit its source-owned placement bounds, and all visible text styling should come from <code>.frog</code> instance properties interpreted through the Default Label realization.
 </p>

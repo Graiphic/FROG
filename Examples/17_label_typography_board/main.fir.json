@@ -57,7 +57,7 @@
         "This FIR is a repository-visible Label widget progression slice beyond the current public reference runtime closure.",
         "The standalone Label widget is a support widget; it is not a scalar value control or indicator.",
         "Visible Label text is owned by .frog text.value instance properties, not by baked SVG preview text.",
-        "The Default Label SVG realization publishes background, frame, text_surface, and focus_ring parts.",
+        "The Default Label SVG realization publishes root, placement_bounds, and text_surface only.",
         "Runtime implementation for this example continues in Graiphic/FROG-Runtime unless explicitly promoted later."
       ]
     }

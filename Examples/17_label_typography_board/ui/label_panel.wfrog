@@ -46,6 +46,7 @@
         "window",
         "basic_widget_rendering",
         "support_text_rendering",
+        "placement_bounds_overlay",
         "svg_part_overlay_alignment",
         "svg_style_property_binding",
         "native_kernel_manifest"

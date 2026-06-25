@@ -58,7 +58,8 @@ It is not the same thing as the common <code>label.*</code> property present on 
 </p>
 
 <p>
-The label widget is intentionally small, but it is still a real widget class with public properties, methods, events, parts, and a default realization posture.
+The label widget is intentionally simple: it is static support text with a placement aura.
+It is still a real widget class, but its default SVG skin must stay minimal so text does not become entangled with decorative boxes or focus markers.
 </p>
 
 <hr/>
@@ -148,11 +149,15 @@ The SVG asset must not be the semantic owner of the live label text.
 
 <ul>
   <li><code>root</code></li>
-  <li><code>background</code></li>
-  <li><code>frame</code></li>
+  <li><code>placement_bounds</code> - non-rendered widget placement aura used by IDE/runtime overlays.</li>
   <li><code>text_surface</code></li>
-  <li><code>focus_ring</code> when supported</li>
 </ul>
+
+<p>
+The default Label contract deliberately does not publish <code>background</code>, <code>frame</code>, or <code>focus_ring</code> parts.
+Selection and hover visuals belong to the IDE/runtime overlay aligned to <code>placement_bounds</code>.
+Visible boxes, callouts, or grouping frames should be represented by decoration/frame widgets composed with a Label.
+</p>
 
 <hr/>
 
@@ -183,8 +188,7 @@ The SVG asset must not be the semantic owner of the live label text.
 <ul>
   <li><code>interaction.visible : bool</code></li>
   <li><code>interaction.enabled : bool</code> — host affordance only; the label remains support-oriented.</li>
-  <li><code>interaction.focusable : bool</code> when exposed.</li>
-  <li><code>interaction.focused : bool</code> when exposed.</li>
+  <li><code>interaction.selected : bool</code> when an IDE/runtime wants to expose selection state.</li>
 </ul>
 
 <h3>7.4 Style</h3>
@@ -196,13 +200,6 @@ The SVG asset must not be the semantic owner of the live label text.
   <li><code>style.text.font_weight : enum</code></li>
   <li><code>style.text.font_style : enum</code></li>
   <li><code>style.text.text_decoration : enum</code></li>
-  <li><code>style.background.visible : bool</code></li>
-  <li><code>style.background.fill_color : frog.color.rgba8</code></li>
-  <li><code>style.frame.visible : bool</code></li>
-  <li><code>style.frame.border_color : frog.color.rgba8</code></li>
-  <li><code>style.frame.border_width : length</code></li>
-  <li><code>style.frame.corner_radius : length</code></li>
-  <li><code>style.focus_ring.*</code> when focus posture is exposed.</li>
 </ul>
 
 <h3>7.5 Realization</h3>
@@ -223,7 +220,6 @@ The SVG asset must not be the semantic owner of the live label text.
   <li><code>append_text(text : string)</code></li>
   <li><code>size_to_text()</code> when supported by the host</li>
   <li><code>reset_to_default_style()</code></li>
-  <li><code>focus()</code> when focus posture is supported</li>
 </ul>
 
 <hr/>
@@ -233,8 +229,6 @@ The SVG asset must not be the semantic owner of the live label text.
 <ul>
   <li><code>text_changed</code></li>
   <li><code>value_rendered</code></li>
-  <li><code>focus_gained</code> when focus posture is supported</li>
-  <li><code>focus_lost</code> when focus posture is supported</li>
 </ul>
 
 <hr/>
@@ -242,7 +236,8 @@ The SVG asset must not be the semantic owner of the live label text.
 <h2 id="default-realization-posture">10. Default Realization Posture</h2>
 
 <p>
-The Default realization should expose a rectangular text-region SVG template with a background part, frame part, dynamic text surface, and optional focus ring.
+The Default realization exposes a minimal static-text SVG template with <code>root</code>, <code>placement_bounds</code>, and <code>text_surface</code>.
+The default aura band is 4 px. The host may replace the template preview text with native text rendering, but it must keep <code>text.value</code> as the semantic owner of the visible text.
 </p>
 
 <hr/>
@@ -262,7 +257,7 @@ The label is not standardized as a natural value-path widget in the intrinsic ba
 <h2 id="validation-expectations">12. Validation Expectations</h2>
 
 <p>
-Validators SHOULD diagnose attempts to treat <code>frog.widgets.label</code> as a required scalar value-carrying widget, use of SVG-baked text as semantic text, and confusion between common <code>label.*</code> and label-widget <code>text.value</code>.
+Validators SHOULD diagnose attempts to treat <code>frog.widgets.label</code> as a required scalar value-carrying widget, use of SVG-baked text as semantic text, confusion between common <code>label.*</code> and label-widget <code>text.value</code>, and Label SVG skins that publish decorative <code>background</code>, <code>frame</code>, or <code>focus_ring</code> parts instead of the standard <code>placement_bounds</code> aura.
 </p>
 
 <hr/>
