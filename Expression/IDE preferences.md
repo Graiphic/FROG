@@ -451,6 +451,9 @@ Example:
 
 <pre>"front_panel": {
   "background_color": "#FFFFFF",
+  "background_opacity": 100,
+  "grid_color": "#D2D2D2",
+  "grid_opacity": 100,
   "alignment_guides": {
     "enabled": true
   },
@@ -465,11 +468,22 @@ Suggested fields include:
 </p>
 
 <ul>
-  <li><code>background_color</code> — string color</li>
+  <li><code>background_color</code> — string color, or <code>"transparent"</code> for a transparent document-level front-panel background</li>
+  <li><code>background_opacity</code> — optional integer percentage from <code>0</code> to <code>100</code>; omitted means fully opaque</li>
+  <li><code>grid_color</code> — optional string color for the document-level front-panel grid</li>
+  <li><code>grid_opacity</code> — optional integer percentage from <code>0</code> to <code>100</code>; omitted means fully opaque</li>
   <li><code>alignment_guides.enabled</code> — boolean</li>
   <li><code>snap.enabled</code> — boolean</li>
   <li><code>snap.size</code> — integer</li>
 </ul>
+
+<p>
+The front-panel background preference is document-level IDE presentation.
+It may be saved in the <code>.frog</code> so the same source reopens with the same authoring background.
+It is distinct from a local IDE default theme, which belongs to tool configuration and not to source.
+When an IDE exposes paired fill/stroke color tools for the front-panel canvas, the fill/front color maps to
+<code>background_color</code> and the stroke/back color maps to <code>grid_color</code>.
+</p>
 
 <p>
 These preferences affect editor UX only.
@@ -809,6 +823,9 @@ if they stay:
   },
   "front_panel": {
     "background_color": "#FFFFFF",
+    "background_opacity": 100,
+    "grid_color": "#D2D2D2",
+    "grid_opacity": 100,
     "alignment_guides": { "enabled": true },
     "snap": { "enabled": true, "size": 5 }
   },
