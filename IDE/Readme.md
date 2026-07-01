@@ -626,6 +626,16 @@ The front-panel editor is responsible for:
 </ul>
 
 <p>
+A front-panel selection pane MAY expose source-owned object management
+properties such as stacking order, grouping, lock state, and editor visibility.
+When such a pane hides a front-panel object, the hidden state MUST be stored on
+the source object, for example as an object-level <code>hidden</code> flag in
+the <code>front_panel</code>/<code>frontPanel</code> object list. This is an
+authoring visibility affordance for the front-panel editor; it must not become
+a hidden runtime mechanism and must not redefine diagram execution semantics.
+</p>
+
+<p>
 The front panel is not:
 </p>
 
