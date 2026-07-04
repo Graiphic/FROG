@@ -399,6 +399,19 @@
       "value_source": "value",
       "label_source": "label.text",
       "caption_source": "caption.text"
+    },
+    "default_front_panel_layout": {
+      "posture": "compact_text_button_aligned_to_default_numeric_widget_scale",
+      "origin": "placement_bounds.top_left",
+      "bounds_ref": "placement_bounds",
+      "width": 80,
+      "height": 40,
+      "placement_grid_pitch": 16,
+      "placement_aura_padding": 4,
+      "body_part": "button_face",
+      "body_scales_with_layout": true,
+      "state_text_anchor": "frog.realizations.default.button.state_text.center",
+      "resize_rule": "front-panel default placement uses an 80 by 40 layout rectangle; resizing scales the rectangular button realization from placement_bounds while preserving the button_face aura rule"
     }
   },
   "validation_expectations": [

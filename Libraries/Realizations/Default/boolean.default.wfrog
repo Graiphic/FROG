@@ -245,15 +245,15 @@
     "placement_bounds": {
       "x": 16,
       "y": 32,
-      "width": 72,
-      "height": 72,
+      "width": 36,
+      "height": 36,
       "role": "default Boolean placement aura"
     },
     "state_face": {
       "x": 20,
       "y": 36,
-      "width": 64,
-      "height": 64,
+      "width": 28,
+      "height": 28,
       "role": "default Boolean visible value body"
     },
     "aura_band": {
@@ -266,6 +266,6 @@
     "The SVG must not publish outer_face, inner_face, or frame as public Boolean parts.",
     "The runtime must bind state colors through style.state_face.* and never hardcode true/false colors outside defaults.",
     "IDE selection aura is represented by placement_bounds; focus_ring remains a main_body/state_face outline.",
-    "Default Boolean placement_bounds is 72x72 source units, main_body maps to state_face at 64x64 source units, and the nominal Boolean aura_band is 4 source units, matching the shared aura standard without shrinking the accepted Boolean outer footprint."
+    "Default Boolean placement_bounds is 36x36 source units, main_body maps to state_face at 28x28 source units, and the nominal Boolean aura_band is 4 source units, matching the shared aura standard at the compact Front Panel scale."
   ]
 }

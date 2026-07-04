@@ -61,32 +61,32 @@
           data-frog-part="placement_bounds"
           x="16"
           y="32"
-          width="72"
-          height="72"
+          width="36"
+          height="36"
           data-frog-role="placement_bounds" />
 
     <ellipse id="state_face"
              data-frog-part="state_face"
-             cx="52"
-             cy="68"
-             rx="32"
-             ry="32"
+             cx="34"
+             cy="50"
+             rx="14"
+             ry="14"
              data-frog-bind="value style.state_face.*" />
 
     <ellipse id="focus_ring"
              data-frog-part="focus_ring"
-             cx="52"
-             cy="68"
-             rx="32"
-             ry="32"
+             cx="34"
+             cy="50"
+             rx="14"
+             ry="14"
              data-frog-bind="interaction.focused style.focus_ring.*" />
 
     <text id="state_text"
           data-frog-part="state_text"
           data-frog-member="state_text.true_text state_text.false_text"
           data-frog-anchor="state_text.center"
-          x="52"
-          y="68"
+          x="34"
+          y="50"
           text-anchor="middle"
           dominant-baseline="middle">On</text>
   </g>
