@@ -56,6 +56,10 @@
       <td>Why FROG's durable asset is the public source-to-FIR-to-contract pipeline rather than one IDE product.</td>
     </tr>
     <tr>
+      <td><a href="./IDE/Editors.md">Editors and authoring tools</a></td>
+      <td>How FROG-compatible editors fit around the public language specification, including Graiphic Studio.</td>
+    </tr>
+    <tr>
       <td><a href="./FROG-Architecture.md">FROG Architecture</a></td>
       <td>Source, FIR, lowering, runtime/compiler, observability, targets, security, interoperability, and language/tooling separation.</td>
     </tr>
@@ -94,6 +98,33 @@ FROG is a public language specification, not a single IDE, runtime, compiler, de
 
 <p>
 The long-form strategic explanation is maintained in <a href="./FROG-Strategy.md">FROG Strategy and Positioning</a>. The dedicated AI generation compatibility vs AI inspectability chart explanation is maintained in <a href="./Strategy/AI-Generation-Inspectability-Orville.md">AI Generation Compatibility vs AI Inspectability Orville Chart</a>.
+</p>
+
+<hr/>
+
+<h2 id="editors-and-authoring-tools">Editors and authoring tools</h2>
+
+<p>
+FROG is a public language specification rather than a single editor product.
+As the ecosystem grows, third-party and product-specific authoring tools may be
+developed around the same <code>.frog</code> source model, validation rules,
+interface concepts, widget definitions, and execution-facing contracts.
+</p>
+
+<p>
+One such editor effort is
+<a href="https://github.com/Graiphic/Graiphic-Studio">Graiphic Studio</a>,
+the Graiphic authoring environment being developed around the FROG language.
+Graiphic Studio documentation is maintained separately as user-facing product
+documentation. It does not replace this repository as the public FROG language
+specification.
+</p>
+
+<p>
+The IDE-facing architecture for conforming authoring environments is described
+in <a href="./IDE/Readme.md"><code>IDE/</code></a>, with the ecosystem-facing
+editor list maintained in <a href="./IDE/Editors.md">Editors and authoring
+tools</a>.
 </p>
 
 <hr/>

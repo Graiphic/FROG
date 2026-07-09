@@ -79,6 +79,8 @@ This document defines how a conforming FROG IDE is organized as an authoring, di
 <p>
 <code>IDE/</code> defines IDE-facing architecture for conforming tools.
 Proprietary IDE implementations may exist and do not redefine the FROG language.
+Editor efforts currently tracked around the language are listed in
+<a href="./Editors.md">Editors and authoring tools</a>.
 </p>
 
 <pre><code>Repository architecture around IDE/
