@@ -89,3 +89,11 @@ Graiphic Studio user documentation lives in
 It should be read as product documentation for the editor, not as a replacement
 for the FROG specification.
 </p>
+
+<p>
+Current product documentation includes the
+<a href="https://github.com/Graiphic/Graiphic-Studio/blob/main/docs/interface/options.md">Studio Options</a>
+surface for editor themes, Front Panel grid defaults, and local Icon Editor
+glyph folders. Those settings remain editor preferences and do not redefine
+FROG source or runtime semantics.
+</p>
