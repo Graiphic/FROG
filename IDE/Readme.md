@@ -637,6 +637,53 @@ authoring visibility affordance for the front-panel editor; it must not become
 a hidden runtime mechanism and must not redefine diagram execution semantics.
 </p>
 
+<h3>12.1 Authoring Preview and Live Execution Boundary</h3>
+
+<p>
+An IDE MAY make a widget interactive while authoring so that its declared
+appearance, intrinsic class behavior, initial value, item model, containment,
+and instance properties can be inspected and edited. Such interaction is an
+authoring preview and a source-editing operation. It MUST NOT execute an
+undeclared dataflow path or become a second source of widget semantics.
+</p>
+
+<p>
+Executable widget participation begins only through explicit diagram and
+boundary artifacts. For ordinary primary-value flow, a control supplies a
+value to the graph and an indicator receives a value from the graph through
+the canonical <code>widget_value</code> path. Object-style interaction uses
+<code>widget_reference</code> and the declared <code>frog.ui.*</code>
+primitives. Public inputs and outputs remain explicit public-interface
+boundaries; a widget does not create one merely by existing on the panel.
+</p>
+
+<pre><code>authoring
+  Studio interaction
+    -&gt; source-owned .frog widget state and undo history
+
+execution
+  validated .frog diagram and explicit bindings
+    -&gt; FIR / lowering / backend contract
+    -&gt; runtime orchestration
+    -&gt; live control inputs, graph values, and indicator outputs
+</code></pre>
+
+<p>
+The runtime MAY host the same published widget behavior used by the authoring
+preview, but the runtime consumes validated source and execution-facing
+artifacts rather than hidden Studio state. Studio, compiler, runtime, and host
+implementations MUST preserve the published widget class, behavior, package,
+and realization contracts instead of independently recreating them.
+</p>
+
+<p>
+For a container such as Array, the container owns rank, shape, index displays,
+viewport, scrolling, selection, and element materialization. A contained
+widget retains its own class law, primary-value type, editable/read-only role,
+properties, and realization. An IDE or runtime MUST NOT replace contained
+widgets with reduced hardcoded cell behavior.
+</p>
+
 <p>
 The front panel is not:
 </p>
