@@ -460,6 +460,11 @@ Example:
   "snap": {
     "enabled": true,
     "size": 5
+  },
+  "zoom_percent": 100,
+  "viewport_origin": {
+    "x": 0,
+    "y": 0
   }
 }</pre>
 
@@ -475,12 +480,21 @@ Suggested fields include:
   <li><code>alignment_guides.enabled</code> — boolean</li>
   <li><code>snap.enabled</code> — boolean</li>
   <li><code>snap.size</code> — integer</li>
+  <li><code>zoom_percent</code> — integer percentage for the document's authoring view</li>
+  <li><code>viewport_origin.x</code> — number identifying the canvas x-coordinate at the viewport's upper-left corner</li>
+  <li><code>viewport_origin.y</code> — number identifying the canvas y-coordinate at the viewport's upper-left corner</li>
 </ul>
 
 <p>
 The front-panel background preference is document-level IDE presentation.
 It may be saved in the <code>.frog</code> so the same source reopens with the same authoring background.
 It is distinct from a local IDE default theme, which belongs to tool configuration and not to source.
+The zoom and viewport origin are document-level authoring state for reopening the same working view.
+An IDE-wide navigation font preference is local tool configuration: it MUST NOT change Front Panel widget typography, bounds, or authored layout.
+The useful Front Panel surface dimensions do not belong to <code>ide.front_panel</code>:
+they are canonical presentation intent stored as <code>front_panel.canvas.width</code>
+and <code>front_panel.canvas.height</code>. They remain independent from the IDE
+window position, native chrome, navigation font, zoom, and viewport origin.
 When an IDE exposes paired fill/stroke color tools for the front-panel canvas, the fill/front color maps to
 <code>background_color</code> and the stroke/back color maps to <code>grid_color</code>.
 </p>

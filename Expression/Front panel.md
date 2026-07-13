@@ -408,6 +408,15 @@ Canvas and layout intent:
 </ul>
 
 <p>
+When present, <code>canvas.width</code> and <code>canvas.height</code> are the
+source-owned dimensions of the useful Front Panel presentation surface in
+<code>panel_pixels</code>. A runtime or compiled host MAY use them as its initial
+client-area dimensions. They exclude IDE and operating-system chrome such as
+title bars, menus, toolbars, status bars, window borders, and monitor
+coordinates. They are also independent from editor zoom and viewport origin.
+</p>
+
+<p>
 Likewise, widget <code>layout</code> fields define source-owned placement intent, not executable graph behavior.
 </p>
 

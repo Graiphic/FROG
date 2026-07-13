@@ -58,7 +58,7 @@ Current instance-level properties proven by the example include:
 
 <ul>
   <li><code>caption.text</code>, <code>caption.anchor.x</code>, <code>caption.anchor.y</code>, and <code>caption.align.horizontal</code></li>
-  <li><code>representation.kind = uint16</code></li>
+  <li><code>data_type.representation = u16</code>, <code>data_type.named_numeric_size = U16</code>, and <code>representation.kind = uint16</code></li>
   <li><code>data_entry.minimum</code>, <code>data_entry.maximum</code>, and <code>data_entry.increment_step</code> on the control</li>
   <li><code>display.increment_buttons_visible</code> on the control and indicator</li>
   <li><code>layout.origin = placement_bounds.top_left</code> and <code>layout.bounds_ref = placement_bounds</code> when placement/aura behavior is being inspected</li>
@@ -185,6 +185,16 @@ It does not consume LLVM directly as a runtime dependency.
   <li>The C++ standard CLI, C++ native-kernel CLI, Python runtime, and Rust runtime must all produce the same result for equivalent inputs.</li>
   <li>Overflow must produce the published diagnostic: <code>final_state must remain in the u16 domain.</code></li>
 </ul>
+
+<p>
+Studio editing may select the complete Numeric representation family:
+<code>EXT</code>, <code>DBL</code>, <code>SGL</code>, <code>FXP</code>,
+signed <code>I64/I32/I16/I8</code>, unsigned <code>U64/U32/U16/U8</code>,
+and complex <code>CXT/CDB/CSG</code>. These are source-owned type declarations.
+Their presence in a front-panel editor does not by itself claim that every type
+has a validated executable lowering/native ABI corridor; each runtime corridor
+must still be proven explicitly.
+</p>
 
 <h2>Reference Snapshots</h2>
 
