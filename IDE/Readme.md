@@ -24,6 +24,7 @@
   <li><a href="#current-documents">8. Current Documents</a></li>
   <li><a href="#main-components">9. Main Components</a></li>
   <li><a href="#ide-shell">10. IDE Shell</a></li>
+  <li><a href="#coordinated-authoring-views">10.1 Coordinated Authoring Views</a></li>
   <li><a href="#diagram-editor">11. Diagram Editor</a></li>
   <li><a href="#front-panel-editor">12. Front Panel Editor</a></li>
   <li><a href="#frog-program-model">13. FROG Program Model</a></li>
@@ -204,7 +205,7 @@ It defines:
 
 <ul>
   <li>the role of the IDE shell,</li>
-  <li>the role of diagram and front-panel editors,</li>
+  <li>the role of diagram, front-panel, and canonical source views,</li>
   <li>the role of the IDE-managed editable Program Model,</li>
   <li>the IDE-facing boundary between authoring and execution-facing integration,</li>
   <li>the role of palette-driven authoring,</li>
@@ -366,7 +367,7 @@ The IDE architecture combines:
 
 <pre><code>                                   FROG IDE
                  +--------------------------------------------------+
-                 | Diagram + Front Panel UI + Probes + Watches      |
+                 | Diagram + Front Panel + Source + Probes + Watch |
                  +--------------------------+-----------------------+
                                             |
                                             v
@@ -490,6 +491,7 @@ A FROG IDE typically includes the following architectural components:
   <li>an IDE shell,</li>
   <li>a diagram editor,</li>
   <li>a front-panel editor,</li>
+  <li>a canonical source view or editor,</li>
   <li>a FROG Program Model,</li>
   <li>source serialization and reload services,</li>
   <li>validation and execution-preparation integration,</li>
@@ -509,6 +511,7 @@ Authoring components
 - IDE shell
 - diagram editor
 - front panel editor
+- canonical source view or editor
 - palette
 - Express services
 - authoring provenance services
@@ -563,6 +566,44 @@ Not owned by the shell:
 - profile semantics
 - IR semantics
 </code></pre>
+
+<h3 id="coordinated-authoring-views">10.1 Coordinated Authoring Views</h3>
+
+<p>
+A conforming IDE MAY expose three coordinated authoring views over one FROG
+Program Model:
+</p>
+
+<ul>
+  <li><strong>Front Panel</strong> - widget composition, appearance, interaction posture, and interface-map authoring.</li>
+  <li><strong>Diagram</strong> - executable dataflow nodes, terminals, structures, wires, and diagram annotations.</li>
+  <li><strong>Source</strong> - a live textual projection of canonical <code>.frog</code> source.</li>
+</ul>
+
+<p>
+These are views of one document, not three independent documents. A source-owned
+change accepted in one view MUST be reflected in the others through the shared
+Program Model. Examples include control/indicator role changes, Numeric
+representation changes, Array encapsulation, terminal identity changes, label
+visibility, binding changes, and object deletion. An IDE MUST NOT require an
+unrelated click or manual refresh to make an accepted source-owned change
+visible in a companion view.
+</p>
+
+<p>
+View-switch commands SHOULD raise or focus the companion view without silently
+moving or resizing the view from which the command was issued. View window
+geometry, open state, zoom, and viewport origin MAY be persisted as
+non-executable IDE metadata according to
+<a href="../Expression/IDE%20preferences.md"><code>Expression/IDE preferences.md</code></a>.
+</p>
+
+<p>
+The Source view MUST preserve canonical serialization rules and MUST NOT create
+a second textual language. When direct textual editing is supported, changes
+must pass structural and semantic validation before replacing the active
+Program Model. A read-only live source view is also conforming.
+</p>
 
 <hr/>
 

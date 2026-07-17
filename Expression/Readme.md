@@ -305,6 +305,22 @@ The FROG Expression is defined through the following documents in this directory
 </code></pre>
 
 <p>
+The canonical numeric vocabulary is specified separately in
+<a href="./Numeric%20representations.md"><code>Numeric representations.md</code></a>.
+It defines compact source tokens, canonical names, defaults, parameterized
+forms, migration rules, array propagation, and non-semantic visual type-family
+guidance shared by widgets, terminals, bindings, and interface ports.
+</p>
+
+<p>
+Public interface authoring that uses a visual slot pattern is specified in
+<a href="Interface%20map.md"><code>Interface map.md</code></a>. That document
+defines source-owned pattern selection, transforms, widget-value bindings,
+deterministic migration, and Array-binding transfer without moving executable
+dataflow authority out of the Diagram.
+</p>
+
+<p>
 The documents in this directory play four different roles:
 </p>
 

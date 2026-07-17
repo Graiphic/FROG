@@ -118,6 +118,7 @@ It relies on other specifications for concepts outside that scope.
   <li><code>Widget.md</code> defines widget classes and widget value semantics.</li>
   <li><code>Widget interaction.md</code> defines object-style widget access in the diagram.</li>
   <li><code>Connector.md</code>, when present, defines the graphical perimeter mapping used when a FROG is reused as a node.</li>
+  <li><code>Interface map.md</code> defines the selected Interface Layout Pattern and explicit Front Panel widget-value correspondence for public ports.</li>
   <li><code>Versioning/Readme.md</code> defines the centralized distinction between specification corpus version, top-level <code>spec_version</code>, and program artifact versioning.</li>
 </ul>
 
@@ -564,14 +565,22 @@ It only maps existing interface ports to graphical positions on the reusable nod
 </p>
 
 <p>
+The source-owned Interface Map is specified separately in
+<code>Interface map.md</code>. It records the selected layout pattern,
+transforms, and widget-value-to-public-port slot correspondence. A connector
+projection derived from that map MUST remain consistent with the same public
+port identities and MUST NOT rely on hidden IDE state.
+</p>
+
+<p>
 This mapping is done by referencing the interface port identifier and assigning it to a perimeter <code>slot</code>.
 </p>
 
 <pre><code>"connector": {
   "granularity": 40,
   "ports": [
-    { "interface_port": "a", "slot": 82 },
-    { "interface_port": "b", "slot": 94 },
+    { "interface_port": "a", "slot": 34 },
+    { "interface_port": "b", "slot": 36 },
     { "interface_port": "result", "slot": 14 }
   ]
 }</code></pre>
@@ -659,6 +668,8 @@ When a full FROG is validated, consistency checks MUST also include:
   <li>every <code>interface_output</code> node references an existing public output,</li>
   <li>the diagram does not contradict the declared public contract,</li>
   <li>the connector does not contradict the declared public contract.</li>
+  <li>the Interface Map does not reference an unknown pattern, slot, widget, or public port,</li>
+  <li>Interface Map widget role and value type agree with public port direction and type.</li>
 </ul>
 
 <p>

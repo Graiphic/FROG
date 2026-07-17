@@ -158,6 +158,14 @@ In practical terms:
 The connector does not define source-format compatibility policy and does not redefine the versioning meaning of top-level <code>spec_version</code>.
 </p>
 
+<p>
+The connector is also distinct from the source-owned Interface Map defined in
+<code>Interface map.md</code>. The Interface Map records an editor-visible
+layout pattern and explicit widget-value bindings. A reusable-node connector
+projection MAY be derived from that map, but it MUST preserve public port
+identity, direction, and type, and MUST NOT depend on transient IDE state.
+</p>
+
 <hr/>
 
 <h2 id="structure">5. Connector Structure</h2>
@@ -444,4 +452,5 @@ In short:
   <li><strong>interface</strong> defines <em>what</em> the Frog exposes</li>
   <li><strong>connector</strong> defines <em>how</em> that interface appears when the Frog is used as a reusable node</li>
   <li><strong>connector</strong> does not define source-format compatibility law or published specification corpus versioning</li>
+  <li><strong>interface.map</strong> records the selected Interface Layout Pattern and widget-value slot correspondence described by <code>Interface map.md</code></li>
 </ul>

@@ -21,6 +21,7 @@ Definition of the optional <code>icon</code> section of <strong>.frog</strong> p
   <li><a href="#location">5. Location in a <code>.frog</code> File</a></li>
   <li><a href="#purpose">6. Purpose of the Icon Section</a></li>
   <li><a href="#structure">7. Icon Object Structure</a></li>
+  <li><a href="#authoring-segmentation">7.1 Optional Authoring Segmentation</a></li>
   <li><a href="#svg-requirements">8. SVG Requirements</a></li>
   <li><a href="#coordinate-system-and-sizing">9. Coordinate System and Sizing</a></li>
   <li><a href="#embedding-and-formatting-rules">10. Embedding and Formatting Rules</a></li>
@@ -316,6 +317,56 @@ icon
 
 <hr/>
 
+<h3 id="authoring-segmentation">7.1 Optional Authoring Segmentation</h3>
+
+<p>
+The rendered icon remains the embedded <code>svg</code>. An editor MAY also
+preserve durable authoring segmentation so the icon can be reopened without
+merging every visible region into one opaque bitmap or one indivisible shape.
+</p>
+
+<pre>"icon": {
+  "size": 40,
+  "svg": "&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'&gt;...&lt;/svg&gt;",
+  "authoring": {
+    "model": "svg-regions-v1",
+    "regions": [
+      {
+        "id": "background",
+        "label": "Background",
+        "visible": true,
+        "locked": false,
+        "svg_element_ids": ["background-path"]
+      }
+    ]
+  }
+}</pre>
+
+<ul>
+  <li><code>authoring.model</code> identifies the durable authoring metadata model.</li>
+  <li><code>authoring.regions[]</code> describes independently selectable paint regions or logical groups.</li>
+  <li><code>regions[].svg_element_ids[]</code> references stable element ids in <code>icon.svg</code>.</li>
+  <li>Region visibility and order MAY be represented in the SVG itself or mirrored in authoring metadata, but both forms MUST agree when present.</li>
+</ul>
+
+<p>
+When importing SVG, an editor MAY normalize compound artwork into independent
+static SVG elements or paint regions so fill, erase, select, move, resize, and
+recolor operations target the visible region under the pointer. Such
+normalization MUST preserve the rendered result, vector geometry, clipping,
+transparency, and logical coordinate system. It MUST NOT rasterize an SVG merely
+because the standard preview is 40 x 40.
+</p>
+
+<p>
+The 40 x 40 value is a logical preview and authoring coordinate convention, not
+a raster-resolution requirement. SVG output MUST remain sharp at any supported
+render size. Raster imports MAY lose quality when scaled and SHOULD be embedded
+or converted through an explicit, source-visible policy.
+</p>
+
+<hr/>
+
 <h2 id="svg-requirements">8. SVG Requirements</h2>
 
 <p>
@@ -391,6 +442,8 @@ Recommended form:
 <p>
 Tools MAY scale icons for high-DPI or zoomed rendering.
 However, the source-level logical coordinate system SHOULD remain stable.
+The standard 40 x 40 preview does not require the SVG to be rasterized or
+sampled onto forty physical pixels.
 </p>
 
 <pre>Logical icon model
@@ -461,7 +514,10 @@ Example:
 <pre>"icon": {
   "size": 40,
   "svg": "&lt;svg&gt;...&lt;/svg&gt;",
-  "editable_layers": true,
+  "authoring": {
+    "model": "svg-regions-v1",
+    "regions": []
+  },
   "hint": {
     "category": "math",
     "preferred_bg": "dark"
@@ -537,6 +593,9 @@ They SHOULD NOT become a hidden transport for executable hints, runtime policies
   <li>The SVG SHOULD define a stable logical coordinate system compatible with the standard 40 x 40 grid.</li>
   <li>The SVG MUST be self-contained.</li>
   <li>The SVG MUST NOT alter executable meaning.</li>
+  <li>If <code>icon.authoring</code> is present, it MUST remain non-executable and safely ignorable by execution-facing systems.</li>
+  <li>Every <code>svg_element_ids</code> reference SHOULD resolve to a stable element id in <code>icon.svg</code>.</li>
+  <li>Normalization into independent regions MUST preserve the rendered vector result and MUST NOT rasterize SVG content implicitly.</li>
   <li>Implementations MAY apply stricter safety validation, including rejection of scripts or unsafe constructs.</li>
 </ul>
 

@@ -529,6 +529,27 @@ The array supports natural value participation through <code>widget_value</code>
 </p>
 
 <p>
+An empty Array with no element template is untyped. It MUST NOT expose a typed
+value terminal and MUST NOT participate in an interface-map binding until a
+compatible element widget or explicit element type is assigned. Once typed,
+the Array terminal, binding type, and redundant type-family color derive from
+the contained element type. A numeric Array therefore uses the exact numeric
+representation defined by its Numeric element template; an Array is not
+generically "numeric blue".
+</p>
+
+<p>
+When a bound scalar widget is encapsulated into an Array, a conforming authoring
+operation MUST update the corresponding diagram identity and binding in the
+same transaction. The relationship transfers to the typed Array value when the
+encapsulation is valid. The previous scalar terminal and interface-map slot
+association MUST NOT remain as an independent live relationship. Changing the
+contained element representation or changing between compatible control and
+indicator roles must likewise refresh the Array terminal and binding without a
+manual diagram refresh.
+</p>
+
+<p>
 Array viewport properties are first-class diagram targets. A LabVIEW-like
 property-node flow must be visible in <code>.frog</code>, preserved in FIR, and
 declared through lowering before the runtime consumes the native manifest and

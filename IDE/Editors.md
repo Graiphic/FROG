@@ -29,7 +29,7 @@ does it make the editor a normative implementation of FROG semantics.
     <tr>
       <td><a href="https://github.com/Graiphic/Graiphic-Studio">Graiphic Studio</a></td>
       <td>In development</td>
-      <td>Graiphic's user-facing authoring environment for creating and editing <code>.frog</code> documents.</td>
+      <td>Graiphic's user-facing authoring environment with coordinated Front Panel, Block Diagram, and live Source views for creating and editing <code>.frog</code> documents.</td>
     </tr>
   </tbody>
 </table>
@@ -85,6 +85,8 @@ widget contracts, and execution-facing handoff rules.
 
 <p>
 Graiphic Studio user documentation lives in
+<a href="https://graiphic.github.io/Graiphic-Studio/">the Graiphic Studio documentation site</a>
+and its source lives in
 <a href="https://github.com/Graiphic/Graiphic-Studio">Graiphic/Graiphic-Studio</a>.
 It should be read as product documentation for the editor, not as a replacement
 for the FROG specification.
@@ -92,8 +94,12 @@ for the FROG specification.
 
 <p>
 Current product documentation includes the
-<a href="https://github.com/Graiphic/Graiphic-Studio/blob/main/docs/interface/options.md">Studio Options</a>
-surface for editor themes, Front Panel grid defaults, and local Icon Editor
-glyph folders. Those settings remain editor preferences and do not redefine
-FROG source or runtime semantics.
+<a href="https://graiphic.github.io/Graiphic-Studio/#/docs/interface/window-workflow">coordinated window workflow</a>,
+<a href="https://graiphic.github.io/Graiphic-Studio/#/docs/interface/widget-navigator">Widget Navigator</a>,
+<a href="https://graiphic.github.io/Graiphic-Studio/#/docs/interface/function-navigator">Function Navigator</a>,
+<a href="https://graiphic.github.io/Graiphic-Studio/#/docs/interface/icon-editor">Icon Editor</a>, and
+<a href="https://graiphic.github.io/Graiphic-Studio/#/docs/interface/options">Studio Options</a>.
+Product UI behavior remains editor documentation. Canonical source shape,
+numeric representation identity, Array typing, interface-map bindings, and
+other cross-tool contracts remain owned by this public specification.
 </p>

@@ -257,41 +257,32 @@ data_type.named_numeric_size</code></pre>
 <p>
 The <code>data_type.representation</code> member is the machine-readable semantic carrier used by
 the diagram, FIR, lowering, native artifact contract, runtime, and host UI binding. The
-<code>data_type.named_numeric_size</code> member is the LabVIEW-like display name an IDE may show in
-the palette or property dialog.
+<code>data_type.named_numeric_size</code> member is the canonical human-readable name an IDE may
+show in a palette or property dialog.
 </p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Named size</th>
-      <th>Canonical representation</th>
-      <th>Meaning</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td><code>EXT</code></td><td><code>ext</code></td><td>extended precision floating point, host/backend defined</td></tr>
-    <tr><td><code>DBL</code></td><td><code>dbl</code></td><td>64-bit floating point</td></tr>
-    <tr><td><code>SGL</code></td><td><code>sgl</code></td><td>32-bit floating point</td></tr>
-    <tr><td><code>FXP</code></td><td><code>fxp</code></td><td>fixed-point numeric value with explicit fixed-point members</td></tr>
-    <tr><td><code>I64</code></td><td><code>i64</code></td><td>signed 64-bit integer</td></tr>
-    <tr><td><code>I32</code></td><td><code>i32</code></td><td>signed 32-bit integer</td></tr>
-    <tr><td><code>I16</code></td><td><code>i16</code></td><td>signed 16-bit integer</td></tr>
-    <tr><td><code>I8</code></td><td><code>i8</code></td><td>signed 8-bit integer</td></tr>
-    <tr><td><code>U64</code></td><td><code>u64</code></td><td>unsigned 64-bit integer</td></tr>
-    <tr><td><code>U32</code></td><td><code>u32</code></td><td>unsigned 32-bit integer</td></tr>
-    <tr><td><code>U16</code></td><td><code>u16</code></td><td>unsigned 16-bit integer</td></tr>
-    <tr><td><code>U8</code></td><td><code>u8</code></td><td>unsigned 8-bit integer</td></tr>
-    <tr><td><code>CXT</code></td><td><code>cxt</code></td><td>extended precision complex value, host/backend defined</td></tr>
-    <tr><td><code>CDB</code></td><td><code>cdb</code></td><td>complex value with double-precision components</td></tr>
-    <tr><td><code>CSG</code></td><td><code>csg</code></td><td>complex value with single-precision components</td></tr>
-  </tbody>
-</table>
+<p>
+The canonical vocabulary, exact source tokens, parameterized forms, migration
+rules, array propagation law, and reference visual type-family colors are
+defined in
+<a href="../../Expression/Numeric%20representations.md"><code>Expression/Numeric representations.md</code></a>.
+The baseline contains 16 main representations and 9 advanced representations.
+The advanced grouping is a discoverability tier, not a different semantic
+class.
+</p>
+
+<p>
+The standard Numeric widget default is <code>Float64</code> / <code>f64</code>.
+It accepts negative and fractional values. A representation change is
+source-owned and must propagate to the corresponding diagram terminal, typed
+array terminal, and compatible interface-map binding.
+</p>
 
 <p>
 Older reference material may still contain <code>representation.kind</code>. That member is a
-compatibility alias for the same source-owned concept and should be lowered to
-<code>data_type.representation</code> in new examples and runtime-facing artifacts.
+compatibility alias for the same source-owned concept and should be normalized to
+<code>data_type.representation</code> in new examples and runtime-facing artifacts. If both
+members are present, they MUST identify the same representation.
 </p>
 
 <p>

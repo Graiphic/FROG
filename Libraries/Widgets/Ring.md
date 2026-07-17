@@ -83,7 +83,7 @@ The family separates:
   <li><code>value.selected_id</code> - selected item identity for UI lookup and editing,</li>
   <li><code>value.selected_index</code> - selected item index when index access is required,</li>
   <li><code>value.selected_value</code> - scalar value carried by the selected item and published to the diagram,</li>
-  <li><code>data_type.representation</code> - numeric representation such as <code>u8</code>, <code>u16</code>, <code>u32</code>, <code>i16</code>, <code>i32</code>, <code>i64</code>, <code>sgl</code>, <code>dbl</code>, or equivalent implementation-supported numeric carrier,</li>
+  <li><code>data_type.representation</code> - numeric carrier from the canonical <a href="../../Expression/Numeric%20representations.md">numeric representation contract</a>; the standard default is <code>u16</code>,</li>
   <li><code>items[]</code> - source-owned item inventory,</li>
   <li><code>display.*</code> - selector display posture,</li>
   <li><code>interaction.*</code> - enabled, read-only, opened, and focus posture,</li>

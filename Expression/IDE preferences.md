@@ -391,17 +391,14 @@ Example:
 
 <pre>"diagram": {
   "background_color": "#202020",
-  "grid": {
-    "enabled": true,
-    "size": 10,
-    "snap": true
-  },
   "wires": {
     "style": "curved",
     "show_dots": false
   },
-  "zoom": {
-    "default": 1.0
+  "zoom_percent": 100,
+  "viewport_origin": {
+    "x": 0,
+    "y": 0
   }
 }</pre>
 
@@ -411,13 +408,29 @@ Suggested fields include:
 
 <ul>
   <li><code>background_color</code> — string color</li>
-  <li><code>grid.enabled</code> — boolean</li>
-  <li><code>grid.size</code> — integer</li>
-  <li><code>grid.snap</code> — boolean</li>
   <li><code>wires.style</code> — string such as <code>curved</code> or <code>orthogonal</code></li>
   <li><code>wires.show_dots</code> — boolean</li>
-  <li><code>zoom.default</code> — number</li>
+  <li><code>zoom_percent</code> — positive integer percentage for the document's authoring view</li>
+  <li><code>viewport_origin.x</code> — number identifying the diagram x-coordinate at the viewport's upper-left corner</li>
+  <li><code>viewport_origin.y</code> — number identifying the diagram y-coordinate at the viewport's upper-left corner</li>
 </ul>
+
+<p>
+The standardized diagram presentation baseline is a solid background. It does
+not define a document-level diagram grid. An IDE MAY expose transient alignment
+guides, but those guides are tool behavior and MUST NOT be serialized as a
+standard diagram grid or alter graph coordinates. This is intentionally
+different from the Front Panel, whose document-level grid and snap preferences
+are explicitly defined below.
+</p>
+
+<p>
+The zoom and viewport origin are document-level authoring state. A tool that
+cannot reproduce the exact zoom MAY use its closest supported value while
+preserving graph coordinates. Scrollbars, middle-button panning, and other
+navigation controls are editor mechanisms derived from viewport and content
+bounds; they do not change diagram meaning.
+</p>
 
 <p>
 These preferences affect authoring presentation only.
@@ -428,7 +441,7 @@ They MUST NOT affect canonical diagram meaning.
 Diagram preferences affect:
 - presentation
 - editing comfort
-- default editor behavior
+- reopen position and zoom
 
 Diagram preferences do not affect:
 - node identity
@@ -609,6 +622,20 @@ Example:
   },
   "history": {
     "remember_window_state": true
+  },
+  "views": {
+    "front_panel": {
+      "open": true,
+      "client_bounds": { "x": 80, "y": 60, "width": 1280, "height": 800 }
+    },
+    "diagram": {
+      "open": true,
+      "client_bounds": { "x": 140, "y": 90, "width": 1280, "height": 800 }
+    },
+    "source": {
+      "open": true,
+      "client_bounds": { "x": 200, "y": 120, "width": 900, "height": 760 }
+    }
   }
 }</pre>
 
@@ -621,7 +648,20 @@ Suggested fields include:
   <li><code>panes.show_properties</code> — boolean</li>
   <li><code>search.default_scope</code> — string</li>
   <li><code>history.remember_window_state</code> — boolean</li>
+  <li><code>views.front_panel</code>, <code>views.diagram</code>, and <code>views.source</code> — optional coordinated authoring-view state</li>
+  <li><code>views.*.open</code> — boolean reopen hint</li>
+  <li><code>views.*.client_bounds</code> — optional desktop client geometry with numeric <code>x</code>, <code>y</code>, <code>width</code>, and <code>height</code></li>
 </ul>
+
+<p>
+The Front Panel, Diagram, and Source views are three coordinated projections of
+one Program Model. Their window geometry is recoverable authoring state only.
+It MUST NOT be used as Front Panel runtime size or compilation layout intent.
+The useful Front Panel surface dimensions remain
+<code>front_panel.canvas.width</code> and <code>front_panel.canvas.height</code>.
+The Source view is a textual projection of canonical <code>.frog</code> source;
+it does not create a second source format.
+</p>
 
 <p>
 These fields are authoring conveniences only.
@@ -831,9 +871,9 @@ if they stay:
 <pre>"ide": {
   "diagram": {
     "background_color": "#202020",
-    "grid": { "enabled": true, "size": 10, "snap": true },
     "wires": { "style": "curved", "show_dots": false },
-    "zoom": { "default": 1.0 }
+    "zoom_percent": 100,
+    "viewport_origin": { "x": 0, "y": 0 }
   },
   "front_panel": {
     "background_color": "#FFFFFF",
@@ -853,7 +893,12 @@ if they stay:
   "workflow": {
     "panes": { "show_palette": true, "show_properties": true },
     "search": { "default_scope": "project" },
-    "history": { "remember_window_state": true }
+    "history": { "remember_window_state": true },
+    "views": {
+      "front_panel": { "open": true, "client_bounds": { "x": 80, "y": 60, "width": 1280, "height": 800 } },
+      "diagram": { "open": true, "client_bounds": { "x": 140, "y": 90, "width": 1280, "height": 800 } },
+      "source": { "open": true, "client_bounds": { "x": 200, "y": 120, "width": 900, "height": 760 } }
+    }
   }
 }</pre>
 
@@ -864,7 +909,8 @@ if they stay:
 <pre>"ide": {
   "diagram": {
     "background_color": "#202020",
-    "grid": { "enabled": true, "size": 10, "snap": true }
+    "zoom_percent": 100,
+    "viewport_origin": { "x": 0, "y": 0 }
   },
   "workflow": {
     "panes": { "show_palette": true, "show_properties": true }
