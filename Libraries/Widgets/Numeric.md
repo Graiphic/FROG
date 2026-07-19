@@ -394,26 +394,212 @@ The Default <code>.wfrog</code> realization may publish the parts needed to disp
 <h3>8.4 Data entry</h3>
 
 <ul>
-  <li><code>data_entry.minimum : numeric</code></li>
-  <li><code>data_entry.maximum : numeric</code></li>
+  <li><code>data_entry.use_type_defaults : bool</code></li>
+  <li><code>data_entry.minimum : numeric</code> when a custom lower limit is present</li>
+  <li><code>data_entry.maximum : numeric</code> when a custom upper limit is present</li>
+  <li><code>data_entry.minimum_response : enum</code> — <code>ignore</code> or <code>coerce</code></li>
+  <li><code>data_entry.maximum_response : enum</code> — <code>ignore</code> or <code>coerce</code></li>
   <li><code>data_entry.increment_step : numeric</code></li>
-  <li><code>data_entry.coerce_on_commit : bool</code></li>
-  <li><code>data_entry.response_to_out_of_range : enum</code> — <code>reject</code>, <code>coerce</code>, <code>warn</code>, or <code>allow_with_status</code></li>
+  <li><code>data_entry.increment_response : enum</code> — <code>ignore</code>, <code>nearest</code>, <code>up</code>, or <code>down</code></li>
+  <li><code>data_entry.page_step : numeric</code></li>
 </ul>
+
+<p>
+Data-entry policy applies to interactive user commits on a Numeric control. It
+does not silently rewrite programmatic Diagram/runtime writes, property writes,
+or indicator publication. The numeric representation remains authoritative for
+every path: unsigned representations cannot store negative values and integral
+representations store whole values.
+</p>
+
+<p>
+The lower and upper responses are independent. <code>ignore</code> accepts an
+out-of-range user value when the selected representation can store it.
+<code>coerce</code> clamps that value to the corresponding configured boundary.
+Changing a Data Entry property does not retroactively mutate the current value;
+the policy is applied by a later interactive commit or by an explicit validation
+operation.
+</p>
+
+<p>
+Increment response quantizes user input on a grid whose origin is the custom
+minimum when present, otherwise zero. <code>ignore</code> accepts off-grid input;
+<code>nearest</code>, <code>up</code>, and <code>down</code> select the corresponding
+grid point. An <code>increment_step</code> of zero disables custom quantization
+without disabling the control or its natural increment/decrement interaction.
+<code>page_step</code> is the standard FROG Page Up/Page Down interaction amount.
+An exact configured minimum or maximum remains accessible when it is not aligned
+with the increment grid; coercion to that boundary preserves the boundary value.
+</p>
+
+<pre><code>"data_entry.use_type_defaults": false,
+"data_entry.minimum": 0,
+"data_entry.maximum": 100,
+"data_entry.minimum_response": "coerce",
+"data_entry.maximum_response": "ignore",
+"data_entry.increment_step": 1,
+"data_entry.increment_response": "nearest",
+"data_entry.page_step": 10</code></pre>
+
+<h4>8.4.1 Interactive commit pipeline</h4>
+
+<p>
+An implementation MUST apply interactive Numeric input in the following order:
+</p>
+
+<ol>
+  <li>parse the edit text without applying Display Format decoration,</li>
+  <li>reject values that the selected numeric representation cannot store,</li>
+  <li>apply configured minimum and maximum coercion independently,</li>
+  <li>apply increment quantization when its response is not <code>ignore</code>,</li>
+  <li>convert integral representations to a whole value using the selected rounding posture,</li>
+  <li>reapply coercing limits so quantization cannot escape a required boundary,</li>
+  <li>commit the typed value and then regenerate its visible text through Display Format.</li>
+</ol>
+
+<p>
+The representation domain is unconditional. For example, a <code>u16</code>
+control rejects negative input even when a custom minimum response is
+<code>ignore</code>. Integral representations do not retain a fractional value:
+<code>nearest</code> and the default posture round to the nearest integer,
+<code>up</code> uses the next integer toward positive infinity, and
+<code>down</code> uses the next integer toward negative infinity. Interactive
+<code>NaN</code> and infinity text is rejected by the standard Numeric editor;
+applications that exchange such floating values through dataflow MUST handle
+them explicitly.
+</p>
+
+<h4>8.4.2 Defaults, roles, and failure behavior</h4>
+
+<p>
+When <code>data_entry.use_type_defaults</code> is true, custom Data Entry
+members are ignored and the representation supplies its natural domain.
+Signed integers use their signed bit range, unsigned integers start at zero,
+and floating representations use their finite storage domain. The natural
+increment/decrement interaction step is one unless a realization publishes a
+more specific compatible step.
+</p>
+
+<p>
+Data Entry governs Numeric controls because they accept interactive commits.
+Numeric indicators may retain the properties for roundtrip and role switching,
+but published indicator values are not coerced by them. Invalid settings, such
+as a minimum greater than the maximum, a negative increment, a non-positive
+page step, or a custom bound outside the representation domain, MUST prevent the
+settings transaction from being accepted and MUST leave the widget unchanged.
+</p>
 
 <h3>8.5 Display format</h3>
 
 <ul>
-  <li><code>display.format_kind : enum</code> — <code>default</code>, <code>decimal</code>, <code>scientific</code>, <code>engineering</code>, <code>hex</code>, <code>binary</code>, <code>octal</code>, or <code>custom</code></li>
-  <li><code>display.format_string : string</code></li>
-  <li><code>display.precision_digits : u32</code></li>
-  <li><code>display.radix_visible : bool</code></li>
+  <li><code>display.format.kind : enum</code> - <code>automatic</code>, <code>fixed</code>, <code>scientific</code>, <code>engineering</code>, <code>si</code>, <code>decimal</code>, <code>hexadecimal</code>, <code>binary</code>, <code>octal</code>, or <code>custom</code></li>
+  <li><code>display.format.digits : u32</code> - clamped to <code>1..18</code></li>
+  <li><code>display.format.precision_type : enum</code> - <code>fractional</code> or <code>significant</code></li>
+  <li><code>display.format.hide_trailing_zeros : bool</code></li>
+  <li><code>display.format.exponent_multiple_of_3 : bool</code></li>
+  <li><code>display.format.minimum_field_width : u32</code> - minimum only, never a truncation width</li>
+  <li><code>display.format.padding : enum</code> - <code>none</code>, <code>spaces</code>, or <code>zeros</code></li>
+  <li><code>display.format.alignment : enum</code> - <code>left</code> or <code>right</code></li>
+  <li><code>display.format.sign : enum</code> - <code>negative_only</code>, <code>always</code>, or <code>space_positive</code></li>
+  <li><code>display.format.locale : enum</code> - <code>invariant</code> or <code>system</code></li>
+  <li><code>display.format.prefix : string</code> - decorative text before the formatted value</li>
+  <li><code>display.format.suffix : string</code> - decorative text after the formatted value</li>
+  <li><code>display.format.radix.show_prefix : bool</code></li>
+  <li><code>display.format.radix.uppercase : bool</code></li>
+  <li><code>display.format.radix.group_size : u32</code> - <code>0..8</code>, where zero disables grouping</li>
+  <li><code>display.format.radix.interpretation : enum</code> - <code>numeric</code> or <code>raw_bits</code></li>
+  <li><code>display.format.custom_string : string</code> - expert/import format with one safe conversion</li>
   <li><code>display.increment_buttons_visible : bool</code></li>
   <li><code>display.increment_buttons_side : enum</code> - <code>right</code> or <code>left</code> when increment/decrement buttons are visible.</li>
   <li><code>display.unit_visible : bool</code> - when supported by the realization, render the unit inside <code>text_value</code>.</li>
   <li><code>display.unit_suffix : string</code> - optional unit suffix included in the formatted value text.</li>
   <li><code>display.text_width_chars : u32</code></li>
 </ul>
+
+<p>
+Display Format is a presentation-only contract. It must not change the numeric
+representation, stored value, calculation precision, Data Entry policy, Diagram
+terminal type, or binding color. A Numeric control keeps raw in-progress edit
+text separate from its committed typed value; the formatted text is restored
+after a successful commit. Numeric indicators format every published value
+without rewriting it.
+</p>
+
+<p>
+<code>fractional</code> precision counts digits after the decimal separator.
+<code>significant</code> precision counts meaningful digits across the complete
+value. <code>exponent_multiple_of_3</code> converts scientific output to
+engineering posture. <code>si</code> uses standard SI exponent prefixes when the
+exponent is representable and falls back to engineering notation otherwise.
+</p>
+
+<p>
+Radix formatting is available for integral representations. In
+<code>numeric</code> interpretation a signed value retains its sign. In
+<code>raw_bits</code> interpretation the complete storage-width bit pattern is
+shown; hexadecimal, octal, and binary digits are padded to the selected numeric
+representation width before optional grouping. Source JSON and executable
+artifacts remain locale-independent even when <code>locale=system</code> changes
+the visible decimal separator.
+</p>
+
+<p>
+The expert format accepts one conversion among <code>f</code>, <code>e</code>,
+<code>g</code>, <code>p</code>, <code>d</code>, <code>u</code>, <code>x</code>,
+<code>X</code>, <code>o</code>, and <code>b</code>. It supports the safe modifiers
+<code>-</code>, <code>+</code>, <code>#</code>, <code>^</code>, <code>0</code>,
+minimum width, <code>.N</code> fractional precision, <code>_N</code> significant
+precision, and <code>%%</code> literals. Additional conversions are rejected.
+Timestamp and Duration are distinct typed widget families and are not Numeric
+Display Format variants.
+</p>
+
+<pre><code>"display.format.kind": "si",
+"display.format.digits": 4,
+"display.format.precision_type": "significant",
+"display.format.hide_trailing_zeros": true,
+"display.format.exponent_multiple_of_3": false,
+"display.format.minimum_field_width": 0,
+"display.format.padding": "none",
+"display.format.alignment": "right",
+"display.format.sign": "negative_only",
+"display.format.locale": "system",
+"display.format.prefix": "",
+"display.format.suffix": " V",
+"display.format.radix.show_prefix": false,
+"display.format.radix.uppercase": true,
+"display.format.radix.group_size": 0,
+"display.format.radix.interpretation": "numeric",
+"display.format.custom_string": "%.6g"</code></pre>
+
+<p>
+Typed Array cells inherit the Display Format contract from their contained
+Numeric element template. The Array does not replace the Numeric formatter with
+a generic cell formatter.
+</p>
+
+<h4>8.5.1 Formatting pipeline</h4>
+
+<p>
+The standard formatting pipeline is value preserving:
+</p>
+
+<ol>
+  <li>read the committed typed value,</li>
+  <li>select notation and precision rules compatible with its representation,</li>
+  <li>apply sign, radix, case, and grouping rules,</li>
+  <li>apply minimum width, alignment, and padding without truncation,</li>
+  <li>apply decorative prefix and suffix text,</li>
+  <li>publish the resulting display string.</li>
+</ol>
+
+<p>
+The formatter MUST NOT feed its rounded or decorated text back into the stored
+numeric value. A live preview in an editor MUST use the same formatter as the
+Front Panel realization. Changing locale affects only visible separators;
+serialized <code>.frog</code> numeric literals remain invariant. Timestamp and
+Duration formatting are outside this Numeric contract.
+</p>
 
 <h3>8.6 Key bindings</h3>
 
@@ -534,8 +720,9 @@ The numeric family supports natural value participation through <code>widget_val
 
 <ul>
   <li>numeric controls accept user-originated editing only when enabled and not read-only,</li>
-  <li>increment and decrement use <code>data_entry.increment_step</code>,</li>
-  <li>commits respect <code>data_entry.response_to_out_of_range</code>,</li>
+  <li>interactive commits respect the selected representation and <code>data_entry.*</code> policies,</li>
+  <li>increment and decrement use a positive <code>data_entry.increment_step</code>, or their natural step when the configured step is zero,</li>
+  <li>programmatic dataflow writes bypass Data Entry policy while remaining subject to representation validity,</li>
   <li>formatting follows <code>display.*</code>,</li>
   <li>representation changes must preserve or explicitly convert numeric meaning according to the active validation posture.</li>
 </ul>
@@ -579,8 +766,8 @@ Validators SHOULD diagnose at least:
   <li>fixed-point members used without <code>data_type.representation = fxp</code>,</li>
   <li>runtime-facing examples whose native artifact ABI type does not match the source-owned numeric representation,</li>
   <li>minimum greater than maximum,</li>
-  <li>non-positive increment steps for increment/decrement posture,</li>
-  <li>out-of-range values where the configured response forbids them,</li>
+  <li>negative increment steps,</li>
+  <li>custom limits outside the selected representation domain,</li>
   <li>unsupported public members,</li>
   <li>attempts to treat realization-only spinner internals as public class members.</li>
 </ul>
