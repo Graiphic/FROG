@@ -152,6 +152,8 @@ The current IDE-facing repository family is organized as follows:
 │   -&gt; this document, the architectural entry point
 ├── Palette.md
 │   -&gt; palette model for the active insertable space
+├── Context Help.md
+│   -&gt; modeless source-object discoverability and documentation-link behavior
 ├── Express.md
 │   -&gt; guided authoring and normalization to canonical content
 ├── Observability.md
@@ -459,6 +461,8 @@ The IDE layer is currently organized as follows:
 │   -&gt; palette model for the active insertable space, including primitives,
 │      structures, node insertions, annotations, guided entries,
 │      conditional profile-defined entries, and third-party entries
+├── Context Help.md
+│   -&gt; live source-object descriptions, stable catalog identity, and detailed-help links
 ├── Express.md
 │   -&gt; guided Express authoring model and normalization to canonical FROG content
 ├── Authoring provenance.md

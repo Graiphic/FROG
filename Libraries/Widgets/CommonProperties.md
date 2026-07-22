@@ -98,8 +98,8 @@ browser-hosted example.
     </tr>
     <tr>
       <td>Documentation</td>
-      <td><code>documentation.description</code>, <code>documentation.tip_strip</code></td>
-      <td>Human-oriented description and tooltip-style help text. It is not a semantic value.</td>
+      <td><code>documentation.description</code>, <code>documentation.tip_strip</code>, <code>documentation.url</code></td>
+      <td>Human-oriented description, tooltip-style help text, and an optional detailed-help URL. They are discoverability metadata, not semantic values.</td>
     </tr>
     <tr>
       <td>Visibility and enabled state</td>

@@ -349,16 +349,29 @@ In v0.1:
 
 <h3>10.1 <code>frog.core.add</code></h3>
 
-<p>Adds two numeric values.</p>
+<p>Adds two or more numeric values.</p>
 
 <ul>
-  <li>input ports: <code>a</code>, <code>b</code></li>
+  <li>required input ports: <code>a</code>, <code>b</code></li>
+  <li>optional ordered input ports: <code>input_3</code>, <code>input_4</code>, ...</li>
   <li>output port: <code>result</code></li>
 </ul>
 
 <p>
 The operands MUST be numeric and type-compatible under the FROG type rules.
-The output type is the resolved numeric result type.
+The output type is the resolved numeric result type across every connected
+operand. Implementations MUST evaluate connected operands in canonical port
+order: <code>a</code>, <code>b</code>, then increasing <code>input_N</code>
+suffixes. Before evaluation, each operand MUST be coerced to the resolved
+result type so a variadic addition remains deterministic.
+</p>
+
+<p>
+An editor MAY expose unused optional input slots before they are connected.
+Those authoring slots do not participate in execution and MUST NOT be inferred
+from presentation geometry by a runtime. A connected <code>input_N</code> edge,
+not the displayed node height, establishes that the optional operand
+participates in the executable graph.
 </p>
 
 <h3>10.2 <code>frog.core.sub</code></h3>

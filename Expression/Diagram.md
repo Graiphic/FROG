@@ -400,7 +400,18 @@ Rules:
   <li><code>type</code> MUST identify a valid primitive in the active catalog or profile.</li>
   <li>Primitive identifiers SHOULD use canonical namespaces such as <code>frog.core.*</code>, <code>frog.ui.*</code>, or another standardized library namespace.</li>
   <li>Primitive meaning and port signature are defined by the referenced primitive definition.</li>
+  <li>A primitive definition MAY expose a canonical extensible port family. Edges MUST address each such port by its stable canonical identifier.</li>
+  <li>Editor geometry MAY expose unused extensible-port slots, but layout metadata MUST NOT create executable operands or alter primitive semantics.</li>
 </ul>
+
+<p>
+For example, <code>frog.core.add</code> always exposes <code>a</code> and
+<code>b</code>, and may receive additional ordered operands through
+<code>input_3</code>, <code>input_4</code>, and later canonical port identifiers.
+Only connected optional ports participate in the validated graph. A node
+<code>layout.height</code> value may preserve the editor's expanded shape, but
+it is not a substitute for those edge port identifiers.
+</p>
 
 <p>
 Primitive nodes include ordinary computational functions,
@@ -746,7 +757,11 @@ Edges define directed graph connectivity.
 <pre><code>{
   "id": "e1",
   "from": { "node": "input_a", "port": "value" },
-  "to":   { "node": "add_1",   "port": "a" }
+  "to":   { "node": "add_1",   "port": "a" },
+  "bends": [
+    { "x": 180, "y": 104 },
+    { "x": 180, "y": 92 }
+  ]
 }</code></pre>
 
 <p>
@@ -760,6 +775,14 @@ Every edge MUST define:
   <li><code>to.node</code> — destination node identifier,</li>
   <li><code>to.port</code> — destination input port identifier.</li>
 </ul>
+
+<p>
+An edge MAY define an optional <code>bends</code> array that preserves its editor route.
+Each bend MUST contain finite numeric <code>x</code> and <code>y</code> coordinates in diagram space.
+Bends are ordered from the source endpoint toward the destination endpoint.
+They are layout metadata and MUST NOT alter the directed connectivity or validated execution semantics of the edge.
+When <code>bends</code> is absent or empty, an editor MAY choose any route that preserves the same connectivity.
+</p>
 
 <h3>12.2 Edge validity</h3>
 
@@ -781,7 +804,15 @@ An edge is valid only if all of the following hold:
 <ul>
   <li>An output port MAY drive multiple destination ports when type compatibility holds.</li>
   <li>An input port MUST NOT have more than one incoming edge unless a stricter structure-specific rule explicitly defines otherwise.</li>
+  <li>All edges with the same <code>from.node</code> and <code>from.port</code> MUST be interpreted as branches of one logical dataflow net.</li>
+  <li>Fan-out remains serialized as one directed edge per destination; it MUST NOT require an executable junction node.</li>
 </ul>
+
+<p>
+Editors MAY give branches of the same logical net shared route coordinates and render an internal junction marker at a shared point.
+Such a marker is a graphical representation of fan-out, not a node and not an additional source of data.
+A geometric crossing between edges from different source ports MUST NOT be interpreted as a junction merely because their routes intersect.
+</p>
 
 <h3>12.4 Scope locality</h3>
 
@@ -850,7 +881,8 @@ Typical layout fields include:
   <li><code>x</code>,</li>
   <li><code>y</code>,</li>
   <li><code>width</code>,</li>
-  <li><code>height</code>.</li>
+  <li><code>height</code>,</li>
+  <li><code>bends</code> on an edge for ordered wire-routing points.</li>
 </ul>
 
 <p>

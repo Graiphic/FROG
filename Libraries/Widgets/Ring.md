@@ -327,6 +327,7 @@ families shown by LabVIEW without copying LabVIEW internals:
 <ul>
   <li><code>documentation.description : string</code></li>
   <li><code>documentation.tip_strip : string</code></li>
+  <li><code>documentation.url : string</code></li>
   <li><code>binding.data_binding_ref : string</code></li>
   <li><code>binding.control_index : u32</code></li>
 </ul>
