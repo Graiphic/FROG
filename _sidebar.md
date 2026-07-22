@@ -322,6 +322,7 @@
   - [UI Widget Classes](/Profiles/UI%20Widget%20Classes.md)
 - [IDE](/IDE/Readme.md)
   - [Authoring provenance](/IDE/Authoring%20provenance.md)
+  - [Context Help](/IDE/Context%20Help.md)
   - [Debugging](/IDE/Debugging.md)
   - [Editors](/IDE/Editors.md)
   - [Express](/IDE/Express.md)

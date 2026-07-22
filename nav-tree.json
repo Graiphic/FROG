@@ -2333,6 +2333,13 @@
               "children": []
             },
             {
+              "key": "ide/context-help.md",
+              "title": "Context Help",
+              "path": "/IDE/Context%20Help.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "ide/debugging.md",
               "title": "Debugging",
               "path": "/IDE/Debugging.md",
@@ -5581,6 +5588,7 @@
     "/Profiles/UI%20Widget%20Classes.md",
     "/Profiles/Readme.md",
     "/IDE/Authoring%20provenance.md",
+    "/IDE/Context%20Help.md",
     "/IDE/Debugging.md",
     "/IDE/Editors.md",
     "/IDE/Express.md",
