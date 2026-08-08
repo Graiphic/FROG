@@ -917,7 +917,7 @@ Dependency fields:
 
 <ul>
   <li><code>name</code> — logical identifier used by <code>subfrog.ref</code>,</li>
-  <li><code>path</code> — relative path or equivalent source reference.</li>
+  <li><code>path</code> — normalized portable path to the referenced <code>.frog</code> source.</li>
 </ul>
 
 <p>
@@ -928,7 +928,21 @@ Rules:
   <li>Dependency names MUST be unique within the diagram.</li>
   <li>A <code>subfrog.ref</code> value MUST match one declared dependency name.</li>
   <li>The referenced dependency MUST resolve to a FROG whose interface can define the node boundary.</li>
+  <li><code>path</code> MUST be relative to the directory containing the declaring FROG document.</li>
+  <li><code>path</code> MUST use <code>/</code> as its serialized separator and MUST be lexically normalized.</li>
+  <li><code>path</code> MUST NOT be an absolute operating-system path, a Windows drive path, a UNC path, a rooted POSIX path, or a <code>file:</code> URI.</li>
+  <li>Resolution MUST NOT depend on the process working directory. Tools MUST resolve <code>path</code> from the declaring FROG document location.</li>
+  <li>Parent segments such as <code>../shared/filter.frog</code> MAY be used when permitted by the active workspace or package source-root policy.</li>
+  <li>When a document is moved or saved under another path, authoring tools MUST rebase <code>path</code> while preserving the logical <code>name</code> used by <code>subfrog.ref</code>.</li>
+  <li>An absolute path MAY be accepted only as a legacy authoring input. It MUST be converted to a portable relative path before canonical source is written.</li>
+  <li>An unresolved or non-portable dependency MUST produce a diagnostic; a tool MUST NOT silently serialize an absolute fallback.</li>
 </ul>
+
+<p>
+Non-file dependency sources, including registries, package identities, and network locations, require an explicitly
+discriminated source-reference form. They MUST NOT be encoded by overloading <code>path</code> with a URI or a
+machine-local locator.
+</p>
 
 <hr/>
 
