@@ -309,13 +309,36 @@ def _collect_diagram_node_map(
 
     nodes = diagram.get("nodes", [])
     edges = diagram.get("edges", [])
+    wire_fragments = diagram.get("wire_fragments", [])
 
-    if not _is_array(nodes) or not _is_array(edges):
+    if not _is_array(nodes) or not _is_array(edges) or not _is_array(wire_fragments):
         return (
             _fail(
                 "structural_invalid",
                 source_ref,
-                [_diag("invalid_diagram_collections", "'diagram.nodes' and 'diagram.edges' must be arrays.")],
+                [
+                    _diag(
+                        "invalid_diagram_collections",
+                        "'diagram.nodes', 'diagram.edges', and optional 'diagram.wire_fragments' must be arrays.",
+                    )
+                ],
+            ),
+            {},
+            [],
+        )
+
+    if wire_fragments:
+        return (
+            _fail(
+                "semantic_rejected",
+                source_ref,
+                [
+                    _diag(
+                        "incomplete_wire_fragments",
+                        "The diagram contains incomplete authoring wires; repair or remove them before validation.",
+                        location="diagram.wire_fragments",
+                    )
+                ],
             ),
             {},
             [],

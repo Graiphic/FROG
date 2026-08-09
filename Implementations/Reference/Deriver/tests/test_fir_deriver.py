@@ -39,3 +39,17 @@ def test_unsupported_source_pattern_reports_derivation_error() -> None:
 
     with pytest.raises(DerivationError, match="unsupported source pattern"):
         derive_fir_from_source(source, "Examples/unsupported/main.frog")
+
+
+def test_incomplete_wire_fragments_block_fir_derivation() -> None:
+    source = load_json("Examples/01_pure_addition/main.frog")
+    source["diagram"]["wire_fragments"] = [
+        {
+            "id": "fragment_1",
+            "points": [{"x": 10, "y": 20}, {"x": 40, "y": 20}],
+            "source": {"node": "in_a", "port": "value"},
+        }
+    ]
+
+    with pytest.raises(DerivationError, match="incomplete wire fragments"):
+        derive_fir_from_source(source, "Examples/01_pure_addition/main.frog")

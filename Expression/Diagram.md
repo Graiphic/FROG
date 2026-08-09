@@ -181,12 +181,13 @@ In this source shape:
 <h2 id="diagram-structure">5. Diagram Structure</h2>
 
 <p>
-The <code>diagram</code> object contains up to four fields:
+The <code>diagram</code> object contains up to five fields:
 </p>
 
 <pre><code>"diagram": {
   "nodes": [],
   "edges": [],
+  "wire_fragments": [],
   "dependencies": [],
   "annotations": []
 }</code></pre>
@@ -198,6 +199,7 @@ Fields:
 <ul>
   <li><code>nodes</code> — required array of graph nodes,</li>
   <li><code>edges</code> — required array of directed graph connections,</li>
+  <li><code>wire_fragments</code> — optional array preserving non-executable, incomplete wire geometry during authoring,</li>
   <li><code>dependencies</code> — optional array of referenced external FROGs,</li>
   <li><code>annotations</code> — optional array of visible diagram annotations.</li>
 </ul>
@@ -209,6 +211,7 @@ Rules:
 <ul>
   <li><code>nodes</code> MUST exist and MUST be an array.</li>
   <li><code>edges</code> MUST exist and MUST be an array.</li>
+  <li><code>wire_fragments</code> MAY be omitted when no incomplete wire exists.</li>
   <li><code>dependencies</code> MAY be omitted when unused.</li>
   <li><code>annotations</code> MAY be omitted when unused.</li>
 </ul>
@@ -261,8 +264,6 @@ unless a structure-specific rule explicitly states otherwise.
 An edge MUST connect nodes within the same diagram scope.
 Cross-scope communication MUST occur only through the explicit mechanisms defined by structure boundaries.
 </p>
-
-<hr/>
 
 <h2 id="conceptual-model">7. Conceptual Model</h2>
 
@@ -820,6 +821,52 @@ A geometric crossing between edges from different source ports MUST NOT be inter
 An edge MUST connect nodes within the same diagram scope.
 Cross-scope communication MUST occur only through the explicit mechanisms defined by structure boundaries.
 </p>
+
+<h3>12.5 Incomplete authoring wire fragments</h3>
+
+<p>
+An editor MAY preserve the result of cutting or partially deleting wire geometry in
+the optional <code>wire_fragments</code> array. A wire fragment is authoring state: it
+is not an edge, does not carry executable connectivity, and MUST NOT be lowered to
+FIR or interpreted as dataflow.
+</p>
+
+<pre><code>{
+  "id": "wire_fragment_1",
+  "points": [
+    { "x": 180, "y": 104 },
+    { "x": 260, "y": 104 }
+  ],
+  "source": { "node": "input_a", "port": "value" },
+  "type_hint": "u8"
+}</code></pre>
+
+<p>Every wire fragment MUST define:</p>
+
+<ul>
+  <li><code>id</code> — a unique fragment identifier within the owning diagram scope,</li>
+  <li><code>points</code> — at least two ordered finite points describing one connected orthogonal polyline.</li>
+</ul>
+
+<p>A wire fragment MAY define:</p>
+
+<ul>
+  <li><code>source</code> — the output endpoint still attached to the first point,</li>
+  <li><code>sink</code> — the input endpoint still attached to the last point,</li>
+  <li><code>type_hint</code> — a presentation hint for editor diagnostics and wire color.</li>
+</ul>
+
+<p>Rules:</p>
+
+<ul>
+  <li>At least one end of a fragment MUST remain loose; a complete source-to-sink connection MUST be represented as an ordinary <code>edge</code>.</li>
+  <li>An endpoint reference, when present, MUST identify a legal port in the owning diagram scope.</li>
+  <li><code>source</code> and <code>sink</code> are diagnostic anchors only; their presence MUST NOT make a fragment executable.</li>
+  <li><code>type_hint</code> MUST NOT establish or repair type semantics. A validator MAY ignore it.</li>
+  <li>Crossings between fragments, edges, or both MUST NOT create a junction by geometry alone.</li>
+  <li>The presence of any wire fragment MUST produce a semantic diagnostic and MUST block FIR derivation until the fragment is repaired or removed.</li>
+  <li>A runtime or compiler MUST NOT infer an edge from fragment geometry.</li>
+</ul>
 
 <hr/>
 

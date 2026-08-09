@@ -329,6 +329,7 @@ Diagnostics should remain source-aligned and should preserve enough attribution 
   <li>Preserve enough source identity for later attribution.</li>
   <li>Keep the supported slice narrow and coherent.</li>
   <li>Keep downstream derivation unavailable until validation has succeeded.</li>
+  <li>Reject non-empty <code>diagram.wire_fragments</code> as incomplete authoring state before downstream derivation.</li>
   <li>Keep implementation convenience downstream from published repository law.</li>
 </ul>
 

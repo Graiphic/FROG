@@ -236,6 +236,7 @@ The following are invalid for semantic acceptance:
   <li>unknown executable node family with no published extension or profile rule,</li>
   <li>known node with incompatible port count, direction, or type use,</li>
   <li>edge endpoint that does not exist or is not legal for dataflow,</li>
+  <li>one or more incomplete <code>diagram.wire_fragments</code> that have not been repaired or removed,</li>
   <li>type mismatch with no published conversion rule,</li>
   <li>structure boundary crossing without an explicit legal terminal or tunnel,</li>
   <li>cycle that requires hidden memory or scheduler repair,</li>

@@ -54,6 +54,7 @@ class SourceGraph:
     @classmethod
     def from_source(cls, source: dict[str, Any]) -> "SourceGraph":
         diagram = require_object(source.get("diagram"), "source.diagram")
+        require_no_wire_fragments(diagram)
         nodes_raw = require_list(diagram.get("nodes"), "source.diagram.nodes")
         edges = require_list(diagram.get("edges"), "source.diagram.edges")
         nodes: dict[str, dict[str, Any]] = {}
@@ -105,6 +106,14 @@ class SourceGraph:
         if not isinstance(value_type, str):
             raise DerivationError(f"constant {node_id} has no string type")
         return value_type, node.get("value")
+
+
+def require_no_wire_fragments(diagram: dict[str, Any]) -> None:
+    fragments = require_list(diagram.get("wire_fragments", []), "source.diagram.wire_fragments")
+    if fragments:
+        raise DerivationError(
+            "source.diagram contains incomplete wire fragments; repair or remove them before FIR derivation"
+        )
 
 
 def require_object(value: Any, name: str) -> dict[str, Any]:
@@ -1001,6 +1010,8 @@ def try_rule(rule: DerivationRule, source: dict[str, Any], source_rel: str) -> R
 
 
 def derive_fir_from_source(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    diagram = require_object(source.get("diagram"), "source.diagram")
+    require_no_wire_fragments(diagram)
     attempts = [try_rule(rule, source, source_rel) for rule in DERIVATION_RULES]
     matches = [attempt for attempt in attempts if attempt.result is not None]
 
