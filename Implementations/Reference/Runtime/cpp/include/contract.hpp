@@ -75,7 +75,7 @@ struct WidgetReferenceSupport {
     std::vector<std::string> supported_members;
 };
 
-struct UiBinding {
+struct ContractUiBinding {
     std::vector<std::string> package_refs;
     std::vector<WidgetBinding> widgets;
     std::vector<WidgetReferenceSupport> widget_reference_support;
@@ -128,7 +128,7 @@ struct ContractUnit {
     std::string unit_id;
     std::string kind;
     PublicInterface public_interface;
-    UiBinding ui_binding;
+    ContractUiBinding ui_binding;
     StateModel state_model;
     ExecutionModel execution_model;
     std::vector<PropertyWrite> property_writes;

@@ -6,6 +6,12 @@ import json
 from pathlib import Path
 from typing import Any
 
+from Implementations.Reference.Runtime.boolean_runtime import (
+    BooleanRuntimeModelError,
+    build_boolean_roundtrip_artifact,
+    merge_default_widget_properties,
+)
+
 
 class ContractExecutionError(RuntimeError):
     """Raised when a reference backend contract cannot be executed."""
@@ -424,107 +430,11 @@ def execute_boolean_value_roundtrip_ui_unit(contract: dict[str, Any], unit: dict
         raise ContractExecutionError("input_value must be a boolean")
 
     panel = support_main_panel(contract, support_artifacts)
-    widgets_by_id: dict[str, dict[str, Any]] = {}
-    for widget in require_list(panel.get("widgets"), "wfrog.front_panels[0].widgets"):
-        obj = require_object(widget, "wfrog widget")
-        widget_id = obj.get("instance_id")
-        if not isinstance(widget_id, str):
-            raise ContractExecutionError("wfrog widget instance_id must be a string")
-        widgets_by_id[widget_id] = obj
-
-    for widget_id in ("bool_input", "bool_result"):
-        if widget_id not in widgets_by_id:
-            raise ContractExecutionError(f"boolean_value_roundtrip_ui_unit requires widget {widget_id}")
-
-    def widget_runtime(widget_id: str, value: bool) -> dict[str, Any]:
-        widget = widgets_by_id[widget_id]
-        props = require_object(widget.get("props"), f"wfrog widget {widget_id}.props")
-        visual = require_object(widget.get("visual"), f"wfrog widget {widget_id}.visual")
-        runtime = {
-            "value": value,
-            "label.text": props.get("label.text"),
-            "caption.text": props.get("caption.text"),
-            "state_text.true_text": props.get("state_text.true_text"),
-            "state_text.false_text": props.get("state_text.false_text"),
-            "asset_ref": visual.get("asset_ref"),
-            "realization.variant": props.get("realization.variant"),
-        }
-        for member in (
-            "state_text.style.text_color.false",
-            "state_text.style.text_color.true",
-            "state_text.style.font_size",
-            "state_text.style.font_weight",
-            "state_text.visible",
-            "caption.visible",
-            "caption.anchor.x",
-            "caption.anchor.y",
-            "caption.align.horizontal",
-            "caption.style.text_color",
-            "caption.style.font_family",
-            "caption.style.font_size",
-            "caption.style.font_weight",
-            "style.frame.visible",
-            "style.outer.border_color.false",
-            "style.outer.border_color.true",
-            "style.outer.border_color.hover_false",
-            "style.outer.border_color.hover_true",
-            "style.outer.border_color.pressed_false",
-            "style.outer.border_color.pressed_true",
-            "style.inner.fill_color.false",
-            "style.inner.fill_color.true",
-            "style.inner.fill_color.hover_false",
-            "style.inner.fill_color.hover_true",
-            "style.inner.fill_color.pressed_false",
-            "style.inner.fill_color.pressed_true",
-            "style.inner.border_color.false",
-            "style.inner.border_color.true",
-            "style.inner.border_color.hover_false",
-            "style.inner.border_color.hover_true",
-            "style.inner.border_color.pressed_false",
-            "style.inner.border_color.pressed_true",
-            "style.inner.left",
-            "style.inner.top",
-            "style.inner.width",
-            "style.inner.height",
-            "style.focus_ring.visible",
-            "style.focus_ring.color",
-            "style.focus_ring.width",
-            "style.pressed.inset",
-            "style.transition.duration_ms",
-            "style.transition.timing",
-        ):
-            if member in props:
-                runtime[member] = props[member]
-        return runtime
-
-    return {
-        "artifact_kind": "frog_runtime_execution_result",
-        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
-        "status": "ok",
-        "contract_ref": {"unit_ids": [unit.get("unit_id")], "backend_family": contract.get("backend_family"), "source_ref": contract.get("source_ref")},
-        "execution_summary": {"mode": "boolean_value_roundtrip", "executed_unit": unit.get("unit_id"), "operation": "copy", "input_value": input_value, "result": input_value},
-        "outputs": {"public": {"result": input_value}, "ui": {"bool_input": input_value, "bool_result": input_value}},
-        "ui_runtime": {
-            "panel": {"panel_id": panel.get("panel_id"), "title": panel.get("title"), "class_ref": panel.get("class_ref"), "layout": panel.get("layout")},
-            "widgets": [
-                {
-                    "widget_id": "bool_input",
-                    "class_ref": widgets_by_id["bool_input"].get("class_ref"),
-                    "role": "control",
-                    "layout": widgets_by_id["bool_input"].get("layout"),
-                    "runtime": widget_runtime("bool_input", input_value),
-                },
-                {
-                    "widget_id": "bool_result",
-                    "class_ref": widgets_by_id["bool_result"].get("class_ref"),
-                    "role": "indicator",
-                    "layout": widgets_by_id["bool_result"].get("layout"),
-                    "runtime": widget_runtime("bool_result", input_value),
-                },
-            ],
-        },
-        "diagnostics": [],
-    }
+    try:
+        panel = merge_default_widget_properties(panel, wfrog)
+        return build_boolean_roundtrip_artifact(contract, panel, input_value, unit=unit)
+    except BooleanRuntimeModelError as exc:
+        raise ContractExecutionError(str(exc)) from exc
 
 
 KIND_EXECUTORS = {

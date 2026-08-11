@@ -23,6 +23,14 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from Implementations.Reference.Runtime.boolean_runtime import (  # noqa: E402
+    build_boolean_roundtrip_artifact as execute_boolean_roundtrip,
+    merge_default_widget_properties,
+)
+
 DEFAULT_ACCEPTANCE = (
     ROOT
     / "Implementations"
@@ -225,63 +233,30 @@ def validate_wfrog_assets(
     return assets
 
 
-def merge_default_widget_properties(panel: dict[str, Any], wfrog: dict[str, Any]) -> dict[str, Any]:
-    defaults = wfrog.get("default_widget_properties", [])
-    require(isinstance(defaults, list), "Example 06 .wfrog default_widget_properties must be an array when present")
-
-    merged_panel = dict(panel)
-    merged_widgets: list[dict[str, Any]] = []
-    for widget in panel["widgets"]:
-        merged_widget = dict(widget)
-        class_ref = str(widget["class_ref"])
-        role = str(widget.get("role", ""))
-        props: dict[str, Any] = {}
-        visual: dict[str, Any] = {}
-        for entry in defaults:
-            require(isinstance(entry, dict), "default_widget_properties entries must be objects")
-            default_class = entry.get("class_id") or entry.get("target_class")
-            default_role = entry.get("role", "")
-            if default_class != class_ref:
-                continue
-            if isinstance(default_role, str) and default_role and default_role != role:
-                continue
-            default_visual = entry.get("visual", {})
-            default_props = entry.get("props", entry.get("properties", {}))
-            require(isinstance(default_visual, dict), "default_widget_properties.visual must be an object")
-            require(isinstance(default_props, dict), "default_widget_properties.props must be an object")
-            visual.update(default_visual)
-            props.update(default_props)
-        visual.update(widget.get("visual", {}))
-        props.update(widget.get("props", {}))
-        merged_widget["visual"] = visual
-        merged_widget["props"] = props
-        merged_widgets.append(merged_widget)
-    merged_panel["widgets"] = merged_widgets
-    return merged_panel
-
-
 def validate_svg_template(svg_text: str, *, label: str, expected_class: str, expected_variant: str, widget_width: int, widget_height: int) -> None:
     require(f'data-frog-variant="{expected_variant}"' in svg_text, f"{label} must declare variant {expected_variant}")
     require(expected_class in svg_text, f"{label} must target {expected_class}")
-    for public_part in ("root", "label", "caption", "outer_face", "inner_face", "state_text", "focus_ring"):
+    for public_part in ("root", "label", "caption", "placement_bounds", "state_face", "state_text", "focus_ring"):
         require(f'data-frog-part="{public_part}"' in svg_text, f"{label} missing public part marker {public_part}")
     require("data-frog-bind=" in svg_text, f"{label} must expose binding markers")
     require("data-frog-anchor=" in svg_text, f"{label} must expose anchor markers")
 
-    view_width, view_height = parse_viewbox(svg_text, label)
-    widget_ratio = widget_width / widget_height
-    asset_ratio = view_width / view_height
-    require(abs(widget_ratio - asset_ratio) <= 0.05, f"{label} viewBox ratio {asset_ratio:.2f} must match widget ratio {widget_ratio:.2f}")
+    parse_viewbox(svg_text, label)
+    require(widget_width == widget_height, f"{label} default placement must remain square")
+    placement = re.search(
+        r'id="placement_bounds"[\s\S]*?width="([0-9.]+)"[\s\S]*?height="([0-9.]+)"',
+        svg_text,
+    )
+    require(placement is not None, f"{label} must expose placement_bounds geometry")
+    require(float(placement.group(1)) == float(placement.group(2)), f"{label} placement_bounds must remain square")
 
     # The host overlay owns user-visible caption/state text in Example 06. The template
     # still exposes the public text parts, but the template text must not also render.
     require("#caption_text" in svg_text and "display:none" in svg_text.replace(" ", ""), f"{label} template caption text must be hidden by default")
     require("#state_text" in svg_text and "display:none" in svg_text.replace(" ", ""), f"{label} template state text must be hidden by default")
-    require("stroke:transparent" in svg_text.replace(" ", ""), f"{label} outer template border must be transparent by default")
-    require("#inner_face" in svg_text and "stroke:transparent" in svg_text.replace(" ", ""), f"{label} inner template border must be transparent by default")
-    if expected_class in {"frog.widgets.boolean_control", "frog.widgets.boolean_indicator"}:
-        compact = svg_text.replace(" ", "")
-        require("#frame_shadow" in svg_text and "fill:transparent" in compact and "opacity:0" in compact, f"{label} template frame must be transparent by default")
+    compact = svg_text.replace(" ", "")
+    require("#placement_bounds" in svg_text and "display:none" in compact, f"{label} placement aura must not render inside the SVG")
+    require("#state_face" in svg_text, f"{label} must expose the Boolean state face")
 
 
 def normalize_source_front_panel(source: dict[str, Any]) -> dict[str, Any]:
@@ -313,7 +288,7 @@ def normalize_source_front_panel(source: dict[str, Any]) -> dict[str, Any]:
 
 def validate_layout(panel: dict[str, Any]) -> dict[str, dict[str, Any]]:
     layout = panel.get("layout")
-    require(layout == {"width": 420, "height": 150, "coordinate_space": "panel_pixels"}, "unexpected Example 06 panel layout")
+    require(layout == {"width": 360, "height": 160, "coordinate_space": "panel_pixels"}, "unexpected Example 06 panel layout")
 
     widgets_raw = panel.get("widgets")
     require(isinstance(widgets_raw, list) and len(widgets_raw) == 2, "Example 06 panel must contain two widgets")
@@ -322,188 +297,59 @@ def validate_layout(panel: dict[str, Any]) -> dict[str, dict[str, Any]]:
     require(set(widgets) == {"bool_input", "bool_result"}, "unexpected Example 06 widget ids")
     require(widgets["bool_input"]["class_ref"] == "frog.widgets.boolean_control", "bool_input class mismatch")
     require(widgets["bool_result"]["class_ref"] == "frog.widgets.boolean_indicator", "bool_result class mismatch")
-    require(widgets["bool_input"]["layout"] == {"x": 20, "y": 32, "width": 160, "height": 80}, "bool_input layout mismatch")
-    require(widgets["bool_result"]["layout"] == {"x": 240, "y": 32, "width": 160, "height": 80}, "bool_result layout mismatch")
+    require(
+        widgets["bool_input"]["layout"]
+        == {
+            "x": 56,
+            "y": 56,
+            "width": 72,
+            "height": 72,
+            "origin": "placement_bounds.top_left",
+            "bounds_ref": "placement_bounds",
+        },
+        "bool_input layout mismatch",
+    )
+    require(
+        widgets["bool_result"]["layout"]
+        == {
+            "x": 224,
+            "y": 56,
+            "width": 72,
+            "height": 72,
+            "origin": "placement_bounds.top_left",
+            "bounds_ref": "placement_bounds",
+        },
+        "bool_result layout mismatch",
+    )
     require(widgets["bool_input"]["visual"]["asset_ref"] == "asset:boolean_rectangular_svg", "bool_input asset_ref mismatch")
     require(widgets["bool_result"]["visual"]["asset_ref"] == "asset:boolean_circular_svg", "bool_result asset_ref mismatch")
     input_props = widgets["bool_input"].get("props", {})
     result_props = widgets["bool_result"].get("props", {})
-    require(input_props.get("style.frame.visible") is False, "bool_input external frame must be disabled through merged .wfrog defaults")
-    require(result_props.get("style.frame.visible") is False, "bool_result external frame must be disabled through merged .wfrog defaults")
-    require(input_props.get("caption.align.horizontal") == "center", "bool_input caption must be centered through the .frog front-panel instance")
-    require(result_props.get("caption.align.horizontal") == "center", "bool_result caption must be centered through the .frog front-panel instance")
-    require(input_props.get("caption.anchor.x") == 80 and input_props.get("caption.anchor.y") == 16, "bool_input caption anchor must be declared through the .frog front-panel instance")
-    require(result_props.get("caption.anchor.x") == 80 and result_props.get("caption.anchor.y") == 16, "bool_result caption anchor must be declared through the .frog front-panel instance")
+    require(input_props.get("caption.align.horizontal") == "left", "bool_input caption alignment must come from the .wfrog defaults")
+    require(result_props.get("caption.align.horizontal") == "left", "bool_result caption alignment must come from the .wfrog defaults")
+    require(input_props.get("caption.anchor.x") == 16 and input_props.get("caption.anchor.y") == 24, "bool_input caption anchor must come from the .wfrog defaults")
+    require(result_props.get("caption.anchor.x") == 16 and result_props.get("caption.anchor.y") == 24, "bool_result caption anchor must come from the .wfrog defaults")
     require(input_props.get("state_text.visible") is True, "bool_input state text must remain visible through merged .wfrog defaults")
     require(input_props.get("style.focus_ring.visible") is True, "bool_input focus ring visibility must be declared through merged .wfrog defaults")
-    require(input_props.get("style.focus_ring.color") == "#2563eb", "bool_input focus ring color must be declared through merged .wfrog defaults")
-    require(input_props.get("style.focus_ring.width") == "3px", "bool_input focus ring width must be declared through merged .wfrog defaults")
+    require(input_props.get("style.focus_ring.color") == "#00ADEF", "bool_input focus ring color must be declared through merged .wfrog defaults")
+    require(input_props.get("style.focus_ring.width") == "1px", "bool_input focus ring width must be declared through merged .wfrog defaults")
     require(result_props.get("state_text.visible") is False, "bool_result state text must be hidden through merged .wfrog defaults")
-    require(result_props.get("style.inner.fill_color.false") == "#ef4444", "bool_result false state must be red through the .frog front-panel instance")
-    require(result_props.get("style.inner.fill_color.true") == "#22c55e", "bool_result true state must be green through the .frog front-panel instance")
-    require(result_props.get("style.inner.left") == "60px", "bool_result LED must be horizontally recentered through the .frog front-panel instance")
-    require(result_props.get("style.inner.top") == "31px", "bool_result LED must be vertically recentered through the .frog front-panel instance")
-    require(result_props.get("style.inner.width") == "40px", "bool_result LED width must be reduced through the .frog front-panel instance")
-    require(result_props.get("style.inner.height") == "40px", "bool_result LED height must be reduced through the .frog front-panel instance")
+    require(result_props.get("style.state_face.fill_color.false") == "#ffffff", "bool_result false fill must come from the .wfrog defaults")
+    require(result_props.get("style.state_face.fill_color.true") == "#4A8DBC", "bool_result true fill must come from the .wfrog defaults")
     for props, widget_id in ((input_props, "bool_input"), (result_props, "bool_result")):
-        require("style.inner.fill_color.false" in props, f"{widget_id} must declare false fill color through the .frog front-panel instance")
-        require("style.inner.fill_color.true" in props, f"{widget_id} must declare true fill color through the .frog front-panel instance")
-        require("style.outer.border_color.false" in props, f"{widget_id} must declare false border color through the .frog front-panel instance")
-        require("style.outer.border_color.true" in props, f"{widget_id} must declare true border color through the .frog front-panel instance")
-        require(props["style.outer.border_color.false"] == "transparent", f"{widget_id} false border must be transparent through the .frog front-panel instance")
-        require(props["style.outer.border_color.true"] == "transparent", f"{widget_id} true border must be transparent through the .frog front-panel instance")
-        require(props.get("style.inner.border_color.false") == "transparent", f"{widget_id} false inner border must be transparent through the .frog front-panel instance")
-        require(props.get("style.inner.border_color.true") == "transparent", f"{widget_id} true inner border must be transparent through the .frog front-panel instance")
+        require("style.state_face.fill_color.false" in props, f"{widget_id} must declare false fill color through .wfrog")
+        require("style.state_face.fill_color.true" in props, f"{widget_id} must declare true fill color through .wfrog")
+        require("style.state_face.border_color.false" in props, f"{widget_id} must declare false border color through .wfrog")
+        require("style.state_face.border_color.true" in props, f"{widget_id} must declare true border color through .wfrog")
+        require(props.get("style.state_face.border_width") == "1px", f"{widget_id} must declare the state-face border width through .wfrog")
         require("state_text.style.text_color.false" in props, f"{widget_id} must declare false state text color through the .frog front-panel instance")
         require("state_text.style.text_color.true" in props, f"{widget_id} must declare true state text color through the .frog front-panel instance")
-        require("style.transition.duration_ms" in props, f"{widget_id} must declare transition timing through the .frog front-panel instance")
-    require("style.pressed.inset" in input_props, "bool_input must declare pressed inset through the .frog front-panel instance")
+        require("style.focus_ring.visible" in props, f"{widget_id} must declare focus-ring visibility through .wfrog")
+    require("style.transition.duration_ms" in input_props, "bool_input must declare transition timing through .wfrog")
     for state in ("hover_false", "hover_true", "pressed_false", "pressed_true"):
-        require(f"style.inner.fill_color.{state}" in input_props, f"bool_input must declare {state} fill color through the .frog front-panel instance")
-        for props, widget_id in ((input_props, "bool_input"), (result_props, "bool_result")):
-            require(f"style.outer.border_color.{state}" in props, f"{widget_id} must declare {state} border color through the .frog front-panel instance")
-            require(props[f"style.outer.border_color.{state}"] == "transparent", f"{widget_id} {state} border must be transparent through the .frog front-panel instance")
-            require(f"style.inner.border_color.{state}" in props, f"{widget_id} must declare {state} inner border color through the .frog front-panel instance")
-            require(props[f"style.inner.border_color.{state}"] == "transparent", f"{widget_id} {state} inner border must be transparent through the .frog front-panel instance")
+        require(f"style.state_face.fill_color.{state}" in input_props, f"bool_input must declare {state} fill color through .wfrog")
+        require(f"style.state_face.border_color.{state}" in input_props, f"bool_input must declare {state} border color through .wfrog")
     return widgets
-
-
-def execute_boolean_roundtrip(contract: dict[str, Any], panel: dict[str, Any], input_value: bool) -> dict[str, Any]:
-    unit = single_unit(contract)
-    widgets_by_id = {widget["instance_id"]: widget for widget in panel["widgets"]}
-
-    result = bool(input_value)
-    return {
-        "artifact_kind": "frog_runtime_execution_result",
-        "artifact_governance_ref": {"path": "Versioning/Readme.md"},
-        "status": "ok",
-        "contract_ref": {
-            "unit_ids": [unit["unit_id"]],
-            "backend_family": contract["backend_family"],
-            "source_ref": contract["source_ref"],
-        },
-        "execution_summary": {
-            "mode": "boolean_value_roundtrip",
-            "executed_unit": unit["unit_id"],
-            "operation": "copy",
-            "input_value": result,
-            "result": result,
-        },
-        "outputs": {"public": {"result": result}, "ui": {"bool_input": result, "bool_result": result}},
-        "ui_runtime": {
-            "panel": {
-                "panel_id": panel["panel_id"],
-                "title": panel["title"],
-                "class_ref": panel["class_ref"],
-                "layout": panel["layout"],
-            },
-            "widgets": [
-                {
-                    "widget_id": "bool_input",
-                    "class_ref": widgets_by_id["bool_input"]["class_ref"],
-                    "role": "control",
-                    "layout": widgets_by_id["bool_input"]["layout"],
-                    "runtime": {
-                        "value": result,
-                        "label.text": widgets_by_id["bool_input"]["props"]["label.text"],
-                        "caption.text": widgets_by_id["bool_input"]["props"]["caption.text"],
-                        "caption.visible": widgets_by_id["bool_input"]["props"]["caption.visible"],
-                        "caption.anchor.x": widgets_by_id["bool_input"]["props"]["caption.anchor.x"],
-                        "caption.anchor.y": widgets_by_id["bool_input"]["props"]["caption.anchor.y"],
-                        "caption.align.horizontal": widgets_by_id["bool_input"]["props"]["caption.align.horizontal"],
-                        "caption.style.text_color": widgets_by_id["bool_input"]["props"]["caption.style.text_color"],
-                        "caption.style.font_family": widgets_by_id["bool_input"]["props"]["caption.style.font_family"],
-                        "caption.style.font_size": widgets_by_id["bool_input"]["props"]["caption.style.font_size"],
-                        "caption.style.font_weight": widgets_by_id["bool_input"]["props"]["caption.style.font_weight"],
-                        "state_text.true_text": widgets_by_id["bool_input"]["props"]["state_text.true_text"],
-                        "state_text.false_text": widgets_by_id["bool_input"]["props"]["state_text.false_text"],
-                        "state_text.visible": widgets_by_id["bool_input"]["props"]["state_text.visible"],
-                        "style.frame.visible": widgets_by_id["bool_input"]["props"]["style.frame.visible"],
-                        "state_text.style.text_color.false": widgets_by_id["bool_input"]["props"]["state_text.style.text_color.false"],
-                        "state_text.style.text_color.true": widgets_by_id["bool_input"]["props"]["state_text.style.text_color.true"],
-                        "state_text.style.font_size": widgets_by_id["bool_input"]["props"]["state_text.style.font_size"],
-                        "state_text.style.font_weight": widgets_by_id["bool_input"]["props"]["state_text.style.font_weight"],
-                        "style.outer.border_color.false": widgets_by_id["bool_input"]["props"]["style.outer.border_color.false"],
-                        "style.outer.border_color.true": widgets_by_id["bool_input"]["props"]["style.outer.border_color.true"],
-                        "style.outer.border_color.hover_false": widgets_by_id["bool_input"]["props"]["style.outer.border_color.hover_false"],
-                        "style.outer.border_color.hover_true": widgets_by_id["bool_input"]["props"]["style.outer.border_color.hover_true"],
-                        "style.outer.border_color.pressed_false": widgets_by_id["bool_input"]["props"]["style.outer.border_color.pressed_false"],
-                        "style.outer.border_color.pressed_true": widgets_by_id["bool_input"]["props"]["style.outer.border_color.pressed_true"],
-                        "style.inner.fill_color.false": widgets_by_id["bool_input"]["props"]["style.inner.fill_color.false"],
-                        "style.inner.fill_color.true": widgets_by_id["bool_input"]["props"]["style.inner.fill_color.true"],
-                        "style.inner.fill_color.hover_false": widgets_by_id["bool_input"]["props"]["style.inner.fill_color.hover_false"],
-                        "style.inner.fill_color.hover_true": widgets_by_id["bool_input"]["props"]["style.inner.fill_color.hover_true"],
-                        "style.inner.fill_color.pressed_false": widgets_by_id["bool_input"]["props"]["style.inner.fill_color.pressed_false"],
-                        "style.inner.fill_color.pressed_true": widgets_by_id["bool_input"]["props"]["style.inner.fill_color.pressed_true"],
-                        "style.inner.border_color.false": widgets_by_id["bool_input"]["props"]["style.inner.border_color.false"],
-                        "style.inner.border_color.true": widgets_by_id["bool_input"]["props"]["style.inner.border_color.true"],
-                        "style.inner.border_color.hover_false": widgets_by_id["bool_input"]["props"]["style.inner.border_color.hover_false"],
-                        "style.inner.border_color.hover_true": widgets_by_id["bool_input"]["props"]["style.inner.border_color.hover_true"],
-                        "style.inner.border_color.pressed_false": widgets_by_id["bool_input"]["props"]["style.inner.border_color.pressed_false"],
-                        "style.inner.border_color.pressed_true": widgets_by_id["bool_input"]["props"]["style.inner.border_color.pressed_true"],
-                        "style.focus_ring.visible": widgets_by_id["bool_input"]["props"]["style.focus_ring.visible"],
-                        "style.focus_ring.color": widgets_by_id["bool_input"]["props"]["style.focus_ring.color"],
-                        "style.focus_ring.width": widgets_by_id["bool_input"]["props"]["style.focus_ring.width"],
-                        "style.pressed.inset": widgets_by_id["bool_input"]["props"]["style.pressed.inset"],
-                        "style.transition.duration_ms": widgets_by_id["bool_input"]["props"]["style.transition.duration_ms"],
-                        "style.transition.timing": widgets_by_id["bool_input"]["props"]["style.transition.timing"],
-                        "asset_ref": widgets_by_id["bool_input"]["visual"]["asset_ref"],
-                        "realization.variant": widgets_by_id["bool_input"]["props"]["realization.variant"],
-                    },
-                },
-                {
-                    "widget_id": "bool_result",
-                    "class_ref": widgets_by_id["bool_result"]["class_ref"],
-                    "role": "indicator",
-                    "layout": widgets_by_id["bool_result"]["layout"],
-                    "runtime": {
-                        "value": result,
-                        "label.text": widgets_by_id["bool_result"]["props"]["label.text"],
-                        "caption.text": widgets_by_id["bool_result"]["props"]["caption.text"],
-                        "caption.visible": widgets_by_id["bool_result"]["props"]["caption.visible"],
-                        "caption.anchor.x": widgets_by_id["bool_result"]["props"]["caption.anchor.x"],
-                        "caption.anchor.y": widgets_by_id["bool_result"]["props"]["caption.anchor.y"],
-                        "caption.align.horizontal": widgets_by_id["bool_result"]["props"]["caption.align.horizontal"],
-                        "caption.style.text_color": widgets_by_id["bool_result"]["props"]["caption.style.text_color"],
-                        "caption.style.font_family": widgets_by_id["bool_result"]["props"]["caption.style.font_family"],
-                        "caption.style.font_size": widgets_by_id["bool_result"]["props"]["caption.style.font_size"],
-                        "caption.style.font_weight": widgets_by_id["bool_result"]["props"]["caption.style.font_weight"],
-                        "state_text.true_text": widgets_by_id["bool_result"]["props"]["state_text.true_text"],
-                        "state_text.false_text": widgets_by_id["bool_result"]["props"]["state_text.false_text"],
-                        "state_text.visible": widgets_by_id["bool_result"]["props"]["state_text.visible"],
-                        "style.frame.visible": widgets_by_id["bool_result"]["props"]["style.frame.visible"],
-                        "state_text.style.text_color.false": widgets_by_id["bool_result"]["props"]["state_text.style.text_color.false"],
-                        "state_text.style.text_color.true": widgets_by_id["bool_result"]["props"]["state_text.style.text_color.true"],
-                        "state_text.style.font_size": widgets_by_id["bool_result"]["props"]["state_text.style.font_size"],
-                        "state_text.style.font_weight": widgets_by_id["bool_result"]["props"]["state_text.style.font_weight"],
-                        "style.outer.border_color.false": widgets_by_id["bool_result"]["props"]["style.outer.border_color.false"],
-                        "style.outer.border_color.true": widgets_by_id["bool_result"]["props"]["style.outer.border_color.true"],
-                        "style.outer.border_color.hover_false": widgets_by_id["bool_result"]["props"]["style.outer.border_color.hover_false"],
-                        "style.outer.border_color.hover_true": widgets_by_id["bool_result"]["props"]["style.outer.border_color.hover_true"],
-                        "style.outer.border_color.pressed_false": widgets_by_id["bool_result"]["props"]["style.outer.border_color.pressed_false"],
-                        "style.outer.border_color.pressed_true": widgets_by_id["bool_result"]["props"]["style.outer.border_color.pressed_true"],
-                        "style.inner.fill_color.false": widgets_by_id["bool_result"]["props"]["style.inner.fill_color.false"],
-                        "style.inner.fill_color.true": widgets_by_id["bool_result"]["props"]["style.inner.fill_color.true"],
-                        "style.inner.border_color.false": widgets_by_id["bool_result"]["props"]["style.inner.border_color.false"],
-                        "style.inner.border_color.true": widgets_by_id["bool_result"]["props"]["style.inner.border_color.true"],
-                        "style.inner.border_color.hover_false": widgets_by_id["bool_result"]["props"]["style.inner.border_color.hover_false"],
-                        "style.inner.border_color.hover_true": widgets_by_id["bool_result"]["props"]["style.inner.border_color.hover_true"],
-                        "style.inner.border_color.pressed_false": widgets_by_id["bool_result"]["props"]["style.inner.border_color.pressed_false"],
-                        "style.inner.border_color.pressed_true": widgets_by_id["bool_result"]["props"]["style.inner.border_color.pressed_true"],
-                        "style.inner.left": widgets_by_id["bool_result"]["props"]["style.inner.left"],
-                        "style.inner.top": widgets_by_id["bool_result"]["props"]["style.inner.top"],
-                        "style.inner.width": widgets_by_id["bool_result"]["props"]["style.inner.width"],
-                        "style.inner.height": widgets_by_id["bool_result"]["props"]["style.inner.height"],
-                        "style.transition.duration_ms": widgets_by_id["bool_result"]["props"]["style.transition.duration_ms"],
-                        "style.transition.timing": widgets_by_id["bool_result"]["props"]["style.transition.timing"],
-                        "asset_ref": widgets_by_id["bool_result"]["visual"]["asset_ref"],
-                        "realization.variant": widgets_by_id["bool_result"]["props"]["realization.variant"],
-                    },
-                },
-            ],
-        },
-        "diagnostics": [],
-    }
 
 
 def bool_text(value: bool, runtime: dict[str, Any]) -> str:
@@ -529,8 +375,8 @@ def caption_anchor_style(runtime: dict[str, Any]) -> str:
         text_align = "left"
     visible = "display:none;" if runtime.get("caption.visible", True) is False else ""
     return (
-        f"left:{x / 160 * 100:.6g}%;"
-        f"top:{y / 80 * 100:.6g}%;"
+        f"left:{x:g}px;"
+        f"top:{y:g}px;"
         f"transform:{transform};"
         f"text-align:{text_align};"
         f"{visible}"
@@ -555,27 +401,25 @@ def render_boolean_widget(widget: dict[str, Any], *, default_manifest_path: str)
     pressed_state = "pressed_true" if value else "pressed_false"
     transition_state = "transition_true_to_false" if value else "transition_false_to_true"
     variant = str(runtime.get("realization.variant", "circular" if role == "indicator" else "rectangular"))
-    state_fill = state_runtime_value(runtime, "style.inner.fill_color", visual_state, "#8bd86f" if value else "#ffffff")
-    hover_fill = state_runtime_value(runtime, "style.inner.fill_color", hover_state, "#9be884" if value else "#eef6ff")
-    pressed_fill = state_runtime_value(runtime, "style.inner.fill_color", pressed_state, "#6fc657" if value else "#dbeafe")
-    state_border = state_runtime_value(runtime, "style.outer.border_color", visual_state, "#184a24" if value else "#111827")
-    hover_border = state_runtime_value(runtime, "style.outer.border_color", hover_state, "#166534" if value else "#2563eb")
-    pressed_border = state_runtime_value(runtime, "style.outer.border_color", pressed_state, "#14532d" if value else "#1d4ed8")
-    state_inner_border = state_runtime_value(runtime, "style.inner.border_color", visual_state, state_border)
-    hover_inner_border = state_runtime_value(runtime, "style.inner.border_color", hover_state, hover_border)
-    pressed_inner_border = state_runtime_value(runtime, "style.inner.border_color", pressed_state, pressed_border)
+    state_fill = state_runtime_value(runtime, "style.state_face.fill_color", visual_state, "#4A8DBC" if value else "#ffffff")
+    hover_fill = state_runtime_value(runtime, "style.state_face.fill_color", hover_state, state_fill)
+    pressed_fill = state_runtime_value(runtime, "style.state_face.fill_color", pressed_state, state_fill)
+    state_border = state_runtime_value(runtime, "style.state_face.border_color", visual_state, "#A8ABAE")
+    hover_border = state_runtime_value(runtime, "style.state_face.border_color", hover_state, state_border)
+    pressed_border = state_runtime_value(runtime, "style.state_face.border_color", pressed_state, state_border)
+    state_border_width = str(runtime.get("style.state_face.border_width", "1px"))
     text_color = state_runtime_value(runtime, "state_text.style.text_color", visual_state, "#0b3d19" if value else "#111827")
+    state_font_size = str(runtime.get("state_text.style.font_size", "13px"))
+    state_font_weight = str(runtime.get("state_text.style.font_weight", "400"))
+    caption_color = str(runtime.get("caption.style.text_color", "#2B3033"))
+    caption_font_family = str(runtime.get("caption.style.font_family", "Segoe UI, Arial, sans-serif"))
+    caption_font_size = str(runtime.get("caption.style.font_size", "12px"))
+    caption_font_weight = str(runtime.get("caption.style.font_weight", "400"))
     transition_ms = str(runtime.get("style.transition.duration_ms", 120))
     transition_timing = str(runtime.get("style.transition.timing", "ease-out"))
-    pressed_inset = str(runtime.get("style.pressed.inset", "1px"))
     state_text_visible = bool(runtime.get("state_text.visible", True))
-    frame_visible = bool(runtime.get("style.frame.visible", True))
     focus_color = str(runtime.get("style.focus_ring.color", "#2563eb"))
     focus_width = str(runtime.get("style.focus_ring.width", "3px")) if runtime.get("style.focus_ring.visible", True) else "0px"
-    inner_left = str(runtime.get("style.inner.left", "52px" if variant == "circular" else "18px"))
-    inner_top = str(runtime.get("style.inner.top", "23px" if variant == "circular" else "31px"))
-    inner_width = str(runtime.get("style.inner.width", "56px" if variant == "circular" else "124px"))
-    inner_height = str(runtime.get("style.inner.height", "56px" if variant == "circular" else "34px"))
 
     style = (
         f"left:{layout['x']}px;top:{layout['y']}px;"
@@ -586,18 +430,17 @@ def render_boolean_widget(widget: dict[str, Any], *, default_manifest_path: str)
         f"--boolean-border:{state_border};"
         f"--boolean-hover-border:{hover_border};"
         f"--boolean-pressed-border:{pressed_border};"
-        f"--boolean-inner-border:{state_inner_border};"
-        f"--boolean-hover-inner-border:{hover_inner_border};"
-        f"--boolean-pressed-inner-border:{pressed_inner_border};"
-        f"--boolean-inner-left:{inner_left};"
-        f"--boolean-inner-top:{inner_top};"
-        f"--boolean-inner-width:{inner_width};"
-        f"--boolean-inner-height:{inner_height};"
+        f"--boolean-border-width:{state_border_width};"
         f"--boolean-text:{text_color};"
+        f"--boolean-state-font-size:{state_font_size};"
+        f"--boolean-state-font-weight:{state_font_weight};"
+        f"--boolean-caption-color:{caption_color};"
+        f"--boolean-caption-font-family:{caption_font_family};"
+        f"--boolean-caption-font-size:{caption_font_size};"
+        f"--boolean-caption-font-weight:{caption_font_weight};"
         f"--boolean-focus-color:{focus_color};"
         f"--boolean-focus-width:{focus_width};"
         f"--boolean-transition:{transition_ms}ms {transition_timing};"
-        f"--boolean-pressed-inset:{pressed_inset};"
     )
 
     attrs = (
@@ -614,13 +457,12 @@ def render_boolean_widget(widget: dict[str, Any], *, default_manifest_path: str)
         f" data-frog-pressed-state='{pressed_state}'"
         f" data-frog-transition-state='{transition_state}'"
         f" data-frog-state-text-visible='{str(state_text_visible).lower()}'"
-        f" data-frog-frame-visible='{str(frame_visible).lower()}'"
         f" data-default-realization-manifest='{html.escape(default_manifest_path)}'"
         f" style='position:absolute;{style}'"
     )
 
     skin = (
-        "<span class='boolean-state-face' data-frog-part='inner_face' aria-hidden='true'></span>"
+        "<span class='boolean-state-face' data-frog-part='state_face' aria-hidden='true'></span>"
         f"<img class='boolean-skin' src='{html.escape(route)}' "
         f"alt='' aria-hidden='true' />"
     )
@@ -660,16 +502,13 @@ def render_front_panel(snapshot: dict[str, Any], *, default_manifest_path: str) 
         ".boolean-control{cursor:pointer;}"
         ".boolean-indicator{pointer-events:none;}"
         ".boolean-skin{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;pointer-events:none;z-index:2;}"
-        ".boolean-caption-overlay{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-size:14px;font-weight:600;line-height:1;color:#1f2933;white-space:nowrap;pointer-events:none;z-index:3;}"
-        ".boolean-state-face{position:absolute;left:var(--boolean-inner-left);top:var(--boolean-inner-top);width:var(--boolean-inner-width);height:var(--boolean-inner-height);border:2px solid var(--boolean-inner-border);border-radius:7px;background:var(--boolean-fill);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(15,23,42,.16);transition:background var(--boolean-transition),border-color var(--boolean-transition),box-shadow var(--boolean-transition),transform var(--boolean-transition);z-index:1;}"
+        ".boolean-caption-overlay{position:absolute;left:0;top:0;transform:translateY(-50%);text-align:left;font-family:var(--boolean-caption-font-family);font-size:var(--boolean-caption-font-size);font-weight:var(--boolean-caption-font-weight);line-height:1;color:var(--boolean-caption-color);white-space:nowrap;pointer-events:none;z-index:3;}"
+        ".boolean-state-face{position:absolute;left:4px;top:4px;width:64px;height:64px;box-sizing:border-box;border:var(--boolean-border-width) solid var(--boolean-border);border-radius:0;background:var(--boolean-fill);transition:background var(--boolean-transition),border-color var(--boolean-transition);z-index:1;}"
         ".boolean-widget[data-realization-variant='circular'] .boolean-state-face{border-radius:50%;}"
-        ".boolean-widget[data-frog-frame-visible='false'] .boolean-state-face{box-shadow:none;}"
-        ".boolean-control:hover .boolean-state-face{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-inner-border);box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 2px 5px rgba(15,23,42,.18);}"
-        ".boolean-control[data-frog-frame-visible='false']:hover .boolean-state-face{box-shadow:none;}"
-        ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-inner-border);box-shadow:inset 0 2px 4px rgba(15,23,42,.22);transform:translateY(var(--boolean-pressed-inset));}"
-        ".boolean-control[data-frog-frame-visible='false']:active .boolean-state-face{box-shadow:none;}"
+        ".boolean-control:hover .boolean-state-face{background:var(--boolean-hover-fill);border-color:var(--boolean-hover-border);}"
+        ".boolean-control:active .boolean-state-face{background:var(--boolean-pressed-fill);border-color:var(--boolean-pressed-border);}"
         ".boolean-control:focus-visible .boolean-state-face{outline:var(--boolean-focus-width) solid var(--boolean-focus-color);outline-offset:2px;}"
-        ".boolean-state-overlay{position:absolute;left:0;right:0;top:49px;transform:translateY(-50%);text-align:center;font-size:18px;font-weight:700;line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;}"
+        ".boolean-state-overlay{position:absolute;left:4px;right:4px;top:36px;transform:translateY(-50%);text-align:center;font-size:var(--boolean-state-font-size);font-weight:var(--boolean-state-font-weight);line-height:1;color:var(--boolean-text);pointer-events:none;z-index:4;}"
         ".actions{margin-top:16px;display:flex;gap:12px;align-items:center;}"
         ".state-link{font-size:16px;}"
         "</style>"
@@ -706,31 +545,32 @@ def validate_rendered_front_panel(rendered: str, *, expected_value: bool, widget
 
     require("data-widget-id='bool_input'" in rendered, "rendered control widget missing")
     require("data-widget-id='bool_result'" in rendered, "rendered indicator widget missing")
-    require("left:20px;top:32px;width:160px;height:80px" in rendered, "rendered control layout mismatch")
-    require("left:240px;top:32px;width:160px;height:80px" in rendered, "rendered indicator layout mismatch")
+    require("left:56px;top:56px;width:72px;height:72px" in rendered, "rendered control layout mismatch")
+    require("left:224px;top:56px;width:72px;height:72px" in rendered, "rendered indicator layout mismatch")
     require("class='boolean-skin'" in rendered, "rendered widgets must use the Boolean SVG skin assets")
-    require("class='boolean-state-face'" in rendered, "rendered widgets must materialize the realization inner_face state surface")
+    require("class='boolean-state-face'" in rendered, "rendered widgets must materialize the realization state_face surface")
+    require("data-frog-part='state_face'" in rendered, "rendered widgets must expose the modern state_face realization part")
     require("data-frog-visual-law='wfrog-realization-state-map'" in rendered, "rendered widgets must declare the .wfrog realization state-map law")
     require("data-realization-variant='rectangular'" in rendered, "control must preserve the .wfrog rectangular realization variant")
     require("data-realization-variant='circular'" in rendered, "indicator must preserve the .wfrog circular realization variant")
     require("data-frog-hover-state='hover_true'" in rendered or "data-frog-hover-state='hover_false'" in rendered, "control must expose hover visual-state mapping")
     require("data-frog-pressed-state='pressed_true'" in rendered or "data-frog-pressed-state='pressed_false'" in rendered, "control must expose pressed visual-state mapping")
     require("data-frog-transition-state='transition_true_to_false'" in rendered or "data-frog-transition-state='transition_false_to_true'" in rendered, "widgets must expose transition visual-state mapping")
-    require("--boolean-fill:" in rendered and "--boolean-border:" in rendered and "--boolean-inner-border:" in rendered and "--boolean-transition:" in rendered and "--boolean-pressed-inset:" in rendered, "visual state styles must come from .wfrog Boolean properties")
-    require(rendered.count("--boolean-inner-border:transparent;") == 2, "both Boolean widgets must render transparent inner borders from .wfrog")
-    require(rendered.count("data-frog-frame-visible='false' data-default-realization-manifest") == 2, "both Boolean widgets must expose transparent external frame state from .wfrog")
+    require("--boolean-fill:" in rendered and "--boolean-border:" in rendered and "--boolean-border-width:" in rendered and "--boolean-transition:" in rendered, "visual state styles must come from .wfrog Boolean properties")
+    require(rendered.count("--boolean-border:#A8ABAE;") == 2, "both Boolean widgets must render the published state-face border color")
+    require(rendered.count("--boolean-border-width:1px;") == 2, "both Boolean widgets must render the published state-face border width")
     require(rendered.count("data-svg-anchor='caption.anchor'") == 2, "both Boolean captions must expose the realization caption anchor")
-    require(rendered.count("left:50%;top:20%;transform:translate(-50%,-50%);text-align:center;") == 2, "both Boolean caption positions must come from .wfrog anchor properties")
-    require("--boolean-inner-width:40px;" in rendered and "--boolean-inner-height:40px;" in rendered, "indicator LED size must be reduced through the .frog front-panel instance")
-    require("--boolean-inner-left:60px;" in rendered and "--boolean-inner-top:31px;" in rendered, "indicator LED position must remain centered after resizing")
+    require(rendered.count("left:16px;top:24px;transform:translateY(-50%);text-align:left;") == 2, "both Boolean caption positions must come from .wfrog anchor properties")
     require("data-frog-state-text-visible='false'" in rendered, "bool_result must expose hidden state text from .wfrog")
-    require("--boolean-fill:#22c55e;" in rendered or "--boolean-fill:#ef4444;" in rendered, "indicator color must come from .wfrog true/false fill properties")
-    require("transform:translateY(1px)" not in rendered, "pressed movement must be driven by .wfrog style.pressed.inset, not a runtime hardcoded value")
+    expected_fill = "#4A8DBC" if expected_value else "#ffffff"
+    require(rendered.count(f"--boolean-fill:{expected_fill};") == 2, "Boolean fill must come from the selected .wfrog true/false state")
+    require("transform:translateY(1px)" not in rendered, "pressed movement must not be hardcoded by the runtime")
     require("outline:2px solid #2563eb" not in rendered, "focus styling must be driven by .wfrog focus properties")
-    require("font-size:18px" in rendered and "font-size:14px" in rendered, "rendered text must remain readable at the published size")
+    require(rendered.count("--boolean-caption-font-size:12px;") == 2, "caption typography must come from .wfrog")
+    require(rendered.count("--boolean-state-font-size:13px;") == 2, "state typography must come from .wfrog")
 
-    state_word = "TRUE" if expected_value else "FALSE"
-    other_word = "FALSE" if expected_value else "TRUE"
+    state_word = "On" if expected_value else "Off"
+    other_word = "Off" if expected_value else "On"
     require(rendered.count(f">{state_word}</span>") == 1, f"rendered front panel must show only the control {state_word} state overlay")
     require(rendered.count(f">{other_word}</span>") == 0, f"rendered front panel must not duplicate inactive {other_word} state text")
     require(rendered.count(f"data-frog-visual-state='{str(expected_value).lower()}'") == 2, "rendered widgets must expose the active true/false realization state")

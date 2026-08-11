@@ -279,7 +279,6 @@ Minimal icon structure:
 </p>
 
 <pre>"icon": {
-  "size": 40,
   "svg": "&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'&gt;...&lt;/svg&gt;"
 }</pre>
 
@@ -288,8 +287,8 @@ Standard fields:
 </p>
 
 <ul>
-  <li><code>size</code> — logical icon size in source units.</li>
   <li><code>svg</code> — embedded SVG markup as a JSON string.</li>
+  <li><code>size</code> — optional legacy shorthand for a square logical icon.</li>
 </ul>
 
 <p>
@@ -298,8 +297,11 @@ Field rules:
 
 <ul>
   <li>If <code>icon</code> is present, <code>icon.svg</code> MUST be present.</li>
-  <li>If present, <code>icon.size</code> MUST be an integer.</li>
-  <li>If <code>icon.size</code> is omitted, tools MAY assume the standard logical size of <code>40</code>.</li>
+  <li>The SVG <code>viewBox</code> is the authoritative logical width, height, and aspect ratio.</li>
+  <li>New writers SHOULD omit <code>icon.size</code>.</li>
+  <li>If present, <code>icon.size</code> MUST be a positive integer and describes a legacy <code>size</code> by <code>size</code> square.</li>
+  <li>If both <code>icon.size</code> and an SVG <code>viewBox</code> are present, they MUST describe the same square logical bounds.</li>
+  <li>If neither a usable <code>viewBox</code> nor a legacy <code>icon.size</code> is available, tools MAY fall back to <code>40 x 40</code>.</li>
 </ul>
 
 <p>
@@ -311,8 +313,8 @@ It is not intended to become a general multimedia container.
 Icon structure model
 
 icon
-├─ size   -> logical source size
-└─ svg    -> embedded self-contained SVG markup
+├─ svg    -> embedded self-contained SVG markup and authoritative viewBox
+└─ size   -> optional legacy square shorthand
 </pre>
 
 <hr/>
@@ -326,7 +328,6 @@ merging every visible region into one opaque bitmap or one indivisible shape.
 </p>
 
 <pre>"icon": {
-  "size": 40,
   "svg": "&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'&gt;...&lt;/svg&gt;",
   "authoring": {
     "model": "svg-regions-v1",
@@ -355,14 +356,16 @@ static SVG elements or paint regions so fill, erase, select, move, resize, and
 recolor operations target the visible region under the pointer. Such
 normalization MUST preserve the rendered result, vector geometry, clipping,
 transparency, and logical coordinate system. It MUST NOT rasterize an SVG merely
-because the standard preview is 40 x 40.
+because its longest preview side is displayed at 40 units.
 </p>
 
 <p>
-The 40 x 40 value is a logical preview and authoring coordinate convention, not
-a raster-resolution requirement. SVG output MUST remain sharp at any supported
-render size. Raster imports MAY lose quality when scaled and SHOULD be embedded
-or converted through an explicit, source-visible policy.
+The <code>40 x 40</code> value is the default square convention, not a mandatory
+shape or raster resolution. Rectangular icons preserve their SVG aspect ratio,
+and their preview normally fits the longest side into 40 display units. SVG
+output MUST remain sharp at any supported render size. Raster imports MAY lose
+quality when scaled and SHOULD be embedded or converted through an explicit,
+source-visible policy.
 </p>
 
 <hr/>
@@ -421,44 +424,51 @@ Disallowed intent:
 <h2 id="coordinate-system-and-sizing">9. Coordinate System and Sizing</h2>
 
 <p>
-In v0.1, icons are expected to target a <strong>40 x 40 logical grid</strong>.
+Icons MUST declare a finite, positive SVG <code>viewBox</code>. Its width and
+height define the logical icon dimensions and aspect ratio. The default square
+format is <strong>40 x 40</strong>; rectangular formats are first-class and MUST
+not be stretched back to a square.
 </p>
 
-<p>
-The embedded SVG SHOULD declare either:
-</p>
+<p>Recommended authoring presets are:</p>
 
 <ul>
-  <li><code>viewBox="0 0 40 40"</code>, or</li>
-  <li>an equivalent coordinate strategy clearly aligned to a 40-unit logical size.</li>
+  <li><code>40 x 40</code> — square reference;</li>
+  <li><code>52 x 40</code> and <code>40 x 52</code> — 30 percent rectangular variants;</li>
+  <li><code>60 x 40</code> and <code>40 x 60</code> — 3:2 rectangular variants.</li>
 </ul>
+
+<p>
+Tools MAY accept other safe static SVG dimensions. Changing the logical format
+SHOULD preserve existing artwork without non-uniform stretching; editors SHOULD
+translate or reframe it explicitly.
+</p>
 
 <p>
 Recommended form:
 </p>
 
-<pre>&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"&gt;...&lt;/svg&gt;</pre>
+<pre>&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40"&gt;...&lt;/svg&gt;</pre>
 
 <p>
 Tools MAY scale icons for high-DPI or zoomed rendering.
 However, the source-level logical coordinate system SHOULD remain stable.
-The standard 40 x 40 preview does not require the SVG to be rasterized or
-sampled onto forty physical pixels.
+The standard 40-unit preview extent does not require the SVG to be rasterized
+or sampled onto forty physical pixels.
 </p>
 
 <pre>Logical icon model
 
 source icon
    |
-   +-- logical size: 40
-   +-- logical grid: 0..40 x 0..40
-   |
-   +-- SVG viewBox defines source-space geometry
+   +-- SVG viewBox defines logical width and height
+   +-- SVG viewBox defines source-space geometry and aspect ratio
    |
 tool rendering
    |
-   +-- MAY scale for zoom
+   +-- MAY scale uniformly for zoom and preview
    +-- MAY scale for DPI
+   +-- MUST preserve the SVG aspect ratio
    +-- MUST NOT change executable meaning</pre>
 
 <hr/>
@@ -565,7 +575,6 @@ They SHOULD NOT become a hidden transport for executable hints, runtime policies
 <h3 id="minimal-example">12.1 Minimal Icon</h3>
 
 <pre>"icon": {
-  "size": 40,
   "svg": "&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'&gt;&lt;rect x='2' y='2' width='36' height='36' rx='6'/&gt;&lt;/svg&gt;"
 }</pre>
 
@@ -574,11 +583,10 @@ They SHOULD NOT become a hidden transport for executable hints, runtime policies
 <h3 id="symbol-example">12.2 Icon with Simple Symbol</h3>
 
 <pre>"icon": {
-  "size": 40,
-  "svg": "&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'&gt;
-    &lt;rect x='2' y='2' width='36' height='36' rx='6' fill='#1f2937'/&gt;
-    &lt;path d='M12 20h16' stroke='#ffffff' stroke-width='3' stroke-linecap='round'/&gt;
-    &lt;path d='M20 12v16' stroke='#ffffff' stroke-width='3' stroke-linecap='round'/&gt;
+  "svg": "&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 40'&gt;
+    &lt;rect x='2' y='2' width='56' height='36' rx='6' fill='#1f2937'/&gt;
+    &lt;path d='M22 20h16' stroke='#ffffff' stroke-width='3' stroke-linecap='round'/&gt;
+    &lt;path d='M30 12v16' stroke='#ffffff' stroke-width='3' stroke-linecap='round'/&gt;
   &lt;/svg&gt;"
 }</pre>
 
@@ -589,8 +597,10 @@ They SHOULD NOT become a hidden transport for executable hints, runtime policies
 <ul>
   <li>If <code>icon</code> is present, it MUST be a JSON object.</li>
   <li>If <code>icon</code> is present, <code>icon.svg</code> MUST be present and MUST be a string.</li>
-  <li>If present, <code>icon.size</code> MUST be an integer.</li>
-  <li>The SVG SHOULD define a stable logical coordinate system compatible with the standard 40 x 40 grid.</li>
+  <li>The SVG MUST define a finite, positive <code>viewBox</code> that is authoritative for logical dimensions.</li>
+  <li>If present, legacy <code>icon.size</code> MUST be a positive integer and MUST agree with a square SVG <code>viewBox</code>.</li>
+  <li>Readers SHOULD retain the <code>40 x 40</code> fallback for legacy documents without usable geometry.</li>
+  <li>Rendering, preview generation, hit testing, and connector projection MUST preserve the SVG aspect ratio.</li>
   <li>The SVG MUST be self-contained.</li>
   <li>The SVG MUST NOT alter executable meaning.</li>
   <li>If <code>icon.authoring</code> is present, it MUST remain non-executable and safely ignorable by execution-facing systems.</li>

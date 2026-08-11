@@ -8,6 +8,31 @@ permissions:
   contents: read
 
 jobs:
+  runtime-contract:
+    name: Public Runtime contract
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile public Runtime contract smoke test
+        run: |
+          c++ -std=c++20 -Wall -Wextra -Wpedantic \
+            -Isdk/cpp/include \
+            sdk/cpp/tests/runtime_contract_smoke.cpp \
+            -o runtime-contract-smoke
+
+      - name: Run public Runtime contract smoke test
+        run: ./runtime-contract-smoke
+
+      - name: Enforce canonical contract ownership
+        run: |
+          cmake \
+            -DSCAN_ROOT=${{ github.workspace }} \
+            -DCANONICAL_CONTRACT_HEADER=${{ github.workspace }}/sdk/cpp/include/frog/sdk/runtime_contract.hpp \
+            -P sdk/cpp/cmake/verify_runtime_contract_ownership.cmake
+
   reference-workspace:
     name: Reference workspace checks
     runs-on: ubuntu-latest

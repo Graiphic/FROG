@@ -1,123 +1,443 @@
 {
   "format": "frog.wfrog",
-  "kind": "widget_realization_package",
+  "kind": "widget_realization_library",
   "publication_role": "default_boolean_realization_manifest",
-  "package_id": "frog.realizations.default.boolean",
-  "title": "Default Boolean realization package",
-  "reviewed_date": "2026-06-11",
-  "metadata": {
+  "version_governance_ref": "../../../Versioning/Readme.md",
+  "package": {
+    "id": "frog.realizations.default.boolean",
+    "name": "FROG Default Boolean Realization",
     "namespace": "frog.realizations.default.boolean",
-    "summary": "Machine-readable default realization manifest for standardized Boolean control and indicator widgets.",
-    "contract_summary": "Boolean is one semantic widget family with control/indicator roles and square/round SVG skins. The public skin contract is placement_bounds, state_face, state_text, focus_ring, label, caption, and root."
+    "family": "default",
+    "category": "value",
+    "role_posture": "control_indicator",
+    "summary": "Machine-readable default realization manifest for standardized Boolean control and indicator widgets."
   },
-  "widget_classes": [
+  "ownership_boundary": {
+    "owns": [
+      "default Boolean realization records",
+      "Boolean realization variant declarations",
+      "Boolean realization resource references",
+      "Boolean part bindings",
+      "Boolean visual state maps",
+      "Boolean realization property bindings",
+      "Boolean anchors",
+      "Boolean host hints",
+      "Boolean realization validation expectations"
+    ],
+    "does_not_own": [
+      "Boolean widget class law",
+      "Boolean value semantics",
+      "canonical .frog source",
+      "frog.ui primitive semantics",
+      "runtime-private Boolean handles",
+      "IDE-private editing behavior"
+    ],
+    "class_law_refs": [
+      "../../../Libraries/Widgets/Boolean.md",
+      "../../../Libraries/Widgets/Readme.md"
+    ],
+    "interaction_refs": [
+      "../../../Libraries/UI.md",
+      "../../../Expression/Widget interaction.md"
+    ],
+    "package_posture_ref": "./Package.md"
+  },
+  "targets": [
     {
       "class_id": "frog.widgets.boolean_control",
       "role": "control",
-      "value_type": "bool",
-      "properties": [
-        { "name": "value" },
-        { "name": "caption.text" },
-        { "name": "caption.visible" },
-        { "name": "state_text.true_text" },
-        { "name": "state_text.false_text" },
-        { "name": "state_text.visible" },
-        { "name": "style.state_face.fill_color.*" },
-        { "name": "style.state_face.border_color.*" },
-        { "name": "style.state_face.border_width" },
-        { "name": "style.focus_ring.*" },
-        { "name": "realization.variant" }
-      ]
+      "primary_value": {
+        "present": true,
+        "type": "bool",
+        "user_mutable": true
+      }
     },
     {
       "class_id": "frog.widgets.boolean_indicator",
       "role": "indicator",
-      "value_type": "bool",
-      "properties": [
-        { "name": "value" },
-        { "name": "caption.text" },
-        { "name": "caption.visible" },
-        { "name": "state_text.true_text" },
-        { "name": "state_text.false_text" },
-        { "name": "state_text.visible" },
-        { "name": "style.state_face.fill_color.*" },
-        { "name": "style.state_face.border_color.*" },
-        { "name": "style.state_face.border_width" },
-        { "name": "style.focus_ring.*" },
-        { "name": "realization.variant" }
-      ]
+      "primary_value": {
+        "present": true,
+        "type": "bool",
+        "user_mutable": false
+      }
     }
   ],
+  "exports": {
+    "realizations": [
+      "frog.realizations.default.boolean_control",
+      "frog.realizations.default.boolean_indicator"
+    ],
+    "variants": [
+      "frog.realizations.default.boolean.rectangular",
+      "frog.realizations.default.boolean.circular"
+    ],
+    "resources": [
+      "frog.realizations.default.boolean.assets.rectangular_svg",
+      "frog.realizations.default.boolean.assets.circular_svg"
+    ]
+  },
   "realizations": [
+    {
+      "id": "frog.realizations.default.boolean_control",
+      "family": "default",
+      "target_class": "frog.widgets.boolean_control",
+      "variant_property": "realization.variant",
+      "default_variant": "rectangular",
+      "supported_variants": [
+        "rectangular",
+        "circular"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "placement_bounds",
+        "state_face",
+        "state_text",
+        "focus_ring"
+      ],
+      "supported_visual_states": [
+        "false",
+        "true",
+        "hover_false",
+        "hover_true",
+        "pressed_false",
+        "pressed_true",
+        "focused_false",
+        "focused_true",
+        "disabled_false",
+        "disabled_true",
+        "transition_false_to_true",
+        "transition_true_to_false"
+      ],
+      "fallbacks": {
+        "missing_state_override": "parameterized_svg_template",
+        "missing_caption": "host_external_caption_region",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+      }
+    },
+    {
+      "id": "frog.realizations.default.boolean_indicator",
+      "family": "default",
+      "target_class": "frog.widgets.boolean_indicator",
+      "variant_property": "realization.variant",
+      "default_variant": "circular",
+      "supported_variants": [
+        "rectangular",
+        "circular"
+      ],
+      "supported_parts": [
+        "root",
+        "label",
+        "caption",
+        "placement_bounds",
+        "state_face",
+        "state_text",
+        "focus_ring"
+      ],
+      "supported_visual_states": [
+        "false",
+        "true",
+        "hover_false",
+        "hover_true",
+        "pressed_false",
+        "pressed_true",
+        "focused_false",
+        "focused_true",
+        "disabled_false",
+        "disabled_true",
+        "transition_false_to_true",
+        "transition_true_to_false"
+      ],
+      "fallbacks": {
+        "missing_state_override": "parameterized_svg_template",
+        "missing_caption": "host_external_caption_region",
+        "unsupported_style_member": "preserve_semantics_ignore_visual_hint"
+      }
+    }
+  ],
+  "variants": [
     {
       "id": "frog.realizations.default.boolean.rectangular",
       "variant": "rectangular",
-      "display_name": "Square LED",
-      "resource_ref": "frog.realizations.default.boolean.assets.rectangular_svg",
-      "supported_classes": [
+      "target_classes": [
         "frog.widgets.boolean_control",
         "frog.widgets.boolean_indicator"
       ],
-      "shape_rule": "The state_face is a square/rectangular LED body. IDE resizing may change width and height independently."
+      "resource_ref": "frog.realizations.default.boolean.assets.rectangular_svg",
+      "geometry_posture": {
+        "shape_family": "rectangular_boolean",
+        "layout_source": "placement_bounds",
+        "scales_to_layout": true,
+        "placement_bounds_part": "placement_bounds",
+        "visible_body_part": "state_face",
+        "host_input_overlay_alignment_part": "state_face",
+        "aura_band_units": 4
+      },
+      "fallback": "host_boolean_surface_only_when_svg_resource_is_missing"
     },
     {
       "id": "frog.realizations.default.boolean.circular",
       "variant": "circular",
-      "display_name": "Round LED",
-      "resource_ref": "frog.realizations.default.boolean.assets.circular_svg",
-      "supported_classes": [
+      "target_classes": [
         "frog.widgets.boolean_control",
         "frog.widgets.boolean_indicator"
       ],
-      "shape_rule": "The state_face is an ellipse. Equal width and height render a circle; independent resizing renders an oval."
+      "resource_ref": "frog.realizations.default.boolean.assets.circular_svg",
+      "geometry_posture": {
+        "shape_family": "circular_boolean",
+        "layout_source": "placement_bounds",
+        "scales_to_layout": true,
+        "placement_bounds_part": "placement_bounds",
+        "visible_body_part": "state_face",
+        "host_input_overlay_alignment_part": "state_face",
+        "aura_band_units": 4
+      },
+      "fallback": "host_boolean_surface_only_when_svg_resource_is_missing"
     }
   ],
-  "svg_assets": [
+  "resources": [
     {
-      "asset_id": "boolean_rectangular_svg",
+      "id": "frog.realizations.default.boolean.assets.rectangular_svg",
       "kind": "svg",
       "path": "./assets/boolean/templates/boolean_rectangular.svg",
-      "semantic_parts": [
-        "root",
-        "label",
-        "caption",
-        "placement_bounds",
-        "state_face",
-        "focus_ring",
-        "state_text"
-      ]
+      "target_classes": [
+        "frog.widgets.boolean_control",
+        "frog.widgets.boolean_indicator"
+      ],
+      "target_variant": "rectangular",
+      "template_markers": {
+        "template": "frog.realizations.default.boolean.rectangular",
+        "variant": "rectangular",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
     },
     {
-      "asset_id": "boolean_circular_svg",
+      "id": "frog.realizations.default.boolean.assets.circular_svg",
       "kind": "svg",
       "path": "./assets/boolean/templates/boolean_circular.svg",
-      "semantic_parts": [
-        "root",
-        "label",
-        "caption",
-        "placement_bounds",
-        "state_face",
-        "focus_ring",
-        "state_text"
-      ]
-    }
-  ],
-  "host_bindings": [
-    {
-      "binding_id": "reference_host_default",
-      "host_family": "reference_browser_host",
-      "target": "reference_browser_host",
-      "required_capabilities": [
-        "window",
-        "basic_widget_rendering",
-        "widget_value_binding"
+      "target_classes": [
+        "frog.widgets.boolean_control",
+        "frog.widgets.boolean_indicator"
       ],
-      "optional_capabilities": [
-        "ide_selection_overlay",
-        "placement_grid"
-      ]
+      "target_variant": "circular",
+      "template_markers": {
+        "template": "frog.realizations.default.boolean.circular",
+        "variant": "circular",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
     }
   ],
+  "part_bindings": [
+    {
+      "part": "root",
+      "binding_kind": "svg_or_host_surface",
+      "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "label",
+      "binding_kind": "svg_text_or_metadata",
+      "binding_selector": "[data-frog-part='label']",
+      "semantic_member": "label.text",
+      "visibility_member": "label.visible",
+      "placement_role": "structural_label"
+    },
+    {
+      "part": "caption",
+      "binding_kind": "svg_text_or_host_text",
+      "binding_selector": "[data-frog-part='caption']",
+      "semantic_member": "caption.text",
+      "visibility_member": "caption.visible",
+      "placement_role": "front_panel_caption"
+    },
+    {
+      "part": "placement_bounds",
+      "binding_kind": "svg_geometry",
+      "binding_selector": "[data-frog-part='placement_bounds']",
+      "semantic_member": "layout.placement_bounds",
+      "placement_role": "uniform_aura_around_visible_body"
+    },
+    {
+      "part": "state_face",
+      "binding_kind": "svg_shape_or_host_input_overlay_alignment",
+      "binding_selector": "[data-frog-part='state_face']",
+      "style_binding_group": "style.state_face",
+      "semantic_member": "value",
+      "state_sensitive": true,
+      "host_overlay_role": "input_hit_area_for_controls"
+    },
+    {
+      "part": "state_text",
+      "binding_kind": "svg_text_or_host_text",
+      "binding_selector": "[data-frog-part='state_text']",
+      "semantic_members": [
+        "state_text.true_text",
+        "state_text.false_text"
+      ],
+      "visibility_member": "state_text.visible",
+      "placement_role": "internal_state_text"
+    },
+    {
+      "part": "focus_ring",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='focus_ring']",
+      "style_binding_group": "style.focus_ring",
+      "state_sensitive": true
+    }
+  ],
+  "property_bindings": [
+    {
+      "member": "label.*",
+      "target_part": "label",
+      "target_operation": "apply_label"
+    },
+    {
+      "member": "caption.*",
+      "target_part": "caption",
+      "target_operation": "apply_caption"
+    },
+    {
+      "member": "value",
+      "target_part": "state_face",
+      "target_operation": "resolve_boolean_visual_state"
+    },
+    {
+      "member": "state_text.*",
+      "target_part": "state_text",
+      "target_operation": "render_state_text"
+    },
+    {
+      "member": "style.state_face.*",
+      "target_part": "state_face",
+      "target_operation": "apply_state_face_style"
+    },
+    {
+      "member": "style.focus_ring.*",
+      "target_part": "focus_ring",
+      "target_operation": "apply_focus_ring_style"
+    }
+  ],
+  "state_maps": [
+    {
+      "state": "false",
+      "value_condition": { "value": false },
+      "style_binding_group": "style.state_face.false"
+    },
+    {
+      "state": "true",
+      "value_condition": { "value": true },
+      "style_binding_group": "style.state_face.true"
+    },
+    {
+      "state": "hover_false",
+      "value_condition": { "value": false, "interaction.hovered": true },
+      "style_binding_group": "style.state_face.hover_false",
+      "inherits": "false"
+    },
+    {
+      "state": "hover_true",
+      "value_condition": { "value": true, "interaction.hovered": true },
+      "style_binding_group": "style.state_face.hover_true",
+      "inherits": "true"
+    },
+    {
+      "state": "pressed_false",
+      "value_condition": { "value": false, "interaction.pressed": true },
+      "style_binding_group": "style.state_face.pressed_false",
+      "inherits": "false"
+    },
+    {
+      "state": "pressed_true",
+      "value_condition": { "value": true, "interaction.pressed": true },
+      "style_binding_group": "style.state_face.pressed_true",
+      "inherits": "true"
+    },
+    {
+      "state": "focused_false",
+      "value_condition": { "value": false, "interaction.focused": true },
+      "focus_ring_visible": true,
+      "inherits": "false"
+    },
+    {
+      "state": "focused_true",
+      "value_condition": { "value": true, "interaction.focused": true },
+      "focus_ring_visible": true,
+      "inherits": "true"
+    },
+    {
+      "state": "disabled_false",
+      "value_condition": { "value": false, "interaction.enabled": false },
+      "style_posture": "disabled",
+      "inherits": "false"
+    },
+    {
+      "state": "disabled_true",
+      "value_condition": { "value": true, "interaction.enabled": false },
+      "style_posture": "disabled",
+      "inherits": "true"
+    },
+    {
+      "state": "transition_false_to_true",
+      "transition": { "from": false, "to": true },
+      "style_binding_group": "style.transition"
+    },
+    {
+      "state": "transition_true_to_false",
+      "transition": { "from": true, "to": false },
+      "style_binding_group": "style.transition"
+    }
+  ],
+  "anchors": [
+    {
+      "id": "frog.realizations.default.boolean.label.anchor",
+      "target_part": "label",
+      "source_selector": "[data-frog-anchor='label.anchor']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "baseline"
+    },
+    {
+      "id": "frog.realizations.default.boolean.caption.anchor",
+      "target_part": "caption",
+      "source_selector": "[data-frog-anchor='caption.anchor']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "start",
+      "default_vertical_alignment": "baseline"
+    },
+    {
+      "id": "frog.realizations.default.boolean.state_text.center",
+      "target_part": "state_text",
+      "source_selector": "[data-frog-anchor='state_text.center']",
+      "anchor_kind": "text_anchor",
+      "default_horizontal_alignment": "center",
+      "default_vertical_alignment": "middle"
+    }
+  ],
+  "host_hints": {
+    "preferred_host_kind": "svg_template_host",
+    "resize_posture": "scale_selected_variant_to_front_panel_layout_rectangle",
+    "text_rendering_posture": "host_may_replace_template_text_content",
+    "state_rendering_posture": "parameterized_svg_template",
+    "style_application_posture": "apply_property_bindings_before_render",
+    "input_overlay_posture": {
+      "host_overlay_allowed_for_controls": true,
+      "target_part": "state_face",
+      "overlay_must_not_replace_svg_visual": true
+    },
+    "accessibility_posture": {
+      "control_role": "checkbox",
+      "indicator_role": "status",
+      "value_source": "value",
+      "label_source": "label.text",
+      "caption_source": "caption.text"
+    }
+  },
   "default_widget_properties": [
     {
       "class_id": "frog.widgets.boolean_control",
@@ -206,29 +526,6 @@
       }
     }
   ],
-  "part_bindings": [
-    {
-      "part": "placement_bounds",
-      "role": "placement_bounds",
-      "geometry_contract": "The IDE may use this non-rendered rect as the placement aura. It is not the focus ring and it is not a value surface."
-    },
-    {
-      "part": "state_face",
-      "role": "boolean_value_surface",
-      "style_binding_group": "style.state_face",
-      "value_binding": "value"
-    },
-    {
-      "part": "state_text",
-      "role": "optional_centered_true_false_text",
-      "text_binding": "state_text.true_text/state_text.false_text"
-    },
-    {
-      "part": "focus_ring",
-      "role": "keyboard_focus_outline_for_state_face",
-      "style_binding_group": "style.focus_ring"
-    }
-  ],
   "default_geometry_contract": {
     "coordinate_space": "svg_source_units",
     "placement_vocabulary": {
@@ -258,14 +555,19 @@
     },
     "aura_band": {
       "source_units": 4,
-      "description": "Default Boolean keeps the same standard vocabulary as other reviewed widgets: a uniform 4 source-unit aura_band between placement_bounds and main_body. The concrete SVG mapping for main_body is state_face. Host resizing scales the skin; the runtime must not invent a different Boolean aura."
+      "description": "The placement aura remains distinct from the visible state face and keyboard focus ring."
     }
   },
-  "validation_rules": [
-    "A Boolean widget remains frog.widgets.boolean_control or frog.widgets.boolean_indicator regardless of square, round, or oval skin.",
-    "The SVG must not publish outer_face, inner_face, or frame as public Boolean parts.",
-    "The runtime must bind state colors through style.state_face.* and never hardcode true/false colors outside defaults.",
-    "IDE selection aura is represented by placement_bounds; focus_ring remains a main_body/state_face outline.",
-    "Default Boolean placement_bounds is 36x36 source units, main_body maps to state_face at 28x28 source units, and the nominal Boolean aura_band is 4 source units, matching the shared aura standard at the compact Front Panel scale."
+  "validation_expectations": [
+    "target classes must exist in Libraries/Widgets/Boolean.md",
+    "all declared public parts must exist in the Boolean class law",
+    "resources must resolve relative to this package file",
+    "resource SVG templates must expose data-frog-part markers for declared SVG-bound parts",
+    "the Boolean value and control or indicator role must remain source-owned semantics",
+    "rectangular and circular are realization variants and must not create new widget classes",
+    "state maps must cover value, hover, pressed, focus, disabled, and value-transition states",
+    "placement_bounds must remain a non-rendered public placement aura distinct from state_face and focus_ring",
+    "property bindings must target public Boolean members declared by class law",
+    "host input overlays may align to state_face for controls but must never replace the SVG visual"
   ]
 }

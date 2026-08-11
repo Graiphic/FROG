@@ -873,9 +873,17 @@ def emit_button_switch_when_released_to_boolean(lowering: dict[str, Any]) -> str
     return emit_button_bool_kernel_abi(example_number="12", action="switch_when_released", result_name="switched")
 
 
-def emit_button_bool_kernel_abi(*, example_number: str, action: str, result_name: str) -> str:
+def emit_button_bool_kernel_abi(
+    *,
+    example_number: str,
+    action: str,
+    result_name: str,
+    normalize_input: bool = False,
+) -> str:
     title_action = action
     value_name = f"is_{result_name}"
+    trigger_normalization = "  %normalized_trigger = and i8 %trigger_value, 1\n" if normalize_input else ""
+    trigger_operand = "%normalized_trigger" if normalize_input else "%trigger_value"
     return f"""; FROG Example {example_number} - native Button {title_action} Boolean kernel ABI proof artifact
 ; This module is intended for the compiler-agnostic runtime kernel bridge.
 ; It exposes a manifest-declared C-compatible entry surface:
@@ -889,7 +897,7 @@ def emit_button_bool_kernel_abi(*, example_number: str, action: str, result_name
 
 define void @frog_example{example_number}_run(i8 %trigger_value, ptr %out_result) {{
 entry:
-  %{value_name} = icmp ne i8 %trigger_value, 0
+{trigger_normalization}  %{value_name} = icmp ne i8 {trigger_operand}, 0
   %result = zext i1 %{value_name} to i8
 
   %ok_ptr = getelementptr inbounds %FrogBoolRunResult, ptr %out_result, i32 0, i32 0
@@ -904,7 +912,13 @@ entry:
 """
 
 
-def emit_button_latch_to_boolean(lowering: dict[str, Any], *, example_number: str, action: str) -> str:
+def emit_button_latch_to_boolean(
+    lowering: dict[str, Any],
+    *,
+    example_number: str,
+    action: str,
+    normalize_input: bool = False,
+) -> str:
     unit = single_lowered_unit(lowering)
     kernel = execution_kernel(unit)
     public_io = require_object(unit.get("public_io"), "unit.public_io")
@@ -919,7 +933,12 @@ def emit_button_latch_to_boolean(lowering: dict[str, Any], *, example_number: st
     expect_equal(inputs, [{"id": "trigger_value", "type": "bool", "binding_origin": "widget.trigger_button.value"}], f"{kind} expects one Button value input")
     expect_equal(outputs, [{"id": "latched", "type": "bool"}], f"{kind} expects one bool output")
 
-    return emit_button_bool_kernel_abi(example_number=example_number, action=action, result_name="latched")
+    return emit_button_bool_kernel_abi(
+        example_number=example_number,
+        action=action,
+        result_name="latched",
+        normalize_input=normalize_input,
+    )
 
 
 def emit_button_latch_when_pressed_to_boolean(lowering: dict[str, Any]) -> str:
@@ -931,7 +950,12 @@ def emit_button_latch_when_released_to_boolean(lowering: dict[str, Any]) -> str:
 
 
 def emit_button_latch_until_released_to_boolean(lowering: dict[str, Any]) -> str:
-    return emit_button_latch_to_boolean(lowering, example_number="15", action="latch_until_released")
+    return emit_button_latch_to_boolean(
+        lowering,
+        example_number="15",
+        action="latch_until_released",
+        normalize_input=True,
+    )
 
 
 def emit_picture_path_to_image(lowering: dict[str, Any]) -> str:
