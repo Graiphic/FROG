@@ -4707,6 +4707,13 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/runtime/boolean_runtime.py",
+                  "title": "boolean_runtime.py",
+                  "path": "/Implementations/Reference/Runtime/boolean_runtime.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/runtime/build_native_kernel_library.py",
                   "title": "build_native_kernel_library.py",
                   "path": "/Implementations/Reference/Runtime/build_native_kernel_library.py",
@@ -5922,6 +5929,7 @@
     "/Implementations/Reference/Runtime/accept_contract_and_execute.md",
     "/Implementations/Reference/Runtime/KernelBridge.md",
     "/Implementations/Reference/Runtime/responsibilities.md",
+    "/Implementations/Reference/Runtime/boolean_runtime.py",
     "/Implementations/Reference/Runtime/build_native_kernel_library.py",
     "/Implementations/Reference/Runtime/check_example05_cpp_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/check_example05_native_kernel_bridge.py",
