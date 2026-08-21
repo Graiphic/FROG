@@ -358,12 +358,23 @@ In v0.1:
 </ul>
 
 <p>
-The operands MUST be numeric and type-compatible under the FROG type rules.
-The output type is the resolved numeric result type across every connected
-operand. Implementations MUST evaluate connected operands in canonical port
-order: <code>a</code>, <code>b</code>, then increasing <code>input_N</code>
-suffixes. Before evaluation, each operand MUST be coerced to the resolved
-result type so a variadic addition remains deterministic.
+Each operand MUST be either a numeric scalar or a numeric array. Scalar-only
+addition resolves the common numeric scalar type using the FROG numeric
+promotion rules. When at least one operand is an array, every array operand
+MUST have the same structural shape, including rank, nesting, and fixed versus
+dynamic extents. Scalar operands are lifted element by element across that
+common shape. FROG Add performs no implicit broadcasting and MUST reject
+different array shapes.
+</p>
+
+<p>
+The result is scalar when every operand is scalar; otherwise it has the common
+array shape. Its leaf type is the resolved numeric result type across every
+connected operand. Implementations MUST evaluate connected operands in
+canonical port order: <code>a</code>, <code>b</code>, then increasing
+<code>input_N</code> suffixes, using a canonical left fold. Before each
+addition, the operand MUST be coerced to the resolved result leaf type so a
+variadic addition remains deterministic.
 </p>
 
 <p>
@@ -372,6 +383,13 @@ Those authoring slots do not participate in execution and MUST NOT be inferred
 from presentation geometry by a runtime. A connected <code>input_N</code> edge,
 not the displayed node height, establishes that the optional operand
 participates in the executable graph.
+</p>
+
+<p>
+The language contract does not impose a maximum optional-input count. An
+authoring profile MAY impose a practical cap; the FROG Studio profile currently
+uses sixteen total inputs. The machine-readable authority for this primitive is
+<code>Libraries/Manifests/frog.core.add.v1.json</code>.
 </p>
 
 <h3>10.2 <code>frog.core.sub</code></h3>
