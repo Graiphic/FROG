@@ -145,6 +145,30 @@
       }
     }
   ],
+  "default_widget_properties": [
+    {
+      "class_id": "frog.widgets.button",
+      "role": "control",
+      "visual": {
+        "resource_ref": "frog.realizations.default.button.assets.rectangular_template_svg"
+      },
+      "props": {
+        "layout.default_width": 92,
+        "layout.default_height": 40,
+        "layout.aura_band_px": 4,
+        "caption.text": "Text Button Control",
+        "caption.visible": true,
+        "value": false,
+        "state_text.true_text": "ON",
+        "state_text.false_text": "OFF",
+        "state_text.visible": true,
+        "mechanical_action": "switch_when_pressed",
+        "interaction.enabled": true,
+        "interaction.read_only": false,
+        "realization.variant": "rectangular"
+      }
+    }
+  ],
   "part_bindings": [
     {
       "part": "root",

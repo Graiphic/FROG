@@ -184,6 +184,60 @@
       }
     }
   ],
+  "default_widget_properties": [
+    {
+      "class_id": "frog.widgets.string_control",
+      "role": "control",
+      "visual": {
+        "resource_ref": "frog.realizations.default.string.assets.rectangular_svg"
+      },
+      "props": {
+        "layout.default_width": 120,
+        "layout.default_height": 32,
+        "layout.aura_band_px": 4,
+        "caption.text": "String Control",
+        "caption.visible": true,
+        "value": "",
+        "display.style": "normal",
+        "display.style_visible": false,
+        "display.vertical_scrollbar_visible": false,
+        "display.horizontal_scrollbar_visible": false,
+        "display.size_to_text": false,
+        "interaction.text.single_line": false,
+        "interaction.text.wrap_at_word_breaks": true,
+        "interaction.text.update_while_typing": false,
+        "interaction.enabled": true,
+        "interaction.read_only": false,
+        "realization.variant": "rectangular"
+      }
+    },
+    {
+      "class_id": "frog.widgets.string_indicator",
+      "role": "indicator",
+      "visual": {
+        "resource_ref": "frog.realizations.default.string.assets.rectangular_svg"
+      },
+      "props": {
+        "layout.default_width": 120,
+        "layout.default_height": 32,
+        "layout.aura_band_px": 4,
+        "caption.text": "String Indicator",
+        "caption.visible": true,
+        "value": "",
+        "display.style": "normal",
+        "display.style_visible": false,
+        "display.vertical_scrollbar_visible": false,
+        "display.horizontal_scrollbar_visible": false,
+        "display.size_to_text": false,
+        "interaction.text.single_line": false,
+        "interaction.text.wrap_at_word_breaks": true,
+        "interaction.text.update_while_typing": false,
+        "interaction.enabled": false,
+        "interaction.read_only": true,
+        "realization.variant": "rectangular"
+      }
+    }
+  ],
   "part_bindings": [
     {
       "part": "root",
