@@ -46,25 +46,38 @@ def test_public_schema_and_fixture_publish_the_exact_shared_contract() -> None:
         "case",
         "for_loop",
         "while_loop",
+        "timed_loop",
         "event_structure",
         "disabled_structure",
         "conditional_disable_structure",
     ]
     assert "structure_tunnels" in properties
     assert "case_structure_true_background_rgb" in properties
+    assert "case_structure_subdiagram_label_visible" in properties
+    assert "case_structure_true_subdiagram_label_text" in properties
+    assert "case_structure_false_subdiagram_label_text" in properties
+    assert "case_structure_subdiagram_label_height" in properties
     assert "for_loop_iteration_normalized_x" in properties
     assert "for_loop_subdiagram_label_visible" in properties
     assert "for_loop_subdiagram_label_text" in properties
     assert "for_loop_subdiagram_label_height" in properties
     assert "while_loop_condition_normalized_y" in properties
+    assert "timed_loop_schedule" in properties
+    assert "timing_nodes" in properties
     assert "event_structure_data_node_normalized_y" in properties
     assert nodes["case"]["structure_terminals"]["selector"]["body_port"] == "selected_case"
+    assert nodes["case"]["case_structure_subdiagram_label_visible"] is True
+    assert nodes["case"]["case_structure_true_subdiagram_label_text"] == "Nominal path"
+    assert nodes["case"]["case_structure_false_subdiagram_label_text"] == "Fallback path"
+    assert nodes["case"]["case_structure_subdiagram_label_height"] == 68
     assert nodes["for_loop"]["structure_terminals"]["count"]["type"] == "i64"
     assert nodes["for_loop"]["structure_terminals"]["index"]["body_port"] == "iteration"
     assert nodes["for_loop"]["for_loop_subdiagram_label_visible"] is True
     assert nodes["for_loop"]["for_loop_subdiagram_label_text"] == "Acquisition"
     assert nodes["for_loop"]["for_loop_subdiagram_label_height"] == 72
     assert nodes["while_loop"]["structure_terminals"]["condition"]["body_port"] == "condition"
+    assert nodes["timed_loop"]["timed_loop_schedule"]["period"] == 1000
+    assert nodes["timed_loop"]["timing_nodes"]["feedback"]["direction"] == "output"
     assert nodes["event_structure"]["regions"][1]["event"] == {
         "kind": "value_change",
         "source": "widget:temperature",
@@ -94,12 +107,22 @@ def test_public_fixture_covers_and_validates_all_standard_structure_families() -
         "case",
         "for_loop",
         "while_loop",
+        "timed_loop",
         "event_structure",
         "disabled_structure",
         "conditional_disable_structure",
     }
     for node in nodes:
         assert _errors(node) == []
+
+
+@pytest.mark.skipif(jsonschema is None, reason="jsonschema is not installed")
+def test_timed_loop_requires_a_positive_period_and_all_timing_surfaces() -> None:
+    node = copy.deepcopy(next(node for node in _nodes() if node["structure_type"] == "timed_loop"))
+    node["timed_loop_schedule"]["period"] = 0
+    del node["timing_nodes"]["result"]
+
+    assert _errors(node)
 
 
 @pytest.mark.skipif(jsonschema is None, reason="jsonschema is not installed")

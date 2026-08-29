@@ -2,7 +2,7 @@
   "spec_version": "0.1",
   "metadata": {
     "name": "public_structure_families",
-    "description": "Valid public source for Case/If, For, While, Event, Diagram Disable, and Conditional Disable structures.",
+    "description": "Valid public source for Case/If, For, While, Timed Loop, Event, Diagram Disable, and Conditional Disable structures.",
     "author": "FROG Conformance",
     "version": "0.1.0",
     "tags": ["conformance", "valid", "structures"]
@@ -42,6 +42,10 @@
         ],
         "case_structure_true_visible": true,
         "case_structure_selector_normalized_y": 0.5,
+        "case_structure_subdiagram_label_visible": true,
+        "case_structure_true_subdiagram_label_text": "Nominal path",
+        "case_structure_false_subdiagram_label_text": "Fallback path",
+        "case_structure_subdiagram_label_height": 68,
         "case_structure_true_background_rgb": 8174216,
         "case_structure_true_background_opacity_percent": 100,
         "case_structure_true_subframe_rgb": 882961,
@@ -121,6 +125,54 @@
         "while_loop_subframe_rgb": 4932963,
         "while_loop_subframe_opacity_percent": 100,
         "layout": {"x": 40, "y": 340, "width": 360, "height": 260}
+      },
+      {
+        "id": "timed_1",
+        "kind": "structure",
+        "structure_type": "timed_loop",
+        "boundary": {"inputs": [], "outputs": []},
+        "timed_loop_schedule": {
+          "timing_source": "internal_1khz",
+          "period": 1000,
+          "offset": 0,
+          "deadline": 1000,
+          "timeout": -1,
+          "priority": 100,
+          "processor": -1,
+          "late_iteration_policy": {"missed_periods": "discard", "phase": "maintain"}
+        },
+        "timing_nodes": {
+          "initial": {"role": "configuration", "direction": "input", "fields": [
+            {"id": "source", "label": "Timing Source", "type": "string"},
+            {"id": "period", "label": "Period", "type": "i64"},
+            {"id": "offset", "label": "Offset", "type": "i64"},
+            {"id": "deadline", "label": "Deadline", "type": "i64"},
+            {"id": "priority", "label": "Priority", "type": "i64"}
+          ]},
+          "feedback": {"role": "iteration_feedback", "direction": "output", "fields": [
+            {"id": "expected_start", "label": "Expected Start", "type": "i64"},
+            {"id": "actual_start", "label": "Actual Start", "type": "i64"},
+            {"id": "finished_late", "label": "Finished Late?", "type": "bool"}
+          ]},
+          "update": {"role": "next_iteration", "direction": "input", "fields": [
+            {"id": "period", "label": "Period", "type": "i64"},
+            {"id": "deadline", "label": "Deadline", "type": "i64"}
+          ]},
+          "result": {"role": "completion", "direction": "output", "fields": [
+            {"id": "actual_end", "label": "Actual End", "type": "i64"},
+            {"id": "finished_late", "label": "Finished Late?", "type": "bool"}
+          ]}
+        },
+        "structure_terminals": {
+          "condition": {"type": "bool", "outer_visible": false, "exposed_in_body": true, "read_only": false, "body_port": "condition", "role": "continue_while_true"},
+          "index": {"type": "i64", "outer_visible": false, "exposed_in_body": true, "read_only": true, "body_port": "iteration", "role": "index"}
+        },
+        "regions": [{"id": "body", "diagram": {"nodes": [], "edges": []}}],
+        "timed_loop_initial_visible_row_count": 5,
+        "timed_loop_feedback_visible_row_count": 6,
+        "timed_loop_update_visible_row_count": 4,
+        "timed_loop_result_visible_row_count": 4,
+        "layout": {"x": 440, "y": 640, "width": 520, "height": 320}
       },
       {
         "id": "event_1",

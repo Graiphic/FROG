@@ -312,7 +312,7 @@ FROG v0.1 standardizes the following <code>frog.time</code> primitives:
 </table>
 
 <p>
-Timer-handle APIs, asynchronous callbacks, timed loops, wall-clock alarms, cron-like scheduling,
+Timer-handle APIs, asynchronous callbacks, wall-clock alarms, cron-like scheduling,
 timer events, cancellation tokens, high-resolution benchmarking suites, locale-heavy formatting,
 and real-time guarantees are not part of the v0.1 <code>frog.time</code> surface.
 </p>
@@ -1044,7 +1044,7 @@ The following are outside the strict scope of <code>frog.time</code> in v0.1:
 
 <ul>
   <li>hard real-time guarantees, deterministic jitter bounds, priority scheduling, or deadline scheduling,</li>
-  <li>timed loops or event structures as source-level structure families,</li>
+  <li>runtime guarantees for timed loops beyond the capabilities declared by the selected execution profile,</li>
   <li>timer handles, cancellation tokens, async callbacks, promises, futures, or event-loop APIs,</li>
   <li>wall-clock alarms, cron-like scheduling, calendar recurrence, business calendars, or time-zone databases,</li>
   <li>locale-specific formatting, named time zones, leap-second tables, non-Gregorian calendars, and natural-language parsing,</li>

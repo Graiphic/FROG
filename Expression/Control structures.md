@@ -179,13 +179,14 @@ FROG v0.1 standardizes the following control structures:
   <li><code>case</code></li>
   <li><code>for_loop</code></li>
   <li><code>while_loop</code></li>
+  <li><code>timed_loop</code></li>
   <li><code>event_structure</code></li>
   <li><code>disabled_structure</code></li>
   <li><code>conditional_disable_structure</code></li>
 </ul>
 
 <p>
-FROG v0.1 does not standardize general timed-loop structures, parallel-region structures, pattern-match structures, or exception-handling structures.
+FROG v0.1 does not standardize parallel-region structures, pattern-match structures, or exception-handling structures.
 Those MAY be introduced later as their own structure families.
 </p>
 
@@ -201,6 +202,7 @@ The standard structure families for FROG v0.1 are:
   <li><code>case</code></li>
   <li><code>for_loop</code></li>
   <li><code>while_loop</code></li>
+  <li><code>timed_loop</code></li>
   <li><code>event_structure</code></li>
   <li><code>disabled_structure</code></li>
   <li><code>conditional_disable_structure</code></li>
@@ -222,7 +224,7 @@ Accordingly:
 </p>
 
 <ul>
-  <li>canonical source MUST serialize standardized structure families such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, <code>event_structure</code>, <code>disabled_structure</code>, and <code>conditional_disable_structure</code>,</li>
+  <li>canonical source MUST serialize standardized structure families such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, <code>timed_loop</code>, <code>event_structure</code>, <code>disabled_structure</code>, and <code>conditional_disable_structure</code>,</li>
   <li>canonical source MUST NOT introduce separate structure families such as <code>if</code>, <code>if_else</code>, <code>else_if</code>, or <code>switch</code> in base v0.1,</li>
   <li>tooling MAY preserve authoring intent in editor metadata, but MUST preserve canonical structural meaning when serializing source.</li>
 </ul>
@@ -394,7 +396,7 @@ Normalized positions range from <code>0</code> to <code>1</code>, colors are pac
 </p>
 
 <ul>
-  <li><code>case_structure_*</code> preserves the visible boolean case, selector position, and the separate True/False body and subframe colors,</li>
+  <li><code>case_structure_*</code> preserves the visible boolean case, selector position, separate True/False body and subframe colors, plus the optional fixed subdiagram label: visibility and clamped authoring height are shared by the structure, while <code>case_structure_true_subdiagram_label_text</code> and <code>case_structure_false_subdiagram_label_text</code> preserve the text belonging to each subdiagram,</li>
   <li><code>for_loop_*</code> preserves the movable body index position, For body/subframe colors, and the optional fixed subdiagram label above the body through <code>for_loop_subdiagram_label_visible</code>, <code>for_loop_subdiagram_label_text</code> and the authoring-only clamped <code>for_loop_subdiagram_label_height</code>; the fixed count terminal needs no position field,</li>
   <li><code>while_loop_*</code> preserves the movable condition and index positions and While body/subframe colors,</li>
   <li><code>event_structure_*</code> preserves the visible event-case index, the vertically movable Event Data node, and Event body/subframe colors; the fixed timeout terminal needs no position field,</li>
@@ -1443,7 +1445,43 @@ Tools SHOULD additionally warn when:
 
 <hr/>
 
-<h3>19.5 Event structure</h3>
+<h3>19.5 Timed loop</h3>
+
+<p>
+A <code>timed_loop</code> owns one <code>body</code> region and preserves the normal iterative dataflow semantics of a <code>while_loop</code>. Its <code>timed_loop_schedule</code> declares scheduler inputs, while <code>timing_nodes</code> publishes the four typed boundary surfaces used for initial configuration, per-iteration feedback, next-iteration updates, and completion results. Authoring row counts and colors are non-semantic presentation state. A runtime profile MAY reject a schedule it cannot honor and MUST NOT claim deterministic deadline guarantees on a non-deterministic host.
+</p>
+
+<pre><code>{
+  "id": "timed_1",
+  "kind": "structure",
+  "structure_type": "timed_loop",
+  "boundary": { "inputs": [], "outputs": [] },
+  "timed_loop_schedule": {
+    "timing_source": "internal_1khz",
+    "period": 1000,
+    "offset": 0,
+    "deadline": 1000,
+    "timeout": -1,
+    "priority": 100,
+    "processor": -1,
+    "late_iteration_policy": { "missed_periods": "discard", "phase": "maintain" }
+  },
+  "timing_nodes": {
+    "initial": { "role": "configuration", "direction": "input", "fields": [{ "id": "period", "label": "Period", "type": "i64" }] },
+    "feedback": { "role": "iteration_feedback", "direction": "output", "fields": [{ "id": "finished_late", "label": "Finished Late?", "type": "bool" }] },
+    "update": { "role": "next_iteration", "direction": "input", "fields": [{ "id": "period", "label": "Period", "type": "i64" }] },
+    "result": { "role": "completion", "direction": "output", "fields": [{ "id": "actual_end", "label": "Actual End", "type": "i64" }] }
+  },
+  "structure_terminals": {
+    "condition": { "type": "bool", "outer_visible": false, "exposed_in_body": true, "read_only": false, "body_port": "condition", "role": "continue_while_true" },
+    "index": { "type": "i64", "outer_visible": false, "exposed_in_body": true, "read_only": true, "body_port": "iteration", "role": "index" }
+  },
+  "regions": [{ "id": "body", "diagram": { "nodes": [], "edges": [] } }]
+}</code></pre>
+
+<hr/>
+
+<h3>19.6 Event structure</h3>
 
 <pre><code>{
   "id": "events_1",
@@ -1488,7 +1526,7 @@ Tools SHOULD additionally warn when:
 <h2 id="out-of-scope-for-v01">20. Out of Scope for v0.1</h2>
 
 <ul>
-  <li>timed or clock-driven structures,</li>
+  <li>hard real-time guarantees on hosts or execution profiles that do not provide deterministic scheduling,</li>
   <li>parallel-region control structures,</li>
   <li>pattern-matching structures beyond the standardized boolean and string case forms,</li>
   <li>exception-handling structures,</li>

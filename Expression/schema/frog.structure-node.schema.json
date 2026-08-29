@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://graiphic.github.io/FROG/Expression/schema/frog.structure-node.schema.json",
   "title": "FROG Public Structure Node Contract",
-  "description": "Machine-checkable public .frog source contract for case (the canonical if/else form), for_loop, while_loop, event_structure, disabled_structure, and conditional_disable_structure nodes.",
+  "description": "Machine-checkable public .frog source contract for case (the canonical if/else form), for_loop, while_loop, timed_loop, event_structure, disabled_structure, and conditional_disable_structure nodes.",
   "$ref": "#/$defs/structureNode",
   "$defs": {
     "identifier": {
@@ -395,6 +395,72 @@
       },
       "additionalProperties": true
     },
+    "timedLoopTerminals": {
+      "allOf": [
+        { "$ref": "#/$defs/whileLoopTerminals" },
+        {
+          "properties": {
+            "condition": {
+              "properties": { "role": { "enum": ["stop_if_true", "continue_while_true"] } }
+            }
+          }
+        }
+      ]
+    },
+    "timedLoopSchedule": {
+      "type": "object",
+      "required": ["timing_source", "period", "offset", "deadline", "timeout", "priority", "processor", "late_iteration_policy"],
+      "properties": {
+        "timing_source": { "$ref": "#/$defs/identifier" },
+        "period": { "type": "integer", "minimum": 1 },
+        "offset": { "type": "integer", "minimum": 0 },
+        "deadline": { "type": "integer", "minimum": 1 },
+        "timeout": { "type": "integer", "minimum": -1 },
+        "priority": { "type": "integer" },
+        "processor": { "type": "integer", "minimum": -1 },
+        "late_iteration_policy": {
+          "type": "object",
+          "required": ["missed_periods", "phase"],
+          "properties": {
+            "missed_periods": { "enum": ["discard", "execute"] },
+            "phase": { "enum": ["maintain", "reset"] }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "timingField": {
+      "type": "object",
+      "required": ["id", "label", "type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "label": { "type": "string" },
+        "type": { "$ref": "#/$defs/valueType" }
+      },
+      "additionalProperties": false
+    },
+    "timingNode": {
+      "type": "object",
+      "required": ["role", "direction", "fields"],
+      "properties": {
+        "role": { "enum": ["configuration", "iteration_feedback", "next_iteration", "completion"] },
+        "direction": { "enum": ["input", "output"] },
+        "fields": { "type": "array", "items": { "$ref": "#/$defs/timingField" }, "minItems": 1 }
+      },
+      "additionalProperties": false
+    },
+    "timingNodes": {
+      "type": "object",
+      "required": ["initial", "feedback", "update", "result"],
+      "properties": {
+        "initial": { "$ref": "#/$defs/timingNode" },
+        "feedback": { "$ref": "#/$defs/timingNode" },
+        "update": { "$ref": "#/$defs/timingNode" },
+        "result": { "$ref": "#/$defs/timingNode" }
+      },
+      "additionalProperties": false
+    },
     "eventTerminals": {
       "type": "object",
       "required": ["timeout", "event_data"],
@@ -465,7 +531,7 @@
       "properties": {
         "id": { "$ref": "#/$defs/identifier" },
         "kind": { "const": "structure" },
-        "structure_type": { "enum": ["case", "for_loop", "while_loop", "event_structure", "disabled_structure", "conditional_disable_structure"] },
+        "structure_type": { "enum": ["case", "for_loop", "while_loop", "timed_loop", "event_structure", "disabled_structure", "conditional_disable_structure"] },
         "boundary": { "$ref": "#/$defs/boundary" },
         "structure_terminals": { "type": "object" },
         "regions": { "type": "array" },
@@ -475,6 +541,10 @@
         },
         "case_structure_true_visible": { "type": "boolean" },
         "case_structure_selector_normalized_y": { "$ref": "#/$defs/normalizedPosition" },
+        "case_structure_subdiagram_label_visible": { "type": "boolean" },
+        "case_structure_true_subdiagram_label_text": { "type": "string" },
+        "case_structure_false_subdiagram_label_text": { "type": "string" },
+        "case_structure_subdiagram_label_height": { "type": "number", "minimum": 24, "maximum": 160 },
         "case_structure_true_background_rgb": { "$ref": "#/$defs/authoringColor" },
         "case_structure_true_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
         "case_structure_true_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
@@ -500,6 +570,20 @@
         "while_loop_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
         "while_loop_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
         "while_loop_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "timed_loop_schedule": { "$ref": "#/$defs/timedLoopSchedule" },
+        "timing_nodes": { "$ref": "#/$defs/timingNodes" },
+        "timed_loop_condition_normalized_x": { "$ref": "#/$defs/normalizedPosition" },
+        "timed_loop_condition_normalized_y": { "$ref": "#/$defs/normalizedPosition" },
+        "timed_loop_iteration_normalized_x": { "$ref": "#/$defs/normalizedPosition" },
+        "timed_loop_iteration_normalized_y": { "$ref": "#/$defs/normalizedPosition" },
+        "timed_loop_initial_visible_row_count": { "type": "integer", "minimum": 1, "maximum": 8 },
+        "timed_loop_feedback_visible_row_count": { "type": "integer", "minimum": 1, "maximum": 14 },
+        "timed_loop_update_visible_row_count": { "type": "integer", "minimum": 1, "maximum": 7 },
+        "timed_loop_result_visible_row_count": { "type": "integer", "minimum": 1, "maximum": 7 },
+        "timed_loop_background_rgb": { "$ref": "#/$defs/authoringColor" },
+        "timed_loop_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "timed_loop_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
+        "timed_loop_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
         "event_structure_visible_case_index": { "type": "integer", "minimum": 0 },
         "event_structure_data_node_normalized_y": { "$ref": "#/$defs/normalizedPosition" },
         "event_structure_background_rgb": { "$ref": "#/$defs/authoringColor" },
@@ -546,6 +630,16 @@
           "then": {
             "properties": {
               "structure_terminals": { "$ref": "#/$defs/whileLoopTerminals" },
+              "regions": { "type": "array", "items": { "$ref": "#/$defs/bodyRegion" }, "minItems": 1, "maxItems": 1 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "structure_type": { "const": "timed_loop" } } },
+          "then": {
+            "required": ["timed_loop_schedule", "timing_nodes"],
+            "properties": {
+              "structure_terminals": { "$ref": "#/$defs/timedLoopTerminals" },
               "regions": { "type": "array", "items": { "$ref": "#/$defs/bodyRegion" }, "minItems": 1, "maxItems": 1 }
             }
           }
