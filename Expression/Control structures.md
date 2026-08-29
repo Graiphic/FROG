@@ -27,13 +27,14 @@
   <li><a href="#case-structure">11. Case Structure</a></li>
   <li><a href="#for-loop-structure">12. For Loop Structure</a></li>
   <li><a href="#while-loop-structure">13. While Loop Structure</a></li>
-  <li><a href="#source-to-language-alignment">14. Source-to-Language Alignment</a></li>
-  <li><a href="#interaction-with-local-memory-and-cycles">15. Interaction with Local Memory and Cycles</a></li>
-  <li><a href="#diagram-representation">16. Diagram Representation</a></li>
-  <li><a href="#validation-rules">17. Validation Rules</a></li>
-  <li><a href="#examples">18. Examples</a></li>
-  <li><a href="#out-of-scope-for-v01">19. Out of Scope for v0.1</a></li>
-  <li><a href="#summary">20. Summary</a></li>
+  <li><a href="#event-structure">14. Event Structure</a></li>
+  <li><a href="#source-to-language-alignment">15. Source-to-Language Alignment</a></li>
+  <li><a href="#interaction-with-local-memory-and-cycles">16. Interaction with Local Memory and Cycles</a></li>
+  <li><a href="#diagram-representation">17. Diagram Representation</a></li>
+  <li><a href="#validation-rules">18. Validation Rules</a></li>
+  <li><a href="#examples">19. Examples</a></li>
+  <li><a href="#out-of-scope-for-v01">20. Out of Scope for v0.1</a></li>
+  <li><a href="#summary">21. Summary</a></li>
 </ul>
 
 <hr/>
@@ -61,8 +62,8 @@ In canonical source, it is a structural region of the diagram with:
 </ul>
 
 <p>
-FROG v0.1 keeps concrete loop forms explicit.
-Therefore, the language standardizes <code>case</code>, <code>for_loop</code>, and <code>while_loop</code> as distinct visible structures rather than collapsing them into one generic hidden form.
+FROG v0.1 keeps concrete control forms explicit.
+Therefore, the language standardizes <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code> as distinct visible structures rather than collapsing them into one generic hidden form.
 </p>
 
 <p>
@@ -144,7 +145,7 @@ FROG distinguishes between:
 
 <ul>
   <li><strong>functions</strong> — callable operations such as <code>frog.core.add</code> or <code>frog.core.delay</code>,</li>
-  <li><strong>control structures</strong> — structural regions such as <code>case</code>, <code>for_loop</code>, and <code>while_loop</code>.</li>
+  <li><strong>control structures</strong> — structural regions such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code>.</li>
 </ul>
 
 <p>
@@ -178,10 +179,11 @@ FROG v0.1 standardizes the following control structures:
   <li><code>case</code></li>
   <li><code>for_loop</code></li>
   <li><code>while_loop</code></li>
+  <li><code>event_structure</code></li>
 </ul>
 
 <p>
-FROG v0.1 does not standardize event structures, timed structures, parallel-region structures, pattern-match structures, or exception-handling structures.
+FROG v0.1 does not standardize general timed-loop structures, parallel-region structures, pattern-match structures, or exception-handling structures.
 Those MAY be introduced later as their own structure families.
 </p>
 
@@ -197,6 +199,7 @@ The standard structure families for FROG v0.1 are:
   <li><code>case</code></li>
   <li><code>for_loop</code></li>
   <li><code>while_loop</code></li>
+  <li><code>event_structure</code></li>
 </ul>
 
 <p>
@@ -215,7 +218,7 @@ Accordingly:
 </p>
 
 <ul>
-  <li>canonical source MUST serialize standardized structure families such as <code>case</code>, <code>for_loop</code>, and <code>while_loop</code>,</li>
+  <li>canonical source MUST serialize standardized structure families such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code>,</li>
   <li>canonical source MUST NOT introduce separate structure families such as <code>if</code>, <code>if_else</code>, <code>else_if</code>, or <code>switch</code> in base v0.1,</li>
   <li>tooling MAY preserve authoring intent in editor metadata, but MUST preserve canonical structural meaning when serializing source.</li>
 </ul>
@@ -250,7 +253,7 @@ Field meaning:
 <ul>
   <li><code>id</code> — unique structure node identifier within the owning diagram scope,</li>
   <li><code>kind</code> — MUST be <code>"structure"</code>,</li>
-  <li><code>structure_type</code> — MUST be a valid structure family such as <code>case</code>, <code>for_loop</code>, or <code>while_loop</code>,</li>
+  <li><code>structure_type</code> — MUST be a valid structure family such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, or <code>event_structure</code>,</li>
   <li><code>boundary</code> — explicit structure inputs and outputs crossing the structure wall,</li>
   <li><code>structure_terminals</code> — structure-specific terminals such as selector, count, condition, or index,</li>
   <li><code>regions</code> — owned executable regions,</li>
@@ -258,6 +261,13 @@ Field meaning:
   <li><code>doc</code> — optional structured documentation,</li>
   <li><code>tags</code> — optional structured tags.</li>
 </ul>
+
+<p>
+The machine-checkable public node contract is published as
+<code>Expression/schema/frog.structure-node.schema.json</code>. It validates the
+four standardized structure families recursively without attempting to replace
+the normative prose in this document.
+</p>
 
 <p>
 Rules:
@@ -358,6 +368,33 @@ A structure boundary is part of canonical executable-graph representation.
 The structure wall MUST NOT be treated as a purely visual editor artifact.
 </p>
 
+<h3>8.5 Common structure authoring metadata</h3>
+
+<p>
+An authoring tool MAY additionally write <code>structure_tunnels</code> to retain
+the side and normalized wall position of boundary crossings. That array is
+non-semantic placement metadata. When it disagrees with <code>boundary</code>, the
+boundary id, type and direction MUST win; tools MUST NOT reinterpret the
+executable contract from a stale authoring tunnel record.
+</p>
+
+<p>
+The public structure-node schema also defines the optional authoring fields used
+to preserve visible-case selection, normalized terminal positions, background
+colors, subframe colors and subframe opacity for the four standard families.
+Normalized positions range from <code>0</code> to <code>1</code>, colors are packed
+24-bit RGB integers (<code>0xRRGGBB</code>) or the transparent sentinel
+<code>0xFFFFFFFF</code>, and opacity ranges from
+<code>0</code> to <code>100</code>. These fields MUST NOT change execution semantics.
+</p>
+
+<ul>
+  <li><code>case_structure_*</code> preserves the visible boolean case, selector position, and the separate True/False body and subframe colors,</li>
+  <li><code>for_loop_*</code> preserves the movable body index position and For body/subframe colors; the fixed count terminal needs no position field,</li>
+  <li><code>while_loop_*</code> preserves the movable condition and index positions and While body/subframe colors,</li>
+  <li><code>event_structure_*</code> preserves the visible event-case index, the vertically movable Event Data node, and Event body/subframe colors; the fixed timeout terminal needs no position field.</li>
+</ul>
+
 <hr/>
 
 <h2 id="structure-terminals">9. Structure Terminals</h2>
@@ -374,7 +411,8 @@ Examples include:
   <li>a case selector,</li>
   <li>a for-loop count terminal,</li>
   <li>a while-loop continuation terminal,</li>
-  <li>an iteration index exposed inside a loop body.</li>
+  <li>an iteration index exposed inside a loop body,</li>
+  <li>an event timeout terminal and the typed Event Data field group.</li>
 </ul>
 
 <p>
@@ -398,7 +436,9 @@ Field meaning:
   <li><code>outer_visible</code> — whether the terminal appears as an external structure port,</li>
   <li><code>exposed_in_body</code> — whether the terminal is visible inside the owned region body,</li>
   <li><code>read_only</code> — whether body logic may only read the terminal value,</li>
-  <li><code>role</code> — optional semantic role label.</li>
+  <li><code>role</code> — optional semantic role label,</li>
+  <li><code>outer_port</code> — stable graph port id used on the outer face, when the terminal has one,</li>
+  <li><code>body_port</code> — stable graph port id used by the terminal projection inside an owned region, when the terminal has one.</li>
 </ul>
 
 <p>
@@ -406,7 +446,8 @@ Rules:
 </p>
 
 <ul>
-  <li>every standardized terminal MUST define <code>type</code>,</li>
+  <li>every scalar standardized terminal MUST define <code>type</code>,</li>
+  <li>a grouped terminal such as <code>event_data</code> MUST instead define the type of every exposed field,</li>
   <li>terminal meaning is determined by the structure family and owned semantically by <code>Language/</code>,</li>
   <li>terminals MUST NOT be confused with ordinary boundary values.</li>
 </ul>
@@ -456,7 +497,8 @@ A structure MAY own one region or multiple regions depending on its family:
 <ul>
   <li>a <code>case</code> structure owns multiple branch regions,</li>
   <li>a <code>for_loop</code> owns one body region,</li>
-  <li>a <code>while_loop</code> owns one body region.</li>
+  <li>a <code>while_loop</code> owns one body region,</li>
+  <li>an <code>event_structure</code> owns one or more event-case regions.</li>
 </ul>
 
 <p>
@@ -513,8 +555,10 @@ A canonical <code>case</code> MUST define one selector terminal named <code>sele
   "selector": {
     "type": "bool",
     "outer_visible": true,
-    "exposed_in_body": false,
+    "exposed_in_body": true,
     "read_only": true,
+    "outer_port": "selector",
+    "body_port": "selected_case",
     "role": "selector"
   }
 }</code></pre>
@@ -527,8 +571,10 @@ Rules:
   <li><code>selector</code> MUST exist.</li>
   <li><code>selector.type</code> MUST be either <code>bool</code> or <code>string</code> in base v0.1.</li>
   <li><code>selector.outer_visible</code> MUST be <code>true</code>.</li>
-  <li><code>selector.exposed_in_body</code> SHOULD be <code>false</code>.</li>
+  <li><code>selector.exposed_in_body</code> MUST be <code>true</code> so the selected value has a body-side projection.</li>
   <li><code>selector.read_only</code> SHOULD be <code>true</code>.</li>
+  <li><code>selector.outer_port</code> MUST be <code>selector</code>.</li>
+  <li><code>selector.body_port</code> MUST be <code>selected_case</code>.</li>
 </ul>
 
 <h3>11.3 Boolean case</h3>
@@ -628,8 +674,10 @@ The source form is intended to support explicit loop-carried computation and exp
   "count": {
     "type": "i64",
     "outer_visible": true,
-    "exposed_in_body": false,
+    "exposed_in_body": true,
     "read_only": true,
+    "outer_port": "count",
+    "body_port": "count_value",
     "role": "count"
   },
   "index": {
@@ -637,6 +685,7 @@ The source form is intended to support explicit loop-carried computation and exp
     "outer_visible": false,
     "exposed_in_body": true,
     "read_only": true,
+    "body_port": "iteration",
     "role": "index"
   }
 }</code></pre>
@@ -649,10 +698,13 @@ Rules:
   <li><code>count</code> MUST exist.</li>
   <li><code>count.type</code> MUST be <code>i64</code> in base v0.1.</li>
   <li><code>count.outer_visible</code> MUST be <code>true</code>.</li>
+  <li><code>count.exposed_in_body</code> MUST be <code>true</code>.</li>
+  <li><code>count.outer_port</code> MUST be <code>count</code> and <code>count.body_port</code> MUST be <code>count_value</code>.</li>
   <li><code>index</code> MUST exist.</li>
   <li><code>index.type</code> MUST be <code>i64</code> in base v0.1.</li>
   <li><code>index.exposed_in_body</code> MUST be <code>true</code>.</li>
   <li><code>index.read_only</code> SHOULD be <code>true</code>.</li>
+  <li><code>index.body_port</code> MUST be <code>iteration</code>.</li>
 </ul>
 
 <h3>12.3 Count representation</h3>
@@ -772,6 +824,7 @@ The runtime meaning of that loop family belongs to <code>Language/Control struct
     "outer_visible": false,
     "exposed_in_body": true,
     "read_only": false,
+    "body_port": "condition",
     "role": "continue_while_true"
   },
   "index": {
@@ -779,6 +832,7 @@ The runtime meaning of that loop family belongs to <code>Language/Control struct
     "outer_visible": false,
     "exposed_in_body": true,
     "read_only": true,
+    "body_port": "iteration",
     "role": "index"
   }
 }</code></pre>
@@ -792,9 +846,11 @@ Rules:
   <li><code>condition.type</code> MUST be <code>bool</code>.</li>
   <li><code>condition.exposed_in_body</code> MUST be <code>true</code>.</li>
   <li><code>condition.outer_visible</code> SHOULD be <code>false</code> in base v0.1.</li>
+  <li><code>condition.body_port</code> MUST be <code>condition</code>.</li>
   <li><code>index</code> MUST exist.</li>
   <li><code>index.type</code> MUST be <code>i64</code> in base v0.1.</li>
   <li><code>index.exposed_in_body</code> MUST be <code>true</code>.</li>
+  <li><code>index.body_port</code> MUST be <code>iteration</code>.</li>
 </ul>
 
 <h3>13.4 Continuation representation</h3>
@@ -839,14 +895,114 @@ Both remain distinct structure families in canonical v0.1 source.
 
 <hr/>
 
-<h2 id="source-to-language-alignment">14. Source-to-Language Alignment</h2>
+<h2 id="event-structure">14. Event Structure</h2>
+
+<p>
+An <code>event_structure</code> waits for one of its declared events and executes
+exactly one matching event-case region. Its timeout terminal, event descriptors,
+typed Event Data fields, boundary and owned regions are public canonical
+<code>.frog</code> source; the currently visible case and visual placement remain
+non-semantic authoring state.
+</p>
+
+<h3>14.1 Canonical terminals</h3>
+
+<pre><code>"structure_terminals": {
+  "timeout": {
+    "type": "i64",
+    "outer_visible": true,
+    "exposed_in_body": true,
+    "read_only": true,
+    "outer_port": "timeout",
+    "body_port": "timeout_value",
+    "role": "timeout_milliseconds"
+  },
+  "event_data": {
+    "outer_visible": false,
+    "exposed_in_body": true,
+    "read_only": true,
+    "role": "event_data",
+    "fields": [
+      { "id": "source", "type": "string", "body_port": "event_data.source" },
+      { "id": "type", "type": "string", "body_port": "event_data.type" },
+      { "id": "time", "type": "u64", "body_port": "event_data.time" }
+    ]
+  }
+}</code></pre>
+
+<p>
+The timeout terminal has an outer input and a read-only body projection. The
+Event Data terminal is a grouped projection rather than a v0.1 record type;
+each field therefore declares its own public scalar type and body port. Base
+v0.1 writes the canonical field catalogue in <code>source</code>, <code>type</code>,
+then <code>time</code> order.
+</p>
+
+<h3>14.2 Event-case regions</h3>
+
+<p>
+Every event-case region MUST define <code>id</code>, <code>event</code>,
+<code>event_data_fields</code>, and <code>diagram</code>. The event descriptor MUST
+define <code>kind</code>. Base v0.1 publishes <code>timeout</code>,
+<code>value_change</code>, and <code>user</code>. A <code>value_change</code> case MUST
+identify its source; a <code>user</code> case MAY identify a source when scoped.
+</p>
+
+<pre><code>"regions": [
+  {
+    "id": "timeout",
+    "event_label": "[0] Timeout",
+    "event": { "kind": "timeout" },
+    "event_data_fields": ["source", "type", "time"],
+    "diagram": { "nodes": [], "edges": [] }
+  },
+  {
+    "id": "temperature-change",
+    "event_label": "[1] Temperature: Value Change",
+    "event": {
+      "kind": "value_change",
+      "source": "widget:temperature"
+    },
+    "event_data_fields": ["source", "time"],
+    "diagram": { "nodes": [], "edges": [] }
+  }
+]</code></pre>
+
+<p>
+<code>event_label</code> is authoring text and MUST NOT replace the event
+descriptor. <code>event_data_fields</code> selects the rows exposed by the Event
+Data node for that region and MUST contain only field ids declared by the
+<code>event_data</code> terminal.
+</p>
+
+<h3>14.3 Timeout case</h3>
+
+<p>
+A canonical Event Structure MUST contain exactly one region whose
+<code>event.kind</code> is <code>timeout</code>. The timeout value is resolved through
+the <code>timeout</code> outer port and is projected read-only in the selected body
+through <code>timeout_value</code>.
+</p>
+
+<h3>14.4 Authoring metadata</h3>
+
+<p>
+Fields such as <code>event_structure_visible_case_index</code>,
+<code>event_structure_data_node_normalized_y</code>, background colors, subframe
+colors and their opacity values preserve editor presentation only. They MUST
+not affect which event is selected or how the region executes.
+</p>
+
+<hr/>
+
+<h2 id="source-to-language-alignment">15. Source-to-Language Alignment</h2>
 
 <p>
 Canonical source representation and normative execution semantics are intentionally separated in FROG.
 This section defines the source-level alignment points between the structures declared here and the execution-semantics layer owned by <code>Language/</code>.
 </p>
 
-<h3>14.1 Case alignment</h3>
+<h3>15.1 Case alignment</h3>
 
 <ul>
   <li>a node with <code>kind: "structure"</code> and <code>structure_type: "case"</code> aligns with the standardized <code>case</code> structure family,</li>
@@ -855,7 +1011,7 @@ This section defines the source-level alignment points between the structures de
   <li><code>match</code> and <code>default</code> fields provide the source-level branch-selection metadata consumed by the semantic layer.</li>
 </ul>
 
-<h3>14.2 For-loop alignment</h3>
+<h3>15.2 For-loop alignment</h3>
 
 <ul>
   <li>a node with <code>structure_type: "for_loop"</code> aligns with the standardized counted-loop family,</li>
@@ -866,7 +1022,7 @@ This section defines the source-level alignment points between the structures de
   <li>explicit local memory inside the body remains represented by ordinary primitives such as <code>frog.core.delay</code> rather than by hidden loop-owned magic state.</li>
 </ul>
 
-<h3>14.3 While-loop alignment</h3>
+<h3>15.3 While-loop alignment</h3>
 
 <ul>
   <li>a node with <code>structure_type: "while_loop"</code> aligns with the standardized condition-governed loop family,</li>
@@ -875,7 +1031,17 @@ This section defines the source-level alignment points between the structures de
   <li>the region <code>body</code> identifies the owned loop body region.</li>
 </ul>
 
-<h3>14.4 No semantic redefinition in this document</h3>
+<h3>15.4 Event-structure alignment</h3>
+
+<ul>
+  <li>a node with <code>structure_type: "event_structure"</code> aligns with the standardized event-dispatch family,</li>
+  <li><code>structure_terminals.timeout</code> identifies the timeout input and its body projection,</li>
+  <li><code>structure_terminals.event_data.fields</code> defines the typed Event Data projections,</li>
+  <li>each region's <code>event</code> descriptor defines its trigger independently from its authoring label,</li>
+  <li>the region's <code>event_data_fields</code> selects the Event Data rows visible in that region.</li>
+</ul>
+
+<h3>15.5 No semantic redefinition in this document</h3>
 
 <p>
 This document MUST NOT be interpreted as redefining:
@@ -886,6 +1052,7 @@ This document MUST NOT be interpreted as redefining:
   <li>how many times a loop body executes,</li>
   <li>how loop outputs are produced at runtime,</li>
   <li>how continuation is resolved after a loop-body activation,</li>
+  <li>how an event source delivers and orders occurrences,</li>
   <li>how structure behavior participates in global execution semantics.</li>
 </ul>
 
@@ -895,7 +1062,7 @@ Those topics are owned normatively by <code>Language/Control structures.md</code
 
 <hr/>
 
-<h2 id="interaction-with-local-memory-and-cycles">15. Interaction with Local Memory and Cycles</h2>
+<h2 id="interaction-with-local-memory-and-cycles">16. Interaction with Local Memory and Cycles</h2>
 
 <p>
 Control structures interact with local memory and cycles at the source-representation level, but do not redefine the general semantic validity rule for cyclic graphs.
@@ -924,7 +1091,7 @@ The normative cycle-validity rule belongs to <code>Language/State and cycles.md<
 
 <hr/>
 
-<h2 id="diagram-representation">16. Diagram Representation</h2>
+<h2 id="diagram-representation">17. Diagram Representation</h2>
 
 <p>
 Control structures are represented in the diagram as nodes of:
@@ -936,7 +1103,7 @@ Control structures are represented in the diagram as nodes of:
 with a valid:
 </p>
 
-<pre><code>structure_type = "case" | "for_loop" | "while_loop"</code></pre>
+<pre><code>structure_type = "case" | "for_loop" | "while_loop" | "event_structure"</code></pre>
 
 <p>
 Their external ports are resolved from:
@@ -964,7 +1131,7 @@ Tools SHOULD present these structures as dedicated visible structural elements r
 
 <hr/>
 
-<h2 id="validation-rules">17. Validation Rules</h2>
+<h2 id="validation-rules">18. Validation Rules</h2>
 
 <p>
 Implementations MUST enforce the following source-level validation rules:
@@ -986,6 +1153,10 @@ Implementations MUST enforce the following source-level validation rules:
   <li>a <code>for_loop</code> MUST define exactly one body region,</li>
   <li>a <code>while_loop</code> MUST define a valid boolean continuation terminal,</li>
   <li>a <code>while_loop</code> MUST use the canonical source shape aligned with the standardized continue-while-true rule of base v0.1,</li>
+  <li>an <code>event_structure</code> MUST define canonical <code>timeout</code> and <code>event_data</code> terminals,</li>
+  <li>an <code>event_structure</code> MUST define exactly one timeout event-case region,</li>
+  <li>every event-case region MUST define an explicit <code>event</code> descriptor independently from <code>event_label</code>,</li>
+  <li>every selected <code>event_data_fields</code> id MUST be declared by the typed <code>event_data</code> terminal,</li>
   <li>every loop output MUST have a complete source-level meaning,</li>
   <li>if <code>mode: "last_value"</code> is used and zero iterations are possible, <code>zero_iteration_value</code> MUST be present and type-compatible,</li>
   <li>cycles inside structure regions MUST use explicit source representation for local memory when local memory is intended.</li>
@@ -1003,9 +1174,9 @@ Tools SHOULD additionally warn when:
 
 <hr/>
 
-<h2 id="examples">18. Examples</h2>
+<h2 id="examples">19. Examples</h2>
 
-<h3>18.1 Boolean case (canonical if / else)</h3>
+<h3>19.1 Boolean case (canonical if / else)</h3>
 
 <pre><code>{
   "id": "case_1",
@@ -1023,8 +1194,10 @@ Tools SHOULD additionally warn when:
     "selector": {
       "type": "bool",
       "outer_visible": true,
-      "exposed_in_body": false,
+      "exposed_in_body": true,
       "read_only": true,
+      "outer_port": "selector",
+      "body_port": "selected_case",
       "role": "selector"
     }
   },
@@ -1048,7 +1221,7 @@ Tools SHOULD additionally warn when:
   ]
 }</code></pre>
 
-<h3>18.2 String case</h3>
+<h3>19.2 String case</h3>
 
 <pre><code>{
   "id": "case_2",
@@ -1062,8 +1235,10 @@ Tools SHOULD additionally warn when:
     "selector": {
       "type": "string",
       "outer_visible": true,
-      "exposed_in_body": false,
+      "exposed_in_body": true,
       "read_only": true,
+      "outer_port": "selector",
+      "body_port": "selected_case",
       "role": "selector"
     }
   },
@@ -1095,7 +1270,7 @@ Tools SHOULD additionally warn when:
   ]
 }</code></pre>
 
-<h3>18.3 For loop with explicit final-value output</h3>
+<h3>19.3 For loop with explicit final-value output</h3>
 
 <pre><code>{
   "id": "loop_accumulate",
@@ -1113,8 +1288,10 @@ Tools SHOULD additionally warn when:
     "count": {
       "type": "i64",
       "outer_visible": true,
-      "exposed_in_body": false,
+      "exposed_in_body": true,
       "read_only": true,
+      "outer_port": "count",
+      "body_port": "count_value",
       "role": "count"
     },
     "index": {
@@ -1122,6 +1299,7 @@ Tools SHOULD additionally warn when:
       "outer_visible": false,
       "exposed_in_body": true,
       "read_only": true,
+      "body_port": "iteration",
       "role": "index"
     }
   },
@@ -1139,7 +1317,7 @@ Tools SHOULD additionally warn when:
   ]
 }</code></pre>
 
-<h3>18.4 While loop</h3>
+<h3>19.4 While loop</h3>
 
 <pre><code>{
   "id": "loop_2",
@@ -1159,6 +1337,7 @@ Tools SHOULD additionally warn when:
       "outer_visible": false,
       "exposed_in_body": true,
       "read_only": false,
+      "body_port": "condition",
       "role": "continue_while_true"
     },
     "index": {
@@ -1166,6 +1345,7 @@ Tools SHOULD additionally warn when:
       "outer_visible": false,
       "exposed_in_body": true,
       "read_only": true,
+      "body_port": "iteration",
       "role": "index"
     }
   },
@@ -1182,10 +1362,51 @@ Tools SHOULD additionally warn when:
 
 <hr/>
 
-<h2 id="out-of-scope-for-v01">19. Out of Scope for v0.1</h2>
+<h3>19.5 Event structure</h3>
+
+<pre><code>{
+  "id": "events_1",
+  "kind": "structure",
+  "structure_type": "event_structure",
+  "boundary": { "inputs": [], "outputs": [] },
+  "structure_terminals": {
+    "timeout": {
+      "type": "i64",
+      "outer_visible": true,
+      "exposed_in_body": true,
+      "read_only": true,
+      "outer_port": "timeout",
+      "body_port": "timeout_value",
+      "role": "timeout_milliseconds"
+    },
+    "event_data": {
+      "outer_visible": false,
+      "exposed_in_body": true,
+      "read_only": true,
+      "role": "event_data",
+      "fields": [
+        { "id": "source", "type": "string", "body_port": "event_data.source" },
+        { "id": "type", "type": "string", "body_port": "event_data.type" },
+        { "id": "time", "type": "u64", "body_port": "event_data.time" }
+      ]
+    }
+  },
+  "regions": [
+    {
+      "id": "timeout",
+      "event_label": "[0] Timeout",
+      "event": { "kind": "timeout" },
+      "event_data_fields": ["source", "type", "time"],
+      "diagram": { "nodes": [], "edges": [] }
+    }
+  ]
+}</code></pre>
+
+<hr/>
+
+<h2 id="out-of-scope-for-v01">20. Out of Scope for v0.1</h2>
 
 <ul>
-  <li>event structures,</li>
   <li>timed or clock-driven structures,</li>
   <li>parallel-region control structures,</li>
   <li>pattern-matching structures beyond the standardized boolean and string case forms,</li>
@@ -1198,7 +1419,7 @@ Tools SHOULD additionally warn when:
 
 <hr/>
 
-<h2 id="summary">20. Summary</h2>
+<h2 id="summary">21. Summary</h2>
 
 <p>
 FROG treats structural control as an explicit language-level concept, not as a disguised library call.
@@ -1206,11 +1427,12 @@ This document defines how that structural control is represented in canonical so
 </p>
 
 <ul>
-  <li><code>case</code>, <code>for_loop</code>, and <code>while_loop</code> are the standardized control structures of base v0.1.</li>
+  <li><code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code> are the standardized control structures of base v0.1.</li>
   <li>A boolean <code>case</code> is the canonical source-level equivalent of <code>if / else</code>.</li>
   <li>A string <code>case</code> provides canonical multi-branch source representation with an explicit required default region.</li>
   <li>Derived IDE-facing authoring forms such as <em>If</em>, <em>If / Else</em>, <em>Else If</em>, and <em>Switch</em> do not introduce separate canonical structure families in source.</li>
   <li>Loop structures remain source-distinct from ordinary functions.</li>
+  <li>Event structures declare their triggers separately from authoring labels and expose typed Event Data field projections.</li>
   <li>Structure boundaries, structure terminals, and owned regions are explicit parts of canonical source.</li>
   <li>Explicit local memory inside loop regions remains represented by ordinary source primitives such as <code>frog.core.delay</code>.</li>
   <li>Normative execution semantics remain owned by <code>Language/Control structures.md</code>.</li>

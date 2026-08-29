@@ -1,0 +1,176 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "public_structure_families",
+    "description": "Valid public source for Case/If, For, While, and Event structures.",
+    "author": "FROG Conformance",
+    "version": "0.1.0",
+    "tags": ["conformance", "valid", "structures"]
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": []
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "case_1",
+        "kind": "structure",
+        "structure_type": "case",
+        "boundary": {
+          "inputs": [{"id": "case_in", "type": "f64"}],
+          "outputs": [{"id": "case_out", "type": "f64"}]
+        },
+        "structure_tunnels": [
+          {"id": "case_in", "value_type": "f64", "side": "left", "normalized_position": 0.4, "output_from_structure": false},
+          {"id": "case_out", "value_type": "f64", "side": "right", "normalized_position": 0.6, "output_from_structure": true}
+        ],
+        "structure_terminals": {
+          "selector": {
+            "type": "bool",
+            "outer_visible": true,
+            "exposed_in_body": true,
+            "read_only": true,
+            "outer_port": "selector",
+            "body_port": "selected_case",
+            "role": "selector"
+          }
+        },
+        "regions": [
+          {"id": "true", "match": true, "diagram": {"nodes": [], "edges": []}},
+          {"id": "false", "match": false, "diagram": {"nodes": [], "edges": []}}
+        ],
+        "case_structure_true_visible": true,
+        "case_structure_selector_normalized_y": 0.5,
+        "case_structure_true_background_rgb": 8174216,
+        "case_structure_true_background_opacity_percent": 100,
+        "case_structure_true_subframe_rgb": 882961,
+        "case_structure_true_subframe_opacity_percent": 100,
+        "case_structure_false_background_rgb": 12036547,
+        "case_structure_false_background_opacity_percent": 100,
+        "case_structure_false_subframe_rgb": 7671053,
+        "case_structure_false_subframe_opacity_percent": 100,
+        "layout": {"x": 40, "y": 40, "width": 360, "height": 260}
+      },
+      {
+        "id": "for_1",
+        "kind": "structure",
+        "structure_type": "for_loop",
+        "boundary": {"inputs": [], "outputs": []},
+        "structure_terminals": {
+          "count": {
+            "type": "i64",
+            "outer_visible": true,
+            "exposed_in_body": true,
+            "read_only": true,
+            "outer_port": "count",
+            "body_port": "count_value",
+            "role": "count"
+          },
+          "index": {
+            "type": "i64",
+            "outer_visible": false,
+            "exposed_in_body": true,
+            "read_only": true,
+            "body_port": "iteration",
+            "role": "index"
+          }
+        },
+        "regions": [{"id": "body", "diagram": {"nodes": [], "edges": []}}],
+        "for_loop_iteration_normalized_x": 0.1,
+        "for_loop_iteration_normalized_y": 0.85,
+        "for_loop_background_rgb": 9028325,
+        "for_loop_background_opacity_percent": 100,
+        "for_loop_subframe_rgb": 5723990,
+        "for_loop_subframe_opacity_percent": 100,
+        "layout": {"x": 440, "y": 40, "width": 360, "height": 260}
+      },
+      {
+        "id": "while_1",
+        "kind": "structure",
+        "structure_type": "while_loop",
+        "boundary": {"inputs": [], "outputs": []},
+        "structure_terminals": {
+          "condition": {
+            "type": "bool",
+            "outer_visible": false,
+            "exposed_in_body": true,
+            "read_only": false,
+            "body_port": "condition",
+            "role": "continue_while_true"
+          },
+          "index": {
+            "type": "i64",
+            "outer_visible": false,
+            "exposed_in_body": true,
+            "read_only": true,
+            "body_port": "iteration",
+            "role": "index"
+          }
+        },
+        "regions": [{"id": "body", "diagram": {"nodes": [], "edges": []}}],
+        "while_loop_condition_normalized_x": 0.92,
+        "while_loop_condition_normalized_y": 0.86,
+        "while_loop_iteration_normalized_x": 0.1,
+        "while_loop_iteration_normalized_y": 0.86,
+        "while_loop_background_rgb": 9028325,
+        "while_loop_background_opacity_percent": 100,
+        "while_loop_subframe_rgb": 4932963,
+        "while_loop_subframe_opacity_percent": 100,
+        "layout": {"x": 40, "y": 340, "width": 360, "height": 260}
+      },
+      {
+        "id": "event_1",
+        "kind": "structure",
+        "structure_type": "event_structure",
+        "boundary": {"inputs": [], "outputs": []},
+        "structure_terminals": {
+          "timeout": {
+            "type": "i64",
+            "outer_visible": true,
+            "exposed_in_body": true,
+            "read_only": true,
+            "outer_port": "timeout",
+            "body_port": "timeout_value",
+            "role": "timeout_milliseconds"
+          },
+          "event_data": {
+            "outer_visible": false,
+            "exposed_in_body": true,
+            "read_only": true,
+            "role": "event_data",
+            "fields": [
+              {"id": "source", "type": "string", "body_port": "event_data.source"},
+              {"id": "type", "type": "string", "body_port": "event_data.type"},
+              {"id": "time", "type": "u64", "body_port": "event_data.time"}
+            ]
+          }
+        },
+        "regions": [
+          {
+            "id": "timeout",
+            "event": {"kind": "timeout"},
+            "event_label": "[0] Timeout",
+            "event_data_fields": ["source", "type", "time"],
+            "diagram": {"nodes": [], "edges": []}
+          },
+          {
+            "id": "temperature-change",
+            "event": {"kind": "value_change", "source": "widget:temperature"},
+            "event_label": "[1] Temperature: Value Change",
+            "event_data_fields": ["source", "time"],
+            "diagram": {"nodes": [], "edges": []}
+          }
+        ],
+        "event_structure_visible_case_index": 0,
+        "event_structure_data_node_normalized_y": 0.42,
+        "event_structure_background_rgb": 13336528,
+        "event_structure_background_opacity_percent": 100,
+        "event_structure_subframe_rgb": 9460434,
+        "event_structure_subframe_opacity_percent": 100,
+        "layout": {"x": 440, "y": 340, "width": 360, "height": 260}
+      }
+    ],
+    "edges": []
+  }
+}

@@ -24,13 +24,14 @@ Normative execution semantics for control structures in FROG programs<br/>
   <li><a href="#case-structure-semantics">8. Case Structure Semantics</a></li>
   <li><a href="#for-loop-structure-semantics">9. For Loop Structure Semantics</a></li>
   <li><a href="#while-loop-structure-semantics">10. While Loop Structure Semantics</a></li>
-  <li><a href="#loop-output-semantics">11. Loop Output Semantics</a></li>
-  <li><a href="#scheduler-independence">12. Scheduler Independence</a></li>
-  <li><a href="#relation-with-local-memory-and-cycles">13. Relation with Local Memory and Cycles</a></li>
-  <li><a href="#validation-rules">14. Validation Rules</a></li>
-  <li><a href="#examples">15. Examples</a></li>
-  <li><a href="#out-of-scope-for-v01">16. Out of Scope for v0.1</a></li>
-  <li><a href="#summary">17. Summary</a></li>
+  <li><a href="#event-structure-semantics">11. Event Structure Semantics</a></li>
+  <li><a href="#loop-output-semantics">12. Loop Output Semantics</a></li>
+  <li><a href="#scheduler-independence">13. Scheduler Independence</a></li>
+  <li><a href="#relation-with-local-memory-and-cycles">14. Relation with Local Memory and Cycles</a></li>
+  <li><a href="#validation-rules">15. Validation Rules</a></li>
+  <li><a href="#examples">16. Examples</a></li>
+  <li><a href="#out-of-scope-for-v01">17. Out of Scope for v0.1</a></li>
+  <li><a href="#summary">18. Summary</a></li>
 </ul>
 
 <hr/>
@@ -50,7 +51,8 @@ In FROG v0.1, control structures govern:
 <ul>
   <li>selection of exactly one executable region among several candidates,</li>
   <li>counted repetition of one executable region,</li>
-  <li>condition-governed repetition of one executable region.</li>
+  <li>condition-governed repetition of one executable region,</li>
+  <li>dispatch of exactly one region for a declared event or timeout.</li>
 </ul>
 
 <p>
@@ -60,8 +62,8 @@ terminals, or regions. Those source-facing topics belong to <code>Expression/</c
 </p>
 
 <p>
-FROG v0.1 keeps concrete loop forms explicit. Therefore, the language standardizes
-<code>case</code>, <code>for_loop</code>, and <code>while_loop</code> as distinct semantic
+FROG v0.1 keeps concrete control forms explicit. Therefore, the language standardizes
+<code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code> as distinct semantic
 families rather than collapsing them into one generic hidden form.
 </p>
 
@@ -152,7 +154,7 @@ FROG distinguishes between:
 
 <ul>
   <li><strong>functions</strong> — callable primitive operations such as <code>frog.core.add</code> or <code>frog.core.delay</code>,</li>
-  <li><strong>control structures</strong> — language-level structural constructs such as <code>case</code>, <code>for_loop</code>, and <code>while_loop</code>.</li>
+  <li><strong>control structures</strong> — language-level structural constructs such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code>.</li>
 </ul>
 
 <p>
@@ -187,10 +189,11 @@ FROG v0.1 standardizes the following control structures:
   <li><code>case</code></li>
   <li><code>for_loop</code></li>
   <li><code>while_loop</code></li>
+  <li><code>event_structure</code></li>
 </ul>
 
 <p>
-FROG v0.1 does not standardize event structures, timed structures, parallel-region structures,
+FROG v0.1 does not standardize general timed structures, parallel-region structures,
 pattern-match structures beyond the base case forms, or exception-handling structures.
 Those MAY be introduced later as distinct semantic families.
 </p>
@@ -207,6 +210,7 @@ The standardized control-structure families for FROG v0.1 are:
   <li><code>case</code></li>
   <li><code>for_loop</code></li>
   <li><code>while_loop</code></li>
+  <li><code>event_structure</code></li>
 </ul>
 
 <p>
@@ -517,7 +521,60 @@ Both remain distinct structure families in v0.1.
 
 <hr/>
 
-<h2 id="loop-output-semantics">11. Loop Output Semantics</h2>
+<h2 id="event-structure-semantics">11. Event Structure Semantics</h2>
+
+<h3>11.1 Purpose</h3>
+
+<p>
+An <code>event_structure</code> waits for one of its declared event occurrences and
+executes exactly one matching event-case region. Event labels are authoring text;
+selection is determined only by each region's canonical <code>event</code> descriptor.
+</p>
+
+<h3>11.2 Timeout resolution</h3>
+
+<p>
+The <code>timeout</code> terminal resolves to an <code>i64</code> number of milliseconds
+before waiting begins. A value of <code>-1</code> disables timeout generation, a
+non-negative value defines the timeout duration, and values below <code>-1</code> are
+invalid. Exactly one region MUST declare <code>event.kind: "timeout"</code>.
+</p>
+
+<p>
+If a matching non-timeout event occurs at or before the computed timeout deadline,
+that event wins. Otherwise, expiration generates the timeout occurrence. This rule
+keeps the selected region independent from scheduler polling intervals.
+</p>
+
+<h3>11.3 Event matching</h3>
+
+<ul>
+  <li><code>value_change</code> regions MUST identify their source.</li>
+  <li><code>user</code> regions MAY identify a source when the event producer is scoped.</li>
+  <li>Non-timeout descriptor pairs of <code>kind</code> and <code>source</code> MUST be unique within the structure.</li>
+  <li>One occurrence MUST activate exactly one matching region.</li>
+</ul>
+
+<h3>11.4 Event Data</h3>
+
+<p>
+Before the selected region executes, the runtime MUST project its Event Data fields
+as read-only values: <code>source</code> and <code>type</code> are <code>string</code>, and
+<code>time</code> is <code>u64</code>. A region MAY expose only a selected subset, but
+every selected field id MUST come from the public Event Data field catalogue.
+</p>
+
+<h3>11.5 Completion</h3>
+
+<p>
+An event-structure activation completes after the selected event-case region and
+its boundary outputs complete. A later event occurrence begins a new activation;
+it MUST NOT cause a second region to execute in the already completed activation.
+</p>
+
+<hr/>
+
+<h2 id="loop-output-semantics">12. Loop Output Semantics</h2>
 
 <p>
 Loop outputs define how values become observable after loop termination.
@@ -528,7 +585,7 @@ In base v0.1, the only standardized loop-output mode is:
   <li><code>mode: "last_value"</code></li>
 </ul>
 
-<h3>11.1 last_value</h3>
+<h3>12.1 last_value</h3>
 
 <p>
 If a loop output uses <code>mode: "last_value"</code>:
@@ -539,7 +596,7 @@ If a loop output uses <code>mode: "last_value"</code>:
   <li>when zero iterations are possible and zero iterations occur, the loop output value MUST be the declared <code>zero_iteration_value</code>.</li>
 </ul>
 
-<h3>11.2 Zero-iteration consequence</h3>
+<h3>12.2 Zero-iteration consequence</h3>
 
 <p>
 For <code>for_loop</code>, zero iterations are possible when the resolved count is <code>0</code>.
@@ -551,7 +608,7 @@ For base v0.1 <code>while_loop</code>, zero iterations do not occur under the st
 Therefore, <code>zero_iteration_value</code> is not required for that reason.
 </p>
 
-<h3>11.3 No additional standardized loop-output modes in v0.1</h3>
+<h3>12.3 No additional standardized loop-output modes in v0.1</h3>
 
 <p>
 Collection, generalized reduction, profile-defined accumulation, and other advanced output modes are out of scope for base v0.1.
@@ -559,7 +616,7 @@ Collection, generalized reduction, profile-defined accumulation, and other advan
 
 <hr/>
 
-<h2 id="scheduler-independence">12. Scheduler Independence</h2>
+<h2 id="scheduler-independence">13. Scheduler Independence</h2>
 
 <p>
 The exact internal scheduler implementation may vary across runtimes, but the observable semantics of control structures
@@ -588,6 +645,7 @@ However, runtimes MUST NOT differ in:
   <li>whether a string <code>case</code> falls back to the unique default region when no explicit match exists,</li>
   <li>whether a <code>for_loop</code> with resolved count <code>N</code> executes exactly <code>N</code> iterations,</li>
   <li>whether a <code>while_loop</code> uses the standardized post-test continue-while-true rule,</li>
+  <li>which event-case region executes for a given event descriptor, source, and timeout deadline,</li>
   <li>how <code>last_value</code> loop outputs are resolved,</li>
   <li>whether directed cycles inside structure regions still require explicit local memory.</li>
 </ul>
@@ -598,7 +656,7 @@ This separation allows backend freedom without semantic fragmentation of the lan
 
 <hr/>
 
-<h2 id="relation-with-local-memory-and-cycles">13. Relation with Local Memory and Cycles</h2>
+<h2 id="relation-with-local-memory-and-cycles">14. Relation with Local Memory and Cycles</h2>
 
 <p>
 Control structures do not weaken the general cycle-validity rule of FROG.
@@ -613,7 +671,8 @@ Therefore:
   <li>a cycle in an outer diagram remains subject to the normal explicit-local-memory rule,</li>
   <li>a cycle inside a <code>case</code> region remains subject to the same rule,</li>
   <li>a cycle inside a <code>for_loop</code> body remains subject to the same rule,</li>
-  <li>a cycle inside a <code>while_loop</code> body remains subject to the same rule.</li>
+  <li>a cycle inside a <code>while_loop</code> body remains subject to the same rule,</li>
+  <li>a cycle inside an <code>event_structure</code> region remains subject to the same rule.</li>
 </ul>
 
 <p>
@@ -628,7 +687,7 @@ The normative cycle-validity rule remains owned by <code>Language/State and cycl
 
 <hr/>
 
-<h2 id="validation-rules">14. Validation Rules</h2>
+<h2 id="validation-rules">15. Validation Rules</h2>
 
 <p>
 Implementations MUST enforce the following semantic rules:
@@ -644,6 +703,12 @@ Implementations MUST enforce the following semantic rules:
   <li>a <code>for_loop</code> with resolved count <code>N</code> MUST execute exactly <code>N</code> iterations,</li>
   <li>a <code>while_loop</code> condition MUST resolve to a <code>bool</code> value after each body activation,</li>
   <li>a base v0.1 <code>while_loop</code> MUST use the standardized post-test continue-while-true rule,</li>
+  <li>an <code>event_structure</code> timeout MUST resolve to an <code>i64</code> value greater than or equal to <code>-1</code>,</li>
+  <li>an <code>event_structure</code> MUST define exactly one timeout region,</li>
+  <li>every event-case region MUST define a canonical event descriptor,</li>
+  <li>every <code>value_change</code> event descriptor MUST identify its source,</li>
+  <li>non-timeout event descriptors MUST be unique by kind and source within one structure,</li>
+  <li>one event occurrence MUST execute exactly one matching event-case region,</li>
   <li>loop outputs MUST have deterministic semantic meaning after termination,</li>
   <li>if <code>mode: "last_value"</code> is used and zero iterations are possible, a deterministic zero-iteration meaning MUST exist,</li>
   <li>cycles inside structure-owned regions MUST satisfy the same explicit-local-memory rule as any other directed cycle.</li>
@@ -661,9 +726,9 @@ Tools SHOULD additionally warn when:
 
 <hr/>
 
-<h2 id="examples">15. Examples</h2>
+<h2 id="examples">16. Examples</h2>
 
-<h3>15.1 Boolean case</h3>
+<h3>16.1 Boolean case</h3>
 
 <p>
 Assume one validated boolean <code>case</code> activation:
@@ -679,7 +744,7 @@ An IDE MAY present this structure as <em>If</em> or <em>If / Else</em>.
 That presentation does not change the semantic family or the branch-selection rule.
 </p>
 
-<h3>15.2 String case with default fallback</h3>
+<h3>16.2 String case with default fallback</h3>
 
 <p>
 Assume a string <code>case</code> with explicit matches <code>"start"</code> and <code>"stop"</code> plus one default region:
@@ -696,7 +761,7 @@ An IDE MAY present this structure as a <em>Switch</em>-like form.
 That presentation does not create a distinct standardized semantic family.
 </p>
 
-<h3>15.3 for_loop with count 3</h3>
+<h3>16.3 for_loop with count 3</h3>
 
 <p>
 If the resolved count is <code>3</code>, the body executes exactly three times and the standardized index sequence is:
@@ -704,7 +769,7 @@ If the resolved count is <code>3</code>, the body executes exactly three times a
 
 <pre><code>0, 1, 2</code></pre>
 
-<h3>15.4 for_loop with count 0</h3>
+<h3>16.4 for_loop with count 0</h3>
 
 <p>
 If the resolved count is <code>0</code>, the body executes zero times.
@@ -712,7 +777,7 @@ If a loop output uses <code>mode: "last_value"</code>, its observable result is 
 <code>zero_iteration_value</code>.
 </p>
 
-<h3>15.5 while_loop under the standardized post-test rule</h3>
+<h3>16.5 while_loop under the standardized post-test rule</h3>
 
 <p>
 A base v0.1 <code>while_loop</code> always executes its body once.
@@ -724,7 +789,16 @@ After that first body activation:
   <li>if the condition resolves to <code>false</code>, the loop terminates.</li>
 </ul>
 
-<h3>15.6 Cycle inside a loop body</h3>
+<h3>16.6 Event structure with a 100 ms timeout</h3>
+
+<p>
+Assume one <code>value_change</code> region for source
+<code>widget:temperature</code> and one timeout region. If a matching value-change
+occurrence arrives within 100 ms, the value-change region executes. Otherwise,
+the timeout region executes. In both cases exactly one region executes.
+</p>
+
+<h3>16.7 Cycle inside a loop body</h3>
 
 <p>
 A feedback path inside a loop body is not automatically valid just because the enclosing structure repeats.
@@ -733,10 +807,9 @@ If that feedback path is a directed cycle, it still requires explicit local memo
 
 <hr/>
 
-<h2 id="out-of-scope-for-v01">16. Out of Scope for v0.1</h2>
+<h2 id="out-of-scope-for-v01">17. Out of Scope for v0.1</h2>
 
 <ul>
-  <li>event structures,</li>
   <li>timed or clock-driven structures,</li>
   <li>parallel-region control structures,</li>
   <li>pattern-oriented branch selection beyond the standardized boolean and string case forms,</li>
@@ -749,7 +822,7 @@ If that feedback path is a directed cycle, it still requires explicit local memo
 
 <hr/>
 
-<h2 id="summary">17. Summary</h2>
+<h2 id="summary">18. Summary</h2>
 
 <p>
 FROG treats structural control as an explicit language-level concept, not as a disguised library call.
@@ -757,12 +830,13 @@ This document defines the normative execution semantics of that structural contr
 </p>
 
 <ul>
-  <li><code>case</code>, <code>for_loop</code>, and <code>while_loop</code> are the standardized control-structure families of base v0.1.</li>
+  <li><code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code> are the standardized control-structure families of base v0.1.</li>
   <li>A boolean <code>case</code> is the semantic equivalent of <code>if / else</code>, but the standardized family remains <code>case</code>.</li>
   <li>A string <code>case</code> performs deterministic exact-match selection with a required default fallback.</li>
   <li>Authoring-facing derived forms such as <em>If</em>, <em>If / Else</em>, <em>Else If</em>, and <em>Switch</em> do not introduce separate semantic families in base v0.1.</li>
   <li>A <code>for_loop</code> performs counted repetition with deterministic index progression.</li>
   <li>A base v0.1 <code>while_loop</code> uses standardized post-test continue-while-true semantics.</li>
+  <li>An <code>event_structure</code> executes exactly one region for a declared event occurrence or deterministic timeout.</li>
   <li>Loop outputs have standardized deterministic meaning through <code>mode: "last_value"</code>.</li>
   <li>Control structures do not create hidden memory and do not weaken the explicit-local-memory rule for cycles.</li>
 </ul>
