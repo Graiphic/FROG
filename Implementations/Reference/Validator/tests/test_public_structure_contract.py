@@ -47,20 +47,43 @@ def test_public_schema_and_fixture_publish_the_exact_shared_contract() -> None:
         "for_loop",
         "while_loop",
         "event_structure",
+        "disabled_structure",
+        "conditional_disable_structure",
     ]
     assert "structure_tunnels" in properties
     assert "case_structure_true_background_rgb" in properties
     assert "for_loop_iteration_normalized_x" in properties
+    assert "for_loop_subdiagram_label_visible" in properties
+    assert "for_loop_subdiagram_label_text" in properties
+    assert "for_loop_subdiagram_label_height" in properties
     assert "while_loop_condition_normalized_y" in properties
     assert "event_structure_data_node_normalized_y" in properties
     assert nodes["case"]["structure_terminals"]["selector"]["body_port"] == "selected_case"
     assert nodes["for_loop"]["structure_terminals"]["count"]["type"] == "i64"
     assert nodes["for_loop"]["structure_terminals"]["index"]["body_port"] == "iteration"
+    assert nodes["for_loop"]["for_loop_subdiagram_label_visible"] is True
+    assert nodes["for_loop"]["for_loop_subdiagram_label_text"] == "Acquisition"
+    assert nodes["for_loop"]["for_loop_subdiagram_label_height"] == 72
     assert nodes["while_loop"]["structure_terminals"]["condition"]["body_port"] == "condition"
     assert nodes["event_structure"]["regions"][1]["event"] == {
         "kind": "value_change",
         "source": "widget:temperature",
     }
+    assert nodes["disabled_structure"]["regions"][1]["activation"] == "disabled"
+    assert nodes["conditional_disable_structure"]["regions"][0]["condition"] == {
+        "any": [
+            {
+                "all": [
+                    {
+                        "symbol": "TARGET_TYPE",
+                        "operator": "==",
+                        "value": "Windows",
+                    }
+                ]
+            }
+        ]
+    }
+    assert nodes["conditional_disable_structure"]["regions"][1]["default"] is True
 
 
 @pytest.mark.skipif(jsonschema is None, reason="jsonschema is not installed")
@@ -72,6 +95,8 @@ def test_public_fixture_covers_and_validates_all_standard_structure_families() -
         "for_loop",
         "while_loop",
         "event_structure",
+        "disabled_structure",
+        "conditional_disable_structure",
     }
     for node in nodes:
         assert _errors(node) == []
@@ -91,6 +116,35 @@ def test_event_public_contract_requires_explicit_descriptors_and_typed_fields() 
     del node["regions"][1]["event"]
     node["structure_terminals"]["event_data"]["fields"][2]["type"] = "i64"
 
+    assert _errors(node)
+
+
+@pytest.mark.skipif(jsonschema is None, reason="jsonschema is not installed")
+def test_conditional_disable_requires_one_default_and_exact_operators() -> None:
+    node = copy.deepcopy(
+        next(
+            node
+            for node in _nodes()
+            if node["structure_type"] == "conditional_disable_structure"
+        )
+    )
+    node["regions"].append(
+        {"id": "other_default", "default": True, "diagram": {"nodes": [], "edges": []}}
+    )
+    assert _errors(node)
+
+    node = copy.deepcopy(
+        next(
+            node
+            for node in _nodes()
+            if node["structure_type"] == "conditional_disable_structure"
+        )
+    )
+    node["regions"][0]["condition"]["any"][0]["all"][0]["operator"] = ">"
+    assert _errors(node)
+
+    node["regions"][0]["condition"]["any"][0]["all"][0]["operator"] = "=="
+    node["structure_terminals"] = {"selector": {}}
     assert _errors(node)
 
 

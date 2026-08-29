@@ -2,7 +2,7 @@
   "spec_version": "0.1",
   "metadata": {
     "name": "public_structure_families",
-    "description": "Valid public source for Case/If, For, While, and Event structures.",
+    "description": "Valid public source for Case/If, For, While, Event, Diagram Disable, and Conditional Disable structures.",
     "author": "FROG Conformance",
     "version": "0.1.0",
     "tags": ["conformance", "valid", "structures"]
@@ -79,6 +79,9 @@
         "regions": [{"id": "body", "diagram": {"nodes": [], "edges": []}}],
         "for_loop_iteration_normalized_x": 0.1,
         "for_loop_iteration_normalized_y": 0.85,
+        "for_loop_subdiagram_label_visible": true,
+        "for_loop_subdiagram_label_text": "Acquisition",
+        "for_loop_subdiagram_label_height": 72,
         "for_loop_background_rgb": 9028325,
         "for_loop_background_opacity_percent": 100,
         "for_loop_subframe_rgb": 5723990,
@@ -169,6 +172,66 @@
         "event_structure_subframe_rgb": 9460434,
         "event_structure_subframe_opacity_percent": 100,
         "layout": {"x": 440, "y": 340, "width": 360, "height": 260}
+      },
+      {
+        "id": "disabled_1",
+        "kind": "structure",
+        "structure_type": "disabled_structure",
+        "boundary": {
+          "inputs": [{"id": "disabled_in", "type": "f64"}],
+          "outputs": [{"id": "disabled_out", "type": "f64"}]
+        },
+        "structure_tunnels": [
+          {"id": "disabled_in", "value_type": "f64", "side": "left", "normalized_position": 0.4, "output_from_structure": false},
+          {"id": "disabled_out", "value_type": "f64", "side": "right", "normalized_position": 0.6, "output_from_structure": true}
+        ],
+        "structure_terminals": {},
+        "regions": [
+          {"id": "enabled", "activation": "enabled", "diagram": {"nodes": [], "edges": []}},
+          {"id": "disabled", "activation": "disabled", "diagram": {"nodes": [], "edges": []}}
+        ],
+        "disabled_structure_enabled_visible": true,
+        "disabled_structure_background_rgb": 11120536,
+        "disabled_structure_background_opacity_percent": 100,
+        "disabled_structure_subframe_rgb": 5723990,
+        "disabled_structure_subframe_opacity_percent": 100,
+        "disabled_structure_veil_rgb": 5132102,
+        "disabled_structure_veil_opacity_percent": 35,
+        "layout": {"x": 840, "y": 40, "width": 360, "height": 260}
+      },
+      {
+        "id": "conditional_disable_1",
+        "kind": "structure",
+        "structure_type": "conditional_disable_structure",
+        "boundary": {
+          "inputs": [{"id": "conditional_in", "type": "string"}],
+          "outputs": [{"id": "conditional_out", "type": "string"}]
+        },
+        "structure_tunnels": [
+          {"id": "conditional_in", "value_type": "string", "side": "left", "normalized_position": 0.4, "output_from_structure": false},
+          {"id": "conditional_out", "value_type": "string", "side": "right", "normalized_position": 0.6, "output_from_structure": true}
+        ],
+        "structure_terminals": {},
+        "regions": [
+          {
+            "id": "condition_1",
+            "condition": {
+              "any": [
+                {"all": [{"symbol": "TARGET_TYPE", "operator": "==", "value": "Windows"}]}
+              ]
+            },
+            "diagram": {"nodes": [], "edges": []}
+          },
+          {"id": "default", "default": true, "diagram": {"nodes": [], "edges": []}}
+        ],
+        "conditional_disable_visible_case_index": 0,
+        "conditional_disable_background_rgb": 13614737,
+        "conditional_disable_background_opacity_percent": 100,
+        "conditional_disable_subframe_rgb": 10122541,
+        "conditional_disable_subframe_opacity_percent": 100,
+        "conditional_disable_veil_rgb": 6312502,
+        "conditional_disable_veil_opacity_percent": 30,
+        "layout": {"x": 840, "y": 340, "width": 420, "height": 260}
       }
     ],
     "edges": []

@@ -63,7 +63,7 @@ In canonical source, it is a structural region of the diagram with:
 
 <p>
 FROG v0.1 keeps concrete control forms explicit.
-Therefore, the language standardizes <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code> as distinct visible structures rather than collapsing them into one generic hidden form.
+Therefore, the language standardizes <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, <code>event_structure</code>, <code>disabled_structure</code>, and <code>conditional_disable_structure</code> as distinct visible structures rather than collapsing them into one generic hidden form.
 </p>
 
 <p>
@@ -145,7 +145,7 @@ FROG distinguishes between:
 
 <ul>
   <li><strong>functions</strong> — callable operations such as <code>frog.core.add</code> or <code>frog.core.delay</code>,</li>
-  <li><strong>control structures</strong> — structural regions such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code>.</li>
+  <li><strong>control structures</strong> — structural regions such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, <code>event_structure</code>, <code>disabled_structure</code>, and <code>conditional_disable_structure</code>.</li>
 </ul>
 
 <p>
@@ -180,6 +180,8 @@ FROG v0.1 standardizes the following control structures:
   <li><code>for_loop</code></li>
   <li><code>while_loop</code></li>
   <li><code>event_structure</code></li>
+  <li><code>disabled_structure</code></li>
+  <li><code>conditional_disable_structure</code></li>
 </ul>
 
 <p>
@@ -200,6 +202,8 @@ The standard structure families for FROG v0.1 are:
   <li><code>for_loop</code></li>
   <li><code>while_loop</code></li>
   <li><code>event_structure</code></li>
+  <li><code>disabled_structure</code></li>
+  <li><code>conditional_disable_structure</code></li>
 </ul>
 
 <p>
@@ -218,7 +222,7 @@ Accordingly:
 </p>
 
 <ul>
-  <li>canonical source MUST serialize standardized structure families such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code>,</li>
+  <li>canonical source MUST serialize standardized structure families such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, <code>event_structure</code>, <code>disabled_structure</code>, and <code>conditional_disable_structure</code>,</li>
   <li>canonical source MUST NOT introduce separate structure families such as <code>if</code>, <code>if_else</code>, <code>else_if</code>, or <code>switch</code> in base v0.1,</li>
   <li>tooling MAY preserve authoring intent in editor metadata, but MUST preserve canonical structural meaning when serializing source.</li>
 </ul>
@@ -253,7 +257,7 @@ Field meaning:
 <ul>
   <li><code>id</code> — unique structure node identifier within the owning diagram scope,</li>
   <li><code>kind</code> — MUST be <code>"structure"</code>,</li>
-  <li><code>structure_type</code> — MUST be a valid structure family such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, or <code>event_structure</code>,</li>
+  <li><code>structure_type</code> — MUST be a valid structure family such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, <code>event_structure</code>, <code>disabled_structure</code>, or <code>conditional_disable_structure</code>,</li>
   <li><code>boundary</code> — explicit structure inputs and outputs crossing the structure wall,</li>
   <li><code>structure_terminals</code> — structure-specific terminals such as selector, count, condition, or index,</li>
   <li><code>regions</code> — owned executable regions,</li>
@@ -380,8 +384,9 @@ executable contract from a stale authoring tunnel record.
 
 <p>
 The public structure-node schema also defines the optional authoring fields used
-to preserve visible-case selection, normalized terminal positions, background
-colors, subframe colors and subframe opacity for the four standard families.
+to preserve visible-case selection, normalized terminal positions, fixed
+subdiagram text, background colors, subframe colors and subframe opacity for
+the standard families.
 Normalized positions range from <code>0</code> to <code>1</code>, colors are packed
 24-bit RGB integers (<code>0xRRGGBB</code>) or the transparent sentinel
 <code>0xFFFFFFFF</code>, and opacity ranges from
@@ -390,9 +395,11 @@ Normalized positions range from <code>0</code> to <code>1</code>, colors are pac
 
 <ul>
   <li><code>case_structure_*</code> preserves the visible boolean case, selector position, and the separate True/False body and subframe colors,</li>
-  <li><code>for_loop_*</code> preserves the movable body index position and For body/subframe colors; the fixed count terminal needs no position field,</li>
+  <li><code>for_loop_*</code> preserves the movable body index position, For body/subframe colors, and the optional fixed subdiagram label above the body through <code>for_loop_subdiagram_label_visible</code>, <code>for_loop_subdiagram_label_text</code> and the authoring-only clamped <code>for_loop_subdiagram_label_height</code>; the fixed count terminal needs no position field,</li>
   <li><code>while_loop_*</code> preserves the movable condition and index positions and While body/subframe colors,</li>
-  <li><code>event_structure_*</code> preserves the visible event-case index, the vertically movable Event Data node, and Event body/subframe colors; the fixed timeout terminal needs no position field.</li>
+  <li><code>event_structure_*</code> preserves the visible event-case index, the vertically movable Event Data node, and Event body/subframe colors; the fixed timeout terminal needs no position field,</li>
+  <li><code>disabled_structure_*</code> preserves the visible Enabled/Disabled region, body/subframe colors, and the non-semantic veil color and opacity used while authoring the Disabled region.</li>
+  <li><code>conditional_disable_*</code> preserves only authoring-visible case selection and presentation colors; compile-time activation is derived from the Compilation Context and MUST NOT be serialized as editor state.</li>
 </ul>
 
 <hr/>
@@ -498,7 +505,9 @@ A structure MAY own one region or multiple regions depending on its family:
   <li>a <code>case</code> structure owns multiple branch regions,</li>
   <li>a <code>for_loop</code> owns one body region,</li>
   <li>a <code>while_loop</code> owns one body region,</li>
-  <li>an <code>event_structure</code> owns one or more event-case regions.</li>
+  <li>an <code>event_structure</code> owns one or more event-case regions,</li>
+  <li>a <code>disabled_structure</code> owns exactly one Enabled region and exactly one Disabled region.</li>
+  <li>a <code>conditional_disable_structure</code> owns an ordered list of conditioned regions followed by exactly one Default region.</li>
 </ul>
 
 <p>
@@ -993,6 +1002,55 @@ colors and their opacity values preserve editor presentation only. They MUST
 not affect which event is selected or how the region executes.
 </p>
 
+<h2 id="disabled-structure">14.5 Diagram Disable Structure</h2>
+
+<p>
+A <code>disabled_structure</code> preserves exactly two owned regions named
+<code>enabled</code> and <code>disabled</code>. Each region MUST repeat its semantic
+role through <code>activation: "enabled"</code> or
+<code>activation: "disabled"</code>. The structure has no selector or condition
+terminal, so <code>structure_terminals</code> MUST be an empty object. Ordinary
+typed boundary ports and <code>structure_tunnels</code> remain valid.
+</p>
+
+<p>
+Only the Enabled region is executable. The Disabled region remains canonical
+source so an editor can retain and display its diagram, but it does not
+participate in execution. <code>disabled_structure_enabled_visible</code>, the
+background and subframe colors, and the veil color and opacity are authoring
+metadata only and MUST NOT change that rule.
+</p>
+
+<h2 id="conditional-disable-structure">14.6 Conditional Disable Structure</h2>
+
+<p>
+A <code>conditional_disable_structure</code> is a compile-time conditional
+dataflow container. It has no runtime selector terminal, so
+<code>structure_terminals</code> MUST be empty. Its <code>regions</code> array is
+ordered and MUST contain one or more regions with a structured
+<code>condition</code>, followed by exactly one region with
+<code>default: true</code>. Every region retains its complete owned diagram in
+canonical source.
+</p>
+
+<p>
+A condition is represented as <code>condition.any[]</code> terms joined by OR;
+each term contains <code>all[]</code> comparisons joined by AND. A comparison
+contains <code>symbol</code>, <code>operator</code> (<code>==</code> or
+<code>!=</code>), and a case-sensitive string <code>value</code>. This normalized
+form preserves AND precedence over OR without treating an opaque display
+string as semantic source.
+</p>
+
+<p>
+Resolution evaluates non-Default regions in source order against the resolved
+Compilation Context. The first true region wins. If none is true, the Default
+region wins. Built-in symbols are overlaid by Project symbols and then Target
+symbols; a more specific layer replaces the same symbol name from a less
+specific layer. <code>conditional_disable_visible_case_index</code> is
+authoring metadata only and MUST NOT influence compile-time selection.
+</p>
+
 <hr/>
 
 <h2 id="source-to-language-alignment">15. Source-to-Language Alignment</h2>
@@ -1041,7 +1099,26 @@ This section defines the source-level alignment points between the structures de
   <li>the region's <code>event_data_fields</code> selects the Event Data rows visible in that region.</li>
 </ul>
 
-<h3>15.5 No semantic redefinition in this document</h3>
+<h3>15.5 Disabled-structure alignment</h3>
+
+<ul>
+  <li>a node with <code>structure_type: "disabled_structure"</code> aligns with the standardized source-exclusion family,</li>
+  <li><code>structure_terminals</code> is empty because the structure has no selector input,</li>
+  <li>the <code>enabled</code> and <code>disabled</code> regions retain both diagrams in source,</li>
+  <li>the semantic layer executes only the region whose <code>activation</code> is <code>enabled</code>.</li>
+</ul>
+
+<h3>15.6 Conditional-disable alignment</h3>
+
+<ul>
+  <li>a node with <code>structure_type: "conditional_disable_structure"</code> aligns with compile-time graph specialization,</li>
+  <li>its empty <code>structure_terminals</code> object forbids a runtime selector wire,</li>
+  <li>conditioned regions are evaluated in array order and the first true region wins,</li>
+  <li>exactly one Default region provides the fallback when no condition matches,</li>
+  <li>all variants remain canonical source even when lowering retains only the selected graph.</li>
+</ul>
+
+<h3>15.7 No semantic redefinition in this document</h3>
 
 <p>
 This document MUST NOT be interpreted as redefining:
@@ -1103,7 +1180,7 @@ Control structures are represented in the diagram as nodes of:
 with a valid:
 </p>
 
-<pre><code>structure_type = "case" | "for_loop" | "while_loop" | "event_structure"</code></pre>
+<pre><code>structure_type = "case" | "for_loop" | "while_loop" | "event_structure" | "disabled_structure" | "conditional_disable_structure"</code></pre>
 
 <p>
 Their external ports are resolved from:
@@ -1157,6 +1234,10 @@ Implementations MUST enforce the following source-level validation rules:
   <li>an <code>event_structure</code> MUST define exactly one timeout event-case region,</li>
   <li>every event-case region MUST define an explicit <code>event</code> descriptor independently from <code>event_label</code>,</li>
   <li>every selected <code>event_data_fields</code> id MUST be declared by the typed <code>event_data</code> terminal,</li>
+  <li>a <code>disabled_structure</code> MUST define an empty <code>structure_terminals</code> object,</li>
+  <li>a <code>disabled_structure</code> MUST define exactly one <code>enabled</code> region and one <code>disabled</code> region with matching <code>activation</code> values,</li>
+  <li>a <code>conditional_disable_structure</code> MUST define an empty <code>structure_terminals</code> object, one or more ordered condition regions, and exactly one Default region,</li>
+  <li>every conditional-disable comparison MUST use exact string values and one of <code>==</code> or <code>!=</code>, with AND groups evaluated before OR groups,</li>
   <li>every loop output MUST have a complete source-level meaning,</li>
   <li>if <code>mode: "last_value"</code> is used and zero iterations are possible, <code>zero_iteration_value</code> MUST be present and type-compatible,</li>
   <li>cycles inside structure regions MUST use explicit source representation for local memory when local memory is intended.</li>
@@ -1427,12 +1508,14 @@ This document defines how that structural control is represented in canonical so
 </p>
 
 <ul>
-  <li><code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code> are the standardized control structures of base v0.1.</li>
+  <li><code>case</code>, <code>for_loop</code>, <code>while_loop</code>, <code>event_structure</code>, <code>disabled_structure</code>, and <code>conditional_disable_structure</code> are the standardized control structures of base v0.1.</li>
   <li>A boolean <code>case</code> is the canonical source-level equivalent of <code>if / else</code>.</li>
   <li>A string <code>case</code> provides canonical multi-branch source representation with an explicit required default region.</li>
   <li>Derived IDE-facing authoring forms such as <em>If</em>, <em>If / Else</em>, <em>Else If</em>, and <em>Switch</em> do not introduce separate canonical structure families in source.</li>
   <li>Loop structures remain source-distinct from ordinary functions.</li>
   <li>Event structures declare their triggers separately from authoring labels and expose typed Event Data field projections.</li>
+  <li>Diagram Disable structures retain both diagrams in source while excluding the Disabled region from execution.</li>
+  <li>Conditional Disable structures retain every build variant in source and select the first matching condition, or Default, before runtime.</li>
   <li>Structure boundaries, structure terminals, and owned regions are explicit parts of canonical source.</li>
   <li>Explicit local memory inside loop regions remains represented by ordinary source primitives such as <code>frog.core.delay</code>.</li>
   <li>Normative execution semantics remain owned by <code>Language/Control structures.md</code>.</li>

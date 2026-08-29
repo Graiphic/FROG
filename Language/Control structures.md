@@ -63,7 +63,7 @@ terminals, or regions. Those source-facing topics belong to <code>Expression/</c
 
 <p>
 FROG v0.1 keeps concrete control forms explicit. Therefore, the language standardizes
-<code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code> as distinct semantic
+<code>case</code>, <code>for_loop</code>, <code>while_loop</code>, <code>event_structure</code>, <code>disabled_structure</code>, and <code>conditional_disable_structure</code> as distinct semantic
 families rather than collapsing them into one generic hidden form.
 </p>
 
@@ -154,7 +154,7 @@ FROG distinguishes between:
 
 <ul>
   <li><strong>functions</strong> — callable primitive operations such as <code>frog.core.add</code> or <code>frog.core.delay</code>,</li>
-  <li><strong>control structures</strong> — language-level structural constructs such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code>.</li>
+  <li><strong>control structures</strong> — language-level structural constructs such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, <code>event_structure</code>, <code>disabled_structure</code>, and <code>conditional_disable_structure</code>.</li>
 </ul>
 
 <p>
@@ -190,6 +190,8 @@ FROG v0.1 standardizes the following control structures:
   <li><code>for_loop</code></li>
   <li><code>while_loop</code></li>
   <li><code>event_structure</code></li>
+  <li><code>disabled_structure</code></li>
+  <li><code>conditional_disable_structure</code></li>
 </ul>
 
 <p>
@@ -211,6 +213,8 @@ The standardized control-structure families for FROG v0.1 are:
   <li><code>for_loop</code></li>
   <li><code>while_loop</code></li>
   <li><code>event_structure</code></li>
+  <li><code>disabled_structure</code></li>
+  <li><code>conditional_disable_structure</code></li>
 </ul>
 
 <p>
@@ -572,6 +576,49 @@ its boundary outputs complete. A later event occurrence begins a new activation;
 it MUST NOT cause a second region to execute in the already completed activation.
 </p>
 
+<h2 id="disabled-structure-semantics">11.6 Diagram Disable Structure Semantics</h2>
+
+<p>
+A <code>disabled_structure</code> retains one Enabled region and one Disabled
+region but activates only the Enabled region. The Disabled region MUST NOT
+schedule nodes, perform effects, publish boundary outputs, or otherwise alter
+runtime behavior. Retaining and displaying its source is an authoring concern.
+</p>
+
+<p>
+The structure has no selector, condition, or other family-specific terminal.
+Changing the region visible in an editor MUST NOT change which region executes.
+Boundary-output completeness is evaluated against the Enabled region only.
+Syntax, schema, and local type validation MAY still diagnose malformed retained
+source inside the Disabled region without making that region executable.
+</p>
+
+<h2 id="conditional-disable-semantics">11.7 Conditional Disable Semantics</h2>
+
+<p>
+A <code>conditional_disable_structure</code> resolves exactly one owned region
+before runtime from a Compilation Context of case-sensitive string symbols.
+Built-in symbols form the base context, Project symbols replace matching
+Built-in names, and Target symbols replace matching Project names. Runtime
+data, controls, wires, and enumerators MUST NOT modify this selection.
+</p>
+
+<p>
+Condition regions are evaluated in canonical source order. Comparisons use
+exact string equality or inequality; comparisons inside one <code>all</code>
+group are AND-ed, and <code>any</code> groups are OR-ed. The first true region
+wins. If no explicit region matches, the unique Default region wins. Reordering
+regions can therefore change program meaning.
+</p>
+
+<p>
+Only the resolved region participates in executable graph validation,
+scheduling, side effects, and boundary-output resolution for the selected
+target. Other regions remain source variants for other Compilation Contexts.
+Lowering MAY replace the structure with the resolved graph, but source tooling
+MUST preserve every region and its order.
+</p>
+
 <hr/>
 
 <h2 id="loop-output-semantics">12. Loop Output Semantics</h2>
@@ -646,6 +693,8 @@ However, runtimes MUST NOT differ in:
   <li>whether a <code>for_loop</code> with resolved count <code>N</code> executes exactly <code>N</code> iterations,</li>
   <li>whether a <code>while_loop</code> uses the standardized post-test continue-while-true rule,</li>
   <li>which event-case region executes for a given event descriptor, source, and timeout deadline,</li>
+  <li>whether a <code>disabled_structure</code> executes anything other than its Enabled region,</li>
+  <li>which ordered <code>conditional_disable_structure</code> region is selected for an identical resolved Compilation Context,</li>
   <li>how <code>last_value</code> loop outputs are resolved,</li>
   <li>whether directed cycles inside structure regions still require explicit local memory.</li>
 </ul>
@@ -709,6 +758,9 @@ Implementations MUST enforce the following semantic rules:
   <li>every <code>value_change</code> event descriptor MUST identify its source,</li>
   <li>non-timeout event descriptors MUST be unique by kind and source within one structure,</li>
   <li>one event occurrence MUST execute exactly one matching event-case region,</li>
+  <li>a <code>disabled_structure</code> MUST define exactly one Enabled region and one Disabled region,</li>
+  <li>a <code>disabled_structure</code> activation MUST execute only its Enabled region and MUST ignore its authoring-visible region,</li>
+  <li>a <code>conditional_disable_structure</code> MUST have no runtime selector, MUST evaluate AND before OR, MUST select the first true ordered condition, and MUST fall back to its unique Default region,</li>
   <li>loop outputs MUST have deterministic semantic meaning after termination,</li>
   <li>if <code>mode: "last_value"</code> is used and zero iterations are possible, a deterministic zero-iteration meaning MUST exist,</li>
   <li>cycles inside structure-owned regions MUST satisfy the same explicit-local-memory rule as any other directed cycle.</li>
@@ -830,13 +882,15 @@ This document defines the normative execution semantics of that structural contr
 </p>
 
 <ul>
-  <li><code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code> are the standardized control-structure families of base v0.1.</li>
+  <li><code>case</code>, <code>for_loop</code>, <code>while_loop</code>, <code>event_structure</code>, <code>disabled_structure</code>, and <code>conditional_disable_structure</code> are the standardized control-structure families of base v0.1.</li>
   <li>A boolean <code>case</code> is the semantic equivalent of <code>if / else</code>, but the standardized family remains <code>case</code>.</li>
   <li>A string <code>case</code> performs deterministic exact-match selection with a required default fallback.</li>
   <li>Authoring-facing derived forms such as <em>If</em>, <em>If / Else</em>, <em>Else If</em>, and <em>Switch</em> do not introduce separate semantic families in base v0.1.</li>
   <li>A <code>for_loop</code> performs counted repetition with deterministic index progression.</li>
   <li>A base v0.1 <code>while_loop</code> uses standardized post-test continue-while-true semantics.</li>
   <li>An <code>event_structure</code> executes exactly one region for a declared event occurrence or deterministic timeout.</li>
+  <li>A <code>disabled_structure</code> retains both regions but executes only its Enabled region.</li>
+  <li>A <code>conditional_disable_structure</code> resolves the first matching compile-time variant, or Default, before runtime.</li>
   <li>Loop outputs have standardized deterministic meaning through <code>mode: "last_value"</code>.</li>
   <li>Control structures do not create hidden memory and do not weaken the explicit-local-memory rule for cycles.</li>
 </ul>

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://graiphic.github.io/FROG/Expression/schema/frog.structure-node.schema.json",
   "title": "FROG Public Structure Node Contract",
-  "description": "Machine-checkable public .frog source contract for case (the canonical if/else form), for_loop, while_loop, and event_structure nodes.",
+  "description": "Machine-checkable public .frog source contract for case (the canonical if/else form), for_loop, while_loop, event_structure, disabled_structure, and conditional_disable_structure nodes.",
   "$ref": "#/$defs/structureNode",
   "$defs": {
     "identifier": {
@@ -186,6 +186,78 @@
       "allOf": [
         { "$ref": "#/$defs/baseRegion" },
         { "properties": { "id": { "const": "body" } } }
+      ]
+    },
+    "disabledRegion": {
+      "allOf": [
+        { "$ref": "#/$defs/baseRegion" },
+        {
+          "required": ["activation"],
+          "properties": {
+            "id": { "enum": ["enabled", "disabled"] },
+            "activation": { "enum": ["enabled", "disabled"] }
+          }
+        }
+      ]
+    },
+    "disabledStructureTerminals": {
+      "type": "object",
+      "maxProperties": 0,
+      "additionalProperties": false
+    },
+    "conditionalDisableComparison": {
+      "type": "object",
+      "required": ["symbol", "operator", "value"],
+      "properties": {
+        "symbol": { "$ref": "#/$defs/identifier" },
+        "operator": { "enum": ["==", "!="] },
+        "value": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "conditionalDisableTerm": {
+      "type": "object",
+      "required": ["all"],
+      "properties": {
+        "all": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/conditionalDisableComparison" },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "conditionalDisableCondition": {
+      "type": "object",
+      "required": ["any"],
+      "properties": {
+        "any": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/conditionalDisableTerm" },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "conditionalDisableRegion": {
+      "allOf": [
+        { "$ref": "#/$defs/baseRegion" },
+        {
+          "oneOf": [
+            {
+              "required": ["condition"],
+              "properties": {
+                "condition": { "$ref": "#/$defs/conditionalDisableCondition" }
+              },
+              "not": { "required": ["default"] }
+            },
+            {
+              "required": ["default"],
+              "properties": { "default": { "const": true } },
+              "not": { "required": ["condition"] }
+            }
+          ]
+        }
       ]
     },
     "eventDescriptor": {
@@ -393,7 +465,7 @@
       "properties": {
         "id": { "$ref": "#/$defs/identifier" },
         "kind": { "const": "structure" },
-        "structure_type": { "enum": ["case", "for_loop", "while_loop", "event_structure"] },
+        "structure_type": { "enum": ["case", "for_loop", "while_loop", "event_structure", "disabled_structure", "conditional_disable_structure"] },
         "boundary": { "$ref": "#/$defs/boundary" },
         "structure_terminals": { "type": "object" },
         "regions": { "type": "array" },
@@ -413,6 +485,9 @@
         "case_structure_false_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
         "for_loop_iteration_normalized_x": { "$ref": "#/$defs/normalizedPosition" },
         "for_loop_iteration_normalized_y": { "$ref": "#/$defs/normalizedPosition" },
+        "for_loop_subdiagram_label_visible": { "type": "boolean" },
+        "for_loop_subdiagram_label_text": { "type": "string" },
+        "for_loop_subdiagram_label_height": { "type": "number", "minimum": 24, "maximum": 160 },
         "for_loop_background_rgb": { "$ref": "#/$defs/authoringColor" },
         "for_loop_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
         "for_loop_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
@@ -431,6 +506,20 @@
         "event_structure_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
         "event_structure_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
         "event_structure_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "disabled_structure_enabled_visible": { "type": "boolean" },
+        "disabled_structure_background_rgb": { "$ref": "#/$defs/authoringColor" },
+        "disabled_structure_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "disabled_structure_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
+        "disabled_structure_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "disabled_structure_veil_rgb": { "$ref": "#/$defs/authoringColor" },
+        "disabled_structure_veil_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "conditional_disable_visible_case_index": { "type": "integer", "minimum": 0 },
+        "conditional_disable_background_rgb": { "$ref": "#/$defs/authoringColor" },
+        "conditional_disable_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "conditional_disable_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
+        "conditional_disable_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "conditional_disable_veil_rgb": { "$ref": "#/$defs/authoringColor" },
+        "conditional_disable_veil_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
         "layout": { "$ref": "#/$defs/layout" }
       },
       "allOf": [
@@ -478,6 +567,63 @@
                     }
                   },
                   "required": ["event"]
+                },
+                "minContains": 1,
+                "maxContains": 1
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "structure_type": { "const": "disabled_structure" } } },
+          "then": {
+            "properties": {
+              "structure_terminals": { "$ref": "#/$defs/disabledStructureTerminals" },
+              "regions": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/disabledRegion" },
+                "minItems": 2,
+                "maxItems": 2,
+                "allOf": [
+                  {
+                    "contains": {
+                      "required": ["id", "activation"],
+                      "properties": {
+                        "id": { "const": "enabled" },
+                        "activation": { "const": "enabled" }
+                      }
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  },
+                  {
+                    "contains": {
+                      "required": ["id", "activation"],
+                      "properties": {
+                        "id": { "const": "disabled" },
+                        "activation": { "const": "disabled" }
+                      }
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "structure_type": { "const": "conditional_disable_structure" } } },
+          "then": {
+            "properties": {
+              "structure_terminals": { "$ref": "#/$defs/disabledStructureTerminals" },
+              "regions": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/conditionalDisableRegion" },
+                "minItems": 2,
+                "contains": {
+                  "required": ["default"],
+                  "properties": { "default": { "const": true } }
                 },
                 "minContains": 1,
                 "maxContains": 1
