@@ -5,7 +5,7 @@
 <h1 align="center">FROG Standard Button Widget</h1>
 
 <p align="center">
-  <strong>Normative baseline for the standardized button control widget class</strong><br/>
+  <strong>Normative baseline for the standardized button widget class</strong><br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -48,7 +48,7 @@
 
 <p>
 This document defines the intrinsic standardized baseline for the button widget in FROG.
-The button is a command-oriented control with a boolean state, explicit mechanical-action behavior, event observation, and realization-driven visual state support.
+The button is command-oriented when used as a control and state-presenting when used as an indicator. It keeps one boolean value class, explicit mechanical-action behavior for the control role, event observation, and realization-driven visual state support.
 </p>
 
 <p>
@@ -266,7 +266,7 @@ Host overlays for input handling MAY align to <code>button_face.bounds</code>, b
 <ul>
   <li><strong>class_id:</strong> <code>frog.widgets.button</code></li>
   <li><strong>family:</strong> <code>button_widget</code></li>
-  <li><strong>compatible role:</strong> <code>control</code></li>
+  <li><strong>compatible roles:</strong> <code>control</code>, <code>indicator</code></li>
 </ul>
 
 <h3>8.2 Value posture</h3>
@@ -385,5 +385,5 @@ The standardized button defines the intrinsic command-oriented action widget of 
 </ul>
 
 <p>
-The button is a stateful command control with explicit mechanical-action behavior, event posture, internal state text, shared <code>label</code> / <code>caption</code> convention, and default SVG realization support through one parameterized semantic skin.
+The button is one stateful widget class with role-derived terminal posture. Its control role owns command and mechanical-action behavior; its indicator role presents the source/runtime-driven value without mouse mutation. Both roles share internal state text, the <code>label</code> / <code>caption</code> convention, and one parameterized semantic SVG skin.
 </p>

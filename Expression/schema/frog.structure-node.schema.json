@@ -1,0 +1,732 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.github.io/FROG/Expression/schema/frog.structure-node.schema.json",
+  "title": "FROG Public Structure Node Contract",
+  "description": "Machine-checkable public .frog source contract for case (the canonical if/else form), for_loop, while_loop, timed_loop, event_structure, disabled_structure, and conditional_disable_structure nodes.",
+  "$ref": "#/$defs/structureNode",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "valueType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "normalizedPosition": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "packedRgb": {
+      "description": "Packed 24-bit RGB authoring color (0xRRGGBB).",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 16777215
+    },
+    "authoringColor": {
+      "description": "Packed 24-bit RGB or the public transparent sentinel 0xFFFFFFFF.",
+      "oneOf": [
+        { "$ref": "#/$defs/packedRgb" },
+        { "const": 4294967295 }
+      ]
+    },
+    "opacityPercent": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "layout": {
+      "type": "object",
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "edgeEndpoint": {
+      "type": "object",
+      "required": ["node", "port"],
+      "properties": {
+        "node": { "$ref": "#/$defs/identifier" },
+        "port": { "$ref": "#/$defs/identifier" }
+      },
+      "additionalProperties": true
+    },
+    "edge": {
+      "type": "object",
+      "required": ["id", "from", "to"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "from": { "$ref": "#/$defs/edgeEndpoint" },
+        "to": { "$ref": "#/$defs/edgeEndpoint" }
+      },
+      "additionalProperties": true
+    },
+    "diagramScope": {
+      "type": "object",
+      "required": ["nodes", "edges"],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "allOf": [
+              {
+                "if": {
+                  "required": ["kind"],
+                  "properties": { "kind": { "const": "structure" } }
+                },
+                "then": { "$ref": "#/$defs/structureNode" }
+              }
+            ]
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/edge" }
+        },
+        "wire_fragments": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
+    "boundaryPort": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "type": { "$ref": "#/$defs/valueType" },
+        "mode": { "enum": ["last_value"] },
+        "zero_iteration_value": {}
+      },
+      "additionalProperties": true
+    },
+    "boundary": {
+      "type": "object",
+      "required": ["inputs", "outputs"],
+      "properties": {
+        "inputs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/boundaryPort" }
+        },
+        "outputs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/boundaryPort" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "terminal": {
+      "type": "object",
+      "required": ["outer_visible", "exposed_in_body", "read_only", "role"],
+      "properties": {
+        "type": { "$ref": "#/$defs/valueType" },
+        "outer_visible": { "type": "boolean" },
+        "exposed_in_body": { "type": "boolean" },
+        "read_only": { "type": "boolean" },
+        "role": { "$ref": "#/$defs/identifier" },
+        "outer_port": { "$ref": "#/$defs/identifier" },
+        "body_port": { "$ref": "#/$defs/identifier" }
+      },
+      "additionalProperties": true
+    },
+    "eventDataField": {
+      "type": "object",
+      "required": ["id", "type", "body_port"],
+      "properties": {
+        "id": { "enum": ["source", "type", "time"] },
+        "type": { "$ref": "#/$defs/valueType" },
+        "body_port": { "$ref": "#/$defs/identifier" }
+      },
+      "additionalProperties": false
+    },
+    "structureTunnel": {
+      "description": "Optional authoring placement for a canonical boundary id. Boundary id, type and direction remain authoritative.",
+      "type": "object",
+      "required": ["id", "value_type", "side", "normalized_position", "output_from_structure"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "value_type": { "$ref": "#/$defs/valueType" },
+        "side": { "enum": ["left", "right", "top", "bottom"] },
+        "normalized_position": { "$ref": "#/$defs/normalizedPosition" },
+        "output_from_structure": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "baseRegion": {
+      "type": "object",
+      "required": ["id", "diagram"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "diagram": { "$ref": "#/$defs/diagramScope" }
+      },
+      "additionalProperties": true
+    },
+    "caseRegion": {
+      "allOf": [
+        { "$ref": "#/$defs/baseRegion" },
+        {
+          "anyOf": [
+            {
+              "required": ["match"],
+              "properties": { "match": { "type": ["boolean", "string"] } }
+            },
+            {
+              "required": ["default"],
+              "properties": { "default": { "const": true } }
+            }
+          ]
+        }
+      ]
+    },
+    "bodyRegion": {
+      "allOf": [
+        { "$ref": "#/$defs/baseRegion" },
+        { "properties": { "id": { "const": "body" } } }
+      ]
+    },
+    "disabledRegion": {
+      "allOf": [
+        { "$ref": "#/$defs/baseRegion" },
+        {
+          "required": ["activation"],
+          "properties": {
+            "id": { "enum": ["enabled", "disabled"] },
+            "activation": { "enum": ["enabled", "disabled"] }
+          }
+        }
+      ]
+    },
+    "disabledStructureTerminals": {
+      "type": "object",
+      "maxProperties": 0,
+      "additionalProperties": false
+    },
+    "conditionalDisableComparison": {
+      "type": "object",
+      "required": ["symbol", "operator", "value"],
+      "properties": {
+        "symbol": { "$ref": "#/$defs/identifier" },
+        "operator": { "enum": ["==", "!="] },
+        "value": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "conditionalDisableTerm": {
+      "type": "object",
+      "required": ["all"],
+      "properties": {
+        "all": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/conditionalDisableComparison" },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "conditionalDisableCondition": {
+      "type": "object",
+      "required": ["any"],
+      "properties": {
+        "any": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/conditionalDisableTerm" },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "conditionalDisableRegion": {
+      "allOf": [
+        { "$ref": "#/$defs/baseRegion" },
+        {
+          "oneOf": [
+            {
+              "required": ["condition"],
+              "properties": {
+                "condition": { "$ref": "#/$defs/conditionalDisableCondition" }
+              },
+              "not": { "required": ["default"] }
+            },
+            {
+              "required": ["default"],
+              "properties": { "default": { "const": true } },
+              "not": { "required": ["condition"] }
+            }
+          ]
+        }
+      ]
+    },
+    "eventDescriptor": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["timeout", "value_change", "user"] },
+        "source": { "$ref": "#/$defs/identifier" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "value_change" } } },
+          "then": { "required": ["source"] }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "eventRegion": {
+      "allOf": [
+        { "$ref": "#/$defs/baseRegion" },
+        {
+          "required": ["event", "event_data_fields"],
+          "properties": {
+            "event": { "$ref": "#/$defs/eventDescriptor" },
+            "event_label": { "type": "string" },
+            "event_data_fields": {
+              "type": "array",
+              "items": { "enum": ["source", "type", "time"] },
+              "uniqueItems": true
+            }
+          }
+        }
+      ]
+    },
+    "caseTerminals": {
+      "type": "object",
+      "required": ["selector"],
+      "properties": {
+        "selector": {
+          "allOf": [
+            { "$ref": "#/$defs/terminal" },
+            {
+              "required": ["type", "outer_port", "body_port"],
+              "properties": {
+                "type": { "enum": ["bool", "string"] },
+                "outer_visible": { "const": true },
+                "exposed_in_body": { "const": true },
+                "read_only": { "const": true },
+                "role": { "const": "selector" },
+                "outer_port": { "const": "selector" },
+                "body_port": { "const": "selected_case" }
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "forLoopTerminals": {
+      "type": "object",
+      "required": ["count", "index"],
+      "properties": {
+        "count": {
+          "allOf": [
+            { "$ref": "#/$defs/terminal" },
+            {
+              "required": ["type", "outer_port", "body_port"],
+              "properties": {
+                "type": { "const": "i64" },
+                "outer_visible": { "const": true },
+                "exposed_in_body": { "const": true },
+                "read_only": { "const": true },
+                "role": { "const": "count" },
+                "outer_port": { "const": "count" },
+                "body_port": { "const": "count_value" }
+              }
+            }
+          ]
+        },
+        "index": {
+          "allOf": [
+            { "$ref": "#/$defs/terminal" },
+            {
+              "required": ["type", "body_port"],
+              "properties": {
+                "type": { "const": "i64" },
+                "outer_visible": { "const": false },
+                "exposed_in_body": { "const": true },
+                "read_only": { "const": true },
+                "role": { "const": "index" },
+                "body_port": { "const": "iteration" }
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "whileLoopTerminals": {
+      "type": "object",
+      "required": ["condition", "index"],
+      "properties": {
+        "condition": {
+          "allOf": [
+            { "$ref": "#/$defs/terminal" },
+            {
+              "required": ["type", "body_port"],
+              "properties": {
+                "type": { "const": "bool" },
+                "outer_visible": { "const": false },
+                "exposed_in_body": { "const": true },
+                "read_only": { "const": false },
+                "role": { "const": "continue_while_true" },
+                "body_port": { "const": "condition" }
+              }
+            }
+          ]
+        },
+        "index": {
+          "allOf": [
+            { "$ref": "#/$defs/terminal" },
+            {
+              "required": ["type", "body_port"],
+              "properties": {
+                "type": { "const": "i64" },
+                "outer_visible": { "const": false },
+                "exposed_in_body": { "const": true },
+                "read_only": { "const": true },
+                "role": { "const": "index" },
+                "body_port": { "const": "iteration" }
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "timedLoopTerminals": {
+      "allOf": [
+        { "$ref": "#/$defs/whileLoopTerminals" },
+        {
+          "properties": {
+            "condition": {
+              "properties": { "role": { "enum": ["stop_if_true", "continue_while_true"] } }
+            }
+          }
+        }
+      ]
+    },
+    "timedLoopSchedule": {
+      "type": "object",
+      "required": ["timing_source", "period", "offset", "deadline", "timeout", "priority", "processor", "late_iteration_policy"],
+      "properties": {
+        "timing_source": { "$ref": "#/$defs/identifier" },
+        "period": { "type": "integer", "minimum": 1 },
+        "offset": { "type": "integer", "minimum": 0 },
+        "deadline": { "type": "integer", "minimum": 1 },
+        "timeout": { "type": "integer", "minimum": -1 },
+        "priority": { "type": "integer" },
+        "processor": { "type": "integer", "minimum": -1 },
+        "late_iteration_policy": {
+          "type": "object",
+          "required": ["missed_periods", "phase"],
+          "properties": {
+            "missed_periods": { "enum": ["discard", "execute"] },
+            "phase": { "enum": ["maintain", "reset"] }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "timingField": {
+      "type": "object",
+      "required": ["id", "label", "type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "label": { "type": "string" },
+        "type": { "$ref": "#/$defs/valueType" }
+      },
+      "additionalProperties": false
+    },
+    "timingNode": {
+      "type": "object",
+      "required": ["role", "direction", "fields"],
+      "properties": {
+        "role": { "enum": ["configuration", "iteration_feedback", "next_iteration", "completion"] },
+        "direction": { "enum": ["input", "output"] },
+        "fields": { "type": "array", "items": { "$ref": "#/$defs/timingField" }, "minItems": 1 }
+      },
+      "additionalProperties": false
+    },
+    "timingNodes": {
+      "type": "object",
+      "required": ["initial", "feedback", "update", "result"],
+      "properties": {
+        "initial": { "$ref": "#/$defs/timingNode" },
+        "feedback": { "$ref": "#/$defs/timingNode" },
+        "update": { "$ref": "#/$defs/timingNode" },
+        "result": { "$ref": "#/$defs/timingNode" }
+      },
+      "additionalProperties": false
+    },
+    "eventTerminals": {
+      "type": "object",
+      "required": ["timeout", "event_data"],
+      "properties": {
+        "timeout": {
+          "allOf": [
+            { "$ref": "#/$defs/terminal" },
+            {
+              "required": ["type", "outer_port", "body_port"],
+              "properties": {
+                "type": { "const": "i64" },
+                "outer_visible": { "const": true },
+                "exposed_in_body": { "const": true },
+                "read_only": { "const": true },
+                "role": { "const": "timeout_milliseconds" },
+                "outer_port": { "const": "timeout" },
+                "body_port": { "const": "timeout_value" }
+              }
+            }
+          ]
+        },
+        "event_data": {
+          "allOf": [
+            { "$ref": "#/$defs/terminal" },
+            {
+              "required": ["fields"],
+              "properties": {
+                "outer_visible": { "const": false },
+                "exposed_in_body": { "const": true },
+                "read_only": { "const": true },
+                "role": { "const": "event_data" },
+                "fields": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "allOf": [
+                        { "$ref": "#/$defs/eventDataField" },
+                        { "properties": { "id": { "const": "source" }, "type": { "const": "string" }, "body_port": { "const": "event_data.source" } } }
+                      ]
+                    },
+                    {
+                      "allOf": [
+                        { "$ref": "#/$defs/eventDataField" },
+                        { "properties": { "id": { "const": "type" }, "type": { "const": "string" }, "body_port": { "const": "event_data.type" } } }
+                      ]
+                    },
+                    {
+                      "allOf": [
+                        { "$ref": "#/$defs/eventDataField" },
+                        { "properties": { "id": { "const": "time" }, "type": { "const": "u64" }, "body_port": { "const": "event_data.time" } } }
+                      ]
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 3,
+                  "maxItems": 3
+                }
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "structureNode": {
+      "type": "object",
+      "required": ["id", "kind", "structure_type", "boundary", "structure_terminals", "regions"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "kind": { "const": "structure" },
+        "structure_type": { "enum": ["case", "for_loop", "while_loop", "timed_loop", "event_structure", "disabled_structure", "conditional_disable_structure"] },
+        "boundary": { "$ref": "#/$defs/boundary" },
+        "structure_terminals": { "type": "object" },
+        "regions": { "type": "array" },
+        "structure_tunnels": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/structureTunnel" }
+        },
+        "case_structure_true_visible": { "type": "boolean" },
+        "case_structure_selector_normalized_y": { "$ref": "#/$defs/normalizedPosition" },
+        "case_structure_subdiagram_label_visible": { "type": "boolean" },
+        "case_structure_true_subdiagram_label_text": { "type": "string" },
+        "case_structure_false_subdiagram_label_text": { "type": "string" },
+        "case_structure_subdiagram_label_height": { "type": "number", "minimum": 24, "maximum": 160 },
+        "case_structure_true_background_rgb": { "$ref": "#/$defs/authoringColor" },
+        "case_structure_true_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "case_structure_true_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
+        "case_structure_true_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "case_structure_false_background_rgb": { "$ref": "#/$defs/authoringColor" },
+        "case_structure_false_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "case_structure_false_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
+        "case_structure_false_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "for_loop_iteration_normalized_x": { "$ref": "#/$defs/normalizedPosition" },
+        "for_loop_iteration_normalized_y": { "$ref": "#/$defs/normalizedPosition" },
+        "for_loop_subdiagram_label_visible": { "type": "boolean" },
+        "for_loop_subdiagram_label_text": { "type": "string" },
+        "for_loop_subdiagram_label_height": { "type": "number", "minimum": 24, "maximum": 160 },
+        "for_loop_background_rgb": { "$ref": "#/$defs/authoringColor" },
+        "for_loop_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "for_loop_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
+        "for_loop_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "while_loop_condition_normalized_x": { "$ref": "#/$defs/normalizedPosition" },
+        "while_loop_condition_normalized_y": { "$ref": "#/$defs/normalizedPosition" },
+        "while_loop_iteration_normalized_x": { "$ref": "#/$defs/normalizedPosition" },
+        "while_loop_iteration_normalized_y": { "$ref": "#/$defs/normalizedPosition" },
+        "while_loop_background_rgb": { "$ref": "#/$defs/authoringColor" },
+        "while_loop_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "while_loop_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
+        "while_loop_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "timed_loop_schedule": { "$ref": "#/$defs/timedLoopSchedule" },
+        "timing_nodes": { "$ref": "#/$defs/timingNodes" },
+        "timed_loop_condition_normalized_x": { "$ref": "#/$defs/normalizedPosition" },
+        "timed_loop_condition_normalized_y": { "$ref": "#/$defs/normalizedPosition" },
+        "timed_loop_iteration_normalized_x": { "$ref": "#/$defs/normalizedPosition" },
+        "timed_loop_iteration_normalized_y": { "$ref": "#/$defs/normalizedPosition" },
+        "timed_loop_initial_visible_row_count": { "type": "integer", "minimum": 1, "maximum": 8 },
+        "timed_loop_feedback_visible_row_count": { "type": "integer", "minimum": 1, "maximum": 14 },
+        "timed_loop_update_visible_row_count": { "type": "integer", "minimum": 1, "maximum": 7 },
+        "timed_loop_result_visible_row_count": { "type": "integer", "minimum": 1, "maximum": 7 },
+        "timed_loop_background_rgb": { "$ref": "#/$defs/authoringColor" },
+        "timed_loop_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "timed_loop_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
+        "timed_loop_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "event_structure_visible_case_index": { "type": "integer", "minimum": 0 },
+        "event_structure_data_node_normalized_y": { "$ref": "#/$defs/normalizedPosition" },
+        "event_structure_background_rgb": { "$ref": "#/$defs/authoringColor" },
+        "event_structure_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "event_structure_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
+        "event_structure_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "disabled_structure_enabled_visible": { "type": "boolean" },
+        "disabled_structure_background_rgb": { "$ref": "#/$defs/authoringColor" },
+        "disabled_structure_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "disabled_structure_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
+        "disabled_structure_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "disabled_structure_veil_rgb": { "$ref": "#/$defs/authoringColor" },
+        "disabled_structure_veil_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "conditional_disable_visible_case_index": { "type": "integer", "minimum": 0 },
+        "conditional_disable_background_rgb": { "$ref": "#/$defs/authoringColor" },
+        "conditional_disable_background_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "conditional_disable_subframe_rgb": { "$ref": "#/$defs/authoringColor" },
+        "conditional_disable_subframe_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "conditional_disable_veil_rgb": { "$ref": "#/$defs/authoringColor" },
+        "conditional_disable_veil_opacity_percent": { "$ref": "#/$defs/opacityPercent" },
+        "layout": { "$ref": "#/$defs/layout" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "structure_type": { "const": "case" } } },
+          "then": {
+            "properties": {
+              "structure_terminals": { "$ref": "#/$defs/caseTerminals" },
+              "regions": { "type": "array", "items": { "$ref": "#/$defs/caseRegion" }, "minItems": 2 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "structure_type": { "const": "for_loop" } } },
+          "then": {
+            "properties": {
+              "structure_terminals": { "$ref": "#/$defs/forLoopTerminals" },
+              "regions": { "type": "array", "items": { "$ref": "#/$defs/bodyRegion" }, "minItems": 1, "maxItems": 1 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "structure_type": { "const": "while_loop" } } },
+          "then": {
+            "properties": {
+              "structure_terminals": { "$ref": "#/$defs/whileLoopTerminals" },
+              "regions": { "type": "array", "items": { "$ref": "#/$defs/bodyRegion" }, "minItems": 1, "maxItems": 1 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "structure_type": { "const": "timed_loop" } } },
+          "then": {
+            "required": ["timed_loop_schedule", "timing_nodes"],
+            "properties": {
+              "structure_terminals": { "$ref": "#/$defs/timedLoopTerminals" },
+              "regions": { "type": "array", "items": { "$ref": "#/$defs/bodyRegion" }, "minItems": 1, "maxItems": 1 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "structure_type": { "const": "event_structure" } } },
+          "then": {
+            "properties": {
+              "structure_terminals": { "$ref": "#/$defs/eventTerminals" },
+              "regions": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/eventRegion" },
+                "minItems": 1,
+                "contains": {
+                  "properties": {
+                    "event": {
+                      "required": ["kind"],
+                      "properties": { "kind": { "const": "timeout" } }
+                    }
+                  },
+                  "required": ["event"]
+                },
+                "minContains": 1,
+                "maxContains": 1
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "structure_type": { "const": "disabled_structure" } } },
+          "then": {
+            "properties": {
+              "structure_terminals": { "$ref": "#/$defs/disabledStructureTerminals" },
+              "regions": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/disabledRegion" },
+                "minItems": 2,
+                "maxItems": 2,
+                "allOf": [
+                  {
+                    "contains": {
+                      "required": ["id", "activation"],
+                      "properties": {
+                        "id": { "const": "enabled" },
+                        "activation": { "const": "enabled" }
+                      }
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  },
+                  {
+                    "contains": {
+                      "required": ["id", "activation"],
+                      "properties": {
+                        "id": { "const": "disabled" },
+                        "activation": { "const": "disabled" }
+                      }
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "structure_type": { "const": "conditional_disable_structure" } } },
+          "then": {
+            "properties": {
+              "structure_terminals": { "$ref": "#/$defs/disabledStructureTerminals" },
+              "regions": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/conditionalDisableRegion" },
+                "minItems": 2,
+                "contains": {
+                  "required": ["default"],
+                  "properties": { "default": { "const": true } }
+                },
+                "minContains": 1,
+                "maxContains": 1
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": true
+    }
+  }
+}

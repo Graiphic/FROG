@@ -125,7 +125,8 @@ Representative bindings include <code>caption.text</code> to <code>caption</code
 
 <p>
 The published String default realization keeps hover and text-region appearance on <code>style.text_region.*</code>.
-It does not publish a <code>focus_ring</code> part, so runtimes must not add a separate hardcoded String focus surface.
+It publishes <code>focus_ring</code> as the skin-owned keyboard-focus boundary, so hosts must use that semantic part instead of inventing a hardcoded String focus shape.
+IDE hover and selection auras remain separate host overlays aligned to <code>placement_bounds</code>.
 </p>
 
 <h2>8. Rectangular SVG Geometry Contract</h2>

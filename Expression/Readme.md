@@ -264,8 +264,10 @@ The FROG Expression is defined through the following documents in this directory
 ├── Schema.md
 │   -&gt; source-schema posture and machine-checkable structural validation boundary
 ├── schema/
-│   └── frog.schema.json
-│       -&gt; conservative machine-checkable top-level canonical source schema
+│   ├── frog.schema.json
+│   │   -&gt; conservative machine-checkable top-level canonical source schema
+│   └── frog.structure-node.schema.json
+│       -&gt; public recursive node contract for Case/If, For, While, and Event structures
 ├── Metadata.md
 │   -&gt; descriptive program metadata and non-executable identification fields
 ├── Type.md
@@ -395,6 +397,14 @@ These documents do not turn widget packages into top-level canonical program fil
 
 <p>
 <code>Schema.md</code> and the files under <code>schema/</code> define the conservative machine-checkable posture of canonical source shape.
+</p>
+
+<p>
+The top-level schema intentionally remains conservative. The dedicated
+<code>frog.structure-node.schema.json</code> publishes the stricter recursive
+contract for the four standard structure families, including their terminals,
+stable outer/body graph port ids, event descriptors, typed Event Data fields,
+boundary tunnels, and non-semantic authoring fields.
 </p>
 
 <p>
