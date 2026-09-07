@@ -6,6 +6,17 @@
   <desc>Default SVG-backed picture widget realization with a caption, one image region, an image surface, optional overlays, and a focus ring.</desc>
 
   <g id="root" data-frog-part="root" data-frog-bind="value image.* viewport.* display.* style.* interaction.*">
+    <rect id="placement_bounds"
+          data-frog-part="placement_bounds"
+          data-frog-anchor="placement_bounds"
+          data-frog-bind="layout.placement_bounds.* layout.grid.* layout.resize.*"
+          x="28"
+          y="74"
+          width="464"
+          height="260"
+          fill="none"
+          stroke="none"
+          pointer-events="none"/>
     <text id="label"
           data-frog-part="label"
           data-frog-member="label.text"

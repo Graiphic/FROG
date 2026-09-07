@@ -40,12 +40,12 @@ def test_python_example09_browser_ui_consumes_frog_instance_and_wfrog_realizatio
     assert "data-frog-input-id='input_path'" in html
     assert "data-frog-input-id='input_path_no_icon'" in html
     assert "--frog-path-icon-display:none" in html
-    assert "--frog-path-face-stroke-width:2px" in html
+    assert "--frog-path-face-stroke-width:0.5px" in html
     assert ".path-control:has(.path-control-editor:hover) .path-skin #path_face" in html
     assert ".path-control:has(.path-browse-overlay:hover) .path-skin #browse_button" in html
     assert ".path-control:hover .path-skin #path_face" not in html
     assert "--frog-path-frame-" not in html
-    assert "--frog-path-focus-display" not in html
+    assert "--frog-path-focus-display: none;" in html
     assert "frogPathPicked" in html
     assert "path-card" not in html
     assert "fallback" not in html

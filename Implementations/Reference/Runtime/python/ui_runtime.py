@@ -17,11 +17,13 @@ try:
     from .runtime_core import Slice05RuntimeCore, default_contract_path, default_wfrog_path, load_source_front_panel_from_contract
     from .native_kernel import NativeBoolKernelBridge, NativeEnumKernelBridge, NativeKernelBridge, NativeStringKernelBridge
     from ..contract_executor import execute_contract_case, load_json as load_contract_json
+    from ..boolean_runtime import merge_boolean_realization_defaults
 except ImportError:  # pragma: no cover
     sys.path.append(str(Path(__file__).resolve().parents[1]))
     from runtime_core import Slice05RuntimeCore, default_contract_path, default_wfrog_path, load_source_front_panel_from_contract
     from native_kernel import NativeBoolKernelBridge, NativeEnumKernelBridge, NativeKernelBridge, NativeStringKernelBridge
     from contract_executor import execute_contract_case, load_json as load_contract_json
+    from boolean_runtime import merge_boolean_realization_defaults
 
 
 def repo_root() -> Path:
@@ -737,7 +739,9 @@ class BooleanRuntimeCore:
         self.wfrog_path = Path(wfrog_path or default_example06_wfrog_path()).resolve()
         self.contract = load_contract_json(self.contract_path)
         self.package = load_contract_json(self.wfrog_path)
-        self.panel = load_source_front_panel_from_contract(self.contract, self.contract_path)
+        self.panel = merge_boolean_realization_defaults(
+            load_source_front_panel_from_contract(self.contract, self.contract_path), self.package, repo_root(),
+        )
         self.asset_map = {
             item["asset_id"]: (self.wfrog_path.parent / Path(item["path"])).resolve()
             for item in self.package.get("svg_assets", [])
@@ -832,7 +836,9 @@ class ButtonRuntimeCore:
         self.package = load_contract_json(self.wfrog_path)
         self.example_id = contract_example_id(self.contract)
         self.config = self._button_config()
-        self.panel = load_source_front_panel_from_contract(self.contract, self.contract_path)
+        self.panel = merge_boolean_realization_defaults(
+            load_source_front_panel_from_contract(self.contract, self.contract_path), self.package, repo_root(),
+        )
         self.unit = self._load_and_validate()
         self.control_binding = _button_control_binding(self.unit)
         self.indicator_binding = _button_indicator_binding(self.unit)
@@ -1252,6 +1258,15 @@ class ButtonRuntimeCore:
             "style.frame.border_color",
             "style.frame.border_width",
             "style.frame.visible",
+            "style.button_face.fill_color.false",
+            "style.button_face.fill_color.true",
+            "style.button_face.fill_color.hover_false",
+            "style.button_face.fill_color.hover_true",
+            "style.button_face.fill_color.pressed_false",
+            "style.button_face.fill_color.pressed_true",
+            "style.button_face.border_color.false",
+            "style.button_face.border_color.true",
+            "style.button_face.border_width",
             "style.face.fill_color.false",
             "style.face.fill_color.true",
             "style.face.fill_color.hover_false",
@@ -2440,6 +2455,11 @@ def render_boolean_widget(widget: dict[str, Any]) -> str:
     return f"<section class='frog-widget boolean-widget boolean-indicator' aria-readonly='true'{attrs} style='{style}'>{skin}{overlays}</section>"
 
 
+def button_face_part(svg: str) -> str:
+    # Public Button skins use button_face since 39f6e27; retain pre-migration skins.
+    return "button_face" if re.search(r"\bid=[\"']button_face[\"']", svg) else "face"
+
+
 def load_button_svg_geometry(asset_path: Path | None) -> dict[str, float]:
     geometry = {
         "view_width": 340.0,
@@ -2470,10 +2490,11 @@ def load_button_svg_geometry(asset_path: Path | None) -> dict[str, float]:
                 pass
     geometry["caption_x"] = svg_attribute_float(svg, "caption_text", "x", geometry["caption_x"])
     geometry["caption_y"] = svg_attribute_float(svg, "caption_text", "y", geometry["caption_y"])
-    geometry["face_x"] = svg_attribute_float(svg, "face", "x", geometry["face_x"])
-    geometry["face_y"] = svg_attribute_float(svg, "face", "y", geometry["face_y"])
-    geometry["face_width"] = svg_attribute_float(svg, "face", "width", geometry["face_width"])
-    geometry["face_height"] = svg_attribute_float(svg, "face", "height", geometry["face_height"])
+    face_part = button_face_part(svg)
+    geometry["face_x"] = svg_attribute_float(svg, face_part, "x", geometry["face_x"])
+    geometry["face_y"] = svg_attribute_float(svg, face_part, "y", geometry["face_y"])
+    geometry["face_width"] = svg_attribute_float(svg, face_part, "width", geometry["face_width"])
+    geometry["face_height"] = svg_attribute_float(svg, face_part, "height", geometry["face_height"])
     geometry["state_text_x"] = svg_attribute_float(svg, "state_text", "x", geometry["state_text_x"])
     geometry["state_text_y"] = svg_attribute_float(svg, "state_text", "y", geometry["state_text_y"])
     return geometry
@@ -2502,8 +2523,12 @@ def button_caption_anchor_style(runtime: dict[str, Any], geometry: dict[str, flo
 
 def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
     runtime = widget["runtime"]
+    # Canonical properties win as a group; legacy aliases only support old documents.
+    face_style = "style.button_face" if any(key.startswith("style.button_face.") for key in runtime) else "style.face"
     layout = widget["layout"]
     geometry = load_button_svg_geometry(asset_path)
+    svg = asset_path.read_text(encoding="utf-8")
+    face_part = button_face_part(svg)
     mechanical_action = runtime_string(runtime, "behavior.mechanical_action", "")
     if mechanical_action == "switch_until_released":
         value = bool(runtime.get("pressed", runtime.get("value", False)))
@@ -2523,17 +2548,17 @@ def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
     frame_fill = safe_css_color(runtime.get("style.frame.fill_color"), "transparent")
     frame_stroke = safe_css_color(runtime.get("style.frame.border_color"), "transparent")
     frame_width = safe_css_length(runtime.get("style.frame.border_width"), "0px")
-    face_fill_false = safe_css_color(state_property(runtime, "style.face.fill_color", "false", "#e2e8f0"), "#e2e8f0")
-    face_fill_true = safe_css_color(state_property(runtime, "style.face.fill_color", "true", face_fill_false), face_fill_false)
+    face_fill_false = safe_css_color(state_property(runtime, f"{face_style}.fill_color", "false", "#e2e8f0"), "#e2e8f0")
+    face_fill_true = safe_css_color(state_property(runtime, f"{face_style}.fill_color", "true", face_fill_false), face_fill_false)
     face_fill = face_fill_true if value else face_fill_false
-    face_hover_fill_false = safe_css_color(state_property(runtime, "style.face.fill_color", "hover_false", face_fill_false), face_fill_false)
-    face_hover_fill_true = safe_css_color(state_property(runtime, "style.face.fill_color", "hover_true", face_fill_true), face_fill_true)
+    face_hover_fill_false = safe_css_color(state_property(runtime, f"{face_style}.fill_color", "hover_false", face_fill_false), face_fill_false)
+    face_hover_fill_true = safe_css_color(state_property(runtime, f"{face_style}.fill_color", "hover_true", face_fill_true), face_fill_true)
     face_hover_fill = face_hover_fill_true if value else face_hover_fill_false
-    face_pressed_fill_false = safe_css_color(state_property(runtime, "style.face.fill_color", "pressed_false", face_fill_false), face_fill_false)
-    face_pressed_fill_true = safe_css_color(state_property(runtime, "style.face.fill_color", "pressed_true", face_fill_true), face_fill_true)
+    face_pressed_fill_false = safe_css_color(state_property(runtime, f"{face_style}.fill_color", "pressed_false", face_fill_false), face_fill_false)
+    face_pressed_fill_true = safe_css_color(state_property(runtime, f"{face_style}.fill_color", "pressed_true", face_fill_true), face_fill_true)
     face_pressed_fill = face_pressed_fill_true if value else face_pressed_fill_false
-    face_stroke = safe_css_color(state_property(runtime, "style.face.border_color", visual_state, "#334155"), "#334155")
-    face_stroke_width = safe_css_length(runtime.get("style.face.border_width"), "1px")
+    face_stroke = safe_css_color(state_property(runtime, f"{face_style}.border_color", visual_state, "#334155"), "#334155")
+    face_stroke_width = safe_css_length(runtime.get(f"{face_style}.border_width"), "1px")
     state_face_fill_false = safe_css_color(state_property(runtime, "style.state_face.fill_color", "false", "transparent"), "transparent")
     state_face_fill_true = safe_css_color(state_property(runtime, "style.state_face.fill_color", "true", state_face_fill_false), state_face_fill_false)
     state_face_fill = state_face_fill_true if value else state_face_fill_false
@@ -2661,15 +2686,15 @@ def render_button_widget(widget: dict[str, Any], asset_path: Path) -> str:
         f" data-frog-button-state-face-pressed-stroke-false='{html.escape(state_face_pressed_stroke_false)}'"
         f" data-frog-button-state-face-pressed-stroke-true='{html.escape(state_face_pressed_stroke_true)}'"
         f" style='{style}'>"
-        f"<div class='button-skin' data-frog-asset-consumed='true' aria-hidden='true'>{asset_path.read_text(encoding='utf-8')}</div>"
+        f"<div class='button-skin' data-frog-asset-consumed='true' aria-hidden='true'>{svg}</div>"
         "<span class='button-caption-overlay' data-frog-part='caption' data-svg-anchor='caption.anchor'"
         f" style='{button_caption_anchor_style(runtime, geometry)}'>{html.escape(caption)}</span>"
         f"{state_text_overlay}"
         "<button class='button-press-overlay' type='button'"
         f" name='{html.escape(input_id)}' value='true'"
         f" aria-label='{html.escape(caption)}' aria-pressed='{'true' if physical_pressed else 'false'}'"
-        f" data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='{html.escape(input_id)}'"
-        " data-frog-host-overlay='input' data-frog-align-to-part='face'"
+        f" data-frog-part='{face_part}' data-frog-event='pressed' data-frog-public-input-id='{html.escape(input_id)}'"
+        f" data-frog-host-overlay='input' data-frog-align-to-part='{face_part}'"
         f" style='{button_box_style(geometry['face_x'], geometry['face_y'], geometry['face_width'], geometry['face_height'], geometry)}'>"
         "</button></div>"
     )
@@ -2679,7 +2704,7 @@ def button_widget_script() -> str:
     return """<script>
 (() => {
   const form = document.querySelector("form[action='/run']");
-  const overlay = document.querySelector(".button-press-overlay[data-frog-part='face'][data-frog-host-overlay='input']");
+  const overlay = document.querySelector(".button-press-overlay:is([data-frog-part='button_face'],[data-frog-part='face'])[data-frog-host-overlay='input']");
   const buttonWidget = overlay ? overlay.closest(".button-widget[data-class-ref='frog.widgets.button']") : null;
   const indicator = document.querySelector(".boolean-indicator[data-class-ref='frog.widgets.boolean_indicator']");
   const readButton = document.querySelector(".program-read-action[data-frog-event='read']");
@@ -4527,7 +4552,11 @@ class ButtonBrowserUiRuntime:
         control_id = self.runtime.control_widget_id
         indicator_id = self.runtime.indicator_widget_id
         button_html = render_button_widget(widgets[control_id], self.runtime.widgets[control_id]["asset_path"])
-        indicator_html = render_boolean_widget(widgets[indicator_id])
+        indicator = widgets[indicator_id]
+        indicator_html = render_boolean_widget({
+            **indicator,
+            "asset_path": self.runtime.asset_map.get(str(indicator["runtime"].get("asset_ref", "")).split(":", 1)[-1]),
+        })
         execution_text = "native kernel bridge" if uses_native_kernel else self.runtime.config["execution_path"]
         compiler_backend = "LLVM native Button bool kernel artifact" if uses_native_kernel else self.runtime.config["compiler_backend"]
         compiler_backend_id = "llvm" if uses_native_kernel else "none"
@@ -4553,12 +4582,12 @@ p.meta{{margin:0 0 20px 0;color:#52606d;}}
 .button-skin svg{{width:100%;height:100%;display:block;}}
 .button-skin [data-frog-part='label'],.button-skin [data-frog-part='caption'],.button-skin [data-frog-part='state_text']{{display:none!important;}}
 .button-skin [data-frog-part='frame']{{fill:var(--frog-button-frame-fill)!important;stroke:var(--frog-button-frame-stroke)!important;stroke-width:var(--frog-button-frame-stroke-width)!important;}}
-.button-skin [data-frog-part='face']{{fill:var(--frog-button-face-fill)!important;stroke:var(--frog-button-face-stroke)!important;stroke-width:var(--frog-button-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}}
+.button-skin :is([data-frog-part='button_face'],[data-frog-part='face']){{fill:var(--frog-button-face-fill)!important;stroke:var(--frog-button-face-stroke)!important;stroke-width:var(--frog-button-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}}
 .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-fill)!important;stroke:var(--frog-button-state-face-stroke)!important;stroke-width:var(--frog-button-state-face-stroke-width)!important;transition:fill var(--frog-button-transition),stroke var(--frog-button-transition),transform var(--frog-button-transition);}}
 .button-skin [data-frog-part='focus_ring']{{display:none!important;stroke:var(--frog-button-focus-color)!important;stroke-width:var(--frog-button-focus-width)!important;}}
-.button-widget[data-frog-hover-applies-when-value-false-only='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='face'],.button-widget[data-frog-hover-applies-when-value-false-only='true'][data-current-value='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-hover-fill)!important;}}
+.button-widget[data-frog-hover-applies-when-value-false-only='false']:has(.button-press-overlay:hover) .button-skin :is([data-frog-part='button_face'],[data-frog-part='face']),.button-widget[data-frog-hover-applies-when-value-false-only='true'][data-current-value='false']:has(.button-press-overlay:hover) .button-skin :is([data-frog-part='button_face'],[data-frog-part='face']){{fill:var(--frog-button-face-hover-fill)!important;}}
 .button-widget[data-frog-hover-applies-when-value-false-only='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face'],.button-widget[data-frog-hover-applies-when-value-false-only='true'][data-current-value='false']:has(.button-press-overlay:hover) .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-hover-fill)!important;stroke:var(--frog-button-state-face-hover-stroke)!important;}}
-.button-widget[data-frog-pressed-applies-while-active='true']:has(.button-press-overlay:active) .button-skin [data-frog-part='face'],.button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-skin [data-frog-part='face']{{fill:var(--frog-button-face-pressed-fill)!important;transform:translateY(var(--frog-button-pressed-inset));}}
+.button-widget[data-frog-pressed-applies-while-active='true']:has(.button-press-overlay:active) .button-skin :is([data-frog-part='button_face'],[data-frog-part='face']),.button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-skin :is([data-frog-part='button_face'],[data-frog-part='face']){{fill:var(--frog-button-face-pressed-fill)!important;transform:translateY(var(--frog-button-pressed-inset));}}
 .button-widget[data-frog-pressed-applies-while-active='true']:has(.button-press-overlay:active) .button-skin [data-frog-part='state_face'],.button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-skin [data-frog-part='state_face']{{fill:var(--frog-button-state-face-pressed-fill)!important;stroke:var(--frog-button-state-face-pressed-stroke)!important;transform:translateY(var(--frog-button-pressed-inset));}}
 .button-widget[data-frog-pressed-applies-when-value-true='true'][data-current-value='true'] .button-state-overlay{{transform:translate(-50%,calc(-50% + var(--frog-button-pressed-inset)));}}
 .button-widget:has(.button-press-overlay:focus-visible) .button-skin [data-frog-part='focus_ring']{{display:inline!important;}}

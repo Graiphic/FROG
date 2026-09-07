@@ -54,6 +54,12 @@ This document is the centralized repository-visible governance surface for speci
 </p>
 
 <p>
+The companion <a href="../Expression/Source%20compatibility%20and%20profiles.md">Source compatibility and implementation profiles</a>
+records the accepted source/reader safety and cross-implementation boundaries.
+It distinguishes Read, Preserve, Edit, Validate, Lower and Execute capabilities without changing the corpus version or treating a Studio draft as canonical source.
+</p>
+
+<p>
 Its purpose is to define how specification versions are identified, how version-to-version closure is evaluated, what becomes normative at each published boundary, what remains draft or deferred, and how the repository should describe transition from one published specification state to the next.
 </p>
 

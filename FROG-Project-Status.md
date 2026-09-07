@@ -39,7 +39,7 @@ The repository also contains repository-level support areas and repository-level
 </ul>
 
 <p>
-The published numbered example surface now exposes a repository-visible progression under <code>Examples/01_*</code> through <code>Examples/20_*</code>.
+The repository-visible numbered example inventory contains 47 directories, <code>Examples/01_*</code> through <code>Examples/47_*</code>, as checked on 2026-09-06.
 Examples <code>01</code> through <code>15</code> define the current public reference runtime closure.
 Examples beyond this boundary may remain repository-visible as specification-facing, widget-facing, conformance-facing, or design-progression examples, while Graiphic production runtime work for those later examples continues in the proprietary <code>Graiphic/FROG-Runtime</code> repository unless explicitly promoted later.
 All example families are organized by the public
@@ -52,6 +52,12 @@ is expected to expose the full <code>.frog -&gt; FIR -&gt; lowering -&gt; LLVM I
 native artifact + manifest -&gt; runtime host</code> corridor. Earlier stopping
 points must be explicitly documented as documentation-only, negative
 conformance, or exploratory posture rather than implied executable closure.
+</p>
+
+<p>
+The following historical, partial table describes the earlier Examples 01–24 progression.
+It is not the complete 47-directory inventory or a current per-target execution certification.
+Each later dossier states its own artifacts, validation evidence and limitations.
 </p>
 
 <table>
@@ -221,7 +227,7 @@ roadmap.
 </p>
 
 <p>
-The progression is intentionally staged:
+The following historical progression extract is intentionally staged and stops at Example 24:
 </p>
 
 <pre><code>01_pure_addition
@@ -307,8 +313,8 @@ Runtime development for examples beyond Example <code>15</code> continues in Gra
 </p>
 
 <p>
-Examples <code>16</code> through <code>24</code> are the current post-boundary
-widget-facing progression examples. They remain public as source, library,
+Examples <code>16</code> through <code>24</code> form the earlier post-boundary
+widget-facing progression. They remain public as source, library,
 widget, realization, and conformance-facing material for Picture, Label,
 Decoration, Subpanel, Tab, Ring, Listbox, Table, and Tree surfaces without adding public runtime
 implementation beyond the Example <code>15</code> closure.
@@ -316,7 +322,7 @@ implementation beyond the Example <code>15</code> closure.
 
 <p>
 The correct current statement is therefore:
-the repository materially exposes Examples <code>01</code> through <code>24</code>, while Example <code>05</code> remains the richest applicative UI/state/runtime/native reference corridor, Examples <code>06</code> through <code>15</code> define the current bounded public widget-runtime wave, and Examples <code>16</code> through <code>24</code> are public post-boundary widget/design progression material backed by Graiphic private runtime validation.
+the repository materially exposes 47 numbered dossiers, Examples <code>01</code> through <code>47</code>, while Example <code>05</code> remains the primary applicative UI/state/runtime/native reference corridor and Examples <code>01</code> through <code>15</code> remain the bounded public reference runtime surface. Examples <code>16</code> through <code>47</code> are post-boundary source, widget, design or IDE progression material; their presence does not establish uniform runtime support or execution evidence.
 This does not claim full generalized symmetry across all future examples, all runtime families, or rendered-native front-panel closure.
 </p>
 
@@ -324,7 +330,7 @@ This does not claim full generalized symmetry across all future examples, all ru
 The current reference checks are intentionally repository-visible:
 </p>
 
-<pre><code>python -m pip install pytest
+<pre><code>python -m pip install -r Implementations/Reference/requirements-test.txt
 python Implementations/Reference/check_reference_workspace.py --include-pytest
 
 cmake -S Implementations/Reference/Runtime/cpp -B build/frog_runtime_cpp
@@ -352,10 +358,10 @@ The repository already contains substantial material across canonical source rep
 </p>
 
 <p>
-At the current published state, the repository has reached a stronger closure milestone:
-Examples <code>01</code> through <code>24</code> materially expose repository-visible source, FIR, lowering, backend-contract, widget, and LLVM-oriented proof material.
+The repository contains 47 numbered example dossiers with differing artifact and validation depths.
+Source, FIR, lowering, backend-contract, widget and LLVM-oriented proof artifacts must be assessed per dossier rather than inferred from that count.
 Examples <code>06</code> through <code>15</code> extend the current public reference workspace with validated widget-front-panel runtime slices for Boolean, String, Enum, Path, and Button.
-Examples <code>16</code> through <code>24</code> extend the public post-boundary widget-facing progression for Picture, Label, Decoration, Subpanel, Tab, Ring, Listbox, Table, and Tree while runtime implementation continues privately.
+Examples <code>16</code> through <code>47</code> extend the public post-boundary widget and authoring progression while later runtime implementation remains outside the bounded public runtime closure.
 </p>
 
 <p>
@@ -369,8 +375,8 @@ They do not, by presence alone, expand the public runtime implementation maintai
 The current post-boundary set starts with <code>16_picture_logo_jpeg</code>,
 which uses a Path control, the standard
 <code>frog.image.decode_file_rgba8</code> primitive contract, and a Picture
-indicator. It now continues through <code>24_tree_node_selection_roundtrip</code> with
-Label, Decoration, Subpanel, Tab, Ring, Listbox, Table, and Tree widget-facing examples. Runtime support
+indicator. The inventory continues through <code>47_static_image_clipboard_placement</code>,
+including widget, Array and IDE/calibration dossiers. This inventory does not assign every dossier an executable closure level. Runtime support
 for these examples continues in <code>Graiphic/FROG-Runtime</code> unless
 deliberately promoted later.
 </p>

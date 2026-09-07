@@ -1155,9 +1155,6 @@
           "element.props.caption.visible": false,
           "element.props.label.visible": false,
           "element.props.interaction.read_only": false,
-          "element.props.style.text_region.fill_color": "transparent",
-          "element.props.style.text_region.border_color": "#94a3b8",
-          "element.props.style.text_region.border_width": "1px",
           "dimensions.rank_profile.1.shape": [
             30
           ],
@@ -1813,9 +1810,6 @@
           "element.props.caption.visible": false,
           "element.props.label.visible": false,
           "element.props.interaction.read_only": true,
-          "element.props.style.text_region.fill_color": "transparent",
-          "element.props.style.text_region.border_color": "#94a3b8",
-          "element.props.style.text_region.border_width": "1px",
           "dimensions.rank_profile.1.shape": [
             30
           ],

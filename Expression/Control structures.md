@@ -509,7 +509,7 @@ A structure MAY own one region or multiple regions depending on its family:
   <li>a <code>while_loop</code> owns one body region,</li>
   <li>an <code>event_structure</code> owns one or more event-case regions,</li>
   <li>a <code>disabled_structure</code> owns exactly one Enabled region and exactly one Disabled region.</li>
-  <li>a <code>conditional_disable_structure</code> owns an ordered list of conditioned regions followed by exactly one Default region.</li>
+  <li>a <code>conditional_disable_structure</code> owns a nonempty ordered list of regions, with at most one Default region at any position.</li>
 </ul>
 
 <p>
@@ -557,6 +557,12 @@ They normalize to the canonical <code>case</code> family defined here.
 </p>
 
 <h3>11.2 Canonical selector terminal</h3>
+
+<p>The additive <a href="Typed%20Binding%20Contract%20v1.md">Typed Binding Contract v1</a>
+profile extends the base selector categories to integers and domain-identified enums.
+Such Case nodes declare <code>binding_profile: "frog.typed-binding@1"</code>. Their
+terminal and tunnel law is declared in <code>Libraries/Structures/case.bindings.v1.json</code>;
+the outer selector and its inner projection share one resolved type.</p>
 
 <p>
 A canonical <code>case</code> MUST define one selector terminal named <code>selector</code>.
@@ -1029,10 +1035,12 @@ metadata only and MUST NOT change that rule.
 A <code>conditional_disable_structure</code> is a compile-time conditional
 dataflow container. It has no runtime selector terminal, so
 <code>structure_terminals</code> MUST be empty. Its <code>regions</code> array is
-ordered and MUST contain one or more regions with a structured
-<code>condition</code>, followed by exactly one region with
-<code>default: true</code>. Every region retains its complete owned diagram in
-canonical source.
+ordered and MUST contain at least one region. Each region has exactly one of
+a structured <code>condition</code>, <code>default: true</code>, or the explicit
+authoring marker <code>condition_draft: true</code>. There is at most one Default;
+it can appear at any position. A single Default is a valid initial structure.
+A draft preserves an unfinished treatment but is not an executable predicate.
+Every region retains its complete owned diagram in canonical source.
 </p>
 
 <p>
@@ -1047,9 +1055,11 @@ string as semantic source.
 <p>
 Resolution evaluates non-Default regions in source order against the resolved
 Compilation Context. The first true region wins. If none is true, the Default
-region wins. Built-in symbols are overlaid by Project symbols and then Target
-symbols; a more specific layer replaces the same symbol name from a less
-specific layer. <code>conditional_disable_visible_case_index</code> is
+region wins if present; otherwise selection is an error. Project symbols are
+overlaid by Target symbols. Reserved built-in names <code>OS</code>,
+<code>TARGET_TYPE</code>, <code>TARGET_BITNESS</code>, <code>CPU</code> and
+<code>RUN_TIME_ENGINE</code> belong to the build backend and cannot be replaced
+by document symbols. <code>conditional_disable_visible_case_index</code> is
 authoring metadata only and MUST NOT influence compile-time selection.
 </p>
 
@@ -1116,7 +1126,7 @@ This section defines the source-level alignment points between the structures de
   <li>a node with <code>structure_type: "conditional_disable_structure"</code> aligns with compile-time graph specialization,</li>
   <li>its empty <code>structure_terminals</code> object forbids a runtime selector wire,</li>
   <li>conditioned regions are evaluated in array order and the first true region wins,</li>
-  <li>exactly one Default region provides the fallback when no condition matches,</li>
+  <li>at most one Default region provides the fallback when no condition matches; without a match or Default, selection fails under the <a href="../Language/Control%20structures.md#conditional-disable-semantics">Conditional Disable selection rules</a>,</li>
   <li>all variants remain canonical source even when lowering retains only the selected graph.</li>
 </ul>
 
@@ -1238,7 +1248,7 @@ Implementations MUST enforce the following source-level validation rules:
   <li>every selected <code>event_data_fields</code> id MUST be declared by the typed <code>event_data</code> terminal,</li>
   <li>a <code>disabled_structure</code> MUST define an empty <code>structure_terminals</code> object,</li>
   <li>a <code>disabled_structure</code> MUST define exactly one <code>enabled</code> region and one <code>disabled</code> region with matching <code>activation</code> values,</li>
-  <li>a <code>conditional_disable_structure</code> MUST define an empty <code>structure_terminals</code> object, one or more ordered condition regions, and exactly one Default region,</li>
+  <li>a <code>conditional_disable_structure</code> MUST define an empty <code>structure_terminals</code> object, at least one region, and at most one Default; an unresolved selection or an active unfinished draft is not executable,</li>
   <li>every conditional-disable comparison MUST use exact string values and one of <code>==</code> or <code>!=</code>, with AND groups evaluated before OR groups,</li>
   <li>every loop output MUST have a complete source-level meaning,</li>
   <li>if <code>mode: "last_value"</code> is used and zero iterations are possible, <code>zero_iteration_value</code> MUST be present and type-compatible,</li>

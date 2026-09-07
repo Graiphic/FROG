@@ -137,6 +137,28 @@ It does not invent a replacement source of truth.
 <h2 id="validation-staging">5. Validation Staging</h2>
 
 <p>
+The source-envelope preflight consumes the required section, allowed section and
+version vocabulary of <code>Expression/schema/frog.schema.json</code>. Its
+bounded projection is tested against Draft 2020-12; it is not a general schema
+interpreter. An unknown source version returns <code>unsupported_source</code>,
+without a <code>validated_program</code> and without mutating the loaded document.
+This does not certify that a newer source is valid or invalid under its own version.
+Metadata name shape and top-level interface/node/edge identities are also checked
+before semantic resolution. These checks do not claim complete section-local or
+all-profile conformance.
+</p>
+
+<p>
+Implementation boundary: the Examples 01–15 pipeline currently uses the separate
+bounded <code>Deriver/fir_deriver.py</code> rules, not this module's full
+<code>validate_source()</code> path. The two share the source-envelope preflight,
+but their semantic subsets are not unified. Passing that pipeline is therefore
+not evidence that this validator accepted every example, nor a general FROG
+semantic-validity certificate. See the
+<a href="../../../docs/language-studio-convergence-audit-2026-09-06.md">convergence audit</a>.
+</p>
+
+<p>
 The reference validator should preserve the staged corridor explicitly:
 </p>
 

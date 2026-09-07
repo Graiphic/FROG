@@ -31,6 +31,14 @@
 
 <h2 id="start-here">Start here</h2>
 
+<p>
+The current source/editor convergence decisions are in
+<a href="./Expression/Source%20compatibility%20and%20profiles.md">Source compatibility and profiles</a>.
+The <a href="./docs/language-studio-convergence-audit-2026-09-06.md">6 September 2026 convergence audit</a>
+records implementation evidence and remaining gaps; it is not a claim that all
+editors, reference artifacts or runtimes already implement the same source profile.
+</p>
+
 <table>
   <thead>
     <tr>

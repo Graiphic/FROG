@@ -5,11 +5,7 @@ import json
 from pathlib import Path
 
 import pytest
-
-try:
-    import jsonschema
-except ImportError:  # The reference workspace requires only pytest by default.
-    jsonschema = None
+import jsonschema
 
 ROOT = Path(__file__).resolve().parents[4]
 SCHEMA_PATH = ROOT / "Expression" / "schema" / "frog.structure-node.schema.json"
@@ -99,7 +95,6 @@ def test_public_schema_and_fixture_publish_the_exact_shared_contract() -> None:
     assert nodes["conditional_disable_structure"]["regions"][1]["default"] is True
 
 
-@pytest.mark.skipif(jsonschema is None, reason="jsonschema is not installed")
 def test_public_fixture_covers_and_validates_all_standard_structure_families() -> None:
     nodes = _nodes()
 
@@ -116,7 +111,6 @@ def test_public_fixture_covers_and_validates_all_standard_structure_families() -
         assert _errors(node) == []
 
 
-@pytest.mark.skipif(jsonschema is None, reason="jsonschema is not installed")
 def test_timed_loop_requires_a_positive_period_and_all_timing_surfaces() -> None:
     node = copy.deepcopy(next(node for node in _nodes() if node["structure_type"] == "timed_loop"))
     node["timed_loop_schedule"]["period"] = 0
@@ -125,7 +119,6 @@ def test_timed_loop_requires_a_positive_period_and_all_timing_surfaces() -> None
     assert _errors(node)
 
 
-@pytest.mark.skipif(jsonschema is None, reason="jsonschema is not installed")
 def test_for_loop_public_contract_rejects_legacy_i32_count() -> None:
     node = copy.deepcopy(next(node for node in _nodes() if node["structure_type"] == "for_loop"))
     node["structure_terminals"]["count"]["type"] = "i32"
@@ -133,7 +126,6 @@ def test_for_loop_public_contract_rejects_legacy_i32_count() -> None:
     assert _errors(node)
 
 
-@pytest.mark.skipif(jsonschema is None, reason="jsonschema is not installed")
 def test_event_public_contract_requires_explicit_descriptors_and_typed_fields() -> None:
     node = copy.deepcopy(next(node for node in _nodes() if node["structure_type"] == "event_structure"))
     del node["regions"][1]["event"]
@@ -142,8 +134,7 @@ def test_event_public_contract_requires_explicit_descriptors_and_typed_fields() 
     assert _errors(node)
 
 
-@pytest.mark.skipif(jsonschema is None, reason="jsonschema is not installed")
-def test_conditional_disable_requires_one_default_and_exact_operators() -> None:
+def test_conditional_disable_allows_at_most_one_default_and_exact_operators() -> None:
     node = copy.deepcopy(
         next(
             node
@@ -151,6 +142,14 @@ def test_conditional_disable_requires_one_default_and_exact_operators() -> None:
             if node["structure_type"] == "conditional_disable_structure"
         )
     )
+    # Saveable source need not contain a Default. Whether a condition matches
+    # is a later semantic selection check against the Compilation Context.
+    without_default = copy.deepcopy(node)
+    without_default["regions"] = [
+        region for region in without_default["regions"] if not region.get("default", False)
+    ]
+    assert not _errors(without_default)
+    assert not _errors(node)
     node["regions"].append(
         {"id": "other_default", "default": True, "diagram": {"nodes": [], "edges": []}}
     )
@@ -171,9 +170,90 @@ def test_conditional_disable_requires_one_default_and_exact_operators() -> None:
     assert _errors(node)
 
 
-@pytest.mark.skipif(jsonschema is None, reason="jsonschema is not installed")
 def test_case_public_contract_uses_structure_kind_not_primitive_kind() -> None:
     node = copy.deepcopy(next(node for node in _nodes() if node["structure_type"] == "case"))
     node["kind"] = "primitive"
 
     assert _errors(node)
+
+
+@pytest.mark.parametrize("selector_type", ["i32", "u64", 'enum<"application.mode",u16>'])
+def test_typed_binding_case_requires_explicit_profile(selector_type: str) -> None:
+    node = copy.deepcopy(next(n for n in _nodes() if n["structure_type"] == "case"))
+    node["structure_terminals"]["selector"]["type"] = selector_type
+    assert _errors(node)
+    node["binding_profile"] = "frog.typed-binding@1"
+    assert not _errors(node)
+    node["structure_terminals"]["selector"]["type"] = "array<i32>"
+    assert _errors(node)
+    node["structure_terminals"]["selector"]["type"] = "f64"
+    assert _errors(node)
+
+
+def test_typed_binding_case_lexical_matchers() -> None:
+    node = copy.deepcopy(next(n for n in _nodes() if n["structure_type"] == "case"))
+    node["binding_profile"] = "frog.typed-binding@1"
+    node["structure_terminals"]["selector"]["type"] = "u64"
+    for index, region in enumerate(node["regions"]):
+        region.pop("match", None)
+        region["matches"] = [{"kind": "integer_exact", "value": str(index)}]
+    assert not _errors(node)
+    node["regions"][0]["matches"][0]["value"] = 18446744073709551615
+    assert _errors(node)  # Preserve large integer lexical identity, not a JSON number.
+
+
+@pytest.mark.parametrize("matcher", [
+    {"kind": "boolean_exact", "value": True},
+    {"kind": "string_exact", "value": "a"},
+    {"kind": "enum_item", "item": "idle"},
+])
+def test_typed_binding_case_matcher_payloads(matcher: dict) -> None:
+    node = copy.deepcopy(next(n for n in _nodes() if n["structure_type"] == "case"))
+    node["binding_profile"] = "frog.typed-binding@1"
+    for region in node["regions"]:
+        region.pop("match", None)
+        region["matches"] = [copy.deepcopy(matcher)]
+    assert not _errors(node)
+    node["regions"][0]["matches"][0]["value"] = 1.5
+    assert _errors(node)
+
+
+def test_typed_binding_case_manifest_declares_the_equivalence_contract() -> None:
+    manifest = json.loads((ROOT / "Libraries/Structures/case.bindings.v1.json").read_text(encoding="utf-8"))
+    assert manifest["selector"]["type_expr"] == "case_selector"
+    assert manifest["selector"]["type_variable"] == "S"
+    assert manifest["dynamic_tunnels"]["output_coverage"] == "every_region"
+    assert manifest["dynamic_tunnels"]["type_relation"] == "exact"
+
+
+@pytest.mark.parametrize("matcher", [
+    {"kind": "integer_range", "lower": "-9223372036854775808", "upper": "9223372036854775807"},
+    {"kind": "integer_range", "upper": "18446744073709551615"},
+    {"kind": "integer_range", "lower": "1"},
+    {"kind": "enum_range", "lower": "first", "upper": "last"},
+    {"kind": "string_exact", "value": ""},
+])
+def test_case_editing_profile_range_payloads(matcher: dict) -> None:
+    node = copy.deepcopy(next(n for n in _nodes() if n["structure_type"] == "case"))
+    node["binding_profile"] = "frog.typed-binding@1"
+    node["case_profile"] = "frog.case-editing@1"
+    for region in node["regions"]:
+        region.pop("match", None)
+        region["matches"] = [copy.deepcopy(matcher)]
+        region["title"] = "Treatment, not a matcher"
+    assert not _errors(node)
+    node["regions"][0]["matches"][0]["lower"] = 0.5
+    assert _errors(node)
+
+
+def test_case_editing_allows_saved_drafts_and_one_string_default() -> None:
+    node = copy.deepcopy(next(n for n in _nodes() if n["structure_type"] == "case"))
+    node["case_profile"] = "frog.case-editing@1"
+    node["structure_terminals"]["selector"]["type"] = "string"
+    node["regions"] = [{"id": "fallback", "default": True, "matches": [], "diagram": {"nodes": [], "edges": []}}]
+    assert not _errors(node)
+    node["regions"][0].pop("default")
+    assert _errors(node)
+    node["regions"][0]["draft"] = True
+    node["regions"][0]["draft_text"] = '"unfinished'
+    assert not _errors(node)  # Authored source is saveable; semantic/build validation still rejects it.

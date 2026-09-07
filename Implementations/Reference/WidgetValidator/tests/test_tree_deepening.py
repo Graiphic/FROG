@@ -15,6 +15,7 @@ EXPECTED_PARTS = {
     "label",
     "caption",
     "node_region",
+    "column_headers",
     "node_row",
     "node_indent",
     "node_connector",
@@ -23,6 +24,7 @@ EXPECTED_PARTS = {
     "node_icon",
     "node_label",
     "active_node",
+    "active_cell",
     "selection_face",
     "edit_overlay",
     "drag_feedback",
@@ -52,6 +54,8 @@ def test_tree_widget_doc_defines_deepened_public_surface() -> None:
         "nodes[].id",
         "nodes[].path",
         "selection.selected_node_ids",
+        "selection.active_cell_id",
+        "display.column_headers_visible",
         "expansion.expanded_node_ids",
         "check.indeterminate_node_ids",
         "drag.active_node_ids",
@@ -89,10 +93,30 @@ def test_tree_manifest_declares_expected_parts_and_bindings() -> None:
 
 def test_tree_svg_resource_exposes_only_static_geometry_markers() -> None:
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    shell_resources = [resource for resource in data["resources"] if resource["role"] == "geometry_shell"]
+    assert len(shell_resources) == 1
     parts = set()
-    for resource in data["resources"]:
+    for resource in shell_resources:
         path = DEFAULT_DIR / resource["path"]
         text = path.read_text(encoding="utf-8")
         parts |= set(re.findall(r"data-frog-part=[\\\"']([^\\\"']+)[\\\"']", text))
     assert parts == STATIC_SHELL_PARTS
     assert DYNAMIC_OVERLAY_PARTS.isdisjoint(parts)
+
+
+def test_tree_item_symbols_remain_separate_static_resources() -> None:
+    data = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    expected_symbols = {"check", "folder_closed", "folder_open", "document", "leaf"}
+    assert set(data["item_symbol_assets"]) == expected_symbols
+    assert {resource["role"] for resource in data["resources"]} == {"geometry_shell", "tree_item_symbol"}
+    symbol_resources = [resource for resource in data["resources"] if resource["role"] == "tree_item_symbol"]
+    assert len(symbol_resources) == len(expected_symbols)
+    assert {resource["id"] for resource in symbol_resources} == set(data["item_symbol_assets"].values())
+    for resource in symbol_resources:
+        path = DEFAULT_DIR / resource["path"]
+        assert path.stem in expected_symbols
+        assert data["item_symbol_assets"][path.stem] == resource["id"]
+        text = path.read_text(encoding="utf-8")
+        parts = set(re.findall(r"data-frog-part=[\"']([^\"']+)[\"']", text))
+        assert parts == {"item_symbol_path"}
+        assert EXPECTED_PARTS.isdisjoint(parts)

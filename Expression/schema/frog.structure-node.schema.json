@@ -171,12 +171,45 @@
         {
           "anyOf": [
             {
+              "required": ["matches"],
+              "properties": {
+                "matches": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "required": ["kind"],
+                    "properties": {
+                      "kind": { "enum": ["boolean_exact", "integer_exact", "string_exact", "enum_item", "integer_range", "enum_range"] },
+                      "value": {},
+                      "lower": { "type": "string" },
+                      "upper": { "type": "string" },
+                      "item": { "type": "string", "minLength": 1 }
+                    },
+                    "oneOf": [
+                      { "required": ["value"], "properties": { "kind": { "const": "boolean_exact" }, "value": { "type": "boolean" } }, "not": { "required": ["item"] } },
+                      { "required": ["value"], "properties": { "kind": { "const": "integer_exact" }, "value": { "type": "string", "pattern": "^-?[0-9]+$" } }, "not": { "required": ["item"] } },
+                      { "required": ["value"], "properties": { "kind": { "const": "string_exact" }, "value": { "type": "string" } }, "not": { "required": ["item"] } },
+                      { "required": ["item"], "properties": { "kind": { "const": "enum_item" } }, "not": { "required": ["value"] } },
+                      { "properties": { "kind": { "const": "integer_range" }, "lower": { "pattern": "^-?[0-9]+$" }, "upper": { "pattern": "^-?[0-9]+$" } }, "not": { "anyOf": [{ "required": ["item"] }, { "required": ["value"] }] } },
+                      { "required": ["lower", "upper"], "properties": { "kind": { "const": "enum_range" }, "lower": { "minLength": 1 }, "upper": { "minLength": 1 } }, "not": { "anyOf": [{ "required": ["item"] }, { "required": ["value"] }] } }
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            },
+            {
               "required": ["match"],
-              "properties": { "match": { "type": ["boolean", "string"] } }
+              "properties": { "match": { "type": ["boolean", "string", "integer"] } }
             },
             {
               "required": ["default"],
               "properties": { "default": { "const": true } }
+            },
+            {
+              "required": ["draft", "matches"],
+              "properties": { "draft": { "const": true }, "matches": { "type": "array", "maxItems": 0 } }
             }
           ]
         }
@@ -249,12 +282,18 @@
               "properties": {
                 "condition": { "$ref": "#/$defs/conditionalDisableCondition" }
               },
-              "not": { "required": ["default"] }
+              "not": { "anyOf": [{ "required": ["default"] }, { "required": ["condition_draft"] }] }
             },
             {
               "required": ["default"],
               "properties": { "default": { "const": true } },
-              "not": { "required": ["condition"] }
+              "not": { "anyOf": [{ "required": ["condition"] }, { "required": ["condition_draft"] }] }
+            },
+            {
+              "description": "Persisted authoring draft, never an executable condition. Semantic validation must reject it when its enclosing structure is active.",
+              "required": ["condition_draft"],
+              "properties": { "condition_draft": { "const": true } },
+              "not": { "anyOf": [{ "required": ["condition"] }, { "required": ["default"] }] }
             }
           ]
         }
@@ -302,7 +341,13 @@
             {
               "required": ["type", "outer_port", "body_port"],
               "properties": {
-                "type": { "enum": ["bool", "string"] },
+                "type": {
+                  "description": "Typed-binding profile selector. A semantic TypeRef parser must also validate enum syntax and domain identity.",
+                  "anyOf": [
+                    { "enum": ["bool", "string", "i4", "i8", "i16", "i32", "i64", "i128", "u4", "u8", "u16", "u32", "u64", "u128", "biguint"] },
+                    { "type": "string", "pattern": "^enum<.+,(i|u)(4|8|16|32|64|128)>$", "maxLength": 65536 }
+                  ]
+                },
                 "outer_visible": { "const": true },
                 "exposed_in_body": { "const": true },
                 "read_only": { "const": true },
@@ -610,10 +655,27 @@
         {
           "if": { "properties": { "structure_type": { "const": "case" } } },
           "then": {
+            "if": {
+              "required": ["binding_profile"],
+              "properties": { "binding_profile": { "const": "frog.typed-binding@1" } }
+            },
+            "else": {
+              "properties": {
+                "structure_terminals": {
+                  "properties": { "selector": { "properties": { "type": { "enum": ["bool", "string"] } } } }
+                }
+              }
+            },
             "properties": {
               "structure_terminals": { "$ref": "#/$defs/caseTerminals" },
-              "regions": { "type": "array", "items": { "$ref": "#/$defs/caseRegion" }, "minItems": 2 }
-            }
+              "case_profile": { "const": "frog.case-editing@1" },
+              "case_structure_radix": { "enum": [2, 8, 10, 16] },
+              "regions": { "type": "array", "items": { "$ref": "#/$defs/caseRegion" }, "minItems": 1 }
+            },
+            "allOf": [{
+              "if": { "not": { "required": ["case_profile"] } },
+              "then": { "properties": { "regions": { "minItems": 2 } } }
+            }]
           }
         },
         {
@@ -714,12 +776,12 @@
               "regions": {
                 "type": "array",
                 "items": { "$ref": "#/$defs/conditionalDisableRegion" },
-                "minItems": 2,
+                "minItems": 1,
                 "contains": {
                   "required": ["default"],
                   "properties": { "default": { "const": true } }
                 },
-                "minContains": 1,
+                "minContains": 0,
                 "maxContains": 1
               }
             }

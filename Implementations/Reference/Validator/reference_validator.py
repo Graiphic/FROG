@@ -8,6 +8,7 @@ from Implementations.Reference.common import (
     LoadedSource,
     ValidationResult,
 )
+from Implementations.Reference.Validator.source_envelope import validate_envelope
 
 
 SUPPORTED_PRIMITIVES = {
@@ -77,18 +78,6 @@ def _diag(code: str, message: str, *, location: Optional[str] = None, severity: 
     return diag
 
 
-def _require_top_level_sections(doc: Dict[str, Any], source_ref: Dict[str, Any]) -> Optional[ValidationResult]:
-    required = ["spec_version", "metadata", "interface", "diagram"]
-    missing = [name for name in required if name not in doc]
-    if missing:
-        return _fail(
-            "structural_invalid",
-            source_ref,
-            [_diag("missing_top_level_sections", f"Missing top-level sections: {', '.join(missing)}.")],
-        )
-    return None
-
-
 def _validate_interface(
     interface: Dict[str, Any],
     source_ref: Dict[str, Any],
@@ -122,16 +111,31 @@ def _validate_interface(
     output_types: Dict[str, str] = {}
     diagnostics: List[Dict[str, Any]] = []
 
+    all_port_ids: set[str] = set()
     for item in inputs:
         if not _is_object(item) or "id" not in item or "type" not in item:
             diagnostics.append(_diag("invalid_input_port", "Each interface input must contain 'id' and 'type'."))
             continue
+        if not isinstance(item["id"], str) or not item["id"] or not isinstance(item["type"], str):
+            diagnostics.append(_diag("invalid_input_port", "Interface input id must be a nonempty string and type must be a string."))
+            continue
+        if item["id"] in all_port_ids:
+            diagnostics.append(_diag("duplicate_interface_port_id", f"Duplicate interface port id '{item['id']}'."))
+            continue
+        all_port_ids.add(item["id"])
         input_types[item["id"]] = item["type"]
 
     for item in outputs:
         if not _is_object(item) or "id" not in item or "type" not in item:
             diagnostics.append(_diag("invalid_output_port", "Each interface output must contain 'id' and 'type'."))
             continue
+        if not isinstance(item["id"], str) or not item["id"] or not isinstance(item["type"], str):
+            diagnostics.append(_diag("invalid_output_port", "Interface output id must be a nonempty string and type must be a string."))
+            continue
+        if item["id"] in all_port_ids:
+            diagnostics.append(_diag("duplicate_interface_port_id", f"Duplicate interface port id '{item['id']}'."))
+            continue
+        all_port_ids.add(item["id"])
         output_types[item["id"]] = item["type"]
 
     if diagnostics:
@@ -352,6 +356,9 @@ def _collect_diagram_node_map(
             diagnostics.append(_diag("invalid_node_shape", "Each diagram node must define 'id' and 'kind'."))
             continue
         node_id = node["id"]
+        if not isinstance(node_id, str) or not node_id or not isinstance(node["kind"], str):
+            diagnostics.append(_diag("invalid_node_shape", "Each node id must be a nonempty string and kind must be a string."))
+            continue
         if node_id in node_map:
             diagnostics.append(_diag("duplicate_node_id", f"Duplicate diagram node id '{node_id}'."))
             continue
@@ -369,6 +376,7 @@ def _build_incoming_edge_map(
 ) -> Tuple[Optional[ValidationResult], Dict[Tuple[str, str], List[Dict[str, Any]]]]:
     incoming: Dict[Tuple[str, str], List[Dict[str, Any]]] = {}
     diagnostics: List[Dict[str, Any]] = []
+    edge_ids: set[str] = set()
 
     for edge in edges:
         if not _is_object(edge):
@@ -379,16 +387,20 @@ def _build_incoming_edge_map(
         edge_from = edge.get("from")
         edge_to = edge.get("to")
 
-        if not edge_id or not _is_object(edge_from) or not _is_object(edge_to):
+        if not isinstance(edge_id, str) or not edge_id or not _is_object(edge_from) or not _is_object(edge_to):
             diagnostics.append(_diag("invalid_edge_fields", "Each edge must define 'id', 'from', and 'to'."))
             continue
+        if edge_id in edge_ids:
+            diagnostics.append(_diag("duplicate_edge_id", f"Duplicate diagram edge id '{edge_id}'."))
+            continue
+        edge_ids.add(edge_id)
 
         from_node = edge_from.get("node")
         from_port = edge_from.get("port")
         to_node = edge_to.get("node")
         to_port = edge_to.get("port")
 
-        if not from_node or not from_port or not to_node or not to_port:
+        if not all(isinstance(value, str) and value for value in (from_node, from_port, to_node, to_port)):
             diagnostics.append(_diag("invalid_edge_endpoints", "Each edge endpoint must define 'node' and 'port'."))
             continue
 
@@ -1476,6 +1488,18 @@ def _validate_and_enrich_nodes(
 
 
 def validate_source(loaded: LoadedSource) -> ValidationResult:
+    try:
+        return _validate_source(loaded)
+    except RecursionError:
+        return _fail(
+            "unsupported_source",
+            dict(loaded.artifact["source"]),
+            [_diag("source_resource_limit", "Source nesting exceeds the reference validator's capacity; "
+                   "no partial program has been validated.")],
+        )
+
+
+def _validate_source(loaded: LoadedSource) -> ValidationResult:
     source_ref = dict(loaded.artifact["source"])
 
     if loaded.artifact.get("status") != "ok":
@@ -1487,9 +1511,9 @@ def validate_source(loaded: LoadedSource) -> ValidationResult:
 
     doc = deepcopy(loaded.artifact["document"])
 
-    top_level_failure = _require_top_level_sections(doc, source_ref)
-    if top_level_failure is not None:
-        return top_level_failure
+    envelope_status, envelope_diagnostics = validate_envelope(doc)
+    if envelope_status != "ok":
+        return _fail(envelope_status, source_ref, envelope_diagnostics)
 
     interface_failure, input_types, output_types = _validate_interface(doc["interface"], source_ref)
     if interface_failure is not None:

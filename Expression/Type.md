@@ -38,6 +38,12 @@ Definition of the FROG value type system for <strong>.frog</strong> programs<br/
 
 <h2 id="overview">1. Overview</h2>
 
+<p><strong>Accepted extension:</strong> <a href="Typed%20Binding%20Contract%20v1.md">FROG Typed Binding Contract v1</a>
+defines the additive <code>frog.typed-binding@1</code> profile for explicit array rank,
+enum domains, ordered cluster fields and shared binding resolution. The base v0.1
+scope below remains the historical compatibility baseline; its exclusions do not
+apply to artifacts explicitly using that extension.</p>
+
 <p>
 The FROG type system defines how value types are described, serialized, validated, connected, and converted inside a
 <code>.frog</code> program.

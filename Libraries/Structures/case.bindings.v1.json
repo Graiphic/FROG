@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "definition_id": "frog.structures.case",
+  "definition_version": 1,
+  "type_profile": "frog.typed-binding@1",
+  "selector": {
+    "outer_port": "selector",
+    "inner_port": "selected_case",
+    "outer_direction": "input",
+    "inner_direction": "output",
+    "type_variable": "S",
+    "type_expr": "case_selector",
+    "inner_scope": "each_region",
+    "read_only": true
+  },
+  "dynamic_tunnels": {
+    "type_variable_scope": "per_boundary_id",
+    "type_relation": "exact",
+    "output_coverage": "every_region",
+    "allow_default_if_unwired": true,
+    "source_cardinality": "single_per_region",
+    "persisted_type": "validated_cache"
+  },
+  "resolver_id": "frog.structures.case.bindings@1",
+  "lowering_id": "frog.structures.case.lowering@1",
+  "visual_profile": "studio.case"
+}
+

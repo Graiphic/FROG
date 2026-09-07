@@ -125,6 +125,7 @@ def main(argv: list[str] | None = None) -> int:
             stages.extend([
                 ("ArtifactChecks tests", [py, "-m", "pytest", "Implementations/Reference/ArtifactChecks/tests"]),
                 ("Validator tests", [py, "-m", "pytest", "Implementations/Reference/Validator/tests"]),
+                ("WidgetValidator tests", [py, "-m", "pytest", "Implementations/Reference/WidgetValidator/tests"]),
                 ("Deriver tests", [py, "-m", "pytest", "Implementations/Reference/Deriver/tests"]),
                 ("Lowerer tests", [py, "-m", "pytest", "Implementations/Reference/Lowerer/tests"]),
                 ("ContractEmitter tests", [py, "-m", "pytest", "Implementations/Reference/ContractEmitter/tests"]),

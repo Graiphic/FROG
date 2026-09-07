@@ -598,8 +598,10 @@ source inside the Disabled region without making that region executable.
 <p>
 A <code>conditional_disable_structure</code> resolves exactly one owned region
 before runtime from a Compilation Context of case-sensitive string symbols.
-Built-in symbols form the base context, Project symbols replace matching
-Built-in names, and Target symbols replace matching Project names. Runtime
+Built-in symbols form the base context, Project symbols add custom names,
+and Target symbols replace matching Project names. Reserved built-in names
+(OS, TARGET_TYPE, TARGET_BITNESS, CPU, RUN_TIME_ENGINE) are authoritative values
+from the build backend, not from editable document symbols. Runtime
 data, controls, wires, and enumerators MUST NOT modify this selection.
 </p>
 
@@ -607,8 +609,19 @@ data, controls, wires, and enumerators MUST NOT modify this selection.
 Condition regions are evaluated in canonical source order. Comparisons use
 exact string equality or inequality; comparisons inside one <code>all</code>
 group are AND-ed, and <code>any</code> groups are OR-ed. The first true region
-wins. If no explicit region matches, the unique Default region wins. Reordering
-regions can therefore change program meaning.
+wins. If no explicit region matches, the Default region wins when present,
+regardless of its position. Without a match or Default, selection fails.
+Reordering conditioned regions can therefore change program meaning.
+</p>
+
+<p>
+AND and OR are short-circuited left to right. An evaluated missing symbol is
+unresolved for both equality and inequality; it is never coerced to false or
+an empty string, and Default does not hide that error. Malformed condition
+syntax is rejected before selection, including in masked treatments. An
+explicit <code>condition_draft: true</code> is allowed in source but blocks
+compilation when its enclosing structure participates in the selected graph.
+Nested conditions inside an excluded parent body are not evaluated.
 </p>
 
 <p>
@@ -760,7 +773,7 @@ Implementations MUST enforce the following semantic rules:
   <li>one event occurrence MUST execute exactly one matching event-case region,</li>
   <li>a <code>disabled_structure</code> MUST define exactly one Enabled region and one Disabled region,</li>
   <li>a <code>disabled_structure</code> activation MUST execute only its Enabled region and MUST ignore its authoring-visible region,</li>
-  <li>a <code>conditional_disable_structure</code> MUST have no runtime selector, MUST evaluate AND before OR, MUST select the first true ordered condition, and MUST fall back to its unique Default region,</li>
+  <li>a <code>conditional_disable_structure</code> MUST have no runtime selector, MUST evaluate AND before OR, MUST select the first true ordered condition, and MUST fall back to Default if present; unresolved symbols, active drafts and absence of a selection are compilation errors,</li>
   <li>loop outputs MUST have deterministic semantic meaning after termination,</li>
   <li>if <code>mode: "last_value"</code> is used and zero iterations are possible, a deterministic zero-iteration meaning MUST exist,</li>
   <li>cycles inside structure-owned regions MUST satisfy the same explicit-local-memory rule as any other directed cycle.</li>

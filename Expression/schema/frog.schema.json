@@ -47,6 +47,12 @@
     "icon": {
       "$ref": "#/$defs/iconSection"
     },
+    "host": {
+      "$ref": "#/$defs/hostSection"
+    },
+    "execution_policy": {
+      "$ref": "#/$defs/executionPolicySection"
+    },
     "ide": {
       "$ref": "#/$defs/ideSection"
     },
@@ -107,6 +113,22 @@
         }
       ]
     },
+    "hostSection": {
+      "description": "Optional host launch and front-panel window policy. Section-local structure is owned by Expression/Host and execution policy.md.",
+      "allOf": [
+        {
+          "$ref": "#/$defs/genericSectionObject"
+        }
+      ]
+    },
+    "executionPolicySection": {
+      "description": "Optional versioned portable execution-control policy. Section-local structure is owned by Expression/Host and execution policy.md.",
+      "allOf": [
+        {
+          "$ref": "#/$defs/genericSectionObject"
+        }
+      ]
+    },
     "ideSection": {
       "description": "Optional ide section. Section-local object structure is owned by Expression/IDE preferences.md.",
       "allOf": [
@@ -139,6 +161,8 @@
       "connector": {},
       "front_panel": {},
       "icon": {},
+      "host": {},
+      "execution_policy": {},
       "ide": {},
       "cache": {}
     }

@@ -1,21 +1,31 @@
 """Rule-oriented FIR derivation helpers for the non-normative reference workspace.
 
-This module supports the published Examples 01 through 10 and the
+This module supports the published Examples 01 through 15 and the
 post-boundary Example 16 Picture slice through explicit source-pattern
 recognition and source-to-FIR derivation rules.
 
 It is intentionally narrow and does not claim general FROG compiler
-completeness. The important boundary is that rule selection is based on the
-validated source shape being recognized, not on trusting a document-local
-example name as semantic authority.
+completeness. Rule selection is bounded by the common source-envelope preflight
+and exact recursive graph shapes. Rule-local wiring checks remain intentionally
+narrower than a general semantic validator; producing FIR is not such a claim.
 """
 
 from __future__ import annotations
 
 import json
+import sys
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
+
+# Direct script entry points also work outside the checkout, without PYTHONPATH.
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
+from Implementations.Reference.common import FrogPipelineError, load_json_file
+from Implementations.Reference.Validator.source_envelope import validate_envelope
 
 
 class DerivationError(RuntimeError):
@@ -29,12 +39,24 @@ class EdgeEndpoint:
 
 
 @dataclass(frozen=True)
+class GraphShape:
+    """Complete graph inventory for one bounded rule, not a semantic schema."""
+
+    nodes: tuple[tuple[str, str | None], ...]
+    edge_count: int
+    regions: tuple[tuple[str, GraphShape], ...] = ()
+    inputs: tuple[tuple[str, str], ...] = ()
+    outputs: tuple[tuple[str, str, str, str], ...] = ()
+
+
+@dataclass(frozen=True)
 class DerivationRule:
     """Bounded reference derivation rule for one supported source pattern."""
 
     rule_id: str
     fir_example_id: str
     derive: Callable[[dict[str, Any], str], dict[str, Any]]
+    graph_shape: GraphShape
 
 
 @dataclass(frozen=True)
@@ -137,15 +159,75 @@ def parse_endpoint(raw: Any) -> EdgeEndpoint:
     return EdgeEndpoint(node=node, port=port)
 
 
+def require_graph_shape(diagram: dict[str, Any], shape: GraphShape, location: str) -> None:
+    """Reject unconsumed graph inventory before a rule can emit fixed FIR.
+
+    Node/edge order and metadata do not select a rule. Existing rule functions
+    still own their bounded wiring/value checks; this is not global validation.
+    """
+    require_no_wire_fragments(diagram)
+    nodes = require_list(diagram.get("nodes"), f"{location}.nodes")
+    edges = require_list(diagram.get("edges"), f"{location}.edges")
+    if len(nodes) != len(shape.nodes) or len(edges) != shape.edge_count:
+        raise DerivationError(
+            f"unsupported graph shape at {location}: expected {len(shape.nodes)} nodes / "
+            f"{shape.edge_count} edges, found {len(nodes)} / {len(edges)}; no graph entries are discarded"
+        )
+    signatures: list[tuple[str, str | None]] = []
+    node_ids: set[str] = set()
+    region_shapes = dict(shape.regions)
+    for index, raw in enumerate(nodes):
+        node = require_object(raw, f"{location}.nodes[{index}]")
+        node_id, kind, value_type = node.get("id"), node.get("kind"), node.get("type")
+        if not isinstance(node_id, str) or not node_id or node_id in node_ids:
+            raise DerivationError(f"unsupported graph shape at {location}: missing or duplicate node ID")
+        node_ids.add(node_id)
+        if not isinstance(kind, str) or (value_type is not None and not isinstance(value_type, str)):
+            raise DerivationError(f"unsupported graph shape at {location}.{node_id}: kind/type must be strings")
+        signatures.append((kind, value_type))
+        if any(key in node for key in ("regions", "diagram", "body")):
+            raise DerivationError(f"unsupported nested graph at {location}.{node_id}; no nested source is discarded")
+        if "region" in node or kind in region_shapes:
+            nested_shape = region_shapes.get(kind)
+            if nested_shape is None:
+                raise DerivationError(f"unsupported nested region at {location}.{node_id}")
+            region = require_object(node.get("region"), f"{location}.{node_id}.region")
+            require_graph_shape(region, nested_shape, f"{location}.{node_id}.region")
+    if Counter(signatures) != Counter(shape.nodes):
+        raise DerivationError(f"unsupported graph shape at {location}: node kind/type inventory differs from this rule")
+
+    inputs = [require_object(port, f"{location}.inputs[]")
+              for port in require_list(diagram.get("inputs", []), f"{location}.inputs")]
+    outputs = [require_object(port, f"{location}.outputs[]")
+               for port in require_list(diagram.get("outputs", []), f"{location}.outputs")]
+    if tuple((port.get("id"), port.get("type")) for port in inputs) != shape.inputs:
+        raise DerivationError(f"unsupported region input signature at {location}")
+    output_signature = []
+    for port in outputs:
+        endpoint = parse_endpoint(port.get("from"))
+        output_signature.append((port.get("id"), port.get("type"), endpoint.node, endpoint.port))
+    if tuple(output_signature) != shape.outputs:
+        raise DerivationError(f"unsupported region output signature at {location}")
+
+    visible_nodes = node_ids | {port_id for port_id, _ in shape.inputs}
+    edge_ids: set[str] = set()
+    for raw in edges:
+        edge = require_object(raw, f"{location}.edges[]")
+        edge_id = edge.get("id")
+        if not isinstance(edge_id, str) or not edge_id or edge_id in edge_ids:
+            raise DerivationError(f"unsupported graph shape at {location}: missing or duplicate edge ID")
+        edge_ids.add(edge_id)
+        for direction in ("from", "to"):
+            endpoint = parse_endpoint(edge.get(direction))
+            if endpoint.node not in visible_nodes or not endpoint.port:
+                raise DerivationError(f"unsupported graph endpoint at {location}.{edge_id}.{direction}")
+
+
 def load_json(path: Path) -> dict[str, Any]:
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except FileNotFoundError as exc:
-        raise DerivationError(f"missing file: {path}") from exc
-    except json.JSONDecodeError as exc:
-        raise DerivationError(f"invalid JSON in {path}: {exc}") from exc
-    if not isinstance(data, dict):
-        raise DerivationError(f"{path} must contain a JSON object")
+        _, data = load_json_file(path)
+    except FrogPipelineError as exc:
+        raise DerivationError(f"{exc.error_code}: {exc.message}") from exc
     return data
 
 
@@ -368,6 +450,21 @@ def derive_example05(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
         context,
     )
     loop = require_node(graph, "loop_accumulate", context)
+    region = require_object(loop.get("region"), "loop_accumulate.region")
+    observed_connections: Counter[tuple[EdgeEndpoint, EdgeEndpoint]] = Counter()
+    for raw in require_list(region.get("edges"), "loop_accumulate.region.edges"):
+        edge = require_object(raw, "loop_accumulate.region.edges[]")
+        observed_connections[(parse_endpoint(edge.get("from")), parse_endpoint(edge.get("to")))] += 1
+    # The emitted recurrence is fixed; preserving node kinds and edge counts
+    # alone cannot establish that this body actually computes that recurrence.
+    expected_connections = Counter((
+        (EdgeEndpoint("loop_input_value", "value"), EdgeEndpoint("add_step", "a")),
+        (EdgeEndpoint("delay_state", "out"), EdgeEndpoint("add_step", "b")),
+        (EdgeEndpoint("add_step", "result"), EdgeEndpoint("delay_state", "in")),
+        (EdgeEndpoint("loop_initial_state", "value"), EdgeEndpoint("delay_state", "initial")),
+    ))
+    if observed_connections != expected_connections:
+        raise DerivationError(f"{context} has unsupported internal wiring; the four accumulator connections must match exactly")
     count_node = require_object(loop.get("count_from"), "loop_accumulate.count_from").get("node")
     if not isinstance(count_node, str):
         raise DerivationError(f"{context} has invalid loop count source")
@@ -982,34 +1079,64 @@ def artifacts_example04(source_rel: str) -> dict[str, Any]:
     }
 
 
+# These inventories describe the bounded rules, never a source/golden-file
+# oracle. Only the accumulator rule consumes a nested region. Every other rule
+# is flat and rejects added regions even when the original pattern still fits.
+PUBLIC_ADDITION_SHAPE = GraphShape(
+    (("interface_input", None),) * 2 + (("primitive", "frog.core.add"), ("interface_output", None)), 3)
+UI_ADDITION_SHAPE = GraphShape((("widget_value", None),) * 3 + (("primitive", "frog.core.add"),), 3)
+PROPERTY_WRITE_SHAPE = GraphShape(
+    (("interface_input", None), ("widget_reference", None), ("primitive", "frog.ui.property_write")), 2)
+FEEDBACK_SHAPE = GraphShape(
+    (("interface_input", None), ("primitive", "frog.core.add"), ("primitive", "frog.core.delay"), ("interface_output", None)), 4)
+ACCUMULATOR_BODY_SHAPE = GraphShape(
+    (("primitive", "frog.core.delay"), ("primitive", "frog.core.add")), 4,
+    inputs=(("loop_input_value", "u16"), ("loop_initial_state", "u16")),
+    outputs=(("loop_final_state", "u16", "add_step", "result"),))
+ACCUMULATOR_SHAPE = GraphShape(
+    (("widget_value", None),) * 2 + (("widget_reference", None),) * 2 +
+    (("constant", "u16"), ("constant", "i32")) + (("constant", "frog.color.rgba8"),) * 2 +
+    (("primitive", "frog.ui.property_write"),) * 2 + (("for_loop", None), ("interface_output", None)), 8,
+    regions=(("for_loop", ACCUMULATOR_BODY_SHAPE),))
+SCALAR_COPY_SHAPE = GraphShape((("widget_value", None),) * 2 + (("interface_output", None),), 2)
+BUTTON_EVENT_SHAPE = GraphShape(
+    (("widget_event_value", None), ("widget_value", None), ("interface_output", None)), 2)
+PICTURE_SHAPE = GraphShape(
+    (("widget_value", None),) * 2 + (("primitive", "frog.image.decode_file_rgba8"),) + (("interface_output", None),) * 3, 5)
+
 DERIVATION_RULES = [
-    DerivationRule("pure_public_addition", "01_pure_addition", derive_example01),
-    DerivationRule("ui_value_roundtrip", "02_ui_value_roundtrip", derive_example02),
-    DerivationRule("ui_property_write", "03_ui_property_write", derive_example03),
-    DerivationRule("stateful_feedback_delay", "04_stateful_feedback_delay", derive_example04),
-    DerivationRule("bounded_ui_accumulator", "05_bounded_ui_accumulator", derive_example05),
-    DerivationRule("boolean_value_roundtrip", "06_boolean_value_roundtrip", derive_example06),
-    DerivationRule("string_value_roundtrip", "07_string_value_roundtrip", derive_example07),
-    DerivationRule("enum_value_roundtrip", "08_enum_value_roundtrip", derive_example08),
-    DerivationRule("path_value_roundtrip", "09_path_value_roundtrip", derive_example09),
-    DerivationRule("button_press_to_boolean", "10_button_press_to_boolean", derive_example10),
-    DerivationRule("button_switch_when_pressed", "11_button_switch_when_pressed", derive_example11),
-    DerivationRule("button_switch_when_released", "12_button_switch_when_released", derive_example12),
-    DerivationRule("button_latch_when_pressed", "13_button_latch_when_pressed", derive_example13),
-    DerivationRule("button_latch_when_released", "14_button_latch_when_released", derive_example14),
-    DerivationRule("button_latch_until_released", "15_button_latch_until_released", derive_example15),
-    DerivationRule("picture_path_to_image", "16_picture_logo_jpeg", derive_example16),
+    DerivationRule("pure_public_addition", "01_pure_addition", derive_example01, PUBLIC_ADDITION_SHAPE),
+    DerivationRule("ui_value_roundtrip", "02_ui_value_roundtrip", derive_example02, UI_ADDITION_SHAPE),
+    DerivationRule("ui_property_write", "03_ui_property_write", derive_example03, PROPERTY_WRITE_SHAPE),
+    DerivationRule("stateful_feedback_delay", "04_stateful_feedback_delay", derive_example04, FEEDBACK_SHAPE),
+    DerivationRule("bounded_ui_accumulator", "05_bounded_ui_accumulator", derive_example05, ACCUMULATOR_SHAPE),
+    DerivationRule("boolean_value_roundtrip", "06_boolean_value_roundtrip", derive_example06, SCALAR_COPY_SHAPE),
+    DerivationRule("string_value_roundtrip", "07_string_value_roundtrip", derive_example07, SCALAR_COPY_SHAPE),
+    DerivationRule("enum_value_roundtrip", "08_enum_value_roundtrip", derive_example08, SCALAR_COPY_SHAPE),
+    DerivationRule("path_value_roundtrip", "09_path_value_roundtrip", derive_example09, SCALAR_COPY_SHAPE),
+    DerivationRule("button_press_to_boolean", "10_button_press_to_boolean", derive_example10, BUTTON_EVENT_SHAPE),
+    DerivationRule("button_switch_when_pressed", "11_button_switch_when_pressed", derive_example11, SCALAR_COPY_SHAPE),
+    DerivationRule("button_switch_when_released", "12_button_switch_when_released", derive_example12, SCALAR_COPY_SHAPE),
+    DerivationRule("button_latch_when_pressed", "13_button_latch_when_pressed", derive_example13, SCALAR_COPY_SHAPE),
+    DerivationRule("button_latch_when_released", "14_button_latch_when_released", derive_example14, SCALAR_COPY_SHAPE),
+    DerivationRule("button_latch_until_released", "15_button_latch_until_released", derive_example15, SCALAR_COPY_SHAPE),
+    DerivationRule("picture_path_to_image", "16_picture_logo_jpeg", derive_example16, PICTURE_SHAPE),
 ]
 
 
 def try_rule(rule: DerivationRule, source: dict[str, Any], source_rel: str) -> RuleAttempt:
     try:
+        require_graph_shape(require_object(source.get("diagram"), "source.diagram"), rule.graph_shape, "source.diagram")
         return RuleAttempt(rule.rule_id, rule.fir_example_id, rule.derive(source, source_rel), None)
     except (DerivationError, KeyError, TypeError, IndexError) as exc:
         return RuleAttempt(rule.rule_id, rule.fir_example_id, None, str(exc))
 
 
 def derive_fir_from_source(source: dict[str, Any], source_rel: str) -> dict[str, Any]:
+    status, diagnostics = validate_envelope(require_object(source, "source"))
+    if status != "ok":
+        detail = "; ".join(f"{item['code']} at {item['location']}: {item['message']}" for item in diagnostics)
+        raise DerivationError(f"source envelope {status}: {detail}")
     diagram = require_object(source.get("diagram"), "source.diagram")
     require_no_wire_fragments(diagram)
     attempts = [try_rule(rule, source, source_rel) for rule in DERIVATION_RULES]

@@ -34,19 +34,20 @@ def test_python_example06_browser_ui_consumes_wfrog_realization() -> None:
     assert "/asset/boolean_circular_svg" in html
     assert "data-frog-visual-law='wfrog-realization-state-map'" in html
     assert "data-svg-anchor='caption.anchor'" in html
-    assert "left:50%;top:20%;transform:translate(-50%,-50%);text-align:center;" in html
-    assert "--boolean-inner-width:40px;" in html
-    assert "--boolean-inner-height:40px;" in html
-    assert "--boolean-focus-color:#2563eb;" in html
-    assert "--boolean-focus-width:3px;" in html
-    assert "outline:var(--boolean-focus-width) solid var(--boolean-focus-color);" in html
+    assert "left:0%;top:-22.2222%;transform:translateY(-50%);text-align:left;" in html
+    assert "data-realization-crop-part='placement_bounds'" in html
+    assert "data-frog-part=\"state_face\"" in html
+    assert "--boolean-focus-color:#00ADEF;" in html
+    assert "--boolean-focus-width:1px;" in html
+    assert "data-frog-part=\"focus_ring\"" in html
     assert "outline:2px solid #2563eb" not in html
     assert "Current runtime snapshot" not in html
 
     runtime.runtime.execute(False)
     html = runtime.render_html()
-    assert "value='true'" in html
-    assert "--boolean-fill:#ef4444;" in html
+    assert "data-toggle-target='true' aria-pressed='false'" in html
+    assert "name='input_value' value='false' data-frog-boolean-state-input='bool_input'" in html
+    assert "--boolean-fill:#ffffff;" in html
 
 
 def test_python_runtime_builder_dispatches_example06() -> None:

@@ -32,7 +32,8 @@ def test_derivation_rule_selection_does_not_trust_metadata_name() -> None:
 
 def test_unsupported_source_pattern_reports_derivation_error() -> None:
     source = {
-        "metadata": {"name": "unsupported"},
+        "spec_version": "0.1",
+        "metadata": {"name": "unsupported", "description": "Unsupported empty graph"},
         "interface": {"inputs": [], "outputs": []},
         "diagram": {"nodes": [], "edges": []},
     }

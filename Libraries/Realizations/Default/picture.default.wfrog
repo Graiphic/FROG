@@ -65,6 +65,7 @@
       ],
       "supported_parts": [
         "root",
+        "placement_bounds",
         "label",
         "caption",
         "frame",
@@ -93,11 +94,70 @@
       ]
     }
   ],
+  "default_widget_properties": [
+    {
+      "class_id": "frog.widgets.picture_control",
+      "role": "control",
+      "visual": {
+        "resource_ref": "frog.realizations.default.picture.assets.rectangular_svg"
+      },
+      "props": {
+        "layout.default_width": 240,
+        "layout.default_height": 160,
+        "layout.aura_band_px": 4,
+        "caption.text": "Picture Control",
+        "caption.visible": true,
+        "value": "",
+        "viewport.scale": 1,
+        "viewport.fit_mode": "fit",
+        "display.preserve_aspect_ratio": true,
+        "display.interpolation": "linear",
+        "display.background_color": "#ffffff",
+        "interaction.enabled": true,
+        "interaction.read_only": false,
+        "realization.variant": "rectangular"
+      }
+    },
+    {
+      "class_id": "frog.widgets.picture_indicator",
+      "role": "indicator",
+      "visual": {
+        "resource_ref": "frog.realizations.default.picture.assets.rectangular_svg"
+      },
+      "props": {
+        "layout.default_width": 240,
+        "layout.default_height": 160,
+        "layout.aura_band_px": 4,
+        "caption.text": "Picture Indicator",
+        "caption.visible": true,
+        "value": "",
+        "viewport.scale": 1,
+        "viewport.fit_mode": "fit",
+        "display.preserve_aspect_ratio": true,
+        "display.interpolation": "linear",
+        "display.background_color": "#ffffff",
+        "interaction.enabled": false,
+        "interaction.read_only": true,
+        "realization.variant": "rectangular"
+      }
+    }
+  ],
   "part_bindings": [
     {
       "part": "root",
       "binding_kind": "svg_or_host_surface",
       "binding_selector": "[data-frog-part='root']"
+    },
+    {
+      "part": "placement_bounds",
+      "binding_kind": "svg_shape",
+      "binding_selector": "[data-frog-part='placement_bounds']",
+      "semantic_members": [
+        "layout.placement_bounds.*",
+        "layout.grid.*",
+        "layout.resize.*"
+      ],
+      "placement_role": "widget_placement_aura_not_focus_not_selection_optional_grid_snap_policy"
     },
     {
       "part": "label",
