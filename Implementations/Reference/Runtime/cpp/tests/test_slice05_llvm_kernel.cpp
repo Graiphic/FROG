@@ -36,7 +36,9 @@ std::string canonical_json(const frog::json::Value& value) {
 }
 
 void assert_contains(const std::string& haystack, const std::string& needle) {
-    assert(haystack.find(needle) != std::string::npos);
+    if (haystack.find(needle) == std::string::npos) {
+        throw std::runtime_error("Missing expected HTML fragment: " + needle);
+    }
 }
 
 const frog::json::Object& acceptance_root() {
@@ -123,17 +125,22 @@ void test_browser_ui_runtime_uses_llvm_kernel_bridge() {
     assert_contains(html, "C++ reference runtime");
     assert_contains(html, "native kernel bridge");
     assert_contains(html, "LLVM native kernel artifact");
-    assert_contains(html, "style='width:500px;height:170px;'");
-    assert_contains(html, "left:20px;top:24px;width:220px;height:88px;");
-    assert_contains(html, "left:260px;top:24px;width:220px;height:88px;");
+    assert_contains(html, "style='width:500px;height:128px;'");
+    assert_contains(html, "left:32px;top:32px;width:96px;height:32px;");
+    assert_contains(html, "left:288px;top:32px;width:96px;height:32px;");
 }
 
 } // namespace
 
 int main() {
-    test_direct_llvm_kernel_bridge_call();
-    test_runtime_uses_llvm_kernel_bridge();
-    test_browser_ui_runtime_uses_llvm_kernel_bridge();
+    try {
+        test_direct_llvm_kernel_bridge_call();
+        test_runtime_uses_llvm_kernel_bridge();
+        test_browser_ui_runtime_uses_llvm_kernel_bridge();
+    } catch (const std::exception& error) {
+        std::cerr << error.what() << std::endl;
+        return 1;
+    }
     std::cout << "slice05 LLVM-produced native kernel bridge passed" << std::endl;
     return 0;
 }
