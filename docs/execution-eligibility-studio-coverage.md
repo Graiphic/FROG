@@ -43,8 +43,17 @@ réussies : `frog-ui-fixture-conformance-smoke`, `frog-document-readiness-smoke`
 `frog-structure-execution-validation-smoke` et
 `frog-win32-execution-validation-smoke`. Le test natif s'exécute sur un bureau
 Windows privé avec `FROG_UI_TEST_FORCE_WARP_SVG=1`.
-Cette preuve est celle du code local testé ; aucun commit d'implémentation
-publié ni aucune validation exhaustive des 137 scénarios n'est revendiqué.
+Cette preuve est celle du code local testé, publié ensuite dans le dépôt
+privé FROG-STUDIO au commit `ac8fa9618d671c2983cee69e9ee76b5af7aa2e0a`
+(branche de travail, pas release de main). Aucune validation exhaustive des
+137 scénarios n'est revendiquée.
+
+Contrôle supplémentaire avant publication : 18/19 tests Studio ciblés réussis.
+Le test `frog-win32-inline-text-clipboard-smoke` échoue sur `string_control`
+avec « Studio exported incorrect clipboard text », y compris lors d'une relance
+isolée. Sa cause reste à diagnostiquer ; cela ne transforme pas le succès ciblé
+des diagnostics en qualification globale. Le backend Event/Program Session a
+réussi ses deux tests séparés ; son intégration complète dans Studio reste distincte.
 
 Lors d'une qualification, enregistrer la règle EXEC et le scénario VAL, le commit
 de l'implémentation, la commande de test, la configuration/cible, le résultat et
