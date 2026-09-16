@@ -41,3 +41,11 @@ decoder bounds all strings and collections, rejects truncated or trailing data,
 and validates the complete artifact before exposing it. Producers emit nodes,
 ports, edges, UI bindings and source identities in stable semantic order so the
 same document revision always produces the same bytes.
+
+## Opt-in event backend
+
+The separate [event backend contract](event-runtime-contract.md) defines typed
+notifications, already-lowered cases, filter responses and dynamic registration
+handles. It does not change `ProgramArtifact` schema 1, its codec, or the
+default Numeric/Boolean execution profile. Public source/FIR lowering and IDE
+host integration are separate requirements, not implied by this backend API.
