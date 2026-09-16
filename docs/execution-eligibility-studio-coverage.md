@@ -1,11 +1,61 @@
 # Execution eligibility — Studio implementation coverage
 
-Révision 1 — 16 septembre 2026. Ce relevé est **informatif**.
+Révision 2 — 16 septembre 2026. Ce relevé est **informatif**.
 Les [règles EXEC](../Language/Execution%20eligibility.md) sont le contrat ;
 cette page indique la preuve disponible, pas une équivalence automatique entre
 le modèle privé d'édition et toutes les sources publiques FROG.
 
 ## Qualification
+
+### Checkpoint de publication du 16 septembre 2026
+
+Les corrections décrites ci-dessous sont incluses dans FROG-STUDIO
+[`48f300f`](https://github.com/Graiphic/FROG-STUDIO/commit/48f300fa2e9d45770f2d6a9b9f4af9d8168352b3),
+publié sur `agent/complete-studio-interaction-conformance`, sans fusion sur `main`.
+La livraison courante est **0.0.2.513**, Authenticode **Valid**, avec vérification
+du raccourci Bureau canonique. Son relevé de livraison décrit aussi les évolutions
+ultérieures : focus animé des diagnostics, formats d’icône et palette Horodatage.
+
+Avant publication, **16/16 tests ciblés** ont été réexécutés avec succès :
+catalogues/contrats et typage, navigation, Horodatage, sélection Variant,
+diagnostics Win32, document readiness, Custom icon, binding profile, version
+et contours graphiques. Ce n’est pas une reconstruction complète de toutes les
+suites ni une qualification des 137 scénarios VAL. Runtime POC reste OFF.
+L’échec clipboard du précédent audit n’est pas déclaré résolu.
+
+### Livraison initiale : compilation et runtime séparés
+
+Livraison **0.0.2.479**, signature Authenticode valide et raccourci Bureau canonique
+vérifiés. Les preuves de cette section décrivent la livraison initiale locale ;
+les sources sont désormais incluses dans le checkpoint Studio cité ci-dessus.
+
+`win32_execution_validation_smoke.cpp` : **110 vérifications réussies**. Cinq
+suites CTest ciblées passent : fixture conformance, document readiness, structure
+execution validation, diagnostics Win32 et contrat de version du binaire.
+Configuration : Windows, Runtime POC OFF, rendu de test WARP.
+
+| Situation ciblée | Résultat local vérifié |
+| --- | --- |
+| Nouveau diagramme vide, sans obligation d’interface | Buildable, pas de sens interdit ; runtime absent expliqué séparément. |
+| Deux constantes numériques vers a/b d’Add, sortie inutilisée (VAL-011) | Valide, un seul diagnostic global runtime, pas de fausse erreur pour Add/constantes. |
+| Add avec entrées obligatoires absentes (VAL-012/013, périmètre Add) | Compilation bloquée et sens interdit ; navigation vers l’objet possible. |
+| Source publique sans validateur/lowerer | Toujours bloquée / non prise en charge, pas assimilée au diagramme d’édition vide. |
+| Lecture sur Front Panel et Block Diagram | Chaque gestionnaire réel ouvre le même service de diagnostics ; capture libérée. |
+| Présentation | Clair/sombre, tailles 18/24/32, français à 15 points, retour à la ligne réel, Tab/Échap, seconde icône intacte. |
+
+Le contrôle visuel avec le véritable exécutable a confirmé le document vide,
+l’Add valide et le clic Lecture corrigé depuis le Block Diagram. Ce contrôle a
+révélé un ancien trou du test : appeler le gestionnaire Front Panel avec un HWND
+Diagram ne prouvait pas que le gestionnaire Diagram transmettait le clic.
+Le test utilise désormais les deux gestionnaires distincts.
+
+SHA-256 du binaire livré :
+`CEEB01D39BF2B1E5B26D2291B8498016E35574368A28059BADD1439230F1F23E`.
+La validation ne génère pas d’artefact et n’active pas le runtime. Ces preuves
+ciblées ne qualifient pas à elles seules toutes les variantes des scénarios VAL
+ni les backends publics.
+
+### Qualification précédente publiée
 
 | Règles | Couverture observée | Preuve / limite |
 | --- | --- | --- |

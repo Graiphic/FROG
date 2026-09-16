@@ -1,6 +1,6 @@
 # Execution eligibility and diagnostics
 
-Revision **1.0 — 2026-09-16**. Maintainer: FROG.
+Revision **1.1 — 2026-09-16**. Maintainer: FROG.
 Status: **normative admission requirements**, with implementation evidence kept separately.
 
 This is the stable reference for deciding whether a FROG program may be
@@ -33,6 +33,14 @@ type error. Saving an incomplete document MUST NOT assert that it is executable.
 Public semantic outcomes remain accepted/rejected, with an explicit unsupported
 implementation outcome where appropriate. Internal unknown/pending/stale states
 MUST NOT be interpreted as accepted.
+
+An empty, recognized diagram with no unmet interface obligations is a valid
+no-op (void), not a missing program. Its validation MUST NOT require an artificial
+node or a consumed output. This does not waive required public outputs or authorize
+an unsupported source profile: an empty editor projection is not proof that its
+underlying source has been validated. Runtime absence alone MUST NOT invalidate
+the graph or claim a compilation error; build validation still does not prove
+that a current artifact exists or that a runtime can start it.
 
 ## 2. Revision and execution requests — EXEC-002
 
@@ -75,6 +83,9 @@ Actual running instances and the current editable source are distinct states.
   elimination must not legalize invalid source. A defined but unconsumed ordinary
   output is not an error by itself. Declared structure outputs and promised
   public outputs still require their complete production contract.
+  In particular, two correctly typed constants connected to Add's required a/b
+  inputs remain valid when its ordinary result is unused. Removing either
+  required input must still reject the graph.
 
 ## 4. Structures and their outputs
 
