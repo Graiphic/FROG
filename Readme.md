@@ -31,6 +31,14 @@
 
 <h2 id="start-here">Start here</h2>
 
+<p>
+The maintained <a href="./Language/Execution%20eligibility.md">Execution eligibility and diagnostics</a>
+reference defines validation, build and launch gates, stable rule identifiers,
+and the evidence required to claim support. See also the
+<a href="./IDE/Execution%20diagnostics.md">IDE diagnostics contract</a> and
+<a href="./docs/execution-eligibility-acceptance-matrix.md">acceptance tracking matrix</a>.
+</p>
+
 <table>
   <thead>
     <tr>
