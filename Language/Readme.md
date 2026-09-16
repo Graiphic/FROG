@@ -191,6 +191,7 @@ The internal structure of <code>Language/</code> is currently:
 <pre><code>Language/
 ├── Readme.md
 ├── Expression to validated meaning.md
+├── Execution eligibility.md
 ├── Control structures.md
 ├── State and cycles.md
 ├── Execution model.md
@@ -234,6 +235,12 @@ valid source file has enough accepted meaning for FIR derivation.
 <hr/>
 
 <h2 id="current-documents">5. Current Documents</h2>
+
+<p>
+<a href="Execution%20eligibility.md">Execution eligibility and diagnostics</a>
+is the maintained admission reference: independent validation/build/run gates,
+recursive output coverage, stable rule identifiers and qualification evidence.
+</p>
 
 <p>
 The documents currently published in this directory are:
