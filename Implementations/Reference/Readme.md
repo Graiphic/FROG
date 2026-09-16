@@ -14,6 +14,13 @@
 <h2>Overview</h2>
 
 <p>
+For the complete Python test suite, first run
+<code>python -m pip install -r Implementations/Reference/requirements-test.txt</code>
+from the repository root. JSON Schema checks are mandatory tests, not optional
+skips. The reference pipeline itself retains its standard-library-only baseline.
+</p>
+
+<p>
 This directory contains the non-normative reference implementation workspace for FROG.
 It exists to make selected repository-visible corridors executable and inspectable without turning implementation convenience into normative language law.
 </p>

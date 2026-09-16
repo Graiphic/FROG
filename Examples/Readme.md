@@ -50,6 +50,14 @@ They should not be interpreted as a commitment to publish Graiphic's production 
 Current runtime development and validation continue in Graiphic proprietary repositories, including <code>Graiphic/FROG-Runtime</code>, while preserving the public contracts required for independent implementations.
 </p>
 
+<h2>Current Authoring and Visual Authority</h2>
+
+<p>
+Graiphic Studio is the canonical Graiphic authoring host for current widget integration.
+It consumes the public <code>.frog</code>, Default <code>.wfrog</code>, and semantic SVG contracts rather than defining a private parallel widget law.
+Public example dossiers and their accepted screenshots remain specification-facing witnesses; historical browser-host wording records earlier validation and does not identify the current authoring authority.
+</p>
+
 <h2>Browser-Hosted Inspection Surface</h2>
 
 <p>

@@ -14,6 +14,8 @@ EXPECTED_PARTS = {
     "root", "label", "caption", "frame", "tab_header_region", "tab_item",
     "tab_item_label", "tab_item_icon", "tab_close_button", "selection_face",
     "overflow_button", "overflow_menu", "tab_scroll_previous", "tab_scroll_next",
+    "page_label_display", "page_label_display_face", "page_label_display_text",
+    "page_label_display_previous", "page_label_display_next",
     "page_region", "page_container", "page_content", "focus_ring",
 }
 
@@ -25,6 +27,8 @@ def test_tab_widget_doc_defines_deepened_public_surface() -> None:
         "pages[].content_ref", "selection.previous_id", "headers.placement",
         "page_region.active_page_id", "overflow.hidden_page_ids", "reorder.drop_index",
         "close.policy", "page_container", "page_content",
+        "page_label_display.selected_page_id", "page_label_display_previous",
+        "page_label_display_next",
     ]:
         assert token in text
 
@@ -40,10 +44,15 @@ def test_tab_manifest_declares_expected_parts_and_bindings() -> None:
     assert "pages.*" in property_members
     assert "selection.*" in property_members
     assert "headers.*" in property_members
+    assert "page_label_display.*" in property_members
     assert "page_region.*" in property_members
     assert "overflow.*" in property_members
     assert "close.*" in property_members
     assert "reorder.*" in property_members
+    page_label_parts = {part for part in EXPECTED_PARTS if part.startswith("page_label_display")}
+    binding_kinds = {item["part"]: item["binding_kind"] for item in data["part_bindings"]}
+    for part in page_label_parts:
+        assert binding_kinds[part] == "svg_or_host_surface"
 
 
 def test_tab_svg_resources_expose_all_public_part_markers() -> None:

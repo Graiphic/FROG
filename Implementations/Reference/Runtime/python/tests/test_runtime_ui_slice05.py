@@ -53,15 +53,15 @@ def test_slice05_ui_routes_and_state_match_shared_acceptance() -> None:
         assert 'data-coordinate-space="panel_pixels"' in html
         assert 'data-runtime-language="python"' in html
         assert 'data-compiler-backend="none"' in html
-        assert 'style="width:500px;height:170px;"' in html
+        assert 'style="width:500px;height:128px;"' in html
         assert "data-widget-id='ctrl_input'" in html
         assert "data-widget-id='ind_result'" in html
         assert "data-class-ref='frog.widgets.numeric_control'" in html
         assert "data-class-ref='frog.widgets.numeric_indicator'" in html
         assert "data-frog-visual-law='wfrog-realization-state-map'" in html
         assert "data-asset-route='/asset/numeric_rectangular_svg'" in html
-        assert "left:20px;top:24px;width:220px;height:88px;" in html
-        assert "left:260px;top:24px;width:220px;height:88px;" in html
+        assert "left:32px;top:32px;width:96px;height:32px;" in html
+        assert "left:288px;top:32px;width:96px;height:32px;" in html
         assert "class='numeric-skin'" in html
         assert "<svg" in html
         assert "data-frog-part='caption'" in html
@@ -74,14 +74,14 @@ def test_slice05_ui_routes_and_state_match_shared_acceptance() -> None:
         assert "data-frog-method='decrement'" in html
         assert "data-frog-button-state-law='normal-pressed'" in html
         assert "--frog-numeric-frame-fill:transparent" in html
-        assert "--frog-numeric-frame-stroke:transparent" in html
-        assert "--frog-numeric-frame-stroke-width:2px" in html
-        assert "--frog-numeric-step-fill:#5B9BD5" in html
-        assert "--frog-numeric-step-fill-pressed:#2B4F7B" in html
+        assert "--frog-numeric-value-face-stroke:#A8ABAE" in html
+        assert "--frog-numeric-value-face-stroke-width:1px" in html
+        assert "--frog-numeric-step-fill:#DDE1E4" in html
+        assert "--frog-numeric-step-fill-pressed:#D2D4D5" in html
         assert "--frog-numeric-caption-font-size:12px;" in html
         assert "--frog-numeric-caption-font-weight:400;" in html
-        assert "--frog-numeric-text-color:#111827;" in html
-        assert "--frog-numeric-text-font-size:11px;" in html
+        assert "--frog-numeric-text-color:#2B3033;" in html
+        assert "--frog-numeric-text-font-size:13px;" in html
         assert "font-size: var(--frog-numeric-caption-font-size)" in html
         assert "font-size: 12px;\n  line-height: 1;\n  white-space: nowrap;" not in html
         assert "Current runtime snapshot" not in html
@@ -96,10 +96,10 @@ def test_slice05_ui_routes_and_state_match_shared_acceptance() -> None:
         asset_body = asset_response.read().decode("utf-8")
         assert asset_response.status == 200
         assert "<svg" in asset_body
-        assert 'viewBox="0 0 380 150"' in asset_body
+        assert 'viewBox="0 0 220 88"' in asset_body
         assert 'id="caption_text"' in asset_body
-        assert 'id="frame"' in asset_body
-        assert 'width="222"' in asset_body
+        assert 'id="placement_bounds"' in asset_body
+        assert 'width="96"' in asset_body
         assert 'id="value_face"' in asset_body
         assert 'id="increment_up"' in asset_body
         assert 'id="increment_down"' in asset_body

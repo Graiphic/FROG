@@ -1,0 +1,3 @@
+# Shared by both reference CI workflows. Schema assertions must not be skipped.
+pytest>=8,<9
+jsonschema>=4.18,<5

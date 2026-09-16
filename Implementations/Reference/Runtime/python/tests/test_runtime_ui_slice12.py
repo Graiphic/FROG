@@ -85,7 +85,7 @@ def test_python_example12_browser_ui_consumes_default_svg_and_source_styles() ->
     assert "data-frog-pressed-applies-when-value-true='true'" in html
     assert "data-frog-pressed-applies-while-active='false'" in html
     assert "data-frog-hover-applies-when-value-false-only='false'" in html
-    assert "data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='trigger_value'" in html
+    assert "data-frog-part='button_face' data-frog-event='pressed' data-frog-public-input-id='trigger_value'" in html
     assert "name='trigger_value' value='true'" in html
     assert "--frog-button-face-fill:#e2e8f0;" in html
     assert "--frog-button-face-hover-fill:#f1f5f9;" in html
@@ -101,7 +101,7 @@ def test_python_example12_browser_ui_consumes_default_svg_and_source_styles() ->
     assert "fetch(\"/event\"" in html
     assert "pointerup" in html
     assert ">OFF</span>" in html
-    assert ">FALSE</span>" in html
+    assert ">Off</span>" in html
     assert "fallback" not in html
     assert "type='checkbox'" not in html
     assert "type='submit'" not in html
@@ -113,7 +113,7 @@ def test_python_example12_browser_ui_consumes_default_svg_and_source_styles() ->
     assert "data-frog-visual-state='false'" in html
     assert "aria-pressed='true'" in html
     assert ">OFF</span>" in html
-    assert ">FALSE</span>" in html
+    assert ">Off</span>" in html
 
 
 def test_python_example12_event_endpoint_sets_released_switch_value() -> None:

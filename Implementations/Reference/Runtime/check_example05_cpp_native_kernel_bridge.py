@@ -145,8 +145,15 @@ def check_native_runtime_headless(build_dir: Path) -> None:
     assert artifact["outputs"]["ui"]["ctrl_input"] == 3
     assert artifact["outputs"]["ui"]["ind_result"] == 15
     assert artifact["ui_runtime"]["panel"]["layout"]["width"] == 500
-    assert artifact["ui_runtime"]["widgets"][0]["layout"]["width"] == 220
-    assert artifact["ui_runtime"]["widgets"][1]["layout"]["width"] == 220
+    assert artifact["ui_runtime"]["panel"]["layout"]["height"] == 128
+    assert artifact["ui_runtime"]["widgets"][0]["layout"] == {
+        "bounds_ref": "placement_bounds", "origin": "placement_bounds.top_left",
+        "x": 32, "y": 32, "width": 96, "height": 32,
+    }
+    assert artifact["ui_runtime"]["widgets"][1]["layout"] == {
+        "bounds_ref": "placement_bounds", "origin": "placement_bounds.top_left",
+        "x": 288, "y": 32, "width": 96, "height": 32,
+    }
 
 
 def main() -> int:

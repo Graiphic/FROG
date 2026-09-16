@@ -122,9 +122,23 @@
               "children": []
             },
             {
+              "key": "expression/case-editing-profile-v1.md",
+              "title": "Case Editing Profile v1",
+              "path": "/Expression/Case%20Editing%20Profile%20v1.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "expression/front-panel-object-model.md",
               "title": "Front-panel object model",
               "path": "/Expression/Front-panel%20object%20model.md",
+              "kind": "page",
+              "children": []
+            },
+            {
+              "key": "expression/host-and-execution-policy.md",
+              "title": "Host and execution policy",
+              "path": "/Expression/Host%20and%20execution%20policy.md",
               "kind": "page",
               "children": []
             },
@@ -143,9 +157,23 @@
               "children": []
             },
             {
+              "key": "expression/source-compatibility-and-profiles.md",
+              "title": "Source compatibility and profiles",
+              "path": "/Expression/Source%20compatibility%20and%20profiles.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "expression/source-provenance.md",
               "title": "Source provenance",
               "path": "/Expression/Source%20provenance.md",
+              "kind": "page",
+              "children": []
+            },
+            {
+              "key": "expression/typed-binding-contract-v1.md",
+              "title": "Typed Binding Contract v1",
+              "path": "/Expression/Typed%20Binding%20Contract%20v1.md",
               "kind": "page",
               "children": []
             },
@@ -1897,32 +1925,17 @@
                     },
                     {
                       "key": "libraries/realizations/default/assets/",
-                      "title": "Assets",
-                      "path": "/Libraries/Realizations/Default/Assets/Readme.md",
+                      "title": "assets",
+                      "path": "/Libraries/Realizations/Default/assets/Readme.md",
                       "kind": "category",
                       "children": [
                         {
                           "key": "libraries/realizations/default/assets/naming.md",
                           "title": "Naming",
-                          "path": "/Libraries/Realizations/Default/Assets/Naming.md",
+                          "path": "/Libraries/Realizations/Default/assets/Naming.md",
                           "kind": "page",
                           "children": []
                         },
-                        {
-                          "key": "libraries/realizations/default/assets/ring/",
-                          "title": "ring",
-                          "path": "/Libraries/Realizations/Default/Assets/ring/Readme.md",
-                          "kind": "category",
-                          "children": []
-                        }
-                      ]
-                    },
-                    {
-                      "key": "libraries/realizations/default/assets/",
-                      "title": "assets",
-                      "path": null,
-                      "kind": "category",
-                      "children": [
                         {
                           "key": "libraries/realizations/default/assets/array/",
                           "title": "array",
@@ -2011,6 +2024,13 @@
                           "key": "libraries/realizations/default/assets/picture/",
                           "title": "picture",
                           "path": "/Libraries/Realizations/Default/assets/picture/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        },
+                        {
+                          "key": "libraries/realizations/default/assets/ring/",
+                          "title": "ring",
+                          "path": "/Libraries/Realizations/Default/assets/ring/Readme.md",
                           "kind": "category",
                           "children": []
                         },
@@ -2262,6 +2282,13 @@
                   "key": "libraries/widgets/tree.md",
                   "title": "Tree",
                   "path": "/Libraries/Widgets/Tree.md",
+                  "kind": "page",
+                  "children": []
+                },
+                {
+                  "key": "libraries/widgets/waveformgraph.md",
+                  "title": "WaveformGraph",
+                  "path": "/Libraries/Widgets/WaveformGraph.md",
                   "kind": "page",
                   "children": []
                 },
@@ -3742,6 +3769,21 @@
                   ]
                 },
                 {
+                  "key": "conformance/valid/11_public_structure_families/",
+                  "title": "11 public structure families",
+                  "path": "/Conformance/valid/11_public_structure_families/Readme.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "conformance/valid/11_public_structure_families/case.frog",
+                      "title": "case.frog",
+                      "path": "/Conformance/valid/11_public_structure_families/case.frog",
+                      "kind": "code",
+                      "children": []
+                    }
+                  ]
+                },
+                {
                   "key": "conformance/valid/compiler/",
                   "title": "compiler",
                   "path": "/Conformance/valid/compiler/Readme.md",
@@ -4269,6 +4311,13 @@
                       "key": "implementations/reference/deriver/tests/test_fir_deriver.py",
                       "title": "test_fir_deriver.py",
                       "path": "/Implementations/Reference/Deriver/tests/test_fir_deriver.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/deriver/tests/test_fir_source_boundary.py",
+                      "title": "test_fir_source_boundary.py",
+                      "path": "/Implementations/Reference/Deriver/tests/test_fir_source_boundary.py",
                       "kind": "code",
                       "children": []
                     }
@@ -4915,6 +4964,13 @@
                       "kind": "category",
                       "children": [
                         {
+                          "key": "implementations/reference/runtime/python/tests/test_boolean_realization_defaults.py",
+                          "title": "test_boolean_realization_defaults.py",
+                          "path": "/Implementations/Reference/Runtime/python/tests/test_boolean_realization_defaults.py",
+                          "kind": "code",
+                          "children": []
+                        },
+                        {
                           "key": "implementations/reference/runtime/python/tests/test_native_kernel_bridge.py",
                           "title": "test_native_kernel_bridge.py",
                           "path": "/Implementations/Reference/Runtime/python/tests/test_native_kernel_bridge.py",
@@ -5097,15 +5153,43 @@
                   "children": []
                 },
                 {
+                  "key": "implementations/reference/validator/source_envelope.py",
+                  "title": "source_envelope.py",
+                  "path": "/Implementations/Reference/Validator/source_envelope.py",
+                  "kind": "code",
+                  "children": []
+                },
+                {
                   "key": "implementations/reference/validator/tests/",
                   "title": "tests",
                   "path": null,
                   "kind": "category",
                   "children": [
                     {
+                      "key": "implementations/reference/validator/tests/test_canonical_artifact_boundaries.py",
+                      "title": "test_canonical_artifact_boundaries.py",
+                      "path": "/Implementations/Reference/Validator/tests/test_canonical_artifact_boundaries.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/validator/tests/test_public_structure_contract.py",
+                      "title": "test_public_structure_contract.py",
+                      "path": "/Implementations/Reference/Validator/tests/test_public_structure_contract.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
                       "key": "implementations/reference/validator/tests/test_reference_validator.py",
                       "title": "test_reference_validator.py",
                       "path": "/Implementations/Reference/Validator/tests/test_reference_validator.py",
+                      "kind": "code",
+                      "children": []
+                    },
+                    {
+                      "key": "implementations/reference/validator/tests/test_source_boundary.py",
+                      "title": "test_source_boundary.py",
+                      "path": "/Implementations/Reference/Validator/tests/test_source_boundary.py",
                       "kind": "code",
                       "children": []
                     }
@@ -5307,10 +5391,14 @@
     "/Expression/Widget%20interaction.md",
     "/Expression/Widget.md",
     "/Expression/Canonical%20source%20scope.md",
+    "/Expression/Case%20Editing%20Profile%20v1.md",
     "/Expression/Front-panel%20object%20model.md",
+    "/Expression/Host%20and%20execution%20policy.md",
     "/Expression/Interface%20map.md",
     "/Expression/Numeric%20representations.md",
+    "/Expression/Source%20compatibility%20and%20profiles.md",
     "/Expression/Source%20provenance.md",
+    "/Expression/Typed%20Binding%20Contract%20v1.md",
     "/Expression/Widget%20behavior.md",
     "/Expression/Widget%20class%20contract.md",
     "/Expression/Widget%20package%20%28.wfrog%29.md",
@@ -5548,9 +5636,7 @@
     "/Libraries/Realizations/Default/Table.md",
     "/Libraries/Realizations/Default/Tree.md",
     "/Libraries/Realizations/Default/Validation.md",
-    "/Libraries/Realizations/Default/Assets/Naming.md",
-    "/Libraries/Realizations/Default/Assets/ring/Readme.md",
-    "/Libraries/Realizations/Default/Assets/Readme.md",
+    "/Libraries/Realizations/Default/assets/Naming.md",
     "/Libraries/Realizations/Default/assets/array/Readme.md",
     "/Libraries/Realizations/Default/assets/boolean/Readme.md",
     "/Libraries/Realizations/Default/assets/button/Readme.md",
@@ -5564,12 +5650,14 @@
     "/Libraries/Realizations/Default/assets/numeric/Readme.md",
     "/Libraries/Realizations/Default/assets/path/Readme.md",
     "/Libraries/Realizations/Default/assets/picture/Readme.md",
+    "/Libraries/Realizations/Default/assets/ring/Readme.md",
     "/Libraries/Realizations/Default/assets/splitter/Readme.md",
     "/Libraries/Realizations/Default/assets/string/Readme.md",
     "/Libraries/Realizations/Default/assets/subpanel/Readme.md",
     "/Libraries/Realizations/Default/assets/tab/Readme.md",
     "/Libraries/Realizations/Default/assets/table/Readme.md",
     "/Libraries/Realizations/Default/assets/tree/Readme.md",
+    "/Libraries/Realizations/Default/assets/Readme.md",
     "/Libraries/Realizations/Default/Examples/Button%20default%20realization.wfrog.md",
     "/Libraries/Realizations/Default/Examples/Button%20package%20and%20assets%20example.md",
     "/Libraries/Realizations/Default/Examples/Numeric%20control%20default%20realization.wfrog.md",
@@ -5600,6 +5688,7 @@
     "/Libraries/Widgets/Tab.md",
     "/Libraries/Widgets/Table.md",
     "/Libraries/Widgets/Tree.md",
+    "/Libraries/Widgets/WaveformGraph.md",
     "/Libraries/Widgets/WidgetEngineeringReferenceStandard.md",
     "/Libraries/Widgets/Readme.md",
     "/Libraries/Readme.md",
@@ -5806,6 +5895,8 @@
     "/Conformance/valid/09_optional_front_panel_present_and_structurally_valid/Readme.md",
     "/Conformance/valid/10_distinct_source_identifiers_are_valid/case.frog",
     "/Conformance/valid/10_distinct_source_identifiers_are_valid/Readme.md",
+    "/Conformance/valid/11_public_structure_families/case.frog",
+    "/Conformance/valid/11_public_structure_families/Readme.md",
     "/Conformance/valid/compiler/01_pure_arithmetic_is_consumable.md",
     "/Conformance/valid/compiler/02_structured_control_is_consumable.md",
     "/Conformance/valid/compiler/03_explicit_state_is_consumable.md",
@@ -5875,6 +5966,7 @@
     "/Implementations/Reference/Deriver/tests/test_example08_fir_derivation.py",
     "/Implementations/Reference/Deriver/tests/test_examples01_10_fir_derivation.py",
     "/Implementations/Reference/Deriver/tests/test_fir_deriver.py",
+    "/Implementations/Reference/Deriver/tests/test_fir_source_boundary.py",
     "/Implementations/Reference/Deriver/Readme.md",
     "/Implementations/Reference/LLVM/bridge/fir_to_lowering.md",
     "/Implementations/Reference/LLVM/bridge/lowering_to_llvm.md",
@@ -5957,6 +6049,7 @@
     "/Implementations/Reference/Runtime/python/run_slice05_ui.py",
     "/Implementations/Reference/Runtime/python/runtime_core.py",
     "/Implementations/Reference/Runtime/python/ui_runtime.py",
+    "/Implementations/Reference/Runtime/python/tests/test_boolean_realization_defaults.py",
     "/Implementations/Reference/Runtime/python/tests/test_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_core_normalized_contract.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_slice05.py",
@@ -5982,7 +6075,11 @@
     "/Implementations/Reference/Validator/responsibilities.md",
     "/Implementations/Reference/Validator/validate_source.md",
     "/Implementations/Reference/Validator/reference_validator.py",
+    "/Implementations/Reference/Validator/source_envelope.py",
+    "/Implementations/Reference/Validator/tests/test_canonical_artifact_boundaries.py",
+    "/Implementations/Reference/Validator/tests/test_public_structure_contract.py",
     "/Implementations/Reference/Validator/tests/test_reference_validator.py",
+    "/Implementations/Reference/Validator/tests/test_source_boundary.py",
     "/Implementations/Reference/Validator/Readme.md",
     "/Implementations/Reference/WidgetValidator/validate_widget_layer.py",
     "/Implementations/Reference/WidgetValidator/notes/chart_deepening.md",

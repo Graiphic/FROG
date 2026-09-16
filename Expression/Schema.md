@@ -409,6 +409,14 @@ Schema growth across cross-cutting subsystems should therefore remain selective 
 <h2 id="machine-checkable-schema-posture">11. Machine-Checkable Schema Posture</h2>
 
 <p>
+The repository publishes <code>schema/frog.schema.json</code> for conservative
+top-level source shape and <code>schema/frog.structure-node.schema.json</code> for
+the stricter recursive public contract of the standard Case/If, For, While, and
+Event structure nodes. The latter remains subordinate to the normative source
+rules in <code>Control structures.md</code>.
+</p>
+
+<p>
 A repository-visible machine-checkable schema artifact SHOULD aim to capture the parts of structural validity that are:
 </p>
 

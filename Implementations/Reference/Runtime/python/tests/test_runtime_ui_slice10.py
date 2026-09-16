@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 import urllib.parse
 import urllib.request
+
+import pytest
 
 from Implementations.Reference.Runtime.python.cli import execute_example10_contract
 from Implementations.Reference.Runtime.python.ui_runtime import (
@@ -11,6 +14,8 @@ from Implementations.Reference.Runtime.python.ui_runtime import (
     build_runtime,
     default_example10_contract_path,
     default_example10_wfrog_path,
+    load_button_svg_geometry,
+    render_button_widget,
 )
 
 
@@ -72,8 +77,8 @@ def test_python_example10_browser_ui_consumes_default_svg_and_source_styles() ->
     assert "data-frog-part='caption' data-svg-anchor='caption.anchor'" in html
     assert "data-frog-part='state_text' data-svg-anchor='state_text.center'" in html
     assert "class='button-press-overlay' type='button'" in html
-    assert "data-frog-part='face' data-frog-event='pressed' data-frog-public-input-id='trigger_pressed'" in html
-    assert "data-frog-host-overlay='input' data-frog-align-to-part='face'" in html
+    assert "data-frog-part='button_face' data-frog-event='pressed' data-frog-public-input-id='trigger_pressed'" in html
+    assert "data-frog-host-overlay='input' data-frog-align-to-part='button_face'" in html
     assert "--frog-button-face-fill:#e2e8f0;" in html
     assert "--frog-button-face-hover-fill:#f1f5f9;" in html
     assert "--frog-button-face-pressed-fill:#e2e8f0;" in html
@@ -82,10 +87,11 @@ def test_python_example10_browser_ui_consumes_default_svg_and_source_styles() ->
     assert "--frog-button-state-text-font-weight:400;" in html
     assert "--frog-button-caption-font-size:18px;" in html
     assert "--frog-button-caption-font-weight:600;" in html
-    assert "--boolean-caption-font-size:18px;" in html
-    assert "--boolean-text-font-size:12px;" in html
+    # Public circular Boolean defaults; do not certify the renderer's 18px fallback.
+    assert "--boolean-caption-font-size:12px;" in html
+    assert "--boolean-text-font-size:13px;" in html
     assert "--boolean-text-font-weight:400;" in html
-    assert "--boolean-inner-border-width:0px;" in html
+    assert "--boolean-state-border-width:1px;" in html
     assert "fetch(\"/event\"" in html
     assert 'mechanicalAction !== "switch_until_released"' in html
     assert 'mechanicalAction !== "latch_until_released"' in html
@@ -94,7 +100,7 @@ def test_python_example10_browser_ui_consumes_default_svg_and_source_styles() ->
     assert "pointerdown" in html
     assert "pointerup" in html
     assert ">OFF</span>" in html
-    assert ">FALSE</span>" in html
+    assert ">Off</span>" in html
     assert "font-size:14px" not in html
     assert "top:49px" not in html
     assert "type='submit'" not in html
@@ -107,7 +113,7 @@ def test_python_example10_browser_ui_consumes_default_svg_and_source_styles() ->
     html = runtime.render_html()
     assert "data-frog-visual-state='true'" in html
     assert ">ON</span>" in html
-    assert ">TRUE</span>" in html
+    assert ">On</span>" in html
 
 
 def test_python_example10_event_endpoint_is_momentary() -> None:
@@ -153,3 +159,59 @@ def test_python_runtime_builder_dispatches_example10() -> None:
     runtime = build_runtime(example="10", open_browser=False)
 
     assert isinstance(runtime, ButtonBrowserUiRuntime)
+
+
+@pytest.mark.parametrize("part", ["button_face", "face"])
+def test_button_face_geometry_and_overlay_follow_canonical_or_legacy_skin(tmp_path: Path, part: str) -> None:
+    asset = tmp_path / "button.svg"
+    asset.write_text(
+        f'<svg viewBox="0 0 100 100"><rect id="{part}" data-frog-part="{part}" '
+        'x="10" y="20" width="30" height="40" /></svg>', encoding="utf-8",
+    )
+    geometry = load_button_svg_geometry(asset)
+    assert [geometry[f"face_{key}"] for key in ("x", "y", "width", "height")] == [10, 20, 30, 40]
+    rendered = render_button_widget({
+        "widget_id": "button", "class_ref": "frog.widgets.button", "role": "control",
+        "layout": {}, "runtime": {},
+    }, asset)
+    assert f"data-frog-part='{part}' data-frog-event='pressed'" in rendered
+    assert f"data-frog-host-overlay='input' data-frog-align-to-part='{part}'" in rendered
+    assert "left:10%;top:20%;width:30%;height:40%;" in rendered
+
+
+def test_button_face_canonical_states_win_and_legacy_only_documents_remain_readable() -> None:
+    browser = build_runtime(example="10", open_browser=False)
+    core = browser.runtime
+    widget = next(w for w in core.execution_artifact()["ui_runtime"]["widgets"] if w["widget_id"] == "trigger_button")
+    asset = core.asset_map["button_rectangular_svg"]
+    source_runtime = widget["runtime"]
+    assert source_runtime["style.button_face.fill_color.hover_false"] == "#f1f5f9"
+    states = {
+        "false": "#112233", "true": "#223344", "hover_false": "#334455",
+        "hover_true": "#445566", "pressed_false": "#556677", "pressed_true": "#667788",
+    }
+    for prefix in ("style.button_face", "style.face"):
+        runtime = {key: value for key, value in source_runtime.items() if not key.startswith(("style.button_face.", "style.face."))}
+        runtime.update({f"{prefix}.fill_color.{state}": color for state, color in states.items()})
+        if prefix == "style.button_face":
+            runtime["style.face.fill_color.true"] = "#abcdef"
+        for value in (False, True):
+            runtime.update(value=value, pressed=value)
+            rendered = render_button_widget({**widget, "runtime": runtime}, asset)
+            state = "true" if value else "false"
+            assert f"--frog-button-face-fill:{states[state]};" in rendered
+            assert f"--frog-button-face-hover-fill:{states['hover_' + state]};" in rendered
+            assert f"--frog-button-face-pressed-fill:{states['pressed_' + state]};" in rendered
+            assert f"data-frog-button-face-fill-{state}='{states[state]}'" in rendered
+        # Missing canonical states inherit the canonical base, not stale legacy values.
+        if prefix == "style.button_face":
+            del runtime["style.button_face.fill_color.true"]
+            assert "--frog-button-face-fill:#112233;" in render_button_widget({**widget, "runtime": runtime}, asset)
+    html = browser.render_html()
+    marker_selector = ":is([data-frog-part='button_face'],[data-frog-part='face'])"
+    assert f".button-press-overlay{marker_selector}[data-frog-host-overlay='input']" in html
+    assert f".button-skin {marker_selector}{{fill:var(--frog-button-face-fill)" in html
+    assert f".button-skin {marker_selector}{{fill:var(--frog-button-face-hover-fill)" in html
+    assert f".button-skin {marker_selector}{{fill:var(--frog-button-face-pressed-fill)" in html
+    assert "data-frog-template=\"frog.realizations.default.boolean.circular\"" in html
+    assert "class='boolean-skin missing-skin'" not in html

@@ -48,6 +48,14 @@ This document describes how the default realization family can embody that law t
 
 <pre><code>Libraries/Realizations/Default/button.default.wfrog</code></pre>
 
+<p>
+The manifest publishes one <code>control</code> creation profile for
+<code>frog.widgets.button</code>. A source-level change to the
+<code>indicator</code> role keeps the same class, SVG resource, state text, and
+visual state map while making the value read-only and disabling mechanical
+mouse mutation. It does not select a second indicator-only skin.
+</p>
+
 <hr/>
 
 <h2>4. Public Parts Realized</h2>

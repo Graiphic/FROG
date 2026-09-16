@@ -34,14 +34,14 @@ def test_python_example08_browser_ui_consumes_frog_instance_and_wfrog_realizatio
     assert "/asset/enum_rectangular_ring_svg" in html
     assert "data-frog-visual-law='wfrog-realization-state-map'" in html
     assert "class='enum-value-display-overlay enum-display-button'" in html
-    assert "class='enum-selector-overlay enum-selector-button'" in html
+    assert "--frog-enum-selector-display:none;" in html
     assert "class='enum-dropdown'" in html
-    assert "--frog-enum-selector-hover-fill:#60a5fa;" in html
-    assert "--frog-enum-dropdown-option-hover-fill:#2563eb;" in html
-    assert "--frog-enum-dropdown-option-selected-fill:#1d4ed8;" in html
+    assert "--frog-enum-selector-hover-fill:#f1f5f9;" in html
+    assert "--frog-enum-dropdown-option-hover-fill:#dbeafe;" in html
+    assert "--frog-enum-dropdown-option-selected-fill:#3b6db5;" in html
     assert "enum-card" not in html
     assert "Current runtime snapshot" not in html
-    assert "<pre>" not in html
+    assert 'class="artifact-raw-link" href="/main.frog"' in html
 
     runtime.runtime.execute("idle")
     html = runtime.render_html()

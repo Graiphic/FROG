@@ -56,8 +56,8 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install pytest
-        run: python -m pip install pytest
+      - name: Install reference test dependencies
+        run: python -m pip install -r Implementations/Reference/requirements-test.txt
 
       - name: Run reference workspace pytest checks
         run: python Implementations/Reference/check_reference_workspace.py --include-pytest

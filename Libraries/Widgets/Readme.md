@@ -61,7 +61,7 @@ cohabitation rules.
   <tbody>
     <tr><td><a href="./Boolean.md"><code>Boolean.md</code></a></td><td>Boolean</td><td><code>frog.widgets.boolean_control</code>, <code>frog.widgets.boolean_indicator</code></td><td>core value</td><td>control / indicator</td><td>published scalar baseline</td></tr>
     <tr><td><a href="./String.md"><code>String.md</code></a></td><td>String</td><td><code>frog.widgets.string_control</code>, <code>frog.widgets.string_indicator</code></td><td>core value</td><td>control / indicator</td><td>published scalar baseline</td></tr>
-    <tr><td><a href="./Button.md"><code>Button.md</code></a></td><td>Button</td><td><code>frog.widgets.button</code></td><td>action</td><td>command</td><td>published action baseline</td></tr>
+    <tr><td><a href="./Button.md"><code>Button.md</code></a></td><td>Button</td><td><code>frog.widgets.button</code></td><td>action</td><td>control / indicator</td><td>published action baseline</td></tr>
     <tr><td><a href="./Numeric.md"><code>Numeric.md</code></a></td><td>Numeric</td><td><code>frog.widgets.numeric_control</code>, <code>frog.widgets.numeric_indicator</code></td><td>core value</td><td>control / indicator</td><td>published scalar baseline</td></tr>
     <tr><td><a href="./Enum.md"><code>Enum.md</code></a></td><td>Enum</td><td><code>frog.widgets.enum_control</code>, <code>frog.widgets.enum_indicator</code></td><td>core value</td><td>control / indicator</td><td>published scalar baseline</td></tr>
     <tr><td><a href="./Ring.md"><code>Ring.md</code></a></td><td>Ring</td><td><code>frog.widgets.ring_control</code>, <code>frog.widgets.ring_indicator</code></td><td>selection / navigation</td><td>control / indicator</td><td>published compact finite-choice baseline</td></tr>

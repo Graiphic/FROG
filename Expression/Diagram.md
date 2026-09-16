@@ -133,7 +133,7 @@ This document depends on the following FROG specifications:
   <li><code>Expression/Control structures.md</code> — source-facing representation of structure nodes and their serialized form,</li>
   <li><code>Expression/State and cycles.md</code> — source-facing representation of explicit local-memory elements and feedback-cycle formation constraints,</li>
   <li><code>Language/Readme.md</code> — defines the role of <code>Language/</code> as the normative execution-semantics layer,</li>
-  <li><code>Language/Control structures.md</code> — normative execution semantics for structure families such as <code>case</code>, <code>for_loop</code>, and <code>while_loop</code>,</li>
+  <li><code>Language/Control structures.md</code> — normative execution semantics for structure families such as <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code>,</li>
   <li><code>Language/State and cycles.md</code> — normative semantics for local memory and cycle validity,</li>
   <li><code>Libraries/Core.md</code> — standard primitive definitions such as <code>frog.core.add</code>, <code>frog.core.mul</code>, and <code>frog.core.delay</code>,</li>
   <li><code>Libraries/UI.md</code> — standard executable UI primitive definitions such as <code>frog.ui.property_read</code>, <code>frog.ui.property_write</code>, and <code>frog.ui.method_invoke</code>,</li>
@@ -453,7 +453,7 @@ Rules:
 <ul>
   <li><code>structure_type</code> MUST exist.</li>
   <li><code>structure_type</code> MUST identify a valid standardized or profile-defined structure family.</li>
-  <li>The canonical standardized structure types for v0.1 are <code>case</code>, <code>for_loop</code>, and <code>while_loop</code>.</li>
+  <li>The canonical standardized structure types for v0.1 are <code>case</code>, <code>for_loop</code>, <code>while_loop</code>, and <code>event_structure</code>.</li>
   <li><code>boundary</code>, <code>structure_terminals</code>, and <code>regions</code> MUST be valid for the chosen structure type.</li>
   <li>Structure internals and region representation MUST remain aligned with the control-structure specifications and MUST NOT be redefined ad hoc by tools.</li>
 </ul>

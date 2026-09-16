@@ -87,11 +87,11 @@ def test_python_latch_examples_consume_source_and_default_assets() -> None:
         assert runtime.widgets["trigger_button"]["properties"]["behavior.mechanical_action"] == spec["action"]
         assert runtime.widgets["trigger_button"]["properties"]["behavior.latch_reset_policy"] == "reset_on_natural_value_consumption"
         assert runtime.widgets["trigger_button"]["properties"]["behavior.output_pulse.duration_ms"] == 220
-        assert runtime.widgets["trigger_button"]["properties"]["style.face.fill_color.false"] == "#e2e8f0"
-        assert runtime.widgets["trigger_button"]["properties"]["style.face.fill_color.true"] == "#cbd5e1"
-        assert runtime.widgets["trigger_button"]["properties"]["style.face.fill_color.hover_false"] == "#f1f5f9"
-        assert runtime.widgets["trigger_button"]["properties"]["style.face.fill_color.hover_true"] == "#dbeafe"
-        assert runtime.widgets["trigger_button"]["properties"]["style.face.border_width"] == "1px"
+        assert runtime.widgets["trigger_button"]["properties"]["style.button_face.fill_color.false"] == "#e2e8f0"
+        assert runtime.widgets["trigger_button"]["properties"]["style.button_face.fill_color.true"] == "#cbd5e1"
+        assert runtime.widgets["trigger_button"]["properties"]["style.button_face.fill_color.hover_false"] == "#f1f5f9"
+        assert runtime.widgets["trigger_button"]["properties"]["style.button_face.fill_color.hover_true"] == "#dbeafe"
+        assert runtime.widgets["trigger_button"]["properties"]["style.button_face.border_width"] == "1px"
         assert runtime.widgets["trigger_button"]["properties"]["style.pressed.inset"] == "0px"
         assert runtime.widgets["trigger_button"]["properties"]["style.pressed.apply_when_value_true"] is True
         assert runtime.widgets["trigger_button"]["properties"]["style.pressed.apply_while_active"] is False
@@ -203,7 +203,7 @@ def test_python_latch_browser_surface_is_svg_and_source_owned() -> None:
         assert "buttonWidget.style.setProperty(\"--frog-button-face-fill\", buttonProperty(\"frogButtonFaceFill\", value));" in html
         assert "program-read-action" in html
         assert ">OFF</span>" in html
-        assert ">FALSE</span>" in html
+        assert ">Off</span>" in html
         assert "fallback" not in html
         assert "type='checkbox'" not in html
         assert "type='submit'" not in html

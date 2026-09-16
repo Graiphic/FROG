@@ -167,6 +167,13 @@
         "popup_resource_ref": "frog.realizations.default.enum.assets.dropdown_list_svg"
       },
       "props": {
+        "layout.default_width": 176,
+        "layout.default_height": 38,
+        "layout.aura_band_px": 4,
+        "caption.text": "Enum Control",
+        "caption.visible": true,
+        "value": "item_1",
+        "items.default": "item_1|Item 1|0",
         "display.increment_buttons_visible": true,
         "data_entry.increment_wrap": true,
         "style.scale.reference_width": 200,
@@ -226,6 +233,14 @@
         "resource_ref": "frog.realizations.default.enum.assets.rectangular_ring_svg"
       },
       "props": {
+        "layout.default_width": 176,
+        "layout.default_height": 38,
+        "layout.aura_band_px": 4,
+        "caption.text": "Enum Indicator",
+        "caption.visible": true,
+        "value": "item_1",
+        "items.default": "item_1|Item 1|0",
+        "display.increment_buttons_visible": false,
         "style.scale.reference_width": 200,
         "style.scale.reference_height": 130,
         "style.value_face.fill_color": "#E8EBED",

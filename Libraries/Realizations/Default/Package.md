@@ -52,10 +52,11 @@ It is the machine-readable publication layer that allows hosts, validators, tool
   <tbody>
     <tr><td><a href="./Boolean.md">Boolean</a></td><td><code>boolean.default.wfrog</code></td><td><code>frog.widgets.boolean_control</code>, <code>frog.widgets.boolean_indicator</code></td><td>core value</td><td>control / indicator</td><td>single-family scalar package</td></tr>
     <tr><td><a href="./String.md">String</a></td><td><code>string.default.wfrog</code></td><td><code>frog.widgets.string_control</code>, <code>frog.widgets.string_indicator</code></td><td>core value</td><td>control / indicator</td><td>single-family scalar package</td></tr>
-    <tr><td><a href="./Button.md">Button</a></td><td><code>button.default.wfrog</code></td><td><code>frog.widgets.button</code></td><td>action</td><td>command</td><td>single-family action package</td></tr>
+    <tr><td><a href="./Button.md">Button</a></td><td><code>button.default.wfrog</code></td><td><code>frog.widgets.button</code></td><td>action</td><td>command; control / indicator instance role</td><td>single-family action package</td></tr>
     <tr><td><a href="./Numeric.md">Numeric</a></td><td><code>numeric.default.wfrog</code></td><td><code>frog.widgets.numeric_control</code>, <code>frog.widgets.numeric_indicator</code></td><td>core value</td><td>control / indicator</td><td>single-family scalar package</td></tr>
     <tr><td><a href="./Enum.md">Enum</a></td><td><code>enum.default.wfrog</code></td><td><code>frog.widgets.enum_control</code>, <code>frog.widgets.enum_indicator</code></td><td>core value</td><td>control / indicator</td><td>single-family scalar package</td></tr>
     <tr><td><a href="./Path.md">Path</a></td><td><code>path.default.wfrog</code></td><td><code>frog.widgets.path_control</code>, <code>frog.widgets.path_indicator</code></td><td>core value</td><td>control / indicator</td><td>single-family scalar package</td></tr>
+    <tr><td><a href="./Image.md">Image Static</a></td><td><code>image.default.wfrog</code></td><td><code>frog.widgets.image_static</code></td><td>support media</td><td>support</td><td>rectangular static media package</td></tr>
     <tr><td><a href="./Picture.md">Picture</a></td><td><code>picture.default.wfrog</code></td><td><code>frog.widgets.picture_control</code>, <code>frog.widgets.picture_indicator</code></td><td>visual data</td><td>control / indicator</td><td>image-surface package</td></tr>
     <tr><td><a href="./Chart.md">Waveform Chart</a></td><td><code>chart.default.wfrog</code></td><td><code>frog.widgets.waveform_chart</code></td><td>visual data</td><td>indicator</td><td>composite package with shell, subobjects, slots, bindings, and host-native plot allowance</td></tr>
     <tr><td><a href="./Listbox.md">Listbox</a></td><td><code>listbox.default.wfrog</code></td><td><code>frog.widgets.listbox_control</code>, <code>frog.widgets.listbox_indicator</code></td><td>selection / navigation</td><td>control / indicator</td><td>composite package with item rows, selection surfaces, viewport, and virtual-list allowance</td></tr>
@@ -91,6 +92,7 @@ A Default realization manifest should provide the following machine-readable sur
   <li><code>exports</code> — exported realization and resource identifiers.</li>
   <li><code>realizations</code> — realization records, supported parts, fallback rules, and family posture.</li>
   <li><code>resources</code> — SVG templates, subobject resources, and host-consumable resources.</li>
+  <li><code>default_widget_properties</code> — role-specific initial dimensions, visual resource references, aura band, values, labels, interaction posture, and other source-visible defaults.</li>
   <li><code>part_bindings</code> — public part names mapped to selectors or host surfaces.</li>
   <li><code>property_bindings</code> — property/member surfaces mapped to realization operations.</li>
   <li><code>method_bindings</code> — method surfaces mapped to realization operations, when present.</li>
@@ -100,6 +102,23 @@ A Default realization manifest should provide the following machine-readable sur
   <li><code>host_hints</code> — rendering and host-native replacement posture.</li>
   <li><code>validation_expectations</code> — repository-visible validation expectations.</li>
 </ul>
+
+<hr/>
+
+<h2>Canonical Default and Placement Rule</h2>
+
+<p>
+For a declared widget class and role, <code>default_widget_properties</code> is the canonical Default realization profile.
+An authoring host must consume that profile when creating a widget and may persist explicit instance overrides in <code>.frog</code>.
+It must not reconstruct a second family-specific default from private coordinates, colors, or class-name heuristics.
+</p>
+
+<p>
+<code>placement_bounds</code> is the source-owned authored envelope used for placement, hit testing, hover, and selection.
+The visible widget body is inset by <code>layout.aura_band_px</code>; the current Default profiles use a homogeneous 4 px band.
+The envelope may be published as an explicit SVG part, or derived from source layout plus the realization profile when a skin does not carry such a part.
+The selection aura is a host overlay on that envelope and is distinct from an SVG-owned <code>focus_ring</code>.
+</p>
 
 <hr/>
 
@@ -125,7 +144,7 @@ runtime implementation
 </code></pre>
 
 <p>
-Default manifests publish realization resources, public part bindings, state maps, property bindings, method bindings, event bindings, anchors, host hints, and validation expectations.
+Default manifests publish canonical widget defaults, realization resources, public part bindings, state maps, property bindings, method bindings, event bindings, anchors, host hints, and validation expectations.
 They do not redefine public widget class law.
 </p>
 
@@ -135,7 +154,7 @@ They do not redefine public widget class law.
 
 <ul>
   <li>Every declared public part should correspond to a public part defined by the owning widget class-law document.</li>
-  <li>Every declared resource path should resolve relative to the manifest file.</li>
+  <li>Every declared resource path should resolve relative to the manifest file with the exact repository path casing.</li>
   <li>SVG resources should expose relevant public parts through <code>data-frog-part</code> markers when those parts are represented in the SVG template.</li>
   <li>Composite shell resources may expose slots through <code>data-frog-slot</code> markers.</li>
   <li>A resource may serve multiple public parts when the manifest explicitly declares that relationship.</li>

@@ -58,7 +58,8 @@ This distinction is intentional:
 <h2>Current Derivation Posture</h2>
 
 <pre><code>canonical .frog source
-  -&gt; source structure checks
+  -&gt; common strict JSON reader and source-envelope preflight
+  -&gt; exact recursive graph inventory for each bounded rule
   -&gt; supported source-pattern recognition
   -&gt; bounded source-to-FIR rule
   -&gt; published FIR artifact
@@ -68,6 +69,32 @@ This distinction is intentional:
 The deriver remains intentionally narrow.
 It recognizes the current published source patterns and emits the current published FIR shapes.
 It does not yet implement a general FROG derivation engine.
+</p>
+
+<p>
+The FIR entry point shares <code>common.load_json_file()</code> with the source loader:
+invalid UTF-8, duplicate JSON members, non-JSON numeric tokens, and unsupported
+numeric range fail with a <code>DerivationError</code>. Before selecting any rule,
+<code>validate_envelope()</code> checks the supported public source version and
+envelope/profile boundary. It does not invoke the separate, narrower
+<code>validate_source()</code> semantic implementation.
+</p>
+
+<p>
+Each <code>DerivationRule</code> declares a static <code>GraphShape</code>: the exact
+multiset of node kinds/types, edge count, and recursively permitted regions.
+The accumulator additionally declares its nested region inputs and output
+projection, and its rule requires all four internal source/destination
+connections to match the emitted recurrence exactly. Added nodes, edges, unsupported nested graphs, and dangling graph
+endpoints cannot disappear merely because an existing source pattern still
+matches. These signatures do not read golden artifacts or dispatch by source
+filename; metadata and array order are not graph-inventory authorities.
+</p>
+
+<p>
+Rule-local wiring and value checks remain bounded. A successful FIR derivation
+or Examples 01-15 pipeline run is not a general public-language semantic-validity
+certificate. Unifying the two semantic validation paths remains separate work.
 </p>
 
 <hr/>
@@ -82,7 +109,8 @@ A source is accepted only when exactly one rule recognizes the source pattern.
 <ul>
   <li>If no rule recognizes the source, derivation fails with diagnostics from each attempted rule.</li>
   <li>If more than one rule recognizes the source, derivation fails as ambiguous.</li>
-  <li><code>metadata.name</code> may appear in diagnostics, but it is not the derivation authority.</li>
+  <li>Example 01 is explicitly tested to derive identical FIR after changing <code>metadata.name</code>.</li>
+  <li>Examples 06-16 still require their historical <code>metadata.name</code> as an additional rule-level compatibility guard. Their graph checks are also required; global independence from metadata names has not yet been implemented.</li>
 </ul>
 
 <p>
@@ -94,7 +122,7 @@ This is a transitional step from example-specific derivation toward structural d
     -&gt; derivation function
 
 current posture:
-  source pattern
+  source pattern (+ legacy metadata.name guards for Examples 06-16)
     -&gt; recognized bounded rule
     -&gt; FIR artifact
 

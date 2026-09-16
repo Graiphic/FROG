@@ -20,14 +20,21 @@ Version governance remains centralized in this directory and in the repository h
 </p>
 
 <p>
-The public reference runtime closure is currently bounded to Examples <code>01</code> through <code>15</code>.
+As checked on 2026-09-06, the repository contains 47 numbered example directories, <code>01</code> through <code>47</code>. The public reference runtime closure remains bounded to Examples <code>01</code> through <code>15</code>.
 Runtime development for later examples continues in Graiphic's proprietary <code>Graiphic/FROG-Runtime</code> repository unless a later public reference surface is explicitly promoted.
 Graiphic production runtime and IDE development may continue in proprietary repositories without redefining the public specification.
 </p>
 
+<p>
+The detailed tables below retain historical, partial snapshots of the early corridor and widget families.
+They are not an exhaustive capability registry for all 47 dossiers, and a historical “Published and tested” cell is not a fresh execution result.
+Current support claims require the corresponding dossier, declared reference-runner stage and dated validation evidence.
+Read <a href="../Expression/Source%20compatibility%20and%20profiles.md">Source compatibility and implementation profiles</a> for the separate Read, Preserve, Edit, Validate, Lower and Execute boundaries.
+</p>
+
 <hr/>
 
-<h2>Executable Example Closure Matrix</h2>
+<h2>Historical Partial Executable Example Closure Matrix (01–07)</h2>
 
 <table>
   <thead>
@@ -122,7 +129,7 @@ Graiphic production runtime and IDE development may continue in proprietary repo
 
 <hr/>
 
-<h2>Current FIR, Lowering, Contract, Runtime, and LLVM Kind Matrix</h2>
+<h2>Historical Partial FIR, Lowering, Contract, Runtime, and LLVM Kind Matrix (01–07)</h2>
 
 <table>
   <thead>
@@ -153,7 +160,7 @@ Graiphic production runtime and IDE development may continue in proprietary repo
 <h2>Backend Contract Common Surface</h2>
 
 <p>
-Examples <code>01</code> through <code>09</code> share the common backend-contract unit surface where currently published:
+The earlier Examples <code>01</code> through <code>09</code> corridor documented the following common backend-contract unit surface where published. This historical list is not a complete field-parity or backend-capability claim for Examples 01–47:
 </p>
 
 <pre><code>public_io
@@ -251,11 +258,11 @@ publications
     </tr>
   </thead>
   <tbody>
-    <tr><td>Example corridor checks</td><td><code>Implementations/Reference/check_reference_workspace.py</code></td><td>Published</td><td>Protects the published source / FIR / lowering / contract / runtime / LLVM corridor, including current Examples 01–09 coverage where wired into the bounded reference surface.</td></tr>
+    <tr><td>Example corridor checks</td><td><code>Implementations/Reference/check_reference_workspace.py</code></td><td>Declared bounded runner</td><td>Runs the Examples 01–15 corridor at each dossier's declared executable depth. The compatibility entry point <code>Pipeline/check_examples01_10_full.py</code> explicitly enumerates those 15 examples; a completed run and its options determine the actual evidence.</td></tr>
     <tr><td>Reference workspace checks</td><td><code>Implementations/Reference/check_reference_workspace.py</code></td><td>Published</td><td>Repository-wide reference workspace hygiene check.</td></tr>
     <tr><td>Reference pytest checks</td><td><code>Implementations/Reference/check_reference_workspace.py --include-pytest</code></td><td>Published</td><td>Protects source-pattern derivation, FIR-kind lowering, lowered-kind contract emission, contract-kind runtime execution, lowered-kind LLVM emission, and unsupported-pattern / unsupported-kind failure behavior.</td></tr>
     <tr><td>Reference native build checks</td><td><code>Implementations/Reference/check_reference_workspace.py --include-llvm-build</code></td><td>Published</td><td>Protects optional clang-backed native proof material for the current LLVM-oriented dossiers when the toolchain is available.</td></tr>
-    <tr><td>Native kernel bridge validation</td><td><code>Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge</code></td><td>Published as optional validation</td><td>Protects Examples 05, 06, 07, 08, and 09 native manifest publication, ABI declaration, LLVM-produced kernel artifact consumption by the C++, Python, and Rust runtime bridge surfaces, runtime result publication, diagnostics, and snapshot preservation.</td></tr>
+    <tr><td>Native kernel bridge validation</td><td><code>Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge</code></td><td>Declared optional validation</td><td>Runs the per-example bridge stages explicitly listed by the entry point, including dedicated 05, 06, 11, 12 and 13–15 checks plus Python/Rust consumers. This is not a claim of every target supporting all 47 dossiers.</td></tr>
     <tr><td>Widget layer validator</td><td><code>Implementations/Reference/WidgetValidator/validate_widget_layer.py</code></td><td>Published and strengthened</td><td>Protects widget docs, Default docs, manifests, target classes, resources, SVG part markers, composition references, bindings, and public-part alignment.</td></tr>
   </tbody>
 </table>
@@ -282,5 +289,5 @@ Implementations/Reference/WidgetValidator/
 
 <p>
 The widget layer is organized as a standard-facing surface rather than a collection of isolated documents.
-The current implementation priority remains to keep the Examples 01–09 executable corridor, reference checks, widget validation, and version-governance posture coherent before broadening into new examples or new widget families.
+The current implementation priority remains to keep the bounded Examples 01–15 executable corridor, reference checks, widget validation, and version-governance posture coherent. The separate 47-directory example inventory must not be used as a runtime coverage count.
 </p>

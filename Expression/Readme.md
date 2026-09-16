@@ -12,6 +12,13 @@
 <hr/>
 
 <h2>Contents</h2>
+
+<p>For cross-tool compatibility, safe draft migration and the distinct read,
+preserve, edit, validate, lower and execute capabilities, see
+<a href="Source%20compatibility%20and%20profiles.md">Source compatibility and profiles</a>.</p>
+
+<p>New accepted architecture contract: <a href="Typed%20Binding%20Contract%20v1.md">Typed Binding Contract v1</a>
+(type identities, function/widget/structure ownership and staged implementation gates).</p>
 <ul>
   <li><a href="#overview">1. Overview</a></li>
   <li><a href="#why-expression-exists">2. Why Expression Exists</a></li>
@@ -264,10 +271,14 @@ The FROG Expression is defined through the following documents in this directory
 ├── Schema.md
 │   -&gt; source-schema posture and machine-checkable structural validation boundary
 ├── schema/
-│   └── frog.schema.json
-│       -&gt; conservative machine-checkable top-level canonical source schema
+│   ├── frog.schema.json
+│   │   -&gt; conservative machine-checkable top-level canonical source schema
+│   └── frog.structure-node.schema.json
+│       -&gt; public recursive node contract for Case/If, For, While, and Event structures
 ├── Metadata.md
 │   -&gt; descriptive program metadata and non-executable identification fields
+├── Host and execution policy.md
+│   -&gt; optional host launch/window policy and versioned portable execution-control policy
 ├── Type.md
 │   -&gt; canonical type-expression model used across the source format
 ├── Interface.md
@@ -395,6 +406,14 @@ These documents do not turn widget packages into top-level canonical program fil
 
 <p>
 <code>Schema.md</code> and the files under <code>schema/</code> define the conservative machine-checkable posture of canonical source shape.
+</p>
+
+<p>
+The top-level schema intentionally remains conservative. The dedicated
+<code>frog.structure-node.schema.json</code> publishes the stricter recursive
+contract for the four standard structure families, including their terminals,
+stable outer/body graph port ids, event descriptors, typed Event Data fields,
+boundary tunnels, and non-semantic authoring fields.
 </p>
 
 <p>
@@ -584,6 +603,8 @@ Conceptually:
   "front_panel": { ... },
   "connector": { ... },
   "icon": { ... },
+  "host": { ... },
+  "execution_policy": { ... },
   "ide": { ... },
   "cache": { ... }
 }
@@ -620,6 +641,8 @@ A canonical <code>.frog</code> source file MAY additionally contain:
   <li><code>front_panel</code>,</li>
   <li><code>connector</code>,</li>
   <li><code>icon</code>,</li>
+  <li><code>host</code>,</li>
+  <li><code>execution_policy</code>,</li>
   <li><code>ide</code>,</li>
   <li><code>cache</code>.</li>
 </ul>
@@ -648,6 +671,8 @@ MAY:
 - connector
 - front_panel
 - icon
+- host
+- execution_policy
 - ide
 - cache
 </code></pre>
@@ -732,7 +757,16 @@ Optional section containing the icon used by tools when the FROG is represented 
 Detailed specification: <code>Icon.md</code>
 </p>
 
-<h3>12.7 IDE Preferences</h3>
+<h3>12.7 Host and Execution Policy</h3>
+
+<p>
+Optional <code>host</code> and <code>execution_policy</code> sections define
+launch/window requests and versioned portable execution-control policy without
+changing validated graph meaning. Detailed specification:
+<code>Host and execution policy.md</code>.
+</p>
+
+<h3>12.8 IDE Preferences</h3>
 
 <p>
 Optional section containing IDE-facing preferences and recoverability metadata serialized with the FROG itself. This section belongs to the FROG Expression because a FROG behaves as a durable editable program unit and may embed source-level IDE preferences together with non-authoritative authoring recoverability aids.
@@ -746,7 +780,7 @@ Runtimes and other execution-facing systems MUST ignore this section for executi
 Detailed specification: <code>IDE preferences.md</code>
 </p>
 
-<h3>12.8 Cache</h3>
+<h3>12.9 Cache</h3>
 
 <p>
 Optional section containing derived, non-authoritative tooling data used to accelerate workflows.
@@ -764,6 +798,8 @@ connector   -&gt; graphical node-side projection of interface
 diagram     -&gt; authoritative executable graph
 front_panel -&gt; optional user interaction surface
 icon        -&gt; reusable-node icon
+host        -&gt; external launch and front-panel window policy
+execution_policy -&gt; versioned portable execution-control policy
 ide         -&gt; non-authoritative IDE-facing metadata
 cache       -&gt; non-authoritative tooling cache
 </code></pre>
