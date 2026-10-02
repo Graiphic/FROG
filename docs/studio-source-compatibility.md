@@ -81,7 +81,10 @@ is historical evidence. The [execution coverage record](execution-eligibility-st
 preserves its bounded qualification results. Neither is a current full-green gate.
 
 Public FROG PRs [15](https://github.com/Graiphic/FROG/pull/15) and
-[16](https://github.com/Graiphic/FROG/pull/16) still have failing checks at this
-checkpoint. Runtime's reviewed working branch pins FROG commit
-`236dc72ddc68bc936d2519acc7651da125d6d19a`; it has not thereby adopted the
-public `main` contract. Update the pin only with demonstrated compatibility.
+[16](https://github.com/Graiphic/FROG/pull/16) were integrated through normal Git
+merges and GitHub reports both as merged/closed. Their historical failing checks
+remain failure evidence; main publication is not a claim that those checks passed.
+Runtime retains the reviewed FROG SDK revision
+`236dc72ddc68bc936d2519acc7651da125d6d19a`, now an ancestor of public main.
+This immutable pin does not automatically adopt later contract changes.
+Update it only with demonstrated compatibility.
