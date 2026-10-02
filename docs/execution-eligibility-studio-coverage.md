@@ -3,16 +3,15 @@
 ## Current checkpoint — 2 October 2026
 
 This coverage record is informative. The canonical local Studio binary is
-**0.0.4.044**; remote Studio main is **f7dbb93** (29 September), with later local
-changes not represented by that commit. Runtime POC remains OFF. Tests are paused;
+**0.0.4.047**; Studio main **314c338d41a6633b891b9e28271a88afa635981f** has been published and its remote
+commit verified. Runtime POC remains OFF. Tests are paused;
 the latest full attempt failed on **0.0.3.935**, **300/403 passed, 103 failed**.
-Recent compilation does not qualify the complete EXEC/VAL matrix.
+Recent compilation and Git publication do not qualify the complete EXEC/VAL matrix.
 
 See [Studio/source compatibility](studio-source-compatibility.md) for the current
 source-envelope and integration limits. The results below belong to their dated
 September revisions and remain historical evidence; they are not a fresh gate
-for 0.0.4.044.
-
+for 0.0.4.047. The September working-branch commits are now ancestors of Studio main.
 
 Révision 2 — 16 septembre 2026. Ce relevé est **informatif**.
 Les [règles EXEC](../Language/Execution%20eligibility.md) sont le contrat ;
@@ -21,11 +20,27 @@ le modèle privé d'édition et toutes les sources publiques FROG.
 
 ## Qualification
 
-### Correctif local : compilation et runtime séparés
+### Checkpoint de publication du 16 septembre 2026
+
+Les corrections décrites ci-dessous sont incluses dans FROG-STUDIO
+[`48f300f`](https://github.com/Graiphic/FROG-STUDIO/commit/48f300fa2e9d45770f2d6a9b9f4af9d8168352b3),
+publié sur `agent/complete-studio-interaction-conformance`, sans fusion sur `main`.
+La livraison courante est **0.0.2.513**, Authenticode **Valid**, avec vérification
+du raccourci Bureau canonique. Son relevé de livraison décrit aussi les évolutions
+ultérieures : focus animé des diagnostics, formats d’icône et palette Horodatage.
+
+Avant publication, **16/16 tests ciblés** ont été réexécutés avec succès :
+catalogues/contrats et typage, navigation, Horodatage, sélection Variant,
+diagnostics Win32, document readiness, Custom icon, binding profile, version
+et contours graphiques. Ce n’est pas une reconstruction complète de toutes les
+suites ni une qualification des 137 scénarios VAL. Runtime POC reste OFF.
+L’échec clipboard du précédent audit n’est pas déclaré résolu.
+
+### Livraison initiale : compilation et runtime séparés
 
 Livraison **0.0.2.479**, signature Authenticode valide et raccourci Bureau canonique
-vérifiés. Les sources de ce correctif sont locales, non commitées/publiées ; elles
-ne modifient pas le checkpoint Git précédent cité plus bas.
+vérifiés. Les preuves de cette section décrivent la livraison initiale locale ;
+les sources sont désormais incluses dans le checkpoint Studio cité ci-dessus.
 
 `win32_execution_validation_smoke.cpp` : **110 vérifications réussies**. Cinq
 suites CTest ciblées passent : fixture conformance, document readiness, structure

@@ -35,9 +35,9 @@ unsupported versions. Its editing-model importer has narrower support. These are
 different code paths, so a successful source read does not promise full canvas
 editing, semantic validation, export migration or execution.
 
-The local binary checkpoint is **0.0.4.044**, while the last integrated Studio
-`main` commit is `f7dbb9398d7242eb9c8812f08e1b50156db1b3be` (29 September).
-Post-checkpoint local changes are not represented by that commit alone.
+The local binary checkpoint is **0.0.4.047**. Studio `main` is now published at
+`314c338d41a6633b891b9e28271a88afa635981f` (2 October), verified against the remote.
+It includes the accumulated editor fixes and the function-selection contour rule.
 Runtime POC is disabled in this delivery. The last complete Studio regression
 attempt failed on 0.0.3.935: 300/403 passed, 103 failed. Tests remain paused;
 recent compilation is not a new successful functional gate.
