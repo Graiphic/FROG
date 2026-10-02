@@ -268,6 +268,14 @@ Graiphic is the initial steward of the FROG specification repository.
 As steward, Graiphic is responsible for maintaining architectural coherence, reviewing proposed changes, deciding when documents are sufficiently mature for inclusion, and publishing authoritative repository revisions.
 </p>
 
+<p>Graiphic Studio is the lead authoring implementation developed by the steward.
+Its requirements and regression cases inform the public contracts. Accepted
+source-visible changes must record their owner, compatibility boundary,
+conformance expectations and consumer evidence so independent tools can
+implement the same behavior. The
+<a href="./docs/studio-source-compatibility.md">Studio/source integration record</a>
+keeps implementation status separate from specification authority.</p>
+
 <p>
 Stewardship of the repository does not mean that FROG is a vendor-locked product.
 The purpose of stewardship is to keep the specification coherent while the language is still being actively defined, cleaned up, and stabilized.

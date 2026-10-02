@@ -9,6 +9,11 @@ This document connects [canonical source scope](Canonical%20source%20scope.md),
 [version governance](../Versioning/Readme.md). It does not replace their ownership.
 Its acceptance does not retrofit readers that have already been distributed.
 
+For a complete public JSON example, see the [source guide](Frog%20source%20guide.md).
+The [Studio integration checkpoint](../docs/studio-source-compatibility.md) records
+the authoring/public-envelope difference and qualification limits. Implementation
+facts do not change this document's accepted safety requirements.
+
 ## One language, explicit implementation boundaries
 
 FROG source remains independent of an IDE. Graiphic Studio's proven authoring

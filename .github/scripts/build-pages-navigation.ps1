@@ -5,6 +5,23 @@ $sidebarPath = Join-Path $repoRoot "_sidebar.md"
 $navTreePath = Join-Path $repoRoot "nav-tree.json"
 $displayExtensions = @(".md", ".frog", ".py")
 
+# A Windows checkout can merge differently cased directories that remain distinct
+# in Git (for example Assets/ and assets/). Publish each tracked file's exact Git
+# spelling so generated links also resolve on GitHub and case-sensitive hosts.
+$gitPathCaseMap = [System.Collections.Generic.Dictionary[string, string]]::new(
+    [System.StringComparer]::OrdinalIgnoreCase)
+$trackedRepoPaths = @(& git -C $repoRoot -c core.quotePath=false ls-files)
+if ($LASTEXITCODE -ne 0) {
+    throw "Cannot read tracked paths for case-correct Pages navigation."
+}
+foreach ($trackedRepoPath in $trackedRepoPaths) {
+    if ($gitPathCaseMap.ContainsKey($trackedRepoPath) -and
+        $gitPathCaseMap[$trackedRepoPath] -cne $trackedRepoPath) {
+        throw "Tracked paths collide on a case-insensitive checkout: $trackedRepoPath"
+    }
+    $gitPathCaseMap[$trackedRepoPath] = $trackedRepoPath
+}
+
 $rootSections = @(
     @{ RelativePath = "Expression"; Label = "Expression" },
     @{ RelativePath = "Examples"; Label = "Examples" },
@@ -20,6 +37,7 @@ $rootSections = @(
 )
 
 $preferredRootDocs = @(
+    @{ File = "docs/studio-source-compatibility.md"; Label = "Studio and source compatibility" },
     @{ File = "FROG-Strategy.md"; Label = "FROG Strategy" },
     @{ File = "FROG-Architecture.md"; Label = "FROG Architecture" },
     @{ File = "FROG-Repository-Guide.md"; Label = "FROG Repository Guide" },
@@ -31,6 +49,7 @@ $preferredRootDocs = @(
 
 $preferredFileOrderByDirectory = @{
     "Expression" = @(
+        "Frog source guide.md",
         "Cache.md",
         "Connector.md",
         "Control structures.md",
@@ -54,7 +73,11 @@ function Convert-ToRelativeRepoPath {
         [string]$FullPath
     )
 
-    return $FullPath.Substring($repoRoot.Length + 1).Replace("\", "/")
+    $relativePath = $FullPath.Substring($repoRoot.Length + 1).Replace("\", "/")
+    if ($gitPathCaseMap.ContainsKey($relativePath)) {
+        return $gitPathCaseMap[$relativePath]
+    }
+    return $relativePath
 }
 
 function Convert-ToDocsifyHref {

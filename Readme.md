@@ -31,6 +31,21 @@
 
 <h2 id="start-here">Start here</h2>
 
+<p>To understand or generate a <code>.frog</code> file, start with the
+<a href="./Expression/Frog%20source%20guide.md">source syntax guide and complete example</a>.
+Then read <a href="./docs/studio-source-compatibility.md">Graiphic Studio and public-source compatibility</a>
+for the implementation boundary and requirements for ecosystem tools. Graiphic
+leads the specification's stewardship and develops the lead authoring implementation;
+portable contracts remain public and independently implementable.</p>
+
+<p>
+The maintained <a href="./Language/Execution%20eligibility.md">Execution eligibility and diagnostics</a>
+reference defines validation, build and launch gates, stable rule identifiers,
+and the evidence required to claim support. See also the
+<a href="./IDE/Execution%20diagnostics.md">IDE diagnostics contract</a> and
+<a href="./docs/execution-eligibility-acceptance-matrix.md">acceptance tracking matrix</a>.
+</p>
+
 <p>
 The current source/editor convergence decisions are in
 <a href="./Expression/Source%20compatibility%20and%20profiles.md">Source compatibility and profiles</a>.

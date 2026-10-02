@@ -53,9 +53,16 @@ Rules:
   the base fixed-length rank-1 contract. Rank is bounded to 1..16 in this profile.
 - `array<array<T>>` is an array of array values, NOT an alias for a rectangular rank-2 array.
   Implementations must not silently flatten the distinction.
-- Enum identity is the pair (domain ID, integer representation). Labels are presentation,
-  item IDs belong to the domain, and two different domains do not implicitly connect.
-  Copy/conversion of a value preserves its domain. A new independent enum has its own domain.
+- Enum references carry the pair (domain ID, integer representation). Compatibility
+  also requires a consistent resolved definition: the ordered enumerator names and
+  numeric values must agree. The same domain token with different definitions is
+  an error. A type string alone cannot carry or prove this complete definition.
+  Enumerator names are part of the definition; a widget's own label and display-only
+  visibility/disabled state are presentation. Stable item IDs remain references used
+  by value/Case transport and must survive copying and migration; different domains
+  do not implicitly connect. Copy/conversion preserves the domain, representation
+  and complete definition. A new independent enum has its own domain. See the
+  [definition conformance matrix](../docs/enum-definition-conformance-matrix.md).
 - Ring is a numeric presentation, not a separate transported type: `ring:u16` imports as `u16`.
 - Cluster identity is structural: the ordered sequence of stable field IDs and their types.
   This v1 decision does not introduce an additional nominal schema ID. Renaming a displayed
@@ -104,7 +111,7 @@ The initial TypeExpr parser does not yet implement a general-purpose polymorphic
 Resolution distinguishes four outcomes: compatible, numeric coercion required, unresolved,
 and incompatible. A diagnostic includes a stable code and the offending binding. Numeric
 implicit connections preserve the declared target type; aggregate rank/contractual extents
-must match. Cluster fields and enum domains use exact identity. Execution conversion rules
+must match. Cluster fields and resolved enum definitions use exact identity. Execution conversion rules
 remain separately enforced by the target/provider.
 
 ## 4. Structure contract and Case equivalence classes

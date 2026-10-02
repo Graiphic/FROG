@@ -17,6 +17,13 @@
           "kind": "category",
           "children": [
             {
+              "key": "expression/frog-source-guide.md",
+              "title": "Frog source guide",
+              "path": "/Expression/Frog%20source%20guide.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "expression/cache.md",
               "title": "Cache",
               "path": "/Expression/Cache.md",
@@ -1525,6 +1532,13 @@
               "children": []
             },
             {
+              "key": "language/execution-eligibility.md",
+              "title": "Execution eligibility",
+              "path": "/Language/Execution%20eligibility.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "language/execution-model.md",
               "title": "Execution model",
               "path": "/Language/Execution%20model.md",
@@ -1926,13 +1940,13 @@
                     {
                       "key": "libraries/realizations/default/assets/",
                       "title": "assets",
-                      "path": "/Libraries/Realizations/Default/assets/Readme.md",
+                      "path": "/Libraries/Realizations/Default/Assets/Readme.md",
                       "kind": "category",
                       "children": [
                         {
                           "key": "libraries/realizations/default/assets/naming.md",
                           "title": "Naming",
-                          "path": "/Libraries/Realizations/Default/assets/Naming.md",
+                          "path": "/Libraries/Realizations/Default/Assets/Naming.md",
                           "kind": "page",
                           "children": []
                         },
@@ -2030,7 +2044,7 @@
                         {
                           "key": "libraries/realizations/default/assets/ring/",
                           "title": "ring",
-                          "path": "/Libraries/Realizations/Default/assets/ring/Readme.md",
+                          "path": "/Libraries/Realizations/Default/Assets/ring/Readme.md",
                           "kind": "category",
                           "children": []
                         },
@@ -2377,6 +2391,13 @@
               "key": "ide/editors.md",
               "title": "Editors",
               "path": "/IDE/Editors.md",
+              "kind": "page",
+              "children": []
+            },
+            {
+              "key": "ide/execution-diagnostics.md",
+              "title": "Execution diagnostics",
+              "path": "/IDE/Execution%20diagnostics.md",
               "kind": "page",
               "children": []
             },
@@ -4971,6 +4992,13 @@
                           "children": []
                         },
                         {
+                          "key": "implementations/reference/runtime/python/tests/test_native_bridge_checks.py",
+                          "title": "test_native_bridge_checks.py",
+                          "path": "/Implementations/Reference/Runtime/python/tests/test_native_bridge_checks.py",
+                          "kind": "code",
+                          "children": []
+                        },
+                        {
                           "key": "implementations/reference/runtime/python/tests/test_native_kernel_bridge.py",
                           "title": "test_native_kernel_bridge.py",
                           "path": "/Implementations/Reference/Runtime/python/tests/test_native_kernel_bridge.py",
@@ -5323,6 +5351,13 @@
           "children": []
         },
         {
+          "key": "docs/studio-source-compatibility.md",
+          "title": "Studio and source compatibility",
+          "path": "/docs/studio-source-compatibility.md",
+          "kind": "page",
+          "children": []
+        },
+        {
           "key": "frog-strategy.md",
           "title": "FROG Strategy",
           "path": "/FROG-Strategy.md",
@@ -5376,6 +5411,7 @@
   ],
   "searchPaths": [
     "/",
+    "/Expression/Frog%20source%20guide.md",
     "/Expression/Cache.md",
     "/Expression/Connector.md",
     "/Expression/Control%20structures.md",
@@ -5581,6 +5617,7 @@
     "/Examples/Readme.md",
     "/Language/Control%20structures.md",
     "/Language/Execution%20control%20and%20observation%20boundaries.md",
+    "/Language/Execution%20eligibility.md",
     "/Language/Execution%20model.md",
     "/Language/Expression%20to%20validated%20meaning.md",
     "/Language/Semantic%20validation%20before%20FIR.md",
@@ -5636,7 +5673,7 @@
     "/Libraries/Realizations/Default/Table.md",
     "/Libraries/Realizations/Default/Tree.md",
     "/Libraries/Realizations/Default/Validation.md",
-    "/Libraries/Realizations/Default/assets/Naming.md",
+    "/Libraries/Realizations/Default/Assets/Naming.md",
     "/Libraries/Realizations/Default/assets/array/Readme.md",
     "/Libraries/Realizations/Default/assets/boolean/Readme.md",
     "/Libraries/Realizations/Default/assets/button/Readme.md",
@@ -5650,14 +5687,14 @@
     "/Libraries/Realizations/Default/assets/numeric/Readme.md",
     "/Libraries/Realizations/Default/assets/path/Readme.md",
     "/Libraries/Realizations/Default/assets/picture/Readme.md",
-    "/Libraries/Realizations/Default/assets/ring/Readme.md",
+    "/Libraries/Realizations/Default/Assets/ring/Readme.md",
     "/Libraries/Realizations/Default/assets/splitter/Readme.md",
     "/Libraries/Realizations/Default/assets/string/Readme.md",
     "/Libraries/Realizations/Default/assets/subpanel/Readme.md",
     "/Libraries/Realizations/Default/assets/tab/Readme.md",
     "/Libraries/Realizations/Default/assets/table/Readme.md",
     "/Libraries/Realizations/Default/assets/tree/Readme.md",
-    "/Libraries/Realizations/Default/assets/Readme.md",
+    "/Libraries/Realizations/Default/Assets/Readme.md",
     "/Libraries/Realizations/Default/Examples/Button%20default%20realization.wfrog.md",
     "/Libraries/Realizations/Default/Examples/Button%20package%20and%20assets%20example.md",
     "/Libraries/Realizations/Default/Examples/Numeric%20control%20default%20realization.wfrog.md",
@@ -5702,6 +5739,7 @@
     "/IDE/Context%20Help.md",
     "/IDE/Debugging.md",
     "/IDE/Editors.md",
+    "/IDE/Execution%20diagnostics.md",
     "/IDE/Express.md",
     "/IDE/Observability.md",
     "/IDE/Palette.md",
@@ -6050,6 +6088,7 @@
     "/Implementations/Reference/Runtime/python/runtime_core.py",
     "/Implementations/Reference/Runtime/python/ui_runtime.py",
     "/Implementations/Reference/Runtime/python/tests/test_boolean_realization_defaults.py",
+    "/Implementations/Reference/Runtime/python/tests/test_native_bridge_checks.py",
     "/Implementations/Reference/Runtime/python/tests/test_native_kernel_bridge.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_core_normalized_contract.py",
     "/Implementations/Reference/Runtime/python/tests/test_runtime_slice05.py",
@@ -6097,6 +6136,7 @@
     "/Roadmap/Milestones.md",
     "/Roadmap/Readme.md",
     "/Strategy/Heilmeier/Readme.md",
+    "/docs/studio-source-compatibility.md",
     "/FROG-Strategy.md",
     "/FROG-Architecture.md",
     "/FROG-Repository-Guide.md",

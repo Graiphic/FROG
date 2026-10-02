@@ -4,6 +4,15 @@
 
 <h1 align="center">FROG Version Matrix</h1>
 
+<p><strong>Integration clarification — 2 October 2026:</strong>
+the <a href="../Expression/Frog%20source%20guide.md">source guide</a> uses the
+existing public v0.1 syntax. The
+<a href="../docs/studio-source-compatibility.md">Studio/source record</a>
+does not introduce a source version or claim universal implementation support.
+Typed Binding v1 requires a consistent resolved Enum definition, including names,
+values and order; see its <a href="../docs/enum-definition-conformance-matrix.md">qualification cases</a>.
+Consumer qualification and explicit draft migration remain separate gates.</p>
+
 <p align="center">
   <strong>Centralized current-status table for the published FROG specification corpus</strong><br/>
   <em>FROG — Free Open Graphical Language</em>

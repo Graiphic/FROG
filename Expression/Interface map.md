@@ -147,6 +147,34 @@ editor index.
 
 <hr/>
 
+<h3>Graiphic Studio Custom layout implementation note</h3>
+
+<p>
+Graiphic Studio 0.0.3.161 persists Custom layouts in its separately versioned
+<code>frog.document.draft</code> authoring envelope. Its
+<code>binding_map_profile: "custom_v1"</code> identifier and
+<code>custom_v1_...</code>, <code>custom_v2_...</code>, and
+<code>custom_v3_...</code> descriptors are documented in the product's
+<a href="https://graiphic.github.io/Graiphic-Studio/#/docs/reference/custom-bindings">Custom Binding Persistence reference</a>.
+They record logical dimensions, stable slot identities, disabled slots and,
+for v3, explicit perimeter positions. The profile identifier and descriptor
+version are distinct.
+</p>
+
+<p>
+This is an implementation note, not an amendment to the canonical source
+envelope or a claim of cross-tool conformance. A draft saved with a
+<code>.frog</code> extension does not establish support for those descriptors
+in a canonical reader, validator or runtime. The independent capability and
+migration requirements in
+<a href="./Source%20compatibility%20and%20profiles.md">Source compatibility and profiles</a>
+continue to apply. Public port identity and typing remain owned by
+<code>interface.inputs</code> and <code>interface.outputs</code>, independently
+of their visual slot placement.
+</p>
+
+<hr/>
+
 <h2 id="widget-bindings">5. Widget Bindings</h2>
 
 <p>

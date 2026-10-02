@@ -39,7 +39,7 @@ The repository also contains repository-level support areas and repository-level
 </ul>
 
 <p>
-The repository-visible numbered example inventory contains 47 directories, <code>Examples/01_*</code> through <code>Examples/47_*</code>, as checked on 2026-09-06.
+The repository-visible numbered example inventory contains 47 directories, <code>Examples/01_*</code> through <code>Examples/47_*</code>, as checked on 2026-10-02.
 Examples <code>01</code> through <code>15</code> define the current public reference runtime closure.
 Examples beyond this boundary may remain repository-visible as specification-facing, widget-facing, conformance-facing, or design-progression examples, while Graiphic production runtime work for those later examples continues in the proprietary <code>Graiphic/FROG-Runtime</code> repository unless explicitly promoted later.
 All example families are organized by the public

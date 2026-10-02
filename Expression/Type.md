@@ -149,7 +149,7 @@ FROG v0.1 standardizes a minimal built-in value type system consisting of:
 </ul>
 
 <p>
-FROG v0.1 does not yet standardize:
+The base v0.1 type vocabulary defined by this document does not standardize:
 </p>
 
 <ul>
@@ -825,6 +825,13 @@ They do not, by themselves, redefine top-level <code>spec_version</code> policy 
 <hr/>
 
 <h2 id="out-of-scope-for-v01">16. Out of Scope for v0.1</h2>
+
+<p>This section concerns the base vocabulary. The additive
+<a href="Typed%20Binding%20Contract%20v1.md">Typed Binding Contract v1</a>
+defines bounded Enum, cluster and ranked-array contracts. Declaring that profile
+does not imply that every schema, editor, lowerer or target implements it.
+See <a href="Source%20compatibility%20and%20profiles.md">Source compatibility and profiles</a>
+for separate read, preserve, edit, validate, lower and execute capabilities.</p>
 
 <ul>
   <li>user-defined named types,</li>

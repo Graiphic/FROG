@@ -39,6 +39,11 @@
 
 <h2 id="overview">1. Overview</h2>
 
+<p>For an annotated source example, see <a href="Frog%20source%20guide.md">the .frog guide</a>.
+The checked-in root schema requires public sections and constrains section shape;
+it is not full semantic or profile validation. Studio's authoring draft is a
+separate envelope; see <a href="../docs/studio-source-compatibility.md">the integration checkpoint</a>.</p>
+
 <p>
 This document defines the schema posture of canonical FROG source. It specifies how machine-checkable structural validation relates to the published FROG Expression specification.
 </p>

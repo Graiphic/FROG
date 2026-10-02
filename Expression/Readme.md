@@ -13,6 +13,10 @@
 
 <h2>Contents</h2>
 
+<p>Start with the <a href="Frog%20source%20guide.md">practical .frog source guide</a>
+for a complete JSON program, stable node/port references, optional presentation
+sections and the distinction between source readability and execution support.</p>
+
 <p>For cross-tool compatibility, safe draft migration and the distinct read,
 preserve, edit, validate, lower and execute capabilities, see
 <a href="Source%20compatibility%20and%20profiles.md">Source compatibility and profiles</a>.</p>

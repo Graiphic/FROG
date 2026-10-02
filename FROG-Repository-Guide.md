@@ -1,5 +1,10 @@
 <h1>FROG Repository Guide</h1>
 
+<p>New readers and tool authors should begin with the
+<a href="./Expression/Frog%20source%20guide.md">.frog source syntax guide</a>
+and <a href="./docs/studio-source-compatibility.md">Studio/source integration record</a>.
+They connect concrete JSON source with its owners and implementation limits.</p>
+
 <p>
 Public repository orientation: what this repository defines, what it deliberately does not define, how the public specification boundary works, and where readers should go next.
 </p>

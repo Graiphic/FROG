@@ -388,7 +388,12 @@ Its meaning is single-branch execution per activation.
 <h3>8.9 Future extensibility</h3>
 
 <p>
-Future revisions or stricter profiles MAY add selector categories such as integers, enums, or pattern-oriented matching.
+The additive <a href="../Expression/Typed%20Binding%20Contract%20v1.md">Typed Binding Contract v1</a>
+defines integer and Enum selector categories for declared Case profiles, with
+<a href="../Expression/Case%20Editing%20Profile%20v1.md">Case Editing Profile v1</a>
+owning their bounded editing/matching extensions. They do not change the base
+selector vocabulary or imply universal target support. Further revisions or
+profiles MAY add other selector categories or pattern-oriented matching.
 Such extensions MUST preserve deterministic branch selection and MUST remain compatible with the ownership split between
 <code>Expression/</code> and <code>Language/</code>.
 </p>

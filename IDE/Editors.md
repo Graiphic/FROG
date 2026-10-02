@@ -1,10 +1,12 @@
 <h1>FROG Editors and Authoring Tools</h1>
 
 <p>
-FROG is a public graphical dataflow language specification. It is not owned by
-one editor, one runtime, one compiler, or one vendor product. A FROG-compatible
-editor is an authoring tool built around the public <code>.frog</code> source
-model and the specification-owned language boundaries.
+FROG is a public graphical dataflow language specification stewarded by Graiphic.
+Graiphic Studio is the lead authoring implementation developed by the steward.
+Portable syntax and semantics are documented publicly so that independent
+editors, generators, validators, compilers and runtimes can implement the same
+contracts. A FROG-compatible editor consumes those contracts and declares its
+supported source versions and profiles.
 </p>
 
 <p>
@@ -12,6 +14,13 @@ This page tracks editor and authoring-tool efforts that are being developed
 around FROG. Listing an editor here does not make that editor the language, nor
 does it make the editor a normative implementation of FROG semantics.
 </p>
+
+<p>The <a href="../Expression/Frog%20source%20guide.md">source syntax guide</a>
+explains canonical JSON. The
+<a href="../docs/studio-source-compatibility.md">Studio integration record</a>
+states the current draft/public-envelope difference and remaining qualification
+gates. The Source window showing a file is not proof of canonical export,
+complete profile validation or target execution.</p>
 
 <hr/>
 

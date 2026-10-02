@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="../../FROG logo.svg" alt="FROG logo" width="140" />
+  <img src="../../../FROG logo.svg" alt="FROG logo" width="140" />
 </p>
 
 <h1 align="center">Default Frame Realization</h1>
