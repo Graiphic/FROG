@@ -85,7 +85,13 @@ void test_runtime_uses_llvm_bool_kernel_bridge() {
         const auto actual = runtime.execute_with_native_kernel_bridge(*bridge, input_value);
 
         assert(actual.as_object().at("outputs").as_object().at("public").as_object().at("result").as_bool() == expected_result);
-        assert(canonical_json(actual) == canonical_json(expected));
+        const auto actual_json = canonical_json(actual);
+        const auto expected_json = canonical_json(expected);
+        if (actual_json != expected_json) {
+            std::cerr << "Boolean snapshot mismatch: " << current_case.at("id").as_string()
+                      << "\nActual:\n" << actual_json << "\nExpected:\n" << expected_json << std::endl;
+        }
+        assert(actual_json == expected_json);
     }
 }
 
@@ -140,6 +146,22 @@ void test_state_face_properties_survive_native_execution() {
     assert(canonical_json(runtime.execute(input_value)) == canonical_json(expected));
 }
 
+void test_realization_defaults_preserve_source_authority() {
+    const auto& refs = acceptance_root().at("artifact_refs").as_object();
+    const auto package = frog::runtime::load_wfrog_from_path(resolve_repo_path(refs.at("wfrog_path").as_string()));
+    const auto panel = frog::runtime::load_front_panel_from_frog_source_path(resolve_repo_path(refs.at("source_path").as_string()));
+    assert(package.default_widget_properties.size() == 2);
+    auto widget = panel.widgets.front();
+    widget.props["value"] = frog::json::Value(false);
+    widget.props["style.state_face.fill_color.false"] = frog::json::Value("#123456");
+    const auto resolved = frog::runtime::resolve_widget_defaults(package, widget, "control");
+    assert(resolved.props.at("style.state_face.fill_color.false").as_string() == "#123456");
+    assert(resolved.props.at("caption.style.font_size").as_string() == "12px");
+    assert(!resolved.props.at("value").as_bool());
+    assert(canonical_json(resolved.layout) == canonical_json(widget.layout));
+    assert(canonical_json(frog::json::Value(resolved.visual)) == canonical_json(frog::json::Value(widget.visual)));
+}
+
 } // namespace
 
 int main() {
@@ -147,6 +169,7 @@ int main() {
     test_runtime_uses_llvm_bool_kernel_bridge();
     test_browser_ui_runtime_uses_llvm_bool_kernel_bridge();
     test_state_face_properties_survive_native_execution();
+    test_realization_defaults_preserve_source_authority();
     std::cout << "slice06 LLVM-produced native bool kernel bridge passed" << std::endl;
     return 0;
 }

@@ -188,6 +188,13 @@ struct FrontPanel {
     std::string host_binding_ref;
 };
 
+struct WidgetPropertyDefaults {
+    std::string class_ref;
+    std::string role;
+    frog::json::Object props;
+    frog::json::Object visual;
+};
+
 struct WfrogPackage {
     std::string format;
     std::string kind;
@@ -195,6 +202,7 @@ struct WfrogPackage {
     std::vector<SvgAsset> svg_assets;
     std::vector<HostBinding> host_bindings;
     std::vector<FrontPanel> front_panels;
+    std::vector<WidgetPropertyDefaults> default_widget_properties;
 };
 
 std::filesystem::path find_repo_root(const std::filesystem::path& start);
@@ -204,5 +212,6 @@ std::filesystem::path default_wfrog_path();
 BackendContract load_contract_from_path(const std::filesystem::path& path);
 WfrogPackage load_wfrog_from_path(const std::filesystem::path& path);
 FrontPanel load_front_panel_from_frog_source_path(const std::filesystem::path& path);
+PanelWidget resolve_widget_defaults(const WfrogPackage& package, const PanelWidget& widget, const std::string& role);
 
 } // namespace frog::runtime

@@ -691,7 +691,8 @@ std::map<std::string, WidgetState> Slice06BooleanRuntimeCore::build_widgets() co
 
     std::map<std::string, WidgetState> result;
     for (const auto& binding : unit.ui_binding.widgets) {
-        const auto* panel_widget = panel_widgets.at(binding.widget_id);
+        const auto realized_widget = resolve_widget_defaults(package, *panel_widgets.at(binding.widget_id), binding.role);
+        const auto* panel_widget = &realized_widget;
         std::optional<std::string> asset_id;
         std::filesystem::path asset_path;
         if (const auto visual_it = panel_widget->visual.find("asset_ref"); visual_it != panel_widget->visual.end() && visual_it->second.is_string()) {

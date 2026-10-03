@@ -473,12 +473,46 @@ WfrogPackage load_wfrog_from_path(const std::filesystem::path& path) {
             package.host_bindings.push_back(parse_host_binding(item));
         }
     }
+    if (const auto* defaults = optional_field(root, "default_widget_properties")) {
+        for (const auto& item : as_array(*defaults, "default_widget_properties")) {
+            const auto& object = as_object(item, "Expected widget defaults object.");
+            WidgetPropertyDefaults entry;
+            entry.class_ref = get_string(object, "class_id");
+            entry.role = get_optional_string(object, "role").value_or("");
+            if (const auto* props = optional_field(object, "props")) {
+                entry.props = as_object(*props, "Expected widget defaults props object.");
+            }
+            if (const auto* visual = optional_field(object, "visual")) {
+                entry.visual = as_object(*visual, "Expected widget defaults visual object.");
+            }
+            package.default_widget_properties.push_back(std::move(entry));
+        }
+    }
     if (const auto* front_panels = optional_field(root, "front_panels")) {
         for (const auto& item : as_array(*front_panels, "front_panels")) {
             package.front_panels.push_back(parse_front_panel(item));
         }
     }
     return package;
+}
+
+PanelWidget resolve_widget_defaults(const WfrogPackage& package, const PanelWidget& widget, const std::string& role) {
+    PanelWidget result = widget;
+    for (const auto& defaults : package.default_widget_properties) {
+        if (defaults.class_ref != widget.class_ref || (!defaults.role.empty() && defaults.role != role)) {
+            continue;
+        }
+        for (const auto& property : defaults.props) {
+            // A realization supplies appearance defaults, never program values.
+            if (property.first != "value") {
+                result.props.emplace(property.first, property.second);
+            }
+        }
+        for (const auto& property : defaults.visual) {
+            result.visual.emplace(property.first, property.second);
+        }
+    }
+    return result;
 }
 
 FrontPanel load_front_panel_from_frog_source_path(const std::filesystem::path& path) {
