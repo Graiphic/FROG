@@ -832,6 +832,13 @@ Value Slice06BooleanRuntimeCore::execution_artifact() const {
         copy_property("style.hover.apply_when_value_false_only");
         copy_property("style.transition.duration_ms");
         copy_property("style.transition.timing");
+        // Preserve the current Boolean realization's state-face properties in
+        // the execution artifact, just as the renderer and reference snapshots do.
+        for (const auto& property : widget.properties) {
+            if (property.first.rfind("style.state_face.", 0) == 0) {
+                runtime_fields.emplace(property.first, property.second);
+            }
+        }
         widget_entries.push_back(make_object({
             {"widget_id", Value(widget.widget_id)},
             {"class_ref", Value(widget.class_ref)},

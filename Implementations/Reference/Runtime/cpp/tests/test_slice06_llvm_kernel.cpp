@@ -113,12 +113,40 @@ void test_browser_ui_runtime_uses_llvm_bool_kernel_bridge() {
     assert_contains(html, "--boolean-pressed-inset:1px;");
 }
 
+void test_state_face_properties_survive_native_execution() {
+    const auto& root = acceptance_root();
+    const auto& refs = root.at("artifact_refs").as_object();
+    const auto& current_case = root.at("cases").as_array().front().as_object();
+    const bool input_value = current_case.at("input_value").as_bool();
+    auto expected = load_json(resolve_repo_path(current_case.at("snapshot_path").as_string()));
+    frog::runtime::Slice06BooleanRuntimeCore runtime(
+        resolve_repo_path(refs.at("contract_path").as_string()),
+        resolve_repo_path(refs.at("wfrog_path").as_string()));
+    const frog::json::Object overrides{
+        {"style.state_face.fill_color.false", frog::json::Value("#112233")},
+        {"style.state_face.fill_color.true", frog::json::Value("#445566")},
+        {"style.state_face.left", frog::json::Value("6px")},
+        {"style.state_face.border_width", frog::json::Value("2px")},
+    };
+    auto& properties = runtime.widgets.at("bool_input").properties;
+    auto& expected_properties = expected.as_object().at("ui_runtime").as_object()
+        .at("widgets").as_array().front().as_object().at("runtime").as_object();
+    for (const auto& property : overrides) {
+        properties[property.first] = property.second;
+        expected_properties[property.first] = property.second;
+    }
+    const auto actual = runtime.execute_with_native_kernel_bridge(*make_bridge(), input_value);
+    assert(canonical_json(actual) == canonical_json(expected));
+    assert(canonical_json(runtime.execute(input_value)) == canonical_json(expected));
+}
+
 } // namespace
 
 int main() {
     test_direct_llvm_bool_kernel_bridge_call();
     test_runtime_uses_llvm_bool_kernel_bridge();
     test_browser_ui_runtime_uses_llvm_bool_kernel_bridge();
+    test_state_face_properties_survive_native_execution();
     std::cout << "slice06 LLVM-produced native bool kernel bridge passed" << std::endl;
     return 0;
 }
