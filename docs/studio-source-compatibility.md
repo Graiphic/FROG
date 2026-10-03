@@ -1,6 +1,6 @@
 # Graiphic Studio and public FROG source compatibility
 
-Implementation checkpoint: 2 October 2026. This page describes integration status,
+Implementation checkpoint: 3 October 2026. This page describes integration status,
 not a new source format or a conformance certification. The
 [source guide](../Expression/Frog%20source%20guide.md) explains public `.frog` syntax.
 
@@ -22,7 +22,7 @@ decision, diagnostics and qualification evidence.
 
 | Surface | Public source | Studio authoring document |
 | --- | --- | --- |
-| Envelope | `spec_version: "0.1"` | `format: "frog.document.draft"`, `draft_revision: 2` |
+| Envelope | `spec_version: "0.1"` | `format: "frog.document.draft"`; Readable revision 2, opt-in numeric storage revision 3 |
 | Required public sections | `metadata`, `interface`, `diagram` | Studio-owned document model; not a substitute for the public envelope |
 | Front Panel spelling | Optional `front_panel` | `frontPanel` |
 | Public interface | Independent of widgets | Current authoring writer derives declarations from bound widgets |
@@ -35,9 +35,20 @@ unsupported versions. Its editing-model importer has narrower support. These are
 different code paths, so a successful source read does not promise full canvas
 editing, semantic validation, export migration or execution.
 
-The local binary checkpoint is **0.0.4.047**. Studio `main` is now published at
-`314c338d41a6633b891b9e28271a88afa635981f` (2 October), verified against the remote.
-It includes the accumulated editor fixes and the function-selection contour rule.
+The opt-in [Studio numeric array storage profile](studio-array-storage-v1.md)
+documents the three document choices and the exact private binary/base64 records.
+It is implemented in Studio with functional qualification pending while tests are
+paused. It does not change the public 0.1 schema or claim canonical compact source
+interoperability. Readable remains the default; loading compact values currently
+expands them into the existing editing model.
+
+The compiled and signed desktop checkpoint is **0.0.4.235**. Studio `main` is
+published at
+[`36f56ba3e88c5b25d5632485ce35ab907e761011`](https://github.com/Graiphic/FROG-STUDIO/commit/36f56ba3e88c5b25d5632485ce35ab907e761011),
+verified against the remote on 3 October 2026 at 08:43 UTC. It includes the
+27-item sequential editor queue, the function-selection contour rule, recursive
+container work, numeric array storage choices, Enum text sizing and atomic mixed
+wire/terminal movement. Remote publication is distinct from CI qualification.
 Runtime POC is disabled in this delivery. The last complete Studio regression
 attempt failed on 0.0.3.935: 300/403 passed, 103 failed. Tests remain paused;
 recent compilation is not a new successful functional gate.

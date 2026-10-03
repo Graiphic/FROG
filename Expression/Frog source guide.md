@@ -126,8 +126,11 @@ does not make them runnable.
 
 ## Graiphic Studio documents
 
-Graiphic Studio 0.0.4.044 still writes authoring documents with
+Graiphic Studio's default Readable mode writes authoring documents with
 `"format": "frog.document.draft"`, `"draft_revision": 2` and `frontPanel`.
+Opt-in numeric array storage uses private revision 3; its
+[storage profile](../docs/studio-array-storage-v1.md) is documented separately
+and remains pending functional qualification. It does not change public 0.1.
 It also has a separate public-source reader/writer with bounded capabilities.
 The common `.frog` extension does not make these envelopes interchangeable.
 Replacing `format` with `spec_version`, renaming a section or deleting unsupported
