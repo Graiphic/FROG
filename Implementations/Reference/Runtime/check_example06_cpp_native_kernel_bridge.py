@@ -127,14 +127,20 @@ def executable_path(build_dir: Path, name: str) -> Path:
 
 def check_native_runtime_headless(build_dir: Path) -> None:
     executable = executable_path(build_dir, "frog_reference_runtime_cpp_llvm_kernel")
-    result = run([str(executable.relative_to(ROOT)), "run", "true", "--example", "06"])
-    artifact = json.loads(result.stdout)
-    assert artifact["status"] == "ok"
-    assert artifact["execution_summary"]["input_value"] is True
-    assert artifact["outputs"]["public"]["result"] is True
-    assert artifact["outputs"]["ui"]["bool_input"] is True
-    assert artifact["outputs"]["ui"]["bool_result"] is True
-    assert artifact["ui_runtime"]["panel"]["layout"]["width"] == 420
+    acceptance = json.loads((ROOT / "Implementations/Reference/Runtime/acceptance/example06_boolean_value_roundtrip.acceptance.json").read_text(encoding="utf-8"))
+    for case in acceptance["cases"]:
+        input_value = case["input_value"]
+        result = run([str(executable.relative_to(ROOT)), "run", "true" if input_value else "false", "--example", "06"])
+        artifact = json.loads(result.stdout)
+        expected = json.loads((ROOT / case["snapshot_path"]).read_text(encoding="utf-8"))
+        assert artifact["status"] == "ok"
+        assert artifact["execution_summary"]["input_value"] is input_value
+        assert artifact["outputs"]["public"]["result"] is case["expected_result"]
+        assert artifact["outputs"]["ui"]["bool_input"] is input_value
+        assert artifact["outputs"]["ui"]["bool_result"] is case["expected_result"]
+        # Source owns layout; compare the complete accepted result rather than
+        # retaining the former hard-coded 420-pixel panel width.
+        assert artifact == expected, f"Native CLI snapshot mismatch: {case['id']}"
 
 
 def main() -> int:
@@ -150,13 +156,14 @@ def main() -> int:
             str(build_dir.relative_to(ROOT)),
             "--target",
             "frog_reference_runtime_cpp_llvm_bool_kernel_tests",
+            "frog_reference_runtime_cpp_slice06_tests",
         ])
         run([
             "ctest",
             "--test-dir",
             str(build_dir.relative_to(ROOT)),
             "-R",
-            "frog_reference_runtime_cpp_llvm_bool_kernel_tests",
+            "^frog_reference_runtime_cpp_(llvm_bool_kernel|slice06)_tests$",
             "--output-on-failure",
         ])
         run([
