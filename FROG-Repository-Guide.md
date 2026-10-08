@@ -279,6 +279,33 @@ The map below summarizes the intended role of the major Markdown documents in th
     -> centralized status and governance matrix
 </code></pre>
 
+<h3 id="engineering-lifecycle-documents">Engineering lifecycle documents</h3>
+
+<p>
+The <a href="./FROG-Architecture.md#engineering-lifecycle-and-digital-thread-integration">architecture
+view</a> explains optional connections to engineering systems. The
+<a href="./FROG-Strategy.md#engineering-continuity">strategy rationale</a> and
+<a href="./ExecutionPipelineDiagram.md#engineering-lifecycle-context">pipeline context</a>
+provide complementary reading. The
+<a href="./docs/proposals/engineering-traceability.md">engineering traceability proposal</a>
+is a non-normative draft for an associated document, not a new source section,
+seventh semantic layer or adopted capability profile.
+</p>
+
+<p>
+For a concrete industrial direction, read the
+<a href="./docs/proposals/iec-61499-bridge.md">IEC 61499 bridge evaluation</a>.
+It is informative and distinguishes data exchange, encapsulation and translation;
+the general architecture keeps industrial bridges independent of any one standard
+or vendor.
+</p>
+
+<p>
+Existing source, language, IR, profile and governance documents retain ownership.
+The <a href="./FROG-Project-Status.md#engineering-lifecycle-proposal-status">proposal status</a>
+distinguishes documentation from adoption, implementation and execution evidence.
+</p>
+
 <hr/>
 
 <h2 id="recommended-reading-path">Recommended reading path</h2>

@@ -10,6 +10,14 @@ the public root README. The root README now acts as a concise orientation page
 and links here for detail.
 </p>
 
+<p>
+Optional engineering-lifecycle integrations can relate external intent, canonical
+FROG source, execution artifacts and observed evidence. They complement the
+language pipeline without making lifecycle systems part of executable meaning.
+This overview introduces no traceability format or additional core conformance
+requirement: detailed obligations remain with their specification owners.
+</p>
+
 <hr/>
 
 <h2 id="core-concept-diagram-front-panel-and-public-interface">Core concept: Diagram, Front Panel, Public Interface</h2>
@@ -59,6 +67,12 @@ It contains widget instances, layout information, composition, styling, and opti
 <p>
 A FROG MAY exist without a front panel.
 When absent, the program remains a valid executable graphical artifact centered on its diagram and public interface.
+</p>
+
+<p>
+An engineering reference to a node does not change its ports, types, values or
+scheduling. External requirements are not a fourth mandatory program component.
+A front panel remains optional; its widgets do not own public interface identities.
 </p>
 
 <h3>Widget interaction model</h3>
@@ -173,6 +187,13 @@ backend-consumable artifact.
 The runtime or launcher resolves and orchestrates the declared call boundary; it does not become the semantic owner of image decoding.
 </p>
 
+<p>
+<a href="#observations-and-engineering-evidence">Engineering evidence</a> can
+concern runtime-hosted, compiled or hybrid execution. Packaging alone establishes
+neither conformance nor safety; each claim identifies the actual artifact,
+configuration, dependencies and required host services.
+</p>
+
 <hr/>
 
 <h2 id="open-fir-bridges-and-deployment-modularity">Open FIR bridges and deployment modularity</h2>
@@ -210,6 +231,9 @@ validated meaning
         |
         v
 open FIR
+        |
+        v
+lowering / backend contract
    +----+-----------------------------+-----------------------------+
    |                                  |                             |
    v                                  v                             v
@@ -234,6 +258,84 @@ It means the architecture is deliberately shaped so they can exist without chang
 This distinction is strategically important:
 FROG should support complete runtime-hosted execution where that is the right engineering answer, and it should also support deployment-specialized artifacts where only the program-specific runtime services, libraries, widgets, manifests, and assets are carried forward.
 The open specification defines the source, FIR, contracts, profiles, and public boundaries; individual implementations decide how to realize full hosts, generated launchers, static links, dynamic links, or other deployment packages without redefining the language.
+</p>
+
+<h3 id="industrial-execution-bridges">Industrial execution bridges</h3>
+
+<p>
+Industrial execution bridges are downstream integrations with declared target
+capabilities and a supported FROG subset. They may use runtime, compilation or
+hybrid realization: industrial, edge and embedded are domains, not alternative
+sources of semantics. Such bridges consume FIR through the applicable
+<a href="./IR/Lowering.md">lowering</a> and
+<a href="./IR/Backend%20contract.md">backend contracts</a>, preserving meaning,
+dependencies and attribution or explicitly rejecting unsupported content.
+</p>
+
+<p>
+Exchanging data with a platform, invoking one of its services and realizing a
+FROG program on it are three distinct claims. Each bridge describes its version,
+targets, types, operations, structures, state, effects, time and memory assumptions,
+error handling, host requirements and observation limits, with evidence for its
+claimed subset. No industrial protocol or vendor backend is implied by this page.
+</p>
+
+<hr/>
+
+<h2 id="engineering-lifecycle-and-digital-thread-integration">Engineering lifecycle and digital-thread integration</h2>
+
+<p>
+FROG can participate in a digital thread: a set of versioned, inspectable relations
+between engineering intent, source, derived artifacts, actual executions and
+observed evidence. External systems remain authoritative for their requirements,
+system models and baselines; FROG contracts define validated program meaning.
+A requirement does not execute merely because a source object refers to it.
+Executable thresholds, timing policies and external calls still need explicit
+source and applicable contracts. This does not make FROG an ALM, PLM or digital twin.
+</p>
+
+<table>
+  <thead><tr><th>Concern</th><th>Responsibility</th><th>Boundary</th></tr></thead>
+  <tbody>
+    <tr><td>Program and execution</td><td>Source, validation, FIR, lowering and target realization.</td><td>Defines and realizes accepted computation.</td></tr>
+    <tr><td>Traceability and evidence</td><td>Qualified identities, revisions, links, runs and observations.</td><td>Relates artifacts; does not schedule the graph.</td></tr>
+    <tr><td>Policy and authorization</td><td>Versioned organizational release or deployment decisions.</td><td>May reject a release without inventing a source type error.</td></tr>
+  </tbody>
+</table>
+
+<pre><code>External requirements / models / test baselines
+          | explicit links and reviewed source changes
+          v
+Canonical .frog source -------------------&gt; Associated links / evidence
+          | loadability and validation                 ^
+          v                                             |
+Validated meaning -&gt; FIR ------------------------------+ source correspondence
+          | lowering / backend contract                 |
+          v                                             |
+Runtime / compiler / hybrid realization ---------------+ artifact identity
+          |                                             |
+          v                                             |
+Actual target instance --------------------------------+ observations / tests
+                                                        |
+                                                        v
+                                           Versioned policy evaluation</code></pre>
+
+<p>
+The horizontal links are artifact relationships, not dataflow wires. Feedback
+from observations proposes a reviewed change; it grants no authority to modify or
+redeploy a running system. Programs without lifecycle links remain legitimate.
+No ALM, PLM, network, cloud service or vendor integration is required by this
+architectural direction; organizational deployment policy remains a separate gate.
+</p>
+
+<p>
+The <a href="./docs/proposals/engineering-traceability.md">non-normative engineering
+traceability proposal</a> develops an associated document outside <code>.frog</code>.
+It is not an adopted profile, implemented connector or proof of target support.
+Existing <a href="./IR/Identity%20and%20Mapping.md">source/FIR correspondence</a>
+remains required by its own contract even when external lifecycle links are absent.
+<a href="./Expression/Source%20provenance.md">Authoring provenance</a>, test results,
+requirement satisfaction and approval are distinct records.
 </p>
 
 <hr/>
@@ -286,6 +388,13 @@ what is prototyped    -> Implementations/Reference/
 what version means    -> Versioning/
 </pre>
 
+<p>
+Lifecycle integrations use these existing owners; they do not add a seventh
+semantic layer. A future optional traceability profile would own its associated
+format, not canonical source syntax or FIR identity. Embedding new facts in
+<code>.frog</code> would require a separate decision in <code>Expression/</code>.
+</p>
+
 <hr/>
 
 <h2 id="program-representation">Program representation</h2>
@@ -312,6 +421,8 @@ Structural validity is an explicit stage owned by <code>Expression/</code>.
 
 <p>
 The <strong>FROG Program Model</strong> is the canonical editable in-memory representation used by IDEs during authoring.
+An IDE installation is not a prerequisite for validation or compilation: command-line
+tools can validate a source-derived representation under the same contracts.
 </p>
 
 <h3>4. Validated program meaning</h3>
@@ -349,6 +460,12 @@ canonical execution-facing representation (FIR posture)
     v
 lowering / backend-facing handoff
 </pre>
+
+<p>
+Engineering intent and evidence dossiers are linked artifacts, not additional
+canonical representations of a program. Resolving an external requirement is not
+a language loading stage, and FIR remains derived rather than a second authoring source.
+</p>
 
 <hr/>
 
@@ -426,13 +543,23 @@ The architectural posture below deliberately combines three requirements:
 </pre>
 
 <p>
-A serious downstream compiler path MAY eventually target compiler families such as LLVM.
-However, those downstream families remain consumers of lowered FROG forms rather than the definition of FROG itself.
+The <a href="./Profiles/Native%20CPU%20LLVM.md">Native CPU LLVM profile</a> and
+<a href="./FROG-Project-Status.md">bounded reference evidence</a> describe an existing
+compiler direction without establishing universal target coverage. Compiler
+families remain consumers of lowered FROG forms rather than the definition of FROG.
 </p>
 
 <p>
 Likewise, probes and watches belong to the execution-observability and IDE-facing posture layered on top of execution projection.
 They do not redefine the validated executable meaning of the program.
+</p>
+
+<p>
+<a href="./Language/Execution%20eligibility.md">Execution eligibility</a> keeps
+loadability, structural validity, semantic acceptance, target buildability,
+current artifact and launch readiness separate. The
+<a href="#engineering-lifecycle-and-digital-thread-integration">lifecycle view</a>
+complements the execution diagram; policy evaluation does not replace these gates.
 </p>
 
 <hr/>
@@ -476,6 +603,24 @@ In this architecture:
   <li><strong>runtime telemetry alone</strong> is not sufficient unless it can be mapped back to meaningful FROG objects.</li>
 </ul>
 
+<h3 id="observations-and-engineering-evidence">Observations and engineering evidence</h3>
+
+<p>
+An observation can contribute to evidence when it identifies the actual execution
+instance, artifact revision, configuration and method. An IDE may display a newer
+source than the running instance; values remain attributed to the latter. A probe
+value is not by itself a qualified test result, and a passed test does not authorize
+release or establish requirement satisfaction beyond its oracle and coverage.
+</p>
+
+<p>
+Evidence belongs in associated records, not in FIR as a copy of an external
+lifecycle database or in a regenerable source cache as its only storage. Debug
+instrumentation can affect timing. Optimized objects may be fused, eliminated or
+unobservable; required mapping remains, without invented per-node runtime values.
+Historical results retain their original subjects when applicability becomes stale.
+</p>
+
 <hr/>
 
 <h2 id="execution-targets">Execution targets</h2>
@@ -499,9 +644,17 @@ Representative target classes include:
   <li><strong>Industrial edge controllers</strong> — integrated vendor-specific control and acquisition platforms.</li>
 </ul>
 
+<p>
+These are architectural target classes, not declarations of uniform support.
+Actual support names its profile, subset, backend, dependency closure and execution
+evidence. Source portability does not imply one binary, identical performance or
+hard real-time behavior across these targets.
+</p>
+
 <hr/>
 
-<h2 id="open-industrial-hardware-standard">Open industrial hardware standard</h2>
+<a id="open-industrial-hardware-standard"></a>
+<h2 id="open-industrial-systems-programming-layer">Open industrial systems programming layer</h2>
 
 <p>
 FROG aims to be more than a language that merely supports multiple targets.
@@ -510,6 +663,14 @@ Its long-term goal is to provide an <strong>open industrial graphical programmin
 
 <p>
 That ambition includes a future where hardware vendors can expose runtime bridges, compiler bridges, backend contracts, and operational integration layers against the same open upstream language basis rather than forcing users into isolated graphical silos.
+</p>
+
+<p>
+This ambition concerns an open language and execution-facing contracts, not the
+standardization of physical hardware interfaces or a claim of externally granted
+certification. Vendors and independent implementers can contribute tools,
+libraries and bridges under the same upstream contracts. The existing
+<a href="./GOVERNANCE.md">steward-led governance</a> is unchanged.
 </p>
 
 <hr/>
@@ -542,6 +703,15 @@ The same point applies to responsibility.
 In an AI-assisted development context, the critical question is not only whether code can be produced.
 The critical question is whether the produced logic can be inspected, explained, accepted, and evolved by accountable humans and organizations.
 FROG is designed to make that responsibility chain more explicit.
+</p>
+
+<p>
+Traceability, provenance, integrity, trust, approval and safety are different
+properties. A verified signature binds an issuer to content; it proves neither
+correctness nor authority to approve a release. An open specification does not
+require disclosure of users' source, requirements, credentials or test records.
+Access policies and minimal exports protect associated engineering information;
+reading a reference grants no permission to execute, write remotely or deploy.
 </p>
 
 <hr/>
@@ -577,6 +747,15 @@ Representative integration targets may include:
 
 <p>
 In the long-term architectural model, interoperability also means that one open FIR may be bridged toward multiple runtime or compiler families without forcing one operational stack to become the language definition.
+</p>
+
+<p>
+Engineering-lifecycle interoperability exchanges versioned references, baselines,
+results and reviews. It is distinct from executable foreign calls and downstream
+execution bridges. Transport, credentials and vendor adapters remain integration
+concerns. The <a href="./Profiles/Interop.md">Interop profile</a> defines the
+published executable capabilities; this list does not standardize additional
+network or industrial protocols.
 </p>
 
 <hr/>
@@ -620,7 +799,15 @@ At the modeling level, FROG also separates:
   <li>natural widget value flow from object-style widget interaction,</li>
   <li>program execution meaning from probes and watches,</li>
   <li>specification corpus governance from <code>.frog spec_version</code>,</li>
-  <li><code>.frog spec_version</code> from <code>metadata.program_version</code>.</li>
+  <li><code>.frog spec_version</code> from <code>metadata.program_version</code>,</li>
+  <li>engineering intent from executable program meaning,</li>
+  <li>lifecycle relationships from executable graph edges,</li>
+  <li>authoring provenance from requirement satisfaction,</li>
+  <li>source/FIR correspondence from complete external lifecycle traceability,</li>
+  <li>observed results from approved engineering conclusions,</li>
+  <li>language validity from organizational deployment authorization,</li>
+  <li>an open specification from mandatory disclosure of user artifacts,</li>
+  <li>architectural target classes from demonstrated implementation support.</li>
 </ul>
 
 <hr/>

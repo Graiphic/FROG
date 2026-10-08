@@ -174,6 +174,58 @@ industrial graphical programming should no longer require the language, the edit
 
 <hr/>
 
+<h2 id="engineering-continuity">Engineering continuity: intent, execution and evidence</h2>
+
+<p>
+An open, inspectable language can provide one executable layer of an engineering
+digital thread. The value hypothesis is that qualified links from requirements
+and system models to source revisions, built artifacts, actual runs and test
+results make change impact and review easier to assess across tools. A link is
+an assertion, not a proof that the linked requirement is satisfied.
+</p>
+
+<p>
+The <a href="./FROG-Architecture.md#engineering-lifecycle-and-digital-thread-integration">architecture</a>
+separates execution, traceability/evidence and policy. External engineering systems
+keep authority over their artifacts; FROG stays a language rather than an ALM,
+PLM, digital twin or universal industrial runtime. Programs without those links
+remain useful and valid. No supplier need, partnership or delivered connector is
+inferred from this strategic direction.
+</p>
+
+<p>
+The <a href="./docs/proposals/engineering-traceability.md">non-normative proposal</a>
+starts with an associated versioned document and a small public arithmetic example.
+It proposes evidence attribution and negative cases before vendor integration.
+Industrial bridges can be runtime-based, compiled or hybrid, with declared
+subsets and explicit rejections; source portability does not establish hardware,
+real-time or safety guarantees. AI-assisted changes follow review, validation,
+derivation, tests and a separately authorized deployment decision.
+</p>
+
+<hr/>
+
+<h2 id="iec-61499-evaluation">IEC 61499 as an industrial integration direction</h2>
+
+<p>
+IEC 61499 provides an architecture for distributed industrial function blocks.
+It is an informative candidate ecosystem for downstream integration, not a
+replacement for FROG dataflow semantics or a mandatory transport protocol.
+The <a href="./docs/proposals/iec-61499-bridge.md">IEC 61499 evaluation note</a>
+distinguishes data exchange, encapsulation of a bounded FROG calculation and
+translation of a declared subset. Each option needs its own target contract,
+semantic preservation assessment and execution evidence.
+</p>
+
+<p>
+The note links IEC, Eclipse 4diac and UniversalAutomation.org primary sources.
+These references establish context, not a partnership, certified compatibility,
+implemented backend, hardware portability or real-time guarantee. Target selection,
+activation/state mapping and an executable experiment remain future work.
+</p>
+
+<hr/>
+
 <h2 id="from-go-hw-to-frog">From GO HW to FROG</h2>
 
 <p>

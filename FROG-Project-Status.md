@@ -350,6 +350,37 @@ python Implementations/Reference/check_reference_workspace.py --include-native-k
 
 <hr/>
 
+<h2 id="engineering-lifecycle-proposal-status">Engineering lifecycle proposal status</h2>
+
+<p>
+The <a href="./FROG-Architecture.md#engineering-lifecycle-and-digital-thread-integration">engineering-lifecycle
+architecture</a> now has a separate
+<a href="./docs/proposals/engineering-traceability.md">non-normative contract proposal</a>.
+The documentation clarifies optional links between intent, source, execution and
+evidence. It introduces no source migration, mandatory metadata or executable primitive.
+</p>
+
+<table>
+  <thead><tr><th>Surface</th><th>Status of this addition</th></tr></thead>
+  <tbody>
+    <tr><td>Architecture, strategy and reading paths (lot A)</td><td>Documentary clarification; no change to core conformance.</td></tr>
+    <tr><td>Associated traceability document (lot B)</td><td>Proposed only; grammar, schema, versioning and adoption decisions remain open.</td></tr>
+    <tr><td>ETR proposed cases and arithmetic evidence example</td><td>Definitions for future validation; not executed by this documentation change.</td></tr>
+    <tr><td><a href="./docs/proposals/iec-61499-bridge.md">IEC 61499 bridge evaluation</a></td><td>Informative direction and proposed validation slice; no implementation, target experiment or compatibility evidence supplied.</td></tr>
+    <tr><td>ALM/PLM connector, industrial bridge or certification</td><td>No additional implementation or support claim.</td></tr>
+  </tbody>
+</table>
+
+<p>
+Existing example results retain their original scope. This addition supplies no
+new runtime test result, released lifecycle profile or industrial target evidence.
+Adoption follows <a href="./GOVERNANCE.md">repository governance</a>; corpus,
+source-compatibility and program versions remain distinct under
+<a href="./Versioning/Readme.md">Versioning</a>.
+</p>
+
+<hr/>
+
 <h2 id="project-status">Project status</h2>
 
 <p>

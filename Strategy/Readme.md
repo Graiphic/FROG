@@ -668,6 +668,32 @@ FROG is not anti-AI.
 FROG is an attempt to make AI-accelerated software creation inspectable, attributable, controllable, and evolvable in serious industrial settings.
 </p>
 
+<h3 id="engineering-lifecycle-reading-path">Engineering lifecycle reading path</h3>
+
+<p>
+For the optional digital-thread direction, read
+<a href="../FROG-Strategy.md#engineering-continuity">engineering continuity</a>,
+then the <a href="../FROG-Architecture.md#engineering-lifecycle-and-digital-thread-integration">three
+architectural concerns</a> and the
+<a href="../docs/proposals/engineering-traceability.md">non-normative traceability proposal</a>.
+The proposed links connect intent, source, actual execution and evidence without
+making an ALM, PLM, cloud service or vendor part of program meaning.
+</p>
+
+<p>
+This is a value hypothesis and contract proposal, not a released profile or
+implemented industrial bridge. Strategy owns the rationale; source, semantics,
+FIR and backend obligations keep their existing owners. Evidence and approval
+remain separate, and open technical contracts do not change steward-led governance.
+</p>
+
+<p>
+The <a href="../FROG-Strategy.md#iec-61499-evaluation">IEC 61499 direction</a>
+and <a href="../docs/proposals/iec-61499-bridge.md">informative bridge evaluation</a>
+make one industrial candidate explicit. They introduce no adopted profile or
+claim of implemented compatibility.
+</p>
+
 <hr/>
 
 <h2 id="strategic-boundaries-to-preserve">13. Strategic Boundaries to Preserve</h2>

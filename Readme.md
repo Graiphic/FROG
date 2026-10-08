@@ -123,6 +123,22 @@ FROG is a public language specification, not a single IDE, runtime, compiler, de
 The long-form strategic explanation is maintained in <a href="./FROG-Strategy.md">FROG Strategy and Positioning</a>. The dedicated AI generation compatibility vs AI inspectability chart explanation is maintained in <a href="./Strategy/AI-Generation-Inspectability-Orville.md">AI Generation Compatibility vs AI Inspectability Orville Chart</a>.
 </p>
 
+<p>
+FROG can also serve as an inspectable executable-language layer within an
+<a href="./FROG-Architecture.md#engineering-lifecycle-and-digital-thread-integration">engineering
+digital thread</a>: optional lifecycle integrations can relate external intent,
+validated source, execution artifacts and observed evidence. Language semantics,
+target capabilities and organizational acceptance remain separate. The associated
+traceability contract is a proposal, not a released integration capability.
+</p>
+
+<p>
+The <a href="./docs/proposals/iec-61499-bridge.md">IEC 61499 industrial bridge
+evaluation</a> examines data exchange, encapsulated calculation and translation
+as distinct future integration paths. It is informative; no IEC 61499 backend
+or interoperability claim is made by this documentation.
+</p>
+
 <hr/>
 
 <h2 id="editors-and-authoring-tools">Editors and authoring tools</h2>
