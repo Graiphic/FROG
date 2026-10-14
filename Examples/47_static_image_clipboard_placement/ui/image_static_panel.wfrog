@@ -70,7 +70,7 @@
     {
       "asset_id": "image_static_rectangular_svg",
       "kind": "svg",
-      "path": "../../../Libraries/Realizations/Default/Assets/image/templates/image_static_rectangular.svg",
+      "path": "../../../Libraries/Realizations/Default/assets/image/templates/image_static_rectangular.svg",
       "target_class": "frog.widgets.image_static"
     }
   ],

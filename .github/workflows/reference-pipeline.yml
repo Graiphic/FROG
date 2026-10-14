@@ -16,6 +16,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up ownership validation Python
+        id: ownership-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
       - name: Compile public Runtime contract smoke test
         run: |
           c++ -std=c++20 -Wall -Wextra -Wpedantic \
@@ -31,6 +37,7 @@ jobs:
           cmake \
             -DSCAN_ROOT=${{ github.workspace }} \
             -DCANONICAL_CONTRACT_HEADER=${{ github.workspace }}/sdk/cpp/include/frog/sdk/runtime_contract.hpp \
+            "-DFROG_OWNERSHIP_PYTHON_EXECUTABLE=${{ steps.ownership-python.outputs.python-path }}" \
             -P sdk/cpp/cmake/verify_runtime_contract_ownership.cmake
 
   reference-workspace:
