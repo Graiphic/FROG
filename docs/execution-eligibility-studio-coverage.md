@@ -1,6 +1,68 @@
 # Execution eligibility — Studio implementation coverage
 
-## Current checkpoint — 2 October 2026
+## Current checkpoint — 14 October 2026
+
+This informative coverage record does not extend the public language or its
+execution eligibility contract. The canonical local Studio delivery is signed
+**0.0.5.313**. Regression tests remain paused globally; the user authorized only
+the targeted groups below. No complete clean all-target/full-CTest gate or
+remote publication is confirmed by this record.
+
+The checkpoints are separate: **87: 4/4 PASS** qualifies normal private Run with
+Highlight initially disabled and POC OFF, interactive controls, read-only
+indicators and return to authoring at Stop. **89: 7/7 PASS** qualifies the public
+captured-Event Unbundle Source→IR→SDK corridor and its neighbors.
+**94: 2/2 PASS** qualifies current-font Path/String sizing through real Options,
+text-size menus, Size to Text and pointer resize, including creation, values,
+types and connections. These results are not combined into a global gate.
+
+Unbundle reuses the typed Event Record carrier and existing SDK provider
+([contract](../sdk/cpp/docs/runtime-contract.md)). It introduces no native LLVM
+Record kernel, arbitrary Array/Enum transport or aggregate Front Panel widget.
+The qualified native public CPU corridor remains flat f64/Add, distinct from
+private Run simulation and the SDK Event corridor. The full execution engine
+and broader runtime milestones remain open; the Adapter UI owner still stops
+before Clipboard, while the recursive owner has a separate targeted PASS.
+
+All earlier checkpoints below are retained as historical evidence. Their
+then-current versions, test-pause statements and pending-publication statements
+do not describe the state above; historical failures are not reclassified.
+
+## Preserved historical record
+
+
+## Current checkpoint — 4 October 2026
+
+This record is informative and does not extend the public language or its
+execution eligibility contract. The latest complete local Studio diagnostic
+campaign failed on **0.0.4.635: 305/421 passed, 115 failures and one timeout**, without exclusions.
+It follows a clean compilation and an incremental continuation, so it is not a clean,
+uninterrupted qualification gate. The regression pause has been lifted for
+the complete verification and progressive repair requested by the user.
+
+Highlight Execution now evaluates implemented basic numeric, Boolean and
+comparison operations, recursive explicit numeric conversions, and
+For/While/Sequence structures with invocation-local shift registers. Public
+FROG implicit conversions still follow [Type, section 11](../Expression/Type.md);
+Studio's explicit To functions have their own documented conversion behavior.
+The new portable owner `frog-basic-execution-smoke` passed on signed **635**.
+The application owner `frog-highlight-execution-ui-smoke` passed on signed
+**635**, with 13 native captures: the unchanged user file test1.frog computes
+0 + 0 followed by Increment = 1 through 35 For iterations. Real palette/editor
+creation supplies the normal visual fixture geometry.
+
+Runtime POC remains **OFF** in the canonical application. These simulation
+results are not evidence of a native compiler/backend supporting the whole
+public language, the complete EXEC/VAL matrix or every Studio catalog entry.
+Unsupported operations retain explicit diagnostics. The current changes,
+adjacent failing owners, real-geometry audit, clean all-target/full-suite gate
+and publication are tracked in the
+[Studio request queue](https://github.com/Graiphic/FROG-Context/blob/main/Current/studio-request-queue-2026-10-02.md)
+and the dated verification report in FROG-STUDIO
+(`native-portable-engine/docs/reponses/2026-10-04-reprise-integrale-execution-bindings.md`).
+Publication of the current correction series is still pending.
+
+## Historical checkpoint — 2 October 2026
 
 This coverage record is informative. The canonical local Studio binary is
 **0.0.4.047**; Studio main **314c338d41a6633b891b9e28271a88afa635981f** has been published and its remote

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "frog/sdk/runtime_contract.hpp"
+#include "frog/sdk/runtime_compound_value.hpp"
 
 #include <array>
 #include <bit>
@@ -24,18 +24,25 @@ namespace codec_detail {
 inline constexpr std::array<std::uint8_t, 8> kMagic{
     'F', 'R', 'O', 'G', 'A', 'R', 'T', '1'
 };
+inline constexpr std::array<std::uint8_t, 8> kTypedMagic{
+    'F', 'R', 'O', 'G', 'A', 'R', 'T', '2'
+};
 inline constexpr std::uint32_t kMaximumCollectionSize = 1'000'000U;
 inline constexpr std::uint32_t kMaximumStringSize = 16U * 1024U * 1024U;
+inline constexpr std::size_t kMaximumTypedEnvelopeSize = 32U * 1024U * 1024U;
 
 class Writer final {
 public:
+    explicit Writer(bool typed = false) : typed_(typed) {}
     void bytes(std::span<const std::uint8_t> value) {
+        if (!valid_ || (typed_ && value.size() > kMaximumTypedEnvelopeSize - data_.size())) { valid_ = false; return; }
         data_.insert(data_.end(), value.begin(), value.end());
     }
 
     template <typename Unsigned>
     void unsignedInteger(Unsigned value) {
         static_assert(std::is_unsigned_v<Unsigned>);
+        if (!valid_ || (typed_ && sizeof(Unsigned) > kMaximumTypedEnvelopeSize - data_.size())) { valid_ = false; return; }
         for (std::size_t index = 0; index < sizeof(Unsigned); ++index) {
             data_.push_back(static_cast<std::uint8_t>(value & 0xffU));
             value >>= 8U;
@@ -66,7 +73,8 @@ public:
         string(type.elementType);
     }
 
-    void runtimeValue(const RuntimeValue &value) {
+    void runtimeValue(const RuntimeValue &value, unsigned depth = 0) {
+        if (typed_ && (depth > 32 || ++valueNodes_ > 4096)) { valid_ = false; return; }
         enumeration(static_cast<std::uint8_t>(value.index()));
         switch (value.index()) {
         case 0U: break;
@@ -78,22 +86,45 @@ public:
         case 4U:
             unsignedInteger(std::bit_cast<std::uint64_t>(std::get<double>(value)));
             break;
-        case 5U: string(std::get<std::string>(value)); break;
-        default: break;
+        case 5U: {
+            const auto &text = std::get<std::string>(value);
+            if (typed_ && (text.size() > 1'000'000 || text.size() > 16'000'000 - valueBytes_)) { valid_ = false; return; }
+            valueBytes_ += typed_ ? text.size() : 0;
+            string(text); break;
+        }
+        case 6U: {
+            const auto &record = std::get<6>(value);
+            if (!typed_ || !record || record->isReference() ||
+                !runtimeValueRepresentable(value, valueTypeFromCanonicalName(record->canonicalType()))) { valid_ = false; return; }
+            string(record->canonicalType());
+            unsignedInteger(static_cast<std::uint32_t>(record->fields().size()));
+            for (const auto &field : record->fields()) {
+                string(field.id); valueType(field.type); runtimeValue(field.value, depth + 1);
+            }
+            break;
+        }
+        default: valid_ = false; break;
         }
     }
 
     [[nodiscard]] std::vector<std::uint8_t> finish() && {
-        return std::move(data_);
+        return valid_ ? std::move(data_) : std::vector<std::uint8_t>{};
     }
 
 private:
     std::vector<std::uint8_t> data_;
+    bool typed_ = false, valid_ = true;
+    std::size_t valueNodes_ = 0, valueBytes_ = 0;
 };
 
 class Reader final {
 public:
     explicit Reader(std::span<const std::uint8_t> data) : data_(data) {}
+    bool typed(bool enabled) {
+        typed_ = enabled;
+        return !typed_ || data_.size() <= kMaximumTypedEnvelopeSize ||
+            fail("Typed artifact envelope exceeds its aggregate metadata/value budget.");
+    }
 
     [[nodiscard]] bool bytes(std::span<std::uint8_t> target) {
         if (!reserve(target.size())) return false;
@@ -154,12 +185,13 @@ public:
 
     [[nodiscard]] bool valueType(ValueType &type) {
         return string(type.canonicalName) &&
-            enumeration(type.category, static_cast<std::uint8_t>(ValueCategory::Array)) &&
+            enumeration(type.category, static_cast<std::uint8_t>(typed_ ? ValueCategory::ObjectReference : ValueCategory::Array)) &&
             unsignedInteger(type.bitWidth) && unsignedInteger(type.rank) &&
             string(type.elementType);
     }
 
-    [[nodiscard]] bool runtimeValue(RuntimeValue &value) {
+    [[nodiscard]] bool runtimeValue(RuntimeValue &value, unsigned depth = 0) {
+        if (typed_ && (depth > 32 || ++valueNodes_ > 4096)) return fail("Typed Runtime values exceed their recursive limit.");
         std::uint8_t tag = 0U;
         if (!unsignedInteger(tag)) return false;
         switch (tag) {
@@ -191,7 +223,28 @@ public:
         case 5U: {
             std::string decoded;
             if (!string(decoded)) return false;
+            if (typed_ && (decoded.size() > 1'000'000 || decoded.size() > 16'000'000 - valueBytes_))
+                return fail("Typed Runtime strings exceed their aggregate limit.");
+            valueBytes_ += typed_ ? decoded.size() : 0;
             value = std::move(decoded);
+            return true;
+        }
+        case 6U: {
+            if (!typed_) return fail("Record values require artifact schema v2.");
+            std::string canonical; std::uint32_t size = 0;
+            if (!string(canonical) || canonical.size() > 65536 || !count(size) || size > 64)
+                return fail("The record encoding has an invalid type or field count.");
+            std::vector<RuntimeNamedField> fields;
+            fields.reserve(size);
+            for (std::uint32_t index = 0; index < size; ++index) {
+                RuntimeNamedField field;
+                if (!string(field.id) || !valueType(field.type) || !runtimeValue(field.value, depth + 1)) return false;
+                fields.push_back(std::move(field));
+            }
+            auto record = makeRuntimeRecord(std::move(fields));
+            if (!record || std::get<6>(*record)->canonicalType() != canonical)
+                return fail("Record fields do not match their canonical type.");
+            value = std::move(*record);
             return true;
         }
         default:
@@ -220,7 +273,8 @@ private:
 
     std::span<const std::uint8_t> data_;
     std::size_t cursor_ = 0U;
-    bool valid_ = true;
+    bool valid_ = true, typed_ = false;
+    std::size_t valueNodes_ = 0, valueBytes_ = 0;
     std::string error_;
 };
 
@@ -236,8 +290,22 @@ inline Diagnostic codecDiagnostic(std::string message) {
 
 [[nodiscard]] inline std::vector<std::uint8_t> encodeProgramArtifact(
     const ProgramArtifact &artifact) {
-    codec_detail::Writer writer;
-    writer.bytes(codec_detail::kMagic);
+    const bool typed = artifact.schemaVersion == kTypedArtifactSchemaVersion;
+    if ((!typed && artifact.schemaVersion != kArtifactSchemaVersion) ||
+        !validateProgramArtifact(artifact).empty()) return {};
+    if (typed) {
+        for (const auto &node : artifact.nodes) if (node.literalValue) {
+            const auto output = std::find_if(node.ports.begin(), node.ports.end(), [](const auto &port) {
+                return port.direction == PortDirection::Output;
+            });
+            if (output == node.ports.end() || !runtimeValueValidForOwner(*node.literalValue, output->valueType, *artifact.valueOwner)) return {};
+        }
+        for (const auto &binding : artifact.uiBindings)
+            if (!std::holds_alternative<std::monostate>(binding.initialValue) &&
+                !runtimeValueValidForOwner(binding.initialValue, binding.valueType, *artifact.valueOwner)) return {};
+    }
+    codec_detail::Writer writer(typed);
+    writer.bytes(typed ? codec_detail::kTypedMagic : codec_detail::kMagic);
     writer.unsignedInteger(artifact.protocol.major);
     writer.unsignedInteger(artifact.protocol.minor);
     writer.unsignedInteger(artifact.schemaVersion);
@@ -247,6 +315,12 @@ inline Diagnostic codecDiagnostic(std::string message) {
     writer.unsignedInteger(artifact.revision.semantic);
     writer.unsignedInteger(artifact.revision.interfaceContract);
     writer.unsignedInteger(artifact.revision.topology);
+    if (typed) {
+        const auto &owner = *artifact.valueOwner;
+        writer.string(owner.id); writer.string(owner.sourceDigest);
+        writer.unsignedInteger(owner.epoch); writer.unsignedInteger(owner.sourceRevision);
+        writer.unsignedInteger(owner.artifactRevision);
+    }
 
     writer.unsignedInteger(static_cast<std::uint32_t>(artifact.nodes.size()));
     for (const auto &node : artifact.nodes) {
@@ -266,6 +340,10 @@ inline Diagnostic codecDiagnostic(std::string message) {
         }
         writer.boolean(node.literalValue.has_value());
         if (node.literalValue.has_value()) writer.runtimeValue(*node.literalValue);
+        if (typed) {
+            writer.unsignedInteger(static_cast<std::uint32_t>(node.selectedFields.size()));
+            for (const auto &field : node.selectedFields) writer.string(field);
+        }
     }
 
     writer.unsignedInteger(static_cast<std::uint32_t>(artifact.edges.size()));
@@ -285,6 +363,7 @@ inline Diagnostic codecDiagnostic(std::string message) {
         writer.enumeration(binding.direction);
         writer.valueType(binding.valueType);
         writer.runtimeValue(binding.initialValue);
+        if (typed) writer.boolean(binding.suppliedByEvent);
     }
 
     writer.unsignedInteger(static_cast<std::uint32_t>(artifact.sourceIdentities.size()));
@@ -314,16 +393,28 @@ inline Diagnostic codecDiagnostic(std::string message) {
         return result;
     };
 
-    if (!reader.bytes(magic) || magic != codec_detail::kMagic ||
+    if (!reader.bytes(magic) || (magic != codec_detail::kMagic && magic != codec_detail::kTypedMagic) ||
         !reader.unsignedInteger(artifact.protocol.major) ||
         !reader.unsignedInteger(artifact.protocol.minor) ||
-        !reader.unsignedInteger(artifact.schemaVersion) ||
-        !reader.stableId(artifact.artifactId) ||
+        !reader.unsignedInteger(artifact.schemaVersion)) return fail();
+    const bool typed = artifact.schemaVersion == kTypedArtifactSchemaVersion;
+    if ((typed ? codec_detail::kTypedMagic : codec_detail::kMagic) != magic ||
+        (!typed && artifact.schemaVersion != kArtifactSchemaVersion)) return fail();
+    // Admit the entire v2 envelope before the first variable-length field.
+    if (!reader.typed(typed)) return fail();
+    if (!reader.stableId(artifact.artifactId) ||
         !reader.stableId(artifact.sourceDocumentId) ||
         !reader.string(artifact.sourceDocumentUri) ||
         !reader.unsignedInteger(artifact.revision.semantic) ||
         !reader.unsignedInteger(artifact.revision.interfaceContract) ||
         !reader.unsignedInteger(artifact.revision.topology)) return fail();
+    if (typed) {
+        RuntimeValueOwner owner;
+        if (!reader.string(owner.id) || !reader.string(owner.sourceDigest) ||
+            !reader.unsignedInteger(owner.epoch) || !reader.unsignedInteger(owner.sourceRevision) ||
+            !reader.unsignedInteger(owner.artifactRevision) || !runtimeValueOwnerValid(owner)) return fail();
+        artifact.valueOwner = std::move(owner);
+    }
 
     std::uint32_t count = 0U;
     if (!reader.count(count)) return fail();
@@ -353,6 +444,14 @@ inline Diagnostic codecDiagnostic(std::string message) {
             if (!reader.runtimeValue(value)) return fail();
             node.literalValue = std::move(value);
         }
+        if (typed) {
+            std::uint32_t fieldCount = 0;
+            if (!reader.count(fieldCount) || fieldCount > 64) return fail();
+            for (std::uint32_t index = 0; index < fieldCount; ++index) {
+                std::string field; if (!reader.string(field)) return fail();
+                node.selectedFields.push_back(std::move(field));
+            }
+        }
         artifact.nodes.push_back(std::move(node));
     }
 
@@ -375,6 +474,7 @@ inline Diagnostic codecDiagnostic(std::string message) {
             !reader.stableId(binding.endpoint.portId) ||
             !reader.enumeration(binding.direction, static_cast<std::uint8_t>(UiBindingDirection::RuntimeToIndicator)) ||
             !reader.valueType(binding.valueType) || !reader.runtimeValue(binding.initialValue)) return fail();
+        if (typed && !reader.boolean(binding.suppliedByEvent)) return fail();
         artifact.uiBindings.push_back(std::move(binding));
     }
 
@@ -400,6 +500,19 @@ inline Diagnostic codecDiagnostic(std::string message) {
 
     ArtifactDecodeResult result;
     result.diagnostics = validateProgramArtifact(artifact);
+    if (typed && result.diagnostics.empty()) {
+        for (const auto &node : artifact.nodes) if (node.literalValue) {
+            const auto output = std::find_if(node.ports.begin(), node.ports.end(), [](const auto &port) {
+                return port.direction == PortDirection::Output;
+            });
+            if (output == node.ports.end() || !runtimeValueValidForOwner(*node.literalValue, output->valueType, *artifact.valueOwner))
+                result.diagnostics.push_back(codec_detail::codecDiagnostic("Typed literal is not representable by its actual type/owner."));
+        }
+        for (const auto &binding : artifact.uiBindings)
+            if (!std::holds_alternative<std::monostate>(binding.initialValue) &&
+                !runtimeValueValidForOwner(binding.initialValue, binding.valueType, *artifact.valueOwner))
+                result.diagnostics.push_back(codec_detail::codecDiagnostic("Typed binding is not representable by its actual type/owner."));
+    }
     if (result.diagnostics.empty()) result.artifact = std::move(artifact);
     return result;
 }

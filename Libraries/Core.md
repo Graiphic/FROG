@@ -28,6 +28,7 @@
   <li><a href="#logical-primitives">12. Logical Primitives</a></li>
   <li><a href="#selection-primitive">13. Selection Primitive</a></li>
   <li><a href="#local-memory-primitive">14. Local-Memory Primitive</a></li>
+  <li><a href="#record-decomposition-extension">14a. Record Decomposition Extension v1</a></li>
   <li><a href="#diagram-representation">15. Diagram Representation</a></li>
   <li><a href="#validation-rules">16. Validation Rules</a></li>
   <li><a href="#execution-facing-posture">17. Execution-Facing Posture</a></li>
@@ -650,6 +651,76 @@ For <code>frog.core.delay</code>, ownership is intentionally split as follows:
   <li><code>Language/State and cycles.md</code> owns the cross-cutting semantic rule that makes a directed cycle valid only when explicit local memory is present,</li>
   <li><code>IR/</code> may later preserve this primitive as an explicit attributable state-bearing execution-facing object, but that later representation does not replace the primitive-local contract defined here.</li>
 </ul>
+
+<hr/>
+
+<h2 id="record-decomposition-extension">14a. Record Decomposition Extension v1</h2>
+
+<p><code>frog.core.unbundle.by_name</code> is an explicitly published, stateless
+Record decomposition primitive of the versioned typed-cluster extension. It is
+not an alias for a private Studio catalogue function and is not required by the
+historical scalar-only base v0.1 runtime. It reuses the ordered stable cluster
+field identities of <code>frog.typed-binding@1</code>, defined in
+<code>Expression/Typed Binding Contract v1.md</code>; it adds no new TypeRef syntax
+or mandatory per-primitive binding_profile property. A consumer must admit this
+extension and the real cluster value carrier before accepting the primitive;
+other targets must diagnose unsupported capability explicitly.</p>
+
+<p>Its normative machine-readable signature is
+<code>Libraries/Manifests/frog.core.unbundle.by_name.v1.json</code>; its local Source
+node schema is <code>Expression/schema/frog.unbundle-by-name-node.v1.schema.json</code>.
+Source conformance validators for this extension MUST consume that schema as
+well as the general diagram schema. The schema checks syntax; the real graph
+resolver checks drivers, cluster members, types, cardinality and cycles.</p>
+
+<pre><code class="language-json">{
+  "id": "coords_fields", "kind": "primitive", "type": "frog.core.unbundle.by_name",
+  "selected_fields_version": 1,
+  "selected_fields": [{"port": "first", "field_id": "y"}, {"port": "second", "field_id": "x"}]
+}</code></pre>
+
+<ul>
+  <li>The only input is <code>record</code>, required, connected and Single, with
+  the exact canonical cluster type of its actual driver.</li>
+  <li><code>selected_fields_version</code> is the integer 1. The ordered
+  <code>selected_fields</code> array has 1–64 exact <code>{port,field_id}</code> pairs.
+  Output port identities are persisted with those pairs; they are unique,
+  different from <code>record</code>, follow the existing open-IR
+  <code>^[A-Za-z0-9._:-]+$</code> grammar and this profile's 1024-byte ceiling
+  (configured limits may tighten it).</li>
+  <li><code>field_id</code> is the exact direct cluster member identity, not a
+  label, ordinal or dotted/path expression. Existing canonical cluster rules
+  allow quotes and backslashes and reject structural control bytes. The initial
+  Event/SDK target admits field identities up to 1024 UTF-8 bytes; this is a
+  consumer admission budget, not a new general cluster grammar. The port grammar
+  is not applied to field identities.</li>
+  <li>Each output's type is the exact selected member type. Output order follows
+  the persisted pairs. Repeated field selections on distinct ports are allowed;
+  reordering a cluster's members or changing a presentation label cannot change
+  a selection. Deleting/recreating a member with a different identity does.</li>
+  <li>A nested cluster is selected as a whole and may drive a second Unbundle.
+  This contract introduces no concatenated private path syntax or implicit cast.</li>
+</ul>
+
+<p>The versioned resolver
+<code>frog.core.unbundle.by_name.type-resolution@1</code> resolves from the actual
+connected canonical cluster schema in two graph phases. It introduces no
+<code>T:record</code> or invented dependent-type syntax. Missing/invalid selections,
+fields, ports, required drivers, multiple drivers, incompatible types and
+state-free cycles are explicit failures. Selection version1 fixes its 1–64
+output signature. The initial Event consumer separately limits accumulated
+derived type descriptors to the tighter of 16 MiB and its IR byte budget, before
+cloning; this resource admission limit does not redefine cluster identity.
+The existing SDK implementation ID is explicitly
+<code>frog.core.unbundle.by_name</code>; resolved selections are lowered in output
+order into <code>RuntimeNode.selectedFields</code> under artifact schema 2.</p>
+
+<p>The first public Event consumer realizes the existing captured Coords/Mods/
+PlatMods cluster types with the existing provider. It does not add Array/Enum
+carriers, aggregate Front Panel widgets, arbitrary public User Event producers,
+general authoring UI, or a native LLVM Record kernel. Unsupported transports
+remain explicit refusals. Source/FIR admission and SDK execution are distinct
+requirements; publication of this definition alone does not qualify them.</p>
 
 <hr/>
 

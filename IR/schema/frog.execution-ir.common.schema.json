@@ -277,7 +277,8 @@
           "enum": [
             "case",
             "for_loop",
-            "while_loop"
+            "while_loop",
+            "event_structure"
           ]
         }
       }

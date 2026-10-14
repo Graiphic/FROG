@@ -7,9 +7,10 @@
 
 namespace frog::sdk::runtime {
 
-// Opt-in backend contract for event dispatch. This is not a reinterpretation
-// of editor metadata, nor an extension of ProgramArtifact schema version 1.
-// A compiler must validate/lower every region into its own ProgramArtifact.
+// Explicit lowered Event contract, never a reinterpretation of editor metadata.
+// Schema 1 preserves scalar dispatch. Schema 2 is admitted only by loadCaptured
+// with the actual source/run owner and delegates typed bodies to ProgramArtifact
+// schema 2. A compiler must validate/lower every region before this handoff.
 struct EventIdentity {
     std::string scope;
     std::string source;
@@ -67,6 +68,9 @@ struct EventDispatchResult {
     EventPayload response;
     std::vector<SessionEvent> events;
     std::string error;
+    // In-process correlation only, never Source/SDK artifact authority.
+    // The native owner retains and resolves the actual action on its UI thread.
+    std::uint64_t hostActionToken = 0;
 };
 
 } // namespace frog::sdk::runtime

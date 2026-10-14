@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "definition_id": "frog.core.unbundle.by_name",
+  "maturity": "published_frog",
+  "extension": "typed_cluster_v1",
+  "source_schema": "Expression/schema/frog.unbundle-by-name-node.v1.schema.json",
+  "selection": {
+    "version_property": "selected_fields_version",
+    "version": 1,
+    "property": "selected_fields",
+    "pair_keys": [
+      "port",
+      "field_id"
+    ],
+    "minimum_outputs": 1,
+    "maximum_outputs": 64,
+    "output_order": "persisted_pair_order",
+    "repeated_fields_on_distinct_ports": true
+  },
+  "ports": {
+    "required_input": "record",
+    "input_cardinality": "single",
+    "required_connected": true,
+    "output_id_pattern": "^[A-Za-z0-9._:-]+$",
+    "unique_output_ids": true,
+    "reserved_output_id": "record"
+  },
+  "type_resolution": {
+    "resolver_id": "frog.core.unbundle.by_name.type-resolution@1",
+    "input": "actual_connected_canonical_cluster",
+    "field_identity": "exact_direct_cluster_member",
+    "output_type": "exact_selected_member_type",
+    "implicit_casts": false,
+    "private_path_syntax": false,
+    "required_transport_admission": true,
+    "cluster_contract": "frog.typed-binding@1"
+  },
+  "evaluation": {
+    "stateless": true,
+    "implementation_id": "frog.core.unbundle.by_name",
+    "minimum_artifact_schema": 2,
+    "selected_fields_adapter": "RuntimeNode.selectedFields_in_output_port_order",
+    "reference_owner_validation": "existing_runtime_contract"
+  },
+  "unsupported_transport_in_initial_event_profile": [
+    "array",
+    "enum",
+    "aggregate_front_panel_widgets",
+    "arbitrary_public_user_event_payloads",
+    "native_llvm_record_kernel"
+  ],
+  "consumer_admission": {
+    "initial_profile": "event_captured_v1",
+    "maximum_output_id_bytes": 1024,
+    "maximum_field_identity_utf8_bytes": 1024,
+    "maximum_derived_descriptor_bytes": 16777216,
+    "tighter_configured_limits_apply": true,
+    "unsupported_capability": "explicit_refusal_without_fallback"
+  }
+}

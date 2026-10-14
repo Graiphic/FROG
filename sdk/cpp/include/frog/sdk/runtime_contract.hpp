@@ -1,8 +1,12 @@
 #pragma once
 
+#include "frog/sdk/runtime_type_syntax.hpp"
+
 #include <algorithm>
 #include <cstdint>
 #include <optional>
+#include <memory>
+#include <span>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -22,6 +26,7 @@ struct ProtocolVersion {
 
 inline constexpr ProtocolVersion kProtocolVersion{ 1U, 0U };
 inline constexpr std::uint32_t kArtifactSchemaVersion = 1U;
+inline constexpr std::uint32_t kTypedArtifactSchemaVersion = 2U;
 
 template <typename Tag>
 struct StableId {
@@ -60,7 +65,9 @@ enum class ValueCategory {
     FixedPoint,
     String,
     Path,
-    Array
+    Array,
+    Cluster,
+    ObjectReference
 };
 
 struct ValueType {
@@ -117,16 +124,50 @@ struct ValueType {
             std::string(name.substr(arrayPrefix.size()))
         };
     }
+    if (name.starts_with("cluster<") && structural_detail::TypeSyntax(name).record())
+        return scalar(ValueCategory::Cluster);
+    if (name.starts_with("ref<") && structural_detail::TypeSyntax(name).reference())
+        return scalar(ValueCategory::ObjectReference);
     return ValueType{ std::string(name), ValueCategory::Unknown, 0U, 0U, {} };
 }
 
+struct RuntimeValueOwner {
+    std::string id, sourceDigest;
+    std::uint64_t epoch = 0, sourceRevision = 0, artifactRevision = 0;
+    bool operator==(const RuntimeValueOwner &) const noexcept = default;
+};
+inline bool runtimeValueOwnerValid(const RuntimeValueOwner &owner) noexcept {
+    return structural_detail::identity(owner.id) && owner.epoch != 0 && owner.sourceDigest.size() == 64 &&
+        std::all_of(owner.sourceDigest.begin(), owner.sourceDigest.end(), [](char ch) {
+            return (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F');
+        });
+}
+class CompoundRuntimeValue;
 using RuntimeValue = std::variant<
     std::monostate,
     bool,
     std::int64_t,
     std::uint64_t,
     double,
-    std::string>;
+    std::string,
+    std::shared_ptr<const CompoundRuntimeValue>>;
+
+struct RuntimeNamedField {
+    std::string id;
+    ValueType type;
+    RuntimeValue value;
+};
+// Immutable in-process carrier. Record implementations own validated fields;
+// references are borrowed capabilities backed by the host registry.
+class CompoundRuntimeValue {
+public:
+    virtual ~CompoundRuntimeValue() = default;
+    virtual std::string_view canonicalType() const noexcept = 0;
+    virtual bool isReference() const noexcept = 0;
+    virtual bool valid() const noexcept = 0;
+    virtual bool validForOwner(const RuntimeValueOwner &) const noexcept = 0;
+    virtual std::span<const RuntimeNamedField> fields() const noexcept = 0;
+};
 
 [[nodiscard]] inline bool runtimeValueMatches(
     const RuntimeValue &value,
@@ -146,6 +187,13 @@ using RuntimeValue = std::variant<
     case ValueCategory::String:
     case ValueCategory::Path:
         return std::holds_alternative<std::string>(value);
+    case ValueCategory::Cluster:
+    case ValueCategory::ObjectReference: {
+        const auto *compound = std::get_if<std::shared_ptr<const CompoundRuntimeValue>>(&value);
+        return compound && *compound && (*compound)->valid() &&
+            (*compound)->canonicalType() == type.canonicalName &&
+            (*compound)->isReference() == (type.category == ValueCategory::ObjectReference);
+    }
     default:
         return false;
     }
@@ -212,6 +260,8 @@ struct RuntimeNode {
     std::string implementationId;
     std::vector<RuntimePort> ports;
     std::optional<RuntimeValue> literalValue;
+    // Schema v2: compiler-resolved selections, never inferred from display text.
+    std::vector<std::string> selectedFields;
 
     [[nodiscard]] bool operator==(const RuntimeNode &) const noexcept = default;
 };
@@ -239,6 +289,10 @@ struct UiBinding {
     UiBindingDirection direction = UiBindingDirection::ControlToRuntime;
     ValueType valueType;
     RuntimeValue initialValue;
+    // Event Data may be unavailable until a real occurrence injects this input.
+    // Only the Event lowerer may author this flag; standalone Start faults if
+    // that occurrence value has not actually arrived. Schema v2 only.
+    bool suppliedByEvent = false;
 
     [[nodiscard]] bool operator==(const UiBinding &) const noexcept = default;
 };
@@ -281,6 +335,9 @@ struct ProgramArtifact {
     std::vector<RuntimeEdge> edges;
     std::vector<UiBinding> uiBindings;
     std::vector<SourceIdentity> sourceIdentities;
+    // Schema v2 typed bodies carry the actual source/run owner context.
+    // It is not an opaque reference token or an IR/source graph authority.
+    std::optional<RuntimeValueOwner> valueOwner;
 };
 
 enum class DiagnosticSeverity { Information, Warning, Error };
@@ -314,6 +371,9 @@ struct RuntimeCapabilities {
     bool supportsStop = true;
     bool supportsRestart = true;
     bool supportsIncrementalControlUpdates = true;
+    // Opt-in typed transport only. This never advertises arithmetic on records
+    // or references, nor changes the legacy Numeric/Boolean target.
+    bool supportsTypedEventValues = false;
 
     [[nodiscard]] bool supportsOperation(std::string_view operationId) const {
         return std::find(operationIds.begin(), operationIds.end(), operationId) !=
@@ -321,8 +381,10 @@ struct RuntimeCapabilities {
     }
 
     [[nodiscard]] bool supportsValueType(std::string_view valueType) const {
-        return std::find(valueTypes.begin(), valueTypes.end(), valueType) !=
-            valueTypes.end();
+        if (std::find(valueTypes.begin(), valueTypes.end(), valueType) != valueTypes.end()) return true;
+        return supportsTypedEventValues &&
+            (valueType.starts_with("cluster<") || valueType.starts_with("ref<")) &&
+            structural_detail::TypeSyntax(valueType).transport();
     }
 };
 
@@ -408,8 +470,13 @@ struct SessionEvent {
     if (artifact.protocol.major != kProtocolVersion.major) {
         add("contract.protocol.unsupported", "Unsupported Runtime protocol major version.");
     }
-    if (artifact.schemaVersion != kArtifactSchemaVersion) {
+    if (artifact.schemaVersion != kArtifactSchemaVersion && artifact.schemaVersion != kTypedArtifactSchemaVersion) {
         add("contract.artifact_schema.unsupported", "Unsupported Runtime artifact schema version.");
+    }
+    const bool typed = artifact.schemaVersion == kTypedArtifactSchemaVersion;
+    if ((typed && (!artifact.valueOwner || !runtimeValueOwnerValid(*artifact.valueOwner))) ||
+        (!typed && artifact.valueOwner)) {
+        add("contract.value_owner.invalid", "Typed bodies require their actual source/run owner; legacy artifacts cannot carry it.");
     }
     if (artifact.artifactId.empty()) {
         add("contract.artifact_id.missing", "The Runtime artifact requires a stable artifact ID.");
@@ -430,8 +497,15 @@ struct SessionEvent {
         if (node.operationId.empty()) {
             add("contract.operation_id.missing", "Every Runtime node requires an operation ID.", node.id);
         }
+        if (node.selectedFields.size() > 64 || (!node.selectedFields.empty() && (!typed || node.kind != NodeKind::Function)))
+            add("contract.record.selection_invalid", "Resolved record selections require a schema-v2 function.", node.id);
+        for (const auto &field : node.selectedFields)
+            if (!structural_detail::identity(field))
+                add("contract.record.selection_invalid", "A resolved field requires a canonical identity.", node.id);
         std::unordered_set<std::string> portIds;
         for (const auto &port : node.ports) {
+            if (typed && port.valueType != valueTypeFromCanonicalName(port.valueType.canonicalName))
+                add("contract.value_type.descriptor_invalid", "A schema-v2 port descriptor must match its canonical type.", node.id, port.id);
             if (port.id.empty()) {
                 add("contract.port_id.missing", "Every Runtime port requires a stable ID.", node.id);
                 continue;
@@ -439,6 +513,9 @@ struct SessionEvent {
             if (!portIds.insert(port.id.value).second) {
                 add("contract.port_id.duplicate", "Port IDs must be unique within a node.", node.id, port.id);
             }
+            if (!typed && (port.valueType.category == ValueCategory::Cluster ||
+                port.valueType.category == ValueCategory::ObjectReference))
+                add("contract.value_type.schema_invalid", "Record/reference transport requires artifact schema v2.", node.id, port.id);
             if (!port.valueType.known()) {
                 add("contract.value_type.unknown", "Every Runtime port requires a known value type.", node.id, port.id);
             }
@@ -493,6 +570,8 @@ struct SessionEvent {
     }
 
     for (const auto &binding : artifact.uiBindings) {
+        if (binding.suppliedByEvent && (!typed || binding.direction != UiBindingDirection::ControlToRuntime))
+            add("contract.event_input.invalid", "Deferred occurrence inputs require a schema-v2 control binding.", binding.endpoint.nodeId, binding.endpoint.portId);
         const auto *node = findNode(artifact, binding.endpoint.nodeId.value);
         const auto *port = node == nullptr
             ? nullptr : findPort(*node, binding.endpoint.portId.value);
@@ -535,6 +614,8 @@ struct SessionEvent {
         add("capability.protocol.unsupported",
             "The Runtime and artifact protocol major versions are incompatible.");
     }
+    if (artifact.schemaVersion == kTypedArtifactSchemaVersion && !capabilities.supportsTypedEventValues)
+        add("capability.typed_event_values.unavailable", "This target has not opted into schema-v2 typed Event values.");
     for (const auto &node : artifact.nodes) {
         if (node.kind == NodeKind::Function || node.kind == NodeKind::Call) {
             const std::string_view operation = node.implementationId.empty()

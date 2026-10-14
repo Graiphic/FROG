@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.io/frog/expression/schema/frog.unbundle-by-name-node.v1.schema.json",
+  "title": "FROG public Unbundle by Name node, selected-fields version 1",
+  "description": "Local extension schema consumed by Source validators; graph-derived cluster members/types/drivers/cycles require the real resolver.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "kind",
+    "type",
+    "selected_fields_version",
+    "selected_fields"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "kind": {
+      "const": "primitive"
+    },
+    "type": {
+      "const": "frog.core.unbundle.by_name"
+    },
+    "selected_fields_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "selected_fields": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "port",
+          "field_id"
+        ],
+        "properties": {
+          "port": {
+            "allOf": [
+              {
+                "$ref": "https://graiphic.io/frog/ir/schema/frog.execution-ir.common.schema.json#/$defs/id_string"
+              }
+            ],
+            "maxLength": 1024,
+            "not": {
+              "const": "record"
+            }
+          },
+          "field_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "not": {
+              "pattern": "[\\u0000-\\u001F]"
+            },
+            "description": "Exact cluster identity; the executable Event target additionally checks the 1024-byte UTF-8 budget, not a private port/path grammar."
+          }
+        }
+      }
+    },
+    "layout": {
+      "type": "object"
+    },
+    "doc": {},
+    "tags": {}
+  }
+}
