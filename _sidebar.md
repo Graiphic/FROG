@@ -19,6 +19,7 @@
   - [Widget](/Expression/Widget.md)
   - [Canonical source scope](/Expression/Canonical%20source%20scope.md)
   - [Case Editing Profile v1](/Expression/Case%20Editing%20Profile%20v1.md)
+  - [Event Captured Profile v1](/Expression/Event%20Captured%20Profile%20v1.md)
   - [Front-panel object model](/Expression/Front-panel%20object%20model.md)
   - [Host and execution policy](/Expression/Host%20and%20execution%20policy.md)
   - [Interface map](/Expression/Interface%20map.md)
@@ -586,6 +587,7 @@
     - [derive execution ir](/Implementations/Reference/Deriver/derive_execution_ir.md)
     - [responsibilities](/Implementations/Reference/Deriver/responsibilities.md)
     - [__init__.py](/Implementations/Reference/Deriver/__init__.py)
+    - [canonical_execution_ir.py](/Implementations/Reference/Deriver/canonical_execution_ir.py)
     - [derive_example05_fir.py](/Implementations/Reference/Deriver/derive_example05_fir.py)
     - [derive_fir.py](/Implementations/Reference/Deriver/derive_fir.py)
     - [fir_deriver.py](/Implementations/Reference/Deriver/fir_deriver.py)
@@ -598,6 +600,7 @@
       - [example04 fir derivation](/Implementations/Reference/Deriver/rules/example04_fir_derivation.md)
       - [example05 fir derivation](/Implementations/Reference/Deriver/rules/example05_fir_derivation.md)
     - tests
+      - [test_canonical_execution_ir.py](/Implementations/Reference/Deriver/tests/test_canonical_execution_ir.py)
       - [test_example01_fir_derivation.py](/Implementations/Reference/Deriver/tests/test_example01_fir_derivation.py)
       - [test_example05_fir_derivation.py](/Implementations/Reference/Deriver/tests/test_example05_fir_derivation.py)
       - [test_example07_fir_derivation.py](/Implementations/Reference/Deriver/tests/test_example07_fir_derivation.py)
