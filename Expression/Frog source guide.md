@@ -126,15 +126,23 @@ does not make them runnable.
 
 ## Graiphic Studio documents
 
-Graiphic Studio's default Readable mode writes authoring documents with
-`"format": "frog.document.draft"`, `"draft_revision": 2` and `frontPanel`.
-Opt-in numeric array storage uses private revision 3; its
-[storage profile](../docs/studio-array-storage-v1.md) is documented separately
-and remains pending functional qualification. It does not change public 0.1.
-It also has a separate public-source reader/writer with bounded capabilities.
+Graiphic Studio writes authoring documents with `"format": "frog.document.draft"`
+and `frontPanel`. Ordinary Readable documents use revision 2; the configured
+features can require a newer revision. Numeric Array storage requires at least
+3, exact integer state 4, complex state 5, Application Control 6 and Connectivity
+7. Storage mode and feature requirements compose for the whole document.
+The [actual writer profile](Studio%20authoring%20document%20profile%20v1.md) and
+[storage profile](../docs/studio-array-storage-v1.md) document these existing
+rules. Their structural documentation is distinct from product execution
+qualification and does not change public 0.1.
+Studio also has a separate public-source reader/writer with bounded capabilities.
 The common `.frog` extension does not make these envelopes interchangeable.
 Replacing `format` with `spec_version`, renaming a section or deleting unsupported
 content does not convert a document safely. See
 [Studio/source compatibility](../docs/studio-source-compatibility.md) and
 [Source compatibility and profiles](Source%20compatibility%20and%20profiles.md)
 before implementing an importer, writer or editor.
+
+## Studio reconciliation — 14 October 2026
+
+This guide continues to describe canonical `spec_version` source. The [Studio authoring guide](Studio%20authoring%20document%20profile%20v1.md) describes the other `.frog` envelope actually saved by the product, including its feature revisions and retained declarations. The [reconciliation record](../docs/studio-reconciliation-2026-10-14.md) lists the real integration and qualification boundaries.

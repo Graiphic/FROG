@@ -1054,3 +1054,7 @@ This specification establishes that:
   <li>probes remain distinct from centralized watch entries,</li>
   <li>stronger support may add richer or more specialized probe forms without changing the base semantics.</li>
 </ul>
+
+## Studio reconciliation — 14 October 2026
+
+The [current Studio record](../docs/studio-reconciliation-2026-10-14.md) separates existing native subscriptions from complete product coverage. Real typed observations retain session/generation and lifetime. No observation is manufactured for an unexecuted point, and a presentation refresh must neither run the producer nor decide a condition from a lossy latest-value stream.

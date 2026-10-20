@@ -931,3 +931,7 @@ Its key v1 rule is:
 <p>
 This keeps the baseline coherent, portable, extensible, and compatible with future custom widget publication without turning one runtime implementation into the true owner of front-panel object meaning.
 </p>
+
+## Studio reconciliation — 14 October 2026
+
+The [Studio authoring profile](Studio%20authoring%20document%20profile%20v1.md) records complete nested widget schemas, stable Cluster field identities and true Array data shape separately from visible previews. Symbolic reference-node adaptation is qualified separately from new reference-value widgets currently being developed. Object shape, source acceptance and runtime provider support must remain distinct.

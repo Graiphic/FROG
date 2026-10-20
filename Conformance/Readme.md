@@ -1027,3 +1027,7 @@ implementation must align
 <p>
 That is the intended role of <code>Conformance/</code> in FROG v0.1.
 </p>
+
+## Studio reconciliation — 14 October 2026
+
+The [Studio reconciliation](../docs/studio-reconciliation-2026-10-14.md) records a whole-repository static pass and existing targeted receipts separately. The new [writer-profile schema](../Expression/Schemas/frog.studio-document.schema.json) is structural documentation, not a new semantic or runtime conformance certificate. The example is explicitly documentation-only.

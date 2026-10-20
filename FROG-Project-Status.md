@@ -1,5 +1,13 @@
 <h1>FROG Project Status</h1>
 
+<p><strong>Studio implementation checkpoint — 14 October 2026:</strong>
+<a href="docs/studio-reconciliation-2026-10-14.md">Current code/specification reconciliation</a>,
+<a href="Expression/Studio%20authoring%20document%20profile%20v1.md">actual saved .frog profile</a>
+and <a href="Profiles/StudioAuthoring.md">535 declared authoring contracts</a>.
+Earlier dated integration statements below retain their historical scope;
+authored, lowered, compiled and tested capabilities remain distinct.</p>
+
+
 <p>
 Published public repository state, current implementation boundaries, conformance coverage, examples, libraries, profiles, and project maturity notes.
 </p>
@@ -445,3 +453,7 @@ FROG aims to help keep fast-produced software understandable, attributable, cont
 </p>
 
 <hr/>
+
+## Studio reconciliation — 14 October 2026
+
+The [current implementation reconciliation](docs/studio-reconciliation-2026-10-14.md) supersedes earlier desktop integration checkpoints. Public reference-example closure, current Studio authoring, native f64/Add execution, captured Event/Unbundle and private simulation are separate capabilities. New reference-value work remains pending qualification; no complete runtime or full regression gate is claimed.

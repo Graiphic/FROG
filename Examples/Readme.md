@@ -1089,3 +1089,7 @@ Examples remain subordinate to the owning specification documents.
 They illustrate and verify published corridors.
 They do not define FROG semantics.
 </p>
+
+## Studio reconciliation — 14 October 2026
+
+The [Studio authoring-envelope example](../Profiles/Studio/examples/Readme.md) is a separately labelled structural compatibility example. It is not added to the public reference runtime closure 01..15 and does not claim FIR/lowering/native artifacts. Current Studio target coverage is recorded in the [reconciliation](../docs/studio-reconciliation-2026-10-14.md).

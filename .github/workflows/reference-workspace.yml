@@ -1,39 +1,29 @@
 name: Reference Workspace
 
+# The automatic checks (including widget-layer-only) are authoritative in
+# reference-pipeline.yml. Keep these original contexts for explicit diagnostics.
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "Examples/**"
-      - "Expression/**"
-      - "IR/**"
-      - "Libraries/**"
-      - "Implementations/Reference/**"
-      - "Versioning/**"
-      - ".github/workflows/reference-workspace.yml"
-  pull_request:
-    paths:
-      - "Examples/**"
-      - "Expression/**"
-      - "IR/**"
-      - "Libraries/**"
-      - "Implementations/Reference/**"
-      - "Versioning/**"
-      - ".github/workflows/reference-workspace.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: reference-workspace-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   reference-workspace:
     name: Reference workspace
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -46,15 +36,21 @@ jobs:
   reference-pytest:
     name: Reference pytest
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
+          cache-dependency-path: Implementations/Reference/requirements-test.txt
 
       - name: Install reference test dependencies
         run: python -m pip install -r Implementations/Reference/requirements-test.txt
@@ -65,10 +61,14 @@ jobs:
   widget-layer-only:
     name: Widget layer only
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -81,10 +81,14 @@ jobs:
   reference-native-kernel-bridge:
     name: Reference native kernel bridge
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -96,8 +100,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y clang cmake
 
+      - name: Cache Cargo dependency downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('Implementations/Reference/Runtime/rust/Cargo.lock', 'Implementations/Reference/Runtime/rust/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
       - name: Prepare Rust runtime dependencies
-        run: cargo fetch --manifest-path Implementations/Reference/Runtime/rust/Cargo.toml
+        run: cargo fetch --locked --manifest-path Implementations/Reference/Runtime/rust/Cargo.toml
 
       - name: Run native kernel bridge checks
         run: python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge

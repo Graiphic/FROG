@@ -686,3 +686,7 @@ The string widget family defines the intrinsic standardized text-value baseline 
 These classes provide the first standard textual value widgets of the portable front-panel baseline.
 They expose a real object surface with properties, methods, events, and parts while keeping realization ownership and runtime-private embodiment clearly separated from class meaning.
 </p>
+
+## Studio reconciliation — 14 October 2026
+
+Studio also authors Dropdown String through its String value class, `display.string.dropdown`, item metadata and `text.value`. Its payload remains String; numeric item bookkeeping is not its wire value. String/Dropdown authoring and initial text fitting are recorded in the [Studio profile](../../Expression/Studio%20authoring%20document%20profile%20v1.md).

@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "profile_id": "studio.structure-catalog",
+  "profile_version": 1,
+  "authority": "studio_private",
+  "provides_runtime_capability": false,
+  "families": [
+    {
+      "family": "conditional",
+      "node_type": "frog.studio.structures.case_structure",
+      "canonical_type": "case",
+      "display_name": "Conditional Structure"
+    },
+    {
+      "family": "for_loop",
+      "node_type": "frog.studio.structures.for_loop",
+      "canonical_type": "for_loop",
+      "display_name": "For Loop"
+    },
+    {
+      "family": "while_loop",
+      "node_type": "frog.studio.structures.while_loop",
+      "canonical_type": "while_loop",
+      "display_name": "While Loop"
+    },
+    {
+      "family": "timed_loop",
+      "node_type": "frog.studio.structures.timed_loop",
+      "canonical_type": "timed_loop",
+      "display_name": "Timed Loop"
+    },
+    {
+      "family": "event",
+      "node_type": "frog.studio.structures.event_structure",
+      "canonical_type": "event_structure",
+      "display_name": "Event Structure"
+    },
+    {
+      "family": "disabled",
+      "node_type": "frog.studio.structures.disabled_structure",
+      "canonical_type": "disabled_structure",
+      "display_name": "Diagram Disable Structure"
+    },
+    {
+      "family": "conditional_disable",
+      "node_type": "frog.studio.structures.conditional_disable_structure",
+      "canonical_type": "conditional_disable_structure",
+      "display_name": "Conditional Disable Structure"
+    },
+    {
+      "family": "sequence",
+      "node_type": "frog.studio.structures.sequence_structure",
+      "canonical_type": "sequence_structure",
+      "display_name": "Sequence Structure"
+    },
+    {
+      "family": "in_place",
+      "node_type": "frog.studio.structures.in_place_element_structure",
+      "canonical_type": "in_place_element_structure",
+      "display_name": "In Place Element Structure"
+    }
+  ]
+}

@@ -185,7 +185,7 @@ constituent pas une vérification visuelle CSS/JavaScript en navigateur.
 
 Les chiffres Studio ci-dessous restent historiques. La livraison native
 ultérieure et ses contrôles sont consignés dans le
-[bilan de modularisation et d'optimisation](../../FROG-STUDIO/docs/source-optimization-follow-up-2026-09-06.md).
+[bilan de modularisation et d'optimisation](https://github.com/Graiphic/FROG-STUDIO/blob/main/docs/source-optimization-follow-up-2026-09-06.md).
 
 - Studio canonique **0.0.1.245**, compilation `all`, liaison et signature valides ;
   le raccourci du Bureau pointe vers `build-nmake-verify/frog-engine-shell.exe`.

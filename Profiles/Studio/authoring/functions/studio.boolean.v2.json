@@ -1,0 +1,1267 @@
+{
+  "schema_version": 2,
+  "family": "Boolean",
+  "entries": [
+    {
+      "catalog_id": "boolean.and",
+      "definition_ref": "frog.core.and",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.boolean.and.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "a",
+            "display_name": "a",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "b",
+            "display_name": "b",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "input_N",
+        "optional_input_first_index": 3,
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:logical_tree",
+          "T:logical_tree"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element."
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 2,
+        "maximum_input_count": 16,
+        "port_order": [
+          "a",
+          "b",
+          "input_N_ascending"
+        ],
+        "reduction": "canonical_left_fold"
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "scalar_lift": true
+      },
+      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+      "runtime_availability": {
+        "available": true,
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.core.and",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "published_frog",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/and.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "canonical_left_fold",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      },
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/and.html"
+      ]
+    },
+    {
+      "catalog_id": "boolean.or",
+      "definition_ref": "frog.core.or",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.boolean.or.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "a",
+            "display_name": "a",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "b",
+            "display_name": "b",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "input_N",
+        "optional_input_first_index": 3,
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:logical_tree",
+          "T:logical_tree"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element."
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 2,
+        "maximum_input_count": 16,
+        "port_order": [
+          "a",
+          "b",
+          "input_N_ascending"
+        ],
+        "reduction": "canonical_left_fold"
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "scalar_lift": true
+      },
+      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+      "runtime_availability": {
+        "available": true,
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.core.or",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "published_frog",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/or.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "canonical_left_fold",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      },
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/or.html"
+      ]
+    },
+    {
+      "catalog_id": "boolean.xor",
+      "definition_ref": "frog.core.xor",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.boolean.xor.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "a",
+            "display_name": "a",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "b",
+            "display_name": "b",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "input_N",
+        "optional_input_first_index": 3,
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:logical_tree",
+          "T:logical_tree"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element."
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 2,
+        "maximum_input_count": 16,
+        "port_order": [
+          "a",
+          "b",
+          "input_N_ascending"
+        ],
+        "reduction": "canonical_left_fold"
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "scalar_lift": true
+      },
+      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+      "runtime_availability": {
+        "available": true,
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.core.xor",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "published_frog",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/exclusive-or.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "canonical_left_fold",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      },
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/exclusive-or.html"
+      ]
+    },
+    {
+      "catalog_id": "boolean.not",
+      "definition_ref": "frog.core.not",
+      "contract_status": "defined",
+      "profile_id": "frog.studio.polymorphic.boolean.not.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "in",
+            "display_name": "in",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "value"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:logical_tree"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "scalar_lift": false
+      },
+      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+      "runtime_availability": {
+        "available": true,
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.core.not",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "published_frog",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not.html"
+      ]
+    },
+    {
+      "catalog_id": "boolean.nand",
+      "definition_ref": "frog.studio.boolean.nand",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.boolean.nand.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "a",
+            "display_name": "a",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "b",
+            "display_name": "b",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "input_N",
+        "optional_input_first_index": 3,
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:logical_tree",
+          "T:logical_tree"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element."
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 2,
+        "maximum_input_count": 16,
+        "port_order": [
+          "a",
+          "b",
+          "input_N_ascending"
+        ],
+        "reduction": "not_normalized"
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "scalar_lift": true
+      },
+      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not-and.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      },
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not-and.html"
+      ]
+    },
+    {
+      "catalog_id": "boolean.nor",
+      "definition_ref": "frog.studio.boolean.nor",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.boolean.nor.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "a",
+            "display_name": "a",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "b",
+            "display_name": "b",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "input_N",
+        "optional_input_first_index": 3,
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:logical_tree",
+          "T:logical_tree"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element."
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 2,
+        "maximum_input_count": 16,
+        "port_order": [
+          "a",
+          "b",
+          "input_N_ascending"
+        ],
+        "reduction": "not_normalized"
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "scalar_lift": true
+      },
+      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not-or.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      },
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not-or.html"
+      ]
+    },
+    {
+      "catalog_id": "boolean.xnor",
+      "definition_ref": "frog.studio.boolean.xnor",
+      "contract_status": "blocked",
+      "profile_id": "frog.studio.polymorphic.boolean.xnor.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "a",
+            "display_name": "a",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "b",
+            "display_name": "b",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "input_N",
+        "optional_input_first_index": 3,
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:logical_tree",
+          "T:logical_tree"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element."
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 2,
+        "maximum_input_count": 16,
+        "port_order": [
+          "a",
+          "b",
+          "input_N_ascending"
+        ],
+        "reduction": "unresolved"
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "scalar_lift": true
+      },
+      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not-exclusive-or.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      },
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not-exclusive-or.html"
+      ]
+    },
+    {
+      "catalog_id": "boolean.implies",
+      "definition_ref": "frog.studio.boolean.implies",
+      "contract_status": "blocked",
+      "profile_id": "frog.studio.polymorphic.boolean.implies.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "a",
+            "display_name": "a",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "b",
+            "display_name": "b",
+            "type": "T:logical_tree",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:logical_tree",
+          "T:logical_tree"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "scalar_lift": true
+      },
+      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/implies.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      },
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/implies.html"
+      ]
+    },
+    {
+      "catalog_id": "boolean.and_array_elements",
+      "definition_ref": "frog.studio.boolean.and_array_elements",
+      "contract_status": "blocked",
+      "profile_id": "frog.studio.polymorphic.boolean.and_array_elements.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "value",
+            "display_name": "array",
+            "type": "array<bool,rank>=1>",
+            "default_value_type": "array:bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<bool,rank>=1>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Boolean array of any rank -> scalar Boolean AND."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "reduction_to_scalar",
+        "empty_array_identity": "true",
+        "description": "Boolean array of any rank -> scalar Boolean AND.",
+        "shape_rule": "any_positive_rank_to_scalar"
+      },
+      "behavior_summary": "Boolean array of any rank -> scalar Boolean AND.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/and-array-elements.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/and-array-elements.html"
+      ]
+    },
+    {
+      "catalog_id": "boolean.or_array_elements",
+      "definition_ref": "frog.studio.boolean.or_array_elements",
+      "contract_status": "blocked",
+      "profile_id": "frog.studio.polymorphic.boolean.or_array_elements.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "value",
+            "display_name": "array",
+            "type": "array<bool,rank>=1>",
+            "default_value_type": "array:bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<bool,rank>=1>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Boolean array of any rank -> scalar Boolean OR."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "reduction_to_scalar",
+        "empty_array_identity": "false",
+        "description": "Boolean array of any rank -> scalar Boolean OR.",
+        "shape_rule": "any_positive_rank_to_scalar"
+      },
+      "behavior_summary": "Boolean array of any rank -> scalar Boolean OR.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/or-array-elements.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/or-array-elements.html"
+      ]
+    },
+    {
+      "catalog_id": "boolean.to_integer",
+      "definition_ref": "frog.studio.boolean.to_integer",
+      "contract_status": "blocked",
+      "profile_id": "frog.studio.polymorphic.boolean.to_integer.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "i16",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Boolean scalar/array/cluster -> same structure with I16 leaves (0 or 1)."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Boolean scalar/array/cluster -> same structure with I16 leaves (0 or 1)."
+      },
+      "behavior_summary": "Boolean scalar/array/cluster -> same structure with I16 leaves (0 or 1).",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/boolean-to-integer.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/boolean-to-integer.html"
+      ]
+    },
+    {
+      "catalog_id": "boolean.number_to_array",
+      "definition_ref": "frog.studio.boolean.number_to_array",
+      "contract_status": "blocked",
+      "profile_id": "frog.studio.polymorphic.boolean.number_to_array.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "T:integer",
+            "default_value_type": "u8",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "integer_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "array:bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:integer"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Integer/fixed-point scalar -> 1D Boolean array, one element per bit; first is least significant."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "produces_array": true,
+        "result_rank": 1,
+        "lifting": "none",
+        "description": "Integer/fixed-point scalar -> 1D Boolean array, one element per bit; first is least significant."
+      },
+      "behavior_summary": "Integer/fixed-point scalar -> 1D Boolean array, one element per bit; first is least significant.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/number-to-boolean-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/number-to-boolean-array.html"
+      ]
+    },
+    {
+      "catalog_id": "boolean.array_to_number",
+      "definition_ref": "frog.studio.boolean.array_to_number",
+      "contract_status": "blocked",
+      "profile_id": "frog.studio.polymorphic.boolean.array_to_number.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<bool,rank=1>",
+            "default_value_type": "array:bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "u32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<bool,rank=1>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "1D Boolean array -> configured integer representation (LabVIEW default U32); first element is least significant."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "accepted_rank": 1,
+        "lifting": "array_to_scalar_conversion",
+        "description": "1D Boolean array -> configured integer representation (LabVIEW default U32); first element is least significant."
+      },
+      "behavior_summary": "1D Boolean array -> configured integer representation (LabVIEW default U32); first element is least significant.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/boolean-array-to-number.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/boolean-array-to-number.html"
+      ]
+    },
+    {
+      "catalog_id": "boolean.true_constant",
+      "definition_ref": "frog.studio.boolean.true_constant",
+      "contract_status": "partial",
+      "profile_id": "boolean.fixed_literal.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "bool",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none"
+      },
+      "behavior_summary": "The Studio node stores and exposes the fixed Boolean value true through output value.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_state_only",
+        "implementation_id": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The Runtime artifact builder currently treats the catalog entry as a function with no provider.",
+        "Define an editor-to-NodeKind::Constant lowering or another explicit literal projection."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "boolean.false_constant",
+      "definition_ref": "frog.studio.boolean.false_constant",
+      "contract_status": "partial",
+      "profile_id": "boolean.fixed_literal.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "bool",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none"
+      },
+      "behavior_summary": "The Studio node stores and exposes the fixed Boolean value false through output value.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_state_only",
+        "implementation_id": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The Runtime artifact builder currently treats the catalog entry as a function with no provider.",
+        "Define an editor-to-NodeKind::Constant lowering or another explicit literal projection."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "boolean.terminal",
+      "definition_ref": "frog.studio.boolean.terminal",
+      "contract_status": "editor_managed",
+      "profile_id": "boolean.widget_terminal.editor.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "editor_managed",
+        "accepted_operands": [],
+        "result": "editor_managed",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none"
+      },
+      "behavior_summary": "This palette action places a Boolean widget and its linked diagram terminal; it is not a Runtime function contract.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "frog.studio.editor-managed",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Keep the palette action outside semantic function lowering and use the widget terminal value contract instead."
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    }
+  ]
+}

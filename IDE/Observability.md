@@ -830,3 +830,7 @@ This preserves the core architectural distinction between:
   <li>interactive debugger control,</li>
   <li>inspection tools built on top of that visible world.</li>
 </ul>
+
+## Studio reconciliation — 14 October 2026
+
+The [implementation record](../docs/studio-reconciliation-2026-10-14.md) distinguishes qualified native observation from proposed richer contexts. Numeric formatting uses each destination settings without rounding the underlying data; an empty/false/zero value is not absence. Published reference contracts are not a claim that all current Studio targets supply them.

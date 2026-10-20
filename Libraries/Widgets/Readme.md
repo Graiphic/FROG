@@ -169,3 +169,7 @@ The corresponding official Default realization family is published under:
 Each standard widget family should have a matching Default realization document and a machine-readable <code>*.default.wfrog</code> manifest when the Default family publishes an embodiment for it.
 The reference WidgetValidator protects this repository-level alignment, but the validator remains non-normative.
 </p>
+
+## Studio reconciliation — 14 October 2026
+
+The [actual Studio widget metadata snapshot](../../Profiles/Studio/authoring/studio.widgets.v1.json) is now publicly readable with its original `studio_private` authority and runtime-capability flag. Its [profile guide](../../Profiles/StudioAuthoring.md) distinguishes authoring from target execution; no undeclared reference-widget palette entry is inferred.

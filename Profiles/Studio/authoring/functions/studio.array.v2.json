@@ -1,0 +1,4659 @@
+{
+  "schema_version": 2,
+  "family": "Array",
+  "entries": [
+    {
+      "catalog_id": "array.size",
+      "definition_ref": "frog.studio.array.size",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.size.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "T:any",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "size",
+            "display_name": "size",
+            "type": "T:any",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Any n-D array T: size is I32 for 1D, otherwise a 1D I32 array of dimension sizes. A waveform reports the size of Y."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Any n-D array T: size is I32 for 1D, otherwise a 1D I32 array of dimension sizes. A waveform reports the size of Y."
+      },
+      "behavior_summary": "Any n-D array T: size is I32 for 1D, otherwise a 1D I32 array of dimension sizes. A waveform reports the size of Y.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-size.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-size.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.index",
+      "definition_ref": "frog.studio.array.index",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.index.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "T:any",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "index",
+            "display_name": "index",
+            "type": "T:integer",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "element",
+            "display_name": "element",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any",
+          "T:integer"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "An n-D array of T yields T when all dimensions are indexed; otherwise an array of T with one dimension removed per indexed dimension. With no index wired, the first dimension defaults to index zero. Waveforms expose Y elements."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "An n-D array of T yields T when all dimensions are indexed; otherwise an array of T with one dimension removed per indexed dimension. With no index wired, the first dimension defaults to index zero. Waveforms expose Y elements."
+      },
+      "behavior_summary": "An n-D array of T yields T when all dimensions are indexed; otherwise an array of T with one dimension removed per indexed dimension. With no index wired, the first dimension defaults to index zero. Waveforms expose Y elements.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target.",
+        "Studio provides one index per dimension (up to 16) and up to 32 expandable output groups. An unwired group follows the preceding group's indexed dimensions. Runtime support depends on the target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/index-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/index-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.replace_subset",
+      "definition_ref": "frog.studio.array.replace_subset",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.replace_subset.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "subset",
+            "display_name": "new element or subarray",
+            "type": "T:any",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "index",
+            "display_name": "index",
+            "type": "T:integer",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank>=1>",
+          "T:any",
+          "T:integer"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "An N-D array of T exposes N indices per replacement group. With x indexed dimensions, the inferred replacement is T of rank N-x (a scalar when x=N); full-rank replacement blocks are also accepted. Unwired groups inherit the preceding indexed dimensions, initially the first dimension. Extend the node to replace multiple subsets without enlarging the array. The result retains T and rank N."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "An N-D array of T exposes N indices per replacement group. With x indexed dimensions, the inferred replacement is T of rank N-x (a scalar when x=N); full-rank replacement blocks are also accepted. Unwired groups inherit the preceding indexed dimensions, initially the first dimension. Extend the node to replace multiple subsets without enlarging the array. The result retains T and rank N."
+      },
+      "behavior_summary": "An N-D array of T exposes N indices per replacement group. With x indexed dimensions, the inferred replacement is T of rank N-x (a scalar when x=N); full-rank replacement blocks are also accepted. Unwired groups inherit the preceding indexed dimensions, initially the first dimension. Extend the node to replace multiple subsets without enlarging the array. The result retains T and rank N.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/replace-array-subset.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/replace-array-subset.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.insert",
+      "definition_ref": "frog.studio.array.insert",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.insert.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "subset",
+            "display_name": "new element or subarray",
+            "type": "T:any",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "index",
+            "display_name": "index",
+            "type": "T:integer",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank>=1>",
+          "T:any",
+          "T:integer"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "An N-D array of T accepts T data of rank N-1 or N. Its N index terminals select one insertion dimension: wiring one disables the others; without an index, insertion appends. Additional value terminals insert consecutive blocks at the same position, with no extra index group. The result retains T and rank N."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "An N-D array of T accepts T data of rank N-1 or N. Its N index terminals select one insertion dimension: wiring one disables the others; without an index, insertion appends. Additional value terminals insert consecutive blocks at the same position, with no extra index group. The result retains T and rank N."
+      },
+      "behavior_summary": "An N-D array of T accepts T data of rank N-1 or N. Its N index terminals select one insertion dimension: wiring one disables the others; without an index, insertion appends. Additional value terminals insert consecutive blocks at the same position, with no extra index group. The result retains T and rank N.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/insert-into-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/insert-into-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.delete",
+      "definition_ref": "frog.studio.array.delete",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.delete.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "length",
+            "display_name": "length",
+            "type": "T:integer",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "index",
+            "display_name": "index",
+            "type": "T:integer",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "remaining array",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "deleted",
+            "display_name": "deleted portion",
+            "type": "T:any",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank>=1>",
+          "T:integer",
+          "T:integer"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "An N-D array of T exposes N index terminals, with only one dimension selectable for deletion. The remaining array retains rank N. The deleted portion has rank N-1 when length is unwired (scalar for 1D), or rank N when length is wired, including a wired value of one. Default length is one; without an index, deletion starts at the last element or slice."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "An N-D array of T exposes N index terminals, with only one dimension selectable for deletion. The remaining array retains rank N. The deleted portion has rank N-1 when length is unwired (scalar for 1D), or rank N when length is wired, including a wired value of one. Default length is one; without an index, deletion starts at the last element or slice."
+      },
+      "behavior_summary": "An N-D array of T exposes N index terminals, with only one dimension selectable for deletion. The remaining array retains rank N. The deleted portion has rank N-1 when length is unwired (scalar for 1D), or rank N when length is wired, including a wired value of one. Default length is one; without an index, deletion starts at the last element or slice.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/delete-from-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/delete-from-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.initialize",
+      "definition_ref": "frog.studio.array.initialize",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.initialize.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "element",
+            "display_name": "element",
+            "type": "T:any",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "size",
+            "display_name": "Dimension size",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "initialized array",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "input_N",
+        "optional_input_first_index": 3
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any",
+          "T:numeric"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "A scalar or cluster T initializes an M-dimensional array of T. Resize to expose M dimension-size inputs (1–16); real numeric sizes are converted to I32. A direct array element is not accepted."
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 2,
+        "maximum_input_count": 17,
+        "port_order": [
+          "element",
+          "size",
+          "input_N_ascending"
+        ],
+        "reduction": "editor_terminal_count"
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A scalar or cluster T initializes an M-dimensional array of T. Resize to expose M dimension-size inputs (1–16); real numeric sizes are converted to I32. A direct array element is not accepted."
+      },
+      "behavior_summary": "A scalar or cluster T initializes an M-dimensional array of T. Resize to expose M dimension-size inputs (1–16); real numeric sizes are converted to I32. A direct array element is not accepted.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/initialize-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/initialize-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.build",
+      "definition_ref": "frog.studio.array.build",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.build.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array_a",
+            "display_name": "array a",
+            "type": "T:any",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "input_N",
+        "optional_input_first_index": 2
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Expand Build Array from 1 to 32 ordered inputs. Compatible elements must have equal or adjacent ranks. Equal rank N produces rank N+1, or rank N when Concatenate Inputs is selected. Mixed ranks N and N-1 force concatenation at rank N and lock the checked menu item. All scalars produce a 1D array and lock concatenation off. Unwired inputs supply no type evidence; without known types the output is void. Numeric leaves may promote; unrelated types cannot mix. Manual mode and input count are saved; target execution remains separately gated."
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 1,
+        "maximum_input_count": 32,
+        "port_order": [
+          "array_a",
+          "input_N_ascending"
+        ],
+        "reduction": "ordered_array_construction"
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Expand Build Array from 1 to 32 ordered inputs. Compatible elements must have equal or adjacent ranks. Equal rank N produces rank N+1, or rank N when Concatenate Inputs is selected. Mixed ranks N and N-1 force concatenation at rank N and lock the checked menu item. All scalars produce a 1D array and lock concatenation off. Unwired inputs supply no type evidence; without known types the output is void. Numeric leaves may promote; unrelated types cannot mix. Manual mode and input count are saved; target execution remains separately gated.",
+        "shape_rule": "equal_or_adjacent_ranks; effective_concatenate_mode"
+      },
+      "behavior_summary": "Expand Build Array from 1 to 32 ordered inputs. Compatible elements must have equal or adjacent ranks. Equal rank N produces rank N+1, or rank N when Concatenate Inputs is selected. Mixed ranks N and N-1 force concatenation at rank N and lock the checked menu item. All scalars produce a 1D array and lock concatenation off. Unwired inputs supply no type evidence; without known types the output is void. Numeric leaves may promote; unrelated types cannot mix. Manual mode and input count are saved; target execution remains separately gated.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/build-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/build-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.subset",
+      "definition_ref": "frog.studio.array.subset",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.subset.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "T:any",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "index",
+            "display_name": "index",
+            "type": "T:integer",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "length",
+            "display_name": "length",
+            "type": "T:integer",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "subset",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any",
+          "T:integer",
+          "T:integer"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "An N-D array of T exposes an optional index and length for each dimension. An unwired index defaults to zero and an unwired length keeps the remaining elements of that dimension. The result preserves T and rank N. A waveform preserves its envelope and subsets Y."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "An N-D array of T exposes an optional index and length for each dimension. An unwired index defaults to zero and an unwired length keeps the remaining elements of that dimension. The result preserves T and rank N. A waveform preserves its envelope and subsets Y."
+      },
+      "behavior_summary": "An N-D array of T exposes an optional index and length for each dimension. An unwired index defaults to zero and an unwired length keeps the remaining elements of that dimension. The result preserves T and rank N. A waveform preserves its envelope and subsets Y.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-subset.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-subset.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.max_min",
+      "definition_ref": "frog.studio.array.max_min",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.max_min.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "T:any",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "max",
+            "display_name": "maximum",
+            "type": "T:any",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "max_index",
+            "display_name": "maximum index",
+            "type": "T:any",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "min",
+            "display_name": "minimum",
+            "type": "T:any",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "min_index",
+            "display_name": "minimum index",
+            "type": "T:any",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Any N-D array of T yields scalar elements T for min/max. Both indices are I32 for rank 1, and 1D arrays of I32 for rank greater than 1. Element schemas are retained."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Any N-D array of T yields scalar elements T for min/max. Both indices are I32 for rank 1, and 1D arrays of I32 for rank greater than 1. Element schemas are retained."
+      },
+      "behavior_summary": "Any N-D array of T yields scalar elements T for min/max. Both indices are I32 for rank 1, and 1D arrays of I32 for rank greater than 1. Element schemas are retained.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-max-min.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-max-min.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.reshape",
+      "definition_ref": "frog.studio.array.reshape",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.reshape.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "dimension_size",
+            "display_name": "dimension size",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "reshaped array",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "input_N",
+        "optional_input_first_index": 3
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank>=1>",
+          "T:numeric"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "An array of any element type and input rank N produces the same element type at output rank M, where M is the displayed size-terminal count (1 to 16). Resize the node vertically to add or remove size terminals. Each size is a real numeric scalar converted to I32; values do not determine rank. All displayed sizes are required for readiness. Without an array type, the output remains void. Expanded rank is saved and supports Undo/Redo; connected terminals cannot be folded away. Target execution remains separately gated."
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 2,
+        "maximum_input_count": 17,
+        "port_order": [
+          "array",
+          "dimension_size",
+          "input_N_ascending"
+        ],
+        "reduction": "reshape_by_size_terminal_count"
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "An array of any element type and input rank N produces the same element type at output rank M, where M is the displayed size-terminal count (1 to 16). Resize the node vertically to add or remove size terminals. Each size is a real numeric scalar converted to I32; values do not determine rank. All displayed sizes are required for readiness. Without an array type, the output remains void. Expanded rank is saved and supports Undo/Redo; connected terminals cannot be folded away. Target execution remains separately gated.",
+        "shape_rule": "preserve_element_type; output_rank_equals_size_terminal_count"
+      },
+      "behavior_summary": "An array of any element type and input rank N produces the same element type at output rank M, where M is the displayed size-terminal count (1 to 16). Resize the node vertically to add or remove size terminals. Each size is a real numeric scalar converted to I32; values do not determine rank. All displayed sizes are required for readiness. Without an array type, the output remains void. Expanded rank is saved and supports Undo/Redo; connected terminals cannot be folded away. Target execution remains separately gated.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/reshape-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/reshape-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.sort_1d",
+      "definition_ref": "frog.studio.array.sort_1d",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.sort_1d.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank=1>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Accepts only a 1D array of any T; sorts its elements without changing T or rank."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Accepts only a 1D array of any T; sorts its elements without changing T or rank."
+      },
+      "behavior_summary": "Accepts only a 1D array of any T; sorts its elements without changing T or rank.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/sort-1d-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/sort-1d-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.search_1d",
+      "definition_ref": "frog.studio.array.search_1d",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.search_1d.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "value",
+            "display_name": "element",
+            "type": "T:any",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "start_index",
+            "display_name": "start index",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "index",
+            "display_name": "index",
+            "type": "T:integer",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank=1>",
+          "T:any",
+          "T:numeric"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "A 1D array and a matching scalar/cluster element share their full element schema; compatible numeric representations promote together. Either input specializes the other. Optional start index defaults to zero; real numeric indices convert to I32. Result is an I32 index."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A 1D array and a matching scalar/cluster element share their full element schema; compatible numeric representations promote together. Either input specializes the other. Optional start index defaults to zero; real numeric indices convert to I32. Result is an I32 index."
+      },
+      "behavior_summary": "A 1D array and a matching scalar/cluster element share their full element schema; compatible numeric representations promote together. Either input specializes the other. Optional start index defaults to zero; real numeric indices convert to I32. Result is an I32 index.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/search-1d-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/search-1d-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.split_1d",
+      "definition_ref": "frog.studio.array.split_1d",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.split_1d.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "index",
+            "display_name": "index",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "before",
+            "display_name": "before",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "after",
+            "display_name": "after",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank=1>",
+          "T:numeric"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Accepts only a 1D array of any T; splits its elements without changing T or rank. Both outputs remain 1D arrays of T. The split index is a real number converted to I32."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Accepts only a 1D array of any T; splits its elements without changing T or rank. Both outputs remain 1D arrays of T. The split index is a real number converted to I32."
+      },
+      "behavior_summary": "Accepts only a 1D array of any T; splits its elements without changing T or rank. Both outputs remain 1D arrays of T. The split index is a real number converted to I32.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/split-1d-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/split-1d-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.reverse_1d",
+      "definition_ref": "frog.studio.array.reverse_1d",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.reverse_1d.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank=1>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Accepts only a 1D array of any T; reverses its elements without changing T or rank."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Accepts only a 1D array of any T; reverses its elements without changing T or rank."
+      },
+      "behavior_summary": "Accepts only a 1D array of any T; reverses its elements without changing T or rank.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/reverse-1d-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/reverse-1d-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.rotate_1d",
+      "definition_ref": "frog.studio.array.rotate_1d",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.rotate_1d.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "offset",
+            "display_name": "offset",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "rotated array",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank=1>",
+          "T:numeric"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Accepts only a 1D array of any T; rotates its elements without changing T or rank. The offset is a real number converted to I32."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Accepts only a 1D array of any T; rotates its elements without changing T or rank. The offset is a real number converted to I32."
+      },
+      "behavior_summary": "Accepts only a 1D array of any T; rotates its elements without changing T or rank. The offset is a real number converted to I32.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/rotate-1d-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/rotate-1d-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.interpolate_1d",
+      "definition_ref": "frog.studio.array.interpolate_1d",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.interpolate_1d.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "index",
+            "display_name": "fractional index",
+            "type": "T:numeric",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "interpolated value",
+            "type": "T:numeric",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank=1>",
+          "T:numeric"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Accepts a 1D array of real numbers or two-real-number point clusters (x,y); not a multidimensional, Boolean, String or complex array. Numeric data and the fractional index/threshold use DBL. The output is a scalar DBL."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Accepts a 1D array of real numbers or two-real-number point clusters (x,y); not a multidimensional, Boolean, String or complex array. Numeric data and the fractional index/threshold use DBL. The output is a scalar DBL."
+      },
+      "behavior_summary": "Accepts a 1D array of real numbers or two-real-number point clusters (x,y); not a multidimensional, Boolean, String or complex array. Numeric data and the fractional index/threshold use DBL. The output is a scalar DBL.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/interpolate-1d-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/interpolate-1d-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.threshold_1d",
+      "definition_ref": "frog.studio.array.threshold_1d",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.threshold_1d.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "threshold",
+            "display_name": "threshold",
+            "type": "T:numeric",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "start_index",
+            "display_name": "Start index",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "index",
+            "display_name": "fractional index",
+            "type": "T:numeric",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank=1>",
+          "T:numeric",
+          "T:numeric"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Accepts a 1D array of real numbers or two-real-number point clusters (x,y); not a multidimensional, Boolean, String or complex array. Numeric data and the fractional index/threshold use DBL. The output is a scalar DBL. Optional start index is a real numeric scalar converted to I32, default zero."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Accepts a 1D array of real numbers or two-real-number point clusters (x,y); not a multidimensional, Boolean, String or complex array. Numeric data and the fractional index/threshold use DBL. The output is a scalar DBL. Optional start index is a real numeric scalar converted to I32, default zero."
+      },
+      "behavior_summary": "Accepts a 1D array of real numbers or two-real-number point clusters (x,y); not a multidimensional, Boolean, String or complex array. Numeric data and the fractional index/threshold use DBL. The output is a scalar DBL. Optional start index is a real numeric scalar converted to I32, default zero.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/threshold-1d-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/threshold-1d-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.interleave_1d",
+      "definition_ref": "frog.studio.array.interleave_1d",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.interleave_1d.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array_a",
+            "display_name": "Array",
+            "type": "array<T:any,rank=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "input_N",
+        "optional_input_first_index": 2
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank=1>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Resize for 1–32 one-dimensional arrays with compatible element schemas; all connected numeric representations promote to a shared T. Output remains a 1D array of T. Input lengths need not match; their values do not affect the authoring type."
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 1,
+        "maximum_input_count": 32,
+        "port_order": [
+          "array_a",
+          "input_N_ascending"
+        ],
+        "reduction": "editor_terminal_count"
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Resize for 1–32 one-dimensional arrays with compatible element schemas; all connected numeric representations promote to a shared T. Output remains a 1D array of T. Input lengths need not match; their values do not affect the authoring type."
+      },
+      "behavior_summary": "Resize for 1–32 one-dimensional arrays with compatible element schemas; all connected numeric representations promote to a shared T. Output remains a 1D array of T. Input lengths need not match; their values do not affect the authoring type.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/interleave-1d-arrays.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/interleave-1d-arrays.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.decimate_1d",
+      "definition_ref": "frog.studio.array.decimate_1d",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.decimate_1d.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "first",
+            "display_name": "first output",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank=1>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A 1D array of any T produces 1–32 expandable output arrays, each 1D with the complete element schema T. The number of outputs does not change their rank."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A 1D array of any T produces 1–32 expandable output arrays, each 1D with the complete element schema T. The number of outputs does not change their rank."
+      },
+      "behavior_summary": "A 1D array of any T produces 1–32 expandable output arrays, each 1D with the complete element schema T. The number of outputs does not change their rank.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/decimate-1d-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/decimate-1d-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.transpose_2d",
+      "definition_ref": "frog.studio.array.transpose_2d",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.transpose_2d.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank=2>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Accepts exactly a 2D array of any T and preserves its rank and full element schema. 1D and rank greater than 2 are rejected."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Accepts exactly a 2D array of any T and preserves its rank and full element schema. 1D and rank greater than 2 are rejected."
+      },
+      "behavior_summary": "Accepts exactly a 2D array of any T and preserves its rank and full element schema. 1D and rank greater than 2 are rejected.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/transpose-2d-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/transpose-2d-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.constant",
+      "definition_ref": "frog.studio.array.array_constant",
+      "contract_status": "editor_managed",
+      "profile_id": "frog.studio.legacy.array.constant.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "array",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<T:any,rank>=1>",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Array Constant.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "frog.studio.editor-managed",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.terminal",
+      "definition_ref": "frog.studio.array.terminal",
+      "contract_status": "editor_managed",
+      "profile_id": "frog.studio.legacy.array.terminal.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "array",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "array:f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<T:any,rank>=1>",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Array Terminal Precision.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "frog.studio.editor-managed",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.conversion.spreadsheet_string_to_array",
+      "definition_ref": "frog.studio.array.conversion.spreadsheet_string_to_array",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.conversion.spreadsheet_string_to_array.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "string",
+            "display_name": "string",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": [
+              "value"
+            ]
+          },
+          {
+            "id": "format",
+            "display_name": "format",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "delimiter",
+            "display_name": "delimiter",
+            "type": "T:any",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "array_type",
+            "display_name": "array type",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "array<f64,rank=2>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "same(array_type)",
+            "default_value_type": "array<f64,rank=2>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": [
+              "result"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "string",
+          "string",
+          "T:any",
+          "array<T:any,rank>=1>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Spreadsheet String and format are strings. Delimiter accepts a String or 1D String array. Optional array type selects numeric/String element type and rank 1–16, default 2D DBL; output exactly follows that type."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Spreadsheet String and format are strings. Delimiter accepts a String or 1D String array. Optional array type selects numeric/String element type and rank 1–16, default 2D DBL; output exactly follows that type."
+      },
+      "behavior_summary": "Spreadsheet String and format are strings. Delimiter accepts a String or 1D String array. Optional array type selects numeric/String element type and rank 1–16, default 2D DBL; output exactly follows that type.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/spreadsheet-string-to-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/spreadsheet-string-to-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.conversion.array_to_spreadsheet_string",
+      "definition_ref": "frog.studio.array.conversion.array_to_spreadsheet_string",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.conversion.array_to_spreadsheet_string.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "value"
+            ]
+          },
+          {
+            "id": "format",
+            "display_name": "format",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "delimiter",
+            "display_name": "delimiter",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "string",
+            "display_name": "string",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": [
+              "result"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank>=1>",
+          "string",
+          "string"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Any-rank numeric or String array produces a scalar String. Format and delimiter are scalar strings; arrays of Boolean, clusters, paths or timestamps are rejected."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Any-rank numeric or String array produces a scalar String. Format and delimiter are scalar strings; arrays of Boolean, clusters, paths or timestamps are rejected."
+      },
+      "behavior_summary": "Any-rank numeric or String array produces a scalar String. Format and delimiter are scalar strings; arrays of Boolean, clusters, paths or timestamps are rejected.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-to-spreadsheet-string.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-to-spreadsheet-string.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.conversion.number_to_boolean_array",
+      "definition_ref": "frog.studio.array.conversion.number_to_boolean_array",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.conversion.number_to_boolean_array.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "number",
+            "display_name": "number",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "value"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<bool,rank=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": [
+              "result"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "An integer or real fixed-point scalar produces a 1D Boolean array; bit width affects length, not rank. Array and cluster operands are not accepted."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "An integer or real fixed-point scalar produces a 1D Boolean array; bit width affects length, not rank. Array and cluster operands are not accepted."
+      },
+      "behavior_summary": "An integer or real fixed-point scalar produces a 1D Boolean array; bit width affects length, not rank. Array and cluster operands are not accepted.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/number-to-boolean-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/number-to-boolean-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.conversion.boolean_array_to_number",
+      "definition_ref": "frog.studio.array.conversion.boolean_array_to_number",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.conversion.boolean_array_to_number.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<bool,rank=1>",
+            "default_value_type": "array<bool>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": [
+              "value"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "number",
+            "display_name": "number",
+            "type": "T:any",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": [
+              "result"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<bool,rank=1>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A 1D Boolean array produces an integer or real fixed-point scalar. The output representation is configured in the editor (default U32), not inferred from array length."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A 1D Boolean array produces an integer or real fixed-point scalar. The output representation is configured in the editor (default U32), not inferred from array length."
+      },
+      "behavior_summary": "A 1D Boolean array produces an integer or real fixed-point scalar. The output representation is configured in the editor (default U32), not inferred from array length.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/boolean-array-to-number.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/boolean-array-to-number.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.conversion.array_to_cluster",
+      "definition_ref": "frog.studio.array.conversion.array_to_cluster",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.conversion.array_to_cluster.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "value"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "cluster",
+            "display_name": "cluster",
+            "type": "T:cluster",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "result"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank=1>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A 1D array of T becomes a fixed-size cluster of T. Cluster Size is configured in the editor from 1 to 256 (default nine); runtime array length does not define the schema."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A 1D array of T becomes a fixed-size cluster of T. Cluster Size is configured in the editor from 1 to 256 (default nine); runtime array length does not define the schema."
+      },
+      "behavior_summary": "A 1D array of T becomes a fixed-size cluster of T. Cluster Size is configured in the editor from 1 to 256 (default nine); runtime array length does not define the schema.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-to-cluster.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-to-cluster.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.conversion.cluster_to_array",
+      "definition_ref": "frog.studio.array.conversion.cluster_to_array",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.conversion.cluster_to_array.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "cluster",
+            "display_name": "cluster",
+            "type": "T:cluster",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "value"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "result"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:cluster"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A non-empty cluster of compatible homogeneous elements produces a 1D array. Direct array fields are not accepted. Nested clusters retain their complete compatible schema; numeric representations can promote."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A non-empty cluster of compatible homogeneous elements produces a 1D array. Direct array fields are not accepted. Nested clusters retain their complete compatible schema; numeric representations can promote."
+      },
+      "behavior_summary": "A non-empty cluster of compatible homogeneous elements produces a 1D array. Direct array fields are not accepted. Nested clusters retain their complete compatible schema; numeric representations can promote.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/cluster-to-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/cluster-to-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.conversion.string_to_byte_array",
+      "definition_ref": "frog.studio.array.conversion.string_to_byte_array",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.conversion.string_to_byte_array.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "string",
+            "display_name": "string",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": [
+              "value"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<u8,rank=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": [
+              "result"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "string"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A scalar String produces a one-dimensional U8 array."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A scalar String produces a one-dimensional U8 array."
+      },
+      "behavior_summary": "A scalar String produces a one-dimensional U8 array.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/string-to-byte-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/string-to-byte-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.conversion.byte_array_to_string",
+      "definition_ref": "frog.studio.array.conversion.byte_array_to_string",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.conversion.byte_array_to_string.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<u8,rank=1>",
+            "default_value_type": "array<u8>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": [
+              "value"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "string",
+            "display_name": "string",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": [
+              "result"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<u8,rank=1>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A one-dimensional U8 array produces a scalar String. Other ranks and non-byte element schemas are rejected."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A one-dimensional U8 array produces a scalar String. Other ranks and non-byte element schemas are rejected."
+      },
+      "behavior_summary": "A one-dimensional U8 array produces a scalar String. Other ranks and non-byte element schemas are rejected.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/byte-array-to-string.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/byte-array-to-string.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_constants.double_precision",
+      "definition_ref": "frog.studio.array.other_constants.double_precision",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_constants.double_precision.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<f64,rank=1>",
+            "default_value_type": "array<f64,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<f64,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_constants.double_precision.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_terminals.double_precision",
+      "definition_ref": "frog.studio.array.other_terminals.double_precision",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_terminals.double_precision.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<f64,rank=1>",
+            "default_value_type": "array<f64,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<f64,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_terminals.double_precision.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_constants.integer",
+      "definition_ref": "frog.studio.array.other_constants.integer",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_constants.integer.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<i32,rank=1>",
+            "default_value_type": "array<i32,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<i32,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_constants.integer.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_terminals.integer",
+      "definition_ref": "frog.studio.array.other_terminals.integer",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_terminals.integer.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<i32,rank=1>",
+            "default_value_type": "array<i32,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<i32,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_terminals.integer.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_constants.boolean",
+      "definition_ref": "frog.studio.array.other_constants.boolean",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_constants.boolean.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<bool,rank=1>",
+            "default_value_type": "array<bool,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<bool,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_constants.boolean.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_terminals.boolean",
+      "definition_ref": "frog.studio.array.other_terminals.boolean",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_terminals.boolean.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<bool,rank=1>",
+            "default_value_type": "array<bool,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<bool,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_terminals.boolean.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_constants.string",
+      "definition_ref": "frog.studio.array.other_constants.string",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_constants.string.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<string,rank=1>",
+            "default_value_type": "array<string,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<string,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_constants.string.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_terminals.string",
+      "definition_ref": "frog.studio.array.other_terminals.string",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_terminals.string.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<string,rank=1>",
+            "default_value_type": "array<string,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<string,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_terminals.string.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_constants.waveform",
+      "definition_ref": "frog.studio.array.other_constants.waveform",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_constants.waveform.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<cluster<t0:timestamp,dt:f64,Y:array<f64,rank=1>>,rank=1>",
+            "default_value_type": "array<cluster<t0:timestamp,dt:f64,Y:array<f64,rank=1>>,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<cluster<t0:timestamp,dt:f64,Y:array<f64,rank=1>>,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_constants.waveform.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_terminals.waveform",
+      "definition_ref": "frog.studio.array.other_terminals.waveform",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_terminals.waveform.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<cluster<t0:timestamp,dt:f64,Y:array<f64,rank=1>>,rank=1>",
+            "default_value_type": "array<cluster<t0:timestamp,dt:f64,Y:array<f64,rank=1>>,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<cluster<t0:timestamp,dt:f64,Y:array<f64,rank=1>>,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_terminals.waveform.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_constants.timestamp",
+      "definition_ref": "frog.studio.array.other_constants.timestamp",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_constants.timestamp.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<timestamp,rank=1>",
+            "default_value_type": "array<timestamp,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<timestamp,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_constants.timestamp.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_terminals.timestamp",
+      "definition_ref": "frog.studio.array.other_terminals.timestamp",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_terminals.timestamp.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<timestamp,rank=1>",
+            "default_value_type": "array<timestamp,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<timestamp,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_terminals.timestamp.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_constants.path",
+      "definition_ref": "frog.studio.array.other_constants.path",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_constants.path.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<path,rank=1>",
+            "default_value_type": "array<path,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<path,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_constants.path.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_terminals.path",
+      "definition_ref": "frog.studio.array.other_terminals.path",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_terminals.path.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<path,rank=1>",
+            "default_value_type": "array<path,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<path,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_terminals.path.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_constants.cluster",
+      "definition_ref": "frog.studio.array.other_constants.cluster",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_constants.cluster.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<cluster<>,rank=1>",
+            "default_value_type": "array<cluster<>,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<cluster<>,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_constants.cluster.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_terminals.cluster",
+      "definition_ref": "frog.studio.array.other_terminals.cluster",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_terminals.cluster.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<cluster<>,rank=1>",
+            "default_value_type": "array<cluster<>,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<cluster<>,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_terminals.cluster.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_constants.error",
+      "definition_ref": "frog.studio.array.other_constants.error",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_constants.error.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<cluster<status:bool,code:i32,source:string>,rank=1>",
+            "default_value_type": "array<cluster<status:bool,code:i32,source:string>,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<cluster<status:bool,code:i32,source:string>,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_constants.error.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.other_terminals.error",
+      "definition_ref": "frog.studio.array.other_terminals.error",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.array.other_terminals.error.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "array<cluster<status:bool,code:i32,source:string>,rank=1>",
+            "default_value_type": "array<cluster<status:bool,code:i32,source:string>,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<cluster<status:bool,code:i32,source:string>,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for array.other_terminals.error.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.matrix.reshape",
+      "definition_ref": "frog.studio.array.matrix.reshape",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.matrix.reshape.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "matrix",
+            "display_name": "matrix",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "rows",
+            "display_name": "rows",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "columns",
+            "display_name": "columns",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:numeric,rank=2>",
+          "T:numeric",
+          "T:numeric"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A numeric 2D array retains its element representation and rank 2. Optional real numeric row/column sizes convert to I32; unwired sizes retain the corresponding input lengths."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A numeric 2D array retains its element representation and rank 2. Optional real numeric row/column sizes convert to I32; unwired sizes retain the corresponding input lengths."
+      },
+      "behavior_summary": "A numeric 2D array retains its element representation and rank 2. Optional real numeric row/column sizes convert to I32; unwired sizes retain the corresponding input lengths.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/resize-matrix.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/resize-matrix.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.matrix.transpose",
+      "definition_ref": "frog.studio.array.matrix.transpose",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.matrix.transpose.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "matrix",
+            "display_name": "matrix",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:numeric,rank=2>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A numeric 2D array remains 2D with the same real or complex element type. This is conjugate transpose, unlike ordinary Transpose 2D Array."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A numeric 2D array remains 2D with the same real or complex element type. This is conjugate transpose, unlike ordinary Transpose 2D Array."
+      },
+      "behavior_summary": "A numeric 2D array remains 2D with the same real or complex element type. This is conjugate transpose, unlike ordinary Transpose 2D Array.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/transpose-matrix.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/transpose-matrix.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.matrix.get_diagonal",
+      "definition_ref": "frog.studio.array.matrix.get_diagonal",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.matrix.get_diagonal.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "matrix",
+            "display_name": "matrix",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "diagonal",
+            "display_name": "Row index",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "column",
+            "display_name": "Column index",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "diagonal_values",
+            "display_name": "diagonal values",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "array<f64,rank=2>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:numeric,rank=2>",
+          "T:numeric",
+          "T:numeric"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A numeric 2D input exposes repeatable pairs of scalar row/column indices (real numeric, converted to I32, default zero). Every diagonal output remains 2D, with the same numeric type; its single-column length is a runtime value."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A numeric 2D input exposes repeatable pairs of scalar row/column indices (real numeric, converted to I32, default zero). Every diagonal output remains 2D, with the same numeric type; its single-column length is a runtime value."
+      },
+      "behavior_summary": "A numeric 2D input exposes repeatable pairs of scalar row/column indices (real numeric, converted to I32, default zero). Every diagonal output remains 2D, with the same numeric type; its single-column length is a runtime value.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-matrix-diagonal.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-matrix-diagonal.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.matrix.get_elements",
+      "definition_ref": "frog.studio.array.matrix.get_elements",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.matrix.get_elements.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "matrix",
+            "display_name": "matrix",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "row_indices",
+            "display_name": "row indices",
+            "type": "T:any",
+            "default_value_type": "array<i32>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "column_indices",
+            "display_name": "column indices",
+            "type": "T:any",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "elements",
+            "display_name": "elements",
+            "type": "T:any",
+            "default_value_type": "array<f64,rank=2>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:numeric,rank=2>",
+          "T:any",
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A numeric 2D array exposes repeatable row/column index pairs. Indices accept real numeric scalars or 1D arrays, converted to I32. An output is scalar only when both indices are explicitly wired as scalars; otherwise it is 2D, retaining the input numeric type."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A numeric 2D array exposes repeatable row/column index pairs. Indices accept real numeric scalars or 1D arrays, converted to I32. An output is scalar only when both indices are explicitly wired as scalars; otherwise it is 2D, retaining the input numeric type."
+      },
+      "behavior_summary": "A numeric 2D array exposes repeatable row/column index pairs. Indices accept real numeric scalars or 1D arrays, converted to I32. An output is scalar only when both indices are explicitly wired as scalars; otherwise it is 2D, retaining the input numeric type.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-matrix-elements.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-matrix-elements.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.matrix.get_subset",
+      "definition_ref": "frog.studio.array.matrix.get_subset",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.matrix.get_subset.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "matrix",
+            "display_name": "matrix",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "row",
+            "display_name": "First row",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "column",
+            "display_name": "First column",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "rows",
+            "display_name": "Last row",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "columns",
+            "display_name": "Last column",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:numeric,rank=2>",
+          "T:numeric",
+          "T:numeric",
+          "T:numeric",
+          "T:numeric"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Numeric 2D input/output. Four optional scalar real numeric bounds (first/last row, first/last column) convert to I32. End bounds are inclusive indices, not lengths. Unwired bounds select the full extent."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 5
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Numeric 2D input/output. Four optional scalar real numeric bounds (first/last row, first/last column) convert to I32. End bounds are inclusive indices, not lengths. Unwired bounds select the full extent."
+      },
+      "behavior_summary": "Numeric 2D input/output. Four optional scalar real numeric bounds (first/last row, first/last column) convert to I32. End bounds are inclusive indices, not lengths. Unwired bounds select the full extent.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-submatrix.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-submatrix.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.matrix.set_diagonal",
+      "definition_ref": "frog.studio.array.matrix.set_diagonal",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.matrix.set_diagonal.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "matrix",
+            "display_name": "matrix",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "diagonal",
+            "display_name": "Row index",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "diagonal_values",
+            "display_name": "diagonal values",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "column",
+            "display_name": "Column index",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:numeric,rank=2>",
+          "T:numeric",
+          "T:any",
+          "T:numeric"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Repeatable scalar row/column index pairs and new diagonal inputs. Matrix input/output is numeric 2D. Replacement accepts a numeric scalar fill or 2D numeric row/column vector, with numeric promotion shared by the matrix and replacement. A 1D replacement is not accepted; vector lengths are runtime values."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Repeatable scalar row/column index pairs and new diagonal inputs. Matrix input/output is numeric 2D. Replacement accepts a numeric scalar fill or 2D numeric row/column vector, with numeric promotion shared by the matrix and replacement. A 1D replacement is not accepted; vector lengths are runtime values."
+      },
+      "behavior_summary": "Repeatable scalar row/column index pairs and new diagonal inputs. Matrix input/output is numeric 2D. Replacement accepts a numeric scalar fill or 2D numeric row/column vector, with numeric promotion shared by the matrix and replacement. A 1D replacement is not accepted; vector lengths are runtime values.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-matrix-diagonal.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-matrix-diagonal.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.matrix.set_elements",
+      "definition_ref": "frog.studio.array.matrix.set_elements",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.matrix.set_elements.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "matrix",
+            "display_name": "matrix",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "row_indices",
+            "display_name": "row indices",
+            "type": "T:any",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "column_indices",
+            "display_name": "column indices",
+            "type": "T:any",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "elements",
+            "display_name": "elements",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:numeric,rank=2>",
+          "T:any",
+          "T:any",
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Numeric 2D matrix input/output. Repeatable row/column indices accept real scalars or 1D real arrays (I32 conversion). New elements accept a numeric scalar fill or numeric 2D array, with numeric promotion shared by the matrix and replacement. Optional replacement defaults to zero."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Numeric 2D matrix input/output. Repeatable row/column indices accept real scalars or 1D real arrays (I32 conversion). New elements accept a numeric scalar fill or numeric 2D array, with numeric promotion shared by the matrix and replacement. Optional replacement defaults to zero."
+      },
+      "behavior_summary": "Numeric 2D matrix input/output. Repeatable row/column indices accept real scalars or 1D real arrays (I32 conversion). New elements accept a numeric scalar fill or numeric 2D array, with numeric promotion shared by the matrix and replacement. Optional replacement defaults to zero.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-matrix-elements.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-matrix-elements.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.matrix.set_subset",
+      "definition_ref": "frog.studio.array.matrix.set_subset",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.matrix.set_subset.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "matrix",
+            "display_name": "matrix",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "row",
+            "display_name": "First row",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "column",
+            "display_name": "First column",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "subset",
+            "display_name": "subset",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "rows",
+            "display_name": "Last row",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "columns",
+            "display_name": "Last column",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:numeric,rank=2>",
+          "T:numeric",
+          "T:numeric",
+          "T:any",
+          "T:numeric",
+          "T:numeric"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Numeric 2D matrix input/output. Repeatable groups contain four optional scalar numeric inclusive bounds and a scalar fill or numeric 2D replacement. Indices convert to I32; matrix and replacement promote to a common numeric representation. Unwired bounds select the full matrix."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 6
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Numeric 2D matrix input/output. Repeatable groups contain four optional scalar numeric inclusive bounds and a scalar fill or numeric 2D replacement. Indices convert to I32; matrix and replacement promote to a common numeric representation. Unwired bounds select the full matrix."
+      },
+      "behavior_summary": "Numeric 2D matrix input/output. Repeatable groups contain four optional scalar numeric inclusive bounds and a scalar fill or numeric 2D replacement. Indices convert to I32; matrix and replacement promote to a common numeric representation. Unwired bounds select the full matrix.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-submatrix.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-submatrix.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.matrix.size",
+      "definition_ref": "frog.studio.array.matrix.size",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.matrix.size.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "matrix",
+            "display_name": "matrix",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "rows",
+            "display_name": "rows",
+            "type": "T:integer",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "columns",
+            "display_name": "columns",
+            "type": "T:integer",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:numeric,rank=2>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A numeric 2D array produces two scalar I32 outputs: number of rows and number of columns."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A numeric 2D array produces two scalar I32 outputs: number of rows and number of columns."
+      },
+      "behavior_summary": "A numeric 2D array produces two scalar I32 outputs: number of rows and number of columns.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/matrix-size.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/matrix-size.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "array.matrix.build",
+      "definition_ref": "frog.studio.array.matrix.build",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.array.matrix.build.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "element1",
+            "display_name": "Element or matrix",
+            "type": "T:numeric_tree",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "array<T:numeric,rank=2>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "input_N",
+        "optional_input_first_index": 2
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric_tree"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Resize for 1–32 numeric scalars, 1D arrays or 2D arrays. Numeric representations promote together; output is always 2D. Append by Columns is default; Append by Rows is an editor setting."
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 1,
+        "maximum_input_count": 32,
+        "port_order": [
+          "element1",
+          "input_N_ascending"
+        ],
+        "reduction": "editor_terminal_count"
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Resize for 1–32 numeric scalars, 1D arrays or 2D arrays. Numeric representations promote together; output is always 2D. Append by Columns is default; Append by Rows is an editor setting."
+      },
+      "behavior_summary": "Resize for 1–32 numeric scalars, 1D arrays or 2D arrays. Numeric representations promote together; output is always 2D. Append by Columns is default; Append by Rows is an editor setting.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/build-matrix.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/build-matrix.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    }
+  ]
+}

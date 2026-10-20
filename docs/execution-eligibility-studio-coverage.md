@@ -3,10 +3,15 @@
 ## Current checkpoint — 14 October 2026
 
 This informative coverage record does not extend the public language or its
-execution eligibility contract. The canonical local Studio delivery is signed
-**0.0.5.313**. Regression tests remain paused globally; the user authorized only
-the targeted groups below. No complete clean all-target/full-CTest gate or
-remote publication is confirmed by this record.
+execution eligibility contract. The previously recorded signed **0.0.5.313**
+belongs to the checkpoint through lot 94. Later reference-node wiring lot 101
+was qualified on signed **0.0.5.317**. These are scoped qualification receipts,
+not a claim that every active working-tree change belongs to either binary.
+See the [complete reconciliation](studio-reconciliation-2026-10-14.md) for the
+source baseline, authoring revisions, contracts and remaining implementation gaps.
+Regression tests remain paused globally; the user authorized only the targeted
+groups below. No complete clean all-target/full-CTest gate or remote publication
+is confirmed by this record.
 
 The checkpoints are separate: **87: 4/4 PASS** qualifies normal private Run with
 Highlight initially disabled and POC OFF, interactive controls, read-only
@@ -14,7 +19,12 @@ indicators and return to authoring at Stop. **89: 7/7 PASS** qualifies the publi
 captured-Event Unbundle Source→IR→SDK corridor and its neighbors.
 **94: 2/2 PASS** qualifies current-font Path/String sizing through real Options,
 text-size menus, Size to Text and pointer resize, including creation, values,
-types and connections. These results are not combined into a global gate.
+types and connections. **101: 2/2 PASS** qualifies actual reference-to-Property/
+Invoke wiring, connected type adoption, compatible member preservation,
+incompatible diagnostics, nested targets, save and Undo. It does not supply an
+Application Control graph execution provider. The later reference-value widget
+and Cluster-field working-tree changes remain a separate qualification lot.
+These results are not combined into a global gate.
 
 Unbundle reuses the typed Event Record carrier and existing SDK provider
 ([contract](../sdk/cpp/docs/runtime-contract.md)). It introduces no native LLVM

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "frog/sdk/runtime_contract.hpp"
+#include "frog/sdk/runtime_array_value.hpp"
 #include <cmath>
 #include <limits>
 
@@ -77,6 +78,13 @@ inline bool validate(const RuntimeValue &value, const ValueType &type, const Run
     try {
         if (type != valueTypeFromCanonicalName(type.canonicalName) || !type.known()) return false;
     } catch (...) { return false; }
+    if (const auto *array = std::get_if<RuntimeF64Array>(&value)) {
+        if(depth != 0 || !*array || !array_detail::descriptor(type) ||
+            !(owner ? (*array)->validForOwner(*owner) : (*array)->validForOwner((*array)->owner()))) return false;
+        const auto payload=(*array)->payloadBytes();
+        if(payload > kMaximumF64ArrayPayloadBytes-bytes)return false;
+        bytes+=payload;return true; // packed terminal, not recursive RuntimeValues
+    }
     if (const auto *carrier = std::get_if<std::shared_ptr<const CompoundRuntimeValue>>(&value)) {
         if (!*carrier || (*carrier)->canonicalType() != type.canonicalName) return false;
         if (const auto *record = dynamic_cast<const ImmutableRecord *>(carrier->get())) {
@@ -155,6 +163,11 @@ inline bool validate(const RuntimeValue &value, const ValueType &type, const Run
 [[nodiscard]] inline bool runtimeValuesEqual(const RuntimeValue &left, const RuntimeValue &right,
     unsigned depth = 0) noexcept {
     if (depth > 32 || left.index() != right.index()) return false;
+    if (left.index() == 7) {
+        const auto &a=std::get<7>(left), &b=std::get<7>(right);
+        return depth == 0 && a && b && a->validForOwner(a->owner()) && b->validForOwner(b->owner()) &&
+            a->shape() == b->shape() && std::equal(a->elements().begin(),a->elements().end(),b->elements().begin());
+    }
     if (left.index() != 6) return left == right;
     const auto &a = std::get<6>(left), &b = std::get<6>(right);
     if (!a || !b || a->canonicalType() != b->canonicalType() || !a->valid() || !b->valid()) return false;

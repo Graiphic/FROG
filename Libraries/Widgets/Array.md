@@ -599,3 +599,7 @@ runtime must not create an implicit live-layout shortcut that bypasses
 It can represent arrays of numeric, boolean, string, enum, path, cluster, or other compatible elements.
 Its public law defines the collection, element, dimension, viewport, selection, and layout surfaces while leaving repeated rendering and virtualization to realization and runtime.
 </p>
+
+## Studio reconciliation — 14 October 2026
+
+Current Studio distinguishes true dimensions and present elements from faded out-of-range preview cells, including runtime-fed indicators. Zero remains present data. Nested value, index and content targets follow actual drawn regions. See the [Studio profile](../../Expression/Studio%20authoring%20document%20profile%20v1.md); this does not widen public native Array admission.

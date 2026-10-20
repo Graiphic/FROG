@@ -1,14 +1,17 @@
 # Studio numeric array storage profile, version 1
 
-Implementation record, 3 October 2026. Functional qualification is pending while
-Studio's regression tests are paused. This document describes an opt-in **Studio
-authoring adapter**, not an amendment to public FROG `spec_version: "0.1"`.
+Implementation record updated 14 October 2026 against Studio's serializer.
+This document describes an opt-in **Studio authoring adapter**, not an amendment
+to public FROG `spec_version: "0.1"`. The [current reconciliation](studio-reconciliation-2026-10-14.md)
+separates existing product qualification from static documentation checks. No
+new Array-storage execution qualification is claimed by this update.
 
 ## Envelope and author intent
 
-Readable documents retain `format: "frog.document.draft", draft_revision: 2`.
-The default is Readable. Selecting Automatic or Compact standalone writes private
-`draft_revision: 3` and this root property:
+The format is `frog.document.draft`, and Readable remains the default storage
+mode. An ordinary document with no newer feature requirement writes revision 2.
+Selecting Automatic or Compact standalone requires at least revision 3 and emits
+this root property:
 
 ```json
 "storage": { "version": 1, "array_mode": "automatic" }
@@ -17,7 +20,12 @@ The default is Readable. Selecting Automatic or Compact standalone writes privat
 The three tokens are `readable`, `automatic` and `compact_standalone`. Absence
 means Readable. Unknown versions or modes are errors. Changing this choice must
 not change identities, types, shape, rank, field order, viewport or values.
-Older Studio readers reject revision 3 before projecting it onto an editing model.
+The complete document determines the final revision: exact integer state can
+require 4, complex state 5, Application Control 6 and Connectivity 7. These
+requirements compose with the storage mode; revision 6 or 7 does not imply that
+Array storage is disabled. Conversely, Readable mode does not force a newer
+feature back to revision 2. See the [writer profile](../Expression/Studio%20authoring%20document%20profile%20v1.md).
+Readers reject revisions beyond their supported range before projection.
 Mixing a private `format` with public `spec_version` remains invalid.
 Revision 3 preserves Studio's historical private byte-string compatibility for
 unrelated existing binary String constants. This admission is specific to the

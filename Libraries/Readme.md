@@ -1115,3 +1115,7 @@ For the widget corridor, this means:
   <li><code>frog.ui.*</code> remains the intrinsic executable interaction vocabulary,</li>
   <li>future primitive widget baseline publication can grow in <code>Libraries/</code> without collapsing source, behavior, realization, and runtime ownership into one layer.</li>
 </ul>
+
+## Studio reconciliation — 14 October 2026
+
+The [Studio authoring catalogue](../Profiles/StudioAuthoring.md) exposes535 declared product entries across15 families without inventing public primitive IDs or universal executable providers. Core public definitions and implementation-profile entries remain distinct. Captured Unbundle qualification does not make every private Bundle/Unbundle variant native.

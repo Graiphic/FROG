@@ -867,3 +867,7 @@ Implementations/
 <p>
 This makes it possible for FROG to grow through explicit optional profiles such as interoperability, bounded native compilation corridors, bounded execution-side closures, and portable rich UI widget-class capability families, without collapsing the architecture into one implementation or one runtime.
 </p>
+
+## Studio reconciliation — 14 October 2026
+
+The [Studio authoring snapshot](StudioAuthoring.md) documents 535 actual declarative entries and widget/structure metadata as a product compatibility surface. It is not an optional universal execution capability or a promotion of `studio_private` authorities. The [reconciliation](../docs/studio-reconciliation-2026-10-14.md) states exact implementation and qualification limits.

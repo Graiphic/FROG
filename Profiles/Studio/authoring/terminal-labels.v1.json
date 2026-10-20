@@ -1,0 +1,2875 @@
+{
+  "snapshot_format_version": 1,
+  "source_path": "native-portable-engine/src/win32/Win32FunctionPortLabels.inc",
+  "source_sha256": "1a27502a1c0deb3cfcb025896767bef2c22e2cc781b77d7f88c82bae50f06dca",
+  "scope": "Presentation-only English labels from the shared Studio label resolver. Dynamic member labels, translations, typing and execution still belong to their implementation owners.",
+  "entry_count": 474,
+  "entries": [
+    {
+      "catalog_id": "structures.select",
+      "port_id": "true",
+      "direction": "input",
+      "display_name": "t"
+    },
+    {
+      "catalog_id": "structures.select",
+      "port_id": "select",
+      "direction": "input",
+      "display_name": "s"
+    },
+    {
+      "catalog_id": "structures.select",
+      "port_id": "false",
+      "direction": "input",
+      "display_name": "f"
+    },
+    {
+      "catalog_id": "structures.select",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "s ? t : f"
+    },
+    {
+      "catalog_id": "comparison.equal",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "comparison.equal",
+      "port_id": "y",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "comparison.equal",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x = y?"
+    },
+    {
+      "catalog_id": "comparison.not_equal",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "comparison.not_equal",
+      "port_id": "y",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "comparison.not_equal",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x != y?"
+    },
+    {
+      "catalog_id": "comparison.greater",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "comparison.greater",
+      "port_id": "y",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "comparison.greater",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x > y?"
+    },
+    {
+      "catalog_id": "comparison.less",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "comparison.less",
+      "port_id": "y",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "comparison.less",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x < y?"
+    },
+    {
+      "catalog_id": "comparison.greater_or_equal",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "comparison.greater_or_equal",
+      "port_id": "y",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "comparison.greater_or_equal",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x >= y?"
+    },
+    {
+      "catalog_id": "comparison.less_or_equal",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "comparison.less_or_equal",
+      "port_id": "y",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "comparison.less_or_equal",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x <= y?"
+    },
+    {
+      "catalog_id": "comparison.equal_zero",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "comparison.equal_zero",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x = 0?"
+    },
+    {
+      "catalog_id": "comparison.not_equal_zero",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "comparison.not_equal_zero",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x != 0?"
+    },
+    {
+      "catalog_id": "comparison.greater_zero",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "comparison.greater_zero",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x > 0?"
+    },
+    {
+      "catalog_id": "comparison.less_zero",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "comparison.less_zero",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x < 0?"
+    },
+    {
+      "catalog_id": "comparison.greater_or_equal_zero",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "comparison.greater_or_equal_zero",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x >= 0?"
+    },
+    {
+      "catalog_id": "comparison.less_or_equal_zero",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "comparison.less_or_equal_zero",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x <= 0?"
+    },
+    {
+      "catalog_id": "comparison.not_a_number_path_refnum",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "number/path/refnum"
+    },
+    {
+      "catalog_id": "comparison.not_a_number_path_refnum",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "NaN/invalid path/refnum?"
+    },
+    {
+      "catalog_id": "comparison.empty_array",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "comparison.empty_array",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "empty array?"
+    },
+    {
+      "catalog_id": "comparison.empty_string_or_path",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "string/path"
+    },
+    {
+      "catalog_id": "comparison.empty_string_or_path",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "empty string/path?"
+    },
+    {
+      "catalog_id": "comparison.decimal_digit",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "char"
+    },
+    {
+      "catalog_id": "comparison.decimal_digit",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "decimal digit?"
+    },
+    {
+      "catalog_id": "comparison.hex_digit",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "char"
+    },
+    {
+      "catalog_id": "comparison.hex_digit",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "hex digit?"
+    },
+    {
+      "catalog_id": "comparison.octal_digit",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "char"
+    },
+    {
+      "catalog_id": "comparison.octal_digit",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "octal digit?"
+    },
+    {
+      "catalog_id": "comparison.white_space",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "char"
+    },
+    {
+      "catalog_id": "comparison.white_space",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "white space?"
+    },
+    {
+      "catalog_id": "numeric.add",
+      "port_id": "a",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.add",
+      "port_id": "b",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "numeric.add",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x + y"
+    },
+    {
+      "catalog_id": "numeric.subtract",
+      "port_id": "a",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.subtract",
+      "port_id": "b",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "numeric.subtract",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x - y"
+    },
+    {
+      "catalog_id": "numeric.multiply",
+      "port_id": "a",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.multiply",
+      "port_id": "b",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "numeric.multiply",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x * y"
+    },
+    {
+      "catalog_id": "numeric.divide",
+      "port_id": "a",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.divide",
+      "port_id": "b",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "numeric.divide",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x / y"
+    },
+    {
+      "catalog_id": "numeric.quotient_remainder",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.quotient_remainder",
+      "port_id": "y",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "numeric.quotient_remainder",
+      "port_id": "quotient",
+      "direction": "output",
+      "display_name": "R = x - y * floor(x/y)"
+    },
+    {
+      "catalog_id": "numeric.quotient_remainder",
+      "port_id": "remainder",
+      "direction": "output",
+      "display_name": "IQ = floor(x/y)"
+    },
+    {
+      "catalog_id": "numeric.increment",
+      "port_id": "in",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.increment",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x + 1"
+    },
+    {
+      "catalog_id": "numeric.decrement",
+      "port_id": "in",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.decrement",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x - 1"
+    },
+    {
+      "catalog_id": "numeric.add_array_elements",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "numeric array"
+    },
+    {
+      "catalog_id": "numeric.add_array_elements",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "sum of array elements"
+    },
+    {
+      "catalog_id": "numeric.multiply_array_elements",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "numeric array"
+    },
+    {
+      "catalog_id": "numeric.multiply_array_elements",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "product of array elements"
+    },
+    {
+      "catalog_id": "numeric.absolute_value",
+      "port_id": "in",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.absolute_value",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "abs(x)"
+    },
+    {
+      "catalog_id": "numeric.round_nearest",
+      "port_id": "in",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.round_nearest",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "round(x)"
+    },
+    {
+      "catalog_id": "numeric.round_negative_infinity",
+      "port_id": "in",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.round_negative_infinity",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "floor(x)"
+    },
+    {
+      "catalog_id": "numeric.round_positive_infinity",
+      "port_id": "in",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.round_positive_infinity",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "ceil(x)"
+    },
+    {
+      "catalog_id": "numeric.scale_power_two",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.scale_power_two",
+      "port_id": "n",
+      "direction": "input",
+      "display_name": "n"
+    },
+    {
+      "catalog_id": "numeric.scale_power_two",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x * 2^n"
+    },
+    {
+      "catalog_id": "numeric.square_root",
+      "port_id": "in",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.square_root",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "sqrt(x)"
+    },
+    {
+      "catalog_id": "numeric.square",
+      "port_id": "in",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.square",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x^2"
+    },
+    {
+      "catalog_id": "numeric.negate",
+      "port_id": "in",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.negate",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "-x"
+    },
+    {
+      "catalog_id": "numeric.reciprocal",
+      "port_id": "in",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.reciprocal",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "1/x"
+    },
+    {
+      "catalog_id": "numeric.sign",
+      "port_id": "in",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.sign",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "sign(x)"
+    },
+    {
+      "catalog_id": "numeric.max_min",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.max_min",
+      "port_id": "y",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "numeric.max_min",
+      "port_id": "max",
+      "direction": "output",
+      "display_name": "max(x,y)"
+    },
+    {
+      "catalog_id": "numeric.max_min",
+      "port_id": "min",
+      "direction": "output",
+      "display_name": "min(x,y)"
+    },
+    {
+      "catalog_id": "numeric.in_range",
+      "port_id": "upper_limit",
+      "direction": "input",
+      "display_name": "upper limit"
+    },
+    {
+      "catalog_id": "numeric.in_range",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.in_range",
+      "port_id": "lower_limit",
+      "direction": "input",
+      "display_name": "lower limit"
+    },
+    {
+      "catalog_id": "numeric.in_range",
+      "port_id": "coerced",
+      "direction": "output",
+      "display_name": "coerced(x)"
+    },
+    {
+      "catalog_id": "numeric.in_range",
+      "port_id": "in_range",
+      "direction": "output",
+      "display_name": "in range?"
+    },
+    {
+      "catalog_id": "numeric.multiply_accumulate",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.multiply_accumulate",
+      "port_id": "y",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "numeric.multiply_accumulate",
+      "port_id": "initial_value",
+      "direction": "input",
+      "display_name": "initial value"
+    },
+    {
+      "catalog_id": "numeric.multiply_accumulate",
+      "port_id": "initialize",
+      "direction": "input",
+      "display_name": "initialize?"
+    },
+    {
+      "catalog_id": "numeric.multiply_accumulate",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "accumulator + x * y"
+    },
+    {
+      "catalog_id": "numeric.random_zero_one",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "random number [0,1)"
+    },
+    {
+      "catalog_id": "numeric.random_range",
+      "port_id": "lower_limit",
+      "direction": "input",
+      "display_name": "lower limit"
+    },
+    {
+      "catalog_id": "numeric.random_range",
+      "port_id": "upper_limit",
+      "direction": "input",
+      "display_name": "upper limit"
+    },
+    {
+      "catalog_id": "numeric.random_range",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "random number in range"
+    },
+    {
+      "catalog_id": "numeric.other_constants.positive_infinity",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "+∞"
+    },
+    {
+      "catalog_id": "numeric.other_constants.negative_infinity",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "-∞"
+    },
+    {
+      "catalog_id": "numeric.other_constants.pi",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "π"
+    },
+    {
+      "catalog_id": "numeric.other_constants.pi_over_two",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "π/2"
+    },
+    {
+      "catalog_id": "numeric.other_constants.two_pi",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "2π"
+    },
+    {
+      "catalog_id": "numeric.other_constants.one_over_pi",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "1/π"
+    },
+    {
+      "catalog_id": "numeric.other_constants.e",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "e"
+    },
+    {
+      "catalog_id": "numeric.other_constants.one_over_e",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "1/e"
+    },
+    {
+      "catalog_id": "numeric.other_constants.machine_epsilon",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "ε"
+    },
+    {
+      "catalog_id": "numeric.other_constants.ln_ten",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "ln(10)"
+    },
+    {
+      "catalog_id": "numeric.other_constants.ln_two",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "ln(2)"
+    },
+    {
+      "catalog_id": "numeric.other_constants.ln_pi",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "ln(π)"
+    },
+    {
+      "catalog_id": "numeric.other_constants.log10_e",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "log10(e)"
+    },
+    {
+      "catalog_id": "numeric.other_constants.ideal_gas",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "R (J/(mol*K))"
+    },
+    {
+      "catalog_id": "numeric.other_constants.elementary_charge",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "e (C)"
+    },
+    {
+      "catalog_id": "numeric.other_constants.avogadro",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "N_A (1/mol)"
+    },
+    {
+      "catalog_id": "numeric.other_constants.rydberg",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "R_∞ (1/m)"
+    },
+    {
+      "catalog_id": "numeric.other_constants.gravitational",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "G (N*m^2/kg^2)"
+    },
+    {
+      "catalog_id": "numeric.other_constants.planck",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "h (J*s)"
+    },
+    {
+      "catalog_id": "numeric.other_constants.speed_of_light",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "c (m/s)"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.adapt_to_type",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.adapt_to_type",
+      "port_id": "type",
+      "direction": "input",
+      "display_name": "type"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.adapt_to_type",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "type cast(x)"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.flatten_to_byte_array",
+      "port_id": "anything",
+      "direction": "input",
+      "display_name": "anything"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.flatten_to_byte_array",
+      "port_id": "byte_order",
+      "direction": "input",
+      "display_name": "byte order"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.flatten_to_byte_array",
+      "port_id": "prepend_size",
+      "direction": "input",
+      "display_name": "prepend size?"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.flatten_to_byte_array",
+      "port_id": "error_in",
+      "direction": "input",
+      "display_name": "error in"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.flatten_to_byte_array",
+      "port_id": "data_bytes",
+      "direction": "output",
+      "display_name": "flattened bytes"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.flatten_to_byte_array",
+      "port_id": "error_out",
+      "direction": "output",
+      "display_name": "error out"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.unflatten_from_byte_array",
+      "port_id": "data_bytes",
+      "direction": "input",
+      "display_name": "byte array"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.unflatten_from_byte_array",
+      "port_id": "type",
+      "direction": "input",
+      "display_name": "type"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.unflatten_from_byte_array",
+      "port_id": "byte_order",
+      "direction": "input",
+      "display_name": "byte order"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.unflatten_from_byte_array",
+      "port_id": "includes_size",
+      "direction": "input",
+      "display_name": "includes size?"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.unflatten_from_byte_array",
+      "port_id": "error_in",
+      "direction": "input",
+      "display_name": "error in"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.unflatten_from_byte_array",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "unflattened value"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.unflatten_from_byte_array",
+      "port_id": "remainder",
+      "direction": "output",
+      "display_name": "remaining bytes"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.unflatten_from_byte_array",
+      "port_id": "error_out",
+      "direction": "output",
+      "display_name": "error out"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.mantissa_exponent",
+      "port_id": "number",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.mantissa_exponent",
+      "port_id": "mantissa",
+      "direction": "output",
+      "display_name": "mantissa"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.mantissa_exponent",
+      "port_id": "exponent",
+      "direction": "output",
+      "display_name": "exponent"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.rotate_left_with_carry",
+      "port_id": "value_in",
+      "direction": "input",
+      "display_name": "value"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.rotate_left_with_carry",
+      "port_id": "carry",
+      "direction": "input",
+      "display_name": "carry in"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.rotate_left_with_carry",
+      "port_id": "value_out",
+      "direction": "output",
+      "display_name": "rotated value"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.rotate_left_with_carry",
+      "port_id": "carry_out",
+      "direction": "output",
+      "display_name": "MSB carry out"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.rotate_right_with_carry",
+      "port_id": "value_in",
+      "direction": "input",
+      "display_name": "value"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.rotate_right_with_carry",
+      "port_id": "carry",
+      "direction": "input",
+      "display_name": "carry in"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.rotate_right_with_carry",
+      "port_id": "value_out",
+      "direction": "output",
+      "display_name": "rotated value"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.rotate_right_with_carry",
+      "port_id": "carry_out",
+      "direction": "output",
+      "display_name": "LSB carry out"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.logical_shift",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.logical_shift",
+      "port_id": "y",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.logical_shift",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x << y"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.rotate",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.rotate",
+      "port_id": "y",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.rotate",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x rotated by y"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.split_number",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.split_number",
+      "port_id": "hi",
+      "direction": "output",
+      "display_name": "hi(x)"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.split_number",
+      "port_id": "lo",
+      "direction": "output",
+      "display_name": "lo(x)"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.join_numbers",
+      "port_id": "hi",
+      "direction": "input",
+      "display_name": "hi"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.join_numbers",
+      "port_id": "lo",
+      "direction": "input",
+      "display_name": "lo"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.join_numbers",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "join(hi,lo)"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.swap_bytes",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "data"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.swap_bytes",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "byte-swapped data"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.swap_words",
+      "port_id": "x",
+      "direction": "input",
+      "display_name": "data"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.swap_words",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "word-swapped data"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.reinterpret_number",
+      "port_id": "data_in",
+      "direction": "input",
+      "display_name": "data"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.reinterpret_number",
+      "port_id": "type",
+      "direction": "input",
+      "display_name": "type"
+    },
+    {
+      "catalog_id": "numeric.data_manipulation.reinterpret_number",
+      "port_id": "data_out",
+      "direction": "output",
+      "display_name": "reinterpreted data"
+    },
+    {
+      "catalog_id": "numeric.complex.conjugate",
+      "port_id": "z",
+      "direction": "input",
+      "display_name": "z"
+    },
+    {
+      "catalog_id": "numeric.complex.conjugate",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "conj(z)"
+    },
+    {
+      "catalog_id": "numeric.complex.polar_to_complex",
+      "port_id": "r",
+      "direction": "input",
+      "display_name": "r"
+    },
+    {
+      "catalog_id": "numeric.complex.polar_to_complex",
+      "port_id": "theta",
+      "direction": "input",
+      "display_name": "theta"
+    },
+    {
+      "catalog_id": "numeric.complex.polar_to_complex",
+      "port_id": "z",
+      "direction": "output",
+      "display_name": "r * e^(i*theta)"
+    },
+    {
+      "catalog_id": "numeric.complex.complex_to_polar",
+      "port_id": "z",
+      "direction": "input",
+      "display_name": "z"
+    },
+    {
+      "catalog_id": "numeric.complex.complex_to_polar",
+      "port_id": "r",
+      "direction": "output",
+      "display_name": "abs(z)"
+    },
+    {
+      "catalog_id": "numeric.complex.complex_to_polar",
+      "port_id": "theta",
+      "direction": "output",
+      "display_name": "arg(z)"
+    },
+    {
+      "catalog_id": "numeric.complex.real_imaginary_to_complex",
+      "port_id": "re",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.complex.real_imaginary_to_complex",
+      "port_id": "im",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "numeric.complex.real_imaginary_to_complex",
+      "port_id": "z",
+      "direction": "output",
+      "display_name": "x + i*y"
+    },
+    {
+      "catalog_id": "numeric.complex.complex_to_real_imaginary",
+      "port_id": "z",
+      "direction": "input",
+      "display_name": "z"
+    },
+    {
+      "catalog_id": "numeric.complex.complex_to_real_imaginary",
+      "port_id": "re",
+      "direction": "output",
+      "display_name": "Re(z)"
+    },
+    {
+      "catalog_id": "numeric.complex.complex_to_real_imaginary",
+      "port_id": "im",
+      "direction": "output",
+      "display_name": "Im(z)"
+    },
+    {
+      "catalog_id": "numeric.complex.real_imaginary_to_polar",
+      "port_id": "re",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "numeric.complex.real_imaginary_to_polar",
+      "port_id": "im",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "numeric.complex.real_imaginary_to_polar",
+      "port_id": "r",
+      "direction": "output",
+      "display_name": "sqrt(x^2 + y^2)"
+    },
+    {
+      "catalog_id": "numeric.complex.real_imaginary_to_polar",
+      "port_id": "theta",
+      "direction": "output",
+      "display_name": "atan2(y,x)"
+    },
+    {
+      "catalog_id": "numeric.complex.polar_to_real_imaginary",
+      "port_id": "r",
+      "direction": "input",
+      "display_name": "r"
+    },
+    {
+      "catalog_id": "numeric.complex.polar_to_real_imaginary",
+      "port_id": "theta",
+      "direction": "input",
+      "display_name": "theta"
+    },
+    {
+      "catalog_id": "numeric.complex.polar_to_real_imaginary",
+      "port_id": "re",
+      "direction": "output",
+      "display_name": "r * cos(theta)"
+    },
+    {
+      "catalog_id": "numeric.complex.polar_to_real_imaginary",
+      "port_id": "im",
+      "direction": "output",
+      "display_name": "r * sin(theta)"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_rtd_reading",
+      "port_id": "voltage",
+      "direction": "input",
+      "display_name": "voltage"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_rtd_reading",
+      "port_id": "Ro",
+      "direction": "input",
+      "display_name": "Ro"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_rtd_reading",
+      "port_id": "Iex",
+      "direction": "input",
+      "display_name": "Iex"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_rtd_reading",
+      "port_id": "A",
+      "direction": "input",
+      "display_name": "A"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_rtd_reading",
+      "port_id": "B",
+      "direction": "input",
+      "display_name": "B"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_rtd_reading",
+      "port_id": "temperature",
+      "direction": "output",
+      "display_name": "temperature"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_strain_gauge_reading",
+      "port_id": "voltage",
+      "direction": "input",
+      "display_name": "voltage"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_strain_gauge_reading",
+      "port_id": "Rg",
+      "direction": "input",
+      "display_name": "Rg"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_strain_gauge_reading",
+      "port_id": "GF",
+      "direction": "input",
+      "display_name": "GF"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_strain_gauge_reading",
+      "port_id": "v",
+      "direction": "input",
+      "display_name": "v"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_strain_gauge_reading",
+      "port_id": "Vex",
+      "direction": "input",
+      "display_name": "Vex"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_strain_gauge_reading",
+      "port_id": "Vinit",
+      "direction": "input",
+      "display_name": "Vinit"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_strain_gauge_reading",
+      "port_id": "Rl",
+      "direction": "input",
+      "display_name": "Rl"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_strain_gauge_reading",
+      "port_id": "bridge_configuration",
+      "direction": "input",
+      "display_name": "bridge configuration"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_strain_gauge_reading",
+      "port_id": "strain",
+      "direction": "output",
+      "display_name": "strain"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermistor_reading",
+      "port_id": "voltage",
+      "direction": "input",
+      "display_name": "voltage"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermistor_reading",
+      "port_id": "excitation_current",
+      "direction": "input",
+      "display_name": "excitation current"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermistor_reading",
+      "port_id": "R1",
+      "direction": "input",
+      "display_name": "R1"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermistor_reading",
+      "port_id": "voltage_reference",
+      "direction": "input",
+      "display_name": "voltage reference"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermistor_reading",
+      "port_id": "temperature_units",
+      "direction": "input",
+      "display_name": "temperature units"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermistor_reading",
+      "port_id": "type_of_excitation",
+      "direction": "input",
+      "display_name": "type of excitation"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermistor_reading",
+      "port_id": "temperature",
+      "direction": "output",
+      "display_name": "temperature"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermocouple_reading",
+      "port_id": "voltage",
+      "direction": "input",
+      "display_name": "voltage"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermocouple_reading",
+      "port_id": "CJC_voltage",
+      "direction": "input",
+      "display_name": "CJC voltage"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermocouple_reading",
+      "port_id": "CJC_sensor",
+      "direction": "input",
+      "display_name": "CJC sensor"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermocouple_reading",
+      "port_id": "temperature_units",
+      "direction": "input",
+      "display_name": "temperature units"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermocouple_reading",
+      "port_id": "thermocouple_type",
+      "direction": "input",
+      "display_name": "thermocouple type"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermocouple_reading",
+      "port_id": "type_of_excitation",
+      "direction": "input",
+      "display_name": "type of excitation"
+    },
+    {
+      "catalog_id": "numeric.scaling.convert_thermocouple_reading",
+      "port_id": "temperature",
+      "direction": "output",
+      "display_name": "temperature"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_i8",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_i8",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "I8(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_i16",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_i16",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "I16(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_i32",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_i32",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "I32(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_i64",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_i64",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "I64(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_u8",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_u8",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "U8(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_u16",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_u16",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "U16(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_u32",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_u32",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "U32(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_u64",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_u64",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "U64(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_sgl",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_sgl",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "SGL(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_dbl",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_dbl",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "DBL(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_csg",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_csg",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "CSG(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_cdb",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_cdb",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "CDB(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_fxp",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_fxp",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "FXP(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_cfx",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.to_cfx",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "CFX(number)"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_boolean_array",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_boolean_array",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "Boolean array"
+    },
+    {
+      "catalog_id": "numeric.conversion.boolean_array_to_number",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "Boolean array"
+    },
+    {
+      "catalog_id": "numeric.conversion.boolean_array_to_number",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.boolean_to_integer",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "Boolean"
+    },
+    {
+      "catalog_id": "numeric.conversion.boolean_to_integer",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "0 or 1"
+    },
+    {
+      "catalog_id": "numeric.conversion.format_into_string",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "value"
+    },
+    {
+      "catalog_id": "numeric.conversion.format_into_string",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "formatted string"
+    },
+    {
+      "catalog_id": "numeric.conversion.string_to_byte_array",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "string"
+    },
+    {
+      "catalog_id": "numeric.conversion.string_to_byte_array",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "unsigned byte array"
+    },
+    {
+      "catalog_id": "numeric.conversion.byte_array_to_string",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "unsigned byte array"
+    },
+    {
+      "catalog_id": "numeric.conversion.byte_array_to_string",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "string"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_decimal_string",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_decimal_string",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "decimal string"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_hex_string",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_hex_string",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "hexadecimal string"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_octal_string",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_octal_string",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "octal string"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_fractional_string",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_fractional_string",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "fractional string"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_exponential_string",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_exponential_string",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "exponential string"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_engineering_string",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.number_to_engineering_string",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "engineering string"
+    },
+    {
+      "catalog_id": "numeric.conversion.decimal_string_to_number",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "decimal string"
+    },
+    {
+      "catalog_id": "numeric.conversion.decimal_string_to_number",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.hex_string_to_number",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "hexadecimal string"
+    },
+    {
+      "catalog_id": "numeric.conversion.hex_string_to_number",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.octal_string_to_number",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "octal string"
+    },
+    {
+      "catalog_id": "numeric.conversion.octal_string_to_number",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "numeric.conversion.floating_string_to_number",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "numeric string"
+    },
+    {
+      "catalog_id": "numeric.conversion.floating_string_to_number",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "boolean.and",
+      "port_id": "a",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "boolean.and",
+      "port_id": "b",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "boolean.and",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x and y?"
+    },
+    {
+      "catalog_id": "boolean.or",
+      "port_id": "a",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "boolean.or",
+      "port_id": "b",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "boolean.or",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x or y?"
+    },
+    {
+      "catalog_id": "boolean.xor",
+      "port_id": "a",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "boolean.xor",
+      "port_id": "b",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "boolean.xor",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x xor y?"
+    },
+    {
+      "catalog_id": "boolean.not",
+      "port_id": "in",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "boolean.not",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "not x?"
+    },
+    {
+      "catalog_id": "boolean.nand",
+      "port_id": "a",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "boolean.nand",
+      "port_id": "b",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "boolean.nand",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "not (x and y)?"
+    },
+    {
+      "catalog_id": "boolean.nor",
+      "port_id": "a",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "boolean.nor",
+      "port_id": "b",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "boolean.nor",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "not (x or y)?"
+    },
+    {
+      "catalog_id": "boolean.xnor",
+      "port_id": "a",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "boolean.xnor",
+      "port_id": "b",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "boolean.xnor",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "not (x xor y)?"
+    },
+    {
+      "catalog_id": "boolean.implies",
+      "port_id": "a",
+      "direction": "input",
+      "display_name": "x"
+    },
+    {
+      "catalog_id": "boolean.implies",
+      "port_id": "b",
+      "direction": "input",
+      "display_name": "y"
+    },
+    {
+      "catalog_id": "boolean.implies",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "x implies y?"
+    },
+    {
+      "catalog_id": "boolean.and_array_elements",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "Boolean array"
+    },
+    {
+      "catalog_id": "boolean.and_array_elements",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "AND of array elements"
+    },
+    {
+      "catalog_id": "boolean.or_array_elements",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "Boolean array"
+    },
+    {
+      "catalog_id": "boolean.or_array_elements",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "OR of array elements"
+    },
+    {
+      "catalog_id": "boolean.to_integer",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "Boolean"
+    },
+    {
+      "catalog_id": "boolean.to_integer",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "0 or 1"
+    },
+    {
+      "catalog_id": "boolean.number_to_array",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "boolean.number_to_array",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "Boolean array"
+    },
+    {
+      "catalog_id": "boolean.array_to_number",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "Boolean array"
+    },
+    {
+      "catalog_id": "boolean.array_to_number",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "boolean.true_constant",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "TRUE"
+    },
+    {
+      "catalog_id": "boolean.false_constant",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "FALSE"
+    },
+    {
+      "catalog_id": "string.lexical_class",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "char"
+    },
+    {
+      "catalog_id": "string.lexical_class",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "lexical class number"
+    },
+    {
+      "catalog_id": "array.size",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.size",
+      "port_id": "size",
+      "direction": "output",
+      "display_name": "dimension size(s)"
+    },
+    {
+      "catalog_id": "array.index",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.index",
+      "port_id": "index",
+      "direction": "input",
+      "display_name": "index"
+    },
+    {
+      "catalog_id": "array.index",
+      "port_id": "element",
+      "direction": "output",
+      "display_name": "element or subarray"
+    },
+    {
+      "catalog_id": "array.replace_subset",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.replace_subset",
+      "port_id": "subset",
+      "direction": "input",
+      "display_name": "new element or subarray"
+    },
+    {
+      "catalog_id": "array.replace_subset",
+      "port_id": "index",
+      "direction": "input",
+      "display_name": "index"
+    },
+    {
+      "catalog_id": "array.replace_subset",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "replaced array"
+    },
+    {
+      "catalog_id": "array.insert",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.insert",
+      "port_id": "subset",
+      "direction": "input",
+      "display_name": "new element or subarray"
+    },
+    {
+      "catalog_id": "array.insert",
+      "port_id": "index",
+      "direction": "input",
+      "display_name": "index"
+    },
+    {
+      "catalog_id": "array.insert",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "array with inserted elements"
+    },
+    {
+      "catalog_id": "array.delete",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.delete",
+      "port_id": "length",
+      "direction": "input",
+      "display_name": "length"
+    },
+    {
+      "catalog_id": "array.delete",
+      "port_id": "index",
+      "direction": "input",
+      "display_name": "index"
+    },
+    {
+      "catalog_id": "array.delete",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "remaining array"
+    },
+    {
+      "catalog_id": "array.delete",
+      "port_id": "deleted",
+      "direction": "output",
+      "display_name": "deleted portion"
+    },
+    {
+      "catalog_id": "array.initialize",
+      "port_id": "element",
+      "direction": "input",
+      "display_name": "element"
+    },
+    {
+      "catalog_id": "array.initialize",
+      "port_id": "size",
+      "direction": "input",
+      "display_name": "dimension size"
+    },
+    {
+      "catalog_id": "array.initialize",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "initialized array"
+    },
+    {
+      "catalog_id": "array.build",
+      "port_id": "array_a",
+      "direction": "input",
+      "display_name": "element or subarray"
+    },
+    {
+      "catalog_id": "array.build",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "built array"
+    },
+    {
+      "catalog_id": "array.subset",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.subset",
+      "port_id": "index",
+      "direction": "input",
+      "display_name": "index"
+    },
+    {
+      "catalog_id": "array.subset",
+      "port_id": "length",
+      "direction": "input",
+      "display_name": "length"
+    },
+    {
+      "catalog_id": "array.subset",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "subarray"
+    },
+    {
+      "catalog_id": "array.max_min",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.max_min",
+      "port_id": "max",
+      "direction": "output",
+      "display_name": "max value"
+    },
+    {
+      "catalog_id": "array.max_min",
+      "port_id": "max_index",
+      "direction": "output",
+      "display_name": "max index(es)"
+    },
+    {
+      "catalog_id": "array.max_min",
+      "port_id": "min",
+      "direction": "output",
+      "display_name": "min value"
+    },
+    {
+      "catalog_id": "array.max_min",
+      "port_id": "min_index",
+      "direction": "output",
+      "display_name": "min index(es)"
+    },
+    {
+      "catalog_id": "array.reshape",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.reshape",
+      "port_id": "dimension_size",
+      "direction": "input",
+      "display_name": "dimension size"
+    },
+    {
+      "catalog_id": "array.reshape",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "reshaped array"
+    },
+    {
+      "catalog_id": "array.sort_1d",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.sort_1d",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "sorted array"
+    },
+    {
+      "catalog_id": "array.reverse_1d",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.reverse_1d",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "reversed array"
+    },
+    {
+      "catalog_id": "array.search_1d",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.search_1d",
+      "port_id": "value",
+      "direction": "input",
+      "display_name": "element"
+    },
+    {
+      "catalog_id": "array.search_1d",
+      "port_id": "start_index",
+      "direction": "input",
+      "display_name": "start index"
+    },
+    {
+      "catalog_id": "array.search_1d",
+      "port_id": "index",
+      "direction": "output",
+      "display_name": "index of element"
+    },
+    {
+      "catalog_id": "array.split_1d",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.split_1d",
+      "port_id": "index",
+      "direction": "input",
+      "display_name": "index"
+    },
+    {
+      "catalog_id": "array.split_1d",
+      "port_id": "before",
+      "direction": "output",
+      "display_name": "first subarray"
+    },
+    {
+      "catalog_id": "array.split_1d",
+      "port_id": "after",
+      "direction": "output",
+      "display_name": "second subarray"
+    },
+    {
+      "catalog_id": "array.rotate_1d",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.rotate_1d",
+      "port_id": "offset",
+      "direction": "input",
+      "display_name": "n"
+    },
+    {
+      "catalog_id": "array.rotate_1d",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "rotated array"
+    },
+    {
+      "catalog_id": "array.interpolate_1d",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.interpolate_1d",
+      "port_id": "index",
+      "direction": "input",
+      "display_name": "fractional index"
+    },
+    {
+      "catalog_id": "array.interpolate_1d",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "interpolated value"
+    },
+    {
+      "catalog_id": "array.threshold_1d",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.threshold_1d",
+      "port_id": "threshold",
+      "direction": "input",
+      "display_name": "threshold"
+    },
+    {
+      "catalog_id": "array.threshold_1d",
+      "port_id": "start_index",
+      "direction": "input",
+      "display_name": "start index"
+    },
+    {
+      "catalog_id": "array.threshold_1d",
+      "port_id": "index",
+      "direction": "output",
+      "display_name": "fractional index"
+    },
+    {
+      "catalog_id": "array.interleave_1d",
+      "port_id": "array_a",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.interleave_1d",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "interleaved array"
+    },
+    {
+      "catalog_id": "array.decimate_1d",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.decimate_1d",
+      "port_id": "first",
+      "direction": "output",
+      "display_name": "decimated array"
+    },
+    {
+      "catalog_id": "array.transpose_2d",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "2D array"
+    },
+    {
+      "catalog_id": "array.transpose_2d",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "transposed array"
+    },
+    {
+      "catalog_id": "array.constant",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.terminal",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_constants.double_precision",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_constants.integer",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_constants.boolean",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_constants.string",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_constants.waveform",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_constants.timestamp",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_constants.path",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_constants.cluster",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_constants.error",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.matrix.size",
+      "port_id": "matrix",
+      "direction": "input",
+      "display_name": "matrix"
+    },
+    {
+      "catalog_id": "array.matrix.size",
+      "port_id": "rows",
+      "direction": "output",
+      "display_name": "number of rows"
+    },
+    {
+      "catalog_id": "array.matrix.size",
+      "port_id": "columns",
+      "direction": "output",
+      "display_name": "number of columns"
+    },
+    {
+      "catalog_id": "array.matrix.reshape",
+      "port_id": "matrix",
+      "direction": "input",
+      "display_name": "matrix"
+    },
+    {
+      "catalog_id": "array.matrix.reshape",
+      "port_id": "rows",
+      "direction": "input",
+      "display_name": "rows"
+    },
+    {
+      "catalog_id": "array.matrix.reshape",
+      "port_id": "columns",
+      "direction": "input",
+      "display_name": "columns"
+    },
+    {
+      "catalog_id": "array.matrix.reshape",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "resized matrix"
+    },
+    {
+      "catalog_id": "array.matrix.transpose",
+      "port_id": "matrix",
+      "direction": "input",
+      "display_name": "matrix"
+    },
+    {
+      "catalog_id": "array.matrix.transpose",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "transposed matrix"
+    },
+    {
+      "catalog_id": "array.matrix.get_diagonal",
+      "port_id": "matrix",
+      "direction": "input",
+      "display_name": "matrix"
+    },
+    {
+      "catalog_id": "array.matrix.get_diagonal",
+      "port_id": "diagonal",
+      "direction": "input",
+      "display_name": "row index"
+    },
+    {
+      "catalog_id": "array.matrix.get_diagonal",
+      "port_id": "column",
+      "direction": "input",
+      "display_name": "column index"
+    },
+    {
+      "catalog_id": "array.matrix.get_diagonal",
+      "port_id": "diagonal_values",
+      "direction": "output",
+      "display_name": "diagonal"
+    },
+    {
+      "catalog_id": "array.matrix.get_elements",
+      "port_id": "matrix",
+      "direction": "input",
+      "display_name": "matrix"
+    },
+    {
+      "catalog_id": "array.matrix.get_elements",
+      "port_id": "row_indices",
+      "direction": "input",
+      "display_name": "row indices"
+    },
+    {
+      "catalog_id": "array.matrix.get_elements",
+      "port_id": "column_indices",
+      "direction": "input",
+      "display_name": "column indices"
+    },
+    {
+      "catalog_id": "array.matrix.get_elements",
+      "port_id": "elements",
+      "direction": "output",
+      "display_name": "matrix elements"
+    },
+    {
+      "catalog_id": "array.matrix.get_subset",
+      "port_id": "matrix",
+      "direction": "input",
+      "display_name": "matrix"
+    },
+    {
+      "catalog_id": "array.matrix.get_subset",
+      "port_id": "row",
+      "direction": "input",
+      "display_name": "first row"
+    },
+    {
+      "catalog_id": "array.matrix.get_subset",
+      "port_id": "column",
+      "direction": "input",
+      "display_name": "first column"
+    },
+    {
+      "catalog_id": "array.matrix.get_subset",
+      "port_id": "rows",
+      "direction": "input",
+      "display_name": "last row"
+    },
+    {
+      "catalog_id": "array.matrix.get_subset",
+      "port_id": "columns",
+      "direction": "input",
+      "display_name": "last column"
+    },
+    {
+      "catalog_id": "array.matrix.get_subset",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "submatrix"
+    },
+    {
+      "catalog_id": "array.matrix.set_diagonal",
+      "port_id": "matrix",
+      "direction": "input",
+      "display_name": "matrix"
+    },
+    {
+      "catalog_id": "array.matrix.set_diagonal",
+      "port_id": "diagonal",
+      "direction": "input",
+      "display_name": "row index"
+    },
+    {
+      "catalog_id": "array.matrix.set_diagonal",
+      "port_id": "diagonal_values",
+      "direction": "input",
+      "display_name": "new diagonal"
+    },
+    {
+      "catalog_id": "array.matrix.set_diagonal",
+      "port_id": "column",
+      "direction": "input",
+      "display_name": "column index"
+    },
+    {
+      "catalog_id": "array.matrix.set_diagonal",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "matrix with replaced diagonal"
+    },
+    {
+      "catalog_id": "array.matrix.set_elements",
+      "port_id": "matrix",
+      "direction": "input",
+      "display_name": "matrix"
+    },
+    {
+      "catalog_id": "array.matrix.set_elements",
+      "port_id": "row_indices",
+      "direction": "input",
+      "display_name": "row indices"
+    },
+    {
+      "catalog_id": "array.matrix.set_elements",
+      "port_id": "column_indices",
+      "direction": "input",
+      "display_name": "column indices"
+    },
+    {
+      "catalog_id": "array.matrix.set_elements",
+      "port_id": "elements",
+      "direction": "input",
+      "display_name": "new elements"
+    },
+    {
+      "catalog_id": "array.matrix.set_elements",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "matrix with replaced elements"
+    },
+    {
+      "catalog_id": "array.matrix.build",
+      "port_id": "element1",
+      "direction": "input",
+      "display_name": "element or matrix"
+    },
+    {
+      "catalog_id": "array.matrix.build",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "built matrix"
+    },
+    {
+      "catalog_id": "array.matrix.set_subset",
+      "port_id": "matrix",
+      "direction": "input",
+      "display_name": "matrix"
+    },
+    {
+      "catalog_id": "array.matrix.set_subset",
+      "port_id": "row",
+      "direction": "input",
+      "display_name": "first row"
+    },
+    {
+      "catalog_id": "array.matrix.set_subset",
+      "port_id": "column",
+      "direction": "input",
+      "display_name": "first column"
+    },
+    {
+      "catalog_id": "array.matrix.set_subset",
+      "port_id": "subset",
+      "direction": "input",
+      "display_name": "new submatrix"
+    },
+    {
+      "catalog_id": "array.matrix.set_subset",
+      "port_id": "rows",
+      "direction": "input",
+      "display_name": "last row"
+    },
+    {
+      "catalog_id": "array.matrix.set_subset",
+      "port_id": "columns",
+      "direction": "input",
+      "display_name": "last column"
+    },
+    {
+      "catalog_id": "array.matrix.set_subset",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "matrix with replaced submatrix"
+    },
+    {
+      "catalog_id": "array.other_terminals.double_precision",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_terminals.integer",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_terminals.boolean",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_terminals.string",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_terminals.waveform",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_terminals.timestamp",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_terminals.path",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_terminals.cluster",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.other_terminals.error",
+      "port_id": "value",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.conversion.spreadsheet_string_to_array",
+      "port_id": "string",
+      "direction": "input",
+      "display_name": "spreadsheet string"
+    },
+    {
+      "catalog_id": "array.conversion.spreadsheet_string_to_array",
+      "port_id": "format",
+      "direction": "input",
+      "display_name": "format"
+    },
+    {
+      "catalog_id": "array.conversion.spreadsheet_string_to_array",
+      "port_id": "delimiter",
+      "direction": "input",
+      "display_name": "delimiter"
+    },
+    {
+      "catalog_id": "array.conversion.spreadsheet_string_to_array",
+      "port_id": "array_type",
+      "direction": "input",
+      "display_name": "array type"
+    },
+    {
+      "catalog_id": "array.conversion.spreadsheet_string_to_array",
+      "port_id": "array",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.conversion.array_to_spreadsheet_string",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.conversion.array_to_spreadsheet_string",
+      "port_id": "format",
+      "direction": "input",
+      "display_name": "format"
+    },
+    {
+      "catalog_id": "array.conversion.array_to_spreadsheet_string",
+      "port_id": "delimiter",
+      "direction": "input",
+      "display_name": "delimiter"
+    },
+    {
+      "catalog_id": "array.conversion.array_to_spreadsheet_string",
+      "port_id": "string",
+      "direction": "output",
+      "display_name": "spreadsheet string"
+    },
+    {
+      "catalog_id": "array.conversion.number_to_boolean_array",
+      "port_id": "number",
+      "direction": "input",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "array.conversion.number_to_boolean_array",
+      "port_id": "array",
+      "direction": "output",
+      "display_name": "Boolean array"
+    },
+    {
+      "catalog_id": "array.conversion.boolean_array_to_number",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "Boolean array"
+    },
+    {
+      "catalog_id": "array.conversion.boolean_array_to_number",
+      "port_id": "number",
+      "direction": "output",
+      "display_name": "number"
+    },
+    {
+      "catalog_id": "array.conversion.array_to_cluster",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.conversion.array_to_cluster",
+      "port_id": "cluster",
+      "direction": "output",
+      "display_name": "cluster"
+    },
+    {
+      "catalog_id": "array.conversion.cluster_to_array",
+      "port_id": "cluster",
+      "direction": "input",
+      "display_name": "cluster"
+    },
+    {
+      "catalog_id": "array.conversion.cluster_to_array",
+      "port_id": "array",
+      "direction": "output",
+      "display_name": "array"
+    },
+    {
+      "catalog_id": "array.conversion.string_to_byte_array",
+      "port_id": "string",
+      "direction": "input",
+      "display_name": "string"
+    },
+    {
+      "catalog_id": "array.conversion.string_to_byte_array",
+      "port_id": "array",
+      "direction": "output",
+      "display_name": "unsigned byte array"
+    },
+    {
+      "catalog_id": "array.conversion.byte_array_to_string",
+      "port_id": "array",
+      "direction": "input",
+      "display_name": "unsigned byte array"
+    },
+    {
+      "catalog_id": "array.conversion.byte_array_to_string",
+      "port_id": "string",
+      "direction": "output",
+      "display_name": "string"
+    },
+    {
+      "catalog_id": "path.is_not_empty",
+      "port_id": "path",
+      "direction": "input",
+      "display_name": "path"
+    },
+    {
+      "catalog_id": "path.is_not_empty",
+      "port_id": "result",
+      "direction": "output",
+      "display_name": "valid, non-empty path?"
+    }
+  ],
+  "semantic_associations": [
+    {
+      "catalog_id": "numeric.quotient_remainder",
+      "evidence_path": "native-portable-engine/src/HighlightExecutionEvaluator.cpp",
+      "evidence_sha256": "08911848b568f5d46cad5b9112a9b47407f3a962aa97ea1aac779acf08e88d1b",
+      "note": "Legacy endpoint IDs are retained for saved graphs. Their names must not be interpreted as the output semantics.",
+      "outputs": [
+        {
+          "port_id": "quotient",
+          "symbol": "R",
+          "semantic_role": "remainder",
+          "formula": "x - y * floor(x/y)"
+        },
+        {
+          "port_id": "remainder",
+          "symbol": "IQ",
+          "semantic_role": "integer_quotient",
+          "formula": "floor(x/y)"
+        }
+      ]
+    }
+  ]
+}

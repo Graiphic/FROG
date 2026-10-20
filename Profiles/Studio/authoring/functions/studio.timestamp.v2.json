@@ -1,0 +1,643 @@
+{
+  "schema_version": 2,
+  "family": "Timestamp",
+  "entries": [
+    {
+      "catalog_id": "timestamp.get_current_time",
+      "definition_ref": "frog.studio.timestamp.get_current_time",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.timestamp.get_current_time.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "current_time",
+            "display_name": "current time",
+            "type": "timestamp",
+            "default_value_type": "timestamp",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "No input; current UTC time as Timestamp, in seconds since 1904-01-01."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "No input; current UTC time as Timestamp, in seconds since 1904-01-01."
+      },
+      "behavior_summary": "No input; current UTC time as Timestamp, in seconds since 1904-01-01.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support does not establish runtime execution on the active target.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-date-time-in-seconds.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-date-time-in-seconds.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "timestamp.get_date_time_string",
+      "definition_ref": "frog.studio.timestamp.get_date_time_string",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.timestamp.get_date_time_string.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "date_format",
+            "display_name": "date format (0: short, 1: long, 2: abbreviated)",
+            "type": "u16",
+            "default_value_type": "u16",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "time_stamp",
+            "display_name": "time stamp",
+            "type": "T:any",
+            "default_value_type": "timestamp",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "want_seconds",
+            "display_name": "want seconds?",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "date_string",
+            "display_name": "date string",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "time_string",
+            "display_name": "time string",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "u16",
+          "T:any",
+          "bool"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Optional scalar Timestamp or real number (current time if omitted), date format and seconds flag produce date and time Strings in the computer time zone."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Optional scalar Timestamp or real number (current time if omitted), date format and seconds flag produce date and time Strings in the computer time zone."
+      },
+      "behavior_summary": "Optional scalar Timestamp or real number (current time if omitted), date format and seconds flag produce date and time Strings in the computer time zone.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support does not establish runtime execution on the active target.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-date-time-string.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-date-time-string.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "timestamp.to_date_time",
+      "definition_ref": "frog.studio.timestamp.to_date_time",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.timestamp.to_date_time.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "time_stamp",
+            "display_name": "time stamp",
+            "type": "T:any",
+            "default_value_type": "timestamp",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "to_utc",
+            "display_name": "to UTC?",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "date_time_rec",
+            "display_name": "date time rec",
+            "type": "cluster<fractional_second:f64,second:i32,minute:i32,hour:i32,day_of_month:i32,month:i32,year:i32,day_of_week:i32,day_of_year:i32,dst:i32>",
+            "default_value_type": "cluster<fractional_second:f64,second:i32,minute:i32,hour:i32,day_of_month:i32,month:i32,year:i32,day_of_week:i32,day_of_year:i32,dst:i32>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any",
+          "bool"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Optional scalar Timestamp or real number and UTC flag produce a Cluster: fractional second F64; second, minute, hour, day of month, month, year, day of week, day of year and DST I32."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Optional scalar Timestamp or real number and UTC flag produce a Cluster: fractional second F64; second, minute, hour, day of month, month, year, day of week, day of year and DST I32."
+      },
+      "behavior_summary": "Optional scalar Timestamp or real number and UTC flag produce a Cluster: fractional second F64; second, minute, hour, day of month, month, year, day of week, day of year and DST I32.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support does not establish runtime execution on the active target.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/seconds-to-date-time.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/seconds-to-date-time.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "timestamp.from_date_time",
+      "definition_ref": "frog.studio.timestamp.from_date_time",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.timestamp.from_date_time.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "date_time_rec",
+            "display_name": "date time rec",
+            "type": "cluster<fractional_second:f64,second:i32,minute:i32,hour:i32,day_of_month:i32,month:i32,year:i32,day_of_week:i32,day_of_year:i32,dst:i32>",
+            "default_value_type": "cluster<fractional_second:f64,second:i32,minute:i32,hour:i32,day_of_month:i32,month:i32,year:i32,day_of_week:i32,day_of_year:i32,dst:i32>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "is_utc",
+            "display_name": "is UTC?",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "time_stamp",
+            "display_name": "time stamp",
+            "type": "timestamp",
+            "default_value_type": "timestamp",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "cluster<fractional_second:f64,second:i32,minute:i32,hour:i32,day_of_month:i32,month:i32,year:i32,day_of_week:i32,day_of_year:i32,dst:i32>",
+          "bool"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "A date/time Cluster (fractional second F64 and nine I32 fields) and optional UTC flag produce a Timestamp. Day-of-week and day-of-year fields do not determine the instant."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "A date/time Cluster (fractional second F64 and nine I32 fields) and optional UTC flag produce a Timestamp. Day-of-week and day-of-year fields do not determine the instant."
+      },
+      "behavior_summary": "A date/time Cluster (fractional second F64 and nine I32 fields) and optional UTC flag produce a Timestamp. Day-of-week and day-of-year fields do not determine the instant.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support does not establish runtime execution on the active target.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/date-time-to-seconds.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/date-time-to-seconds.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "timestamp.format_date_time",
+      "definition_ref": "frog.studio.timestamp.format_date_time",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.timestamp.format_date_time.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "time_format_string",
+            "display_name": "time format string (%c)",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "time_stamp",
+            "display_name": "time stamp",
+            "type": "T:any",
+            "default_value_type": "timestamp",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "utc_format",
+            "display_name": "UTC format?",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "date_time_string",
+            "display_name": "date/time string",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "string",
+          "T:any",
+          "bool"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Optional time format String (%c), scalar Timestamp or real number (current time if omitted) and UTC flag produce a formatted date/time String."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Optional time format String (%c), scalar Timestamp or real number (current time if omitted) and UTC flag produce a formatted date/time String."
+      },
+      "behavior_summary": "Optional time format String (%c), scalar Timestamp or real number (current time if omitted) and UTC flag produce a formatted date/time String.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support does not establish runtime execution on the active target.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/format-date-time-string.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/format-date-time-string.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "timestamp.to_timestamp",
+      "definition_ref": "frog.studio.timestamp.to_timestamp",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.timestamp.to_timestamp.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "number",
+            "display_name": "number",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "time_stamp",
+            "display_name": "time stamp",
+            "type": "T:any",
+            "default_value_type": "timestamp",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Real numeric scalar, array or Cluster of real numbers converts to Timestamp leaves, preserving array ranks and Cluster field identity. Complex and nonnumeric leaves are rejected."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise",
+        "description": "Real numeric scalar, array or Cluster of real numbers converts to Timestamp leaves, preserving array ranks and Cluster field identity. Complex and nonnumeric leaves are rejected."
+      },
+      "behavior_summary": "Real numeric scalar, array or Cluster of real numbers converts to Timestamp leaves, preserving array ranks and Cluster field identity. Complex and nonnumeric leaves are rejected.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support does not establish runtime execution on the active target.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/to-time-stamp.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/to-time-stamp.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "timestamp.constant",
+      "definition_ref": "frog.studio.timestamp.constant",
+      "contract_status": "editor_managed",
+      "profile_id": "frog.studio.polymorphic.timestamp.constant.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "time stamp",
+            "type": "timestamp",
+            "default_value_type": "timestamp",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Editor-managed Timestamp constant. Uses the existing UTC date/time editor and seconds-since-1904 double storage, not NI 128-bit timestamp precision."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Editor-managed Timestamp constant. Uses the existing UTC date/time editor and seconds-since-1904 double storage, not NI 128-bit timestamp precision."
+      },
+      "behavior_summary": "Editor-managed Timestamp constant. Uses the existing UTC date/time editor and seconds-since-1904 double storage, not NI 128-bit timestamp precision.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "frog.studio.editor-managed",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support does not establish runtime execution on the active target.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-date-time-in-seconds.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-date-time-in-seconds.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "timestamp.terminal",
+      "definition_ref": "frog.studio.timestamp.terminal",
+      "contract_status": "editor_managed",
+      "profile_id": "frog.studio.polymorphic.timestamp.terminal.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "time stamp",
+            "type": "timestamp",
+            "default_value_type": "timestamp",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Editor-managed Timestamp Front Panel control/indicator and linked Diagram terminal; direction follows control versus indicator."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Editor-managed Timestamp Front Panel control/indicator and linked Diagram terminal; direction follows control versus indicator."
+      },
+      "behavior_summary": "Editor-managed Timestamp Front Panel control/indicator and linked Diagram terminal; direction follows control versus indicator.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "frog.studio.editor-managed",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support does not establish runtime execution on the active target.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-date-time-in-seconds.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-date-time-in-seconds.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    }
+  ]
+}

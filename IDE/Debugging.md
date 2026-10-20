@@ -1061,3 +1061,7 @@ This debugging layer provides the foundation for richer inspection tooling while
 The practical reading is simple:
 debugging in FROG is source-aligned, dataflow-first, observability-dependent, and compatible with probes and watches without collapsing those concerns into one document.
 </p>
+
+## Studio reconciliation — 14 October 2026
+
+Current compiled f64/Add observations and private timed simulation are separate implementation paths in the [Studio record](../docs/studio-reconciliation-2026-10-14.md). Full conditional/hierarchical breakpoint UI is not claimed by the presence of control APIs. Highlight visibility does not determine whether debugging is allowed, and masking animation is not proof of fast compiled Run.

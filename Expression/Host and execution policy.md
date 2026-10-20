@@ -128,3 +128,7 @@ The following are not part of this contract:
 
 Derived diagnostics may be displayed by an IDE but must not be serialized as
 authoritative host or execution policy.
+
+## Studio reconciliation — 14 October 2026
+
+Current desktop host and policy behavior is captured by the [Studio authoring profile](Studio%20authoring%20document%20profile%20v1.md). `debugging_allowed` and Highlight visibility are independent. A new Run, a resumed instance and a changed presentation rate must not be conflated; current compiled admission remains target-specific.

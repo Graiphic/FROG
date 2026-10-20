@@ -1,0 +1,1191 @@
+{
+  "schema_version": 2,
+  "family": "Mathematics",
+  "entries": [
+    {
+      "catalog_id": "math.exponential.exponential",
+      "definition_ref": "frog.studio.math.exponential.exponential",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.math.exponential.exponential.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "exp(x)",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric_tree",
+          "matrix<f64>"
+        ],
+        "result": "resolve:frog.studio.exponential.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. Concrete matrix<f64> dispatch is separate from element-wise Array/Cluster lifting: nonempty square matrices of dimension at most 32; finite real output only, bounded arithmetic and numerical residual checks. Exponential uses matrix Pade scaling/squaring; Natural Logarithm uses the convergent real principal matrix logarithm; Power uses actual matrix products for integer exponents and Exp(y*Ln(A)) for admissible noninteger real exponents. Complex branch-cut, ill-conditioned, nonconvergent or overflowing Matrix results fail explicitly."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1,
+        "port_order": [
+          "x"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "shape_rule": "preserve_rank_and_ordered_fields; binary_array_dimensions_must_match",
+        "scalar_lift": false,
+        "broadcasting": false,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. Concrete matrix<f64> dispatch is separate from element-wise Array/Cluster lifting: nonempty square matrices of dimension at most 32; finite real output only, bounded arithmetic and numerical residual checks. Exponential uses matrix Pade scaling/squaring; Natural Logarithm uses the convergent real principal matrix logarithm; Power uses actual matrix products for integer exponents and Exp(y*Ln(A)) for admissible noninteger real exponents. Complex branch-cut, ill-conditioned, nonconvergent or overflowing Matrix results fail explicitly."
+      },
+      "behavior_summary": "Computes e raised to x. Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. This private Studio profile declares local Highlight calculation separately from target Runtime execution. Concrete matrix<f64> dispatch is separate from element-wise Array/Cluster lifting: nonempty square matrices of dimension at most 32; finite real output only, bounded arithmetic and numerical residual checks. Exponential uses matrix Pade scaling/squaring; Natural Logarithm uses the convergent real principal matrix logarithm; Power uses actual matrix products for integer exponents and Exp(y*Ln(A)) for admissible noninteger real exponents. Complex branch-cut, ill-conditioned, nonconvergent or overflowing Matrix results fail explicitly.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "The local Highlight provider is not a public FROG lowering or a target Runtime provider."
+      },
+      "blockers": [
+        "NI fixed-point, physical units and extended numeric precision are outside this explicit Studio profile.",
+        "Complex input/output transport reuses the existing complete finite c32/c64 lexical grammar; non-finite complex results are rejected explicitly.",
+        "Binary arrays use equal actual dimensions; no dimensional broadcasting or truncation.",
+        "No public FROG lowering or target Runtime provider is declared."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/exponential.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/exponential-and-power-functions-mnu.html",
+        "https://eprints.maths.manchester.ac.uk/634/",
+        "https://eprints.maths.manchester.ac.uk/1851/"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/exponential.html",
+        "resolver_id": "frog.studio.exponential.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      }
+    },
+    {
+      "catalog_id": "math.exponential.exponential_minus_one",
+      "definition_ref": "frog.studio.math.exponential.exponential_minus_one",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.math.exponential.exponential_minus_one.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:numeric_tree",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "exp(x) -1",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric_tree"
+        ],
+        "result": "resolve:frog.studio.exponential.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1,
+        "port_order": [
+          "x"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "shape_rule": "preserve_rank_and_ordered_fields; binary_array_dimensions_must_match",
+        "scalar_lift": false,
+        "broadcasting": false,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "behavior_summary": "Computes e raised to x minus one, retaining accuracy near zero. Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. This private Studio profile declares local Highlight calculation separately from target Runtime execution.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "The local Highlight provider is not a public FROG lowering or a target Runtime provider."
+      },
+      "blockers": [
+        "NI fixed-point, physical units and extended numeric precision are outside this explicit Studio profile.",
+        "Complex input/output transport reuses the existing complete finite c32/c64 lexical grammar; non-finite complex results are rejected explicitly.",
+        "Binary arrays use equal actual dimensions; no dimensional broadcasting or truncation.",
+        "No public FROG lowering or target Runtime provider is declared."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/exponential-arg-1.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/exponential-and-power-functions-mnu.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/exponential-arg-1.html",
+        "resolver_id": "frog.studio.exponential.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      }
+    },
+    {
+      "catalog_id": "math.exponential.power_of_10",
+      "definition_ref": "frog.studio.math.exponential.power_of_10",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.math.exponential.power_of_10.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:numeric_tree",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "10^x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric_tree"
+        ],
+        "result": "resolve:frog.studio.exponential.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1,
+        "port_order": [
+          "x"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "shape_rule": "preserve_rank_and_ordered_fields; binary_array_dimensions_must_match",
+        "scalar_lift": false,
+        "broadcasting": false,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "behavior_summary": "Computes ten raised to x. Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. This private Studio profile declares local Highlight calculation separately from target Runtime execution.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "The local Highlight provider is not a public FROG lowering or a target Runtime provider."
+      },
+      "blockers": [
+        "NI fixed-point, physical units and extended numeric precision are outside this explicit Studio profile.",
+        "Complex input/output transport reuses the existing complete finite c32/c64 lexical grammar; non-finite complex results are rejected explicitly.",
+        "Binary arrays use equal actual dimensions; no dimensional broadcasting or truncation.",
+        "No public FROG lowering or target Runtime provider is declared."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/power-of-10.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/exponential-and-power-functions-mnu.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/power-of-10.html",
+        "resolver_id": "frog.studio.exponential.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      }
+    },
+    {
+      "catalog_id": "math.exponential.power_of_2",
+      "definition_ref": "frog.studio.math.exponential.power_of_2",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.math.exponential.power_of_2.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:numeric_tree",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "2^x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric_tree"
+        ],
+        "result": "resolve:frog.studio.exponential.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1,
+        "port_order": [
+          "x"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "shape_rule": "preserve_rank_and_ordered_fields; binary_array_dimensions_must_match",
+        "scalar_lift": false,
+        "broadcasting": false,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "behavior_summary": "Computes two raised to x. Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. This private Studio profile declares local Highlight calculation separately from target Runtime execution.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "The local Highlight provider is not a public FROG lowering or a target Runtime provider."
+      },
+      "blockers": [
+        "NI fixed-point, physical units and extended numeric precision are outside this explicit Studio profile.",
+        "Complex input/output transport reuses the existing complete finite c32/c64 lexical grammar; non-finite complex results are rejected explicitly.",
+        "Binary arrays use equal actual dimensions; no dimensional broadcasting or truncation.",
+        "No public FROG lowering or target Runtime provider is declared."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/power-of-2.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/exponential-and-power-functions-mnu.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/power-of-2.html",
+        "resolver_id": "frog.studio.exponential.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      }
+    },
+    {
+      "catalog_id": "math.exponential.power_of_x",
+      "definition_ref": "frog.studio.math.exponential.power_of_x",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.math.exponential.power_of_x.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "y",
+            "display_name": "y",
+            "type": "T:numeric_tree",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "x^y",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric_tree",
+          "T:numeric_tree",
+          "matrix<f64>"
+        ],
+        "result": "resolve:frog.studio.exponential.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. Concrete matrix<f64> dispatch is separate from element-wise Array/Cluster lifting: nonempty square matrices of dimension at most 32; finite real output only, bounded arithmetic and numerical residual checks. Exponential uses matrix Pade scaling/squaring; Natural Logarithm uses the convergent real principal matrix logarithm; Power uses actual matrix products for integer exponents and Exp(y*Ln(A)) for admissible noninteger real exponents. Complex branch-cut, ill-conditioned, nonconvergent or overflowing Matrix results fail explicitly."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "y",
+          "x"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "shape_rule": "preserve_rank_and_ordered_fields; binary_array_dimensions_must_match",
+        "scalar_lift": true,
+        "broadcasting": false,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. Concrete matrix<f64> dispatch is separate from element-wise Array/Cluster lifting: nonempty square matrices of dimension at most 32; finite real output only, bounded arithmetic and numerical residual checks. Exponential uses matrix Pade scaling/squaring; Natural Logarithm uses the convergent real principal matrix logarithm; Power uses actual matrix products for integer exponents and Exp(y*Ln(A)) for admissible noninteger real exponents. Complex branch-cut, ill-conditioned, nonconvergent or overflowing Matrix results fail explicitly."
+      },
+      "behavior_summary": "Raises base x to exponent y. Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. This private Studio profile declares local Highlight calculation separately from target Runtime execution. Concrete matrix<f64> dispatch is separate from element-wise Array/Cluster lifting: nonempty square matrices of dimension at most 32; finite real output only, bounded arithmetic and numerical residual checks. Exponential uses matrix Pade scaling/squaring; Natural Logarithm uses the convergent real principal matrix logarithm; Power uses actual matrix products for integer exponents and Exp(y*Ln(A)) for admissible noninteger real exponents. Complex branch-cut, ill-conditioned, nonconvergent or overflowing Matrix results fail explicitly.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "The local Highlight provider is not a public FROG lowering or a target Runtime provider."
+      },
+      "blockers": [
+        "NI fixed-point, physical units and extended numeric precision are outside this explicit Studio profile.",
+        "Complex input/output transport reuses the existing complete finite c32/c64 lexical grammar; non-finite complex results are rejected explicitly.",
+        "Binary arrays use equal actual dimensions; no dimensional broadcasting or truncation.",
+        "No public FROG lowering or target Runtime provider is declared."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/power-of-x.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/exponential-and-power-functions-mnu.html",
+        "https://eprints.maths.manchester.ac.uk/634/",
+        "https://eprints.maths.manchester.ac.uk/1851/"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/power-of-x.html",
+        "resolver_id": "frog.studio.exponential.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      }
+    },
+    {
+      "catalog_id": "math.exponential.y_th_root_of_x",
+      "definition_ref": "frog.studio.math.exponential.y_th_root_of_x",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.math.exponential.y_th_root_of_x.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "y",
+            "display_name": "y",
+            "type": "T:numeric_tree",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:numeric_tree",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "y-th root(x)",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric_tree",
+          "T:numeric_tree"
+        ],
+        "result": "resolve:frog.studio.exponential.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "y",
+          "x"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "shape_rule": "preserve_rank_and_ordered_fields; binary_array_dimensions_must_match",
+        "scalar_lift": true,
+        "broadcasting": false,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "behavior_summary": "Computes the y-th root of x. Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. This private Studio profile declares local Highlight calculation separately from target Runtime execution.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "The local Highlight provider is not a public FROG lowering or a target Runtime provider."
+      },
+      "blockers": [
+        "NI fixed-point, physical units and extended numeric precision are outside this explicit Studio profile.",
+        "Complex input/output transport reuses the existing complete finite c32/c64 lexical grammar; non-finite complex results are rejected explicitly.",
+        "Binary arrays use equal actual dimensions; no dimensional broadcasting or truncation.",
+        "No public FROG lowering or target Runtime provider is declared."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/y-th-root-of-x.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/exponential-and-power-functions-mnu.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/y-th-root-of-x.html",
+        "resolver_id": "frog.studio.exponential.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      }
+    },
+    {
+      "catalog_id": "math.exponential.natural_logarithm",
+      "definition_ref": "frog.studio.math.exponential.natural_logarithm",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.math.exponential.natural_logarithm.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "ln(x)",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric_tree",
+          "matrix<f64>"
+        ],
+        "result": "resolve:frog.studio.exponential.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. Concrete matrix<f64> dispatch is separate from element-wise Array/Cluster lifting: nonempty square matrices of dimension at most 32; finite real output only, bounded arithmetic and numerical residual checks. Exponential uses matrix Pade scaling/squaring; Natural Logarithm uses the convergent real principal matrix logarithm; Power uses actual matrix products for integer exponents and Exp(y*Ln(A)) for admissible noninteger real exponents. Complex branch-cut, ill-conditioned, nonconvergent or overflowing Matrix results fail explicitly."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1,
+        "port_order": [
+          "x"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "shape_rule": "preserve_rank_and_ordered_fields; binary_array_dimensions_must_match",
+        "scalar_lift": false,
+        "broadcasting": false,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. Concrete matrix<f64> dispatch is separate from element-wise Array/Cluster lifting: nonempty square matrices of dimension at most 32; finite real output only, bounded arithmetic and numerical residual checks. Exponential uses matrix Pade scaling/squaring; Natural Logarithm uses the convergent real principal matrix logarithm; Power uses actual matrix products for integer exponents and Exp(y*Ln(A)) for admissible noninteger real exponents. Complex branch-cut, ill-conditioned, nonconvergent or overflowing Matrix results fail explicitly."
+      },
+      "behavior_summary": "Computes the natural logarithm of x. Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. This private Studio profile declares local Highlight calculation separately from target Runtime execution. Concrete matrix<f64> dispatch is separate from element-wise Array/Cluster lifting: nonempty square matrices of dimension at most 32; finite real output only, bounded arithmetic and numerical residual checks. Exponential uses matrix Pade scaling/squaring; Natural Logarithm uses the convergent real principal matrix logarithm; Power uses actual matrix products for integer exponents and Exp(y*Ln(A)) for admissible noninteger real exponents. Complex branch-cut, ill-conditioned, nonconvergent or overflowing Matrix results fail explicitly.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "The local Highlight provider is not a public FROG lowering or a target Runtime provider."
+      },
+      "blockers": [
+        "NI fixed-point, physical units and extended numeric precision are outside this explicit Studio profile.",
+        "Complex input/output transport reuses the existing complete finite c32/c64 lexical grammar; non-finite complex results are rejected explicitly.",
+        "Binary arrays use equal actual dimensions; no dimensional broadcasting or truncation.",
+        "No public FROG lowering or target Runtime provider is declared."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/natural-logarithm.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/exponential-and-power-functions-mnu.html",
+        "https://eprints.maths.manchester.ac.uk/634/",
+        "https://eprints.maths.manchester.ac.uk/1851/"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/natural-logarithm.html",
+        "resolver_id": "frog.studio.exponential.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      }
+    },
+    {
+      "catalog_id": "math.exponential.natural_logarithm_plus_one",
+      "definition_ref": "frog.studio.math.exponential.natural_logarithm_plus_one",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.math.exponential.natural_logarithm_plus_one.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:numeric_tree",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "ln(x+1)",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric_tree"
+        ],
+        "result": "resolve:frog.studio.exponential.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1,
+        "port_order": [
+          "x"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "shape_rule": "preserve_rank_and_ordered_fields; binary_array_dimensions_must_match",
+        "scalar_lift": false,
+        "broadcasting": false,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "behavior_summary": "Computes the natural logarithm of one plus x, retaining accuracy near zero. Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. This private Studio profile declares local Highlight calculation separately from target Runtime execution.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "The local Highlight provider is not a public FROG lowering or a target Runtime provider."
+      },
+      "blockers": [
+        "NI fixed-point, physical units and extended numeric precision are outside this explicit Studio profile.",
+        "Complex input/output transport reuses the existing complete finite c32/c64 lexical grammar; non-finite complex results are rejected explicitly.",
+        "Binary arrays use equal actual dimensions; no dimensional broadcasting or truncation.",
+        "No public FROG lowering or target Runtime provider is declared."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/natural-logarithm-arg-1.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/exponential-and-power-functions-mnu.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/natural-logarithm-arg-1.html",
+        "resolver_id": "frog.studio.exponential.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      }
+    },
+    {
+      "catalog_id": "math.exponential.logarithm_base_10",
+      "definition_ref": "frog.studio.math.exponential.logarithm_base_10",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.math.exponential.logarithm_base_10.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:numeric_tree",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "log(x)",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric_tree"
+        ],
+        "result": "resolve:frog.studio.exponential.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1,
+        "port_order": [
+          "x"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "shape_rule": "preserve_rank_and_ordered_fields; binary_array_dimensions_must_match",
+        "scalar_lift": false,
+        "broadcasting": false,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "behavior_summary": "Computes the logarithm of x to base ten. Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. This private Studio profile declares local Highlight calculation separately from target Runtime execution.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "The local Highlight provider is not a public FROG lowering or a target Runtime provider."
+      },
+      "blockers": [
+        "NI fixed-point, physical units and extended numeric precision are outside this explicit Studio profile.",
+        "Complex input/output transport reuses the existing complete finite c32/c64 lexical grammar; non-finite complex results are rejected explicitly.",
+        "Binary arrays use equal actual dimensions; no dimensional broadcasting or truncation.",
+        "No public FROG lowering or target Runtime provider is declared."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/logarithm-base-10.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/exponential-and-power-functions-mnu.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/logarithm-base-10.html",
+        "resolver_id": "frog.studio.exponential.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      }
+    },
+    {
+      "catalog_id": "math.exponential.logarithm_base_2",
+      "definition_ref": "frog.studio.math.exponential.logarithm_base_2",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.math.exponential.logarithm_base_2.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:numeric_tree",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "log2(x)",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric_tree"
+        ],
+        "result": "resolve:frog.studio.exponential.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1,
+        "port_order": [
+          "x"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "shape_rule": "preserve_rank_and_ordered_fields; binary_array_dimensions_must_match",
+        "scalar_lift": false,
+        "broadcasting": false,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "behavior_summary": "Computes the logarithm of x to base two. Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. This private Studio profile declares local Highlight calculation separately from target Runtime execution.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "The local Highlight provider is not a public FROG lowering or a target Runtime provider."
+      },
+      "blockers": [
+        "NI fixed-point, physical units and extended numeric precision are outside this explicit Studio profile.",
+        "Complex input/output transport reuses the existing complete finite c32/c64 lexical grammar; non-finite complex results are rejected explicitly.",
+        "Binary arrays use equal actual dimensions; no dimensional broadcasting or truncation.",
+        "No public FROG lowering or target Runtime provider is declared."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/logarithm-base-2.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/exponential-and-power-functions-mnu.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/logarithm-base-2.html",
+        "resolver_id": "frog.studio.exponential.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      }
+    },
+    {
+      "catalog_id": "math.exponential.logarithm_base_x",
+      "definition_ref": "frog.studio.math.exponential.logarithm_base_x",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.math.exponential.logarithm_base_x.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "y",
+            "display_name": "y",
+            "type": "T:numeric_tree",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:numeric_tree",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "logx(y)",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric_tree",
+          "T:numeric_tree"
+        ],
+        "result": "resolve:frog.studio.exponential.type-resolution@1",
+        "implicit_coercion": true,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "y",
+          "x"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "element_wise_same_shape_with_scalar_lift",
+        "shape_rule": "preserve_rank_and_ordered_fields; binary_array_dimensions_must_match",
+        "scalar_lift": true,
+        "broadcasting": false,
+        "description": "Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported."
+      },
+      "behavior_summary": "Computes the logarithm of value y to base x. Numeric scalar, array or recursively numeric cluster. F32/F64 and C32/C64 are supported; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays preserve rank and clusters preserve ordered field identities. Binary operands require matching aggregate structures and actual array dimensions; one whole scalar operand may lift through the other aggregate. No fixed-point, extended precision, nominal Matrix dispatch or dimensional broadcasting. Real invalid-domain results follow IEEE NaN/Infinity; non-finite complex results are explicitly unsupported. This private Studio profile declares local Highlight calculation separately from target Runtime execution.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "The local Highlight provider is not a public FROG lowering or a target Runtime provider."
+      },
+      "blockers": [
+        "NI fixed-point, physical units and extended numeric precision are outside this explicit Studio profile.",
+        "Complex input/output transport reuses the existing complete finite c32/c64 lexical grammar; non-finite complex results are rejected explicitly.",
+        "Binary arrays use equal actual dimensions; no dimensional broadcasting or truncation.",
+        "No public FROG lowering or target Runtime provider is declared."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/logarithm-base-x.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/exponential-and-power-functions-mnu.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/logarithm-base-x.html",
+        "resolver_id": "frog.studio.exponential.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "element_wise_same_shape_with_scalar_lift"
+      }
+    },
+    {
+      "catalog_id": "math.matrix.array_to_matrix",
+      "definition_ref": "frog.studio.math.matrix.array_to_matrix",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.math.matrix.array_to_matrix.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "array",
+            "type": "array<f64,rank=2>",
+            "default_value_type": "array<f64,rank=2>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "matrix",
+            "type": "matrix<f64>",
+            "default_value_type": "matrix<f64>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "array<f64,rank=2>"
+        ],
+        "result": "matrix<f64>",
+        "implicit_coercion": false,
+        "description": "Explicit independent row-major finite f64 conversion between a rank-2 Array and the distinct private Matrix type. Preserves exact rectangular/empty dimensions and values, validates shape and resource budgets, and owns immutable copies. Existing Matrix-named Array functions are not reinterpreted. No public FROG lowering or target Runtime provider is declared."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1,
+        "port_order": [
+          "x"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "shape_rule": "explicit_rank_2_f64_conversion_preserves_row_major_dimensions",
+        "scalar_lift": false,
+        "broadcasting": false,
+        "description": "Explicit independent row-major finite f64 conversion between a rank-2 Array and the distinct private Matrix type. Preserves exact rectangular/empty dimensions and values, validates shape and resource budgets, and owns immutable copies. Existing Matrix-named Array functions are not reinterpreted. No public FROG lowering or target Runtime provider is declared."
+      },
+      "behavior_summary": "Explicit independent row-major finite f64 conversion between a rank-2 Array and the distinct private Matrix type. Preserves exact rectangular/empty dimensions and values, validates shape and resource budgets, and owns immutable copies. Existing Matrix-named Array functions are not reinterpreted. No public FROG lowering or target Runtime provider is declared.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "The local Highlight provider is not a public FROG lowering or a target Runtime provider."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "This private profile admits finite f64 data only."
+      ],
+      "authority_refs": [
+        "include/frog_native_engine/MatrixValue.hpp",
+        "src/MatrixConversions.cpp"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "math.matrix.matrix_to_array",
+      "definition_ref": "frog.studio.math.matrix.matrix_to_array",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.math.matrix.matrix_to_array.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "matrix",
+            "type": "matrix<f64>",
+            "default_value_type": "matrix<f64>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "array",
+            "type": "array<f64,rank=2>",
+            "default_value_type": "array<f64,rank=2>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "matrix<f64>"
+        ],
+        "result": "array<f64,rank=2>",
+        "implicit_coercion": false,
+        "description": "Explicit independent row-major finite f64 conversion between a rank-2 Array and the distinct private Matrix type. Preserves exact rectangular/empty dimensions and values, validates shape and resource budgets, and owns immutable copies. Existing Matrix-named Array functions are not reinterpreted. No public FROG lowering or target Runtime provider is declared."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1,
+        "port_order": [
+          "x"
+        ]
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "shape_rule": "explicit_rank_2_f64_conversion_preserves_row_major_dimensions",
+        "scalar_lift": false,
+        "broadcasting": false,
+        "description": "Explicit independent row-major finite f64 conversion between a rank-2 Array and the distinct private Matrix type. Preserves exact rectangular/empty dimensions and values, validates shape and resource budgets, and owns immutable copies. Existing Matrix-named Array functions are not reinterpreted. No public FROG lowering or target Runtime provider is declared."
+      },
+      "behavior_summary": "Explicit independent row-major finite f64 conversion between a rank-2 Array and the distinct private Matrix type. Preserves exact rectangular/empty dimensions and values, validates shape and resource budgets, and owns immutable copies. Existing Matrix-named Array functions are not reinterpreted. No public FROG lowering or target Runtime provider is declared.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "The local Highlight provider is not a public FROG lowering or a target Runtime provider."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "This private profile admits finite f64 data only."
+      ],
+      "authority_refs": [
+        "include/frog_native_engine/MatrixValue.hpp",
+        "src/MatrixConversions.cpp"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    }
+  ]
+}

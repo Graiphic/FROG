@@ -4,9 +4,16 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - _sidebar.md
-      - nav-tree.json
+    paths:
+      - '**/*.md'
+      - '!_sidebar.md'
+      - '**/*.frog'
+      - '**/*.py'
+      - '.nojekyll'
+      - 'index.html'
+      - '404.html'
+      - '.github/scripts/**'
+      - '.github/workflows/refresh-pages-navigation.yml'
   schedule:
     - cron: "23 2 * * *"
   workflow_dispatch:
@@ -21,56 +28,23 @@ concurrency:
 jobs:
   refresh-pages-navigation:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-
-      - name: Decide whether this push needs a Pages refresh
-        id: scope
-        shell: pwsh
-        run: |
-          $shouldRefresh = $true
-
-          if ("${{ github.event_name }}" -eq "push") {
-            $before = "${{ github.event.before }}"
-            $after = "${{ github.sha }}"
-            $changedFiles = @()
-
-            if ($before -and $before -ne "0000000000000000000000000000000000000000") {
-              $changedFiles = @(git diff --name-only $before $after)
-            } else {
-              $changedFiles = @(git diff-tree --no-commit-id --name-only -r $after)
-            }
-
-            $relevantPattern = '(^|/)[^/]+\.(md|frog|py)$|^(index\.html|404\.html|_navbar\.md)$|^\.github/scripts/|^\.github/workflows/refresh-pages-navigation\.yml$'
-            $relevantFiles = @($changedFiles | Where-Object { $_ -match $relevantPattern })
-
-            if ($relevantFiles.Count -eq 0) {
-              $shouldRefresh = $false
-              Write-Host "No relevant documentation or Pages inputs changed in this push."
-            } else {
-              Write-Host "Relevant files changed:"
-              $relevantFiles | ForEach-Object { Write-Host " - $_" }
-            }
-          }
-
-          "should_refresh=$($shouldRefresh.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+          fetch-depth: 2
 
       - name: Rebuild Pages navigation
-        if: steps.scope.outputs.should_refresh == 'true' || github.event_name != 'push'
         shell: pwsh
         run: ./.github/scripts/build-pages-navigation.ps1
 
       - name: Verify Pages navigation
-        if: steps.scope.outputs.should_refresh == 'true' || github.event_name != 'push'
         shell: pwsh
         run: ./.github/scripts/verify-pages-navigation.ps1
 
       - name: Detect generated navigation changes
-        if: steps.scope.outputs.should_refresh == 'true' || github.event_name != 'push'
         id: changes
         shell: pwsh
         run: |

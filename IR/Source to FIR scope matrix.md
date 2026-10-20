@@ -369,3 +369,7 @@ calls. It preserves source attribution, but it does not absorb front-panel
 visual realization, SVG geometry, runtime-private behavior, IDE state, or
 backend-specific lowering choices.
 </p>
+
+## Studio reconciliation — 14 October 2026
+
+The [current Studio record](../docs/studio-reconciliation-2026-10-14.md) qualifies the public flat f64/Add native corridor and bounded captured Event/Unbundle Source→IR→SDK separately. Private authoring metadata and native Pane producer support do not establish general LLVM Record, Array, Enum or While lowering.

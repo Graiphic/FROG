@@ -1,0 +1,2058 @@
+{
+  "schema_version": 2,
+  "family": "Error",
+  "entries": [
+    {
+      "catalog_id": "error.build_cluster",
+      "definition_ref": "frog.studio.error.build_cluster",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.build_cluster.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "code",
+            "display_name": "code",
+            "type": "i32",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "description",
+            "display_name": "description",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "include_call_chain",
+            "display_name": "include call chain",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "make_warning",
+            "display_name": "make warning",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "i32",
+          "string",
+          "bool",
+          "bool",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Creates a diagnostic from an I32 code, description and optional call chain. An incoming error or warning is preserved."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 5
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Creates a diagnostic from an I32 code, description and optional call chain. An incoming error or warning is preserved."
+      },
+      "behavior_summary": "Creates a diagnostic from an I32 code, description and optional call chain. An incoming error or warning is preserved.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/build-error-cluster.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/build-error-cluster.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.clear_cluster",
+      "definition_ref": "frog.studio.error.clear_cluster",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.clear_cluster.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Resets status to false, code to zero and source to an empty string. Clearing a diagnostic does not repair or retry the failed operation."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Resets status to false, code to zero and source to an empty string. Clearing a diagnostic does not repair or retry the failed operation."
+      },
+      "behavior_summary": "Resets status to false, code to zero and source to an empty string. Clearing a diagnostic does not repair or retry the failed operation.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/clear-error-cluster.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/clear-error-cluster.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.demultiplex",
+      "definition_ref": "frog.studio.error.demultiplex",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.demultiplex.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "errors_out",
+            "display_name": "errors out",
+            "type": "array<cluster<status:bool,code:i32,source:string>,rank=1>",
+            "default_value_type": "array<cluster<status:bool,code:i32,source:string>,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Extracts the diagnostics combined by Multiplex Errors into a 1D array of error clusters."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Extracts the diagnostics combined by Multiplex Errors into a 1D array of error clusters."
+      },
+      "behavior_summary": "Extracts the diagnostics combined by Multiplex Errors into a 1D array of error clusters.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/demultiplex-errors.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/demultiplex-errors.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.display",
+      "definition_ref": "frog.studio.error.display",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.display.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "type_of_dialog",
+            "display_name": "type of dialog",
+            "type": "enum<error_dialog_type,u16>",
+            "default_value_type": "enum<error_dialog_type,u16>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error",
+            "display_name": "error",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "code",
+            "display_name": "code",
+            "type": "i32",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "location",
+            "display_name": "location",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "description",
+            "display_name": "description",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "enum<error_dialog_type,u16>",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Reports status, code, location and description; the selected dialog mode controls runtime presentation. Placing this node opens no dialog."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Reports status, code, location and description; the selected dialog mode controls runtime presentation. Placing this node opens no dialog."
+      },
+      "behavior_summary": "Reports status, code, location and description; the selected dialog mode controls runtime presentation. Placing this node opens no dialog.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/display-error.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/display-error.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.downgrade_to_warning",
+      "definition_ref": "frog.studio.error.downgrade_to_warning",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.downgrade_to_warning.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Changes an active error into a warning without treating the sign of the code as severity."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Changes an active error into a warning without treating the sign of the code as severity."
+      },
+      "behavior_summary": "Changes an active error into a warning without treating the sign of the code as severity.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/downgrade-to-warning.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/downgrade-to-warning.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.filter_code",
+      "definition_ref": "frog.studio.error.filter_code",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.filter_code.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "codes",
+            "display_name": "codes",
+            "type": "T:any",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "codes_cleared",
+            "display_name": "codes cleared",
+            "type": "array<i32,rank=1>",
+            "default_value_type": "array<i32,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_cleared",
+            "display_name": "error cleared",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Accepts an I32 code or a 1D I32 array. Clears matching diagnostics, preserves others, and exposes codes cleared for the array overload."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Accepts an I32 code or a 1D I32 array. Clears matching diagnostics, preserves others, and exposes codes cleared for the array overload."
+      },
+      "behavior_summary": "Accepts an I32 code or a 1D I32 array. Clears matching diagnostics, preserves others, and exposes codes cleared for the array overload.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/filter-error-code.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/filter-error-code.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.generate_report",
+      "definition_ref": "frog.studio.error.generate_report",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.generate_report.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "include_divider_line",
+            "display_name": "include divider line",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_report",
+            "display_name": "error report",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "bool",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Formats a diagnostic into a multiline report string, optionally followed by a divider line."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Formats a diagnostic into a multiline report string, optionally followed by a divider line."
+      },
+      "behavior_summary": "Formats a diagnostic into a multiline report string, optionally followed by a divider line.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/generate-error-report.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/generate-error-report.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.is_error_or_warning",
+      "definition_ref": "frog.studio.error.is_error_or_warning",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.is_error_or_warning.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Tests for an error or warning: status true or nonzero code. The output is one Boolean."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Tests for an error or warning: status true or nonzero code. The output is one Boolean."
+      },
+      "behavior_summary": "Tests for an error or warning: status true or nonzero code. The output is one Boolean.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/is-error-or-warning.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/is-error-or-warning.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.is_error",
+      "definition_ref": "frog.studio.error.is_error",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.is_error.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Tests the status field, not the sign of the error code. The output is one Boolean."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Tests the status field, not the sign of the error code. The output is one Boolean."
+      },
+      "behavior_summary": "Tests the status field, not the sign of the error code. The output is one Boolean.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/is-error.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/is-error.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.is_warning",
+      "definition_ref": "frog.studio.error.is_warning",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.is_warning.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Tests for status false with a nonzero code. The output is one Boolean."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Tests for status false with a nonzero code. The output is one Boolean."
+      },
+      "behavior_summary": "Tests for status false with a nonzero code. The output is one Boolean.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/is-warning.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/is-warning.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.multiplex",
+      "definition_ref": "frog.studio.error.multiplex",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.multiplex.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "error_in_1",
+            "display_name": "error in 1",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in_2",
+            "display_name": "error in 2",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in_3",
+            "display_name": "error in 3",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_array_in",
+            "display_name": "error array in",
+            "type": "array<cluster<status:bool,code:i32,source:string>,rank=1>",
+            "default_value_type": "array<cluster<status:bool,code:i32,source:string>,rank=1>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "cluster<status:bool,code:i32,source:string>",
+          "cluster<status:bool,code:i32,source:string>",
+          "cluster<status:bool,code:i32,source:string>",
+          "array<cluster<status:bool,code:i32,source:string>,rank=1>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Combines three individual diagnostics and a 1D diagnostic array into one multiplexed error cluster. Demultiplex Errors recovers the collection."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Combines three individual diagnostics and a 1D diagnostic array into one multiplexed error cluster. Demultiplex Errors recovers the collection."
+      },
+      "behavior_summary": "Combines three individual diagnostics and a 1D diagnostic array into one multiplexed error cluster. Demultiplex Errors recovers the collection.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/multiplex-errors.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/multiplex-errors.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.override_call_chain",
+      "definition_ref": "frog.studio.error.override_call_chain",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.override_call_chain.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "location",
+            "display_name": "location",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "string",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Replaces the stored call chain with a location string; an empty string removes that location."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Replaces the stored call chain with a location string; an empty string removes that location."
+      },
+      "behavior_summary": "Replaces the stored call chain with a location string; an empty string removes that location.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/override-call-chain.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/override-call-chain.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.read_call_chain",
+      "definition_ref": "frog.studio.error.read_call_chain",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.read_call_chain.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "call_chain",
+            "display_name": "call chain",
+            "type": "array<string,rank=1>",
+            "default_value_type": "array<string,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "has_location",
+            "display_name": "has location",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Returns the call chain as a 1D string array and indicates whether an alternate location was stored."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Returns the call chain as a 1D string array and indicates whether an alternate location was stored."
+      },
+      "behavior_summary": "Returns the call chain as a 1D string array and indicates whether an alternate location was stored.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/read-call-chain.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/read-call-chain.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.read_description",
+      "definition_ref": "frog.studio.error.read_description",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.read_description.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "filter_typeface_tags",
+            "display_name": "filter typeface tags",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "description",
+            "display_name": "description",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "bool",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Reads the diagnostic description, optionally removing typeface formatting tags."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Reads the diagnostic description, optionally removing typeface formatting tags."
+      },
+      "behavior_summary": "Reads the diagnostic description, optionally removing typeface formatting tags.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/read-description.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/read-description.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.read_code",
+      "definition_ref": "frog.studio.error.read_code",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.read_code.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "code",
+            "display_name": "code",
+            "type": "i32",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Reads the signed 32-bit code without inferring severity from its sign."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Reads the signed 32-bit code without inferring severity from its sign."
+      },
+      "behavior_summary": "Reads the signed 32-bit code without inferring severity from its sign.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/read-error-code.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/read-error-code.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.read_location",
+      "definition_ref": "frog.studio.error.read_location",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.read_location.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "location",
+            "display_name": "location",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Reads the location or formats the call chain as a multiline string."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Reads the location or formats the call chain as a multiline string."
+      },
+      "behavior_summary": "Reads the location or formats the call chain as a multiline string.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/read-location.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/read-location.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.translate_code",
+      "definition_ref": "frog.studio.error.translate_code",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.translate_code.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "original_codes",
+            "display_name": "original codes",
+            "type": "array<i32,rank=1>",
+            "default_value_type": "array<i32,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "replacement_codes",
+            "display_name": "replacement codes",
+            "type": "array<i32,rank=1>",
+            "default_value_type": "array<i32,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "update_call_chain",
+            "display_name": "update call chain",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "array<i32,rank=1>",
+          "array<i32,rank=1>",
+          "bool",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Maps original codes to replacement codes supplied as two 1D I32 arrays; optionally updates the call chain. Array lengths are runtime values."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Maps original codes to replacement codes supplied as two 1D I32 arrays; optionally updates the call chain. Array lengths are runtime values."
+      },
+      "behavior_summary": "Maps original codes to replacement codes supplied as two 1D I32 arrays; optionally updates the call chain. Array lengths are runtime values.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/translate-error-code.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/translate-error-code.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.upgrade_to_error",
+      "definition_ref": "frog.studio.error.upgrade_to_error",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.upgrade_to_error.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Changes a warning into an active error."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Changes a warning into an active error."
+      },
+      "behavior_summary": "Changes a warning into an active error.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/upgrade-to-error.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/upgrade-to-error.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.write_call_chain",
+      "definition_ref": "frog.studio.error.write_call_chain",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.write_call_chain.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "call_chain",
+            "display_name": "call chain",
+            "type": "array<string,rank=1>",
+            "default_value_type": "array<string,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "array<string,rank=1>",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Writes a 1D string array as the diagnostic call chain, including in an empty error cluster."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Writes a 1D string array as the diagnostic call chain, including in an empty error cluster."
+      },
+      "behavior_summary": "Writes a 1D string array as the diagnostic call chain, including in an empty error cluster.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/write-call-chain.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/write-call-chain.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.write_current_call_chain",
+      "definition_ref": "frog.studio.error.write_current_call_chain",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.write_current_call_chain.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "number_of_elements_to_remove",
+            "display_name": "number of elements to remove",
+            "type": "i32",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "i32",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Updates an error or warning with the current call chain, omitting the specified number of initial elements (default one)."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Updates an error or warning with the current call chain, omitting the specified number of initial elements (default one)."
+      },
+      "behavior_summary": "Updates an error or warning with the current call chain, omitting the specified number of initial elements (default one).",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/write-current-call-chain.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/write-current-call-chain.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.write_code",
+      "definition_ref": "frog.studio.error.write_code",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.write_code.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "code",
+            "display_name": "code",
+            "type": "i32",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "i32",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Replaces the signed 32-bit diagnostic code."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Replaces the signed 32-bit diagnostic code."
+      },
+      "behavior_summary": "Replaces the signed 32-bit diagnostic code.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/write-error-code.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/write-error-code.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.retain_first",
+      "definition_ref": "frog.studio.error.retain_first",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.retain_first.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "a",
+            "display_name": "a",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "b",
+            "display_name": "b",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "input_N",
+        "optional_input_first_index": 3
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "cluster<status:bool,code:i32,source:string>",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Expandable inputs are checked from top to bottom: first error, otherwise first warning, otherwise no error. This is not Multiplex Errors."
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 2,
+        "maximum_input_count": 16,
+        "port_order": [
+          "a",
+          "b",
+          "input_N_ascending"
+        ],
+        "reduction": "first_error_then_warning"
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Expandable inputs are checked from top to bottom: first error, otherwise first warning, otherwise no error. This is not Multiplex Errors."
+      },
+      "behavior_summary": "Expandable inputs are checked from top to bottom: first error, otherwise first warning, otherwise no error. This is not Multiplex Errors.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/merge-errors.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/merge-errors.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.constant",
+      "definition_ref": "frog.studio.error.constant",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.constant.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Creates an editable status/code/source cluster with the initial no-error value false, zero and empty string. This value is not an exception."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Creates an editable status/code/source cluster with the initial no-error value false, zero and empty string. This value is not an exception."
+      },
+      "behavior_summary": "Creates an editable status/code/source cluster with the initial no-error value false, zero and empty string. This value is not an exception.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/error-constant.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/error-constant.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.terminal",
+      "definition_ref": "frog.studio.error.terminal",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.terminal.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Creates an error-cluster control on the Front Panel and its linked diagram terminal."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Creates an error-cluster control on the Front Panel and its linked diagram terminal."
+      },
+      "behavior_summary": "Creates an error-cluster control on the Front Panel and its linked diagram terminal.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/error-terminal.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/error-terminal.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    }
+  ]
+}

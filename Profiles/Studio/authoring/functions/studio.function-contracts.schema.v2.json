@@ -1,0 +1,490 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graiphic.github.io/frog-studio/schemas/studio.function-contracts.schema.v2.json",
+  "title": "Versioned Studio function authoring contracts",
+  "description": "Complete generated binding inputs and preserved policy descriptors for the Studio palette families. This private schema does not create public FROG semantics.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "family",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "family": {
+      "enum": [
+        "Numeric",
+        "Boolean",
+        "String",
+        "Path",
+        "Array",
+        "Structures",
+        "Cluster",
+        "Variant",
+        "Comparison",
+        "Error",
+        "Timestamp",
+        "ApplicationControl",
+        "Connectivity",
+        "Mathematics",
+        "File"
+      ]
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/function_contract"
+      }
+    }
+  },
+  "definitions": {
+    "non_empty_string": {
+      "type": "string",
+      "minLength": 1
+    },
+    "qualified_id": {
+      "type": "string",
+      "minLength": 3,
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]*(\\.[A-Za-z0-9_-]+)+$"
+    },
+    "string_array": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "port": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "display_name",
+        "legacy_aliases",
+        "type",
+        "default_value_type",
+        "requirement",
+        "cardinality",
+        "connection_policy"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.]*$"
+        },
+        "display_name": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "legacy_aliases": {
+          "$ref": "#/definitions/string_array"
+        },
+        "type": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "default_value_type": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "requirement": {
+          "description": "Connection requirement for an input binding. 'required' means mandatory: the function is not semantically ready while this input is unconnected.",
+          "enum": [
+            "required",
+            "recommended",
+            "optional"
+          ]
+        },
+        "cardinality": {
+          "enum": [
+            "single",
+            "variadic"
+          ]
+        },
+        "connection_policy": {
+          "$ref": "#/definitions/non_empty_string"
+        }
+      }
+    },
+    "input_port": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/port"
+        },
+        {
+          "type": "object",
+          "required": [
+            "requirement"
+          ]
+        }
+      ]
+    },
+    "ports": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputs",
+        "outputs"
+      ],
+      "properties": {
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/input_port"
+          }
+        },
+        "optional_input_pattern": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "optional_input_first_index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/port"
+          }
+        }
+      },
+      "dependencies": {
+        "optional_input_pattern": [
+          "optional_input_first_index"
+        ],
+        "optional_input_first_index": [
+          "optional_input_pattern"
+        ]
+      }
+    },
+    "overload_type_resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy",
+        "accepted_operands",
+        "result",
+        "implicit_coercion"
+      ],
+      "properties": {
+        "policy": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "accepted_operands": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/non_empty_string"
+          }
+        },
+        "result": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "implicit_coercion": {
+          "type": "boolean"
+        },
+        "description": {
+          "$ref": "#/definitions/non_empty_string"
+        }
+      }
+    },
+    "variadicity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "input_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "minimum_input_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximum_input_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "port_order": {
+          "$ref": "#/definitions/string_array"
+        },
+        "reduction": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "decision_status": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "description": {
+          "$ref": "#/definitions/non_empty_string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "enabled": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "minimum_input_count",
+              "maximum_input_count",
+              "port_order",
+              "reduction"
+            ]
+          },
+          "else": {
+            "required": [
+              "input_count"
+            ]
+          }
+        }
+      ]
+    },
+    "array_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accepted",
+        "lifting"
+      ],
+      "properties": {
+        "accepted": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "accepted_operands": {
+          "$ref": "#/definitions/string_array"
+        },
+        "accepted_rank": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "shape_rule": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "scalar_lift": {
+          "type": "boolean"
+        },
+        "broadcasting": {
+          "type": "boolean"
+        },
+        "produces_array": {
+          "type": "boolean"
+        },
+        "result_rank": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "lifting": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "empty_array_identity": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "description": {
+          "$ref": "#/definitions/non_empty_string"
+        }
+      }
+    },
+    "runtime_availability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "available",
+        "implementation_kind",
+        "implementation_id",
+        "provider_requirement"
+      ],
+      "properties": {
+        "available": {
+          "type": "boolean"
+        },
+        "availability_scope": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "implementation_kind": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "implementation_id": {
+          "type": "string"
+        },
+        "provider_requirement": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "available": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "implementation_id": {
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shape",
+        "extension"
+      ],
+      "properties": {
+        "shape": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "extension": {
+          "$ref": "#/definitions/non_empty_string"
+        }
+      }
+    },
+    "function_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "catalog_id",
+        "definition_ref",
+        "contract_status",
+        "profile_id",
+        "ports",
+        "overload_type_resolution",
+        "variadicity",
+        "array_policy",
+        "behavior_summary",
+        "runtime_availability",
+        "blockers",
+        "authority_scope",
+        "binding_projection"
+      ],
+      "properties": {
+        "catalog_id": {
+          "$ref": "#/definitions/qualified_id"
+        },
+        "definition_ref": {
+          "$ref": "#/definitions/qualified_id"
+        },
+        "contract_status": {
+          "enum": [
+            "defined",
+            "partial",
+            "blocked",
+            "editor_managed"
+          ]
+        },
+        "profile_id": {
+          "$ref": "#/definitions/qualified_id"
+        },
+        "ports": {
+          "$ref": "#/definitions/ports"
+        },
+        "overload_type_resolution": {
+          "$ref": "#/definitions/overload_type_resolution"
+        },
+        "variadicity": {
+          "$ref": "#/definitions/variadicity"
+        },
+        "array_policy": {
+          "$ref": "#/definitions/array_policy"
+        },
+        "behavior_summary": {
+          "$ref": "#/definitions/non_empty_string"
+        },
+        "runtime_availability": {
+          "$ref": "#/definitions/runtime_availability"
+        },
+        "blockers": {
+          "$ref": "#/definitions/string_array"
+        },
+        "authority_refs": {
+          "$ref": "#/definitions/string_array"
+        },
+        "presentation": {
+          "$ref": "#/definitions/presentation"
+        },
+        "authority_scope": {
+          "enum": [
+            "studio_authoring_profile",
+            "public_frog_with_studio_profile"
+          ]
+        },
+        "binding_projection": {
+          "required": [
+            "schema_version",
+            "maturity",
+            "documentation_url",
+            "resolver_id",
+            "evaluation_order",
+            "reduction_policy",
+            "array_lifting_policy"
+          ],
+          "type": "object",
+          "properties": {
+            "schema_version": {
+              "const": 1
+            },
+            "maturity": {
+              "enum": [
+                "catalog_only",
+                "editor_managed",
+                "draft",
+                "reference_verified",
+                "published_frog"
+              ]
+            },
+            "documentation_url": {
+              "type": "string"
+            },
+            "resolver_id": {
+              "type": "string"
+            },
+            "evaluation_order": {
+              "enum": [
+                "unspecified",
+                "canonical_port_order"
+              ]
+            },
+            "reduction_policy": {
+              "enum": [
+                "unspecified",
+                "canonical_left_fold"
+              ]
+            },
+            "array_lifting_policy": {
+              "enum": [
+                "none",
+                "element_wise_same_shape_with_scalar_lift"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

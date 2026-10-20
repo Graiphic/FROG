@@ -751,3 +751,7 @@ It is also compatible with the centralized cumulative version model: later sourc
 <p>
 See the repository-level license information for the licensing terms governing this specification.
 </p>
+
+## Studio reconciliation — 14 October 2026
+
+The separate [Studio writer-profile schema](Schemas/frog.studio-document.schema.json) documents existing authoring output. It does not relax or replace [the canonical root schema](schema/frog.schema.json), and passing it establishes neither semantic validity nor runtime availability. See the [owning profile](Studio%20authoring%20document%20profile%20v1.md).

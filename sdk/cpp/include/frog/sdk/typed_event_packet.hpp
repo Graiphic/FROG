@@ -47,7 +47,7 @@ inline bool owner(const SourceOwner &s) noexcept {
         });
 }
 inline bool scalar(const runtime::RuntimeValue &v,const runtime::ValueType &t) noexcept {
-    if(t.category==runtime::ValueCategory::Cluster || t.category==runtime::ValueCategory::ObjectReference)return false;
+    if(t.category==runtime::ValueCategory::Cluster || t.category==runtime::ValueCategory::ObjectReference || t.category==runtime::ValueCategory::Array)return false;
     if(!t.known() || std::holds_alternative<std::monostate>(v) || !runtime::runtimeValueMatches(v,t))return false;
     if(const auto *f=std::get_if<double>(&v))return std::isfinite(*f) &&
         (t.bitWidth==64 || (t.bitWidth==32 && static_cast<double>(static_cast<float>(*f))==*f));

@@ -1,0 +1,151 @@
+{
+  "snapshot_format_version": 1,
+  "snapshot_date": "2026-10-14",
+  "source_repository": "https://github.com/Graiphic/FROG-STUDIO",
+  "source_head": "55d859c278d925b91d7b57a8112d2b4fa54fdbe4",
+  "source_was_dirty": true,
+  "scope": "Byte-identical declarative authoring metadata. Does not promote studio_private authorities or catalogue entries to universal public execution capability.",
+  "function_entry_count": 535,
+  "function_contract_statuses": {
+    "partial": 490,
+    "editor_managed": 17,
+    "defined": 2,
+    "blocked": 26
+  },
+  "files": [
+    {
+      "path": "authoring/functions/studio.applicationcontrol.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.applicationcontrol.v2.json",
+      "sha256": "93cc4e382cbfa722087e66cb486a0169f6bf1f848a2c7bf9436359c2db812035",
+      "family": "ApplicationControl",
+      "entry_count": 4
+    },
+    {
+      "path": "authoring/functions/studio.array.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.array.v2.json",
+      "sha256": "791d37936b0277068641cfb5e7f586e7e67bb2d8589eb5716e123a8c1924db8e",
+      "family": "Array",
+      "entry_count": 58
+    },
+    {
+      "path": "authoring/functions/studio.boolean.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.boolean.v2.json",
+      "sha256": "21153b3cd180e0f24a327b5be99687c995db7477ad033d7fcd179634ed60687d",
+      "family": "Boolean",
+      "entry_count": 16
+    },
+    {
+      "path": "authoring/functions/studio.cluster.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.cluster.v2.json",
+      "sha256": "a42a3c3e5d263a469cdfa6621087eb743bf79544515a8a06d4ae124f8ff80048",
+      "family": "Cluster",
+      "entry_count": 9
+    },
+    {
+      "path": "authoring/functions/studio.comparison.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.comparison.v2.json",
+      "sha256": "10fb944b5f143e2598c1b15a23829a7438978e7b95b694b5082aeabd0ce76868",
+      "family": "Comparison",
+      "entry_count": 19
+    },
+    {
+      "path": "authoring/functions/studio.connectivity.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.connectivity.v2.json",
+      "sha256": "0a257d4a0d99a3065dbaac5e72920580fe243146b548b0a9e2aea81ec2e09fb8",
+      "family": "Connectivity",
+      "entry_count": 130
+    },
+    {
+      "path": "authoring/functions/studio.error.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.error.v2.json",
+      "sha256": "7e465e4ca822df03a2bbfbdb0ea4096c1f82332bf011f3add50a01f3287ea436",
+      "family": "Error",
+      "entry_count": 24
+    },
+    {
+      "path": "authoring/functions/studio.file.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.file.v2.json",
+      "sha256": "7e2689aac4cf03fd83a4c1b7ec0e82b9867f40b2193b2a6f435a44d663eff2b6",
+      "family": "File",
+      "entry_count": 32
+    },
+    {
+      "path": "authoring/functions/studio.mathematics.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.mathematics.v2.json",
+      "sha256": "f9155bacb7d910a214f6700eaecbf4b15f5651d256bdce74323d12430699b156",
+      "family": "Mathematics",
+      "entry_count": 13
+    },
+    {
+      "path": "authoring/functions/studio.numeric.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.numeric.v2.json",
+      "sha256": "95b5197227c80d00c002cf35393468fcd10ce59311fb9233ea2614bb28b8da96",
+      "family": "Numeric",
+      "entry_count": 106
+    },
+    {
+      "path": "authoring/functions/studio.path.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.path.v2.json",
+      "sha256": "b31283c04202558cfa874526b466950b6572a5b66cb6961fc6d51d511e091d9e",
+      "family": "Path",
+      "entry_count": 19
+    },
+    {
+      "path": "authoring/functions/studio.string.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.string.v2.json",
+      "sha256": "11537cce20e626122d169509b86bb0492d16ae2f47cd0d4d67e79b7a2bfc78fe",
+      "family": "String",
+      "entry_count": 58
+    },
+    {
+      "path": "authoring/functions/studio.structures.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.structures.v2.json",
+      "sha256": "a0edd10039e10b3857ff0fcc91a7f3fc88d378961d7826f17f3cd324c98845e7",
+      "family": "Structures",
+      "entry_count": 16
+    },
+    {
+      "path": "authoring/functions/studio.timestamp.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.timestamp.v2.json",
+      "sha256": "729325c9db41e76e9891ea4fc196f6e7cf360121bc7493b916a8cd97270fa79a",
+      "family": "Timestamp",
+      "entry_count": 8
+    },
+    {
+      "path": "authoring/functions/studio.variant.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.variant.v2.json",
+      "sha256": "f492abfd25807d146da3b7f8f68a00e530aff265694df0c59d5b40105f4142b8",
+      "family": "Variant",
+      "entry_count": 23
+    },
+    {
+      "path": "authoring/functions/studio.function-contracts.schema.v2.json",
+      "source_path": "native-portable-engine/manifests/function-bindings/studio.function-contracts.schema.v2.json",
+      "sha256": "4746e8c836801e54c709aa61f013ee91bddb198055bb75c567a69fed4e2758ac"
+    },
+    {
+      "path": "authoring/studio.widgets.v1.json",
+      "source_path": "native-portable-engine/manifests/studio-authoring/studio.widgets.v1.json",
+      "sha256": "f040cc55b36aa2c2bdbcbb4d9ccef317799bc5039e69067b86754ced3a509931",
+      "collection_counts": {
+        "definitions": 21,
+        "aliases": 2,
+        "catalog_entries": 27
+      }
+    },
+    {
+      "path": "authoring/studio.structures.v1.json",
+      "source_path": "native-portable-engine/manifests/studio-authoring/studio.structures.v1.json",
+      "sha256": "acb5b96352902873c16b3be4b8297ad384bcee7c66331cea3c28a87425f16a7a",
+      "collection_counts": {
+        "families": 9
+      }
+    }
+  ],
+  "terminal_labels": {
+    "path": "authoring/terminal-labels.v1.json",
+    "sha256": "134316638dbc723b27114b347749b04b2e500588657962321edf5424bdcca447",
+    "entry_count": 474
+  },
+  "regression_tests_executed_for_this_snapshot": false
+}

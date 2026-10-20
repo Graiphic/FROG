@@ -418,3 +418,7 @@ used to repair a missing canonical binding silently.
   <li>Type, role, Array composition, Diagram terminals, and binding visualization remain synchronized.</li>
   <li>No editor-only state may substitute for the serialized relationship.</li>
 </ul>
+
+## Studio reconciliation — 14 October 2026
+
+Current Studio custom authoring supports independent width and height8..128px, perimeter handles and distinct Reset/Clear actions. Disconnect clears the association without moving or renumbering the slot; copied widgets start unbound without affecting the original. These product rules are documented in the [Studio profile](Studio%20authoring%20document%20profile%20v1.md), not imposed as a universal FROG icon-size or gesture law.

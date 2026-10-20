@@ -756,3 +756,8 @@
 - [Governance](/GOVERNANCE.md)
 - [Contributing](/CONTRIBUTING.md)
 - [CLA](/CLA.md)
+
+- Studio implementation compatibility
+  - [Current reconciliation](docs/studio-reconciliation-2026-10-14.md)
+  - [Actual authoring .frog profile](Expression/Studio%20authoring%20document%20profile%20v1.md)
+  - [Authoring catalogue](Profiles/StudioAuthoring.md)

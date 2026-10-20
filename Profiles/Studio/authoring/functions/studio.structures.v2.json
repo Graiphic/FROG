@@ -1,0 +1,1115 @@
+{
+  "schema_version": 2,
+  "family": "Structures",
+  "entries": [
+    {
+      "catalog_id": "structures.in_place_element_structure",
+      "definition_ref": "frog.studio.structures.in_place_element_structure",
+      "contract_status": "blocked",
+      "profile_id": "frog.studio.in_place.authoring.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio-private single-body In Place structure with stable access/replacement pairs and exact type preservation. Runtime execution and storage optimization are unavailable.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime access/replacement lowering, alias analysis and storage optimization are not implemented.",
+        "Map and DVR types and their synchronization contracts are not enabled."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/structures/in-place-element-structure.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.sequence_structure",
+      "definition_ref": "frog.studio.structures.sequence_structure",
+      "contract_status": "blocked",
+      "profile_id": "frog.studio.sequence.flat.authoring.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring for a flat Sequence: ordered stable frames, forward data dependencies and single-producer boundary tunnels. Execution is not implemented.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Flat-sequence runtime lowering, frame-completion barriers and output publication are not implemented.",
+        "Stacked Sequence and Sequence Locals are not enabled by this authoring profile."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.for_loop",
+      "definition_ref": "frog.studio.structures.for_loop",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.legacy.structures.for_loop.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "count",
+            "display_name": "count",
+            "type": "T:integer",
+            "default_value_type": "i64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "count_value",
+            "display_name": "count value",
+            "type": "i64",
+            "default_value_type": "i64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "iteration",
+            "display_name": "iteration",
+            "type": "i64",
+            "default_value_type": "i64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "T:integer"
+        ],
+        "result": "i64;i64",
+        "implicit_coercion": true,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for For Loop.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.while_loop",
+      "definition_ref": "frog.studio.structures.while_loop",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.legacy.structures.while_loop.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "condition",
+            "display_name": "continue while true",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "iteration",
+            "display_name": "iteration",
+            "type": "i64",
+            "default_value_type": "i64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "bool"
+        ],
+        "result": "i64",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for While Loop.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.case_structure",
+      "definition_ref": "frog.studio.structures.case_structure",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.legacy.structures.case_structure.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "selector",
+            "display_name": "selector",
+            "type": "T:case_selector",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "selected_case",
+            "display_name": "selected case",
+            "type": "same(selector)",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "pass_through",
+        "accepted_operands": [
+          "T:case_selector"
+        ],
+        "result": "same(selector)",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Case Structure.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.event_structure",
+      "definition_ref": "frog.studio.structures.event_structure",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.legacy.structures.event_structure.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "timeout",
+            "display_name": "timeout milliseconds",
+            "type": "i64",
+            "default_value_type": "i64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "timeout_value",
+            "display_name": "timeout value",
+            "type": "i64",
+            "default_value_type": "i64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "event_data.source",
+            "display_name": "Source",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "event_data.type",
+            "display_name": "Type",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "event_data.time",
+            "display_name": "Time",
+            "type": "u64",
+            "default_value_type": "u64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "i64"
+        ],
+        "result": "i64;string;string;u64",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Event Structure.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.disabled_structure",
+      "definition_ref": "frog.studio.structures.disabled_structure",
+      "contract_status": "blocked",
+      "profile_id": "frog.studio.legacy.structures.disabled_structure.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Diagram Disable Structure.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.conditional_disable_structure",
+      "definition_ref": "frog.studio.structures.conditional_disable_structure",
+      "contract_status": "blocked",
+      "profile_id": "frog.studio.legacy.structures.conditional_disable_structure.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Conditional Disable Structure.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.timed_loop",
+      "definition_ref": "frog.studio.structures.timed_loop",
+      "contract_status": "blocked",
+      "profile_id": "frog.studio.legacy.structures.timed_loop.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Timed Loop.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.elapsed_time",
+      "definition_ref": "frog.studio.structures.elapsed_time",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.legacy.structures.elapsed_time.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "time_target",
+            "display_name": "time target",
+            "type": "T:numeric",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "reset",
+            "display_name": "reset",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "time_has_elapsed",
+            "display_name": "time has elapsed",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "elapsed_time",
+            "display_name": "elapsed time",
+            "type": "f64",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "T:numeric",
+          "bool"
+        ],
+        "result": "bool;f64",
+        "implicit_coercion": true,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Elapsed Time.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.select",
+      "definition_ref": "frog.studio.structures.select",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.structures.select.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "true",
+            "display_name": "true",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "select",
+            "display_name": "select",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "false",
+            "display_name": "false",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any",
+          "T:any",
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Boolean/error-cluster selector and two compatible values of any type yield the common branch type. Array rank, cluster schema and enum identity are preserved; numeric leaves may promote."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Boolean/error-cluster selector and two compatible values of any type yield the common branch type. Array rank, cluster schema and enum identity are preserved; numeric leaves may promote."
+      },
+      "behavior_summary": "Boolean/error-cluster selector and two compatible values of any type yield the common branch type. Array rank, cluster schema and enum identity are preserved; numeric leaves may promote.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/select.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/select.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.tick_count",
+      "definition_ref": "frog.studio.structures.tick_count",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.legacy.structures.tick_count.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "count",
+            "display_name": "count",
+            "type": "u32",
+            "default_value_type": "u32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "u32",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Tick Count.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.wait",
+      "definition_ref": "frog.studio.structures.wait",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.legacy.structures.wait.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "milliseconds_to_wait",
+            "display_name": "milliseconds to wait",
+            "type": "T:integer",
+            "default_value_type": "u32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "T:integer"
+        ],
+        "result": "undecided",
+        "implicit_coercion": true,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Wait.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.wait_until_next",
+      "definition_ref": "frog.studio.structures.wait_until_next",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.legacy.structures.wait_until_next.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "millisecond_multiple",
+            "display_name": "millisecond multiple",
+            "type": "T:integer",
+            "default_value_type": "u32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "T:integer"
+        ],
+        "result": "undecided",
+        "implicit_coercion": true,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Wait Until Next Multiple.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.call_chain",
+      "definition_ref": "frog.studio.structures.call_chain",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.legacy.structures.call_chain.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "call_chain",
+            "display_name": "call chain",
+            "type": "array<string,rank=1>",
+            "default_value_type": "array:string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "array<string,rank=1>",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Call Chain.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "structures.feedback_node",
+      "definition_ref": "frog.studio.structures.feedback_node",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.legacy.structures.feedback_node.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "initial_value",
+            "display_name": "initial value",
+            "type": "same(value)",
+            "default_value_type": "f64",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "enable",
+            "display_name": "enable?",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "same(value)",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "pass_through",
+        "accepted_operands": [
+          "same(value)",
+          "T:any",
+          "bool"
+        ],
+        "result": "same(value)",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Feedback Node.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    }
+  ]
+}

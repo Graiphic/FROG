@@ -1,0 +1,1645 @@
+{
+  "schema_version": 2,
+  "family": "Variant",
+  "entries": [
+    {
+      "catalog_id": "variant.to_variant",
+      "definition_ref": "frog.studio.variant.to_variant",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.variant.to_variant.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "data",
+            "display_name": "data",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "variant",
+            "display_name": "variant",
+            "type": "variant",
+            "default_value_type": "variant",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "variant",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for variant.to_variant.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.to_data",
+      "definition_ref": "frog.studio.variant.to_data",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.variant.to_data.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "variant",
+            "display_name": "variant",
+            "type": "variant",
+            "default_value_type": "variant",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "type",
+            "display_name": "type",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "data",
+            "display_name": "data",
+            "type": "same(type)",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "variant",
+          "T:any",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.palette.type-resolution@1",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for variant.to_data.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "frog.studio.palette.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.set_attribute",
+      "definition_ref": "frog.studio.variant.set_attribute",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.variant.set_attribute.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "variant",
+            "display_name": "variant",
+            "type": "variant",
+            "default_value_type": "variant",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "name",
+            "display_name": "name",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "T:any",
+            "default_value_type": "variant",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "variant",
+            "default_value_type": "variant",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "variant",
+          "string",
+          "T:any",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "variant",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for variant.set_attribute.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.get_attribute",
+      "definition_ref": "frog.studio.variant.get_attribute",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.variant.get_attribute.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "variant",
+            "display_name": "variant",
+            "type": "variant",
+            "default_value_type": "variant",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "name",
+            "display_name": "name",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "default_value",
+            "display_name": "default value",
+            "type": "T:any",
+            "default_value_type": "variant",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "same(default_value)",
+            "default_value_type": "variant",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "found",
+            "display_name": "found",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "variant",
+          "string",
+          "T:any",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.palette.type-resolution@1",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for variant.get_attribute.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "frog.studio.palette.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.delete_attribute",
+      "definition_ref": "frog.studio.variant.delete_attribute",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.variant.delete_attribute.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "variant",
+            "display_name": "variant",
+            "type": "variant",
+            "default_value_type": "variant",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "name",
+            "display_name": "name",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "variant",
+            "default_value_type": "variant",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "found",
+            "display_name": "found",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "variant",
+          "string",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "variant",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for variant.delete_attribute.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.to_flattened_bytes",
+      "definition_ref": "frog.studio.variant.to_flattened_bytes",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.variant.to_flattened_bytes.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "variant",
+            "display_name": "variant",
+            "type": "variant",
+            "default_value_type": "variant",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "bytes",
+            "display_name": "bytes",
+            "type": "array<u8,rank=1>",
+            "default_value_type": "array<u8,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "type_descriptor",
+            "display_name": "type descriptor",
+            "type": "array<u16,rank=1>",
+            "default_value_type": "array<u16,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "variant",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "array<u8,rank=1>",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for variant.to_flattened_bytes.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.from_flattened_bytes",
+      "definition_ref": "frog.studio.variant.from_flattened_bytes",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.variant.from_flattened_bytes.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "bytes",
+            "display_name": "bytes",
+            "type": "array<u8,rank=1>",
+            "default_value_type": "array<u8,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "type_descriptor",
+            "display_name": "type descriptor",
+            "type": "array<u16,rank=1>",
+            "default_value_type": "array<u16,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "variant",
+            "display_name": "variant",
+            "type": "variant",
+            "default_value_type": "variant",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "array<u8,rank=1>",
+          "array<u16,rank=1>",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "variant",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for variant.from_flattened_bytes.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.constant",
+      "definition_ref": "frog.studio.variant.constant",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.variant.constant.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "variant",
+            "default_value_type": "variant",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "variant",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for variant.constant.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.terminal",
+      "definition_ref": "frog.studio.variant.terminal",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.variant.terminal.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "variant",
+            "default_value_type": "variant",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "variant",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for variant.terminal.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.get_type_info",
+      "definition_ref": "frog.studio.variant.data_type_analysis.get_type_info",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.get_type_info.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Get Type Information. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.get_array_info",
+      "definition_ref": "frog.studio.variant.data_type_analysis.get_array_info",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.get_array_info.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Get Array Information. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.get_cluster_info",
+      "definition_ref": "frog.studio.variant.data_type_analysis.get_cluster_info",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.get_cluster_info.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Get Cluster Information. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.get_numeric_info",
+      "definition_ref": "frog.studio.variant.data_type_analysis.get_numeric_info",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.get_numeric_info.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Get Numeric Information. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.get_fixed_point_info",
+      "definition_ref": "frog.studio.variant.data_type_analysis.get_fixed_point_info",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.get_fixed_point_info.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Get Fixed-Point Information. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.get_waveform_info",
+      "definition_ref": "frog.studio.variant.data_type_analysis.get_waveform_info",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.get_waveform_info.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Get Waveform Information. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.get_refnum_info",
+      "definition_ref": "frog.studio.variant.data_type_analysis.get_refnum_info",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.get_refnum_info.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Get Refnum Information. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.get_user_defined_refnum_info",
+      "definition_ref": "frog.studio.variant.data_type_analysis.get_user_defined_refnum_info",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.get_user_defined_refnum_info.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Get User-Defined Refnum Information. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.get_user_defined_hardware_reference_info",
+      "definition_ref": "frog.studio.variant.data_type_analysis.get_user_defined_hardware_reference_info",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.get_user_defined_hardware_reference_info.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Get User-Defined Hardware Reference Type Information. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.get_hardware_reference_info",
+      "definition_ref": "frog.studio.variant.data_type_analysis.get_hardware_reference_info",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.get_hardware_reference_info.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Get Hardware Reference Type Information. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.find_contained_data_types",
+      "definition_ref": "frog.studio.variant.data_type_analysis.find_contained_data_types",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.find_contained_data_types.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Find Contained Data Types. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.is_or_contains_g_type",
+      "definition_ref": "frog.studio.variant.data_type_analysis.is_or_contains_g_type",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.is_or_contains_g_type.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Is Or Contains G Type. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.disconnect_g_types",
+      "definition_ref": "frog.studio.variant.data_type_analysis.disconnect_g_types",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.disconnect_g_types.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Disconnect G Types. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "variant.data_type_analysis.is_error_cluster",
+      "definition_ref": "frog.studio.variant.data_type_analysis.is_error_cluster",
+      "contract_status": "blocked",
+      "profile_id": "variant.data_type_analysis.is_error_cluster.catalog-only.blocked",
+      "ports": {
+        "inputs": [],
+        "outputs": []
+      },
+      "overload_type_resolution": {
+        "policy": "undecided",
+        "accepted_operands": [],
+        "result": "undecided",
+        "implicit_coercion": false,
+        "description": "undecided"
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": null,
+        "decision_status": "undecided",
+        "description": "not_variadic"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "undecided",
+        "description": "none"
+      },
+      "behavior_summary": "Supplied Data Type Analysis palette artwork for Is Error Cluster. Ports and execution are not defined by this visual integration.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "notes": "",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Port identities and cardinality are not defined.",
+        "Accepted overloads and result type rules are not defined.",
+        "Runtime behavior and provider are unavailable."
+      ],
+      "authority_refs": [],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "catalog_only",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    }
+  ]
+}

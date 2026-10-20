@@ -1,0 +1,32 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Studio authoring profile example",
+  "metadata": {
+    "name": "Studio authoring profile example",
+    "name_source": "document",
+    "program_version": "0.0.0.0"
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": []
+  },
+  "frontPanel": {
+    "canvas": {
+      "width": 916,
+      "height": 462,
+      "coordinate_space": "panel_pixels"
+    },
+    "grid": {
+      "pitch": 12
+    },
+    "widgets": []
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "nodes": [],
+    "edges": [],
+    "wire_fragments": []
+  }
+}

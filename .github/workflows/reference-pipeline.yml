@@ -2,19 +2,82 @@ name: FROG reference checks
 
 on:
   push:
+    branches:
+      - main
+    paths:
+      - 'Conformance/**'
+      - 'Examples/**'
+      - 'Expression/**'
+      - 'IR/**'
+      - 'Libraries/**'
+      - 'Language/**'
+      - 'Profiles/**'
+      - 'IDE/**'
+      - 'Implementations/Reference/**'
+      - 'Versioning/**'
+      - 'sdk/**'
+      - 'assets/**'
+      - 'Readme.md'
+      - 'conftest.py'
+      - 'pytest.ini'
+      - 'pyproject.toml'
+      - 'setup.cfg'
+      - '.github/workflows/reference-pipeline.yml'
+      - '.github/workflows/reference-workspace.yml'
+      - '**/*.h'
+      - '**/*.hpp'
+      - '**/*.c'
+      - '**/*.cc'
+      - '**/*.cpp'
+      - '**/*.cxx'
   pull_request:
+    paths:
+      - 'Conformance/**'
+      - 'Examples/**'
+      - 'Expression/**'
+      - 'IR/**'
+      - 'Libraries/**'
+      - 'Language/**'
+      - 'Profiles/**'
+      - 'IDE/**'
+      - 'Implementations/Reference/**'
+      - 'Versioning/**'
+      - 'sdk/**'
+      - 'assets/**'
+      - 'Readme.md'
+      - 'conftest.py'
+      - 'pytest.ini'
+      - 'pyproject.toml'
+      - 'setup.cfg'
+      - '.github/workflows/reference-pipeline.yml'
+      - '.github/workflows/reference-workspace.yml'
+      - '**/*.h'
+      - '**/*.hpp'
+      - '**/*.c'
+      - '**/*.cc'
+      - '**/*.cpp'
+      - '**/*.cxx'
+  workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: reference-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   runtime-contract:
     name: Public Runtime contract
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
 
       - name: Set up ownership validation Python
         id: ownership-python
@@ -43,19 +106,24 @@ jobs:
   reference-workspace:
     name: Reference workspace checks
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
+          cache-dependency-path: Implementations/Reference/requirements-test.txt
 
       - name: Install Python test dependencies
         run: |
-          python -m pip install --upgrade pip
           python -m pip install -r Implementations/Reference/requirements-test.txt
 
       - name: Run reference workspace checks
@@ -65,10 +133,14 @@ jobs:
   llvm-native-proof:
     name: LLVM native proof
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
 
       - name: Install native build tools
         run: |
@@ -80,9 +152,39 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Cache Cargo dependency downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('Implementations/Reference/Runtime/rust/Cargo.lock', 'Implementations/Reference/Runtime/rust/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
       - name: Prepare Rust runtime dependencies
-        run: cargo fetch --manifest-path Implementations/Reference/Runtime/rust/Cargo.toml
+        run: cargo fetch --locked --manifest-path Implementations/Reference/Runtime/rust/Cargo.toml
 
       - name: Check manifest-backed native kernel bridge
         run: |
           python Implementations/Reference/check_reference_workspace.py --include-native-kernel-bridge
+
+  widget-layer-only:
+    name: Widget layer only
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run widget-layer validation
+        run: python Implementations/Reference/check_reference_workspace.py --widget-layer-only

@@ -1,0 +1,334 @@
+{
+  "schema_version": 2,
+  "family": "ApplicationControl",
+  "entries": [
+    {
+      "catalog_id": "application_control.reference",
+      "definition_ref": "frog.studio.application_control.reference",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.application_control.reference.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "reference_out",
+            "display_name": "reference_out",
+            "type": "ref<\"frog.object\">",
+            "default_value_type": "ref<\"frog.object\">",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [],
+        "result": "resolve:frog.studio.application_control.type-resolution@1",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "References are not ordinary widget values. Named data ports are derived from the durable operation configuration."
+      },
+      "behavior_summary": "Private Studio authoring configuration with fixed reference/error ports. Property rows and one method signature are projected by ApplicationControl, not by this discovery envelope. This does not implement public frog.ui/FIR lowering or runtime execution.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.application_control",
+        "notes": "Authoring provider operations are not a graph execution provider."
+      },
+      "blockers": [
+        "Object-operation execution and public lowering require an explicit provider."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "frog.studio.application_control.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "application_control.property_node",
+      "definition_ref": "frog.studio.application_control.property_node",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.application_control.property_node.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "reference_in",
+            "display_name": "reference_in",
+            "type": "ref<\"frog.object\">",
+            "default_value_type": "ref<\"frog.object\">",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error_in",
+            "type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "default_value_type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "reference_out",
+            "display_name": "reference_out",
+            "type": "ref<\"frog.object\">",
+            "default_value_type": "ref<\"frog.object\">",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error_out",
+            "type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "default_value_type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "ref<\"frog.object\">",
+          "cluster<\"status\":bool,\"code\":i32,\"source\":string>"
+        ],
+        "result": "resolve:frog.studio.application_control.type-resolution@1",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "References are not ordinary widget values. Named data ports are derived from the durable operation configuration."
+      },
+      "behavior_summary": "Private Studio authoring configuration with fixed reference/error ports. Property rows and one method signature are projected by ApplicationControl, not by this discovery envelope. This does not implement public frog.ui/FIR lowering or runtime execution.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.application_control",
+        "notes": "Authoring provider operations are not a graph execution provider."
+      },
+      "blockers": [
+        "Object-operation execution and public lowering require an explicit provider."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "frog.studio.application_control.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "application_control.invoke_node",
+      "definition_ref": "frog.studio.application_control.invoke_node",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.application_control.invoke_node.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "reference_in",
+            "display_name": "reference_in",
+            "type": "ref<\"frog.object\">",
+            "default_value_type": "ref<\"frog.object\">",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error_in",
+            "type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "default_value_type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "reference_out",
+            "display_name": "reference_out",
+            "type": "ref<\"frog.object\">",
+            "default_value_type": "ref<\"frog.object\">",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error_out",
+            "type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "default_value_type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "ref<\"frog.object\">",
+          "cluster<\"status\":bool,\"code\":i32,\"source\":string>"
+        ],
+        "result": "resolve:frog.studio.application_control.type-resolution@1",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "References are not ordinary widget values. Named data ports are derived from the durable operation configuration."
+      },
+      "behavior_summary": "Private Studio authoring configuration with fixed reference/error ports. Property rows and one method signature are projected by ApplicationControl, not by this discovery envelope. This does not implement public frog.ui/FIR lowering or runtime execution.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.application_control",
+        "notes": "Authoring provider operations are not a graph execution provider."
+      },
+      "blockers": [
+        "Object-operation execution and public lowering require an explicit provider."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "frog.studio.application_control.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "application_control.close_reference",
+      "definition_ref": "frog.studio.application_control.close_reference",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.application_control.close_reference.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "reference_in",
+            "display_name": "reference_in",
+            "type": "ref<\"frog.object\">",
+            "default_value_type": "ref<\"frog.object\">",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error_in",
+            "type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "default_value_type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error_out",
+            "type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "default_value_type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "ref<\"frog.object\">",
+          "cluster<\"status\":bool,\"code\":i32,\"source\":string>"
+        ],
+        "result": "resolve:frog.studio.application_control.type-resolution@1",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "References are not ordinary widget values. Named data ports are derived from the durable operation configuration."
+      },
+      "behavior_summary": "Private Studio authoring configuration with fixed reference/error ports. Property rows and one method signature are projected by ApplicationControl, not by this discovery envelope. This does not implement public frog.ui/FIR lowering or runtime execution.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.application_control",
+        "notes": "Authoring provider operations are not a graph execution provider."
+      },
+      "blockers": [
+        "Object-operation execution and public lowering require an explicit provider."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "frog.studio.application_control.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    }
+  ]
+}

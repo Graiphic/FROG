@@ -1,6 +1,6 @@
 # Graiphic Studio and public FROG source compatibility
 
-Implementation checkpoint: 3 October 2026. This page describes integration status,
+Implementation checkpoint: 14 October 2026. This page describes integration status,
 not a new source format or a conformance certification. The
 [source guide](../Expression/Frog%20source%20guide.md) explains public `.frog` syntax.
 
@@ -22,10 +22,10 @@ decision, diagnostics and qualification evidence.
 
 | Surface | Public source | Studio authoring document |
 | --- | --- | --- |
-| Envelope | `spec_version: "0.1"` | `format: "frog.document.draft"`; Readable revision 2, opt-in numeric storage revision 3 |
+| Envelope | `spec_version: "0.1"` | `format: "frog.document.draft"`; readable revision 2, conditional feature revisions 3..7 |
 | Required public sections | `metadata`, `interface`, `diagram` | Studio-owned document model; not a substitute for the public envelope |
 | Front Panel spelling | Optional `front_panel` | `frontPanel` |
-| Public interface | Independent of widgets | Current authoring writer derives declarations from bound widgets |
+| Public interface | Independent of widgets | Retained independent declarations when present; historical widget-derived projection remains a compatibility path |
 | Writer | Public source preservation/transaction writer | Studio editing-model serializer |
 | Claim | Bounded source/profile contracts | Product authoring support; no automatic public conformance claim |
 
@@ -37,21 +37,23 @@ editing, semantic validation, export migration or execution.
 
 The opt-in [Studio numeric array storage profile](studio-array-storage-v1.md)
 documents the three document choices and the exact private binary/base64 records.
-It is implemented in Studio with functional qualification pending while tests are
-paused. It does not change the public 0.1 schema or claim canonical compact source
+It is implemented in Studio; its qualification is scoped to the recorded product owners, not inferred from this page or the general test-pause setting. It does not change the public 0.1 schema or claim canonical compact source
 interoperability. Readable remains the default; loading compact values currently
 expands them into the existing editing model.
 
-The compiled and signed desktop checkpoint is **0.0.4.235**. Studio `main` is
-published at
-[`36f56ba3e88c5b25d5632485ce35ab907e761011`](https://github.com/Graiphic/FROG-STUDIO/commit/36f56ba3e88c5b25d5632485ce35ab907e761011),
-verified against the remote on 3 October 2026 at 08:43 UTC. It includes the
-27-item sequential editor queue, the function-selection contour rule, recursive
-container work, numeric array storage choices, Enum text sizing and atomic mixed
-wire/terminal movement. Remote publication is distinct from CI qualification.
-Runtime POC is disabled in this delivery. The last complete Studio regression
-attempt failed on 0.0.3.935: 300/403 passed, 103 failed. Tests remain paused;
-recent compilation is not a new successful functional gate.
+The current implementation record is the
+[14 October reconciliation](studio-reconciliation-2026-10-14.md), with captured
+code revisions and separate targeted qualification receipts. It supersedes the
+old 0.0.4.235 desktop checkpoint without declaring a new complete regression gate.
+Normal private Run, public native Run and captured Event execution are distinct
+paths. POC OFF is not a statement that every runtime path is absent.
+
+The [Studio document profile](../Expression/Studio%20authoring%20document%20profile%20v1.md)
+describes actual saved revisions 2..7. Its
+[structural schema](../Expression/Schemas/frog.studio-document.schema.json) and
+[authoring contract snapshots](../Profiles/StudioAuthoring.md) are public
+compatibility documentation; they do not promote an editing projection or
+private provider to universal canonical execution.
 
 ## Integration rules for the ecosystem
 

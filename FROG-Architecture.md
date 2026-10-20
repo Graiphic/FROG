@@ -1,5 +1,13 @@
 <h1>FROG Architecture</h1>
 
+<p><strong>Studio implementation checkpoint — 14 October 2026:</strong>
+<a href="docs/studio-reconciliation-2026-10-14.md">Current code/specification reconciliation</a>,
+<a href="Expression/Studio%20authoring%20document%20profile%20v1.md">actual saved .frog profile</a>
+and <a href="Profiles/StudioAuthoring.md">535 declared authoring contracts</a>.
+Earlier dated integration statements below retain their historical scope;
+authored, lowered, compiled and tested capabilities remain distinct.</p>
+
+
 <p>
 Long-form architectural detail for the public FROG specification, including program representation, source-to-FIR posture, runtime/compiler complementarity, the original ASCII execution architecture, observability, targets, security, interoperability, and language/tooling separation.
 </p>
@@ -811,3 +819,7 @@ At the modeling level, FROG also separates:
 </ul>
 
 <hr/>
+
+## Studio reconciliation — 14 October 2026
+
+Graiphic Studio is the implementation evidence reference for product reconciliation. See the [current cross-layer record](docs/studio-reconciliation-2026-10-14.md). Source authority, validation, IR, lowering, runtime realization and observation remain separate. A normal Run routed to the historical timed simulation does not become native compilation by masking Highlight.

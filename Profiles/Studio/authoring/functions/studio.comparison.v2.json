@@ -1,0 +1,1567 @@
+{
+  "schema_version": 2,
+  "family": "Comparison",
+  "entries": [
+    {
+      "catalog_id": "comparison.equal",
+      "definition_ref": "frog.studio.comparison.equal",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.equal.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "y",
+            "display_name": "y",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Compatible numeric, Boolean, String, Path, Timestamp, Enum or Variant leaves; matching-rank arrays/clusters and scalar lifting. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "Compatible numeric, Boolean, String, Path, Timestamp, Enum or Variant leaves; matching-rank arrays/clusters and scalar lifting. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean."
+      },
+      "behavior_summary": "Tests equality of compatible values. Compatible numeric, Boolean, String, Path, Timestamp, Enum or Variant leaves; matching-rank arrays/clusters and scalar lifting. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/equal.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/equal.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.not_equal",
+      "definition_ref": "frog.studio.comparison.not_equal",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.not_equal.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "y",
+            "display_name": "y",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Compatible numeric, Boolean, String, Path, Timestamp, Enum or Variant leaves; matching-rank arrays/clusters and scalar lifting. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "Compatible numeric, Boolean, String, Path, Timestamp, Enum or Variant leaves; matching-rank arrays/clusters and scalar lifting. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean."
+      },
+      "behavior_summary": "Tests inequality of compatible values. Compatible numeric, Boolean, String, Path, Timestamp, Enum or Variant leaves; matching-rank arrays/clusters and scalar lifting. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not-equal.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not-equal.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.greater",
+      "definition_ref": "frog.studio.comparison.greater",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.greater.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "y",
+            "display_name": "y",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Real numeric, Boolean, String, Timestamp or Enum leaves; matching-rank arrays/clusters and scalar lifting. Complex numbers and Paths are rejected. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "Real numeric, Boolean, String, Timestamp or Enum leaves; matching-rank arrays/clusters and scalar lifting. Complex numbers and Paths are rejected. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean."
+      },
+      "behavior_summary": "Tests whether x is greater than y. Real numeric, Boolean, String, Timestamp or Enum leaves; matching-rank arrays/clusters and scalar lifting. Complex numbers and Paths are rejected. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/greater.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/greater.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.less",
+      "definition_ref": "frog.studio.comparison.less",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.less.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "y",
+            "display_name": "y",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Real numeric, Boolean, String, Timestamp or Enum leaves; matching-rank arrays/clusters and scalar lifting. Complex numbers and Paths are rejected. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "Real numeric, Boolean, String, Timestamp or Enum leaves; matching-rank arrays/clusters and scalar lifting. Complex numbers and Paths are rejected. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean."
+      },
+      "behavior_summary": "Tests whether x is less than y. Real numeric, Boolean, String, Timestamp or Enum leaves; matching-rank arrays/clusters and scalar lifting. Complex numbers and Paths are rejected. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/less.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/less.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.greater_or_equal",
+      "definition_ref": "frog.studio.comparison.greater_or_equal",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.greater_or_equal.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "y",
+            "display_name": "y",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Real numeric, Boolean, String, Timestamp or Enum leaves; matching-rank arrays/clusters and scalar lifting. Complex numbers and Paths are rejected. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "Real numeric, Boolean, String, Timestamp or Enum leaves; matching-rank arrays/clusters and scalar lifting. Complex numbers and Paths are rejected. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean."
+      },
+      "behavior_summary": "Tests whether x is greater than or equal to y. Real numeric, Boolean, String, Timestamp or Enum leaves; matching-rank arrays/clusters and scalar lifting. Complex numbers and Paths are rejected. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/greater-or-equal.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/greater-or-equal.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.less_or_equal",
+      "definition_ref": "frog.studio.comparison.less_or_equal",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.less_or_equal.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "y",
+            "display_name": "y",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Real numeric, Boolean, String, Timestamp or Enum leaves; matching-rank arrays/clusters and scalar lifting. Complex numbers and Paths are rejected. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "Real numeric, Boolean, String, Timestamp or Enum leaves; matching-rank arrays/clusters and scalar lifting. Complex numbers and Paths are rejected. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean."
+      },
+      "behavior_summary": "Tests whether x is less than or equal to y. Real numeric, Boolean, String, Timestamp or Enum leaves; matching-rank arrays/clusters and scalar lifting. Complex numbers and Paths are rejected. Elements mode preserves the Boolean shape; Aggregates mode returns one Boolean.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/less-or-equal.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/less-or-equal.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.equal_zero",
+      "definition_ref": "frog.studio.comparison.equal_zero",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.equal_zero.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Numeric and Timestamp leaves, including arrays and clusters. The Boolean output preserves their structure and rank."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "Numeric and Timestamp leaves, including arrays and clusters. The Boolean output preserves their structure and rank."
+      },
+      "behavior_summary": "Tests whether a numeric value equals zero. Numeric and Timestamp leaves, including arrays and clusters. The Boolean output preserves their structure and rank.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/equal-to-0.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/equal-to-0.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.not_equal_zero",
+      "definition_ref": "frog.studio.comparison.not_equal_zero",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.not_equal_zero.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Numeric and Timestamp leaves, including arrays and clusters. The Boolean output preserves their structure and rank."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "Numeric and Timestamp leaves, including arrays and clusters. The Boolean output preserves their structure and rank."
+      },
+      "behavior_summary": "Tests whether a numeric value differs from zero. Numeric and Timestamp leaves, including arrays and clusters. The Boolean output preserves their structure and rank.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not-equal-to-0.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not-equal-to-0.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.greater_zero",
+      "definition_ref": "frog.studio.comparison.greater_zero",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.greater_zero.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Real numeric and Timestamp leaves, including arrays and clusters; complex inputs are rejected. The Boolean output preserves their structure and rank."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "Real numeric and Timestamp leaves, including arrays and clusters; complex inputs are rejected. The Boolean output preserves their structure and rank."
+      },
+      "behavior_summary": "Tests whether a value is positive. Real numeric and Timestamp leaves, including arrays and clusters; complex inputs are rejected. The Boolean output preserves their structure and rank.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/greater-than-0.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/greater-than-0.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.less_zero",
+      "definition_ref": "frog.studio.comparison.less_zero",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.less_zero.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Real numeric and Timestamp leaves, including arrays and clusters; complex inputs are rejected. The Boolean output preserves their structure and rank."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "Real numeric and Timestamp leaves, including arrays and clusters; complex inputs are rejected. The Boolean output preserves their structure and rank."
+      },
+      "behavior_summary": "Tests whether a value is negative. Real numeric and Timestamp leaves, including arrays and clusters; complex inputs are rejected. The Boolean output preserves their structure and rank.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/less-than-0.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/less-than-0.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.greater_or_equal_zero",
+      "definition_ref": "frog.studio.comparison.greater_or_equal_zero",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.greater_or_equal_zero.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Real numeric and Timestamp leaves, including arrays and clusters; complex inputs are rejected. The Boolean output preserves their structure and rank."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "Real numeric and Timestamp leaves, including arrays and clusters; complex inputs are rejected. The Boolean output preserves their structure and rank."
+      },
+      "behavior_summary": "Tests whether a value is non-negative. Real numeric and Timestamp leaves, including arrays and clusters; complex inputs are rejected. The Boolean output preserves their structure and rank.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/greater-or-equal-to-0.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/greater-or-equal-to-0.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.less_or_equal_zero",
+      "definition_ref": "frog.studio.comparison.less_or_equal_zero",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.less_or_equal_zero.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Real numeric and Timestamp leaves, including arrays and clusters; complex inputs are rejected. The Boolean output preserves their structure and rank."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "Real numeric and Timestamp leaves, including arrays and clusters; complex inputs are rejected. The Boolean output preserves their structure and rank."
+      },
+      "behavior_summary": "Tests whether a value is non-positive. Real numeric and Timestamp leaves, including arrays and clusters; complex inputs are rejected. The Boolean output preserves their structure and rank.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/less-or-equal-to-0.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/less-or-equal-to-0.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.not_a_number_path_refnum",
+      "definition_ref": "frog.studio.comparison.not_a_number_path_refnum",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.not_a_number_path_refnum.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Numeric or Path leaves, including arrays and clusters; output has the same Boolean structure. Refnums are not yet represented by Studio's type system."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "Numeric or Path leaves, including arrays and clusters; output has the same Boolean structure. Refnums are not yet represented by Studio's type system."
+      },
+      "behavior_summary": "Tests for NaN or an invalid Path. Numeric or Path leaves, including arrays and clusters; output has the same Boolean structure. Refnums are not yet represented by Studio's type system.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not-a-number-path-refnum.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/not-a-number-path-refnum.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.empty_array",
+      "definition_ref": "frog.studio.comparison.empty_array",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.empty_array.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "array<f64>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "An array of any element type and rank produces a scalar Boolean."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "An array of any element type and rank produces a scalar Boolean."
+      },
+      "behavior_summary": "Tests whether an array contains no elements. An array of any element type and rank produces a scalar Boolean.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/empty-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/empty-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.empty_string_or_path",
+      "definition_ref": "frog.studio.comparison.empty_string_or_path",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.empty_string_or_path.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "String, Path or Variant leaves in scalars, arrays or clusters produce the same Boolean structure. Picture-string/DSC-specific types are not represented separately in Studio."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "String, Path or Variant leaves in scalars, arrays or clusters produce the same Boolean structure. Picture-string/DSC-specific types are not represented separately in Studio."
+      },
+      "behavior_summary": "Tests an empty String, Path or Variant. String, Path or Variant leaves in scalars, arrays or clusters produce the same Boolean structure. Picture-string/DSC-specific types are not represented separately in Studio.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/empty-string-path.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/empty-string-path.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.decimal_digit",
+      "definition_ref": "frog.studio.comparison.decimal_digit",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.decimal_digit.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "String or real numeric leaves, including arrays/clusters; output preserves their Boolean structure. The predicate examines the first string character or numeric ASCII code."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "String or real numeric leaves, including arrays/clusters; output preserves their Boolean structure. The predicate examines the first string character or numeric ASCII code."
+      },
+      "behavior_summary": "Tests a decimal digit (0–9). String or real numeric leaves, including arrays/clusters; output preserves their Boolean structure. The predicate examines the first string character or numeric ASCII code.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/decimal-digit.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/decimal-digit.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.hex_digit",
+      "definition_ref": "frog.studio.comparison.hex_digit",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.hex_digit.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "String or real numeric leaves, including arrays/clusters; output preserves their Boolean structure. The predicate examines the first string character or numeric ASCII code."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "String or real numeric leaves, including arrays/clusters; output preserves their Boolean structure. The predicate examines the first string character or numeric ASCII code."
+      },
+      "behavior_summary": "Tests a hexadecimal digit (0–9, A–F, a–f). String or real numeric leaves, including arrays/clusters; output preserves their Boolean structure. The predicate examines the first string character or numeric ASCII code.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/hex-digit.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/hex-digit.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.octal_digit",
+      "definition_ref": "frog.studio.comparison.octal_digit",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.octal_digit.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "String or real numeric leaves, including arrays/clusters; output preserves their Boolean structure. The predicate examines the first string character or numeric ASCII code."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "String or real numeric leaves, including arrays/clusters; output preserves their Boolean structure. The predicate examines the first string character or numeric ASCII code."
+      },
+      "behavior_summary": "Tests an octal digit (0–7). String or real numeric leaves, including arrays/clusters; output preserves their Boolean structure. The predicate examines the first string character or numeric ASCII code.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/octal-digit.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/octal-digit.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    },
+    {
+      "catalog_id": "comparison.white_space",
+      "definition_ref": "frog.studio.comparison.white_space",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.comparison.white_space.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "x",
+            "display_name": "x",
+            "type": "T:any",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "String or real numeric leaves, including arrays/clusters; output preserves their Boolean structure. The predicate examines the first string character or numeric ASCII code."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "shape_preserving",
+        "description": "String or real numeric leaves, including arrays/clusters; output preserves their Boolean structure. The predicate examines the first string character or numeric ASCII code."
+      },
+      "behavior_summary": "Tests a whitespace character. String or real numeric leaves, including arrays/clusters; output preserves their Boolean structure. The predicate examines the first string character or numeric ASCII code.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Runtime execution is not implemented by this authoring profile.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Runtime execution is not implemented by this authoring profile."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/white-space.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/white-space.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      },
+      "presentation": {
+        "shape": "triangle",
+        "extension": "none"
+      }
+    }
+  ]
+}

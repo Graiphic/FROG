@@ -1,0 +1,13 @@
+# Preserve the exact SDK/Runtime bytes consumed by Studio dependency locks.
+# Mixed LF/CRLF is intentional here; do not normalize these versioned inputs.
+sdk/cpp/cmake/verify_runtime_contract_ownership.cmake -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+sdk/cpp/include/frog/sdk/captured_event_notification.hpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+sdk/cpp/include/frog/sdk/event_runtime_contract.hpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+sdk/cpp/include/frog/sdk/runtime_array_value.hpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+sdk/cpp/include/frog/sdk/runtime_compound_value.hpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+sdk/cpp/include/frog/sdk/runtime_contract_codec.hpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+sdk/cpp/include/frog/sdk/runtime_contract.hpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+sdk/cpp/include/frog/sdk/runtime_type_syntax.hpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+sdk/cpp/include/frog/sdk/typed_event_packet.hpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+sdk/cpp/tests/runtime_array_transport_smoke.cpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+sdk/cpp/tests/runtime_contract_smoke.cpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

@@ -1,0 +1,4305 @@
+{
+  "schema_version": 2,
+  "family": "File",
+  "entries": [
+    {
+      "catalog_id": "file.spreadsheet_write",
+      "definition_ref": "frog.studio.file.spreadsheet_write",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.spreadsheet_write.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "data",
+            "display_name": "data",
+            "type": "T:spreadsheet",
+            "default_value_type": "array<f64,rank=2>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "delimiter",
+            "display_name": "delimiter",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "format",
+            "display_name": "format",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "transpose",
+            "display_name": "transpose",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "append",
+            "display_name": "append",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "T:spreadsheet",
+          "string",
+          "string",
+          "bool",
+          "bool",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Writes 1D/2D DBL, I64 or String arrays as delimited text; default tab, numeric format %.3f, overwrite unless append is true."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 7,
+        "port_order": [
+          "path",
+          "data",
+          "delimiter",
+          "format",
+          "transpose",
+          "append",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Writes 1D/2D DBL, I64 or String arrays as delimited text; default tab, numeric format %.3f, overwrite unless append is true.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path.",
+        "The Studio profile uses one rank-1/rank-2 data connector and explicit DBL/I64/String instance settings instead of separate NI rank-specific connectors. Format support is a bounded subset; unsupported format codes report errors."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/file-llb/write-delimited-spreadsheet-dbl-vi.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/file-llb/write-delimited-spreadsheet-dbl-vi.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.spreadsheet_read",
+      "definition_ref": "frog.studio.file.spreadsheet_read",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.spreadsheet_read.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "delimiter",
+            "display_name": "delimiter",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "format",
+            "display_name": "format",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "count",
+            "display_name": "count",
+            "type": "i32",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "offset",
+            "display_name": "offset (bytes)",
+            "type": "i32",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "max_chars",
+            "display_name": "max characters per row",
+            "type": "i32",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "transpose",
+            "display_name": "transpose",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "data",
+            "display_name": "data",
+            "type": "T:spreadsheet",
+            "default_value_type": "array<f64,rank=2>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "first_row",
+            "display_name": "first row",
+            "type": "T:spreadsheet_row",
+            "default_value_type": "array<f64,rank=1>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "position",
+            "display_name": "position (bytes)",
+            "type": "i32",
+            "default_value_type": "i32",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "eof",
+            "display_name": "EOF?",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "string",
+          "string",
+          "i32",
+          "i32",
+          "i32",
+          "bool",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Reads 2D DBL, I64 or String data from a byte offset; count -1 reads the remainder; first row, resulting byte position and EOF are returned."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 8,
+        "port_order": [
+          "path",
+          "delimiter",
+          "format",
+          "count",
+          "offset",
+          "max_chars",
+          "transpose",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Reads 2D DBL, I64 or String data from a byte offset; count -1 reads the remainder; first row, resulting byte position and EOF are returned.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path.",
+        "The Studio profile uses one rank-1/rank-2 data connector and explicit DBL/I64/String instance settings instead of separate NI rank-specific connectors. Format support is a bounded subset; unsupported format codes report errors."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/file-llb/read-delimited-spreadsheet-dbl-vi.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/file-llb/read-delimited-spreadsheet-dbl-vi.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.text_write",
+      "definition_ref": "frog.studio.file.text_write",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.text_write.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "file",
+            "display_name": "file (path or open refnum)",
+            "type": "T:path_or_file",
+            "default_value_type": "path",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "data",
+            "display_name": "data",
+            "type": "T:text",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "prompt",
+            "display_name": "prompt",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "file_ref",
+            "display_name": "file refnum",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "cancelled",
+            "display_name": "cancelled",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:path_or_file",
+          "T:text",
+          "string",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Writes a String or String array. A path replaces the file; a live reference writes at its current byte position. Wiring refnum out retains an automatically opened reference."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4,
+        "port_order": [
+          "file",
+          "data",
+          "prompt",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Writes a String or String array. A path replaces the file; a live reference writes at its current byte position. Wiring refnum out retains an automatically opened reference.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/write-to-text-file.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-file-position.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/write-to-text-file.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.text_read",
+      "definition_ref": "frog.studio.file.text_read",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.text_read.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "file",
+            "display_name": "file (path or open refnum)",
+            "type": "T:path_or_file",
+            "default_value_type": "path",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "count",
+            "display_name": "count",
+            "type": "i32",
+            "default_value_type": "i32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "prompt",
+            "display_name": "prompt",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "data",
+            "display_name": "data",
+            "type": "T:text",
+            "default_value_type": "string",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "file_ref",
+            "display_name": "file refnum",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "cancelled",
+            "display_name": "cancelled",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:path_or_file",
+          "i32",
+          "string",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Reads bytes or lines; Read Lines changes the output type when count is connected. Convert EOL defaults to true. A path opens read-only; wiring refnum out retains it."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4,
+        "port_order": [
+          "file",
+          "count",
+          "prompt",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Reads bytes or lines; Read Lines changes the output type when count is connected. Convert EOL defaults to true. A path opens read-only; wiring refnum out retains it.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/read-from-text-file.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/read-from-text-file.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.flatten_to_xml",
+      "definition_ref": "frog.studio.file.flatten_to_xml",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.flatten_to_xml.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "data",
+            "display_name": "data",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "xml",
+            "display_name": "xml",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Serializes a supported typed value in memory using the NI LabVIEW XML schema subset; no file is created. Unsupported schemas report an error."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "data",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Serializes a supported typed value in memory using the NI LabVIEW XML schema subset; no file is created. Unsupported schemas report an error.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path.",
+        "The NI-schema XML host subset supports Boolean, 8/16/32/64-bit integers, SGL/DBL, String, Path, unsigned 8/16/32-bit Enum, arrays and recursive Clusters. Complex, Timestamp, references, waveform, Variant, extended and fixed-point transports are explicitly unavailable."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/flatten-to-xml.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/flatten-to-xml.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.unflatten_from_xml",
+      "definition_ref": "frog.studio.file.unflatten_from_xml",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.unflatten_from_xml.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "xml",
+            "display_name": "xml",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "type",
+            "display_name": "type",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "data",
+            "display_name": "data",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "string",
+          "T:any",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Parses a supported LabVIEW XML value against the complete connected type specimen. Invalid XML or mismatched schemas report an error."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3,
+        "port_order": [
+          "xml",
+          "type",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Parses a supported LabVIEW XML value against the complete connected type specimen. Invalid XML or mismatched schemas report an error.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path.",
+        "The NI-schema XML host subset supports Boolean, 8/16/32/64-bit integers, SGL/DBL, String, Path, unsigned 8/16/32-bit Enum, arrays and recursive Clusters. Complex, Timestamp, references, waveform, Variant, extended and fixed-point transports are explicitly unavailable."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/unflatten-from-xml.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/unflatten-from-xml.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.write_xml",
+      "definition_ref": "frog.studio.file.write_xml",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.write_xml.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "xml",
+            "display_name": "xml",
+            "type": "T:text",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "encoding",
+            "display_name": "encoding",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "standalone",
+            "display_name": "standalone",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "xml_out",
+            "display_name": "XML document",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "T:text",
+          "string",
+          "bool",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Wraps supplied XML fragment(s) in a LabVIEW XML document and writes an .xml file. UTF-8 encoding is the supported Studio adaptation; standalone defaults to true."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 5,
+        "port_order": [
+          "path",
+          "xml",
+          "encoding",
+          "standalone",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Wraps supplied XML fragment(s) in a LabVIEW XML document and writes an .xml file. UTF-8 encoding is the supported Studio adaptation; standalone defaults to true.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path.",
+        "The NI-schema XML host subset supports Boolean, 8/16/32/64-bit integers, SGL/DBL, String, Path, unsigned 8/16/32-bit Enum, arrays and recursive Clusters. Complex, Timestamp, references, waveform, Variant, extended and fixed-point transports are explicitly unavailable."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/xml-llb/write-to-xml-file-string-vi.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/xml-llb/write-to-xml-file-string-vi.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.read_xml",
+      "definition_ref": "frog.studio.file.read_xml",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.read_xml.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "xml",
+            "display_name": "xml",
+            "type": "T:text",
+            "default_value_type": "string",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Reads a LabVIEW XML document and returns its content fragment or top-level fragments; it does not deserialize the final typed data."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "path",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Reads a LabVIEW XML document and returns its content fragment or top-level fragments; it does not deserialize the final typed data.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path.",
+        "The NI-schema XML host subset supports Boolean, 8/16/32/64-bit integers, SGL/DBL, String, Path, unsigned 8/16/32-bit Enum, arrays and recursive Clusters. Complex, Timestamp, references, waveform, Variant, extended and fixed-point transports are explicitly unavailable."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/xml-llb/read-from-xml-file-string-vi.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/xml-llb/read-from-xml-file-string-vi.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.get_position",
+      "definition_ref": "frog.studio.file.get_position",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.get_position.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "file_ref",
+            "display_name": "file refnum",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "position",
+            "display_name": "position (bytes)",
+            "type": "i64",
+            "default_value_type": "i64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "file_ref_out",
+            "display_name": "file refnum out",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "ref<file>",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Returns a live file reference's current byte position without moving it."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "file_ref",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Returns a live file reference's current byte position without moving it.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-file-position.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-file-position.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.get_size",
+      "definition_ref": "frog.studio.file.get_size",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.get_size.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "file",
+            "display_name": "file (path or open refnum)",
+            "type": "T:path_or_file",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "size",
+            "display_name": "size",
+            "type": "i64",
+            "default_value_type": "i64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "file_ref",
+            "display_name": "file refnum",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:path_or_file",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Returns file length in bytes, independently of its current position. A path and an open file reference are distinct input variants."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "file",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Returns file length in bytes, independently of its current position. A path and an open file reference are distinct input variants.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-file-size.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-file-size.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.get_permissions",
+      "definition_ref": "frog.studio.file.get_permissions",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.get_permissions.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "permissions",
+            "display_name": "permissions",
+            "type": "i16",
+            "default_value_type": "i16",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "owner",
+            "display_name": "owner",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "group",
+            "display_name": "group",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Returns the NI-style permission mask. On Windows owner and group are empty; this is not an NTFS ACL query."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "path",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Returns the NI-style permission mask. On Windows owner and group are empty; this is not an NTFS ACL query.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-permissions.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-permissions.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.get_type_creator",
+      "definition_ref": "frog.studio.file.get_type_creator",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.get_type_creator.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "type",
+            "display_name": "type",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "creator",
+            "display_name": "creator",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Returns historical four-character type/creator codes for recognized extensions; unknown codes are ????; creator is not the Windows user."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "path",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Returns historical four-character type/creator codes for recognized extensions; unknown codes are ????; creator is not the Windows user.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-type-and-creator.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-type-and-creator.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.binary_read_preallocated",
+      "definition_ref": "frog.studio.file.binary_read_preallocated",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.binary_read_preallocated.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "file_ref",
+            "display_name": "file refnum",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "data",
+            "display_name": "data",
+            "type": "T:binary_array",
+            "default_value_type": "array<u8,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "byte_order",
+            "display_name": "byte order (0: big-endian, 1: native, 2: little-endian)",
+            "type": "u16",
+            "default_value_type": "u16",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "data_out",
+            "display_name": "data",
+            "type": "T:binary_array",
+            "default_value_type": "array<u8,rank=1>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "count",
+            "display_name": "count",
+            "type": "i32",
+            "default_value_type": "i32",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "file_ref_out",
+            "display_name": "file refnum out",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "ref<file>",
+          "T:binary_array",
+          "u16",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Reads into a preallocated numeric array at the live file position; output capacity is retained and count identifies the initialized prefix. String elements are unsupported."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4,
+        "port_order": [
+          "file_ref",
+          "data",
+          "byte_order",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Reads into a preallocated numeric array at the live file position; output capacity is retained and count identifies the initialized prefix. String elements are unsupported.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path.",
+        "The host supports fixed-width 8/16/32/64-bit integers, Boolean, SGL/DBL and CSG/CDB scalar or flat arrays with preserved rank. Extended/fixed-point and nested-array element representations are unavailable. Host endian decoding is an explicit FROG adaptation and immutable values do not guarantee zero-copy allocation."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/preallocated-read-from-binary-file.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/preallocated-read-from-binary-file.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.set_position",
+      "definition_ref": "frog.studio.file.set_position",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.set_position.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "file_ref",
+            "display_name": "file refnum",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "offset",
+            "display_name": "offset (bytes)",
+            "type": "i64",
+            "default_value_type": "i64",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "origin",
+            "display_name": "origin (0: start, 1: end, 2: current)",
+            "type": "u16",
+            "default_value_type": "u16",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "file_ref_out",
+            "display_name": "file refnum out",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "ref<file>",
+          "i64",
+          "u16",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Moves a live file position by a signed 64-bit byte offset relative to start, end or current position."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4,
+        "port_order": [
+          "file_ref",
+          "offset",
+          "origin",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Moves a live file position by a signed 64-bit byte offset relative to start, end or current position.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-file-position.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-file-position.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.set_size",
+      "definition_ref": "frog.studio.file.set_size",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.set_size.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "file",
+            "display_name": "file (path or open refnum)",
+            "type": "T:path_or_file",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "size",
+            "display_name": "size",
+            "type": "i64",
+            "default_value_type": "i64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "file_ref",
+            "display_name": "file refnum",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:path_or_file",
+          "i64",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Changes file length in bytes. A smaller size truncates data; zero preserves the empty file. An open reference retains its lifetime."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3,
+        "port_order": [
+          "file",
+          "size",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Changes file length in bytes. A smaller size truncates data; zero preserves the empty file. An open reference retains its lifetime.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-file-size.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-file-size.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.set_permissions",
+      "definition_ref": "frog.studio.file.set_permissions",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.set_permissions.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "permissions",
+            "display_name": "permissions",
+            "type": "i16",
+            "default_value_type": "i16",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "owner",
+            "display_name": "owner",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "group",
+            "display_name": "group",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "i16",
+          "string",
+          "string",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Changes the exposed permission mask. Windows applies only user-write bit 7 and ignores owner/group; this does not edit ACLs or file sharing."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 5,
+        "port_order": [
+          "path",
+          "permissions",
+          "owner",
+          "group",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Changes the exposed permission mask. Windows applies only user-write bit 7 and ignores owner/group; this does not edit ACLs or file sharing.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-permissions.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/deny-access.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-permissions.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.set_type_creator",
+      "definition_ref": "frog.studio.file.set_type_creator",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.set_type_creator.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "type",
+            "display_name": "type",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "creator",
+            "display_name": "creator",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "string",
+          "string",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Changes historical four-character codes on supported macOS targets only. Windows reports unsupported; it never simulates success."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4,
+        "port_order": [
+          "path",
+          "type",
+          "creator",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Changes historical four-character codes on supported macOS targets only. Windows reports unsupported; it never simulates success.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path.",
+        "Changing type/creator is not supported on the Windows host."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-type-and-creator.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-type-and-creator.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.show_in_file_system",
+      "definition_ref": "frog.studio.file.show_in_file_system",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.show_in_file_system.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Shows a path in the platform file manager; it does not read data or open a file reference."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "path",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Shows a path in the platform file manager; it does not read data or open a file reference.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/show-in-file-system-vi.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/show-in-file-system-vi.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.create_incrementing",
+      "definition_ref": "frog.studio.file.create_incrementing",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.create_incrementing.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "suffix_format",
+            "display_name": "suffix format",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "file_ref",
+            "display_name": "file refnum",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "string",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Atomically creates and opens a free filename, inserting default suffix (%d) before the extension starting at 1. The caller must close the returned reference."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3,
+        "port_order": [
+          "path",
+          "suffix_format",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Atomically creates and opens a free filename, inserting default suffix (%d) before the extension starting at 1. The caller must close the returned reference.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/file-llb/create-file-with-incrementing-suffix-vi.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/file-llb/create-file-with-incrementing-suffix-vi.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.move",
+      "definition_ref": "frog.studio.file.move",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.move.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "source",
+            "display_name": "source",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "destination",
+            "display_name": "destination",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "overwrite",
+            "display_name": "overwrite",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "cancelled",
+            "display_name": "cancelled",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "path",
+          "bool",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Moves/renames a file or recursive folder to its destination; overwrite defaults to false. Existing destination folders receive the source name."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4,
+        "port_order": [
+          "source",
+          "destination",
+          "overwrite",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Moves/renames a file or recursive folder to its destination; overwrite defaults to false. Existing destination folders receive the source name.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/move.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/move.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.copy",
+      "definition_ref": "frog.studio.file.copy",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.copy.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "source",
+            "display_name": "source",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "destination",
+            "display_name": "destination",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "overwrite",
+            "display_name": "overwrite",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "cancelled",
+            "display_name": "cancelled",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "path",
+          "bool",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Copies a file or recursive folder and preserves its source; overwrite defaults to false. Existing destination folders receive the source name."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4,
+        "port_order": [
+          "source",
+          "destination",
+          "overwrite",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Copies a file or recursive folder and preserves its source; overwrite defaults to false. Existing destination folders receive the source name.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/copy.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/copy.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.delete",
+      "definition_ref": "frog.studio.file.delete",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.delete.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "entire_hierarchy",
+            "display_name": "entire hierarchy",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "confirm",
+            "display_name": "confirm",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "cancelled",
+            "display_name": "cancelled",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "bool",
+          "bool",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Deletes a file or folder. Recursive removal requires entire hierarchy; confirm defaults to false. Errors are never success."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 4,
+        "port_order": [
+          "path",
+          "entire_hierarchy",
+          "confirm",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Deletes a file or folder. Recursive removal requires entire hierarchy; confirm defaults to false. Errors are never success.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/delete.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/delete.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.flush",
+      "definition_ref": "frog.studio.file.flush",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.flush.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "file_ref",
+            "display_name": "file refnum",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "file_ref_out",
+            "display_name": "file refnum out",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "ref<file>",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Flushes the live file to disk without closing its reference."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "file_ref",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Flushes the live file to disk without closing its reference.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/flush-file.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/flush-file.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.deny_access",
+      "definition_ref": "frog.studio.file.deny_access",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.deny_access.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "file_ref",
+            "display_name": "file refnum",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "mode",
+            "display_name": "deny mode (0: read/write, 1: write, 2: none)",
+            "type": "u16",
+            "default_value_type": "u16",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "file_ref_out",
+            "display_name": "file refnum out",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "ref<file>",
+          "u16",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Changes live file sharing: deny read/write, deny write, or deny none. These temporary restrictions are distinct from permissions."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3,
+        "port_order": [
+          "file_ref",
+          "mode",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Changes live file sharing: deny read/write, deny write, or deny none. These temporary restrictions are distinct from permissions.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/deny-access.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/deny-access.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.info",
+      "definition_ref": "frog.studio.file.info",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.info.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "is_directory",
+            "display_name": "is directory",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "size",
+            "display_name": "size",
+            "type": "i64",
+            "default_value_type": "i64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "modified",
+            "display_name": "last modified",
+            "type": "timestamp",
+            "default_value_type": "timestamp",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "is_shortcut",
+            "display_name": "is shortcut",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "resolved_path",
+            "display_name": "resolved path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Returns file/directory metadata. File size is bytes; directory size is its immediate entry count. Modified time is a timestamp."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "path",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Returns file/directory metadata. File size is bytes; directory size is its immediate entry count. Modified time is a timestamp.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/file-directory-info.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/file-directory-info.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.volume_info",
+      "definition_ref": "frog.studio.file.volume_info",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.volume_info.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "volume",
+            "display_name": "volume",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "total",
+            "display_name": "total",
+            "type": "i64",
+            "default_value_type": "i64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "free",
+            "display_name": "free",
+            "type": "i64",
+            "default_value_type": "i64",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "sector_size",
+            "display_name": "sector size",
+            "type": "u32",
+            "default_value_type": "u32",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Returns containing volume, total/free bytes and sector size; it does not reserve storage."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "path",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Returns containing volume, total/free bytes and sector size; it does not reserve storage.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-volume-info.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-volume-info.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.create_folder",
+      "definition_ref": "frog.studio.file.create_folder",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.create_folder.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "cancelled",
+            "display_name": "cancelled",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Creates an absolute folder path and missing parents; an already existing target is an error."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "path",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Creates an absolute folder path and missing parents; an already existing target is an error.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/create-folder.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/create-folder.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.list_folder",
+      "definition_ref": "frog.studio.file.list_folder",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.list_folder.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "pattern",
+            "display_name": "pattern",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "files",
+            "display_name": "files",
+            "type": "array<string,rank=1>",
+            "default_value_type": "array<string,rank=1>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "folders",
+            "display_name": "folders",
+            "type": "array<string,rank=1>",
+            "default_value_type": "array<string,rank=1>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "string",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Lists sorted immediate file/folder names using * and ? wildcards; returns names, not full paths, and does not recurse."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3,
+        "port_order": [
+          "path",
+          "pattern",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Lists sorted immediate file/folder names using * and ? wildcards; returns names, not full paths, and does not recurse.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/list-folder.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/list-folder.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.exists",
+      "definition_ref": "frog.studio.file.exists",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.exists.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "exists",
+            "display_name": "exists",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Tests file/folder existence. On Windows an empty path represents the drive list and returns true. Existence does not guarantee access."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "path",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Tests file/folder existence. On Windows an empty path represents the drive list and returns true. Existence does not guarantee access.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/check-if-file-or-folder-exists-vi.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/check-if-file-or-folder-exists-vi.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.recursive_list",
+      "definition_ref": "frog.studio.file.recursive_list",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.recursive_list.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "pattern",
+            "display_name": "pattern",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "exclude_folders",
+            "display_name": "folders to exclude",
+            "type": "array<string,rank=1>",
+            "default_value_type": "array<string,rank=1>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "include_llb",
+            "display_name": "treat LLBs as folders?",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "continue_on_error",
+            "display_name": "continue on error",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "files",
+            "display_name": "files",
+            "type": "array<path,rank=1>",
+            "default_value_type": "array<path,rank=1>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "folders",
+            "display_name": "folders",
+            "type": "array<path,rank=1>",
+            "default_value_type": "array<path,rank=1>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "count",
+            "display_name": "count",
+            "type": "i32",
+            "default_value_type": "i32",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "string",
+          "array<string,rank=1>",
+          "bool",
+          "bool",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Recursively lists full file/folder paths; exclusions are case-insensitive, wildcards filter files, errors stop by default. LLB content is unsupported by the Studio host provider."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 6,
+        "port_order": [
+          "path",
+          "pattern",
+          "exclude_folders",
+          "include_llb",
+          "continue_on_error",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Recursively lists full file/folder paths; exclusions are case-insensitive, wildcards filter files, errors stop by default. LLB content is unsupported by the Studio host provider.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/recursive-file-list-vi.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/file-llb/write-delimited-spreadsheet-dbl-vi.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/file-llb/read-delimited-spreadsheet-dbl-vi.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/write-to-text-file.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/read-from-text-file.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/flatten-to-xml.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/unflatten-from-xml.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/xml-llb/write-to-xml-file-string-vi.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/xml-llb/read-from-xml-file-string-vi.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-file-position.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-file-size.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-permissions.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-type-and-creator.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/preallocated-read-from-binary-file.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-file-position.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-file-size.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-permissions.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/set-type-and-creator.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/show-in-file-system-vi.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/file-llb/create-file-with-incrementing-suffix-vi.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/move.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/copy.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/delete.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/flush-file.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/deny-access.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/file-directory-info.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/get-volume-info.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/create-folder.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/list-folder.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/check-if-file-or-folder-exists-vi.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/recursive-file-list-vi.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.open",
+      "definition_ref": "frog.studio.file.open",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.open.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "operation",
+            "display_name": "operation",
+            "type": "u32",
+            "default_value_type": "u32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "access",
+            "display_name": "access",
+            "type": "u32",
+            "default_value_type": "u32",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "disable_buffering",
+            "display_name": "disable buffering",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "prompt",
+            "display_name": "prompt",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "file_ref",
+            "display_name": "file refnum",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "cancelled",
+            "display_name": "cancelled",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "u32",
+          "u32",
+          "bool",
+          "string",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Auxiliary Open/Create/Replace File node establishes a typed live file reference. Explicit operation, access and share mode control resource creation and lifetime."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 6,
+        "port_order": [
+          "path",
+          "operation",
+          "access",
+          "disable_buffering",
+          "prompt",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Auxiliary Open/Create/Replace File node establishes a typed live file reference. Explicit operation, access and share mode control resource creation and lifetime.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/open-create-replace-file.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/open-create-replace-file.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "file.close",
+      "definition_ref": "frog.studio.file.close",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.file.close.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "file_ref",
+            "display_name": "file refnum",
+            "type": "ref<file>",
+            "default_value_type": "ref<file>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "path_out",
+            "display_name": "new file path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "recommended",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "ref<file>",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "resolve:frog.studio.file.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Auxiliary Close File node releases a typed live file reference; reuse of a closed reference reports an error."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2,
+        "port_order": [
+          "file_ref",
+          "error_in"
+        ]
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Arrays are accepted only by the function-specific data connector; file paths and references are never lifted."
+      },
+      "behavior_summary": "Auxiliary Close File node releases a typed live file reference; reuse of a closed reference reports an error.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "provider_requirement": "",
+        "notes": "A real Studio host File provider executes Highlight activations; this is separate from target compilation/runtime availability."
+      },
+      "blockers": [
+        "No public FROG lowering or target Runtime provider is declared.",
+        "LLB package content requires an unavailable library adapter and reports an error. Headless evaluation without host dialog callbacks reports unsupported instead of selecting an invented path."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/close-file.html"
+      ],
+      "presentation": {
+        "shape": "square",
+        "extension": "none"
+      },
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/close-file.html",
+        "resolver_id": "frog.studio.file.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    }
+  ]
+}

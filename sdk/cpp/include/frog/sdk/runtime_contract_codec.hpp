@@ -27,13 +27,17 @@ inline constexpr std::array<std::uint8_t, 8> kMagic{
 inline constexpr std::array<std::uint8_t, 8> kTypedMagic{
     'F', 'R', 'O', 'G', 'A', 'R', 'T', '2'
 };
+inline constexpr std::array<std::uint8_t, 8> kPackedF64ArrayMagic{
+    'F', 'R', 'O', 'G', 'A', 'R', 'T', '3'
+};
 inline constexpr std::uint32_t kMaximumCollectionSize = 1'000'000U;
 inline constexpr std::uint32_t kMaximumStringSize = 16U * 1024U * 1024U;
 inline constexpr std::size_t kMaximumTypedEnvelopeSize = 32U * 1024U * 1024U;
 
 class Writer final {
 public:
-    explicit Writer(bool typed = false) : typed_(typed) {}
+    explicit Writer(bool typed = false, bool packed = false, const RuntimeValueOwner *arrayOwner = nullptr)
+        : typed_(typed || packed), packed_(packed), arrayOwner_(arrayOwner) {}
     void bytes(std::span<const std::uint8_t> value) {
         if (!valid_ || (typed_ && value.size() > kMaximumTypedEnvelopeSize - data_.size())) { valid_ = false; return; }
         data_.insert(data_.end(), value.begin(), value.end());
@@ -87,6 +91,7 @@ public:
             unsignedInteger(std::bit_cast<std::uint64_t>(std::get<double>(value)));
             break;
         case 5U: {
+            if(packed_) { valid_=false; return; }
             const auto &text = std::get<std::string>(value);
             if (typed_ && (text.size() > 1'000'000 || text.size() > 16'000'000 - valueBytes_)) { valid_ = false; return; }
             valueBytes_ += typed_ ? text.size() : 0;
@@ -94,13 +99,23 @@ public:
         }
         case 6U: {
             const auto &record = std::get<6>(value);
-            if (!typed_ || !record || record->isReference() ||
+            if (!typed_ || packed_ || !record || record->isReference() ||
                 !runtimeValueRepresentable(value, valueTypeFromCanonicalName(record->canonicalType()))) { valid_ = false; return; }
             string(record->canonicalType());
             unsignedInteger(static_cast<std::uint32_t>(record->fields().size()));
             for (const auto &field : record->fields()) {
                 string(field.id); valueType(field.type); runtimeValue(field.value, depth + 1);
             }
+            break;
+        }
+        case 7U: {
+            const auto &array=std::get<7>(value);
+            if(!packed_ || depth != 0 || !array || !arrayOwner_ || !array->validForOwner(*arrayOwner_) ||
+                array->payloadBytes()>kMaximumF64ArrayPayloadBytes-valueBytes_) {valid_=false;return;}
+            valueBytes_+=array->payloadBytes();
+            unsignedInteger<std::uint8_t>(1);
+            unsignedInteger(static_cast<std::uint32_t>(array->elements().size()));
+            for(double element:array->elements())unsignedInteger(std::bit_cast<std::uint64_t>(element));
             break;
         }
         default: valid_ = false; break;
@@ -113,18 +128,21 @@ public:
 
 private:
     std::vector<std::uint8_t> data_;
-    bool typed_ = false, valid_ = true;
+    bool typed_ = false, packed_ = false, valid_ = true;
+    const RuntimeValueOwner *arrayOwner_ = nullptr;
     std::size_t valueNodes_ = 0, valueBytes_ = 0;
 };
 
 class Reader final {
 public:
     explicit Reader(std::span<const std::uint8_t> data) : data_(data) {}
-    bool typed(bool enabled) {
-        typed_ = enabled;
+    bool typed(bool enabled, bool packed = false) {
+        typed_ = enabled || packed; packed_=packed;
         return !typed_ || data_.size() <= kMaximumTypedEnvelopeSize ||
             fail("Typed artifact envelope exceeds its aggregate metadata/value budget.");
     }
+
+    void arrayOwner(const RuntimeValueOwner &owner) noexcept { arrayOwner_=&owner; }
 
     [[nodiscard]] bool bytes(std::span<std::uint8_t> target) {
         if (!reserve(target.size())) return false;
@@ -221,6 +239,7 @@ public:
             return true;
         }
         case 5U: {
+            if(packed_)return fail("String values are outside local schema3 packed Arrays.");
             std::string decoded;
             if (!string(decoded)) return false;
             if (typed_ && (decoded.size() > 1'000'000 || decoded.size() > 16'000'000 - valueBytes_))
@@ -230,6 +249,7 @@ public:
             return true;
         }
         case 6U: {
+            if(packed_)return fail("Record values are outside local schema3 packed Arrays.");
             if (!typed_) return fail("Record values require artifact schema v2.");
             std::string canonical; std::uint32_t size = 0;
             if (!string(canonical) || canonical.size() > 65536 || !count(size) || size > 64)
@@ -246,6 +266,30 @@ public:
                 return fail("Record fields do not match their canonical type.");
             value = std::move(*record);
             return true;
+        }
+        case 7U: {
+            if(!packed_ || depth != 0 || !arrayOwner_ || !runtimeValueOwnerValid(*arrayOwner_))
+                return fail("Packed Array values require local schema3 and its exact owner.");
+            std::uint8_t rank=0;std::uint32_t count=0;
+            if(!unsignedInteger(rank) || !unsignedInteger(count) || rank != 1 || count>kMaximumF64ArrayElements)
+                return fail("Packed Array rank/count exceeds the exact rank1 f64 profile.");
+            const auto payload=static_cast<std::size_t>(count)*sizeof(double);
+            if(payload>kMaximumF64ArrayPayloadBytes-valueBytes_ || !reserve(payload))
+                return fail("Packed Array payload is truncated or exceeds 16,000,000 bytes.");
+            // Charge BEFORE allocation. The decoder alone can move its private
+            // validated buffer into the sealed carrier, without an8MB copy.
+            valueBytes_+=payload;
+            try {
+                std::vector<double> decoded;decoded.reserve(count);
+                for(std::uint32_t index=0;index<count;++index) {
+                    std::uint64_t bits=0;if(!unsignedInteger(bits))return false;
+                    const auto element=std::bit_cast<double>(bits);
+                    if(!std::isfinite(element))return fail("Packed Array requires finite exact f64 elements.");
+                    decoded.push_back(element);
+                }
+                RuntimeValue complete{RuntimeF64Array{new ImmutableF64Array(*arrayOwner_,std::move(decoded))}};
+                value=std::move(complete);return true;
+            }catch(const std::bad_alloc &) {return fail("Packed Array allocation failed; no partial value was produced.");}
         }
         default:
             return fail("The artifact contains an invalid Runtime value tag.");
@@ -273,7 +317,8 @@ private:
 
     std::span<const std::uint8_t> data_;
     std::size_t cursor_ = 0U;
-    bool valid_ = true, typed_ = false;
+    bool valid_ = true, typed_ = false, packed_ = false;
+    const RuntimeValueOwner *arrayOwner_ = nullptr;
     std::size_t valueNodes_ = 0, valueBytes_ = 0;
     std::string error_;
 };
@@ -291,9 +336,11 @@ inline Diagnostic codecDiagnostic(std::string message) {
 [[nodiscard]] inline std::vector<std::uint8_t> encodeProgramArtifact(
     const ProgramArtifact &artifact) {
     const bool typed = artifact.schemaVersion == kTypedArtifactSchemaVersion;
-    if ((!typed && artifact.schemaVersion != kArtifactSchemaVersion) ||
+    const bool packed = artifact.schemaVersion == kPackedF64ArrayArtifactSchemaVersion;
+    const bool owned = typed || packed;
+    if ((!owned && artifact.schemaVersion != kArtifactSchemaVersion) ||
         !validateProgramArtifact(artifact).empty()) return {};
-    if (typed) {
+    if (owned) {
         for (const auto &node : artifact.nodes) if (node.literalValue) {
             const auto output = std::find_if(node.ports.begin(), node.ports.end(), [](const auto &port) {
                 return port.direction == PortDirection::Output;
@@ -304,8 +351,8 @@ inline Diagnostic codecDiagnostic(std::string message) {
             if (!std::holds_alternative<std::monostate>(binding.initialValue) &&
                 !runtimeValueValidForOwner(binding.initialValue, binding.valueType, *artifact.valueOwner)) return {};
     }
-    codec_detail::Writer writer(typed);
-    writer.bytes(typed ? codec_detail::kTypedMagic : codec_detail::kMagic);
+    codec_detail::Writer writer(typed,packed,packed ? &*artifact.valueOwner : nullptr);
+    writer.bytes(packed ? codec_detail::kPackedF64ArrayMagic : typed ? codec_detail::kTypedMagic : codec_detail::kMagic);
     writer.unsignedInteger(artifact.protocol.major);
     writer.unsignedInteger(artifact.protocol.minor);
     writer.unsignedInteger(artifact.schemaVersion);
@@ -315,7 +362,7 @@ inline Diagnostic codecDiagnostic(std::string message) {
     writer.unsignedInteger(artifact.revision.semantic);
     writer.unsignedInteger(artifact.revision.interfaceContract);
     writer.unsignedInteger(artifact.revision.topology);
-    if (typed) {
+    if (owned) {
         const auto &owner = *artifact.valueOwner;
         writer.string(owner.id); writer.string(owner.sourceDigest);
         writer.unsignedInteger(owner.epoch); writer.unsignedInteger(owner.sourceRevision);
@@ -340,7 +387,7 @@ inline Diagnostic codecDiagnostic(std::string message) {
         }
         writer.boolean(node.literalValue.has_value());
         if (node.literalValue.has_value()) writer.runtimeValue(*node.literalValue);
-        if (typed) {
+        if (owned) {
             writer.unsignedInteger(static_cast<std::uint32_t>(node.selectedFields.size()));
             for (const auto &field : node.selectedFields) writer.string(field);
         }
@@ -363,7 +410,7 @@ inline Diagnostic codecDiagnostic(std::string message) {
         writer.enumeration(binding.direction);
         writer.valueType(binding.valueType);
         writer.runtimeValue(binding.initialValue);
-        if (typed) writer.boolean(binding.suppliedByEvent);
+        if (owned) writer.boolean(binding.suppliedByEvent);
     }
 
     writer.unsignedInteger(static_cast<std::uint32_t>(artifact.sourceIdentities.size()));
@@ -393,27 +440,30 @@ inline Diagnostic codecDiagnostic(std::string message) {
         return result;
     };
 
-    if (!reader.bytes(magic) || (magic != codec_detail::kMagic && magic != codec_detail::kTypedMagic) ||
+    if (!reader.bytes(magic) || (magic != codec_detail::kMagic && magic != codec_detail::kTypedMagic && magic != codec_detail::kPackedF64ArrayMagic) ||
         !reader.unsignedInteger(artifact.protocol.major) ||
         !reader.unsignedInteger(artifact.protocol.minor) ||
         !reader.unsignedInteger(artifact.schemaVersion)) return fail();
     const bool typed = artifact.schemaVersion == kTypedArtifactSchemaVersion;
-    if ((typed ? codec_detail::kTypedMagic : codec_detail::kMagic) != magic ||
-        (!typed && artifact.schemaVersion != kArtifactSchemaVersion)) return fail();
-    // Admit the entire v2 envelope before the first variable-length field.
-    if (!reader.typed(typed)) return fail();
+    const bool packed = artifact.schemaVersion == kPackedF64ArrayArtifactSchemaVersion;
+    const bool owned = typed || packed;
+    if ((packed ? codec_detail::kPackedF64ArrayMagic : typed ? codec_detail::kTypedMagic : codec_detail::kMagic) != magic ||
+        (!owned && artifact.schemaVersion != kArtifactSchemaVersion)) return fail();
+    // Admit each owned envelope before the first variable-length field.
+    if (!reader.typed(owned,packed)) return fail();
     if (!reader.stableId(artifact.artifactId) ||
         !reader.stableId(artifact.sourceDocumentId) ||
         !reader.string(artifact.sourceDocumentUri) ||
         !reader.unsignedInteger(artifact.revision.semantic) ||
         !reader.unsignedInteger(artifact.revision.interfaceContract) ||
         !reader.unsignedInteger(artifact.revision.topology)) return fail();
-    if (typed) {
+    if (owned) {
         RuntimeValueOwner owner;
         if (!reader.string(owner.id) || !reader.string(owner.sourceDigest) ||
             !reader.unsignedInteger(owner.epoch) || !reader.unsignedInteger(owner.sourceRevision) ||
             !reader.unsignedInteger(owner.artifactRevision) || !runtimeValueOwnerValid(owner)) return fail();
         artifact.valueOwner = std::move(owner);
+        if(packed)reader.arrayOwner(*artifact.valueOwner);
     }
 
     std::uint32_t count = 0U;
@@ -444,9 +494,9 @@ inline Diagnostic codecDiagnostic(std::string message) {
             if (!reader.runtimeValue(value)) return fail();
             node.literalValue = std::move(value);
         }
-        if (typed) {
+        if (owned) {
             std::uint32_t fieldCount = 0;
-            if (!reader.count(fieldCount) || fieldCount > 64) return fail();
+            if (!reader.count(fieldCount) || fieldCount > 64 || (packed && fieldCount != 0)) return fail();
             for (std::uint32_t index = 0; index < fieldCount; ++index) {
                 std::string field; if (!reader.string(field)) return fail();
                 node.selectedFields.push_back(std::move(field));
@@ -474,7 +524,7 @@ inline Diagnostic codecDiagnostic(std::string message) {
             !reader.stableId(binding.endpoint.portId) ||
             !reader.enumeration(binding.direction, static_cast<std::uint8_t>(UiBindingDirection::RuntimeToIndicator)) ||
             !reader.valueType(binding.valueType) || !reader.runtimeValue(binding.initialValue)) return fail();
-        if (typed && !reader.boolean(binding.suppliedByEvent)) return fail();
+        if (owned && !reader.boolean(binding.suppliedByEvent)) return fail();
         artifact.uiBindings.push_back(std::move(binding));
     }
 
@@ -500,7 +550,7 @@ inline Diagnostic codecDiagnostic(std::string message) {
 
     ArtifactDecodeResult result;
     result.diagnostics = validateProgramArtifact(artifact);
-    if (typed && result.diagnostics.empty()) {
+    if (owned && result.diagnostics.empty()) {
         for (const auto &node : artifact.nodes) if (node.literalValue) {
             const auto output = std::find_if(node.ports.begin(), node.ports.end(), [](const auto &port) {
                 return port.direction == PortDirection::Output;

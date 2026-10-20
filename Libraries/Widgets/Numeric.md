@@ -788,3 +788,7 @@ The numeric widget family defines the intrinsic standardized numeric baseline of
 <p>
 It standardizes numeric value, representation, data-entry limits, display format, optional increment/decrement interaction, and a realization-ready public part model while preserving the class-versus-realization boundary. Optional unit and radix surfaces are variant-level extensions unless the selected realization publishes them explicitly.
 </p>
+
+## Studio reconciliation — 14 October 2026
+
+Current Studio serialization retains the display-format properties above and applies them per destination on runtime observations. Geometry follows document typography and existing user bounds, rather than a fixed20pt box. This is recorded in the [Studio profile](../../Expression/Studio%20authoring%20document%20profile%20v1.md); format changes never round execution data.

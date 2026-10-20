@@ -216,3 +216,7 @@ Changes must:
 | Revision | Date | Change |
 | --- | --- | --- |
 | 1.0 | 2026-09-16 | Establish a stable admission reference, independent gates, recursive coverage, diagnostics and evidence governance; incorporate the supplied revision-2 validation study without asserting unverified implementation coverage. |
+
+## Studio reconciliation — 14 October 2026
+
+The [Studio reconciliation](../docs/studio-reconciliation-2026-10-14.md) distinguishes current runtime routes and qualification. POC OFF alone no longer means all execution is absent. Catalogue visibility, a complete authoring signature or a successful structural schema check cannot replace actual target/provider admission.

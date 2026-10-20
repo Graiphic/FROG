@@ -1,0 +1,694 @@
+{
+  "schema_version": 2,
+  "family": "Cluster",
+  "entries": [
+    {
+      "catalog_id": "cluster.build",
+      "definition_ref": "frog.studio.cluster.build",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.cluster.build.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "element1",
+            "display_name": "element1",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "element2",
+            "display_name": "element2",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "cluster",
+            "display_name": "cluster",
+            "type": "T:cluster",
+            "default_value_type": "cluster<>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "elementN",
+        "optional_input_first_index": 3
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any",
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.palette.type-resolution@1",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 2,
+        "maximum_input_count": 32,
+        "port_order": [
+          "element1",
+          "element2",
+          "elementN_ascending"
+        ],
+        "reduction": "unspecified"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for cluster.build.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "frog.studio.palette.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "cluster.properties",
+      "definition_ref": "frog.studio.cluster.properties",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.cluster.properties.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "cluster",
+            "display_name": "cluster",
+            "type": "T:cluster",
+            "default_value_type": "cluster<>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "T:any",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:cluster"
+        ],
+        "result": "resolve:frog.studio.palette.type-resolution@1",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Cluster field access. The selected field name is stored in the node text; an unconfigured field remains unresolved.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "frog.studio.palette.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "cluster.bundle_by_name",
+      "definition_ref": "frog.studio.cluster.bundle_by_name",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.cluster.bundle_by_name.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "cluster",
+            "display_name": "cluster",
+            "type": "T:cluster",
+            "default_value_type": "cluster<>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "element1",
+            "display_name": "field",
+            "type": "T:any",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "cluster",
+            "type": "T:cluster",
+            "default_value_type": "cluster<>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:cluster",
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Updates selected nominal fields of a required input Cluster; unselected fields and the complete output schema are preserved. Repeated rows, stored by name, accept the normal numeric coercions. Missing or ambiguous names invalidate the node.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "cluster.unbundle_by_name",
+      "definition_ref": "frog.studio.cluster.unbundle_by_name",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.cluster.unbundle_by_name.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "cluster",
+            "display_name": "cluster",
+            "type": "T:cluster",
+            "default_value_type": "cluster<>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "element1",
+            "display_name": "field",
+            "type": "T:any",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:cluster"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Extracts selected nominal fields of a required input Cluster. Repeated output rows have the exact selected field types. Reordering does not change selections; missing or ambiguous names invalidate the node.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "cluster.build_array",
+      "definition_ref": "frog.studio.cluster.build_array",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.cluster.build_array.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "element1",
+            "display_name": "element1",
+            "type": "T:any",
+            "default_value_type": "f64",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:cluster,rank>=1>",
+            "default_value_type": "array<cluster<>,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "elementN",
+        "optional_input_first_index": 2
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": true
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 1,
+        "maximum_input_count": 32,
+        "port_order": [
+          "element1",
+          "elementN_ascending"
+        ],
+        "reduction": "unspecified"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Wraps each input value independently in a single-field Cluster and builds a 1D Array with one element per input. Scalars, Arrays and Clusters are accepted; all inputs must have one common effective type under normal numeric coercion rules.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "cluster.index_build_array",
+      "definition_ref": "frog.studio.cluster.index_build_array",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.cluster.index_build_array.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "element1",
+            "display_name": "element1",
+            "type": "array<T:any,rank=1>",
+            "default_value_type": "array<f64,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:cluster,rank>=1>",
+            "default_value_type": "array<cluster<>,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "optional_input_pattern": "elementN",
+        "optional_input_first_index": 2
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank=1>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": true,
+        "minimum_input_count": 1,
+        "maximum_input_count": 32,
+        "port_order": [
+          "element1",
+          "elementN_ascending"
+        ],
+        "reduction": "unspecified"
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Zips 1D input Arrays, allowing heterogeneous element types, into a 1D Array of Clusters in input row order. Output length is the shortest input length; any empty input produces an empty output.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "cluster.constant",
+      "definition_ref": "frog.studio.cluster.constant",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.cluster.constant.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "T:cluster",
+            "default_value_type": "cluster<>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "T:cluster",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Studio authoring ports for cluster.constant.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Execution requires explicit support by the active target."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "cluster.conversion.cluster_to_array",
+      "definition_ref": "frog.studio.cluster.conversion.cluster_to_array",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.cluster.conversion.cluster_to_array.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "cluster",
+            "display_name": "cluster",
+            "type": "T:cluster",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank>=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:cluster"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A non-empty cluster of compatible homogeneous elements produces a 1D array. Direct array fields are not accepted. Nested clusters retain their complete compatible schema; numeric representations can promote."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A non-empty cluster of compatible homogeneous elements produces a 1D array. Direct array fields are not accepted. Nested clusters retain their complete compatible schema; numeric representations can promote."
+      },
+      "behavior_summary": "A non-empty cluster of compatible homogeneous elements produces a 1D array. Direct array fields are not accepted. Nested clusters retain their complete compatible schema; numeric representations can promote.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/cluster-to-array.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/cluster-to-array.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "cluster.conversion.array_to_cluster",
+      "definition_ref": "frog.studio.cluster.conversion.array_to_cluster",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.cluster.conversion.array_to_cluster.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<T:any,rank=1>",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "cluster",
+            "display_name": "cluster",
+            "type": "T:cluster",
+            "default_value_type": "unknown",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "array<T:any,rank=1>"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A 1D array of T becomes a fixed-size cluster of T. Cluster Size is configured in the editor from 1 to 256 (default nine); runtime array length does not define the schema."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A 1D array of T becomes a fixed-size cluster of T. Cluster Size is configured in the editor from 1 to 256 (default nine); runtime array length does not define the schema."
+      },
+      "behavior_summary": "A 1D array of T becomes a fixed-size cluster of T. Cluster Size is configured in the editor from 1 to 256 (default nine); runtime array length does not define the schema.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring support is not an execution capability.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-to-cluster.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "draft",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-to-cluster.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    }
+  ]
+}

@@ -345,3 +345,7 @@ Validators SHOULD diagnose aggregate-value shape mismatch, unknown field ids, du
 <code>frog.widgets.cluster</code> is the standardized heterogeneous aggregate widget of FROG.
 It groups named fields of potentially different value types and widget classes into one structured value.
 </p>
+
+## Studio reconciliation — 14 October 2026
+
+Current Studio preserves complete ordered field schemas and uses stable field IDs for nested authoring and value updates. New reference-valued fields are an active product lot, not qualified merely by the existing Cluster authoring surface. See the [reconciliation record](../../docs/studio-reconciliation-2026-10-14.md).

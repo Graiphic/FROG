@@ -1,0 +1,1145 @@
+{
+  "schema_version": 1,
+  "profile_id": "studio.widget-authoring",
+  "profile_version": 1,
+  "authority": "studio_private",
+  "public_reference": "FROG/Libraries/Widgets/Readme.md",
+  "provides_runtime_capability": false,
+  "definitions": [
+    {
+      "class_id": "frog.widgets.numeric_control",
+      "family": "numeric",
+      "canonical_role": "control",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element",
+        "data_type",
+        "data_entry",
+        "display_format",
+        "increment_decrement",
+        "editable_value"
+      ],
+      "property_pages": [
+        "appearance",
+        "data_type",
+        "data_entry",
+        "display_format"
+      ],
+      "terminal": {
+        "direction": "output",
+        "default_value_type": "f64"
+      },
+      "binding_policy": "public_input",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.numeric_indicator",
+      "family": "numeric",
+      "canonical_role": "indicator",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element",
+        "data_type",
+        "data_entry",
+        "display_format",
+        "increment_decrement"
+      ],
+      "property_pages": [
+        "appearance",
+        "data_type",
+        "data_entry",
+        "display_format"
+      ],
+      "terminal": {
+        "direction": "input",
+        "default_value_type": "f64"
+      },
+      "binding_policy": "public_output",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.button",
+      "family": "button",
+      "canonical_role": "control",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element",
+        "editable_value",
+        "mechanical_action"
+      ],
+      "property_pages": [
+        "appearance",
+        "operation"
+      ],
+      "terminal": {
+        "direction": "role_derived",
+        "default_value_type": "bool"
+      },
+      "binding_policy": "role_derived",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.boolean_control",
+      "family": "boolean",
+      "canonical_role": "control",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element",
+        "editable_value"
+      ],
+      "property_pages": [
+        "appearance",
+        "operation"
+      ],
+      "terminal": {
+        "direction": "output",
+        "default_value_type": "bool"
+      },
+      "binding_policy": "public_input",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.boolean_indicator",
+      "family": "boolean",
+      "canonical_role": "indicator",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element"
+      ],
+      "property_pages": [
+        "appearance",
+        "operation"
+      ],
+      "terminal": {
+        "direction": "input",
+        "default_value_type": "bool"
+      },
+      "binding_policy": "public_output",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.string_control",
+      "family": "string_path",
+      "canonical_role": "control",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element",
+        "editable_value",
+        "data_entry",
+        "display_format"
+      ],
+      "property_pages": [
+        "appearance",
+        "display",
+        "data_entry"
+      ],
+      "terminal": {
+        "direction": "output",
+        "default_value_type": "string"
+      },
+      "binding_policy": "public_input",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.string_indicator",
+      "family": "string_path",
+      "canonical_role": "indicator",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element",
+        "display_format"
+      ],
+      "property_pages": [
+        "appearance",
+        "display"
+      ],
+      "terminal": {
+        "direction": "input",
+        "default_value_type": "string"
+      },
+      "binding_policy": "public_output",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.path_control",
+      "family": "string_path",
+      "canonical_role": "control",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element",
+        "editable_value",
+        "browse"
+      ],
+      "property_pages": [
+        "appearance",
+        "browse_options"
+      ],
+      "terminal": {
+        "direction": "output",
+        "default_value_type": "path"
+      },
+      "binding_policy": "public_input",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.path_indicator",
+      "family": "string_path",
+      "canonical_role": "indicator",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element"
+      ],
+      "property_pages": [
+        "appearance"
+      ],
+      "terminal": {
+        "direction": "input",
+        "default_value_type": "path"
+      },
+      "binding_policy": "public_output",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.enum_control",
+      "family": "enum",
+      "canonical_role": "control",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element",
+        "data_type",
+        "display_format",
+        "items",
+        "editable_value"
+      ],
+      "property_pages": [
+        "appearance",
+        "data_type",
+        "display_format",
+        "edit_items"
+      ],
+      "terminal": {
+        "direction": "output",
+        "default_value_type": "enum_item_id"
+      },
+      "binding_policy": "public_input",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.enum_indicator",
+      "family": "enum",
+      "canonical_role": "indicator",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element",
+        "data_type",
+        "display_format",
+        "items"
+      ],
+      "property_pages": [
+        "appearance",
+        "data_type",
+        "display_format",
+        "edit_items"
+      ],
+      "terminal": {
+        "direction": "input",
+        "default_value_type": "enum_item_id"
+      },
+      "binding_policy": "public_output",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.ring_control",
+      "family": "ring",
+      "canonical_role": "control",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element",
+        "data_type",
+        "display_format",
+        "items",
+        "editable_value",
+        "data_entry"
+      ],
+      "property_pages": [
+        "appearance",
+        "data_type",
+        "display_format",
+        "edit_items",
+        "data_entry"
+      ],
+      "terminal": {
+        "direction": "output",
+        "default_value_type": "u16"
+      },
+      "binding_policy": "public_input",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.ring_indicator",
+      "family": "ring",
+      "canonical_role": "indicator",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element",
+        "data_type",
+        "display_format",
+        "items",
+        "data_entry"
+      ],
+      "property_pages": [
+        "appearance",
+        "data_type",
+        "display_format",
+        "edit_items",
+        "data_entry"
+      ],
+      "terminal": {
+        "direction": "input",
+        "default_value_type": "u16"
+      },
+      "binding_policy": "public_output",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.array_control",
+      "family": "data_containers",
+      "canonical_role": "control",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "editable_value",
+        "array_container"
+      ],
+      "property_pages": [
+        "appearance",
+        "size"
+      ],
+      "terminal": {
+        "direction": "output",
+        "default_value_type": "frog.array<unknown>"
+      },
+      "binding_policy": "element_type_required",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.array_indicator",
+      "family": "data_containers",
+      "canonical_role": "indicator",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_container"
+      ],
+      "property_pages": [
+        "appearance",
+        "size"
+      ],
+      "terminal": {
+        "direction": "input",
+        "default_value_type": "frog.array<unknown>"
+      },
+      "binding_policy": "element_type_required",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.variant_control",
+      "family": "data_containers",
+      "canonical_role": "control",
+      "supported_roles": ["control", "indicator"],
+      "capabilities": ["label", "enabled_state", "role_conversion", "public_interface_binding", "array_element"],
+      "property_pages": ["appearance", "size"],
+      "terminal": {"direction": "role_derived", "default_value_type": "variant"},
+      "binding_policy": "role_derived",
+      "defaults": {"label_visible": true, "enabled": true}
+    },
+    {
+      "class_id": "frog.widgets.cluster_control",
+      "family": "data_containers",
+      "canonical_role": "control",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "editable_value",
+        "array_element",
+        "cluster_container"
+      ],
+      "property_pages": [
+        "appearance",
+        "size"
+      ],
+      "terminal": {
+        "direction": "output",
+        "default_value_type": "cluster:unknown"
+      },
+      "binding_policy": "element_type_required",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.cluster_indicator",
+      "family": "data_containers",
+      "canonical_role": "indicator",
+      "supported_roles": [
+        "control",
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "role_conversion",
+        "font",
+        "color",
+        "public_interface_binding",
+        "array_element",
+        "cluster_container"
+      ],
+      "property_pages": [
+        "appearance",
+        "size"
+      ],
+      "terminal": {
+        "direction": "input",
+        "default_value_type": "cluster:unknown"
+      },
+      "binding_policy": "element_type_required",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.picture_indicator",
+      "family": "visualization",
+      "canonical_role": "indicator",
+      "supported_roles": [
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "font",
+        "color",
+        "public_interface_binding"
+      ],
+      "property_pages": [
+        "appearance",
+        "size"
+      ],
+      "terminal": {
+        "direction": "input",
+        "default_value_type": "frog.array<u32,rank=2>"
+      },
+      "binding_policy": "public_output",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.waveform_graph",
+      "family": "visualization",
+      "canonical_role": "indicator",
+      "supported_roles": [
+        "indicator"
+      ],
+      "capabilities": [
+        "label",
+        "enabled_state",
+        "font",
+        "color",
+        "public_interface_binding"
+      ],
+      "property_pages": [
+        "appearance",
+        "size"
+      ],
+      "terminal": {
+        "direction": "input",
+        "default_value_type": "frog.waveform_graph_value"
+      },
+      "binding_policy": "public_output",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    },
+    {
+      "class_id": "frog.widgets.label",
+      "family": "label",
+      "canonical_role": "support",
+      "supported_roles": [
+        "support"
+      ],
+      "capabilities": [
+        "editable_value",
+        "font",
+        "color"
+      ],
+      "property_pages": [
+        "appearance"
+      ],
+      "terminal": {
+        "direction": "none",
+        "default_value_type": ""
+      },
+      "binding_policy": "none",
+      "defaults": {
+        "label_visible": true,
+        "enabled": true
+      }
+    }
+  ],
+  "aliases": [
+    {
+      "alias": "frog.widgets.array",
+      "class_id": "frog.widgets.array_control"
+    },
+    {
+      "alias": "frog.widgets.cluster",
+      "class_id": "frog.widgets.cluster_control"
+    }
+  ],
+  "catalog_entries": [
+    {
+      "family": "numeric",
+      "display_name": "Numeric Control",
+      "class_id": "frog.widgets.numeric_control",
+      "role": "control",
+      "value_type": "f64",
+      "source_example_path": "Examples/41_numeric_placement_ide_view/main.frog",
+      "wfrog_package_path": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/numeric.default.wfrog",
+      "asset_ref": "asset:numeric_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+      "default_preview_size": {
+        "width": 96,
+        "height": 32
+      }
+    },
+    {
+      "family": "numeric",
+      "display_name": "Numeric Indicator",
+      "class_id": "frog.widgets.numeric_indicator",
+      "role": "indicator",
+      "value_type": "f64",
+      "source_example_path": "Examples/41_numeric_placement_ide_view/main.frog",
+      "wfrog_package_path": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/numeric.default.wfrog",
+      "asset_ref": "asset:numeric_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+      "default_preview_size": {
+        "width": 96,
+        "height": 32
+      }
+    },
+    {
+      "family": "numeric",
+      "display_name": "Color Box Control",
+      "class_id": "frog.widgets.numeric_control",
+      "role": "control",
+      "value_type": "u32",
+      "source_example_path": "Examples/41_numeric_placement_ide_view/main.frog",
+      "wfrog_package_path": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/numeric.default.wfrog",
+      "asset_ref": "asset:numeric_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+      "default_preview_size": {"width": 46.2, "height": 46.2}
+    },
+    {
+      "family": "numeric",
+      "display_name": "Color Box Indicator",
+      "class_id": "frog.widgets.numeric_indicator",
+      "role": "indicator",
+      "value_type": "u32",
+      "source_example_path": "Examples/41_numeric_placement_ide_view/main.frog",
+      "wfrog_package_path": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/numeric.default.wfrog",
+      "asset_ref": "asset:numeric_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+      "default_preview_size": {"width": 46.2, "height": 46.2}
+    },
+    {
+      "family": "numeric",
+      "display_name": "Time Stamp",
+      "class_id": "frog.widgets.numeric_control",
+      "role": "control",
+      "value_type": "timestamp",
+      "source_example_path": "Examples/41_numeric_placement_ide_view/main.frog",
+      "wfrog_package_path": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/numeric.default.wfrog",
+      "asset_ref": "asset:numeric_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+      "default_preview_size": {
+        "width": 164,
+        "height": 48
+      }
+    },
+    {
+      "family": "button",
+      "display_name": "Text Button",
+      "class_id": "frog.widgets.button",
+      "role": "control",
+      "value_type": "bool",
+      "source_example_path": "Examples/11_button_switch_when_pressed/main.frog",
+      "wfrog_package_path": "Examples/11_button_switch_when_pressed/ui/button_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/button.default.wfrog",
+      "asset_ref": "asset:button_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/button/templates/button_rectangular.svg",
+      "default_preview_size": {
+        "width": 92,
+        "height": 40
+      }
+    },
+    {
+      "family": "boolean",
+      "display_name": "Boolean Control",
+      "class_id": "frog.widgets.boolean_control",
+      "role": "control",
+      "value_type": "bool",
+      "source_example_path": "Examples/42_boolean_placement_ide_view/main.frog",
+      "wfrog_package_path": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/boolean.default.wfrog",
+      "asset_ref": "asset:boolean_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg",
+      "default_preview_size": {
+        "width": 46.2,
+        "height": 46.2
+      }
+    },
+    {
+      "family": "boolean",
+      "display_name": "Boolean Indicator",
+      "class_id": "frog.widgets.boolean_indicator",
+      "role": "indicator",
+      "value_type": "bool",
+      "source_example_path": "Examples/42_boolean_placement_ide_view/main.frog",
+      "wfrog_package_path": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/boolean.default.wfrog",
+      "asset_ref": "asset:boolean_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg",
+      "default_preview_size": {
+        "width": 46.2,
+        "height": 46.2
+      }
+    },
+    {
+      "family": "boolean",
+      "display_name": "Round LED",
+      "class_id": "frog.widgets.boolean_control",
+      "role": "control",
+      "value_type": "bool",
+      "source_example_path": "Examples/42_boolean_placement_ide_view/main.frog",
+      "wfrog_package_path": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/boolean.default.wfrog",
+      "asset_ref": "asset:boolean_circular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg",
+      "default_preview_size": {
+        "width": 46.2,
+        "height": 46.2
+      }
+    },
+    {
+      "family": "string_path",
+      "display_name": "String Control",
+      "class_id": "frog.widgets.string_control",
+      "role": "control",
+      "value_type": "string",
+      "source_example_path": "Examples/07_string_value_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/string.default.wfrog",
+      "asset_ref": "asset:string_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg",
+      "default_preview_size": {
+        "width": 120,
+        "height": 32
+      }
+    },
+    {
+      "family": "string_path",
+      "display_name": "String Indicator",
+      "class_id": "frog.widgets.string_indicator",
+      "role": "indicator",
+      "value_type": "string",
+      "source_example_path": "Examples/07_string_value_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/string.default.wfrog",
+      "asset_ref": "asset:string_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg",
+      "default_preview_size": {
+        "width": 120,
+        "height": 32
+      }
+    },
+    {
+      "family": "string_path",
+      "display_name": "Dropdown String Control",
+      "class_id": "frog.widgets.string_control",
+      "role": "control",
+      "value_type": "string",
+      "source_example_path": "Examples/07_string_value_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/string.default.wfrog",
+      "asset_ref": "asset:string_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg",
+      "default_preview_size": {
+        "width": 120,
+        "height": 32
+      },
+      "authoring_preset": "string_dropdown"
+    },
+    {
+      "family": "string_path",
+      "display_name": "Dropdown String Indicator",
+      "class_id": "frog.widgets.string_indicator",
+      "role": "indicator",
+      "value_type": "string",
+      "source_example_path": "Examples/07_string_value_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/string.default.wfrog",
+      "asset_ref": "asset:string_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg",
+      "default_preview_size": {
+        "width": 120,
+        "height": 32
+      },
+      "authoring_preset": "string_dropdown"
+    },
+    {
+      "family": "string_path",
+      "display_name": "Path Control",
+      "class_id": "frog.widgets.path_control",
+      "role": "control",
+      "value_type": "path",
+      "source_example_path": "Examples/09_path_value_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/09_path_value_roundtrip/ui/path_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/path.default.wfrog",
+      "asset_ref": "asset:path_rectangular_field_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/path/templates/path_rectangular_field.svg",
+      "default_preview_size": {
+        "width": 320,
+        "height": 32
+      }
+    },
+    {
+      "family": "string_path",
+      "display_name": "Path Indicator",
+      "class_id": "frog.widgets.path_indicator",
+      "role": "indicator",
+      "value_type": "path",
+      "source_example_path": "Examples/09_path_value_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/09_path_value_roundtrip/ui/path_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/path.default.wfrog",
+      "asset_ref": "asset:path_rectangular_field_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/path/templates/path_rectangular_field.svg",
+      "default_preview_size": {
+        "width": 320,
+        "height": 32
+      }
+    },
+    {
+      "family": "enum",
+      "display_name": "Enum Control",
+      "class_id": "frog.widgets.enum_control",
+      "role": "control",
+      "value_type": "enum_item_id",
+      "source_example_path": "Examples/08_enum_value_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/08_enum_value_roundtrip/ui/enum_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/enum.default.wfrog",
+      "asset_ref": "asset:enum_rectangular_ring_svg",
+      "popup_asset_ref": "asset:enum_dropdown_list_svg",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/enum/templates/enum_rectangular_ring.svg",
+      "default_preview_size": {
+        "width": 176,
+        "height": 38
+      }
+    },
+    {
+      "family": "enum",
+      "display_name": "Enum Indicator",
+      "class_id": "frog.widgets.enum_indicator",
+      "role": "indicator",
+      "value_type": "enum_item_id",
+      "source_example_path": "Examples/08_enum_value_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/08_enum_value_roundtrip/ui/enum_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/enum.default.wfrog",
+      "asset_ref": "asset:enum_rectangular_ring_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/enum/templates/enum_rectangular_ring.svg",
+      "default_preview_size": {
+        "width": 176,
+        "height": 38
+      }
+    },
+    {
+      "family": "ring",
+      "display_name": "Ring Control",
+      "class_id": "frog.widgets.ring_control",
+      "role": "control",
+      "value_type": "u16",
+      "source_example_path": "Examples/21_ring_selection_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/21_ring_selection_roundtrip/ui/ring_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/ring.default.wfrog",
+      "asset_ref": "asset:ring_rectangular_svg",
+      "popup_asset_ref": "asset:ring_dropdown_list_svg",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/ring/templates/ring_rectangular.svg",
+      "default_preview_size": {
+        "width": 176,
+        "height": 38
+      }
+    },
+    {
+      "family": "ring",
+      "display_name": "Ring Indicator",
+      "class_id": "frog.widgets.ring_indicator",
+      "role": "indicator",
+      "value_type": "u16",
+      "source_example_path": "Examples/21_ring_selection_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/21_ring_selection_roundtrip/ui/ring_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/ring.default.wfrog",
+      "asset_ref": "asset:ring_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/ring/templates/ring_rectangular.svg",
+      "default_preview_size": {
+        "width": 176,
+        "height": 38
+      }
+    },
+    {
+      "family": "data_containers",
+      "display_name": "Array",
+      "class_id": "frog.widgets.array_control",
+      "role": "control",
+      "value_type": "frog.array<u16,rank=1>",
+      "source_example_path": "Examples/26_array_numeric_selection_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/26_array_numeric_selection_roundtrip/ui/array_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/array.default.wfrog",
+      "asset_ref": "asset:array_shell_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg",
+      "default_preview_size": {
+        "width": 182,
+        "height": 112
+      }
+    },
+    {
+      "family": "data_containers",
+      "display_name": "Cluster",
+      "class_id": "frog.widgets.cluster_control",
+      "role": "control",
+      "value_type": "cluster:unknown",
+      "source_example_path": "Examples/44_cluster_widget_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/44_cluster_widget_roundtrip/ui/cluster_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/cluster.default.wfrog",
+      "asset_ref": "asset:cluster_shell_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/cluster/templates/cluster_shell.svg",
+      "default_preview_size": {
+        "width": 168,
+        "height": 112
+      }
+    },
+    {
+      "family": "data_containers",
+      "display_name": "Variant",
+      "class_id": "frog.widgets.variant_control",
+      "role": "indicator",
+      "value_type": "variant",
+      "source_example_path": "",
+      "wfrog_package_path": "",
+      "realization_package_ref": "",
+      "asset_ref": "",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "",
+      "default_preview_size": {"width": 140, "height": 70}
+    },
+    {
+      "family": "data_containers",
+      "display_name": "Error Cluster Control",
+      "class_id": "frog.widgets.cluster_control",
+      "role": "control",
+      "value_type": "cluster<status:bool,code:i32,source:string>",
+      "source_example_path": "Examples/44_cluster_widget_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/44_cluster_widget_roundtrip/ui/cluster_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/cluster.default.wfrog",
+      "asset_ref": "asset:cluster_shell_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/cluster/templates/cluster_shell.svg",
+      "default_preview_size": {
+        "width": 168,
+        "height": 112
+      }
+    },
+    {
+      "family": "data_containers",
+      "display_name": "Error Cluster Indicator",
+      "class_id": "frog.widgets.cluster_indicator",
+      "role": "indicator",
+      "value_type": "cluster<status:bool,code:i32,source:string>",
+      "source_example_path": "Examples/44_cluster_widget_roundtrip/main.frog",
+      "wfrog_package_path": "Examples/44_cluster_widget_roundtrip/ui/cluster_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/cluster.default.wfrog",
+      "asset_ref": "asset:cluster_shell_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/cluster/templates/cluster_shell.svg",
+      "default_preview_size": {
+        "width": 168,
+        "height": 112
+      }
+    },
+    {
+      "family": "visualization",
+      "display_name": "Picture Display",
+      "class_id": "frog.widgets.picture_indicator",
+      "role": "indicator",
+      "value_type": "frog.array<u32,rank=2>",
+      "source_example_path": "Examples/16_picture_logo_jpeg/main.frog",
+      "wfrog_package_path": "Examples/16_picture_logo_jpeg/ui/picture_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/picture.default.wfrog",
+      "asset_ref": "asset:picture_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/picture/templates/picture_rectangular.svg",
+      "default_preview_size": {
+        "width": 240,
+        "height": 160
+      }
+    },
+    {
+      "family": "visualization",
+      "display_name": "Waveform Graph",
+      "class_id": "frog.widgets.waveform_graph",
+      "role": "indicator",
+      "value_type": "frog.waveform_graph_value",
+      "source_example_path": "Examples/45_waveform_graph/main.frog",
+      "wfrog_package_path": "Libraries/Widgets/waveform_graph.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/waveform_graph.default.wfrog",
+      "asset_ref": "asset:waveform_graph_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/waveform_graph/templates/waveform_graph_rectangular.svg",
+      "default_preview_size": {
+        "width": 640,
+        "height": 400
+      }
+    },
+    {
+      "family": "label",
+      "display_name": "Label",
+      "class_id": "frog.widgets.label",
+      "role": "support",
+      "value_type": "support_text",
+      "source_example_path": "Examples/17_label_typography_board/main.frog",
+      "wfrog_package_path": "Examples/17_label_typography_board/ui/label_panel.wfrog",
+      "realization_package_ref": "Libraries/Realizations/Default/label.default.wfrog",
+      "asset_ref": "asset:label_rectangular_svg",
+      "popup_asset_ref": "",
+      "default_svg_asset_path": "Libraries/Realizations/Default/assets/label/templates/label_rectangular.svg",
+      "default_preview_size": {
+        "width": 72,
+        "height": 20
+      }
+    }
+  ]
+}

@@ -1,0 +1,553 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.github.io/FROG/Expression/Schemas/frog.studio-document.schema.json",
+  "title": "Graiphic Studio authoring writer profile v1",
+  "description": "Structural documentation of existing frog.document.draft writer output, revisions 2..7. Not canonical spec_version conformance, historical loader grammar, semantic validation, runtime admission or complete feature/revision checking.",
+  "$comment": "Evidence owner: Graiphic Studio FrogDocumentFormat/FrogDocumentSerialization. Unknown authoring members remain open for repair and extension; accepting an opaque property is not execution support. Numeric lexical state, recursive container props and provider payloads require their actual implementation validators.",
+  "type": "object",
+  "required": [
+    "format",
+    "draft_revision",
+    "language",
+    "title",
+    "metadata",
+    "interface",
+    "frontPanel",
+    "diagram"
+  ],
+  "properties": {
+    "format": {
+      "const": "frog.document.draft"
+    },
+    "draft_revision": {
+      "type": "integer",
+      "minimum": 2,
+      "maximum": 7
+    },
+    "language": {
+      "const": "FROG"
+    },
+    "title": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "interface": {
+      "type": "object"
+    },
+    "interface_map": {
+      "type": "object"
+    },
+    "frontPanel": {
+      "type": "object",
+      "required": [
+        "widgets"
+      ],
+      "properties": {
+        "canvas": {
+          "type": "object"
+        },
+        "grid": {
+          "type": "object"
+        },
+        "widgets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/widget"
+          }
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "diagram": {
+      "$ref": "#/$defs/graph"
+    },
+    "host": {
+      "type": "object"
+    },
+    "execution_policy": {
+      "type": "object"
+    },
+    "compilation": {
+      "type": "object"
+    },
+    "storage": {
+      "type": "object"
+    },
+    "icon": {
+      "type": "object"
+    },
+    "ide": {
+      "type": "object"
+    }
+  },
+  "not": {
+    "required": [
+      "spec_version"
+    ]
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "storage"
+        ]
+      },
+      "then": {
+        "properties": {
+          "draft_revision": {
+            "minimum": 3
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": true,
+  "$defs": {
+    "bounds": {
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": true
+    },
+    "endpoint": {
+      "type": "object",
+      "required": [
+        "node",
+        "port"
+      ],
+      "properties": {
+        "node": {
+          "type": "string"
+        },
+        "port": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "binding": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "const": "widget_value"
+        },
+        "public_input_id": {
+          "type": "string"
+        },
+        "public_output_id": {
+          "type": "string"
+        },
+        "interface_map_slot": {
+          "type": "string"
+        },
+        "connection_requirement": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "choice": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "integer"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "visible": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "typeSchema": {
+      "type": "object",
+      "required": [
+        "canonical",
+        "choice_kind",
+        "field_names",
+        "choices",
+        "children"
+      ],
+      "properties": {
+        "canonical": {
+          "type": "string"
+        },
+        "choice_kind": {
+          "enum": [
+            "none",
+            "enum",
+            "ring",
+            "dropdown"
+          ]
+        },
+        "field_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "choices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/choice"
+          }
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/typeSchema"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "applicationControl": {
+      "type": "object",
+      "required": [
+        "profile",
+        "kind",
+        "expected_class",
+        "value_schema",
+        "target",
+        "properties",
+        "method_id",
+        "parameters"
+      ],
+      "properties": {
+        "profile": {
+          "const": "frog.studio.application_control@1"
+        },
+        "kind": {
+          "enum": [
+            "reference",
+            "property",
+            "invoke",
+            "close"
+          ]
+        },
+        "expected_class": {
+          "type": "string"
+        },
+        "value_schema": {
+          "$ref": "#/$defs/typeSchema"
+        },
+        "target": {
+          "type": "object",
+          "required": [
+            "kind",
+            "owner_document",
+            "widget_id"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "unbound",
+                "this_frog",
+                "this_application",
+                "front_panel",
+                "widget"
+              ]
+            },
+            "owner_document": {
+              "type": "string"
+            },
+            "widget_id": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "member_id",
+              "mode"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "member_id": {
+                "type": "string"
+              },
+              "mode": {
+                "enum": [
+                  "read",
+                  "write"
+                ]
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "method_id": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "enabled"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "enabled": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "widget": {
+      "type": "object",
+      "required": [
+        "id",
+        "bounds"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "classId": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "valueType": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "bounds": {
+          "$ref": "#/$defs/bounds"
+        },
+        "layout": {
+          "$ref": "#/$defs/bounds"
+        },
+        "props": {
+          "type": "object"
+        },
+        "state": {
+          "type": "object"
+        },
+        "geometry": {
+          "type": "object"
+        },
+        "typography": {
+          "type": "object"
+        },
+        "binding": {
+          "$ref": "#/$defs/binding"
+        },
+        "runtime": {
+          "type": "object"
+        },
+        "studio_application_control": {
+          "$ref": "#/$defs/applicationControl"
+        },
+        "studio_dotnet_reference": {
+          "type": "object"
+        },
+        "type": {
+          "type": "string"
+        },
+        "class_ref": {
+          "type": "string"
+        },
+        "visual": {
+          "type": "object"
+        },
+        "studio": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": true
+    },
+    "edge": {
+      "type": "object",
+      "required": [
+        "id",
+        "from",
+        "to"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "$ref": "#/$defs/endpoint"
+        },
+        "to": {
+          "$ref": "#/$defs/endpoint"
+        },
+        "bends": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "node": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "widget": {
+          "type": "string"
+        },
+        "structure_type": {
+          "type": "string"
+        },
+        "layout": {
+          "$ref": "#/$defs/bounds"
+        },
+        "label": {
+          "type": "string"
+        },
+        "label_visible": {
+          "type": "boolean"
+        },
+        "value_type": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "palette_catalog_id": {
+          "type": "string"
+        },
+        "constant_owner_node_id": {
+          "type": "string"
+        },
+        "constant_field_id": {
+          "type": "string"
+        },
+        "constant_field_order": {
+          "type": "integer"
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "diagram"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "diagram": {
+                "$ref": "#/$defs/graph"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "studio_application_control": {
+          "$ref": "#/$defs/applicationControl"
+        },
+        "studio_connectivity": {
+          "type": "object"
+        },
+        "studio_native_call": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": true
+    },
+    "graph": {
+      "type": "object",
+      "required": [
+        "nodes",
+        "edges"
+      ],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/edge"
+          }
+        },
+        "wire_fragments": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "zoom_percent": {
+          "type": "integer"
+        },
+        "viewport_origin": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

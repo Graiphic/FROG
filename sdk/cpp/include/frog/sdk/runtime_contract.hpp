@@ -3,6 +3,7 @@
 #include "frog/sdk/runtime_type_syntax.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <optional>
 #include <memory>
@@ -27,6 +28,11 @@ struct ProtocolVersion {
 inline constexpr ProtocolVersion kProtocolVersion{ 1U, 0U };
 inline constexpr std::uint32_t kArtifactSchemaVersion = 1U;
 inline constexpr std::uint32_t kTypedArtifactSchemaVersion = 2U;
+// Local packed rank-one f64 transport; schema2 Record/Event is unchanged.
+inline constexpr std::uint32_t kPackedF64ArrayArtifactSchemaVersion = 3U;
+inline constexpr std::size_t kMaximumF64ArrayElements = 1'000'000;
+inline constexpr std::size_t kMaximumF64ArrayPayloadBytes = 16'000'000;
+inline constexpr std::string_view kPackedF64ArrayProfile = "frog.studio.array.real1d@1";
 
 template <typename Tag>
 struct StableId {
@@ -142,6 +148,40 @@ inline bool runtimeValueOwnerValid(const RuntimeValueOwner &owner) noexcept {
             return (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F');
         });
 }
+namespace codec_detail { class Reader; }
+class ImmutableF64Array;
+using RuntimeF64Array = std::shared_ptr<const ImmutableF64Array>;
+enum class F64ArrayFailure { None, OwnerInvalid, ElementLimit, NonFinite, PayloadLimit, ResourceFailure };
+struct F64ArrayCreateResult {
+    RuntimeF64Array value;
+    F64ArrayFailure failure = F64ArrayFailure::None;
+    [[nodiscard]] bool accepted() const noexcept { return value && failure == F64ArrayFailure::None; }
+};
+[[nodiscard]] inline ValueType f64ArrayValueType() { return valueTypeFromCanonicalName("array:f64"); }
+[[nodiscard]] inline F64ArrayCreateResult makeRuntimeF64Array(
+    std::span<const double>, const RuntimeValueOwner &, std::size_t availablePayloadBytes);
+// Only the factory and the checked schema3 decoder can seal private storage.
+// No mutable caller buffer is adopted by the public factory.
+class ImmutableF64Array final {
+public:
+    [[nodiscard]] std::span<const double> elements() const noexcept { return values_; }
+    [[nodiscard]] std::array<std::uint32_t,1> shape() const noexcept { return {static_cast<std::uint32_t>(values_.size())}; }
+    [[nodiscard]] std::size_t payloadBytes() const noexcept { return values_.size() * sizeof(double); }
+    [[nodiscard]] const RuntimeValueOwner &owner() const noexcept { return owner_; }
+    [[nodiscard]] bool validForOwner(const RuntimeValueOwner &owner) const noexcept { return owner == owner_ && runtimeValueOwnerValid(owner_); }
+private:
+    friend F64ArrayCreateResult makeRuntimeF64Array(std::span<const double>, const RuntimeValueOwner &, std::size_t);
+    friend class codec_detail::Reader;
+    ImmutableF64Array(RuntimeValueOwner owner, std::vector<double> values) : owner_(std::move(owner)), values_(std::move(values)) {}
+    const RuntimeValueOwner owner_;
+    const std::vector<double> values_;
+};
+namespace array_detail {
+inline bool descriptor(const ValueType &type) noexcept {
+    return type.canonicalName == "array:f64" && type.category == ValueCategory::Array &&
+        type.bitWidth == 0 && type.rank == 1 && type.elementType == "f64";
+}
+}
 class CompoundRuntimeValue;
 using RuntimeValue = std::variant<
     std::monostate,
@@ -150,7 +190,8 @@ using RuntimeValue = std::variant<
     std::uint64_t,
     double,
     std::string,
-    std::shared_ptr<const CompoundRuntimeValue>>;
+    std::shared_ptr<const CompoundRuntimeValue>,
+    RuntimeF64Array>;
 
 struct RuntimeNamedField {
     std::string id;
@@ -187,6 +228,10 @@ public:
     case ValueCategory::String:
     case ValueCategory::Path:
         return std::holds_alternative<std::string>(value);
+    case ValueCategory::Array: {
+        const auto *array = std::get_if<RuntimeF64Array>(&value);
+        return array_detail::descriptor(type) && array && *array && (*array)->validForOwner((*array)->owner());
+    }
     case ValueCategory::Cluster:
     case ValueCategory::ObjectReference: {
         const auto *compound = std::get_if<std::shared_ptr<const CompoundRuntimeValue>>(&value);
@@ -374,6 +419,8 @@ struct RuntimeCapabilities {
     // Opt-in typed transport only. This never advertises arithmetic on records
     // or references, nor changes the legacy Numeric/Boolean target.
     bool supportsTypedEventValues = false;
+    // Separate local schema3 opt-in. Never enables Array inside Record/Event.
+    bool supportsPackedF64Arrays = false;
 
     [[nodiscard]] bool supportsOperation(std::string_view operationId) const {
         return std::find(operationIds.begin(), operationIds.end(), operationId) !=
@@ -382,6 +429,7 @@ struct RuntimeCapabilities {
 
     [[nodiscard]] bool supportsValueType(std::string_view valueType) const {
         if (std::find(valueTypes.begin(), valueTypes.end(), valueType) != valueTypes.end()) return true;
+        if (supportsPackedF64Arrays && valueType == "array:f64") return true;
         return supportsTypedEventValues &&
             (valueType.starts_with("cluster<") || valueType.starts_with("ref<")) &&
             structural_detail::TypeSyntax(valueType).transport();
@@ -470,12 +518,14 @@ struct SessionEvent {
     if (artifact.protocol.major != kProtocolVersion.major) {
         add("contract.protocol.unsupported", "Unsupported Runtime protocol major version.");
     }
-    if (artifact.schemaVersion != kArtifactSchemaVersion && artifact.schemaVersion != kTypedArtifactSchemaVersion) {
+    if (artifact.schemaVersion != kArtifactSchemaVersion && artifact.schemaVersion != kTypedArtifactSchemaVersion &&
+        artifact.schemaVersion != kPackedF64ArrayArtifactSchemaVersion) {
         add("contract.artifact_schema.unsupported", "Unsupported Runtime artifact schema version.");
     }
     const bool typed = artifact.schemaVersion == kTypedArtifactSchemaVersion;
-    if ((typed && (!artifact.valueOwner || !runtimeValueOwnerValid(*artifact.valueOwner))) ||
-        (!typed && artifact.valueOwner)) {
+    const bool packed = artifact.schemaVersion == kPackedF64ArrayArtifactSchemaVersion;
+    if (((typed || packed) && (!artifact.valueOwner || !runtimeValueOwnerValid(*artifact.valueOwner))) ||
+        (!typed && !packed && artifact.valueOwner)) {
         add("contract.value_owner.invalid", "Typed bodies require their actual source/run owner; legacy artifacts cannot carry it.");
     }
     if (artifact.artifactId.empty()) {
@@ -485,6 +535,18 @@ struct SessionEvent {
         add("contract.document_id.missing", "The Runtime artifact requires a stable source document ID.");
     }
 
+    std::size_t arrayPayload = 0;
+    const auto checkArray = [&](const RuntimeValue &value, const ValueType &type, NodeId node, PortId port) {
+        const auto *array=std::get_if<RuntimeF64Array>(&value);
+        if(!array)return;
+        if(!packed) { add("contract.array.schema_invalid", "Packed Array values require local artifact schema3.",node,port); return; }
+        if(!*array || !array_detail::descriptor(type) || !artifact.valueOwner || !(*array)->validForOwner(*artifact.valueOwner)) {
+            add("contract.array.owner_invalid", "Packed Array value must match its exact descriptor and artifact owner.",node,port);return;
+        }
+        const auto bytes=(*array)->payloadBytes();
+        if(bytes>kMaximumF64ArrayPayloadBytes-arrayPayload)add("contract.array.payload_limit", "Packed Array artifact values exceed 16,000,000 payload bytes.",node,port);
+        else arrayPayload+=bytes;
+    };
     std::unordered_set<std::string> nodeIds;
     for (const auto &node : artifact.nodes) {
         if (node.id.empty()) {
@@ -504,7 +566,7 @@ struct SessionEvent {
                 add("contract.record.selection_invalid", "A resolved field requires a canonical identity.", node.id);
         std::unordered_set<std::string> portIds;
         for (const auto &port : node.ports) {
-            if (typed && port.valueType != valueTypeFromCanonicalName(port.valueType.canonicalName))
+            if ((typed || packed) && port.valueType != valueTypeFromCanonicalName(port.valueType.canonicalName))
                 add("contract.value_type.descriptor_invalid", "A schema-v2 port descriptor must match its canonical type.", node.id, port.id);
             if (port.id.empty()) {
                 add("contract.port_id.missing", "Every Runtime port requires a stable ID.", node.id);
@@ -516,6 +578,9 @@ struct SessionEvent {
             if (!typed && (port.valueType.category == ValueCategory::Cluster ||
                 port.valueType.category == ValueCategory::ObjectReference))
                 add("contract.value_type.schema_invalid", "Record/reference transport requires artifact schema v2.", node.id, port.id);
+            if (packed && (port.valueType.category == ValueCategory::String || port.valueType.category == ValueCategory::Path ||
+                (port.valueType.category == ValueCategory::Array && !array_detail::descriptor(port.valueType))))
+                add("contract.array.profile_invalid", "Schema3 admits only exact packed rank1 f64 Arrays and scalar support values.",node.id,port.id);
             if (!port.valueType.known()) {
                 add("contract.value_type.unknown", "Every Runtime port requires a known value type.", node.id, port.id);
             }
@@ -528,6 +593,7 @@ struct SessionEvent {
                 !runtimeValueMatches(*node.literalValue, output->valueType)) {
                 add("contract.literal.type_mismatch", "A literal value must match an output port type.", node.id);
             }
+            checkArray(*node.literalValue,output == node.ports.end() ? ValueType{} : output->valueType,node.id,{});
         }
     }
 
@@ -572,6 +638,7 @@ struct SessionEvent {
     for (const auto &binding : artifact.uiBindings) {
         if (binding.suppliedByEvent && (!typed || binding.direction != UiBindingDirection::ControlToRuntime))
             add("contract.event_input.invalid", "Deferred occurrence inputs require a schema-v2 control binding.", binding.endpoint.nodeId, binding.endpoint.portId);
+        checkArray(binding.initialValue,binding.valueType,binding.endpoint.nodeId,binding.endpoint.portId);
         const auto *node = findNode(artifact, binding.endpoint.nodeId.value);
         const auto *port = node == nullptr
             ? nullptr : findPort(*node, binding.endpoint.portId.value);
@@ -614,6 +681,8 @@ struct SessionEvent {
         add("capability.protocol.unsupported",
             "The Runtime and artifact protocol major versions are incompatible.");
     }
+    if (artifact.schemaVersion == kPackedF64ArrayArtifactSchemaVersion && !capabilities.supportsPackedF64Arrays)
+        add("capability.packed_f64_arrays.unavailable", "This target has not opted into local schema3 packed f64 Arrays.");
     if (artifact.schemaVersion == kTypedArtifactSchemaVersion && !capabilities.supportsTypedEventValues)
         add("capability.typed_event_values.unavailable", "This target has not opted into schema-v2 typed Event values.");
     for (const auto &node : artifact.nodes) {

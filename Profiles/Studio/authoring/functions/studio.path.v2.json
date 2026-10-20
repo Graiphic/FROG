@@ -1,0 +1,1657 @@
+{
+  "schema_version": 2,
+  "family": "Path",
+  "entries": [
+    {
+      "catalog_id": "path.compose",
+      "definition_ref": "frog.studio.path.compose",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.compose.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "base_path",
+            "display_name": "base path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "name_or_relative_path",
+            "display_name": "name or relative path",
+            "type": "T:any",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "name",
+              "relative_path"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "appended_path"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "path",
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A scalar base Path (optional, empty by default) and one scalar name/relative Path or String produce a scalar appended Path. No array or cluster lifting."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "A scalar base Path (optional, empty by default) and one scalar name/relative Path or String produce a scalar appended Path. No array or cluster lifting."
+      },
+      "behavior_summary": "A scalar base Path (optional, empty by default) and one scalar name/relative Path or String produce a scalar appended Path. No array or cluster lifting.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/build-path.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/build-path.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.decompose",
+      "definition_ref": "frog.studio.path.decompose",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.decompose.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "stripped_path",
+            "display_name": "stripped path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "name",
+            "display_name": "name",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "path"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "One scalar Path produces the stripped parent Path and the final name as a scalar String."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "One scalar Path produces the stripped parent Path and the final name as a scalar String."
+      },
+      "behavior_summary": "One scalar Path produces the stripped parent Path and the final name as a scalar String.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/strip-path.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/strip-path.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.type",
+      "definition_ref": "frog.studio.path.type",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.type.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "i16",
+            "default_value_type": "i16",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "path_type"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "path"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "One scalar Path produces an I16: 0 absolute, 1 relative, 2 Not A Path. This is a numeric output, not an enum, and does not test filesystem existence."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "One scalar Path produces an I16: 0 absolute, 1 relative, 2 Not A Path. This is a numeric output, not an enum, and does not test filesystem existence."
+      },
+      "behavior_summary": "One scalar Path produces an I16: 0 absolute, 1 relative, 2 Not A Path. This is a numeric output, not an enum, and does not test filesystem existence.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/path-type.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/path-type.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.empty_string_or_path",
+      "definition_ref": "frog.studio.path.empty_string_or_path",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.empty_string_or_path.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "T:any",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "string_path"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "empty"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "String, Path or Variant values, including arrays and clusters of supported leaves, produce Booleans preserving all ranks and cluster fields. NI picture strings use String; DSC tags have no Studio type."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "String, Path or Variant values, including arrays and clusters of supported leaves, produce Booleans preserving all ranks and cluster fields. NI picture strings use String; DSC tags have no Studio type."
+      },
+      "behavior_summary": "String, Path or Variant values, including arrays and clusters of supported leaves, produce Booleans preserving all ranks and cluster fields. NI picture strings use String; DSC tags have no Studio type.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/empty-string-path.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/empty-string-path.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.get_component_directory",
+      "definition_ref": "frog.studio.path.get_component_directory",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.get_component_directory.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "NXG component-directory primitive: no input, one scalar Path output. It describes the owning library/application/project directory. Authoring performs no directory lookup."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "NXG component-directory primitive: no input, one scalar Path output. It describes the owning library/application/project directory. Authoring performs no directory lookup."
+      },
+      "behavior_summary": "NXG component-directory primitive: no input, one scalar Path output. It describes the owning library/application/project directory. Authoring performs no directory lookup.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/documentation/en/labview/latest/node-ref/get-component-directory/"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/documentation/en/labview/latest/node-ref/get-component-directory/",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.to_string",
+      "definition_ref": "frog.studio.path.to_string",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.to_string.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "T:path_tree",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "path"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "string"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:path_tree"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A Path or an array/cluster containing only Paths produces Strings with exactly the same rank, field identities and nesting."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A Path or an array/cluster containing only Paths produces Strings with exactly the same rank, field identities and nesting."
+      },
+      "behavior_summary": "A Path or an array/cluster containing only Paths produces Strings with exactly the same rank, field identities and nesting.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/path-to-string.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/path-to-string.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.from_string",
+      "definition_ref": "frog.studio.path.from_string",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.from_string.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "T:string_tree",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "string"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "path"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:string_tree"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "A String or an array/cluster containing only Strings produces Paths with exactly the same rank, field identities and nesting."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "A String or an array/cluster containing only Strings produces Paths with exactly the same rank, field identities and nesting."
+      },
+      "behavior_summary": "A String or an array/cluster containing only Strings produces Paths with exactly the same rank, field identities and nesting.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/string-to-path.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/string-to-path.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.to_string_array",
+      "definition_ref": "frog.studio.path.to_string_array",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.to_string_array.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "relative",
+            "display_name": "relative",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<string,rank=1>",
+            "default_value_type": "array<string,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "array_of_strings"
+            ]
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "path"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "One scalar Path produces a 1D String array of components and a scalar relative-path Boolean. Input arrays and clusters are not accepted."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "One scalar Path produces a 1D String array of components and a scalar relative-path Boolean. Input arrays and clusters are not accepted."
+      },
+      "behavior_summary": "One scalar Path produces a 1D String array of components and a scalar relative-path Boolean. Input arrays and clusters are not accepted.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/path-to-array-of-strings.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/path-to-array-of-strings.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.from_string_array",
+      "definition_ref": "frog.studio.path.from_string_array",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.from_string_array.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "relative",
+            "display_name": "relative",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "array",
+            "display_name": "array",
+            "type": "array<string,rank=1>",
+            "default_value_type": "array<string,rank=1>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "array_of_strings"
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "bool",
+          "array<string,rank=1>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Exactly a 1D String array and an optional scalar relative Boolean (false by default) produce one scalar Path. Higher ranks and arrays of Paths are rejected."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": true,
+        "lifting": "none",
+        "description": "Exactly a 1D String array and an optional scalar relative Boolean (false by default) produce one scalar Path. Higher ranks and arrays of Paths are rejected."
+      },
+      "behavior_summary": "Exactly a 1D String array and an optional scalar relative Boolean (false by default) produce one scalar Path. Higher ranks and arrays of Paths are rejected.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-of-strings-to-path.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/array-of-strings-to-path.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.get_system_directory",
+      "definition_ref": "frog.studio.path.get_system_directory",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.get_system_directory.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "directory_type",
+            "display_name": "directory type",
+            "type": "T:numeric",
+            "default_value_type": "i32",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "numeric_implicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "create_directory",
+            "display_name": "create directory",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:numeric",
+          "bool"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "Classic LabVIEW signature: directory type I32 (choices 0–13) and optional create-directory Boolean (false) produce one Path. No error-cluster terminals; NXG's additional directory choice is not part of this classic signature."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Classic LabVIEW signature: directory type I32 (choices 0–13) and optional create-directory Boolean (false) produce one Path. No error-cluster terminals; NXG's additional directory choice is not part of this classic signature."
+      },
+      "behavior_summary": "Classic LabVIEW signature: directory type I32 (choices 0–13) and optional create-directory Boolean (false) produce one Path. No error-cluster terminals; NXG's additional directory choice is not part of this classic signature.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/sysdir-llb/get-system-directory-vi.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/sysdir-llb/get-system-directory-vi.html",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.compare",
+      "definition_ref": "frog.studio.path.compare",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.compare.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path_1",
+            "display_name": "path 1",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_2",
+            "display_name": "path 2",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "relative_path",
+            "display_name": "relative path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "common_path",
+            "display_name": "common path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_2_relative_to_path_1",
+            "display_name": "path 2 relative to path 1",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "path",
+          "path",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Two scalar Paths and an optional error cluster produce a relative Path from 1 to 2, their common Path, a relative-path Boolean and the error cluster. No array lifting."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Two scalar Paths and an optional error cluster produce a relative Path from 1 to 2, their common Path, a relative-path Boolean and the error cluster. No array lifting."
+      },
+      "behavior_summary": "Two scalar Paths and an optional error cluster produce a relative Path from 1 to 2, their common Path, a relative-path Boolean and the error cluster. No array lifting.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/compare-two-paths-vi.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/compare-two-paths-vi.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.generate_temporary_file",
+      "definition_ref": "frog.studio.path.generate_temporary_file",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.generate_temporary_file.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "extension",
+            "display_name": "extension",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "temporary_path"
+            ]
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "string",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Optional scalar extension String (tmp by default) and error cluster produce a unique temporary Path and error cluster. The VI returns a path without creating a file; no filesystem action is performed during authoring."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Optional scalar extension String (tmp by default) and error cluster produce a unique temporary Path and error cluster. The VI returns a path without creating a file; no filesystem action is performed during authoring."
+      },
+      "behavior_summary": "Optional scalar extension String (tmp by default) and error cluster produce a unique temporary Path and error cluster. The VI returns a path without creating a file; no filesystem action is performed during authoring.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/generate-temporary-file-path-vi.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/generate-temporary-file-path-vi.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.common_relative",
+      "definition_ref": "frog.studio.path.common_relative",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.common_relative.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path_1",
+            "display_name": "path 1",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_2",
+            "display_name": "path 2",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "common_path",
+            "display_name": "common path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_1_to_common",
+            "display_name": "path 1 to common",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "common_to_path_1",
+            "display_name": "common to path 1",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "path_2_to_common",
+            "display_name": "path 2 to common",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "common_to_path_2",
+            "display_name": "common to path 2",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "path",
+          "path"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "NXG signature: two scalar Paths produce five Paths: common path, 1 to common, common to 1, 2 to common and common to 2. There are no Boolean or error-cluster terminals."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "NXG signature: two scalar Paths produce five Paths: common path, 1 to common, common to 1, 2 to common and common to 2. There are no Boolean or error-cluster terminals."
+      },
+      "behavior_summary": "NXG signature: two scalar Paths produce five Paths: common path, 1 to common, common to 1, 2 to common and common to 2. There are no Boolean or error-cluster terminals.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/documentation/en/labview/latest/node-ref/get-common-relative-paths/"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/documentation/en/labview/latest/node-ref/get-common-relative-paths/",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.get_file_extension",
+      "definition_ref": "frog.studio.path.get_file_extension",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.get_file_extension.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "file",
+            "display_name": "file",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "duplicate_file",
+            "display_name": "duplicate file",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "lowercase_extension",
+            "display_name": "lowercase extension",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "filename_without_extension",
+            "display_name": "filename without extension",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          },
+          {
+            "id": "unmodified_extension",
+            "display_name": "unmodified extension",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "path",
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Classic LabVIEW signature: scalar file Path and optional error cluster; outputs duplicate Path, lowercase extension String, filename without extension String, error cluster and unmodified extension String. String filenames and arrays are not accepted by this classic VI."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Classic LabVIEW signature: scalar file Path and optional error cluster; outputs duplicate Path, lowercase extension String, filename without extension String, error cluster and unmodified extension String. String filenames and arrays are not accepted by this classic VI."
+      },
+      "behavior_summary": "Classic LabVIEW signature: scalar file Path and optional error cluster; outputs duplicate Path, lowercase extension String, filename without extension String, error cluster and unmodified extension String. String filenames and arrays are not accepted by this classic VI.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/get-file-extension-vi.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/libraryn-llb/get-file-extension-vi.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.replace_file_extension",
+      "definition_ref": "frog.studio.path.replace_file_extension",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.replace_file_extension.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "T:any",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "file",
+              "path",
+              "file_name"
+            ]
+          },
+          {
+            "id": "new_extension",
+            "display_name": "new extension",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "T:any",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": [
+              "path_with_new_extension"
+            ]
+          },
+          {
+            "id": "previous_extension",
+            "display_name": "previous extension",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "T:any",
+          "string"
+        ],
+        "result": "resolve:frog.studio.polymorphic.type-resolution@1",
+        "implicit_coercion": false,
+        "description": "NXG Path and filename overloads: a scalar Path or String plus a scalar new-extension String produce a value of the same Path/String type and the previous extension as a String. No arrays, clusters or error terminals; this operation does not rename files."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "NXG Path and filename overloads: a scalar Path or String plus a scalar new-extension String produce a value of the same Path/String type and the previous extension as a String. No arrays, clusters or error terminals; this operation does not rename files."
+      },
+      "behavior_summary": "NXG Path and filename overloads: a scalar Path or String plus a scalar new-extension String produce a value of the same Path/String type and the previous extension as a String. No arrays, clusters or error terminals; this operation does not rename files.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/documentation/en/labview/latest/node-ref/replace-file-extension/"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/documentation/en/labview/latest/node-ref/replace-file-extension/",
+        "resolver_id": "frog.studio.polymorphic.type-resolution@1",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.is_not_empty",
+      "definition_ref": "frog.studio.path.is_not_empty",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.is_not_empty.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "path",
+            "display_name": "path",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "bool",
+            "default_value_type": "bool",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "path"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "One scalar Path produces one scalar Boolean indicating a non-empty valid path. No arrays or clusters; this predicate does not establish file existence."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "One scalar Path produces one scalar Boolean indicating a non-empty valid path. No arrays or clusters; this predicate does not establish file existence."
+      },
+      "behavior_summary": "One scalar Path produces one scalar Boolean indicating a non-empty valid path. No arrays or clusters; this predicate does not establish file existence.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/file-llb/is-path-and-not-empty-vi.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/file-llb/is-path-and-not-empty-vi.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.constant",
+      "definition_ref": "frog.studio.path.constant",
+      "contract_status": "editor_managed",
+      "profile_id": "frog.studio.legacy.path.constant.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "path",
+        "implicit_coercion": false,
+        "description": "Historical Studio binding profile; no additional public FROG semantics are claimed."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": null,
+        "lifting": "none",
+        "description": "Only the declared port expressions and connection policies are defined by this Studio profile; general array semantics remain unspecified."
+      },
+      "behavior_summary": "Preserves the historical Studio authoring bindings for Path Constant.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "editor_managed",
+        "implementation_id": "frog.studio.editor-managed",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "The complete public execution semantics and target support for this legacy Studio profile have not been established."
+      ],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.not_a_refnum_constant",
+      "definition_ref": "frog.studio.path.not_a_refnum_constant",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.not_a_refnum_constant.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "refnum",
+            "default_value_type": "refnum",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "An invalid reference output, distinct from Path and numeric values. Studio exposes an opaque refnum authoring type; reference-class specialization and runtime reference providers remain unavailable."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "An invalid reference output, distinct from Path and numeric values. Studio exposes an opaque refnum authoring type; reference-class specialization and runtime reference providers remain unavailable."
+      },
+      "behavior_summary": "An invalid reference output, distinct from Path and numeric values. Studio exposes an opaque refnum authoring type; reference-class specialization and runtime reference providers remain unavailable.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/constants/not-a-refnum-constant.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/constants/not-a-refnum-constant.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.terminal",
+      "definition_ref": "frog.studio.path.terminal",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.polymorphic.path.terminal.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "value",
+            "display_name": "value",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "any_explicit",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Editor-managed Path front-panel control/indicator terminal; direction follows control versus indicator. It is not a callable function."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Editor-managed Path front-panel control/indicator terminal; direction follows control versus indicator. It is not a callable function."
+      },
+      "behavior_summary": "Editor-managed Path front-panel control/indicator terminal; direction follows control versus indicator. It is not a callable function.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/constants/path.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/constants/path.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    }
+  ]
+}

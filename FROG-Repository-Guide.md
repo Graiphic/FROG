@@ -434,3 +434,7 @@ Repository stewardship, governance direction, and ecosystem positioning are desc
 </p>
 
 <hr/>
+
+## Studio reconciliation — 14 October 2026
+
+Current Studio compatibility is documented in the [authoring profile](Expression/Studio%20authoring%20document%20profile%20v1.md), [declarative catalogue snapshot](Profiles/StudioAuthoring.md) and [reconciliation record](docs/studio-reconciliation-2026-10-14.md). These are implementation profiles; the original canonical source and reference-runtime contracts retain their own boundaries.

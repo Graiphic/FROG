@@ -4,6 +4,14 @@
 
 <h1 align="center">🐸 FROG — Free Open Graphical Language</h1>
 
+<p><strong>Studio implementation checkpoint — 14 October 2026:</strong>
+<a href="docs/studio-reconciliation-2026-10-14.md">Current code/specification reconciliation</a>,
+<a href="Expression/Studio%20authoring%20document%20profile%20v1.md">actual saved .frog profile</a>
+and <a href="Profiles/StudioAuthoring.md">535 declared authoring contracts</a>.
+Earlier dated integration statements below retain their historical scope;
+authored, lowered, compiled and tested capabilities remain distinct.</p>
+
+
 <p align="center">
   <strong>Free Open Graphical Dataflow Programming Language</strong><br/>
   FROG is an open, hardware-agnostic graphical dataflow programming language designed to describe computation as explicit executable graphs while remaining accessible, inspectable, portable, auditable, modular, and scalable across heterogeneous execution targets.
@@ -232,3 +240,7 @@ This project is licensed under the <strong>Apache License 2.0</strong>. See <cod
 </p>
 
 <hr/>
+
+## Studio reconciliation — 14 October 2026
+
+The [14 October implementation reconciliation](docs/studio-reconciliation-2026-10-14.md) follows Graiphic Studio as product evidence. The [actual authoring document profile](Expression/Studio%20authoring%20document%20profile%20v1.md) and [535 declared function contracts](Profiles/StudioAuthoring.md) make current compatibility explicit without treating an editor catalogue as universal runtime support.

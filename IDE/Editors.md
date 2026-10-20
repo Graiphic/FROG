@@ -112,3 +112,7 @@ Product UI behavior remains editor documentation. Canonical source shape,
 numeric representation identity, Array typing, interface-map bindings, and
 other cross-tool contracts remain owned by this public specification.
 </p>
+
+## Studio reconciliation — 14 October 2026
+
+For Graiphic Studio behavior, the [implementation reconciliation](../docs/studio-reconciliation-2026-10-14.md) and [authoring profile](../Expression/Studio%20authoring%20document%20profile%20v1.md) are the dated compatibility record. The actual product and qualified fixtures drive documentation updates; uncompiled working-tree features remain identified as such.

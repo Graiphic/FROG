@@ -145,3 +145,7 @@ fail setup rather than produce a green build with skipped validation.
 See the [convergence audit](../docs/language-studio-convergence-audit-2026-09-06.md)
 for observed implementation gaps and evidence. That report is non-normative and
 does not turn planned migration gates into delivered functionality.
+
+## Studio reconciliation — 14 October 2026
+
+The [Studio authoring profile](Studio%20authoring%20document%20profile%20v1.md) now records conditional revisions 4/5 for exact numeric state,6 for symbolic Application Control and7 for Connectivity. Ordinary readable output remains2. Retained independent interface declarations and historical widget projections are distinguished. Current source-code behavior is captured in the [reconciliation record](../docs/studio-reconciliation-2026-10-14.md).

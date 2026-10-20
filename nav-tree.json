@@ -5436,6 +5436,39 @@
           "children": []
         }
       ]
+    },
+    {
+      "title": "Studio implementation compatibility",
+      "children": [
+        {
+          "key": "studio/reconciliation-2026-10-14",
+          "title": "Current implementation reconciliation",
+          "path": "/docs/studio-reconciliation-2026-10-14.md",
+          "kind": "page",
+          "children": []
+        },
+        {
+          "key": "studio/authoring-document-profile",
+          "title": "Studio authoring document profile",
+          "path": "/Expression/Studio%20authoring%20document%20profile%20v1.md",
+          "kind": "page",
+          "children": []
+        },
+        {
+          "key": "studio/authoring-catalogue",
+          "title": "Studio authoring catalogue",
+          "path": "/Profiles/StudioAuthoring.md",
+          "kind": "page",
+          "children": []
+        },
+        {
+          "key": "studio/serialized-fields",
+          "title": "Serialized field inventory",
+          "path": "/docs/studio-serialization-fields-2026-10-14.md",
+          "kind": "page",
+          "children": []
+        }
+      ]
     }
   ],
   "searchPaths": [
