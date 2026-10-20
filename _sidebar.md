@@ -26,6 +26,7 @@
   - [Numeric representations](/Expression/Numeric%20representations.md)
   - [Source compatibility and profiles](/Expression/Source%20compatibility%20and%20profiles.md)
   - [Source provenance](/Expression/Source%20provenance.md)
+  - [Studio authoring document profile v1](/Expression/Studio%20authoring%20document%20profile%20v1.md)
   - [Typed Binding Contract v1](/Expression/Typed%20Binding%20Contract%20v1.md)
   - [Widget behavior](/Expression/Widget%20behavior.md)
   - [Widget class contract](/Expression/Widget%20class%20contract.md)
@@ -326,8 +327,12 @@
   - [Interop](/Profiles/Interop.md)
   - [Native CPU LLVM](/Profiles/Native%20CPU%20LLVM.md)
   - [Native CPU LLVM Execution contract](/Profiles/Native%20CPU%20LLVM%20Execution%20contract.md)
+  - [StudioAuthoring](/Profiles/StudioAuthoring.md)
   - [Trusted authoring](/Profiles/Trusted%20authoring.md)
   - [UI Widget Classes](/Profiles/UI%20Widget%20Classes.md)
+  - Studio
+    - [examples](/Profiles/Studio/examples/Readme.md)
+      - [minimal.frog](/Profiles/Studio/examples/minimal.frog)
 - [IDE](/IDE/Readme.md)
   - [Authoring provenance](/IDE/Authoring%20provenance.md)
   - [Context Help](/IDE/Context%20Help.md)
@@ -756,8 +761,3 @@
 - [Governance](/GOVERNANCE.md)
 - [Contributing](/CONTRIBUTING.md)
 - [CLA](/CLA.md)
-
-- Studio implementation compatibility
-  - [Current reconciliation](docs/studio-reconciliation-2026-10-14.md)
-  - [Actual authoring .frog profile](Expression/Studio%20authoring%20document%20profile%20v1.md)
-  - [Authoring catalogue](Profiles/StudioAuthoring.md)

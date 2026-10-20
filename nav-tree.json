@@ -185,6 +185,13 @@
               "children": []
             },
             {
+              "key": "expression/studio-authoring-document-profile-v1.md",
+              "title": "Studio authoring document profile v1",
+              "path": "/Expression/Studio%20authoring%20document%20profile%20v1.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "expression/typed-binding-contract-v1.md",
               "title": "Typed Binding Contract v1",
               "path": "/Expression/Typed%20Binding%20Contract%20v1.md",
@@ -2360,6 +2367,13 @@
               "children": []
             },
             {
+              "key": "profiles/studioauthoring.md",
+              "title": "StudioAuthoring",
+              "path": "/Profiles/StudioAuthoring.md",
+              "kind": "page",
+              "children": []
+            },
+            {
               "key": "profiles/trusted-authoring.md",
               "title": "Trusted authoring",
               "path": "/Profiles/Trusted%20authoring.md",
@@ -2372,6 +2386,29 @@
               "path": "/Profiles/UI%20Widget%20Classes.md",
               "kind": "page",
               "children": []
+            },
+            {
+              "key": "profiles/studio/",
+              "title": "Studio",
+              "path": null,
+              "kind": "category",
+              "children": [
+                {
+                  "key": "profiles/studio/examples/",
+                  "title": "examples",
+                  "path": "/Profiles/Studio/examples/Readme.md",
+                  "kind": "category",
+                  "children": [
+                    {
+                      "key": "profiles/studio/examples/minimal.frog",
+                      "title": "minimal.frog",
+                      "path": "/Profiles/Studio/examples/minimal.frog",
+                      "kind": "code",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -5436,39 +5473,6 @@
           "children": []
         }
       ]
-    },
-    {
-      "title": "Studio implementation compatibility",
-      "children": [
-        {
-          "key": "studio/reconciliation-2026-10-14",
-          "title": "Current implementation reconciliation",
-          "path": "/docs/studio-reconciliation-2026-10-14.md",
-          "kind": "page",
-          "children": []
-        },
-        {
-          "key": "studio/authoring-document-profile",
-          "title": "Studio authoring document profile",
-          "path": "/Expression/Studio%20authoring%20document%20profile%20v1.md",
-          "kind": "page",
-          "children": []
-        },
-        {
-          "key": "studio/authoring-catalogue",
-          "title": "Studio authoring catalogue",
-          "path": "/Profiles/StudioAuthoring.md",
-          "kind": "page",
-          "children": []
-        },
-        {
-          "key": "studio/serialized-fields",
-          "title": "Serialized field inventory",
-          "path": "/docs/studio-serialization-fields-2026-10-14.md",
-          "kind": "page",
-          "children": []
-        }
-      ]
     }
   ],
   "searchPaths": [
@@ -5497,6 +5501,7 @@
     "/Expression/Numeric%20representations.md",
     "/Expression/Source%20compatibility%20and%20profiles.md",
     "/Expression/Source%20provenance.md",
+    "/Expression/Studio%20authoring%20document%20profile%20v1.md",
     "/Expression/Typed%20Binding%20Contract%20v1.md",
     "/Expression/Widget%20behavior.md",
     "/Expression/Widget%20class%20contract.md",
@@ -5795,8 +5800,11 @@
     "/Profiles/Interop.md",
     "/Profiles/Native%20CPU%20LLVM.md",
     "/Profiles/Native%20CPU%20LLVM%20Execution%20contract.md",
+    "/Profiles/StudioAuthoring.md",
     "/Profiles/Trusted%20authoring.md",
     "/Profiles/UI%20Widget%20Classes.md",
+    "/Profiles/Studio/examples/minimal.frog",
+    "/Profiles/Studio/examples/Readme.md",
     "/Profiles/Readme.md",
     "/IDE/Authoring%20provenance.md",
     "/IDE/Context%20Help.md",
