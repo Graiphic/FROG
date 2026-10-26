@@ -1,6 +1,8 @@
 # Graiphic Studio authoring compatibility snapshot
 
-Snapshot: 14 October 2026. Studio is the implementation evidence authority.
+**Historical snapshot: 14 October 2026.** For the newer product inventory and
+measured profiles, read the [26 October reconciliation](../docs/studio-current-state-2026-10-26.md).
+The copied contracts and hashes below remain unchanged. Studio is the implementation evidence authority.
 This page makes the actual declarative editor contracts accessible to readers,
 generators and other authoring tools. It does not publish proprietary execution
 implementation code and does not redefine canonical FROG execution.

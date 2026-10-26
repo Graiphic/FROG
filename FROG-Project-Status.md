@@ -1,6 +1,10 @@
 <h1>FROG Project Status</h1>
 
-<p><strong>Studio implementation checkpoint — 14 October 2026:</strong>
+<p><strong>Current implementation/corpus reconciliation — 26 October 2026:</strong>
+<a href="docs/studio-current-state-2026-10-26.md">Published SDK, 625 examples, native profiles and documentation boundaries</a>.
+This is a dated implementation update, not a new normative language contract.</p>
+
+<p><strong>Historical authoring snapshot — 14 October 2026:</strong>
 <a href="docs/studio-reconciliation-2026-10-14.md">Current code/specification reconciliation</a>,
 <a href="Expression/Studio%20authoring%20document%20profile%20v1.md">actual saved .frog profile</a>
 and <a href="Profiles/StudioAuthoring.md">535 declared authoring contracts</a>.
