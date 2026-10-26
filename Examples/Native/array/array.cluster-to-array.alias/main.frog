@@ -1,0 +1,378 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Cluster To Array preserves homogeneous I64 — alternate palette entry",
+  "metadata": {
+    "name": "Cluster To Array preserves homogeneous I64 — alternate palette entry",
+    "name_source": "document",
+    "description": "Homogeneous fields retain their exact integer carrier. An integer above 2^53 remains unchanged, and stable Cluster field order determines Array order.\n\nHomogeneous fields retain their exact integer carrier. An integer above 2^53 remains unchanged, and stable Cluster field order determines Array order.\n\nMode: execution. Profile: studio-draft. Capability: frog.studio.array.owned@1.\nExpected:\nresult (array<i64>) = [9007199254740993,-7]\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["typed", "deterministic", "cluster", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 24.8\">\n  <defs>\n    <style>\n      .cls-1 {\n        fill: #fff;\n      }\n\n      .cls-2 {\n        fill: #4b5563;\n        stroke: #aab4c0;\n        stroke-width: 1.8px;\n      }\n\n      .cls-3 {\n        fill: #fffffe;\n        stroke: #f8fafc;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: .86px;\n      }\n\n      .cls-4 {\n        fill: #e359af;\n      }\n    </style>\n  </defs>\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n      <g>\n        <rect class=\"cls-2\" x=\".9\" y=\".9\" width=\"46\" height=\"23\" rx=\"4.5\" ry=\"4.5\"/>\n        <rect class=\"cls-1\" x=\"35.3\" y=\"8.79\" width=\"8\" height=\"2.5\" transform=\"translate(78.59 20.09) rotate(-180)\"/>\n        <rect class=\"cls-1\" x=\"35.3\" y=\"16.14\" width=\"8\" height=\"2.5\" transform=\"translate(78.59 34.79) rotate(-180)\"/>\n        <rect class=\"cls-1\" x=\"35.3\" y=\"12.47\" width=\"8\" height=\"2.5\" transform=\"translate(78.59 27.44) rotate(-180)\"/>\n        <rect class=\"cls-1\" x=\"35.3\" y=\"5.12\" width=\"8\" height=\"2.5\" transform=\"translate(78.59 12.74) rotate(-180)\"/>\n      </g>\n      <g>\n        <rect class=\"cls-4\" x=\"5.41\" y=\"6.35\" width=\"8.38\" height=\"8.38\"/>\n        <rect class=\"cls-4\" x=\"14.97\" y=\"6.35\" width=\"3.63\" height=\"11.56\"/>\n        <rect class=\"cls-4\" x=\"8.5\" y=\"12.62\" width=\"2.19\" height=\"8.38\" transform=\"translate(26.41 7.21) rotate(90)\"/>\n      </g>\n      <g>\n        <rect class=\"cls-3\" x=\"25.32\" y=\"7.54\" width=\".82\" height=\"8.68\" transform=\"translate(13.85 37.61) rotate(-90)\"/>\n        <polygon class=\"cls-3\" points=\"27.62 16.3 30.7 12.12 30.87 11.88 30.7 11.64 27.62 7.46 26.97 7.94 29.86 11.88 26.97 15.82 27.62 16.3\"/>\n      </g>\n    </g>\n  </g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "result",
+        "classId": "frog.widgets.array_indicator",
+        "role": "indicator",
+        "valueType": "frog.array<i64,rank=1>",
+        "label": "result",
+        "bounds": {
+          "x": 30,
+          "y": 40,
+          "width": 182,
+          "height": 112
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "dimensions.rank": 1,
+          "dimensions.shape": [0],
+          "dimensions.allow_resize": true,
+          "viewport.first_indices": [0],
+          "viewport.visible_counts": [1],
+          "viewport.orientation": "vertical",
+          "viewport.scrollbar_gap": 6,
+          "index_display.visible": true,
+          "index_display.layout.box_width": 54,
+          "index_display.layout.box_height": 30,
+          "index_display.layout.gap": 4,
+          "index_display.layout.step_width": 16,
+          "style.index_display.step_gap": 2,
+          "style.index_display.value_gap": 4,
+          "style.index_display.container_padding": "4px",
+          "style.index_display.container_border_width": "1px",
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": false,
+          "element.cell_width": 96,
+          "element.cell_height": 32,
+          "element.gap": 0,
+          "element.class_id": "frog.widgets.numeric_indicator",
+          "element.value_type": "i64",
+          "element.role": "indicator",
+          "element.icon": false
+,
+          "element.template":           {
+            "id": "result.element",
+            "classId": "frog.widgets.numeric_indicator",
+            "role": "indicator",
+            "valueType": "i64",
+            "label": "Numeric Indicator",
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 96,
+              "height": 32
+            },
+            "props": {
+              "layout.aura_band_px": 4,
+              "label.visible": false,
+              "data_type.representation": "i64",
+              "data_type.named_numeric_size": "Int64",
+              "representation.kind": "int64",
+              "data_entry.use_type_defaults": true
+            },
+            "runtime": {
+              "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+              "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+              "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+              "asset": "asset:numeric_rectangular_svg",
+              "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+            },
+            "state": {
+              "value": 0
+            },
+            "typography": {
+              "inheritanceVersion": 1
+            }
+          }
+
+        },
+        "runtime": {
+          "sourceExample": "Examples/26_array_numeric_selection_roundtrip/main.frog",
+          "wfrog": "Examples/26_array_numeric_selection_roundtrip/ui/array_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/array.default.wfrog",
+          "asset": "asset:array_shell_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 50,
+      "y": -70
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.array.conversion.cluster_to_array",
+        "label": "Cluster To Array",
+        "label_visible": true,
+        "palette_catalog_id": "array.conversion.cluster_to_array",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": 180,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "record",
+        "kind": "primitive",
+        "type": "frog.studio.cluster.constant",
+        "label": "Cluster Constant",
+        "label_visible": true,
+        "palette_catalog_id": "cluster.constant",
+        "cluster_constant_collapsed": false,
+        "cluster_constant_autosizing": "none",
+        "cluster_expanded_width": 180,
+        "cluster_expanded_height": 110,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 70,
+          "y": 130,
+          "width": 200,
+          "height": 120
+        }
+      },
+      {
+        "id": "first",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "i64",
+        "label": "First",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "constant_owner_node_id": "record",
+        "constant_field_id": "first-id",
+        "constant_field_order": 0,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "9007199254740993",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 250,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "second",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "i64",
+        "label": "Second",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "constant_owner_node_id": "record",
+        "constant_field_id": "second-id",
+        "constant_field_order": 1,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "-7",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 325,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "result-terminal",
+        "kind": "widget_value",
+        "type": "array:i64",
+        "widget": "result",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Cluster To Array preserves homogeneous I64 — alternate palette entry\nHomogeneous fields retain their exact integer carrier. An integer above 2^53 remains unchanged, and stable Cluster field order determines Array order.\nEntrées -> opération -> indicateurs. Résultat attendu : result (array<i64>) = [9007199254740993,-7]\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 70,
+          "y": -50,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "record",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "cluster"
+        }
+      },
+      {
+        "id": "wire-1",
+        "from": {
+          "node": "operation",
+          "port": "array"
+        },
+        "to": {
+          "node": "result-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

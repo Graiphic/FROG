@@ -1,0 +1,278 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "ErfC — reference 1",
+  "metadata": {
+    "name": "ErfC — reference 1",
+    "name_source": "document",
+    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : x (f64) = -2.0.\nRésultats attendus : result (f64) = 0.004677734981047266.\n\nEvaluates the complementary error function erfc(q)=2/sqrt(pi)*integral(q,infinity,exp(-t*t),dt), directly rather than subtracting rounded erf from 1.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (f64) = 0.004677734981047266\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["numeric-math", "typed-values", "independent-oracle", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 47.8\">\n  <defs>\n    <style>\n      .cls-1 {\n        fill: #00bc85;\n      }\n\n      .cls-2 {\n        fill: #fff;\n      }\n\n      .cls-3 {\n        fill: #4b5563;\n      }\n\n      .cls-4 {\n        fill: #f8fafc;\n        stroke: #00bc85;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: 1.8px;\n      }\n    </style>\n  </defs>\n  <g id=\"Foonction_d_erreur\" data-name=\"Foonction d&amp;apos;erreur\">\n    <g>\n      <g>\n        <rect class=\"cls-4\" x=\".9\" y=\".9\" width=\"46\" height=\"46\" rx=\"4.5\" ry=\"4.5\"/>\n        <path class=\"cls-1\" d=\"M5.4.51h37c2.48,0,4.5,2.02,4.5,4.5v9.9H.9V5.01C.9,2.52,2.92.51,5.4.51Z\"/>\n        <g>\n          <path class=\"cls-2\" d=\"M14.79,13.74V5.35c0-.42.05-.81.16-1.17.11-.36.27-.67.49-.94.22-.27.5-.48.84-.63.33-.15.73-.23,1.19-.23.33,0,.65.04.96.13.31.09.58.23.82.41.24.19.43.42.58.7.14.28.22.61.22,1,0,.86-.41,1.53-1.22,2v.05c.28.05.53.14.77.27.23.13.44.3.61.49.17.2.31.43.4.69.09.26.14.55.14.86,0,.44-.07.82-.22,1.15-.14.33-.33.6-.56.82s-.5.38-.8.49-.61.16-.92.16c-.35,0-.71-.06-1.06-.19-.35-.13-.69-.36-1-.7.02.51.03,1.01.05,1.5.02.49.03.99.05,1.5h-1.48ZM17.85,10.43c.2,0,.39-.03.56-.1.17-.07.33-.17.46-.29.14-.13.24-.29.32-.48.08-.19.11-.41.11-.67,0-.41-.12-.75-.35-1.03-.24-.28-.6-.42-1.08-.42-.2,0-.39.03-.57.08l-.19-1.09c.28-.05.51-.13.7-.24.19-.11.35-.24.47-.39.12-.15.21-.32.26-.49.05-.18.08-.36.08-.56,0-.41-.11-.71-.34-.91-.23-.2-.49-.3-.8-.3-.4,0-.7.17-.92.51-.22.34-.33.84-.35,1.5-.02.68-.03,1.34-.04,2,0,.66-.01,1.33-.01,2.02.27.35.55.58.84.69s.57.17.84.17Z\"/>\n          <path class=\"cls-2\" d=\"M32.92,3.07h-6.27v.6l1.06.12c.02,1.07.03,2.15.03,3.22v.65c0,1,0,2.06-.03,3.12l-1.06.12v.6h3.91v-.6l-1.16-.13c-.02-1.07-.03-2.13-.03-3.11v-.65c0-1.1,0-2.19.03-3.25h2.36l.03.02h.02s.31,1.83.31,1.83h.88l-.09-2.52Z\"/>\n        </g>\n        <g>\n          <path class=\"cls-1\" d=\"M8.96,38.5c0-1.76,1.25-2.84,2.54-2.84,1.5,0,2.28,1.06,2.28,2.56,0,.24-.02.48-.06.62h-3.51c.11.96.74,1.51,1.63,1.51.47,0,.88-.14,1.28-.4l.44.79c-.53.34-1.19.58-1.89.58-1.53,0-2.72-1.04-2.72-2.83ZM12.66,37.99c0-.84-.37-1.34-1.12-1.34-.65,0-1.21.47-1.33,1.34h2.45Z\"/>\n          <path class=\"cls-1\" d=\"M15.02,35.8h1.07l.09.96h.05c.39-.7.98-1.09,1.56-1.09.28,0,.46.03.63.11l-.23,1.1c-.19-.05-.34-.09-.57-.09-.44,0-.97.3-1.3,1.11v3.3h-1.29v-5.4Z\"/>\n          <path class=\"cls-1\" d=\"M19.21,35.8h1.07l.09.96h.05c.39-.7.98-1.09,1.56-1.09.28,0,.46.03.63.11l-.23,1.1c-.19-.05-.34-.09-.57-.09-.44,0-.97.3-1.3,1.11v3.3h-1.29v-5.4Z\"/>\n          <path class=\"cls-1\" d=\"M22.93,38.5c0-1.8,1.25-2.84,2.62-2.84s2.63,1.03,2.63,2.84-1.25,2.83-2.63,2.83-2.62-1.03-2.62-2.83ZM26.85,38.5c0-1.09-.49-1.8-1.3-1.8s-1.29.71-1.29,1.8.48,1.79,1.29,1.79,1.3-.71,1.3-1.79Z\"/>\n          <path class=\"cls-1\" d=\"M29.46,35.8h1.07l.09.96h.04c.39-.7.98-1.09,1.56-1.09.28,0,.46.03.63.11l-.23,1.1c-.19-.05-.34-.09-.57-.09-.44,0-.97.3-1.3,1.11v3.3h-1.29v-5.4Z\"/>\n          <path class=\"cls-1\" d=\"M33.38,37.62c0-2.35,1.51-3.75,3.36-3.75.92,0,1.66.43,2.13.91l-.7.83c-.38-.37-.82-.63-1.39-.63-1.2,0-2.06.99-2.06,2.61s.79,2.63,2.02,2.63c.65,0,1.16-.3,1.57-.74l.7.8c-.6.67-1.37,1.04-2.32,1.04-1.86,0-3.32-1.32-3.32-3.71Z\"/>\n        </g>\n      </g>\n      <g>\n        <path class=\"cls-3\" d=\"M8.75,25.42c0-1.76,1.25-2.84,2.54-2.84,1.5,0,2.28,1.06,2.28,2.56,0,.24-.02.48-.06.62h-3.51c.11.96.74,1.51,1.63,1.51.47,0,.88-.14,1.28-.4l.44.79c-.53.34-1.19.58-1.89.58-1.53,0-2.72-1.04-2.72-2.83ZM12.45,24.9c0-.84-.37-1.34-1.12-1.34-.65,0-1.21.47-1.33,1.34h2.45Z\"/>\n        <path class=\"cls-3\" d=\"M14.81,22.71h1.07l.09.96h.05c.39-.7.98-1.09,1.56-1.09.28,0,.46.03.63.11l-.23,1.1c-.19-.05-.34-.09-.57-.09-.44,0-.97.3-1.3,1.11v3.3h-1.29v-5.4Z\"/>\n        <path class=\"cls-3\" d=\"M19.23,23.72h-.74v-.95l.74-.06v-.56c0-1.12.53-1.94,1.83-1.94.39,0,.76.09,1.01.19l-.25.95c-.2-.09-.42-.13-.61-.13-.45,0-.7.29-.7.91v.58h1.08v1h-1.08v4.4h-1.29v-4.4Z\"/>\n        <path class=\"cls-3\" d=\"M22.09,25.42c0-1.8,1.29-2.84,2.77-2.84.71,0,1.21.26,1.62.6l-.63.83c-.29-.25-.57-.4-.92-.4-.89,0-1.51.71-1.51,1.8s.61,1.79,1.47,1.79c.43,0,.82-.21,1.14-.46l.53.84c-.52.44-1.17.66-1.8.66-1.51,0-2.67-1.03-2.67-2.83Z\"/>\n        <path class=\"cls-3\" d=\"M27.69,25.32c0-1.61.55-2.95,1.48-4.2l.81.35c-.84,1.17-1.24,2.52-1.24,3.85s.39,2.68,1.24,3.85l-.81.35c-.93-1.25-1.48-2.6-1.48-4.2Z\"/>\n        <path class=\"cls-3\" d=\"M32.38,25.3l-1.64-2.59h1.39l.62,1.02c.16.3.34.62.51.91h.04c.13-.3.29-.62.43-.91l.53-1.02h1.34l-1.63,2.73,1.75,2.67h-1.39l-.67-1.07c-.18-.32-.37-.65-.56-.96h-.04c-.16.31-.33.63-.48.96l-.58,1.07h-1.35l1.75-2.82Z\"/>\n        <path class=\"cls-3\" d=\"M36.35,29.17c.84-1.17,1.24-2.52,1.24-3.85s-.39-2.68-1.24-3.85l.81-.35c.93,1.25,1.48,2.6,1.48,4.2s-.55,2.95-1.48,4.2l-.81-.35Z\"/>\n      </g>\n    </g>\n  </g>\n</svg>"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "input-x",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "f64",
+        "label": "input-x",
+        "bounds": {
+          "x": 36,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-x\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"f64\",\n  \"label\": \"input-x\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": -2\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": -2
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "output-result",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "f64",
+        "label": "output-result",
+        "bounds": {
+          "x": 420,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"output-result\",\n  \"classId\": \"frog.widgets.numeric_indicator\",\n  \"role\": \"indicator\",\n  \"valueType\": \"f64\",\n  \"label\": \"output-result\",\n  \"bounds\": {\n    \"x\": 420,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 22,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.math.special.error_functions.erfc",
+        "label": "",
+        "label_visible": true,
+        "palette_catalog_id": "math.special.error_functions.erfc",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 270,
+          "y": 120,
+          "width": 56,
+          "height": 56
+        }
+      },
+      {
+        "id": "input-x-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "input-x",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "output-result-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "output-result",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 460,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "ErfC — reference 1\nEvaluates the complementary error function erfc(q)=2/sqrt(pi)*integral(q,infinity,exp(-t*t),dt), directly rather than subtracting rounded erf from 1.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = 0.004677734981047266\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "input-x-wire",
+        "from": {
+          "node": "input-x-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "x"
+        }
+      },
+      {
+        "id": "output-result-wire",
+        "from": {
+          "node": "operation",
+          "port": "result"
+        },
+        "to": {
+          "node": "output-result-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

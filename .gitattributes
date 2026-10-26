@@ -11,3 +11,5 @@ sdk/cpp/include/frog/sdk/runtime_type_syntax.hpp -text whitespace=blank-at-eol,b
 sdk/cpp/include/frog/sdk/typed_event_packet.hpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 sdk/cpp/tests/runtime_array_transport_smoke.cpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 sdk/cpp/tests/runtime_contract_smoke.cpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+sdk/cpp/include/frog/sdk/collection_order.hpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+sdk/cpp/include/frog/sdk/runtime_collection_order.hpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

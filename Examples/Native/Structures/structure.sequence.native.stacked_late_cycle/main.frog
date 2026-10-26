@@ -1,0 +1,446 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Stacked Sequence : diagnostiquer une dépendance circulaire",
+  "metadata": {
+    "name": "Stacked Sequence : diagnostiquer une dépendance circulaire",
+    "name_source": "document",
+    "description": "Ce montage reprend le trajet extérieur de l'exemple Flat. Stacked doit disposer de toutes ses entrées avant la première frame et ne publie qu'à sa sortie finale : le trajet constitue donc un vrai cycle. Le Readiness doit le refuser dès la validation avec diagram.combinational_cycle, avant le FIR et sans réécrire le document. Un test séparé contrôle également la garde indépendante du FIR sur le même graphe canonique.\n\nStacked Sequence : diagnostiquer une dépendance circulaire\n\nMode: expected-diagnostic. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nDiagnostic: diagram.combinational_cycle",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["native", "typed", "resources", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 30.8.0, SVG Export Plug-In . SVG Version: 9.03 Build 0)  -->\r\n<svg version=\"1.1\" id=\"Calque_2_00000172407021494623334140000018354300039955615108_\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 33.233 26.911\"\r\n\t style=\"enable-background:new 0 0 33.233 26.911;\" xml:space=\"preserve\">\r\n<style type=\"text/css\">\r\n\t.st0{fill:#FCF8CF;stroke:#83773D;stroke-width:0.25;stroke-miterlimit:10;}\r\n</style>\r\n<path class=\"st0\" d=\"M26.584,0H6.649C4.604,0,2.946,1.658,2.946,3.703v19.505c0,2.045,1.658,3.703,3.703,3.703h19.935\r\n\tc2.045,0,3.703-1.658,3.703-3.703V3.703C30.287,1.658,28.629,0,26.584,0z M23.077,0.967c0-0.034,0.035-0.063,0.077-0.063h1.598\r\n\tc0.042,0,0.077,0.029,0.077,0.063v2.465c0,0.034-0.035,0.063-0.077,0.063h-1.598c-0.042,0-0.077-0.029-0.077-0.063V0.967z\r\n\t M19.41,0.967c0-0.034,0.035-0.063,0.077-0.063h1.598c0.042,0,0.077,0.029,0.077,0.063v2.465c0,0.034-0.035,0.063-0.077,0.063\r\n\th-1.598c-0.042,0-0.077-0.029-0.077-0.063V0.967z M15.744,0.967c0-0.034,0.035-0.063,0.077-0.063h1.598\r\n\tc0.042,0,0.077,0.029,0.077,0.063v2.465c0,0.034-0.035,0.063-0.077,0.063h-1.598c-0.042,0-0.077-0.029-0.077-0.063V0.967z\r\n\t M12.077,0.967c0-0.034,0.035-0.063,0.077-0.063h1.598c0.042,0,0.077,0.029,0.077,0.063v2.465c0,0.034-0.035,0.063-0.077,0.063\r\n\th-1.598c-0.042,0-0.077-0.029-0.077-0.063V0.967z M8.404,0.967c0-0.034,0.035-0.063,0.077-0.063h1.598\r\n\tc0.042,0,0.077,0.029,0.077,0.063v2.465c0,0.034-0.035,0.063-0.077,0.063H8.481c-0.042,0-0.077-0.029-0.077-0.063V0.967z\r\n\t M10.156,25.99c0,0.034-0.035,0.063-0.077,0.063H8.481c-0.042,0-0.077-0.029-0.077-0.063v-2.465c0-0.034,0.035-0.063,0.077-0.063\r\n\th1.598c0.042,0,0.077,0.029,0.077,0.063V25.99z M13.83,25.99c0,0.034-0.035,0.063-0.077,0.063h-1.598\r\n\tc-0.042,0-0.077-0.029-0.077-0.063v-2.465c0-0.034,0.035-0.063,0.077-0.063h1.598c0.042,0,0.077,0.029,0.077,0.063V25.99z\r\n\t M17.496,25.99c0,0.034-0.035,0.063-0.077,0.063h-1.598c-0.042,0-0.077-0.029-0.077-0.063v-2.465c0-0.034,0.035-0.063,0.077-0.063\r\n\th1.598c0.042,0,0.077,0.029,0.077,0.063V25.99z M21.163,25.99c0,0.034-0.035,0.063-0.077,0.063h-1.598\r\n\tc-0.042,0-0.077-0.029-0.077-0.063v-2.465c0-0.034,0.035-0.063,0.077-0.063h1.598c0.042,0,0.077,0.029,0.077,0.063V25.99z\r\n\t M24.829,25.99c0,0.034-0.035,0.063-0.077,0.063h-1.598c-0.042,0-0.077-0.029-0.077-0.063v-2.465c0-0.034,0.035-0.063,0.077-0.063\r\n\th1.598c0.042,0,0.077,0.029,0.077,0.063V25.99z M27.854,18.98c0,2.045-1.658,3.703-3.703,3.703H9.082\r\n\tc-2.045,0-3.703-1.658-3.703-3.703V7.931c0-2.045,1.658-3.703,3.703-3.703h15.069c2.045,0,3.703,1.658,3.703,3.703V18.98z\"/>\r\n</svg>\r\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "result",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i64",
+        "label": "result",
+        "bounds": {
+          "x": 30,
+          "y": 30,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i64",
+          "data_type.named_numeric_size": "Int64",
+          "representation.kind": "int64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 0,
+      "y": -175
+    },
+    "nodes": [
+      {
+        "id": "sequence",
+        "kind": "structure",
+        "structure_type": "sequence_structure",
+        "type": "frog.studio.structures.sequence_structure",
+        "label": "Sequence Structure",
+        "label_visible": false,
+        "palette_catalog_id": "structures.sequence_structure",
+        "structure_tunnels": [
+          { "id": "entry", "value_type": "i64", "side": "left", "normalized_position": 0.5, "output_from_structure": false, "studio_sequence_frame": "first" },
+          { "id": "first-middle", "value_type": "i64", "side": "left", "normalized_position": 0.5, "output_from_structure": false, "studio_sequence_frame": "middle", "studio_sequence_outer_frame": "first" },
+          { "id": "middle-last", "value_type": "i64", "side": "left", "normalized_position": 0.5, "output_from_structure": false, "studio_sequence_frame": "last", "studio_sequence_outer_frame": "middle" },
+          { "id": "late", "value_type": "i64", "side": "left", "normalized_position": 0.5, "output_from_structure": false, "studio_sequence_frame": "last" },
+          { "id": "exit", "value_type": "i64", "side": "right", "normalized_position": 0.5, "output_from_structure": true, "studio_sequence_frame": "last" },
+          { "id": "early", "value_type": "i64", "side": "right", "normalized_position": 0.5, "output_from_structure": true, "studio_sequence_frame": "first" }
+        ],
+        "boundary": {
+          "inputs": [
+            { "id": "entry", "type": "i64" },
+            { "id": "first-middle", "type": "i64" },
+            { "id": "middle-last", "type": "i64" },
+            { "id": "late", "type": "i64" }
+          ],
+          "outputs": [
+            { "id": "exit", "type": "i64" },
+            { "id": "early", "type": "i64" }
+          ]
+        },
+        "structure_subdiagram_label_visible": false,
+        "structure_subdiagram_label_height": 48,
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "studio_sequence_profile": "stacked_sequence",
+        "studio_sequence_selected_frame": "last",
+        "regions": [
+          {
+            "id": "first",
+            "studio_title": "First",
+            "studio_subdiagram_label_text": "",
+            "studio_width": 240,
+            "diagram": {
+              "zoom_percent": 100,
+              "nodes": [],
+              "edges": [
+                {
+                  "id": "first",
+                  "from": {
+                    "node": "sequence",
+                    "port": "tunnel:entry:output"
+                  },
+                  "to": {
+                    "node": "sequence",
+                    "port": "tunnel:first-middle:input"
+                  }
+                },
+                {
+                  "id": "notifier-wire-5",
+                  "from": {
+                    "node": "sequence",
+                    "port": "tunnel:entry:output"
+                  },
+                  "to": {
+                    "node": "sequence",
+                    "port": "tunnel:early:input"
+                  }
+                }
+              ],
+              "wire_fragments": []
+            }
+          },
+          {
+            "id": "middle",
+            "studio_title": "Empty transport frame",
+            "studio_subdiagram_label_text": "",
+            "studio_width": 240,
+            "diagram": {
+              "zoom_percent": 100,
+              "nodes": [],
+              "edges": [
+                {
+                  "id": "middle",
+                  "from": {
+                    "node": "sequence",
+                    "port": "tunnel:first-middle:output"
+                  },
+                  "to": {
+                    "node": "sequence",
+                    "port": "tunnel:middle-last:input"
+                  }
+                }
+              ],
+              "wire_fragments": []
+            }
+          },
+          {
+            "id": "last",
+            "studio_title": "Last",
+            "studio_subdiagram_label_text": "",
+            "studio_width": 240,
+            "diagram": {
+              "zoom_percent": 100,
+              "nodes": [
+                {
+                  "id": "increment",
+                  "kind": "primitive",
+                  "type": "frog.studio.numeric.increment",
+                  "label": "Increment",
+                  "label_visible": false,
+                  "palette_catalog_id": "numeric.increment",
+                  "label_auto_size": true,
+                  "label_vertical_arrangement": "none",
+                  "label_offset": {
+                    "x": 0,
+                    "y": 0
+                  },
+                  "label_size": {
+                    "width": 24,
+                    "height": 31
+                  },
+                  "label_font": {
+                    "family": "",
+                    "style": "plain",
+                    "use_default_size": true,
+                    "point_size": 15
+                  },
+                  "hidden": false,
+                  "locked": false,
+                  "group": "",
+                  "layout": {
+                    "x": 640,
+                    "y": 180,
+                    "width": 40,
+                    "height": 40
+                  }
+                }
+              ],
+              "edges": [
+                {
+                  "id": "last",
+                  "from": {
+                    "node": "sequence",
+                    "port": "tunnel:late:output"
+                  },
+                  "to": {
+                    "node": "increment",
+                    "port": "in"
+                  }
+                },
+                {
+                  "id": "result",
+                  "from": {
+                    "node": "increment",
+                    "port": "result"
+                  },
+                  "to": {
+                    "node": "sequence",
+                    "port": "tunnel:exit:input"
+                  }
+                }
+              ],
+              "wire_fragments": []
+            }
+          }
+        ],
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 100,
+          "y": 100,
+          "width": 720,
+          "height": 280
+        }
+      },
+      {
+        "id": "source",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "i64",
+        "label": "Float Constant",
+        "label_visible": false,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "7",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 20,
+          "y": 160,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "outside",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.increment",
+        "label": "Increment",
+        "label_visible": false,
+        "palette_catalog_id": "numeric.increment",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 460,
+          "y": 25,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "result-terminal",
+        "kind": "widget_value",
+        "type": "i64",
+        "widget": "result",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 930,
+          "y": 190,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Stacked Sequence : diagnostiquer une dépendance circulaire\nStacked Sequence : diagnostiquer une dépendance circulaire\nEntrées -> opération -> indicateurs. Résultat attendu : Diagnostic: diagram.combinational_cycle",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 20,
+          "y": -155,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "external",
+        "from": {
+          "node": "source",
+          "port": "value"
+        },
+        "to": {
+          "node": "sequence",
+          "port": "tunnel:entry:input"
+        }
+      },
+      {
+        "id": "notifier-wire-6",
+        "from": {
+          "node": "sequence",
+          "port": "tunnel:early:output"
+        },
+        "to": {
+          "node": "outside",
+          "port": "in"
+        }
+      },
+      {
+        "id": "notifier-wire-7",
+        "from": {
+          "node": "outside",
+          "port": "result"
+        },
+        "to": {
+          "node": "sequence",
+          "port": "tunnel:late:input"
+        }
+      },
+      {
+        "id": "notifier-wire-8",
+        "from": {
+          "node": "sequence",
+          "port": "tunnel:exit:output"
+        },
+        "to": {
+          "node": "result-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

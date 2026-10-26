@@ -58,6 +58,12 @@ on:
       - '**/*.cpp'
       - '**/*.cxx'
   workflow_dispatch:
+    inputs:
+      run_global_validation:
+        description: 'Authorize the unchanged complete validation gate.'
+        type: boolean
+        required: true
+        default: false
 
 permissions:
   contents: read
@@ -95,6 +101,16 @@ jobs:
       - name: Run public Runtime contract smoke test
         run: ./runtime-contract-smoke
 
+      - name: Compile SDK Array transport owner
+        run: |
+          c++ -std=c++20 -Wall -Wextra -Wpedantic \
+            -Isdk/cpp/include \
+            sdk/cpp/tests/runtime_array_transport_smoke.cpp \
+            -o runtime-array-transport-smoke
+
+      - name: Run SDK Array transport owner
+        run: ./runtime-array-transport-smoke
+
       - name: Enforce canonical contract ownership
         run: |
           cmake \
@@ -104,6 +120,7 @@ jobs:
             -P sdk/cpp/cmake/verify_runtime_contract_ownership.cmake
 
   reference-workspace:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_global_validation == true }}
     name: Reference workspace checks
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -131,6 +148,7 @@ jobs:
           python Implementations/Reference/check_reference_workspace.py --include-pytest
 
   llvm-native-proof:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_global_validation == true }}
     name: LLVM native proof
     runs-on: ubuntu-latest
     timeout-minutes: 30

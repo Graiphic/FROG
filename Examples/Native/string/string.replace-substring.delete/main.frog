@@ -1,0 +1,487 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Replace Substring — delete",
+  "metadata": {
+    "name": "Replace Substring — delete",
+    "name_source": "document",
+    "description": "The offset and replacement length are bytes. Missing length uses the replacement byte count, zero inserts, and empty replacement deletes.\n\nThe offset and replacement length are bytes. Missing length uses the replacement byte count, zero inserts, and empty replacement deletes.\n\nMode: execution. Profile: studio-draft. Capability: frog.studio.string.raw-bytes@1.\nExpected:\nresult (string) = \"abef\"\nreplaced (string) = \"cd\"\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["typed", "deterministic", "string", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_1\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewBox=\"0 0 48 48\">\n  <title>Remplacer une portion de chaîne</title>\n<defs>\n    <style>\n      .st0 {\n        fill: #4b5563;\n        stroke: #aab4c0;\n        stroke-width: 1.8px;\n      }\n\n      .st1, .st2 {\n        stroke-width: 2.3px;\n      }\n\n      .st1, .st2, .st3, .st4 {\n        fill: none;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n      }\n\n      .st1, .st4 {\n        stroke: #f8fafc;\n      }\n\n      .st2, .st3 {\n        stroke: #f017f0;\n      }\n\n      .st3, .st4 {\n        stroke-width: 2px;\n      }\n\n      .st5, .st6 {\n        isolation: isolate;\n      }\n\n      .st6 {\n        fill: #f8fafc;\n        font-family: Arial-BoldMT, Arial;\n        font-size: 11px;\n        font-weight: 700;\n      }\n    </style>\n  </defs>\n  <rect class=\"st0\" x=\"1\" y=\"1\" width=\"46\" height=\"46\" rx=\"4.5\" ry=\"4.5\"/>\n  <line class=\"st1\" x1=\"27.39\" y1=\"8.34\" x2=\"42.24\" y2=\"8.34\"/>\n  <line class=\"st1\" x1=\"27.39\" y1=\"14\" x2=\"42.24\" y2=\"14\"/>\n  <g class=\"st5\">\n    <text class=\"st6\" transform=\"translate(5.08 16.68)\"><tspan x=\"0\" y=\"0\">abc</tspan></text>\n  </g>\n  <line class=\"st1\" x1=\"6.58\" y1=\"21.17\" x2=\"33.31\" y2=\"21.17\"/>\n  <line class=\"st3\" x1=\"6.58\" y1=\"41.43\" x2=\"42.68\" y2=\"41.43\"/>\n  <g>\n    <line class=\"st4\" x1=\"24.63\" y1=\"36.35\" x2=\"24.63\" y2=\"27.42\"/>\n    <path class=\"st4\" d=\"M22.03,30.21l2.6-3.9,2.6,3.9\"/>\n  </g>\n  <line class=\"st2\" x1=\"32.93\" y1=\"35.35\" x2=\"42.68\" y2=\"35.35\"/>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "result",
+        "classId": "frog.widgets.string_indicator",
+        "role": "indicator",
+        "valueType": "string",
+        "label": "result",
+        "bounds": {
+          "x": 30,
+          "y": 40,
+          "width": 120,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "text.value": "",
+          "display.string.style": "normal",
+          "text.horizontal_alignment": "left",
+          "display.string.style_selector_visible": false,
+          "interaction.text.single_line": true,
+          "interaction.text.wrap_at_word_breaks": true,
+          "interaction.text.update_while_typing": true,
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": false,
+          "layout.size_to_text": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/07_string_value_roundtrip/main.frog",
+          "wfrog": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/string.default.wfrog",
+          "asset": "asset:string_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "replaced",
+        "classId": "frog.widgets.string_indicator",
+        "role": "indicator",
+        "valueType": "string",
+        "label": "replaced",
+        "bounds": {
+          "x": 30,
+          "y": 150,
+          "width": 120,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "text.value": "",
+          "display.string.style": "normal",
+          "text.horizontal_alignment": "left",
+          "display.string.style_selector_visible": false,
+          "interaction.text.single_line": true,
+          "interaction.text.wrap_at_word_breaks": true,
+          "interaction.text.update_while_typing": true,
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": false,
+          "layout.size_to_text": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/07_string_value_roundtrip/main.frog",
+          "wfrog": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/string.default.wfrog",
+          "asset": "asset:string_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 60,
+      "y": -40
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.string.replace_substring",
+        "label": "Replace Substring",
+        "label_visible": true,
+        "palette_catalog_id": "string.replace_substring",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": 180,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "input-value",
+        "kind": "primitive",
+        "type": "frog.studio.string.constant",
+        "value_type": "string",
+        "label": "String Constant",
+        "label_visible": true,
+        "palette_catalog_id": "string.constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "text": "abcdef",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 175,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "input-substring",
+        "kind": "primitive",
+        "type": "frog.studio.string.constant",
+        "value_type": "string",
+        "label": "String Constant",
+        "label_visible": true,
+        "palette_catalog_id": "string.constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 250,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "input-offset",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "i32",
+        "label": "Float Constant",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "2",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 325,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "input-length",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "i32",
+        "label": "Float Constant",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "2",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 400,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "result-terminal",
+        "kind": "widget_value",
+        "type": "string",
+        "widget": "result",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "replaced-terminal",
+        "kind": "widget_value",
+        "type": "string",
+        "widget": "replaced",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 240,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Replace Substring — delete\nThe offset and replacement length are bytes. Missing length uses the replacement byte count, zero inserts, and empty replacement deletes.\nEntrées -> opération -> indicateurs. Résultat attendu : result (string) = \"abef\"\nreplaced (string) = \"cd\"\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": -20,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "input-value",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "value"
+        }
+      },
+      {
+        "id": "wire-1",
+        "from": {
+          "node": "input-substring",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "substring"
+        }
+      },
+      {
+        "id": "wire-2",
+        "from": {
+          "node": "input-offset",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "offset"
+        }
+      },
+      {
+        "id": "wire-3",
+        "from": {
+          "node": "input-length",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "length"
+        }
+      },
+      {
+        "id": "wire-4",
+        "from": {
+          "node": "operation",
+          "port": "result"
+        },
+        "to": {
+          "node": "result-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "wire-5",
+        "from": {
+          "node": "operation",
+          "port": "replaced_substring"
+        },
+        "to": {
+          "node": "replaced-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

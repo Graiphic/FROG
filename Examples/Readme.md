@@ -14,6 +14,14 @@
 <h2>Overview</h2>
 
 <p>
+The proposed <a href="./Native_examples.md">native Studio corpus and shared
+example index</a> complements this historical numbered progression. Its
+documents explicitly retain the Studio authoring profile, separately from
+canonical Source 0.1. Declared examples, actual validation results and publication
+status must not be conflated.
+</p>
+
+<p>
 This directory contains the repository-visible numbered example progression.
 Examples are not semantic owners.
 They are published slices used to inspect how source, FIR, lowering, contracts, runtimes, and native proof paths relate.

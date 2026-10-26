@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.24)
+project(FrogExampleNativeLibrary VERSION 1.0 LANGUAGES C)
+add_library(frog-example-native-library SHARED resources_structures.c)
+set_target_properties(frog-example-native-library PROPERTIES C_STANDARD 99)
+if(MSVC)
+  set_target_properties(frog-example-native-library PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()

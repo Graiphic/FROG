@@ -1,0 +1,201 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Ln 10 — value and persistence",
+  "metadata": {
+    "name": "Ln 10 — value and persistence",
+    "name_source": "document",
+    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : aucune; constante typée.\nRésultats attendus : value (f64) = 2.302585092994046.\n\nEmits the fixed f64 value currently catalogued by Studio.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-value (f64) = 2.302585092994046\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["numeric-math", "typed-values", "independent-oracle", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 30.8.0, SVG Export Plug-In . SVG Version: 9.03 Build 0)  -->\r\n<svg version=\"1.1\" id=\"Calque_1\" data-frog-shape-standard=\"fixed-constant\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 48 48\"\r\n\t style=\"enable-background:new 0 0 48 48;\" xml:space=\"preserve\">\r\n<style type=\"text/css\">\r\n\t.st0{fill:#D97706;stroke:#AAB4C0;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}\r\n\t.st1{fill:#FFFFFF;}\r\n\t.st2{font-family:'SegoeUI-Bold';}\r\n\t.st3{font-size:14px;}\r\n</style>\r\n<path class=\"st0\" d=\"M18.25,12.5h11.5c6.351,0,11.5,5.149,11.5,11.5l0,0c0,6.351-5.149,11.5-11.5,11.5h-11.5\r\n\tc-6.351,0-11.5-5.149-11.5-11.5l0,0C6.75,17.649,11.899,12.5,18.25,12.5z\"/>\r\n<text transform=\"matrix(1 0 0 1 10.0994 29.0404)\" class=\"st1 st2 st3\">ln10</text>\r\n</svg>\r\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "output-value",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "f64",
+        "label": "output-value",
+        "bounds": {
+          "x": 420,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"output-value\",\n  \"classId\": \"frog.widgets.numeric_indicator\",\n  \"role\": \"indicator\",\n  \"valueType\": \"f64\",\n  \"label\": \"output-value\",\n  \"bounds\": {\n    \"x\": 420,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 250,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.other_constants.ln_ten",
+        "label": "",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.other_constants.ln_ten",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 270,
+          "y": 120,
+          "width": 56,
+          "height": 56
+        }
+      },
+      {
+        "id": "output-value-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "output-value",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 460,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Ln 10 — value and persistence\nEmits the fixed f64 value currently catalogued by Studio.\nEntrées -> opération -> indicateurs. Résultat attendu : output-value (f64) = 2.302585092994046\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 270,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "output-value-wire",
+        "from": {
+          "node": "operation",
+          "port": "value"
+        },
+        "to": {
+          "node": "output-value-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

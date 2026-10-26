@@ -1,0 +1,372 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Array To Cluster pads missing elements",
+  "metadata": {
+    "name": "Array To Cluster pads missing elements",
+    "name_source": "document",
+    "description": "The configured Cluster has three fields. Two array elements fill its first fields and the missing final field receives its intrinsic I32 default; excess array elements would be ignored.\n\nThe configured Cluster has three fields. Two array elements fill its first fields and the missing final field receives its intrinsic I32 default; excess array elements would be ignored.\n\nMode: execution. Profile: studio-draft. Capability: frog.studio.array.owned@1.\nExpected:\nresult (cluster<\"element1\":i32,\"element2\":i32,\"element3\":i32>) = {\"element1\":7,\"element2\":8,\"element3\":0}\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["typed", "deterministic", "array", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 24.8\">\n  <defs>\n    <style>\n      .cls-1 {\n        fill: #fff;\n      }\n\n      .cls-2 {\n        fill: #4b5563;\n        stroke: #aab4c0;\n        stroke-width: 1.8px;\n      }\n\n      .cls-3 {\n        fill: #fffffe;\n        stroke: #f8fafc;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: .86px;\n      }\n\n      .cls-4 {\n        fill: #e359af;\n      }\n    </style>\n  </defs>\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n      <g>\n        <rect class=\"cls-2\" x=\".9\" y=\".9\" width=\"46\" height=\"23\" rx=\"4.5\" ry=\"4.5\"/>\n        <rect class=\"cls-1\" x=\"4.5\" y=\"8.79\" width=\"8\" height=\"2.5\"/>\n        <rect class=\"cls-1\" x=\"4.5\" y=\"16.14\" width=\"8\" height=\"2.5\"/>\n        <rect class=\"cls-1\" x=\"4.5\" y=\"12.47\" width=\"8\" height=\"2.5\"/>\n        <rect class=\"cls-1\" x=\"4.5\" y=\"5.12\" width=\"8\" height=\"2.5\"/>\n      </g>\n      <g>\n        <rect class=\"cls-4\" x=\"29.2\" y=\"6.35\" width=\"8.38\" height=\"8.38\"/>\n        <rect class=\"cls-4\" x=\"38.76\" y=\"6.35\" width=\"3.63\" height=\"11.56\"/>\n        <rect class=\"cls-4\" x=\"32.3\" y=\"12.62\" width=\"2.19\" height=\"8.38\" transform=\"translate(50.2 -16.59) rotate(90)\"/>\n      </g>\n      <g>\n        <rect class=\"cls-3\" x=\"20.86\" y=\"7.54\" width=\".82\" height=\"8.68\" transform=\"translate(9.39 33.15) rotate(-90)\"/>\n        <polygon class=\"cls-3\" points=\"23.16 16.3 26.24 12.12 26.41 11.88 26.24 11.64 23.16 7.46 22.51 7.94 25.4 11.88 22.51 15.82 23.16 16.3\"/>\n      </g>\n    </g>\n  </g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "result",
+        "classId": "frog.widgets.cluster_indicator",
+        "role": "indicator",
+        "valueType": "cluster:i32|i32|i32",
+        "label": "result",
+        "bounds": {
+          "x": 30,
+          "y": 40,
+          "width": 168,
+          "height": 112
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "cluster.padding": 8,
+          "cluster.next_field_serial": "3",
+          "cluster.auto_sizing": "none",
+          "cluster.elements": [
+            {
+              "field_id": "element1",
+              "technical_name": "element1",
+              "logical_order": 0,
+              "widget":               {
+                "id": "result.field.0",
+                "classId": "frog.widgets.numeric_indicator",
+                "role": "indicator",
+                "valueType": "i32",
+                "label": "element1",
+                "bounds": {
+                  "x": 8,
+                  "y": 8,
+                  "width": 96,
+                  "height": 32
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "data_type.representation": "i32",
+                  "data_type.named_numeric_size": "Int32",
+                  "representation.kind": "int32",
+                  "data_entry.use_type_defaults": true
+                },
+                "runtime": {
+                  "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+                  "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+                  "asset": "asset:numeric_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+                },
+                "state": {
+                  "value": 0
+                },
+                "typography": {
+                  "inheritanceVersion": 1
+                }
+              }
+            },
+            {
+              "field_id": "element2",
+              "technical_name": "element2",
+              "logical_order": 1,
+              "widget":               {
+                "id": "result.field.1",
+                "classId": "frog.widgets.numeric_indicator",
+                "role": "indicator",
+                "valueType": "i32",
+                "label": "element2",
+                "bounds": {
+                  "x": 8,
+                  "y": 53,
+                  "width": 96,
+                  "height": 32
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "data_type.representation": "i32",
+                  "data_type.named_numeric_size": "Int32",
+                  "representation.kind": "int32",
+                  "data_entry.use_type_defaults": true
+                },
+                "runtime": {
+                  "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+                  "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+                  "asset": "asset:numeric_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+                },
+                "state": {
+                  "value": 0
+                },
+                "typography": {
+                  "inheritanceVersion": 1
+                }
+              }
+            },
+            {
+              "field_id": "element3",
+              "technical_name": "element3",
+              "logical_order": 2,
+              "widget":               {
+                "id": "result.field.2",
+                "classId": "frog.widgets.numeric_indicator",
+                "role": "indicator",
+                "valueType": "i32",
+                "label": "element3",
+                "bounds": {
+                  "x": 8,
+                  "y": 98,
+                  "width": 96,
+                  "height": 32
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "data_type.representation": "i32",
+                  "data_type.named_numeric_size": "Int32",
+                  "representation.kind": "int32",
+                  "data_entry.use_type_defaults": true
+                },
+                "runtime": {
+                  "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+                  "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+                  "asset": "asset:numeric_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+                },
+                "state": {
+                  "value": 0
+                },
+                "typography": {
+                  "inheritanceVersion": 1
+                }
+              }
+            }
+          ]
+        },
+        "runtime": {
+          "sourceExample": "Examples/44_cluster_widget_roundtrip/main.frog",
+          "wfrog": "Examples/44_cluster_widget_roundtrip/ui/cluster_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/cluster.default.wfrog",
+          "asset": "asset:cluster_shell_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/cluster/templates/cluster_shell.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 60,
+      "y": -40
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.array.conversion.array_to_cluster",
+        "label": "Array To Cluster",
+        "label_visible": true,
+        "palette_catalog_id": "array.conversion.array_to_cluster",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "3",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": 180,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "input-array",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_array_constant",
+        "value_type": "i32",
+        "label": "Array Constant",
+        "label_visible": true,
+        "palette_catalog_id": "array.constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "array_constant": {
+          "rank": 1,
+          "shape": [2],
+          "first_indices": [0],
+          "visible_counts": [3],
+          "one_dimensional_vertical": false,
+          "cell_size": {
+            "width": 48,
+            "element_gap": 0,
+            "height": 20
+          },
+          "values": ["7", "8"],
+          "element_label_visible": false
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 160,
+          "width": 190,
+          "height": 100
+        }
+      },
+      {
+        "id": "result-terminal",
+        "kind": "widget_value",
+        "type": "cluster<\"element1\":i32,\"element2\":i32,\"element3\":i32>",
+        "widget": "result",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Array To Cluster pads missing elements\nThe configured Cluster has three fields. Two array elements fill its first fields and the missing final field receives its intrinsic I32 default; excess array elements would be ignored.\nEntrées -> opération -> indicateurs. Résultat attendu : result (cluster<\"element1\":i32,\"element2\":i32,\"element3\":i32>) = {\"element1\":7,\"element2\":8,\"element3\":0}\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": -20,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "input-array",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "array"
+        }
+      },
+      {
+        "id": "wire-1",
+        "from": {
+          "node": "operation",
+          "port": "cluster"
+        },
+        "to": {
+          "node": "result-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

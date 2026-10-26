@@ -1,0 +1,635 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Read Text : conserver l'erreur amont sans accès disque",
+  "metadata": {
+    "name": "Read Text : conserver l'erreur amont sans accès disque",
+    "name_source": "document",
+    "description": "L'erreur 77 arrive avant Read Text. L'opération propage cette même erreur sans ouvrir le chemin, ni afficher un sélecteur. Un défaut de chemin ne doit pas remplacer l'erreur du traitement amont.\n\nRead Text : conserver l'erreur amont sans accès disque\n\nMode: execution. Profile: studio-draft. Capability: windows/highlight-fileio.\nExpected:\ncancelled (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 77\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["native", "typed", "resources", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 47.8\">\n  <defs>\n    <style>\n      .cls-1 {\n        fill: none;\n        stroke: #4b5563;\n      }\n\n      .cls-2 {\n        isolation: isolate;\n      }\n\n      .cls-3 {\n        stroke: #aab4c0;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: 1.8px;\n      }\n\n      .cls-3, .cls-4 {\n        fill: #4b5563;\n      }\n\n      .cls-5 {\n        fill: #f8fafc;\n      }\n    </style>\n  </defs>\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n      <rect class=\"cls-3\" x=\".9\" y=\".9\" width=\"46\" height=\"46\" rx=\"4.5\" ry=\"4.5\"/>\n      <g>\n        <path class=\"cls-5\" d=\"M13,7.4h14.47l7.23,7.23v17.5l-10.8,1.23-10.9-1.23V7.4Z\"/>\n        <path class=\"cls-1\" d=\"M27.47,7.32v7.32h7.33\"/>\n      </g>\n      <g>\n        <path class=\"cls-5\" d=\"M32.55,44.4c-2.44,0-4.73-1.2-6.15-3.21-.75-1.07-1.28-2.31-1.56-3.67-.13-.61-.09-1.18-.05-1.73l.03-.44c0-.13-.03-.23-.12-.32-.16-.17-.48-.29-.8-.29h0c-.32,0-.63.11-.79.28-.09.09-.13.2-.12.33l.03.45c.04.55.07,1.11-.05,1.72-.28,1.37-.81,2.6-1.56,3.67-1.41,2.01-3.71,3.21-6.15,3.21-1.73,0-3.36-.58-4.73-1.67-1.83-1.46-2.68-3.38-2.73-6.21-.25-.09-.58-.26-.66-.7-.11-.57-.42-1.01-.92-1.26l-.27-.14-.03-1.64c0-.42.24-.76.63-.86,2.35-.61,4.83-.93,7.19-.93,3.34,0,6.31.66,8.61,1.9.51-.18,1.04-.28,1.57-.28s1.06.09,1.57.28c2.29-1.24,5.26-1.9,8.61-1.9,2.35,0,4.84.32,7.19.93l.09.02.54.39v2.1s-.28.14-.28.14c-.5.24-.83.68-.93,1.25-.09.5-.49.64-.66.69,0,0,0,0,0,0-.03,2.8-.91,4.79-2.77,6.25-1.36,1.07-2.98,1.64-4.69,1.64ZM15.13,33.23c-.97,0-2,.08-2.99.23-1.55.24-2.39.88-2.47,1.92-.09,1.1.01,2.23.3,3.34.32,1.23,1.06,2.22,2.2,2.93.93.59,2,.9,3.08.9,1.65,0,3.22-.73,4.3-1.99.9-1.05,1.47-2.4,1.6-3.78.1-1.15-.44-2.13-1.5-2.69-1.07-.56-2.63-.86-4.51-.86ZM32.67,33.23c-1.9,0-3.48.31-4.55.89-1.03.56-1.56,1.53-1.46,2.67.13,1.38.69,2.73,1.6,3.78,1.09,1.27,2.65,1.99,4.3,1.99h0c1.1,0,2.17-.32,3.12-.92,1.11-.71,1.84-1.69,2.16-2.91.29-1.11.39-2.24.3-3.34-.09-1.03-.9-1.67-2.42-1.91-1.01-.16-2.06-.24-3.05-.24Z\"/>\n        <path class=\"cls-4\" d=\"M13.72,31.49c3.06,0,6.11.55,8.57,1.95.52-.22,1.06-.33,1.6-.33s1.08.11,1.61.33c2.46-1.4,5.51-1.95,8.57-1.95,2.45,0,4.9.36,7.07.92l.25.18v1.53c-.63.3-1.08.87-1.21,1.61-.08.44-.67.18-.67.71,0,2.44-.66,4.42-2.58,5.93-1.31,1.03-2.85,1.53-4.38,1.53-2.2,0-4.36-1.03-5.74-2.99-.73-1.04-1.22-2.21-1.48-3.49-.14-.7-.05-1.35-.02-2.05.03-.75-.75-1.13-1.42-1.13,0,0,0,0,0,0-.68,0-1.44.38-1.41,1.13.03.69.12,1.35-.02,2.05-.26,1.27-.75,2.45-1.48,3.49-1.38,1.97-3.54,3-5.74,3-1.54,0-3.1-.51-4.42-1.56-1.93-1.54-2.52-3.5-2.55-5.96,0-.44-.59-.21-.67-.65-.13-.71-.53-1.28-1.18-1.62l-.03-1.34c0-.16.08-.32.26-.37,2.16-.56,4.61-.92,7.06-.92h0ZM32.55,43.05c1.16,0,2.33-.33,3.39-1,1.2-.77,2.01-1.83,2.37-3.2.3-1.14.41-2.33.32-3.51-.12-1.49-1.42-2.14-2.84-2.37-.94-.15-2.02-.25-3.13-.25-1.73,0-3.49.25-4.79.95-1.18.64-1.85,1.79-1.72,3.15.14,1.5.74,2.93,1.71,4.06,1.22,1.42,2.93,2.17,4.68,2.17h0ZM15.25,43.05c1.75,0,3.46-.74,4.68-2.17.97-1.13,1.58-2.56,1.71-4.06.13-1.38-.56-2.54-1.77-3.18-1.29-.68-3.04-.92-4.74-.92-1.08,0-2.14.1-3.07.24-1.44.22-2.77.86-2.89,2.37-.1,1.18.02,2.36.32,3.51.36,1.39,1.19,2.46,2.42,3.23,1.04.66,2.2.98,3.34.98h0ZM8.1,33.79c.51,0,1.04-.17.95-.48-.07-.25-.49-.37-.91-.37-.5,0-.99.16-.93.48.05.25.47.37.89.37h0ZM39.67,33.79c.47,0,.93-.14.92-.43,0-.28-.46-.42-.92-.42s-.93.14-.93.42c0,.29.46.43.93.43h0ZM13.72,30.49c-2.4,0-4.93.33-7.31.95-.6.16-1.02.71-1,1.36l.03,1.34v.6s.54.27.54.27c.36.18.58.49.66.91.08.41.3.72.66.93.11,2.82,1.02,4.77,2.91,6.28,1.46,1.16,3.2,1.78,5.04,1.78,2.6,0,5.05-1.28,6.55-3.42.79-1.13,1.34-2.43,1.64-3.86.14-.67.1-1.28.06-1.86,0-.14-.02-.29-.02-.43.01,0,.18-.09.41-.09.2,0,.36.07.43.12,0,.14-.02.27-.02.4-.04.58-.08,1.19.06,1.86.3,1.43.85,2.73,1.64,3.86,1.51,2.14,3.96,3.42,6.55,3.42,1.82,0,3.55-.6,5-1.75,1.92-1.51,2.86-3.53,2.95-6.32.38-.22.6-.53.67-.93.07-.41.3-.71.65-.88l.57-.27v-.63s0-1.53,0-1.53v-.51s-.42-.3-.42-.3l-.25-.18-.15-.11-.18-.05c-2.39-.62-4.92-.95-7.32-.95-3.33,0-6.31.64-8.65,1.86-.5-.15-1.01-.23-1.52-.23s-1.02.08-1.52.23c-2.34-1.22-5.32-1.86-8.65-1.86h0ZM32.55,42.05c-1.5,0-2.93-.66-3.92-1.82-.84-.98-1.36-2.22-1.48-3.5-.08-.93.35-1.72,1.2-2.18,1-.54,2.49-.83,4.31-.83.96,0,1.99.08,2.97.24,1.9.3,1.97,1.17,1.99,1.46.09,1.05,0,2.11-.29,3.17-.29,1.11-.93,1.96-1.95,2.61-.86.55-1.85.84-2.85.84h0ZM15.25,42.05c-.99,0-1.96-.28-2.81-.82-1.04-.66-1.69-1.52-1.98-2.64-.28-1.06-.37-2.12-.29-3.17.02-.29.1-1.17,2.05-1.47.97-.15,1.98-.23,2.92-.23,1.8,0,3.28.28,4.28.81.87.46,1.32,1.26,1.24,2.2-.12,1.28-.64,2.52-1.48,3.5-.99,1.16-2.42,1.82-3.92,1.82h0Z\"/>\n      </g>\n      <g class=\"cls-2\">\n        <path class=\"cls-4\" d=\"M16.23,20.29l-1.37-.25c.15-.55.42-.96.79-1.22s.93-.4,1.68-.4c.67,0,1.17.08,1.5.24.33.16.56.36.7.61.13.25.2.7.2,1.35l-.02,1.76c0,.5.02.87.07,1.11.05.24.14.49.27.77h-1.49c-.04-.1-.09-.25-.15-.45-.02-.09-.04-.15-.05-.18-.26.25-.53.44-.83.56-.29.12-.61.19-.94.19-.59,0-1.05-.16-1.39-.48-.34-.32-.51-.72-.51-1.21,0-.32.08-.61.23-.86.15-.25.37-.45.65-.58.28-.13.68-.25,1.2-.35.71-.13,1.19-.26,1.47-.37v-.15c0-.29-.07-.5-.21-.62-.14-.12-.41-.18-.81-.18-.27,0-.48.05-.63.16s-.27.29-.37.56ZM18.25,21.52c-.19.06-.5.14-.92.23-.42.09-.69.18-.82.26-.2.14-.29.32-.29.53s.08.39.24.55c.16.15.36.23.6.23.27,0,.53-.09.78-.27.18-.14.3-.3.36-.5.04-.13.06-.37.06-.74v-.3Z\"/>\n        <path class=\"cls-4\" d=\"M21.16,24.26v-7.87h1.51v2.84c.47-.53,1.02-.79,1.65-.79.7,0,1.27.25,1.72.75.45.5.68,1.23.68,2.17s-.23,1.72-.7,2.25c-.46.53-1.03.79-1.69.79-.33,0-.65-.08-.96-.24-.32-.16-.59-.4-.82-.72v.84h-1.4ZM22.66,21.28c0,.59.09,1.03.28,1.31.26.4.61.6,1.04.6.33,0,.62-.14.85-.43.23-.29.35-.73.35-1.35,0-.65-.12-1.12-.35-1.41s-.54-.43-.91-.43-.66.14-.9.42c-.24.28-.36.71-.36,1.28Z\"/>\n        <path class=\"cls-4\" d=\"M32.92,20.24l-1.49.27c-.05-.3-.16-.52-.34-.67-.18-.15-.41-.23-.69-.23-.38,0-.68.13-.9.39-.22.26-.34.69-.34,1.3,0,.68.11,1.16.34,1.43s.53.42.92.42c.29,0,.52-.08.7-.24s.31-.44.39-.84l1.48.25c-.15.68-.45,1.19-.89,1.54-.44.35-1.02.52-1.76.52-.83,0-1.5-.26-2-.79-.5-.53-.74-1.26-.74-2.19s.25-1.67.75-2.2c.5-.52,1.17-.79,2.02-.79.69,0,1.25.15,1.66.45.41.3.7.75.88,1.37Z\"/>\n      </g>\n    </g>\n  </g>\n</svg>"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "error_status",
+        "classId": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "valueType": "bool",
+        "label": "error_status",
+        "bounds": {
+          "x": 30,
+          "y": 30,
+          "width": 46.2,
+          "height": 46.2
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": false
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      },
+      {
+        "id": "error_code",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i32",
+        "label": "error_code",
+        "bounds": {
+          "x": 30,
+          "y": 100,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "cancelled",
+        "classId": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "valueType": "bool",
+        "label": "cancelled",
+        "bounds": {
+          "x": 30,
+          "y": 170,
+          "width": 46.2,
+          "height": 46.2
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": false
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 40,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "path",
+        "kind": "primitive",
+        "type": "frog.studio.path.constant",
+        "value_type": "path",
+        "label": "Path Constant",
+        "label_visible": false,
+        "palette_catalog_id": "path.constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "path_constant": {
+          "folder_visible": false,
+          "browse_button_visible": false,
+          "scrollbar_visible": false,
+          "overflow_mode": "abbreviate",
+          "size_to_text": false,
+          "browse_prompt": "",
+          "browse_pattern_label": "",
+          "browse_pattern": "*.*",
+          "browse_selection_mode": "files",
+          "browse_existence_mode": "existing",
+          "browse_start_path": ""
+        },
+        "text": "frog-example-relative.txt",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 60,
+          "y": 100,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "read",
+        "kind": "primitive",
+        "type": "frog.studio.file.text_read",
+        "label": "Read from Text File",
+        "label_visible": false,
+        "palette_catalog_id": "file.text_read",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 230,
+          "y": 100,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "incoming",
+        "kind": "primitive",
+        "type": "frog.studio.error.constant",
+        "label": "Error Constant",
+        "label_visible": false,
+        "palette_catalog_id": "error.constant",
+        "cluster_constant_collapsed": false,
+        "cluster_constant_autosizing": "vertical",
+        "cluster_expanded_width": 44,
+        "cluster_expanded_height": 84,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 400,
+          "y": 100,
+          "width": 44,
+          "height": 84
+        }
+      },
+      {
+        "id": "incoming.status",
+        "kind": "primitive",
+        "type": "frog.studio.boolean.true_constant",
+        "value_type": "bool",
+        "label": "status",
+        "label_visible": false,
+        "constant_owner_node_id": "incoming",
+        "constant_field_id": "status",
+        "constant_field_order": 0,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 54,
+          "height": 22
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "true",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 402,
+          "y": 102,
+          "width": 40,
+          "height": 28
+        }
+      },
+      {
+        "id": "incoming.code",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "i32",
+        "label": "code",
+        "label_visible": false,
+        "constant_owner_node_id": "incoming",
+        "constant_field_id": "code",
+        "constant_field_order": 1,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 54,
+          "height": 22
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "77",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 402,
+          "y": 132,
+          "width": 40,
+          "height": 24
+        }
+      },
+      {
+        "id": "incoming.source",
+        "kind": "primitive",
+        "type": "frog.studio.string.constant",
+        "value_type": "string",
+        "label": "source",
+        "label_visible": false,
+        "constant_owner_node_id": "incoming",
+        "constant_field_id": "source",
+        "constant_field_order": 2,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 54,
+          "height": 22
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "text": "protected work failed",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 402,
+          "y": 162,
+          "width": 40,
+          "height": 24
+        }
+      },
+      {
+        "id": "error-fields",
+        "kind": "primitive",
+        "type": "frog.studio.cluster.unbundle",
+        "label": "Unbundle",
+        "label_visible": false,
+        "palette_catalog_id": "cluster.unbundle",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "cluster_function_terminals": 3,
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 570,
+          "y": 100,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "error_status-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "error_status",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 740,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "error_code-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "error_code",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 60,
+          "y": 210,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "cancelled-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "cancelled",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 230,
+          "y": 210,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Read Text : conserver l'erreur amont sans accès disque\nRead Text : conserver l'erreur amont sans accès disque\nEntrées -> opération -> indicateurs. Résultat attendu : cancelled (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 77\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 60,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "notifier-wire-0",
+        "from": {
+          "node": "path",
+          "port": "value"
+        },
+        "to": {
+          "node": "read",
+          "port": "file"
+        }
+      },
+      {
+        "id": "notifier-wire-1",
+        "from": {
+          "node": "incoming",
+          "port": "value"
+        },
+        "to": {
+          "node": "read",
+          "port": "error_in"
+        }
+      },
+      {
+        "id": "notifier-wire-2",
+        "from": {
+          "node": "read",
+          "port": "error_out"
+        },
+        "to": {
+          "node": "error-fields",
+          "port": "cluster"
+        }
+      },
+      {
+        "id": "notifier-wire-3",
+        "from": {
+          "node": "error-fields",
+          "port": "element1"
+        },
+        "to": {
+          "node": "error_status-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "notifier-wire-4",
+        "from": {
+          "node": "error-fields",
+          "port": "element2"
+        },
+        "to": {
+          "node": "error_code-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "notifier-wire-5",
+        "from": {
+          "node": "read",
+          "port": "cancelled"
+        },
+        "to": {
+          "node": "cancelled-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

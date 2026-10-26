@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <optional>
 #include <memory>
+#include <limits>
 #include <span>
 #include <string>
 #include <string_view>
@@ -30,8 +31,11 @@ inline constexpr std::uint32_t kArtifactSchemaVersion = 1U;
 inline constexpr std::uint32_t kTypedArtifactSchemaVersion = 2U;
 // Local packed rank-one f64 transport; schema2 Record/Event is unchanged.
 inline constexpr std::uint32_t kPackedF64ArrayArtifactSchemaVersion = 3U;
-inline constexpr std::size_t kMaximumF64ArrayElements = 1'000'000;
-inline constexpr std::size_t kMaximumF64ArrayPayloadBytes = 16'000'000;
+inline constexpr std::size_t kMaximumF64ArrayElements = UINT32_MAX;
+inline constexpr std::size_t kMaximumF64ArrayPayloadBytes =
+    std::uint64_t{UINT32_MAX}*sizeof(double)>(std::numeric_limits<std::size_t>::max)()
+        ? (std::numeric_limits<std::size_t>::max)()
+        : static_cast<std::size_t>(std::uint64_t{UINT32_MAX}*sizeof(double));
 inline constexpr std::string_view kPackedF64ArrayProfile = "frog.studio.array.real1d@1";
 
 template <typename Tag>
@@ -73,7 +77,9 @@ enum class ValueCategory {
     Path,
     Array,
     Cluster,
-    ObjectReference
+    ObjectReference,
+    // Local frog.studio.ipe@1 carriers, never a claim of published transport.
+    Variant, Map, Timestamp, Set
 };
 
 struct ValueType {
@@ -119,6 +125,23 @@ struct ValueType {
     if (name == "fxp" || name == "cfx") return scalar(ValueCategory::FixedPoint);
     if (name == "string") return scalar(ValueCategory::String);
     if (name == "path") return scalar(ValueCategory::Path);
+    if (name == "variant") return scalar(ValueCategory::Variant);
+    if (name == "timestamp") return scalar(ValueCategory::Timestamp);
+    if (name.starts_with("map<") && structural_detail::TypeSyntax(name).collection()) return scalar(ValueCategory::Map);
+    if (name.starts_with("set<") && structural_detail::TypeSyntax(name).collection()) {
+        auto t=scalar(ValueCategory::Set);t.elementType=std::string(name.substr(4,name.size()-5));return t;
+    }
+    if (name.starts_with("array<") && structural_detail::TypeSyntax(name).collection()) {
+        auto body=name.substr(6,name.size()-7);std::uint8_t rank=1;
+        std::size_t comma=std::string_view::npos;unsigned nested=0;bool quoted=false,escaped=false;
+        for(std::size_t i=0;i<body.size();++i){const auto c=body[i];if(quoted){if(escaped)escaped=false;else if(c=='\\')escaped=true;else if(c=='"')quoted=false;continue;}if(c=='"')quoted=true;else if(c=='<')++nested;else if(c=='>')--nested;else if(c==','&&!nested){comma=i;break;}}
+        if(comma!=std::string_view::npos){
+            const auto digits=body.substr(comma+6);unsigned count=0;
+            for(const auto ch:digits){if(ch<'0'||ch>'9'||count>16)return {};count=count*10+unsigned(ch-'0');}
+            if(!count||count>16)return {};rank=static_cast<std::uint8_t>(count);body=body.substr(0,comma);
+        }
+        return ValueType{std::string(name),ValueCategory::Array,0,rank,std::string(body)};
+    }
 
     constexpr std::string_view arrayPrefix = "array:";
     if (name.starts_with(arrayPrefix) && name.size() > arrayPrefix.size()) {
@@ -177,6 +200,14 @@ private:
     const std::vector<double> values_;
 };
 namespace array_detail {
+inline std::optional<std::size_t> elementCount(std::span<const std::uint32_t> shape) noexcept {
+    if(shape.empty())return {};
+    for(const auto extent:shape)if(!extent)return 0;
+    std::uint64_t count=1;
+    for(const auto extent:shape){if(count>UINT32_MAX/extent)return {};count*=extent;}
+    if(count>(std::numeric_limits<std::size_t>::max)())return {};
+    return static_cast<std::size_t>(count);
+}
 inline bool descriptor(const ValueType &type) noexcept {
     return type.canonicalName == "array:f64" && type.category == ValueCategory::Array &&
         type.bitWidth == 0 && type.rank == 1 && type.elementType == "f64";
@@ -230,9 +261,15 @@ public:
         return std::holds_alternative<std::string>(value);
     case ValueCategory::Array: {
         const auto *array = std::get_if<RuntimeF64Array>(&value);
-        return array_detail::descriptor(type) && array && *array && (*array)->validForOwner((*array)->owner());
+        if(array_detail::descriptor(type))return array && *array && (*array)->validForOwner((*array)->owner());
+        const auto *compound=std::get_if<std::shared_ptr<const CompoundRuntimeValue>>(&value);
+        return compound && *compound && !(*compound)->isReference() && (*compound)->canonicalType()==type.canonicalName && (*compound)->valid();
     }
     case ValueCategory::Cluster:
+    case ValueCategory::Variant:
+    case ValueCategory::Map:
+    case ValueCategory::Set:
+    case ValueCategory::Timestamp:
     case ValueCategory::ObjectReference: {
         const auto *compound = std::get_if<std::shared_ptr<const CompoundRuntimeValue>>(&value);
         return compound && *compound && (*compound)->valid() &&
@@ -421,6 +458,11 @@ struct RuntimeCapabilities {
     bool supportsTypedEventValues = false;
     // Separate local schema3 opt-in. Never enables Array inside Record/Event.
     bool supportsPackedF64Arrays = false;
+    // Explicit local frog.studio.ipe@1 value transport. Default consumers keep
+    // their original closed transport grammar; this grants no arithmetic.
+    bool supportsLocalInPlaceValues = false;
+    // Independent opt-in for the local sorted Collection value contract.
+    bool supportsLocalCollectionValues = false;
 
     [[nodiscard]] bool supportsOperation(std::string_view operationId) const {
         return std::find(operationIds.begin(), operationIds.end(), operationId) !=
@@ -430,6 +472,8 @@ struct RuntimeCapabilities {
     [[nodiscard]] bool supportsValueType(std::string_view valueType) const {
         if (std::find(valueTypes.begin(), valueTypes.end(), valueType) != valueTypes.end()) return true;
         if (supportsPackedF64Arrays && valueType == "array:f64") return true;
+        if (supportsLocalInPlaceValues && structural_detail::TypeSyntax(valueType).ipe()) return true;
+        if (supportsLocalCollectionValues && structural_detail::TypeSyntax(valueType).collection()) return true;
         return supportsTypedEventValues &&
             (valueType.starts_with("cluster<") || valueType.starts_with("ref<")) &&
             structural_detail::TypeSyntax(valueType).transport();
@@ -544,7 +588,7 @@ struct SessionEvent {
             add("contract.array.owner_invalid", "Packed Array value must match its exact descriptor and artifact owner.",node,port);return;
         }
         const auto bytes=(*array)->payloadBytes();
-        if(bytes>kMaximumF64ArrayPayloadBytes-arrayPayload)add("contract.array.payload_limit", "Packed Array artifact values exceed 16,000,000 payload bytes.",node,port);
+        if(bytes>kMaximumF64ArrayPayloadBytes-arrayPayload)add("contract.array.payload_limit", "Packed Array artifact payload exceeds addressable memory.",node,port);
         else arrayPayload+=bytes;
     };
     std::unordered_set<std::string> nodeIds;

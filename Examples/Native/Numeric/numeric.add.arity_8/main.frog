@@ -1,0 +1,817 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Add — arity 8",
+  "metadata": {
+    "name": "Add — arity 8",
+    "name_source": "document",
+    "description": "Addition de 8 opérandes FROG dans l'ordre canonique a,b puis input_3… si présents. La réduction est à gauche. NI Add reste binaire; cette extensibilité est une loi FROG conservée.\nEntrées : a (i32) = 1; b (i32) = 2; input_3 (i32) = 3; input_4 (i32) = 4; input_5 (i32) = 5; input_6 (i32) = 6; input_7 (i32) = 7; input_8 (i32) = 8.\nRésultats attendus : result (i32) = 36.\n\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (i32) = 36\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["numeric-math", "typed-values", "independent-oracle", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" role=\"img\" aria-labelledby=\"title\">\n  <title id=\"title\">Additionner</title>\n  <g shape-rendering=\"geometricPrecision\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n    <path d=\"M7 3.5C5.4 2.7 4 3.7 4 5.5v37c0 1.9 1.9 3 3.6 2.1l36.1-18.2c1.8-.9 1.8-3.5 0-4.4L7 3.5Z\" fill=\"#4B5563\" stroke=\"#AAB4C0\" stroke-width=\"1.8\"/><g data-role=\"glyph\" data-shell=\"triangle\" transform=\"translate(-2.5 0)\"><text x=\"20.5\" y=\"24.5\" fill=\"#F8FAFC\" font-family=\"Segoe UI, Arial, sans-serif\" font-size=\"20\" font-weight=\"700\" font-style=\"normal\" text-anchor=\"middle\" dominant-baseline=\"middle\" letter-spacing=\"0\">+</text></g>\n  </g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "input-a",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "i32",
+        "label": "input-a",
+        "bounds": {
+          "x": 36,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-a\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"i32\",\n  \"label\": \"input-a\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"i32\",\n    \"data_type.named_numeric_size\": \"Int32\",\n    \"representation.kind\": \"int32\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 1\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 1
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "input-b",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "i32",
+        "label": "input-b",
+        "bounds": {
+          "x": 36,
+          "y": 140,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-b\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"i32\",\n  \"label\": \"input-b\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 140,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"i32\",\n    \"data_type.named_numeric_size\": \"Int32\",\n    \"representation.kind\": \"int32\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 2\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 2
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "input-input_3",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "i32",
+        "label": "input-input_3",
+        "bounds": {
+          "x": 36,
+          "y": 204,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-input_3\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"i32\",\n  \"label\": \"input-input_3\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 204,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"i32\",\n    \"data_type.named_numeric_size\": \"Int32\",\n    \"representation.kind\": \"int32\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 3\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 3
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "input-input_4",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "i32",
+        "label": "input-input_4",
+        "bounds": {
+          "x": 36,
+          "y": 268,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-input_4\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"i32\",\n  \"label\": \"input-input_4\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 268,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"i32\",\n    \"data_type.named_numeric_size\": \"Int32\",\n    \"representation.kind\": \"int32\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 4\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 4
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "input-input_5",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "i32",
+        "label": "input-input_5",
+        "bounds": {
+          "x": 36,
+          "y": 332,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-input_5\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"i32\",\n  \"label\": \"input-input_5\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 332,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"i32\",\n    \"data_type.named_numeric_size\": \"Int32\",\n    \"representation.kind\": \"int32\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 5\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 5
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "input-input_6",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "i32",
+        "label": "input-input_6",
+        "bounds": {
+          "x": 36,
+          "y": 396,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-input_6\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"i32\",\n  \"label\": \"input-input_6\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 396,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"i32\",\n    \"data_type.named_numeric_size\": \"Int32\",\n    \"representation.kind\": \"int32\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 6\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 6
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "input-input_7",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "i32",
+        "label": "input-input_7",
+        "bounds": {
+          "x": 36,
+          "y": 460,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-input_7\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"i32\",\n  \"label\": \"input-input_7\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 460,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"i32\",\n    \"data_type.named_numeric_size\": \"Int32\",\n    \"representation.kind\": \"int32\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 7\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 7
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "input-input_8",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "i32",
+        "label": "input-input_8",
+        "bounds": {
+          "x": 36,
+          "y": 524,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-input_8\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"i32\",\n  \"label\": \"input-input_8\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 524,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"i32\",\n    \"data_type.named_numeric_size\": \"Int32\",\n    \"representation.kind\": \"int32\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 8\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 8
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "output-result",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i32",
+        "label": "output-result",
+        "bounds": {
+          "x": 420,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"output-result\",\n  \"classId\": \"frog.widgets.numeric_indicator\",\n  \"role\": \"indicator\",\n  \"valueType\": \"i32\",\n  \"label\": \"output-result\",\n  \"bounds\": {\n    \"x\": 420,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"i32\",\n    \"data_type.named_numeric_size\": \"Int32\",\n    \"representation.kind\": \"int32\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 22,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.core.add",
+        "label": "",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.add",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 270,
+          "y": 120,
+          "width": 56,
+          "height": 124
+        }
+      },
+      {
+        "id": "input-a-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "input-a",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "input-b-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "input-b",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 152,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "input-input_3-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "input-input_3",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 204,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "input-input_4-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "input-input_4",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 256,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "input-input_5-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "input-input_5",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 308,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "input-input_6-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "input-input_6",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 360,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "input-input_7-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "input-input_7",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 412,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "input-input_8-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "input-input_8",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 464,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "output-result-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "output-result",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 460,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Add — arity 8\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (i32) = 36\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "input-a-wire",
+        "from": {
+          "node": "input-a-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "a"
+        }
+      },
+      {
+        "id": "input-b-wire",
+        "from": {
+          "node": "input-b-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "b"
+        }
+      },
+      {
+        "id": "input-input_3-wire",
+        "from": {
+          "node": "input-input_3-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "input_3"
+        }
+      },
+      {
+        "id": "input-input_4-wire",
+        "from": {
+          "node": "input-input_4-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "input_4"
+        }
+      },
+      {
+        "id": "input-input_5-wire",
+        "from": {
+          "node": "input-input_5-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "input_5"
+        }
+      },
+      {
+        "id": "input-input_6-wire",
+        "from": {
+          "node": "input-input_6-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "input_6"
+        }
+      },
+      {
+        "id": "input-input_7-wire",
+        "from": {
+          "node": "input-input_7-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "input_7"
+        }
+      },
+      {
+        "id": "input-input_8-wire",
+        "from": {
+          "node": "input-input_8-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "input_8"
+        }
+      },
+      {
+        "id": "output-result-wire",
+        "from": {
+          "node": "operation",
+          "port": "result"
+        },
+        "to": {
+          "node": "output-result-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

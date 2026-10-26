@@ -1,0 +1,464 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "File Exists : le chemin vide désigne la liste des lecteurs Windows",
+  "metadata": {
+    "name": "File Exists : le chemin vide désigne la liste des lecteurs Windows",
+    "name_source": "document",
+    "description": "Ce test n'accède à aucun chemin utilisateur. Sous Windows, le chemin vide correspond à la liste des lecteurs pour File Exists et renvoie True. Cette règle propre à Exists ne rend pas un chemin vide valide pour lire ou écrire un fichier.\n\nFile Exists : le chemin vide désigne la liste des lecteurs Windows\n\nMode: execution. Profile: studio-draft. Capability: windows/highlight-fileio.\nExpected:\nexists (bool) = true\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["native", "typed", "resources", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 47.8\">\n  <defs>\n    <style>\n      .cls-1, .cls-2 {\n        stroke: #4b5563;\n      }\n\n      .cls-1, .cls-3 {\n        fill: #f8fafc;\n      }\n\n      .cls-1, .cls-3, .cls-4 {\n        stroke-miterlimit: 10;\n      }\n\n      .cls-2 {\n        fill: none;\n      }\n\n      .cls-5 {\n        stroke: #aab4c0;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: 1.8px;\n      }\n\n      .cls-5, .cls-4 {\n        fill: #4b5563;\n      }\n\n      .cls-3 {\n        stroke-width: .5px;\n      }\n\n      .cls-3, .cls-4 {\n        stroke: #f8fafc;\n      }\n\n      .cls-6 {\n        fill: #fffffe;\n      }\n    </style>\n  </defs>\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n      <rect class=\"cls-5\" x=\".9\" y=\".9\" width=\"46\" height=\"46\" rx=\"4.5\" ry=\"4.5\"/>\n      <path class=\"cls-6\" d=\"M37.68,13.42c0-.75-.61-1.36-1.36-1.36h-13.42l-5-4.78c-.06-.06-.15-.09-.23-.09H6.85c-.75,0-1.36.61-1.36,1.36v25.21c0,.75.61,1.36,1.36,1.36h29.73c.55,0,.9-.34,1.11-.85V13.42Z\"/>\n      <g>\n        <path class=\"cls-1\" d=\"M28.39,22.07h9.88l4.94,3.99v13.11h-14.83v-17.1Z\"/>\n        <path class=\"cls-2\" d=\"M38.28,22.02v4.04h5.01\"/>\n      </g>\n      <path class=\"cls-4\" d=\"M27.41,28.94c-3.74,0-6.76,3.03-6.76,6.76s3.03,6.76,6.76,6.76,6.76-3.03,6.76-6.76-3.04-6.76-6.76-6.76\"/>\n      <path class=\"cls-3\" d=\"M29.1,35.29l-.5.51c-.4.4-.65.73-.65,1.56h-1.1v-.28c0-.61.25-1.17.65-1.56l.68-.7c.2-.2.33-.48.33-.78,0-.61-.49-1.1-1.1-1.1s-1.1.49-1.1,1.1h-1.1c0-1.22.99-2.21,2.21-2.21s2.21.99,2.21,2.21c0,.47-.19.91-.51,1.24\"/>\n      <rect class=\"cls-3\" x=\"26.85\" y=\"38.88\" width=\"1.1\" height=\"1.1\"/>\n    </g>\n  </g>\n</svg>"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "exists",
+        "classId": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "valueType": "bool",
+        "label": "exists",
+        "bounds": {
+          "x": 30,
+          "y": 30,
+          "width": 46.2,
+          "height": 46.2
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": false
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      },
+      {
+        "id": "error_status",
+        "classId": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "valueType": "bool",
+        "label": "error_status",
+        "bounds": {
+          "x": 30,
+          "y": 100,
+          "width": 46.2,
+          "height": 46.2
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": false
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      },
+      {
+        "id": "error_code",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i32",
+        "label": "error_code",
+        "bounds": {
+          "x": 30,
+          "y": 170,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 40,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "path",
+        "kind": "primitive",
+        "type": "frog.studio.path.constant",
+        "value_type": "path",
+        "label": "Path Constant",
+        "label_visible": false,
+        "palette_catalog_id": "path.constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "path_constant": {
+          "folder_visible": false,
+          "browse_button_visible": false,
+          "scrollbar_visible": false,
+          "overflow_mode": "abbreviate",
+          "size_to_text": false,
+          "browse_prompt": "",
+          "browse_pattern_label": "",
+          "browse_pattern": "*.*",
+          "browse_selection_mode": "files",
+          "browse_existence_mode": "existing",
+          "browse_start_path": ""
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 60,
+          "y": 100,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "exists",
+        "kind": "primitive",
+        "type": "frog.studio.file.exists",
+        "label": "Check if File or Folder Exists",
+        "label_visible": false,
+        "palette_catalog_id": "file.exists",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 230,
+          "y": 100,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "exists-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "exists",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 400,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "error-fields",
+        "kind": "primitive",
+        "type": "frog.studio.cluster.unbundle",
+        "label": "Unbundle",
+        "label_visible": false,
+        "palette_catalog_id": "cluster.unbundle",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "cluster_function_terminals": 3,
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 570,
+          "y": 100,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "error_status-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "error_status",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 740,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "error_code-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "error_code",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 60,
+          "y": 210,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "File Exists : le chemin vide désigne la liste des lecteurs Windows\nFile Exists : le chemin vide désigne la liste des lecteurs Windows\nEntrées -> opération -> indicateurs. Résultat attendu : exists (bool) = true\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 60,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "notifier-wire-0",
+        "from": {
+          "node": "path",
+          "port": "value"
+        },
+        "to": {
+          "node": "exists",
+          "port": "path"
+        }
+      },
+      {
+        "id": "notifier-wire-1",
+        "from": {
+          "node": "exists",
+          "port": "exists"
+        },
+        "to": {
+          "node": "exists-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "notifier-wire-2",
+        "from": {
+          "node": "exists",
+          "port": "error_out"
+        },
+        "to": {
+          "node": "error-fields",
+          "port": "cluster"
+        }
+      },
+      {
+        "id": "notifier-wire-3",
+        "from": {
+          "node": "error-fields",
+          "port": "element1"
+        },
+        "to": {
+          "node": "error_status-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "notifier-wire-4",
+        "from": {
+          "node": "error-fields",
+          "port": "element2"
+        },
+        "to": {
+          "node": "error_code-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

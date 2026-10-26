@@ -1,0 +1,355 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Y-th Root of X — ordered y x",
+  "metadata": {
+    "name": "Y-th Root of X — ordered y x",
+    "name_source": "document",
+    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : y (f64) = 3; x (f64) = 8.\nRésultats attendus : result (f64) = 2.\n\nComputes the y-th root of x.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (f64) = 2\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["numeric-math", "typed-values", "independent-oracle", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 47.8\">\n  <defs>\n    <style>\n      .cls-1 {\n        fill: #fff;\n      }\n\n      .cls-2 {\n        fill: #f8fafc;\n        stroke: #4b5563;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: 1.8px;\n      }\n\n      .cls-3 {\n        fill: #4b5563;\n      }\n    </style>\n  </defs>\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n      <g>\n        <rect class=\"cls-2\" x=\".9\" y=\".9\" width=\"46\" height=\"46\" rx=\"4.5\" ry=\"4.5\"/>\n        <rect class=\"cls-3\" x=\"3.81\" y=\"12.1\" width=\"40.18\" height=\"23.59\" transform=\"translate(47.8 47.8) rotate(-180)\"/>\n      </g>\n      <g>\n        <path class=\"cls-1\" d=\"M13.1,21.76c-.14,0-.26,0-.37-.03-.11-.02-.21-.04-.3-.07l.25-1.07s.1.02.16.03.11.02.15.02c.23,0,.41-.05.53-.16.12-.11.21-.24.27-.39l.07-.22-1.8-4.43h1.44l.65,1.9c.07.2.14.41.19.63s.11.44.17.66h.03c.06-.2.11-.42.16-.64.05-.22.1-.44.16-.65l.55-1.9h1.37l-1.61,4.57c-.14.39-.3.71-.48.98-.18.26-.4.46-.65.58-.25.13-.57.19-.95.19Z\"/>\n        <path class=\"cls-1\" d=\"M25.14,28.02l2.86-4.29-2.67-3.95h2.62l.85,1.33c.13.23.28.47.43.71.15.24.3.47.43.71h.07c.1-.23.21-.47.34-.71.13-.24.24-.48.34-.7l.73-1.33h2.56l-2.69,4.24,2.86,4h-2.62l-.95-1.36c-.16-.23-.31-.47-.47-.71-.16-.24-.32-.48-.47-.71h-.07c-.12.23-.25.47-.38.71-.13.24-.26.48-.38.72l-.81,1.36h-2.56Z\"/>\n        <path class=\"cls-1\" d=\"M35.74,15.44h-12.65s-4.26,13.77-4.3,14.04h-.08c-.05-.27-2.41-7.54-2.41-7.54l-3.49,1.42.52,1.38,1.48-.62,3.01,8.24h2.04l4.79-15.5h11.07v-1.43Z\"/>\n      </g>\n    </g>\n  </g>\n</svg>"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "input-y",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "f64",
+        "label": "input-y",
+        "bounds": {
+          "x": 36,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-y\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"f64\",\n  \"label\": \"input-y\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 3\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 3
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "input-x",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "f64",
+        "label": "input-x",
+        "bounds": {
+          "x": 36,
+          "y": 140,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-x\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"f64\",\n  \"label\": \"input-x\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 140,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 8\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 8
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "output-result",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "f64",
+        "label": "output-result",
+        "bounds": {
+          "x": 420,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"output-result\",\n  \"classId\": \"frog.widgets.numeric_indicator\",\n  \"role\": \"indicator\",\n  \"valueType\": \"f64\",\n  \"label\": \"output-result\",\n  \"bounds\": {\n    \"x\": 420,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 22,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.math.exponential.y_th_root_of_x",
+        "label": "",
+        "label_visible": true,
+        "palette_catalog_id": "math.exponential.y_th_root_of_x",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 270,
+          "y": 120,
+          "width": 56,
+          "height": 56
+        }
+      },
+      {
+        "id": "input-y-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "input-y",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "input-x-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "input-x",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 152,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "output-result-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "output-result",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 460,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Y-th Root of X — ordered y x\nComputes the y-th root of x.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = 2\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "input-y-wire",
+        "from": {
+          "node": "input-y-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "y"
+        }
+      },
+      {
+        "id": "input-x-wire",
+        "from": {
+          "node": "input-x-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "x"
+        }
+      },
+      {
+        "id": "output-result-wire",
+        "from": {
+          "node": "operation",
+          "port": "result"
+        },
+        "to": {
+          "node": "output-result-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

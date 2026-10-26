@@ -1,0 +1,768 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Evaluate a persisted prepared assignment program",
+  "metadata": {
+    "name": "Evaluate a persisted prepared assignment program",
+    "name_source": "document",
+    "description": "The real authoring producer stores named inputs [x,z,q] and outputs [p,y] with its AST. Values [3,4,5] produce [25,10] without reparsing the original source text at execution.\n\nThe real authoring producer stores named inputs [x,z,q] and outputs [p,y] with its AST. Values [3,4,5] produce [25,10] without reparsing the original source text at execution.\n\nMode: execution. Profile: studio-draft. Capability: frog.studio.formula.evaluation@1; compiled owned-value service.\nExpected:\noutput-output_values (array<f64>) = [25,10]\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["formula", "native", "typed", "independent-oracle", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 47.8\">\n  <defs>\n    <style>\n      .cls-1, .cls-2 {\n        fill: #fff;\n      }\n\n      .cls-3 {\n        fill: #4b5563;\n      }\n\n      .cls-3, .cls-4 {\n        stroke: #aab4c0;\n        stroke-width: 1.8px;\n      }\n\n      .cls-5 {\n        fill: none;\n        stroke: #fff;\n        stroke-miterlimit: 10;\n        stroke-width: 1.4px;\n      }\n\n      .cls-2 {\n        font-family: SourceSansPro-Bold, 'Source Sans Pro';\n        font-size: 14px;\n        font-weight: 700;\n      }\n\n      .cls-4 {\n        fill: #aab4c0;\n      }\n    </style>\n  </defs>\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n      <rect class=\"cls-3\" x=\".9\" y=\".9\" width=\"46\" height=\"46\" rx=\"4.5\" ry=\"4.5\"/>\n      <path class=\"cls-4\" d=\"M5.88,1.21h12.03v17.01H.9V6.19C.9,3.44,3.13,1.21,5.88,1.21Z\"/>\n      <text class=\"cls-2\" transform=\"translate(6.58 13.87)\"><tspan x=\"0\" y=\"0\">∑</tspan></text>\n      <path class=\"cls-1\" d=\"M5.1,34.85l2.07-3.33-1.94-3.05h1.65l.73,1.21c.1.17.2.35.3.54.1.19.2.37.3.54h.05c.08-.17.16-.35.25-.54.09-.19.17-.37.25-.54l.62-1.21h1.58l-1.93,3.22,2.07,3.16h-1.65l-.8-1.26c-.11-.19-.21-.38-.33-.57-.11-.19-.22-.38-.34-.56h-.05c-.09.18-.18.37-.28.55-.1.19-.19.38-.29.58l-.69,1.26h-1.59Z\"/>\n      <g>\n        <path class=\"cls-1\" d=\"M22.99,13.76v-5.87h2c.43,0,.82.06,1.16.18.35.12.63.31.83.59.21.28.31.65.31,1.12s-.1.83-.31,1.12c-.21.29-.48.51-.83.65-.35.14-.72.21-1.13.21h-.72v1.99h-1.31ZM24.3,10.72h.64c.71,0,1.07-.31,1.07-.94,0-.31-.1-.52-.29-.65-.19-.13-.46-.19-.82-.19h-.61v1.77Z\"/>\n        <path class=\"cls-1\" d=\"M27.12,13.76l1.82-5.87h1.58l1.82,5.87h-1.39l-.36-1.4h-1.78l-.36,1.4h-1.34ZM29.23,10.79l-.14.54h1.24l-.13-.54c-.08-.29-.16-.61-.24-.94-.08-.33-.16-.65-.24-.95h-.04c-.07.31-.14.63-.22.96-.07.33-.15.64-.24.93Z\"/>\n        <path class=\"cls-1\" d=\"M32.98,13.76v-5.87h2.1c.41,0,.79.06,1.12.17.34.11.61.3.81.56.2.26.3.63.3,1.1,0,.43-.09.79-.28,1.07-.19.28-.44.49-.75.63l1.32,2.35h-1.47l-1.12-2.12h-.72v2.12h-1.31ZM34.29,10.59h.68c.34,0,.61-.07.79-.22.18-.15.27-.36.27-.65s-.09-.49-.27-.6c-.18-.11-.44-.17-.79-.17h-.68v1.65Z\"/>\n        <path class=\"cls-1\" d=\"M40.1,13.87c-.38,0-.76-.07-1.14-.22-.38-.14-.72-.35-1.01-.63l.75-.91c.21.18.44.33.7.44.26.11.5.17.74.17.27,0,.48-.05.61-.15s.2-.24.2-.41c0-.19-.08-.32-.23-.41-.15-.09-.36-.18-.61-.29l-.76-.32c-.2-.08-.38-.2-.56-.34-.18-.14-.32-.32-.44-.53-.11-.21-.17-.46-.17-.74,0-.32.09-.62.26-.88.18-.26.42-.47.73-.63.31-.16.67-.23,1.08-.23.33,0,.67.07,1,.2.33.13.62.32.87.58l-.67.84c-.19-.15-.38-.27-.57-.35s-.4-.12-.63-.12-.41.05-.54.14c-.13.09-.2.22-.2.39,0,.18.08.31.25.4.17.09.38.19.63.29l.75.31c.35.14.63.34.84.59.21.25.31.58.31,1,0,.32-.09.62-.26.9-.17.28-.42.5-.75.67-.33.17-.72.25-1.19.25Z\"/>\n      </g>\n      <path class=\"cls-1\" d=\"M37.69,36.08c-.18,0-.33-.01-.47-.04-.13-.03-.26-.06-.38-.09l.28-1.17c.06.02.13.04.22.06.08.02.17.03.25.03.35,0,.62-.1.83-.31s.37-.47.47-.79l.12-.4-2.56-6.3h1.55l1.13,3.13c.1.28.19.57.29.88.09.31.19.61.29.92h.05c.08-.29.16-.6.25-.9.08-.31.17-.6.25-.89l.98-3.13h1.47l-2.36,6.67c-.27.72-.61,1.29-1,1.71-.39.42-.94.63-1.65.63Z\"/>\n      <rect class=\"cls-5\" x=\"14.51\" y=\"23.26\" width=\"18.78\" height=\"18.78\"/>\n    </g>\n  </g>\n</svg>"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "output-output_values",
+        "classId": "frog.widgets.array_indicator",
+        "role": "indicator",
+        "valueType": "frog.array<f64,rank=1>",
+        "label": "output-output_values",
+        "bounds": {
+          "x": 30,
+          "y": 40,
+          "width": 182,
+          "height": 112
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "dimensions.rank": 1,
+          "dimensions.shape": [0],
+          "dimensions.allow_resize": true,
+          "viewport.first_indices": [0],
+          "viewport.visible_counts": [1],
+          "viewport.orientation": "vertical",
+          "viewport.scrollbar_gap": 6,
+          "index_display.visible": true,
+          "index_display.layout.box_width": 54,
+          "index_display.layout.box_height": 30,
+          "index_display.layout.gap": 4,
+          "index_display.layout.step_width": 16,
+          "style.index_display.step_gap": 2,
+          "style.index_display.value_gap": 4,
+          "style.index_display.container_padding": "4px",
+          "style.index_display.container_border_width": "1px",
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": false,
+          "element.cell_width": 96,
+          "element.cell_height": 32,
+          "element.gap": 0,
+          "element.class_id": "frog.widgets.numeric_indicator",
+          "element.value_type": "f64",
+          "element.role": "indicator",
+          "element.icon": false
+,
+          "element.template":           {
+            "id": "output-output_values.element",
+            "classId": "frog.widgets.numeric_indicator",
+            "role": "indicator",
+            "valueType": "f64",
+            "label": "Numeric Indicator",
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 96,
+              "height": 32
+            },
+            "props": {
+              "layout.aura_band_px": 4,
+              "label.visible": false,
+              "data_type.representation": "f64",
+              "data_type.named_numeric_size": "Float64",
+              "representation.kind": "float64",
+              "data_entry.use_type_defaults": true
+            },
+            "runtime": {
+              "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+              "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+              "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+              "asset": "asset:numeric_rectangular_svg",
+              "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+            },
+            "state": {
+              "value": 0
+            },
+            "typography": {
+              "inheritanceVersion": 1
+            }
+          }
+
+        },
+        "runtime": {
+          "sourceExample": "Examples/26_array_numeric_selection_roundtrip/main.frog",
+          "wfrog": "Examples/26_array_numeric_selection_roundtrip/ui/array_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/array.default.wfrog",
+          "asset": "asset:array_shell_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "output-error",
+        "classId": "frog.widgets.cluster_indicator",
+        "role": "indicator",
+        "valueType": "cluster:bool|i32|string",
+        "label": "output-error",
+        "bounds": {
+          "x": 30,
+          "y": 150,
+          "width": 168,
+          "height": 112
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "cluster.padding": 8,
+          "cluster.next_field_serial": "3",
+          "cluster.auto_sizing": "none",
+          "cluster.elements": [
+            {
+              "field_id": "status",
+              "technical_name": "status",
+              "logical_order": 0,
+              "widget":               {
+                "id": "output-error.field.0",
+                "classId": "frog.widgets.boolean_indicator",
+                "role": "indicator",
+                "valueType": "bool",
+                "label": "status",
+                "bounds": {
+                  "x": 8,
+                  "y": 8,
+                  "width": 46.2,
+                  "height": 46.2
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "state_text.visible": false
+                },
+                "runtime": {
+                  "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+                  "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+                  "asset": "asset:boolean_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+                },
+                "state": {
+                  "value": false
+                },
+                "typography": {
+                  "inheritanceVersion": 1,
+                  "stateTextFontFamily": "",
+                  "stateTextStyle": "plain"
+                }
+              }
+            },
+            {
+              "field_id": "code",
+              "technical_name": "code",
+              "logical_order": 1,
+              "widget":               {
+                "id": "output-error.field.1",
+                "classId": "frog.widgets.numeric_indicator",
+                "role": "indicator",
+                "valueType": "i32",
+                "label": "code",
+                "bounds": {
+                  "x": 8,
+                  "y": 53,
+                  "width": 96,
+                  "height": 32
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "data_type.representation": "i32",
+                  "data_type.named_numeric_size": "Int32",
+                  "representation.kind": "int32",
+                  "data_entry.use_type_defaults": true
+                },
+                "runtime": {
+                  "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+                  "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+                  "asset": "asset:numeric_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+                },
+                "state": {
+                  "value": 0
+                },
+                "typography": {
+                  "inheritanceVersion": 1
+                }
+              }
+            },
+            {
+              "field_id": "source",
+              "technical_name": "source",
+              "logical_order": 2,
+              "widget":               {
+                "id": "output-error.field.2",
+                "classId": "frog.widgets.string_indicator",
+                "role": "indicator",
+                "valueType": "string",
+                "label": "source",
+                "bounds": {
+                  "x": 8,
+                  "y": 98,
+                  "width": 120,
+                  "height": 32
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "text.value": "",
+                  "display.string.style": "normal",
+                  "text.horizontal_alignment": "left",
+                  "display.string.style_selector_visible": false,
+                  "interaction.text.single_line": true,
+                  "interaction.text.wrap_at_word_breaks": true,
+                  "interaction.text.update_while_typing": true,
+                  "display.vertical_scrollbar_visible": false,
+                  "display.horizontal_scrollbar_visible": false,
+                  "layout.size_to_text": false
+                },
+                "runtime": {
+                  "sourceExample": "Examples/07_string_value_roundtrip/main.frog",
+                  "wfrog": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/string.default.wfrog",
+                  "asset": "asset:string_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg"
+                },
+                "typography": {
+                  "inheritanceVersion": 1
+                }
+              }
+            }
+          ]
+        },
+        "runtime": {
+          "sourceExample": "Examples/44_cluster_widget_roundtrip/main.frog",
+          "wfrog": "Examples/44_cluster_widget_roundtrip/ui/cluster_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/cluster.default.wfrog",
+          "asset": "asset:cluster_shell_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/cluster/templates/cluster_shell.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 60,
+      "y": -40
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.math.formula.parsed_node",
+        "label": "Eval Parsed Formula Node",
+        "label_visible": true,
+        "palette_catalog_id": "math.formula.parsed_node",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 450,
+          "y": 160,
+          "width": 64,
+          "height": 64
+        }
+      },
+      {
+        "id": "input-input_values",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_array_constant",
+        "value_type": "f64",
+        "label": "input-input_values",
+        "label_visible": true,
+        "array_element_template": "{\n  \"id\": \"input-input_values-element\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"f64\",\n  \"label\": \"Numeric Control\",\n  \"bounds\": {\n    \"x\": 20,\n    \"y\": 20,\n    \"width\": 96,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+        "array_element_icon": false,
+        "palette_catalog_id": "array.constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "array_constant": {
+          "rank": 1,
+          "shape": [3],
+          "first_indices": [0],
+          "visible_counts": [3],
+          "one_dimensional_vertical": false,
+          "cell_size": {
+            "width": 48,
+            "element_gap": 0,
+            "height": 20
+          },
+          "values": ["3", "4", "5"],
+          "element_label_visible": false
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 185,
+          "width": 190,
+          "height": 110
+        }
+      },
+      {
+        "id": "output-output_values-terminal",
+        "kind": "widget_value",
+        "type": "array:f64",
+        "widget": "output-output_values",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "output-error-terminal",
+        "kind": "widget_value",
+        "type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+        "widget": "output-error",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 240,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "input-parsed_node",
+        "kind": "primitive",
+        "type": "frog.studio.cluster.constant",
+        "label": "input-parsed_node",
+        "label_visible": true,
+        "palette_catalog_id": "cluster.constant",
+        "cluster_constant_collapsed": true,
+        "cluster_constant_autosizing": "none",
+        "cluster_expanded_width": 180,
+        "cluster_expanded_height": 110,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 440,
+          "width": 190,
+          "height": 60
+        }
+      },
+      {
+        "id": "input-parsed_node-format_version",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "u32",
+        "label": "format_version",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "constant_owner_node_id": "input-parsed_node",
+        "constant_field_id": "format_version",
+        "constant_field_order": 0,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "1",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 525,
+          "width": 190,
+          "height": 32
+        }
+      },
+      {
+        "id": "input-parsed_node-node_program",
+        "kind": "primitive",
+        "type": "frog.studio.string.constant",
+        "value_type": "string",
+        "label": "node_program",
+        "label_visible": true,
+        "palette_catalog_id": "string.constant",
+        "constant_owner_node_id": "input-parsed_node",
+        "constant_field_id": "node_program",
+        "constant_field_order": 1,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "text": "16\nFROG_MATH_NODE_1\n3\n1\nx\n1\nz\n1\nq\n2\n1\np\n1\ny\n2\n1\ny\n102\n22\nFROG_MATH_EXPRESSION_1\n1\n3\n1\nx\n1\nz\n1\nq\n5\n0\n0\n0\n4611686018427387904\n1\n0\n0\n0\n4\n0\n1\n0\n1\n1\n0\n0\n2\n2\n3\n0\n\n1\np\n90\n22\nFROG_MATH_EXPRESSION_1\n1\n4\n1\nx\n1\nz\n1\nq\n1\ny\n3\n1\n2\n0\n0\n0\n0\n0\n4611686018427387904\n6\n0\n1\n0\n\n",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 610,
+          "width": 190,
+          "height": 32
+        }
+      },
+      {
+        "id": "input-parsed_node-input_names",
+        "kind": "primitive",
+        "type": "frog.studio.string.string_array_constant",
+        "value_type": "string",
+        "label": "input_names",
+        "label_visible": true,
+        "array_element_template": "{\n  \"id\": \"input-parsed_node-input_names-element\",\n  \"classId\": \"frog.widgets.string_control\",\n  \"role\": \"control\",\n  \"valueType\": \"string\",\n  \"label\": \"String Control\",\n  \"bounds\": {\n    \"x\": 20,\n    \"y\": 20,\n    \"width\": 120,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"text.value\": \"\",\n    \"display.string.style\": \"normal\",\n    \"text.horizontal_alignment\": \"left\",\n    \"display.string.style_selector_visible\": false,\n    \"interaction.text.single_line\": true,\n    \"interaction.text.wrap_at_word_breaks\": true,\n    \"interaction.text.update_while_typing\": true,\n    \"display.vertical_scrollbar_visible\": false,\n    \"display.horizontal_scrollbar_visible\": false,\n    \"layout.size_to_text\": false\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/07_string_value_roundtrip/main.frog\",\n    \"wfrog\": \"Examples/07_string_value_roundtrip/ui/string_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/string.default.wfrog\",\n    \"asset\": \"asset:string_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg\"\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+        "array_element_icon": false,
+        "palette_catalog_id": "array.constant",
+        "constant_owner_node_id": "input-parsed_node",
+        "constant_field_id": "input_names",
+        "constant_field_order": 2,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "array_constant": {
+          "rank": 1,
+          "shape": [3],
+          "first_indices": [0],
+          "visible_counts": [3],
+          "one_dimensional_vertical": false,
+          "cell_size": {
+            "width": 48,
+            "element_gap": 0,
+            "height": 20
+          },
+          "values": ["x", "z", "q"],
+          "element_label_visible": false
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 695,
+          "width": 190,
+          "height": 110
+        }
+      },
+      {
+        "id": "input-parsed_node-output_names",
+        "kind": "primitive",
+        "type": "frog.studio.string.string_array_constant",
+        "value_type": "string",
+        "label": "output_names",
+        "label_visible": true,
+        "array_element_template": "{\n  \"id\": \"input-parsed_node-output_names-element\",\n  \"classId\": \"frog.widgets.string_control\",\n  \"role\": \"control\",\n  \"valueType\": \"string\",\n  \"label\": \"String Control\",\n  \"bounds\": {\n    \"x\": 20,\n    \"y\": 20,\n    \"width\": 120,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"text.value\": \"\",\n    \"display.string.style\": \"normal\",\n    \"text.horizontal_alignment\": \"left\",\n    \"display.string.style_selector_visible\": false,\n    \"interaction.text.single_line\": true,\n    \"interaction.text.wrap_at_word_breaks\": true,\n    \"interaction.text.update_while_typing\": true,\n    \"display.vertical_scrollbar_visible\": false,\n    \"display.horizontal_scrollbar_visible\": false,\n    \"layout.size_to_text\": false\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/07_string_value_roundtrip/main.frog\",\n    \"wfrog\": \"Examples/07_string_value_roundtrip/ui/string_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/string.default.wfrog\",\n    \"asset\": \"asset:string_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg\"\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+        "array_element_icon": false,
+        "palette_catalog_id": "array.constant",
+        "constant_owner_node_id": "input-parsed_node",
+        "constant_field_id": "output_names",
+        "constant_field_order": 3,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "array_constant": {
+          "rank": 1,
+          "shape": [2],
+          "first_indices": [0],
+          "visible_counts": [3],
+          "one_dimensional_vertical": false,
+          "cell_size": {
+            "width": 48,
+            "element_gap": 0,
+            "height": 20
+          },
+          "values": ["p", "y"],
+          "element_label_visible": false
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 780,
+          "width": 190,
+          "height": 110
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Evaluate a persisted prepared assignment program\nThe real authoring producer stores named inputs [x,z,q] and outputs [p,y] with its AST. Values [3,4,5] produce [25,10] without reparsing the original source text at execution.\nEntrées -> opération -> indicateurs. Résultat attendu : output-output_values (array<f64>) = [25,10]\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": -20,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "input-input_values",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "input_values"
+        }
+      },
+      {
+        "id": "wire-1",
+        "from": {
+          "node": "operation",
+          "port": "output_values"
+        },
+        "to": {
+          "node": "output-output_values-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "wire-2",
+        "from": {
+          "node": "operation",
+          "port": "error_out"
+        },
+        "to": {
+          "node": "output-error-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "wire-3",
+        "from": {
+          "node": "input-parsed_node",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "parsed_node"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

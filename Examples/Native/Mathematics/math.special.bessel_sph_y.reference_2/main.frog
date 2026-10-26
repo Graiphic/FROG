@@ -1,0 +1,355 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Bessel y — reference 2",
+  "metadata": {
+    "name": "Bessel y — reference 2",
+    "name_source": "document",
+    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : x (f64) = 1.0; n (i32) = -1.\nRésultats attendus : value (f64) = 0.8414709848078965.\n\nSpherical Bessel function of the second kind, signed integer order n; y_0(r)=-cos(r)/r.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-value (f64) = 0.8414709848078965\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["numeric-math", "typed-values", "independent-oracle", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 47.8\">\n  <defs>\n    <style>\n      .cls-1 {\n        fill: #00bc85;\n      }\n\n      .cls-2 {\n        fill: #fff;\n      }\n\n      .cls-3 {\n        fill: #4b5563;\n      }\n\n      .cls-4 {\n        fill: #f8fafc;\n        stroke: #00bc85;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: 1.8px;\n      }\n    </style>\n  </defs>\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n      <g>\n        <rect class=\"cls-4\" x=\".9\" y=\".9\" width=\"46\" height=\"46\" rx=\"4.5\" ry=\"4.5\"/>\n        <path class=\"cls-1\" d=\"M5.4.51h37c2.48,0,4.5,2.02,4.5,4.5v9.9H.9V5.01C.9,2.52,2.92.51,5.4.51Z\"/>\n        <g>\n          <path class=\"cls-2\" d=\"M14.79,13.74V5.35c0-.42.05-.81.16-1.17.11-.36.27-.67.49-.94.22-.27.5-.48.84-.63.33-.15.73-.23,1.19-.23.33,0,.65.04.96.13.31.09.58.23.82.41.24.19.43.42.58.7.14.28.22.61.22,1,0,.86-.41,1.53-1.22,2v.05c.28.05.53.14.77.27.23.13.44.3.61.49.17.2.31.43.4.69.09.26.14.55.14.86,0,.44-.07.82-.22,1.15-.14.33-.33.6-.56.82s-.5.38-.8.49-.61.16-.92.16c-.35,0-.71-.06-1.06-.19-.35-.13-.69-.36-1-.7.02.51.03,1.01.05,1.5.02.49.03.99.05,1.5h-1.48ZM17.85,10.43c.2,0,.39-.03.56-.1.17-.07.33-.17.46-.29.14-.13.24-.29.32-.48.08-.19.11-.41.11-.67,0-.41-.12-.75-.35-1.03-.24-.28-.6-.42-1.08-.42-.2,0-.39.03-.57.08l-.19-1.09c.28-.05.51-.13.7-.24.19-.11.35-.24.47-.39.12-.15.21-.32.26-.49.05-.18.08-.36.08-.56,0-.41-.11-.71-.34-.91-.23-.2-.49-.3-.8-.3-.4,0-.7.17-.92.51-.22.34-.33.84-.35,1.5-.02.68-.03,1.34-.04,2,0,.66-.01,1.33-.01,2.02.27.35.55.58.84.69s.57.17.84.17Z\"/>\n          <path class=\"cls-2\" d=\"M32.92,3.07h-6.27v.6l1.06.12c.02,1.07.03,2.15.03,3.22v.65c0,1,0,2.06-.03,3.12l-1.06.12v.6h3.91v-.6l-1.16-.13c-.02-1.07-.03-2.13-.03-3.11v-.65c0-1.1,0-2.19.03-3.25h2.36l.03.02h.02s.31,1.83.31,1.83h.88l-.09-2.52Z\"/>\n        </g>\n        <g>\n          <path class=\"cls-1\" d=\"M9.41,34h2.35c1.52,0,2.63.45,2.63,1.77,0,.68-.38,1.34-1.02,1.56v.04c.81.18,1.41.74,1.41,1.71,0,1.44-1.2,2.11-2.82,2.11h-2.54v-7.19ZM11.65,36.97c1.02,0,1.46-.4,1.46-1.01,0-.7-.48-.97-1.44-.97h-.96v1.98h.93ZM11.82,40.21c1.08,0,1.69-.38,1.69-1.19,0-.76-.58-1.09-1.69-1.09h-1.1v2.28h1.1Z\"/>\n          <path class=\"cls-1\" d=\"M15.65,38.5c0-1.76,1.25-2.84,2.54-2.84,1.5,0,2.28,1.06,2.28,2.56,0,.24-.02.48-.06.62h-3.51c.11.96.74,1.51,1.63,1.51.47,0,.88-.14,1.28-.4l.44.79c-.53.34-1.19.58-1.89.58-1.53,0-2.72-1.04-2.72-2.83ZM19.35,37.99c0-.84-.37-1.34-1.12-1.34-.65,0-1.21.47-1.33,1.34h2.45Z\"/>\n          <path class=\"cls-1\" d=\"M21.16,40.58l.61-.81c.5.37.97.6,1.53.6.6,0,.88-.27.88-.65,0-.45-.6-.65-1.18-.87-.73-.26-1.55-.67-1.55-1.57,0-.95.78-1.62,2.01-1.62.76,0,1.38.31,1.83.65l-.6.77c-.38-.27-.78-.46-1.21-.46-.55,0-.81.25-.81.59,0,.43.55.59,1.15.8.75.28,1.59.63,1.59,1.64,0,.92-.75,1.67-2.15,1.67-.75,0-1.55-.32-2.09-.75Z\"/>\n          <path class=\"cls-1\" d=\"M26,40.58l.61-.81c.5.37.97.6,1.53.6.6,0,.88-.27.88-.65,0-.45-.6-.65-1.18-.87-.73-.26-1.55-.67-1.55-1.57,0-.95.78-1.62,2.01-1.62.76,0,1.38.31,1.83.65l-.6.77c-.38-.27-.78-.46-1.21-.46-.55,0-.81.25-.81.59,0,.43.55.59,1.15.8.75.28,1.59.63,1.59,1.64,0,.92-.75,1.67-2.15,1.67-.75,0-1.55-.32-2.09-.75Z\"/>\n          <path class=\"cls-1\" d=\"M31.04,38.5c0-1.76,1.25-2.84,2.54-2.84,1.5,0,2.28,1.06,2.28,2.56,0,.24-.02.48-.06.62h-3.51c.11.96.74,1.51,1.63,1.51.47,0,.88-.14,1.28-.4l.44.79c-.53.34-1.19.58-1.89.58-1.53,0-2.72-1.04-2.72-2.83ZM34.74,37.99c0-.84-.37-1.34-1.12-1.34-.65,0-1.21.47-1.33,1.34h2.45Z\"/>\n          <path class=\"cls-1\" d=\"M37.1,39.81v-6.38h1.29v6.45c0,.31.15.42.28.42.06,0,.1,0,.2-.02l.17.95c-.16.07-.38.11-.69.11-.92,0-1.26-.58-1.26-1.52Z\"/>\n        </g>\n      </g>\n      <g>\n        <path class=\"cls-3\" d=\"M12.46,30.23l.24-.99c.1.03.26.08.39.08.58,0,.92-.39,1.1-.92l.1-.34-2.17-5.34h1.32l.96,2.65c.16.47.31,1.01.48,1.52h.04c.14-.49.28-1.03.42-1.52l.83-2.65h1.25l-2,5.64c-.46,1.22-1.03,1.98-2.24,1.98-.3,0-.52-.04-.72-.11Z\"/>\n        <path class=\"cls-3\" d=\"M18.38,22.71h1.07l.09.73h.05c.49-.47,1.06-.86,1.81-.86,1.18,0,1.7.78,1.7,2.15v3.39h-1.29v-3.22c0-.89-.26-1.22-.87-1.22-.48,0-.8.23-1.26.67v3.77h-1.29v-5.4Z\"/>\n        <path class=\"cls-3\" d=\"M24.71,25.06c0-1.94.55-3.52,1.48-5.02l.81.35c-.84,1.41-1.24,3.05-1.24,4.66s.39,3.26,1.24,4.67l-.81.35c-.93-1.5-1.48-3.08-1.48-5.02Z\"/>\n        <path class=\"cls-3\" d=\"M29.4,25.3l-1.64-2.59h1.39l.62,1.02c.16.3.34.62.51.91h.04c.13-.3.29-.62.43-.91l.53-1.02h1.34l-1.63,2.73,1.75,2.67h-1.39l-.67-1.07c-.18-.32-.37-.65-.56-.96h-.04c-.16.31-.33.63-.48.96l-.58,1.07h-1.35l1.75-2.82Z\"/>\n        <path class=\"cls-3\" d=\"M33.38,29.72c.84-1.41,1.24-3.05,1.24-4.67s-.39-3.26-1.24-4.66l.81-.35c.93,1.5,1.48,3.08,1.48,5.02s-.55,3.52-1.48,5.02l-.81-.35Z\"/>\n      </g>\n    </g>\n  </g>\n</svg>"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "input-x",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "f64",
+        "label": "input-x",
+        "bounds": {
+          "x": 36,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-x\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"f64\",\n  \"label\": \"input-x\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 1\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 1
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "input-n",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "i32",
+        "label": "input-n",
+        "bounds": {
+          "x": 36,
+          "y": 140,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-n\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"i32\",\n  \"label\": \"input-n\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 140,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"i32\",\n    \"data_type.named_numeric_size\": \"Int32\",\n    \"representation.kind\": \"int32\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": -1\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": -1
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "output-value",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "f64",
+        "label": "output-value",
+        "bounds": {
+          "x": 420,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"output-value\",\n  \"classId\": \"frog.widgets.numeric_indicator\",\n  \"role\": \"indicator\",\n  \"valueType\": \"f64\",\n  \"label\": \"output-value\",\n  \"bounds\": {\n    \"x\": 420,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 22,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.math.special.bessel_sph_y",
+        "label": "",
+        "label_visible": true,
+        "palette_catalog_id": "math.special.bessel_sph_y",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 270,
+          "y": 120,
+          "width": 56,
+          "height": 56
+        }
+      },
+      {
+        "id": "input-x-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "input-x",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "input-n-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "input-n",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 152,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "output-value-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "output-value",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 460,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Bessel y — reference 2\nSpherical Bessel function of the second kind, signed integer order n; y_0(r)=-cos(r)/r.\nEntrées -> opération -> indicateurs. Résultat attendu : output-value (f64) = 0.8414709848078965\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "input-x-wire",
+        "from": {
+          "node": "input-x-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "x"
+        }
+      },
+      {
+        "id": "input-n-wire",
+        "from": {
+          "node": "input-n-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "n"
+        }
+      },
+      {
+        "id": "output-value-wire",
+        "from": {
+          "node": "operation",
+          "port": "value"
+        },
+        "to": {
+          "node": "output-value-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

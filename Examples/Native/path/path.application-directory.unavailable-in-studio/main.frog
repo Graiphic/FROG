@@ -1,0 +1,203 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Application Directory requires a compiled application",
+  "metadata": {
+    "name": "Application Directory requires a compiled application",
+    "name_source": "document",
+    "description": "When this program runs inside Studio it has no compiled application executable. The native provider reports its precise unavailable-context diagnostic; it must not invent the Studio or current working directory.\n\nWhen this program runs inside Studio it has no compiled application executable. The native provider reports its precise unavailable-context diagnostic; it must not invent the Studio or current working directory.\n\nMode: expected-diagnostic. Profile: studio-draft. Capability: frog.studio.context-path@1.\nExpected:\nDiagnostic: native.path.application_directory_unavailable",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["typed", "deterministic", "path", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg data-frog-element-standard=\"numeric-constant\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewBox=\"0 0 48 48\">\n  <!-- Generator: Adobe Illustrator 30.7.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 114)  -->\n  <defs>\n    <style>\n      .st0 {\n        fill: #fafafa;\n        stroke-width: 1.5px;\n      }\n\n      .st0, .st1 {\n        stroke: #008ea3;\n      }\n\n      .st2 {\n        fill: #008ea3;\n      }\n\n      .st1 {\n        fill: none;\n        stroke-linecap: square;\n        stroke-width: .75px;\n      }\n    </style>\n  </defs>\n  <g id=\"Calque_1\" data-frog-canvas=\"48-square\" shape-rendering=\"geometricPrecision\">\n    <rect class=\"st0\" x=\"2\" y=\"14.8\" width=\"44\" height=\"18.4\"/>\n    <g>\n      <polygon class=\"st2\" points=\"10.51 24.01 10.14 24.29 12.17 26.69 12.54 26.42 10.51 24.01\"/>\n      <polygon class=\"st2\" points=\"8.5 24.01 8.87 24.29 6.84 26.69 6.47 26.42 8.5 24.01\"/>\n      <rect class=\"st1\" x=\"8.74\" y=\"22.66\" width=\"1.47\" height=\"1.65\" transform=\"translate(-14.01 32.95) rotate(-90)\"/>\n      <rect class=\"st1\" x=\"5.23\" y=\"26.3\" width=\"1.47\" height=\"1.65\" transform=\"translate(-21.16 33.09) rotate(-90)\"/>\n      <rect class=\"st1\" x=\"12.38\" y=\"26.3\" width=\"1.47\" height=\"1.65\" transform=\"translate(-14.01 40.24) rotate(-90)\"/>\n    </g>\n  </g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "result",
+        "classId": "frog.widgets.path_indicator",
+        "role": "indicator",
+        "valueType": "path",
+        "label": "result",
+        "bounds": {
+          "x": 30,
+          "y": 40,
+          "width": 320,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "text.value": "",
+          "display.path.scrollbar_visible": false,
+          "display.path.overflow": "clip",
+          "layout.size_to_text": false,
+          "interaction.path.prompt": "",
+          "interaction.path.pattern_label": "",
+          "interaction.path.pattern": "*.*",
+          "interaction.path.selection_mode": "files",
+          "interaction.path.existence_mode": "existing",
+          "interaction.path.start_path": ""
+        },
+        "runtime": {
+          "sourceExample": "Examples/09_path_value_roundtrip/main.frog",
+          "wfrog": "Examples/09_path_value_roundtrip/ui/path_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/path.default.wfrog",
+          "asset": "asset:path_rectangular_field_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/path/templates/path_rectangular_field.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 340,
+      "y": -40
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.path.application_directory",
+        "label": "Application Directory",
+        "label_visible": true,
+        "palette_catalog_id": "path.application_directory",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": 180,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "result-terminal",
+        "kind": "widget_value",
+        "type": "path",
+        "widget": "result",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Application Directory requires a compiled application\nWhen this program runs inside Studio it has no compiled application executable. The native provider reports its precise unavailable-context diagnostic; it must not invent the Studio or current working directory.\nEntrées -> opération -> indicateurs. Résultat attendu : Diagnostic: native.path.application_directory_unavailable",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": -20,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "operation",
+          "port": "result"
+        },
+        "to": {
+          "node": "result-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

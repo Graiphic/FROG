@@ -1,0 +1,355 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "GammaC — reference 2",
+  "metadata": {
+    "name": "GammaC — reference 2",
+    "name_source": "document",
+    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : x (f64) = 0.1; a (f64) = 1.0.\nRésultats attendus : value (f64) = 0.024127343726327778.\n\nRegularized upper Gamma Q(shape=abs(x),limit=a).\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-value (f64) = 0.024127343726327778\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["numeric-math", "typed-values", "independent-oracle", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 47.8\">\n  <defs>\n    <style>\n      .cls-1 {\n        fill: #00bc85;\n      }\n\n      .cls-2 {\n        fill: #fff;\n      }\n\n      .cls-3 {\n        fill: #4b5563;\n      }\n\n      .cls-4 {\n        fill: #f8fafc;\n        stroke: #00bc85;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: 1.8px;\n      }\n    </style>\n  </defs>\n  <g id=\"Fonction_gamma_et_beta\" data-name=\"Fonction gamma et beta\">\n    <g>\n      <g>\n        <rect class=\"cls-4\" x=\".9\" y=\".9\" width=\"46\" height=\"46\" rx=\"4.5\" ry=\"4.5\"/>\n        <path class=\"cls-1\" d=\"M5.4.51h37c2.48,0,4.5,2.02,4.5,4.5v9.9H.9V5.01C.9,2.52,2.92.51,5.4.51Z\"/>\n        <g>\n          <path class=\"cls-2\" d=\"M14.28,13.74V5.35c0-.42.05-.81.16-1.17.11-.36.27-.67.49-.94.22-.27.5-.48.84-.63.33-.15.73-.23,1.19-.23.33,0,.65.04.96.13.31.09.58.23.82.41.24.19.43.42.58.7.14.28.22.61.22,1,0,.86-.41,1.53-1.22,2v.05c.28.05.53.14.77.27.23.13.44.3.61.49.17.2.31.43.4.69.09.26.14.55.14.86,0,.44-.07.82-.22,1.15-.14.33-.33.6-.56.82s-.5.38-.8.49-.61.16-.92.16c-.35,0-.71-.06-1.06-.19-.35-.13-.69-.36-1-.7.02.51.03,1.01.05,1.5.02.49.03.99.05,1.5h-1.48ZM17.33,10.43c.2,0,.39-.03.56-.1.17-.07.33-.17.46-.29.14-.13.24-.29.32-.48.08-.19.11-.41.11-.67,0-.41-.12-.75-.35-1.03-.24-.28-.6-.42-1.08-.42-.2,0-.39.03-.57.08l-.19-1.09c.28-.05.51-.13.7-.24.19-.11.35-.24.47-.39.12-.15.21-.32.26-.49.05-.18.08-.36.08-.56,0-.41-.11-.71-.34-.91-.23-.2-.49-.3-.8-.3-.4,0-.7.17-.92.51-.22.34-.33.84-.35,1.5-.02.68-.03,1.34-.04,2,0,.66-.01,1.33-.01,2.02.27.35.55.58.84.69s.57.17.84.17Z\"/>\n          <path class=\"cls-2\" d=\"M32.41,3.07h-6.27v.6l1.06.12c.02,1.07.03,2.15.03,3.22v.65c0,1,0,2.06-.03,3.12l-1.06.12v.6h3.91v-.6l-1.16-.13c-.02-1.07-.03-2.13-.03-3.11v-.65c0-1.1,0-2.19.03-3.25h2.36l.03.02h.02s.31,1.83.31,1.83h.88l-.09-2.52Z\"/>\n        </g>\n        <g>\n          <path class=\"cls-1\" d=\"M21.7,32.93c0-1.93,1.23-3.07,2.75-3.07.75,0,1.36.35,1.74.75l-.57.68c-.31-.31-.67-.51-1.14-.51-.98,0-1.68.81-1.68,2.13s.64,2.15,1.66,2.15c.53,0,.95-.24,1.29-.6l.57.66c-.49.55-1.12.85-1.9.85-1.52,0-2.71-1.08-2.71-3.03Z\"/>\n          <path class=\"cls-1\" d=\"M7.31,39.61c0-2.14,1.38-3.41,3.16-3.41.95,0,1.61.41,2.02.83l-.63.75c-.34-.32-.73-.57-1.35-.57-1.19,0-1.98.9-1.98,2.37s.71,2.39,2.04,2.39c.38,0,.75-.1.96-.29v-1.41h-1.27v-.95h2.33v2.88c-.45.44-1.23.78-2.14.78-1.81,0-3.15-1.2-3.15-3.37Z\"/>\n          <path class=\"cls-1\" d=\"M13.7,41.54c0-1.05.89-1.6,2.95-1.82-.02-.52-.24-.96-.92-.96-.49,0-.96.22-1.41.48l-.43-.77c.55-.34,1.27-.64,2.06-.64,1.25,0,1.87.75,1.87,2.12v2.91h-.97l-.08-.54h-.04c-.45.37-.96.66-1.55.66-.88,0-1.48-.58-1.48-1.44ZM16.66,41.54v-1.1c-1.37.17-1.82.52-1.82,1.01,0,.44.31.63.73.63s.72-.2,1.09-.54Z\"/>\n          <path class=\"cls-1\" d=\"M19.24,37.95h.97l.08.67h.04c.42-.44.91-.79,1.53-.79.74,0,1.16.33,1.39.88.48-.5.98-.88,1.62-.88,1.06,0,1.55.71,1.55,1.95v3.08h-1.19v-2.93c0-.81-.25-1.11-.77-1.11-.32,0-.67.2-1.05.61v3.43h-1.18v-2.93c0-.81-.25-1.11-.78-1.11-.31,0-.66.2-1.05.61v3.43h-1.18v-4.91Z\"/>\n          <path class=\"cls-1\" d=\"M27.85,37.95h.97l.08.67h.04c.42-.44.91-.79,1.53-.79.74,0,1.16.33,1.39.88.48-.5.98-.88,1.62-.88,1.06,0,1.55.71,1.55,1.95v3.08h-1.19v-2.93c0-.81-.25-1.11-.77-1.11-.32,0-.66.2-1.05.61v3.43h-1.18v-2.93c0-.81-.25-1.11-.78-1.11-.31,0-.67.2-1.05.61v3.43h-1.18v-4.91Z\"/>\n          <path class=\"cls-1\" d=\"M36.2,41.54c0-1.05.89-1.6,2.96-1.82-.02-.52-.24-.96-.92-.96-.49,0-.96.22-1.41.48l-.43-.77c.55-.34,1.27-.64,2.07-.64,1.25,0,1.87.75,1.87,2.12v2.91h-.97l-.08-.54h-.04c-.45.37-.96.66-1.55.66-.88,0-1.48-.58-1.48-1.44ZM39.16,41.54v-1.1c-1.37.17-1.82.52-1.82,1.01,0,.44.31.63.73.63s.71-.2,1.09-.54Z\"/>\n        </g>\n      </g>\n      <g>\n        <path class=\"cls-3\" d=\"M8.99,17.56h1.69v.68h-.15l-1.55-.17v-.52ZM8.99,24.34l1.55-.17h.37l1.55.17v.52h-3.47v-.52ZM9.96,21.53v-.57c0-1.13,0-2.28-.03-3.41h1.53c-.03,1.11-.03,2.26-.03,3.41v.56c0,1.05,0,2.19.03,3.33h-1.53c.03-1.11.03-2.26.03-3.32ZM10.69,17.56h3.87l.08,2.19h-.78l-.38-2.19.69.59h-3.48v-.59Z\"/>\n        <path class=\"cls-3\" d=\"M16.75,28.59c-.29,0-.56-.07-.79-.2-.23-.13-.42-.32-.56-.56-.14-.25-.21-.54-.21-.89s.07-.65.22-.89c.15-.25.35-.43.59-.56s.51-.2.8-.2c.21,0,.38.03.54.1.15.07.29.15.41.25l-.37.48c-.08-.07-.17-.13-.26-.17-.09-.04-.18-.06-.28-.06-.26,0-.47.1-.63.29-.16.19-.25.45-.25.76s.08.56.24.76c.16.19.37.29.62.29.13,0,.25-.03.36-.08.11-.05.21-.12.3-.19l.31.49c-.15.13-.31.22-.5.29-.18.06-.37.1-.55.1Z\"/>\n        <path class=\"cls-3\" d=\"M20.31,26.26c-.46-.63-.83-1.29-1.09-1.97-.26-.69-.39-1.43-.39-2.23s.13-1.55.39-2.24c.26-.69.62-1.34,1.09-1.96l.81.35c-.42.58-.73,1.2-.93,1.86-.2.66-.3,1.32-.3,1.99s.1,1.33.3,1.99c.2.66.51,1.28.93,1.86l-.81.35Z\"/>\n        <path class=\"cls-3\" d=\"M21.76,24.85l1.75-2.82-1.64-2.58h1.39l.62,1.02c.08.15.17.3.25.46s.17.31.25.46h.04c.07-.15.14-.3.21-.46.07-.16.15-.31.21-.46l.53-1.02h1.34l-1.63,2.73,1.75,2.67h-1.39l-.67-1.07c-.09-.16-.18-.32-.28-.48-.09-.16-.19-.32-.29-.47h-.04c-.07.15-.15.31-.24.47-.08.16-.17.32-.25.49l-.58,1.07h-1.35Z\"/>\n        <path class=\"cls-3\" d=\"M27.95,26.86l-.28-.69c.37-.14.65-.33.85-.57.2-.24.29-.49.29-.76h-.1c-.22,0-.41-.07-.58-.2-.17-.14-.25-.33-.25-.58,0-.23.09-.42.26-.57.17-.14.37-.21.61-.21.31,0,.54.11.71.34.17.23.25.55.25.96,0,.54-.15,1-.46,1.4-.31.4-.74.69-1.29.89Z\"/>\n        <path class=\"cls-3\" d=\"M32.39,24.99c-.48,0-.87-.15-1.17-.44-.3-.29-.46-.67-.46-1.14,0-.58.26-1.03.78-1.35.52-.32,1.34-.54,2.47-.65,0-.29-.08-.53-.23-.74s-.41-.31-.78-.31c-.27,0-.53.05-.79.15-.26.1-.51.23-.76.37l-.47-.85c.31-.19.65-.36,1.04-.5.39-.14.8-.21,1.23-.21.69,0,1.21.2,1.55.6.34.4.51.98.51,1.73v3.2h-1.07l-.09-.59h-.04c-.25.21-.51.38-.79.52-.28.14-.59.21-.92.21ZM32.8,24c.23,0,.43-.05.61-.16.18-.11.38-.25.59-.43v-1.21c-.75.1-1.27.24-1.56.42s-.44.42-.44.69c0,.24.08.42.22.53.15.11.34.17.57.17Z\"/>\n        <path class=\"cls-3\" d=\"M37.32,26.26l-.81-.35c.42-.59.73-1.21.93-1.86s.3-1.32.3-1.99-.1-1.33-.3-1.99c-.2-.66-.51-1.28-.93-1.86l.81-.35c.46.62.83,1.28,1.09,1.96.26.69.39,1.43.39,2.24s-.13,1.54-.39,2.23c-.26.69-.63,1.34-1.09,1.97Z\"/>\n      </g>\n    </g>\n  </g>\n</svg>"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "input-x",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "f64",
+        "label": "input-x",
+        "bounds": {
+          "x": 36,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-x\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"f64\",\n  \"label\": \"input-x\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0.1\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0.1
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "input-a",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "f64",
+        "label": "input-a",
+        "bounds": {
+          "x": 36,
+          "y": 140,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-a\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"f64\",\n  \"label\": \"input-a\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 140,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 1\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 1
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "output-value",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "f64",
+        "label": "output-value",
+        "bounds": {
+          "x": 420,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"output-value\",\n  \"classId\": \"frog.widgets.numeric_indicator\",\n  \"role\": \"indicator\",\n  \"valueType\": \"f64\",\n  \"label\": \"output-value\",\n  \"bounds\": {\n    \"x\": 420,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 22,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.math.gamma.regularized_upper",
+        "label": "",
+        "label_visible": true,
+        "palette_catalog_id": "math.gamma.regularized_upper",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 270,
+          "y": 120,
+          "width": 56,
+          "height": 56
+        }
+      },
+      {
+        "id": "input-x-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "input-x",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "input-a-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "input-a",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 152,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "output-value-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "output-value",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 460,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "GammaC — reference 2\nRegularized upper Gamma Q(shape=abs(x),limit=a).\nEntrées -> opération -> indicateurs. Résultat attendu : output-value (f64) = 0.024127343726327778\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "input-x-wire",
+        "from": {
+          "node": "input-x-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "x"
+        }
+      },
+      {
+        "id": "input-a-wire",
+        "from": {
+          "node": "input-a-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "a"
+        }
+      },
+      {
+        "id": "output-value-wire",
+        "from": {
+          "node": "operation",
+          "port": "value"
+        },
+        "to": {
+          "node": "output-value-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

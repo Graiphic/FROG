@@ -39,14 +39,14 @@ public:
     explicit Writer(bool typed = false, bool packed = false, const RuntimeValueOwner *arrayOwner = nullptr)
         : typed_(typed || packed), packed_(packed), arrayOwner_(arrayOwner) {}
     void bytes(std::span<const std::uint8_t> value) {
-        if (!valid_ || (typed_ && value.size() > kMaximumTypedEnvelopeSize - data_.size())) { valid_ = false; return; }
+        if (!valid_ || (typed_ && !arrayDepth_ && value.size() > kMaximumTypedEnvelopeSize - (data_.size()-arrayEnvelopeBytes_))) { valid_ = false; return; }
         data_.insert(data_.end(), value.begin(), value.end());
     }
 
     template <typename Unsigned>
     void unsignedInteger(Unsigned value) {
         static_assert(std::is_unsigned_v<Unsigned>);
-        if (!valid_ || (typed_ && sizeof(Unsigned) > kMaximumTypedEnvelopeSize - data_.size())) { valid_ = false; return; }
+        if (!valid_ || (typed_ && !arrayDepth_ && sizeof(Unsigned) > kMaximumTypedEnvelopeSize - (data_.size()-arrayEnvelopeBytes_))) { valid_ = false; return; }
         for (std::size_t index = 0; index < sizeof(Unsigned); ++index) {
             data_.push_back(static_cast<std::uint8_t>(value & 0xffU));
             value >>= 8U;
@@ -79,8 +79,14 @@ public:
 
     void runtimeValue(const RuntimeValue &value, unsigned depth = 0) {
         if (typed_ && (depth > 32 || ++valueNodes_ > 4096)) { valid_ = false; return; }
-        enumeration(static_cast<std::uint8_t>(value.index()));
-        switch (value.index()) {
+        // Local typed IPE extension: new explicit tags leave every historical
+        // encoding unchanged. Older readers reject these tags; a live opaque
+        // reference is deliberately never serialized.
+        std::uint8_t tag=static_cast<std::uint8_t>(value.index());
+        if(runtimeArray(value))tag=8;else if(runtimeVariant(value))tag=9;
+        else if(runtimeMap(value))tag=10;else if(runtimeTimestamp(value))tag=11;else if(runtimeSet(value))tag=12;
+        enumeration(tag);
+        switch (tag) {
         case 0U: break;
         case 1U: boolean(std::get<bool>(value)); break;
         case 2U:
@@ -115,11 +121,48 @@ public:
             valueBytes_+=array->payloadBytes();
             unsignedInteger<std::uint8_t>(1);
             unsignedInteger(static_cast<std::uint32_t>(array->elements().size()));
+            const auto begin=data_.size();++arrayDepth_;
             for(double element:array->elements())unsignedInteger(std::bit_cast<std::uint64_t>(element));
+            --arrayDepth_;if(!arrayDepth_)arrayEnvelopeBytes_+=data_.size()-begin;
+            break;
+        }
+        case 8U: case 9U: case 10U: case 11U: case 12U: {
+            const auto &carrier=*std::get<6>(value);
+            if(!typed_||packed_||!runtimeValueRepresentable(value,valueTypeFromCanonicalName(carrier.canonicalType()))||
+                (tag!=11&&(!arrayOwner_||!runtimeValueValidForOwner(value,valueTypeFromCanonicalName(carrier.canonicalType()),*arrayOwner_)))) {valid_=false;return;}
+            if(tag==8) {
+                const auto &a=*runtimeArray(value);valueType(a.elementType());unsignedInteger(static_cast<std::uint32_t>(a.shape().size()));
+                for(const auto extent:a.shape())unsignedInteger(extent);
+                unsignedInteger(static_cast<std::uint32_t>(a.elements().size()));
+                const auto begin=data_.size(),outerNodes=valueNodes_,outerBytes=valueBytes_;++arrayDepth_;
+                for(const auto &v:a.elements()){valueNodes_=0;valueBytes_=0;runtimeValue(v,depth+1);}
+                --arrayDepth_;valueNodes_=outerNodes;valueBytes_=outerBytes;
+                if(!arrayDepth_)arrayEnvelopeBytes_+=data_.size()-begin;
+            }else if(tag==9) {
+                const auto &v=*runtimeVariant(value);valueType(v.payloadType());string(v.payloadSchemaJson());runtimeValue(v.payload(),depth+1);
+                unsignedInteger(static_cast<std::uint32_t>(v.attributes().size()));
+                for(const auto &field:v.attributes()){string(field.id);valueType(field.type);runtimeValue(field.value,depth+1);}
+            }else if(tag==10) {
+                const auto &v=*runtimeMap(value);valueType(v.keyType());valueType(v.valueType());unsignedInteger(static_cast<std::uint32_t>(v.entries().size()));
+                for(const auto &[key,item]:v.entries()){runtimeValue(key,depth+1);runtimeValue(item,depth+1);}
+            }else if(tag==12) {
+                const auto &v=*runtimeSet(value);valueType(v.elementType());unsignedInteger(static_cast<std::uint32_t>(v.elements().size()));
+                for(const auto &element:v.elements())runtimeValue(element,depth+1);
+            }else {const auto &v=*runtimeTimestamp(value);unsignedInteger(static_cast<std::uint64_t>(v.seconds()));unsignedInteger(v.fraction());}
             break;
         }
         default: valid_ = false; break;
         }
+    }
+
+    // Mixed private metadata may contain ordinary typed values and the
+    // historical packed-F64 root carrier. Select only this root's existing
+    // codec profile; owner, depth, node and byte counters remain cumulative.
+    // The caller must seal/write the selected profile beside the value.
+    [[nodiscard]] bool runtimeValueWithProfile(const RuntimeValue &value,bool packed) {
+        if(!typed_) {valid_=false;return false;}
+        const bool previous=packed_;packed_=packed;runtimeValue(value);packed_=previous;
+        return valid_;
     }
 
     [[nodiscard]] std::vector<std::uint8_t> finish() && {
@@ -131,6 +174,8 @@ private:
     bool typed_ = false, packed_ = false, valid_ = true;
     const RuntimeValueOwner *arrayOwner_ = nullptr;
     std::size_t valueNodes_ = 0, valueBytes_ = 0;
+    std::size_t arrayEnvelopeBytes_ = 0;
+    unsigned arrayDepth_ = 0;
 };
 
 class Reader final {
@@ -138,8 +183,9 @@ public:
     explicit Reader(std::span<const std::uint8_t> data) : data_(data) {}
     bool typed(bool enabled, bool packed = false) {
         typed_ = enabled || packed; packed_=packed;
-        return !typed_ || data_.size() <= kMaximumTypedEnvelopeSize ||
-            fail("Typed artifact envelope exceeds its aggregate metadata/value budget.");
+        // Array payload bytes are charged separately while parsing; metadata
+        // and non-Array values retain the existing aggregate envelope bound.
+        return true;
     }
 
     void arrayOwner(const RuntimeValueOwner &owner) noexcept { arrayOwner_=&owner; }
@@ -203,7 +249,7 @@ public:
 
     [[nodiscard]] bool valueType(ValueType &type) {
         return string(type.canonicalName) &&
-            enumeration(type.category, static_cast<std::uint8_t>(typed_ ? ValueCategory::ObjectReference : ValueCategory::Array)) &&
+            enumeration(type.category, static_cast<std::uint8_t>(typed_ ? ValueCategory::Set : ValueCategory::Array)) &&
             unsignedInteger(type.bitWidth) && unsignedInteger(type.rank) &&
             string(type.elementType);
     }
@@ -273,9 +319,11 @@ public:
             std::uint8_t rank=0;std::uint32_t count=0;
             if(!unsignedInteger(rank) || !unsignedInteger(count) || rank != 1 || count>kMaximumF64ArrayElements)
                 return fail("Packed Array rank/count exceeds the exact rank1 f64 profile.");
+            if(count>(std::numeric_limits<std::size_t>::max)()/sizeof(double))return fail("Not enough memory to complete this operation.");
             const auto payload=static_cast<std::size_t>(count)*sizeof(double);
+            const auto begin=cursor_;++arrayDepth_;
             if(payload>kMaximumF64ArrayPayloadBytes-valueBytes_ || !reserve(payload))
-                return fail("Packed Array payload is truncated or exceeds 16,000,000 bytes.");
+                return fail("Packed Array payload is truncated or exceeds addressable memory.");
             // Charge BEFORE allocation. The decoder alone can move its private
             // validated buffer into the sealed carrier, without an8MB copy.
             valueBytes_+=payload;
@@ -288,8 +336,59 @@ public:
                     decoded.push_back(element);
                 }
                 RuntimeValue complete{RuntimeF64Array{new ImmutableF64Array(*arrayOwner_,std::move(decoded))}};
+                --arrayDepth_;if(!arrayDepth_)arrayEnvelopeBytes_+=cursor_-begin;
                 value=std::move(complete);return true;
-            }catch(const std::bad_alloc &) {return fail("Packed Array allocation failed; no partial value was produced.");}
+            }catch(const std::bad_alloc &) {return fail("Not enough memory to complete this operation; no partial Array value was produced.");}
+            catch(const std::length_error &) {return fail("Not enough memory to complete this operation; no partial Array value was produced.");}
+        }
+        case 8U: case 9U: case 10U: case 11U: case 12U: {
+            if(!typed_||packed_||(tag!=11&&(!arrayOwner_||!runtimeValueOwnerValid(*arrayOwner_))))return fail("Local IPE values require a typed envelope and its exact value owner.");
+            std::optional<RuntimeValue> complete;
+            if(tag==8) {
+                ValueType element;std::uint32_t rank=0,size=0;
+                if(!valueType(element)||!count(rank)||rank==0||rank>16)return fail("Invalid IPE Array rank.");
+                std::vector<std::uint32_t> shape(rank);
+                for(auto &extent:shape)if(!unsignedInteger(extent))return false;
+                const auto product=array_detail::elementCount(shape);
+                if(!unsignedInteger(size)||!product||size!=*product)return fail("IPE Array shape/value count differs or exceeds4294967295 elements.");
+                if(size>(std::numeric_limits<std::size_t>::max)()/sizeof(RuntimeValue))return fail("Not enough memory to complete this operation.");
+                const auto begin=cursor_,outerNodes=valueNodes_,outerBytes=valueBytes_;++arrayDepth_;
+                // At least one tag byte is required per element. Refuse a
+                // forged huge count before attempting its vector allocation.
+                if(!reserve(size))return false;
+                try {
+                std::vector<RuntimeValue> elements;elements.reserve(size);
+                for(std::uint32_t i=0;i<size;++i){valueNodes_=0;valueBytes_=0;RuntimeValue v;if(!runtimeValue(v,depth+1))return false;elements.push_back(std::move(v));}
+                --arrayDepth_;valueNodes_=outerNodes;valueBytes_=outerBytes;
+                if(!arrayDepth_)arrayEnvelopeBytes_+=cursor_-begin;
+                complete=makeRuntimeArray(std::move(element),std::move(shape),std::move(elements),*arrayOwner_);
+                }catch(const std::bad_alloc &){return fail("Not enough memory to complete this operation; no partial Array value was produced.");}
+                catch(const std::length_error &){return fail("Not enough memory to complete this operation; no partial Array value was produced.");}
+            }else if(tag==9) {
+                ValueType payloadType;RuntimeValue payload;std::uint32_t size=0;std::string payloadSchema;
+                if(!valueType(payloadType)||!string(payloadSchema)||payloadSchema.size()>65536||!runtimeValue(payload,depth+1)||!count(size)||size>4096)return fail("Invalid IPE Variant attribute count or schema.");
+                std::vector<RuntimeNamedField> attributes;attributes.reserve(size);
+                for(std::uint32_t i=0;i<size;++i){RuntimeNamedField field;if(!string(field.id)||!valueType(field.type)||!runtimeValue(field.value,depth+1))return false;attributes.push_back(std::move(field));}
+                complete=makeRuntimeVariant(std::move(payloadType),std::move(payload),std::move(attributes),*arrayOwner_,std::move(payloadSchema));
+            }else if(tag==10) {
+                ValueType key,item;std::uint32_t size=0;if(!valueType(key)||!valueType(item)||!count(size)||size>4096)return fail("Invalid IPE Map entry count.");
+                std::vector<std::pair<RuntimeValue,RuntimeValue>> entries;entries.reserve(size);
+                for(std::uint32_t i=0;i<size;++i){RuntimeValue k,v;if(!runtimeValue(k,depth+1)||!runtimeValue(v,depth+1))return false;entries.emplace_back(std::move(k),std::move(v));}
+                std::vector<RuntimeValue> keys;keys.reserve(entries.size());for(const auto &entry:entries)keys.push_back(entry.first);
+                const auto normalized=normalizeRuntimeCollectionValues(keys,key,*arrayOwner_,collection_order::DuplicatePolicy::KeepLast);
+                if(!normalized.accepted()||normalized.indices.size()!=entries.size())return fail("A sealed Map must already have unique sorted keys.");
+                for(std::size_t i=0;i<normalized.indices.size();++i)if(normalized.indices[i]!=i)return fail("A sealed Map cannot be reordered by decoding.");
+                complete=makeRuntimeMap(std::move(key),std::move(item),std::move(entries),*arrayOwner_);
+            }else if(tag==12) {
+                ValueType element;std::uint32_t size=0;if(!valueType(element)||!count(size)||size>4096)return fail("Invalid Set element count.");
+                std::vector<RuntimeValue> elements;elements.reserve(size);
+                for(std::uint32_t i=0;i<size;++i){RuntimeValue item;if(!runtimeValue(item,depth+1))return false;elements.push_back(std::move(item));}
+                const auto normalized=normalizeRuntimeCollectionValues(elements,element,*arrayOwner_,collection_order::DuplicatePolicy::KeepFirst);
+                if(!normalized.accepted()||normalized.indices.size()!=elements.size())return fail("A sealed Set must already contain unique sorted elements.");
+                for(std::size_t i=0;i<normalized.indices.size();++i)if(normalized.indices[i]!=i)return fail("A sealed Set cannot be reordered by decoding.");
+                complete=makeRuntimeSet(std::move(element),std::move(elements),*arrayOwner_);
+            }else {std::uint64_t seconds=0,fraction=0;if(!unsignedInteger(seconds)||!unsignedInteger(fraction))return false;complete=makeRuntimeTimestamp(static_cast<std::int64_t>(seconds),fraction);}
+            if(!complete)return fail("The sealed IPE value failed its exact carrier contract.");value=std::move(*complete);return true;
         }
         default:
             return fail("The artifact contains an invalid Runtime value tag.");
@@ -306,6 +405,8 @@ private:
         if (!valid_ || size > data_.size() - cursor_) {
             return fail("The artifact payload is truncated.");
         }
+        if(typed_&&!arrayDepth_&&size>kMaximumTypedEnvelopeSize-(cursor_-arrayEnvelopeBytes_))
+            return fail("Typed artifact metadata exceeds its aggregate envelope budget.");
         return true;
     }
 
@@ -320,6 +421,8 @@ private:
     bool valid_ = true, typed_ = false, packed_ = false;
     const RuntimeValueOwner *arrayOwner_ = nullptr;
     std::size_t valueNodes_ = 0, valueBytes_ = 0;
+    std::size_t arrayEnvelopeBytes_ = 0;
+    unsigned arrayDepth_ = 0;
     std::string error_;
 };
 
@@ -351,7 +454,7 @@ inline Diagnostic codecDiagnostic(std::string message) {
             if (!std::holds_alternative<std::monostate>(binding.initialValue) &&
                 !runtimeValueValidForOwner(binding.initialValue, binding.valueType, *artifact.valueOwner)) return {};
     }
-    codec_detail::Writer writer(typed,packed,packed ? &*artifact.valueOwner : nullptr);
+    codec_detail::Writer writer(typed,packed,owned ? &*artifact.valueOwner : nullptr);
     writer.bytes(packed ? codec_detail::kPackedF64ArrayMagic : typed ? codec_detail::kTypedMagic : codec_detail::kMagic);
     writer.unsignedInteger(artifact.protocol.major);
     writer.unsignedInteger(artifact.protocol.minor);
@@ -463,7 +566,7 @@ inline Diagnostic codecDiagnostic(std::string message) {
             !reader.unsignedInteger(owner.epoch) || !reader.unsignedInteger(owner.sourceRevision) ||
             !reader.unsignedInteger(owner.artifactRevision) || !runtimeValueOwnerValid(owner)) return fail();
         artifact.valueOwner = std::move(owner);
-        if(packed)reader.arrayOwner(*artifact.valueOwner);
+        reader.arrayOwner(*artifact.valueOwner);
     }
 
     std::uint32_t count = 0U;

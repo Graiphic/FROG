@@ -1,0 +1,277 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Check Prime — basic exact",
+  "metadata": {
+    "name": "Check Prime — basic exact",
+    "name_source": "document",
+    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : n (i64) = 97.\nRésultats attendus : prime (bool) = true.\n\nReturns a Boolean primality result for an I64 integer.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-prime (bool) = true\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["numeric-math", "typed-values", "independent-oracle", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 47.8\">\n  <defs>\n    <style>\n      .cls-1 {\n        fill: #00bc85;\n      }\n\n      .cls-2 {\n        fill: #fff;\n      }\n\n      .cls-3 {\n        fill: #4b5563;\n      }\n\n      .cls-4 {\n        fill: #f8fafc;\n        stroke: #00bc85;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: 1.8px;\n      }\n    </style>\n  </defs>\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n      <g>\n        <rect class=\"cls-4\" x=\".9\" y=\".9\" width=\"46\" height=\"46\" rx=\"4.5\" ry=\"4.5\"/>\n        <path class=\"cls-1\" d=\"M5.4.51h37c2.48,0,4.5,2.02,4.5,4.5v9.9H.9V5.01C.9,2.52,2.92.51,5.4.51Z\"/>\n        <g>\n          <path class=\"cls-2\" d=\"M14.79,13.74V5.35c0-.42.05-.81.16-1.17.11-.36.27-.67.49-.94.22-.27.5-.48.84-.63.33-.15.73-.23,1.19-.23.33,0,.65.04.96.13.31.09.58.23.82.41.24.19.43.42.58.7.14.28.22.61.22,1,0,.86-.41,1.53-1.22,2v.05c.28.05.53.14.77.27.23.13.44.3.61.49.17.2.31.43.4.69.09.26.14.55.14.86,0,.44-.07.82-.22,1.15-.14.33-.33.6-.56.82s-.5.38-.8.49-.61.16-.92.16c-.35,0-.71-.06-1.06-.19-.35-.13-.69-.36-1-.7.02.51.03,1.01.05,1.5.02.49.03.99.05,1.5h-1.48ZM17.85,10.43c.2,0,.39-.03.56-.1.17-.07.33-.17.46-.29.14-.13.24-.29.32-.48.08-.19.11-.41.11-.67,0-.41-.12-.75-.35-1.03-.24-.28-.6-.42-1.08-.42-.2,0-.39.03-.57.08l-.19-1.09c.28-.05.51-.13.7-.24.19-.11.35-.24.47-.39.12-.15.21-.32.26-.49.05-.18.08-.36.08-.56,0-.41-.11-.71-.34-.91-.23-.2-.49-.3-.8-.3-.4,0-.7.17-.92.51-.22.34-.33.84-.35,1.5-.02.68-.03,1.34-.04,2,0,.66-.01,1.33-.01,2.02.27.35.55.58.84.69s.57.17.84.17Z\"/>\n          <path class=\"cls-2\" d=\"M32.92,3.07h-6.27v.6l1.06.12c.02,1.07.03,2.15.03,3.22v.65c0,1,0,2.06-.03,3.12l-1.06.12v.6h3.91v-.6l-1.16-.13c-.02-1.07-.03-2.13-.03-3.11v-.65c0-1.1,0-2.19.03-3.25h2.36l.03.02h.02s.31,1.83.31,1.83h.88l-.09-2.52Z\"/>\n        </g>\n      </g>\n      <g>\n        <path class=\"cls-3\" d=\"M7.56,43.26v-7.82h2.75c.59,0,1.12.08,1.6.23.48.16.86.42,1.15.79.29.37.43.87.43,1.5s-.14,1.11-.43,1.5c-.29.39-.67.68-1.14.87s-.99.28-1.56.28h-.99v2.65h-1.8ZM9.36,39.2h.88c.98,0,1.47-.42,1.47-1.25,0-.41-.13-.7-.39-.86s-.64-.25-1.13-.25h-.83v2.36Z\"/>\n        <path class=\"cls-3\" d=\"M14.86,43.26v-7.82h2.88c.56,0,1.08.07,1.54.22.47.15.84.4,1.12.75.28.35.42.84.42,1.46,0,.58-.13,1.05-.39,1.42-.26.37-.6.65-1.04.83l1.82,3.13h-2.02l-1.53-2.82h-.99v2.82h-1.8ZM16.66,39.03h.93c.47,0,.83-.1,1.08-.29.25-.2.37-.49.37-.87s-.12-.65-.37-.8c-.25-.15-.61-.23-1.08-.23h-.93v2.2Z\"/>\n        <path class=\"cls-3\" d=\"M22.38,43.26v-7.82h1.8v7.82h-1.8Z\"/>\n        <path class=\"cls-3\" d=\"M26.07,43.26v-7.82h1.97l1.29,3.48c.08.22.16.46.23.71.07.25.15.49.23.73h.05c.08-.24.16-.48.23-.73.07-.25.15-.48.23-.71l1.26-3.48h1.96v7.82h-1.64v-2.87c0-.26.01-.54.04-.86.03-.32.06-.63.1-.95.04-.32.07-.6.09-.85h-.05l-.65,1.86-1.14,2.99h-.99l-1.14-2.99-.64-1.86h-.05c.03.25.06.53.1.85.03.32.06.64.09.95.03.32.04.6.04.86v2.87h-1.62Z\"/>\n        <path class=\"cls-3\" d=\"M35.41,43.26v-7.82h5v1.49h-3.2v1.57h2.72v1.48h-2.72v1.8h3.32v1.49h-5.12Z\"/>\n      </g>\n      <path class=\"cls-1\" d=\"M23.9,17.16c-4.17,0-7.56,3.38-7.56,7.56s3.38,7.56,7.56,7.56,7.56-3.38,7.56-7.56-3.38-7.56-7.56-7.56ZM24.57,28.85c-.22.23-.5.34-.84.34s-.61-.11-.83-.34c-.22-.23-.33-.51-.33-.85s.11-.63.33-.86.5-.34.83-.34.61.11.84.34c.22.23.34.51.34.86s-.11.62-.34.85ZM26.21,23.29c-.13.25-.29.47-.49.68-.19.21-.38.41-.57.61s-.33.42-.45.66-.15.51-.12.82h-1.7c-.05-.35-.03-.67.07-.95.1-.28.23-.53.4-.76.17-.23.35-.44.53-.63.18-.19.34-.38.47-.57.13-.19.19-.37.19-.56,0-.27-.08-.47-.24-.61-.16-.14-.38-.21-.64-.21-.25,0-.46.06-.65.17s-.37.25-.55.43l-1.07-.96c.31-.35.68-.64,1.11-.85.43-.21.9-.32,1.41-.32.48,0,.9.08,1.27.23.37.15.67.4.89.72.22.33.33.74.33,1.25,0,.32-.07.6-.2.85Z\"/>\n    </g>\n  </g>\n</svg>"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "input-n",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "i64",
+        "label": "input-n",
+        "bounds": {
+          "x": 36,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-n\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"i64\",\n  \"label\": \"input-n\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"i64\",\n    \"data_type.named_numeric_size\": \"Int64\",\n    \"representation.kind\": \"int64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 97\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i64",
+          "data_type.named_numeric_size": "Int64",
+          "representation.kind": "int64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 97
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "output-prime",
+        "classId": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "valueType": "bool",
+        "label": "output-prime",
+        "bounds": {
+          "x": 420,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"output-prime\",\n  \"classId\": \"frog.widgets.boolean_indicator\",\n  \"role\": \"indicator\",\n  \"valueType\": \"bool\",\n  \"label\": \"output-prime\",\n  \"bounds\": {\n    \"x\": 420,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"state_text.visible\": false\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/42_boolean_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/boolean.default.wfrog\",\n    \"asset\": \"asset:boolean_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": false\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1,\n    \"stateTextFontFamily\": \"\",\n    \"stateTextStyle\": \"plain\"\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": false
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 22,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.math.discrete.check_prime",
+        "label": "",
+        "label_visible": true,
+        "palette_catalog_id": "math.discrete.check_prime",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 270,
+          "y": 120,
+          "width": 56,
+          "height": 56
+        }
+      },
+      {
+        "id": "input-n-terminal",
+        "kind": "widget_value",
+        "type": "i64",
+        "widget": "input-n",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "output-prime-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "output-prime",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 460,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Check Prime — basic exact\nReturns a Boolean primality result for an I64 integer.\nEntrées -> opération -> indicateurs. Résultat attendu : output-prime (bool) = true\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "input-n-wire",
+        "from": {
+          "node": "input-n-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "n"
+        }
+      },
+      {
+        "id": "output-prime-wire",
+        "from": {
+          "node": "operation",
+          "port": "prime"
+        },
+        "to": {
+          "node": "output-prime-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

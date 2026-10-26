@@ -1,0 +1,631 @@
+# Native Studio examples
+
+The same real `.frog` files feed Find Examples, context help and the example runner. The index is versioned metadata; operator contracts remain in their existing canonical manifests.
+
+`studio-draft` identifies the current Studio document profile. It is not public Source 0.1. Native and private simulation backends are stated separately for every example. Merely browsing a document does not execute it.
+
+- [Add — scalar i8](Numeric/numeric.add.scalar_i8/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Square — unary i8](Numeric/numeric.square.unary_i8/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Add — scalar u8](Numeric/numeric.add.scalar_u8/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Square — unary u8](Numeric/numeric.square.unary_u8/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Add — scalar i16](Numeric/numeric.add.scalar_i16/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Square — unary i16](Numeric/numeric.square.unary_i16/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Add — scalar u16](Numeric/numeric.add.scalar_u16/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Square — unary u16](Numeric/numeric.square.unary_u16/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Add — scalar i32](Numeric/numeric.add.scalar_i32/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Square — unary i32](Numeric/numeric.square.unary_i32/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Add — scalar u32](Numeric/numeric.add.scalar_u32/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Square — unary u32](Numeric/numeric.square.unary_u32/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Add — scalar i64](Numeric/numeric.add.scalar_i64/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Square — unary i64](Numeric/numeric.square.unary_i64/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Add — scalar u64](Numeric/numeric.add.scalar_u64/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Square — unary u64](Numeric/numeric.square.unary_u64/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Add — scalar f32](Numeric/numeric.add.scalar_f32/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Square — unary f32](Numeric/numeric.square.unary_f32/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Add — scalar f64](Numeric/numeric.add.scalar_f64/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Square — unary f64](Numeric/numeric.square.unary_f64/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Add — mixed i32 f64](Numeric/numeric.add.mixed_i32_f64/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — scalar array](Numeric/numeric.add.scalar_array/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arrays same shape](Numeric/numeric.add.arrays_same_shape/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — typed empty](Numeric/numeric.add.typed_empty/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Square — array](Numeric/numeric.square.array/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Add — incompatible shapes](Numeric/numeric.add.incompatible_shapes/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 2](Numeric/numeric.add.arity_2/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 3](Numeric/numeric.add.arity_3/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 4](Numeric/numeric.add.arity_4/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 5](Numeric/numeric.add.arity_5/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 6](Numeric/numeric.add.arity_6/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 7](Numeric/numeric.add.arity_7/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 8](Numeric/numeric.add.arity_8/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 9](Numeric/numeric.add.arity_9/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 10](Numeric/numeric.add.arity_10/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 11](Numeric/numeric.add.arity_11/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 12](Numeric/numeric.add.arity_12/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 13](Numeric/numeric.add.arity_13/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 14](Numeric/numeric.add.arity_14/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 15](Numeric/numeric.add.arity_15/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — arity 16](Numeric/numeric.add.arity_16/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — left fold f64](Numeric/numeric.add.left_fold_f64/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Add — left fold f32](Numeric/numeric.add.left_fold_f32/main.frog) — Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
+- [Subtract — scalar i32](Numeric/numeric.subtract.scalar_i32/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Multiply — scalar i32](Numeric/numeric.multiply.scalar_i32/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Divide — scalar i32](Numeric/numeric.divide.scalar_i32/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Square Root — integer promotion i32](Numeric/numeric.square_root.integer_promotion_i32/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Reciprocal — integer promotion i32](Numeric/numeric.reciprocal.integer_promotion_i32/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Increment — scalar i32](Numeric/numeric.increment.scalar_i32/main.frog) — Numeric or enum x -> same structure/representation x+1; NI also has timestamp and waveform overloads.
+- [Decrement — scalar i32](Numeric/numeric.decrement.scalar_i32/main.frog) — Numeric or enum x -> same structure/representation x-1; NI also has timestamp and waveform overloads.
+- [Subtract — scalar u32](Numeric/numeric.subtract.scalar_u32/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Multiply — scalar u32](Numeric/numeric.multiply.scalar_u32/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Divide — scalar u32](Numeric/numeric.divide.scalar_u32/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Square Root — integer promotion u32](Numeric/numeric.square_root.integer_promotion_u32/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Reciprocal — integer promotion u32](Numeric/numeric.reciprocal.integer_promotion_u32/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Increment — scalar u32](Numeric/numeric.increment.scalar_u32/main.frog) — Numeric or enum x -> same structure/representation x+1; NI also has timestamp and waveform overloads.
+- [Decrement — scalar u32](Numeric/numeric.decrement.scalar_u32/main.frog) — Numeric or enum x -> same structure/representation x-1; NI also has timestamp and waveform overloads.
+- [Subtract — scalar i64](Numeric/numeric.subtract.scalar_i64/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Multiply — scalar i64](Numeric/numeric.multiply.scalar_i64/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Divide — scalar i64](Numeric/numeric.divide.scalar_i64/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Square Root — integer promotion i64](Numeric/numeric.square_root.integer_promotion_i64/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Reciprocal — integer promotion i64](Numeric/numeric.reciprocal.integer_promotion_i64/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Increment — scalar i64](Numeric/numeric.increment.scalar_i64/main.frog) — Numeric or enum x -> same structure/representation x+1; NI also has timestamp and waveform overloads.
+- [Decrement — scalar i64](Numeric/numeric.decrement.scalar_i64/main.frog) — Numeric or enum x -> same structure/representation x-1; NI also has timestamp and waveform overloads.
+- [Subtract — scalar u64](Numeric/numeric.subtract.scalar_u64/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Multiply — scalar u64](Numeric/numeric.multiply.scalar_u64/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Divide — scalar u64](Numeric/numeric.divide.scalar_u64/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Square Root — integer promotion u64](Numeric/numeric.square_root.integer_promotion_u64/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Reciprocal — integer promotion u64](Numeric/numeric.reciprocal.integer_promotion_u64/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Increment — scalar u64](Numeric/numeric.increment.scalar_u64/main.frog) — Numeric or enum x -> same structure/representation x+1; NI also has timestamp and waveform overloads.
+- [Decrement — scalar u64](Numeric/numeric.decrement.scalar_u64/main.frog) — Numeric or enum x -> same structure/representation x-1; NI also has timestamp and waveform overloads.
+- [Subtract — scalar f64](Numeric/numeric.subtract.scalar_f64/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Multiply — scalar f64](Numeric/numeric.multiply.scalar_f64/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Divide — scalar f64](Numeric/numeric.divide.scalar_f64/main.frog) — Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
+- [Square Root — integer promotion f64](Numeric/numeric.square_root.integer_promotion_f64/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Reciprocal — integer promotion f64](Numeric/numeric.reciprocal.integer_promotion_f64/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Increment — scalar f64](Numeric/numeric.increment.scalar_f64/main.frog) — Numeric or enum x -> same structure/representation x+1; NI also has timestamp and waveform overloads.
+- [Decrement — scalar f64](Numeric/numeric.decrement.scalar_f64/main.frog) — Numeric or enum x -> same structure/representation x-1; NI also has timestamp and waveform overloads.
+- [Negate — signed i32](Numeric/numeric.negate.signed_i32/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Absolute Value — signed i32](Numeric/numeric.absolute_value.signed_i32/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Negate — signed i64](Numeric/numeric.negate.signed_i64/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Absolute Value — signed i64](Numeric/numeric.absolute_value.signed_i64/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Negate — signed f64](Numeric/numeric.negate.signed_f64/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Absolute Value — signed f64](Numeric/numeric.absolute_value.signed_f64/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Round To Nearest — ties even half](Numeric/numeric.round_nearest.ties_even_half/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Round To Nearest — ties even one half](Numeric/numeric.round_nearest.ties_even_one_half/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Round To Nearest — ties even two half](Numeric/numeric.round_nearest.ties_even_two_half/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Round To Nearest — ties even negative half](Numeric/numeric.round_nearest.ties_even_negative_half/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Round To Nearest — ties even negative one half](Numeric/numeric.round_nearest.ties_even_negative_one_half/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Round To Nearest — ties even negative two half](Numeric/numeric.round_nearest.ties_even_negative_two_half/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Round Toward -Infinity — negative](Numeric/numeric.round_negative_infinity.negative/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Round Toward +Infinity — negative](Numeric/numeric.round_positive_infinity.negative/main.frog) — Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
+- [Quotient & Remainder — signed x7 y3](Numeric/numeric.quotient_remainder.signed_x7_y3/main.frog) — Floor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure.
+- [Quotient & Remainder — signed xneg7 y3](Numeric/numeric.quotient_remainder.signed_xneg7_y3/main.frog) — Floor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure.
+- [Quotient & Remainder — signed x7 yneg3](Numeric/numeric.quotient_remainder.signed_x7_yneg3/main.frog) — Floor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure.
+- [Quotient & Remainder — signed xneg7 yneg3](Numeric/numeric.quotient_remainder.signed_xneg7_yneg3/main.frog) — Floor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure.
+- [Quotient & Remainder — signed x7 y0](Numeric/numeric.quotient_remainder.signed_x7_y0/main.frog) — Floor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure.
+- [Pi — value and persistence](Numeric/numeric.other_constants.pi.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Pi / 2 — value and persistence](Numeric/numeric.other_constants.pi_over_two.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [2 Pi — value and persistence](Numeric/numeric.other_constants.two_pi.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [1 / Pi — value and persistence](Numeric/numeric.other_constants.one_over_pi.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [e — value and persistence](Numeric/numeric.other_constants.e.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [1 / e — value and persistence](Numeric/numeric.other_constants.one_over_e.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Machine Epsilon — value and persistence](Numeric/numeric.other_constants.machine_epsilon.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Ln 10 — value and persistence](Numeric/numeric.other_constants.ln_ten.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Ln 2 — value and persistence](Numeric/numeric.other_constants.ln_two.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Ln Pi — value and persistence](Numeric/numeric.other_constants.ln_pi.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Log10(e) — value and persistence](Numeric/numeric.other_constants.log10_e.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Ideal Gas Constant — value and persistence](Numeric/numeric.other_constants.ideal_gas.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Elementary Charge — value and persistence](Numeric/numeric.other_constants.elementary_charge.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Avogadro Constant — value and persistence](Numeric/numeric.other_constants.avogadro.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Rydberg Constant — value and persistence](Numeric/numeric.other_constants.rydberg.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Gravitational Constant — value and persistence](Numeric/numeric.other_constants.gravitational.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Planck Constant — value and persistence](Numeric/numeric.other_constants.planck.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Speed of Light — value and persistence](Numeric/numeric.other_constants.speed_of_light.value_and_persistence/main.frog) — Emits the fixed f64 value currently catalogued by Studio.
+- [Max & Min — ascending i32](Numeric/numeric.max_min.ascending_i32/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — descending i32](Numeric/numeric.max_min.descending_i32/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — ascending u32](Numeric/numeric.max_min.ascending_u32/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — descending u32](Numeric/numeric.max_min.descending_u32/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — ascending i64](Numeric/numeric.max_min.ascending_i64/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — descending i64](Numeric/numeric.max_min.descending_i64/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — ascending u64](Numeric/numeric.max_min.ascending_u64/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — descending u64](Numeric/numeric.max_min.descending_u64/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — ascending f64](Numeric/numeric.max_min.ascending_f64/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — descending f64](Numeric/numeric.max_min.descending_f64/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — bounds i32](Numeric/numeric.max_min.bounds_i32/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — bounds u32](Numeric/numeric.max_min.bounds_u32/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — bounds i64](Numeric/numeric.max_min.bounds_i64/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — bounds u64](Numeric/numeric.max_min.bounds_u64/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — bounds f64](Numeric/numeric.max_min.bounds_f64/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — nan x](Numeric/numeric.max_min.nan_x/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — nan y](Numeric/numeric.max_min.nan_y/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [Max & Min — nan both](Numeric/numeric.max_min.nan_both/main.frog) — Compatible comparable x,y -> max/min of the common type.
+- [AND — truth 00](Boolean/boolean.and.truth_00/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [AND — truth 01](Boolean/boolean.and.truth_01/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [AND — truth 10](Boolean/boolean.and.truth_10/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [AND — truth 11](Boolean/boolean.and.truth_11/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [OR — truth 00](Boolean/boolean.or.truth_00/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [OR — truth 01](Boolean/boolean.or.truth_01/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [OR — truth 10](Boolean/boolean.or.truth_10/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [OR — truth 11](Boolean/boolean.or.truth_11/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [Exclusive OR — truth 00](Boolean/boolean.xor.truth_00/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [Exclusive OR — truth 01](Boolean/boolean.xor.truth_01/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [Exclusive OR — truth 10](Boolean/boolean.xor.truth_10/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [Exclusive OR — truth 11](Boolean/boolean.xor.truth_11/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [NAND — truth 00](Boolean/boolean.nand.truth_00/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [NAND — truth 01](Boolean/boolean.nand.truth_01/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [NAND — truth 10](Boolean/boolean.nand.truth_10/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [NAND — truth 11](Boolean/boolean.nand.truth_11/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [NOR — truth 00](Boolean/boolean.nor.truth_00/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [NOR — truth 01](Boolean/boolean.nor.truth_01/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [NOR — truth 10](Boolean/boolean.nor.truth_10/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [NOR — truth 11](Boolean/boolean.nor.truth_11/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [XNOR — truth 00](Boolean/boolean.xnor.truth_00/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [XNOR — truth 01](Boolean/boolean.xnor.truth_01/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [XNOR — truth 10](Boolean/boolean.xnor.truth_10/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [XNOR — truth 11](Boolean/boolean.xnor.truth_11/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [Implies — truth 00](Boolean/boolean.implies.truth_00/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [Implies — truth 01](Boolean/boolean.implies.truth_01/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [Implies — truth 10](Boolean/boolean.implies.truth_10/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [Implies — truth 11](Boolean/boolean.implies.truth_11/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [NOT — truth 0](Boolean/boolean.not.truth_0/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [NOT — truth 1](Boolean/boolean.not.truth_1/main.frog) — Boolean or non-complex numeric scalars, arrays and clusters are accepted.
+- [True Constant — direct indicator](Boolean/boolean.true_constant.direct_indicator/main.frog) — The Studio node stores and exposes the fixed Boolean value true through output value.
+- [False Constant — direct indicator](Boolean/boolean.false_constant.direct_indicator/main.frog) — The Studio node stores and exposes the fixed Boolean value false through output value.
+- [Equal? — exact i32](Comparison/comparison.equal.exact_i32/main.frog) — Tests equality of compatible values.
+- [Equal? — exact i64](Comparison/comparison.equal.exact_i64/main.frog) — Tests equality of compatible values.
+- [Equal? — exact u64](Comparison/comparison.equal.exact_u64/main.frog) — Tests equality of compatible values.
+- [Equal? — exact f64](Comparison/comparison.equal.exact_f64/main.frog) — Tests equality of compatible values.
+- [Not Equal? — exact i32](Comparison/comparison.not_equal.exact_i32/main.frog) — Tests inequality of compatible values.
+- [Not Equal? — exact i64](Comparison/comparison.not_equal.exact_i64/main.frog) — Tests inequality of compatible values.
+- [Not Equal? — exact u64](Comparison/comparison.not_equal.exact_u64/main.frog) — Tests inequality of compatible values.
+- [Not Equal? — exact f64](Comparison/comparison.not_equal.exact_f64/main.frog) — Tests inequality of compatible values.
+- [Greater? — exact i32](Comparison/comparison.greater.exact_i32/main.frog) — Tests whether x is greater than y.
+- [Greater? — exact i64](Comparison/comparison.greater.exact_i64/main.frog) — Tests whether x is greater than y.
+- [Greater? — exact u64](Comparison/comparison.greater.exact_u64/main.frog) — Tests whether x is greater than y.
+- [Greater? — exact f64](Comparison/comparison.greater.exact_f64/main.frog) — Tests whether x is greater than y.
+- [Less? — exact i32](Comparison/comparison.less.exact_i32/main.frog) — Tests whether x is less than y.
+- [Less? — exact i64](Comparison/comparison.less.exact_i64/main.frog) — Tests whether x is less than y.
+- [Less? — exact u64](Comparison/comparison.less.exact_u64/main.frog) — Tests whether x is less than y.
+- [Less? — exact f64](Comparison/comparison.less.exact_f64/main.frog) — Tests whether x is less than y.
+- [Greater Or Equal? — exact i32](Comparison/comparison.greater_or_equal.exact_i32/main.frog) — Tests whether x is greater than or equal to y.
+- [Greater Or Equal? — exact i64](Comparison/comparison.greater_or_equal.exact_i64/main.frog) — Tests whether x is greater than or equal to y.
+- [Greater Or Equal? — exact u64](Comparison/comparison.greater_or_equal.exact_u64/main.frog) — Tests whether x is greater than or equal to y.
+- [Greater Or Equal? — exact f64](Comparison/comparison.greater_or_equal.exact_f64/main.frog) — Tests whether x is greater than or equal to y.
+- [Less Or Equal? — exact i32](Comparison/comparison.less_or_equal.exact_i32/main.frog) — Tests whether x is less than or equal to y.
+- [Less Or Equal? — exact i64](Comparison/comparison.less_or_equal.exact_i64/main.frog) — Tests whether x is less than or equal to y.
+- [Less Or Equal? — exact u64](Comparison/comparison.less_or_equal.exact_u64/main.frog) — Tests whether x is less than or equal to y.
+- [Less Or Equal? — exact f64](Comparison/comparison.less_or_equal.exact_f64/main.frog) — Tests whether x is less than or equal to y.
+- [Equal To 0? — negative](Comparison/comparison.equal_zero.negative/main.frog) — Tests whether a numeric value equals zero.
+- [Equal To 0? — zero](Comparison/comparison.equal_zero.zero/main.frog) — Tests whether a numeric value equals zero.
+- [Equal To 0? — positive](Comparison/comparison.equal_zero.positive/main.frog) — Tests whether a numeric value equals zero.
+- [Not Equal To 0? — negative](Comparison/comparison.not_equal_zero.negative/main.frog) — Tests whether a numeric value differs from zero.
+- [Not Equal To 0? — zero](Comparison/comparison.not_equal_zero.zero/main.frog) — Tests whether a numeric value differs from zero.
+- [Not Equal To 0? — positive](Comparison/comparison.not_equal_zero.positive/main.frog) — Tests whether a numeric value differs from zero.
+- [Greater Than 0? — negative](Comparison/comparison.greater_zero.negative/main.frog) — Tests whether a value is positive.
+- [Greater Than 0? — zero](Comparison/comparison.greater_zero.zero/main.frog) — Tests whether a value is positive.
+- [Greater Than 0? — positive](Comparison/comparison.greater_zero.positive/main.frog) — Tests whether a value is positive.
+- [Less Than 0? — negative](Comparison/comparison.less_zero.negative/main.frog) — Tests whether a value is negative.
+- [Less Than 0? — zero](Comparison/comparison.less_zero.zero/main.frog) — Tests whether a value is negative.
+- [Less Than 0? — positive](Comparison/comparison.less_zero.positive/main.frog) — Tests whether a value is negative.
+- [Greater Or Equal To 0? — negative](Comparison/comparison.greater_or_equal_zero.negative/main.frog) — Tests whether a value is non-negative.
+- [Greater Or Equal To 0? — zero](Comparison/comparison.greater_or_equal_zero.zero/main.frog) — Tests whether a value is non-negative.
+- [Greater Or Equal To 0? — positive](Comparison/comparison.greater_or_equal_zero.positive/main.frog) — Tests whether a value is non-negative.
+- [Less Or Equal To 0? — negative](Comparison/comparison.less_or_equal_zero.negative/main.frog) — Tests whether a value is non-positive.
+- [Less Or Equal To 0? — zero](Comparison/comparison.less_or_equal_zero.zero/main.frog) — Tests whether a value is non-positive.
+- [Less Or Equal To 0? — positive](Comparison/comparison.less_or_equal_zero.positive/main.frog) — Tests whether a value is non-positive.
+- [Sine — radian identity](Mathematics/math.trigonometric.sin.radian_identity/main.frog) — sin(x).
+- [Cosine — radian identity](Mathematics/math.trigonometric.cos.radian_identity/main.frog) — cos(x).
+- [Tangent — radian identity](Mathematics/math.trigonometric.tan.radian_identity/main.frog) — tan(x).
+- [Cosecant — radian identity](Mathematics/math.trigonometric.csc.radian_identity/main.frog) — 1/sin(x).
+- [Secant — radian identity](Mathematics/math.trigonometric.sec.radian_identity/main.frog) — 1/cos(x).
+- [Cotangent — radian identity](Mathematics/math.trigonometric.cot.radian_identity/main.frog) — cos(x)/sin(x).
+- [Inverse Cosecant — radian identity](Mathematics/math.trigonometric.acsc.radian_identity/main.frog) — asin(1/x).
+- [Inverse Secant — radian identity](Mathematics/math.trigonometric.asec.radian_identity/main.frog) — acos(1/x).
+- [Inverse Cotangent — radian identity](Mathematics/math.trigonometric.acot.radian_identity/main.frog) — atan(1/x).
+- [Inverse Sine — radian identity](Mathematics/math.trigonometric.asin.radian_identity/main.frog) — asin(x).
+- [Inverse Cosine — radian identity](Mathematics/math.trigonometric.acos.radian_identity/main.frog) — acos(x).
+- [Inverse Tangent — radian identity](Mathematics/math.trigonometric.atan.radian_identity/main.frog) — atan(x).
+- [Sinc — radian identity](Mathematics/math.trigonometric.sinc.radian_identity/main.frog) — sin(x)/x; sinc(±0)=1.
+- [Sine — pi over six](Mathematics/math.trigonometric.sin.pi_over_six/main.frog) — sin(x).
+- [Inverse Tangent (2 Input) — ordered y x](Mathematics/math.trigonometric.atan2.ordered_y_x/main.frog) — atan2(y,x).
+- [Sine and Cosine — zero](Mathematics/math.trigonometric.sincos.zero/main.frog) — sin(x), cos(x).
+- [Hyperbolic Sine — real identity](Mathematics/math.hyperbolic.sinh.real_identity/main.frog) — Computes the hyperbolic sine of x.
+- [Hyperbolic Cosine — real identity](Mathematics/math.hyperbolic.cosh.real_identity/main.frog) — Computes the hyperbolic cosine of x.
+- [Hyperbolic Tangent — real identity](Mathematics/math.hyperbolic.tanh.real_identity/main.frog) — Computes the hyperbolic tangent of x.
+- [Hyperbolic Secant — real identity](Mathematics/math.hyperbolic.sech.real_identity/main.frog) — Computes the reciprocal of the hyperbolic cosine, not its inverse function.
+- [Hyperbolic Cosecant — real identity](Mathematics/math.hyperbolic.csch.real_identity/main.frog) — Computes the reciprocal of the hyperbolic sine.
+- [Hyperbolic Cotangent — real identity](Mathematics/math.hyperbolic.coth.real_identity/main.frog) — Computes the reciprocal of the hyperbolic tangent.
+- [Inverse Hyperbolic Sine — real identity](Mathematics/math.hyperbolic.asinh.real_identity/main.frog) — Returns y such that sinh(y)=x, using the principal branch for a complex input.
+- [Inverse Hyperbolic Cosine — real identity](Mathematics/math.hyperbolic.acosh.real_identity/main.frog) — Returns the non-negative real y such that cosh(y)=x, or the principal complex result.
+- [Inverse Hyperbolic Tangent — real identity](Mathematics/math.hyperbolic.atanh.real_identity/main.frog) — Returns y such that tanh(y)=x, using the principal branch for a complex input.
+- [Inverse Hyperbolic Secant — real identity](Mathematics/math.hyperbolic.asech.real_identity/main.frog) — Returns the non-negative real y such that sech(y)=x, or the principal complex result.
+- [Inverse Hyperbolic Cosecant — real identity](Mathematics/math.hyperbolic.acsch.real_identity/main.frog) — Returns y such that csch(y)=x, using the principal branch for a complex input.
+- [Inverse Hyperbolic Cotangent — real identity](Mathematics/math.hyperbolic.acoth.real_identity/main.frog) — Returns y such that coth(y)=x, using the principal branch for a complex input.
+- [Exponential — real identity](Mathematics/math.exponential.exponential.real_identity/main.frog) — Computes e raised to x.
+- [Exponential (Arg) -1 — real identity](Mathematics/math.exponential.exponential_minus_one.real_identity/main.frog) — Computes e raised to x minus one, retaining accuracy near zero.
+- [Power Of 10 — real identity](Mathematics/math.exponential.power_of_10.real_identity/main.frog) — Computes ten raised to x.
+- [Power Of 2 — real identity](Mathematics/math.exponential.power_of_2.real_identity/main.frog) — Computes two raised to x.
+- [Natural Logarithm — real identity](Mathematics/math.exponential.natural_logarithm.real_identity/main.frog) — Computes the natural logarithm of x.
+- [Natural Logarithm (Arg +1) — real identity](Mathematics/math.exponential.natural_logarithm_plus_one.real_identity/main.frog) — Computes the natural logarithm of one plus x, retaining accuracy near zero.
+- [Logarithm Base 10 — real identity](Mathematics/math.exponential.logarithm_base_10.real_identity/main.frog) — Computes the logarithm of x to base ten.
+- [Logarithm Base 2 — real identity](Mathematics/math.exponential.logarithm_base_2.real_identity/main.frog) — Computes the logarithm of x to base two.
+- [Power Of X — ordered y x](Mathematics/math.exponential.power_of_x.ordered_y_x/main.frog) — Raises base x to exponent y.
+- [Y-th Root of X — ordered y x](Mathematics/math.exponential.y_th_root_of_x.ordered_y_x/main.frog) — Computes the y-th root of x.
+- [Logarithm Base X — ordered y x](Mathematics/math.exponential.logarithm_base_x.ordered_y_x/main.frog) — Computes the logarithm of value y to base x.
+- [Exponential (Arg) -1 — near zero](Mathematics/math.exponential.exponential_minus_one.near_zero/main.frog) — Computes e raised to x minus one, retaining accuracy near zero.
+- [Natural Logarithm (Arg +1) — near zero](Mathematics/math.exponential.natural_logarithm_plus_one.near_zero/main.frog) — Computes the natural logarithm of one plus x, retaining accuracy near zero.
+- [Spike — piecewise 0](Mathematics/math.gating.spike.piecewise_0/main.frog) — Returns 1 for 0≤x<1 and 0 elsewhere; a nonperiodic unit rectangular pulse.
+- [Spike — piecewise 1](Mathematics/math.gating.spike.piecewise_1/main.frog) — Returns 1 for 0≤x<1 and 0 elsewhere; a nonperiodic unit rectangular pulse.
+- [Spike — piecewise 2](Mathematics/math.gating.spike.piecewise_2/main.frog) — Returns 1 for 0≤x<1 and 0 elsewhere; a nonperiodic unit rectangular pulse.
+- [Spike — piecewise 3](Mathematics/math.gating.spike.piecewise_3/main.frog) — Returns 1 for 0≤x<1 and 0 elsewhere; a nonperiodic unit rectangular pulse.
+- [Square — piecewise 0](Mathematics/math.gating.square.piecewise_0/main.frog) — Returns a numeric 0/1 pulse of period 2: 1 on [2n,2n+1) and 0 elsewhere, also for negative x.
+- [Square — piecewise 1](Mathematics/math.gating.square.piecewise_1/main.frog) — Returns a numeric 0/1 pulse of period 2: 1 on [2n,2n+1) and 0 elsewhere, also for negative x.
+- [Square — piecewise 2](Mathematics/math.gating.square.piecewise_2/main.frog) — Returns a numeric 0/1 pulse of period 2: 1 on [2n,2n+1) and 0 elsewhere, also for negative x.
+- [Square — piecewise 3](Mathematics/math.gating.square.piecewise_3/main.frog) — Returns a numeric 0/1 pulse of period 2: 1 on [2n,2n+1) and 0 elsewhere, also for negative x.
+- [Step — piecewise 0](Mathematics/math.gating.step.piecewise_0/main.frog) — Returns 0 for negative x and 1 for positive or zero x.
+- [Step — piecewise 1](Mathematics/math.gating.step.piecewise_1/main.frog) — Returns 0 for negative x and 1 for positive or zero x.
+- [Step — piecewise 2](Mathematics/math.gating.step.piecewise_2/main.frog) — Returns 0 for negative x and 1 for positive or zero x.
+- [Bessel J — reference 1](Mathematics/math.special.bessel_cyl_j.reference_1/main.frog) — Cylindrical Bessel function of the first kind, real order v (fractional and signed orders accepted).
+- [Bessel J — reference 2](Mathematics/math.special.bessel_cyl_j.reference_2/main.frog) — Cylindrical Bessel function of the first kind, real order v (fractional and signed orders accepted).
+- [Bessel J — reference 3](Mathematics/math.special.bessel_cyl_j.reference_3/main.frog) — Cylindrical Bessel function of the first kind, real order v (fractional and signed orders accepted).
+- [Bessel Y — reference 1](Mathematics/math.special.bessel_cyl_y.reference_1/main.frog) — Cylindrical Bessel function of the second kind (Neumann), real order v.
+- [Bessel Y — reference 2](Mathematics/math.special.bessel_cyl_y.reference_2/main.frog) — Cylindrical Bessel function of the second kind (Neumann), real order v.
+- [Bessel Y — reference 3](Mathematics/math.special.bessel_cyl_y.reference_3/main.frog) — Cylindrical Bessel function of the second kind (Neumann), real order v.
+- [Bessel I — reference 1](Mathematics/math.special.bessel_mod_i.reference_1/main.frog) — Modified Bessel function of the first kind, real order v.
+- [Bessel I — reference 2](Mathematics/math.special.bessel_mod_i.reference_2/main.frog) — Modified Bessel function of the first kind, real order v.
+- [Bessel I — reference 3](Mathematics/math.special.bessel_mod_i.reference_3/main.frog) — Modified Bessel function of the first kind, real order v.
+- [Bessel K — reference 1](Mathematics/math.special.bessel_mod_k.reference_1/main.frog) — Modified Bessel function of the second kind, signed integer order n.
+- [Bessel K — reference 2](Mathematics/math.special.bessel_mod_k.reference_2/main.frog) — Modified Bessel function of the second kind, signed integer order n.
+- [Bessel K — reference 3](Mathematics/math.special.bessel_mod_k.reference_3/main.frog) — Modified Bessel function of the second kind, signed integer order n.
+- [Bessel j — reference 1](Mathematics/math.special.bessel_sph_j.reference_1/main.frog) — Spherical Bessel function of the first kind, signed integer order n; j_0(r)=sin(r)/r.
+- [Bessel j — reference 2](Mathematics/math.special.bessel_sph_j.reference_2/main.frog) — Spherical Bessel function of the first kind, signed integer order n; j_0(r)=sin(r)/r.
+- [Bessel j — reference 3](Mathematics/math.special.bessel_sph_j.reference_3/main.frog) — Spherical Bessel function of the first kind, signed integer order n; j_0(r)=sin(r)/r.
+- [Bessel y — reference 1](Mathematics/math.special.bessel_sph_y.reference_1/main.frog) — Spherical Bessel function of the second kind, signed integer order n; y_0(r)=-cos(r)/r.
+- [Bessel y — reference 2](Mathematics/math.special.bessel_sph_y.reference_2/main.frog) — Spherical Bessel function of the second kind, signed integer order n; y_0(r)=-cos(r)/r.
+- [Bessel y — reference 3](Mathematics/math.special.bessel_sph_y.reference_3/main.frog) — Spherical Bessel function of the second kind, signed integer order n; y_0(r)=-cos(r)/r.
+- [Airy Ai, Bi — reference 1](Mathematics/math.special.airy_ai_bi.reference_1/main.frog) — Returns both Airy functions on independent real F64 outputs ai and bi.
+- [Airy Ai, Bi — reference 2](Mathematics/math.special.airy_ai_bi.reference_2/main.frog) — Returns both Airy functions on independent real F64 outputs ai and bi.
+- [Airy Ai, Bi — reference 3](Mathematics/math.special.airy_ai_bi.reference_3/main.frog) — Returns both Airy functions on independent real F64 outputs ai and bi.
+- [Struve — reference 1](Mathematics/math.special.struve_h.reference_1/main.frog) — Ordinary Struve H function, real order v.
+- [Struve — reference 2](Mathematics/math.special.struve_h.reference_2/main.frog) — Ordinary Struve H function, real order v.
+- [Struve — reference 3](Mathematics/math.special.struve_h.reference_3/main.frog) — Ordinary Struve H function, real order v.
+- [Gamma — reference 1](Mathematics/math.gamma.complete.reference_1/main.frog) — Gamma(x), the real extension of factorial.
+- [Gamma — reference 2](Mathematics/math.gamma.complete.reference_2/main.frog) — Gamma(x), the real extension of factorial.
+- [Gamma — reference 3](Mathematics/math.gamma.complete.reference_3/main.frog) — Gamma(x), the real extension of factorial.
+- [Stirling — reference 1](Mathematics/math.gamma.stirling_leading.reference_1/main.frog) — First Stirling term for Gamma at r=abs(x)>0: sqrt(2*pi)*r^(r-1/2)*exp(-r), evaluated in log space.
+- [Stirling — reference 2](Mathematics/math.gamma.stirling_leading.reference_2/main.frog) — First Stirling term for Gamma at r=abs(x)>0: sqrt(2*pi)*r^(r-1/2)*exp(-r), evaluated in log space.
+- [Stirling — reference 3](Mathematics/math.gamma.stirling_leading.reference_3/main.frog) — First Stirling term for Gamma at r=abs(x)>0: sqrt(2*pi)*r^(r-1/2)*exp(-r), evaluated in log space.
+- [Ln Gamma — reference 1](Mathematics/math.gamma.log_complete.reference_1/main.frog) — Natural logGamma(abs(x)) for required finite x!=0, directly evaluated.
+- [Ln Gamma — reference 2](Mathematics/math.gamma.log_complete.reference_2/main.frog) — Natural logGamma(abs(x)) for required finite x!=0, directly evaluated.
+- [Ln Gamma — reference 3](Mathematics/math.gamma.log_complete.reference_3/main.frog) — Natural logGamma(abs(x)) for required finite x!=0, directly evaluated.
+- [Digamma — reference 1](Mathematics/math.gamma.digamma.reference_1/main.frog) — Psi, the logarithmic derivative of Gamma, evaluated at abs(x)>0 under the NI documented negative-input adapter.
+- [Digamma — reference 2](Mathematics/math.gamma.digamma.reference_2/main.frog) — Psi, the logarithmic derivative of Gamma, evaluated at abs(x)>0 under the NI documented negative-input adapter.
+- [Digamma — reference 3](Mathematics/math.gamma.digamma.reference_3/main.frog) — Psi, the logarithmic derivative of Gamma, evaluated at abs(x)>0 under the NI documented negative-input adapter.
+- [Ln(n!) — reference 1](Mathematics/math.gamma.log_factorial.reference_1/main.frog) — Natural logarithm of factorial for required exact i32 n>=0.
+- [Ln(n!) — reference 2](Mathematics/math.gamma.log_factorial.reference_2/main.frog) — Natural logarithm of factorial for required exact i32 n>=0.
+- [Ln(n!) — reference 3](Mathematics/math.gamma.log_factorial.reference_3/main.frog) — Natural logarithm of factorial for required exact i32 n>=0.
+- [Beta — reference 1](Mathematics/math.beta.complete.reference_1/main.frog) — Complete Beta B(x,y), symmetric in strictly positive real shapes x and y.
+- [Beta — reference 2](Mathematics/math.beta.complete.reference_2/main.frog) — Complete Beta B(x,y), symmetric in strictly positive real shapes x and y.
+- [Beta — reference 3](Mathematics/math.beta.complete.reference_3/main.frog) — Complete Beta B(x,y), symmetric in strictly positive real shapes x and y.
+- [Beta — Regularized Incomplete — reference 1](Mathematics/math.beta.regularized_lower.reference_1/main.frog) — Explicit Regularized Incomplete instance: I_a(x,y), strictly positive real shapes x,y and 0<=a<=1.
+- [Beta — Regularized Incomplete — reference 2](Mathematics/math.beta.regularized_lower.reference_2/main.frog) — Explicit Regularized Incomplete instance: I_a(x,y), strictly positive real shapes x,y and 0<=a<=1.
+- [Beta — Regularized Incomplete — reference 3](Mathematics/math.beta.regularized_lower.reference_3/main.frog) — Explicit Regularized Incomplete instance: I_a(x,y), strictly positive real shapes x,y and 0<=a<=1.
+- [Gamma — Regularized Incomplete — reference 1](Mathematics/math.gamma.regularized_lower.reference_1/main.frog) — Explicit Regularized Incomplete instance: P(shape=x,limit=a), x>0 and a>=0.
+- [Gamma — Regularized Incomplete — reference 2](Mathematics/math.gamma.regularized_lower.reference_2/main.frog) — Explicit Regularized Incomplete instance: P(shape=x,limit=a), x>0 and a>=0.
+- [Gamma — Regularized Incomplete — reference 3](Mathematics/math.gamma.regularized_lower.reference_3/main.frog) — Explicit Regularized Incomplete instance: P(shape=x,limit=a), x>0 and a>=0.
+- [GammaC — reference 1](Mathematics/math.gamma.regularized_upper.reference_1/main.frog) — Regularized upper Gamma Q(shape=abs(x),limit=a).
+- [GammaC — reference 2](Mathematics/math.gamma.regularized_upper.reference_2/main.frog) — Regularized upper Gamma Q(shape=abs(x),limit=a).
+- [GammaC — reference 3](Mathematics/math.gamma.regularized_upper.reference_3/main.frog) — Regularized upper Gamma Q(shape=abs(x),limit=a).
+- [Gauss — reference 1](Mathematics/math.hypergeometric.gauss.reference_1/main.frog) — Evaluates ordinary Gauss hypergeometric 2F1, not a Gaussian density or regularized 2F1/Gamma(c).
+- [Gauss — reference 2](Mathematics/math.hypergeometric.gauss.reference_2/main.frog) — Evaluates ordinary Gauss hypergeometric 2F1, not a Gaussian density or regularized 2F1/Gamma(c).
+- [Gauss — reference 3](Mathematics/math.hypergeometric.gauss.reference_3/main.frog) — Evaluates ordinary Gauss hypergeometric 2F1, not a Gaussian density or regularized 2F1/Gamma(c).
+- [Kummer — reference 1](Mathematics/math.hypergeometric.kummer_m.reference_1/main.frog) — Evaluates ordinary confluent hypergeometric M=1F1, not M/Gamma(b).
+- [Kummer — reference 2](Mathematics/math.hypergeometric.kummer_m.reference_2/main.frog) — Evaluates ordinary confluent hypergeometric M=1F1, not M/Gamma(b).
+- [Kummer — reference 3](Mathematics/math.hypergeometric.kummer_m.reference_3/main.frog) — Evaluates ordinary confluent hypergeometric M=1F1, not M/Gamma(b).
+- [Tricomi — reference 1](Mathematics/math.hypergeometric.tricomi_u.reference_1/main.frog) — Evaluates confluent hypergeometric U, a distinct solution from Kummer M; never 1/M, 1-M or regularized M.
+- [Tricomi — reference 2](Mathematics/math.hypergeometric.tricomi_u.reference_2/main.frog) — Evaluates confluent hypergeometric U, a distinct solution from Kummer M; never 1/M, 1-M or regularized M.
+- [Tricomi — reference 3](Mathematics/math.hypergeometric.tricomi_u.reference_3/main.frog) — Evaluates confluent hypergeometric U, a distinct solution from Kummer M; never 1/M, 1-M or regularized M.
+- [Elliptic 1 — Complete K — reference 1](Mathematics/math.elliptic.first_kind.complete_k.reference_1/main.frog) — Complete elliptic integral of the first kind.
+- [Elliptic 1 — Complete K — reference 2](Mathematics/math.elliptic.first_kind.complete_k.reference_2/main.frog) — Complete elliptic integral of the first kind.
+- [Elliptic 1 — Complete K — reference 3](Mathematics/math.elliptic.first_kind.complete_k.reference_3/main.frog) — Complete elliptic integral of the first kind.
+- [Elliptic 2 — Complete E — reference 1](Mathematics/math.elliptic.second_kind.complete_e.reference_1/main.frog) — Complete elliptic integral of the second kind.
+- [Elliptic 2 — Complete E — reference 2](Mathematics/math.elliptic.second_kind.complete_e.reference_2/main.frog) — Complete elliptic integral of the second kind.
+- [Elliptic 2 — Complete E — reference 3](Mathematics/math.elliptic.second_kind.complete_e.reference_3/main.frog) — Complete elliptic integral of the second kind.
+- [Elliptic 1 — reference 1](Mathematics/math.elliptic.first_kind.incomplete_f.reference_1/main.frog) — Incomplete elliptic integral of the first kind.
+- [Elliptic 1 — reference 2](Mathematics/math.elliptic.first_kind.incomplete_f.reference_2/main.frog) — Incomplete elliptic integral of the first kind.
+- [Elliptic 1 — reference 3](Mathematics/math.elliptic.first_kind.incomplete_f.reference_3/main.frog) — Incomplete elliptic integral of the first kind.
+- [Elliptic 2 — reference 1](Mathematics/math.elliptic.second_kind.incomplete_e.reference_1/main.frog) — Incomplete elliptic integral of the second kind.
+- [Elliptic 2 — reference 2](Mathematics/math.elliptic.second_kind.incomplete_e.reference_2/main.frog) — Incomplete elliptic integral of the second kind.
+- [Elliptic 2 — reference 3](Mathematics/math.elliptic.second_kind.incomplete_e.reference_3/main.frog) — Incomplete elliptic integral of the second kind.
+- [Erf — reference 1](Mathematics/math.special.error_functions.erf.reference_1/main.frog) — Evaluates erf(q)=2/sqrt(pi)*integral(0,q,exp(-t*t),dt).
+- [Erf — reference 2](Mathematics/math.special.error_functions.erf.reference_2/main.frog) — Evaluates erf(q)=2/sqrt(pi)*integral(0,q,exp(-t*t),dt).
+- [Erf — reference 3](Mathematics/math.special.error_functions.erf.reference_3/main.frog) — Evaluates erf(q)=2/sqrt(pi)*integral(0,q,exp(-t*t),dt).
+- [ErfC — reference 1](Mathematics/math.special.error_functions.erfc.reference_1/main.frog) — Evaluates the complementary error function erfc(q)=2/sqrt(pi)*integral(q,infinity,exp(-t*t),dt), directly rather than subtracting rounded erf from 1.
+- [ErfC — reference 2](Mathematics/math.special.error_functions.erfc.reference_2/main.frog) — Evaluates the complementary error function erfc(q)=2/sqrt(pi)*integral(q,infinity,exp(-t*t),dt), directly rather than subtracting rounded erf from 1.
+- [ErfC — reference 3](Mathematics/math.special.error_functions.erfc.reference_3/main.frog) — Evaluates the complementary error function erfc(q)=2/sqrt(pi)*integral(q,infinity,exp(-t*t),dt), directly rather than subtracting rounded erf from 1.
+- [Scaled ErfC — reference 1](Mathematics/math.special.error_functions.erfcx.reference_1/main.frog) — Evaluates erfcx(q)=exp(q*q)*erfc(q) with a dedicated stable algorithm, avoiding infinity*0.
+- [Scaled ErfC — reference 2](Mathematics/math.special.error_functions.erfcx.reference_2/main.frog) — Evaluates erfcx(q)=exp(q*q)*erfc(q) with a dedicated stable algorithm, avoiding infinity*0.
+- [Scaled ErfC — reference 3](Mathematics/math.special.error_functions.erfcx.reference_3/main.frog) — Evaluates erfcx(q)=exp(q*q)*erfc(q) with a dedicated stable algorithm, avoiding infinity*0.
+- [Inverse Erf — reference 1](Mathematics/math.special.error_functions.erfinv.reference_1/main.frog) — Solves erf(y)=q; this inverse function is not the reciprocal 1/erf(q).
+- [Inverse Erf — reference 2](Mathematics/math.special.error_functions.erfinv.reference_2/main.frog) — Solves erf(y)=q; this inverse function is not the reciprocal 1/erf(q).
+- [Inverse Erf — reference 3](Mathematics/math.special.error_functions.erfinv.reference_3/main.frog) — Solves erf(y)=q; this inverse function is not the reciprocal 1/erf(q).
+- [Inverse ErfC — reference 1](Mathematics/math.special.error_functions.erfcinv.reference_1/main.frog) — Solves erfc(y)=q; this is not inverse erf or reciprocal 1/erfc(q).
+- [Inverse ErfC — reference 2](Mathematics/math.special.error_functions.erfcinv.reference_2/main.frog) — Solves erfc(y)=q; this is not inverse erf or reciprocal 1/erfc(q).
+- [Inverse ErfC — reference 3](Mathematics/math.special.error_functions.erfcinv.reference_3/main.frog) — Solves erfc(y)=q; this is not inverse erf or reciprocal 1/erfc(q).
+- [Fresnel — reference 1](Mathematics/math.special.error_functions.fresnel.reference_1/main.frog) — Evaluates normalized C(q)=integral(0,q,cos(pi*t*t/2),dt) and S(q)=integral(0,q,sin(pi*t*t/2),dt).
+- [Fresnel — reference 2](Mathematics/math.special.error_functions.fresnel.reference_2/main.frog) — Evaluates normalized C(q)=integral(0,q,cos(pi*t*t/2),dt) and S(q)=integral(0,q,sin(pi*t*t/2),dt).
+- [Fresnel — reference 3](Mathematics/math.special.error_functions.fresnel.reference_3/main.frog) — Evaluates normalized C(q)=integral(0,q,cos(pi*t*t/2),dt) and S(q)=integral(0,q,sin(pi*t*t/2),dt).
+- [Dawson — reference 1](Mathematics/math.special.error_functions.dawson.reference_1/main.frog) — Evaluates Dawson D(q)=exp(-q*q)*integral(0,q,exp(t*t),dt) with a dedicated stable algorithm.
+- [Dawson — reference 2](Mathematics/math.special.error_functions.dawson.reference_2/main.frog) — Evaluates Dawson D(q)=exp(-q*q)*integral(0,q,exp(t*t),dt) with a dedicated stable algorithm.
+- [Dawson — reference 3](Mathematics/math.special.error_functions.dawson.reference_3/main.frog) — Evaluates Dawson D(q)=exp(-q*q)*integral(0,q,exp(t*t),dt) with a dedicated stable algorithm.
+- [Exponential Integral — reference 1](Mathematics/math.special.exponential_integrals.expn.reference_1/main.frog) — Evaluates E_n(q)=integral(1,infinity,exp(-q*t)/t^n,dt), q=abs(x), with required integer n>=0 and no default order.
+- [Exponential Integral — reference 2](Mathematics/math.special.exponential_integrals.expn.reference_2/main.frog) — Evaluates E_n(q)=integral(1,infinity,exp(-q*t)/t^n,dt), q=abs(x), with required integer n>=0 and no default order.
+- [Exponential Integral — reference 3](Mathematics/math.special.exponential_integrals.expn.reference_3/main.frog) — Evaluates E_n(q)=integral(1,infinity,exp(-q*t)/t^n,dt), q=abs(x), with required integer n>=0 and no default order.
+- [Sine Integral — reference 1](Mathematics/math.special.exponential_integrals.si.reference_1/main.frog) — Evaluates Si(x)=integral(0,x,sin(t)/t,dt) in radians with signed x.
+- [Sine Integral — reference 2](Mathematics/math.special.exponential_integrals.si.reference_2/main.frog) — Evaluates Si(x)=integral(0,x,sin(t)/t,dt) in radians with signed x.
+- [Sine Integral — reference 3](Mathematics/math.special.exponential_integrals.si.reference_3/main.frog) — Evaluates Si(x)=integral(0,x,sin(t)/t,dt) in radians with signed x.
+- [Cosine Integral — reference 1](Mathematics/math.special.exponential_integrals.ci.reference_1/main.frog) — Evaluates real Ci(abs(x)), including Euler gamma plus log(q) normalization.
+- [Cosine Integral — reference 2](Mathematics/math.special.exponential_integrals.ci.reference_2/main.frog) — Evaluates real Ci(abs(x)), including Euler gamma plus log(q) normalization.
+- [Cosine Integral — reference 3](Mathematics/math.special.exponential_integrals.ci.reference_3/main.frog) — Evaluates real Ci(abs(x)), including Euler gamma plus log(q) normalization.
+- [Dilogarithm — reference 1](Mathematics/math.special.exponential_integrals.dilogarithm.reference_1/main.frog) — Evaluates D(q)=-Li2(1-q)=integral(1,q,ln(t)/(t-1),dt), q=abs(x), following the NI/CVI equation.
+- [Dilogarithm — reference 2](Mathematics/math.special.exponential_integrals.dilogarithm.reference_2/main.frog) — Evaluates D(q)=-Li2(1-q)=integral(1,q,ln(t)/(t-1),dt), q=abs(x), following the NI/CVI equation.
+- [Dilogarithm — reference 3](Mathematics/math.special.exponential_integrals.dilogarithm.reference_3/main.frog) — Evaluates D(q)=-Li2(1-q)=integral(1,q,ln(t)/(t-1),dt), q=abs(x), following the NI/CVI equation.
+- [Hyperbolic Sine Integral — reference 1](Mathematics/math.special.exponential_integrals.shi.reference_1/main.frog) — Evaluates Shi(abs(x))=integral(0,abs(x),sinh(t)/t,dt).
+- [Hyperbolic Sine Integral — reference 2](Mathematics/math.special.exponential_integrals.shi.reference_2/main.frog) — Evaluates Shi(abs(x))=integral(0,abs(x),sinh(t)/t,dt).
+- [Hyperbolic Sine Integral — reference 3](Mathematics/math.special.exponential_integrals.shi.reference_3/main.frog) — Evaluates Shi(abs(x))=integral(0,abs(x),sinh(t)/t,dt).
+- [Hyperbolic Cosine Integral — reference 1](Mathematics/math.special.exponential_integrals.chi.reference_1/main.frog) — Evaluates real Chi(abs(x)) with Euler gamma plus log(q) normalization.
+- [Hyperbolic Cosine Integral — reference 2](Mathematics/math.special.exponential_integrals.chi.reference_2/main.frog) — Evaluates real Chi(abs(x)) with Euler gamma plus log(q) normalization.
+- [Hyperbolic Cosine Integral — reference 3](Mathematics/math.special.exponential_integrals.chi.reference_3/main.frog) — Evaluates real Chi(abs(x)) with Euler gamma plus log(q) normalization.
+- [Jacobi Elliptic — reference 1](Mathematics/math.special.elliptic_parabolic_functions.jacobi_elliptic.reference_1/main.frog) — Evaluates Jacobi cn, dn, sn and continuous amplitude phi for real x and parameter m=k (not k squared and not the modulus).
+- [Jacobi Elliptic — reference 2](Mathematics/math.special.elliptic_parabolic_functions.jacobi_elliptic.reference_2/main.frog) — Evaluates Jacobi cn, dn, sn and continuous amplitude phi for real x and parameter m=k (not k squared and not the modulus).
+- [Jacobi Elliptic — reference 3](Mathematics/math.special.elliptic_parabolic_functions.jacobi_elliptic.reference_3/main.frog) — Evaluates Jacobi cn, dn, sn and continuous amplitude phi for real x and parameter m=k (not k squared and not the modulus).
+- [Parabolic Cylinder — reference 1](Mathematics/math.special.elliptic_parabolic_functions.parabolic_cylinder.reference_1/main.frog) — Evaluates the normalized parabolic cylinder function Dv(x), the Weber solution with Dv(z)~z^v exp(-z*z/4) at positive infinity.
+- [Parabolic Cylinder — reference 2](Mathematics/math.special.elliptic_parabolic_functions.parabolic_cylinder.reference_2/main.frog) — Evaluates the normalized parabolic cylinder function Dv(x), the Weber solution with Dv(z)~z^v exp(-z*z/4) at positive infinity.
+- [Parabolic Cylinder — reference 3](Mathematics/math.special.elliptic_parabolic_functions.parabolic_cylinder.reference_3/main.frog) — Evaluates the normalized parabolic cylinder function Dv(x), the Weber solution with Dv(z)~z^v exp(-z*z/4) at positive infinity.
+- [GCD — basic exact](Mathematics/math.discrete.gcd.basic_exact/main.frog) — Computes the nonnegative greatest common divisor of two I32 integers.
+- [LCM — basic exact](Mathematics/math.discrete.lcm.basic_exact/main.frog) — Computes the nonnegative least common multiple of two I32 integers in I64 arithmetic.
+- [Factorial — basic exact](Mathematics/math.discrete.factorial.basic_exact/main.frog) — Computes n! for an I32 integer, returning F64.
+- [Check Prime — basic exact](Mathematics/math.discrete.check_prime.basic_exact/main.frog) — Returns a Boolean primality result for an I64 integer.
+- [Permute — basic exact](Mathematics/math.discrete.permute.basic_exact/main.frog) — Counts ordered selections of k distinct elements among n, without replacement.
+- [Binomial Coefficient — basic exact](Mathematics/math.discrete.binomial.basic_exact/main.frog) — Counts unordered selections of k distinct elements among n.
+- [Evaluate an arithmetic formula](Mathematics/math.formula.eval_string.precedence/main.frog) — Expression precedence is explicit: 2 + 3 * 4 = 14. This actual compiled Formula service has no free variable.
+- [Evaluate a polynomial at x=3](Mathematics/math.formula.single_scalar.polynomial/main.frog) — The one named variable is bound to scalar x. x^2 + 2*x + 1 at 3 equals 16; the standard Error Cluster is also observed.
+- [Evaluate a formula at three points](Mathematics/math.formula.single_array.polynomial/main.frog) — A rank-one F64 Array is evaluated element by element: x^2+1 at [-2,0,3] gives [5,1,10]. No shape or point is manufactured.
+- [Bind three named formula variables](Mathematics/math.formula.multi_scalar.named-variables/main.frog) — variables and x_values have a one-to-one relation. 2*a-b+c^2 with a=4,b=3,c=2 equals 9.
+- [Evaluate named variables over three columns](Mathematics/math.formula.multi_array.variables-by-points/main.frog) — The FROG profile stores one row per variable and one column per point. 10*a+b over rows [1,2,3] and [4,5,6] gives [14,25,36].
+- [Evaluate assignments with ordered outputs](Mathematics/math.formula.node.ordered-outputs/main.frog) — Input names [x,z,q] bind [3,4,5]. The requested output order [p,y] yields [25,10], independently of assignment order.
+- [Evaluate a persisted prepared expression](Mathematics/math.formula.parsed_string.reordered-bindings/main.frog) — The real authoring producer stores the versioned FROG AST of x^2+c. Binding [c,x] to [4,5] yields 29. This portable Record is not an NI binary instruction table.
+- [Evaluate a persisted prepared assignment program](Mathematics/math.formula.parsed_node.ordered-outputs/main.frog) — The real authoring producer stores named inputs [x,z,q] and outputs [p,y] with its AST. Values [3,4,5] produce [25,10] without reparsing the original source text at execution.
+- [Sample a formula with named parameters](Mathematics/math.formula.y_parameters.affine/main.frog) — Parameters a=2,b=1 are distinct from the independent variable x. Three equidistant points from 0 to 2 produce x=[0,1,2],y=[1,3,5]. ticks measures real execution time and is intentionally not compared to a fabricated constant.
+- [Sample a two-variable surface](Mathematics/math.formula.surface.row-major/main.frog) — For 100*x1+x2, rows follow x2 and columns follow x1 in the explicit FROG v1 layout. The output is a rank-two Array, distinct from a Matrix.
+- [Sample a surface with parameters](Mathematics/math.formula.surface_parameters.weighted-grid/main.frog) — With a=2,b=3, a*x1+b*x2 is sampled at x1=[0,1],x2=[0,2]. Named parameter Records and the rank-two output persist in the actual document.
+- [Sample three parametric coordinates](Mathematics/math.formula.xyz.parameter-order/main.frog) — The t1 axis varies fastest in the FROG v1 flattened grid. Formulas [t1,t2,t1+2*t2] preserve the ordered coordinate triple at all four points.
+- [Sample three coordinates with parameters](Mathematics/math.formula.xyz_parameters.named-parameters/main.frog) — Named a=2,b=3,c=5 scale and offset three coordinate formulas. The points remain in t1-fastest order, with no conversion to nominal Matrix.
+- [Sample two coordinates of a curve](Mathematics/math.formula.xy.polynomial-curve/main.frog) — The parameter t is sampled at [0,1,2]. Formulas [2*t,t^2] give the independent point pairs (0,0),(2,1),(4,4).
+- [Sample a curve with named parameters](Mathematics/math.formula.xy_parameters.affine-curve/main.frog) — With a=2,b=1 and t=[0,1,2], [a*t,b+t] gives x=[0,2,4],y=[1,2,3]. The parameter Array contains genuine named Cluster values.
+- [Sample a polar quarter circle](Mathematics/math.formula.polar.quarter-circle/main.frog) — Radius 2 over angles [0,pi/4,pi/2] gives x=[2,sqrt(2),0],y=[0,sqrt(2),2]. The oracle uses analytic constants with absolute/relative tolerance 1e-12.
+- [Adaptive sampling keeps an exact straight line](Mathematics/math.formula.y_optimal.affine-no-refinement/main.frog) — The explicit FROG refinement rule needs no extra point on 2*x+1. Initial parameter points [0,1,2] remain ordered. This example does not claim the same adaptive grid as NI.
+- [Adaptive coordinates preserve a straight line](Mathematics/math.formula.xy_optimal.affine-no-refinement/main.frog) — For [2*t,t+1], every intermediate point lies exactly on the chord. The FROG refinement rule keeps the initial three parameter points and both endpoint occurrences.
+- [Adaptive polar sampling preserves parameter occurrences](Mathematics/math.formula.polar_optimal.zero-radius/main.frog) — Zero radius gives three coincident coordinate pairs. At angles 0,1,2, cos(2) is negative, so +0*cos(2) is IEEE -0; the independent x oracle preserves that sign. Distinct parameter occurrences are retained; the output must not deduplicate them merely because their coordinates agree.
+- [Add: mixed i32 f64](Numeric/numeric.add.native_owned_mixed_i32_f64/main.frog) — Exact representable conversion and elementary sum. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: scalar array i32](Numeric/numeric.add.native_owned_scalar_array_i32/main.frog) — Apply the scalar independently to each of the three existing elements. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: array scalar i32](Numeric/numeric.add.native_owned_array_scalar_i32/main.frog) — Same lifting law in the other operand order. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arrays i32](Numeric/numeric.add.native_owned_arrays_i32/main.frog) — Elementwise sums on exactly equal shapes. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: empty i32](Numeric/numeric.add.native_owned_empty_i32/main.frog) — A typed empty Array has shape[0], retains its type and creates no element. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: rank2 i32](Numeric/numeric.add.native_owned_rank2_i32/main.frog) — Row-major rank and shape stay unchanged. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: i64 precision](Numeric/numeric.add.native_owned_i64_precision/main.frog) — Exact integer identity beyond2^53; no floating intermediate is permitted. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: u64 wrap](Numeric/numeric.add.native_owned_u64_wrap/main.frog) — Modulo2^64: maximum+1 is0. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: i32 wrap](Numeric/numeric.add.native_owned_i32_wrap/main.frog) — Modulo2^32 with restoration of the signed representation. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: i16 array promoted i32](Numeric/numeric.add.native_owned_i16_array_promoted_i32/main.frog) — The authored common type is I32; the source Array stays I16 and is not rebound as an I32 input. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: i64 extremes](Numeric/numeric.add.native_owned_i64_extremes/main.frog) — Exact signed carrier and modulo2^64 restore, with no invalid signed C++ overflow. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: f64 left fold](Numeric/numeric.add.native_owned_f64_left_fold/main.frog) — (1e16 + -1e16)+1 is1; reassociation would produce0. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: f32 left fold](Numeric/numeric.add.native_owned_f32_left_fold/main.frog) — A binary32 addition rounds at every step;2^24+1 first rounds to2^24. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: logical i128 then f64](Numeric/numeric.add.native_owned_logical_i128_then_f64/main.frog) — Type fold I64/U64 logically reachesI128, then finalF64. Convert all actual values to finalF64 before arithmetic; never construct an I128 value. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: negative zero](Numeric/numeric.add.native_owned_negative_zero/main.frog) — IEEE sum of two negative zeros remains negative zero in the ordinary nearest mode. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: i64 direct f32 round](Numeric/numeric.add.native_owned_i64_direct_f32_round/main.frog) — Exact integer is1 above the binary32 halfway value: direct nearest-even conversion gives bits0x5e800001. A double intermediate would incorrectly return0x5e800000 for PromotionV1. Adding binary32zero preserves this finite result. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 2](Numeric/numeric.add.native_owned_arity_2/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 3](Numeric/numeric.add.native_owned_arity_3/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 4](Numeric/numeric.add.native_owned_arity_4/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 5](Numeric/numeric.add.native_owned_arity_5/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 6](Numeric/numeric.add.native_owned_arity_6/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 7](Numeric/numeric.add.native_owned_arity_7/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 8](Numeric/numeric.add.native_owned_arity_8/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 9](Numeric/numeric.add.native_owned_arity_9/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 10](Numeric/numeric.add.native_owned_arity_10/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 11](Numeric/numeric.add.native_owned_arity_11/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 12](Numeric/numeric.add.native_owned_arity_12/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 13](Numeric/numeric.add.native_owned_arity_13/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 14](Numeric/numeric.add.native_owned_arity_14/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 15](Numeric/numeric.add.native_owned_arity_15/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: arity 16](Numeric/numeric.add.native_owned_arity_16/main.frog) — The true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: shape length rejected](Numeric/numeric.add.native_owned_shape_length_rejected/main.frog) — Shapes[2] and[3] are incompatible; keep a connected real indicator to verify that it receives nothing. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: shape equal count rejected](Numeric/numeric.add.native_owned_shape_equal_count_rejected/main.frog) — Equal element counts do not make shapes[2,2] and[1,4] compatible. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Add: nonfinite result rejected](Numeric/numeric.add.native_owned_nonfinite_result_rejected/main.frog) — The finite owned SDK profile cannot carry+Infinity; reject atomically rather than publish an empty Array or zero. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.
+- [Numeric String to byte Array](Numeric/numeric.conversion.string_to_byte_array.ascii/main.frog) — The Numeric palette alias uses the existing native raw-byte operation. The persisted endpoints remain value/result. NUL is data; no character decoding or numeric conversion occurs.
+- [Numeric String to byte Array](Numeric/numeric.conversion.string_to_byte_array.empty/main.frog) — The Numeric palette alias uses the existing native raw-byte operation. The persisted endpoints remain value/result. NUL is data; no character decoding or numeric conversion occurs.
+- [Numeric String to byte Array](Numeric/numeric.conversion.string_to_byte_array.utf8-nul/main.frog) — The Numeric palette alias uses the existing native raw-byte operation. The persisted endpoints remain value/result. NUL is data; no character decoding or numeric conversion occurs.
+- [Numeric byte Array to String](Numeric/numeric.conversion.byte_array_to_string.ascii/main.frog) — The Numeric palette alias uses the existing native raw-byte operation. The persisted endpoints remain value/result. NUL is data; no character decoding or numeric conversion occurs.
+- [Numeric byte Array to String](Numeric/numeric.conversion.byte_array_to_string.empty/main.frog) — The Numeric palette alias uses the existing native raw-byte operation. The persisted endpoints remain value/result. NUL is data; no character decoding or numeric conversion occurs.
+- [Numeric byte Array to String](Numeric/numeric.conversion.byte_array_to_string.utf8-nul/main.frog) — The Numeric palette alias uses the existing native raw-byte operation. The persisted endpoints remain value/result. NUL is data; no character decoding or numeric conversion occurs.
+- [Read an unnormalized binary String](Numeric/numeric.conversion.string_to_byte_array.binary-intermediate/main.frog) — The Numeric palette alias uses the existing native raw-byte operation. The persisted endpoints remain value/result. NUL is data; no character decoding or numeric conversion occurs.
+- [Preserve all bytes through both Numeric aliases](Numeric/numeric.conversion.byte_array_to_string.binary-roundtrip/main.frog) — The Numeric palette alias uses the existing native raw-byte operation. The persisted endpoints remain value/result. NUL is data; no character decoding or numeric conversion occurs.
+- [Scale by a rounded power of two](Numeric/numeric.scale_power_two.half/main.frog) — The exact scalar signature is x:F64,n:F64 -> result:F64. With x=8, floating n rounds to the nearest even integer before scaling. The exponent's type remains F64; no implicit promotion or integer shift is claimed.
+- [Scale by a rounded power of two](Numeric/numeric.scale_power_two.above-half/main.frog) — The exact scalar signature is x:F64,n:F64 -> result:F64. With x=8, floating n rounds to the nearest even integer before scaling. The exponent's type remains F64; no implicit promotion or integer shift is claimed.
+- [Scale by a rounded power of two](Numeric/numeric.scale_power_two.one-half/main.frog) — The exact scalar signature is x:F64,n:F64 -> result:F64. With x=8, floating n rounds to the nearest even integer before scaling. The exponent's type remains F64; no implicit promotion or integer shift is claimed.
+- [Scale by a rounded power of two](Numeric/numeric.scale_power_two.two-half/main.frog) — The exact scalar signature is x:F64,n:F64 -> result:F64. With x=8, floating n rounds to the nearest even integer before scaling. The exponent's type remains F64; no implicit promotion or integer shift is claimed.
+- [Scale by a rounded power of two](Numeric/numeric.scale_power_two.negative-half/main.frog) — The exact scalar signature is x:F64,n:F64 -> result:F64. With x=8, floating n rounds to the nearest even integer before scaling. The exponent's type remains F64; no implicit promotion or integer shift is claimed.
+- [Scale by a rounded power of two](Numeric/numeric.scale_power_two.below-negative-half/main.frog) — The exact scalar signature is x:F64,n:F64 -> result:F64. With x=8, floating n rounds to the nearest even integer before scaling. The exponent's type remains F64; no implicit promotion or integer shift is claimed.
+- [Scale by a rounded power of two](Numeric/numeric.scale_power_two.negative-one-half/main.frog) — The exact scalar signature is x:F64,n:F64 -> result:F64. With x=8, floating n rounds to the nearest even integer before scaling. The exponent's type remains F64; no implicit promotion or integer shift is claimed.
+- [Scale by a rounded power of two](Numeric/numeric.scale_power_two.negative-two-half/main.frog) — The exact scalar signature is x:F64,n:F64 -> result:F64. With x=8, floating n rounds to the nearest even integer before scaling. The exponent's type remains F64; no implicit promotion or integer shift is claimed.
+- [String Length — ascii](string/string.length.ascii/main.frog) — Length counts bytes, including NUL. UTF-8 é occupies two bytes; this example does not count Unicode characters.
+- [String Length — empty](string/string.length.empty/main.frog) — Length counts bytes, including NUL. UTF-8 é occupies two bytes; this example does not count Unicode characters.
+- [String Length — utf8](string/string.length.utf8/main.frog) — Length counts bytes, including NUL. UTF-8 é occupies two bytes; this example does not count Unicode characters.
+- [String Length — nul](string/string.length.nul/main.frog) — Length counts bytes, including NUL. UTF-8 é occupies two bytes; this example does not count Unicode characters.
+- [String Subset — basic](string/string.subset.basic/main.frog) — Offsets and length are bytes. Negative offset uses zero, absent length means the rest, and a nonpositive length produces an empty String.
+- [String Subset — defaults](string/string.subset.defaults/main.frog) — Offsets and length are bytes. Negative offset uses zero, absent length means the rest, and a nonpositive length produces an empty String.
+- [String Subset — negative-offset](string/string.subset.negative-offset/main.frog) — Offsets and length are bytes. Negative offset uses zero, absent length means the rest, and a nonpositive length produces an empty String.
+- [String Subset — outside](string/string.subset.outside/main.frog) — Offsets and length are bytes. Negative offset uses zero, absent length means the rest, and a nonpositive length produces an empty String.
+- [String Subset — zero-length](string/string.subset.zero-length/main.frog) — Offsets and length are bytes. Negative offset uses zero, absent length means the rest, and a nonpositive length produces an empty String.
+- [String Subset — negative-length](string/string.subset.negative-length/main.frog) — Offsets and length are bytes. Negative offset uses zero, absent length means the rest, and a nonpositive length produces an empty String.
+- [String Subset — excessive-length](string/string.subset.excessive-length/main.frog) — Offsets and length are bytes. Negative offset uses zero, absent length means the rest, and a nonpositive length produces an empty String.
+- [string.reverse — bytes](string/string.reverse.ascii/main.frog) — The operation transforms ASCII bytes and leaves non-ASCII bytes unchanged for case conversion. Rotate moves exactly the first byte to the end.
+- [string.rotate — bytes](string/string.rotate.ascii/main.frog) — The operation transforms ASCII bytes and leaves non-ASCII bytes unchanged for case conversion. Rotate moves exactly the first byte to the end.
+- [string.to_upper — bytes](string/string.to_upper.ascii/main.frog) — The operation transforms ASCII bytes and leaves non-ASCII bytes unchanged for case conversion. Rotate moves exactly the first byte to the end.
+- [string.to_lower — bytes](string/string.to_lower.ascii/main.frog) — The operation transforms ASCII bytes and leaves non-ASCII bytes unchanged for case conversion. Rotate moves exactly the first byte to the end.
+- [Concatenate three Strings](string/string.concatenate.three/main.frog) — The canonical persisted endpoint order a, b, input_3 controls concatenation. Geometry does not reorder bytes.
+- [Concatenate a String Array](string/string.concatenate.array1d/main.frog) — A one-dimensional String Array contributes its elements in index order. The trailing scalar is then appended.
+- [Search/Split String — found](string/string.search-split.found/main.frog) — An exact byte substring search returns the prefix and matching suffix. A missing match returns offset -1 and an empty matching suffix.
+- [Search/Split String — missing](string/string.search-split.missing/main.frog) — An exact byte substring search returns the prefix and matching suffix. A missing match returns offset -1 and an empty matching suffix.
+- [Split String at a byte offset](string/string.search-split.offset-only/main.frog) — When search String is unwired, the offset alone splits the value. No search token or Enter-like validation is fabricated.
+- [Replace Substring — default-length](string/string.replace-substring.default-length/main.frog) — The offset and replacement length are bytes. Missing length uses the replacement byte count, zero inserts, and empty replacement deletes.
+- [Replace Substring — insert](string/string.replace-substring.insert/main.frog) — The offset and replacement length are bytes. Missing length uses the replacement byte count, zero inserts, and empty replacement deletes.
+- [Replace Substring — delete](string/string.replace-substring.delete/main.frog) — The offset and replacement length are bytes. Missing length uses the replacement byte count, zero inserts, and empty replacement deletes.
+- [Rotate 1D Array — right](array/array.rotate.right/main.frog) — Positive offset moves the last elements to the front. Negative offset rotates left. Complete cycles preserve values and order.
+- [Rotate 1D Array — left](array/array.rotate.left/main.frog) — Positive offset moves the last elements to the front. Negative offset rotates left. Complete cycles preserve values and order.
+- [Rotate 1D Array — full-cycle](array/array.rotate.full-cycle/main.frog) — Positive offset moves the last elements to the front. Negative offset rotates left. Complete cycles preserve values and order.
+- [Reverse exact I64 elements](array/array.reverse.exact-i64/main.frog) — The operation reverses immutable elements without a floating-point conversion. The value 9007199254740993 remains exact.
+- [Split 1D Array — middle](array/array.split.middle/main.frog) — The second array starts at the split index. Indices outside the array clamp to its ends; elements are preserved.
+- [Split 1D Array — negative](array/array.split.negative/main.frog) — The second array starts at the split index. Indices outside the array clamp to its ends; elements are preserved.
+- [Split 1D Array — past-end](array/array.split.past-end/main.frog) — The second array starts at the split index. Indices outside the array clamp to its ends; elements are preserved.
+- [Transpose a 2 × 3 Array](array/array.transpose.rectangular/main.frog) — A two-dimensional Array is distinct from the Matrix type. Transpose swaps the two dimensions and preserves every exact element in row-major order.
+- [Read both Array dimensions](array/array.size.rank2/main.frog) — Array Size returns one dimension per axis for rank two, independently from its total element count.
+- [Reverse String elements without altering bytes](array/array.reverse.strings-nul/main.frog) — Array reversal changes element order only. The embedded NUL and UTF-8 bytes inside each String remain unchanged.
+- [Transpose an empty rectangular shape](array/array.transpose.empty-shape/main.frog) — An empty Array still has two distinct dimensions. Shape [0,3] becomes [3,0], without allocating elements or losing its rank.
+- [String bytes retain UTF-8 and NUL](array/array.bytes.utf8-nul/main.frog) — This is a byte conversion, not Unicode character indexing. é, NUL and A produce bytes 195, 169, 0, 65.
+- [Convert bytes including NUL to String](array/array.bytes.to-string/main.frog) — Byte Array To String preserves all bytes, including NUL; no C-string termination is used.
+- [Reverse bytes without repairing UTF-8](string/string.reverse.binary-intermediate/main.frog) — Reverse moves bytes, not Unicode characters. Reversing the UTF-8 encoding of é creates bytes 169, 195. The next real function reads this binary intermediate as U8; no invalid UTF-8 string is saved as a literal.
+- [Convert ASCII codes without rounding I64](string/string.to-upper.exact-i64-array/main.frog) — The numeric overload preserves the exact I64 Array schema and order. ASCII codes 97 and 122 become 65 and 90; the unrelated exact integer 9007199254740993 remains unchanged.
+- [Construct a heterogeneous Cluster](cluster/cluster.bundle.construct/main.frog) — Without an incoming Cluster, Bundle constructs its ordered heterogeneous schema. The Cluster keeps individual exact field values.
+- [Replace one ordered Cluster field](cluster/cluster.bundle.replace-one/main.frog) — The incoming Cluster fixes its field order and types. Only the wired first field is replaced; the String and Boolean values remain unchanged.
+- [Bundle — preserve-all](cluster/cluster.bundle.preserve-all/main.frog) — An incoming Cluster retains every unwired field. Replacement rows keep their semantic positions even when preceding or intervening rows are unwired.
+- [Bundle — replace-middle](cluster/cluster.bundle.replace-middle/main.frog) — An incoming Cluster retains every unwired field. Replacement rows keep their semantic positions even when preceding or intervening rows are unwired.
+- [Bundle — replace-outer](cluster/cluster.bundle.replace-outer/main.frog) — An incoming Cluster retains every unwired field. Replacement rows keep their semantic positions even when preceding or intervening rows are unwired.
+- [Unbundle derives its outputs from the incoming Cluster](cluster/cluster.unbundle.schema-arity/main.frog) — The saved node still records one historical row, while its actual incoming Cluster has three fields. Loading and compilation must expose all three outputs without changing that authored count or losing hidden fields.
+- [Variant retains an exact I64](variant/variant.exact-i64-roundtrip/main.frog) — Boxing owns an immutable typed value. Variant To Data extracts one envelope only when its type specimen matches exactly; it must not route I64 through F64.
+- [String Length preserves Cluster fields](string/string.length.cluster-tree/main.frog) — Each String leaf is replaced by its byte length. Cluster field identities and names remain in the same order, including when UTF-8 uses several bytes.
+- [Array To Cluster pads missing elements](array/array.to-cluster.padding/main.frog) — The configured Cluster has three fields. Two array elements fill its first fields and the missing final field receives its intrinsic I32 default; excess array elements would be ignored.
+- [Array To Cluster ignores excess elements](array/array.to-cluster.excess/main.frog) — The configured three fields receive the first three I32 elements in index order. The fourth input element is ignored; no default provider is needed.
+- [Cluster To Array promotes numeric fields](cluster/cluster.to-array.promotion/main.frog) — I16 and I32 fields promote to the resolver's common I32 element type. Field order determines array order; stable field IDs remain in the original Cluster.
+- [Cluster To Array preserves homogeneous I64](cluster/cluster.to-array.exact-i64/main.frog) — Homogeneous fields retain their exact integer carrier. An integer above 2^53 remains unchanged, and stable Cluster field order determines Array order.
+- [Array To Cluster pads missing elements — alternate palette entry](cluster/cluster.array-to-cluster.alias/main.frog) — The configured Cluster has three fields. Two array elements fill its first fields and the missing final field receives its intrinsic I32 default; excess array elements would be ignored.
+- [Cluster To Array preserves homogeneous I64 — alternate palette entry](array/array.cluster-to-array.alias/main.frog) — Homogeneous fields retain their exact integer carrier. An integer above 2^53 remains unchanged, and stable Cluster field order determines Array order.
+- [Search And Replace String — first](string/string.search-replace.first/main.frog) — The existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode case-folding is an explicit unavailable-provider diagnostic.
+- [Search And Replace String — all](string/string.search-replace.all/main.frog) — The existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode case-folding is an explicit unavailable-provider diagnostic.
+- [Search And Replace String — delete-default](string/string.search-replace.delete-default/main.frog) — The existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode case-folding is an explicit unavailable-provider diagnostic.
+- [Search And Replace String — offset](string/string.search-replace.offset/main.frog) — The existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode case-folding is an explicit unavailable-provider diagnostic.
+- [Search And Replace String — not-found](string/string.search-replace.not-found/main.frog) — The existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode case-folding is an explicit unavailable-provider diagnostic.
+- [Search And Replace String — incoming-error](string/string.search-replace.incoming-error/main.frog) — The existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode case-folding is an explicit unavailable-provider diagnostic.
+- [Search And Replace String — empty-search.profile-error](string/string.search-replace.empty-search.profile-error/main.frog) — The existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode case-folding is an explicit unavailable-provider diagnostic.
+- [Search And Replace String — offset-outside.profile-error](string/string.search-replace.offset-outside.profile-error/main.frog) — The existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode case-folding is an explicit unavailable-provider diagnostic.
+- [Search And Replace String — utf8-boundary.profile-error](string/string.search-replace.utf8-boundary.profile-error/main.frog) — The existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode case-folding is an explicit unavailable-provider diagnostic.
+- [Search And Replace String — casefold-unavailable](string/string.search-replace.casefold-unavailable/main.frog) — The existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode case-folding is an explicit unavailable-provider diagnostic.
+- [Build Map — last repeated key wins](collection/collection.map.build.duplicate-key/main.frog) — Rows are evaluated in their persisted logical order. The last value supplied for key A replaces the first; the displayed Map is ordered by its declared key comparator.
+- [Insert Into Map — new](collection/collection.map.insert.new/main.frog) — Insertion preserves the exact Map<K,V> model and reports separately whether the key already existed and its value remained unchanged.
+- [Insert Into Map — replace](collection/collection.map.insert.replace/main.frog) — Insertion preserves the exact Map<K,V> model and reports separately whether the key already existed and its value remained unchanged.
+- [Insert Into Map — unchanged](collection/collection.map.insert.unchanged/main.frog) — Insertion preserves the exact Map<K,V> model and reports separately whether the key already existed and its value remained unchanged.
+- [Remove From Map — present key](collection/collection.map.remove.found/main.frog) — Removal emits a new Map and the removed value. A missing key preserves the Map and returns the intrinsic I32 default with key_not_found true.
+- [Remove From Map — missing key](collection/collection.map.remove.missing/main.frog) — Removal emits a new Map and the removed value. A missing key preserves the Map and returns the intrinsic I32 default with key_not_found true.
+- [Look In Map — found](collection/collection.map.look.found/main.frog) — Lookup does not modify the Map. A missing key returns the connected default, or the exact intrinsic value for V when the default is unwired.
+- [Look In Map — missing-default](collection/collection.map.look.missing-default/main.frog) — Lookup does not modify the Map. A missing key returns the connected default, or the exact intrinsic value for V when the default is unwired.
+- [Look In Map — missing-intrinsic](collection/collection.map.look.missing-intrinsic/main.frog) — Lookup does not modify the Map. A missing key returns the connected default, or the exact intrinsic value for V when the default is unwired.
+- [Map extrema compare keys](collection/collection.map.extrema.keys/main.frog) — Map extrema compare keys rather than values. The empty Map yields the intrinsic default of its exact key type.
+- [Map extrema — empty](collection/collection.map.extrema.empty/main.frog) — Map extrema compare keys rather than values. The empty Map yields the intrinsic default of its exact key type.
+- [Build Set — deduplicate and order](collection/collection.set.build.deduplicate/main.frog) — A Set stores each exact element once. The logical Build rows 3, 1, 3, 2 produce the ordered set 1, 2, 3.
+- [Insert Into Set — new element](collection/collection.set.insert.new/main.frog) — Set insertion preserves exact element type and reports whether the element was already included. Repeated insertion does not duplicate it.
+- [Insert Into Set — existing element](collection/collection.set.insert.existing/main.frog) — Set insertion preserves exact element type and reports whether the element was already included. Repeated insertion does not duplicate it.
+- [Remove From Set — present element](collection/collection.set.remove.found/main.frog) — Set removal preserves every other element and reports a missing element separately; no fabricated replacement is inserted.
+- [Remove From Set — missing element](collection/collection.set.remove.missing/main.frog) — Set removal preserves every other element and reports a missing element separately; no fabricated replacement is inserted.
+- [Set membership — absent](collection/collection.set.contains.missing/main.frog) — Membership compares the complete typed value. It does not consume or mutate the Set.
+- [Set membership — present](collection/collection.set.contains.found/main.frog) — Membership compares the complete typed value. It does not consume or mutate the Set.
+- [Set extrema](collection/collection.set.extrema.values/main.frog) — Extrema follow the declared exact comparator. The empty Set yields the intrinsic default of T, without creating an element.
+- [Set extrema — empty](collection/collection.set.extrema.empty/main.frog) — Extrema follow the declared exact comparator. The empty Set yields the intrinsic default of T, without creating an element.
+- [Set algebra — union](collection/collection.set.algebra.union/main.frog) — The two operands share one invariant exact Set<T> model. The result uses mathematical membership, retaining each value once in the declared order.
+- [Set algebra — intersection](collection/collection.set.algebra.intersection/main.frog) — The two operands share one invariant exact Set<T> model. The result uses mathematical membership, retaining each value once in the declared order.
+- [Set algebra — difference](collection/collection.set.algebra.difference/main.frog) — The two operands share one invariant exact Set<T> model. The result uses mathematical membership, retaining each value once in the declared order.
+- [Set algebra — symmetric-difference](collection/collection.set.algebra.symmetric-difference/main.frog) — The two operands share one invariant exact Set<T> model. The result uses mathematical membership, retaining each value once in the declared order.
+- [Cartesian product with two element types](collection/collection.set.cartesian.independent-types/main.frog) — The Cartesian product keeps its two independent input types. Every result element is a Cluster whose stable fields first and second retain the corresponding values.
+- [Set size](collection/collection.size.set/main.frog) — Collection Size reports the stored entry count, not a maximum key or highest index.
+- [Map size](collection/collection.size.map/main.frog) — Collection Size reports the stored entry count, not a maximum key or highest index.
+- [A default value is still an element](collection/collection.empty.default-element/main.frog) — A Set containing the value zero is nonempty. Default values are real stored elements and must not be confused with absence.
+- [An empty collection](collection/collection.empty.true/main.frog) — A Set containing the value zero is nonempty. Default values are real stored elements and must not be confused with absence.
+- [Unbundle preserves field order and exact types](cluster/cluster.unbundle.order/main.frog) — The incoming Cluster fixes the positional output count and types. Its I64 field must remain exact, and the String is a separate output terminal.
+- [Read a nested field by stable identity](cluster/cluster.unbundle-by-name.nested/main.frog) — The displayed Config.Offset path resolves the stable IDs config-id / offset-id. Unrelated fields are not read or rebuilt.
+- [Replace one nested Cluster field](cluster/cluster.bundle-by-name.replace-nested/main.frog) — Replacing Config.Offset preserves the nested Name and outer Enabled fields. The selection uses persistent field identities, independently from their displayed names.
+- [Variant preserves an Array shape](variant/variant.rank2-roundtrip/main.frog) — Boxing and unboxing retain the complete rank-two I64 Array shape and row-major values, including an integer above 2^53. The type specimen contributes its schema, not its value.
+- [Variant preserves a named Cluster](variant/variant.cluster-roundtrip/main.frog) — The typed Variant retains the Cluster field identities and values. The same Cluster is used only as a schema witness for unboxing; it is not substituted for the payload.
+- [Variant type mismatch is a normal error](variant/variant.type-mismatch.error/main.frog) — A boxed String cannot be extracted as I32. The result is the I32 intrinsic default and an error status; no numeric parsing or reinterpretation is attempted. Native and historical Simulation currently have distinct error codes, so this example compares the shared status and data behavior.
+- [Semaphore : capacité, acquisition, restitution et fermeture](Synchronization/sync.semaphore.capacity_and_cleanup/main.frog) — Semaphore : capacité, acquisition, restitution et fermeture
+- [Semaphore : timeout zéro sur une capacité épuisée](Synchronization/sync.semaphore.poll_saturated/main.frog) — Semaphore : timeout zéro sur une capacité épuisée
+- [Semaphore : acquérir et nettoyer malgré une erreur](Synchronization/sync.semaphore.upstream_cleanup/main.frog) — Semaphore : acquérir et nettoyer malgré une erreur
+- [semaphore : référence nulle correctement typée](Synchronization/sync.semaphore.typed_null/main.frog) — semaphore : référence nulle correctement typée
+- [Rendezvous : seuil par défaut et variation nulle](Synchronization/sync.rendezvous.defaults/main.frog) — Rendezvous : seuil par défaut et variation nulle
+- [Rendezvous : diminuer le seuil de 1](Synchronization/sync.rendezvous.resize_negative/main.frog) — Rendezvous : diminuer le seuil de 1
+- [Rendezvous : augmenter le seuil de 2](Synchronization/sync.rendezvous.resize_positive/main.frog) — Rendezvous : augmenter le seuil de 2
+- [Rendezvous : erreur standard et exception de destruction](Synchronization/sync.rendezvous.upstream_error/main.frog) — Rendezvous : erreur standard et exception de destruction
+- [rendezvous : référence nulle correctement typée](Synchronization/sync.rendezvous.typed_null/main.frog) — rendezvous : référence nulle correctement typée
+- [Rendezvous : trois préparations indépendantes](Synchronization/sync.rendezvous.three_participants/main.frog) — Rendezvous : trois préparations indépendantes
+- [Rendezvous : trois participants, deux générations](Synchronization/sync.rendezvous.two_generations/main.frog) — Rendezvous : trois participants, deux générations
+- [Occurrence : un signal réveille trois attentes](Synchronization/sync.occurrence.broadcast/main.frog) — Occurrence : un signal réveille trois attentes
+- [Occurrence : deux nœuds Generate distincts](Synchronization/sync.occurrence.distinct_nodes/main.frog) — Occurrence : deux nœuds Generate distincts
+- [Occurrence : timeout zéro sans signal](Synchronization/sync.occurrence.poll_no_signal/main.frog) — Occurrence : timeout zéro sans signal
+- [Occurrence : arrêter une attente infinie](Synchronization/sync.occurrence.infinite_stop/main.frog) — Occurrence : arrêter une attente infinie
+- [occurrence : référence nulle correctement typée](Synchronization/sync.occurrence.typed_null/main.frog) — occurrence : référence nulle correctement typée
+- [Queue : enfiler, défiler et nettoyer](Synchronization/sync.queue.publish_receive/main.frog) — Queue : enfiler, défiler et nettoyer
+- [Notifier : lire le dernier signal et nettoyer](Synchronization/sync.notifier.publish_receive/main.frog) — Notifier : lire le dernier signal et nettoyer
+- [Flat Sequence : entrée et passages entre trois frames](Structures/structure.sequence.three_frames/main.frog) — Flat Sequence : entrée et passages entre trois frames
+- [Retain First Error : une erreur prime sur un warning](Error/error.retain_first.error_before_warning/main.frog) — Retain First Error : une erreur prime sur un warning
+- [File Exists : le chemin vide désigne la liste des lecteurs Windows](File/file.exists.empty_drive_list/main.frog) — File Exists : le chemin vide désigne la liste des lecteurs Windows
+- [Read Text : refuser un chemin relatif sans base explicite](File/file.read.relative_path_rejected/main.frog) — Read Text : refuser un chemin relatif sans base explicite
+- [Read Text : conserver l'erreur amont sans accès disque](File/file.read.upstream_error/main.frog) — Read Text : conserver l'erreur amont sans accès disque
+- [Référence de contrôle : lire sa vraie valeur](ApplicationControl/application_control.read_value/main.frog) — Référence de contrôle : lire sa vraie valeur
+- [Property Node : écrire la valeur sans événement](ApplicationControl/application_control.silent_write/main.frog) — Property Node : écrire la valeur sans événement
+- [Invoke Node : réinitialiser la valeur par défaut](ApplicationControl/application_control.reinitialize/main.frog) — Invoke Node : réinitialiser la valeur par défaut
+- [Appel C : scalaire exact i32](Connectivity/native_call.i32.minimum/main.frog) — Appel C : scalaire exact i32
+- [Appel C : scalaire exact u32](Connectivity/native_call.u32.maximum/main.frog) — Appel C : scalaire exact u32
+- [Appel C : scalaire exact i64](Connectivity/native_call.i64.exact_above_2pow53/main.frog) — Appel C : scalaire exact i64
+- [Appel C : scalaire exact u64](Connectivity/native_call.u64.maximum/main.frog) — Appel C : scalaire exact u64
+- [Appel C : scalaire exact f64](Connectivity/native_call.f64.exact/main.frog) — Appel C : scalaire exact f64
+- [Appel C : ordre visuel différent de l'ordre ABI](Connectivity/native_call.visual_order_independent/main.frog) — Appel C : ordre visuel différent de l'ordre ABI
+- [Appel C : bibliothèque absente](Connectivity/native_call.missing_library/main.frog) — Appel C : bibliothèque absente
+- [Appel C : erreur amont, aucun effet externe](Connectivity/native_call.upstream_error/main.frog) — Appel C : erreur amont, aucun effet externe
+- [Appel C : signature pointeur non admise par scalar5](Connectivity/native_call.pointer_refused_scalar5/main.frog) — Appel C : signature pointeur non admise par scalar5
+- [Queue : capacité, Preview, perte contrôlée et Flush](Synchronization/sync.queue.bounded_preview_lossy_flush/main.frog) — Queue : capacité, Preview, perte contrôlée et Flush
+- [Notifier : Status, Cancel et Release ont des rôles différents](Synchronization/sync.notifier.cancel_status_release/main.frog) — Notifier : Status, Cancel et Release ont des rôles différents
+- [Notifier : ignorer un signal précédent sans l'effacer](Synchronization/sync.notifier.ignore_previous/main.frog) — Notifier : ignorer un signal précédent sans l'effacer
+- [Notifier : Multiple retourne les notifications disponibles](Synchronization/sync.notifier.multiple_available/main.frog) — Notifier : Multiple retourne les notifications disponibles
+- [Notifier : Multiple History conserve les identités de source](Synchronization/sync.notifier.multiple_history_available/main.frog) — Notifier : Multiple History conserve les identités de source
+- [Notifier History : revenir à A sans relire son ancien signal](Synchronization/sync.notifier.history_a_b_a/main.frog) — Notifier History : revenir à A sans relire son ancien signal
+- [First Call? : le premier passage, pas chaque itération](Synchronization/sync.first_call.iterations/main.frog) — First Call? : le premier passage, pas chaque itération
+- [For : un registre initialisé accumule quatre incréments](Structures/structure.for.initialized_shift_register/main.frog) — For : un registre initialisé accumule quatre incréments
+- [For : zéro itération conserve l'initialisation](Structures/structure.for.zero_iterations/main.frog) — For : zéro itération conserve l'initialisation
+- [While : Stop if True exécute au moins une itération](Structures/structure.while.stop_true_one_iteration/main.frog) — While : Stop if True exécute au moins une itération
+- [While : Continue if True s'arrête sur False](Structures/structure.while.continue_false_one_iteration/main.frog) — While : Continue if True s'arrête sur False
+- [While : arrêter au troisième incrément](Structures/structure.while.three_iterations/main.frog) — While : arrêter au troisième incrément
+- [For : l'entrée auto-indexée limite N](Structures/structure.for.indexed_input_limits_count/main.frog) — For : l'entrée auto-indexée limite N
+- [For : collecter les trois éléments par auto-indexation](Structures/structure.for.indexed_output/main.frog) — For : collecter les trois éléments par auto-indexation
+- [Case bool : sélection exacte et tunnels](Structures/structure.case.bool.true/main.frog) — Case bool : sélection exacte et tunnels
+- [Case bool : branche alternative](Structures/structure.case.bool.false/main.frog) — Case bool : branche alternative
+- [Case i64 : sélection exacte et tunnels](Structures/structure.case.i64.exact/main.frog) — Case i64 : sélection exacte et tunnels
+- [Case u64 : sélection exacte et tunnels](Structures/structure.case.u64.exact/main.frog) — Case u64 : sélection exacte et tunnels
+- [Case string : sélection exacte et tunnels](Structures/structure.case.string.exact/main.frog) — Case string : sélection exacte et tunnels
+- [Case string : branche alternative](Structures/structure.case.string.default/main.frog) — Case string : branche alternative
+- [Case enum : sélection exacte et tunnels](Structures/structure.case.enum.exact/main.frog) — Case enum : sélection exacte et tunnels
+- [In Place : modifier une donnée par la paire entrée/sortie](Structures/structure.ipe.generic_modify/main.frog) — In Place : modifier une donnée par la paire entrée/sortie
+- [In Place : indexer et remplacer un élément du tableau](Structures/structure.ipe.array_index_replace/main.frog) — In Place : indexer et remplacer un élément du tableau
+- [Event : traiter un Timeout immédiat](Structures/structure.event.timeout_zero/main.frog) — Event : traiter un Timeout immédiat
+- [Diagram Disable : la branche visible n'est pas la branche active](Structures/structure.diagram_disable.hidden_enabled/main.frog) — Diagram Disable : la branche visible n'est pas la branche active
+- [Conditional Disable : symbole sauvegardé et branches conservées](Structures/structure.conditional_disable.saved_symbol/main.frog) — Conditional Disable : symbole sauvegardé et branches conservées
+- [Timed Loop : configuration des nœuds de temporisation](Structures/structure.timed_loop.saved_schedule/main.frog) — Timed Loop : configuration des nœuds de temporisation
+- [Flat Sequence : traverser trois frames et une frame vide](Structures/structure.sequence.native.flat_passages/main.frog) — Flat Sequence : traverser trois frames et une frame vide
+- [Flat Sequence : publier une frame terminée avant une attente](Structures/structure.sequence.native.flat_wait_abort/main.frog) — Flat Sequence : publier une frame terminée avant une attente
+- [Stacked Sequence : conserver et exécuter toutes les frames](Structures/structure.sequence.native.stacked_passages/main.frog) — Stacked Sequence : conserver et exécuter toutes les frames
+- [Stacked Sequence : ne pas publier avant la dernière frame](Structures/structure.sequence.native.stacked_wait_abort/main.frog) — Stacked Sequence : ne pas publier avant la dernière frame
+- [Flat Sequence : une sortie précoce alimente une entrée tardive](Structures/structure.sequence.native.flat_late_input/main.frog) — Flat Sequence : une sortie précoce alimente une entrée tardive
+- [Stacked Sequence : diagnostiquer une dépendance circulaire](Structures/structure.sequence.native.stacked_late_cycle/main.frog) — Stacked Sequence : diagnostiquer une dépendance circulaire
+- [Current FROG Path uses its source owner](path/path.current_frog_path.context/main.frog) — The result is the actual saved file of this executing FROG, including its file name. The runner computes the expected value independently from its real working document path; no author-machine path is stored.
+- [Default Directory uses the Studio installation](path/path.default_directory.context/main.frog) — Studio provides its actual executable context. The default directory is that executable's containing directory, independently from the process working directory or the source document's directory.
+- [Temporary Directory follows the current system](path/path.temporary_directory.context/main.frog) — The existing native Path service obtains the current system temporary directory. The expected path is computed at execution time, so this example remains portable between users and machines.
+- [Application Directory requires a compiled application](path/path.application-directory.unavailable-in-studio/main.frog) — When this program runs inside Studio it has no compiled application executable. The native provider reports its precise unavailable-context diagnostic; it must not invent the Studio or current working directory.
+- [Timestamp : constante et indicateur conservés dans le document](Timestamp/timestamp.editor_managed.saved_value/main.frog) — Timestamp : constante et indicateur conservés dans le document
+- [User Events : inscription, émission, Flush et nettoyage](DialogUserInterface/events.user_event.register_generate_flush_cleanup/main.frog) — User Events : inscription, émission, Flush et nettoyage
+- [Clear Error : réinitialiser les trois champs du cluster](Error/error.clear.complete_record/main.frog) — Clear Error : réinitialiser les trois champs du cluster
+- [Retain First : conserver le premier avertissement en l'absence d'erreur](Error/error.retain_first.warning_priority/main.frog) — Retain First : conserver le premier avertissement en l'absence d'erreur
+- [Display Error : inspecter un record sans erreur](Error/error.display.clean_record/main.frog) — Display Error : inspecter un record sans erreur

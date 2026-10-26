@@ -1,0 +1,278 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Digamma — reference 2",
+  "metadata": {
+    "name": "Digamma — reference 2",
+    "name_source": "document",
+    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : x (f64) = 0.25.\nRésultats attendus : value (f64) = -4.2274535333762655.\n\nPsi, the logarithmic derivative of Gamma, evaluated at abs(x)>0 under the NI documented negative-input adapter.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-value (f64) = -4.2274535333762655\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["numeric-math", "typed-values", "independent-oracle", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 47.8\">\n  <defs>\n    <style>\n      .cls-1 {\n        fill: #00bc85;\n      }\n\n      .cls-2 {\n        fill: #fff;\n      }\n\n      .cls-3 {\n        fill: #4b5563;\n      }\n\n      .cls-4 {\n        fill: #f8fafc;\n        stroke: #00bc85;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: 1.8px;\n      }\n    </style>\n  </defs>\n  <g id=\"Fonction_gamma_et_beta\" data-name=\"Fonction gamma et beta\">\n    <g>\n      <g>\n        <rect class=\"cls-4\" x=\".9\" y=\".9\" width=\"46\" height=\"46\" rx=\"4.5\" ry=\"4.5\"/>\n        <path class=\"cls-1\" d=\"M5.4.51h37c2.48,0,4.5,2.02,4.5,4.5v9.9H.9V5.01C.9,2.52,2.92.51,5.4.51Z\"/>\n        <g>\n          <path class=\"cls-2\" d=\"M14.79,13.74V5.35c0-.42.05-.81.16-1.17.11-.36.27-.67.49-.94.22-.27.5-.48.84-.63.33-.15.73-.23,1.19-.23.33,0,.65.04.96.13.31.09.58.23.82.41.24.19.43.42.58.7.14.28.22.61.22,1,0,.86-.41,1.53-1.22,2v.05c.28.05.53.14.77.27.23.13.44.3.61.49.17.2.31.43.4.69.09.26.14.55.14.86,0,.44-.07.82-.22,1.15-.14.33-.33.6-.56.82s-.5.38-.8.49-.61.16-.92.16c-.35,0-.71-.06-1.06-.19-.35-.13-.69-.36-1-.7.02.51.03,1.01.05,1.5.02.49.03.99.05,1.5h-1.48ZM17.85,10.43c.2,0,.39-.03.56-.1.17-.07.33-.17.46-.29.14-.13.24-.29.32-.48.08-.19.11-.41.11-.67,0-.41-.12-.75-.35-1.03-.24-.28-.6-.42-1.08-.42-.2,0-.39.03-.57.08l-.19-1.09c.28-.05.51-.13.7-.24.19-.11.35-.24.47-.39.12-.15.21-.32.26-.49.05-.18.08-.36.08-.56,0-.41-.11-.71-.34-.91-.23-.2-.49-.3-.8-.3-.4,0-.7.17-.92.51-.22.34-.33.84-.35,1.5-.02.68-.03,1.34-.04,2,0,.66-.01,1.33-.01,2.02.27.35.55.58.84.69s.57.17.84.17Z\"/>\n          <path class=\"cls-2\" d=\"M32.92,3.07h-6.27v.6l1.06.12c.02,1.07.03,2.15.03,3.22v.65c0,1,0,2.06-.03,3.12l-1.06.12v.6h3.91v-.6l-1.16-.13c-.02-1.07-.03-2.13-.03-3.11v-.65c0-1.1,0-2.19.03-3.25h2.36l.03.02h.02s.31,1.83.31,1.83h.88l-.09-2.52Z\"/>\n        </g>\n        <g>\n          <g>\n            <path class=\"cls-1\" d=\"M20.49,29.97h1.61c1.84,0,2.93.97,2.93,2.92s-1.09,2.97-2.87,2.97h-1.67v-5.89ZM22.03,35.01c1.21,0,1.9-.68,1.9-2.12s-.69-2.07-1.9-2.07h-.47v4.2h.47Z\"/>\n            <path class=\"cls-1\" d=\"M26.24,29.97h1.07v5.89h-1.07v-5.89Z\"/>\n          </g>\n          <g>\n            <path class=\"cls-1\" d=\"M6.59,39.43c0-2.24,1.45-3.57,3.31-3.57,1,0,1.68.43,2.12.87l-.66.79c-.35-.34-.76-.6-1.41-.6-1.24,0-2.08.94-2.08,2.48s.74,2.51,2.14,2.51c.4,0,.78-.1,1.01-.3v-1.48h-1.33v-1h2.44v3.02c-.47.46-1.29.82-2.24.82-1.9,0-3.3-1.26-3.3-3.53Z\"/>\n            <path class=\"cls-1\" d=\"M13.3,41.46c0-1.1.93-1.68,3.1-1.91-.02-.55-.25-1.01-.96-1.01-.51,0-1.01.23-1.48.5l-.45-.81c.58-.36,1.33-.67,2.16-.67,1.31,0,1.96.79,1.96,2.22v3.05h-1.02l-.09-.57h-.04c-.47.39-1.01.69-1.63.69-.92,0-1.55-.61-1.55-1.51ZM16.39,41.46v-1.15c-1.44.18-1.91.55-1.91,1.06,0,.46.32.66.76.66s.75-.21,1.15-.57Z\"/>\n            <path class=\"cls-1\" d=\"M19.1,37.69h1.02l.09.7h.04c.44-.46.95-.83,1.61-.83.77,0,1.21.35,1.46.92.5-.52,1.03-.92,1.69-.92,1.11,0,1.63.74,1.63,2.04v3.23h-1.24v-3.07c0-.85-.26-1.16-.8-1.16-.33,0-.7.21-1.1.64v3.6h-1.23v-3.07c0-.85-.26-1.16-.81-1.16-.32,0-.7.21-1.1.64v3.6h-1.23v-5.15Z\"/>\n            <path class=\"cls-1\" d=\"M28.13,37.69h1.02l.09.7h.04c.44-.46.95-.83,1.61-.83.77,0,1.21.35,1.46.92.5-.52,1.03-.92,1.69-.92,1.11,0,1.63.74,1.63,2.04v3.23h-1.24v-3.07c0-.85-.26-1.16-.8-1.16-.33,0-.7.21-1.1.64v3.6h-1.23v-3.07c0-.85-.26-1.16-.81-1.16-.32,0-.7.21-1.1.64v3.6h-1.23v-5.15Z\"/>\n            <path class=\"cls-1\" d=\"M36.88,41.46c0-1.1.93-1.68,3.1-1.91-.02-.55-.25-1.01-.96-1.01-.51,0-1.01.23-1.48.5l-.45-.81c.58-.36,1.33-.67,2.16-.67,1.31,0,1.96.79,1.96,2.22v3.05h-1.02l-.09-.57h-.04c-.47.39-1.01.69-1.63.69-.92,0-1.55-.61-1.55-1.51ZM39.97,41.46v-1.15c-1.44.18-1.91.55-1.91,1.06,0,.46.32.66.76.66s.75-.21,1.15-.57Z\"/>\n          </g>\n        </g>\n      </g>\n      <g>\n        <path class=\"cls-3\" d=\"M17.06,26.26v-2.55c-.88-.05-1.57-.3-2.07-.76-.49-.45-.74-1.16-.74-2.11v-1.77h1.27v1.71c0,.65.13,1.13.39,1.42s.64.46,1.15.5v-3.63h1.23v3.63c.51-.04.89-.2,1.15-.5.26-.3.39-.77.39-1.42v-1.71h1.28v1.77c0,.95-.25,1.66-.75,2.11-.5.45-1.19.71-2.07.76v2.55h-1.23Z\"/>\n        <path class=\"cls-3\" d=\"M24.11,27.67c-.46-.63-.83-1.29-1.09-1.97s-.39-1.43-.39-2.23.13-1.55.39-2.24c.26-.69.63-1.34,1.09-1.96l.81.35c-.42.58-.73,1.2-.93,1.86-.2.66-.3,1.32-.3,1.99s.1,1.33.3,1.99c.2.66.51,1.28.93,1.86l-.81.35Z\"/>\n        <path class=\"cls-3\" d=\"M25.56,26.26l1.75-2.82-1.64-2.58h1.39l.62,1.02c.08.15.17.3.25.46.09.16.17.31.25.46h.04c.07-.15.14-.3.21-.46s.15-.31.21-.46l.53-1.02h1.34l-1.63,2.73,1.75,2.67h-1.39l-.67-1.07c-.09-.16-.18-.32-.28-.48-.09-.16-.19-.32-.29-.47h-.04c-.07.15-.15.31-.24.47-.08.16-.17.32-.25.49l-.58,1.07h-1.35Z\"/>\n        <path class=\"cls-3\" d=\"M32.1,27.67l-.81-.35c.42-.59.73-1.21.93-1.86.2-.66.3-1.32.3-1.99s-.1-1.33-.3-1.99c-.2-.66-.51-1.28-.93-1.86l.81-.35c.46.62.83,1.28,1.09,1.96.26.69.39,1.43.39,2.24s-.13,1.54-.39,2.23-.63,1.34-1.09,1.97Z\"/>\n      </g>\n    </g>\n  </g>\n</svg>"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "input-x",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "f64",
+        "label": "input-x",
+        "bounds": {
+          "x": 36,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-x\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"f64\",\n  \"label\": \"input-x\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0.25\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0.25
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "output-value",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "f64",
+        "label": "output-value",
+        "bounds": {
+          "x": 420,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"output-value\",\n  \"classId\": \"frog.widgets.numeric_indicator\",\n  \"role\": \"indicator\",\n  \"valueType\": \"f64\",\n  \"label\": \"output-value\",\n  \"bounds\": {\n    \"x\": 420,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 22,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.math.gamma.digamma",
+        "label": "",
+        "label_visible": true,
+        "palette_catalog_id": "math.gamma.digamma",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 270,
+          "y": 120,
+          "width": 56,
+          "height": 56
+        }
+      },
+      {
+        "id": "input-x-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "input-x",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "output-value-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "output-value",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 460,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Digamma — reference 2\nPsi, the logarithmic derivative of Gamma, evaluated at abs(x)>0 under the NI documented negative-input adapter.\nEntrées -> opération -> indicateurs. Résultat attendu : output-value (f64) = -4.2274535333762655\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "input-x-wire",
+        "from": {
+          "node": "input-x-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "x"
+        }
+      },
+      {
+        "id": "output-value-wire",
+        "from": {
+          "node": "operation",
+          "port": "value"
+        },
+        "to": {
+          "node": "output-value-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

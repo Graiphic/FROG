@@ -1,0 +1,352 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "OR — truth 11",
+  "metadata": {
+    "name": "OR — truth 11",
+    "name_source": "document",
+    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : a (bool) = true; b (bool) = true.\nRésultats attendus : result (bool) = true.\n\nBoolean or non-complex numeric scalars, arrays and clusters are accepted.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (bool) = true\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["numeric-math", "typed-values", "independent-oracle", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"48\" height=\"48\" viewBox=\"0 0 48 48\" role=\"img\" aria-labelledby=\"title\" data-frog-visual-standard=\"logic-gate-40x24\">\n  <title id=\"title\">OU</title>\n  <g shape-rendering=\"geometricPrecision\">\n    <g transform=\"translate(-0.5 0)\">\n      <path d=\"M9 12C15.5 18.5 15.5 29.5 9 36H20.5C31 36 40 31.2 40 24S31 12 20.5 12Z\" fill=\"#4B5563\" stroke=\"#AAB4C0\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>\n      <path d=\"M18.8 19.2L24 28.8L29.2 19.2\" fill=\"none\" stroke=\"#F8FAFC\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    </g>\n  </g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "input-a",
+        "classId": "frog.widgets.boolean_control",
+        "role": "control",
+        "valueType": "bool",
+        "label": "input-a",
+        "bounds": {
+          "x": 36,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-a\",\n  \"classId\": \"frog.widgets.boolean_control\",\n  \"role\": \"control\",\n  \"valueType\": \"bool\",\n  \"label\": \"input-a\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"state_text.visible\": false\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/42_boolean_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/boolean.default.wfrog\",\n    \"asset\": \"asset:boolean_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": true\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1,\n    \"stateTextFontFamily\": \"\",\n    \"stateTextStyle\": \"plain\"\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": true
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      },
+      {
+        "id": "input-b",
+        "classId": "frog.widgets.boolean_control",
+        "role": "control",
+        "valueType": "bool",
+        "label": "input-b",
+        "bounds": {
+          "x": 36,
+          "y": 140,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-b\",\n  \"classId\": \"frog.widgets.boolean_control\",\n  \"role\": \"control\",\n  \"valueType\": \"bool\",\n  \"label\": \"input-b\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 140,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"state_text.visible\": false\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/42_boolean_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/boolean.default.wfrog\",\n    \"asset\": \"asset:boolean_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": true\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1,\n    \"stateTextFontFamily\": \"\",\n    \"stateTextStyle\": \"plain\"\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": true
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      },
+      {
+        "id": "output-result",
+        "classId": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "valueType": "bool",
+        "label": "output-result",
+        "bounds": {
+          "x": 420,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"output-result\",\n  \"classId\": \"frog.widgets.boolean_indicator\",\n  \"role\": \"indicator\",\n  \"valueType\": \"bool\",\n  \"label\": \"output-result\",\n  \"bounds\": {\n    \"x\": 420,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"state_text.visible\": false\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/42_boolean_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/boolean.default.wfrog\",\n    \"asset\": \"asset:boolean_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": false\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1,\n    \"stateTextFontFamily\": \"\",\n    \"stateTextStyle\": \"plain\"\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": false
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 22,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.core.or",
+        "label": "",
+        "label_visible": true,
+        "palette_catalog_id": "boolean.or",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 270,
+          "y": 120,
+          "width": 56,
+          "height": 56
+        }
+      },
+      {
+        "id": "input-a-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "input-a",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "input-b-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "input-b",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 152,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "output-result-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "output-result",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 460,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "OR — truth 11\nBoolean or non-complex numeric scalars, arrays and clusters are accepted.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (bool) = true\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "input-a-wire",
+        "from": {
+          "node": "input-a-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "a"
+        }
+      },
+      {
+        "id": "input-b-wire",
+        "from": {
+          "node": "input-b-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "b"
+        }
+      },
+      {
+        "id": "output-result-wire",
+        "from": {
+          "node": "operation",
+          "port": "result"
+        },
+        "to": {
+          "node": "output-result-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

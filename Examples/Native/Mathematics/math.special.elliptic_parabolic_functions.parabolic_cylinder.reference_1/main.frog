@@ -1,0 +1,355 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Parabolic Cylinder — reference 1",
+  "metadata": {
+    "name": "Parabolic Cylinder — reference 1",
+    "name_source": "document",
+    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : argument (f64) = 0.0; order (f64) = -3.0.\nRésultats attendus : value (f64) = 0.6266570686577502.\n\nEvaluates the normalized parabolic cylinder function Dv(x), the Weber solution with Dv(z)~z^v exp(-z*z/4) at positive infinity.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-value (f64) = 0.6266570686577502\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["numeric-math", "typed-values", "independent-oracle", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 47.8\">\n  <defs>\n    <style>\n      .cls-1 {\n        fill: #00bc85;\n      }\n\n      .cls-2 {\n        fill: #fff;\n      }\n\n      .cls-3 {\n        fill: #4b5563;\n      }\n\n      .cls-4 {\n        fill: #f8fafc;\n        stroke: #00bc85;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: 1.8px;\n      }\n    </style>\n  </defs>\n  <g id=\"Fonction_elliptique_et_parabolique\" data-name=\"Fonction elliptique et parabolique\">\n    <g>\n      <g>\n        <rect class=\"cls-4\" x=\".9\" y=\".9\" width=\"46\" height=\"46\" rx=\"4.5\" ry=\"4.5\"/>\n        <path class=\"cls-1\" d=\"M5.4.51h37c2.48,0,4.5,2.02,4.5,4.5v9.9H.9V5.01C.9,2.52,2.92.51,5.4.51Z\"/>\n        <g>\n          <path class=\"cls-2\" d=\"M14.79,13.74V5.35c0-.42.05-.81.16-1.17.11-.36.27-.67.49-.94.22-.27.5-.48.84-.63.33-.15.73-.23,1.19-.23.33,0,.65.04.96.13.31.09.58.23.82.41.24.19.43.42.58.7.14.28.22.61.22,1,0,.86-.41,1.53-1.22,2v.05c.28.05.53.14.77.27.23.13.44.3.61.49.17.2.31.43.4.69.09.26.14.55.14.86,0,.44-.07.82-.22,1.15-.14.33-.33.6-.56.82s-.5.38-.8.49-.61.16-.92.16c-.35,0-.71-.06-1.06-.19-.35-.13-.69-.36-1-.7.02.51.03,1.01.05,1.5.02.49.03.99.05,1.5h-1.48ZM17.85,10.43c.2,0,.39-.03.56-.1.17-.07.33-.17.46-.29.14-.13.24-.29.32-.48.08-.19.11-.41.11-.67,0-.41-.12-.75-.35-1.03-.24-.28-.6-.42-1.08-.42-.2,0-.39.03-.57.08l-.19-1.09c.28-.05.51-.13.7-.24.19-.11.35-.24.47-.39.12-.15.21-.32.26-.49.05-.18.08-.36.08-.56,0-.41-.11-.71-.34-.91-.23-.2-.49-.3-.8-.3-.4,0-.7.17-.92.51-.22.34-.33.84-.35,1.5-.02.68-.03,1.34-.04,2,0,.66-.01,1.33-.01,2.02.27.35.55.58.84.69s.57.17.84.17Z\"/>\n          <path class=\"cls-2\" d=\"M32.92,3.07h-6.27v.6l1.06.12c.02,1.07.03,2.15.03,3.22v.65c0,1,0,2.06-.03,3.12l-1.06.12v.6h3.91v-.6l-1.16-.13c-.02-1.07-.03-2.13-.03-3.11v-.65c0-1.1,0-2.19.03-3.25h2.36l.03.02h.02s.31,1.83.31,1.83h.88l-.09-2.52Z\"/>\n        </g>\n        <g>\n          <path class=\"cls-1\" d=\"M5.86,30.78h1.9c1.33,0,2.33.45,2.33,1.82s-.99,1.91-2.29,1.91h-.86v2.16h-1.07v-5.89ZM7.71,33.67c.89,0,1.32-.35,1.32-1.07s-.47-.98-1.36-.98h-.75v2.05h.78Z\"/>\n          <path class=\"cls-1\" d=\"M10.53,35.48c0-.95.8-1.44,2.66-1.64-.02-.47-.21-.86-.83-.86-.44,0-.87.2-1.27.43l-.39-.69c.5-.31,1.14-.58,1.86-.58,1.12,0,1.68.68,1.68,1.91v2.62h-.87l-.07-.49h-.04c-.4.33-.86.59-1.4.59-.79,0-1.33-.52-1.33-1.3ZM13.19,35.48v-.99c-1.23.15-1.64.47-1.64.91,0,.4.28.57.65.57s.64-.18.98-.49Z\"/>\n          <path class=\"cls-1\" d=\"M15.52,32.25h.87l.07.78h.04c.32-.58.8-.89,1.28-.89.23,0,.38.03.52.09l-.18.9c-.16-.04-.28-.07-.47-.07-.36,0-.79.24-1.07.91v2.7h-1.06v-4.42Z\"/>\n          <path class=\"cls-1\" d=\"M18.47,35.48c0-.95.8-1.44,2.66-1.64-.02-.47-.21-.86-.83-.86-.44,0-.87.2-1.27.43l-.39-.69c.5-.31,1.14-.58,1.86-.58,1.12,0,1.68.68,1.68,1.91v2.62h-.87l-.07-.49h-.04c-.4.33-.86.59-1.4.59-.79,0-1.33-.52-1.33-1.3ZM21.13,35.48v-.99c-1.23.15-1.64.47-1.64.91,0,.4.28.57.65.57s.64-.18.98-.49Z\"/>\n          <path class=\"cls-1\" d=\"M24.41,36.2h-.03l-.09.47h-.84v-6.36h1.06v1.64l-.03.74c.38-.32.85-.55,1.31-.55,1.13,0,1.79.88,1.79,2.24,0,1.52-.93,2.39-1.93,2.39-.41,0-.86-.21-1.23-.58ZM26.48,34.4c0-.88-.29-1.4-.98-1.4-.33,0-.64.16-.99.5v2.06c.32.27.64.37.91.37.6,0,1.06-.52,1.06-1.52Z\"/>\n          <path class=\"cls-1\" d=\"M28.34,34.46c0-1.48,1.02-2.32,2.14-2.32s2.15.85,2.15,2.32-1.02,2.31-2.15,2.31-2.14-.85-2.14-2.31ZM31.55,34.46c0-.89-.4-1.48-1.07-1.48s-1.06.58-1.06,1.48.4,1.47,1.06,1.47,1.07-.58,1.07-1.47Z\"/>\n          <path class=\"cls-1\" d=\"M33.68,35.53v-5.22h1.06v5.28c0,.25.12.34.23.34.05,0,.08,0,.17-.02l.14.77c-.13.05-.31.09-.56.09-.75,0-1.03-.48-1.03-1.24Z\"/>\n          <path class=\"cls-1\" d=\"M36.05,30.89c0-.35.28-.59.65-.59s.65.24.65.59-.28.59-.65.59-.65-.24-.65-.59ZM36.17,32.25h1.06v4.42h-1.06v-4.42Z\"/>\n          <path class=\"cls-1\" d=\"M38.29,34.46c0-1.48,1.06-2.32,2.26-2.32.58,0,.99.22,1.33.5l-.52.68c-.24-.21-.47-.32-.75-.32-.73,0-1.23.58-1.23,1.48s.5,1.47,1.21,1.47c.35,0,.67-.17.93-.38l.43.68c-.42.36-.96.54-1.47.54-1.23,0-2.18-.85-2.18-2.31Z\"/>\n          <path class=\"cls-1\" d=\"M7.56,41.01c0-1.93,1.23-3.07,2.75-3.07.75,0,1.36.35,1.74.75l-.57.68c-.31-.31-.67-.51-1.14-.51-.98,0-1.68.81-1.68,2.13s.64,2.15,1.66,2.15c.53,0,.95-.24,1.29-.6l.57.66c-.49.55-1.12.85-1.9.85-1.52,0-2.71-1.08-2.71-3.03Z\"/>\n          <path class=\"cls-1\" d=\"M12.65,45.67l.19-.81c.08.03.21.06.32.06.48,0,.75-.32.9-.76l.08-.28-1.78-4.37h1.08l.78,2.17c.13.39.26.83.4,1.24h.04c.11-.41.23-.85.34-1.24l.68-2.17h1.02l-1.64,4.62c-.38,1-.85,1.62-1.83,1.62-.25,0-.42-.04-.59-.09Z\"/>\n          <path class=\"cls-1\" d=\"M17.49,42.8v-5.22h1.06v5.28c0,.25.12.34.23.34.05,0,.08,0,.17-.02l.14.77c-.13.05-.31.09-.56.09-.75,0-1.03-.48-1.03-1.24Z\"/>\n          <path class=\"cls-1\" d=\"M19.86,38.16c0-.35.28-.59.65-.59s.65.24.65.59-.28.59-.65.59-.65-.24-.65-.59ZM19.98,39.52h1.06v4.42h-1.06v-4.42Z\"/>\n          <path class=\"cls-1\" d=\"M22.39,39.52h.87l.07.59h.04c.4-.39.86-.7,1.48-.7.97,0,1.39.64,1.39,1.76v2.77h-1.06v-2.64c0-.73-.21-1-.71-1-.4,0-.65.19-1.03.55v3.09h-1.06v-4.42Z\"/>\n          <path class=\"cls-1\" d=\"M27.26,41.73c0-1.44.93-2.32,1.91-2.32.52,0,.84.19,1.19.49l-.04-.71v-1.6h1.06v6.36h-.87l-.07-.48h-.04c-.33.32-.79.58-1.28.58-1.13,0-1.86-.85-1.86-2.31ZM30.33,42.7v-2.06c-.31-.27-.62-.37-.92-.37-.58,0-1.05.53-1.05,1.46s.37,1.47,1.02,1.47c.35,0,.64-.15.95-.5Z\"/>\n          <path class=\"cls-1\" d=\"M32.43,41.73c0-1.44,1.02-2.32,2.08-2.32,1.22,0,1.87.86,1.87,2.1,0,.2-.02.4-.05.5h-2.87c.09.78.61,1.23,1.33,1.23.39,0,.72-.12,1.05-.32l.36.65c-.43.28-.98.48-1.55.48-1.25,0-2.23-.85-2.23-2.31ZM35.46,41.31c0-.68-.3-1.1-.92-1.1-.53,0-.99.39-1.09,1.1h2.01Z\"/>\n          <path class=\"cls-1\" d=\"M37.39,39.52h.87l.07.78h.04c.32-.58.8-.89,1.28-.89.23,0,.38.03.52.09l-.18.9c-.16-.04-.28-.07-.47-.07-.36,0-.79.24-1.07.91v2.7h-1.06v-4.42Z\"/>\n        </g>\n      </g>\n      <g>\n        <path class=\"cls-3\" d=\"M12.2,18.41h1.97c2.25,0,3.58,1.19,3.58,3.56s-1.33,3.63-3.51,3.63h-2.04v-7.19ZM14.07,24.57c1.48,0,2.33-.83,2.33-2.6s-.84-2.53-2.33-2.53h-.57v5.13h.57Z\"/>\n        <path class=\"cls-3\" d=\"M18.42,20.2h1.32l.88,2.81c.15.53.31,1.08.46,1.63h.04c.16-.55.32-1.1.47-1.63l.88-2.81h1.25l-1.88,5.4h-1.5l-1.92-5.4Z\"/>\n        <path class=\"cls-3\" d=\"M24.72,22.81c0-1.61.55-2.95,1.48-4.2l.81.35c-.84,1.17-1.24,2.52-1.24,3.85s.39,2.68,1.24,3.85l-.81.35c-.93-1.25-1.48-2.6-1.48-4.2Z\"/>\n        <path class=\"cls-3\" d=\"M29.4,22.79l-1.64-2.59h1.39l.62,1.02c.16.3.34.62.51.91h.04c.13-.3.29-.62.43-.91l.53-1.02h1.34l-1.63,2.73,1.75,2.67h-1.39l-.67-1.07c-.18-.32-.37-.65-.56-.96h-.04c-.16.31-.33.63-.48.96l-.58,1.07h-1.35l1.75-2.82Z\"/>\n        <path class=\"cls-3\" d=\"M33.38,26.66c.84-1.17,1.24-2.52,1.24-3.85s-.39-2.68-1.24-3.85l.81-.35c.93,1.25,1.48,2.6,1.48,4.2s-.55,2.95-1.48,4.2l-.81-.35Z\"/>\n      </g>\n    </g>\n  </g>\n</svg>"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "input-argument",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "f64",
+        "label": "input-argument",
+        "bounds": {
+          "x": 36,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-argument\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"f64\",\n  \"label\": \"input-argument\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "input-order",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "f64",
+        "label": "input-order",
+        "bounds": {
+          "x": 36,
+          "y": 140,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"input-order\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"f64\",\n  \"label\": \"input-order\",\n  \"bounds\": {\n    \"x\": 36,\n    \"y\": 140,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": -3\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": -3
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "output-value",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "f64",
+        "label": "output-value",
+        "bounds": {
+          "x": 420,
+          "y": 76,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data.default": "{\n  \"id\": \"output-value\",\n  \"classId\": \"frog.widgets.numeric_indicator\",\n  \"role\": \"indicator\",\n  \"valueType\": \"f64\",\n  \"label\": \"output-value\",\n  \"bounds\": {\n    \"x\": 420,\n    \"y\": 76,\n    \"width\": 140,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 22,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.math.special.elliptic_parabolic_functions.parabolic_cylinder",
+        "label": "",
+        "label_visible": true,
+        "palette_catalog_id": "math.special.elliptic_parabolic_functions.parabolic_cylinder",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 270,
+          "y": 120,
+          "width": 56,
+          "height": 56
+        }
+      },
+      {
+        "id": "input-argument-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "input-argument",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "input-order-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "input-order",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": 152,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "output-value-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "output-value",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 460,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Parabolic Cylinder — reference 1\nEvaluates the normalized parabolic cylinder function Dv(x), the Weber solution with Dv(z)~z^v exp(-z*z/4) at positive infinity.\nEntrées -> opération -> indicateurs. Résultat attendu : output-value (f64) = 0.6266570686577502\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 42,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "input-argument-wire",
+        "from": {
+          "node": "input-argument-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "argument"
+        }
+      },
+      {
+        "id": "input-order-wire",
+        "from": {
+          "node": "input-order-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "order"
+        }
+      },
+      {
+        "id": "output-value-wire",
+        "from": {
+          "node": "operation",
+          "port": "value"
+        },
+        "to": {
+          "node": "output-value-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

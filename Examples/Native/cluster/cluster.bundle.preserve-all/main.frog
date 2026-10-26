@@ -1,0 +1,594 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Bundle — preserve-all",
+  "metadata": {
+    "name": "Bundle — preserve-all",
+    "name_source": "document",
+    "description": "An incoming Cluster retains every unwired field. Replacement rows keep their semantic positions even when preceding or intervening rows are unwired.\n\nAn incoming Cluster retains every unwired field. Replacement rows keep their semantic positions even when preceding or intervening rows are unwired.\n\nMode: execution. Profile: studio-draft. Capability: studio.native.composed@1.\nExpected:\nnumber (i64) = 9007199254740993\ntext (string) = \"FROG\"\nflag (bool) = true\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["typed", "deterministic", "cluster", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 24.8\">\n  <defs>\n    <style>\n      .cls-1 {\n        stroke-width: 1.8px;\n      }\n\n      .cls-1, .cls-2 {\n        stroke: #aab4c0;\n      }\n\n      .cls-1, .cls-3 {\n        fill: #f8fafc;\n      }\n\n      .cls-2 {\n        fill: #4b5563;\n        stroke-width: 1.21px;\n      }\n\n      .cls-4 {\n        fill: #e359af;\n      }\n    </style>\n  </defs>\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n      <rect class=\"cls-1\" x=\".9\" y=\".9\" width=\"46\" height=\"23\" rx=\"4.5\" ry=\"4.5\"/>\n      <rect class=\"cls-2\" x=\".9\" y=\".9\" width=\"46\" height=\"9.2\" rx=\"4.6\" ry=\"4.6\"/>\n      <rect class=\"cls-4\" x=\"30.04\" y=\"3.51\" width=\"9.75\" height=\"3.99\"/>\n      <path class=\"cls-3\" d=\"M9.92,8.41l-.37-1.65-1.27.74c-.14.09-.29-.07-.21-.21l.74-1.27-1.65-.37c-.16-.04-.16-.26,0-.29l1.65-.37-.74-1.27c-.09-.14.07-.29.21-.21l1.27.74.37-1.65c.04-.16.26-.16.29,0l.37,1.65,1.27-.74c.14-.09.29.07.21.21l-.74,1.27,1.65.37c.16.04.16.26,0,.29l-1.65.37.74,1.27c.09.14-.07.29-.21.21l-1.27-.74-.37,1.65c-.04.16-.26.16-.29,0Z\"/>\n    </g>\n  </g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "number",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i64",
+        "label": "number",
+        "bounds": {
+          "x": 30,
+          "y": 40,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i64",
+          "data_type.named_numeric_size": "Int64",
+          "representation.kind": "int64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "text",
+        "classId": "frog.widgets.string_indicator",
+        "role": "indicator",
+        "valueType": "string",
+        "label": "text",
+        "bounds": {
+          "x": 30,
+          "y": 150,
+          "width": 120,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "text.value": "",
+          "display.string.style": "normal",
+          "text.horizontal_alignment": "left",
+          "display.string.style_selector_visible": false,
+          "interaction.text.single_line": true,
+          "interaction.text.wrap_at_word_breaks": true,
+          "interaction.text.update_while_typing": true,
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": false,
+          "layout.size_to_text": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/07_string_value_roundtrip/main.frog",
+          "wfrog": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/string.default.wfrog",
+          "asset": "asset:string_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "flag",
+        "classId": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "valueType": "bool",
+        "label": "flag",
+        "bounds": {
+          "x": 30,
+          "y": 260,
+          "width": 46.2,
+          "height": 46.2
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": false
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 60,
+      "y": -40
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.cluster.bundle",
+        "label": "Bundle",
+        "label_visible": true,
+        "palette_catalog_id": "cluster.bundle",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "cluster_function_terminals": 3,
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": 180,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "input-element1",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "i64",
+        "label": "Float Constant",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "9007199254740993",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 175,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "input-element2",
+        "kind": "primitive",
+        "type": "frog.studio.string.constant",
+        "value_type": "string",
+        "label": "String Constant",
+        "label_visible": true,
+        "palette_catalog_id": "string.constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "text": "FROG",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 250,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "input-element3",
+        "kind": "primitive",
+        "type": "frog.studio.boolean.true_constant",
+        "value_type": "bool",
+        "label": "True Constant",
+        "label_visible": true,
+        "palette_catalog_id": "boolean.true_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "true",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 325,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "replacement",
+        "kind": "primitive",
+        "type": "frog.studio.cluster.bundle",
+        "label": "Bundle",
+        "label_visible": true,
+        "palette_catalog_id": "cluster.bundle",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "cluster_function_terminals": 3,
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 500,
+          "y": 180,
+          "width": 48,
+          "height": 80
+        }
+      },
+      {
+        "id": "read",
+        "kind": "primitive",
+        "type": "frog.studio.cluster.unbundle",
+        "label": "Unbundle",
+        "label_visible": true,
+        "palette_catalog_id": "cluster.unbundle",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "cluster_function_terminals": 3,
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 600,
+          "y": 180,
+          "width": 48,
+          "height": 80
+        }
+      },
+      {
+        "id": "number-terminal",
+        "kind": "widget_value",
+        "type": "i64",
+        "widget": "number",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "text-terminal",
+        "kind": "widget_value",
+        "type": "string",
+        "widget": "text",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 240,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "flag-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "flag",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 320,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Bundle — preserve-all\nAn incoming Cluster retains every unwired field. Replacement rows keep their semantic positions even when preceding or intervening rows are unwired.\nEntrées -> opération -> indicateurs. Résultat attendu : number (i64) = 9007199254740993\ntext (string) = \"FROG\"\nflag (bool) = true\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": -20,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "input-element1",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "element1"
+        }
+      },
+      {
+        "id": "wire-1",
+        "from": {
+          "node": "input-element2",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "element2"
+        }
+      },
+      {
+        "id": "wire-2",
+        "from": {
+          "node": "input-element3",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "element3"
+        }
+      },
+      {
+        "id": "wire-3",
+        "from": {
+          "node": "operation",
+          "port": "result"
+        },
+        "to": {
+          "node": "replacement",
+          "port": "cluster"
+        }
+      },
+      {
+        "id": "wire-4",
+        "from": {
+          "node": "replacement",
+          "port": "result"
+        },
+        "to": {
+          "node": "read",
+          "port": "cluster"
+        }
+      },
+      {
+        "id": "wire-5",
+        "from": {
+          "node": "read",
+          "port": "element1"
+        },
+        "to": {
+          "node": "number-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "wire-6",
+        "from": {
+          "node": "read",
+          "port": "element2"
+        },
+        "to": {
+          "node": "text-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "wire-7",
+        "from": {
+          "node": "read",
+          "port": "element3"
+        },
+        "to": {
+          "node": "flag-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

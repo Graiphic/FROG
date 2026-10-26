@@ -82,12 +82,14 @@ void factories() {
     require(!rt::makeRuntimeRecord({{"illegal",rt::f64ArrayValueType(),rt::RuntimeValue{a}}}),"Array was admitted inside Record");
     ev::PacketError error=ev::PacketError::None;require(!ev::FieldValue::scalar("array:f64",rt::RuntimeValue{a},&error)&&error==ev::PacketError::InvalidValue,"Array was admitted as an unbudgeted Event scalar");
     for(const auto invalid:{std::numeric_limits<double>::infinity(),-std::numeric_limits<double>::infinity(),std::numeric_limits<double>::quiet_NaN()}){const std::array<double,1> bad{invalid};const auto r=rt::makeRuntimeF64Array(bad,owner(),8);require(!r.accepted()&&!r.value&&r.failure==rt::F64ArrayFailure::NonFinite,"Factory accepted nonfinite or returned a partial array");}
-    const auto noOwner=rt::makeRuntimeF64Array(values,{},24),shortBudget=rt::makeRuntimeF64Array(values,owner(),23),invalidBudget=rt::makeRuntimeF64Array(values,owner(),rt::kMaximumF64ArrayPayloadBytes+1);
+    const auto noOwner=rt::makeRuntimeF64Array(values,{},24),shortBudget=rt::makeRuntimeF64Array(values,owner(),23),invalidBudget=rt::makeRuntimeF64Array(values,owner(),0);
     require(noOwner.failure==rt::F64ArrayFailure::OwnerInvalid&&!noOwner.value,"Factory accepted absent owner");require(shortBudget.failure==rt::F64ArrayFailure::PayloadLimit&&!shortBudget.value&&invalidBudget.failure==rt::F64ArrayFailure::PayloadLimit,"Factory allocated outside the explicit available payload");
-    std::vector<double> maximum(rt::kMaximumF64ArrayElements,1.5);maximum.front()=-0.0;maximum.back()=9.25;
-    const auto full=rt::makeRuntimeF64Array(maximum,owner(),8'000'000);require(full.accepted()&&full.value->elements().size()==1'000'000&&full.value->payloadBytes()==8'000'000,"Historical1M packed boundary was limited by recursive4096 values");
+    std::vector<double> maximum(1'000'001,1.5);maximum.front()=-0.0;maximum.back()=9.25;
+    const auto full=rt::makeRuntimeF64Array(maximum,owner(),maximum.size()*sizeof(double));require(full.accepted()&&full.value->elements().size()==1'000'001&&full.value->payloadBytes()==8'000'008,"Packed Array retained the former1M element cap");
     require(rt::runtimeValueRepresentable(rt::RuntimeValue{full.value},rt::f64ArrayValueType()),"1M packed value was recursively traversed/rejected");
-    maximum.push_back(1);const auto tooMany=rt::makeRuntimeF64Array(maximum,owner(),rt::kMaximumF64ArrayPayloadBytes);require(!tooMany.value&&tooMany.failure==rt::F64ArrayFailure::ElementLimit,"Factory accepted1M+1 elements");
+    const std::array<std::uint32_t,2> boundary{UINT32_MAX,1},overflow{UINT32_MAX,2};
+    require(rt::kMaximumF64ArrayElements==UINT32_MAX&&rt::array_detail::elementCount(boundary)==std::optional<std::size_t>{UINT32_MAX}&&
+        !rt::array_detail::elementCount(overflow),"Packed Array limit arithmetic lost the exact U32 maximum or overflow refusal");
     std::vector<double> fail(5000,1.0);const auto payload=fail.size()*sizeof(double);allocation_fault::arm(payload);const auto failed=rt::makeRuntimeF64Array(fail,owner(),rt::kMaximumF64ArrayPayloadBytes);const auto fault=allocation_fault::state();
     const bool allocationRejected=!failed.value&&failed.failure==rt::F64ArrayFailure::ResourceFailure&&fault.armedMinimum==0&&fault.failures==1&&fault.requested>=payload;
     if(!allocationRejected)std::cerr<<"Factory allocation injection: payload="<<payload<<" armed-minimum="<<fault.armedMinimum<<" failed-request="<<fault.requested<<" failures="<<fault.failures<<" failure-status="<<unsigned(failed.failure)<<" partial="<<bool(failed.value)<<'\n';
@@ -112,7 +114,7 @@ void codec() {
     const auto raw=[&](){rt::codec_detail::Writer writer(false,true,&*source.valueOwner);writer.runtimeValue(rt::RuntimeValue{a});return std::move(writer).finish();}();
     for(bool typed:{false,true}){rt::codec_detail::Reader old(raw);require(old.typed(typed),"Old envelope mode was unexpectedly invalid");old.arrayOwner(*source.valueOwner);rt::RuntimeValue unchanged;require(!old.runtimeValue(unchanged)&&std::holds_alternative<std::monostate>(unchanged),"Actual old-schema value reader admitted tag7");}
     bad=bytes;const auto inf=std::bit_cast<std::uint64_t>(std::numeric_limits<double>::infinity());for(unsigned i=0;i<8;++i)bad[at+6+i]=static_cast<std::uint8_t>(inf>>(i*8));rejects(std::move(bad),"nonfinite packed bits");
-    bad=bytes;const std::uint32_t excess=1'000'001;for(unsigned i=0;i<4;++i)bad[at+2+i]=static_cast<std::uint8_t>(excess>>(i*8));const auto oversizedPayload=static_cast<std::size_t>(excess)*8;allocation_fault::arm(oversizedPayload);rejects(std::move(bad),"count>1M before allocation");const auto oversizedFault=allocation_fault::state();
+    bad=bytes;const std::uint32_t excess=UINT32_MAX;for(unsigned i=0;i<4;++i)bad[at+2+i]=static_cast<std::uint8_t>(excess>>(i*8));const auto oversizedPayload=static_cast<std::size_t>(excess)*8;allocation_fault::arm(oversizedPayload);rejects(std::move(bad),"U32-max count with truncated payload before allocation");const auto oversizedFault=allocation_fault::state();
     const bool refusedBeforeAllocation=oversizedFault.armedMinimum==oversizedPayload&&oversizedFault.failures==0&&oversizedFault.requested==0;
     if(!refusedBeforeAllocation)std::cerr<<"Oversized count guard: payload="<<oversizedPayload<<" armed-minimum="<<oversizedFault.armedMinimum<<" failed-request="<<oversizedFault.requested<<" failures="<<oversizedFault.failures<<'\n';
     require(refusedBeforeAllocation,"Oversized count allocated before refusal");allocation_fault::clear();
@@ -122,15 +124,30 @@ void codec() {
     require(allocationRejected,"Decoder bad_alloc escaped or returned a partial artifact");allocation_fault::clear();
 }
 void aggregate() {
-    phase="1M packed elements and aggregate decoder ledger";
-    std::vector<double> values(1'000'000,2.5);values[0]=-0.0;const auto full=array(values);const auto source=artifact(full,2);const auto bytes=rt::encodeProgramArtifact(source);require(!bytes.empty(),"Exact16M aggregate did not encode");const auto decoded=rt::decodeProgramArtifact(bytes);require(decoded.artifact&&decoded.artifact->nodes.size()==2,"Exact16M decoder ledger did not admit two8M values");for(const auto &n:decoded.artifact->nodes){const auto &a=std::get<7>(*n.literalValue);require(a->payloadBytes()==8'000'000&&a->elements().size()==1'000'000&&std::signbit(a->elements()[0]),"Packed1M codec consumed recursive elements or lost bits");}
-    auto tooLarge=artifact(full,3);require(code(rt::validateProgramArtifact(tooLarge),"contract.array.payload_limit")&&rt::encodeProgramArtifact(tooLarge).empty(),"Artifact encoder exceeded aggregate16M payload");
-    // Direct Reader is the same real decoder used above. Three exact8M blocks
-    // prove that the third is rejected before its payload allocation.
+    phase="Large packed Arrays and allocation failure without a fixed payload quota";
+    std::vector<double> values(2'100'000,2.5);values[0]=-0.0;const auto full=array(values);const auto source=artifact(full,2);const auto bytes=rt::encodeProgramArtifact(source);require(!bytes.empty()&&bytes.size()>32U*1024U*1024U,"Array payload remained limited by the former32MiB typed envelope quota");const auto decoded=rt::decodeProgramArtifact(bytes);require(decoded.artifact&&decoded.artifact->nodes.size()==2,"Large Array decoder did not admit two actual arrays");for(const auto &n:decoded.artifact->nodes){const auto &a=std::get<7>(*n.literalValue);require(a->payloadBytes()==16'800'000&&a->elements().size()==2'100'000&&std::signbit(a->elements()[0]),"Large packed codec consumed recursive elements or lost bits");}
+    // Direct Reader is the same real decoder used above. Three actual blocks
+    // prove that actual allocation failure, rather than a16MB quota, is atomic.
     const auto valueBytes=[&](){rt::codec_detail::Writer w(false,true,&*source.valueOwner);w.runtimeValue(rt::RuntimeValue{full});return std::move(w).finish();}();require(!valueBytes.empty(),"Real packed Writer failed");std::vector<std::uint8_t> three;three.reserve(valueBytes.size()*3);for(unsigned i=0;i<3;++i)three.insert(three.end(),valueBytes.begin(),valueBytes.end());rt::codec_detail::Reader reader(three);require(reader.typed(true,true),"Packed reader envelope rejected bounded fixture");reader.arrayOwner(*source.valueOwner);rt::RuntimeValue first,second,third;require(reader.runtimeValue(first)&&reader.runtimeValue(second),"Reader did not commit two exact8M packed values");allocation_fault::arm(8'000'000);const bool thirdRead=reader.runtimeValue(third);const auto thirdFault=allocation_fault::state();
-    const bool thirdRejected=!thirdRead&&std::holds_alternative<std::monostate>(third)&&thirdFault.armedMinimum==8'000'000&&thirdFault.failures==0&&thirdFault.requested==0;
+    const bool thirdRejected=!thirdRead&&std::holds_alternative<std::monostate>(third)&&thirdFault.armedMinimum==0&&thirdFault.failures==1&&thirdFault.requested>=8'000'000;
     if(!thirdRejected)std::cerr<<"Third packed payload guard: armed-minimum="<<thirdFault.armedMinimum<<" failed-request="<<thirdFault.requested<<" failures="<<thirdFault.failures<<" partial-alternative="<<third.index()<<" read="<<thirdRead<<'\n';
-    require(thirdRejected,"Third packed payload was allocated or partially returned before aggregate refusal");allocation_fault::clear();
+    require(thirdRejected,"Actual Array allocation failure escaped or published a partial value");allocation_fault::clear();
+}
+void genericArray() {
+    phase="Generic Array8192 and atomic allocation failure";
+    std::vector<rt::RuntimeValue> elements(8192,rt::RuntimeValue{std::uint64_t{9007199254740993ULL}});
+    elements.back()=std::uint64_t{UINT64_MAX};
+    const auto authority=owner();
+    const auto value=rt::makeRuntimeArray(rt::valueTypeFromCanonicalName("u64"),{64,128},std::move(elements),authority);
+    require(value&&rt::runtimeValueValidForOwner(*value,rt::valueTypeFromCanonicalName("array<u64,rank=2>"),authority),"Generic Array8192 retained its recursive4096 cap");
+    rt::codec_detail::Writer writer(true,false,&authority);writer.runtimeValue(*value);const auto bytes=std::move(writer).finish();
+    rt::codec_detail::Reader reader(bytes);reader.typed(true);reader.arrayOwner(authority);rt::RuntimeValue decoded;
+    require(!bytes.empty()&&reader.runtimeValue(decoded)&&reader.finished()&&rt::runtimeValuesEqual(*value,decoded),"Generic Array8192 lost rank, row-major values or exact u64 data");
+    rt::codec_detail::Reader failed(bytes);failed.typed(true);failed.arrayOwner(authority);rt::RuntimeValue unchanged;
+    const auto payload=std::size_t{8192}*sizeof(rt::RuntimeValue);allocation_fault::arm(payload);
+    const bool accepted=failed.runtimeValue(unchanged);const auto failure=allocation_fault::state();allocation_fault::clear();
+    require(!accepted&&std::holds_alternative<std::monostate>(unchanged)&&failure.failures==1&&failure.requested>=payload&&
+        failed.error().find("Not enough memory")!=std::string_view::npos,"Generic Array allocation failure escaped or published partial state");
 }
 }
-int main(){try{legacyBytes();factories();codec();aggregate();std::cout<<"SDK_PACKED_F64_ARRAY_PASS "<<checks<<" checks; schema3/tag7 packed1M,16M aggregate, exact owner, content equality, -0 codec, sealed-copy and ART1/2/tag6 preservation; no Runtime/Source/operator/UI capability claimed\n";return 0;}catch(const std::exception &e){allocation_fault::clear();std::cerr<<e.what()<<'\n';return 1;}}
+int main(){try{legacyBytes();factories();codec();aggregate();genericArray();std::cout<<"SDK_PACKED_F64_ARRAY_PASS "<<checks<<" checks; schema3/tag7 U32 capacity, actual arrays above1M and32MiB, generic Array8192, exact owner, allocation failure, -0 codec, sealed-copy and ART1/2/tag6 preservation; no Runtime/Source/operator/UI capability claimed\n";return 0;}catch(const std::exception &e){allocation_fault::clear();std::cerr<<e.what()<<'\n';return 1;}}

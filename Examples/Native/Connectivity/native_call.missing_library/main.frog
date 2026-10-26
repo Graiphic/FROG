@@ -1,0 +1,519 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 7,
+  "language": "FROG",
+  "title": "Appel C : bibliothèque absente",
+  "metadata": {
+    "name": "Appel C : bibliothèque absente",
+    "name_source": "document",
+    "description": "Le vrai nœud NativeCall utilise la bibliothèque C livrée avec les exemples, via un chemin relatif au document. Profil scalar5 : I32/U32/I64/U64/F64 par valeur, thread Any, C ABI. Les IDs param.<id>.in/out sont persistants. Les arguments restent dans l'ordre ABI même lorsque leurs lignes visuelles sont inversées. Les nombres entiers ne transitent jamais par un double.\n\nAppel C : bibliothèque absente\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/native-call.scalar5@1.\nExpected:\nreturned (i64) = 0\nerror_status (bool) = true\nerror_code (i32) = 7603\nmirror_0 (i64) = 9007199254740993\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["native", "typed", "resources", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.5 36.5\"><g><g><rect x=\".75\" y=\".75\" width=\"46\" height=\"35\" rx=\"3.68\" ry=\"3.68\" stroke=\"#aab4c0\" fill=\"#6b7987\" stroke-width=\"1.5px\" data-frog-part=\"fixed-body\" /><rect x=\".75\" y=\".76\" width=\"46\" height=\"23\" rx=\"3.68\" ry=\"3.68\" stroke=\"#aab4c0\" fill=\"#4b5563\" stroke-width=\"1.47px\" data-frog-part=\"header\" /><path d=\"M21.54,4.08v13.9h2.78V4.08h-2.78ZM24.32,5.94l3.71,12.04,2.78-.93-3.71-12.04-2.78.93ZM17.83,5.94v12.04h2.78V5.94h-2.78ZM15.98,18.91v1.85h16.68v-1.85H15.98Z\" fill=\"#fffffe\" data-frog-part=\"library-glyph\" /><line x1=\"23.75\" y1=\"23.76\" x2=\"23.75\" y2=\"35.75\" stroke=\"#aab4c0\" stroke-width=\"2px\" fill=\"none\" data-frog-part=\"center-divider\" /></g></g></svg>"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "mirror_0",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i64",
+        "label": "mirror_0",
+        "bounds": {
+          "x": 30,
+          "y": 30,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i64",
+          "data_type.named_numeric_size": "Int64",
+          "representation.kind": "int64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "returned",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i64",
+        "label": "returned",
+        "bounds": {
+          "x": 30,
+          "y": 100,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i64",
+          "data_type.named_numeric_size": "Int64",
+          "representation.kind": "int64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "error_status",
+        "classId": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "valueType": "bool",
+        "label": "error_status",
+        "bounds": {
+          "x": 30,
+          "y": 170,
+          "width": 46.2,
+          "height": 46.2
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": false
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      },
+      {
+        "id": "error_code",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i32",
+        "label": "error_code",
+        "bounds": {
+          "x": 30,
+          "y": 240,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 40,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "call",
+        "studio_native_call": {"arguments":[{"access":"read_only","default_canonical_value":null,"dimensions":[],"display_name":"argument 1","id":"p1","initialization":"zero","input_requirement":"required","minimum_capacity":{"constant":0,"parameter_id":"","source":"unspecified","unit":"elements"},"nullable":false,"pass":"value","type":{"adapted_type":{"canonical":"unknown","children":[],"choice_kind":0,"choices":[],"field_names":[]},"ansi_code_page":0,"array_format":"data_pointer","element_type":"f64","kind":"numeric","numeric_type":"i64","rank":1,"string_encoding":"utf8","string_format":"c_string","struct_layout":{"alignment":0,"byte_size":0,"c_type_name":"","fields":[],"packing":0}},"valid_length_parameter_id":null}],"callbacks":{"abort":"","profile_version":1,"reserve":"","unreserve":""},"calling_convention":"cdecl","error_checking":"maximum","library":{"dynamic_relative_base":"document_relative","mode":"document_relative","specify_path_on_diagram":false,"value":"../../lib/frog-example-native-library.absent.dll"},"next_identity":2,"presentation":{"compact":false,"header_title_visible":true,"requested_width":0,"show_parameter_names":true,"visual_parameter_order":["p1"]},"return":{"display_name":"return","lifetime":"","maximum_read":{"constant":0,"parameter_id":"","source":"unspecified","unit":"elements"},"ownership":"borrowed","type":{"adapted_type":{"canonical":"unknown","children":[],"choice_kind":0,"choices":[],"field_names":[]},"ansi_code_page":0,"array_format":"data_pointer","element_type":"f64","kind":"numeric","numeric_type":"i64","rank":1,"string_encoding":"utf8","string_format":"c_string","struct_layout":{"alignment":0,"byte_size":0,"c_type_name":"","fields":[],"packing":0}}},"schema_version":1,"symbol":"FrogExampleEchoI64V1","thread":"any","variadic":false},
+        "kind": "primitive",
+        "type": "frog.studio.connectivity.libraries.call_library_function",
+        "label": "Call Library Function Node",
+        "label_visible": false,
+        "palette_catalog_id": "connectivity.libraries.call_library_function",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 60,
+          "y": 100,
+          "width": 109.72800000000001,
+          "height": 70.48421052631579
+        }
+      },
+      {
+        "id": "argument-0",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "i64",
+        "label": "Float Constant",
+        "label_visible": false,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "9007199254740993",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 230,
+          "y": 100,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "mirror_0-terminal",
+        "kind": "widget_value",
+        "type": "i64",
+        "widget": "mirror_0",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 400,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "returned-terminal",
+        "kind": "widget_value",
+        "type": "i64",
+        "widget": "returned",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 570,
+          "y": 100,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "error-fields",
+        "kind": "primitive",
+        "type": "frog.studio.cluster.unbundle",
+        "label": "Unbundle",
+        "label_visible": false,
+        "palette_catalog_id": "cluster.unbundle",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "cluster_function_terminals": 3,
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 740,
+          "y": 100,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "error_status-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "error_status",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 60,
+          "y": 210,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "error_code-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "error_code",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 230,
+          "y": 210,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Appel C : bibliothèque absente\nAppel C : bibliothèque absente\nEntrées -> opération -> indicateurs. Résultat attendu : returned (i64) = 0\nerror_status (bool) = true\nerror_code (i32) = 7603\nmirror_0 (i64) = 9007199254740993\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 60,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "notifier-wire-0",
+        "from": {
+          "node": "argument-0",
+          "port": "value"
+        },
+        "to": {
+          "node": "call",
+          "port": "param.p1.in"
+        }
+      },
+      {
+        "id": "notifier-wire-1",
+        "from": {
+          "node": "call",
+          "port": "param.p1.out"
+        },
+        "to": {
+          "node": "mirror_0-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "notifier-wire-2",
+        "from": {
+          "node": "call",
+          "port": "return_value"
+        },
+        "to": {
+          "node": "returned-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "notifier-wire-3",
+        "from": {
+          "node": "call",
+          "port": "error_out"
+        },
+        "to": {
+          "node": "error-fields",
+          "port": "cluster"
+        }
+      },
+      {
+        "id": "notifier-wire-4",
+        "from": {
+          "node": "error-fields",
+          "port": "element1"
+        },
+        "to": {
+          "node": "error_status-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "notifier-wire-5",
+        "from": {
+          "node": "error-fields",
+          "port": "element2"
+        },
+        "to": {
+          "node": "error_code-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

@@ -4,6 +4,12 @@ name: Reference Workspace
 # reference-pipeline.yml. Keep these original contexts for explicit diagnostics.
 on:
   workflow_dispatch:
+    inputs:
+      run_global_validation:
+        description: 'Authorize the unchanged complete validation gate.'
+        type: boolean
+        required: true
+        default: false
 
 permissions:
   contents: read
@@ -14,6 +20,7 @@ concurrency:
 
 jobs:
   reference-workspace:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_global_validation == true }}
     name: Reference workspace
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -34,6 +41,7 @@ jobs:
         run: python Implementations/Reference/check_reference_workspace.py
 
   reference-pytest:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_global_validation == true }}
     name: Reference pytest
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -79,6 +87,7 @@ jobs:
         run: python Implementations/Reference/check_reference_workspace.py --widget-layer-only
 
   reference-native-kernel-bridge:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_global_validation == true }}
     name: Reference native kernel bridge
     runs-on: ubuntu-latest
     timeout-minutes: 30

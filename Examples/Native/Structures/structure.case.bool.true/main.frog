@@ -1,0 +1,449 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Case bool : sélection exacte et tunnels",
+  "metadata": {
+    "name": "Case bool : sélection exacte et tunnels",
+    "name_source": "document",
+    "description": "Le sélecteur choisit la branche exécutée, indépendamment de la branche affichée. La branche chosen incrémente l'entrée 40 et publie 41 ; l'autre publie 99. Tous les contenus et les producteurs du tunnel de sortie persistent, y compris dans la branche cachée. Les sélecteurs I64/U64 conservent les valeurs exactes ; les enums comparent les IDs de domaine/items.\n\nCase bool : sélection exacte et tunnels\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nresult (i64) = 41\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["native", "typed", "resources", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 30.8.0, SVG Export Plug-In . SVG Version: 9.03 Build 0)  -->\r\n<svg version=\"1.1\" id=\"Calque_2_00000072243703882665720740000010071851286079018127_\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 33.233 26.911\"\r\n\t style=\"enable-background:new 0 0 33.233 26.911;\" xml:space=\"preserve\">\r\n<style type=\"text/css\">\r\n\t.st0{fill:#9ABC96;stroke:#AAB4C0;stroke-width:0.5;stroke-miterlimit:10;}\n\t.st1{fill:#FFFFFF;stroke:#AAB4C0;stroke-width:0.72;stroke-miterlimit:10;}\n\t.st2{fill:#9ABC96;}\r\n\t.st3{fill:#FFFFFF;}\r\n\t.st4{fill:#0D770D;stroke:#FFFFFF;stroke-width:0.5;stroke-miterlimit:10;}\r\n\t.st5{fill:none;stroke:#FFFFFF;stroke-width:0.59;stroke-miterlimit:10;}\r\n</style>\r\n<path class=\"st0\" d=\"M27.788,0.598H5.434c-2.431,0-4.407,1.976-4.407,4.407v16.902c0,2.441,1.976,4.417,4.417,4.417h22.344\n\tc2.441,0,4.417-1.976,4.417-4.417V5.004c0-2.441-1.976-4.417-4.417-4.417V0.598z M29.34,20.81c0,1.686-1.365,3.052-3.052,3.052\n\tH7.007c-1.686,0-3.052-1.365-3.052-3.052V6.473c0-1.686,1.365-3.052,3.052-3.052h19.282c1.686,0,3.052,1.365,3.052,3.052V20.81z\"/>\n<rect x=\"5.383\" y=\"0.598\" class=\"st1\" width=\"22.561\" height=\"6.9\"/>\n<rect x=\"11.279\" y=\"1.653\" class=\"st2\" width=\"10.81\" height=\"4.696\"/>\n<polygon class=\"st3\" points=\"16.699,5.118 14.558,2.977 18.84,2.977 \"/>\n<rect x=\"22.864\" y=\"1.653\" class=\"st2\" width=\"3.931\" height=\"4.696\"/>\n<polygon class=\"st3\" points=\"26.216,4.053 24.064,5.118 24.064,2.977 \"/>\n<rect x=\"6.572\" y=\"1.653\" class=\"st2\" width=\"3.931\" height=\"4.696\"/>\n<polygon class=\"st3\" points=\"7.4,4.053 9.562,5.118 9.562,2.977 \"/>\n<path class=\"st4\" d=\"M1.853,10.719h4.27c0.718,0,1.3,0.582,1.3,1.3v3.85c0,0.718-0.582,1.3-1.3,1.3h-4.27\r\n\tc-0.718,0-1.3-0.582-1.3-1.3v-3.85C0.553,11.301,1.135,10.719,1.853,10.719z\"/>\r\n<g>\r\n\t<path class=\"st5\" d=\"M3.143,12.219c0,0,0.21-0.46,0.75-0.46s1.15,0.66,0.87,1.44s-0.87,0.54-0.87,0.87v0.43\"/>\r\n\t<line class=\"st5\" x1=\"3.893\" y1=\"15.249\" x2=\"3.893\" y2=\"15.979\"/>\r\n</g>\r\n</svg>\r\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "result",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i64",
+        "label": "result",
+        "bounds": {
+          "x": 30,
+          "y": 30,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i64",
+          "data_type.named_numeric_size": "Int64",
+          "representation.kind": "int64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 30,
+      "y": -120
+    },
+    "nodes": [
+      {
+        "id": "case",
+        "kind": "structure",
+        "structure_type": "case",
+        "type": "frog.studio.structures.case_structure",
+        "label": "Case Structure",
+        "label_visible": false,
+        "palette_catalog_id": "structures.case_structure",
+        "boundary": {
+          "inputs": [
+            { "id": "input", "type": "i64" }
+          ],
+          "outputs": [
+            { "id": "output", "type": "i64" }
+          ]
+        },
+        "binding_profile": "frog.typed-binding@1",
+        "structure_terminals": {
+          "selector": {
+            "type": "bool",
+            "outer_visible": true,
+            "exposed_in_body": true,
+            "read_only": true,
+            "outer_port": "selector",
+            "body_port": "selected_case",
+            "role": "selector"
+          }
+        },
+        "case_profile": "frog.case-editing@1",
+        "case_structure_radix": 10,
+        "regions": [
+          {
+            "id": "chosen",
+            "title": "",
+            "matches": [
+              {"kind": "boolean_exact", "value": true}
+            ],
+            "diagram": {
+              "zoom_percent": 100,
+              "nodes": [
+                {
+                  "id": "increment",
+                  "kind": "primitive",
+                  "type": "frog.studio.numeric.increment",
+                  "label": "Increment",
+                  "label_visible": false,
+                  "palette_catalog_id": "numeric.increment",
+                  "label_auto_size": true,
+                  "label_vertical_arrangement": "none",
+                  "label_offset": {
+                    "x": 0,
+                    "y": 0
+                  },
+                  "label_size": {
+                    "width": 120,
+                    "height": 24
+                  },
+                  "label_font": {
+                    "family": "",
+                    "style": "plain",
+                    "use_default_size": true,
+                    "point_size": 15
+                  },
+                  "hidden": false,
+                  "locked": false,
+                  "group": "",
+                  "layout": {
+                    "x": 480,
+                    "y": 240,
+                    "width": 48,
+                    "height": 48
+                  }
+                }
+              ],
+              "edges": [
+                {
+                  "id": "notifier-wire-2",
+                  "from": {
+                    "node": "case",
+                    "port": "tunnel:input:output"
+                  },
+                  "to": {
+                    "node": "increment",
+                    "port": "in"
+                  }
+                },
+                {
+                  "id": "notifier-wire-3",
+                  "from": {
+                    "node": "increment",
+                    "port": "result"
+                  },
+                  "to": {
+                    "node": "case",
+                    "port": "tunnel:output:input"
+                  }
+                }
+              ],
+              "wire_fragments": []
+            }
+          },
+          {
+            "id": "other",
+            "title": "",
+            "matches": [
+              {"kind": "boolean_exact", "value": false}
+            ],
+            "diagram": {
+              "zoom_percent": 100,
+              "nodes": [
+                {
+                  "id": "fallback",
+                  "kind": "primitive",
+                  "type": "frog.studio.numeric.numeric_constant",
+                  "value_type": "i64",
+                  "label": "Float Constant",
+                  "label_visible": false,
+                  "palette_catalog_id": "numeric.numeric_constant",
+                  "label_auto_size": true,
+                  "label_vertical_arrangement": "none",
+                  "label_offset": {
+                    "x": 0,
+                    "y": 0
+                  },
+                  "label_size": {
+                    "width": 120,
+                    "height": 24
+                  },
+                  "label_font": {
+                    "family": "",
+                    "style": "plain",
+                    "use_default_size": true,
+                    "point_size": 15
+                  },
+                  "text": "99",
+                  "hidden": false,
+                  "locked": false,
+                  "group": "",
+                  "layout": {
+                    "x": 480,
+                    "y": 240,
+                    "width": 48,
+                    "height": 48
+                  }
+                }
+              ],
+              "edges": [
+                {
+                  "id": "notifier-wire-4",
+                  "from": {
+                    "node": "fallback",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "case",
+                    "port": "tunnel:output:input"
+                  }
+                }
+              ],
+              "wire_fragments": []
+            }
+          }
+        ],
+        "case_structure_true_visible": false,
+        "case_structure_visible_region_id": "other",
+        "case_structure_selector_normalized_y": 0.5,
+        "case_structure_subdiagram_label_visible": false,
+        "case_structure_true_subdiagram_label_text": "",
+        "case_structure_false_subdiagram_label_text": "",
+        "case_structure_subdiagram_label_height": 48,
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "structure_tunnels": [
+          { "id": "input", "value_type": "i64", "side": "left", "normalized_position": 0.5, "output_from_structure": false },
+          { "id": "output", "value_type": "i64", "side": "right", "normalized_position": 0.5, "output_from_structure": true }
+        ],
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 260,
+          "y": 100,
+          "width": 580,
+          "height": 340
+        }
+      },
+      {
+        "id": "selector",
+        "kind": "primitive",
+        "type": "frog.studio.boolean.true_constant",
+        "value_type": "bool",
+        "label": "True Constant",
+        "label_visible": false,
+        "palette_catalog_id": "boolean.true_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "true",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 50,
+          "y": 80,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "seed",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "i64",
+        "label": "Float Constant",
+        "label_visible": false,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "40",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 50,
+          "y": 230,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "result-terminal",
+        "kind": "widget_value",
+        "type": "i64",
+        "widget": "result",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 950,
+          "y": 230,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Case bool : sélection exacte et tunnels\nCase bool : sélection exacte et tunnels\nEntrées -> opération -> indicateurs. Résultat attendu : result (i64) = 41\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 50,
+          "y": -100,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "notifier-wire-0",
+        "from": {
+          "node": "selector",
+          "port": "value"
+        },
+        "to": {
+          "node": "case",
+          "port": "selector"
+        }
+      },
+      {
+        "id": "notifier-wire-1",
+        "from": {
+          "node": "seed",
+          "port": "value"
+        },
+        "to": {
+          "node": "case",
+          "port": "tunnel:input:input"
+        }
+      },
+      {
+        "id": "notifier-wire-5",
+        "from": {
+          "node": "case",
+          "port": "tunnel:output:output"
+        },
+        "to": {
+          "node": "result-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

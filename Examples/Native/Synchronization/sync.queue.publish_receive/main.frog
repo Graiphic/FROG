@@ -1,0 +1,739 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Queue : enfiler, défiler et nettoyer",
+  "metadata": {
+    "name": "Queue : enfiler, défiler et nettoyer",
+    "name_source": "document",
+    "description": "Obtain utilise le prototype f64 explicite. Enqueue ajoute 42, Dequeue le retire dans l'ordre FIFO, puis Release ferme la référence. Le fil d'erreur établit l'ordre des effets réels ; timeout=0 ne bloque jamais.\n\nQueue : enfiler, défiler et nettoyer\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nreceived (f64) = 42\ntimed_out (bool) = false\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["native", "typed", "resources", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 47.8\">\n  <defs>\n    <style>\n      .cls-1 {\n        stroke: #aab4c0;\n        stroke-width: 1.8px;\n      }\n\n      .cls-1, .cls-2 {\n        fill: #4b5563;\n      }\n\n      .cls-3 {\n        fill: #fffffe;\n        stroke-width: .86px;\n      }\n\n      .cls-3, .cls-2 {\n        stroke: #f8fafc;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n      }\n\n      .cls-4 {\n        fill: #f8fafc;\n      }\n\n      .cls-2 {\n        stroke-width: 1.3px;\n      }\n    </style>\n  </defs>\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n      <rect class=\"cls-1\" x=\".9\" y=\".9\" width=\"46\" height=\"46\" rx=\"4.5\" ry=\"4.5\"/>\n      <g>\n        <rect class=\"cls-3\" x=\"23.09\" y=\"19.62\" width=\".82\" height=\"30.8\" transform=\"translate(-11.52 58.52) rotate(-90)\"/>\n        <polygon class=\"cls-3\" points=\"36.45 39.44 39.53 35.26 39.7 35.02 39.53 34.78 36.45 30.6 35.8 31.08 38.69 35.02 35.8 38.96 36.45 39.44\"/>\n      </g>\n      <rect class=\"cls-2\" x=\"14.99\" y=\"28.16\" width=\"5.71\" height=\"12.47\"/>\n      <rect class=\"cls-2\" x=\"20.7\" y=\"28.16\" width=\"5.71\" height=\"12.47\"/>\n      <rect class=\"cls-2\" x=\"26.41\" y=\"28.16\" width=\"5.71\" height=\"12.47\"/>\n      <path class=\"cls-4\" d=\"M12.72,21.47l-1.1-4.86-3.74,2.18c-.4.25-.87-.21-.61-.61l2.18-3.74-4.86-1.1c-.46-.1-.46-.76,0-.87l4.86-1.1-2.19-3.75c-.25-.4.21-.87.61-.61l3.75,2.19,1.1-4.86c.1-.46.76-.46.87,0l1.1,4.86,3.75-2.18c.4-.25.87.21.61.61l-2.18,3.75,4.86,1.1c.46.1.46.76,0,.87l-4.86,1.1,2.18,3.74c.25.4-.21.87-.61.61l-3.74-2.18-1.1,4.86c-.1.46-.76.46-.87,0Z\"/>\n    </g>\n  </g>\n</svg>"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "received",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "f64",
+        "label": "received",
+        "bounds": {
+          "x": 30,
+          "y": 30,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "timed_out",
+        "classId": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "valueType": "bool",
+        "label": "timed_out",
+        "bounds": {
+          "x": 30,
+          "y": 100,
+          "width": 46.2,
+          "height": 46.2
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": false
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      },
+      {
+        "id": "error_status",
+        "classId": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "valueType": "bool",
+        "label": "error_status",
+        "bounds": {
+          "x": 30,
+          "y": 170,
+          "width": 46.2,
+          "height": 46.2
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": false
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      },
+      {
+        "id": "error_code",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i32",
+        "label": "error_code",
+        "bounds": {
+          "x": 30,
+          "y": 240,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i32",
+          "data_type.named_numeric_size": "Int32",
+          "representation.kind": "int32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 40,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "obtain",
+        "kind": "primitive",
+        "type": "frog.studio.synchronization.queue.obtain",
+        "label": "Obtain Queue",
+        "label_visible": false,
+        "palette_catalog_id": "synchronization.queue.obtain",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 60,
+          "y": 100,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "publish",
+        "kind": "primitive",
+        "type": "frog.studio.synchronization.queue.enqueue",
+        "label": "Enqueue Element",
+        "label_visible": false,
+        "palette_catalog_id": "synchronization.queue.enqueue",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 230,
+          "y": 100,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "receive",
+        "kind": "primitive",
+        "type": "frog.studio.synchronization.queue.dequeue",
+        "label": "Dequeue Element",
+        "label_visible": false,
+        "palette_catalog_id": "synchronization.queue.dequeue",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 400,
+          "y": 100,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "release",
+        "kind": "primitive",
+        "type": "frog.studio.synchronization.queue.release",
+        "label": "Release Queue",
+        "label_visible": false,
+        "palette_catalog_id": "synchronization.queue.release",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 570,
+          "y": 100,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "value",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "f64",
+        "label": "Float Constant",
+        "label_visible": false,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "42",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 740,
+          "y": 100,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "timeout",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "i32",
+        "label": "Float Constant",
+        "label_visible": false,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "0",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 60,
+          "y": 210,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "received-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "received",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 230,
+          "y": 210,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "timed_out-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "timed_out",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 400,
+          "y": 210,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "error-fields",
+        "kind": "primitive",
+        "type": "frog.studio.cluster.unbundle",
+        "label": "Unbundle",
+        "label_visible": false,
+        "palette_catalog_id": "cluster.unbundle",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "cluster_function_terminals": 3,
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 570,
+          "y": 210,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "error_status-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "error_status",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 740,
+          "y": 210,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "error_code-terminal",
+        "kind": "widget_value",
+        "type": "i32",
+        "widget": "error_code",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 60,
+          "y": 320,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Queue : enfiler, défiler et nettoyer\nQueue : enfiler, défiler et nettoyer\nEntrées -> opération -> indicateurs. Résultat attendu : received (f64) = 42\ntimed_out (bool) = false\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 60,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "notifier-wire-0",
+        "from": {
+          "node": "value",
+          "port": "value"
+        },
+        "to": {
+          "node": "obtain",
+          "port": "element_type"
+        }
+      },
+      {
+        "id": "notifier-wire-1",
+        "from": {
+          "node": "obtain",
+          "port": "queue_out"
+        },
+        "to": {
+          "node": "publish",
+          "port": "queue"
+        }
+      },
+      {
+        "id": "notifier-wire-2",
+        "from": {
+          "node": "value",
+          "port": "value"
+        },
+        "to": {
+          "node": "publish",
+          "port": "element"
+        }
+      },
+      {
+        "id": "notifier-wire-3",
+        "from": {
+          "node": "obtain",
+          "port": "error_out"
+        },
+        "to": {
+          "node": "publish",
+          "port": "error_in"
+        }
+      },
+      {
+        "id": "notifier-wire-4",
+        "from": {
+          "node": "publish",
+          "port": "queue_out"
+        },
+        "to": {
+          "node": "receive",
+          "port": "queue"
+        }
+      },
+      {
+        "id": "notifier-wire-5",
+        "from": {
+          "node": "publish",
+          "port": "error_out"
+        },
+        "to": {
+          "node": "receive",
+          "port": "error_in"
+        }
+      },
+      {
+        "id": "notifier-wire-6",
+        "from": {
+          "node": "timeout",
+          "port": "value"
+        },
+        "to": {
+          "node": "receive",
+          "port": "timeout_ms"
+        }
+      },
+      {
+        "id": "notifier-wire-7",
+        "from": {
+          "node": "receive",
+          "port": "queue_out"
+        },
+        "to": {
+          "node": "release",
+          "port": "queue"
+        }
+      },
+      {
+        "id": "notifier-wire-8",
+        "from": {
+          "node": "receive",
+          "port": "error_out"
+        },
+        "to": {
+          "node": "release",
+          "port": "error_in"
+        }
+      },
+      {
+        "id": "notifier-wire-9",
+        "from": {
+          "node": "receive",
+          "port": "element"
+        },
+        "to": {
+          "node": "received-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "notifier-wire-10",
+        "from": {
+          "node": "receive",
+          "port": "timed_out"
+        },
+        "to": {
+          "node": "timed_out-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "notifier-wire-11",
+        "from": {
+          "node": "release",
+          "port": "error_out"
+        },
+        "to": {
+          "node": "error-fields",
+          "port": "cluster"
+        }
+      },
+      {
+        "id": "notifier-wire-12",
+        "from": {
+          "node": "error-fields",
+          "port": "element1"
+        },
+        "to": {
+          "node": "error_status-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "notifier-wire-13",
+        "from": {
+          "node": "error-fields",
+          "port": "element2"
+        },
+        "to": {
+          "node": "error_code-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

@@ -1,0 +1,663 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Replace one nested Cluster field",
+  "metadata": {
+    "name": "Replace one nested Cluster field",
+    "name_source": "document",
+    "description": "Replacing Config.Offset preserves the nested Name and outer Enabled fields. The selection uses persistent field identities, independently from their displayed names.\n\nReplacing Config.Offset preserves the nested Name and outer Enabled fields. The selection uses persistent field identities, independently from their displayed names.\n\nMode: execution. Profile: studio-draft. Capability: studio.native.composed@1.\nExpected:\noffset (i64) = -7\nname (string) = \"kept\"\nenabled (bool) = true\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["typed", "deterministic", "cluster", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 67.42 24.8\">\n  <rect id=\"shell\" x=\".9\" y=\".9\" width=\"65.62\" height=\"23\" rx=\"4.5\" ry=\"4.5\" fill=\"#f8fafc\" stroke=\"#aab4c0\" stroke-width=\"1.8\"/>\n  <path id=\"rail\" d=\"M42.24 .9h19.78c2.48 0 4.5 2.02 4.5 4.5v14c0 2.48-2.02 4.5-4.5 4.5H42.24Z\" fill=\"#4b5563\" stroke=\"#aab4c0\" stroke-width=\"1.8\"/>\n  <rect id=\"arrow-shaft\" x=\"53.5\" y=\"5.43\" width=\".92\" height=\"13.93\" transform=\"translate(66.36 -41.56) rotate(90)\" fill=\"#fffffe\" stroke=\"#f8fafc\" stroke-linecap=\"round\" stroke-width=\"1.8\"/>\n  <polygon id=\"arrow-head\" points=\"58.4 7.42 61.58 12.13 61.75 12.4 61.58 12.67 58.4 17.38 57.73 16.83 60.71 12.4 57.73 7.97 58.4 7.42\" fill=\"#fffffe\" stroke=\"#f8fafc\" stroke-linecap=\"round\" stroke-width=\"1.8\"/>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "offset",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i64",
+        "label": "offset",
+        "bounds": {
+          "x": 30,
+          "y": 40,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "i64",
+          "data_type.named_numeric_size": "Int64",
+          "representation.kind": "int64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "name",
+        "classId": "frog.widgets.string_indicator",
+        "role": "indicator",
+        "valueType": "string",
+        "label": "name",
+        "bounds": {
+          "x": 30,
+          "y": 150,
+          "width": 120,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "text.value": "",
+          "display.string.style": "normal",
+          "text.horizontal_alignment": "left",
+          "display.string.style_selector_visible": false,
+          "interaction.text.single_line": true,
+          "interaction.text.wrap_at_word_breaks": true,
+          "interaction.text.update_while_typing": true,
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": false,
+          "layout.size_to_text": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/07_string_value_roundtrip/main.frog",
+          "wfrog": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/string.default.wfrog",
+          "asset": "asset:string_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "enabled",
+        "classId": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "valueType": "bool",
+        "label": "enabled",
+        "bounds": {
+          "x": 30,
+          "y": 260,
+          "width": 46.2,
+          "height": 46.2
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": false
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 60,
+      "y": -80
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.cluster.bundle_by_name",
+        "label": "Bundle By Name",
+        "label_visible": true,
+        "palette_catalog_id": "cluster.bundle_by_name",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "cluster_function_terminals": 1,
+        "cluster_field_names": ["Config.Offset"],
+        "cluster_field_id_paths": [["config-id", "offset-id"]],
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": 180,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "record",
+        "kind": "primitive",
+        "type": "frog.studio.cluster.constant",
+        "label": "Cluster Constant",
+        "label_visible": true,
+        "palette_catalog_id": "cluster.constant",
+        "cluster_constant_collapsed": false,
+        "cluster_constant_autosizing": "none",
+        "cluster_expanded_width": 180,
+        "cluster_expanded_height": 110,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 90,
+          "y": 120,
+          "width": 240,
+          "height": 140
+        }
+      },
+      {
+        "id": "inner",
+        "kind": "primitive",
+        "type": "frog.studio.cluster.constant",
+        "label": "Config",
+        "label_visible": true,
+        "palette_catalog_id": "cluster.constant",
+        "constant_owner_node_id": "record",
+        "constant_field_id": "config-id",
+        "constant_field_order": 0,
+        "cluster_constant_collapsed": false,
+        "cluster_constant_autosizing": "none",
+        "cluster_expanded_width": 180,
+        "cluster_expanded_height": 110,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 120,
+          "y": 130,
+          "width": 180,
+          "height": 110
+        }
+      },
+      {
+        "id": "offset",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "i64",
+        "label": "Offset",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "constant_owner_node_id": "inner",
+        "constant_field_id": "offset-id",
+        "constant_field_order": 0,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "9007199254740993",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 150,
+          "y": 150,
+          "width": 100,
+          "height": 28
+        }
+      },
+      {
+        "id": "name",
+        "kind": "primitive",
+        "type": "frog.studio.string.constant",
+        "value_type": "string",
+        "label": "Name",
+        "label_visible": true,
+        "palette_catalog_id": "string.constant",
+        "constant_owner_node_id": "inner",
+        "constant_field_id": "name-id",
+        "constant_field_order": 1,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "text": "kept",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 150,
+          "y": 195,
+          "width": 100,
+          "height": 28
+        }
+      },
+      {
+        "id": "enabled",
+        "kind": "primitive",
+        "type": "frog.studio.boolean.true_constant",
+        "value_type": "bool",
+        "label": "Enabled",
+        "label_visible": true,
+        "palette_catalog_id": "boolean.true_constant",
+        "constant_owner_node_id": "record",
+        "constant_field_id": "enabled-id",
+        "constant_field_order": 1,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "true",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 150,
+          "y": 195,
+          "width": 100,
+          "height": 28
+        }
+      },
+      {
+        "id": "input-element1",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "i64",
+        "label": "Float Constant",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "-7",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 550,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "read",
+        "kind": "primitive",
+        "type": "frog.studio.cluster.unbundle_by_name",
+        "label": "Unbundle By Name",
+        "label_visible": true,
+        "palette_catalog_id": "cluster.unbundle_by_name",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "cluster_function_terminals": 3,
+        "cluster_field_names": ["Config.Offset", "Config.Name", "Enabled"],
+        "cluster_field_id_paths": [["config-id", "offset-id"], ["config-id", "name-id"], ["enabled-id"]],
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 520,
+          "y": 180,
+          "width": 100,
+          "height": 80
+        }
+      },
+      {
+        "id": "offset-terminal",
+        "kind": "widget_value",
+        "type": "i64",
+        "widget": "offset",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "name-terminal",
+        "kind": "widget_value",
+        "type": "string",
+        "widget": "name",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 240,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "enabled-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "enabled",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 320,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Replace one nested Cluster field\nReplacing Config.Offset preserves the nested Name and outer Enabled fields. The selection uses persistent field identities, independently from their displayed names.\nEntrées -> opération -> indicateurs. Résultat attendu : offset (i64) = -7\nname (string) = \"kept\"\nenabled (bool) = true\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": -60,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "record",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "cluster"
+        }
+      },
+      {
+        "id": "wire-1",
+        "from": {
+          "node": "input-element1",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "element1"
+        }
+      },
+      {
+        "id": "wire-2",
+        "from": {
+          "node": "operation",
+          "port": "result"
+        },
+        "to": {
+          "node": "read",
+          "port": "cluster"
+        }
+      },
+      {
+        "id": "wire-3",
+        "from": {
+          "node": "read",
+          "port": "element1"
+        },
+        "to": {
+          "node": "offset-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "wire-4",
+        "from": {
+          "node": "read",
+          "port": "element2"
+        },
+        "to": {
+          "node": "name-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "wire-5",
+        "from": {
+          "node": "read",
+          "port": "element3"
+        },
+        "to": {
+          "node": "enabled-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

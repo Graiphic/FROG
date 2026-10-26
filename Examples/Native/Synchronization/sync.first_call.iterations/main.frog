@@ -1,0 +1,384 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "First Call? : le premier passage, pas chaque itération",
+  "metadata": {
+    "name": "First Call? : le premier passage, pas chaque itération",
+    "name_source": "document",
+    "description": "Le même nœud First Call? est visité trois fois dans For. Il publie True, False, False pour cette activité d'exécution. Il ne s'agit pas d'une comparaison implicite à i=0 ni d'une barrière d'initialisation. La sortie auto-indexée conserve les trois observations.\n\nFirst Call? : le premier passage, pas chaque itération\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nsamples (array<bool>) = [true,false,false]\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["native", "typed", "resources", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" data-frog-provisional=\"synchronization-first-call\">\r\n  <rect x=\"1\" y=\"1\" width=\"46\" height=\"46\" rx=\"5\" fill=\"#30343b\" stroke=\"#aab4c0\" stroke-width=\"2\"/>\r\n  <path d=\"M12 17l5-4v22m-5 0h10\" fill=\"none\" stroke=\"#f8fafc\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\r\n  <path d=\"M27 17c0-6 10-6 10 0 0 4-5 4-5 9\" fill=\"none\" stroke=\"#54b948\" stroke-width=\"3\" stroke-linecap=\"round\"/>\r\n  <circle cx=\"32\" cy=\"33\" r=\"1.7\" fill=\"#54b948\"/>\r\n</svg>\r\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "samples",
+        "classId": "frog.widgets.array_indicator",
+        "role": "indicator",
+        "valueType": "frog.array<bool,rank=1>",
+        "label": "samples",
+        "bounds": {
+          "x": 30,
+          "y": 30,
+          "width": 182,
+          "height": 112
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "dimensions.rank": 1,
+          "dimensions.shape": [0],
+          "dimensions.allow_resize": true,
+          "viewport.first_indices": [0],
+          "viewport.visible_counts": [1],
+          "viewport.orientation": "vertical",
+          "viewport.scrollbar_gap": 6,
+          "index_display.visible": true,
+          "index_display.layout.box_width": 54,
+          "index_display.layout.box_height": 30,
+          "index_display.layout.gap": 4,
+          "index_display.layout.step_width": 16,
+          "style.index_display.step_gap": 2,
+          "style.index_display.value_gap": 4,
+          "style.index_display.container_padding": "4px",
+          "style.index_display.container_border_width": "1px",
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": false,
+          "element.cell_width": 46.2,
+          "element.cell_height": 46.2,
+          "element.gap": 0,
+          "element.class_id": "frog.widgets.boolean_indicator",
+          "element.value_type": "bool",
+          "element.role": "indicator",
+          "element.icon": false
+,
+          "element.template":           {
+            "id": "samples.element",
+            "classId": "frog.widgets.boolean_indicator",
+            "role": "indicator",
+            "valueType": "bool",
+            "label": "Boolean Indicator",
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 46.2,
+              "height": 46.2
+            },
+            "props": {
+              "layout.aura_band_px": 4,
+              "label.visible": false,
+              "state_text.visible": false
+            },
+            "runtime": {
+              "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+              "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+              "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+              "asset": "asset:boolean_rectangular_svg",
+              "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+            },
+            "state": {
+              "value": false
+            },
+            "typography": {
+              "inheritanceVersion": 1,
+              "stateTextFontFamily": "",
+              "stateTextStyle": "plain"
+            }
+          }
+
+        },
+        "runtime": {
+          "sourceExample": "Examples/26_array_numeric_selection_roundtrip/main.frog",
+          "wfrog": "Examples/26_array_numeric_selection_roundtrip/ui/array_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/array.default.wfrog",
+          "asset": "asset:array_shell_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 50,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "loop",
+        "kind": "structure",
+        "structure_type": "for_loop",
+        "type": "frog.studio.structures.for_loop",
+        "label": "For Loop",
+        "label_visible": false,
+        "palette_catalog_id": "structures.for_loop",
+        "for_loop_conditional_terminal": false,
+        "for_loop_stop_if_true": true,
+        "for_loop_condition_normalized_x": 0.92,
+        "for_loop_condition_normalized_y": 0.9,
+        "for_loop_iteration_normalized_x": 0.02,
+        "for_loop_iteration_normalized_y": 0.98,
+        "for_loop_subdiagram_label_visible": false,
+        "for_loop_subdiagram_label_text": "",
+        "for_loop_subdiagram_label_height": 48,
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "structure_tunnels": [
+          { "id": "samples", "value_type": "array<bool>", "side": "right", "normalized_position": 0.5, "output_from_structure": true, "tunnel_mode": "indexing" }
+        ],
+        "boundary": {
+          "inputs": [],
+          "outputs": [
+            { "id": "samples", "type": "array<bool>", "tunnel_mode": "indexing" }
+          ]
+        },
+        "structure_terminals": {
+          "count": {
+            "type": "i64",
+            "outer_visible": true,
+            "exposed_in_body": true,
+            "read_only": true,
+            "outer_port": "count",
+            "body_port": "count_value",
+            "role": "count"
+          },
+          "index": {
+            "type": "i64",
+            "outer_visible": false,
+            "exposed_in_body": true,
+            "read_only": true,
+            "body_port": "iteration",
+            "role": "index"
+          }
+        },
+        "regions": [
+          {
+            "id": "body",
+            "diagram": {
+              "zoom_percent": 100,
+              "nodes": [
+                {
+                  "id": "first",
+                  "kind": "primitive",
+                  "type": "frog.studio.synchronization.first_call",
+                  "label": "First Call?",
+                  "label_visible": false,
+                  "palette_catalog_id": "synchronization.first_call",
+                  "label_auto_size": true,
+                  "label_vertical_arrangement": "none",
+                  "label_offset": {
+                    "x": 0,
+                    "y": 0
+                  },
+                  "label_size": {
+                    "width": 120,
+                    "height": 24
+                  },
+                  "label_font": {
+                    "family": "",
+                    "style": "plain",
+                    "use_default_size": true,
+                    "point_size": 15
+                  },
+                  "hidden": false,
+                  "locked": false,
+                  "group": "",
+                  "layout": {
+                    "x": 460,
+                    "y": 230,
+                    "width": 48,
+                    "height": 48
+                  }
+                }
+              ],
+              "edges": [
+                {
+                  "id": "notifier-wire-1",
+                  "from": {
+                    "node": "first",
+                    "port": "result"
+                  },
+                  "to": {
+                    "node": "loop",
+                    "port": "tunnel:samples:input"
+                  }
+                }
+              ],
+              "wire_fragments": []
+            }
+          }
+        ],
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 220,
+          "y": 100,
+          "width": 560,
+          "height": 320
+        }
+      },
+      {
+        "id": "count",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "i64",
+        "label": "Float Constant",
+        "label_visible": false,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "3",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 70,
+          "y": 120,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "samples-terminal",
+        "kind": "widget_value",
+        "type": "array:bool",
+        "widget": "samples",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 900,
+          "y": 220,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "First Call? : le premier passage, pas chaque itération\nFirst Call? : le premier passage, pas chaque itération\nEntrées -> opération -> indicateurs. Résultat attendu : samples (array<bool>) = [true,false,false]\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 70,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "notifier-wire-0",
+        "from": {
+          "node": "count",
+          "port": "value"
+        },
+        "to": {
+          "node": "loop",
+          "port": "count"
+        }
+      },
+      {
+        "id": "notifier-wire-2",
+        "from": {
+          "node": "loop",
+          "port": "tunnel:samples:output"
+        },
+        "to": {
+          "node": "samples-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

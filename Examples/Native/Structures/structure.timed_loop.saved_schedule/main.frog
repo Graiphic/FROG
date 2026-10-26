@@ -1,0 +1,257 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Timed Loop : configuration des nœuds de temporisation",
+  "metadata": {
+    "name": "Timed Loop : configuration des nœuds de temporisation",
+    "name_source": "document",
+    "description": "Les quatre nœuds de bordure conservent la configuration de temporisation et leurs lignes visibles. Cet exemple vérifie seulement la sauvegarde/réouverture du modèle actuel. Le backend canonique ne fournit pas encore de contrat d'exécution Timed Loop ; aucune précision temps réel ni exécution périodique n'est annoncée.\n\nTimed Loop : configuration des nœuds de temporisation\n\nMode: persistence. Profile: studio-draft. Capability: studio/timed-loop-authoring.\nExpected:\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["native", "typed", "resources", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 30.8.0, SVG Export Plug-In . SVG Version: 9.03 Build 0)  -->\r\n<svg version=\"1.1\" id=\"Calque_2_00000047767074616026574940000014579919257300314012_\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 33.233 26.911\"\r\n\t style=\"enable-background:new 0 0 33.233 26.911;\" xml:space=\"preserve\">\r\n<style type=\"text/css\">\r\n\t.st0{fill:#E3AA63;stroke:#E3AA63;stroke-miterlimit:10;}\r\n\t.st1{fill:#4B5563;stroke:#AAB4C0;stroke-width:0.89;stroke-linecap:round;stroke-linejoin:round;}\r\n\t.st2{fill:#FFFFFF;}\r\n\t.st3{fill:#BE1622;}\r\n</style>\r\n<g>\r\n\t<g>\r\n\t\t<path class=\"st0\" d=\"M22.961,23.979l2.562-0.027c1.898,0,3.325-1.671,3.325-3.588V6.284c0-1.917-1.544-3.47-3.443-3.47H13.496\r\n\t\t\tV1.86l-1.708,1.626l1.708,1.599V4.104l11.845,0.1c1.099,0,1.998,1.326,1.998,2.443v13.843c0,1.108-0.89,2.007-1.998,2.007h-2.38\r\n\t\t\tv1.472L22.961,23.979z\"/>\r\n\t\t<path class=\"st0\" d=\"M10.272,2.932L7.71,2.96c-1.898,0-3.325,1.671-3.325,3.588v14.079c0,1.917,1.544,3.47,3.443,3.47h11.908\r\n\t\t\tv0.954l1.708-1.626l-1.708-1.599v0.981l-11.845-0.1c-1.099,0-1.998-1.326-1.998-2.443V6.42c0-1.108,0.89-2.007,1.998-2.007h2.38\r\n\t\t\tV2.941V2.932z\"/>\r\n\t</g>\r\n\t<g>\r\n\t\t<path class=\"st1\" d=\"M21.606,15.729h2.464c0.718,0,1.3,0.582,1.3,1.3v2.132c0,0.718-0.582,1.3-1.3,1.3h-2.464\r\n\t\t\tc-0.718,0-1.3-0.582-1.3-1.3v-2.132C20.306,16.311,20.888,15.729,21.606,15.729z\"/>\r\n\t\t<g>\r\n\t\t\t<path class=\"st1\" d=\"M9.163,15.729h2.464c0.718,0,1.3,0.582,1.3,1.3v2.132c0,0.718-0.582,1.3-1.3,1.3H9.163\r\n\t\t\t\tc-0.718,0-1.3-0.582-1.3-1.3v-2.132C7.863,16.311,8.445,15.729,9.163,15.729z\"/>\r\n\t\t\t<g>\r\n\t\t\t\t<rect x=\"9.873\" y=\"17.573\" class=\"st2\" width=\"1.037\" height=\"2.081\"/>\r\n\t\t\t\t<rect x=\"9.873\" y=\"16.537\" class=\"st2\" width=\"1.037\" height=\"0.529\"/>\r\n\t\t\t</g>\r\n\t\t</g>\r\n\t\t<path class=\"st3\" d=\"M22.636,16.692h0.404c0.718,0,1.3,0.582,1.3,1.3v0.207c0,0.718-0.582,1.3-1.3,1.3h-0.404\r\n\t\t\tc-0.718,0-1.3-0.582-1.3-1.3v-0.207C21.336,17.274,21.918,16.692,22.636,16.692z\"/>\r\n\t\t<path class=\"st1\" d=\"M8.793,6.45h6.737c0.514,0,0.93,0.416,0.93,0.93v6.174c0,0.514-0.416,0.93-0.93,0.93H8.793\r\n\t\t\tc-0.514,0-0.93-0.416-0.93-0.93V7.38C7.863,6.866,8.28,6.45,8.793,6.45z\"/>\r\n\t\t<g>\r\n\t\t\t<path class=\"st2\" d=\"M14.057,9.514l0.131-0.131l0.104,0.1L14.6,9.175c0.062-0.059,0.062-0.159,0-0.218l0,0L14.324,8.68\r\n\t\t\t\tc-0.062-0.062-0.159-0.062-0.221,0l-0.308,0.308l0.104,0.1L13.767,9.22c-0.412-0.346-0.924-0.547-1.456-0.578V8.521\r\n\t\t\t\tc0.259-0.066,0.45-0.298,0.45-0.574c0-0.329-0.266-0.592-0.598-0.592c-0.332,0-0.598,0.266-0.598,0.592\r\n\t\t\t\tc0,0.277,0.19,0.509,0.45,0.574v0.121c-0.536,0.031-1.048,0.235-1.456,0.578l-0.131-0.131l0.1-0.1L10.217,8.68\r\n\t\t\t\tc-0.062-0.062-0.159-0.062-0.221,0L9.719,8.957c-0.062,0.059-0.062,0.159,0,0.218l0,0l0.308,0.308l0.1-0.1l0.131,0.131\r\n\t\t\t\tC9.892,9.943,9.671,10.5,9.671,11.108c0,1.363,1.114,2.47,2.491,2.47s2.491-1.107,2.491-2.47c0-0.609-0.221-1.162-0.588-1.595\r\n\t\t\t\t M11.906,7.839v0.446c-0.111-0.08-0.176-0.208-0.176-0.342c0-0.235,0.19-0.422,0.425-0.422c0.235,0,0.425,0.19,0.425,0.422\r\n\t\t\t\tc0,0.142-0.069,0.263-0.176,0.342V7.839c0-0.152-0.502-0.152-0.502,0 M12.155,13.246c-1.19,0-2.159-0.958-2.159-2.141\r\n\t\t\t\ts0.965-2.141,2.159-2.141s2.159,0.958,2.159,2.141S13.348,13.246,12.155,13.246\"/>\r\n\t\t\t<path class=\"st2\" d=\"M12.155,9.06c-1.129,0-2.044,0.915-2.044,2.044c0,1.129,0.915,2.044,2.044,2.044\r\n\t\t\t\tc1.129,0,2.044-0.915,2.044-2.044C14.199,9.976,13.284,9.06,12.155,9.06z M13.566,12.499l-1.321-1.128\r\n\t\t\t\tc-0.028,0.01-0.062,0.017-0.093,0.017c-0.156,0-0.28-0.125-0.28-0.28c0-0.156,0.125-0.28,0.28-0.28V9.13\r\n\t\t\t\tc0.069,0,0.201,0.01,0.201,0.01v1.771c0.052,0.052,0.083,0.121,0.083,0.194l-0.007,0.007l1.27,1.242\r\n\t\t\t\tC13.656,12.402,13.611,12.454,13.566,12.499z\"/>\r\n\t\t</g>\r\n\t</g>\r\n</g>\r\n</svg>\r\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 230,
+      "y": -90
+    },
+    "nodes": [
+      {
+        "id": "timed",
+        "kind": "structure",
+        "structure_type": "timed_loop",
+        "type": "frog.studio.structures.timed_loop",
+        "label": "Timed Loop",
+        "label_visible": false,
+        "palette_catalog_id": "structures.timed_loop",
+        "structure_subdiagram_label_visible": false,
+        "structure_subdiagram_label_height": 48,
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "timed_loop_subdiagram_label_text": "",
+        "timed_loop_iteration_normalized_x": 0.08,
+        "timed_loop_iteration_normalized_y": 0.9,
+        "timed_loop_condition_normalized_x": 0.92,
+        "timed_loop_condition_normalized_y": 0.9,
+        "timed_loop_initial_visible_row_count": 4,
+        "timed_loop_feedback_visible_row_count": 1,
+        "timed_loop_update_visible_row_count": 1,
+        "timed_loop_result_visible_row_count": 1,
+        "timed_loop_initial_fields": ["source", "period", "offset", "processor"],
+        "timed_loop_feedback_fields": ["error"],
+        "timed_loop_update_fields": ["mode"],
+        "timed_loop_result_fields": ["error"],
+        "timed_loop_initial_timing_node_normalized_y": 0,
+        "timed_loop_feedback_timing_node_normalized_y": 0,
+        "timed_loop_update_timing_node_normalized_y": 0,
+        "timed_loop_result_timing_node_normalized_y": 0,
+        "structure_tunnels": [],
+        "boundary": {
+          "inputs": [],
+          "outputs": []
+        },
+        "timed_loop_schedule": {
+          "timing_source": "internal_1khz",
+        "period": 1000,
+        "offset": 0,
+        "deadline": 1000,
+        "timeout": -1,
+        "priority": 100,
+        "processor": -1,
+          "late_iteration_policy": { "missed_periods": "discard", "phase": "maintain" }
+        },
+        "timing_nodes": {
+          "initial": { "role": "configuration", "direction": "input", "fields": [
+            { "id": "source", "label": "Timing Source", "type": "string" },
+            { "id": "period", "label": "Period", "type": "i64" },
+            { "id": "offset", "label": "Offset", "type": "i64" },
+            { "id": "deadline", "label": "Deadline", "type": "i64" },
+            { "id": "priority", "label": "Priority", "type": "i64" },
+            { "id": "processor", "label": "Processor", "type": "i64" },
+            { "id": "timeout", "label": "Timeout", "type": "i64" },
+            { "id": "late_policy", "label": "Late Policy", "type": "string" }
+          ] },
+          "feedback": { "role": "iteration_feedback", "direction": "output", "fields": [
+            { "id": "error", "label": "Error", "type": "error" },
+            { "id": "expected_start", "label": "Expected Start", "type": "i64" },
+            { "id": "actual_start", "label": "Actual Start", "type": "i64" },
+            { "id": "expected_end", "label": "Expected End", "type": "i64" },
+            { "id": "actual_end", "label": "Actual End", "type": "i64" },
+            { "id": "finished_late", "label": "Finished Late?", "type": "bool" },
+            { "id": "iteration_duration", "label": "Iteration Duration", "type": "i64" },
+            { "id": "period", "label": "Period", "type": "i64" },
+            { "id": "deadline", "label": "Deadline", "type": "i64" },
+            { "id": "offset", "label": "Offset", "type": "i64" },
+            { "id": "priority", "label": "Priority", "type": "i64" },
+            { "id": "processor", "label": "Processor", "type": "i64" },
+            { "id": "timeout", "label": "Timeout", "type": "i64" },
+            { "id": "wakeup_reason", "label": "Wakeup Reason", "type": "string" }
+          ] },
+          "update": { "role": "next_iteration", "direction": "input", "fields": [
+            { "id": "deadline", "label": "Deadline", "type": "i64" },
+            { "id": "mode", "label": "Mode", "type": "string" },
+            { "id": "offset", "label": "Offset", "type": "i64" },
+            { "id": "period", "label": "Period", "type": "i64" },
+            { "id": "priority", "label": "Priority", "type": "i64" },
+            { "id": "processor", "label": "Processor", "type": "i64" },
+            { "id": "timeout", "label": "Timeout", "type": "i64" }
+          ] },
+          "result": { "role": "completion", "direction": "output", "fields": [
+            { "id": "error", "label": "Error", "type": "error" },
+            { "id": "expected_end", "label": "Expected End", "type": "i64" },
+            { "id": "actual_end", "label": "Actual End", "type": "i64" },
+            { "id": "finished_late", "label": "Finished Late?", "type": "bool" },
+            { "id": "iteration_duration", "label": "Iteration Duration", "type": "i64" },
+            { "id": "processor", "label": "Processor", "type": "i64" },
+            { "id": "global_end", "label": "Global End", "type": "i64" }
+          ] }
+        },
+        "structure_terminals": {
+          "condition": { "type": "bool", "outer_visible": false, "exposed_in_body": true, "read_only": false, "body_port": "condition", "role": "continue_while_true" },
+          "index": { "type": "i64", "outer_visible": false, "exposed_in_body": true, "read_only": true, "body_port": "iteration", "role": "index" }
+        },
+        "regions": [
+          {
+            "id": "body",
+            "diagram": {
+              "zoom_percent": 100,
+              "nodes": [
+                {
+                  "id": "condition",
+                  "kind": "primitive",
+                  "type": "frog.studio.boolean.true_constant",
+                  "value_type": "bool",
+                  "label": "True Constant",
+                  "label_visible": false,
+                  "palette_catalog_id": "boolean.true_constant",
+                  "label_auto_size": true,
+                  "label_vertical_arrangement": "none",
+                  "label_offset": {
+                    "x": 0,
+                    "y": 0
+                  },
+                  "label_size": {
+                    "width": 120,
+                    "height": 24
+                  },
+                  "label_font": {
+                    "family": "",
+                    "style": "plain",
+                    "use_default_size": true,
+                    "point_size": 15
+                  },
+                  "text": "true",
+                  "hidden": false,
+                  "locked": false,
+                  "group": "",
+                  "layout": {
+                    "x": 750,
+                    "y": 350,
+                    "width": 48,
+                    "height": 48
+                  }
+                }
+              ],
+              "edges": [
+                {
+                  "id": "notifier-wire-0",
+                  "from": {
+                    "node": "condition",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "timed",
+                    "port": "condition"
+                  }
+                }
+              ],
+              "wire_fragments": []
+            }
+          }
+        ],
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 250,
+          "y": 110,
+          "width": 640,
+          "height": 350
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Timed Loop : configuration des nœuds de temporisation\nTimed Loop : configuration des nœuds de temporisation\nEntrées -> opération -> indicateurs. Résultat attendu : ",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 250,
+          "y": -70,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [],
+    "wire_fragments": []
+  }
+}

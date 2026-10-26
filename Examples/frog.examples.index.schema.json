@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.github.io/FROG/Examples/frog.examples.index.schema.json",
+  "title": "FROG example document index, version 1",
+  "description": "Metadata about example documents. Operator, type and backend contracts retain their existing authorities.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "version", "examples"],
+  "properties": {
+    "schema": {"const": "frog.examples.index"},
+    "version": {"const": 1},
+    "examples": {"type": "array", "items": {"$ref": "#/$defs/example"}}
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Relative to the directory containing the index. Rooted paths, backslashes, colons, NUL, empty/dot/dot-dot components, escaping symlinks and duplicate file identities are refused by the semantic reader."
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["widget_id", "type", "value_json", "comparator", "absolute_tolerance", "relative_tolerance"],
+      "properties": {
+        "widget_id": {"$ref": "#/$defs/text"},
+        "type": {"$ref": "#/$defs/text"},
+        "type_schema_json": {"type": "string", "description": "Complete nominal schema of the independently authored expected indicator, including field names and enum choices. Its canonical type must equal type."},
+        "value_json": {"type": "string", "description": "Exact JSON lexeme, never an obligatory binary64 conversion of I64/U64. The semantic reader parses it with number lexemes preserved."},
+        "comparator": {"enum": ["exact", "float", "ieee-bits", "nan", "positive-infinity", "negative-infinity", "document_path", "studio_directory", "temporary_directory"]},
+        "absolute_tolerance": {"type": "number", "minimum": 0},
+        "relative_tolerance": {"type": "number", "minimum": 0}
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "summary", "description", "family", "path", "profile", "mode", "catalog_ids", "backends", "expected"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 192, "pattern": "^[A-Za-z0-9._-]+$", "not": {"enum": [".", ".."]}},
+        "title": {"$ref": "#/$defs/text"},
+        "summary": {"$ref": "#/$defs/text"},
+        "description": {"$ref": "#/$defs/text"},
+        "family": {"$ref": "#/$defs/text"},
+        "path": {"$ref": "#/$defs/path"},
+        "profile": {"enum": ["studio-draft", "source-0.1"]},
+        "mode": {"enum": ["execution", "expected-diagnostic", "expected-abort", "persistence", "interactive"]},
+        "capability": {"type": "string"},
+        "catalog_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+        "icon_source_catalog_id": {"type": "string"},
+        "expected_diagnostic": {"type": "string"},
+        "tags": {"type": "array", "items": {"type": "string"}},
+        "dependencies": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/path"}},
+        "backends": {"type": "array", "uniqueItems": true, "items": {"enum": ["native-fast", "native-debug", "simulation"]}},
+        "timeout_ms": {"type": "integer", "minimum": 1, "maximum": 600000},
+        "order": {"type": "integer", "minimum": 0},
+        "expected": {"type": "array", "items": {"$ref": "#/$defs/expected"}}
+      },
+      "allOf": [
+        {"if": {"properties": {"mode": {"const": "execution"}}}, "then": {"properties": {"expected": {"minItems": 1}, "backends": {"minItems": 1}}}},
+        {"if": {"properties": {"mode": {"const": "expected-diagnostic"}}}, "then": {"required": ["expected_diagnostic"], "properties": {"expected_diagnostic": {"minLength": 1}}}}
+      ]
+    }
+  }
+}

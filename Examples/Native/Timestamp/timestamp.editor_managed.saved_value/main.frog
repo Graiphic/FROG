@@ -1,0 +1,205 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Timestamp : constante et indicateur conservés dans le document",
+  "metadata": {
+    "name": "Timestamp : constante et indicateur conservés dans le document",
+    "name_source": "document",
+    "description": "La constante et l'indicateur utilisent le type Timestamp réel de l'éditeur, avec une valeur enregistrée 0 et l'affichage sur deux lignes. Cet exemple qualifie uniquement la sauvegarde, la réouverture et les options de présentation editor_managed. Les six fonctions calendrier/heure de la palette n'ont pas de provider d'exécution qualifié ; aucun résultat d'horloge, de fuseau ou de précision128 bits n'est inventé.\n\nTimestamp : constante et indicateur conservés dans le document\n\nMode: persistence. Profile: studio-draft. Capability: studio/editor-managed-timestamp.\nExpected:\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["native", "typed", "resources", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" data-frog-shape-standard=\"fixed-constant\">\r\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\r\n    <g>\r\n      <rect data-frog-selection-shell=\"true\" x=\"6.75\" y=\"12.5\" width=\"34.5\" height=\"23\" rx=\"11.5\" fill=\"#E3AA63\" stroke=\"#AAB4C0\" stroke-width=\"1.8\"/>\r\n      <g transform=\"translate(5.85 11.6)\">\r\n      <path fill=\"#fff\" stroke=\"#fff\" stroke-miterlimit=\"10\" stroke-width=\".82\" d=\"M25.13,5h-13.99l.19,1.16,3.4,6.09-3.63,6.62v.94h14.11v-.94l-3.63-6.62,3.29-6.09.27-1.16ZM11.95,19.17l3.6-6.91-3.29-6.11h11.7l-3.43,6.11,3.72,6.91h-12.31.02ZM20.2,17.45c-1.43-.27-1.52-.61-1.52-.82h-1.28c0,.21-.07.55-1.52.82-1.45.27-2.54.82-2.87,1.47h10.03c-.32-.65-1.42-1.19-2.87-1.47h.02Z\"/>\r\n      </g>\r\n    </g>\r\n  </g>\r\n</svg>\r\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "stamp",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "timestamp",
+        "label": "Timestamp enregistré",
+        "bounds": {
+          "x": 60,
+          "y": 60,
+          "width": 180,
+          "height": 52
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "timestamp",
+          "data_type.named_numeric_size": "Timestamp",
+          "representation.kind": "timestamp",
+          "data_entry.use_type_defaults": true,
+          "timestamp.display.seconds": true,
+          "timestamp.display.date_first": false,
+          "timestamp.display.single_line": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 80,
+      "y": -70
+    },
+    "nodes": [
+      {
+        "id": "timestamp",
+        "kind": "primitive",
+        "type": "frog.studio.timestamp.constant",
+        "value_type": "timestamp",
+        "label": "Timestamp Constant",
+        "label_visible": false,
+        "palette_catalog_id": "timestamp.constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 120,
+          "height": 24
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "0",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 100,
+          "y": 130,
+          "width": 164,
+          "height": 48
+        }
+      },
+      {
+        "id": "stamp-terminal",
+        "kind": "widget_value",
+        "type": "timestamp",
+        "widget": "stamp",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 430,
+          "y": 140,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Timestamp : constante et indicateur conservés dans le document\nTimestamp : constante et indicateur conservés dans le document\nEntrées -> opération -> indicateurs. Résultat attendu : ",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 100,
+          "y": -50,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "notifier-wire-0",
+        "from": {
+          "node": "timestamp",
+          "port": "value"
+        },
+        "to": {
+          "node": "stamp-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

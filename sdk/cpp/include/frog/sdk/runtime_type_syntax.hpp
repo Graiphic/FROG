@@ -29,15 +29,30 @@ class TypeSyntax final {
 public:
     explicit TypeSyntax(std::string_view value) : value_(value) {}
     bool reference() noexcept {
+        allowCollections_=true;
         try { return reset() && take("ref<") && ref(0) && position_ == value_.size(); }
         catch (...) { return false; }
     }
     bool record() noexcept {
+        allowCollections_=true;
         try { return reset() && take("cluster<") && cluster(0, true) && position_ == value_.size(); }
         catch (...) { return false; }
     }
+    // Private IPE accepts exact typed containers without advertising them to
+    // the older public transport/codec profiles.
+    bool ipe() noexcept {
+        allowCollections_=false;
+        try { return reset() && type(0, false) && position_ == value_.size(); }
+        catch (...) { return false; }
+    }
     bool transport() noexcept {
+        allowCollections_=false;
         try { return reset() && type(0, true) && position_ == value_.size(); }
+        catch (...) { return false; }
+    }
+    bool collection() noexcept {
+        allowCollections_=true;
+        try { return reset() && type(0,false) && position_==value_.size(); }
         catch (...) { return false; }
     }
     std::optional<std::vector<std::pair<std::string, std::string>>> recordFields() {
@@ -103,17 +118,20 @@ private:
             if (take(",")) { static_cast<void>(take("rank=")); if (!positive()) return false; }
             return take(">");
         }
+        if (!transportOnly && take("map<")) return type(depth+1,false) && take(",") && type(depth+1,false) && take(">");
+        if (!transportOnly && allowCollections_ && take("set<")) return type(depth+1,false) && take(">");
         if (!transportOnly && take("enum<")) return name().has_value() && take(",") && type(depth + 1, false) && take(">");
         const auto begin = position_;
         while (position_ < value_.size() && value_[position_] != ',' && value_[position_] != '>') ++position_;
         const auto scalar = value_.substr(begin, position_ - begin);
         for (const auto name : {"bool", "i8", "i16", "i32", "i64", "u8", "u16", "u32", "u64", "f32", "f64", "string", "path"})
             if (scalar == name) return true;
-        if (!transportOnly) for (const auto name : {"c32", "c64", "fxp", "cfx"}) if (scalar == name) return true;
+        if (!transportOnly) for (const auto name : {"c32", "c64", "fxp", "cfx", "timestamp", "variant"}) if (scalar == name) return true;
         return false;
     }
     std::string_view value_;
     std::size_t position_ = 0, nodes_ = 0;
+    bool allowCollections_=false;
     std::vector<std::pair<std::string, std::string>> fields_;
 };
 

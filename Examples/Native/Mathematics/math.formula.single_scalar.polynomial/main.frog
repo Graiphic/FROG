@@ -1,0 +1,493 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 2,
+  "language": "FROG",
+  "title": "Evaluate a polynomial at x=3",
+  "metadata": {
+    "name": "Evaluate a polynomial at x=3",
+    "name_source": "document",
+    "description": "The one named variable is bound to scalar x. x^2 + 2*x + 1 at 3 equals 16; the standard Error Cluster is also observed.\n\nThe one named variable is bound to scalar x. x^2 + 2*x + 1 at 3 equals 16; the standard Error Cluster is also observed.\n\nMode: execution. Profile: studio-draft. Capability: frog.studio.formula.evaluation@1; compiled owned-value service.\nExpected:\noutput-result (f64) = 16\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["formula", "native", "typed", "independent-oracle", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 47.8\">\n  <defs>\n    <style>\n      .cls-1, .cls-2, .cls-3 {\n        fill: #fff;\n      }\n\n      .cls-4 {\n        fill: #4b5563;\n      }\n\n      .cls-4, .cls-5 {\n        stroke: #aab4c0;\n        stroke-width: 1.8px;\n      }\n\n      .cls-2 {\n        stroke: #fff;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: .78px;\n      }\n\n      .cls-3 {\n        font-family: SourceSansPro-Bold, 'Source Sans Pro';\n        font-size: 14px;\n        font-weight: 700;\n      }\n\n      .cls-5 {\n        fill: #aab4c0;\n      }\n    </style>\n  </defs>\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n      <rect class=\"cls-4\" x=\".9\" y=\".9\" width=\"46\" height=\"46\" rx=\"4.5\" ry=\"4.5\"/>\n      <path class=\"cls-5\" d=\"M5.88,1.21h12.03v17.01H.9V6.19C.9,3.44,3.13,1.21,5.88,1.21Z\"/>\n      <text class=\"cls-3\" transform=\"translate(6.58 13.87)\"><tspan x=\"0\" y=\"0\">∑</tspan></text>\n      <g>\n        <path class=\"cls-1\" d=\"M9.42,23.76l-1.8-2.84h1.53l.68,1.12c.17.33.37.68.56,1h.05c.15-.33.32-.68.47-1l.58-1.12h1.47l-1.79,2.99,1.93,2.93h-1.53l-.74-1.17c-.2-.35-.41-.71-.62-1.05h-.05c-.17.34-.36.69-.53,1.05l-.64,1.17h-1.48l1.93-3.09Z\"/>\n        <path class=\"cls-1\" d=\"M8.07,42.82c-.34,0-.65-.07-.94-.21l.37-.83c.15.09.31.13.48.13.2,0,.35-.07.46-.22.11-.15.2-.37.26-.67l.56-2.74h-.97l.14-.67.98-.05.55-2.68c.12-.58.34-1.05.66-1.4.31-.35.79-.52,1.44-.52.14,0,.28.02.42.05s.25.07.34.11l-.39.83c-.06-.02-.12-.04-.19-.05s-.14-.02-.2-.02c-.27,0-.47.08-.6.25-.13.16-.23.42-.3.76l-.55,2.68h.94l-.14.73h-.95l-.56,2.76c-.11.53-.31.96-.59,1.29-.28.34-.69.5-1.21.5Z\"/>\n      </g>\n      <g>\n        <rect class=\"cls-2\" x=\"18.67\" y=\"27.29\" width=\".67\" height=\"7.05\" transform=\"translate(-11.81 49.82) rotate(-90)\"/>\n        <polygon class=\"cls-2\" points=\"20.54 34.4 23.04 31.01 23.18 30.81 23.04 30.62 20.54 27.22 20.01 27.61 22.36 30.81 20.01 34.01 20.54 34.4\"/>\n      </g>\n      <g>\n        <path class=\"cls-1\" d=\"M25.74,35.76c-.33,0-.65-.07-.94-.21l.37-.83c.15.09.31.13.48.13.2,0,.35-.07.46-.22.11-.15.2-.37.26-.67l.56-2.74h-.97l.14-.67.98-.05.55-2.68c.12-.58.34-1.05.66-1.4.31-.35.79-.52,1.44-.52.14,0,.28.02.42.05.14.04.25.07.34.11l-.39.83c-.06-.02-.12-.04-.19-.05-.07-.01-.14-.02-.2-.02-.27,0-.47.08-.6.25-.13.16-.23.42-.29.76l-.55,2.68h.94l-.14.73h-.95l-.56,2.76c-.11.53-.31.96-.59,1.29-.28.33-.69.5-1.21.5Z\"/>\n        <path class=\"cls-1\" d=\"M31.46,34.92c-.45-.61-.81-1.25-1.06-1.92-.26-.67-.38-1.39-.38-2.17s.13-1.51.38-2.18c.25-.67.61-1.3,1.06-1.91l.79.34c-.41.56-.71,1.17-.91,1.81s-.3,1.29-.3,1.94.1,1.29.3,1.93.5,1.24.91,1.81l-.79.34Z\"/>\n        <path class=\"cls-1\" d=\"M32.87,33.56l1.7-2.74-1.6-2.51h1.35l.6.99c.08.14.16.29.25.44s.17.3.25.44h.04c.07-.14.13-.29.21-.44s.14-.3.21-.44l.51-.99h1.3l-1.58,2.65,1.7,2.6h-1.35l-.66-1.04c-.09-.16-.18-.31-.27-.47-.09-.16-.18-.31-.28-.46h-.04c-.07.15-.15.3-.23.45-.08.15-.16.31-.24.48l-.57,1.04h-1.31Z\"/>\n        <path class=\"cls-1\" d=\"M39.23,34.92l-.79-.34c.41-.57.71-1.17.91-1.81s.3-1.28.3-1.93-.1-1.29-.3-1.94-.5-1.24-.91-1.81l.79-.34c.45.61.8,1.24,1.06,1.91.26.67.38,1.39.38,2.18s-.13,1.5-.38,2.17c-.26.67-.61,1.31-1.06,1.92Z\"/>\n      </g>\n    </g>\n  </g>\n</svg>"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "output-result",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "f64",
+        "label": "output-result",
+        "bounds": {
+          "x": 30,
+          "y": 40,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "f64",
+          "data_type.named_numeric_size": "Float64",
+          "representation.kind": "float64",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "output-error",
+        "classId": "frog.widgets.cluster_indicator",
+        "role": "indicator",
+        "valueType": "cluster:bool|i32|string",
+        "label": "output-error",
+        "bounds": {
+          "x": 30,
+          "y": 150,
+          "width": 168,
+          "height": 112
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "cluster.padding": 8,
+          "cluster.next_field_serial": "3",
+          "cluster.auto_sizing": "none",
+          "cluster.elements": [
+            {
+              "field_id": "status",
+              "technical_name": "status",
+              "logical_order": 0,
+              "widget":               {
+                "id": "output-error.field.0",
+                "classId": "frog.widgets.boolean_indicator",
+                "role": "indicator",
+                "valueType": "bool",
+                "label": "status",
+                "bounds": {
+                  "x": 8,
+                  "y": 8,
+                  "width": 46.2,
+                  "height": 46.2
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "state_text.visible": false
+                },
+                "runtime": {
+                  "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+                  "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+                  "asset": "asset:boolean_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+                },
+                "state": {
+                  "value": false
+                },
+                "typography": {
+                  "inheritanceVersion": 1,
+                  "stateTextFontFamily": "",
+                  "stateTextStyle": "plain"
+                }
+              }
+            },
+            {
+              "field_id": "code",
+              "technical_name": "code",
+              "logical_order": 1,
+              "widget":               {
+                "id": "output-error.field.1",
+                "classId": "frog.widgets.numeric_indicator",
+                "role": "indicator",
+                "valueType": "i32",
+                "label": "code",
+                "bounds": {
+                  "x": 8,
+                  "y": 53,
+                  "width": 96,
+                  "height": 32
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "data_type.representation": "i32",
+                  "data_type.named_numeric_size": "Int32",
+                  "representation.kind": "int32",
+                  "data_entry.use_type_defaults": true
+                },
+                "runtime": {
+                  "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+                  "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+                  "asset": "asset:numeric_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+                },
+                "state": {
+                  "value": 0
+                },
+                "typography": {
+                  "inheritanceVersion": 1
+                }
+              }
+            },
+            {
+              "field_id": "source",
+              "technical_name": "source",
+              "logical_order": 2,
+              "widget":               {
+                "id": "output-error.field.2",
+                "classId": "frog.widgets.string_indicator",
+                "role": "indicator",
+                "valueType": "string",
+                "label": "source",
+                "bounds": {
+                  "x": 8,
+                  "y": 98,
+                  "width": 120,
+                  "height": 32
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "text.value": "",
+                  "display.string.style": "normal",
+                  "text.horizontal_alignment": "left",
+                  "display.string.style_selector_visible": false,
+                  "interaction.text.single_line": true,
+                  "interaction.text.wrap_at_word_breaks": true,
+                  "interaction.text.update_while_typing": true,
+                  "display.vertical_scrollbar_visible": false,
+                  "display.horizontal_scrollbar_visible": false,
+                  "layout.size_to_text": false
+                },
+                "runtime": {
+                  "sourceExample": "Examples/07_string_value_roundtrip/main.frog",
+                  "wfrog": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/string.default.wfrog",
+                  "asset": "asset:string_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg"
+                },
+                "typography": {
+                  "inheritanceVersion": 1
+                }
+              }
+            }
+          ]
+        },
+        "runtime": {
+          "sourceExample": "Examples/44_cluster_widget_roundtrip/main.frog",
+          "wfrog": "Examples/44_cluster_widget_roundtrip/ui/cluster_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/cluster.default.wfrog",
+          "asset": "asset:cluster_shell_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/cluster/templates/cluster_shell.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 60,
+      "y": -40
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.math.formula.single_scalar",
+        "label": "Eval Single-Variable Scalar",
+        "label_visible": true,
+        "palette_catalog_id": "math.formula.single_scalar",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 450,
+          "y": 160,
+          "width": 64,
+          "height": 64
+        }
+      },
+      {
+        "id": "input-formula",
+        "kind": "primitive",
+        "type": "frog.studio.string.constant",
+        "value_type": "string",
+        "label": "input-formula",
+        "label_visible": true,
+        "palette_catalog_id": "string.constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "text": "x^2+2*x+1",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 185,
+          "width": 190,
+          "height": 32
+        }
+      },
+      {
+        "id": "input-x",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "f64",
+        "label": "input-x",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "3",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 270,
+          "width": 190,
+          "height": 32
+        }
+      },
+      {
+        "id": "output-result-terminal",
+        "kind": "widget_value",
+        "type": "f64",
+        "widget": "output-result",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "output-error-terminal",
+        "kind": "widget_value",
+        "type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+        "widget": "output-error",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 240,
+          "width": 48,
+          "height": 24
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Evaluate a polynomial at x=3\nThe one named variable is bound to scalar x. x^2 + 2*x + 1 at 3 equals 16; the standard Error Cluster is also observed.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = 16\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": -20,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "input-formula",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "formula"
+        }
+      },
+      {
+        "id": "wire-1",
+        "from": {
+          "node": "input-x",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "x"
+        }
+      },
+      {
+        "id": "wire-2",
+        "from": {
+          "node": "operation",
+          "port": "result"
+        },
+        "to": {
+          "node": "output-result-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "wire-3",
+        "from": {
+          "node": "operation",
+          "port": "error_out"
+        },
+        "to": {
+          "node": "output-error-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}
