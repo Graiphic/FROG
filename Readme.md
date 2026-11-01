@@ -8,7 +8,8 @@
 <a href="docs/frontend-tools-guide.md">Validation, FIR derivation and external-tool integration</a>;
 <a href="sdk/ecosystem/README.md">versioned JSON Schemas and data examples</a>.
 This update publishes documentation and schemas only. The common Frontend library
-and CLI are intended for a later open-source code release; no implementation,
+and CLI have an <a href="sdk/ecosystem/docs/frontend-licensing.md">accepted Apache-2.0 release policy</a>
+for their selected Graiphic-owned files. Their code release is deferred; no implementation,
 executable or production Runtime code is included in this update.</p>
 
 <p><strong>Implementation/corpus checkpoint — 26 October 2026:</strong>

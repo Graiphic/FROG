@@ -1,9 +1,10 @@
 # Common FROG Frontend: public interoperability contracts
 
 **1 November 2026 — documentation, JSON Schemas and synthetic JSON examples.**
-The common Frontend library and CLI are intended to be open source. Their code and
+The common Frontend library and CLI have an [accepted Apache-2.0 policy](docs/frontend-licensing.md)
+for their selected Graiphic-owned files. Their code and
 binaries are deferred to a later release after integration, qualification and
-provenance/licence review. This update includes neither implementation nor private
+review of the actual payload's provenance and applicable notices. This update includes neither implementation nor private
 Runtime code. The existing [C++ Runtime contract SDK](../cpp/docs/runtime-contract.md)
 is a separate surface, not the Frontend C ABI or a universal bridge ABI.
 

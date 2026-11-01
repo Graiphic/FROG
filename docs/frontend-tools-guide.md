@@ -4,6 +4,10 @@
 examples only. The common library and CLI are intended for a later open-source
 code release; no executable implementation is delivered by this update.**
 
+The [Apache-2.0 decision](../sdk/ecosystem/docs/frontend-licensing.md) is accepted
+for the selected Graiphic-owned common Frontend and CLI files. Third-party material
+retains its own notices and licenses; the code release remains deferred.
+
 ## One shared Frontend
 
 The common Frontend owns `.frog` reading, explicit type/dependency resolution,
@@ -95,6 +99,6 @@ Shape validation cannot verify dependency hashes, resolve files, prove callback
 lifetimes, detect all graph errors or admit a backend.
 
 Examples are synthetic illustrations, not conformance or native execution receipts.
-Future code publication requires its own version, provenance/licence review,
-reconstruction instructions and qualification evidence. This publication does not
+Future code publication requires its own version, payload provenance and applicable
+notices, reconstruction instructions and qualification evidence. This publication does not
 grant rights over private Studio or Runtime implementation.

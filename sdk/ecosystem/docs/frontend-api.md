@@ -4,6 +4,9 @@
 are deferred.** The local common C++ owner already serves Studio and its C/CLI
 facades; publishing this contract does not ship that owner. The accepted direction
 is an autonomous open-source library and CLI sharing that same implementation.
+The [Apache-2.0 decision](frontend-licensing.md) is accepted for the selected
+Graiphic-owned files, with third-party licenses and notices preserved. Publication
+of the implementation remains deferred until the main integration is complete.
 The initial Studio integration uses a tested static-library pin.
 
 ## Responsibilities and operations
