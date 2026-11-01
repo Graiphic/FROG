@@ -4,7 +4,14 @@
 
 <h1 align="center">🐸 FROG — Free Open Graphical Language</h1>
 
-<p><strong>Current implementation/corpus reconciliation — 26 October 2026:</strong>
+<p><strong>Frontend interoperability contracts — 1 November 2026:</strong>
+<a href="docs/frontend-tools-guide.md">Validation, FIR derivation and external-tool integration</a>;
+<a href="sdk/ecosystem/README.md">versioned JSON Schemas and data examples</a>.
+This update publishes documentation and schemas only. The common Frontend library
+and CLI are intended for a later open-source code release; no implementation,
+executable or production Runtime code is included in this update.</p>
+
+<p><strong>Implementation/corpus checkpoint — 26 October 2026:</strong>
 <a href="docs/studio-current-state-2026-10-26.md">Published SDK, 625 examples, native profiles and documentation boundaries</a>.
 This is a dated implementation update, not a new normative language contract.</p>
 

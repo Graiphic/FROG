@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.io/frog/sdk/ecosystem/0.1/frontend-type-reference.schema.json",
+  "description": "Authored immutable type-fragment reference for frog.frontend.resolution@1. Identity/version/hash and a selected definition must agree with captured bytes; JSON Schema cannot perform resolution or hash verification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$ref",
+    "identity",
+    "version",
+    "sha256",
+    "pointer"
+  ],
+  "properties": {
+    "$ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8192,
+      "pattern": "^[^\\u0000]*$"
+    },
+    "identity": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8192,
+      "pattern": "^[^\\u0000]*$"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8192,
+      "pattern": "^[^\\u0000]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "pointer": {
+      "type": "string",
+      "maxLength": 8192,
+      "pattern": "^/definitions/(?:[^~]|~[01])*$"
+    }
+  }
+}

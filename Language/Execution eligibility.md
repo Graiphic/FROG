@@ -42,6 +42,23 @@ underlying source has been validated. Runtime absence alone MUST NOT invalidate
 the graph or claim a compilation error; build validation still does not prove
 that a current artifact exists or that a runtime can start it.
 
+### Completion of a validation operation
+
+Semantic acceptance/rejection describes an assessment that completed for its
+supported surface. Capability refusal, missing dependency, cancellation, resource
+exhaustion and API/internal failure remain distinct from an invalid program.
+Incomplete assessment is neither permission to execute nor a corruption diagnosis.
+
+The shared Frontend operation outcome is separate from API-call success and backend
+admission. Even `REJECTED` needs its diagnostic stage/category: a missing dependency
+in `resolve` is not a demonstrated type error. See the
+[external-tool guide](../docs/frontend-tools-guide.md) and
+[operation contract](../sdk/ecosystem/docs/frontend-api.md).
+
+The validator does not propose or apply editor repairs. Studio can prepare an
+explicit transaction from its localized diagnostics and validate the new source
+again. Representable authoring errors remain distinct from executable programs.
+
 ## 2. Revision and execution requests — EXEC-002
 
 Validation and construction MUST identify the same semantic revision, entry

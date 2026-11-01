@@ -1,0 +1,7 @@
+{
+  "$ref": "dep:example.types",
+  "identity": "example.types",
+  "version": "1",
+  "sha256": "d521e8b12e19b815ad5fae209da9d373b2042a09b61d472a11fb64b8b52ac740",
+  "pointer": "/definitions/Count"
+}

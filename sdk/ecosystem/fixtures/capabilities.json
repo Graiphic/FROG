@@ -1,0 +1,63 @@
+{
+  "schema": "frog.frontend.capabilities",
+  "schema_version": "0.2",
+  "source_formats": [
+    {
+      "family": "frog.source",
+      "version": "0.1"
+    }
+  ],
+  "fir_formats": [
+    {
+      "family": "frog.execution_ir",
+      "version": "0.1"
+    }
+  ],
+  "frontend_apis": [
+    "3"
+  ],
+  "frontend": {
+    "software_version": "0.1.0-local",
+    "api_version": "3",
+    "commit": "1111111111111111111111111111111111111111",
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "api_operations": [
+    "validate",
+    "derive",
+    "describe"
+  ],
+  "profiles": [
+    "fixture.only.profile@1"
+  ],
+  "profiles_exhaustive": false,
+  "default_limits": {
+    "max_source_bytes": 8388608,
+    "max_dependency_bytes": 8388608,
+    "max_total_dependency_bytes": 67108864,
+    "max_result_bytes": 33554432,
+    "max_nodes": 1024,
+    "max_connections": 4096,
+    "max_nesting_depth": 64,
+    "max_dependencies": 256,
+    "max_diagnostics": 256
+  },
+  "effective_limits": {
+    "max_source_bytes": 8388608,
+    "max_dependency_bytes": 8388608,
+    "max_total_dependency_bytes": 67108864,
+    "max_result_bytes": 33554432,
+    "max_nodes": 1024,
+    "max_connections": 4096,
+    "max_nesting_depth": 64,
+    "max_dependencies": 256,
+    "max_diagnostics": 256
+  },
+  "max_fir_bytes": 16777216,
+  "max_resolution_steps": 4096,
+  "dependency_kinds": [
+    "type_definition"
+  ],
+  "dissemination": "local",
+  "native_execution_claim": false
+}

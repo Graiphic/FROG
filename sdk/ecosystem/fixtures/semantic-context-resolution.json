@@ -1,0 +1,9 @@
+{
+  "profile": "frog.frontend.resolution@1",
+  "dependencies": [
+    {
+      "kind": 2,
+      "source_pointer": "/diagram/nodes/0/studio_type_schema"
+    }
+  ]
+}

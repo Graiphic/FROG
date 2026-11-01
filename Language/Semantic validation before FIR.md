@@ -87,7 +87,7 @@ lowering conveniences.
 <h2>Validation Output</h2>
 
 <p>
-Semantic validation has exactly two public outcomes:
+A completed semantic assessment of a supported specification surface has two meaning-level outcomes:
 </p>
 
 <table>
@@ -110,7 +110,7 @@ Semantic validation has exactly two public outcomes:
 </table>
 
 <p>
-A third implementation-local result may exist:
+The operation that performs this assessment also has explicit completion and capability states. In particular:
 </p>
 
 <table>
@@ -127,6 +127,33 @@ A third implementation-local result may exist:
     </tr>
   </tbody>
 </table>
+
+<hr/>
+
+<h2>Assessment Completion, Context and Target Independence</h2>
+
+<p>An unsupported feature, unresolved dependency, cancellation, resource limit or
+internal/API failure does not establish invalid source meaning. Tools MUST preserve
+that distinction. An operation may refuse to proceed without completing a
+language-level assessment.</p>
+
+<p>The general assessment MUST use explicit immutable source and dependency contents,
+format/profile versions and any semantic context required by those profiles. It
+MUST NOT inherit operating-system symbols, search paths or installed backend
+capabilities implicitly. Compile-time exclusions use their declared selection
+policy and context; ordinary hidden runtime branches retain their language rules.</p>
+
+<p>A valid program may be unsupported by a selected target. Backend admission,
+lowering, compilation, packaging and runtime outcomes are later gates. Validation
+MUST NOT mutate source or apply an editor repair. The shared Frontend exposes
+<code>validate</code> and <code>derive</code> with the same semantic admission;
+<code>derive</code> also returns complete FIR after success.</p>
+
+<p>The <a href="../docs/frontend-tools-guide.md">external-tool guide</a> and
+<a href="../sdk/ecosystem/docs/frontend-api.md">Frontend operation contract</a>
+define outcomes, diagnostics, resolution, limits and cancellation. Those operation
+states do not replace the meaning-level outcomes above. JSON Schema checking alone
+is not semantic validation.</p>
 
 <hr/>
 

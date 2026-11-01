@@ -1,8 +1,32 @@
 # Graiphic Studio and public FROG source compatibility
 
-Implementation checkpoint: 14 October 2026. This page describes integration status,
+Historical authoring checkpoint: 14 October 2026; common-Frontend update: 1 November 2026. This page describes integration status,
 not a new source format or a conformance certification. The
 [source guide](../Expression/Frog%20source%20guide.md) explains public `.frog` syntax.
+
+## Common Frontend checkpoint — 1 November 2026
+
+The accepted direction is one versioned public Frontend for Studio and external
+tools: reading, explicit resolution, validation, FIR, diagnostics, source maps and
+provenance. Studio pins a tested software/API/content identity. A later public
+release is not automatically loaded into an installed IDE. The common library and
+CLI are intended for open-source publication; code is held for a later release.
+This update contains contracts and schemas, not a runnable Frontend kit.
+
+The local checkpoint uses software `0.1.0-local`, API `3`, Source/FIR `0.1`,
+diagnostic/capability documents `0.2`, provenance `0.3` and source maps `0.1`.
+These axes are independent. Local finite tests are not a public code release or
+proof that every palette function is implemented.
+
+Studio retains historical capture/migration, diagnostic presentation, repair
+proposals, transaction preview/application and Undo/Redo. Its adaptations use the
+common semantic owner. Public resolution currently binds Type Definition fragments
+(kind 2). General Source/library/profile dependencies (kinds 1/3/4) and nonempty
+public ConditionalDisable contexts remain explicit limitations. Historical private
+adaptations do not establish equivalent raw public-input support.
+
+See [the tool guide](frontend-tools-guide.md) and
+[operation contract](../sdk/ecosystem/docs/frontend-api.md).
 
 ## Stewardship and authority
 
