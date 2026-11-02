@@ -1,12 +1,15 @@
 # FROG validation and FIR: guide for external tools
 
-**Contract publication: 1 November 2026. Documentation, JSON Schemas and synthetic
-examples only. The common library and CLI are intended for a later open-source
-code release; no executable implementation is delivered by this update.**
+**Source publication: 2 November 2026.** The [common library and CLI](../Implementations/Frontend/README.md)
+are now available, following qualification in Studio and a standalone public-only build.
+See the [exact checkpoint and limits](frontend-checkpoint-2026-11-02.json).
+This supersedes the documentation-only publication of 1 November; no tagged binary release
+or universal capability qualification is claimed.
 
 The [Apache-2.0 decision](../sdk/ecosystem/docs/frontend-licensing.md) is accepted
 for the selected Graiphic-owned common Frontend and CLI files. Third-party material
-retains its own notices and licenses; the code release remains deferred.
+retains its own notices and licenses. The dated licensing decision records the earlier
+documentation-only stage; the checkpoint above records the subsequent source publication.
 
 ## One shared Frontend
 
@@ -76,7 +79,12 @@ ports, wires or regions. Preserve those fields instead of matching message text.
 The Frontend never applies a repair. An editor can propose a transaction and validate
 its resulting source again before accepting it.
 
-## Current bounded checkpoint
+## Historical bounded checkpoint — 1 November 2026
+
+The following describes the earlier contract publication, not the current candidate.
+For current software, formats, dependency kinds and admitted contexts, use the
+[implementation profile](../Implementations/Frontend/docs/candidate-profile.md) and
+[qualification checkpoint](frontend-checkpoint-2026-11-02.json).
 
 The local integration uses software `0.1.0-local`, API `3` and Source/FIR `0.1`.
 API-3 provenance is `0.3`; diagnostic/capability documents remain `0.2` and source
@@ -99,6 +107,6 @@ Shape validation cannot verify dependency hashes, resolve files, prove callback
 lifetimes, detect all graph errors or admit a backend.
 
 Examples are synthetic illustrations, not conformance or native execution receipts.
-Future code publication requires its own version, payload provenance and applicable
-notices, reconstruction instructions and qualification evidence. This publication does not
+Code publication carries its own version, payload provenance and applicable
+notices, reconstruction instructions and qualification evidence. Publication does not
 grant rights over private Studio or Runtime implementation.

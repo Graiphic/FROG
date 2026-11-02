@@ -4,6 +4,10 @@
 
 <h1 align="center">🐸 FROG — Free Open Graphical Language</h1>
 
+<p><strong>Open participation, Graiphic leadership:</strong>
+<a href="GOVERNANCE.md#official-project-rules">seven simple project rules</a> and
+<a href="CONTRIBUTING.md#contribution-rules">how to contribute</a>. Shared components are proven in Studio and qualified independently before an official release; all merges require maintainer review.</p>
+
 <p><strong>Public implementation checkpoint — 2 November 2026:</strong>
 The <a href="Implementations/Frontend/README.md">common C++ Frontend library and CLI</a>
 and the <a href="Implementations/Bridges/reference-c/README.md">finite reference C bridge</a>

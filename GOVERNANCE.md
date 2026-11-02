@@ -5,7 +5,7 @@
 <h1 align="center">🐸 FROG Governance</h1>
 
 <p align="center">
-  Governance model for the FROG specification repository<br/>
+  Governance model for the FROG specification and public components<br/>
   <em>FROG — Free Open Graphical Language</em>
 </p>
 
@@ -47,7 +47,7 @@ This governance document defines how the specification repository is stewarded, 
 </p>
 
 <p>
-This document governs the specification repository.
+This document governs the specification repository and the public implementation components maintained here.
 It does not require any implementation to be open source, and it does not prohibit any party from building commercial tools, runtimes, compilers, integrations, services, or full IDE platforms around the FROG specification.
 </p>
 
@@ -118,7 +118,8 @@ This document applies to the governance of the FROG specification repository, in
   <li>repository-level strategic framing documents,</li>
   <li>repository-level roadmap documents,</li>
   <li>repository-level versioning-governance documents,</li>
-  <li>related architectural and normative documents contained in this repository.</li>
+  <li>related architectural and normative documents contained in this repository,</li>
+  <li>public Frontend, SDK and reference bridge components maintained here.</li>
 </ul>
 
 <p>
@@ -384,6 +385,22 @@ Source provenance follows the same governance model. The open specification may 
 <hr/>
 
 <h2 id="decision-model">8. Decision Model</h2>
+
+<h3 id="official-project-rules">Simple rules for the official project</h3>
+
+<ol>
+  <li><strong>Graiphic leads.</strong> Graiphic sets the official roadmap and appoints maintainers. Only an authorized maintainer may accept changes or publish an official version; neither a public proposal nor passing CI implies acceptance.</li>
+  <li><strong>Participation is open.</strong> Anyone may report a bug, suggest an improvement or submit a pull request. Discuss substantial changes before investing in implementation. Review is based on the change, regardless of who proposes it.</li>
+  <li><strong>Decisions have reasons.</strong> Review considers usefulness, correctness, compatibility, security, measured performance where relevant, maintainability and licensing. Maintainers record a concise reason when requesting substantial changes, declining or deferring a proposal. Contributors may respond with new evidence; acceptance or a response deadline is not guaranteed.</li>
+  <li><strong>Prove shared code before release.</strong> For components shared from Graiphic Studio, first demonstrate the behavior in Studio, then qualify the common component on its own and publish an identified version with contracts, tests, provenance and known limits. Once extracted, Studio and public tools use the same implementation. Studio pins its qualified version; a public release never silently replaces it. Documentation-only fixes do not require an IDE build, and independent implementations remain free to evolve under their own governance.</li>
+  <li><strong>Publish a clear scope.</strong> Public components, private product code and their licenses remain explicit. Publishing a component does not publish the entire IDE or runtime. Give contributors credit and preserve third-party notices and provenance.</li>
+  <li><strong>Choose effective dependencies.</strong> Retain proven libraries when they offer the best balance of correctness, performance, licensing and maintenance. Replace one only for a demonstrated benefit with a validated contract; reducing the dependency count is not a goal by itself.</li>
+  <li><strong>Respect open-source rights.</strong> Stewardship controls this repository and official releases. It does not restrict the rights granted by the applicable licenses to use, modify, redistribute or fork public code. Official names and marks remain separate from those rights.</li>
+</ol>
+
+<p>These rules extend the existing stewardship model. The repository license,
+<a href="./CLA.md">CLA</a> and contribution requirements remain unchanged.
+<a href="./CONTRIBUTING.md">Contributing</a> describes the practical submission path.</p>
 
 <p>
 FROG governance currently follows a steward-led model.
