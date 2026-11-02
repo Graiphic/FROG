@@ -79,15 +79,15 @@
       },
       "behavior_summary": "Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.",
       "runtime_availability": {
-        "available": true,
-        "availability_scope": "numeric_scalar_only",
+        "available": false,
+        "availability_scope": "requires_explicit_target_capability",
         "implementation_kind": "built_in_provider",
-        "implementation_id": "frog.core.add",
-        "notes": "Scalar execution is available; authorable array lifting is rejected until an array Runtime value provider exists.",
-        "provider_requirement": ""
+        "implementation_id": "frog.studio.numeric.add.owned-promote.v1",
+        "notes": "The existing same-type i32/u32/i64/u64/f64 scalar intrinsics and IEEE slots remain distinct. Mixed/narrow real scalar and numeric Array signatures require the private owned-promote native capability: 2..16 canonical left-fold inputs, exact integer carriers, finite f32/f64 values, identical Array shapes and scalar lifting. A complete type fold may contain logical I128 before a final supported real type; an actual I128 result, complex/fixed-point/nominal/Cluster overloads remain unavailable in this owned profile. Source preparation and the active target must admit the exact signature; this field does not grant universal runtime availability.",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1"
       },
       "blockers": [
-        "Runtime array execution is unavailable."
+        "The owned numeric profile requires an explicitly admitted target signature; nonfinite aggregate values, actual I128/U128 carriers, complex/fixed-point and nominal/Cluster overloads are outside its v1 realization."
       ],
       "authority_refs": [
         "FROG/Libraries/Manifests/frog.core.add.v1.json",
@@ -171,11 +171,12 @@
       },
       "behavior_summary": "Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion. Timestamp minus timestamp yields DBL; timestamp minus a real duration yields timestamp.",
       "runtime_availability": {
-        "available": true,
+        "available": false,
+        "availability_scope": "requires_explicit_target_capability",
         "implementation_kind": "built_in_provider",
-        "implementation_id": "frog.core.sub",
-        "notes": "Portable Runtime scalar execution is present.",
-        "provider_requirement": ""
+        "implementation_id": "frog.studio.numeric.subtract.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -270,11 +271,12 @@
       },
       "behavior_summary": "Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion. The output retains the promoted numeric leaf type.",
       "runtime_availability": {
-        "available": true,
+        "available": false,
+        "availability_scope": "requires_explicit_target_capability",
         "implementation_kind": "built_in_provider",
-        "implementation_id": "frog.core.mul",
-        "notes": "Portable Runtime scalar variadic execution is present.",
-        "provider_requirement": ""
+        "implementation_id": "frog.studio.numeric.multiply.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -361,11 +363,12 @@
       },
       "behavior_summary": "Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion. Two integer leaves yield DBL; floating/complex leaves use their common representation.",
       "runtime_availability": {
-        "available": true,
+        "available": false,
+        "availability_scope": "requires_explicit_target_capability",
         "implementation_kind": "built_in_provider",
-        "implementation_id": "frog.core.div",
-        "notes": "Portable Runtime scalar execution is present.",
-        "provider_requirement": ""
+        "implementation_id": "frog.studio.numeric.divide.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -420,7 +423,7 @@
         "outputs": [
           {
             "id": "quotient",
-            "display_name": "quotient",
+            "display_name": "remainder (R)",
             "type": "T:numeric_tree",
             "default_value_type": "f64",
             "requirement": "required",
@@ -430,7 +433,7 @@
           },
           {
             "id": "remainder",
-            "display_name": "remainder",
+            "display_name": "integer quotient (IQ)",
             "type": "T:numeric_tree",
             "default_value_type": "f64",
             "requirement": "required",
@@ -448,7 +451,7 @@
         ],
         "result": "resolve:frog.studio.polymorphic.type-resolution@1",
         "implicit_coercion": false,
-        "description": "Numeric x,y (scalars/arrays/clusters) -> integer-valued quotient and remainder in promoted numeric structure."
+        "description": "Floor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure. Persistent historical output id quotient is remainder (R), id remainder is integer quotient (IQ); IDs are retained so saved wires stay attached. Integer y=0 yields q=0,r=x; signed minimum/-1 wraps quotient at the declared integer width, remainder=0. Float zero follows IEEE Infinity/NaN."
       },
       "variadicity": {
         "enabled": false,
@@ -457,24 +460,25 @@
       "array_policy": {
         "accepted": true,
         "lifting": "element_wise_same_shape_with_scalar_lift",
-        "description": "Numeric x,y (scalars/arrays/clusters) -> integer-valued quotient and remainder in promoted numeric structure.",
+        "description": "Floor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure. Persistent historical output id quotient is remainder (R), id remainder is integer quotient (IQ); IDs are retained so saved wires stay attached. Integer y=0 yields q=0,r=x; signed minimum/-1 wraps quotient at the declared integer width, remainder=0. Float zero follows IEEE Infinity/NaN.",
         "scalar_lift": true,
         "shape_rule": "compatible_rank_and_schema; scalar_lift"
       },
-      "behavior_summary": "Numeric x,y (scalars/arrays/clusters) -> integer-valued quotient and remainder in promoted numeric structure.",
+      "behavior_summary": "Floor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure. Persistent historical output id quotient is remainder (R), id remainder is integer quotient (IQ); IDs are retained so saved wires stay attached. Integer y=0 yields q=0,r=x; signed minimum/-1 wraps quotient at the declared integer width, remainder=0. Float zero follows IEEE Infinity/NaN.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.quotient_remainder.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
         "Studio authoring supports the declared numeric scalar/array/cluster types; NI waveform, physical-unit and configurable fixed-point layout overloads are not modeled. Runtime execution still requires a target provider."
       ],
       "authority_refs": [
-        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/quotient-and-remainder.html"
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/quotient-remainder.html"
       ],
       "presentation": {
         "shape": "square",
@@ -484,7 +488,7 @@
       "binding_projection": {
         "schema_version": 1,
         "maturity": "reference_verified",
-        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/quotient-and-remainder.html",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/quotient-remainder.html",
         "resolver_id": "frog.studio.polymorphic.type-resolution@1",
         "evaluation_order": "unspecified",
         "reduction_policy": "unspecified",
@@ -545,10 +549,11 @@
       "behavior_summary": "Numeric or enum x -> same structure/representation x+1; NI also has timestamp and waveform overloads.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.increment.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -626,10 +631,11 @@
       "behavior_summary": "Numeric or enum x -> same structure/representation x-1; NI also has timestamp and waveform overloads.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.decrement.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -663,11 +669,11 @@
           {
             "id": "value",
             "display_name": "array",
-            "type": "array<T:numeric,rank>=1>",
+            "type": "array<T:numeric_tree,rank>=1>",
             "default_value_type": "array:f64",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "numeric_array_implicit",
+            "connection_policy": "any_explicit",
             "legacy_aliases": []
           }
         ],
@@ -687,7 +693,7 @@
       "overload_type_resolution": {
         "policy": "custom_resolver",
         "accepted_operands": [
-          "array<T:numeric,rank>=1>"
+          "array<T:numeric_tree,rank>=1>"
         ],
         "result": "resolve:frog.studio.polymorphic.type-resolution@1",
         "implicit_coercion": true,
@@ -710,10 +716,11 @@
       "behavior_summary": "An n-D numeric array reduces to the type and structure of one element, not a fixed DBL. Fixed-point is not accepted.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.add_array_elements.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The compiled Numeric service reduces exact owned Arrays in row-major order, preserves element types and reuses the shared tree walker for compound elements. Empty sum/product identities and per-step rounding are contractual. Nonfinite/advanced/complex leaves require separate admission; no universal or AOT qualification is claimed."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -746,11 +753,11 @@
           {
             "id": "value",
             "display_name": "array",
-            "type": "array<T:numeric,rank>=1>",
+            "type": "array<T:numeric_tree,rank>=1>",
             "default_value_type": "array:f64",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "numeric_array_implicit",
+            "connection_policy": "any_explicit",
             "legacy_aliases": []
           }
         ],
@@ -770,7 +777,7 @@
       "overload_type_resolution": {
         "policy": "custom_resolver",
         "accepted_operands": [
-          "array<T:numeric,rank>=1>"
+          "array<T:numeric_tree,rank>=1>"
         ],
         "result": "resolve:frog.studio.polymorphic.type-resolution@1",
         "implicit_coercion": true,
@@ -793,10 +800,11 @@
       "behavior_summary": "An n-D numeric array reduces to the type and structure of one element, not a fixed DBL. Fixed-point is not accepted.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.multiply_array_elements.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The compiled Numeric service reduces exact owned Arrays in row-major order, preserves element types and reuses the shared tree walker for compound elements. Empty sum/product identities and per-step rounding are contractual. Nonfinite/advanced/complex leaves require separate admission; no universal or AOT qualification is claimed."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -875,10 +883,11 @@
       "behavior_summary": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Unsigned inputs are rejected; a complex leaf produces the corresponding real magnitude type.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.absolute_value.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -943,7 +952,7 @@
         ],
         "result": "resolve:frog.studio.polymorphic.type-resolution@1",
         "implicit_coercion": true,
-        "description": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Rounding retains the representation (including complex leaves and timestamps)."
+        "description": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Rounding retains the representation (including complex leaves and timestamps). Exact halfway values round to the even integer, independent of the caller floating environment. The authored native scalar realization is round_nearest.even64.v1; explicitly persisted historical fenv64.v1 keeps its separately versioned environmental behavior."
       },
       "variadicity": {
         "enabled": false,
@@ -953,15 +962,16 @@
       "array_policy": {
         "accepted": true,
         "lifting": "none",
-        "description": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Rounding retains the representation (including complex leaves and timestamps)."
+        "description": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Rounding retains the representation (including complex leaves and timestamps). Exact halfway values round to the even integer, independent of the caller floating environment. The authored native scalar realization is round_nearest.even64.v1; explicitly persisted historical fenv64.v1 keeps its separately versioned environmental behavior."
       },
-      "behavior_summary": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Rounding retains the representation (including complex leaves and timestamps).",
+      "behavior_summary": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Rounding retains the representation (including complex leaves and timestamps). Exact halfway values round to the even integer, independent of the caller floating environment. The authored native scalar realization is round_nearest.even64.v1; explicitly persisted historical fenv64.v1 keeps its separately versioned environmental behavior.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.round_nearest.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -1041,10 +1051,11 @@
       "behavior_summary": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Floor retains the representation, including complex leaves and timestamps.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.round_negative_infinity.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -1124,10 +1135,11 @@
       "behavior_summary": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Ceiling retains the representation, including complex leaves and timestamps.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.round_positive_infinity.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -1200,7 +1212,7 @@
         ],
         "result": "resolve:frog.studio.polymorphic.type-resolution@1",
         "implicit_coercion": false,
-        "description": "Numeric x and exponent n, scalar/aggregate -> scaled numeric structure; exponent values converted to integer."
+        "description": "Authoring preserves numeric representation of x and compatible shape; floating n is rounded ties-even. The compiled scalar profile requires exact F64 x,n,result."
       },
       "variadicity": {
         "enabled": false,
@@ -1213,20 +1225,23 @@
         "scalar_lift": true,
         "shape_rule": "compatible_rank_and_schema; scalar_lift"
       },
-      "behavior_summary": "Numeric x and exponent n, scalar/aggregate -> scaled numeric structure; exponent values converted to integer.",
+      "behavior_summary": "Scale x by 2 raised to rounded n; floating n uses nearest ties-even. The local compiled profile admits exact x:F64,n:F64->result:F64 only, with finite rounded n within signed32.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.scale_power_two.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
-        "NI reference verified for authoring types; this does not establish runtime support on the active target.",
-        "Studio authoring supports the declared numeric scalar/array/cluster types; NI waveform, physical-unit and configurable fixed-point layout overloads are not modeled. Runtime execution still requires a target provider."
+        "Authoring Array/Cluster/integer signatures do not establish compiled target support; native v1 admits only exact F64 scalars.",
+        "I64 exponent coercion, integer arithmetic-shift and configurable fixed-point/waveform overloads remain outside native v1."
       ],
       "authority_refs": [
-        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/scale-by-power-of-2.html"
+        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/scale-by-power-of-2.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/scale-by-power-of-2.html",
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/round-to-nearest.html"
       ],
       "presentation": {
         "shape": "triangle",
@@ -1299,10 +1314,11 @@
       "behavior_summary": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Integer leaves produce DBL; complex inputs retain a complex result.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.square_root.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -1382,10 +1398,11 @@
       "behavior_summary": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Leaves retain their numeric representation.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.square.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -1465,10 +1482,11 @@
       "behavior_summary": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Leaves retain their numeric representation; unsigned integers are rejected.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.negate.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -1548,10 +1566,11 @@
       "behavior_summary": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Integer leaves produce DBL.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.reciprocal.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -1631,10 +1650,11 @@
       "behavior_summary": "Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure. Leaves retain their numeric representation, including complex values.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.sign.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -1717,7 +1737,7 @@
         ],
         "result": "resolve:frog.studio.polymorphic.type-resolution@1",
         "implicit_coercion": false,
-        "description": "Compatible comparable x,y -> max and min of their common type, including aggregates."
+        "description": "Compatible comparable x,y -> max/min of the common type. In Compare Elements, a single NaN selects the non-NaN value at both outputs; two NaNs remain NaN. The current exact scalar native authored profile is frog.studio.scalar.maxmin.nan-aware.v2; equality and two NaNs retain x bits. Explicit persisted exact.v1 remains historical and chooses x for unordered comparisons."
       },
       "variadicity": {
         "enabled": false,
@@ -1726,24 +1746,25 @@
       "array_policy": {
         "accepted": true,
         "lifting": "element_wise_same_shape_with_scalar_lift",
-        "description": "Compatible comparable x,y -> max and min of their common type, including aggregates.",
+        "description": "Compatible comparable x,y -> max/min of the common type. In Compare Elements, a single NaN selects the non-NaN value at both outputs; two NaNs remain NaN. The current exact scalar native authored profile is frog.studio.scalar.maxmin.nan-aware.v2; equality and two NaNs retain x bits. Explicit persisted exact.v1 remains historical and chooses x for unordered comparisons.",
         "scalar_lift": true,
         "shape_rule": "compatible_rank_and_schema; scalar_lift"
       },
-      "behavior_summary": "Compatible comparable x,y -> max and min of their common type, including aggregates.",
+      "behavior_summary": "Compatible comparable x,y -> max/min of the common type. In Compare Elements, a single NaN selects the non-NaN value at both outputs; two NaNs remain NaN. The current exact scalar native authored profile is frog.studio.scalar.maxmin.nan-aware.v2; equality and two NaNs retain x bits. Explicit persisted exact.v1 remains historical and chooses x for unordered comparisons.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.max_min.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
         "Studio authoring supports the declared numeric scalar/array/cluster types; NI waveform, physical-unit and configurable fixed-point layout overloads are not modeled. Runtime execution still requires a target provider."
       ],
       "authority_refs": [
-        "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/max-and-min.html"
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/max-min.html"
       ],
       "presentation": {
         "shape": "square",
@@ -1753,7 +1774,7 @@
       "binding_projection": {
         "schema_version": 1,
         "maturity": "reference_verified",
-        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/max-and-min.html",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/max-min.html",
         "resolver_id": "frog.studio.polymorphic.type-resolution@1",
         "evaluation_order": "unspecified",
         "reduction_policy": "unspecified",
@@ -1846,10 +1867,11 @@
       "behavior_summary": "Comparable x,lower,upper -> coerced value of common type; Boolean in-range result, elementwise Boolean structure in Compare Elements mode.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.in_range.closed-closed.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -2028,10 +2050,11 @@
       "behavior_summary": "No inputs -> scalar DBL in [0,1).",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.random_zero_one.instance-owned.v1",
+        "provider_requirement": "frog.studio.numeric.random.instance-owned@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -2120,10 +2143,11 @@
       "behavior_summary": "Scalar lower,upper -> scalar result; NI has distinct DBL, I64 and U64 instances.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.random_range.instance-owned.v1",
+        "provider_requirement": "frog.studio.numeric.random.instance-owned@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -3976,10 +4000,11 @@
       "behavior_summary": "x:any + type:T -> T; reinterpretation requires compatible flattened layout.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.adapt_to_type.flat-scalar.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "Exact physical-bit realization in the existing compiled Numeric provider: equal-width scalar/1D Reinterpret and plain scalar byte-layout Adapt. Complete schemas and type-model inputs stay checked. IEEE scalar roundtrips are separate from currently finite owned Array transport; aggregate Adapt and advanced layouts remain unimplemented. Execution/AOT qualification requires actual receipts."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -4023,8 +4048,8 @@
           {
             "id": "byte_order",
             "display_name": "byte order",
-            "type": "i32",
-            "default_value_type": "i32",
+            "type": "T:any",
+            "default_value_type": "enum<byte_order,u16>",
             "requirement": "optional",
             "cardinality": "single",
             "connection_policy": "any_explicit",
@@ -4078,13 +4103,13 @@
         "policy": "custom_resolver",
         "accepted_operands": [
           "T:any",
-          "i32",
+          "enum<byte_order,u16>",
           "bool",
           "cluster<status:bool,code:i32,source:string>"
         ],
         "result": "resolve:frog.studio.polymorphic.type-resolution@1",
         "implicit_coercion": false,
-        "description": "Serializable data + byte-order/size flags -> 1D U8 array + error; refnums excluded."
+        "description": "Serializable data + byte-order/size flags -> 1D U8 array + error; refnums excluded. The byte-order connector presents enum<byte_order,u16> with big-endian=0, native=1, little-endian=2; the scoped resolver also accepts legacy scalar integer selectors and rejects other schemas."
       },
       "variadicity": {
         "enabled": false,
@@ -4100,14 +4125,14 @@
       "behavior_summary": "Serializable data + byte-order/size flags -> 1D U8 array + error; refnums excluded.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.data_manipulation.flatten_to_byte_array.binary.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "The typed binary operation is admitted only by the active Source/FIR/Runtime capability. Byte order is big-endian (0), native (1), or little-endian (2); top-level array/String size prefixes are optional.",
+        "provider_requirement": "frog.studio.string.raw-bytes@1"
       },
       "blockers": [
-        "NI reference verified for authoring types; this does not establish runtime support on the active target.",
-        "Studio authoring supports the declared numeric scalar/array/cluster types; NI waveform, physical-unit and configurable fixed-point layout overloads are not modeled. Runtime execution still requires a target provider."
+        "NI reference verified for the supported binary value schemas; this does not grant an unsupported target this native operation."
       ],
       "authority_refs": [
         "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/flatten-to-byte-array.html"
@@ -4157,8 +4182,8 @@
           {
             "id": "byte_order",
             "display_name": "byte order",
-            "type": "i32",
-            "default_value_type": "i32",
+            "type": "T:any",
+            "default_value_type": "enum<byte_order,u16>",
             "requirement": "optional",
             "cardinality": "single",
             "connection_policy": "any_explicit",
@@ -4223,13 +4248,13 @@
         "accepted_operands": [
           "array<u8,rank=1>",
           "T:any",
-          "i32",
+          "enum<byte_order,u16>",
           "bool",
           "cluster<status:bool,code:i32,source:string>"
         ],
         "result": "resolve:frog.studio.polymorphic.type-resolution@1",
         "implicit_coercion": false,
-        "description": "1D U8 bytes + type:T + byte-order/size flags -> T, remaining U8 bytes and error."
+        "description": "1D U8 bytes + type:T + byte-order/size flags -> T, remaining U8 bytes and error. The byte-order connector presents enum<byte_order,u16> with big-endian=0, native=1, little-endian=2; the scoped resolver also accepts legacy scalar integer selectors and rejects other schemas."
       },
       "variadicity": {
         "enabled": false,
@@ -4245,14 +4270,14 @@
       "behavior_summary": "1D U8 bytes + type:T + byte-order/size flags -> T, remaining U8 bytes and error.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.data_manipulation.unflatten_from_byte_array.binary.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "The typed binary operation is admitted only by the active Source/FIR/Runtime capability. Byte order is big-endian (0), native (1), or little-endian (2); top-level array/String size prefixes are optional.",
+        "provider_requirement": "frog.studio.string.raw-bytes@1"
       },
       "blockers": [
-        "NI reference verified for authoring types; this does not establish runtime support on the active target.",
-        "Studio authoring supports the declared numeric scalar/array/cluster types; NI waveform, physical-unit and configurable fixed-point layout overloads are not modeled. Runtime execution still requires a target provider."
+        "NI reference verified for the supported binary value schemas; this does not grant an unsupported target this native operation."
       ],
       "authority_refs": [
         "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/unflatten-from-byte-array.html"
@@ -4336,10 +4361,11 @@
       "behavior_summary": "Floating number -> mantissa and integer-valued exponent, both in the input floating representation.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.mantissa_exponent.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -4438,10 +4464,11 @@
       "behavior_summary": "Scalar integer + Boolean carry -> same integer type + Boolean carry; no aggregates.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.rotate_left_with_carry.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -4540,10 +4567,11 @@
       "behavior_summary": "Scalar integer + Boolean carry -> same integer type + Boolean carry; no aggregates.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.rotate_right_with_carry.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -4632,10 +4660,11 @@
       "behavior_summary": "Integer x + numeric shift count -> integer representation of x.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.logical_shift.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -4724,10 +4753,11 @@
       "behavior_summary": "Integer x + numeric rotation count -> integer bit pattern in the inferred numeric representation.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.rotate.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -4815,10 +4845,11 @@
       "behavior_summary": "Integer scalar/array/cluster -> high and low unsigned halves, preserving structure.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.split_number.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -4907,10 +4938,11 @@
       "behavior_summary": "8/16/32-bit halves, including arrays/clusters -> unsigned 16/32/64-bit values; twice the widest half.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.join_numbers.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -4988,10 +5020,11 @@
       "behavior_summary": "Integer data or arrays/clusters containing integers -> same type and structure.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.swap_bytes.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -5069,10 +5102,11 @@
       "behavior_summary": "Integer data or arrays/clusters containing integers -> same type and structure.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.swap_words.owned.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -5161,10 +5195,11 @@
       "behavior_summary": "Integer/float/fixed-point scalar or 1D array + equal-bit-width target scalar type -> corresponding target representation, same scalar/array shape.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.reinterpret_number.exact-bits.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "Exact physical-bit realization in the existing compiled Numeric provider: equal-width scalar/1D Reinterpret and plain scalar byte-layout Adapt. Complete schemas and type-model inputs stay checked. IEEE scalar roundtrips are separate from currently finite owned Array transport; aggregate Adapt and advanced layouts remain unimplemented. Execution/AOT qualification requires actual receipts."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -5242,10 +5277,11 @@
       "behavior_summary": "Complex -> Complex. Numeric array/cluster structure is preserved, with real/complex leaf conversion.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.complex.conjugate",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes this finite CSG/CDB leaf profile. Complete Source types, exact components, authored connector roles and target capabilities are checked. Advanced complex/fixed and nonfinite compound values remain unqualified; no universal availability or deployment claim."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -5334,10 +5370,11 @@
       "behavior_summary": "Real r, theta -> Complex. Numeric array/cluster structure is preserved, with real/complex leaf conversion.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.complex.polar_to_complex",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes this finite CSG/CDB leaf profile. Complete Source types, exact components, authored connector roles and target capabilities are checked. Advanced complex/fixed and nonfinite compound values remain unqualified; no universal availability or deployment claim."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -5425,10 +5462,11 @@
       "behavior_summary": "Complex -> Real r, theta. Numeric array/cluster structure is preserved, with real/complex leaf conversion.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.complex.complex_to_polar",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes this finite CSG/CDB leaf profile. Complete Source types, exact components, authored connector roles and target capabilities are checked. Advanced complex/fixed and nonfinite compound values remain unqualified; no universal availability or deployment claim."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -5517,10 +5555,11 @@
       "behavior_summary": "Real x, y -> Complex. Numeric array/cluster structure is preserved, with real/complex leaf conversion.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.complex.real_imaginary_to_complex",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes this finite CSG/CDB leaf profile. Complete Source types, exact components, authored connector roles and target capabilities are checked. Advanced complex/fixed and nonfinite compound values remain unqualified; no universal availability or deployment claim."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -5608,10 +5647,11 @@
       "behavior_summary": "Complex -> Real x, y. Numeric array/cluster structure is preserved, with real/complex leaf conversion.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.complex.complex_to_real_imaginary",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes this finite CSG/CDB leaf profile. Complete Source types, exact components, authored connector roles and target capabilities are checked. Advanced complex/fixed and nonfinite compound values remain unqualified; no universal availability or deployment claim."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -5710,10 +5750,11 @@
       "behavior_summary": "Real x, y -> Real r, theta. Numeric array/cluster structure is preserved, with real/complex leaf conversion.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.complex.real_imaginary_to_polar",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes this finite CSG/CDB leaf profile. Complete Source types, exact components, authored connector roles and target capabilities are checked. Advanced complex/fixed and nonfinite compound values remain unqualified; no universal availability or deployment claim."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -5812,10 +5853,11 @@
       "behavior_summary": "Real r, theta -> Real x, y. Numeric array/cluster structure is preserved, with real/complex leaf conversion.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.complex.polar_to_real_imaginary",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes this finite CSG/CDB leaf profile. Complete Source types, exact components, authored connector roles and target capabilities are checked. Advanced complex/fixed and nonfinite compound values remain unqualified; no universal availability or deployment claim."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -5937,10 +5979,11 @@
       "behavior_summary": "DBL voltage or waveform + sensor-specific numeric calibration parameters and configuration enums -> DBL measurement or corresponding waveform. These are sensor-specific overloads, not arbitrary String/Boolean inputs.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.scaling.convert_rtd_reading.cvd-quadratic.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -6095,10 +6138,11 @@
       "behavior_summary": "DBL voltage or waveform + sensor-specific numeric calibration parameters and configuration enums -> DBL measurement or corresponding waveform. These are sensor-specific overloads, not arbitrary String/Boolean inputs.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.scaling.convert_strain_gauge_reading.seven-bridges.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -6231,10 +6275,11 @@
       "behavior_summary": "DBL voltage or waveform + sensor-specific numeric calibration parameters and configuration enums -> DBL measurement or corresponding waveform. These are sensor-specific overloads, not arbitrary String/Boolean inputs.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.scaling.convert_thermistor_reading.scxi-steinhart-hart.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -6367,10 +6412,11 @@
       "behavior_summary": "DBL voltage or waveform + sensor-specific numeric calibration parameters and configuration enums -> DBL measurement or corresponding waveform. These are sensor-specific overloads, not arbitrary String/Boolean inputs.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.scaling.convert_thermocouple_reading.nist-its90-cjc.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric calibration provider implements a bounded ITS-90/CJC profile with the eight declared thermocouple types. Scalar or Array1D real input is promoted explicitly to F64; configuration connectors remain exact I32/F64. Forward CJC and inverse measurement ranges are checked separately; extrapolation is refused. Declaration is not a native test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -6447,10 +6493,11 @@
       "behavior_summary": "Numeric leaves convert to I8; array ranks and cluster layout stay intact. This is a leaf conversion, not a conversion of the whole aggregate to a scalar.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.convert.to_i8.ieee-even-modulo.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -6526,10 +6573,11 @@
       "behavior_summary": "Numeric leaves convert to I16; array ranks and cluster layout stay intact. This is a leaf conversion, not a conversion of the whole aggregate to a scalar.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.convert.to_i16.ieee-even-modulo.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -6605,10 +6653,11 @@
       "behavior_summary": "Numeric leaves convert to I32; array ranks and cluster layout stay intact. This is a leaf conversion, not a conversion of the whole aggregate to a scalar.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.convert.to_i32.ieee-even-modulo.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -6684,10 +6733,11 @@
       "behavior_summary": "Numeric leaves convert to I64; array ranks and cluster layout stay intact. This is a leaf conversion, not a conversion of the whole aggregate to a scalar.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.convert.to_i64.ieee-even-modulo.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -6763,10 +6813,11 @@
       "behavior_summary": "Numeric leaves convert to U8; array ranks and cluster layout stay intact. This is a leaf conversion, not a conversion of the whole aggregate to a scalar.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.convert.to_u8.ieee-even-modulo.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -6842,10 +6893,11 @@
       "behavior_summary": "Numeric leaves convert to U16; array ranks and cluster layout stay intact. This is a leaf conversion, not a conversion of the whole aggregate to a scalar.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.convert.to_u16.ieee-even-modulo.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -6921,10 +6973,11 @@
       "behavior_summary": "Numeric leaves convert to U32; array ranks and cluster layout stay intact. This is a leaf conversion, not a conversion of the whole aggregate to a scalar.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.convert.to_u32.ieee-even-modulo.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -7000,10 +7053,11 @@
       "behavior_summary": "Numeric leaves convert to U64; array ranks and cluster layout stay intact. This is a leaf conversion, not a conversion of the whole aggregate to a scalar.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.convert.to_u64.ieee-even-modulo.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -7079,10 +7133,11 @@
       "behavior_summary": "Numeric scalar/array/cluster: convert each leaf to SGL/F32 while preserving the full aggregate structure.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.convert.to_sgl.ieee-even-modulo.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -7158,10 +7213,11 @@
       "behavior_summary": "Numeric leaves convert to DBL; array ranks and cluster layout stay intact. This is a leaf conversion, not a conversion of the whole aggregate to a scalar.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.convert.to_dbl.ieee-even-modulo.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -7237,10 +7293,11 @@
       "behavior_summary": "Numeric scalar/array/cluster -> same structure of CSG leaves.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.conversion.to_csg",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes this finite CSG/CDB leaf profile. Complete Source types, exact components, authored connector roles and target capabilities are checked. Advanced complex/fixed and nonfinite compound values remain unqualified; no universal availability or deployment claim."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -7316,10 +7373,11 @@
       "behavior_summary": "Numeric scalar/array/cluster -> same structure of CDB leaves.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.conversion.to_cdb",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes this finite CSG/CDB leaf profile. Complete Source types, exact components, authored connector roles and target capabilities are checked. Advanced complex/fixed and nonfinite compound values remain unqualified; no universal availability or deployment claim."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -7557,10 +7615,11 @@
       "behavior_summary": "Integer/fixed-point scalar -> 1D Boolean array, one element per bit; first is least significant.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.number_to_boolean_array.exact-width.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -7637,10 +7696,11 @@
       "behavior_summary": "1D Boolean array -> configured integer representation (LabVIEW default U32); first element is least significant.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.boolean_array_to_number.sign-if-signed.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -7716,10 +7776,11 @@
       "behavior_summary": "Boolean scalar/array/cluster -> same structure with I16 leaves (0 or 1).",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime conversion provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.boolean_to_integer.i16-tree.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -7795,10 +7856,11 @@
       "behavior_summary": "Scalar String/Path/Boolean/Enum/Timestamp/numeric arguments + format/initial Strings -> scalar String + error; no array/cluster arguments.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime formatting or parsing provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.conversion.format_into_string.unary-typed.v1",
+        "provider_requirement": "frog.studio.numeric.unary-text.ascii-dot-prefix@1",
+        "notes": "Explicit GS unary text defaults: invariant ASCII dot, precision six, exact source integer width and prefix parsers with the declared I32/U32/DBL result. Uses the compiled Numeric provider and existing String formatter; missing NI locale/prototype/precision connectors and advanced carriers are not claimed. Execution and AOT evidence remain distinct."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -7874,19 +7936,22 @@
         "lifting": "none",
         "description": "rank-one byte array only"
       },
-      "behavior_summary": "Requests explicit conversion of a string to a rank-one byte array.",
+      "behavior_summary": "Converts raw String bytes to an exact rank-one U8 Array; preserves NUL and byte order without Unicode decoding.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime formatting or parsing provider is declared.",
-        "provider_requirement": ""
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.conversion.string_to_byte_array.bytes.v1",
+        "notes": "Numeric palette alias of the existing compiled raw-byte operation; authored value/result endpoints are remapped without changing persisted IDs. NUL and arbitrary intermediate String bytes are data. No locale/format/parse provider is implied.",
+        "provider_requirement": "frog.studio.string.raw-bytes@1; exact String/rank-one U8 schema and composed owned-value target",
+        "availability_scope": "requires_explicit_target_capability"
       },
       "blockers": [
-        "Locale, formatting options, encoding, invalid-input behavior and status reporting are not defined.",
-        "No machine-readable FROG function manifest or Runtime provider exists."
+        "Native realization requires the explicit composed raw-byte target capability; no universal portable availability claim.",
+        "Only the exact String/rank-one U8 conversion is admitted; other Numeric formatting/parsing aliases remain unresolved."
       ],
-      "authority_refs": [],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/string-to-byte-array.html"
+      ],
       "presentation": {
         "shape": "square",
         "extension": "none"
@@ -7953,19 +8018,22 @@
         "lifting": "array_to_scalar_conversion",
         "description": "rank-one byte array only"
       },
-      "behavior_summary": "Requests explicit conversion of a rank-one byte array to a string.",
+      "behavior_summary": "Converts raw rank-one U8 Array elements to a String; preserves NUL and byte order without Unicode decoding.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime formatting or parsing provider is declared.",
-        "provider_requirement": ""
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.conversion.byte_array_to_string.bytes.v1",
+        "notes": "Numeric palette alias of the existing compiled raw-byte operation; authored value/result endpoints are remapped without changing persisted IDs. NUL and arbitrary intermediate String bytes are data. No locale/format/parse provider is implied.",
+        "provider_requirement": "frog.studio.string.raw-bytes@1; exact String/rank-one U8 schema and composed owned-value target",
+        "availability_scope": "requires_explicit_target_capability"
       },
       "blockers": [
-        "Locale, formatting options, encoding, invalid-input behavior and status reporting are not defined.",
-        "No machine-readable FROG function manifest or Runtime provider exists."
+        "Native realization requires the explicit composed raw-byte target capability; no universal portable availability claim.",
+        "Only the exact String/rank-one U8 conversion is admitted; other Numeric formatting/parsing aliases remain unresolved."
       ],
-      "authority_refs": [],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/byte-array-to-string.html"
+      ],
       "presentation": {
         "shape": "square",
         "extension": "none"
@@ -8034,10 +8102,11 @@
       "behavior_summary": "Numeric scalar or recursively numeric array/cluster becomes the same structure with String leaves; ranks and field order remain unchanged. Width/precision are scalar formatting parameters in NI.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime formatting or parsing provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.conversion.number_to_decimal_string.unary-typed.v1",
+        "provider_requirement": "frog.studio.numeric.unary-text.ascii-dot-prefix@1",
+        "notes": "Explicit GS unary text defaults: invariant ASCII dot, precision six, exact source integer width and prefix parsers with the declared I32/U32/DBL result. Uses the compiled Numeric provider and existing String formatter; missing NI locale/prototype/precision connectors and advanced carriers are not claimed. Execution and AOT evidence remain distinct."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -8114,10 +8183,11 @@
       "behavior_summary": "Numeric scalar or recursively numeric array/cluster becomes the same structure with String leaves; ranks and field order remain unchanged. Width/precision are scalar formatting parameters in NI.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime formatting or parsing provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.conversion.number_to_hex_string.unary-typed.v1",
+        "provider_requirement": "frog.studio.numeric.unary-text.ascii-dot-prefix@1",
+        "notes": "Explicit GS unary text defaults: invariant ASCII dot, precision six, exact source integer width and prefix parsers with the declared I32/U32/DBL result. Uses the compiled Numeric provider and existing String formatter; missing NI locale/prototype/precision connectors and advanced carriers are not claimed. Execution and AOT evidence remain distinct."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -8194,10 +8264,11 @@
       "behavior_summary": "Numeric scalar or recursively numeric array/cluster becomes the same structure with String leaves; ranks and field order remain unchanged. Width/precision are scalar formatting parameters in NI.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime formatting or parsing provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.conversion.number_to_octal_string.unary-typed.v1",
+        "provider_requirement": "frog.studio.numeric.unary-text.ascii-dot-prefix@1",
+        "notes": "Explicit GS unary text defaults: invariant ASCII dot, precision six, exact source integer width and prefix parsers with the declared I32/U32/DBL result. Uses the compiled Numeric provider and existing String formatter; missing NI locale/prototype/precision connectors and advanced carriers are not claimed. Execution and AOT evidence remain distinct."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -8274,10 +8345,11 @@
       "behavior_summary": "Numeric scalar or recursively numeric array/cluster becomes the same structure with String leaves; ranks and field order remain unchanged. Width/precision are scalar formatting parameters in NI.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime formatting or parsing provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.conversion.number_to_fractional_string.unary-typed.v1",
+        "provider_requirement": "frog.studio.numeric.unary-text.ascii-dot-prefix@1",
+        "notes": "Explicit GS unary text defaults: invariant ASCII dot, precision six, exact source integer width and prefix parsers with the declared I32/U32/DBL result. Uses the compiled Numeric provider and existing String formatter; missing NI locale/prototype/precision connectors and advanced carriers are not claimed. Execution and AOT evidence remain distinct."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -8354,10 +8426,11 @@
       "behavior_summary": "Numeric scalar or recursively numeric array/cluster becomes the same structure with String leaves; ranks and field order remain unchanged. Width/precision are scalar formatting parameters in NI.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime formatting or parsing provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.conversion.number_to_exponential_string.unary-typed.v1",
+        "provider_requirement": "frog.studio.numeric.unary-text.ascii-dot-prefix@1",
+        "notes": "Explicit GS unary text defaults: invariant ASCII dot, precision six, exact source integer width and prefix parsers with the declared I32/U32/DBL result. Uses the compiled Numeric provider and existing String formatter; missing NI locale/prototype/precision connectors and advanced carriers are not claimed. Execution and AOT evidence remain distinct."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -8434,10 +8507,11 @@
       "behavior_summary": "Numeric scalar or recursively numeric array/cluster becomes the same structure with String leaves; ranks and field order remain unchanged. Width/precision are scalar formatting parameters in NI.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime formatting or parsing provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.conversion.number_to_engineering_string.unary-typed.v1",
+        "provider_requirement": "frog.studio.numeric.unary-text.ascii-dot-prefix@1",
+        "notes": "Explicit GS unary text defaults: invariant ASCII dot, precision six, exact source integer width and prefix parsers with the declared I32/U32/DBL result. Uses the compiled Numeric provider and existing String formatter; missing NI locale/prototype/precision connectors and advanced carriers are not claimed. Execution and AOT evidence remain distinct."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -8514,10 +8588,11 @@
       "behavior_summary": "String or recursively String array/cluster becomes the same structure with numeric leaves (default I32). In NI the default-value input selects numeric representation; offset and offset-past-number remain scalar.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime formatting or parsing provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.conversion.decimal_string_to_number.unary-typed.v1",
+        "provider_requirement": "frog.studio.numeric.unary-text.ascii-dot-prefix@1",
+        "notes": "Explicit GS unary text defaults: invariant ASCII dot, precision six, exact source integer width and prefix parsers with the declared I32/U32/DBL result. Uses the compiled Numeric provider and existing String formatter; missing NI locale/prototype/precision connectors and advanced carriers are not claimed. Execution and AOT evidence remain distinct."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -8594,10 +8669,11 @@
       "behavior_summary": "String or recursively String array/cluster becomes the same structure with numeric leaves (default U32). In NI the default-value input selects numeric representation; offset and offset-past-number remain scalar.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime formatting or parsing provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.conversion.hex_string_to_number.unary-typed.v1",
+        "provider_requirement": "frog.studio.numeric.unary-text.ascii-dot-prefix@1",
+        "notes": "Explicit GS unary text defaults: invariant ASCII dot, precision six, exact source integer width and prefix parsers with the declared I32/U32/DBL result. Uses the compiled Numeric provider and existing String formatter; missing NI locale/prototype/precision connectors and advanced carriers are not claimed. Execution and AOT evidence remain distinct."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -8674,10 +8750,11 @@
       "behavior_summary": "String or recursively String array/cluster becomes the same structure with numeric leaves (default U32). In NI the default-value input selects numeric representation; offset and offset-past-number remain scalar.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime formatting or parsing provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.conversion.octal_string_to_number.unary-typed.v1",
+        "provider_requirement": "frog.studio.numeric.unary-text.ascii-dot-prefix@1",
+        "notes": "Explicit GS unary text defaults: invariant ASCII dot, precision six, exact source integer width and prefix parsers with the declared I32/U32/DBL result. Uses the compiled Numeric provider and existing String formatter; missing NI locale/prototype/precision connectors and advanced carriers are not claimed. Execution and AOT evidence remain distinct."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
@@ -8754,10 +8831,11 @@
       "behavior_summary": "String or recursively String array/cluster becomes the same structure with numeric leaves (default DBL). In NI the default-value input selects numeric representation; offset and offset-past-number remain scalar.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "notes": "No portable Runtime formatting or parsing provider is declared.",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.conversion.floating_string_to_number.unary-typed.v1",
+        "provider_requirement": "frog.studio.numeric.unary-text.ascii-dot-prefix@1",
+        "notes": "Explicit GS unary text defaults: invariant ASCII dot, precision six, exact source integer width and prefix parsers with the declared I32/U32/DBL result. Uses the compiled Numeric provider and existing String formatter; missing NI locale/prototype/precision connectors and advanced carriers are not claimed. Execution and AOT evidence remain distinct."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",

@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.io/frog/sdk/ecosystem/0.1/bridge-message.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "protocol_version",
+    "request_id",
+    "session_id",
+    "generation",
+    "kind",
+    "method",
+    "payload"
+  ],
+  "properties": {
+    "schema": {
+      "const": "frog.bridge.message"
+    },
+    "protocol_version": {
+      "const": "0.1"
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "kind": {
+      "enum": [
+        "request",
+        "response",
+        "progress"
+      ]
+    },
+    "method": {
+      "enum": [
+        "describe",
+        "probe",
+        "validate",
+        "lower",
+        "build",
+        "deploy",
+        "run",
+        "stop",
+        "observe"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "error",
+        "cancelled"
+      ]
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "version",
+          "code",
+          "stage",
+          "severity",
+          "message",
+          "source"
+        ],
+        "properties": {
+          "schema": {
+            "const": "frog.diagnostic"
+          },
+          "version": {
+            "const": "0.1"
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "stage": {
+            "enum": [
+              "read",
+              "resolve",
+              "validate",
+              "derive",
+              "admit",
+              "build",
+              "deploy",
+              "run",
+              "inspect",
+              "install"
+            ]
+          },
+          "severity": {
+            "enum": [
+              "info",
+              "warning",
+              "error"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "uri",
+              "pointer"
+            ],
+            "properties": {
+              "uri": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048
+              },
+              "pointer": {
+                "type": "string",
+                "pattern": "^(/.*)?$"
+              },
+              "object_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048
+              },
+              "port_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048
+              },
+              "region_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048
+              }
+            }
+          }
+        }
+      },
+      "maxItems": 4096
+    },
+    "progress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage",
+        "completed",
+        "total"
+      ],
+      "properties": {
+        "stage": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "completed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "response"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "status",
+          "diagnostics"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "progress"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "progress"
+        ]
+      }
+    }
+  ]
+}

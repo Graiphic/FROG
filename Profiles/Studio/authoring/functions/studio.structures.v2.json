@@ -749,11 +749,11 @@
       "behavior_summary": "Boolean/error-cluster selector and two compatible values of any type yield the common branch type. Array rank, cluster schema and enum identity are preserved; numeric leaves may promote.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.comparison.select.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "The existing compiled NumericAggregate service provides the bounded Comparison profile on explicitly admitted targets. The existing exact scalar Select identity and both dataflow producers are preserved; complete compatible owned branches and Error selectors use the declared typed service. Complete types, nominal schemas, shapes and exact physical carriers remain checked. This declaration is not a passing test, full overload coverage or AOT/package qualification.",
+        "provider_requirement": "frog.studio.comparison.owned-tree@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."

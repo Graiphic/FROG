@@ -1,0 +1,414 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.io/frog/sdk/ecosystem/0.1/manifest.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "format_version",
+    "profile",
+    "identity",
+    "content_mode",
+    "files",
+    "contributions",
+    "dependencies",
+    "license",
+    "required_rights"
+  ],
+  "properties": {
+    "schema": {
+      "const": "graiphic.distribution"
+    },
+    "format_version": {
+      "const": "0.1"
+    },
+    "profile": {
+      "enum": [
+        "library",
+        "project",
+        "example",
+        "bridge",
+        "driver"
+      ]
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "publisher",
+        "package",
+        "version"
+      ],
+      "properties": {
+        "publisher": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*(\\.[a-z][a-z0-9-]*)+$"
+        },
+        "package": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+        }
+      }
+    },
+    "content_mode": {
+      "enum": [
+        "source",
+        "compiled",
+        "mixed"
+      ]
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "sha256",
+          "size",
+          "role"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 268435456
+          },
+          "role": {
+            "enum": [
+              "source",
+              "artifact",
+              "contract",
+              "asset",
+              "documentation",
+              "license"
+            ]
+          }
+        }
+      },
+      "maxItems": 4096,
+      "minItems": 1
+    },
+    "contributions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "contract",
+          "payload"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+          },
+          "kind": {
+            "enum": [
+              "export",
+              "type",
+              "widget",
+              "palette",
+              "example",
+              "bridge",
+              "driver"
+            ]
+          },
+          "contract": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "sha256",
+              "symbol"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "symbol": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            }
+          },
+          "payload": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          }
+        }
+      },
+      "maxItems": 4096
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "identity",
+          "origin",
+          "constraint",
+          "consumption_phases",
+          "required_location",
+          "installation_scope"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+          },
+          "identity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "publisher",
+              "package",
+              "version"
+            ],
+            "properties": {
+              "publisher": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]*(\\.[a-z][a-z0-9-]*)+$"
+              },
+              "package": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+              }
+            }
+          },
+          "origin": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "constraint": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "minimum",
+              "maximum_exclusive"
+            ],
+            "properties": {
+              "minimum": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+              },
+              "maximum_exclusive": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+              }
+            }
+          },
+          "consumption_phases": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "build",
+                "run",
+                "deploy",
+                "debug",
+                "test"
+              ]
+            },
+            "maxItems": 4096,
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "required_location": {
+            "enum": [
+              "author",
+              "build",
+              "target"
+            ]
+          },
+          "installation_scope": {
+            "enum": [
+              "project",
+              "user",
+              "machine"
+            ]
+          }
+        }
+      },
+      "maxItems": 4096
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expression",
+        "path"
+      ],
+      "properties": {
+        "expression": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        }
+      }
+    },
+    "required_rights": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "develop",
+          "build",
+          "deploy",
+          "run",
+          "update"
+        ]
+      },
+      "maxItems": 4096,
+      "uniqueItems": true
+    },
+    "entry_point": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "abi",
+          "artifact",
+          "sha256"
+        ],
+        "oneOf": [
+          {"required": ["frontend_provenance"]},
+          {"required": ["build_provenance"]}
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+          },
+          "abi": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "artifact": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "frontend_provenance": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "build_provenance": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Inventory-backed native build provenance, permitted only for the bridge profile and exclusive with frontend_provenance."
+          }
+        }
+      },
+      "maxItems": 4096
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"profile": {"not": {"const": "bridge"}}}
+      },
+      "then": {
+        "properties": {
+          "targets": {
+            "items": {
+              "required": ["frontend_provenance"],
+              "not": {"required": ["build_provenance"]}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "profile": {
+            "enum": [
+              "project",
+              "example"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "entry_point"
+        ],
+        "properties": {
+          "content_mode": {
+            "const": "source"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "content_mode": {
+            "enum": [
+              "compiled",
+              "mixed"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "targets"
+        ],
+        "properties": {
+          "targets": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

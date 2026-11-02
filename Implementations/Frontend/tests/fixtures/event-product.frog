@@ -1,0 +1,317 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "Native precompiled Event product: real Timeout and Value Change"
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": []
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "timeout_read",
+        "kind": "widget_value",
+        "widget": "timeout"
+      },
+      {
+        "id": "events",
+        "kind": "structure",
+        "structure_type": "event_structure",
+        "boundary": {
+          "inputs": [],
+          "outputs": []
+        },
+        "structure_terminals": {
+          "timeout": {
+            "type": "i64",
+            "outer_visible": true,
+            "exposed_in_body": true,
+            "read_only": true,
+            "outer_port": "timeout",
+            "body_port": "timeout_value",
+            "role": "timeout_milliseconds"
+          },
+          "event_data": {
+            "outer_visible": false,
+            "exposed_in_body": true,
+            "read_only": true,
+            "role": "event_data",
+            "fields": [
+              {
+                "id": "source",
+                "type": "string",
+                "body_port": "event_data.source"
+              },
+              {
+                "id": "type",
+                "type": "string",
+                "body_port": "event_data.type"
+              },
+              {
+                "id": "time",
+                "type": "u64",
+                "body_port": "event_data.time"
+              }
+            ]
+          }
+        },
+        "regions": [
+          {
+            "id": "timeout",
+            "event": {
+              "kind": "timeout"
+            },
+            "event_data_fields": [],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read-bias-timeout",
+                  "kind": "widget_value",
+                  "widget": "bias"
+                },
+                {
+                  "id": "write-timeout",
+                  "kind": "widget_value",
+                  "widget": "timeout_hit"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "timeout-publication",
+                  "from": {
+                    "node": "read-bias-timeout",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "write-timeout",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_f64",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_f64"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "f64",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "f64",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read-bias",
+                  "kind": "widget_value",
+                  "widget": "bias"
+                },
+                {
+                  "id": "actual-add",
+                  "kind": "primitive",
+                  "type": "frog.core.add"
+                },
+                {
+                  "id": "write-sum",
+                  "kind": "widget_value",
+                  "widget": "sum"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "new-to-add",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "actual-add",
+                    "port": "a"
+                  }
+                },
+                {
+                  "id": "bias-to-add",
+                  "from": {
+                    "node": "read-bias",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "actual-add",
+                    "port": "b"
+                  }
+                },
+                {
+                  "id": "sum-publication",
+                  "from": {
+                    "node": "actual-add",
+                    "port": "result"
+                  },
+                  "to": {
+                    "node": "write-sum",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "layout": {
+          "x": 320,
+          "y": 80,
+          "width": 320,
+          "height": 260
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "timeout_input",
+        "from": {
+          "node": "timeout_read",
+          "port": "value"
+        },
+        "to": {
+          "node": "events",
+          "port": "timeout"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "widgets": [
+      {
+        "id": "timeout",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "i64",
+        "layout": {
+          "x": 28,
+          "y": 28,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": -1
+        },
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "timeout",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "source_f64",
+        "class_ref": "frog.widgets.numeric_control",
+        "role": "control",
+        "value_type": "f64",
+        "layout": {
+          "x": 28,
+          "y": 100,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 2.5
+        },
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "source_f64",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "bias",
+        "class_ref": "frog.widgets.numeric_control",
+        "role": "control",
+        "value_type": "f64",
+        "layout": {
+          "x": 28,
+          "y": 172,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 4
+        },
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "bias",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "sum",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "f64",
+        "layout": {
+          "x": 260,
+          "y": 100,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "sum",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "timeout_hit",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "f64",
+        "layout": {
+          "x": 260,
+          "y": 172,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "timeout_hit",
+              "visible": true
+            }
+          }
+        }
+      }
+    ]
+  },
+  "cache": {
+    "deliberately_non_authoritative": "This is never an execution graph."
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "profile": "frog.frontend.type-definitions@1",
+  "identity": "integration-nominal-types",
+  "version": "1",
+  "definitions": {
+    "T": {
+      "canonical": "map<string,enum<\"test.collection.nonzero\",u32>>",
+      "children": [
+        {
+          "canonical": "string",
+          "children": [],
+          "choice_kind": "none",
+          "choices": [],
+          "field_names": []
+        },
+        {
+          "canonical": "enum<\"test.collection.nonzero\",u32>",
+          "children": [
+            {
+              "canonical": "u32",
+              "children": [],
+              "choice_kind": "none",
+              "choices": [],
+              "field_names": []
+            }
+          ],
+          "choice_kind": "enum",
+          "choices": [
+            {
+              "disabled": false,
+              "id": "two",
+              "label": "Two",
+              "value": 2,
+              "visible": true
+            },
+            {
+              "disabled": true,
+              "id": "seven",
+              "label": "Seven",
+              "value": 7,
+              "visible": false
+            }
+          ],
+          "field_names": []
+        }
+      ],
+      "choice_kind": "none",
+      "choices": [],
+      "field_names": []
+    }
+  }
+}

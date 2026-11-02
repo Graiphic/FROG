@@ -1,0 +1,31 @@
+{
+  "schema": "frog.bridge.kernel.outputs",
+  "schema_version": "0.1",
+  "outputs": [
+    {
+      "node_id": "node:6374726c5f615f76616c7565",
+      "port_id": "value",
+      "type": "f64",
+      "value": 1
+    },
+    {
+      "node_id": "node:6374726c5f625f76616c7565",
+      "port_id": "value",
+      "type": "f64",
+      "value": 2
+    },
+    {
+      "node_id": "node:6164645f31",
+      "port_id": "result",
+      "type": "f64",
+      "value": 3
+    },
+    {
+      "node_id": "node:696e645f726573756c745f76616c7565",
+      "port_id": "value",
+      "type": "f64",
+      "value": 3
+    }
+  ],
+  "outcome": "completed"
+}

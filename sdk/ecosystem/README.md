@@ -1,30 +1,84 @@
-# Common FROG Frontend: public interoperability contracts
+# Ecosystem contracts — local P01 baseline and P28 API 3
 
-**1 November 2026 — documentation, JSON Schemas and synthetic JSON examples.**
-The common Frontend library and CLI have an [accepted Apache-2.0 policy](docs/frontend-licensing.md)
-for their selected Graiphic-owned files. Their code and
-binaries are deferred to a later release after integration, qualification and
-review of the actual payload's provenance and applicable notices. This update includes neither implementation nor private
-Runtime code. The existing [C++ Runtime contract SDK](../cpp/docs/runtime-contract.md)
-is a separate surface, not the Frontend C ABI or a universal bridge ABI.
+This directory contains executable **contract intake**, the public Frontend API
+3 declarations, and schemas for its result documents. The local production
+implementation lives in `Implementations/Frontend`; compilation and qualification
+are recorded separately. Package codecs, installation, bridge hosting, a Store
+and target execution remain outside these Python consumers.
 
-- [External-tool guide](../../docs/frontend-tools-guide.md): validation versus target admission.
-- [Operation contract](docs/frontend-api.md): inputs, resolver, outcomes, limits and cancellation.
-- [Result documents](docs/frontend-result-contracts.md): API-3 document versions and source attribution.
-- [Synthetic examples](fixtures/README.md): examples and explicit schema mapping.
+Studio and the API/CLI use the same extracted production C++ source-to-FIR
+generator. These Python consumers do not generate FIR and do not replace it.
 
-| Surface | Exact schema |
-| --- | --- |
-| Bounded semantic context | [frontend-semantic-context.schema.json](schemas/frontend-semantic-context.schema.json) |
-| Explicit CLI dependency lock, version 1 | [frontend-dependencies.schema.json](schemas/frontend-dependencies.schema.json) |
-| Authored type-fragment reference | [frontend-type-reference.schema.json](schemas/frontend-type-reference.schema.json) |
-| Type-definition dependency envelope | [frontend-type-definitions.schema.json](schemas/frontend-type-definitions.schema.json) |
-| One diagnostic, version 0.2 | [diagnostic-0.2.schema.json](schemas/diagnostic-0.2.schema.json) |
-| API-3 provenance, version 0.3 | [frontend-context-0.3.schema.json](schemas/frontend-context-0.3.schema.json) |
-| Capability descriptor, version 0.2 | [frontend-capabilities-0.2.schema.json](schemas/frontend-capabilities-0.2.schema.json) |
-| Source correspondences, version 0.1 | [frontend-source-maps.schema.json](schemas/frontend-source-maps.schema.json) |
+## Use the two consumers
 
-Schemas describe data shapes. Completed semantic acceptance, operation completion,
-backend admission and successful package execution are separate facts. Versions of
-Source/FIR, profiles, Frontend software/API and bridge protocol are independent.
-A schema/fixture publication is not executable capability evidence.
+From the repository root, with Python 3.11 and the existing reference test
+dependencies available:
+
+```text
+python -B -m sdk.ecosystem.builder sdk/ecosystem/fixtures/library-source.json --suffix .bfrog
+python -B -m sdk.ecosystem.manager sdk/ecosystem/fixtures/library-source.json --suffix .bfrog
+```
+
+Both read the same manifest through `contract.py`, use the existing strict JSON
+reader, and preserve the complete accepted manifest, license and rights
+requirements. Exit 0 means contract intake succeeded; exit 2 is a structured
+refusal. Neither success grants trust nor proves payload integrity or execution.
+
+Use `Implementations/Reference/requirements-test.txt` in an isolated environment;
+the shared validator uses its existing `jsonschema>=4.18,<5` dependency. No new
+cryptographic or package installation dependency is introduced.
+
+```text
+python -B -m pytest sdk/ecosystem/tests/test_contracts.py -q
+```
+
+This command runs only the P01 contract tests, not the repository's global suite.
+The historical fixtures use `fixture.only.*` identities. API-2 result fixtures
+also contain synthetic identities and hashes; neither set is signed-package or
+executable-capability evidence. The 0.1 negotiation fixtures remain historical
+and are not silently relabelled as API-2 result documents.
+
+## SDK Bridge C++ local
+
+La cible CMake publique `frog-bridge-protocol` fournit le codec wire 0.1,
+les descriptions 0.1/0.2, la négociation et le suivi d'échanges. Son en-tête
+`frog/bridge.hpp` dépend seulement de la bibliothèque standard C++20 ; la
+liaison réutilise le propriétaire Frontend extrait, sans Studio ni LLVM.
+Voir [l'utilisation CMake, le consommateur minimal, les empreintes et les
+limites](docs/bridge-sdk-cpp.md), puis les [payloads des méthodes](docs/bridge-methods.md).
+La reconstruction autonome de ce SDK Bridge et de cet exemple reste à qualifier.
+
+## Contracts
+
+- [Architecture and format families](docs/architecture.md)
+- [Frontend C API and CLI boundary](docs/frontend-api.md)
+- [API-3 result schemas and inspection of actual output](docs/frontend-result-contracts.md)
+- [Public C declarations](include/frog/frontend.h)
+- [Bridge protocol 0.1](docs/bridge-protocol.md)
+- [Schemas](schemas) and [positive/negative fixtures](fixtures)
+- [Local changes and compatibility](CHANGES.md)
+
+There are separate version checks for Source, FIR, Frontend API, Frontend software
+provenance, semantic profiles/operations and the bridge protocol. No version axis
+is used as a substitute for another.
+
+The manifest is bounded to 4 MiB of actual input, 64 nesting levels and 4096
+inventory entries. Each declared file is at most 256 MiB and their declared total
+at most 1 GiB. Duplicate JSON members/identities, isolated Unicode surrogates,
+unsafe paths, unknown fields/versions and contradictory content modes are refused.
+These constraints do not implement ZIP extraction or verify declared payload bytes.
+
+New contract code follows this repository's Apache-2.0 license. Local acceptance
+does not authorize publication of private implementation files.
+
+
+## Local Apache-2.0 candidate
+
+The [accepted license policy](docs/frontend-licensing.md) covers the selected
+Graiphic-owned common Frontend/CLI files, including retained Studio/Runtime
+origins. Historical NOASSERTION observations are kept as history; third-party
+materials retain their own attribution. See the exact [candidate scope](../../Implementations/Frontend/docs/candidate-profile.md) and
+[license inventory](../../Implementations/Frontend/docs/license-inventory.json).
+This local preparation sends no implementation to GitHub. The earlier
+[contracts-only publication](https://github.com/Graiphic/FROG/commit/85a90ebe2c2a78cc4f42f7efce1c8ca990df4d26)
+is retained independently of the candidate's technical qualification.

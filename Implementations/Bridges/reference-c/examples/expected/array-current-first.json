@@ -1,0 +1,273 @@
+{
+  "schema": "frog.bridge.kernel.outputs",
+  "schema_version": "0.1",
+  "outputs": [
+    {
+      "node_id": "node:686561642d72656164",
+      "port_id": "value",
+      "type": "f64",
+      "value": 9.5
+    },
+    {
+      "node_id": "node:706f736974696f6e2d72656164",
+      "port_id": "value",
+      "type": "i32",
+      "value": 0
+    },
+    {
+      "node_id": "node:6974656d2d31",
+      "port_id": "value",
+      "type": "f64",
+      "value": 1.25
+    },
+    {
+      "node_id": "node:6974656d2d32",
+      "port_id": "value",
+      "type": "f64",
+      "value": 2.25
+    },
+    {
+      "node_id": "node:6974656d2d33",
+      "port_id": "value",
+      "type": "f64",
+      "value": 3.25
+    },
+    {
+      "node_id": "node:6974656d2d34",
+      "port_id": "value",
+      "type": "f64",
+      "value": 4.25
+    },
+    {
+      "node_id": "node:6974656d2d35",
+      "port_id": "value",
+      "type": "f64",
+      "value": 5.25
+    },
+    {
+      "node_id": "node:6974656d2d36",
+      "port_id": "value",
+      "type": "f64",
+      "value": 6.25
+    },
+    {
+      "node_id": "node:6974656d2d37",
+      "port_id": "value",
+      "type": "f64",
+      "value": 7.25
+    },
+    {
+      "node_id": "node:6974656d2d38",
+      "port_id": "value",
+      "type": "f64",
+      "value": 8.25
+    },
+    {
+      "node_id": "node:6974656d2d39",
+      "port_id": "value",
+      "type": "f64",
+      "value": 9.25
+    },
+    {
+      "node_id": "node:6974656d2d3130",
+      "port_id": "value",
+      "type": "f64",
+      "value": 10.25
+    },
+    {
+      "node_id": "node:6974656d2d3131",
+      "port_id": "value",
+      "type": "f64",
+      "value": 11.25
+    },
+    {
+      "node_id": "node:6974656d2d3132",
+      "port_id": "value",
+      "type": "f64",
+      "value": 12.25
+    },
+    {
+      "node_id": "node:6974656d2d3133",
+      "port_id": "value",
+      "type": "f64",
+      "value": 13.25
+    },
+    {
+      "node_id": "node:6974656d2d3134",
+      "port_id": "value",
+      "type": "f64",
+      "value": 14.25
+    },
+    {
+      "node_id": "node:6974656d2d3135",
+      "port_id": "value",
+      "type": "f64",
+      "value": 15.25
+    },
+    {
+      "node_id": "node:6974656d2d3136",
+      "port_id": "value",
+      "type": "f64",
+      "value": 16.25
+    },
+    {
+      "node_id": "node:6974656d2d3137",
+      "port_id": "value",
+      "type": "f64",
+      "value": 17.25
+    },
+    {
+      "node_id": "node:6974656d2d3138",
+      "port_id": "value",
+      "type": "f64",
+      "value": 18.25
+    },
+    {
+      "node_id": "node:6974656d2d3139",
+      "port_id": "value",
+      "type": "f64",
+      "value": 19.25
+    },
+    {
+      "node_id": "node:6974656d2d3230",
+      "port_id": "value",
+      "type": "f64",
+      "value": 20.25
+    },
+    {
+      "node_id": "node:6974656d2d3231",
+      "port_id": "value",
+      "type": "f64",
+      "value": 21.25
+    },
+    {
+      "node_id": "node:6974656d2d3232",
+      "port_id": "value",
+      "type": "f64",
+      "value": 22.25
+    },
+    {
+      "node_id": "node:6974656d2d3233",
+      "port_id": "value",
+      "type": "f64",
+      "value": 23.25
+    },
+    {
+      "node_id": "node:6974656d2d3234",
+      "port_id": "value",
+      "type": "f64",
+      "value": 24.25
+    },
+    {
+      "node_id": "node:6974656d2d3235",
+      "port_id": "value",
+      "type": "f64",
+      "value": 25.25
+    },
+    {
+      "node_id": "node:6974656d2d3236",
+      "port_id": "value",
+      "type": "f64",
+      "value": 26.25
+    },
+    {
+      "node_id": "node:6974656d2d3237",
+      "port_id": "value",
+      "type": "f64",
+      "value": 27.25
+    },
+    {
+      "node_id": "node:6974656d2d3238",
+      "port_id": "value",
+      "type": "f64",
+      "value": 28.25
+    },
+    {
+      "node_id": "node:6974656d2d3239",
+      "port_id": "value",
+      "type": "f64",
+      "value": 29.25
+    },
+    {
+      "node_id": "node:6974656d2d3330",
+      "port_id": "value",
+      "type": "f64",
+      "value": 30.25
+    },
+    {
+      "node_id": "node:6974656d2d3331",
+      "port_id": "value",
+      "type": "f64",
+      "value": 31.25
+    },
+    {
+      "node_id": "node:6275696c64",
+      "port_id": "result",
+      "type": "array<f64>",
+      "value": {
+        "shape": [
+          32
+        ],
+        "elements": [
+          9.5,
+          1.25,
+          2.25,
+          3.25,
+          4.25,
+          5.25,
+          6.25,
+          7.25,
+          8.25,
+          9.25,
+          10.25,
+          11.25,
+          12.25,
+          13.25,
+          14.25,
+          15.25,
+          16.25,
+          17.25,
+          18.25,
+          19.25,
+          20.25,
+          21.25,
+          22.25,
+          23.25,
+          24.25,
+          25.25,
+          26.25,
+          27.25,
+          28.25,
+          29.25,
+          30.25,
+          31.25
+        ]
+      }
+    },
+    {
+      "node_id": "node:696e646578",
+      "port_id": "element",
+      "type": "f64",
+      "value": 9.5
+    },
+    {
+      "node_id": "node:73697a65",
+      "port_id": "size",
+      "type": "i32",
+      "value": 32
+    },
+    {
+      "node_id": "node:656c656d656e742d7772697465",
+      "port_id": "value",
+      "type": "f64",
+      "value": 9.5
+    },
+    {
+      "node_id": "node:73697a652d7772697465",
+      "port_id": "value",
+      "type": "i32",
+      "value": 32
+    }
+  ],
+  "outcome": "completed"
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "frog.bridge.kernel.inputs",
+  "schema_version": "0.1",
+  "controls": [
+    {
+      "widget_id": "ctrl_a",
+      "type": "f64",
+      "value": 8
+    }
+  ]
+}

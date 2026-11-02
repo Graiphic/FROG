@@ -2,6 +2,7 @@
 
 #include "frog/sdk/runtime_contract.hpp"
 #include "frog/sdk/runtime_array_value.hpp"
+#include "frog/sdk/runtime_complex_value.hpp"
 #include "frog/sdk/collection_order.hpp"
 #include <cmath>
 #include <limits>
@@ -153,6 +154,12 @@ inline bool validate(const RuntimeValue &value, const ValueType &type, const Run
                 if (!validate(field.value, field.type, owner, depth + 1, nodes, bytes)) return false;
             return true;
         }
+        if(const auto *complex=runtimeComplex(value)) {
+            if(type.category!=ValueCategory::Complex || !complex->valid() ||
+                (owner && !complex->validForOwner(*owner)))return false;
+            const std::size_t payload=type.canonicalName=="c32"?8:16;
+            if(payload>16'000'000-bytes)return false;bytes+=payload;return true;
+        }
         if(const auto *local=dynamic_cast<const RuntimeIpeValue *>(carrier->get()))
             return validateIpe(*local,owner,depth,nodes,bytes);
         const auto *reference = dynamic_cast<const BorrowedReference *>(carrier->get());
@@ -162,18 +169,21 @@ inline bool validate(const RuntimeValue &value, const ValueType &type, const Run
     if (!runtimeValueMatches(value, type)) return false;
     if (const auto *number = std::get_if<std::int64_t>(&value)) {
         if (type.bitWidth == 64) return true;
-        if (type.bitWidth != 8 && type.bitWidth != 16 && type.bitWidth != 32) return false;
+        if (type.bitWidth != 4 && type.bitWidth != 8 && type.bitWidth != 16 && type.bitWidth != 32) return false;
         const auto limit = std::int64_t{1} << (type.bitWidth - 1);
         return *number >= -limit && *number < limit;
     }
     if (const auto *number = std::get_if<std::uint64_t>(&value)) {
         if (type.bitWidth == 64) return true;
-        return (type.bitWidth == 8 || type.bitWidth == 16 || type.bitWidth == 32) &&
+        return (type.bitWidth == 4 || type.bitWidth == 8 || type.bitWidth == 16 || type.bitWidth == 32) &&
             *number < (std::uint64_t{1} << type.bitWidth);
     }
     if (const auto *number = std::get_if<double>(&value))
-        return std::isfinite(*number) && (type.bitWidth == 64 ||
-            (type.bitWidth == 32 && static_cast<double>(static_cast<float>(*number)) == *number));
+        // IEEE specials are physical f32/f64 values. Semantic/literal profiles
+        // still decide whether to admit them; aggregate transport must not
+        // erase the NaN/Inf gaps of an XY series. Finite f32 stays exact.
+        return type.bitWidth == 64 || (type.bitWidth == 32 &&
+            (std::isnan(*number) || static_cast<double>(static_cast<float>(*number)) == *number));
     if (const auto *text = std::get_if<std::string>(&value)) {
         if (text->size() > 1'000'000 || text->size() > 16'000'000 - bytes) return false;
         bytes += text->size();
@@ -319,6 +329,8 @@ inline std::shared_ptr<const RuntimeReferenceAuthority> runtimeReferenceAuthorit
     const auto &a = std::get<6>(left), &b = std::get<6>(right);
     if (!a || !b || a->canonicalType() != b->canonicalType() || !a->valid() || !b->valid()) return false;
     if (a->isReference() || b->isReference()) return a == b;
+    if(const auto *ac=runtimeComplex(left),*bc=runtimeComplex(right);ac||bc)
+        return ac&&bc&&ac->real()==bc->real()&&ac->imaginary()==bc->imaginary();
     const auto *ia=dynamic_cast<const RuntimeIpeValue *>(a.get()),*ib=dynamic_cast<const RuntimeIpeValue *>(b.get());
     if(ia||ib){
         if(!ia||!ib||ia->kind()!=ib->kind()||ia->elementType()!=ib->elementType()||ia->keyType()!=ib->keyType()||

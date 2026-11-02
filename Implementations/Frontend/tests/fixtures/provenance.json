@@ -1,0 +1,36 @@
+{
+  "format": "frog.frontend.test-fixtures",
+  "version": "1",
+  "fixtures": [
+    {
+      "file": "pure-add.frog",
+      "sha256": "23d12570770f24a848503e0c303755e8e2dcb64708b3e0a57d00c18066840278",
+      "origin": "FROG/Examples/02_ui_value_roundtrip/main.frog (exact bytes)"
+    },
+    {
+      "file": "event-values.frog",
+      "sha256": "412299b593447e764bdf07c849ccd28eb9abeb5eec5e4cd4fc8117b527d485b1",
+      "origin": "FROG-STUDIO/native-portable-engine/tests/fixtures/canonical-event-value-snapshots.frog (exact bytes)"
+    },
+    {
+      "file": "pane-unbundle.frog",
+      "sha256": "08471811f0e0fcb145841f5af0090b309932e20fbf14626c88f9cfd574b9724a",
+      "origin": "FROG-STUDIO/native-portable-engine/tests/fixtures/canonical-native-pane-unbundle.frog (exact bytes)"
+    },
+    {
+      "file": "event-product.frog",
+      "sha256": "cae0c6354a61d74933ac54c56f8417025da9264e434a9197f361998100139a0f",
+      "origin": "FROG-STUDIO/native-portable-engine/tests/fixtures/event-native-product.frog (exact bytes)"
+    },
+    {
+      "file": "record-exact.frog",
+      "sha256": "fde211b3d3daba9d0092efdaaee1741b88f334aa699dd8ca532f0be41f378dfa",
+      "origin": "record_source_fir_native_smoke.cpp::fixture(false,false), exact production fixture data/profile; lexical -0 preserved"
+    },
+    {
+      "file": "nominal-nested.frog",
+      "sha256": "2811904dc1baebe616853b5300340c53eab647cabff7bc3c0938a38fa7e7eaa4",
+      "origin": "collection_source_fir_native_smoke.cpp::corpus(), existing enum nonzero and nestedMap look rows, same full schemas/values/profile; bounded 2-row export"
+    }
+  ]
+}

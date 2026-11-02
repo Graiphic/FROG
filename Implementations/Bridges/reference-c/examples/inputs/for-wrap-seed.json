@@ -1,0 +1,11 @@
+{
+  "schema": "frog.bridge.kernel.inputs",
+  "schema_version": "0.1",
+  "controls": [
+    {
+      "widget_id": "seed",
+      "type": "i64",
+      "value": 9223372036854775807
+    }
+  ]
+}

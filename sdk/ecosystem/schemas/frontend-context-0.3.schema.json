@@ -144,7 +144,7 @@
         ],
         "properties": {
           "kind": {
-            "const": 2
+            "enum": [1, 2]
           },
           "identity": {
             "type": "string",

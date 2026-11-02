@@ -80,6 +80,39 @@
         "$ref": "https://graiphic.io/frog/ir/schema/frog.execution-ir.correspondence.schema.json"
       },
       "minItems": 0
+    },
+    "draft_identities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "source_pointer",
+          "public_pointer",
+          "generated"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "source_pointer": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~]|~[01])*)?$"
+          },
+          "public_pointer": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~]|~[01])*)?$"
+          },
+          "generated": {
+            "type": "boolean"
+          }
+        }
+      }
     }
   }
 }

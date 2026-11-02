@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Stacked Sequence : diagnostiquer une dépendance circulaire",
     "name_source": "document",
-    "description": "Ce montage reprend le trajet extérieur de l'exemple Flat. Stacked doit disposer de toutes ses entrées avant la première frame et ne publie qu'à sa sortie finale : le trajet constitue donc un vrai cycle. Le Readiness doit le refuser dès la validation avec diagram.combinational_cycle, avant le FIR et sans réécrire le document. Un test séparé contrôle également la garde indépendante du FIR sur le même graphe canonique.\n\nStacked Sequence : diagnostiquer une dépendance circulaire\n\nMode: expected-diagnostic. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nDiagnostic: diagram.combinational_cycle",
+    "description": "Ce montage reprend le trajet extérieur de l'exemple Flat. Stacked doit disposer de toutes ses entrées avant la première frame et ne publie qu'à sa sortie finale : le trajet constitue donc un vrai cycle. Le Frontend commun doit le refuser lors de la dérivation du FIR avec IR_SEQUENCE_DEPENDENCY_CYCLE, sans produire de FIR exécutable ni réécrire le document. Un test séparé contrôle également la garde indépendante du FIR sur le même graphe canonique.\n\nStacked Sequence : diagnostiquer une dépendance circulaire\n\nMode: expected-diagnostic. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nDiagnostic: IR_SEQUENCE_DEPENDENCY_CYCLE",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -97,6 +97,7 @@
         "id": "sequence",
         "kind": "structure",
         "structure_type": "sequence_structure",
+        "structure_subdiagram_label_alignment": "center",
         "type": "frog.studio.structures.sequence_structure",
         "label": "Sequence Structure",
         "label_visible": false,
@@ -375,7 +376,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Stacked Sequence : diagnostiquer une dépendance circulaire\nStacked Sequence : diagnostiquer une dépendance circulaire\nEntrées -> opération -> indicateurs. Résultat attendu : Diagnostic: diagram.combinational_cycle",
+        "text": "Stacked Sequence : diagnostiquer une dépendance circulaire\nStacked Sequence : diagnostiquer une dépendance circulaire\nEntrées -> opération -> indicateurs. Résultat attendu : Diagnostic: IR_SEQUENCE_DEPENDENCY_CYCLE",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

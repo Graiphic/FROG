@@ -1,4 +1,19 @@
-# Synthetic Frontend data examples
+# P01 contract fixtures
+
+These files exercise manifest intake and version negotiation only. All identities,
+profiles, operations, targets, origins and hash values are explicit fixture data.
+They do not advertise production capabilities or represent compiled executables.
+The inventory declares references; payload existence and byte verification belong
+to archive/package validation and are not claimed by this contract-only suite.
+
+The five distribution profiles are represented, with source, compiled and mixed
+library manifests. `invalid/` contains deliberately rejected documents.
+Both builder and manager must inspect these same manifest bytes without modifying
+them or installing anything. The Frontend and bridge fixtures use `fixture.only.*`
+names so their acceptance cannot be mistaken for production semantic qualification.
+
+## Published API3 data examples
+
 
 These files illustrate the contracts. They are not complete executable programs,
 conformance receipts, native runs or evidence that code is distributed. Repeated

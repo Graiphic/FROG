@@ -29,6 +29,7 @@
       "enum": [
         "read",
         "resolve",
+        "adaptation",
         "validate",
         "derive"
       ]

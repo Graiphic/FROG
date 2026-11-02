@@ -1,0 +1,11 @@
+{
+  "schema": "frog.bridge.kernel.outputs",
+  "schema_version": "0.1",
+  "outputs": [],
+  "outcome": "fault",
+  "diagnostic": {
+    "code": "ARRAY_INDEX_RANGE",
+    "object_id": "node:696e646578",
+    "source_pointer": "/diagram/nodes/34"
+  }
+}

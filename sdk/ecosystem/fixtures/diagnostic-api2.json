@@ -1,0 +1,22 @@
+{
+  "schema": "frog.diagnostic",
+  "version": "0.2",
+  "code": "fixture.not-executed",
+  "stage": "derive",
+  "severity": "error",
+  "category": "frontend-capability",
+  "capability_id": "fixture.not-executed",
+  "message": "Synthetic API-2 document fixture; no compilation or execution evidence.",
+  "source": {
+    "uri": "fixture://frontend-api2/root",
+    "pointer": "",
+    "document_id": "fixture.api2.document"
+  },
+  "derived_pointer": "/unit/objects/0",
+  "related_locations": [
+    {
+      "uri": "fixture://frontend-api2/types",
+      "pointer": "/definitions/T"
+    }
+  ]
+}

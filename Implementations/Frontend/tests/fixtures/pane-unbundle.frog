@@ -1,0 +1,1201 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "Declared public Pane Unbundle acceptance fixture"
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": []
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "timeout_read",
+        "kind": "widget_value",
+        "widget": "timeout"
+      },
+      {
+        "id": "events",
+        "kind": "structure",
+        "structure_type": "event_structure",
+        "boundary": {
+          "inputs": [],
+          "outputs": []
+        },
+        "structure_terminals": {
+          "timeout": {
+            "type": "i64",
+            "outer_visible": true,
+            "exposed_in_body": true,
+            "read_only": true,
+            "outer_port": "timeout",
+            "body_port": "timeout_value",
+            "role": "timeout_milliseconds"
+          },
+          "event_data": {
+            "outer_visible": false,
+            "exposed_in_body": true,
+            "read_only": true,
+            "role": "event_data",
+            "fields": [
+              {
+                "id": "source",
+                "type": "string",
+                "body_port": "event_data.source"
+              },
+              {
+                "id": "type",
+                "type": "string",
+                "body_port": "event_data.type"
+              },
+              {
+                "id": "time",
+                "type": "u64",
+                "body_port": "event_data.time"
+              }
+            ]
+          }
+        },
+        "regions": [
+          {
+            "id": "timeout",
+            "event": {
+              "kind": "timeout"
+            },
+            "event_data_fields": [
+              "type"
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "timeout_write",
+                  "kind": "widget_value",
+                  "widget": "timeout_type"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "timeout_kind",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.type"
+                  },
+                  "to": {
+                    "node": "timeout_write",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "mouse_down",
+            "event": {
+              "kind": "mouse_down",
+              "scope": "pane",
+              "source": "/front_panel"
+            },
+            "event_label": "mouse_down",
+            "event_data_fields": [
+              "source",
+              "type",
+              "time",
+              "pane_ref",
+              "coords",
+              "button",
+              "mods",
+              "platform_mods"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "pane_ref",
+                "type": "ref<\"frog.front_panel\">",
+                "body_port": "event_data.pane_ref"
+              },
+              {
+                "id": "coords",
+                "type": "cluster<\"x\":f64,\"y\":f64>",
+                "body_port": "event_data.coords"
+              },
+              {
+                "id": "button",
+                "type": "u32",
+                "body_port": "event_data.button"
+              },
+              {
+                "id": "mods",
+                "type": "cluster<\"menu_key\":bool,\"keypad\":bool,\"double_click\":bool>",
+                "body_port": "event_data.mods"
+              },
+              {
+                "id": "platform_mods",
+                "type": "cluster<\"shift\":bool,\"control\":bool,\"alt\":bool,\"windows\":bool>",
+                "body_port": "event_data.platform_mods"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "button_write",
+                  "kind": "widget_value",
+                  "widget": "button_result"
+                },
+                {
+                  "id": "source_write",
+                  "kind": "widget_value",
+                  "widget": "occurrence_source"
+                },
+                {
+                  "id": "type_write",
+                  "kind": "widget_value",
+                  "widget": "occurrence_type"
+                },
+                {
+                  "id": "time_write",
+                  "kind": "widget_value",
+                  "widget": "occurrence_time"
+                },
+                {
+                  "id": "coordinates",
+                  "kind": "primitive",
+                  "type": "frog.core.unbundle.by_name",
+                  "selected_fields_version": 1,
+                  "selected_fields": [
+                    {
+                      "port": "first",
+                      "field_id": "y"
+                    },
+                    {
+                      "port": "second",
+                      "field_id": "x"
+                    }
+                  ],
+                  "doc": "First displayed label x and second displayed label y are deliberately not field identities."
+                },
+                {
+                  "id": "modifiers",
+                  "kind": "primitive",
+                  "type": "frog.core.unbundle.by_name",
+                  "selected_fields_version": 1,
+                  "selected_fields": [
+                    {
+                      "port": "double",
+                      "field_id": "double_click"
+                    },
+                    {
+                      "port": "menu",
+                      "field_id": "menu_key"
+                    }
+                  ]
+                },
+                {
+                  "id": "actual_add",
+                  "kind": "primitive",
+                  "type": "frog.core.add"
+                },
+                {
+                  "id": "total_write",
+                  "kind": "widget_value",
+                  "widget": "total"
+                },
+                {
+                  "id": "selected_y_write",
+                  "kind": "widget_value",
+                  "widget": "coordinate_y_result"
+                },
+                {
+                  "id": "selected_x_write",
+                  "kind": "widget_value",
+                  "widget": "coordinate_x_result"
+                },
+                {
+                  "id": "menu_write",
+                  "kind": "widget_value",
+                  "widget": "boolean_result"
+                },
+                {
+                  "id": "double_write",
+                  "kind": "widget_value",
+                  "widget": "double_click_result"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "button-wire",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.button"
+                  },
+                  "to": {
+                    "node": "button_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "source-wire",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.source"
+                  },
+                  "to": {
+                    "node": "source_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "type-wire",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.type"
+                  },
+                  "to": {
+                    "node": "type_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "time-wire",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.time"
+                  },
+                  "to": {
+                    "node": "time_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "actual-coords-record",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.coords"
+                  },
+                  "to": {
+                    "node": "coordinates",
+                    "port": "record"
+                  }
+                },
+                {
+                  "id": "actual-mods-record",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.mods"
+                  },
+                  "to": {
+                    "node": "modifiers",
+                    "port": "record"
+                  }
+                },
+                {
+                  "id": "actual-y-add",
+                  "from": {
+                    "node": "coordinates",
+                    "port": "first"
+                  },
+                  "to": {
+                    "node": "actual_add",
+                    "port": "a"
+                  }
+                },
+                {
+                  "id": "actual-x-add",
+                  "from": {
+                    "node": "coordinates",
+                    "port": "second"
+                  },
+                  "to": {
+                    "node": "actual_add",
+                    "port": "b"
+                  }
+                },
+                {
+                  "id": "actual-sum",
+                  "from": {
+                    "node": "actual_add",
+                    "port": "result"
+                  },
+                  "to": {
+                    "node": "total_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "actual-y-indicator",
+                  "from": {
+                    "node": "coordinates",
+                    "port": "first"
+                  },
+                  "to": {
+                    "node": "selected_y_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "actual-x-indicator",
+                  "from": {
+                    "node": "coordinates",
+                    "port": "second"
+                  },
+                  "to": {
+                    "node": "selected_x_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "actual-menu-indicator",
+                  "from": {
+                    "node": "modifiers",
+                    "port": "menu"
+                  },
+                  "to": {
+                    "node": "menu_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "actual-double-indicator",
+                  "from": {
+                    "node": "modifiers",
+                    "port": "double"
+                  },
+                  "to": {
+                    "node": "double_write",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "mouse_up",
+            "event": {
+              "kind": "mouse_up",
+              "scope": "pane",
+              "source": "/front_panel"
+            },
+            "event_label": "mouse_up",
+            "event_data_fields": [
+              "source",
+              "type",
+              "time",
+              "pane_ref",
+              "coords",
+              "button",
+              "mods",
+              "platform_mods"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "pane_ref",
+                "type": "ref<\"frog.front_panel\">",
+                "body_port": "event_data.pane_ref"
+              },
+              {
+                "id": "coords",
+                "type": "cluster<\"x\":f64,\"y\":f64>",
+                "body_port": "event_data.coords"
+              },
+              {
+                "id": "button",
+                "type": "u32",
+                "body_port": "event_data.button"
+              },
+              {
+                "id": "mods",
+                "type": "cluster<\"menu_key\":bool,\"keypad\":bool,\"double_click\":bool>",
+                "body_port": "event_data.mods"
+              },
+              {
+                "id": "platform_mods",
+                "type": "cluster<\"shift\":bool,\"control\":bool,\"alt\":bool,\"windows\":bool>",
+                "body_port": "event_data.platform_mods"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "button_write",
+                  "kind": "widget_value",
+                  "widget": "button_result"
+                },
+                {
+                  "id": "source_write",
+                  "kind": "widget_value",
+                  "widget": "occurrence_source"
+                },
+                {
+                  "id": "type_write",
+                  "kind": "widget_value",
+                  "widget": "occurrence_type"
+                },
+                {
+                  "id": "time_write",
+                  "kind": "widget_value",
+                  "widget": "occurrence_time"
+                },
+                {
+                  "id": "coordinates",
+                  "kind": "primitive",
+                  "type": "frog.core.unbundle.by_name",
+                  "selected_fields_version": 1,
+                  "selected_fields": [
+                    {
+                      "port": "first",
+                      "field_id": "y"
+                    },
+                    {
+                      "port": "second",
+                      "field_id": "x"
+                    }
+                  ],
+                  "doc": "First displayed label x and second displayed label y are deliberately not field identities."
+                },
+                {
+                  "id": "modifiers",
+                  "kind": "primitive",
+                  "type": "frog.core.unbundle.by_name",
+                  "selected_fields_version": 1,
+                  "selected_fields": [
+                    {
+                      "port": "double",
+                      "field_id": "double_click"
+                    },
+                    {
+                      "port": "menu",
+                      "field_id": "menu_key"
+                    }
+                  ]
+                },
+                {
+                  "id": "actual_add",
+                  "kind": "primitive",
+                  "type": "frog.core.add"
+                },
+                {
+                  "id": "total_write",
+                  "kind": "widget_value",
+                  "widget": "total"
+                },
+                {
+                  "id": "selected_y_write",
+                  "kind": "widget_value",
+                  "widget": "coordinate_y_result"
+                },
+                {
+                  "id": "selected_x_write",
+                  "kind": "widget_value",
+                  "widget": "coordinate_x_result"
+                },
+                {
+                  "id": "menu_write",
+                  "kind": "widget_value",
+                  "widget": "boolean_result"
+                },
+                {
+                  "id": "double_write",
+                  "kind": "widget_value",
+                  "widget": "double_click_result"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "button-wire",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.button"
+                  },
+                  "to": {
+                    "node": "button_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "source-wire",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.source"
+                  },
+                  "to": {
+                    "node": "source_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "type-wire",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.type"
+                  },
+                  "to": {
+                    "node": "type_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "time-wire",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.time"
+                  },
+                  "to": {
+                    "node": "time_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "actual-coords-record",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.coords"
+                  },
+                  "to": {
+                    "node": "coordinates",
+                    "port": "record"
+                  }
+                },
+                {
+                  "id": "actual-mods-record",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.mods"
+                  },
+                  "to": {
+                    "node": "modifiers",
+                    "port": "record"
+                  }
+                },
+                {
+                  "id": "actual-y-add",
+                  "from": {
+                    "node": "coordinates",
+                    "port": "first"
+                  },
+                  "to": {
+                    "node": "actual_add",
+                    "port": "a"
+                  }
+                },
+                {
+                  "id": "actual-x-add",
+                  "from": {
+                    "node": "coordinates",
+                    "port": "second"
+                  },
+                  "to": {
+                    "node": "actual_add",
+                    "port": "b"
+                  }
+                },
+                {
+                  "id": "actual-sum",
+                  "from": {
+                    "node": "actual_add",
+                    "port": "result"
+                  },
+                  "to": {
+                    "node": "total_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "actual-y-indicator",
+                  "from": {
+                    "node": "coordinates",
+                    "port": "first"
+                  },
+                  "to": {
+                    "node": "selected_y_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "actual-x-indicator",
+                  "from": {
+                    "node": "coordinates",
+                    "port": "second"
+                  },
+                  "to": {
+                    "node": "selected_x_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "actual-menu-indicator",
+                  "from": {
+                    "node": "modifiers",
+                    "port": "menu"
+                  },
+                  "to": {
+                    "node": "menu_write",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "actual-double-indicator",
+                  "from": {
+                    "node": "modifiers",
+                    "port": "double"
+                  },
+                  "to": {
+                    "node": "double_write",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "layout": {
+          "x": 320,
+          "y": 80,
+          "width": 320,
+          "height": 260
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "timeout_input",
+        "from": {
+          "node": "timeout_read",
+          "port": "value"
+        },
+        "to": {
+          "node": "events",
+          "port": "timeout"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "widgets": [
+      {
+        "id": "timeout",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "i64",
+        "layout": {
+          "x": 28,
+          "y": 28,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 0
+        },
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "timeout",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "temperature",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "f64",
+        "layout": {
+          "x": 28,
+          "y": 96,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 2.5
+        },
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "temperature",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "offset",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "f64",
+        "layout": {
+          "x": 28,
+          "y": 164,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 4.0
+        },
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "offset",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "unbound",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "f64",
+        "layout": {
+          "x": 28,
+          "y": 232,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 8.0
+        },
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "unbound",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "text_input",
+        "role": "control",
+        "class_ref": "frog.widgets.string_control",
+        "value_type": "string",
+        "layout": {
+          "x": 28,
+          "y": 300,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": "A"
+        },
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "text_input",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "path_input",
+        "role": "control",
+        "class_ref": "frog.widgets.path_control",
+        "value_type": "path",
+        "layout": {
+          "x": 28,
+          "y": 368,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": "/source/path"
+        },
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "path_input",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "boolean_input",
+        "role": "control",
+        "class_ref": "frog.widgets.boolean_control",
+        "value_type": "bool",
+        "layout": {
+          "x": 28,
+          "y": 436,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": false
+        },
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "boolean_input",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "signed_input",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "i64",
+        "layout": {
+          "x": 28,
+          "y": 504,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": -9007199254740993
+        },
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "signed_input",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "unsigned_input",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "u64",
+        "layout": {
+          "x": 248,
+          "y": 28,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 18446744073709551615
+        },
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "unsigned_input",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "total",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "f64",
+        "layout": {
+          "x": 248,
+          "y": 96,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "total",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "timeout_type",
+        "role": "indicator",
+        "class_ref": "frog.widgets.string_indicator",
+        "value_type": "string",
+        "layout": {
+          "x": 248,
+          "y": 164,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "timeout_type",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "occurrence_source",
+        "role": "indicator",
+        "class_ref": "frog.widgets.string_indicator",
+        "value_type": "string",
+        "layout": {
+          "x": 248,
+          "y": 232,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "occurrence_source",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "occurrence_type",
+        "role": "indicator",
+        "class_ref": "frog.widgets.string_indicator",
+        "value_type": "string",
+        "layout": {
+          "x": 248,
+          "y": 300,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "occurrence_type",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "occurrence_time",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "u64",
+        "layout": {
+          "x": 248,
+          "y": 368,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "occurrence_time",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "text_result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.string_indicator",
+        "value_type": "string",
+        "layout": {
+          "x": 248,
+          "y": 436,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "text_result",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "path_result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.path_indicator",
+        "value_type": "path",
+        "layout": {
+          "x": 248,
+          "y": 504,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "path_result",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "boolean_result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.boolean_indicator",
+        "value_type": "bool",
+        "layout": {
+          "x": 468,
+          "y": 28,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "boolean_result",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "signed_result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "i64",
+        "layout": {
+          "x": 468,
+          "y": 96,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "signed_result",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "unsigned_result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "u64",
+        "layout": {
+          "x": 468,
+          "y": 164,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "unsigned_result",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "button_result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "u32",
+        "layout": {
+          "x": 36,
+          "y": 420,
+          "width": 120,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "button",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "coordinate_y_result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "f64",
+        "layout": {
+          "x": 690,
+          "y": 96,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "display x (identity y)",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "coordinate_x_result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "f64",
+        "layout": {
+          "x": 690,
+          "y": 164,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "display y (identity x)",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "double_click_result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.boolean_indicator",
+        "value_type": "bool",
+        "layout": {
+          "x": 690,
+          "y": 232,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "double_click",
+              "visible": true
+            }
+          }
+        }
+      }
+    ]
+  },
+  "cache": {
+    "deliberately_non_authoritative": "This is never an execution graph."
+  }
+}

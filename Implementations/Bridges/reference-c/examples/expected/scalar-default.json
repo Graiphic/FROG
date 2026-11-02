@@ -1,0 +1,121 @@
+{
+  "schema": "frog.bridge.kernel.outputs",
+  "schema_version": "0.1",
+  "outputs": [
+    {
+      "node_id": "node:6936342d72656164",
+      "port_id": "value",
+      "type": "i64",
+      "value": 9007199254740993
+    },
+    {
+      "node_id": "node:6936342d7772697465",
+      "port_id": "value",
+      "type": "i64",
+      "value": 9007199254740994
+    },
+    {
+      "node_id": "node:6936342d6f6e65",
+      "port_id": "value",
+      "type": "i64",
+      "value": 1
+    },
+    {
+      "node_id": "node:6936342d616464",
+      "port_id": "result",
+      "type": "i64",
+      "value": 9007199254740994
+    },
+    {
+      "node_id": "node:7536342d72656164",
+      "port_id": "value",
+      "type": "u64",
+      "value": 18446744073709551615
+    },
+    {
+      "node_id": "node:7536342d7772697465",
+      "port_id": "value",
+      "type": "u64",
+      "value": 0
+    },
+    {
+      "node_id": "node:7536342d6f6e65",
+      "port_id": "value",
+      "type": "u64",
+      "value": 1
+    },
+    {
+      "node_id": "node:7536342d616464",
+      "port_id": "result",
+      "type": "u64",
+      "value": 0
+    },
+    {
+      "node_id": "node:6933322d72656164",
+      "port_id": "value",
+      "type": "i32",
+      "value": -2147483648
+    },
+    {
+      "node_id": "node:6933322d7772697465",
+      "port_id": "value",
+      "type": "i32",
+      "value": -2147483648
+    },
+    {
+      "node_id": "node:7533322d72656164",
+      "port_id": "value",
+      "type": "u32",
+      "value": 4294967295
+    },
+    {
+      "node_id": "node:7533322d7772697465",
+      "port_id": "value",
+      "type": "u32",
+      "value": 4294967295
+    },
+    {
+      "node_id": "node:666c61672d72656164",
+      "port_id": "value",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "node_id": "node:666c61672d7772697465",
+      "port_id": "value",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "node_id": "node:6636342d72656164",
+      "port_id": "value",
+      "type": "f64",
+      "value": 1.25
+    },
+    {
+      "node_id": "node:6636342d7772697465",
+      "port_id": "value",
+      "type": "f64",
+      "value": 2.25
+    },
+    {
+      "node_id": "node:6636342d6f6e65",
+      "port_id": "value",
+      "type": "f64",
+      "value": 1
+    },
+    {
+      "node_id": "node:6636342d616464",
+      "port_id": "result",
+      "type": "f64",
+      "value": 2.25
+    },
+    {
+      "node_id": "node:6e656761746976652d6578616374",
+      "port_id": "value",
+      "type": "i64",
+      "value": -9007199254740993
+    }
+  ],
+  "outcome": "completed"
+}

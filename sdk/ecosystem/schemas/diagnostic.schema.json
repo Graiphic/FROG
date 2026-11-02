@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.io/frog/sdk/ecosystem/0.1/diagnostic.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "version",
+    "code",
+    "stage",
+    "severity",
+    "message",
+    "source"
+  ],
+  "properties": {
+    "schema": {
+      "const": "frog.diagnostic"
+    },
+    "version": {
+      "const": "0.1"
+    },
+    "code": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "stage": {
+      "enum": [
+        "read",
+        "resolve",
+        "validate",
+        "derive",
+        "admit",
+        "build",
+        "deploy",
+        "run",
+        "inspect",
+        "install"
+      ]
+    },
+    "severity": {
+      "enum": [
+        "info",
+        "warning",
+        "error"
+      ]
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uri",
+        "pointer"
+      ],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "pointer": {
+          "type": "string",
+          "pattern": "^(/.*)?$"
+        },
+        "object_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "port_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "region_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      }
+    }
+  }
+}

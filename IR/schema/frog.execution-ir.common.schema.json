@@ -196,8 +196,11 @@
       "additionalProperties": false,
       "required": [
         "id",
-        "direction",
-        "role"
+        "direction"
+      ],
+      "anyOf": [
+        {"required": ["role"]},
+        {"required": ["studio_type_schema"]}
       ],
       "properties": {
         "id": {
@@ -234,6 +237,11 @@
         "type_ref": {
           "type": "string",
           "minLength": 1
+        },
+        "studio_type_schema": {
+          "type": "object",
+          "minProperties": 1,
+          "description": "Complete semantic type schema defined and validated by the declared producer profile. Preserve the entire object, including nominal identity and nested types; type_ref alone is not a replacement. This IR schema does not define a second type grammar."
         },
         "boundary_kind": {
           "type": "string",

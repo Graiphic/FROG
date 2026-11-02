@@ -1,0 +1,228 @@
+{
+  "schema": "frog.reference-c.corpus",
+  "schema_version": "0.1",
+  "source_format": {
+    "family": "frog.source",
+    "version": "0.1"
+  },
+  "fir_format": {
+    "family": "frog.execution_ir",
+    "version": "0.1"
+  },
+  "kernel_inputs": "frog.bridge.kernel.inputs@0.1",
+  "kernel_outputs": "frog.bridge.kernel.outputs@0.1",
+  "expectations": "Static mathematical literals; no graph evaluator; integer JSON lexemes remain exact. Fault diagnostic human message must be nonempty.",
+  "execution_qualification": "not_executed",
+  "sources": [
+    {
+      "path": "array-32.frog",
+      "sha256": "802fca0935945d3fe21f547b6eb39fdbb12bb9aaa011fbcb436f363fa207659b",
+      "probe_fir": "../tests/frontend-probe/array-32.fir.json",
+      "probe_fir_sha256": "d548e9d1349725f2f85228df5e97d85a5190b8f864b272f6b31dc5a24d73d8ec"
+    },
+    {
+      "path": "core-add.frog",
+      "sha256": "d949b166ad5e03e6f56b65bcc4dac7171db17683b06f6e2675aa8592806ef79b",
+      "probe_fir": "../tests/frontend-probe/core-add.fir.json",
+      "probe_fir_sha256": "2329339d1174e8f6178bb288b5e810517a4880b253794695d9e64f8ab2bdf8fb"
+    },
+    {
+      "path": "for-0.frog",
+      "sha256": "8d838ffa96b250ed1f109b1cee83460ce931a0cf657269f26559057a7f8cc087",
+      "probe_fir": "../tests/frontend-probe/for-0.fir.json",
+      "probe_fir_sha256": "87ce881e8e64a647d87b29a0065911488a4e3e6712486a9aa470dfa8e6b83974"
+    },
+    {
+      "path": "for-3.frog",
+      "sha256": "603e9abb2db93ce3ebffac3a0704b385229407d8205f97f7d80376cba56ffb28",
+      "probe_fir": "../tests/frontend-probe/for-3.fir.json",
+      "probe_fir_sha256": "4175c227dbbb8859f88bc7c571c960cb22065b99a604ad4082138ef9fc8f0a94"
+    },
+    {
+      "path": "for-32.frog",
+      "sha256": "c5e01d88cbaa67e5e849c05fb446d9f75fa62f489caeaec288618c4ef02411b6",
+      "probe_fir": "../tests/frontend-probe/for-32.fir.json",
+      "probe_fir_sha256": "645055aef57e99b8eb88e3fa4f0d2cd7d16962e9eea7168f3a42aa8b83553026"
+    },
+    {
+      "path": "scalar-exact.frog",
+      "sha256": "a093fe1015b0d372e7b094c0eb3f51f4b55f19994eb8ea5b8823849c90521257",
+      "probe_fir": "../tests/frontend-probe/scalar-exact.fir.json",
+      "probe_fir_sha256": "8c29a7e38725dc0502f15285b512a482d0dbd71e9fba56bf010418374cff6b0f"
+    }
+  ],
+  "cases": [
+    {
+      "id": "core-default",
+      "source": "core-add.frog",
+      "source_uri": "fixture:/reference-c/core-add.frog",
+      "source_document_id": "reference-c:source:core-add",
+      "fir_document_id": "reference-c:fir:core-add",
+      "inputs": "inputs/core-default.json",
+      "expected": "expected/core-default.json",
+      "inputs_sha256": "ac0a24a91cc395a548b5b6b0a612ea03277be53086a55cd17afa9c0c15c3fac8",
+      "expected_sha256": "0c04001ae7a0ff3f8494fe7a22803ae68ff2d4ced04edfa50a4ec61bf9c91297"
+    },
+    {
+      "id": "core-current-controls",
+      "source": "core-add.frog",
+      "source_uri": "fixture:/reference-c/core-add.frog",
+      "source_document_id": "reference-c:source:core-add",
+      "fir_document_id": "reference-c:fir:core-add",
+      "inputs": "inputs/core-current-controls.json",
+      "expected": "expected/core-current-controls.json",
+      "inputs_sha256": "a815dbcb065cb15cd839cde5130650ed42c683b877da5da70b8482e7eb933851",
+      "expected_sha256": "bc626624e08b3d2849d9116bc18240fdbb4deb4274ba9ffa8e9411089390d343"
+    },
+    {
+      "id": "scalar-default",
+      "source": "scalar-exact.frog",
+      "source_uri": "fixture:/reference-c/scalar-exact.frog",
+      "source_document_id": "reference-c:source:scalar-exact",
+      "fir_document_id": "reference-c:fir:scalar-exact",
+      "inputs": "inputs/scalar-default.json",
+      "expected": "expected/scalar-default.json",
+      "inputs_sha256": "ac0a24a91cc395a548b5b6b0a612ea03277be53086a55cd17afa9c0c15c3fac8",
+      "expected_sha256": "1c54c77eae7a072e16f883608ff2f837e4294e56e7832a07edb3c62d5aea1de1"
+    },
+    {
+      "id": "scalar-wrap-controls",
+      "source": "scalar-exact.frog",
+      "source_uri": "fixture:/reference-c/scalar-exact.frog",
+      "source_document_id": "reference-c:source:scalar-exact",
+      "fir_document_id": "reference-c:fir:scalar-exact",
+      "inputs": "inputs/scalar-wrap-controls.json",
+      "expected": "expected/scalar-wrap-controls.json",
+      "inputs_sha256": "8a7681b42c13b69870e557967c8dde695ef4e5e5be4067645089a92f536d8ca7",
+      "expected_sha256": "1a77d448588af853028e07dc81f97cf3dd187c09e9e6cbc233a572d756ec13c8"
+    },
+    {
+      "id": "array-last",
+      "source": "array-32.frog",
+      "source_uri": "fixture:/reference-c/array-32.frog",
+      "source_document_id": "reference-c:source:array-32",
+      "fir_document_id": "reference-c:fir:array-32",
+      "inputs": "inputs/array-last.json",
+      "expected": "expected/array-last.json",
+      "inputs_sha256": "ac0a24a91cc395a548b5b6b0a612ea03277be53086a55cd17afa9c0c15c3fac8",
+      "expected_sha256": "0dfbd49f57b3d4804a487550f59186d78987922e2fef6a03f5a50ab622bd74b0"
+    },
+    {
+      "id": "array-current-first",
+      "source": "array-32.frog",
+      "source_uri": "fixture:/reference-c/array-32.frog",
+      "source_document_id": "reference-c:source:array-32",
+      "fir_document_id": "reference-c:fir:array-32",
+      "inputs": "inputs/array-current-first.json",
+      "expected": "expected/array-current-first.json",
+      "inputs_sha256": "301274b0553260b3c5346e10a2d2317019961a1eb7050b6b59f6b8c6666b9d8f",
+      "expected_sha256": "33ca268c80613c71f48ad79e548110fa5699b55284782c9bf0e27b126c6bbede"
+    },
+    {
+      "id": "array-negative-index",
+      "source": "array-32.frog",
+      "source_uri": "fixture:/reference-c/array-32.frog",
+      "source_document_id": "reference-c:source:array-32",
+      "fir_document_id": "reference-c:fir:array-32",
+      "inputs": "inputs/array-negative-index.json",
+      "expected": "expected/array-negative-index.json",
+      "inputs_sha256": "d8e97ee7909c19aeb000606c2180160114c18b144e0d01aff72d6253d7f4080b",
+      "expected_sha256": "4f232f6177f8a3f7e18fe2fb5c4927e1577b285bdd4e37285fd0ed180b344e07"
+    },
+    {
+      "id": "array-past-end",
+      "source": "array-32.frog",
+      "source_uri": "fixture:/reference-c/array-32.frog",
+      "source_document_id": "reference-c:source:array-32",
+      "fir_document_id": "reference-c:fir:array-32",
+      "inputs": "inputs/array-past-end.json",
+      "expected": "expected/array-past-end.json",
+      "inputs_sha256": "c242bb99d2839b20d526677a8f4dcbb566d4145319dc55273255dc1c180e2f6f",
+      "expected_sha256": "4f232f6177f8a3f7e18fe2fb5c4927e1577b285bdd4e37285fd0ed180b344e07"
+    },
+    {
+      "id": "for-zero",
+      "source": "for-0.frog",
+      "source_uri": "fixture:/reference-c/for-0.frog",
+      "source_document_id": "reference-c:source:for-0",
+      "fir_document_id": "reference-c:fir:for-0",
+      "inputs": "inputs/for-zero.json",
+      "expected": "expected/for-zero.json",
+      "inputs_sha256": "ac0a24a91cc395a548b5b6b0a612ea03277be53086a55cd17afa9c0c15c3fac8",
+      "expected_sha256": "fe100116d476ca97a122b8d243a84e2f067ce39244687a333b2062e488bc620b"
+    },
+    {
+      "id": "for-three",
+      "source": "for-3.frog",
+      "source_uri": "fixture:/reference-c/for-3.frog",
+      "source_document_id": "reference-c:source:for-3",
+      "fir_document_id": "reference-c:fir:for-3",
+      "inputs": "inputs/for-three.json",
+      "expected": "expected/for-three.json",
+      "inputs_sha256": "ac0a24a91cc395a548b5b6b0a612ea03277be53086a55cd17afa9c0c15c3fac8",
+      "expected_sha256": "79d918baed0aeef84b9c2660eddb717b14f46a2805f171512023f0f0ae848850"
+    },
+    {
+      "id": "for-thirty-two",
+      "source": "for-32.frog",
+      "source_uri": "fixture:/reference-c/for-32.frog",
+      "source_document_id": "reference-c:source:for-32",
+      "fir_document_id": "reference-c:fir:for-32",
+      "inputs": "inputs/for-thirty-two.json",
+      "expected": "expected/for-thirty-two.json",
+      "inputs_sha256": "ac0a24a91cc395a548b5b6b0a612ea03277be53086a55cd17afa9c0c15c3fac8",
+      "expected_sha256": "91da0a906948d68c8bba87a65eb35b05440218835190cf7ee6624c2ee4aeba51"
+    },
+    {
+      "id": "for-wrap-seed",
+      "source": "for-3.frog",
+      "source_uri": "fixture:/reference-c/for-3.frog",
+      "source_document_id": "reference-c:source:for-3",
+      "fir_document_id": "reference-c:fir:for-3",
+      "inputs": "inputs/for-wrap-seed.json",
+      "expected": "expected/for-wrap-seed.json",
+      "inputs_sha256": "5d988095aa61080bf8ca2b2283d6568e875ac5565a47c8b55cfd845edc73e1e2",
+      "expected_sha256": "e3742d932be922c793f089e6f0a1b241e08294d485ff00b9cbd83729626d4fcb"
+    }
+  ],
+  "negative_sources": [
+    {
+      "id": "unsupported-enum-u32",
+      "source": "unsupported-enum-u32.frog",
+      "source_uri": "fixture:/reference-c/unsupported-enum-u32.frog",
+      "source_document_id": "reference-c:source:unsupported-enum-u32",
+      "fir_document_id": "reference-c:fir:unsupported-enum-u32",
+      "source_sha256": "d9beab31c94f46a034b1e3d040b449ee6a9c9483a8b865c7d102fd013b02f6b5",
+      "probe_fir": "../tests/frontend-probe/unsupported-enum-u32.fir.json",
+      "probe_fir_sha256": "3283e6d2e9433ea2e5aa28610101a821c598a077587d4659cc0fc81a7b229002",
+      "frontend_outcome": "success",
+      "expected_bridge_status": "unsupported",
+      "expected_diagnostic": {
+        "code": "reference_c.nominal_type_unsupported",
+        "object_id": "node:6e6f6d696e616c2d753332",
+        "source_pointer": "/diagram/nodes/0"
+      },
+      "compiler_must_not_start": true,
+      "fallback_permitted": false
+    },
+    {
+      "id": "unsupported-subtract",
+      "source": "unsupported-subtract.frog",
+      "source_uri": "fixture:/reference-c/unsupported-subtract.frog",
+      "source_document_id": "reference-c:source:unsupported-subtract",
+      "fir_document_id": "reference-c:fir:unsupported-subtract",
+      "source_sha256": "f2d630b424beb396ca7d54a4a58d04372f32086a71a17e70baee6a557b9d74a4",
+      "probe_fir": "../tests/frontend-probe/unsupported-subtract.fir.json",
+      "probe_fir_sha256": "aa6338f9d98025272c3144468cd10d9c022fead22d8927617753f6a146a654c3",
+      "frontend_outcome": "success",
+      "expected_bridge_status": "unsupported",
+      "expected_diagnostic": {
+        "code": "reference_c.operation_unsupported",
+        "object_id": "node:7375627472616374",
+        "source_pointer": "/diagram/nodes/2"
+      },
+      "compiler_must_not_start": true,
+      "fallback_permitted": false
+    }
+  ]
+}

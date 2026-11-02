@@ -128,7 +128,7 @@
           "size_to_text": false,
           "text_alignment": "left"
         },
-        "text": "red red",
+        "text": "é",
         "hidden": false,
         "locked": false,
         "group": "",
@@ -174,7 +174,7 @@
           "size_to_text": false,
           "text_alignment": "left"
         },
-        "text": "RED",
+        "text": "É",
         "hidden": false,
         "locked": false,
         "group": "",

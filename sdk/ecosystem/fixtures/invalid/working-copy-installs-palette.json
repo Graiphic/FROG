@@ -1,0 +1,71 @@
+{
+  "schema": "graiphic.distribution",
+  "format_version": "0.1",
+  "profile": "example",
+  "identity": {
+    "publisher": "org.example.contract-fixtures",
+    "package": "fixture-example",
+    "version": "0.1.0"
+  },
+  "content_mode": "source",
+  "files": [
+    {
+      "path": "LICENSE.txt",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "size": 27,
+      "role": "license"
+    },
+    {
+      "path": "contracts/fixture-catalogue.json",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "size": 64,
+      "role": "contract"
+    },
+    {
+      "path": "src/fixture.frog",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size": 64,
+      "role": "source"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "fixture.export",
+      "kind": "palette",
+      "contract": {
+        "path": "contracts/fixture-catalogue.json",
+        "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "symbol": "fixture.only.export"
+      },
+      "payload": "src/fixture.frog"
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "fixture.dependency",
+      "identity": {
+        "publisher": "org.example.contract-fixtures",
+        "package": "fixture-dependency",
+        "version": "0.1.0"
+      },
+      "origin": "fixture://declared-only",
+      "constraint": {
+        "minimum": "0.1.0",
+        "maximum_exclusive": "0.2.0"
+      },
+      "consumption_phases": [
+        "build"
+      ],
+      "required_location": "build",
+      "installation_scope": "user"
+    }
+  ],
+  "license": {
+    "expression": "Apache-2.0",
+    "path": "LICENSE.txt"
+  },
+  "required_rights": [
+    "build"
+  ],
+  "entry_point": "src/fixture.frog"
+}

@@ -97,6 +97,7 @@
         "id": "case",
         "kind": "structure",
         "structure_type": "case",
+        "structure_subdiagram_label_alignment": "center",
         "type": "frog.studio.structures.case_structure",
         "label": "Case Structure",
         "label_visible": false,

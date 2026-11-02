@@ -1,0 +1,156 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "02_ui_value_roundtrip",
+    "summary": "Minimal front-panel value-participation example using widget_value nodes.",
+    "description": "Reads two numeric control values from the front panel, adds them, and writes the result to a numeric indicator.",
+    "author": "Graiphic",
+    "program_version": "0.1.0",
+    "tags": [
+      "example",
+      "ui",
+      "widget_value",
+      "core",
+      "minimal"
+    ],
+    "is_example": true,
+    "license": "Apache-2.0"
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": []
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "ctrl_a_value",
+        "kind": "widget_value",
+        "widget": "ctrl_a"
+      },
+      {
+        "id": "ctrl_b_value",
+        "kind": "widget_value",
+        "widget": "ctrl_b"
+      },
+      {
+        "id": "add_1",
+        "kind": "primitive",
+        "type": "frog.core.add"
+      },
+      {
+        "id": "ind_result_value",
+        "kind": "widget_value",
+        "widget": "ind_result"
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": {
+          "node": "ctrl_a_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "add_1",
+          "port": "a"
+        }
+      },
+      {
+        "id": "e2",
+        "from": {
+          "node": "ctrl_b_value",
+          "port": "value"
+        },
+        "to": {
+          "node": "add_1",
+          "port": "b"
+        }
+      },
+      {
+        "id": "e3",
+        "from": {
+          "node": "add_1",
+          "port": "result"
+        },
+        "to": {
+          "node": "ind_result_value",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "canvas": {
+      "width": 420,
+      "height": 180
+    },
+    "widgets": [
+      {
+        "id": "ctrl_a",
+        "role": "control",
+        "widget": "frog.ui.standard.numeric_control",
+        "value_type": "f64",
+        "layout": {
+          "x": 20,
+          "y": 20,
+          "width": 120,
+          "height": 28
+        },
+        "props": {
+          "default_value": 1.0
+        },
+        "parts": {
+          "label": {
+            "class": "frog.ui.standard.label_part",
+            "props": {
+              "text": "A"
+            }
+          }
+        }
+      },
+      {
+        "id": "ctrl_b",
+        "role": "control",
+        "widget": "frog.ui.standard.numeric_control",
+        "value_type": "f64",
+        "layout": {
+          "x": 20,
+          "y": 70,
+          "width": 120,
+          "height": 28
+        },
+        "props": {
+          "default_value": 2.0
+        },
+        "parts": {
+          "label": {
+            "class": "frog.ui.standard.label_part",
+            "props": {
+              "text": "B"
+            }
+          }
+        }
+      },
+      {
+        "id": "ind_result",
+        "role": "indicator",
+        "widget": "frog.ui.standard.numeric_indicator",
+        "value_type": "f64",
+        "layout": {
+          "x": 220,
+          "y": 45,
+          "width": 140,
+          "height": 28
+        },
+        "parts": {
+          "label": {
+            "class": "frog.ui.standard.label_part",
+            "props": {
+              "text": "Result"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

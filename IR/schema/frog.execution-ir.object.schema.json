@@ -19,6 +19,7 @@
       "type": "string",
       "enum": [
         "primitive",
+        "constant",
         "subfrog_invocation",
         "structure",
         "interface_input",
@@ -37,8 +38,7 @@
       "minLength": 1
     },
     "role": {
-      "type": "string",
-      "minLength": 1
+      "type": "string"
     },
     "classification": {
       "$ref": "frog.execution-ir.common.schema.json#/$defs/classification"
@@ -81,6 +81,15 @@
     }
   },
   "allOf": [
+    {
+      "if": {
+        "required": ["role"],
+        "properties": {"role": {"const": ""}}
+      },
+      "then": {
+        "properties": {"family": {"const": "constant"}}
+      }
+    },
     {
       "if": {
         "properties": {

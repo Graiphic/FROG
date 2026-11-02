@@ -1,0 +1,40 @@
+{
+  "schema": "frog.frontend.source_maps",
+  "schema_version": "0.1",
+  "authored_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "fir_source_sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "transformations": [
+    {
+      "profile": "frog.frontend.resolution@1",
+      "source_uri": "fixture://frontend-api2/root",
+      "source_pointer": "/diagram/nodes/0/studio_type_schema",
+      "dependency_uri": "fixture://frontend-api2/types",
+      "dependency_pointer": "/definitions/T",
+      "dependency_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ],
+  "source_map": [
+    {
+      "id": "fixture.mapping",
+      "source_kind": "diagram_node",
+      "source_ref": "fixture://frontend-api2/root#/diagram/nodes/0",
+      "target_kind": "object",
+      "target_refs": [
+        "fixture.object"
+      ],
+      "relation": "direct_primary",
+      "notes": []
+    }
+  ],
+  "correspondence": [
+    {
+      "id": "fixture.correspondence",
+      "source_ref": "fixture://frontend-api2/root#/diagram/nodes/0",
+      "relation_kind": "other",
+      "target_refs": [
+        "fixture.object"
+      ],
+      "metadata": {}
+    }
+  ]
+}

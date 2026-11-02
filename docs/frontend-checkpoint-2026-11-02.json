@@ -1,0 +1,31 @@
+{
+  "format": "frog.public.frontend-checkpoint.v1",
+  "date": "2026-11-02",
+  "frontend": {
+    "software": "0.2.0-local",
+    "api": 3,
+    "content_sha256": "b612330287de5df906794663b6447169fd8f72160acc588fe8479b578c70f8cd"
+  },
+  "studio": {
+    "version": "0.0.6.836",
+    "sha256": "81AAAD5C9B4D6564EB1A5CDD3EECA62EBA39DAA0EB319E580135EC8FE3DF2ADD"
+  },
+  "qualified_source_kit": {
+    "files": 602,
+    "manifest_sha256": "2d4eb6c96e26c3844484d8dda62703c0b3c232d3467e81ba6afd5fed02303023"
+  },
+  "qualification": {
+    "standalone_public_build": "PASS Windows x64 MSVC 19.44.35228 Release /MT",
+    "public_ctest_passed": 6,
+    "public_ctest_total": 6,
+    "installed_c_consumer": "PASS explicit install prefix; ABI/lifetime",
+    "studio_cli_parity": "PASS finite positive and negative corpus",
+    "studio_run_highlight_build_export": "PASS finite corpus; see documentation"
+  },
+  "limits": [
+    "No whole-palette or global CTest qualification",
+    "No clean Windows or multiplatform qualification",
+    "No tagged binary release created by this source checkpoint",
+    "Base revision records remain historical; tested content is identified by its digest"
+  ]
+}

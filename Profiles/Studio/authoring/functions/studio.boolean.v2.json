@@ -69,16 +69,18 @@
       "array_policy": {
         "accepted": true,
         "lifting": "element_wise_same_shape_with_scalar_lift",
-        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
-        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element. Different same-rank Array lengths use the intersection; cross-shaped multidimensional intersection is an explicit GS coordinate-wise contract, not a claim of observed NI behavior.",
+        "shape_rule": "preserve_rank; same_rank_arrays_use_coordinate_intersection; scalar_broadcast",
         "scalar_lift": true
       },
       "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
       "runtime_availability": {
-        "available": true,
+        "available": false,
         "implementation_kind": "built_in_provider",
-        "implementation_id": "frog.core.and",
-        "provider_requirement": ""
+        "implementation_id": "frog.studio.boolean.and.tree.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.boolean.owned-tree@1",
+        "notes": "Conditional complete typed-tree implementation. Existing scalar Boolean Core/reduction identities remain exact; the current Source chooses the tree realization for polymorphic inputs and Array reductions. Extended numeric carriers and deployment require separate admission and proof."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -164,16 +166,18 @@
       "array_policy": {
         "accepted": true,
         "lifting": "element_wise_same_shape_with_scalar_lift",
-        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
-        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element. Different same-rank Array lengths use the intersection; cross-shaped multidimensional intersection is an explicit GS coordinate-wise contract, not a claim of observed NI behavior.",
+        "shape_rule": "preserve_rank; same_rank_arrays_use_coordinate_intersection; scalar_broadcast",
         "scalar_lift": true
       },
       "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
       "runtime_availability": {
-        "available": true,
+        "available": false,
         "implementation_kind": "built_in_provider",
-        "implementation_id": "frog.core.or",
-        "provider_requirement": ""
+        "implementation_id": "frog.studio.boolean.or.tree.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.boolean.owned-tree@1",
+        "notes": "Conditional complete typed-tree implementation. Existing scalar Boolean Core/reduction identities remain exact; the current Source chooses the tree realization for polymorphic inputs and Array reductions. Extended numeric carriers and deployment require separate admission and proof."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -259,16 +263,18 @@
       "array_policy": {
         "accepted": true,
         "lifting": "element_wise_same_shape_with_scalar_lift",
-        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
-        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element. Different same-rank Array lengths use the intersection; cross-shaped multidimensional intersection is an explicit GS coordinate-wise contract, not a claim of observed NI behavior.",
+        "shape_rule": "preserve_rank; same_rank_arrays_use_coordinate_intersection; scalar_broadcast",
         "scalar_lift": true
       },
       "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
       "runtime_availability": {
-        "available": true,
+        "available": false,
         "implementation_kind": "built_in_provider",
-        "implementation_id": "frog.core.xor",
-        "provider_requirement": ""
+        "implementation_id": "frog.studio.boolean.xor.tree.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.boolean.owned-tree@1",
+        "notes": "Conditional complete typed-tree implementation. Existing scalar Boolean Core/reduction identities remain exact; the current Source chooses the tree realization for polymorphic inputs and Array reductions. Extended numeric carriers and deployment require separate admission and proof."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -336,16 +342,18 @@
       "array_policy": {
         "accepted": true,
         "lifting": "element_wise",
-        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
-        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element. Different same-rank Array lengths use the intersection; cross-shaped multidimensional intersection is an explicit GS coordinate-wise contract, not a claim of observed NI behavior.",
+        "shape_rule": "preserve_rank; same_rank_arrays_use_coordinate_intersection; scalar_broadcast",
         "scalar_lift": false
       },
       "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
       "runtime_availability": {
-        "available": true,
+        "available": false,
         "implementation_kind": "built_in_provider",
-        "implementation_id": "frog.core.not",
-        "provider_requirement": ""
+        "implementation_id": "frog.studio.boolean.not.tree.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.boolean.owned-tree@1",
+        "notes": "Conditional complete typed-tree implementation. Existing scalar Boolean Core/reduction identities remain exact; the current Source chooses the tree realization for polymorphic inputs and Array reductions. Extended numeric carriers and deployment require separate admission and proof."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -426,21 +434,23 @@
           "b",
           "input_N_ascending"
         ],
-        "reduction": "not_normalized"
+        "reduction": "invert_once_after_canonical_fold"
       },
       "array_policy": {
         "accepted": true,
         "lifting": "element_wise_same_shape_with_scalar_lift",
-        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
-        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element. Different same-rank Array lengths use the intersection; cross-shaped multidimensional intersection is an explicit GS coordinate-wise contract, not a claim of observed NI behavior.",
+        "shape_rule": "preserve_rank; same_rank_arrays_use_coordinate_intersection; scalar_broadcast",
         "scalar_lift": true
       },
-      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element. Extended inputs fold canonical AND/OR/XOR respectively, then invert exactly once after the complete reduction.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "provider_requirement": ""
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.boolean.nand.tree.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.boolean.owned-tree@1",
+        "notes": "Conditional complete typed-tree implementation. Existing scalar Boolean Core/reduction identities remain exact; the current Source chooses the tree realization for polymorphic inputs and Array reductions. Extended numeric carriers and deployment require separate admission and proof."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -521,21 +531,23 @@
           "b",
           "input_N_ascending"
         ],
-        "reduction": "not_normalized"
+        "reduction": "invert_once_after_canonical_fold"
       },
       "array_policy": {
         "accepted": true,
         "lifting": "element_wise_same_shape_with_scalar_lift",
-        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
-        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element. Different same-rank Array lengths use the intersection; cross-shaped multidimensional intersection is an explicit GS coordinate-wise contract, not a claim of observed NI behavior.",
+        "shape_rule": "preserve_rank; same_rank_arrays_use_coordinate_intersection; scalar_broadcast",
         "scalar_lift": true
       },
-      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element. Extended inputs fold canonical AND/OR/XOR respectively, then invert exactly once after the complete reduction.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "provider_requirement": ""
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.boolean.nor.tree.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.boolean.owned-tree@1",
+        "notes": "Conditional complete typed-tree implementation. Existing scalar Boolean Core/reduction identities remain exact; the current Source chooses the tree realization for polymorphic inputs and Array reductions. Extended numeric carriers and deployment require separate admission and proof."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -616,21 +628,23 @@
           "b",
           "input_N_ascending"
         ],
-        "reduction": "unresolved"
+        "reduction": "invert_once_after_canonical_fold"
       },
       "array_policy": {
         "accepted": true,
         "lifting": "element_wise_same_shape_with_scalar_lift",
-        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
-        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element. Different same-rank Array lengths use the intersection; cross-shaped multidimensional intersection is an explicit GS coordinate-wise contract, not a claim of observed NI behavior.",
+        "shape_rule": "preserve_rank; same_rank_arrays_use_coordinate_intersection; scalar_broadcast",
         "scalar_lift": true
       },
-      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
+      "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element. Extended inputs fold canonical AND/OR/XOR respectively, then invert exactly once after the complete reduction.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "provider_requirement": ""
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.boolean.xnor.tree.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.boolean.owned-tree@1",
+        "notes": "Conditional complete typed-tree implementation. Existing scalar Boolean Core/reduction identities remain exact; the current Source chooses the tree realization for polymorphic inputs and Array reductions. Extended numeric carriers and deployment require separate admission and proof."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -707,16 +721,18 @@
       "array_policy": {
         "accepted": true,
         "lifting": "element_wise_same_shape_with_scalar_lift",
-        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
-        "shape_rule": "preserve_rank; array_operands_must_have_equal_rank",
+        "description": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element. Different same-rank Array lengths use the intersection; cross-shaped multidimensional intersection is an explicit GS coordinate-wise contract, not a claim of observed NI behavior.",
+        "shape_rule": "preserve_rank; same_rank_arrays_use_coordinate_intersection; scalar_broadcast",
         "scalar_lift": true
       },
       "behavior_summary": "Boolean or non-complex numeric scalars, arrays and clusters are accepted. Boolean leaves produce Boolean; integer leaves retain/promote their representation; floating leaves coerce to I32. Error-cluster input uses status. Boolean and numeric leaves cannot mix. Arrays are processed element by element and retain their rank. Multiple array operands must have the same rank; a scalar operand is applied to every element.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "provider_requirement": ""
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.boolean.implies.tree.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.boolean.owned-tree@1",
+        "notes": "Conditional complete typed-tree implementation. Existing scalar Boolean Core/reduction identities remain exact; the current Source chooses the tree realization for polymorphic inputs and Array reductions. Extended numeric carriers and deployment require separate admission and proof."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -789,9 +805,11 @@
       "behavior_summary": "Boolean array of any rank -> scalar Boolean AND.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "provider_requirement": ""
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.boolean.and_array_elements.tree.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.boolean.owned-tree@1",
+        "notes": "Conditional complete typed-tree implementation. Existing scalar Boolean Core/reduction identities remain exact; the current Source chooses the tree realization for polymorphic inputs and Array reductions. Extended numeric carriers and deployment require separate admission and proof."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -864,9 +882,11 @@
       "behavior_summary": "Boolean array of any rank -> scalar Boolean OR.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "provider_requirement": ""
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.boolean.or_array_elements.tree.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.boolean.owned-tree@1",
+        "notes": "Conditional complete typed-tree implementation. Existing scalar Boolean Core/reduction identities remain exact; the current Source chooses the tree realization for polymorphic inputs and Array reductions. Extended numeric carriers and deployment require separate admission and proof."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -937,9 +957,11 @@
       "behavior_summary": "Boolean scalar/array/cluster -> same structure with I16 leaves (0 or 1).",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.boolean_to_integer.i16-tree.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -1012,9 +1034,11 @@
       "behavior_summary": "Integer/fixed-point scalar -> 1D Boolean array, one element per bit; first is least significant.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.number_to_boolean_array.exact-width.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -1086,9 +1110,11 @@
       "behavior_summary": "1D Boolean array -> configured integer representation (LabVIEW default U32); first element is least significant.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
-        "provider_requirement": ""
+        "availability_scope": "requires_explicit_target_capability",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.boolean_array_to_number.sign-if-signed.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."

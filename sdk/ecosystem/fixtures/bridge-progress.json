@@ -1,0 +1,17 @@
+{
+  "schema": "frog.bridge.message",
+  "protocol_version": "0.1",
+  "request_id": "fixture.request",
+  "session_id": "fixture.session",
+  "generation": 7,
+  "kind": "progress",
+  "method": "validate",
+  "payload": {
+    "fixture_only": true
+  },
+  "progress": {
+    "stage": "fixture.contract-only",
+    "completed": 2,
+    "total": 3
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "frog.frontend.context",
+  "schema_version": "0.1",
+  "source": {
+    "family": "fixture.only.source",
+    "version": "0.1",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "fir": {
+    "family": "fixture.only.fir",
+    "version": "0.1"
+  },
+  "frontend": {
+    "software_version": "0.1.0",
+    "api_version": "1",
+    "commit": "1111111111111111111111111111111111111111",
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "profiles": [
+    {
+      "id": "fixture.only.numeric",
+      "version": "0.1"
+    },
+    {
+      "id": "fixture.only.text",
+      "version": "0.1"
+    }
+  ],
+  "operations": [
+    "fixture.only.add",
+    "fixture.only.text.literal"
+  ],
+  "dependencies": [
+    {
+      "id": "fixture.alpha",
+      "version": "0.1.0",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "origin": "fixture://alpha"
+    },
+    {
+      "id": "fixture.beta",
+      "version": "0.2.0",
+      "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "origin": "fixture://beta"
+    }
+  ]
+}

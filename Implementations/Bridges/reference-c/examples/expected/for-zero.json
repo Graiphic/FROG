@@ -1,0 +1,31 @@
+{
+  "schema": "frog.bridge.kernel.outputs",
+  "schema_version": "0.1",
+  "outputs": [
+    {
+      "node_id": "node:636f756e74",
+      "port_id": "value",
+      "type": "i64",
+      "value": 0
+    },
+    {
+      "node_id": "node:736565642d72656164",
+      "port_id": "value",
+      "type": "i64",
+      "value": 9007199254740993
+    },
+    {
+      "node_id": "node:6c6f6f70",
+      "port_id": "tunnel:next:output",
+      "type": "i64",
+      "value": 9007199254740993
+    },
+    {
+      "node_id": "node:726573756c742d7772697465",
+      "port_id": "value",
+      "type": "i64",
+      "value": 9007199254740993
+    }
+  ],
+  "outcome": "completed"
+}

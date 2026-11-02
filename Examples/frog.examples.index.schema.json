@@ -27,7 +27,7 @@
         "type": {"$ref": "#/$defs/text"},
         "type_schema_json": {"type": "string", "description": "Complete nominal schema of the independently authored expected indicator, including field names and enum choices. Its canonical type must equal type."},
         "value_json": {"type": "string", "description": "Exact JSON lexeme, never an obligatory binary64 conversion of I64/U64. The semantic reader parses it with number lexemes preserved."},
-        "comparator": {"enum": ["exact", "float", "ieee-bits", "nan", "positive-infinity", "negative-infinity", "document_path", "studio_directory", "temporary_directory"]},
+        "comparator": {"enum": ["exact", "float", "ieee-bits", "nan", "positive-infinity", "negative-infinity", "document_path", "document_directory", "studio_directory", "temporary_directory"]},
         "absolute_tolerance": {"type": "number", "minimum": 0},
         "relative_tolerance": {"type": "number", "minimum": 0}
       }

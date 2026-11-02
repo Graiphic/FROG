@@ -1,0 +1,61 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "Real subtraction is outside the reference C Add profile",
+    "description": "Declared negative for the limited reference C bridge; common Frontend Source/FIR remains valid."
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": []
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "x",
+        "kind": "constant",
+        "type": "f64",
+        "value": 2.5,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "y",
+        "kind": "constant",
+        "type": "f64",
+        "value": 1.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "subtract",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.sub.ieee-wrap64.v1"
+      }
+    ],
+    "edges": [
+      {
+        "id": "a",
+        "from": {
+          "node": "x",
+          "port": "value"
+        },
+        "to": {
+          "node": "subtract",
+          "port": "a"
+        }
+      },
+      {
+        "id": "b",
+        "from": {
+          "node": "y",
+          "port": "value"
+        },
+        "to": {
+          "node": "subtract",
+          "port": "b"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "widgets": []
+  }
+}

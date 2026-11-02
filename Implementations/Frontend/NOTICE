@@ -1,0 +1,46 @@
+FROG common Frontend and command-line interface
+
+The Graiphic-owned original portions of the files explicitly listed in
+docs/license-inventory.json are made available under the Apache License,
+Version 2.0, by the accepted decision of 1 November 2026. This includes the
+selected original material extracted from Graiphic Studio and Runtime, and
+the build, tests, examples and documentation retained for this Frontend.
+The full license text is provided in LICENSE.
+
+Source ancestry is preserved in source-origin.json and in the per-file
+inventory. Earlier NOASSERTION observations record the state before that
+decision; they are retained as history, not as a denial of the new grant.
+No copyright-holder name or copyright year is inferred from a Git account,
+a source move, an extraction date or this notice.
+
+The selection does not license the rest of Studio, Runtime, external
+services or private realization code. Moving a file does not erase an
+existing third-party origin, attribution, license or notice.
+
+The retained function-binding catalogue contains documentary references to
+NI documentation, NIST DLMF, Microsoft documentation and mathematical
+publications. These references and the names of third parties are retained
+for attribution and technical context. They imply neither endorsement nor
+a license to reproduce third-party texts. The concrete content-review
+items are recorded in docs/license-inventory.json and
+docs/provenance-and-licensing.md. Apache-2.0 applies to Graiphic's original
+portions; it does not relicense any separately protected third-party text.
+
+The current Frontend includes the Zstandard 1.5.7 document decoder, with
+its FSE/HUF and namespaced xxHash components, under third_party/zstd.
+The existing vendor selects the BSD license; this third-party code is not
+relicensed under Apache-2.0. The original Meta Platforms and Yann Collet
+attributions remain in the sources. See third_party/zstd/LICENSE.txt,
+COPYING.txt and UPSTREAM.md. Redistributed binaries must include the
+applicable BSD notice, conditions and disclaimer in their accompanying
+materials.
+
+The earlier 1 November inventory excluding Zstandard describes its
+historical source closure, not this decoder-bearing candidate. No LLVM,
+XSF/Cephes/AMOS, libffi, stb or private Runtime execution implementation is
+introduced by this decoder. The compiler and standard library retain
+their separate distribution terms.
+
+This NOTICE and inventory prepare a source release candidate. Historical
+local source-kit receipts remain historical. They do not publish this
+candidate, certify a new build or authorize a remote release.

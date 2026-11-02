@@ -86,9 +86,23 @@ def sha256_text(text: str) -> str:
     return "sha256:" + hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def load_json_file(path: Path) -> Tuple[str, Any]:
+def load_json_file(path: Path, *, max_bytes: Optional[int] = None) -> Tuple[str, Any]:
     try:
-        text = path.read_text(encoding="utf-8")
+        if max_bytes is None:
+            text = path.read_text(encoding="utf-8")
+        else:
+            # Intake callers can bound the actual read, including when a file
+            # grows between metadata inspection and opening it.
+            if max_bytes < 0:
+                raise ValueError("max_bytes must be nonnegative")
+            with path.open("rb") as source:
+                payload = source.read(max_bytes + 1)
+            if len(payload) > max_bytes:
+                raise FrogPipelineError(
+                    stage="load", error_code="source_resource_limit",
+                    message="JSON input exceeds the configured byte limit.",
+                )
+            text = payload.decode("utf-8")
     except UnicodeDecodeError as exc:
         raise FrogPipelineError(
             stage="load",

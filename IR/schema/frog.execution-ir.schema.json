@@ -43,6 +43,19 @@
           "type": "string",
           "minLength": 1
         },
+        "profile": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "description": "Explicit semantic producer profile; structural validation does not grant backend support."
+        },
+        "source_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "minLength": 71,
+          "maxLength": 71,
+          "description": "SHA256 of the exact authoritative Source bytes, with the explicit algorithm prefix."
+        },
         "generated_at": {
           "type": "string",
           "minLength": 1

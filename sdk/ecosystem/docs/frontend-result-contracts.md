@@ -1,7 +1,8 @@
 # API-3 Frontend result documents
 
-**Contract publication only — 1 November 2026.** These are the result data families
-of the common Frontend API-3 checkpoint. No executable is included. Their versions
+**Published data contract — 1 November 2026.** These are the result data families
+of the common Frontend API-3 checkpoint. The contracts-only publication is historical;
+the separate local candidate is documented in [the Frontend](../../../Implementations/Frontend/README.md). Their versions
 are independent of the C API and Source/FIR.
 
 | Result view | Document/version | Schema |
@@ -20,7 +21,7 @@ schema is silently reinterpreted. Diagnostic/descriptor version 0.2 does not mea
 ## Diagnostics and incomplete assessments
 
 Each diagnostic carries stable code, stage, severity, category, message and source
-attribution. Frontend stages are `read`, `resolve`, `validate`, `derive`; categories
+attribution. Frontend stages are `read`, `resolve`, `adaptation`, `validate`, `derive`; categories
 are format, compatibility, structure, interface, integrity, semantics, dependency,
 frontend-capability and control. Target/backend/runtime categories are later gates,
 not values to force into this Frontend-only schema.
@@ -74,3 +75,18 @@ do not round every JSON number through binary64.
 The [example index](../fixtures/README.md) maps each synthetic file to its schema.
 Examples are shape illustrations, not execution receipts. This update supplies
 no validator script, library, header or CLI implementation.
+
+## Inspect real output locally
+
+```text
+python -B sdk/ecosystem/tests/validate_frontend_results.py --expected-api 3 --diagnostics outputs/diagnostics.json --provenance outputs/provenance.json --source-maps outputs/maps.json --descriptor outputs/descriptor.json
+python -B -m pytest sdk/ecosystem/tests/test_frontend_documents.py -q
+```
+
+The existing checker uses only local SDK/IR schemas, with no network retriever.
+It rejects duplicate members, nonfinite JSON and isolated Unicode surrogates,
+then checks identities, source/projection hashes and transformations. Exit0
+reports inspected hashes; exit1 is a refusal. This inspection does not execute
+a Frontend, prove a backend or turn a synthetic fixture into an execution.
+API3 is the default. `--expected-api 2` explicitly inspects historical API2/
+provenance0.2; older schemas and `*-api2.json` fixtures remain unchanged.

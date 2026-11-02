@@ -1,0 +1,14 @@
+{
+  "format": "frog.frontend.dependencies",
+  "version": "1",
+  "dependencies": [
+    {
+      "kind": 2,
+      "reference": "dep:nominal-types",
+      "source_uri": "frog-integration:/types/nominal.json",
+      "identity": "integration-nominal-types",
+      "version": "1",
+      "path": "nominal-types.json"
+    }
+  ]
+}

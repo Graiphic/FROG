@@ -83,7 +83,7 @@ public:
         // encoding unchanged. Older readers reject these tags; a live opaque
         // reference is deliberately never serialized.
         std::uint8_t tag=static_cast<std::uint8_t>(value.index());
-        if(runtimeArray(value))tag=8;else if(runtimeVariant(value))tag=9;
+        if(runtimeComplex(value))tag=13;else if(runtimeArray(value))tag=8;else if(runtimeVariant(value))tag=9;
         else if(runtimeMap(value))tag=10;else if(runtimeTimestamp(value))tag=11;else if(runtimeSet(value))tag=12;
         enumeration(tag);
         switch (tag) {
@@ -124,6 +124,18 @@ public:
             const auto begin=data_.size();++arrayDepth_;
             for(double element:array->elements())unsignedInteger(std::bit_cast<std::uint64_t>(element));
             --arrayDepth_;if(!arrayDepth_)arrayEnvelopeBytes_+=data_.size()-begin;
+            break;
+        }
+        case 13U: {
+            const auto *complex=runtimeComplex(value);
+            if(!typed_||packed_||!complex||!complex->valid()) {valid_=false;return;}
+            const std::size_t payload=complex->canonicalType()=="c32"?8:16;
+            if(payload>16'000'000-valueBytes_){valid_=false;return;}valueBytes_+=payload;
+            string(complex->canonicalType());
+            if(complex->canonicalType()=="c32") {
+                unsignedInteger(static_cast<std::uint32_t>(complex->realBits()));
+                unsignedInteger(static_cast<std::uint32_t>(complex->imaginaryBits()));
+            }else {unsignedInteger(complex->realBits());unsignedInteger(complex->imaginaryBits());}
             break;
         }
         case 8U: case 9U: case 10U: case 11U: case 12U: {
@@ -340,6 +352,23 @@ public:
                 value=std::move(complete);return true;
             }catch(const std::bad_alloc &) {return fail("Not enough memory to complete this operation; no partial Array value was produced.");}
             catch(const std::length_error &) {return fail("Not enough memory to complete this operation; no partial Array value was produced.");}
+        }
+        case 13U: {
+            if(!typed_||packed_)return fail("Complex values require the explicit typed private codec profile.");
+            std::string canonical;if(!string(canonical)||(canonical!="c32"&&canonical!="c64"))return fail("Invalid complex value type.");
+            const std::size_t payload=canonical=="c32"?8:16;
+            if(payload>16'000'000-valueBytes_)return fail("Complex value exceeds its declared byte budget.");valueBytes_+=payload;
+            double real=0,imaginary=0;
+            if(canonical=="c32") {
+                std::uint32_t re=0,im=0;if(!unsignedInteger(re)||!unsignedInteger(im))return false;
+                real=std::bit_cast<float>(re);imaginary=std::bit_cast<float>(im);
+            }else {
+                std::uint64_t re=0,im=0;if(!unsignedInteger(re)||!unsignedInteger(im))return false;
+                real=std::bit_cast<double>(re);imaginary=std::bit_cast<double>(im);
+            }
+            auto decoded=makeRuntimeComplex(valueTypeFromCanonicalName(canonical),real,imaginary);
+            if(!decoded)return fail("Complex components violate the exact finite carrier contract.");
+            value=std::move(*decoded);return true;
         }
         case 8U: case 9U: case 10U: case 11U: case 12U: {
             if(!typed_||packed_||(tag!=11&&(!arrayOwner_||!runtimeValueOwnerValid(*arrayOwner_))))return fail("Local IPE values require a typed envelope and its exact value owner.");
