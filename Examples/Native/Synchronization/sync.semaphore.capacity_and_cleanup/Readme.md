@@ -1,10 +1,10 @@
-# Semaphore : capacité, acquisition, restitution et fermeture
+# Semaphore: capacity, acquisition, release and closure
 
-Semaphore : capacité, acquisition, restitution et fermeture
+Semaphore: capacity, acquisition, release and closure
 
-Obtain crée un handle de capacité 2. Acquire prend une place : il en reste 1. Release restitue exactement une place : il en reste 2. Release Reference ferme le handle ; ce sont quatre opérations distinctes, jamais quatre noms d'une même destruction.
+Obtain creates a handle with capacity 2. Acquire takes one slot, leaving 1. Release returns exactly one slot, leaving 2. Release Reference closes the handle; these are four distinct operations, never four names for the same destruction.
 
-Semaphore : capacité, acquisition, restitution et fermeture
+Semaphore: capacity, acquisition, release and closure
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

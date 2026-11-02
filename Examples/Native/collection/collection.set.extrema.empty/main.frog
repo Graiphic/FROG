@@ -261,7 +261,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Set extrema — empty\nExtrema follow the declared exact comparator. The empty Set yields the intrinsic default of T, without creating an element.\nEntrées -> opération -> indicateurs. Résultat attendu : maximum (i32) = 0\nminimum (i32) = 0\n",
+        "text": "Set extrema — empty\nExtrema follow the declared exact comparator. The empty Set yields the intrinsic default of T, without creating an element.\nInputs -> operation -> indicators. Expected result: maximum (i32) = 0\nminimum (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

@@ -469,7 +469,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: shape equal count rejected\nEqual element counts do not make shapes[2,2] and[1,4] compatible. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nEntrées -> opération -> indicateurs. Résultat attendu : Diagnostic: native.numeric.incompatible_shape",
+        "text": "Add: shape equal count rejected\nEqual element counts do not make shapes[2,2] and[1,4] compatible. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nInputs -> operation -> indicators. Expected result: Diagnostic: native.numeric.incompatible_shape",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

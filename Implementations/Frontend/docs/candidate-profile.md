@@ -1,141 +1,158 @@
-# Profil de la candidate Frontend commune
+<a id="profil-de-la-candidate-frontend-commune"></a>
 
-Candidate locale `0.2.0-local` / API 3, intégrée à Studio par liaison statique et à la CLI. Source/FIR restent `0.1` ; les drafts déclarent leur révision exacte `0` à `9`. Les qualifications portent sur des empreintes précises et restent distinctes des recettes ci-dessous. L’instantané autonome initial `c640d266a4de9d9581e6394d80d7152ce3d91d64278b960ab6777a524a056a62` a été reconstruit, installé et appelé par un consommateur C externe (six CTest, 6 614 contrôles). Les captures ultérieures nécessitent leur propre reçu, joint à leur inventaire ; ce succès initial ne qualifie pas leurs nouveaux octets ni un exécutable Studio ultérieur.
+# Common Frontend candidate profile
 
-## Propriétaire et frontière
+Local candidate `0.2.0-local` / API 3, statically linked into Studio and used by the CLI. Source/FIR remain `0.1`; drafts declare exact revisions `0` through `9`. Qualifications apply to specific hashes, separately from the recipes below. Initial standalone snapshot `c640d266a4de9d9581e6394d80d7152ce3d91d64278b960ab6777a524a056a62` was rebuilt, installed and called by an external C consumer (six CTest cases, 6,614 checks). Later captures require their own inventory-bound receipt; this initial success qualifies neither new bytes nor a later Studio executable.
 
-`src/FrontendApi.cpp` possède le contrat C et les résultats immuables. `src/FrontendOperation.cpp` possède capture, résolution explicite, budgets, diagnostics et orchestration des producteurs réels `CanonicalExecutionIr` et `CanonicalEventExecutionIr`. Le premier conserve les chemins structurés et composés existants. Studio et la CLI consomment ce même propriétaire.
+<a id="propriétaire-et-frontière"></a>
 
-La bibliothèque reçoit des octets, identités, options et callbacks, sans accès implicite au disque, réseau, registre, projet Studio, environnement ou PATH. La CLI est un hôte fichier explicite de l'API C. La lecture et la migration sémantique des drafts appartiennent au Frontend commun. `FrogDraftData`, `FrogWidgetDataView`, les DTO de widgets et leurs codecs portent les données nécessaires sans Canvas ni `LoadedFrogDocument`. Les façades privées réutilisent ces propriétaires ; les contrôleurs et l’état de récupération restent dans Studio. Les propositions et l’application des réparations restent privées à Studio ; l’admission cible, les fournisseurs, la compilation et l’exécution restent dans leurs propriétaires distincts. L'interface installée est `frog/frontend.h` et `Frog::frog-frontend` ; les headers C++ internes et les propriétaires typés retenus par Studio ne sont pas une seconde ABI publique.
+## Owner and boundary
 
-## Opérations et versions
+`src/FrontendApi.cpp` owns the C contract and immutable results. `src/FrontendOperation.cpp` owns capture, explicit resolution, budgets, diagnostics and orchestration of the actual `CanonicalExecutionIr` and `CanonicalEventExecutionIr` producers. The former retains existing structured/composed paths. Studio and the CLI consume the same owner.
 
-| Opération | Travail réel | Résultat admis |
+The library receives bytes, identities, options and callbacks, with no implicit disk, network, registry, Studio-project, environment or PATH access. The CLI explicitly hosts files for the C API. Draft reading and semantic migration belong to the common Frontend. `FrogDraftData`, `FrogWidgetDataView`, widget DTOs and their codecs carry required data without Canvas or `LoadedFrogDocument`. Private facades reuse these owners; controllers and recovery state remain in Studio. Repair proposals/application remain private to Studio; target admission, providers, compilation and execution retain separate owners. The installed interface is `frog/frontend.h` and `Frog::frog-frontend`; internal C++ headers and typed owners retained by Studio are not a second public ABI.
+
+<a id="opérations-et-versions"></a>
+
+## Operations and versions
+
+| Operation | Actual work | Accepted result |
 | --- | --- | --- |
-| `describe` | Identité de l'implémentation, opérations API, formats, profils principaux et plafonds | Descripteur complet, sans Source ni FIR |
-| `validate` | Même résolution, producteur et scellement que derive | Diagnostics/maps/provenance ; aucun document FIR retourné |
-| `derive` | Même travail puis publication du document admis | FIR complète, diagnostics/maps/provenance |
+| `describe` | Implementation identity, API operations, formats, principal profiles and limits | Complete descriptor, no Source or FIR |
+| `validate` | Same resolution, producer and sealing as derive | Diagnostics/maps/provenance; no returned FIR document |
+| `derive` | Same work, then publication of the accepted document | Complete FIR, diagnostics/maps/provenance |
 
-Chaque demande validate/derive donne les octets authored immuables, URI explicite, `source_document_id`, `fir_document_id`, format/version Source et version FIR exacte. Les identités Source et FIR restent distinctes. Un nom d'affichage ou chemin de sortie ne les remplace pas. Les URI ne déclenchent aucun accès implicite ; les références relatives sont transmises au résolveur avec leur URI propriétaire et JSON Pointer.
+Each validate/derive request supplies immutable authored bytes, explicit URI, `source_document_id`, `fir_document_id`, Source format/version and exact FIR version. Source and FIR identities remain distinct; neither a display name nor output path replaces them. URIs trigger no implicit access; relative references reach the resolver with their owning URI and JSON Pointer.
 
-| Identité/version | Valeur ou rôle |
+| Identity/version | Value or role |
 | --- | --- |
-| API C | `3`, version et tailles exactes, réservés à zéro |
-| Logiciel | `0.2.0-local`, indépendamment de l'ABI |
-| `frontend.commit` | Révision de base enregistrée à la compilation, sans les overlays |
-| `frontend.sha256` | Contenu selon `FrontendInputs.cmake`, distinct du hash PE/archive |
-| Source public / FIR | `frog.source/0.1` / `frog.execution_ir/0.1` |
-| Documents historiques | `frog.document.draft`, révisions `0` à `9` explicitement déclarées |
-| Diagnostics | Tableau de `frog.diagnostic`, version `0.2` |
-| Provenance | `frog.frontend.context`, version de schéma `0.3` |
-| Capacités / maps | `frog.frontend.capabilities/0.2` / `frog.frontend.source_maps/0.1` |
-| Profils et bridge | Révisions sémantiques propres ; protocole aval distinct |
+| C API | `3`, exact version/sizes, reserved fields zeroed |
+| Software | `0.2.0-local`, independent of ABI |
+| `frontend.commit` | Base revision recorded at build time, without overlays |
+| `frontend.sha256` | Content identified by `FrontendInputs.cmake`, distinct from PE/archive hash |
+| Public Source / FIR | `frog.source/0.1` / `frog.execution_ir/0.1` |
+| Historical documents | `frog.document.draft`, explicitly declared revisions `0` through `9` |
+| Provenance | `frog.frontend.context`, schema `0.3` |
+| Capabilities / maps | `frog.frontend.capabilities/0.2` / `frog.frontend.source_maps/0.1` |
+| Profiles and bridge | Their own semantic revisions; separate downstream protocol |
 
-Le descripteur annonce les principaux profils `frog.canonical.widget-f64-add.v1`, `frog.canonical.typed-structures.v1`, `frog.studio.composed-program@1`, `frog.canonical.event-scalar.v1`, `frog.canonical.event-captured.v1`, `frog.frontend.resolution@1` et `frog.frontend.resolution@2`. `profiles_exhaustive: false` interdit de présenter cette liste comme une matrice exhaustive d'opérateurs ou de réalisations. Sur succès, provenance.profiles et provenance.operations proviennent de la FIR réellement produite. Le descripteur conserve `native_execution_claim: false` et la diffusion locale.
+The descriptor announces principal profiles `frog.canonical.widget-f64-add.v1`, `frog.canonical.typed-structures.v1`, `frog.studio.composed-program@1`, `frog.canonical.event-scalar.v1`, `frog.canonical.event-captured.v1`, `frog.frontend.resolution@1` and `frog.frontend.resolution@2`. `profiles_exhaustive: false` prevents presenting this as an exhaustive operator/realization matrix. On success, provenance.profiles and provenance.operations come from actual produced FIR. The descriptor retains `native_execution_claim: false` and local distribution.
 
-## Périmètre fini de langage
+<a id="périmètre-fini-de-langage"></a>
 
-Le corpus `tests/fixtures/provenance.json` conserve hash et origine de chaque Source :
+## Finite language scope
 
-| Fixture | Contrat exercé |
+`tests/fixtures/provenance.json` retains each Source's hash and origin:
+
+| Fixture | Contract exercised |
 | --- | --- |
-| `pure-add.frog` | Contrôles/indicateur et addition f64 par Source public |
-| `record-exact.frog` | Record imbriqué, I64/U64 exacts et schémas conservés |
-| `nominal-nested.frog` | Map/Array/Cluster/Enum complets ; identités et valeurs non réduites aux porteurs physiques |
-| `event-values.frog` | Régions Event et valeurs capturées typées, régions masquées comprises |
-| `pane-unbundle.frog` | Références de panneau/contrôle et données Event conservées |
-| `event-product.frog` | Graphe Event de production via les mêmes frontières publiques |
+| `pure-add.frog` | Controls/indicator and f64 addition through public Source |
+| `record-exact.frog` | Nested Record, exact I64/U64 and preserved schemas |
+| `nominal-nested.frog` | Complete Map/Array/Cluster/Enum; identities/values not reduced to physical carriers |
+| `event-values.frog` | Event regions and typed captured values, including hidden regions |
+| `pane-unbundle.frog` | Preserved panel/control references and Event data |
+| `event-product.frog` | Production Event graph through the same public boundaries |
 
-Les six CTest de phase A exécutés sont `frog-frontend-c-consumer`, `frog-frontend-cli-scalar`, `frog-frontend-cli-type-definitions`, `frog-frontend-integration`, `frog-frontend-draft-integration` et `frog-frontend-draft-dependency-smoke`. Ils couvrent notamment la substitution TypeDef, les refus de Source malformée/future, références/cycles/conflits, budgets, annulation, leases, concurrence et durée de vie des résultats. Les tests draft exercent types exacts, conditions et dépendances ; ils n’exécutent ni LLVM ni Runtime. Les 6 614 contrôles se rapportent à ce corpus fini, pas à toutes les fonctions.
+The six phase-A CTest cases executed are `frog-frontend-c-consumer`, `frog-frontend-cli-scalar`, `frog-frontend-cli-type-definitions`, `frog-frontend-integration`, `frog-frontend-draft-integration` and `frog-frontend-draft-dependency-smoke`. They cover TypeDef substitution; malformed/future Source rejection; references/cycles/conflicts; budgets, cancellation, leases, concurrency and result lifetimes. Draft tests exercise exact types, conditions and dependencies; they execute neither LLVM nor Runtime. The 6,614 checks apply to this finite corpus, not every function.
 
-Les fichiers Studio `regressions/native-qmh1-joined-cleanup.frog` et `regressions/native-state-machine-calculate3.frog` ont aussi passé validate/derive dans l’API/CLI autonome, avec octets d’entrée inchangés. Trois refus de fixtures historiques sont conservés et attribués aux gardes préexistants : ancien `class_ref` de cluster sans adaptation, constante scalaire `u8` hors du profil scalaire choisi, Unbundle par nom dépourvu de chemins d’identifiants stables. La comparaison aux sources antérieures n’est pas un rejeu d’un ancien binaire.
+Studio files `regressions/native-qmh1-joined-cleanup.frog` and `regressions/native-state-machine-calculate3.frog` also passed validate/derive through the standalone API/CLI with unchanged input bytes. Three historical-fixture rejections remain attributed to pre-existing guards: old cluster `class_ref` without adaptation, scalar `u8` constant outside the selected scalar profile, and Unbundle by Name without stable identifier paths. Comparing earlier sources is not rerunning an old binary.
 
-Les schémas admis conservent champs, noms, identités nominales, enums, rangs et enfants. Les I64/U64 ne passent pas par un `double`. Les structures conservent propriétaires de régions, terminaux, connexions et attribution. Une région masquée n'est pas dispensée de validation. L'acceptation reste celle du producteur et du profil réel ; ce corpus ne généralise pas son résultat à toutes les combinaisons de type/structure/opération de la palette.
+Accepted schemas retain fields, names, nominal identities, enums, ranks and children. I64/U64 do not pass through `double`. Structures retain region owners, terminals, connections and attribution. Hidden regions are not exempt from validation. Acceptance belongs to the actual producer/profile; this corpus does not generalize to every palette type/structure/operation combination.
 
-E7 réutilise ce Frontend pour dériver ses Sources scalaires, I64/U64, Array32 et For statique avant un peer C17. Le profil fini du peer, ses contraintes de valeurs et ses refus d'Enum/opération ne sont pas les règles générales du Frontend. Event, références ou opérations présentes dans une FIR ne promettent pas leur exécution par un peer donné.
+E7 reuses this Frontend to derive scalar, I64/U64, Array32 and static-For Sources before a C17 peer. The peer's finite profile, value constraints and Enum/operation refusals are not general Frontend rules. Event, references or operations in FIR do not promise execution by a given peer.
 
-## Résolution TypeDef implémentée
+<a id="résolution-typedef-implémentée"></a>
 
-Sur le parcours Source public `0.1`, un contexte vide vaut `{}`, sans réglage hérité. Le profil initial utilise l’enveloppe fermée `frog.frontend.resolution@1` décrite dans [frontend-resolution.md](../frontend-resolution.md). Ses entrées `{kind:2, source_pointer:...}` visent un vrai `studio_type_schema` ou son sous-schéma. Champs inconnus, cibles arbitraires, pointeurs recouvrants et références contradictoires sont refusés.
+## Implemented TypeDef resolution
 
-L'objet authored `$ref` déclare référence, identité, version, SHA256 et pointeur de fragment. Le callback retourne un document `frog.frontend.type-definitions@1` avec sa propre identité/version et ses octets. Le Frontend calcule le hash, vérifie métadonnées et contenu, développe les références dans une projection détachée puis appelle le même producteur. Les répétitions équivalentes partagent une capture dans la requête ; URI/identités/contenus contradictoires et cycles sont refusés. Aucun cache de dépendance implicite ne survit à une nouvelle opération.
+On public Source `0.1`, an empty context means `{}`, with no inherited settings. The initial profile uses the closed `frog.frontend.resolution@1` envelope in [frontend-resolution.md](../frontend-resolution.md). Its `{kind:2, source_pointer:...}` entries target an actual `studio_type_schema` or subschema. Unknown fields, arbitrary targets, overlapping pointers and contradictory references are rejected.
 
-Resolve et release sont définis ensemble, ou absents ensemble. Après chaque retour normal de resolve, release est appelé exactement une fois pour tous les statuts, avant le retour de l'opération. Les captures détenues restent indépendantes des vues prêtées. Les callbacks sont synchrones sur le thread appelant ; aucune exception C++ ne doit traverser l'ABI C.
+The authored `$ref` object declares reference, identity, version, SHA256 and fragment pointer. The callback returns a `frog.frontend.type-definitions@1` document with its own identity/version and bytes. The Frontend computes the hash, checks metadata/content, expands references in a detached projection and calls the same producer. Equivalent repeats share a capture within the request; contradictory URI/identity/content and cycles are rejected. No implicit dependency cache survives a new operation.
 
-La CLI charge à l'avance les snapshots d'un lock `{"format":"frog.frontend.dependencies","version":"1","dependencies":[...]}`. Une entrée contient kind, reference, source_uri, identity, version et path, avec requesting_source_uri optionnel. Un path relatif est résolu par rapport au lock, pas par le cœur. La sélection kind/reference/propriétaire doit être non ambiguë. Le lock ne peut pas accorder au langage un genre de dépendance qu'il ne réalise pas.
+Resolve/release are either both defined or both absent. Every normal resolve return is followed by exactly one release for every status, before the operation returns. Owned captures remain independent of borrowed views. Callbacks run synchronously on the caller thread; no C++ exception may cross the C ABI.
 
-Le contrat `@1` ci-dessus reste inchangé, y compris le refus d’un `conditional_disable` non vide. Le nouveau contrat `frog.frontend.resolution@2` porte les cartes explicites de symboles `built_in`, `project`, `target` pour le chemin draft. Le Frontend lit les drafts `0..9`, résout leurs liens TypeDef et appels SubFROG par captures fournies au callback, puis utilise les mêmes producteurs FIR. Il conserve le document original et les identités ; aucune proposition de réparation n’est appliquée implicitement. Les parcours ciblés de cette implémentation ont été exécutés en phase A ; les preuves des parcours Studio et de chaque nouvelle capture sont conservées dans leurs reçus propres.
+The CLI preloads snapshots from a `{"format":"frog.frontend.dependencies","version":"1","dependencies":[...]}` lock. An entry contains kind, reference, source_uri, identity, version and path, with optional requesting_source_uri. A relative path resolves against the lock, not in the core. Selection by kind/reference/owner must be unambiguous. A lock cannot grant an unimplemented dependency kind to the language.
 
-Pour les drafts, SOURCE=1 et TYPE_DEFINITION=2 sont des demandes effectives du résolveur, issues des références du document et localisées à leur URI/pointeur. LIBRARY_CONTRACT=3 et PROFILE_CONTRACT=4 ne sont pas réalisés. La lecture d’une révision reconnue ne garantit ni sa validité sémantique ni son admission par un backend ; une copie de récupération sans diagramme exploitable peut rester refusée. Voir [le contrat v2](../frontend-resolution.md).
+The `@1` contract above remains unchanged, including rejection of nonempty `conditional_disable`. New `frog.frontend.resolution@2` carries explicit `built_in`, `project`, `target` symbol maps for the draft path. The Frontend reads drafts `0..9`, resolves TypeDef links and SubFROG calls through callback-supplied captures, then uses the same FIR producers. It preserves the original document and identities; no repair proposal is implicitly applied. Targeted paths were executed in phase A; Studio paths and new captures retain their own receipts.
 
-## Résultats, erreurs et publication
+For drafts, SOURCE=1 and TYPE_DEFINITION=2 are actual resolver requests originating from document references and attributed to their URI/pointer. LIBRARY_CONTRACT=3 and PROFILE_CONTRACT=4 are not implemented. Reading a recognized revision guarantees neither semantic validity nor backend admission; a recovery copy without a usable diagram may remain rejected. See the [v2 contract](../frontend-resolution.md).
 
-`FROG_FRONTEND_OK` signifie que l'appel C a retourné un résultat, même si le programme est refusé. `outcome` distingue SUCCESS, REJECTED, UNSUPPORTED, CANCELLED et LIMIT_EXCEEDED. Un statut C non-OK — argument, ABI, BUSY, mémoire ou erreur interne — ne fournit aucun résultat consommable. Les arguments invalides ne deviennent pas artificiellement une erreur du programme.
+<a id="résultats-erreurs-et-publication"></a>
 
-Les diagnostics portent code stable, étape, sévérité, catégorie et emplacement connu. Capacité Frontend absente, erreur sémantique, intégrité et dépendance restent distinctes. Les messages humains ne sont pas une API de classification. Un emplacement FIR `/unit/...` est `derived_pointer`, sans faux pointeur authored. Les emplacements liés sont optionnels et ne sont pas inventés.
+## Results, errors and publication
 
-Chaque résultat contient diagnostics, maps et provenance complets. Un refus/une annulation/une limite ne renvoie aucun FIR exécutable ni projection partielle. La provenance conserve les faits déjà connus ; avant capture, le hash Source peut être vide. Describe ne fabrique pas de Source/FIR demandé.
+`FROG_FRONTEND_OK` means the C call returned a result, even for a rejected program. `outcome` distinguishes SUCCESS, REJECTED, UNSUPPORTED, CANCELLED and LIMIT_EXCEEDED. A non-OK C status—argument, ABI, BUSY, memory or internal error—provides no consumable result. Invalid arguments are not fabricated program errors.
 
-Après résolution admise, `resolved_source_json` fournit seulement si différente la **Source complète projetée** utilisée par le producteur, sur succès validate/derive. La provenance distingue `source.sha256`, `projected_source_sha256` et transformations authored→dépendance. Le sceau source du FIR reste celui des octets dérivés. La CLI n'expose pas actuellement ce buffer par une option dédiée.
+Diagnostics carry stable code, stage, severity, category and known location. Missing Frontend capability, semantic error, integrity and dependency remain distinct. Human messages are not a classification API. FIR location `/unit/...` is `derived_pointer`, never a fabricated authored pointer. Related locations are optional and not invented.
 
-La CLI publie diagnostics/maps/provenance séparément, puis le FIR uniquement sur succès derive. Un refus ou une erreur auxiliaire avant cette publication laisse le dernier FIR valide intact. Les fichiers ne forment pas une transaction unique. Les options et codes de sortie sont dans le [README](../README.md).
+Every result contains complete diagnostics, maps and provenance. Rejection/cancellation/limits return no executable FIR or partial projection. Provenance retains known facts; before capture, the Source hash may be empty. Describe fabricates no requested Source/FIR.
 
-## Limites, annulation et concurrence
+After accepted resolution, `resolved_source_json` supplies the **complete projected Source** used by the producer only when different, on successful validate/derive. Provenance distinguishes `source.sha256`, `projected_source_sha256` and authored→dependency transformations. The FIR source seal remains that of derived bytes. The CLI currently exposes no dedicated option for this buffer.
 
-Zéro sélectionne le défaut ; une demande non nulle ne peut que réduire le plafond effectif maximal. Ces budgets ne garantissent pas l'admission de toute combinaison de langage de cette taille.
+The CLI publishes diagnostics/maps/provenance separately, then FIR only on successful derive. Rejection or an auxiliary error before publication leaves the last valid FIR intact. Files are not one transaction. Options/exit codes appear in the [README](../README.md).
 
-| Budget maximal effectif | Valeur |
+<a id="limites-annulation-et-concurrence"></a>
+
+## Limits, cancellation and concurrency
+
+Zero selects the default; a nonzero request can only reduce the effective maximum. These budgets do not guarantee admission of every language combination of that size.
+
+| Effective maximum budget | Value |
 | --- | ---: |
-| Source et contexte JSON, chacun | 8 Mio |
-| Une dépendance / total des captures uniques | 8 Mio / 64 Mio |
-| Résultats JSON cumulés, projection comprise | 32 Mio |
-| FIR du producteur | 16 Mio |
-| Nœuds / connexions Source et dépendances cumulés | 1 024 / 4 096 |
-| Profondeur sémantique/résolution | 64 |
-| Dépendances uniques / diagnostics | 256 / 256 |
-| Visites d'expansion TypeDef | 4 096 |
+| Source and context JSON, each | 8 MiB |
+| One dependency / total unique captures | 8 MiB / 64 MiB |
+| Combined JSON results, including projection | 32 MiB |
+| Producer FIR | 16 MiB |
+| Combined Source/dependency nodes / connections | 1,024 / 4,096 |
+| Semantic/resolution depth | 64 |
+| Unique dependencies / diagnostics | 256 / 256 |
+| TypeDef expansion visits | 4,096 |
 
-Les octets sont contrôlés avant copies et scans des grands buffers. Les régions masquées participent aux comptes. Les contraintes du parseur, des codecs et producteurs restent actives. L'épuisement du budget diagnostics conserve un diagnostic terminal ; il ne transforme pas un refus en succès. Si aucun résultat complet ne tient, l'appel renvoie une erreur de ressource plutôt qu'un JSON tronqué.
+Byte limits are checked before copies/scans of large buffers. Hidden regions count. Parser, codec and producer constraints remain active. Exhausting the diagnostics budget retains a terminal diagnostic; it does not convert rejection to success. If no complete result fits, the call returns a resource error rather than truncated JSON.
 
-L'annulation est coopérative : 0 continue, 1 annule ; une autre valeur est une défaillance du callback. Les polls entourent les unités bornées et le producteur synchrone, sans préemption au milieu de celui-ci. Un résolveur bloquant reste sous la responsabilité de l'hôte. Aucune latence maximale ou garantie temps réel n'est annoncée.
+Cancellation is cooperative: 0 continues, 1 cancels; another value is a callback failure. Polls surround bounded units and the synchronous producer, without mid-producer preemption. A blocking resolver remains the host's responsibility. No maximum latency or real-time guarantee is announced.
 
-Entrées, identités et vues restent immuables jusqu'au retour synchrone. La configuration est copiée à la création du contexte. Un seul appel opère par contexte ; un appel simultané ou réentrant retourne BUSY. Des contextes indépendants peuvent travailler concurremment. Aucun worker caché n'est lancé.
+Inputs, identities and views remain immutable until synchronous return. Configuration is copied at context creation. One call operates per context; concurrent/reentrant calls return BUSY. Independent contexts may work concurrently. No hidden worker starts.
 
-Un résultat possède ses buffers et survit à son contexte. Ses vues sont valides jusqu'à `frog_frontend_result_destroy` et ne sont pas libérées/modifiées individuellement. `result_get` exige taille exacte et réservés à zéro. Détruire contexte ou résultat pendant leur usage viole le contrat appelant ; les fonctions destroy du même propriétaire libèrent leurs allocations.
+A result owns its buffers and outlives its context. Views remain valid until `frog_frontend_result_destroy`; they are not individually released/modified. `result_get` requires exact size and zeroed reserved fields. Destroying a context/result during use violates the caller contract; the same owner's destroy functions release its allocations.
 
-## Historique et qualification de candidate
+<a id="historique-et-qualification-de-candidate"></a>
 
-| Lot | Portée des preuves locales | Limite conservée |
+## History and candidate qualification
+
+| Lot | Local evidence scope | Retained limit |
 | --- | --- | --- |
-| E2 | Extraction et audit lexical des producteurs/adaptateurs | Audit source distinct d'un lien ; hashes d'origine distincts des hashes actuels |
-| E3 | Bibliothèque/CLI API3, installation/consommateur C, parité des documents Studio/C ABI/CLI sur corpus borné | Résultats liés aux octets E3, sans suite Studio complète ni Windows propre |
-| E5 | SDK bridge, wire indépendant et consommateurs source publics | Déclarations et fixtures de protocole distincts d'une exécution native |
-| E7 | Reconstruction du kit public et peer C17, FIR communs, sorties et artefacts/commandes réels | Profil C fini et chaîne locale ; aucune couverture universelle de palette ou de Windows propre |
-| E8 | Contrôles pin/identités, frontière publique, reçus et qualification ciblée | Préserver les échecs voisins et contrôles non exécutés ; rattacher les résultats aux dernières empreintes |
-| P28 phase A, 2 novembre | Kit autonome reconstruit, six CTest réussis, 6 614 contrôles, installation/consommateur C et drafts courants QMH/état | Contenu `c640d266a4de9d9581e6394d80d7152ce3d91d64278b960ab6777a524a056a62` uniquement ; pas de Windows propre, de nouvelle preuve mémoire ou d’exécution backend |
-| P28 phase B | Raccordement Studio et parité sur les octets originaux en cours | Non qualifié ; aucun résultat d’application livrée revendiqué |
+| E2 | Producer/adapter extraction and lexical audit | Source audit distinct from linking; original hashes distinct from current hashes |
+| E3 | API3 library/CLI, installation/C consumer, Studio/C ABI/CLI document parity on a bounded corpus | Results bound to E3 bytes, without full Studio suite or clean Windows |
+| E5 | Bridge SDK, independent wire and public source consumers | Protocol declarations/fixtures distinct from native execution |
+| E7 | Public-kit rebuild and C17 peer, common FIR, actual outputs/artifacts/commands | Finite C profile and local toolchain; no universal palette/clean-Windows coverage |
+| E8 | Pin/identity checks, public boundary, receipts and targeted qualification | Preserve neighboring failures/unexecuted checks; bind results to latest hashes |
+| P28 phase A, 2 November | Standalone rebuilt kit, six CTest passes, 6,614 checks, installation/C consumer and current QMH/state drafts | Only content `c640d266a4de9d9581e6394d80d7152ce3d91d64278b960ab6777a524a056a62`; no clean Windows, new memory evidence or backend execution |
+| P28 phase B | Studio integration and original-byte parity in progress | Unqualified; no delivered-application result claimed |
 
-L'intégrateur conserve les preuves dans les artefacts locaux `modularisation-etape{2,3,5,7,8}-...` de Studio. Ces chemins internes ne sont pas des dépendances du kit public. La mention historique E3 de Studio `.738` ne désigne pas la version courante de la candidate.
+The integrator retains evidence in Studio's local `modularisation-etape{2,3,5,7,8}-...` artifacts. These internal paths are not public-kit dependencies. The historical E3 Studio `.738` reference is not the candidate's current version.
 
-Le reçu `artifacts/p28-implementation-2026-11-02/phase-a-result.json` conserve la qualification A : manifeste de kit `fed3baac219da2bc68c99b9d08e6560b73ca68c100e17cbfdfeb33d1e09f0102`, contenu Frontend et SHA des bibliothèques/CLI/consommateur installés. Il est conservé chez l’intégrateur et n’est pas une entrée du kit. Le rapport `public-phase-benchmark.json` reste une mesure attribuée à ce même instantané, sans conclusion de gain ; la mémoire n’a pas été mesurée.
+`artifacts/p28-implementation-2026-11-02/phase-a-result.json` retains A qualification: kit manifest `fed3baac219da2bc68c99b9d08e6560b73ca68c100e17cbfdfeb33d1e09f0102`, Frontend content and installed-library/CLI/consumer SHAs. The integrator retains it; it is not a kit input. `public-phase-benchmark.json` remains a measurement attributed to that same snapshot, without a gain conclusion; memory was not measured.
 
-Pour sceller la phase B : contenu exact mis à jour, SHA des bibliothèques/CLI et binaires Studio, identité retournée, pin Studio correspondant, versions de chaîne, audit et parités pertinentes. Réutiliser les tests publics Frontend existants et les nouveaux tests ciblés draft/dépendances, les modes de parité Studio, le test SDK de protocole et l’audit existant. Ne pas attribuer les réussites historiques à ces nouveaux octets sans vérification. Un succès de protocole ne qualifie pas un backend.
+Sealing phase B requires updated exact content, library/CLI/Studio binary SHAs, returned identity, matching Studio pin, toolchain versions, audit and relevant parity checks. Reuse existing public Frontend tests, new targeted draft/dependency tests, Studio parity modes, the SDK protocol test and existing audit. Historical successes do not qualify new bytes without verification. Protocol success does not qualify a backend.
 
-Depuis la racine FROG, ces commandes sont des recettes, pas des résultats nouveaux :
+From the FROG root, these commands are recipes, not new results:
 
 ```text
 python -B Implementations/Frontend/tools/audit_frontend_closure.py --root Implementations/Frontend --source src/FrontendApi.cpp --source src/FrontendOperation.cpp --source src/FrontendCli.cpp --output frontend-closure.json
 python -B Implementations/Frontend/tools/audit_frontend_closure.py --root . --public-consumer --output public-consumer-closure.json
 ```
 
-Le second contrôle exige les owners publics SDK/peer C présents. La fermeture lexicale ne remplace ni compilation ni inspection des imports directs/différés du binaire. Les dépendances OS chargées à l'exécution restent un prérequis séparé.
+The second check requires the public SDK/C-peer owners. Lexical closure replaces neither compilation nor inspection of direct/delayed binary imports. Runtime-loaded OS dependencies remain a separate prerequisite.
 
-## Licence et diffusion
+<a id="licence-et-diffusion"></a>
 
-La [formalisation Apache-2.0 publiée le 1 novembre 2026](https://github.com/Graiphic/FROG/blob/85a90ebe2c2a78cc4f42f7efce1c8ca990df4d26/sdk/ecosystem/docs/frontend-licensing.md), consignée dans `FROG-Context/Decisions/frog-common-frontend-apache2.md`, accepte cette licence pour les fichiers originaux Graiphic sélectionnés pour le Frontend/CLI et leurs contrats/exemples/tests, extractions nécessaires comprises. Les origines tierces conservent licences et notices. Le reste de Studio, ses réparations privées, le reste du Runtime et les recettes d'optimisation sont exclus.
+## License and distribution
 
-L'inventaire E2 `NOASSERTION` reste une preuve historique préalable à la décision, sans redemander le choix acquis. L'inventaire de diffusion doit relier les fichiers actuels à cet accord, conserver original_hash/current_hash et attribuer les contenus tiers éventuels. Un audit ou une mention SPDX ne remplace pas cette traçabilité du paquet exact.
+The [Apache-2.0 decision published on 1 November 2026](https://github.com/Graiphic/FROG/blob/85a90ebe2c2a78cc4f42f7efce1c8ca990df4d26/sdk/ecosystem/docs/frontend-licensing.md), recorded in `FROG-Context/Decisions/frog-common-frontend-apache2.md`, accepts that license for selected original Graiphic Frontend/CLI files and contracts/examples/tests, including necessary extractions. Third-party origins retain licenses/notices. The rest of Studio, private repairs, the rest of Runtime and optimization recipes are excluded.
 
-La décision de licence est publiée séparément ; elle ne publie pas cette candidate ni son code. Aucune publication distante, qualification globale Studio, qualification Windows propre ou nouvelle version binaire n'est produite par cette mise à jour documentaire.
+The E2 `NOASSERTION` inventory remains historical pre-decision evidence without reopening the accepted choice. Distribution inventory must link current files to that agreement, retain original_hash/current_hash and attribute any third-party content. An audit or SPDX statement does not replace exact-package traceability.
 
-Le décodeur Zstandard 1.5.7 (FSE/HUF et xxHash inclus) est maintenant une dépendance statique de lecture documentaire. Il conserve sa licence BSD et ses notices ; aucune réalisation numérique tierce, LLVM ou runtime privé n’est embarquée pour cette lecture. Sa fermeture source et son lien dans le kit ont été exercés par la reconstruction autonome de phase A. Cela ne démontre ni la compatibilité de tous les documents historiques ni la qualification sur Windows propre. Les notices et la provenance du décodeur restent obligatoires dans chaque nouvelle capture.
+The licensing decision is published separately; it does not publish this candidate or its code. This documentation update produces no remote publication, global Studio qualification, clean-Windows qualification or new binary version.
+
+The Zstandard 1.5.7 decoder (including FSE/HUF and xxHash) is now a static document-reading dependency. It retains BSD licensing and notices; no third-party numerical realization, LLVM or private runtime is embedded for this reading. Its source closure and kit linkage were exercised by phase A's standalone rebuild. This proves neither every historical document's compatibility nor clean Windows. Every new capture must retain decoder notices/provenance.

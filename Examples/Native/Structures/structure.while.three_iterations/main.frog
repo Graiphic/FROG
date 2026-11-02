@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "While : arrêter au troisième incrément",
+  "title": "While: stop at the third increment",
   "metadata": {
-    "name": "While : arrêter au troisième incrément",
+    "name": "While: stop at the third increment",
     "name_source": "document",
-    "description": "Le registre est initialisé à 0. Le corps incrémente puis compare sa nouvelle valeur à 3 ; Stop if True termine donc après les valeurs 1, 2 et 3. Le test compare la sortie finale, sans confondre l'index i (0,1,2) et le nombre d'itérations (3).\n\nWhile : arrêter au troisième incrément\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nresult (i64) = 3\n",
+    "description": "The register is initialized to 0. The body increments, then compares its new value with 3; Stop if True therefore terminates after values 1, 2 and 3. The test compares the final output without confusing index i (0,1,2) with iteration count (3).\n\nWhile: stop at the third increment\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nresult (i64) = 3\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -398,7 +398,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "While : arrêter au troisième incrément\nWhile : arrêter au troisième incrément\nEntrées -> opération -> indicateurs. Résultat attendu : result (i64) = 3\n",
+        "text": "While: stop at the third increment\nWhile: stop at the third increment\nInputs -> operation -> indicators. Expected result: result (i64) = 3\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

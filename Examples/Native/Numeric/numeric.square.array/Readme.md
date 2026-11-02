@@ -2,9 +2,9 @@
 
 Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
 
-Square est unaire et élève chaque élément au carré en conservant rang, forme et représentation I32. La variante agrégée utilise explicitement la Simulation privée.
-Entrées : in (array<i32>) = [-3, 0, 4].
-Résultats attendus : result (array<i32>) = [9, 0, 16].
+Square is unary and squares each element while preserving rank, shape and I32 representation. The aggregate variant explicitly uses private Simulation.
+Inputs: in (array<i32>) = [-3, 0, 4].
+Expected results: result (array<i32>) = [9, 0, 16].
 
 Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
 

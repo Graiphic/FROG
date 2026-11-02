@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "File Exists : le chemin vide désigne la liste des lecteurs Windows",
+  "title": "File Exists: an empty path denotes the Windows drive list",
   "metadata": {
-    "name": "File Exists : le chemin vide désigne la liste des lecteurs Windows",
+    "name": "File Exists: an empty path denotes the Windows drive list",
     "name_source": "document",
-    "description": "Ce test n'accède à aucun chemin utilisateur. Sous Windows, le chemin vide correspond à la liste des lecteurs pour File Exists et renvoie True. Cette règle propre à Exists ne rend pas un chemin vide valide pour lire ou écrire un fichier.\n\nFile Exists : le chemin vide désigne la liste des lecteurs Windows\n\nMode: execution. Profile: studio-draft. Capability: windows/highlight-fileio.\nExpected:\nexists (bool) = true\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+    "description": "This test accesses no user path. On Windows, an empty path denotes the drive list for File Exists and returns True. This Exists-specific rule does not make an empty path valid for reading or writing a file.\n\nFile Exists: an empty path denotes the Windows drive list\n\nMode: execution. Profile: studio-draft. Capability: windows/highlight-fileio.\nExpected:\nexists (bool) = true\nerror_status (bool) = false\nerror_code (i32) = 0\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -382,7 +382,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "File Exists : le chemin vide désigne la liste des lecteurs Windows\nFile Exists : le chemin vide désigne la liste des lecteurs Windows\nEntrées -> opération -> indicateurs. Résultat attendu : exists (bool) = true\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+        "text": "File Exists: an empty path denotes the Windows drive list\nFile Exists: an empty path denotes the Windows drive list\nInputs -> operation -> indicators. Expected result: exists (bool) = true\nerror_status (bool) = false\nerror_code (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

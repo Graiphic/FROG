@@ -525,7 +525,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Bundle — replace-middle\nAn incoming Cluster retains every unwired field. Replacement rows keep their semantic positions even when preceding or intervening rows are unwired.\nEntrées -> opération -> indicateurs. Résultat attendu : number (i64) = 9007199254740993\ntext (string) = \"changed\"\nflag (bool) = true\n",
+        "text": "Bundle — replace-middle\nAn incoming Cluster retains every unwired field. Replacement rows keep their semantic positions even when preceding or intervening rows are unwired.\nInputs -> operation -> indicators. Expected result: number (i64) = 9007199254740993\ntext (string) = \"changed\"\nflag (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

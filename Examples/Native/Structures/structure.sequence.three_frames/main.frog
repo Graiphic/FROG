@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Flat Sequence : entrée et passages entre trois frames",
+  "title": "Flat Sequence: input and passages across three frames",
   "metadata": {
-    "name": "Flat Sequence : entrée et passages entre trois frames",
+    "name": "Flat Sequence: input and passages across three frames",
     "name_source": "document",
-    "description": "Le 7 extérieur entre dans First, traverse Empty transport frame puis arrive dans Last où Increment donne 8. La frame sélectionnée à l'édition est Last ; les trois sous-diagrammes et leurs tunnels persistent. La vue sélectionnée ne détermine pas ce qui s'exécute. Ceci démontre Flat, pas Stacked Sequence.\n\nFlat Sequence : entrée et passages entre trois frames\n\nMode: execution. Profile: studio-draft. Capability: highlight/flat-sequence.\nExpected:\nresult (i64) = 8\n",
+    "description": "External value 7 enters First, traverses Empty transport frame, then reaches Last, where Increment produces 8. The selected editing frame is Last; all three subdiagrams and their tunnels persist. The selected view does not determine what executes. This demonstrates Flat, not Stacked Sequence.\n\nFlat Sequence: input and passages across three frames\n\nMode: execution. Profile: studio-draft. Capability: highlight/flat-sequence.\nExpected:\nresult (i64) = 8\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -328,7 +328,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Flat Sequence : entrée et passages entre trois frames\nFlat Sequence : entrée et passages entre trois frames\nEntrées -> opération -> indicateurs. Résultat attendu : result (i64) = 8\n",
+        "text": "Flat Sequence: input and passages across three frames\nFlat Sequence: input and passages across three frames\nInputs -> operation -> indicators. Expected result: result (i64) = 8\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

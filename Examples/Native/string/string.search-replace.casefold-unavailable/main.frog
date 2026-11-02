@@ -270,7 +270,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Search And Replace String — casefold-unavailable\nThe existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode cas...\nEntrées -> opération -> indicateurs. Résultat attendu : Diagnostic: native.string.casefold_unavailable",
+        "text": "Search And Replace String — casefold-unavailable\nThe existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode cas...\nInputs -> operation -> indicators. Expected result: Diagnostic: native.string.casefold_unavailable",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

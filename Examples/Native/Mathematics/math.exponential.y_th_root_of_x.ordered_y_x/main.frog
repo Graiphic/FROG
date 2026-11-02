@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Y-th Root of X — ordered y x",
     "name_source": "document",
-    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : y (f64) = 3; x (f64) = 8.\nRésultats attendus : result (f64) = 2.\n\nComputes the y-th root of x.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (f64) = 2\n",
+    "description": "Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.\nInputs: y (f64) = 3; x (f64) = 8.\nExpected results: result (f64) = 2.\n\nComputes the y-th root of x.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (f64) = 2\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -295,7 +295,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Y-th Root of X — ordered y x\nComputes the y-th root of x.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = 2\n",
+        "text": "Y-th Root of X — ordered y x\nComputes the y-th root of x.\nInputs -> operation -> indicators. Expected result: output-result (f64) = 2\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

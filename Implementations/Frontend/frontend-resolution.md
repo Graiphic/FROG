@@ -1,32 +1,43 @@
-# Frontend local : opérations et résolution explicite
+<a id="frontend-local--opérations-et-résolution-explicite"></a>
 
-Implémentation locale expérimentale `0.2.0-local`, ABI C3. Les formats
-Source/FIR restent `0.1` ; `frog.document.draft` accepte des révisions explicites `0` à `9` ; les révisions de profils sont indépendantes de
-l'ABI, du logiciel et du protocole bridge. Ce document décrit du code à
-qualifier : sa présence ne prouve ni compilation, ni exécution, ni publication.
+# Local Frontend: operations and explicit resolution
 
-## Génération commune
+Experimental local implementation `0.2.0-local`, C ABI3. Source/FIR remain `0.1`;
+`frog.document.draft` accepts explicitly declared revisions `0` through `9`.
+Profile revisions are independent of ABI, software and bridge protocol. This
+document describes code requiring qualification: its presence proves neither
+compilation, execution nor publication.
 
-`FrontendOperation.cpp` appelle les producteurs C++ de production
-`CanonicalExecutionIr::derive` ou `CanonicalEventExecutionIr::derive`.
-Le profil composé conserve son routage existant dans le premier producteur.
-Le profil Event public distinct est sélectionné pour une Event Structure
-publique hors profil composé. Il n’existe pas de repli vers un interprète, un Canvas, un backend ou une version linguistique différente. `frog.document.draft` est une entrée explicitement déclarée, pas un repli implicite de `frog.source`.
+<a id="génération-commune"></a>
 
-`validate` effectue la même dérivation et les mêmes contrôles de scellement
-que `derive`, puis ne retourne pas la FIR. `derive` ne retourne une FIR
-complète qu'en cas de succès. Un refus, une annulation ou une limite ne
-retourne jamais un préfixe exécutable. La réussite du Frontend n'est pas
-une admission LLVM, une réalisation d'opérateur, ni une preuve d'exécution.
+## Shared generation
 
-Le source original est capturé dans un propriétaire immutable partagé avec les lecteurs communs ; les projections dérivées conservent leur identité distincte. Un contexte vide signifie `{}`, sans
-héritage de l'OS, de l'environnement, de Studio ou d'une requête précédente.
-La lecture, la résolution et les migrations sémantiques des drafts sont maintenant implémentées dans la bibliothèque commune. Elles produisent une projection détachée sans réécrire l’entrée. Les propositions, prévisualisations et applications de réparations avec historique/Undo restent privées à Studio. La qualification de cette extraction `0.2.0-local` n’est pas encore acquise.
+`FrontendOperation.cpp` calls production C++ producers `CanonicalExecutionIr::derive`
+or `CanonicalEventExecutionIr::derive`. The composed profile retains its existing
+routing through the former. The separate public Event profile is selected for a
+public Event Structure outside the composed profile. There is no fallback to an
+interpreter, Canvas, backend or different language version. `frog.document.draft`
+is an explicitly declared input, not an implicit fallback from `frog.source`.
 
-## Profil de résolution `frog.frontend.resolution@1` — contrat conservé
+`validate` performs the same derivation and sealing checks as `derive`, then omits
+FIR from its return. `derive` returns complete FIR only on success. Rejection,
+cancellation or a limit never returns an executable prefix. Frontend success is
+neither LLVM admission, operator realization nor execution evidence.
 
-La première réalisation est délibérément bornée aux définitions de types
-réelles du profil composé. Le contexte est un objet fermé :
+Original source is captured in an immutable owner shared with common readers;
+derived projections retain separate identities. An empty context means `{}`,
+without OS, environment, Studio or previous-request inheritance. Draft reading,
+resolution and semantic migrations are now implemented in the common library.
+They produce a detached projection without rewriting input. Repair proposals,
+previews and application with history/Undo remain private to Studio. Qualification
+of this `0.2.0-local` extraction has not yet been established.
+
+<a id="profil-de-résolution-frogfrontendresolution1--contrat-conservé"></a>
+
+## Resolution profile `frog.frontend.resolution@1` — preserved contract
+
+The first realization is deliberately bounded to actual type definitions in the
+composed profile. Context is a closed object:
 
 ```json
 {
@@ -37,25 +48,23 @@ réelles du profil composé. Le contexte est un objet fermé :
 }
 ```
 
-Le pointeur RFC6901 doit désigner un objet réellement écrit dans un champ
-`studio_type_schema` ou dans un sous-schéma. Les cibles du contexte ne peuvent
-pas se recouvrir. L'hôte ne fournit pas un remplacement arbitraire. L'objet
-authored ciblé contient exactement :
+The RFC6901 pointer must identify an actual authored object in a `studio_type_schema`
+field or subschema. Context targets cannot overlap. The host supplies no arbitrary
+replacement. The targeted authored object contains exactly:
 
 ```json
 {
   "$ref": "dep:types",
   "identity": "example-types",
   "version": "1",
-  "sha256": "<64 chiffres hexadécimaux minuscules du contenu exact>",
+  "sha256": "<64 lowercase hexadecimal digits of the exact content>",
   "pointer": "/definitions/T"
 }
 ```
 
-Le résolveur reçoit le genre `TYPE_DEFINITION=2`, la référence non modifiée,
-l'URI propriétaire réelle, son pointeur et les identité/version/empreinte
-attendues. Il fournit des octets JSON exacts et une URI canonique explicite.
-Le document retourné est lui-même un objet fermé :
+The resolver receives kind `TYPE_DEFINITION=2`, the unmodified reference, actual
+owning URI, its pointer and expected identity/version/hash. It supplies exact JSON
+bytes and an explicit canonical URI. The returned document is itself a closed object:
 
 ```json
 {
@@ -68,53 +77,59 @@ Le document retourné est lui-même un objet fermé :
 }
 ```
 
-Le schéma montré est illustratif : le contenu sélectionné doit être un schéma
-complet réellement accepté par `canonicalObjectReferenceReadType`, propriétaire
-du codec de types existant. Les identités nominales, enums, labels de champs,
-rangs, dimensions et valeurs exactes ne sont pas simplifiés. Les références
-imbriquées utilisent le même objet `$ref` et le même résolveur.
+This schema is illustrative: selected content must be a complete schema actually
+accepted by existing type-codec owner `canonicalObjectReferenceReadType`. Nominal
+identities, enums, field labels, ranks, dimensions and exact values are not simplified.
+Nested references use the same `$ref` object and resolver.
 
-Après sélection du fragment `/definitions/...`, le Frontend développe les
-références dans une projection détachée, valide chaque fragment avec ce codec,
-puis soumet la projection au vrai producteur. Sans dépendance correcte, ou si
-le type résolu contredit les autres types déclarés, la génération échoue.
-Ce mécanisme a donc un effet sémantique réel et n'est pas un inventaire décoratif.
+After selecting `/definitions/...`, the Frontend expands references in a detached
+projection, validates every fragment with that codec and submits the projection
+to the actual producer. Missing/incorrect dependencies or resolved types contradicting
+other declared types fail generation. This has an actual semantic effect; it is not
+a decorative inventory.
 
-La valeur `version` identifie la révision du document de types ; `@1` identifie
-son profil d'enveloppe. Le Frontend vérifie le SHA-256 réellement calculé ainsi
-que l'identité et la version du contenu contre les informations authored et
-les métadonnées retournées. Une seule identité ne peut désigner plusieurs
-URI, versions ou contenus pendant une requête. Une URI ne peut désigner
-plusieurs identités. Les répétitions équivalentes partagent leur capture.
-Les cycles et fragments absents sont des erreurs explicites.
+`version` identifies the type-document revision; `@1` identifies its envelope profile.
+The Frontend checks computed SHA-256, identity and content version against authored
+information and returned metadata. One identity cannot denote multiple URIs,
+versions or contents within a request; one URI cannot denote multiple identities.
+Equivalent repeats share a capture. Cycles and missing fragments are explicit errors.
 
-Chaque callback `resolve` retourné normalement est suivi exactement une fois
-de `release`, quel que soit son statut, y compris refus, métadonnées invalides,
-limite et annulation. Aucun octet prêté n'est utilisé après `release` ; seules
-les captures immutables appartenant à cette requête subsistent. Une exception
-du résolveur ne constitue pas un retour normal. Les exceptions des callbacks
-sont contenues et diagnostiquées ; les hôtes doivent respecter l'ABI C.
-Il n'existe aucun cache implicite inter-requêtes ni accès fichier/réseau.
+Every normal `resolve` return is followed exactly once by `release`, regardless of
+status, including rejection, invalid metadata, limits and cancellation. Borrowed
+bytes are never used after `release`; only request-owned immutable captures survive.
+A resolver exception is not a normal return. Callback exceptions are contained and
+diagnosed; hosts must respect the C ABI. There is no implicit cross-request cache
+or file/network access.
 
-Les genres Source, contrat de bibliothèque et contrat de profil ne sont pas
-réalisés par ce premier profil de résolution. Ils sont refusés explicitement,
-sans supprimer les références ou accorder de nouvelles capacités. Il n'est pas
-possible d'injecter du code natif via un document de types. Les appels SubFROG
-restent soumis aux véritables contrats d'appel du producteur.
+Source, library-contract and profile-contract kinds are not implemented by this
+first resolution profile. They are explicitly rejected without erasing references
+or granting capabilities. Type documents cannot inject native code. SubFROG calls
+remain subject to the producer's actual call contracts.
 
-`conditional_disable` est un champ optionnel du contexte de résolution.
-Dans `@1`, seul l’objet vide est accepté : un contexte non vide est refusé
-avec `frontend.conditional_context_unsupported`, à son emplacement exact.
-Le parcours Source de `@1` ne reçoit pas de contexte symbolique non vide.
-L'ignorer ou le remplacer par des paramètres du backend serait incorrect.
+`conditional_disable` is an optional resolution-context field. In `@1`, only an empty
+object is accepted: nonempty context is rejected with
+`frontend.conditional_context_unsupported` at its exact location. The `@1` Source
+path receives no nonempty symbolic context. Ignoring it or replacing it with backend
+settings would be incorrect.
 
-## Drafts et contexte `frog.frontend.resolution@2`
+<a id="drafts-et-contexte-frogfrontendresolution2"></a>
 
-Cette extension est implémentée séparément du contrat `@1`, qui n’acquiert pas implicitement les nouveaux paramètres. L’appel déclare `source_format_id="frog.document.draft"` et une version décimale exacte de `"0"` à `"9"`, correspondant à la révision de l’enveloppe reçue. La FIR reste `frog.execution_ir/0.1`. Les formats futurs, les révisions incohérentes et les sources malformées sont refusés avec un diagnostic attribué.
+## Drafts and `frog.frontend.resolution@2` context
 
-Le lecteur commun, la normalisation du stockage (y compris les blocs Zstandard), les schémas de widgets, les liens TypeDef, les appels SubFROG, la spécialisation conditionnelle, la validation et la migration vers la Source publique réutilisent leurs propriétaires existants. Ils ne dépendent pas du Canvas ni d’une session runtime. Une révision reconnue ne rend pas automatiquement tout document exécutable : données incomplètes, diagramme indisponible, dépendance absente et capacité non réalisée restent des refus explicites.
+This extension is implemented separately from `@1`, which does not implicitly gain
+new parameters. The call declares `source_format_id="frog.document.draft"` and an
+exact decimal version `"0"` through `"9"` matching the received envelope revision.
+FIR remains `frog.execution_ir/0.1`. Future formats, inconsistent revisions and
+malformed sources are rejected with attributed diagnostics.
 
-Exemple de contexte pour préparer un draft :
+The common reader, storage normalization (including Zstandard blocks), widget
+schemas, TypeDef links, SubFROG calls, conditional specialization, validation and
+public-Source migration reuse existing owners. They depend on neither Canvas nor
+a runtime session. A recognized revision does not automatically make every document
+executable: incomplete data, unavailable diagram, missing dependency and absent
+capability remain explicit refusals.
+
+Example context for draft preparation:
 
 ```json
 {
@@ -128,79 +143,90 @@ Exemple de contexte pour préparer un draft :
 }
 ```
 
-Les trois cartes optionnelles contiennent des noms et valeurs String explicites. Aucun symbole n’est découvert via l’OS, le registre, PATH ou le backend. Le contexte vide conserve l’absence de configuration ; des conditions non résolues restent diagnostiquées. Le contexte v2 est transmis à la préparation des drafts. Il ne prétend pas ajouter une seconde spécialisation à la Source publique déjà projetée.
+The three optional maps contain explicit String names and values. No symbol is
+discovered through OS, registry, PATH or backend. Empty context preserves absent
+configuration; unresolved conditions remain diagnosed. v2 context reaches draft
+preparation; it does not add a second specialization of already projected public Source.
 
-Les liens enregistrés dans un draft déclenchent des demandes `SOURCE=1` pour les SubFROG et `TYPE_DEFINITION=2` pour les TypeDef. Le callback reçoit le libellé de référence original, l’URI propriétaire, le pointeur source et les contraintes d’identité/version/empreinte présentes. Il retourne des contenus immuables, leur URI canonique, identité, version et empreinte ; le Frontend recalcule le SHA-256, vérifie ces contraintes et conserve la provenance des sources incorporées. Les appels ne nécessitent ni fichier ouvert dans Studio ni recherche implicite sur le disque.
+Saved draft links trigger `SOURCE=1` SubFROG and `TYPE_DEFINITION=2` TypeDef requests.
+The callback receives the original reference label, owning URI, source pointer and
+any identity/version/hash constraints. It returns immutable content, canonical URI,
+identity, version and hash; the Frontend recomputes SHA-256, checks those constraints
+and preserves incorporated-source provenance. Calls require neither an open Studio
+file nor implicit disk searching.
 
-Ces liens de documents ne sont pas l’enveloppe JSON de fragments `frog.frontend.type-definitions@1` décrite plus haut : cette dernière reste le contrat du parcours Source `@1`. Les genres bibliothèque/profil ne sont pas réalisés. Des demandes inconnues ou incohérentes ne déclenchent aucun fallback.
+These document links are not the JSON `frog.frontend.type-definitions@1` fragment
+envelope above, which remains the Source `@1` path's contract. Library/profile kinds
+are unimplemented. Unknown or inconsistent requests trigger no fallback.
 
-La CLI fournit les mêmes snapshots par son lock de dépendances et appelle la même bibliothèque que le consommateur C. Les textes de diagnostics, les identités et les maps proviennent de la préparation réelle. La prise en charge de la lecture et de la migration ne donne pas au Frontend l’autorité de modifier le document original ou d’approuver une réparation Studio.
+The CLI supplies the same snapshots through its dependency lock and calls the same
+library as the C consumer. Diagnostic text, identities and maps come from actual
+preparation. Reading/migration support does not authorize modifying the original
+document or approving a Studio repair.
 
-**État : implémenté, NON encore qualifié sur le nouveau kit.** Les tests ciblés draft/dépendances doivent être exécutés avec l’identité exacte des sources, bibliothèque et CLI. Aucune réussite historique Source `@1` n’est présentée comme qualification automatique de `@2`.
+**Status: implemented, NOT yet qualified on the new kit.** Targeted draft/dependency
+tests must run with the exact source/library/CLI identity. Historical Source `@1`
+successes do not automatically qualify `@2`.
 
-## Limites et annulation
+<a id="limites-et-annulation"></a>
 
-Les valeurs zéro sélectionnent les plafonds documentés ; une valeur non nulle
-peut seulement les réduire. Les plafonds du producteur existant priment :
+## Limits and cancellation
 
-| Entrée ou travail | Plafond effectif maximal |
+Zero selects documented limits; nonzero values can only reduce them. Existing
+producer limits take precedence:
+
+| Input or work | Maximum effective limit |
 | --- | ---: |
-| Source et contexte JSON, chacun | 8 Mio |
-| Une dépendance | 8 Mio |
-| Total des captures de dépendances uniques | 64 Mio |
-| Résultats JSON cumulés, FIR comprise | 32 Mio |
-| FIR du producteur | 16 Mio |
-| Nœuds Source et dépendances cumulés | 1 024 |
-| Connexions cumulées | 4 096 |
-| Profondeur sémantique/résolution | 64 |
-| Dépendances uniques | 256 |
+| Source and context JSON, each | 8 MiB |
+| One dependency | 8 MiB |
+| Total unique dependency captures | 64 MiB |
+| Combined JSON results, including FIR | 32 MiB |
+| Producer FIR | 16 MiB |
+| Combined Source/dependency nodes | 1,024 |
+| Combined connections | 4,096 |
+| Semantic/resolution depth | 64 |
+| Unique dependencies | 256 |
 | Diagnostics | 256 |
-| Visites d'expansion des fragments de types | 4 096 |
+| Type-fragment expansion visits | 4,096 |
 
-Les limites octets sont contrôlées avant la copie et le balayage UTF-8 des
-grands buffers. Le budget agrégé et le nombre de captures sont contrôlés avant
-une nouvelle copie de dépendance. Les régions masquées participent aux comptes.
-Les contraintes supplémentaires du parseur, du codec et des producteurs sont
-conservées. Le calcul de taille des résultats précède leur sérialisation.
-Si même le diagnostic complet et la provenance ne tiennent pas dans le budget,
-l'ABI renvoie une erreur de ressource, sans JSON tronqué.
+Byte limits are checked before copying/UTF-8-scanning large buffers. Aggregate
+budget and capture count are checked before another dependency copy. Hidden regions
+count. Additional parser/codec/producer constraints remain. Result-size calculation
+precedes serialization. If complete diagnostics and provenance cannot fit, the ABI
+returns a resource error without truncated JSON.
 
-L'annulation est coopérative : elle est consultée avant les travaux, avant
-résolution, entre unités bornées et après le producteur. Un callback retournant
-autre chose que 0/1 est défectueux. Les producteurs synchrones existants ne sont
-pas préemptés en leur milieu ; aucune borne de latence fine n'est revendiquée.
+Cancellation is cooperative, checked before work, before resolution, between bounded
+units and after the producer. A callback returning anything other than 0/1 is faulty.
+Existing synchronous producers are not preempted mid-execution; no fine-grained
+latency bound is claimed.
 
-## Résultats et provenance
+<a id="résultats-et-provenance"></a>
 
-- Diagnostics : tableau d'objets `frog.diagnostic`, version `0.2` ; code stable,
-  étape, sévérité, catégorie, URI/document/pointeur. Une capacité Frontend
-  manquante reste distincte d'une erreur sémantique. Un pointeur du FIR
-  `/unit/...` reste `derived_pointer`, sans être présenté comme pointeur Source.
-- Descripteur : `frog.frontend.capabilities`, `schema_version=0.2` ; identités
-  logiciel/API/commit/empreinte réellement fournies à la compilation, formats,
-  opérations de l'API, principaux profils et limites effectives. La liste des
-  profils est signalée non exhaustive ; elle ne constitue pas une matrice
-  d'exécution des opérateurs de la palette.
-- Provenance : `frog.frontend.context`, `schema_version=0.3` ; source original
-  exact, dépendances capturées et empreintes, contexte explicite, limites,
-  transformations et état `closure_complete`. Les profils et opérations d'une
-  réussite proviennent du FIR réellement produit. Un refus conserve les faits
-  connus sans prétendre que la fermeture est complète.
-  Le champ `fir.document_id` conserve l'identité FIR distincte du document Source ;
-  cette extension utilise `0.3` sans modifier les schémas historiques fermés.
-- Correspondances : enveloppe `frog.frontend.source_maps`, version de schéma
-  `0.1`, contenant les `source_map` et `correspondence` du FIR ainsi que les
-  transformations de résolution et les empreintes authored/FIR.
+## Results and provenance
 
-En présence de résolution, le FIR reste scellé sur les octets de la projection
-effectivement soumise au producteur ; son empreinte n'est jamais remplacée
-artificiellement par celle du source original. La provenance distingue
-`source.sha256` et `projected_source_sha256`, et les transformations relient
-les emplacements authored aux fragments de dépendances. Sans résolution,
-les octets originaux sont transmis directement au propriétaire commun.
+- Diagnostics: array of `frog.diagnostic` objects, version `0.2`; stable code,
+  stage, severity, category, URI/document/pointer. Missing Frontend capability is
+  distinct from semantic error. FIR pointer `/unit/...` remains `derived_pointer`,
+  never presented as a Source pointer.
+- Descriptor: `frog.frontend.capabilities`, `schema_version=0.2`; actual build-supplied
+  software/API/commit/hash, formats, API operations, principal profiles and effective
+  limits. The profile list is marked non-exhaustive; it is not a palette execution matrix.
+- Provenance: `frog.frontend.context`, `schema_version=0.3`; exact original source,
+  captured dependencies/hashes, explicit context, limits, transformations and
+  `closure_complete`. Profiles/operations on success come from actual produced FIR.
+  A refusal retains known facts without claiming complete closure. `fir.document_id`
+  preserves the distinct FIR identity; this `0.3` extension does not modify closed
+  historical schemas.
+- Mappings: `frog.frontend.source_maps` envelope, schema `0.1`, containing FIR
+  `source_map`/`correspondence`, resolution transformations and authored/FIR hashes.
 
-Après annulation immédiate ou refus de taille avant capture, l'empreinte Source
-peut être vide : le Frontend ne parcourt pas un buffer qu'il vient de refuser.
-L'ordre des captures/callbacks n'est pas une identité sémantique ; la provenance
-des dépendances est ordonnée par identité. Aucun timestamp ou chemin implicite
-du poste ne participe aux résultats déterministes.
+With resolution, FIR remains sealed to projection bytes actually submitted to the
+producer; its hash is never replaced artificially by the original-source hash.
+Provenance distinguishes `source.sha256` and `projected_source_sha256`; transformations
+link authored locations with dependency fragments. Without resolution, original
+bytes pass directly to the common owner.
+
+After immediate cancellation or pre-capture size rejection, the Source hash may be
+empty: the Frontend does not traverse a buffer it has just rejected. Capture/callback
+order is not semantic identity; dependency provenance is ordered by identity. No
+timestamp or implicit machine path enters deterministic results.

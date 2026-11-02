@@ -421,7 +421,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Variant preserves a named Cluster\nThe typed Variant retains the Cluster field identities and values. The same Cluster is used only as a schema witness for unboxing; it is not substituted for the payload.\nEntrées -> opération -> indicateurs. Résultat attendu : number (i64) = 9007199254740993\ntext (string) = \"kept\"\n",
+        "text": "Variant preserves a named Cluster\nThe typed Variant retains the Cluster field identities and values. The same Cluster is used only as a schema witness for unboxing; it is not substituted for the payload.\nInputs -> operation -> indicators. Expected result: number (i64) = 9007199254740993\ntext (string) = \"kept\"\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

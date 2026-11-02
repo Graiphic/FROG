@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Scaled ErfC — reference 1",
     "name_source": "document",
-    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : x (f64) = -2.0.\nRésultats attendus : result (f64) = 0.25539567631050575.\n\nEvaluates erfcx(q)=exp(q*q)*erfc(q) with a dedicated stable algorithm, avoiding infinity*0.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (f64) = 0.25539567631050575\n",
+    "description": "Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.\nInputs: x (f64) = -2.0.\nExpected results: result (f64) = 0.25539567631050575.\n\nEvaluates erfcx(q)=exp(q*q)*erfc(q) with a dedicated stable algorithm, avoiding infinity*0.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (f64) = 0.25539567631050575\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -229,7 +229,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Scaled ErfC — reference 1\nEvaluates erfcx(q)=exp(q*q)*erfc(q) with a dedicated stable algorithm, avoiding infinity*0.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = 0.25539567631050575\n",
+        "text": "Scaled ErfC — reference 1\nEvaluates erfcx(q)=exp(q*q)*erfc(q) with a dedicated stable algorithm, avoiding infinity*0.\nInputs -> operation -> indicators. Expected result: output-result (f64) = 0.25539567631050575\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Queue : enfiler, défiler et nettoyer",
+  "title": "Queue: enqueue, dequeue and clean up",
   "metadata": {
-    "name": "Queue : enfiler, défiler et nettoyer",
+    "name": "Queue: enqueue, dequeue and clean up",
     "name_source": "document",
-    "description": "Obtain utilise le prototype f64 explicite. Enqueue ajoute 42, Dequeue le retire dans l'ordre FIFO, puis Release ferme la référence. Le fil d'erreur établit l'ordre des effets réels ; timeout=0 ne bloque jamais.\n\nQueue : enfiler, défiler et nettoyer\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nreceived (f64) = 42\ntimed_out (bool) = false\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+    "description": "Obtain uses the explicit f64 prototype. Enqueue adds 42, Dequeue removes it in FIFO order, then Release closes the reference. The error wire establishes the order of actual effects; timeout=0 never blocks.\n\nQueue: enqueue, dequeue and clean up\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nreceived (f64) = 42\ntimed_out (bool) = false\nerror_status (bool) = false\nerror_code (i32) = 0\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -558,7 +558,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Queue : enfiler, défiler et nettoyer\nQueue : enfiler, défiler et nettoyer\nEntrées -> opération -> indicateurs. Résultat attendu : received (f64) = 42\ntimed_out (bool) = false\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+        "text": "Queue: enqueue, dequeue and clean up\nQueue: enqueue, dequeue and clean up\nInputs -> operation -> indicators. Expected result: received (f64) = 42\ntimed_out (bool) = false\nerror_status (bool) = false\nerror_code (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

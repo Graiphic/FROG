@@ -1,10 +1,10 @@
-# For : zéro itération conserve l'initialisation
+# For: zero iterations preserve initialization
 
-For : zéro itération conserve l'initialisation
+For: zero iterations preserve initialization
 
-N=0 n'exécute aucun nœud du corps. Le registre de sortie conserve son initialisation extérieure 10. Un corps présent dans le fichier ne signifie pas qu'il doit s'exécuter au moins une fois dans For.
+N=0 executes no body node. The output register retains its external initialization, 10. A body present in the file need not execute at least once in For.
 
-For : zéro itération conserve l'initialisation
+For: zero iterations preserve initialization
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

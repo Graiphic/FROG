@@ -551,7 +551,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Sample a polar quarter circle\nRadius 2 over angles [0,pi/4,pi/2] gives x=[2,sqrt(2),0],y=[0,sqrt(2),2]. The oracle uses analytic constants with absolute/relative tolerance 1e-12.\nEntrées -> opération -> indicateurs. Résultat attendu : output-x_values (array<f64>) = [2,1.4142135623730951,0]\noutput-y_values (array<f64>) = [0,1.4142135623730951,2]\noutput-error (i32) = 0\n",
+        "text": "Sample a polar quarter circle\nRadius 2 over angles [0,pi/4,pi/2] gives x=[2,sqrt(2),0],y=[0,sqrt(2),2]. The oracle uses analytic constants with absolute/relative tolerance 1e-12.\nInputs -> operation -> indicators. Expected result: output-x_values (array<f64>) = [2,1.4142135623730951,0]\noutput-y_values (array<f64>) = [0,1.4142135623730951,2]\noutput-error (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

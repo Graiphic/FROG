@@ -390,7 +390,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Search/Split String — found\nAn exact byte substring search returns the prefix and matching suffix. A missing match returns offset -1 and an empty matching suffix.\nEntrées -> opération -> indicateurs. Résultat attendu : before (string) = \"ab\"\nrest (string) = \"cdef\"\noffset (i32) = 2\n",
+        "text": "Search/Split String — found\nAn exact byte substring search returns the prefix and matching suffix. A missing match returns offset -1 and an empty matching suffix.\nInputs -> operation -> indicators. Expected result: before (string) = \"ab\"\nrest (string) = \"cdef\"\noffset (i32) = 2\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

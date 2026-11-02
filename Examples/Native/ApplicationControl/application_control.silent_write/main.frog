@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 6,
   "language": "FROG",
-  "title": "Property Node : écrire la valeur sans événement",
+  "title": "Property Node: write the value without an event",
   "metadata": {
-    "name": "Property Node : écrire la valeur sans événement",
+    "name": "Property Node: write the value without an event",
     "name_source": "document",
-    "description": "La référence transportée dans un vrai cluster cible le contrôle B. Son état courant est True et sa valeur par défaut sauvegardée est False. Property Value lit/écrit l'état de la vraie session ; Invoke Reinitialize applique le défaut sauvegardé. Ce profil local ne prétend pas exécuter tous les membres proposés par l'éditeur.\n\nProperty Node : écrire la valeur sans événement\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/object-reference.local@1.\nExpected:\nresult (bool) = false\n",
+    "description": "The reference transported in an actual cluster targets control B. Its current state is True and its saved default is False. Property Value reads/writes the real session state; Invoke Reinitialize applies the saved default. This local profile does not claim to execute every member offered by the editor.\n\nProperty Node: write the value without an event\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/object-reference.local@1.\nExpected:\nresult (bool) = false\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -561,7 +561,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Property Node : écrire la valeur sans événement\nProperty Node : écrire la valeur sans événement\nEntrées -> opération -> indicateurs. Résultat attendu : result (bool) = false\n",
+        "text": "Property Node: write the value without an event\nProperty Node: write the value without an event\nInputs -> operation -> indicators. Expected result: result (bool) = false\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

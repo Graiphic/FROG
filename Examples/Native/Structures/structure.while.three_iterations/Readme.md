@@ -1,10 +1,10 @@
-# While : arrêter au troisième incrément
+# While: stop at the third increment
 
-While : arrêter au troisième incrément
+While: stop at the third increment
 
-Le registre est initialisé à 0. Le corps incrémente puis compare sa nouvelle valeur à 3 ; Stop if True termine donc après les valeurs 1, 2 et 3. Le test compare la sortie finale, sans confondre l'index i (0,1,2) et le nombre d'itérations (3).
+The register is initialized to 0. The body increments, then compares its new value with 3; Stop if True therefore terminates after values 1, 2 and 3. The test compares the final output without confusing index i (0,1,2) with iteration count (3).
 
-While : arrêter au troisième incrément
+While: stop at the third increment
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

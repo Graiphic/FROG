@@ -2,9 +2,9 @@
 
 Emits the fixed f64 value currently catalogued by Studio.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : aucune; constante typée.
-Résultats attendus : value (f64) = 0.6931471805599453.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: none; typed constant.
+Expected results: value (f64) = 0.6931471805599453.
 
 Emits the fixed f64 value currently catalogued by Studio.
 

@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Round To Nearest — ties even negative half",
     "name_source": "document",
-    "description": "Une égalité exacte se départage vers l'entier pair. Le nouveau profil Studio even64 est indépendant du mode FENV du processus; le profil historique fenv64 explicitement enregistré garde son sens propre.\nEntrées : in (f64) = -0.5.\nRésultats attendus : result (f64) = -0.0.\n\nNumeric scalar, array or recursively numeric cluster; result preserves aggregate structure.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (f64) = -0.0\n",
+    "description": "Exact ties round to the nearest even integer. The new Studio even64 profile is independent of the process FENV mode; the explicitly saved historical fenv64 profile retains its own meaning.\nInputs: in (f64) = -0.5.\nExpected results: result (f64) = -0.0.\n\nNumeric scalar, array or recursively numeric cluster; result preserves aggregate structure.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (f64) = -0.0\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -44,7 +44,7 @@
     "clear_indicators_when_called": false
   },
   "icon": {
-    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" role=\"img\" aria-labelledby=\"title\">\n  <title id=\"title\">Arrondir à l’entier le plus proche</title>\n  <g shape-rendering=\"geometricPrecision\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n    <path d=\"M7 3.5C5.4 2.7 4 3.7 4 5.5v37c0 1.9 1.9 3 3.6 2.1l36.1-18.2c1.8-.9 1.8-3.5 0-4.4L7 3.5Z\" fill=\"#4B5563\" stroke=\"#AAB4C0\" stroke-width=\"1.8\"/><g data-role=\"glyph\" data-shell=\"triangle\" transform=\"translate(-2.5 0)\"><path d=\"M19 19h-3.5v10h3.5M23 19h3.5v10H23\" fill=\"none\" stroke=\"#F8FAFC\" stroke-width=\"2.3\" stroke-linecap=\"square\"/></g>\n  </g>\n</svg>\n"
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" role=\"img\" aria-labelledby=\"title\">\n  <title id=\"title\">Round to Nearest</title>\n  <g shape-rendering=\"geometricPrecision\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n    <path d=\"M7 3.5C5.4 2.7 4 3.7 4 5.5v37c0 1.9 1.9 3 3.6 2.1l36.1-18.2c1.8-.9 1.8-3.5 0-4.4L7 3.5Z\" fill=\"#4B5563\" stroke=\"#AAB4C0\" stroke-width=\"1.8\"/><g data-role=\"glyph\" data-shell=\"triangle\" transform=\"translate(-2.5 0)\"><path d=\"M19 19h-3.5v10h3.5M23 19h3.5v10H23\" fill=\"none\" stroke=\"#F8FAFC\" stroke-width=\"2.3\" stroke-linecap=\"square\"/></g>\n  </g>\n</svg>\n"
   },
   "frontPanel": {
     "grid": {
@@ -229,7 +229,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Round To Nearest — ties even negative half\nNumeric scalar, array or recursively numeric cluster; result preserves aggregate structure.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = -0.0\n",
+        "text": "Round To Nearest — ties even negative half\nNumeric scalar, array or recursively numeric cluster; result preserves aggregate structure.\nInputs -> operation -> indicators. Expected result: output-result (f64) = -0.0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

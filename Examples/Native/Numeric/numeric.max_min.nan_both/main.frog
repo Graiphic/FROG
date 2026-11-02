@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Max & Min — nan both",
     "name_source": "document",
-    "description": "Le diagramme produit réellement NaN avec Divide 0/0, puis le transmet à both. Ce n'est pas un littéral JSON non fini ni une valeur d'indicateur préfabriquée. Un seul NaN donne 5 sur les deux sorties; deux NaN donnent NaN.\nEntrées : x (f64) = 0; y (f64) = 0.\nRésultats attendus : max (f64) = NaN; min (f64) = NaN.\n\nCompatible comparable x,y -> max/min of the common type.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-max (f64) = NaN\noutput-min (f64) = NaN\n",
+    "description": "The diagram actually produces NaN with Divide 0/0, then passes it to both. This is neither a non-finite JSON literal nor a prefabricated indicator value. One NaN yields 5 on both outputs; two NaNs yield NaN.\nInputs: x (f64) = 0; y (f64) = 0.\nExpected results: max (f64) = NaN; min (f64) = NaN.\n\nCompatible comparable x,y -> max/min of the common type.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-max (f64) = NaN\noutput-min (f64) = NaN\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -394,7 +394,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Max & Min — nan both\nCompatible comparable x,y -> max/min of the common type.\nEntrées -> opération -> indicateurs. Résultat attendu : output-max (f64) = NaN\noutput-min (f64) = NaN\n",
+        "text": "Max & Min — nan both\nCompatible comparable x,y -> max/min of the common type.\nInputs -> operation -> indicators. Expected result: output-max (f64) = NaN\noutput-min (f64) = NaN\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

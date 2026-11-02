@@ -2,9 +2,9 @@
 
 Returns a numeric 0/1 pulse of period 2: 1 on [2n,2n+1) and 0 elsewhere, also for negative x.
 
-Primitive de fenêtrage/palier. Gating Square est périodique de période 2; elle ne calcule jamais le carré numérique x*x.
-Entrées : x (f64) = -0.5.
-Résultats attendus : result (f64) = 0.
+Windowing/step primitive. Gating Square is periodic with period 2; it never computes the numeric square x*x.
+Inputs: x (f64) = -0.5.
+Expected results: result (f64) = 0.
 
 Returns a numeric 0/1 pulse of period 2: 1 on [2n,2n+1) and 0 elsewhere, also for negative x.
 

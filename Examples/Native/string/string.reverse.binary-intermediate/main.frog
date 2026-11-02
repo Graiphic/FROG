@@ -295,7 +295,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Reverse bytes without repairing UTF-8\nReverse moves bytes, not Unicode characters. Reversing the UTF-8 encoding of é creates bytes 169, 195. The next real function reads this binary intermediate as U8; no invalid UTF-8 string is saved as a literal.\nEntrées -> opération -> indicateurs. Résultat attendu : result (array<u8>) = [169,195]\n",
+        "text": "Reverse bytes without repairing UTF-8\nReverse moves bytes, not Unicode characters. Reversing the UTF-8 encoding of é creates bytes 169, 195. The next real function reads this binary intermediate as U8; no invalid UTF-8 string is saved as a literal.\nInputs -> operation -> indicators. Expected result: result (array<u8>) = [169,195]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

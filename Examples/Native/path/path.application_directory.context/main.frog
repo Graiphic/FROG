@@ -165,7 +165,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Application Directory uses the saved root document directory\nIn Studio, a saved root FROG without a loaded project uses its containing directory as the application directory. The runner computes this exact expected path independently from the actual saved example file; it must not substitute the Stud...\nEntrées -> opération -> indicateurs. Résultat attendu : result (path) = <current document directory>\n",
+        "text": "Application Directory uses the saved root document directory\nIn Studio, a saved root FROG without a loaded project uses its containing directory as the application directory. The runner computes this exact expected path independently from the actual saved example file; it must not substitute the Stud...\nInputs -> operation -> indicators. Expected result: result (path) = <current document directory>\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

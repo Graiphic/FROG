@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Exponential Integral — reference 2",
     "name_source": "document",
-    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : x (f64) = 0.5; n (i32) = 0.\nRésultats attendus : result (f64) = 1.2130613194252668.\n\nEvaluates E_n(q)=integral(1,infinity,exp(-q*t)/t^n,dt), q=abs(x), with required integer n>=0 and no default order.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (f64) = 1.2130613194252668\n",
+    "description": "Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.\nInputs: x (f64) = 0.5; n (i32) = 0.\nExpected results: result (f64) = 1.2130613194252668.\n\nEvaluates E_n(q)=integral(1,infinity,exp(-q*t)/t^n,dt), q=abs(x), with required integer n>=0 and no default order.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (f64) = 1.2130613194252668\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -295,7 +295,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Exponential Integral — reference 2\nEvaluates E_n(q)=integral(1,infinity,exp(-q*t)/t^n,dt), q=abs(x), with required integer n>=0 and no default order.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = 1.2130613194252668\n",
+        "text": "Exponential Integral — reference 2\nEvaluates E_n(q)=integral(1,infinity,exp(-q*t)/t^n,dt), q=abs(x), with required integer n>=0 and no default order.\nInputs -> operation -> indicators. Expected result: output-result (f64) = 1.2130613194252668\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

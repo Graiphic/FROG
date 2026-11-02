@@ -1,10 +1,10 @@
-# Occurrence : timeout zéro sans signal
+# Occurrence: zero timeout without a signal
 
-Occurrence : timeout zéro sans signal
+Occurrence: zero timeout without a signal
 
-Le Generate crée l'occurrence vivante ; aucun Set n'est présent. Le Wait utilise timeout=0 et ignore_previous=True par défaut. Il retourne immédiatement timed_out=True et ne conserve aucun message fictif.
+Generate creates the live occurrence; no Set is present. Wait defaults to timeout=0 and ignore_previous=True. It immediately returns timed_out=True and retains no fabricated message.
 
-Occurrence : timeout zéro sans signal
+Occurrence: zero timeout without a signal
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

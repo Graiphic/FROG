@@ -445,7 +445,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Unbundle derives its outputs from the incoming Cluster\nThe saved node still records one historical row, while its actual incoming Cluster has three fields. Loading and compilation must expose all three outputs without changing that authored count or losing hidden fields.\nEntrées -> opération -> indicateurs. Résultat attendu : number-result (i64) = 9007199254740993\ntext-result (string) = \"kept\"\nflag-result (bool) = true\n",
+        "text": "Unbundle derives its outputs from the incoming Cluster\nThe saved node still records one historical row, while its actual incoming Cluster has three fields. Loading and compilation must expose all three outputs without changing that authored count or losing hidden fields.\nInputs -> operation -> indicators. Expected result: number-result (i64) = 9007199254740993\ntext-result (string) = \"kept\"\nflag-result (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

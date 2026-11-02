@@ -2,9 +2,9 @@
 
 Computes e raised to x.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : x (f64) = 0.
-Résultats attendus : result (f64) = 1.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: x (f64) = 0.
+Expected results: result (f64) = 1.
 
 Computes e raised to x.
 

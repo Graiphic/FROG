@@ -2,9 +2,9 @@
 
 Evaluates the normalized parabolic cylinder function Dv(x), the Weber solution with Dv(z)~z^v exp(-z*z/4) at positive infinity.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : argument (f64) = 1.0; order (f64) = -3.0.
-Résultats attendus : value (f64) = 0.12124334954395824.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: argument (f64) = 1.0; order (f64) = -3.0.
+Expected results: value (f64) = 0.12124334954395824.
 
 Evaluates the normalized parabolic cylinder function Dv(x), the Weber solution with Dv(z)~z^v exp(-z*z/4) at positive infinity.
 

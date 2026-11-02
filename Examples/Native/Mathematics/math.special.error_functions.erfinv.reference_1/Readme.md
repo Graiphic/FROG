@@ -2,9 +2,9 @@
 
 Solves erf(y)=q; this inverse function is not the reciprocal 1/erf(q).
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : x (f64) = -0.9999999999999999.
-Résultats attendus : result (f64) = 5.8635847487551676.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: x (f64) = -0.9999999999999999.
+Expected results: result (f64) = 5.8635847487551676.
 
 Solves erf(y)=q; this inverse function is not the reciprocal 1/erf(q).
 

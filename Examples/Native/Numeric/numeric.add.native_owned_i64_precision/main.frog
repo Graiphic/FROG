@@ -406,7 +406,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: i64 precision\nExact integer identity beyond2^53; no floating intermediate is permitted. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (array<i64>) = [9007199254740994]\n",
+        "text": "Add: i64 precision\nExact integer identity beyond2^53; no floating intermediate is permitted. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nInputs -> operation -> indicators. Expected result: output-result (array<i64>) = [9007199254740994]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

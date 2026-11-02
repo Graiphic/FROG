@@ -2,9 +2,9 @@
 
 Compatible comparable x,y -> max/min of the common type.
 
-Les extrêmes entiers restent des carriers entiers exacts, sans passage par DBL. Pour deux zéros égaux, Max et Min conservent tous deux les bits de x, ici -0.
-Entrées : x (u64) = 0; y (u64) = 18446744073709551615.
-Résultats attendus : max (u64) = 18446744073709551615; min (u64) = 0.
+Integer extrema retain exact integer carriers without passing through DBL. For two equal zeros, Max and Min both preserve the bits of x, here -0.
+Inputs: x (u64) = 0; y (u64) = 18446744073709551615.
+Expected results: max (u64) = 18446744073709551615; min (u64) = 0.
 
 Compatible comparable x,y -> max/min of the common type.
 

@@ -570,7 +570,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Replace one nested Cluster field\nReplacing Config.Offset preserves the nested Name and outer Enabled fields. The selection uses persistent field identities, independently from their displayed names.\nEntrées -> opération -> indicateurs. Résultat attendu : offset (i64) = -7\nname (string) = \"kept\"\nenabled (bool) = true\n",
+        "text": "Replace one nested Cluster field\nReplacing Config.Offset preserves the nested Name and outer Enabled fields. The selection uses persistent field identities, independently from their displayed names.\nInputs -> operation -> indicators. Expected result: offset (i64) = -7\nname (string) = \"kept\"\nenabled (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

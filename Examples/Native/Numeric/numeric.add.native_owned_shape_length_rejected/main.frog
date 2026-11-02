@@ -466,7 +466,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: shape length rejected\nShapes[2] and[3] are incompatible; keep a connected real indicator to verify that it receives nothing. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nEntrées -> opération -> indicateurs. Résultat attendu : Diagnostic: native.numeric.incompatible_shape",
+        "text": "Add: shape length rejected\nShapes[2] and[3] are incompatible; keep a connected real indicator to verify that it receives nothing. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nInputs -> operation -> indicators. Expected result: Diagnostic: native.numeric.incompatible_shape",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

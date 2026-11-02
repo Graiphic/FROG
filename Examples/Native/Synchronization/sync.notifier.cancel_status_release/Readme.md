@@ -1,10 +1,10 @@
-# Notifier : Status, Cancel et Release ont des rôles différents
+# Notifier: Status, Cancel and Release have distinct roles
 
-Notifier : Status, Cancel et Release ont des rôles différents
+Notifier: Status, Cancel and Release have distinct roles
 
-Send publie 42. Status lit 42 sans consommer. Cancel retourne 42 puis efface le signal retenu ; Wait avec timeout=0 retourne sa valeur de type par défaut 0 et timed_out=True. Release retrouve une notification vide 0 et ferme le handle.
+Send publishes 42. Status reads 42 without consuming it. Cancel returns 42, then clears the retained signal; Wait with timeout=0 returns its type default, 0, and timed_out=True. Release finds an empty notification, 0, and closes the handle.
 
-Notifier : Status, Cancel et Release ont des rôles différents
+Notifier: Status, Cancel and Release have distinct roles
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

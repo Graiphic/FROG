@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Timed Loop : configuration des nœuds de temporisation",
+  "title": "Timed Loop: timing-node configuration",
   "metadata": {
-    "name": "Timed Loop : configuration des nœuds de temporisation",
+    "name": "Timed Loop: timing-node configuration",
     "name_source": "document",
-    "description": "Les quatre nœuds de bordure conservent la configuration de temporisation et leurs lignes visibles. Cet exemple vérifie seulement la sauvegarde/réouverture du modèle actuel. Le backend canonique ne fournit pas encore de contrat d'exécution Timed Loop ; aucune précision temps réel ni exécution périodique n'est annoncée.\n\nTimed Loop : configuration des nœuds de temporisation\n\nMode: persistence. Profile: studio-draft. Capability: studio/timed-loop-authoring.\nExpected:\n",
+    "description": "The four border nodes retain their timing configuration and visible rows. This example checks only persistence and reopening of the current model. The canonical backend does not yet provide a Timed Loop execution contract; no real-time precision or periodic execution is claimed.\n\nTimed Loop: timing-node configuration\n\nMode: persistence. Profile: studio-draft. Capability: studio/timed-loop-authoring.\nExpected:\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -232,7 +232,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Timed Loop : configuration des nœuds de temporisation\nTimed Loop : configuration des nœuds de temporisation\nEntrées -> opération -> indicateurs. Résultat attendu : ",
+        "text": "Timed Loop: timing-node configuration\nTimed Loop: timing-node configuration\nInputs -> operation -> indicators. Expected result: ",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

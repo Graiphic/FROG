@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Machine Epsilon — value and persistence",
     "name_source": "document",
-    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : aucune; constante typée.\nRésultats attendus : value (f64) = 2.220446049250313e-16.\n\nEmits the fixed f64 value currently catalogued by Studio.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-value (f64) = 2.220446049250313e-16\n",
+    "description": "Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.\nInputs: none; typed constant.\nExpected results: value (f64) = 2.220446049250313e-16.\n\nEmits the fixed f64 value currently catalogued by Studio.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-value (f64) = 2.220446049250313e-16\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -163,7 +163,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Machine Epsilon — value and persistence\nEmits the fixed f64 value currently catalogued by Studio.\nEntrées -> opération -> indicateurs. Résultat attendu : output-value (f64) = 2.220446049250313e-16\n",
+        "text": "Machine Epsilon — value and persistence\nEmits the fixed f64 value currently catalogued by Studio.\nInputs -> operation -> indicators. Expected result: output-value (f64) = 2.220446049250313e-16\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

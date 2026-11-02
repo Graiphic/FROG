@@ -1,10 +1,10 @@
-# Invoke Node : réinitialiser la valeur par défaut
+# Invoke Node: restore the default value
 
-Invoke Node : réinitialiser la valeur par défaut
+Invoke Node: restore the default value
 
-La référence transportée dans un vrai cluster cible le contrôle B. Son état courant est True et sa valeur par défaut sauvegardée est False. Property Value lit/écrit l'état de la vraie session ; Invoke Reinitialize applique le défaut sauvegardé. Ce profil local ne prétend pas exécuter tous les membres proposés par l'éditeur.
+The reference transported in an actual cluster targets control B. Its current state is True and its saved default is False. Property Value reads/writes the real session state; Invoke Reinitialize applies the saved default. This local profile does not claim to execute every member offered by the editor.
 
-Invoke Node : réinitialiser la valeur par défaut
+Invoke Node: restore the default value
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/object-reference.local@1.
 Expected:

@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Square — unary i16",
     "name_source": "document",
-    "description": "Square possède une seule entrée canonique in (anciens alias a/value conservés). Avec 3, la sortie result vaut 9. Ce n'est pas la fenêtre math.gating.square.\nEntrées : in (i16) = 3.\nRésultats attendus : result (i16) = 9.\n\nNumeric scalar, array or recursively numeric cluster; result preserves aggregate structure.\n\nMode: execution. Profile: studio-draft. Capability: explicit private Simulation; not a compiled-native claim.\nExpected:\noutput-result (i16) = 9\n",
+    "description": "Square has one canonical input, in (historical a/value aliases are preserved). With 3, result is 9. This is not the math.gating.square window.\nInputs: in (i16) = 3.\nExpected results: result (i16) = 9.\n\nNumeric scalar, array or recursively numeric cluster; result preserves aggregate structure.\n\nMode: execution. Profile: studio-draft. Capability: explicit private Simulation; not a compiled-native claim.\nExpected:\noutput-result (i16) = 9\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -44,7 +44,7 @@
     "clear_indicators_when_called": false
   },
   "icon": {
-    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" role=\"img\" aria-labelledby=\"title\">\n  <title id=\"title\">Carré</title>\n  <g shape-rendering=\"geometricPrecision\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n    <path d=\"M7 3.5C5.4 2.7 4 3.7 4 5.5v37c0 1.9 1.9 3 3.6 2.1l36.1-18.2c1.8-.9 1.8-3.5 0-4.4L7 3.5Z\" fill=\"#4B5563\" stroke=\"#AAB4C0\" stroke-width=\"1.8\"/><g data-role=\"glyph\" data-shell=\"triangle\" transform=\"translate(-2.5 0)\"><text x=\"20.5\" y=\"24.5\" fill=\"#F8FAFC\" font-family=\"Segoe UI, Arial, sans-serif\" font-size=\"13\" font-weight=\"700\" font-style=\"normal\" text-anchor=\"middle\" dominant-baseline=\"middle\" letter-spacing=\"0\">x²</text></g>\n  </g>\n</svg>\n"
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" role=\"img\" aria-labelledby=\"title\">\n  <title id=\"title\">Square</title>\n  <g shape-rendering=\"geometricPrecision\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n    <path d=\"M7 3.5C5.4 2.7 4 3.7 4 5.5v37c0 1.9 1.9 3 3.6 2.1l36.1-18.2c1.8-.9 1.8-3.5 0-4.4L7 3.5Z\" fill=\"#4B5563\" stroke=\"#AAB4C0\" stroke-width=\"1.8\"/><g data-role=\"glyph\" data-shell=\"triangle\" transform=\"translate(-2.5 0)\"><text x=\"20.5\" y=\"24.5\" fill=\"#F8FAFC\" font-family=\"Segoe UI, Arial, sans-serif\" font-size=\"13\" font-weight=\"700\" font-style=\"normal\" text-anchor=\"middle\" dominant-baseline=\"middle\" letter-spacing=\"0\">x²</text></g>\n  </g>\n</svg>\n"
   },
   "frontPanel": {
     "grid": {
@@ -229,7 +229,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Square — unary i16\nNumeric scalar, array or recursively numeric cluster; result preserves aggregate structure.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (i16) = 9\n",
+        "text": "Square — unary i16\nNumeric scalar, array or recursively numeric cluster; result preserves aggregate structure.\nInputs -> operation -> indicators. Expected result: output-result (i16) = 9\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

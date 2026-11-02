@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Occurrence : arrêter une attente infinie",
+  "title": "Occurrence: stop an infinite wait",
   "metadata": {
-    "name": "Occurrence : arrêter une attente infinie",
+    "name": "Occurrence: stop an infinite wait",
     "name_source": "document",
-    "description": "Run inscrit une vraie attente sans échéance : aucun Set n'est présent. Stop doit annuler l'attente immédiatement, libérer son ticket et terminer la génération sans publier un faux timed_out. Une nouvelle exécution du même document recrée une attente propre et reste elle aussi arrêtable. Le test attend l'inscription observable, pas un délai arbitraire.\n\nOccurrence : arrêter une attente infinie\n\nMode: expected-abort. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\n",
+    "description": "Run registers an actual wait with no deadline; no Set is present. Stop must cancel it immediately, release its ticket and end the generation without publishing a fabricated timed_out. Running the same document again creates a clean, stoppable wait. The test waits for observable registration, not an arbitrary delay.\n\nOccurrence: stop an infinite wait\n\nMode: expected-abort. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -194,7 +194,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Occurrence : arrêter une attente infinie\nOccurrence : arrêter une attente infinie\nEntrées -> opération -> indicateurs. Résultat attendu : ",
+        "text": "Occurrence: stop an infinite wait\nOccurrence: stop an infinite wait\nInputs -> operation -> indicators. Expected result: ",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

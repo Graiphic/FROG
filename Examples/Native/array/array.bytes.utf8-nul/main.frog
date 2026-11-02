@@ -262,7 +262,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "String bytes retain UTF-8 and NUL\nThis is a byte conversion, not Unicode character indexing. é, NUL and A produce bytes 195, 169, 0, 65.\nEntrées -> opération -> indicateurs. Résultat attendu : result (array<u8>) = [195,169,0,65]\n",
+        "text": "String bytes retain UTF-8 and NUL\nThis is a byte conversion, not Unicode character indexing. é, NUL and A produce bytes 195, 169, 0, 65.\nInputs -> operation -> indicators. Expected result: result (array<u8>) = [195,169,0,65]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

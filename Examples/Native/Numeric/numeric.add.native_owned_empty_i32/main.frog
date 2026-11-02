@@ -403,7 +403,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: empty i32\nA typed empty Array has shape[0], retains its type and creates no element. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (array<i32>) = []\n",
+        "text": "Add: empty i32\nA typed empty Array has shape[0], retains its type and creates no element. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nInputs -> operation -> indicators. Expected result: output-result (array<i32>) = []\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

@@ -2,9 +2,9 @@
 
 Floor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure.
 
-q=floor(x/y), r=x-y*q. Les identifiants persistés historiques sont conservés: quotient est la sortie R (reste), remainder est la sortie IQ (quotient entier). Les libellés expliquent ce décalage sans casser les fils existants.
-Entrées : x (i32) = -7; y (i32) = 3.
-Résultats attendus : quotient (i32) = 2; remainder (i32) = -3.
+q=floor(x/y), r=x-y*q. Historical persisted identifiers are preserved: quotient is output R (remainder), and remainder is output IQ (integer quotient). Labels explain this mismatch without breaking existing wires.
+Inputs: x (i32) = -7; y (i32) = 3.
+Expected results: quotient (i32) = 2; remainder (i32) = -3.
 
 Floor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure.
 

@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Case string : sélection exacte et tunnels",
+  "title": "Case string: exact selection and tunnels",
   "metadata": {
-    "name": "Case string : sélection exacte et tunnels",
+    "name": "Case string: exact selection and tunnels",
     "name_source": "document",
-    "description": "Le sélecteur choisit la branche exécutée, indépendamment de la branche affichée. La branche chosen incrémente l'entrée 40 et publie 41 ; l'autre publie 99. Tous les contenus et les producteurs du tunnel de sortie persistent, y compris dans la branche cachée. Les sélecteurs I64/U64 conservent les valeurs exactes ; les enums comparent les IDs de domaine/items.\n\nCase string : sélection exacte et tunnels\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nresult (i64) = 41\n",
+    "description": "The selector chooses the executed branch independently of the displayed branch. The chosen branch increments input 40 and publishes 41; the other publishes 99. All contents and output-tunnel producers persist, including in the hidden branch. I64/U64 selectors retain exact values; enums compare domain/item IDs.\n\nCase string: exact selection and tunnels\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nresult (i64) = 41\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -405,7 +405,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Case string : sélection exacte et tunnels\nCase string : sélection exacte et tunnels\nEntrées -> opération -> indicateurs. Résultat attendu : result (i64) = 41\n",
+        "text": "Case string: exact selection and tunnels\nCase string: exact selection and tunnels\nInputs -> operation -> indicators. Expected result: result (i64) = 41\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

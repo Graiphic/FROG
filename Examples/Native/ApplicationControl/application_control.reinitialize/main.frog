@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 6,
   "language": "FROG",
-  "title": "Invoke Node : réinitialiser la valeur par défaut",
+  "title": "Invoke Node: restore the default value",
   "metadata": {
-    "name": "Invoke Node : réinitialiser la valeur par défaut",
+    "name": "Invoke Node: restore the default value",
     "name_source": "document",
-    "description": "La référence transportée dans un vrai cluster cible le contrôle B. Son état courant est True et sa valeur par défaut sauvegardée est False. Property Value lit/écrit l'état de la vraie session ; Invoke Reinitialize applique le défaut sauvegardé. Ce profil local ne prétend pas exécuter tous les membres proposés par l'éditeur.\n\nInvoke Node : réinitialiser la valeur par défaut\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/object-reference.local@1.\nExpected:\nresult (bool) = false\n",
+    "description": "The reference transported in an actual cluster targets control B. Its current state is True and its saved default is False. Property Value reads/writes the real session state; Invoke Reinitialize applies the saved default. This local profile does not claim to execute every member offered by the editor.\n\nInvoke Node: restore the default value\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/object-reference.local@1.\nExpected:\nresult (bool) = false\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -614,7 +614,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Invoke Node : réinitialiser la valeur par défaut\nInvoke Node : réinitialiser la valeur par défaut\nEntrées -> opération -> indicateurs. Résultat attendu : result (bool) = false\n",
+        "text": "Invoke Node: restore the default value\nInvoke Node: restore the default value\nInputs -> operation -> indicators. Expected result: result (bool) = false\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

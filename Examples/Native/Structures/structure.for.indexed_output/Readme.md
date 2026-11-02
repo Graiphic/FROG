@@ -1,10 +1,10 @@
-# For : collecter les trois éléments par auto-indexation
+# For: collect three elements through auto-indexing
 
-For : collecter les trois éléments par auto-indexation
+For: collect three elements through auto-indexing
 
-Le tableau d'entrée contient 5, 6, 7. Malgré N=9, l'auto-indexation limite la boucle à trois éléments. La sortie indexée collecte [5,6,7] dans le même ordre, sans dimension ou élément supplémentaire.
+The input array contains 5, 6, 7. Despite N=9, auto-indexing limits the loop to three elements. The indexed output collects [5,6,7] in the same order, without an extra dimension or element.
 
-For : collecter les trois éléments par auto-indexation
+For: collect three elements through auto-indexing
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

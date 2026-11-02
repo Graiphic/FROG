@@ -371,7 +371,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "String Length preserves Cluster fields\nEach String leaf is replaced by its byte length. Cluster field identities and names remain in the same order, including when UTF-8 uses several bytes.\nEntrées -> opération -> indicateurs. Résultat attendu : result (cluster<\"accent\":i32,\"word\":i32>) = {\"accent\":2,\"word\":4}\n",
+        "text": "String Length preserves Cluster fields\nEach String leaf is replaced by its byte length. Cluster field identities and names remain in the same order, including when UTF-8 uses several bytes.\nInputs -> operation -> indicators. Expected result: result (cluster<\"accent\":i32,\"word\":i32>) = {\"accent\":2,\"word\":4}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

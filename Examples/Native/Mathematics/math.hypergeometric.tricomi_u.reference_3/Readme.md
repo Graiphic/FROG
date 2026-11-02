@@ -2,9 +2,9 @@
 
 Evaluates confluent hypergeometric U, a distinct solution from Kummer M; never 1/M, 1-M or regularized M.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : x (f64) = 1; a (f64) = 1; b (f64) = 1.
-Résultats attendus : value (f64) = 0.5963473623231940743410784993692793760741778601525487816.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: x (f64) = 1; a (f64) = 1; b (f64) = 1.
+Expected results: value (f64) = 0.5963473623231940743410784993692793760741778601525487816.
 
 Evaluates confluent hypergeometric U, a distinct solution from Kummer M; never 1/M, 1-M or regularized M.
 

@@ -299,7 +299,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Rotate 1D Array — full-cycle\nPositive offset moves the last elements to the front. Negative offset rotates left. Complete cycles preserve values and order.\nEntrées -> opération -> indicateurs. Résultat attendu : result (array<i64>) = [1,2,3,4]\n",
+        "text": "Rotate 1D Array — full-cycle\nPositive offset moves the last elements to the front. Negative offset rotates left. Complete cycles preserve values and order.\nInputs -> operation -> indicators. Expected result: result (array<i64>) = [1,2,3,4]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

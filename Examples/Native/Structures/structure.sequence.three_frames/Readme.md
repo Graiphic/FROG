@@ -1,10 +1,10 @@
-# Flat Sequence : entrée et passages entre trois frames
+# Flat Sequence: input and passages across three frames
 
-Flat Sequence : entrée et passages entre trois frames
+Flat Sequence: input and passages across three frames
 
-Le 7 extérieur entre dans First, traverse Empty transport frame puis arrive dans Last où Increment donne 8. La frame sélectionnée à l'édition est Last ; les trois sous-diagrammes et leurs tunnels persistent. La vue sélectionnée ne détermine pas ce qui s'exécute. Ceci démontre Flat, pas Stacked Sequence.
+External value 7 enters First, traverses Empty transport frame, then reaches Last, where Increment produces 8. The selected editing frame is Last; all three subdiagrams and their tunnels persist. The selected view does not determine what executes. This demonstrates Flat, not Stacked Sequence.
 
-Flat Sequence : entrée et passages entre trois frames
+Flat Sequence: input and passages across three frames
 
 Mode: execution. Profile: studio-draft. Capability: highlight/flat-sequence.
 Expected:

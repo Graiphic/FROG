@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "For : zéro itération conserve l'initialisation",
+  "title": "For: zero iterations preserve initialization",
   "metadata": {
-    "name": "For : zéro itération conserve l'initialisation",
+    "name": "For: zero iterations preserve initialization",
     "name_source": "document",
-    "description": "N=0 n'exécute aucun nœud du corps. Le registre de sortie conserve son initialisation extérieure 10. Un corps présent dans le fichier ne signifie pas qu'il doit s'exécuter au moins une fois dans For.\n\nFor : zéro itération conserve l'initialisation\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nresult (i64) = 10\n",
+    "description": "N=0 executes no body node. The output register retains its external initialization, 10. A body present in the file need not execute at least once in For.\n\nFor: zero iterations preserve initialization\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nresult (i64) = 10\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -332,7 +332,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "For : zéro itération conserve l'initialisation\nFor : zéro itération conserve l'initialisation\nEntrées -> opération -> indicateurs. Résultat attendu : result (i64) = 10\n",
+        "text": "For: zero iterations preserve initialization\nFor: zero iterations preserve initialization\nInputs -> operation -> indicators. Expected result: result (i64) = 10\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

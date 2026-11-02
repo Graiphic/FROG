@@ -1,10 +1,10 @@
-# Event : traiter un Timeout immédiat
+# Event: handle an immediate Timeout
 
-Event : traiter un Timeout immédiat
+Event: handle an immediate Timeout
 
-Le terminal Timeout reçoit 0 milliseconde. Sans événement en attente, la structure exécute exactement son cas Timeout et publie 7. Ce fichier ne requiert aucun clic utilisateur et ne promet pas les événements dynamiques de Register For Events sur tous les backends.
+The Timeout terminal receives 0 milliseconds. With no pending event, the structure executes exactly its Timeout case and publishes 7. This file requires no user click and does not promise Register For Events dynamic events on every backend.
 
-Event : traiter un Timeout immédiat
+Event: handle an immediate Timeout
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

@@ -697,7 +697,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Evaluate a persisted prepared assignment program\nThe real authoring producer stores named inputs [x,z,q] and outputs [p,y] with its AST. Values [3,4,5] produce [25,10] without reparsing the original source text at execution.\nEntrées -> opération -> indicateurs. Résultat attendu : output-output_values (array<f64>) = [25,10]\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
+        "text": "Evaluate a persisted prepared assignment program\nThe real authoring producer stores named inputs [x,z,q] and outputs [p,y] with its AST. Values [3,4,5] produce [25,10] without reparsing the original source text at execution.\nInputs -> operation -> indicators. Expected result: output-output_values (array<f64>) = [25,10]\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

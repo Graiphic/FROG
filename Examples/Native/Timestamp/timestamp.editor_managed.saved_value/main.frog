@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Timestamp : constante et indicateur conservés dans le document",
+  "title": "Timestamp: constant and indicator preserved in the document",
   "metadata": {
-    "name": "Timestamp : constante et indicateur conservés dans le document",
+    "name": "Timestamp: constant and indicator preserved in the document",
     "name_source": "document",
-    "description": "La constante et l'indicateur utilisent le type Timestamp réel de l'éditeur, avec une valeur enregistrée 0 et l'affichage sur deux lignes. Cet exemple qualifie uniquement la sauvegarde, la réouverture et les options de présentation editor_managed. Les six fonctions calendrier/heure de la palette n'ont pas de provider d'exécution qualifié ; aucun résultat d'horloge, de fuseau ou de précision128 bits n'est inventé.\n\nTimestamp : constante et indicateur conservés dans le document\n\nMode: persistence. Profile: studio-draft. Capability: studio/editor-managed-timestamp.\nExpected:\n",
+    "description": "The constant and indicator use the editor's actual Timestamp type, with saved value 0 and a two-line display. This example qualifies only saving, reopening and editor_managed presentation options. The six calendar/time palette functions have no qualified execution provider; no clock, time-zone or 128-bit precision result is fabricated.\n\nTimestamp: constant and indicator preserved in the document\n\nMode: persistence. Profile: studio-draft. Capability: studio/editor-managed-timestamp.\nExpected:\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -56,7 +56,7 @@
         "classId": "frog.widgets.numeric_indicator",
         "role": "indicator",
         "valueType": "timestamp",
-        "label": "Timestamp enregistré",
+        "label": "Saved Timestamp",
         "bounds": {
           "x": 60,
           "y": 60,
@@ -167,7 +167,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Timestamp : constante et indicateur conservés dans le document\nTimestamp : constante et indicateur conservés dans le document\nEntrées -> opération -> indicateurs. Résultat attendu : ",
+        "text": "Timestamp: constant and indicator preserved in the document\nTimestamp: constant and indicator preserved in the document\nInputs -> operation -> indicators. Expected result: ",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

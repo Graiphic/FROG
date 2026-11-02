@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 6,
   "language": "FROG",
-  "title": "Rendezvous : trois préparations indépendantes",
+  "title": "Rendezvous: three independent preparations",
   "metadata": {
-    "name": "Rendezvous : trois préparations indépendantes",
+    "name": "Rendezvous: three independent preparations",
     "name_source": "document",
-    "description": "Run this document. Three independent exact-i32 Increment chains perform one, two and three increments from -2, -3 and -4; each computes timeout -1. All three Waits receive Create directly. passed_0/1/2 are False only after their successful barrier passage. Destroy consumes a typed Record join of all three outcomes; it cannot run directly after Create. These chains use the verified composed Increment profile without claiming other numeric corridors.\n\nRendezvous : trois préparations indépendantes\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nprepared_0 (i32) = -1\npassed_0 (bool) = false\nprepared_1 (i32) = -1\npassed_1 (bool) = false\nprepared_2 (i32) = -1\npassed_2 (bool) = false\n",
+    "description": "Run this document. Three independent exact-i32 Increment chains perform one, two and three increments from -2, -3 and -4; each computes timeout -1. All three Waits receive Create directly. passed_0/1/2 are False only after their successful barrier passage. Destroy consumes a typed Record join of all three outcomes; it cannot run directly after Create. These chains use the verified composed Increment profile without claiming other numeric corridors.\n\nRendezvous: three independent preparations\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nprepared_0 (i32) = -1\npassed_0 (bool) = false\nprepared_1 (i32) = -1\npassed_1 (bool) = false\nprepared_2 (i32) = -1\npassed_2 (bool) = false\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -1398,7 +1398,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Rendezvous : trois préparations indépendantes\nRendezvous : trois préparations indépendantes\nEntrées -> opération -> indicateurs. Résultat attendu : prepared_0 (i32) = -1\npassed_0 (bool) = false\nprepared_1 (i32) = -1\npassed_1 (bool) = false\nprepared_2 (i32) = -1\npassed_2 (bool) = false\n",
+        "text": "Rendezvous: three independent preparations\nRendezvous: three independent preparations\nInputs -> operation -> indicators. Expected result: prepared_0 (i32) = -1\npassed_0 (bool) = false\nprepared_1 (i32) = -1\npassed_1 (bool) = false\nprepared_2 (i32) = -1\npassed_2 (bool) = false\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

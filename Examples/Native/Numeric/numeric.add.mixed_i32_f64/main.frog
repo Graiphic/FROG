@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Add — mixed i32 f64",
     "name_source": "document",
-    "description": "Le résolveur promeut I32 et DBL vers DBL. Cette variante est explicitement exécutée en Simulation privée tant que le lowering natif des opérandes mixtes n'est pas admis; aucune troncature ni repli silencieux.\nEntrées : a (i32) = 2; b (f64) = 0.5.\nRésultats attendus : result (f64) = 2.5.\n\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\n\nMode: execution. Profile: studio-draft. Capability: explicit private Simulation; not a compiled-native claim.\nExpected:\noutput-result (f64) = 2.5\n",
+    "description": "The resolver promotes I32 and DBL to DBL. This variant explicitly executes in private Simulation until native lowering of mixed operands is admitted; there is no truncation or silent fallback.\nInputs: a (i32) = 2; b (f64) = 0.5.\nExpected results: result (f64) = 2.5.\n\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\n\nMode: execution. Profile: studio-draft. Capability: explicit private Simulation; not a compiled-native claim.\nExpected:\noutput-result (f64) = 2.5\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -295,7 +295,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add — mixed i32 f64\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = 2.5\n",
+        "text": "Add — mixed i32 f64\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\nInputs -> operation -> indicators. Expected result: output-result (f64) = 2.5\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

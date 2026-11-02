@@ -303,7 +303,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Concatenate three Strings\nThe canonical persisted endpoint order a, b, input_3 controls concatenation. Geometry does not reorder bytes.\nEntrées -> opération -> indicateurs. Résultat attendu : result (string) = \"FROG\"\n",
+        "text": "Concatenate three Strings\nThe canonical persisted endpoint order a, b, input_3 controls concatenation. Geometry does not reorder bytes.\nInputs -> operation -> indicators. Expected result: result (string) = \"FROG\"\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

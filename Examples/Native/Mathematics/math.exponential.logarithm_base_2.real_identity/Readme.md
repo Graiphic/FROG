@@ -2,9 +2,9 @@
 
 Computes the logarithm of x to base two.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : x (f64) = 8.
-Résultats attendus : result (f64) = 3.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: x (f64) = 8.
+Expected results: result (f64) = 3.
 
 Computes the logarithm of x to base two.
 

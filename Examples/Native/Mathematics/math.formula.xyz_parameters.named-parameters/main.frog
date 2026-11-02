@@ -765,7 +765,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Sample three coordinates with parameters\nNamed a=2,b=3,c=5 scale and offset three coordinate formulas. The points remain in t1-fastest order, with no conversion to nominal Matrix.\nEntrées -> opération -> indicateurs. Résultat attendu : output-x_values (array<f64>) = [0,2,0,2]\noutput-y_values (array<f64>) = [30,30,60,60]\noutput-z_values (array<f64>) = [15,16,25,26]\noutput-error (i32) = 0\n",
+        "text": "Sample three coordinates with parameters\nNamed a=2,b=3,c=5 scale and offset three coordinate formulas. The points remain in t1-fastest order, with no conversion to nominal Matrix.\nInputs -> operation -> indicators. Expected result: output-x_values (array<f64>) = [0,2,0,2]\noutput-y_values (array<f64>) = [30,30,60,60]\noutput-z_values (array<f64>) = [15,16,25,26]\noutput-error (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

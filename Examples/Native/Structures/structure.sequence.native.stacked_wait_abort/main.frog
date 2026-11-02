@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Stacked Sequence : ne pas publier avant la dernière frame",
+  "title": "Stacked Sequence: do not publish before the final frame",
   "metadata": {
-    "name": "Stacked Sequence : ne pas publier avant la dernière frame",
+    "name": "Stacked Sequence: do not publish before the final frame",
     "name_source": "document",
-    "description": "La première frame calcule 7, mais cette sortie extérieure reste privée pendant l'attente infinie de la dernière frame. Stop doit retirer l'attente sans publier de résultat prématuré. Un nouveau lancement possède une nouvelle attente.\n\nStacked Sequence : ne pas publier avant la dernière frame\n\nMode: expected-abort. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\n",
+    "description": "The first frame computes 7, but that external output remains private during the final frame's infinite wait. Stop must withdraw the wait without publishing a premature result. A new run owns a new wait.\n\nStacked Sequence: do not publish before the final frame\n\nMode: expected-abort. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -323,7 +323,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Stacked Sequence : ne pas publier avant la dernière frame\nStacked Sequence : ne pas publier avant la dernière frame\nEntrées -> opération -> indicateurs. Résultat attendu : ",
+        "text": "Stacked Sequence: do not publish before the final frame\nStacked Sequence: do not publish before the final frame\nInputs -> operation -> indicators. Expected result: ",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

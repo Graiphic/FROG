@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Occurrence : un signal réveille trois attentes",
+  "title": "Occurrence: one signal wakes three waits",
   "metadata": {
-    "name": "Occurrence : un signal réveille trois attentes",
+    "name": "Occurrence: one signal wakes three waits",
     "name_source": "document",
-    "description": "Trois Wait indépendants partagent la référence du même Generate. ignore_previous=False permet d'observer le Set quelle que soit l'interversion des branches. Les trois timed_out valent False. Il s'agit d'un signal partagé, pas d'une file de trois messages.\n\nOccurrence : un signal réveille trois attentes\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ntimed_out_0 (bool) = false\ntimed_out_1 (bool) = false\ntimed_out_2 (bool) = false\n",
+    "description": "Three independent Wait operations share the reference from the same Generate. ignore_previous=False allows Set to be observed regardless of branch interleaving. All three timed_out outputs are False. This is a shared signal, not a queue of three messages.\n\nOccurrence: one signal wakes three waits\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ntimed_out_0 (bool) = false\ntimed_out_1 (bool) = false\ntimed_out_2 (bool) = false\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -526,7 +526,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Occurrence : un signal réveille trois attentes\nOccurrence : un signal réveille trois attentes\nEntrées -> opération -> indicateurs. Résultat attendu : timed_out_0 (bool) = false\ntimed_out_1 (bool) = false\ntimed_out_2 (bool) = false\n",
+        "text": "Occurrence: one signal wakes three waits\nOccurrence: one signal wakes three waits\nInputs -> operation -> indicators. Expected result: timed_out_0 (bool) = false\ntimed_out_1 (bool) = false\ntimed_out_2 (bool) = false\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

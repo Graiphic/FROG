@@ -1,10 +1,10 @@
-# Queue : enfiler, défiler et nettoyer
+# Queue: enqueue, dequeue and clean up
 
-Queue : enfiler, défiler et nettoyer
+Queue: enqueue, dequeue and clean up
 
-Obtain utilise le prototype f64 explicite. Enqueue ajoute 42, Dequeue le retire dans l'ordre FIFO, puis Release ferme la référence. Le fil d'erreur établit l'ordre des effets réels ; timeout=0 ne bloque jamais.
+Obtain uses the explicit f64 prototype. Enqueue adds 42, Dequeue removes it in FIFO order, then Release closes the reference. The error wire establishes the order of actual effects; timeout=0 never blocks.
 
-Queue : enfiler, défiler et nettoyer
+Queue: enqueue, dequeue and clean up
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

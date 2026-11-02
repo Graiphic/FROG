@@ -2,9 +2,9 @@
 
 Returns 1 for 0≤x<1 and 0 elsewhere; a nonperiodic unit rectangular pulse.
 
-Primitive de fenêtrage/palier. Gating Square est périodique de période 2; elle ne calcule jamais le carré numérique x*x.
-Entrées : x (f64) = -0.5.
-Résultats attendus : result (f64) = 0.
+Windowing/step primitive. Gating Square is periodic with period 2; it never computes the numeric square x*x.
+Inputs: x (f64) = -0.5.
+Expected results: result (f64) = 0.
 
 Returns 1 for 0≤x<1 and 0 elsewhere; a nonperiodic unit rectangular pulse.
 

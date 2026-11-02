@@ -295,7 +295,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: mixed i32 f64\nExact representable conversion and elementary sum. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = 2.5\n",
+        "text": "Add: mixed i32 f64\nExact representable conversion and elementary sum. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nInputs -> operation -> indicators. Expected result: output-result (f64) = 2.5\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

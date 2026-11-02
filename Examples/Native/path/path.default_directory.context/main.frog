@@ -165,7 +165,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Default Directory uses the Studio installation\nStudio provides its actual executable context. The default directory is that executable's containing directory, independently from the process working directory or the source document's directory.\nEntrées -> opération -> indicateurs. Résultat attendu : result (path) = <Studio installation directory>\n",
+        "text": "Default Directory uses the Studio installation\nStudio provides its actual executable context. The default directory is that executable's containing directory, independently from the process working directory or the source document's directory.\nInputs -> operation -> indicators. Expected result: result (path) = <Studio installation directory>\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

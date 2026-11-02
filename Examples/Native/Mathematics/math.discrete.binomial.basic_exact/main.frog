@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Binomial Coefficient — basic exact",
     "name_source": "document",
-    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : n (u32) = 5; k (u32) = 2.\nRésultats attendus : coefficient (f64) = 10; error (i32) = 0.\n\nCounts unordered selections of k distinct elements among n.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-coefficient (f64) = 10\noutput-error (i32) = 0\n",
+    "description": "Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.\nInputs: n (u32) = 5; k (u32) = 2.\nExpected results: coefficient (f64) = 10; error (i32) = 0.\n\nCounts unordered selections of k distinct elements among n.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-coefficient (f64) = 10\noutput-error (i32) = 0\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -361,7 +361,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Binomial Coefficient — basic exact\nCounts unordered selections of k distinct elements among n.\nEntrées -> opération -> indicateurs. Résultat attendu : output-coefficient (f64) = 10\noutput-error (i32) = 0\n",
+        "text": "Binomial Coefficient — basic exact\nCounts unordered selections of k distinct elements among n.\nInputs -> operation -> indicators. Expected result: output-coefficient (f64) = 10\noutput-error (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

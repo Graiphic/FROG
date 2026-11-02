@@ -323,7 +323,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Array To Cluster ignores excess elements\nThe configured three fields receive the first three I32 elements in index order. The fourth input element is ignored; no default provider is needed.\nEntrées -> opération -> indicateurs. Résultat attendu : result (cluster<\"element1\":i32,\"element2\":i32,\"element3\":i32>) = {\"element1\":1,\"element2\":2,\"element3\":3}\n",
+        "text": "Array To Cluster ignores excess elements\nThe configured three fields receive the first three I32 elements in index order. The fourth input element is ignored; no default provider is needed.\nInputs -> operation -> indicators. Expected result: result (cluster<\"element1\":i32,\"element2\":i32,\"element3\":i32>) = {\"element1\":1,\"element2\":2,\"element3\":3}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

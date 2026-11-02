@@ -38,15 +38,16 @@ also contain synthetic identities and hashes; neither set is signed-package or
 executable-capability evidence. The 0.1 negotiation fixtures remain historical
 and are not silently relabelled as API-2 result documents.
 
-## SDK Bridge C++ local
+<a id="sdk-bridge-c-local"></a>
 
-La cible CMake publique `frog-bridge-protocol` fournit le codec wire 0.1,
-les descriptions 0.1/0.2, la négociation et le suivi d'échanges. Son en-tête
-`frog/bridge.hpp` dépend seulement de la bibliothèque standard C++20 ; la
-liaison réutilise le propriétaire Frontend extrait, sans Studio ni LLVM.
-Voir [l'utilisation CMake, le consommateur minimal, les empreintes et les
-limites](docs/bridge-sdk-cpp.md), puis les [payloads des méthodes](docs/bridge-methods.md).
-La reconstruction autonome de ce SDK Bridge et de cet exemple reste à qualifier.
+## Local C++ Bridge SDK
+
+Public CMake target `frog-bridge-protocol` provides wire codec 0.1,
+descriptions 0.1/0.2, negotiation and exchange tracking. Its `frog/bridge.hpp`
+header depends only on the C++20 standard library; linkage reuses the extracted
+Frontend owner, without Studio or LLVM. See [CMake usage, the minimal consumer,
+hashes and limits](docs/bridge-sdk-cpp.md), then [method payloads](docs/bridge-methods.md).
+Standalone reconstruction of this Bridge SDK and example remains to be qualified.
 
 ## Contracts
 

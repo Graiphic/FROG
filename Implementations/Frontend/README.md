@@ -1,30 +1,36 @@
-# FROG Frontend — candidate locale API 3
+<a id="frog-frontend--candidate-locale-api-3"></a>
 
-Ce répertoire contient le cœur Frontend extrait des propriétaires sémantiques de Studio, sa bibliothèque à interface C et sa CLI autonome. Il lit les octets `frog.source` et les documents `frog.document.draft` explicitement déclarés, résout leurs dépendances fournies par l’hôte, valide le langage et produit la FIR avec diagnostics, correspondances et provenance. Les producteurs ordinaires, structurés, composés et Event partagent ce propriétaire. La lecture et les migrations sémantiques sans mutation de l’original sont communes ; les propositions de réparation, leur prévisualisation et leur application transactionnelle restent privées à Studio.
+# FROG Frontend — local API 3 candidate
 
-**Candidate locale `0.2.0-local`, API 3.** Studio et la CLI utilisent les mêmes lecteurs, règles de validation et producteurs FIR. Les résultats sont attribués à un instantané précis : les six CTest et 6 614 contrôles de la première qualification autonome portent sur `c640d266a4de9d9581e6394d80d7152ce3d91d64278b960ab6777a524a056a62`, pas automatiquement sur les modifications suivantes. Chaque kit final possède son manifeste et un reçu de qualification distinct. Il ne s’agit pas d’une release publiée, d’une qualification de toute la palette ou d’un Windows propre. Voir le [profil](docs/candidate-profile.md) et l’[architecture commune et procédure de maintenance](docs/architecture-and-maintenance.md).
+This directory contains the Frontend core extracted from Studio's semantic owners, its C-interface library and standalone CLI. It reads explicitly declared `frog.source` bytes and `frog.document.draft` documents, resolves host-supplied dependencies, validates the language and produces FIR with diagnostics, mappings and provenance. Ordinary, structured, composed and Event producers share this owner. Reading and semantic migrations that leave the original unchanged are shared; repair proposals, previews and transactional application remain private to Studio.
 
-## Contrat public et versions
+**Local candidate `0.2.0-local`, API 3.** Studio and the CLI use the same readers, validation rules and FIR producers. Results are attributed to an exact snapshot: the six CTest cases and 6,614 checks from the first standalone qualification apply to `c640d266a4de9d9581e6394d80d7152ce3d91d64278b960ab6777a524a056a62`, not automatically to subsequent changes. Each final kit has its own manifest and separate qualification receipt. This is not a published release, whole-palette qualification or clean-Windows qualification. See the [profile](docs/candidate-profile.md) and [shared architecture and maintenance procedure](docs/architecture-and-maintenance.md).
 
-Le consommateur utilise [`frog/frontend.h`](snapshot/api/frog/frontend.h), installé sous `include/frog/frontend.h`, et la cible `Frog::frog-frontend`. Les en-têtes `include/frog_native_engine`, les propriétaires C++ et `runOperation` sont des détails d'implémentation partagés avec Studio, sans ABI C++ publique garantie.
+<a id="contrat-public-et-versions"></a>
 
-| Axe | État de cette candidate |
+## Public contract and versions
+
+Consumers use [`frog/frontend.h`](snapshot/api/frog/frontend.h), installed as `include/frog/frontend.h`, and target `Frog::frog-frontend`. The `include/frog_native_engine` headers, C++ owners and `runOperation` are implementation details shared with Studio, without a guaranteed public C++ ABI.
+
+| Axis | Candidate status |
 | --- | --- |
-| Logiciel | `0.2.0-local` ; commit de base et SHA256 de contenu dans describe/provenance |
-| ABI C | `3` ; tailles exactes des structures, champs réservés à zéro |
-| Source public | `frog.source`, version `0.1` |
-| Documents historiques | `frog.document.draft`, révisions explicites `0` à `9` |
+| Software | `0.2.0-local`; base commit and content SHA256 in describe/provenance |
+| C ABI | `3`; exact structure sizes, reserved fields zeroed |
+| Public Source | `frog.source`, version `0.1` |
+| Historical documents | `frog.document.draft`, explicit revisions `0` through `9` |
 | FIR | `frog.execution_ir`, version `0.1` |
-| Résultats JSON | Diagnostics `0.2`, contexte/provenance `0.3`, capacités `0.2`, maps `0.1` |
-| Profils sémantiques | Identités et révisions propres, conservées dans la FIR/provenance |
+| JSON results | Diagnostics `0.2`, context/provenance `0.3`, capabilities `0.2`, maps `0.1` |
+| Semantic profiles | Their own identities and revisions, preserved in FIR/provenance |
 
-L'API 3 exige les identités Source et FIR explicites et indépendantes. `describe` expose les formats exacts, les principaux profils et les plafonds. Sa liste `profiles_exhaustive: false` ne constitue pas un catalogue exhaustif de fonctions. Les versions ABI, logiciel, Source, FIR, profils et protocole bridge ne se remplacent pas entre elles. Une FIR admise doit encore être admise par sa réalisation cible.
+API 3 requires explicit, independent Source and FIR identities. `describe` exposes exact formats, principal profiles and limits. Its `profiles_exhaustive: false` list is not a complete function catalog. ABI, software, Source, FIR, profile and bridge-protocol versions are separate axes. Accepted FIR still requires admission by its target realization.
 
-## Construire et installer sans Studio
+<a id="construire-et-installer-sans-studio"></a>
 
-Prérequis : C++20, CMake 3.24 ou ultérieur et une chaîne C/C++ configurée. Le kit contient ses snapshots de déclarations et le décodeur Zstandard 1.5.7 sous licence BSD ; il ne recherche aucun checkout privé Studio/Runtime, LLVM ou fournisseur numérique. La reconstruction autonome de phase A a utilisé Windows x64 et MSVC 14.44/19.44 (compilateur `19.44.35228`). Une autre plateforme ou une machine Windows propre ne sont pas déclarées qualifiées ici. Python est nécessaire aux tests CLI lorsqu'ils sont activés.
+## Build and install without Studio
 
-Depuis la racine **FROG** du kit, dans un environnement de compilation préparé et avec un chemin de build court :
+Prerequisites: C++20, CMake 3.24 or later, and a configured C/C++ toolchain. The kit contains declaration snapshots and the BSD-licensed Zstandard 1.5.7 decoder; it searches for no private Studio/Runtime checkout, LLVM or numerical provider. The phase-A standalone reconstruction used Windows x64 and MSVC 14.44/19.44 (compiler `19.44.35228`). No other platform or clean Windows machine is declared qualified here. Python is required for enabled CLI tests.
+
+From the kit's **FROG** root, in a prepared build environment with a short build path:
 
 ```powershell
 cmake -S Implementations/Frontend -B b -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TRY_COMPILE_CONFIGURATION=Release -DFROG_FRONTEND_BUILD_TESTS=ON
@@ -33,9 +39,9 @@ ctest --test-dir b --output-on-failure -R '^frog-frontend-(c-consumer|cli-scalar
 cmake --install b --prefix installed
 ```
 
-La cible `frog-frontend-cli` produit `frog-frontend` (`frog-frontend.exe` sur Windows). La bibliothèque installée est statique dans ce build. Choisir un runtime C/C++ cohérent pour toutes les cibles et le consommateur ; un kit MSVC peut fournir `-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded`. Aucun choix de CRT universel n'est imposé par l'API.
+Target `frog-frontend-cli` produces `frog-frontend` (`frog-frontend.exe` on Windows). The installed library is static in this build. Select a consistent C/C++ runtime for all targets and the consumer; an MSVC kit may supply `-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded`. The API imposes no universal CRT choice.
 
-Pour vérifier un consommateur installé, placer une copie de `tests/frontend_c_consumer.c` dans un projet externe avec ce `CMakeLists.txt` :
+To check an installed consumer, copy `tests/frontend_c_consumer.c` into an external project with this `CMakeLists.txt`:
 
 ```cmake
 cmake_minimum_required(VERSION 3.24)
@@ -46,11 +52,13 @@ set_target_properties(frontend-consumer PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(frontend-consumer PRIVATE Frog::frog-frontend)
 ```
 
-Configurer avec `-DCMAKE_PREFIX_PATH=<chemin-absolu-vers-installed>`, construire puis exécuter `frontend-consumer`. Il inclut seulement `<frog/frontend.h>` et lie les bibliothèques de ce préfixe. Ce parcours a réussi pour l’instantané de phase A ci-dessus ; les empreintes des bibliothèques, de la CLI et du consommateur figurent dans le reçu `phase-a-result.json`. La recette ne réattribue pas ce résultat à une nouvelle capture. Dans le workspace Studio, toute compilation reste coordonnée par son wrapper et son verrou canoniques.
+Configure with `-DCMAKE_PREFIX_PATH=<absolute-path-to-installed>`, build, then run `frontend-consumer`. It includes only `<frog/frontend.h>` and links libraries from that prefix. This path passed for the phase-A snapshot above; library, CLI and consumer hashes appear in `phase-a-result.json`. This recipe does not reattribute that result to a new capture. Inside the Studio workspace, every build remains coordinated by its canonical wrapper and lock.
 
-## Utiliser la CLI
+<a id="utiliser-la-cli"></a>
 
-Exemple Ninja/Windows depuis la racine FROG ; adapter le suffixe `.exe` sur une autre plateforme :
+## Use the CLI
+
+Ninja/Windows example from the FROG root; adjust the `.exe` suffix on other platforms:
 
 ```powershell
 ./b/frog-frontend.exe describe --descriptor-output descriptor.json
@@ -58,30 +66,34 @@ Exemple Ninja/Windows depuis la racine FROG ; adapter le suffixe `.exe` sur une 
 ./b/frog-frontend.exe derive --source Implementations/Frontend/tests/fixtures/pure-add.frog --source-uri fixture:/add.frog --document-id source:add --fir-document-id fir:add --source-format frog.source --source-version 0.1 --fir-version 0.1 --output result.fir.json --diagnostics-output diagnostics.json --source-maps-output maps.json --provenance-output provenance.json
 ```
 
-`validate` utilise les mêmes producteurs et contrôles de scellement que `derive`, mais ne retourne pas le document FIR. `derive` exige `--output`; `validate` le refuse. `describe` ne prend aucune Source, contexte ou dépendance. Il écrit son descripteur sur stdout ; les deux autres opérations écrivent leur tableau de diagnostics sur stdout. Les sorties optionnelles sont des documents JSON distincts.
+`validate` uses the same producers and sealing checks as `derive`, but does not return FIR. `derive` requires `--output`; `validate` rejects it. `describe` accepts no Source, context or dependency. It writes its descriptor to stdout; the other two operations write their diagnostics array to stdout. Optional outputs are separate JSON documents.
 
-Options supplémentaires : `--semantic-context FILE`, `--dependencies LOCK.json`, et `--max-source-bytes`, `--max-dependency-bytes`, `--max-total-dependency-bytes`, `--max-result-bytes`, `--max-nodes`, `--max-connections`, `--max-nesting-depth`, `--max-dependencies`, `--max-diagnostics`. Les nombres sont des entiers décimaux non signés. Zéro sélectionne le défaut ; une valeur supérieure ne relève pas le plafond du producteur. Ctrl+C demande une annulation coopérative. La CLI actuelle n'a pas de sortie `--resolved-source-output` ; la projection complète est accessible par `resolved_source_json` dans l'API C.
+Additional options: `--semantic-context FILE`, `--dependencies LOCK.json`, and `--max-source-bytes`, `--max-dependency-bytes`, `--max-total-dependency-bytes`, `--max-result-bytes`, `--max-nodes`, `--max-connections`, `--max-nesting-depth`, `--max-dependencies`, `--max-diagnostics`. Numbers are unsigned decimal integers. Zero selects the default; a nonzero value may only reduce a limit. Parsing errors and unknown options are rejected before the operation.
 
-Codes de sortie : `0` succès, `2` programme refusé, `3` format/profil non pris en charge, `4` annulation, `5` limite/ressource, `64` argument ou erreur de l'hôte CLI/API. Un refus de dérivation ne remplace pas le dernier FIR valide. Les écritures se font par fichiers complets ; l'ensemble des fichiers auxiliaires n'est pas une transaction atomique unique.
+Exit codes: `0` success, `2` program rejected, `3` unsupported format/profile, `4` cancellation, `5` limit/resource, `64` argument or CLI/API host error. A rejected derivation does not replace the last valid FIR. Writes publish complete files; all auxiliary files together are not one atomic transaction.
 
-## Dépendances explicites et profil fini
+<a id="dépendances-explicites-et-profil-fini"></a>
 
-Le cœur ne lit ni disque, réseau, registre, variables d'environnement, PATH ou bibliothèques installées. Les octets et métadonnées sont fournis par l'appelant. Le résolveur retourne une capture immuable ; ses vues sont libérées avant le retour de l'opération. Seul l'hôte CLI lit les fichiers explicitement sélectionnés et les chemins de son lock.
+## Explicit dependencies and finite profile
 
-`frog.frontend.resolution@1` conserve son contrat : fragments `TYPE_DEFINITION=2` dans de vrais champs `studio_type_schema`, sans contexte ConditionalDisable non vide. Le nouveau `frog.frontend.resolution@2` décrit explicitement les symboles `built_in`, `project` et `target` utilisés pour préparer les drafts ; aucune valeur n’est lue implicitement depuis Windows ou un backend. Les dépendances SubFROG `SOURCE=1` et TypeDef `TYPE_DEFINITION=2` des drafts sont résolues depuis leurs références enregistrées par le même callback, avec octets immuables et empreintes vérifiées. Les contrats bibliothèque/profil ne deviennent pas réalisés par cette extension. Le [contrat de résolution](frontend-resolution.md) distingue ces parcours, leurs enveloppes et leurs limites.
+The core reads no disk, network, registry, environment variables, PATH or installed libraries. The caller supplies bytes and metadata. The resolver returns an immutable capture; its views are released before the operation returns. Only the CLI host reads explicitly selected files and paths from its lock.
+
+`frog.frontend.resolution@1` retains its contract: `TYPE_DEFINITION=2` fragments in actual `studio_type_schema` fields, without a nonempty ConditionalDisable context. The new `frog.frontend.resolution@2` explicitly describes the `built_in`, `project` and `target` symbols used to prepare drafts; no value is implicitly read from Windows or a backend. Draft SubFROG `SOURCE=1` and TypeDef `TYPE_DEFINITION=2` dependencies are resolved from saved references through the same callback, with immutable bytes and verified hashes. This extension does not implement library/profile contracts. The [resolution contract](frontend-resolution.md) distinguishes these paths, envelopes and limits.
 
 ```powershell
 ./b/frog-frontend.exe derive --source Implementations/Frontend/examples/type-definition/main.frog --source-uri fixture:/nominal.frog --document-id source:nominal --fir-document-id fir:nominal --source-format frog.source --source-version 0.1 --fir-version 0.1 --semantic-context Implementations/Frontend/examples/type-definition/context.json --dependencies Implementations/Frontend/examples/type-definition/dependencies.json --output nominal.fir.json
 ```
 
-Les fixtures identifiées couvrent addition scalaire, I64/U64 exacts, Record, Map/Array/Cluster/Enum imbriqués, Event et références conservées. Les régions masquées restent contrôlées. Les DTO de widgets et diagrammes, codecs et résolveurs sont les propriétaires neutres extraits ; ils ne contiennent ni Canvas, ni contrôleur, ni état de récupération privée. Ce corpus fini ne promet pas toutes les combinaisons de types, structures ou fonctions de la palette, ni leur exécution par un backend. Les contrats de durée de vie, concurrence, diagnostics et les limites résiduelles figurent dans [candidate-profile.md](docs/candidate-profile.md).
+Identified fixtures cover scalar addition, exact I64/U64, Record, nested Map/Array/Cluster/Enum, Event and preserved references. Hidden regions remain checked. Widget/diagram DTOs, codecs and resolvers are the extracted neutral owners; they contain no Canvas, controller or private recovery state. This finite corpus does not promise every palette type/structure/function combination or backend execution. Lifetime, concurrency and diagnostic contracts and remaining limits appear in [candidate-profile.md](docs/candidate-profile.md).
 
-## Provenance, pin et licence
+<a id="provenance-pin-et-licence"></a>
 
-`source-origin.json` conserve les captures d'origine et les déclarations snapshot. `cmake/FrontendInputs.cmake` calcule l'identité actuelle ; Studio la compare à son pin logiciel/API/contenu. `frontend-content-identity.txt` identifie les entrées du build. Le SHA de contenu Frontend et le SHA de son exécutable sont deux preuves différentes. Les overlays locaux ne sont pas reconstitués par le seul commit de base.
+## Provenance, pin and license
 
-**Apache-2.0 est accepté pour les fichiers originaux Graiphic sélectionnés pour le Frontend commun, sa CLI et leurs contrats/exemples/tests**, y compris les extractions nécessaires de Studio ou Runtime. La [formalisation publiée du 1 novembre 2026](https://github.com/Graiphic/FROG/blob/85a90ebe2c2a78cc4f42f7efce1c8ca990df4d26/sdk/ecosystem/docs/frontend-licensing.md), consignée localement dans `FROG-Context/Decisions/frog-common-frontend-apache2.md`, maintient les licences/notices des tiers et exclut le reste de Studio, ses réparations privées, le reste du Runtime et les recettes d'optimisation.
+`source-origin.json` retains origin captures and snapshot declarations. `cmake/FrontendInputs.cmake` computes current identity; Studio compares it against its software/API/content pin. `frontend-content-identity.txt` identifies build inputs. Frontend content SHA and executable SHA are different evidence. Local overlays cannot be reconstructed from the base commit alone.
 
-Les mentions `NOASSERTION` de l'[inventaire E2](docs/license-inventory.json) et de ses [observations](docs/provenance-and-licensing.md) décrivent l'état historique avant cette décision ; elles ne remettent pas en attente le choix Apache des fichiers Graiphic concernés. L'intégrateur doit rattacher l'inventaire de la candidate à cet accord, conserver les hashes d'origine/actuels et les notices tierces du contenu exact diffusé. La décision de licence ne vaut ni qualification du nouveau paquet ni autorisation de publier son code maintenant.
+**Apache-2.0 is accepted for the selected original Graiphic files of the common Frontend, CLI and their contracts/examples/tests**, including necessary Studio or Runtime extractions. The [published decision of 1 November 2026](https://github.com/Graiphic/FROG/blob/85a90ebe2c2a78cc4f42f7efce1c8ca990df4d26/sdk/ecosystem/docs/frontend-licensing.md), recorded locally in `FROG-Context/Decisions/frog-common-frontend-apache2.md`, retains third-party licenses/notices and excludes the rest of Studio, private repairs, the rest of Runtime and optimization recipes.
 
-Le décodeur documentaire Zstandard et ses composants FSE/HUF/xxHash restent tiers. Voir [sa provenance et sa licence BSD](third_party/zstd/UPSTREAM.md) ; ils ne sont pas relicenciés sous Apache-2.0. Leur présence ne qualifie ni le runtime ni la lecture de tous les fichiers historiques.
+`NOASSERTION` entries in the [E2 inventory](docs/license-inventory.json) and its [observations](docs/provenance-and-licensing.md) describe the historical state before that decision; they do not reopen the Apache choice for the affected Graiphic files. The integrator must bind the candidate inventory to this agreement and retain origin/current hashes and third-party notices for the exact distributed content. The licensing decision neither qualifies a new package nor authorizes publishing its code now.
+
+The Zstandard document decoder and its FSE/HUF/xxHash components remain third-party material. See [its provenance and BSD license](third_party/zstd/UPSTREAM.md); they are not relicensed under Apache-2.0. Their presence qualifies neither the runtime nor reading every historical file.

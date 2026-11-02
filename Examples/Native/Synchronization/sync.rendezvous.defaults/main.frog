@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Rendezvous : seuil par défaut et variation nulle",
+  "title": "Rendezvous: default threshold and zero change",
   "metadata": {
-    "name": "Rendezvous : seuil par défaut et variation nulle",
+    "name": "Rendezvous: default threshold and zero change",
     "name_source": "document",
-    "description": "Create utilise le seuil initial 2. Une arrivée avec timeout=0 ne suffit pas et est retirée. Resize sans size_change utilise la variation 0 et conserve le seuil 2. Le compteur d'attentes revient à 0. Aucun message n'est transporté.\n\nRendezvous : seuil par défaut et variation nulle\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ntimed_out (bool) = true\nsize (i32) = 2\nnew_size (i32) = 2\nwaiting (i32) = 0\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+    "description": "Create uses initial threshold 2. One arrival with timeout=0 is insufficient and is withdrawn. Resize without size_change uses delta 0 and preserves threshold 2. The waiter count returns to 0. No message is transported.\n\nRendezvous: default threshold and zero change\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ntimed_out (bool) = true\nsize (i32) = 2\nnew_size (i32) = 2\nwaiting (i32) = 0\nerror_status (bool) = false\nerror_code (i32) = 0\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -686,7 +686,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Rendezvous : seuil par défaut et variation nulle\nRendezvous : seuil par défaut et variation nulle\nEntrées -> opération -> indicateurs. Résultat attendu : timed_out (bool) = true\nsize (i32) = 2\nnew_size (i32) = 2\nwaiting (i32) = 0\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+        "text": "Rendezvous: default threshold and zero change\nRendezvous: default threshold and zero change\nInputs -> operation -> indicators. Expected result: timed_out (bool) = true\nsize (i32) = 2\nnew_size (i32) = 2\nwaiting (i32) = 0\nerror_status (bool) = false\nerror_code (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

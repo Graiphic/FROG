@@ -406,7 +406,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: i64 direct f32 round\nExact integer is1 above the binary32 halfway value: direct nearest-even conversion gives bits0x5e800001. A double intermediate would incorrectly return0x5e800000 for PromotionV1. Adding binary32zero preserves this finite result. Native fini...\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (array<f32>) = [4611686568183201792]\n",
+        "text": "Add: i64 direct f32 round\nExact integer is1 above the binary32 halfway value: direct nearest-even conversion gives bits0x5e800001. A double intermediate would incorrectly return0x5e800000 for PromotionV1. Adding binary32zero preserves this finite result. Native fini...\nInputs -> operation -> indicators. Expected result: output-result (array<f32>) = [4611686568183201792]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

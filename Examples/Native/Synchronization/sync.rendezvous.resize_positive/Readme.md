@@ -1,10 +1,10 @@
-# Rendezvous : augmenter le seuil de 2
+# Rendezvous: increase the threshold by 2
 
-Rendezvous : augmenter le seuil de 2
+Rendezvous: increase the threshold by 2
 
-Le seuil initial est 3 ; size_change est une variation signée, pas un nouveau seuil absolu. new_size doit valoir 3 + size_change. La ressource est détruite après observation.
+The initial threshold is 3; size_change is a signed delta, not a new absolute threshold. new_size must equal 3 + size_change. The resource is destroyed after observation.
 
-Rendezvous : augmenter le seuil de 2
+Rendezvous: increase the threshold by 2
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

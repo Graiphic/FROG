@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Add — left fold f32",
     "name_source": "document",
-    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : a (f32) = 16777216; b (f32) = 1; input_3 (f32) = -16777216.\nRésultats attendus : result (f32) = 0.\n\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\n\nMode: execution. Profile: studio-draft. Capability: explicit private Simulation; not a compiled-native claim.\nExpected:\noutput-result (f32) = 0\n",
+    "description": "Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.\nInputs: a (f32) = 16777216; b (f32) = 1; input_3 (f32) = -16777216.\nExpected results: result (f32) = 0.\n\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\n\nMode: execution. Profile: studio-draft. Capability: explicit private Simulation; not a compiled-native claim.\nExpected:\noutput-result (f32) = 0\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -361,7 +361,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add — left fold f32\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f32) = 0\n",
+        "text": "Add — left fold f32\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\nInputs -> operation -> indicators. Expected result: output-result (f32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

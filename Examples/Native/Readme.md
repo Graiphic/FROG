@@ -552,80 +552,80 @@ The same real `.frog` files feed Find Examples, context help and the example run
 - [Variant preserves an Array shape](variant/variant.rank2-roundtrip/main.frog) — Boxing and unboxing retain the complete rank-two I64 Array shape and row-major values, including an integer above 2^53. The type specimen contributes its schema, not its value.
 - [Variant preserves a named Cluster](variant/variant.cluster-roundtrip/main.frog) — The typed Variant retains the Cluster field identities and values. The same Cluster is used only as a schema witness for unboxing; it is not substituted for the payload.
 - [Variant type mismatch is a normal error](variant/variant.type-mismatch.error/main.frog) — A boxed String cannot be extracted as I32. The result is the I32 intrinsic default and an error status; no numeric parsing or reinterpretation is attempted. Native and historical Simulation currently have distinct error codes, so this example compares the shared status and data behavior.
-- [Semaphore : capacité, acquisition, restitution et fermeture](Synchronization/sync.semaphore.capacity_and_cleanup/main.frog) — Semaphore : capacité, acquisition, restitution et fermeture
-- [Semaphore : timeout zéro sur une capacité épuisée](Synchronization/sync.semaphore.poll_saturated/main.frog) — Semaphore : timeout zéro sur une capacité épuisée
-- [Semaphore : acquérir et nettoyer malgré une erreur](Synchronization/sync.semaphore.upstream_cleanup/main.frog) — Semaphore : acquérir et nettoyer malgré une erreur
-- [semaphore : référence nulle correctement typée](Synchronization/sync.semaphore.typed_null/main.frog) — semaphore : référence nulle correctement typée
-- [Rendezvous : seuil par défaut et variation nulle](Synchronization/sync.rendezvous.defaults/main.frog) — Rendezvous : seuil par défaut et variation nulle
-- [Rendezvous : diminuer le seuil de 1](Synchronization/sync.rendezvous.resize_negative/main.frog) — Rendezvous : diminuer le seuil de 1
-- [Rendezvous : augmenter le seuil de 2](Synchronization/sync.rendezvous.resize_positive/main.frog) — Rendezvous : augmenter le seuil de 2
-- [Rendezvous : erreur standard et exception de destruction](Synchronization/sync.rendezvous.upstream_error/main.frog) — Rendezvous : erreur standard et exception de destruction
-- [rendezvous : référence nulle correctement typée](Synchronization/sync.rendezvous.typed_null/main.frog) — rendezvous : référence nulle correctement typée
-- [Rendezvous : trois préparations indépendantes](Synchronization/sync.rendezvous.three_participants/main.frog) — Rendezvous : trois préparations indépendantes
-- [Rendezvous : trois participants, deux générations](Synchronization/sync.rendezvous.two_generations/main.frog) — Rendezvous : trois participants, deux générations
-- [Occurrence : un signal réveille trois attentes](Synchronization/sync.occurrence.broadcast/main.frog) — Occurrence : un signal réveille trois attentes
-- [Occurrence : deux nœuds Generate distincts](Synchronization/sync.occurrence.distinct_nodes/main.frog) — Occurrence : deux nœuds Generate distincts
-- [Occurrence : timeout zéro sans signal](Synchronization/sync.occurrence.poll_no_signal/main.frog) — Occurrence : timeout zéro sans signal
-- [Occurrence : arrêter une attente infinie](Synchronization/sync.occurrence.infinite_stop/main.frog) — Occurrence : arrêter une attente infinie
-- [occurrence : référence nulle correctement typée](Synchronization/sync.occurrence.typed_null/main.frog) — occurrence : référence nulle correctement typée
-- [Queue : enfiler, défiler et nettoyer](Synchronization/sync.queue.publish_receive/main.frog) — Queue : enfiler, défiler et nettoyer
+- [Semaphore: capacity, acquisition, release and closure](Synchronization/sync.semaphore.capacity_and_cleanup/main.frog) — Semaphore: capacity, acquisition, release and closure
+- [Semaphore: zero timeout with exhausted capacity](Synchronization/sync.semaphore.poll_saturated/main.frog) — Semaphore: zero timeout with exhausted capacity
+- [Semaphore: acquire and clean up despite an error](Synchronization/sync.semaphore.upstream_cleanup/main.frog) — Semaphore: acquire and clean up despite an error
+- [semaphore: correctly typed null reference](Synchronization/sync.semaphore.typed_null/main.frog) — semaphore: correctly typed null reference
+- [Rendezvous: default threshold and zero change](Synchronization/sync.rendezvous.defaults/main.frog) — Rendezvous: default threshold and zero change
+- [Rendezvous: decrease the threshold by 1](Synchronization/sync.rendezvous.resize_negative/main.frog) — Rendezvous: decrease the threshold by 1
+- [Rendezvous: increase the threshold by 2](Synchronization/sync.rendezvous.resize_positive/main.frog) — Rendezvous: increase the threshold by 2
+- [Rendezvous: standard error behavior and destruction exception](Synchronization/sync.rendezvous.upstream_error/main.frog) — Rendezvous: standard error behavior and destruction exception
+- [rendezvous: correctly typed null reference](Synchronization/sync.rendezvous.typed_null/main.frog) — rendezvous: correctly typed null reference
+- [Rendezvous: three independent preparations](Synchronization/sync.rendezvous.three_participants/main.frog) — Rendezvous: three independent preparations
+- [Rendezvous: three participants, two generations](Synchronization/sync.rendezvous.two_generations/main.frog) — Rendezvous: three participants, two generations
+- [Occurrence: one signal wakes three waits](Synchronization/sync.occurrence.broadcast/main.frog) — Occurrence: one signal wakes three waits
+- [Occurrence: two distinct Generate nodes](Synchronization/sync.occurrence.distinct_nodes/main.frog) — Occurrence: two distinct Generate nodes
+- [Occurrence: zero timeout without a signal](Synchronization/sync.occurrence.poll_no_signal/main.frog) — Occurrence: zero timeout without a signal
+- [Occurrence: stop an infinite wait](Synchronization/sync.occurrence.infinite_stop/main.frog) — Occurrence: stop an infinite wait
+- [occurrence: correctly typed null reference](Synchronization/sync.occurrence.typed_null/main.frog) — occurrence: correctly typed null reference
+- [Queue: enqueue, dequeue and clean up](Synchronization/sync.queue.publish_receive/main.frog) — Queue: enqueue, dequeue and clean up
 - [Notifier : lire le dernier signal et nettoyer](Synchronization/sync.notifier.publish_receive/main.frog) — Notifier : lire le dernier signal et nettoyer
-- [Flat Sequence : entrée et passages entre trois frames](Structures/structure.sequence.three_frames/main.frog) — Flat Sequence : entrée et passages entre trois frames
-- [Retain First Error : une erreur prime sur un warning](Error/error.retain_first.error_before_warning/main.frog) — Retain First Error : une erreur prime sur un warning
-- [File Exists : le chemin vide désigne la liste des lecteurs Windows](File/file.exists.empty_drive_list/main.frog) — File Exists : le chemin vide désigne la liste des lecteurs Windows
-- [Read Text : refuser un chemin relatif sans base explicite](File/file.read.relative_path_rejected/main.frog) — Read Text : refuser un chemin relatif sans base explicite
-- [Read Text : conserver l'erreur amont sans accès disque](File/file.read.upstream_error/main.frog) — Read Text : conserver l'erreur amont sans accès disque
-- [Référence de contrôle : lire sa vraie valeur](ApplicationControl/application_control.read_value/main.frog) — Référence de contrôle : lire sa vraie valeur
-- [Property Node : écrire la valeur sans événement](ApplicationControl/application_control.silent_write/main.frog) — Property Node : écrire la valeur sans événement
-- [Invoke Node : réinitialiser la valeur par défaut](ApplicationControl/application_control.reinitialize/main.frog) — Invoke Node : réinitialiser la valeur par défaut
-- [Appel C : scalaire exact i32](Connectivity/native_call.i32.minimum/main.frog) — Appel C : scalaire exact i32
-- [Appel C : scalaire exact u32](Connectivity/native_call.u32.maximum/main.frog) — Appel C : scalaire exact u32
-- [Appel C : scalaire exact i64](Connectivity/native_call.i64.exact_above_2pow53/main.frog) — Appel C : scalaire exact i64
-- [Appel C : scalaire exact u64](Connectivity/native_call.u64.maximum/main.frog) — Appel C : scalaire exact u64
-- [Appel C : scalaire exact f64](Connectivity/native_call.f64.exact/main.frog) — Appel C : scalaire exact f64
-- [Appel C : ordre visuel différent de l'ordre ABI](Connectivity/native_call.visual_order_independent/main.frog) — Appel C : ordre visuel différent de l'ordre ABI
-- [Appel C : bibliothèque absente](Connectivity/native_call.missing_library/main.frog) — Appel C : bibliothèque absente
-- [Appel C : erreur amont, aucun effet externe](Connectivity/native_call.upstream_error/main.frog) — Appel C : erreur amont, aucun effet externe
-- [Appel C : signature pointeur non admise par scalar5](Connectivity/native_call.pointer_refused_scalar5/main.frog) — Appel C : signature pointeur non admise par scalar5
-- [Queue : capacité, Preview, perte contrôlée et Flush](Synchronization/sync.queue.bounded_preview_lossy_flush/main.frog) — Queue : capacité, Preview, perte contrôlée et Flush
-- [Notifier : Status, Cancel et Release ont des rôles différents](Synchronization/sync.notifier.cancel_status_release/main.frog) — Notifier : Status, Cancel et Release ont des rôles différents
-- [Notifier : ignorer un signal précédent sans l'effacer](Synchronization/sync.notifier.ignore_previous/main.frog) — Notifier : ignorer un signal précédent sans l'effacer
+- [Flat Sequence: input and passages across three frames](Structures/structure.sequence.three_frames/main.frog) — Flat Sequence: input and passages across three frames
+- [Retain First Error: an error takes priority over a warning](Error/error.retain_first.error_before_warning/main.frog) — Retain First Error: an error takes priority over a warning
+- [File Exists: an empty path denotes the Windows drive list](File/file.exists.empty_drive_list/main.frog) — File Exists: an empty path denotes the Windows drive list
+- [Read Text: reject a relative path without an explicit base](File/file.read.relative_path_rejected/main.frog) — Read Text: reject a relative path without an explicit base
+- [Read Text: preserve the upstream error without disk access](File/file.read.upstream_error/main.frog) — Read Text: preserve the upstream error without disk access
+- [Control reference: read its actual value](ApplicationControl/application_control.read_value/main.frog) — Control reference: read its actual value
+- [Property Node: write the value without an event](ApplicationControl/application_control.silent_write/main.frog) — Property Node: write the value without an event
+- [Invoke Node: restore the default value](ApplicationControl/application_control.reinitialize/main.frog) — Invoke Node: restore the default value
+- [C call: exact i32 scalar](Connectivity/native_call.i32.minimum/main.frog) — C call: exact i32 scalar
+- [C call: exact u32 scalar](Connectivity/native_call.u32.maximum/main.frog) — C call: exact u32 scalar
+- [C call: exact i64 scalar](Connectivity/native_call.i64.exact_above_2pow53/main.frog) — C call: exact i64 scalar
+- [C call: exact u64 scalar](Connectivity/native_call.u64.maximum/main.frog) — C call: exact u64 scalar
+- [C call: exact f64 scalar](Connectivity/native_call.f64.exact/main.frog) — C call: exact f64 scalar
+- [C call: visual order differs from ABI order](Connectivity/native_call.visual_order_independent/main.frog) — C call: visual order differs from ABI order
+- [C call: missing library](Connectivity/native_call.missing_library/main.frog) — C call: missing library
+- [C call: upstream error, no external effect](Connectivity/native_call.upstream_error/main.frog) — C call: upstream error, no external effect
+- [C call: pointer signature not admitted by scalar5](Connectivity/native_call.pointer_refused_scalar5/main.frog) — C call: pointer signature not admitted by scalar5
+- [Queue: capacity, Preview, controlled loss and Flush](Synchronization/sync.queue.bounded_preview_lossy_flush/main.frog) — Queue: capacity, Preview, controlled loss and Flush
+- [Notifier: Status, Cancel and Release have distinct roles](Synchronization/sync.notifier.cancel_status_release/main.frog) — Notifier: Status, Cancel and Release have distinct roles
+- [Notifier: ignore a previous signal without clearing it](Synchronization/sync.notifier.ignore_previous/main.frog) — Notifier: ignore a previous signal without clearing it
 - [Notifier : Multiple retourne les notifications disponibles](Synchronization/sync.notifier.multiple_available/main.frog) — Notifier : Multiple retourne les notifications disponibles
-- [Notifier : Multiple History conserve les identités de source](Synchronization/sync.notifier.multiple_history_available/main.frog) — Notifier : Multiple History conserve les identités de source
-- [Notifier History : revenir à A sans relire son ancien signal](Synchronization/sync.notifier.history_a_b_a/main.frog) — Notifier History : revenir à A sans relire son ancien signal
-- [First Call? : le premier passage, pas chaque itération](Synchronization/sync.first_call.iterations/main.frog) — First Call? : le premier passage, pas chaque itération
-- [For : un registre initialisé accumule quatre incréments](Structures/structure.for.initialized_shift_register/main.frog) — For : un registre initialisé accumule quatre incréments
-- [For : zéro itération conserve l'initialisation](Structures/structure.for.zero_iterations/main.frog) — For : zéro itération conserve l'initialisation
-- [While : Stop if True exécute au moins une itération](Structures/structure.while.stop_true_one_iteration/main.frog) — While : Stop if True exécute au moins une itération
-- [While : Continue if True s'arrête sur False](Structures/structure.while.continue_false_one_iteration/main.frog) — While : Continue if True s'arrête sur False
-- [While : arrêter au troisième incrément](Structures/structure.while.three_iterations/main.frog) — While : arrêter au troisième incrément
-- [For : l'entrée auto-indexée limite N](Structures/structure.for.indexed_input_limits_count/main.frog) — For : l'entrée auto-indexée limite N
-- [For : collecter les trois éléments par auto-indexation](Structures/structure.for.indexed_output/main.frog) — For : collecter les trois éléments par auto-indexation
-- [Case bool : sélection exacte et tunnels](Structures/structure.case.bool.true/main.frog) — Case bool : sélection exacte et tunnels
+- [Notifier: Multiple History preserves source identities](Synchronization/sync.notifier.multiple_history_available/main.frog) — Notifier: Multiple History preserves source identities
+- [Notifier History: return to A without replaying its old signal](Synchronization/sync.notifier.history_a_b_a/main.frog) — Notifier History: return to A without replaying its old signal
+- [First Call?: first visit, not every iteration](Synchronization/sync.first_call.iterations/main.frog) — First Call?: first visit, not every iteration
+- [For: an initialized register accumulates four increments](Structures/structure.for.initialized_shift_register/main.frog) — For: an initialized register accumulates four increments
+- [For: zero iterations preserve initialization](Structures/structure.for.zero_iterations/main.frog) — For: zero iterations preserve initialization
+- [While: Stop if True executes at least one iteration](Structures/structure.while.stop_true_one_iteration/main.frog) — While: Stop if True executes at least one iteration
+- [While: Continue if True stops on False](Structures/structure.while.continue_false_one_iteration/main.frog) — While: Continue if True stops on False
+- [While: stop at the third increment](Structures/structure.while.three_iterations/main.frog) — While: stop at the third increment
+- [For: the auto-indexed input limits N](Structures/structure.for.indexed_input_limits_count/main.frog) — For: the auto-indexed input limits N
+- [For: collect three elements through auto-indexing](Structures/structure.for.indexed_output/main.frog) — For: collect three elements through auto-indexing
+- [Case bool: exact selection and tunnels](Structures/structure.case.bool.true/main.frog) — Case bool: exact selection and tunnels
 - [Case bool : branche alternative](Structures/structure.case.bool.false/main.frog) — Case bool : branche alternative
-- [Case i64 : sélection exacte et tunnels](Structures/structure.case.i64.exact/main.frog) — Case i64 : sélection exacte et tunnels
-- [Case u64 : sélection exacte et tunnels](Structures/structure.case.u64.exact/main.frog) — Case u64 : sélection exacte et tunnels
-- [Case string : sélection exacte et tunnels](Structures/structure.case.string.exact/main.frog) — Case string : sélection exacte et tunnels
+- [Case i64: exact selection and tunnels](Structures/structure.case.i64.exact/main.frog) — Case i64: exact selection and tunnels
+- [Case u64: exact selection and tunnels](Structures/structure.case.u64.exact/main.frog) — Case u64: exact selection and tunnels
+- [Case string: exact selection and tunnels](Structures/structure.case.string.exact/main.frog) — Case string: exact selection and tunnels
 - [Case string : branche alternative](Structures/structure.case.string.default/main.frog) — Case string : branche alternative
-- [Case enum : sélection exacte et tunnels](Structures/structure.case.enum.exact/main.frog) — Case enum : sélection exacte et tunnels
-- [In Place : modifier une donnée par la paire entrée/sortie](Structures/structure.ipe.generic_modify/main.frog) — In Place : modifier une donnée par la paire entrée/sortie
-- [In Place : indexer et remplacer un élément du tableau](Structures/structure.ipe.array_index_replace/main.frog) — In Place : indexer et remplacer un élément du tableau
-- [Event : traiter un Timeout immédiat](Structures/structure.event.timeout_zero/main.frog) — Event : traiter un Timeout immédiat
+- [Case enum: exact selection and tunnels](Structures/structure.case.enum.exact/main.frog) — Case enum: exact selection and tunnels
+- [In Place: modify data through the input/output pair](Structures/structure.ipe.generic_modify/main.frog) — In Place: modify data through the input/output pair
+- [In Place: index and replace an array element](Structures/structure.ipe.array_index_replace/main.frog) — In Place: index and replace an array element
+- [Event: handle an immediate Timeout](Structures/structure.event.timeout_zero/main.frog) — Event: handle an immediate Timeout
 - [Diagram Disable : la branche visible n'est pas la branche active](Structures/structure.diagram_disable.hidden_enabled/main.frog) — Diagram Disable : la branche visible n'est pas la branche active
-- [Conditional Disable : symbole sauvegardé et branches conservées](Structures/structure.conditional_disable.saved_symbol/main.frog) — Conditional Disable : symbole sauvegardé et branches conservées
-- [Timed Loop : configuration des nœuds de temporisation](Structures/structure.timed_loop.saved_schedule/main.frog) — Timed Loop : configuration des nœuds de temporisation
-- [Flat Sequence : traverser trois frames et une frame vide](Structures/structure.sequence.native.flat_passages/main.frog) — Flat Sequence : traverser trois frames et une frame vide
-- [Flat Sequence : publier une frame terminée avant une attente](Structures/structure.sequence.native.flat_wait_abort/main.frog) — Flat Sequence : publier une frame terminée avant une attente
-- [Stacked Sequence : conserver et exécuter toutes les frames](Structures/structure.sequence.native.stacked_passages/main.frog) — Stacked Sequence : conserver et exécuter toutes les frames
-- [Stacked Sequence : ne pas publier avant la dernière frame](Structures/structure.sequence.native.stacked_wait_abort/main.frog) — Stacked Sequence : ne pas publier avant la dernière frame
-- [Flat Sequence : une sortie précoce alimente une entrée tardive](Structures/structure.sequence.native.flat_late_input/main.frog) — Flat Sequence : une sortie précoce alimente une entrée tardive
-- [Stacked Sequence : diagnostiquer une dépendance circulaire](Structures/structure.sequence.native.stacked_late_cycle/main.frog) — Stacked Sequence : diagnostiquer une dépendance circulaire
+- [Conditional Disable: saved symbol and preserved branches](Structures/structure.conditional_disable.saved_symbol/main.frog) — Conditional Disable: saved symbol and preserved branches
+- [Timed Loop: timing-node configuration](Structures/structure.timed_loop.saved_schedule/main.frog) — Timed Loop: timing-node configuration
+- [Flat Sequence: traverse three frames including an empty frame](Structures/structure.sequence.native.flat_passages/main.frog) — Flat Sequence: traverse three frames including an empty frame
+- [Flat Sequence: publish a completed frame before a wait](Structures/structure.sequence.native.flat_wait_abort/main.frog) — Flat Sequence: publish a completed frame before a wait
+- [Stacked Sequence: preserve and execute every frame](Structures/structure.sequence.native.stacked_passages/main.frog) — Stacked Sequence: preserve and execute every frame
+- [Stacked Sequence: do not publish before the final frame](Structures/structure.sequence.native.stacked_wait_abort/main.frog) — Stacked Sequence: do not publish before the final frame
+- [Flat Sequence: an early output feeds a later input](Structures/structure.sequence.native.flat_late_input/main.frog) — Flat Sequence: an early output feeds a later input
+- [Stacked Sequence: diagnose a dependency cycle](Structures/structure.sequence.native.stacked_late_cycle/main.frog) — Stacked Sequence: diagnose a dependency cycle
 - [Current FROG Path uses its source owner](path/path.current_frog_path.context/main.frog) — The result is the actual saved file of this executing FROG, including its file name. The runner computes the expected value independently from its real working document path; no author-machine path is stored.
 - [Application Directory uses the saved root document directory](path/path.application_directory.context/main.frog) — In Studio, a saved root FROG without a loaded project uses its containing directory as the application directory. The runner computes this exact expected path independently from the actual saved example file; it must not substitute the Studio installation or current working directory.
 - [Default Directory uses the Studio installation](path/path.default_directory.context/main.frog) — Studio provides its actual executable context. The default directory is that executable's containing directory, independently from the process working directory or the source document's directory.
 - [Temporary Directory follows the current system](path/path.temporary_directory.context/main.frog) — The existing native Path service obtains the current system temporary directory. The expected path is computed at execution time, so this example remains portable between users and machines.
-- [Timestamp : constante et indicateur conservés dans le document](Timestamp/timestamp.editor_managed.saved_value/main.frog) — Timestamp : constante et indicateur conservés dans le document
-- [User Events : inscription, émission, Flush et nettoyage](DialogUserInterface/events.user_event.register_generate_flush_cleanup/main.frog) — User Events : inscription, émission, Flush et nettoyage
-- [Clear Error : réinitialiser les trois champs du cluster](Error/error.clear.complete_record/main.frog) — Clear Error : réinitialiser les trois champs du cluster
-- [Retain First : conserver le premier avertissement en l'absence d'erreur](Error/error.retain_first.warning_priority/main.frog) — Retain First : conserver le premier avertissement en l'absence d'erreur
-- [Display Error : inspecter un record sans erreur](Error/error.display.clean_record/main.frog) — Display Error : inspecter un record sans erreur
+- [Timestamp: constant and indicator preserved in the document](Timestamp/timestamp.editor_managed.saved_value/main.frog) — Timestamp: constant and indicator preserved in the document
+- [User Events: register, generate, Flush and clean up](DialogUserInterface/events.user_event.register_generate_flush_cleanup/main.frog) — User Events: register, generate, Flush and clean up
+- [Clear Error: reset all three cluster fields](Error/error.clear.complete_record/main.frog) — Clear Error: reset all three cluster fields
+- [Retain First: keep the first warning when no error exists](Error/error.retain_first.warning_priority/main.frog) — Retain First: keep the first warning when no error exists
+- [Display Error: inspect an error-free record](Error/error.display.clean_record/main.frog) — Display Error: inspect an error-free record

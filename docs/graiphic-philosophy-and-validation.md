@@ -1,50 +1,55 @@
-# Graiphic : pilotage, partage et validation
+# Graiphic: leadership, sharing and validation
 
-Graiphic dirige le projet officiel tout en ouvrant une partie de son code et ses contrats à l’écosystème. Les propositions externes sont bienvenues ; l’acceptation reste une décision explicite des mainteneurs. Cette note explique les [règles de gouvernance](../GOVERNANCE.md#official-project-rules), sans modifier les licences ni créer une seconde politique.
+Graiphic leads the official project while opening selected code and contracts to the ecosystem. External proposals are welcome; acceptance remains an explicit maintainer decision. This note explains the [governance rules](../GOVERNANCE.md#official-project-rules), without changing licenses or creating a second policy.
 
-**English summary:** Graiphic leads official development and releases. Contributions are open and reviewed. Shared production components are proven in Studio, qualified independently, then published as identified versions. Studio and public tools consume one implementation; updates are explicit and validated.
+**Summary:** Graiphic leads official development and releases. Contributions are open and reviewed. Shared production components are proven in Studio, qualified independently, then published as identified versions. Studio and public tools consume one implementation; updates are explicit and validated.
 
-## Un produit pilote et un écosystème ouvert
+<a id="un-produit-pilote-et-un-écosystème-ouvert"></a>
+## A leading product and an open ecosystem
 
-Studio est l’environnement d’intégration et l’orchestrateur : édition des documents, diagnostics, réparations proposées, choix des backends et services, exécution, observation et Build. L’ambition est un environnement puissant, extensible et maîtrisé sur l’ensemble de la chaîne. Une ambition ne constitue pas la preuve qu’un matériel, une fonction ou un déploiement est déjà pris en charge : les profils et leurs résultats font foi.
+Studio provides integration and orchestration: document editing, diagnostics, proposed repairs, backend and service selection, execution, observation and Build. The goal is a powerful, extensible environment with control over the whole pipeline. That goal is not evidence that a particular device, function or deployment is already supported: published profiles and results determine support.
 
-Graiphic garde la direction de la feuille de route, de l’architecture et des releases officielles. Chacun peut signaler un problème ou proposer une amélioration. L’auteur d’une proposition ne reçoit pas une promesse d’intégration ; la revue évalue utilité, exactitude, compatibilité, sécurité, performances pertinentes, maintenance et licence. Une demande substantielle de modification, un report ou un refus est accompagné d’une raison concise. Les droits d’usage, de modification, de redistribution et de fork restent ceux des licences ; les noms et marques officiels sont distincts.
+Graiphic directs the roadmap, architecture and official releases. Anyone may report an issue or propose an improvement. A proposal does not come with a promise of integration; review considers usefulness, correctness, compatibility, security, relevant performance, maintainability and licensing. A substantial revision request, deferral or rejection includes a concise reason. Rights to use, modify, redistribute and fork remain governed by the licenses; official names and trademarks are separate.
 
-## Éprouver, partager, puis intégrer volontairement
+<a id="éprouver-partager-puis-intégrer-volontairement"></a>
+## Prove, share, then integrate explicitly
 
-![Cycle des composants partagés](diagrams/graiphic-shared-component-cycle.svg)
+![Shared component lifecycle](diagrams/graiphic-shared-component-cycle.svg)
 
-Le parcours des composants issus de Studio est : comportement éprouvé dans Studio, qualification autonome du composant commun, puis publication d’une version identifiée. Une contribution peut être proposée publiquement à tout moment ; les preuves requises précèdent l’intégration ou la release officielle concernée. Une correction purement documentaire ne demande pas une compilation de l’IDE.
+Components originating in Studio follow this path: proven behavior in Studio, independent qualification of the common component, then publication of an identified version. A contribution may be proposed publicly at any time; required evidence precedes the relevant official integration or release. A documentation-only correction does not require an IDE build.
 
-Après extraction, **une seule implémentation** alimente Studio et les outils publics. La CLI est un hôte de la même bibliothèque Frontend ; elle n’est ni un second générateur FIR ni une étape externe obligatoire pour chaque édition dans Studio. Les contrats nécessaires sont publics ; l’éditeur complet, les réparations et les autres parties privées ne le deviennent pas automatiquement.
+After extraction, **one implementation** serves Studio and public tools. The CLI hosts the same Frontend library; it is neither a second FIR generator nor a mandatory external step for every Studio edit. Required contracts are public; the complete editor, repairs and other private parts do not automatically become public.
 
-Studio épingle la version qualifiée, son identité de contenu et sa configuration. Une release publique plus récente ne remplace jamais silencieusement ce composant. La mise à jour d’un consommateur est une opération volontaire, avec les contrôles directement concernés.
+Studio pins the qualified version, its content identity and its configuration. A newer public release never silently replaces that component. Updating a consumer is an explicit operation, with the checks directly relevant to the change.
 
-## Valider chaque étage pour ce qu’il démontre
+<a id="valider-chaque-étage-pour-ce-quil-démontre"></a>
+## Validate each stage for what it demonstrates
 
-![Étages de validation FROG](diagrams/frog-validation-stages.svg)
+![FROG validation stages](diagrams/frog-validation-stages.svg)
 
-| Décision | Question traitée |
+| Decision | Question addressed |
 |---|---|
-| Lecture et intégrité | Les octets peuvent-ils être lus sans perte ni ambiguïté ? |
-| Format et migration | Le format est-il reconnu ? Une migration explicite est-elle nécessaire ? |
-| Langage et types | Dépendances, terminaux, connexions, régions, valeurs et effets sont-ils valides ? |
-| Admission par cible | Le backend et ses fournisseurs réalisent-ils le graphe complet dans leur profil annoncé ? |
-| Compilation et déploiement | Le programme peut-il être compilé, lié et empaqueté avec ses dépendances ? |
-| Exécution | Le package a-t-il réellement fonctionné dans l’environnement décrit ? |
+| Reading and integrity | Can the bytes be read without loss or ambiguity? |
+| Format and migration | Is the format recognized? Is an explicit migration required? |
+| Language and types | Are dependencies, terminals, connections, regions, values and effects valid? |
+| Target admission | Do the backend and its providers implement the complete graph within their declared profile? |
+| Compilation and deployment | Can the program be compiled, linked and packaged with its dependencies? |
+| Execution | Has the package actually run in the stated environment? |
 
-Le Frontend commun est l’autorité pour la validation sémantique et la FIR. Il ne répare pas implicitement le document. Studio propose et applique les réparations comme transactions d’édition, puis soumet le résultat au même Frontend.
+The common Frontend is the authority for semantic validation and FIR. It does not implicitly repair the document. Studio proposes and applies repairs as editing transactions, then submits the result to the same Frontend.
 
-Un programme valide mais non réalisé sur une cible est **non pris en charge sur cette cible**, pas corrompu. Un contrôle interrompu ou incomplet reste indéterminé. Une compilation réussie ne prouve pas l’exécution, et un lancement local ne qualifie pas Windows propre ou tous les matériels. Les diagnostics doivent conserver étape, catégorie, code, gravité et objets/emplacements concernés.
+A valid program that is not implemented on a target is **unsupported on that target**, not corrupt. An interrupted or incomplete check remains indeterminate. Successful compilation does not prove execution, and a local run does not qualify a clean Windows installation or every device. Diagnostics must retain the stage, category, code, severity and affected objects/source locations.
 
-La peinture signifie simplement dessiner l’interface. Elle consomme un état préparé publié, attribué au document, à sa révision, aux dépendances et à la cible. Elle ne doit pas relancer les traitements lourds à chaque affichage. Cette séparation n’autorise ni Run sans admission correspondante, ni l’exécution silencieuse d’un ancien instantané.
+Painting simply means drawing the interface. It consumes a published prepared state attributed to the document, its revision, dependencies and target. It must not repeat expensive processing on each repaint. This separation permits neither Run without the corresponding admission nor silent execution of an older snapshot.
 
-## Dépendances choisies pour leur valeur
+<a id="dépendances-choisies-pour-leur-valeur"></a>
+## Dependencies chosen for their value
 
-La maîtrise du produit ne demande pas de tout réécrire. Une bibliothèque éprouvée et optimisée peut être le meilleur choix. Un remplacement doit apporter un bénéfice démontré, préserver les contrats et être vérifié. Le nombre de dépendances ou l’étiquette « maison » ne constitue pas une mesure de qualité. Les origines, licences et notices restent conservées, y compris pour le code adapté de tiers.
+Control over the product does not require rewriting everything. A proven, optimized library may be the best choice. A replacement must offer a demonstrated benefit, preserve contracts and be verified. Dependency count or an “in-house” label is not a measure of quality. Origins, licenses and notices remain preserved, including for adapted third-party code.
 
-## Des preuves attribuées, des limites visibles
+<a id="des-preuves-attribuées-des-limites-visibles"></a>
+## Attributed evidence and visible limits
 
-Distinguer systématiquement : implémenté, compilé, testé, livré localement, publié sur GitHub et qualifié sur une machine indépendante. Une réussite finie ne qualifie pas toute une palette. Un échec conservé n’est pas transformé en PASS par une publication.
+Always distinguish implementation, compilation, testing, local delivery, GitHub publication and qualification on an independent machine. A bounded success does not qualify an entire palette. Publishing a retained failure does not turn it into a PASS.
 
-Le [checkpoint Frontend du 2 novembre 2026](frontend-checkpoint-2026-11-02.json) identifie le corpus et ses limites ; les [instructions de construction](../Implementations/Frontend/README.md) décrivent le composant autonome. Les évolutions gardent leurs versions et preuves propres. Les licences, le [CLA](../CLA.md) et le [parcours de contribution](../CONTRIBUTING.md) existants continuent de s’appliquer.
+The [2 November 2026 Frontend checkpoint](frontend-checkpoint-2026-11-02.json) identifies the corpus and its limits; the [build instructions](../Implementations/Frontend/README.md) describe the standalone component. Changes retain their own versions and evidence. Existing licenses, the [CLA](../CLA.md) and the [contribution process](../CONTRIBUTING.md) continue to apply.

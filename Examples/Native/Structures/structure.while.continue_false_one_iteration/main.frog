@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "While : Continue if True s'arrête sur False",
+  "title": "While: Continue if True stops on False",
   "metadata": {
-    "name": "While : Continue if True s'arrête sur False",
+    "name": "While: Continue if True stops on False",
     "name_source": "document",
-    "description": "Le registre reçoit 10 avant l'entrée dans While. Le corps calcule 11 une fois avant d'examiner la condition terminale. Le mode Stop if True ou Continue if True est sauvegardé sur l'instance ; il n'est pas déduit du libellé.\n\nWhile : Continue if True s'arrête sur False\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nresult (i64) = 11\n",
+    "description": "The register receives 10 before entering While. The body computes 11 once before checking the terminal condition. Stop if True or Continue if True is saved on the instance, not inferred from its label.\n\nWhile: Continue if True stops on False\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nresult (i64) = 11\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -343,7 +343,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "While : Continue if True s'arrête sur False\nWhile : Continue if True s'arrête sur False\nEntrées -> opération -> indicateurs. Résultat attendu : result (i64) = 11\n",
+        "text": "While: Continue if True stops on False\nWhile: Continue if True stops on False\nInputs -> operation -> indicators. Expected result: result (i64) = 11\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

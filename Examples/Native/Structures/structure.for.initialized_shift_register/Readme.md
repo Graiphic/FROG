@@ -1,10 +1,10 @@
-# For : un registre initialisé accumule quatre incréments
+# For: an initialized register accumulates four increments
 
-For : un registre initialisé accumule quatre incréments
+For: an initialized register accumulates four increments
 
-Le registre précédent reçoit 10. Quatre itérations exécutent Increment ; la sortie finale vaut 14. La paire conserve une identité stable et ses faces ne sont pas remplacées par un fil combinatoire cyclique.
+The previous register receives 10. Four iterations execute Increment; the final output is 14. The pair retains a stable identity, and its sides are not replaced by a cyclic combinational wire.
 
-For : un registre initialisé accumule quatre incréments
+For: an initialized register accumulates four increments
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

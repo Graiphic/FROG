@@ -2,9 +2,9 @@
 
 Computes the natural logarithm of one plus x, retaining accuracy near zero.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : x (f64) = 1e-12.
-Résultats attendus : result (f64) = 9.999999999995e-13.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: x (f64) = 1e-12.
+Expected results: result (f64) = 9.999999999995e-13.
 
 Computes the natural logarithm of one plus x, retaining accuracy near zero.
 

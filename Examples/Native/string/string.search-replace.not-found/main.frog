@@ -596,7 +596,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Search And Replace String — not-found\nThe existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode cas...\nEntrées -> opération -> indicateurs. Résultat attendu : text-result (string) = \"red red\"\ncount-result (i32) = 0\noffset-result (i32) = -1\nerror-status (bool) = false\nerror-code (i32) = 0\n",
+        "text": "Search And Replace String — not-found\nThe existing UTF-8 literal-search target reports replacement count and the offset in the resulting String. Omitted replacement deletes a match. This version rejects empty searches and invalid UTF-8 offsets with ordinary error 1; Unicode cas...\nInputs -> operation -> indicators. Expected result: text-result (string) = \"red red\"\ncount-result (i32) = 0\noffset-result (i32) = -1\nerror-status (bool) = false\nerror-code (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

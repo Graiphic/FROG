@@ -1,10 +1,10 @@
-# While : Stop if True exécute au moins une itération
+# While: Stop if True executes at least one iteration
 
-While : Stop if True exécute au moins une itération
+While: Stop if True executes at least one iteration
 
-Le registre reçoit 10 avant l'entrée dans While. Le corps calcule 11 une fois avant d'examiner la condition terminale. Le mode Stop if True ou Continue if True est sauvegardé sur l'instance ; il n'est pas déduit du libellé.
+The register receives 10 before entering While. The body computes 11 once before checking the terminal condition. Stop if True or Continue if True is saved on the instance, not inferred from its label.
 
-While : Stop if True exécute au moins une itération
+While: Stop if True executes at least one iteration
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

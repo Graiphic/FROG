@@ -472,7 +472,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: f32 left fold\nA binary32 addition rounds at every step;2^24+1 first rounds to2^24. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (array<f32>) = [0]\n",
+        "text": "Add: f32 left fold\nA binary32 addition rounds at every step;2^24+1 first rounds to2^24. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nInputs -> operation -> indicators. Expected result: output-result (array<f32>) = [0]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

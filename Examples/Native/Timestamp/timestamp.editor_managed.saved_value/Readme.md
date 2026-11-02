@@ -1,10 +1,10 @@
-# Timestamp : constante et indicateur conservés dans le document
+# Timestamp: constant and indicator preserved in the document
 
-Timestamp : constante et indicateur conservés dans le document
+Timestamp: constant and indicator preserved in the document
 
-La constante et l'indicateur utilisent le type Timestamp réel de l'éditeur, avec une valeur enregistrée 0 et l'affichage sur deux lignes. Cet exemple qualifie uniquement la sauvegarde, la réouverture et les options de présentation editor_managed. Les six fonctions calendrier/heure de la palette n'ont pas de provider d'exécution qualifié ; aucun résultat d'horloge, de fuseau ou de précision128 bits n'est inventé.
+The constant and indicator use the editor's actual Timestamp type, with saved value 0 and a two-line display. This example qualifies only saving, reopening and editor_managed presentation options. The six calendar/time palette functions have no qualified execution provider; no clock, time-zone or 128-bit precision result is fabricated.
 
-Timestamp : constante et indicateur conservés dans le document
+Timestamp: constant and indicator preserved in the document
 
 Mode: persistence. Profile: studio-draft. Capability: studio/editor-managed-timestamp.
 Expected:

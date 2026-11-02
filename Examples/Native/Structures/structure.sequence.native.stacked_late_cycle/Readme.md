@@ -1,10 +1,10 @@
-# Stacked Sequence : diagnostiquer une dépendance circulaire
+# Stacked Sequence: diagnose a dependency cycle
 
-Stacked Sequence : diagnostiquer une dépendance circulaire
+Stacked Sequence: diagnose a dependency cycle
 
-Ce montage reprend le trajet extérieur de l'exemple Flat. Stacked doit disposer de toutes ses entrées avant la première frame et ne publie qu'à sa sortie finale : le trajet constitue donc un vrai cycle. Le Frontend commun doit le refuser lors de la dérivation du FIR avec IR_SEQUENCE_DEPENDENCY_CYCLE, sans produire de FIR exécutable ni réécrire le document. Un test séparé contrôle également la garde indépendante du FIR sur le même graphe canonique.
+This graph reuses the external path from the Flat example. Stacked requires all inputs before its first frame and publishes only at its final exit, so this path is a genuine cycle. The common Frontend must reject it during FIR derivation with IR_SEQUENCE_DEPENDENCY_CYCLE, without producing executable FIR or rewriting the document. A separate test also checks the independent FIR guard on the same canonical graph.
 
-Stacked Sequence : diagnostiquer une dépendance circulaire
+Stacked Sequence: diagnose a dependency cycle
 
 Mode: expected-diagnostic. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

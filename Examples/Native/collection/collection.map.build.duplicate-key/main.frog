@@ -399,7 +399,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Build Map — last repeated key wins\nRows are evaluated in their persisted logical order. The last value supplied for key A replaces the first; the displayed Map is ordered by its declared key comparator.\nEntrées -> opération -> indicateurs. Résultat attendu : result (map<string,i32>) = {\"entries\":[{\"key\":\"A\",\"value\":30},{\"key\":\"B\",\"value\":20}]}\n",
+        "text": "Build Map — last repeated key wins\nRows are evaluated in their persisted logical order. The last value supplied for key A replaces the first; the displayed Map is ordered by its declared key comparator.\nInputs -> operation -> indicators. Expected result: result (map<string,i32>) = {\"entries\":[{\"key\":\"A\",\"value\":30},{\"key\":\"B\",\"value\":20}]}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

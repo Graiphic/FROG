@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "While : Stop if True exécute au moins une itération",
+  "title": "While: Stop if True executes at least one iteration",
   "metadata": {
-    "name": "While : Stop if True exécute au moins une itération",
+    "name": "While: Stop if True executes at least one iteration",
     "name_source": "document",
-    "description": "Le registre reçoit 10 avant l'entrée dans While. Le corps calcule 11 une fois avant d'examiner la condition terminale. Le mode Stop if True ou Continue if True est sauvegardé sur l'instance ; il n'est pas déduit du libellé.\n\nWhile : Stop if True exécute au moins une itération\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nresult (i64) = 11\n",
+    "description": "The register receives 10 before entering While. The body computes 11 once before checking the terminal condition. Stop if True or Continue if True is saved on the instance, not inferred from its label.\n\nWhile: Stop if True executes at least one iteration\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nresult (i64) = 11\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -343,7 +343,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "While : Stop if True exécute au moins une itération\nWhile : Stop if True exécute au moins une itération\nEntrées -> opération -> indicateurs. Résultat attendu : result (i64) = 11\n",
+        "text": "While: Stop if True executes at least one iteration\nWhile: Stop if True executes at least one iteration\nInputs -> operation -> indicators. Expected result: result (i64) = 11\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

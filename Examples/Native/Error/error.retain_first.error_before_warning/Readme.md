@@ -1,10 +1,10 @@
-# Retain First Error : une erreur prime sur un warning
+# Retain First Error: an error takes priority over a warning
 
-Retain First Error : une erreur prime sur un warning
+Retain First Error: an error takes priority over a warning
 
-Le premier connecteur porte un warning 41 ; le deuxième porte une erreur 77. Retain First Error choisit d'abord la première erreur, puis seulement la première alerte s'il n'y a aucune erreur. La sortie attendue a status=True et code=77. Le type reste le vrai cluster status/code/source.
+The first connector carries warning 41; the second carries error 77. Retain First Error selects the first error, or the first warning only when no error exists. The expected output has status=True and code=77. Its type remains the actual status/code/source cluster.
 
-Retain First Error : une erreur prime sur un warning
+Retain First Error: an error takes priority over a warning
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

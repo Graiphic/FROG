@@ -265,7 +265,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Variant retains an exact I64\nBoxing owns an immutable typed value. Variant To Data extracts one envelope only when its type specimen matches exactly; it must not route I64 through F64.\nEntrées -> opération -> indicateurs. Résultat attendu : result (i64) = 9007199254740993\n",
+        "text": "Variant retains an exact I64\nBoxing owns an immutable typed value. Variant To Data extracts one envelope only when its type specimen matches exactly; it must not route I64 through F64.\nInputs -> operation -> indicators. Expected result: result (i64) = 9007199254740993\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

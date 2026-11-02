@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Semaphore : acquérir et nettoyer malgré une erreur",
+  "title": "Semaphore: acquire and clean up despite an error",
   "metadata": {
-    "name": "Semaphore : acquérir et nettoyer malgré une erreur",
+    "name": "Semaphore: acquire and clean up despite an error",
     "name_source": "document",
-    "description": "L'erreur 77 est une donnée. Acquire retire une place malgré cette erreur ; Release la restitue ; Release Reference ferme ensuite le handle tout en conservant l'erreur prioritaire. Status inspecte sans erreur amont pour observer le vrai compteur.\n\nSemaphore : acquérir et nettoyer malgré une erreur\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ncapacity (i32) = 1\navailable_held (i32) = 0\navailable_restored (i32) = 1\ntimed_out (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 77\n",
+    "description": "Error 77 is data. Acquire takes a slot despite that error; Release returns it; Release Reference then closes the handle while preserving the priority error. Status inspects without an upstream error to observe the actual count.\n\nSemaphore: acquire and clean up despite an error\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ncapacity (i32) = 1\navailable_held (i32) = 0\navailable_restored (i32) = 1\ntimed_out (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 77\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -946,7 +946,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Semaphore : acquérir et nettoyer malgré une erreur\nSemaphore : acquérir et nettoyer malgré une erreur\nEntrées -> opération -> indicateurs. Résultat attendu : capacity (i32) = 1\navailable_held (i32) = 0\navailable_restored (i32) = 1\ntimed_out (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 77\n",
+        "text": "Semaphore: acquire and clean up despite an error\nSemaphore: acquire and clean up despite an error\nInputs -> operation -> indicators. Expected result: capacity (i32) = 1\navailable_held (i32) = 0\navailable_restored (i32) = 1\ntimed_out (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 77\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

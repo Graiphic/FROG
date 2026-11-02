@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Add — arity 11",
     "name_source": "document",
-    "description": "Addition de 11 opérandes FROG dans l'ordre canonique a,b puis input_3… si présents. La réduction est à gauche. NI Add reste binaire; cette extensibilité est une loi FROG conservée.\nEntrées : a (i32) = 1; b (i32) = 2; input_3 (i32) = 3; input_4 (i32) = 4; input_5 (i32) = 5; input_6 (i32) = 6; input_7 (i32) = 7; input_8 (i32) = 8; input_9 (i32) = 9; input_10 (i32) = 10; input_11 (i32) = 11.\nRésultats attendus : result (i32) = 66.\n\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (i32) = 66\n",
+    "description": "Adds 11 FROG operands in canonical order: a, b, then input_3… when present. This is a left fold. NI Add remains binary; this extensibility is a preserved FROG language rule.\nInputs: a (i32) = 1; b (i32) = 2; input_3 (i32) = 3; input_4 (i32) = 4; input_5 (i32) = 5; input_6 (i32) = 6; input_7 (i32) = 7; input_8 (i32) = 8; input_9 (i32) = 9; input_10 (i32) = 10; input_11 (i32) = 11.\nExpected results: result (i32) = 66.\n\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (i32) = 66\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -889,7 +889,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add — arity 11\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (i32) = 66\n",
+        "text": "Add — arity 11\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\nInputs -> operation -> indicators. Expected result: output-result (i32) = 66\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

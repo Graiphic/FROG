@@ -398,7 +398,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Insert Into Map — replace\nInsertion preserves the exact Map<K,V> model and reports separately whether the key already existed and its value remained unchanged.\nEntrées -> opération -> indicateurs. Résultat attendu : result (map<string,i32>) = {\"entries\":[{\"key\":\"A\",\"value\":11},{\"key\":\"B\",\"value\":20}]}\nalready (bool) = true\nunchanged (bool) = false\n",
+        "text": "Insert Into Map — replace\nInsertion preserves the exact Map<K,V> model and reports separately whether the key already existed and its value remained unchanged.\nInputs -> operation -> indicators. Expected result: result (map<string,i32>) = {\"entries\":[{\"key\":\"A\",\"value\":11},{\"key\":\"B\",\"value\":20}]}\nalready (bool) = true\nunchanged (bool) = false\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

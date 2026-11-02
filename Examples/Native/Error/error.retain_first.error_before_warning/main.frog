@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Retain First Error : une erreur prime sur un warning",
+  "title": "Retain First Error: an error takes priority over a warning",
   "metadata": {
-    "name": "Retain First Error : une erreur prime sur un warning",
+    "name": "Retain First Error: an error takes priority over a warning",
     "name_source": "document",
-    "description": "Le premier connecteur porte un warning 41 ; le deuxième porte une erreur 77. Retain First Error choisit d'abord la première erreur, puis seulement la première alerte s'il n'y a aucune erreur. La sortie attendue a status=True et code=77. Le type reste le vrai cluster status/code/source.\n\nRetain First Error : une erreur prime sur un warning\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nerror_status (bool) = true\nerror_code (i32) = 77\n",
+    "description": "The first connector carries warning 41; the second carries error 77. Retain First Error selects the first error, or the first warning only when no error exists. The expected output has status=True and code=77. Its type remains the actual status/code/source cluster.\n\nRetain First Error: an error takes priority over a warning\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nerror_status (bool) = true\nerror_code (i32) = 77\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -579,7 +579,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Retain First Error : une erreur prime sur un warning\nRetain First Error : une erreur prime sur un warning\nEntrées -> opération -> indicateurs. Résultat attendu : error_status (bool) = true\nerror_code (i32) = 77\n",
+        "text": "Retain First Error: an error takes priority over a warning\nRetain First Error: an error takes priority over a warning\nInputs -> operation -> indicators. Expected result: error_status (bool) = true\nerror_code (i32) = 77\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

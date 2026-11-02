@@ -498,7 +498,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Bind three named formula variables\nvariables and x_values have a one-to-one relation. 2*a-b+c^2 with a=4,b=3,c=2 equals 9.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = 9\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
+        "text": "Bind three named formula variables\nvariables and x_values have a one-to-one relation. 2*a-b+c^2 with a=4,b=3,c=2 equals 9.\nInputs -> operation -> indicators. Expected result: output-result (f64) = 9\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

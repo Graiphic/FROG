@@ -1,10 +1,10 @@
-# File Exists : le chemin vide désigne la liste des lecteurs Windows
+# File Exists: an empty path denotes the Windows drive list
 
-File Exists : le chemin vide désigne la liste des lecteurs Windows
+File Exists: an empty path denotes the Windows drive list
 
-Ce test n'accède à aucun chemin utilisateur. Sous Windows, le chemin vide correspond à la liste des lecteurs pour File Exists et renvoie True. Cette règle propre à Exists ne rend pas un chemin vide valide pour lire ou écrire un fichier.
+This test accesses no user path. On Windows, an empty path denotes the drive list for File Exists and returns True. This Exists-specific rule does not make an empty path valid for reading or writing a file.
 
-File Exists : le chemin vide désigne la liste des lecteurs Windows
+File Exists: an empty path denotes the Windows drive list
 
 Mode: execution. Profile: studio-draft. Capability: windows/highlight-fileio.
 Expected:

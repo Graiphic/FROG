@@ -264,7 +264,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Read both Array dimensions\nArray Size returns one dimension per axis for rank two, independently from its total element count.\nEntrées -> opération -> indicateurs. Résultat attendu : result (array<i32>) = [2,3]\n",
+        "text": "Read both Array dimensions\nArray Size returns one dimension per axis for rank two, independently from its total element count.\nInputs -> operation -> indicators. Expected result: result (array<i32>) = [2,3]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

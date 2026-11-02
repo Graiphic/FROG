@@ -1,103 +1,96 @@
-# Audit de fermeture du Frontend P28
+<a id="audit-de-fermeture-du-frontend-p28"></a>
 
-L'outil `tools/audit_frontend_closure.py` contrôle les vraies unités de production
-énumérées dans `production-sources.cmake`. Il ne compile pas, ne configure pas
-CMake, ne copie aucun fichier source et ne crée aucun paquet. Python 3.10 ou
-ultérieur suffit ; aucune dépendance Python externe n'est nécessaire.
+# P28 Frontend closure audit
 
-Depuis la racine du workspace ou d'un snapshot complet des trois dépôts :
+`tools/audit_frontend_closure.py` checks the actual production translation units
+listed in `production-sources.cmake`. It does not compile, configure CMake, copy
+source files or create packages. Python 3.10 or later suffices, with no external
+Python dependency.
+
+From the workspace root or a complete three-repository snapshot:
 
 ```text
 python FROG/Implementations/Frontend/tools/audit_frontend_closure.py --root FROG/Implementations/Frontend --output frontend-closure-audit.json
 ```
 
-`--root` accepte aussi la racine FROG ou la racine commune des trois dépôts.
-Pour contrôler en plus les adaptateurs C/CLI réellement présents, ajouter :
+`--root` also accepts the FROG root or the common root of all three repositories.
+To additionally check the actual C/CLI adapters, add:
 
 ```text
 --source src/FrontendApi.cpp --source src/FrontendOperation.cpp --source src/FrontendCli.cpp
 ```
 
-L'absence d'un de ces fichiers est un échec, pas une exclusion silencieuse.
-La liste par défaut reste exactement celle du générateur de production ; le
-rapport conserve toutes les racines effectivement inspectées.
+A missing file is a failure, not a silent exclusion. The default list remains
+exactly that of the production generator; the report retains every inspected root.
 
-## Contrat du contrôle
+<a id="contrat-du-contrôle"></a>
 
-- `set(FROG_FRONTEND_PRODUCTION_SOURCES ...)` doit apparaître exactement une fois
-  et contenir des chemins littéraux. Les substitutions CMake sont refusées.
-  `--sources` accepte aussi une liste texte ou JSON (`{"sources":[...]}`).
-- Les includes sont résolus uniquement dans le propriétaire Frontend : `include`,
-  `include/frog_native_engine`, `src`, `snapshot/api`, `snapshot/sdk/include` et
-  `snapshot/generated`, puis les éventuels `--include-dir` confinés à ce même
-  propriétaire. Un lien vers un fichier hors de ce propriétaire échoue.
-- Toutes les branches conditionnelles sont parcourues. Les includes dynamiques,
-  non résolus, privés Runtime/Studio, Canvas, contrôleurs, Win32 et LLVM/Clang
-  sont refusés. Les headers standards C/C++20 sont une liste explicite ; un
-  header plateforme inconnu reste visible.
-- Les identifiants de modèles et sessions privés sont recherchés hors commentaires
-  et littéraux C++. L’extraction admet désormais les propriétaires de données
-  neutres **explicitement listés** par l’outil : `WidgetInstance`, `DiagramNode`,
-  `FrogDocumentStateData` et leurs codecs se résolvent dans le Frontend public.
-  Leur nom historique n’en fait pas un Canvas. Cette liste ne constitue aucune
-  permission générale pour des fichiers préfixés `Widget` ou `FrogDocument` :
-  leurs contenus et dépendances restent contrôlés. `FrontPanelCanvasScene`,
-  `LoadedFrogDocument`, contrôleurs, réparation/récupération privées et sessions
-  runtime restent exclus.
-- Le décodeur documentaire Zstandard 1.5.7 est une dépendance statique bornée et
-  explicite. Ses sources C et notices sont conservées ; seules les branches
-  désactivées par les définitions effectives (`ZSTD_LEGACY_SUPPORT=0`) et les
-  headers intrinsèques du compilateur déclarés par fichier bénéficient des
-  exceptions documentées. Le compresseur et le runtime privés ne sont pas
-  importés par cette exception.
-- Les types de valeurs/schémas du SDK public `frog/sdk/runtime_*` et les espaces
-  de noms historiques `frog::runtime` des contrats sémantiques restent admis.
-  Cela ne permet aucun include privé `frog/runtime/*`.
-- Chaque fichier visité et le manifeste portent un SHA-256 ; une modification
-  pendant l'audit produit un échec. Le rapport contient les arêtes d'include,
-  chemins relatifs, tailles et raisons localisées. Il ne publie aucune origine
-  absolue de la machine.
+## Check contract
 
-Codes de sortie : `0` fermeture conforme, `1` violation, `2` configuration ou
-lecture impossible. Les codes de diagnostic sont stables ; le message est une
-preuve localisée et non une règle de classification sémantique du langage.
+- `set(FROG_FRONTEND_PRODUCTION_SOURCES ...)` must appear exactly once and contain
+  literal paths. CMake substitutions are rejected. `--sources` also accepts a text
+  or JSON list (`{"sources":[...]}`).
+- Includes resolve only within the Frontend owner: `include`,
+  `include/frog_native_engine`, `src`, `snapshot/api`, `snapshot/sdk/include` and
+  `snapshot/generated`, plus any `--include-dir` confined to that same owner.
+  A link to a file outside the owner fails.
+- Every conditional branch is traversed. Dynamic, unresolved, private Runtime/Studio,
+  Canvas, controller, Win32 and LLVM/Clang includes are rejected. C/C++20 standard
+  headers form an explicit list; unknown platform headers remain visible.
+- Private model/session identifiers are searched outside C++ comments and literals.
+  Extraction now admits **explicitly listed** neutral data owners: `WidgetInstance`,
+  `DiagramNode`, `FrogDocumentStateData` and their codecs resolve in the public Frontend.
+  Their historical names do not make them a Canvas. This is no general permission
+  for files prefixed `Widget` or `FrogDocument`: contents/dependencies remain checked.
+  `FrontPanelCanvasScene`, `LoadedFrogDocument`, controllers, private repair/recovery
+  and runtime sessions remain excluded.
+- The Zstandard 1.5.7 document decoder is a bounded, explicit static dependency.
+  Its C sources/notices are retained. Only branches disabled by effective definitions
+  (`ZSTD_LEGACY_SUPPORT=0`) and compiler-intrinsic headers declared per file receive
+  documented exceptions. This imports neither the compressor nor private runtime.
+- Public SDK value/schema types `frog/sdk/runtime_*` and historical `frog::runtime`
+  namespaces of semantic contracts remain allowed. This permits no private
+  `frog/runtime/*` include.
+- Every visited file and manifest has a SHA-256; mutation during the audit fails.
+  The report contains include edges, relative paths, sizes and localized reasons.
+  It publishes no machine-absolute origin.
 
-Ce contrôle lexical conservateur ne remplace ni le compilateur, ni l'audit des
-symboles d'un binaire lié, ni les tests FIR/Event et C ABI/CLI/Studio. Un succès
-ne prouve pas la parité d'une copie SDK avec son owner ; cette parité utilise
-les captures `snapshot` de `source-origin.json` et la configuration CMake
-existante. Les hashes `move` de ce manifeste restent les captures d'extraction,
-sans empêcher les évolutions ultérieures du nouveau propriétaire. L'inventaire
-de licences distingue donc `original_hash` et `current_hash`.
+Exit codes: `0` conforming closure, `1` violation, `2` configuration/read failure.
+Diagnostic codes are stable; the message is localized evidence, not a language
+semantic-classification rule.
 
-Le relevé complet E2 du 1 novembre 2026 a parcouru les 45 sources de production
-et les trois adaptateurs ci-dessus : 48 unités racines, 179 fichiers et
-313 arêtes, sans include privé Runtime/Studio, modèle éditeur concret, Win32,
-LLVM ou include introuvable. La preuve est conservée sous
+This conservative lexical check replaces neither the compiler, linked-binary symbol
+inspection nor FIR/Event and C ABI/CLI/Studio tests. Success does not prove SDK-copy
+parity with its owner; parity uses `source-origin.json` snapshot captures and existing
+CMake configuration. Its `move` hashes remain extraction captures without preventing
+later changes in the new owner. The license inventory therefore distinguishes
+`original_hash` and `current_hash`.
+
+The complete E2 record of 1 November 2026 traversed 45 production sources and the three
+adapters above: 48 root units, 179 files and 313 edges, with no private Runtime/Studio
+include, concrete editor model, Win32, LLVM or missing include. Evidence is retained at
 `FROG-STUDIO/native-portable-engine/artifacts/modularisation-etape2-p28-2026-11-01/independent-frontend-full-closure-audit.json`.
-Ce résultat porte sur la fermeture lexicale de cet état source ; aucun binaire
-ni lien réussi n'est déclaré par cet audit.
+This concerns lexical closure of that source state, not a successful binary or link.
 
-La phase A du 2 novembre a ensuite reconstruit et installé le kit autonome de
-contenu `c640d266a4de9d9581e6394d80d7152ce3d91d64278b960ab6777a524a056a62`, sans sources,
-en-têtes ni bibliothèques Studio/Runtime/LLVM dans ses entrées. Ses six CTest
-ciblés, 6 614 contrôles sémantiques et le consommateur C du préfixe installé
-ont réussi. Le reçu intégrateur
-`artifacts/p28-implementation-2026-11-02/phase-a-result.json` identifie aussi
-le manifeste du kit (`fed3baac219da2bc68c99b9d08e6560b73ca68c100e17cbfdfeb33d1e09f0102`)
-et les binaires. Ce reçu est conservé par l’intégrateur ; son chemin n’est pas
-une dépendance de construction du kit. Il ne qualifie ni Windows propre,
-ni les changements ultérieurs de phase B, ni l’exécution par un backend.
+Phase A on 2 November then rebuilt and installed standalone kit content
+`c640d266a4de9d9581e6394d80d7152ce3d91d64278b960ab6777a524a056a62`, with no
+Studio/Runtime/LLVM sources, headers or libraries among its inputs. Its six targeted
+CTest cases, 6,614 semantic checks and installed-prefix C consumer passed. Integrator
+receipt `artifacts/p28-implementation-2026-11-02/phase-a-result.json` also identifies
+kit manifest `fed3baac219da2bc68c99b9d08e6560b73ca68c100e17cbfdfeb33d1e09f0102`
+and binaries. The integrator retains it; its path is not a kit build dependency.
+It qualifies neither clean Windows, later phase-B changes nor backend execution.
 
-## Même source snapshot que le produit
+<a id="même-source-snapshot-que-le-produit"></a>
 
-La capture complète réutilise
-`FROG-STUDIO/native-portable-engine/tools/Export-StudioSourceSnapshot.ps1` :
-manifeste `source-snapshot.json`, trois dépôts identifiés, révision et overlay
-locaux, chemins portables et hashes vérifiés. Exécuter son mode `-VerifyDirectory`
-avant d'auditer le Frontend dans cette capture. Le présent outil ajoute une
-preuve de fermeture ; il ne remplace pas cet export et n'introduit pas un second
-format de paquet. Ne pas exporter un snapshot pendant une édition active.
+## Same source snapshot as the product
 
-Un audit réussi ne change pas les droits de distribution. Lire
-`provenance-and-licensing.md` et `license-inventory.json` avant toute diffusion.
+Complete capture reuses
+`FROG-STUDIO/native-portable-engine/tools/Export-StudioSourceSnapshot.ps1`:
+`source-snapshot.json` manifest, three identified repositories, local revisions/overlays,
+portable paths and verified hashes. Run its `-VerifyDirectory` mode before auditing
+the Frontend in that capture. This tool adds closure evidence; it replaces neither
+that export nor introduces another package format. Do not export during active editing.
+
+A successful audit changes no distribution rights. Read `provenance-and-licensing.md`
+and `license-inventory.json` before distribution.

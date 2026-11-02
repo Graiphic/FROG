@@ -2,9 +2,9 @@
 
 Tests whether x is less than or equal to y.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : x (i64) = 9007199254740993; y (i64) = 9007199254740992.
-Résultats attendus : result (bool) = false.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: x (i64) = 9007199254740993; y (i64) = 9007199254740992.
+Expected results: result (bool) = false.
 
 Tests whether x is less than or equal to y.
 

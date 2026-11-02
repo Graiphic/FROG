@@ -1,11 +1,13 @@
-# Architecture commune et maintenance
+<a id="architecture-commune-et-maintenance"></a>
 
-Le Frontend transforme des sources immuables en FIR. Il ne lance aucun programme et ne choisit aucun backend à la place de l'appelant. Les contrats publics restent dans `sdk/ecosystem` et les spécifications Source/FIR du dépôt FROG ; le kit les exporte depuis ces propriétaires.
+# Shared architecture and maintenance
+
+The Frontend transforms immutable sources into FIR. It launches no program and chooses no backend on the caller's behalf. Public contracts remain in `sdk/ecosystem` and the FROG repository's Source/FIR specifications; the kit exports them from those owners.
 
 ```mermaid
 flowchart LR
-  Studio[Studio : capture du document courant] --> Core[Une bibliothèque Frontend]
-  CLI[CLI : fichiers explicitement fournis] --> Core
+  Studio[Studio: current document capture] --> Core[One Frontend library]
+  CLI[CLI: explicitly supplied files] --> Core
   Core --> Result[FIR, diagnostics, source maps, provenance]
   Result --> Studio
   Result --> CLI
@@ -13,54 +15,58 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  Source[.frog et dépendances identifiées] --> Frontend[Lecture, types, validation, génération]
-  Frontend --> FIR[FIR publique versionnée]
-  FIR --> Bridge[Admission et lowering du bridge]
-  Bridge --> Backend[Compilateur cible, par exemple LLVM]
-  Backend --> Program[Programme cible et services déclarés]
+  Source[.frog and identified dependencies] --> Frontend[Reading, types, validation, generation]
+  Frontend --> FIR[Versioned public FIR]
+  FIR --> Bridge[Bridge admission and lowering]
+  Bridge --> Backend[Target compiler, such as LLVM]
+  Backend --> Program[Target program and declared services]
 ```
 
 ```mermaid
 flowchart TB
-  subgraph Public[Public : dépôt FROG]
-    API[API C, CLI et bibliothèque Frontend]
-    Contracts[Contrats Source, FIR, types et opérations]
+  subgraph Public[Public: FROG repository]
+    API[C API, CLI and Frontend library]
+    Contracts[Source, FIR, type and operation contracts]
     API --> Contracts
   end
-  subgraph Private[Privé : Studio et réalisations]
-    Editor[Éditeur, présentation, réparation transactionnelle]
-    Runtime[Lowering, backend, scheduler, services et packaging]
+  subgraph Private[Private: Studio and realizations]
+    Editor[Editor, presentation, transactional repair]
+    Runtime[Lowering, backend, scheduler, services and packaging]
   end
-  Editor -->|capture explicite| API
-  API -->|diagnostics et correspondances| Editor
-  API -->|FIR admise| Runtime
+  Editor -->|explicit capture| API
+  API -->|diagnostics and mappings| Editor
+  API -->|admitted FIR| Runtime
 ```
 
-La lecture, les adaptations sémantiques historiques, les types, les dépendances et les producteurs Canonical/Structured/Composed/Event ont un seul propriétaire. La couche Studio fournit les octets, conserve l'historique, présente les diagnostics et propose les réparations. Une réparation crée un nouvel état à revalider ; elle ne supprime pas arbitrairement un diagnostic. Les données de présentation privées ne deviennent pas une seconde sémantique.
+Reading, historical semantic adaptations, types, dependencies and Canonical/Structured/Composed/Event producers have one owner. Studio supplies bytes, preserves history, presents diagnostics and proposes repairs. A repair creates a new state for revalidation; it does not arbitrarily erase a diagnostic. Private presentation data does not become a second semantics.
 
-Le résolveur reçoit une référence, son propriétaire et son emplacement source. Il retourne un contenu immuable identifié et empreinté. Le cœur ne consulte ni disque, réseau, registre ni PATH. Le contexte conditionnel est fourni explicitement ; son origine ne se déduit pas du système hébergeant la bibliothèque.
+The resolver receives a reference, its owner and source location. It returns identified, hashed immutable content. The core consults no disk, network, registry or PATH. Conditional context is supplied explicitly; its origin is not inferred from the system hosting the library.
 
-## Modifier et intégrer une version
+<a id="modifier-et-intégrer-une-version"></a>
 
-1. Modifier les règles dans le propriétaire commun, leurs contrats et les régressions pertinentes. Conserver les identités, types, valeurs exactes et attributions ; inclure des refus et des cas positifs.
-2. Actualiser les déclarations d'origine et leurs empreintes, puis vérifier la fermeture. Une extraction partielle distingue les adaptateurs privés restants du code public ; une copie tierce conserve sa provenance et sa licence.
-3. Capturer une candidate avec l'outil existant `tools/export_frontend_candidate.py`, puis reconstruire, installer et utiliser cette capture autonome. Le manifeste du kit est immuable ; joindre un reçu séparé liant ses empreintes aux résultats réellement exécutés.
-4. Épingler explicitement dans Studio la version logicielle, le commit de base, le contenu exact, l'API et les options admises. Comparer les mêmes octets et dépendances par la bibliothèque, la CLI et Studio, puis vérifier les parcours Run/Highlight/Build/export concernés.
-5. Les mainteneurs décident séparément de la publication. Une nouvelle release publique ne remplace jamais automatiquement le Frontend embarqué dans Studio.
+## Modify and integrate a version
 
-Depuis la racine du dépôt FROG :
+1. Change rules in the common owner, their contracts and relevant regression tests. Preserve identities, types, exact values and attribution; include rejection and positive cases.
+2. Update origin declarations and hashes, then check closure. A partial extraction distinguishes remaining private adapters from public code; third-party copies retain provenance and licenses.
+3. Capture a candidate with the existing `tools/export_frontend_candidate.py`, then rebuild, install and use that standalone capture. Its kit manifest is immutable; attach a separate receipt binding its hashes to checks actually executed.
+4. Explicitly pin Studio's software version, base commit, exact content, API and admitted options. Compare the same bytes and dependencies through the library, CLI and Studio, then check the affected Run/Highlight/Build/export paths.
+5. Maintainers decide publication separately. A new public release never automatically replaces Studio's embedded Frontend.
+
+From the FROG repository root:
 
 ```powershell
 python -B Implementations/Frontend/tools/export_frontend_candidate.py --frog-root . --output C:/qualification/frontend-source
 python -B Implementations/Frontend/tools/export_frontend_candidate.py --verify C:/qualification/frontend-source
 ```
 
-Le répertoire de sortie doit être neuf. La capture refuse un inventaire incomplet ou modifié. Les commandes de construction, les six tests publics et l'exemple de consommateur installé figurent dans le [README](../README.md). Dans le workspace Studio, utiliser son wrapper et son verrou de compilation ; ne pas modifier les entrées sous le compilateur.
+The output directory must be new. Capture rejects an incomplete or changed inventory. Build commands, the six public tests and an installed-consumer example appear in the [README](../README.md). Inside the Studio workspace, use its build wrapper and lock; do not change inputs while a compiler is running.
 
-## Lire les preuves
+<a id="lire-les-preuves"></a>
 
-Le commit de base ne contient pas les modifications locales d'une candidate. Le SHA de contenu Frontend, le SHA du manifeste du kit et ceux des binaires répondent à des questions différentes et sont tous conservés. Les rapports historiques restent disponibles avec leur propre périmètre.
+## Read the evidence
 
-Un résultat de validation n'est pas une admission cible ; une admission n'est pas un Build réussi ; un Build n'est pas une exécution du package. La matrice conserve ces états séparément. Une comparaison Studio/CLI peut différer dans la présentation privée des messages, jamais dans la décision sémantique, les types ou la FIR canonique.
+The base commit does not contain a candidate's local modifications. Frontend content SHA, kit-manifest SHA and binary SHAs answer different questions and are all retained. Historical reports remain available with their own scope.
 
-La qualification locale Windows ne prouve ni une plateforme différente ni un Windows propre. Le Frontend conserve le décodeur documentaire Zstandard sous sa licence BSD ; il n'embarque pas LLVM, les fournisseurs numériques privés, libffi ou le moteur d'exécution Studio.
+Validation is not target admission; admission is not a successful Build; a Build is not package execution. The matrix keeps these states separate. Studio/CLI comparisons may differ in private message presentation, never in semantic decisions, types or canonical FIR.
+
+Local Windows qualification proves neither another platform nor clean Windows. The Frontend retains its BSD-licensed Zstandard document decoder; it embeds no LLVM, private numerical providers, libffi or Studio execution engine.

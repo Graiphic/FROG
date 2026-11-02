@@ -296,7 +296,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Build Set — deduplicate and order\nA Set stores each exact element once. The logical Build rows 3, 1, 3, 2 produce the ordered set 1, 2, 3.\nEntrées -> opération -> indicateurs. Résultat attendu : result (set<i32>) = {\"elements\":[1,2,3]}\n",
+        "text": "Build Set — deduplicate and order\nA Set stores each exact element once. The logical Build rows 3, 1, 3, 2 produce the ordered set 1, 2, 3.\nInputs -> operation -> indicators. Expected result: result (set<i32>) = {\"elements\":[1,2,3]}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

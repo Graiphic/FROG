@@ -1,10 +1,10 @@
-# In Place : indexer et remplacer un élément du tableau
+# In Place: index and replace an array element
 
-In Place : indexer et remplacer un élément du tableau
+In Place: index and replace an array element
 
-L'index 1 lit 20 dans [10,20,30]. Le corps ajoute 1 et écrit 21 sur la face de remplacement. Le résultat est [10,21,30] tandis que la branche source conserve [10,20,30]. La structure ne sert pas de sémaphore et ne promet pas un verrou global.
+Index 1 reads 20 from [10,20,30]. The body adds 1 and writes 21 through the replacement side. The result is [10,21,30], while the source branch retains [10,20,30]. The structure is not a semaphore and promises no global lock.
 
-In Place : indexer et remplacer un élément du tableau
+In Place: index and replace an array element
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

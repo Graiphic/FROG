@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Semaphore : timeout zéro sur une capacité épuisée",
+  "title": "Semaphore: zero timeout with exhausted capacity",
   "metadata": {
-    "name": "Semaphore : timeout zéro sur une capacité épuisée",
+    "name": "Semaphore: zero timeout with exhausted capacity",
     "name_source": "document",
-    "description": "La capacité par défaut est 1. La première acquisition réussit. La seconde teste immédiatement une ressource saturée : timed_out=True, sans erreur opérationnelle. Seule la place réellement acquise est restituée avant fermeture.\n\nSemaphore : timeout zéro sur une capacité épuisée\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nfirst_timeout (bool) = false\nsecond_timeout (bool) = true\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+    "description": "The default capacity is 1. The first acquisition succeeds. The second immediately tests a saturated resource: timed_out=True, without an operational error. Only the slot actually acquired is returned before closing.\n\nSemaphore: zero timeout with exhausted capacity\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nfirst_timeout (bool) = false\nsecond_timeout (bool) = true\nerror_status (bool) = false\nerror_code (i32) = 0\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -590,7 +590,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Semaphore : timeout zéro sur une capacité épuisée\nSemaphore : timeout zéro sur une capacité épuisée\nEntrées -> opération -> indicateurs. Résultat attendu : first_timeout (bool) = false\nsecond_timeout (bool) = true\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+        "text": "Semaphore: zero timeout with exhausted capacity\nSemaphore: zero timeout with exhausted capacity\nInputs -> operation -> indicators. Expected result: first_timeout (bool) = false\nsecond_timeout (bool) = true\nerror_status (bool) = false\nerror_code (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

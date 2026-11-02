@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Rendezvous : erreur standard et exception de destruction",
+  "title": "Rendezvous: standard error behavior and destruction exception",
   "metadata": {
-    "name": "Rendezvous : erreur standard et exception de destruction",
+    "name": "Rendezvous: standard error behavior and destruction exception",
     "name_source": "document",
-    "description": "Avec l'erreur amont 77, Wait ne s'inscrit pas et Resize n'applique pas +1 : le seuil reste 2 et waiting=0. Destroy s'exécute malgré l'erreur et conserve l'erreur prioritaire. Ces règles diffèrent de celles d'Acquire/Release Semaphore.\n\nRendezvous : erreur standard et exception de destruction\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ntimed_out (bool) = true\nsize (i32) = 2\nwaiting (i32) = 0\nerror_status (bool) = true\nerror_code (i32) = 77\n",
+    "description": "With upstream error 77, Wait does not register and Resize does not apply +1: the threshold remains 2 and waiting=0. Destroy executes despite the error and preserves the priority error. These rules differ from Acquire/Release Semaphore.\n\nRendezvous: standard error behavior and destruction exception\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ntimed_out (bool) = true\nsize (i32) = 2\nwaiting (i32) = 0\nerror_status (bool) = true\nerror_code (i32) = 77\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -815,7 +815,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Rendezvous : erreur standard et exception de destruction\nRendezvous : erreur standard et exception de destruction\nEntrées -> opération -> indicateurs. Résultat attendu : timed_out (bool) = true\nsize (i32) = 2\nwaiting (i32) = 0\nerror_status (bool) = true\nerror_code (i32) = 77\n",
+        "text": "Rendezvous: standard error behavior and destruction exception\nRendezvous: standard error behavior and destruction exception\nInputs -> operation -> indicators. Expected result: timed_out (bool) = true\nsize (i32) = 2\nwaiting (i32) = 0\nerror_status (bool) = true\nerror_code (i32) = 77\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

@@ -1,10 +1,10 @@
-# For : l'entrée auto-indexée limite N
+# For: the auto-indexed input limits N
 
-For : l'entrée auto-indexée limite N
+For: the auto-indexed input limits N
 
-Le tableau d'entrée contient trois éléments. N=9 ne crée pas d'éléments : le plus petit nombre d'itérations admissible est 3. Une sortie Last Value reçoit donc 7, le dernier élément réellement visité. Sa politique explicite de défaut produit I64=0 si le tableau d'entrée est vide et qu'aucune itération ne s'exécute.
+The input array contains three elements. N=9 does not create elements: the smallest admissible iteration count is 3. A Last Value output therefore receives 7, the last element actually visited. Its explicit default policy produces I64=0 when the input array is empty and no iteration executes.
 
-For : l'entrée auto-indexée limite N
+For: the auto-indexed input limits N
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

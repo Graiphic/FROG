@@ -1,10 +1,10 @@
-# User Events : inscription, émission, Flush et nettoyage
+# User Events: register, generate, Flush and clean up
 
-User Events : inscription, émission, Flush et nettoyage
+User Events: register, generate, Flush and clean up
 
-Create définit un UserEvent<String> à partir du type du spécimen, sans émettre sa valeur. Register crée une inscription identifiée par la ligne message. Generate émet une occurrence après l'inscription. Flush sans critère de conservation retire exactement cette occurrence ; Unregister et Destroy ferment ensuite inscription et source. L'ordre est imposé par les vrais fils d'erreur. Ce chemin utilise le EventRuntime existant en Simulation, sans revendiquer les fonctions dynamiques sur le backend natif compilé.
+Create defines a UserEvent<String> from the specimen type without emitting its value. Register creates a registration identified by the message row. Generate emits an occurrence after registration. Flush with no retention criterion removes exactly that occurrence; Unregister and Destroy then close the registration and source. Real error wires impose effect order. This path uses the existing EventRuntime in Simulation; it does not claim dynamic-event functions on the compiled native backend.
 
-User Events : inscription, émission, Flush et nettoyage
+User Events: register, generate, Flush and clean up
 
 Mode: execution. Profile: studio-draft. Capability: highlight/user-events-owned-runtime.
 Expected:

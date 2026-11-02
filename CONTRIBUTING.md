@@ -18,6 +18,7 @@ requires an explicit maintainer decision. Read the
 <a href="./GOVERNANCE.md#official-project-rules">seven project rules</a> before proposing a change.</p>
 
 <ul>
+  <li>Write public documentation, example explanations, comments and contributor-facing messages in English, including generated exports. Preserve identifiers, exact test data, original source titles and third-party legal notices when their original wording is required.</li>
   <li>For a bug, provide a small reproduction, expected and observed behavior, and relevant versions.</li>
   <li>For a substantial feature or architecture change, open an issue first to agree on scope.</li>
   <li>Keep a pull request focused. Explain the change, compatibility impact, checks actually run and remaining limits; preserve licenses and attribution.</li>

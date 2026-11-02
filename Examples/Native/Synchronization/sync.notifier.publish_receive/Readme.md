@@ -2,7 +2,7 @@
 
 Notifier : lire le dernier signal et nettoyer
 
-Le Notifier<f64> garde la dernière notification 42. Send précède Wait par le fil d'erreur ; ignore_previous=False et timeout=0 lisent ce signal existant. Release ferme la référence après lecture. Ce comportement ne promet pas une file de messages.
+Notifier<f64> retains the latest notification, 42. The error wire orders Send before Wait; ignore_previous=False and timeout=0 read that existing signal. Release closes the reference after reading. This behavior does not promise a message queue.
 
 Notifier : lire le dernier signal et nettoyer
 

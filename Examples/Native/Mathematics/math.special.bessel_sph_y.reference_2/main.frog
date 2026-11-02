@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Bessel y — reference 2",
     "name_source": "document",
-    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : x (f64) = 1.0; n (i32) = -1.\nRésultats attendus : value (f64) = 0.8414709848078965.\n\nSpherical Bessel function of the second kind, signed integer order n; y_0(r)=-cos(r)/r.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-value (f64) = 0.8414709848078965\n",
+    "description": "Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.\nInputs: x (f64) = 1.0; n (i32) = -1.\nExpected results: value (f64) = 0.8414709848078965.\n\nSpherical Bessel function of the second kind, signed integer order n; y_0(r)=-cos(r)/r.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-value (f64) = 0.8414709848078965\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -295,7 +295,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Bessel y — reference 2\nSpherical Bessel function of the second kind, signed integer order n; y_0(r)=-cos(r)/r.\nEntrées -> opération -> indicateurs. Résultat attendu : output-value (f64) = 0.8414709848078965\n",
+        "text": "Bessel y — reference 2\nSpherical Bessel function of the second kind, signed integer order n; y_0(r)=-cos(r)/r.\nInputs -> operation -> indicators. Expected result: output-value (f64) = 0.8414709848078965\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

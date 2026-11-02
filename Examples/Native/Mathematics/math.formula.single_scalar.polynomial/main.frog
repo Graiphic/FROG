@@ -422,7 +422,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Evaluate a polynomial at x=3\nThe one named variable is bound to scalar x. x^2 + 2*x + 1 at 3 equals 16; the standard Error Cluster is also observed.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = 16\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
+        "text": "Evaluate a polynomial at x=3\nThe one named variable is bound to scalar x. x^2 + 2*x + 1 at 3 equals 16; the standard Error Cluster is also observed.\nInputs -> operation -> indicators. Expected result: output-result (f64) = 16\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

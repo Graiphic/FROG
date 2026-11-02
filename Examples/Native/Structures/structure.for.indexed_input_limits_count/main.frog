@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "For : l'entrée auto-indexée limite N",
+  "title": "For: the auto-indexed input limits N",
   "metadata": {
-    "name": "For : l'entrée auto-indexée limite N",
+    "name": "For: the auto-indexed input limits N",
     "name_source": "document",
-    "description": "Le tableau d'entrée contient trois éléments. N=9 ne crée pas d'éléments : le plus petit nombre d'itérations admissible est 3. Une sortie Last Value reçoit donc 7, le dernier élément réellement visité. Sa politique explicite de défaut produit I64=0 si le tableau d'entrée est vide et qu'aucune itération ne s'exécute.\n\nFor : l'entrée auto-indexée limite N\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nresult (i64) = 7\n",
+    "description": "The input array contains three elements. N=9 does not create elements: the smallest admissible iteration count is 3. A Last Value output therefore receives 7, the last element actually visited. Its explicit default policy produces I64=0 when the input array is empty and no iteration executes.\n\nFor: the auto-indexed input limits N\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nresult (i64) = 7\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -300,7 +300,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "For : l'entrée auto-indexée limite N\nFor : l'entrée auto-indexée limite N\nEntrées -> opération -> indicateurs. Résultat attendu : result (i64) = 7\n",
+        "text": "For: the auto-indexed input limits N\nFor: the auto-indexed input limits N\nInputs -> operation -> indicators. Expected result: result (i64) = 7\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

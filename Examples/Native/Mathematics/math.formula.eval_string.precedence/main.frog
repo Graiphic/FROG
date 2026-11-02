@@ -387,7 +387,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Evaluate an arithmetic formula\nExpression precedence is explicit: 2 + 3 * 4 = 14. This actual compiled Formula service has no free variable.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = 14\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
+        "text": "Evaluate an arithmetic formula\nExpression precedence is explicit: 2 + 3 * 4 = 14. This actual compiled Formula service has no free variable.\nInputs -> operation -> indicators. Expected result: output-result (f64) = 14\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

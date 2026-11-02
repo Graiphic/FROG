@@ -1,10 +1,10 @@
-# Read Text : conserver l'erreur amont sans accès disque
+# Read Text: preserve the upstream error without disk access
 
-Read Text : conserver l'erreur amont sans accès disque
+Read Text: preserve the upstream error without disk access
 
-L'erreur 77 arrive avant Read Text. L'opération propage cette même erreur sans ouvrir le chemin, ni afficher un sélecteur. Un défaut de chemin ne doit pas remplacer l'erreur du traitement amont.
+Error 77 arrives before Read Text. The operation propagates that same error without opening the path or displaying a picker. A path failure must not replace the upstream processing error.
 
-Read Text : conserver l'erreur amont sans accès disque
+Read Text: preserve the upstream error without disk access
 
 Mode: execution. Profile: studio-draft. Capability: windows/highlight-fileio.
 Expected:

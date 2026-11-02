@@ -379,7 +379,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Split String at a byte offset\nWhen search String is unwired, the offset alone splits the value. No search token or Enter-like validation is fabricated.\nEntrées -> opération -> indicateurs. Résultat attendu : before (string) = \"abc\"\nrest (string) = \"def\"\noffset (i32) = 3\n",
+        "text": "Split String at a byte offset\nWhen search String is unwired, the offset alone splits the value. No search token or Enter-like validation is fabricated.\nInputs -> operation -> indicators. Expected result: before (string) = \"abc\"\nrest (string) = \"def\"\noffset (i32) = 3\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

@@ -1,123 +1,142 @@
-# Provenance et licences — originaux Apache-2.0 et décodeur tiers BSD
+<a id="provenance-et-licences--originaux-apache-20-et-décodeur-tiers-bsd"></a>
 
-Mise à jour du 2 novembre 2026. **Le choix Apache-2.0 est acquis pour les portions originales
-Graiphic retenues dans ce Frontend et sa CLI**, y compris les fichiers sélectionnés
-extraits de Studio et Runtime. La décision acceptée est conservée dans
-`FROG-Context/Decisions/frog-common-frontend-apache2.md`. Cette déclaration ne
-relicencie pas Studio ou Runtime en bloc. Les contenus tiers éventuels conservent
-leurs droits ; aucun nouveau choix de licence n'est demandé pour les originaux.
+# Provenance and licenses — Apache-2.0 originals and BSD third-party decoder
 
-[LICENSE](../LICENSE) reproduit exactement le texte Apache-2.0 de FROG, sans
-inventer de titulaire ni d'année. [NOTICE](../NOTICE) précise le périmètre.
-La déclaration par fichier figure dans [license-inventory.json](license-inventory.json). Son relevé v3 du 1 novembre est historique ; l’intégrateur doit le réconcilier avec l’extraction `0.2.0-local` et le décodeur tiers décrit ci-dessous. La présente mise à jour documentaire ne modifie ni API ni sémantique et ne déclare aucun nouveau résultat compilé.
+Updated 2 November 2026. **Apache-2.0 is accepted for original Graiphic portions
+selected for this Frontend and CLI**, including selected files extracted from
+Studio and Runtime. The accepted decision is retained in
+`FROG-Context/Decisions/frog-common-frontend-apache2.md`. This does not relicense
+Studio or Runtime wholesale. Third-party material retains its rights; no new
+license choice is requested for the originals.
 
-## Captures et droits distincts
+[LICENSE](../LICENSE) reproduces FROG's Apache-2.0 text exactly, without inventing
+a holder or year. [NOTICE](../NOTICE) states the scope. Per-file declarations appear
+in [license-inventory.json](license-inventory.json). Its v3 record of 1 November is
+historical; the integrator must reconcile it with the `0.2.0-local` extraction and
+third-party decoder below. This documentation update changes neither API nor
+semantics and claims no new compiled result.
 
-Le relevé historique de `source-origin.json` comportait 178 entrées ; ce chiffre ne décrit pas la nouvelle fermeture de `0.2.0-local`. Pour les 181 anciennes
-entrées de l'inventaire v2, le v3 conserve `upstream`, `earlierOrigins`,
-`original_hash`, sa base et les observations historiques complètes de licence,
-y compris les `NOASSERTION`, hashes et `publicationRightsReviewed:false` alors
-constatés. Un fichier déplacé peut évoluer ; sa capture n'est pas une exigence
-d'immobilité. La parité d'un snapshot reste un contrôle séparé.
+<a id="captures-et-droits-distincts"></a>
 
-`NOASSERTION` décrivait l'absence de concession explicite observée à cette date.
-La décision du 1 novembre apporte cette concession aux originaux sélectionnés ;
-le déplacement dans FROG ne l'avait pas apportée. Ces constats historiques restent
-lisibles et ne sont pas réécrits rétroactivement.
+## Captures and rights are distinct
 
-| Champ v3 | Sens |
+The historical `source-origin.json` record contained 178 entries; this number does
+not describe the new `0.2.0-local` closure. For the 181 old v2 inventory entries,
+v3 retains `upstream`, `earlierOrigins`, `original_hash`, its baseline and complete
+historical license observations, including the then-observed `NOASSERTION`, hashes
+and `publicationRightsReviewed:false`. Moved files may evolve; their capture does
+not require immutability. Snapshot parity remains a separate check.
+
+`NOASSERTION` described the absence of an explicit grant observed at that date.
+The 1 November decision grants rights for selected originals; moving them into
+FROG had not done so. Historical observations remain readable and are not rewritten
+retroactively.
+
+| v3 field | Meaning |
 | --- | --- |
-| `original_hash` | Capture historique conservée ; null si absente. |
-| `current_hash`, `current_bytes` | Octets lus dans le propriétaire actuel. |
-| `capture_relation` | Capture identique, évolution ou parité du snapshot à examiner. |
-| `historicalLicenseObservations` | Ancien constat par fichier, avec son empreinte. |
-| `licenseEvidence`, `declaredLicenseScope` | Apache-2.0 pour les portions originales Graiphic, sans concession inventée pour un tiers. |
-| `thirdPartyReviewFindingIds` | Points concrets de revue, distincts de la concession acquise. |
+| `original_hash` | Retained historical capture; null if absent. |
+| `current_hash`, `current_bytes` | Bytes read from the current owner. |
+| `capture_relation` | Identical capture, evolution or snapshot parity requiring review. |
+| `historicalLicenseObservations` | Earlier per-file observation with its hash. |
+| `licenseEvidence`, `declaredLicenseScope` | Apache-2.0 for original Graiphic portions, no invented third-party grant. |
+| `thirdPartyReviewFindingIds` | Concrete review items, distinct from accepted rights. |
 
-La provenance Runtime des contrats `frog/semantics/*` est conservée. Catalogues,
-headers générés, fixtures, outils, CMake, exemples et docs ont leur entrée propre.
-Le v3 recensait les fichiers présents au moment de sa capture ; les extractions ultérieures et leurs notices doivent figurer dans le relevé actuel avant diffusion.
-L'inventaire s'inclut mais exclut son propre hash, qui serait cyclique. LICENSE,
-NOTICE et cette note ont leurs hashes exacts ; leurs simples liens vers
-l'inventaire ne forment pas une chaîne de hashes circulaire.
+Runtime provenance of `frog/semantics/*` contracts is preserved. Catalogs, generated
+headers, fixtures, tools, CMake, examples and docs have individual entries. v3 listed
+files present at capture time; later extractions/notices must enter the current
+record before distribution. The inventory includes itself but excludes its own hash
+to avoid a cycle. LICENSE, NOTICE and this note have exact hashes; links to the
+inventory do not form a circular hash chain.
 
-## Fermeture et kit réellement consultés
+<a id="fermeture-et-kit-réellement-consultés"></a>
 
-Le relevé historique du contrôle lexical `tools/audit_frontend_closure.py` portait sur les 45 unités d’alors et les trois adaptateurs API/Operation/CLI : **48 unités, 179 fichiers, 313 arêtes, 0 refus**. Il ne qualifie pas les nouveaux lecteurs, codecs, résolveurs ni le décodeur de `0.2.0-local`. Ses chemins,
-empreintes et arêtes sont enregistrés dans le v3. Aucun rapport auxiliaire,
-compilateur, linker ou test produit n'a été lancé. Ce contrôle ne remplace pas
-l'analyse de symboles d'un binaire.
+## Closure and kit actually inspected
 
-Le kit E3 a été consulté dans son archive historique, reliée à
-`final-kit-receipt.json` ; la copie temporaire avait été supprimée. Le v3 distingue
-les fichiers support provenant de FROG, leurs hashes d'archive et leurs octets
-actuels. Les binaires installés, copies générées de qualification et preuves
-historiques ne sont pas transformés en sources de la nouvelle release. Leurs
-reçus restent historiques. Les fichiers support FROG relèvent de `FROG/LICENSE`
-et des notices existantes ; la nouvelle décision ne licence pas d'autres
-portions privées par extension. L'inventaire ne remplace pas un manifeste du
-paquet candidat effectivement assemblé.
+The historical lexical `tools/audit_frontend_closure.py` record covered the then-45
+units and three API/Operation/CLI adapters: **48 units, 179 files, 313 edges, 0 refusals**.
+It does not qualify new readers, codecs, resolvers or the `0.2.0-local` decoder.
+Its paths, hashes and edges are recorded in v3. No auxiliary report, compiler,
+linker or product test ran. This check does not replace binary-symbol analysis.
 
-Le rafraîchissement final recense également l'exporteur durable
-`tools/export_frontend_candidate.py`, son test `tests/test_candidate_export.py`
-et `examples/installed-c-consumer/CMakeLists.txt`. La sélection courante est lue
-par la fonction `source_selection` de cet exporteur ; le v3 en conserve les
-hashes sans lancer la capture du kit. Les 56 fichiers support du kit E3 restent
-un ensemble historique distinct, avec chaque ancien relevé préservé lorsqu'un
-fichier public a évolué. Un hash de cette sélection n'est pas un reçu d'archive.
+The E3 kit was inspected in its historical archive, linked to `final-kit-receipt.json`;
+the temporary copy had been removed. v3 distinguishes FROG support files, archive
+hashes and current bytes. Installed binaries, generated qualification copies and
+historical evidence are not sources of the new release. Their receipts remain
+historical. FROG support files fall under `FROG/LICENSE` and existing notices; the
+new decision does not extend licensing to other private portions. The inventory
+does not replace a manifest of the actual assembled candidate package.
 
-## Revue tierce ciblée
+The final refresh also lists persistent exporter `tools/export_frontend_candidate.py`,
+its `tests/test_candidate_export.py` test and
+`examples/installed-c-consumer/CMakeLists.txt`. The exporter's `source_selection`
+function reads the current selection; v3 retains hashes without capturing a kit.
+The E3 kit's 56 support files remain a distinct historical set, preserving each
+earlier observation when a public file evolved. A selection hash is not an archive receipt.
 
-La candidate contient désormais le décodeur documentaire Zstandard 1.5.7 et ses composants FSE/HUF/xxHash. Le constat historique « sans Zstd » ne s’applique plus à ces sources. Les noyaux LLVM, XSF/Cephes/AMOS, libffi, stb et le runtime privé restent hors de cette extraction ; le Frontend transporte leurs contrats utiles sans embarquer leurs réalisations. Le compilateur et la bibliothèque standard relèvent de leur distribution distincte.
+<a id="revue-tierce-ciblée"></a>
 
-Le vendor existant choisit la licence BSD, dont le texte est conservé dans [LICENSE.txt](../third_party/zstd/LICENSE.txt), avec le texte GPL alternatif dans COPYING.txt. Les 35 fichiers initialement copiés ont été comparés octet pour octet au vendor local ; l’archive amont n’a pas été téléchargée ni revalidée lors de cette extraction. L’[UPSTREAM](../third_party/zstd/UPSTREAM.md) conserve la version, la provenance et le périmètre exact. Meta Platforms et Yann Collet restent attribués ; ces sources ne deviennent ni maison ni Apache-2.0.
+## Targeted third-party review
 
-Les sources distribuées conservent leurs notices. Pour une distribution binaire, la licence BSD, ses conditions et son avertissement doivent accompagner le package. L’inventaire actuel et l’installation doivent inclure ces textes et distinguer les dix unités C compilées du reste des headers copiés. La compilation et la fermeture binaire de ce nouveau kit restent à qualifier.
+The candidate now contains the Zstandard 1.5.7 document decoder and FSE/HUF/xxHash.
+The historical “without Zstd” observation no longer applies. LLVM kernels,
+XSF/Cephes/AMOS, libffi, stb and the private runtime remain outside this extraction;
+the Frontend carries relevant contracts without embedding their realizations.
+The compiler and standard library belong to their separate distributions.
 
-Trois constats historiques restent détaillés dans `thirdPartyReview` de l’inventaire ; l’entrée Zstandard actuelle doit les compléter :
+The existing vendor selects BSD licensing, retained in [LICENSE.txt](../third_party/zstd/LICENSE.txt),
+with the GPL alternative in COPYING.txt. The 35 initially copied files were compared
+byte for byte with the local vendor; the upstream archive was not downloaded or
+revalidated during extraction. [UPSTREAM](../third_party/zstd/UPSTREAM.md) retains
+version, provenance and exact scope. Meta Platforms and Yann Collet remain attributed;
+these sources become neither project-original nor Apache-2.0.
 
-1. **Catalogue documentaire** —
-   `manifests/function-bindings/studio.function-bindings.v2.inc` contient
-   1 384 URL vers NI, NIST DLMF, Microsoft et des publications mathématiques,
-   ainsi que des descriptions de contrats. Aucun noyau tiers n’avait été identifié dans ce catalogue documentaire ; ce constat ne concerne pas le décodeur désormais ajouté. En
-   revanche, ce relevé n'a pas comparé chaque phrase aux pages citées : la
-   présence éventuelle de citations/adaptations textuelles substantielles reste
-   à déterminer avant publication. La licence des portions originales Graiphic
-   est confirmée ; un URL n'accorde pas les droits sur son contenu. Les
-   références sont conservées et aucun texte tiers n'est déclaré Apache par
-   supposition.
-2. **SHA256** — `src/Sha256.cpp` contient une implémentation courte et les
-   constantes standard, avec origine Studio capturée. Il ne cite pas
-   d'implémentation tierce et aucun emprunt à une bibliothèque externe n'a été
-   établi. Les constantes standard ne suffisent ni à prouver un emprunt ni à
-   attribuer l'origine du texte de code ; aucun titulaire ou copyright upstream
-   n'est inventé. La concession des originaux s'applique. Toute ascendance
-   tierce retrouvée ultérieurement devra être ajoutée à l'inventaire.
-3. **Calibration et fixtures** — `numeric_calibration_contracts.hpp` porte des
-   identités `nist-its90` et des paramètres par défaut, sans les tables de calcul
-   thermocouple du Runtime. Les six fixtures sont attribuées dans
-   `tests/fixtures/provenance.json`, avec leurs hashes vérifiés. Ce constat ne
-   transforme ni les métadonnées ni les fixtures en implémentation tierce, et
-   n'attribue pas les codes Graiphic à NIST.
+Distributed sources retain notices. Binary distribution must include the BSD license,
+conditions and disclaimer. The current inventory/installation must include these
+texts and distinguish ten compiled C units from other copied headers. Compilation
+and binary closure of this new kit remain to be qualified.
 
-Cette recherche est bornée aux contenus retenus, commentaires, références,
-captures et provenance du kit. Elle n'est pas une preuve exhaustive de tout
-l'historique Git ni une comparaison contre tous les codes/textes publiés. Les
-incertitudes concrètes sont séparées du choix de licence déjà accepté.
+Three historical findings remain in the inventory's `thirdPartyReview`; the current
+Zstandard entry must supplement them:
 
-## Publication et qualification
+1. **Documentation catalog** — `manifests/function-bindings/studio.function-bindings.v2.inc`
+   contains 1,384 URLs to NI, NIST DLMF, Microsoft and mathematical publications,
+   together with contract descriptions. No third-party kernel was identified in
+   that documentation catalog; this says nothing about the newly added decoder.
+   However, the review did not compare every sentence with cited pages: substantial
+   quotation/adaptation remains to be determined before publication. Original
+   Graiphic portions have a confirmed license; a URL grants no rights to its content.
+   References are retained and no third-party text is assumed Apache-licensed.
+2. **SHA256** — `src/Sha256.cpp` contains a short implementation and standard constants,
+   with captured Studio origin. It cites no third-party implementation; no borrowing
+   from an external library was established. Standard constants alone prove neither
+   borrowing nor code-text origin; no upstream holder/copyright is invented. The
+   original-code grant applies. Any subsequently discovered third-party ancestry
+   must be added to the inventory.
+3. **Calibration and fixtures** — `numeric_calibration_contracts.hpp` carries
+   `nist-its90` identities and defaults, not Runtime thermocouple calculation tables.
+   Six fixtures are attributed with verified hashes in `tests/fixtures/provenance.json`.
+   This makes neither metadata nor fixtures a third-party implementation and does
+   not attribute Graiphic code to NIST.
 
-Le candidat reste local. La décision de licence n'autorise pas un push de code
-immédiat : la publication est différée jusqu'à la fin du chantier et à la
-qualification de la release. Le v3 distingue concession des droits sur les
-originaux, revue tierce, validation technique et autorisation de publication.
-Les anciennes captures E2/E3 et les observations v2 peuvent mentionner l'état
-`NOASSERTION` antérieur à la décision ; elles restent historiques. Le README
-et `candidate-profile.md` courants décrivent désormais la concession Apache
-acquise ; leurs octets `0.2.0-local` doivent être rattachés au relevé actuel, sans réattribuer les anciennes empreintes. L'ancien texte du README
-ne doit donc pas être présenté comme son affirmation actuelle.
+This search is bounded to retained content, comments, references, captures and kit
+provenance. It is neither exhaustive Git-history evidence nor comparison against
+every published code/text. Concrete uncertainties remain separate from the accepted
+license decision.
 
-L'intégrateur rattache le contenu exact du paquet à cet inventaire, traite les points documentaires identifiés et le décodeur tiers, conserve LICENSE/NOTICE et les attributions
-applicables, puis produit les reçus du candidat réellement reconstruit. Cette
-tâche n'a lancé aucun build, test produit, téléchargement ou publication distante
-et n'a modifié aucune source de production.
+<a id="publication-et-qualification"></a>
+
+## Publication and qualification
+
+The candidate remains local. The licensing decision does not authorize an immediate
+code push: publication is deferred until the work and release qualification finish.
+v3 distinguishes grants for originals, third-party review, technical validation
+and publication authorization. Older E2/E3 captures and v2 observations may mention
+pre-decision `NOASSERTION`; they remain historical. The current README and
+`candidate-profile.md` describe accepted Apache rights; their `0.2.0-local` bytes
+must be bound to the current record without reattributing old hashes. Older README
+wording must not be presented as its current claim.
+
+The integrator binds exact package content to this inventory, addresses identified
+documentation items and the third-party decoder, retains LICENSE/NOTICE and applicable
+attribution, then produces receipts for the actually rebuilt candidate. This task
+ran no build, product test, download or remote publication and changed no production source.

@@ -1,10 +1,10 @@
-# Semaphore : timeout zéro sur une capacité épuisée
+# Semaphore: zero timeout with exhausted capacity
 
-Semaphore : timeout zéro sur une capacité épuisée
+Semaphore: zero timeout with exhausted capacity
 
-La capacité par défaut est 1. La première acquisition réussit. La seconde teste immédiatement une ressource saturée : timed_out=True, sans erreur opérationnelle. Seule la place réellement acquise est restituée avant fermeture.
+The default capacity is 1. The first acquisition succeeds. The second immediately tests a saturated resource: timed_out=True, without an operational error. Only the slot actually acquired is returned before closing.
 
-Semaphore : timeout zéro sur une capacité épuisée
+Semaphore: zero timeout with exhausted capacity
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

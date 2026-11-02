@@ -472,7 +472,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: f64 left fold\n(1e16 + -1e16)+1 is1; reassociation would produce0. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (array<f64>) = [1]\n",
+        "text": "Add: f64 left fold\n(1e16 + -1e16)+1 is1; reassociation would produce0. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nInputs -> operation -> indicators. Expected result: output-result (array<f64>) = [1]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

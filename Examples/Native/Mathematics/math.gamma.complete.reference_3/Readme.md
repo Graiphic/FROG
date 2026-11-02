@@ -2,9 +2,9 @@
 
 Gamma(x), the real extension of factorial.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : x (f64) = 0.5.
-Résultats attendus : value (f64) = 1.772453850905516.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: x (f64) = 0.5.
+Expected results: value (f64) = 1.772453850905516.
 
 Gamma(x), the real extension of factorial.
 

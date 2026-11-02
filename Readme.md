@@ -4,7 +4,7 @@
 
 <h1 align="center">🐸 FROG — Free Open Graphical Language</h1>
 
-<p><strong>Comprendre la démarche :</strong> <a href="docs/graiphic-philosophy-and-validation.md">pilotage Graiphic, composants partagés et validation</a>, avec deux schémas explicatifs.</p>
+<p><strong>Understand the approach:</strong> <a href="docs/graiphic-philosophy-and-validation.md">Graiphic leadership, shared components and validation</a>, with two explanatory diagrams.</p>
 
 <p><strong>Open participation, Graiphic leadership:</strong>
 <a href="GOVERNANCE.md#official-project-rules">seven simple project rules</a> and
