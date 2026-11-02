@@ -386,6 +386,8 @@ Source provenance follows the same governance model. The open specification may 
 
 <h2 id="decision-model">8. Decision Model</h2>
 
+<p>For the rationale and diagrams, see <a href="./docs/graiphic-philosophy-and-validation.md">Graiphic: leadership, shared components and validation</a>.</p>
+
 <h3 id="official-project-rules">Simple rules for the official project</h3>
 
 <ol>

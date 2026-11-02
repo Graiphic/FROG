@@ -28,6 +28,8 @@ requires an explicit maintainer decision. Read the
 <p>The existing <a href="./CLA.md">CLA</a> and <a href="./LICENSE">license</a> continue to apply.
 No automatic acceptance, new contributor agreement or change of license is introduced by these rules.</p>
 
+<p>The <a href="./docs/graiphic-philosophy-and-validation.md">project philosophy and validation diagrams</a> explain how public contributions, Studio qualification and identified releases fit together.</p>
+
 <h2>Contents</h2>
 
 <ul>
