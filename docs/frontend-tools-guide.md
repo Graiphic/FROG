@@ -79,6 +79,29 @@ ports, wires or regions. Preserve those fields instead of matching message text.
 The Frontend never applies a repair. An editor can propose a transaction and validate
 its resulting source again before accepting it.
 
+## Updates and publication
+
+Develop the shared semantic owner progressively, then publish identified snapshots
+of its code and documentation in the public FROG repository. The current candidate
+is software `0.2.0-local` / API `3`; use `describe` and the checkpoint's content
+SHA256 to identify actual inputs. The base Git revision alone excludes local overlays.
+
+- A documentation-only correction does not change the C ABI or Source/FIR formats.
+- A code release has its own software version, release tag and content identity,
+  with a changelog describing compatibility, capabilities and remaining limits.
+  Change the API version when its public contract changes, independently of formats.
+- Before publishing code, qualify the exact standalone source snapshot, its library
+  and CLI, and the affected common paths. Include matching contracts, documentation,
+  provenance, licenses and attributable results; historical successes do not qualify
+  changed semantic inputs automatically.
+- Studio keeps an explicitly qualified version/API/content pin. A new public release
+  does not update an installed Studio implicitly. Studio-only graphical changes do
+  not by themselves require a Frontend release.
+
+The implementation's [maintenance procedure](../Implementations/Frontend/docs/architecture-and-maintenance.md)
+owns capture, qualification and deliberate integration. Publication remains a
+separate maintainer decision; these rules add no scheduled or automatic publication.
+
 ## Historical bounded checkpoint — 1 November 2026
 
 The following describes the earlier contract publication, not the current candidate.
