@@ -13,3 +13,5 @@ b/
 Implementations/Reference/Runtime/rust/target/
 Implementations/Reference/Runtime/cpp/build-codex*/
 Implementations/Reference/LLVM/examples/**/*.exe
+
+# Current qualified workspace rules (9 November 2026).

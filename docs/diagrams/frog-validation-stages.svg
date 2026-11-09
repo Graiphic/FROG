@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="906" viewBox="0 0 1080 906" role="img" aria-labelledby="title desc">
+<title id="title">FROG: one pipeline, distinct decisions</title>
+<desc id="desc">Studio orchestrates; the common Frontend validates and derives FIR; the target implements the program.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#487263"/></marker></defs>
+<rect width="100%" height="100%" rx="16" fill="#f6faf8"/>
+<text x="38" y="46" font-family="Segoe UI,Arial,sans-serif" font-size="25" font-weight="700" fill="#153c2e">FROG: one pipeline, distinct decisions</text>
+<text x="38" y="78" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="#476154">Studio orchestrates; the common Frontend validates and derives FIR; the target implements the program.</text>
+<rect x="38" y="114" width="1004" height="92" rx="10" fill="white" stroke="#b7d6c8" stroke-width="2"/>
+<circle cx="70" cy="146" r="16" fill="#1b8151"/>
+<text x="70" y="152" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="white">1</text>
+<text x="102" y="149" font-family="Segoe UI,Arial,sans-serif" font-size="20" font-weight="600" fill="#153c2e">Immutable sources and dependencies</text>
+<text x="102" y="179" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="#476154">Read bytes, check integrity and distinguish the current format from explicit migration.</text>
+<path d="M540 213 V235" stroke="#487263" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="38" y="240" width="1004" height="92" rx="10" fill="white" stroke="#b7d6c8" stroke-width="2"/>
+<circle cx="70" cy="272" r="16" fill="#1b8151"/>
+<text x="70" y="278" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="white">2</text>
+<text x="102" y="275" font-family="Segoe UI,Arial,sans-serif" font-size="20" font-weight="600" fill="#153c2e">Common Frontend: language and type validation</text>
+<text x="102" y="305" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="#476154">Resolve dependencies; locate errors; never apply a repair implicitly.</text>
+<path d="M540 339 V361" stroke="#487263" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="38" y="366" width="1004" height="92" rx="10" fill="white" stroke="#b7d6c8" stroke-width="2"/>
+<circle cx="70" cy="398" r="16" fill="#1b8151"/>
+<text x="70" y="404" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="white">3</text>
+<text x="102" y="401" font-family="Segoe UI,Arial,sans-serif" font-size="20" font-weight="600" fill="#153c2e">Common Frontend: FIR generation</text>
+<text x="102" y="431" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="#476154">The same rules as validate; attributed diagnostics, source maps and provenance.</text>
+<path d="M540 465 V487" stroke="#487263" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="38" y="492" width="1004" height="92" rx="10" fill="white" stroke="#b7d6c8" stroke-width="2"/>
+<circle cx="70" cy="524" r="16" fill="#1b8151"/>
+<text x="70" y="530" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="white">4</text>
+<text x="102" y="527" font-family="Segoe UI,Arial,sans-serif" font-size="20" font-weight="600" fill="#153c2e">Bridge: whole-graph target admission</text>
+<text x="102" y="557" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="#476154">A recognized operation unavailable on the target is a capability refusal, not corruption.</text>
+<path d="M540 591 V613" stroke="#487263" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="38" y="618" width="1004" height="92" rx="10" fill="white" stroke="#b7d6c8" stroke-width="2"/>
+<circle cx="70" cy="650" r="16" fill="#1b8151"/>
+<text x="70" y="656" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="white">5</text>
+<text x="102" y="653" font-family="Segoe UI,Arial,sans-serif" font-size="20" font-weight="600" fill="#153c2e">Lowering, compilation and declared services</text>
+<text x="102" y="683" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="#476154">Explicit backend selection; no silent fallback; hosts and effects preserved.</text>
+<path d="M540 717 V739" stroke="#487263" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="38" y="744" width="1004" height="92" rx="10" fill="white" stroke="#b7d6c8" stroke-width="2"/>
+<circle cx="70" cy="776" r="16" fill="#1b8151"/>
+<text x="70" y="782" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="white">6</text>
+<text x="102" y="779" font-family="Segoe UI,Arial,sans-serif" font-size="20" font-weight="600" fill="#153c2e">Verified package and execution</text>
+<text x="102" y="809" font-family="Segoe UI,Arial,sans-serif" font-size="16" fill="#476154">Build, run, observe; distinguish local success, portability and clean-machine qualification.</text>
+</svg>
