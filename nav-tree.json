@@ -9432,15 +9432,15 @@
                   "kind": "category",
                   "children": [
                     {
-                      "key": "examples/native/path/path.application-directory.unavailable-in-studio/",
-                      "title": "path.application-directory.unavailable-in-studio",
-                      "path": "/Examples/Native/path/path.application-directory.unavailable-in-studio/Readme.md",
+                      "key": "examples/native/path/path.application_directory.context/",
+                      "title": "path.application directory.context",
+                      "path": "/Examples/Native/path/path.application_directory.context/Readme.md",
                       "kind": "category",
                       "children": [
                         {
-                          "key": "examples/native/path/path.application-directory.unavailable-in-studio/main.frog",
+                          "key": "examples/native/path/path.application_directory.context/main.frog",
                           "title": "main.frog",
-                          "path": "/Examples/Native/path/path.application-directory.unavailable-in-studio/main.frog",
+                          "path": "/Examples/Native/path/path.application_directory.context/main.frog",
                           "kind": "code",
                           "children": []
                         }
@@ -16262,8 +16262,8 @@
     "/Examples/Native/Numeric/numeric.subtract.scalar_u32/Readme.md",
     "/Examples/Native/Numeric/numeric.subtract.scalar_u64/main.frog",
     "/Examples/Native/Numeric/numeric.subtract.scalar_u64/Readme.md",
-    "/Examples/Native/path/path.application-directory.unavailable-in-studio/main.frog",
-    "/Examples/Native/path/path.application-directory.unavailable-in-studio/Readme.md",
+    "/Examples/Native/path/path.application_directory.context/main.frog",
+    "/Examples/Native/path/path.application_directory.context/Readme.md",
     "/Examples/Native/path/path.current_frog_path.context/main.frog",
     "/Examples/Native/path/path.current_frog_path.context/Readme.md",
     "/Examples/Native/path/path.default_directory.context/main.frog",

@@ -1261,8 +1261,8 @@
       - [numeric.subtract.scalar u64](/Examples/Native/Numeric/numeric.subtract.scalar_u64/Readme.md)
         - [main.frog](/Examples/Native/Numeric/numeric.subtract.scalar_u64/main.frog)
     - path
-      - [path.application-directory.unavailable-in-studio](/Examples/Native/path/path.application-directory.unavailable-in-studio/Readme.md)
-        - [main.frog](/Examples/Native/path/path.application-directory.unavailable-in-studio/main.frog)
+      - [path.application directory.context](/Examples/Native/path/path.application_directory.context/Readme.md)
+        - [main.frog](/Examples/Native/path/path.application_directory.context/main.frog)
       - [path.current frog path.context](/Examples/Native/path/path.current_frog_path.context/Readme.md)
         - [main.frog](/Examples/Native/path/path.current_frog_path.context/main.frog)
       - [path.default directory.context](/Examples/Native/path/path.default_directory.context/Readme.md)
