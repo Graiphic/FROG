@@ -1,0 +1,61 @@
+{
+  "format": "frog.public.frontend-checkpoint.v1",
+  "date": "2026-11-09",
+  "frontend": {
+    "software": "0.2.0-local",
+    "api": 3,
+    "content_sha256": "81a502cc9dcf06dd01f661ee7e5f05924970d70118d287b06959b9b78835278e"
+  },
+  "studio": {
+    "version": "0.0.7.564",
+    "sha256": "B5E3563AB1266A132C216D89A96E64F0406E719DEB0343DC18A249EF97FAF6A7"
+  },
+  "qualified_source_kit": {
+    "files": 677,
+    "manifest_sha256": "c87238146d2b848bc9e0de41d41be201ac2ec42e24d23237c1c3712182b3fa99"
+  },
+  "qualification": {
+    "standalone_public_build": "PASS Windows x64, MSVC, Release /MT; exact captured source kit",
+    "public_ctest_passed": 6,
+    "public_ctest_total": 6,
+    "installed_c_consumer": "PASS explicit install prefix, C ABI and lifetime checks",
+    "cli_describe": "PASS; exact production content matches existing Studio pin",
+    "capture_regression_tests": "9 PASS, including exact compiler-intrinsic scope and rejection outside that scope",
+    "runtime_contract_ownership": "PASS repository scan and 51 positive/negative CMake fixtures"
+  },
+  "binaries": [
+    {
+      "sha256": "0090AD27CB43F35EB5DAE686283208FA4D17C789E857808B2C8D2E38CB32B0AB",
+      "file": "build\\frog-frontend.exe",
+      "bytes": 10516992
+    },
+    {
+      "sha256": "A85A85B1FCCED01F9019F7468BE10696516276E85973F889B55BC19603D6253E",
+      "file": "build\\frog-frontend.lib",
+      "bytes": 8645440
+    },
+    {
+      "sha256": "3ABBB8D4A32D230791474C5F8DD7C0397190A24D6CF13D0D0160E525935C2CD6",
+      "file": "build\\frog-frontend-production.lib",
+      "bytes": 608019752
+    },
+    {
+      "sha256": "285202D403214F663C54A4BE1FA69F68E55537ED2E02496740CA623B6D98BC86",
+      "file": "consumer-build\\frontend-consumer.exe",
+      "bytes": 10251264
+    }
+  ],
+  "changes": [
+    "Shared source checkpoint consumed by the previously qualified Studio version",
+    "Precise authorized SDK snapshot provenance and bridge Diagnostic ownership checks",
+    "Exact current source and licence inventory; original third-party notices retained"
+  ],
+  "limits": [
+    "No new tagged binary release",
+    "No full Studio or Runtime rebuild or global CTest run for this publication",
+    "Historical product checks retain their dated version and finite scope",
+    "No new clean-Windows, Linux or multiplatform qualification",
+    "The active T299 cable-hover work is intentionally not included",
+    "Studio software/API/content pin is unchanged; full clean Studio reconstruction remains separately unqualified"
+  ]
+}

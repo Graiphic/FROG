@@ -79,6 +79,29 @@ class CandidateExportTests(unittest.TestCase):
     def save_manifest(self, value):
         (self.kit / "source-kit.json").write_bytes(exporter.encoded(value))
 
+    def test_compressor_intrinsic_is_scoped_and_unresolved_includes_refuse(self):
+        # These are source-closure fixtures, never a replacement compressor.
+        vendor = self.front / "third_party/zstd/lib/compress/zstd_compress.c"
+        vendor.parent.mkdir(parents=True)
+        vendor.write_text("#include <immintrin.h>\n", encoding="utf-8")
+        cmake = self.front / "CMakeLists.txt"
+        cmake.write_text(cmake.read_text(encoding="utf-8") +
+                         "\nadd_library(frog-frontend-zstd STATIC third_party/zstd/lib/compress/zstd_compress.c)\n"
+                         "target_compile_definitions(frog-frontend-zstd PRIVATE ZSTD_DISABLE_ASM=1 ZSTD_LEGACY_SUPPORT=0)\n",
+                         encoding="utf-8")
+        source = self.front / "src/packaging_fixture.cpp"
+        source.write_text('#include "../third_party/zstd/lib/compress/zstd_compress.c"\n', encoding="utf-8")
+        report = exporter.audit_closure(self.front)
+        self.assertTrue(any(item["source"] == "third_party/zstd/lib/compress/zstd_compress.c" and
+                            item["include"] == "immintrin.h" for item in report["compilerHeaderRequirements"]))
+        vendor.write_text("#include <not_a_compiler_intrinsic.h>\n", encoding="utf-8")
+        with self.assertRaisesRegex(exporter.ExportError, "unresolved-include"):
+            exporter.audit_closure(self.front)
+        vendor.write_text("#include <immintrin.h>\n", encoding="utf-8")
+        source.write_text("#include <immintrin.h>\n", encoding="utf-8")
+        with self.assertRaisesRegex(exporter.ExportError, "unresolved-include"):
+            exporter.audit_closure(self.front)
+
     def test_capture_exact_identity_notice_pin_and_self_exclusion(self):
         before = {p: p.read_bytes() for p in self.frog.rglob("*") if p.is_file()}
         result = self.capture()

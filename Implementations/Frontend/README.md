@@ -8,6 +8,16 @@ This directory contains the Frontend core extracted from Studio's semantic owner
 
 <a id="contrat-public-et-versions"></a>
 
+## Source checkpoint — 9 November 2026
+
+The refreshed sources retain candidate software `0.2.0-local` and public API 3.
+Their exact production content is `81a502cc9dcf06dd01f661ee7e5f05924970d70118d287b06959b9b78835278e`,
+consumed by Studio `0.0.7.564`. See the [dated source checkpoint](../../docs/frontend-checkpoint-2026-11-09.json)
+for the standalone checks actually performed and their limits. This source update
+is separate from a tagged binary release and does not update Studio's pin automatically.
+The existing Zstandard 1.5.7 document codec now includes its bounded writer as well
+as its decoder; original BSD notices and the selected third-party licence remain intact.
+
 ## Public contract and versions
 
 Consumers use [`frog/frontend.h`](snapshot/api/frog/frontend.h), installed as `include/frog/frontend.h`, and target `Frog::frog-frontend`. The `include/frog_native_engine` headers, C++ owners and `runOperation` are implementation details shared with Studio, without a guaranteed public C++ ABI.

@@ -97,3 +97,8 @@ sdk/cpp/include/frog/sdk/runtime_collection_order.hpp -text whitespace=blank-at-
 /sdk/ecosystem/src/BridgeProtocol.cpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 # Current qualified workspace rules (9 November 2026).
+
+# Preserve exact bytes of the declared 2026-11-09 dependency inputs.
+/sdk/cpp/cmake/runtime_contract_ownership_rules.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/sdk/cpp/include/frog/sdk/runtime_value_metrics.hpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/sdk/cpp/include/frog/sdk/system_array_capacity.hpp -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

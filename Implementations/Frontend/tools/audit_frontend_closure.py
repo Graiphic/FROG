@@ -79,6 +79,8 @@ PUBLIC_DATA_ACCESSORS = {
     "setFrontPanelCanvasSize": frozenset({"src/FrogDraftReader.cpp", "include/frog_native_engine/FrogWidgetData.hpp"}),
 }
 ZSTD_COMPILER_HEADERS = {
+    # The existing compressor uses this compiler-provided x86 intrinsic header.
+    "third_party/zstd/lib/compress/zstd_compress.c": frozenset({"immintrin.h"}),
     "third_party/zstd/lib/common/cpu.h": frozenset({"intrin.h"}),
     "third_party/zstd/lib/common/mem.h": frozenset({"intrin.h", "intrinsics.h"}),
     "third_party/zstd/lib/common/compiler.h": frozenset({"mmintrin.h", "intrin.h", "immintrin.h", "emmintrin.h", "arm_neon.h"}),
