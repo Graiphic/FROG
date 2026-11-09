@@ -55,7 +55,14 @@
     "No full Studio or Runtime rebuild or global CTest run for this publication",
     "Historical product checks retain their dated version and finite scope",
     "No new clean-Windows, Linux or multiplatform qualification",
-    "The active T299 cable-hover work is intentionally not included",
-    "Studio software/API/content pin is unchanged; full clean Studio reconstruction remains separately unqualified"
-  ]
+    "Studio software/API/content pin is unchanged; full clean Studio reconstruction remains separately unqualified",
+    "Active T300 multiline Variant work is excluded; no qualification is inferred for it"
+  ],
+  "additional_studio_visual_checkpoint": {
+    "version": "0.0.7.570",
+    "sha256": "92ABCC4206603DA1D599F3BB5129FB82468D08917309C5930C4CAE86920053D5",
+    "frontend_content_unchanged": true,
+    "scope": "T299 cable-hover geometry only; existing finite native UI results reused",
+    "limits": "Three neighbouring test failures remain documented as pre-existing; not a global pass"
+  }
 }
