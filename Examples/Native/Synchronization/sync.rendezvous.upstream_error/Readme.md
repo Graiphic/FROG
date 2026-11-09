@@ -1,10 +1,10 @@
-# Rendezvous : erreur standard et exception de destruction
+# Rendezvous: standard error behavior and destruction exception
 
-Rendezvous : erreur standard et exception de destruction
+Rendezvous: standard error behavior and destruction exception
 
-Avec l'erreur amont 77, Wait ne s'inscrit pas et Resize n'applique pas +1 : le seuil reste 2 et waiting=0. Destroy s'exécute malgré l'erreur et conserve l'erreur prioritaire. Ces règles diffèrent de celles d'Acquire/Release Semaphore.
+With upstream error 77, Wait does not register and Resize does not apply +1: the threshold remains 2 and waiting=0. Destroy executes despite the error and preserves the priority error. These rules differ from Acquire/Release Semaphore.
 
-Rendezvous : erreur standard et exception de destruction
+Rendezvous: standard error behavior and destruction exception
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

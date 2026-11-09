@@ -179,8 +179,19 @@ foreach(inventory_record IN LISTS inventory_records)
 
     get_filename_component(source_name "${source_file}" NAME)
     if(source_name STREQUAL "runtime_contract.hpp")
+        # One reviewed, pinned declaration snapshot, never content equality or
+        # a directory-wide exclusion. The manifest and both owners must agree.
+        execute_process(COMMAND "${FROG_OWNERSHIP_PYTHON_EXECUTABLE}" -B -X utf8
+            "${CMAKE_CURRENT_LIST_DIR}/runtime_contract_ownership_rules.py" snapshot
+            --scan-root "${normalized_scan_root}" --source "${source_file}"
+            --canonical-header "${normalized_contract_header}"
+            RESULT_VARIABLE snapshot_result ERROR_VARIABLE snapshot_error)
+        if("${snapshot_result}" STREQUAL "0")
+            continue()
+        endif()
+        string(STRIP "${snapshot_error}" snapshot_error)
         list(APPEND violations
-            "${source_file}: copied public contract header is forbidden")
+            "${source_file}: copied public contract header is forbidden (${snapshot_error})")
         continue()
     endif()
 
@@ -203,6 +214,18 @@ foreach(inventory_record IN LISTS inventory_records)
                 duplicate_definition
                 "${source_text}")
             if(duplicate_definition)
+                if(contract_type STREQUAL "Diagnostic")
+                    # Only the qualified bridge declaration is a different
+                    # public contract. Every other type in this file is read
+                    # and checked normally, including Runtime Diagnostic.
+                    execute_process(COMMAND "${FROG_OWNERSHIP_PYTHON_EXECUTABLE}" -B -X utf8
+                        "${CMAKE_CURRENT_LIST_DIR}/runtime_contract_ownership_rules.py" bridge-diagnostic
+                        --scan-root "${normalized_scan_root}" --source "${source_file}"
+                        RESULT_VARIABLE bridge_result ERROR_VARIABLE bridge_error)
+                    if("${bridge_result}" STREQUAL "0")
+                        continue()
+                    endif()
+                endif()
                 list(APPEND violations
                     "${source_file}: private definition of ${contract_type}")
             endif()

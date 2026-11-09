@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 6,
   "language": "FROG",
-  "title": "Occurrence : deux nœuds Generate distincts",
+  "title": "Occurrence: two distinct Generate nodes",
   "metadata": {
-    "name": "Occurrence : deux nœuds Generate distincts",
+    "name": "Occurrence: two distinct Generate nodes",
     "name_source": "document",
-    "description": "Set A ne signale jamais B. Wait A consulte le signal précédent ; Wait B teste immédiatement sa propre occurrence non signalée. Les indicateurs de références montrent deux identités vivantes différentes sans imprimer d'adresse comme oracle.\n\nOccurrence : deux nœuds Generate distincts\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\na_timed_out (bool) = false\nb_timed_out (bool) = true\n",
+    "description": "Set A never signals B. Wait A checks the previous signal; Wait B immediately tests its own unsignaled occurrence. Reference indicators show two distinct live identities without using printed addresses as an oracle.\n\nOccurrence: two distinct Generate nodes\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\na_timed_out (bool) = false\nb_timed_out (bool) = true\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -618,7 +618,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Occurrence : deux nœuds Generate distincts\nOccurrence : deux nœuds Generate distincts\nEntrées -> opération -> indicateurs. Résultat attendu : a_timed_out (bool) = false\nb_timed_out (bool) = true\n",
+        "text": "Occurrence: two distinct Generate nodes\nOccurrence: two distinct Generate nodes\nInputs -> operation -> indicators. Expected result: a_timed_out (bool) = false\nb_timed_out (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

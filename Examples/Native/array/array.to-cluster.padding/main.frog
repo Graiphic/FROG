@@ -323,7 +323,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Array To Cluster pads missing elements\nThe configured Cluster has three fields. Two array elements fill its first fields and the missing final field receives its intrinsic I32 default; excess array elements would be ignored.\nEntrées -> opération -> indicateurs. Résultat attendu : result (cluster<\"element1\":i32,\"element2\":i32,\"element3\":i32>) = {\"element1\":7,\"element2\":8,\"element3\":0}\n",
+        "text": "Array To Cluster pads missing elements\nThe configured Cluster has three fields. Two array elements fill its first fields and the missing final field receives its intrinsic I32 default; excess array elements would be ignored.\nInputs -> operation -> indicators. Expected result: result (cluster<\"element1\":i32,\"element2\":i32,\"element3\":i32>) = {\"element1\":7,\"element2\":8,\"element3\":0}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

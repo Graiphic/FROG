@@ -1,10 +1,10 @@
-# Flat Sequence : traverser trois frames et une frame vide
+# Flat Sequence: traverse three frames including an empty frame
 
-Flat Sequence : traverser trois frames et une frame vide
+Flat Sequence: traverse three frames including an empty frame
 
-L'entrée 7 traverse trois frames explicitement ordonnées, y compris une frame vide. La dernière incrémente et publie 8. La frame affichée est la dernière ; elle ne remplace pas les deux autres lors de l'exécution. Les profils Flat et Stacked ont des règles d'entrée/publication distinctes, conservées dans le fichier.
+Input 7 traverses three explicitly ordered frames, including an empty frame. The last increments and publishes 8. Displaying the last frame does not replace the other two during execution. Flat and Stacked profiles have distinct input/publication rules, preserved in the file.
 
-Flat Sequence : traverser trois frames et une frame vide
+Flat Sequence: traverse three frames including an empty frame
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

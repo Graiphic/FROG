@@ -2,9 +2,9 @@
 
 Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : a (i32) = 9; b (i32) = 4.
-Résultats attendus : result (i32) = 5.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: a (i32) = 9; b (i32) = 4.
+Expected results: result (i32) = 5.
 
 Numeric scalars, arrays and numeric clusters operate element by element, with compatible shapes and numeric promotion.
 

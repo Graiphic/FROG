@@ -1,0 +1,17 @@
+[
+  {
+    "schema": "frog.diagnostic",
+    "version": "0.2",
+    "code": "frontend.dependency_resolver_required",
+    "stage": "resolve",
+    "severity": "error",
+    "category": "dependency",
+    "message": "This authored type dependency requires an explicit resolver.",
+    "source": {
+      "uri": "example:/program.frog",
+      "pointer": "/diagram/nodes/0/studio_type_schema",
+      "document_id": "example.source",
+      "object_id": "example.node"
+    }
+  }
+]

@@ -586,7 +586,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Adaptive sampling keeps an exact straight line\nThe explicit FROG refinement rule needs no extra point on 2*x+1. Initial parameter points [0,1,2] remain ordered. This example does not claim the same adaptive grid as NI.\nEntrées -> opération -> indicateurs. Résultat attendu : output-x_values (array<f64>) = [0,1,2]\noutput-y_values (array<f64>) = [1,3,5]\noutput-error (i32) = 0\n",
+        "text": "Adaptive sampling keeps an exact straight line\nThe explicit FROG refinement rule needs no extra point on 2*x+1. Initial parameter points [0,1,2] remain ordered. This example does not claim the same adaptive grid as NI.\nInputs -> operation -> indicators. Expected result: output-x_values (array<f64>) = [0,1,2]\noutput-y_values (array<f64>) = [1,3,5]\noutput-error (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

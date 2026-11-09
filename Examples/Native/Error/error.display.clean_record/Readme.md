@@ -1,10 +1,10 @@
-# Display Error : inspecter un record sans erreur
+# Display Error: inspect an error-free record
 
-Display Error : inspecter un record sans erreur
+Display Error: inspect an error-free record
 
-Le record possède status=False et code0, avec une source descriptive. Display Error restitue False,0, la localisation et une description vide. Le mode par défaut ne présente aucun dialogue pour ce record sans erreur. Ce test n'établit pas les modes interactifs Continue/Stop, qui exigent un contrat d'hôte distinct.
+The record has status=False and code0, with a descriptive source. Display Error returns False,0, the location and an empty description. The default mode shows no dialog for this error-free record. This test does not establish interactive Continue/Stop modes, which require a separate host contract.
 
-Display Error : inspecter un record sans erreur
+Display Error: inspect an error-free record
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

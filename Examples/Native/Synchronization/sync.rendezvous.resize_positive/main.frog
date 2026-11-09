@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Rendezvous : augmenter le seuil de 2",
+  "title": "Rendezvous: increase the threshold by 2",
   "metadata": {
-    "name": "Rendezvous : augmenter le seuil de 2",
+    "name": "Rendezvous: increase the threshold by 2",
     "name_source": "document",
-    "description": "Le seuil initial est 3 ; size_change est une variation signée, pas un nouveau seuil absolu. new_size doit valoir 3 + size_change. La ressource est détruite après observation.\n\nRendezvous : augmenter le seuil de 2\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nnew_size (i32) = 5\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+    "description": "The initial threshold is 3; size_change is a signed delta, not a new absolute threshold. new_size must equal 3 + size_change. The resource is destroyed after observation.\n\nRendezvous: increase the threshold by 2\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nnew_size (i32) = 5\nerror_status (bool) = false\nerror_code (i32) = 0\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -461,7 +461,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Rendezvous : augmenter le seuil de 2\nRendezvous : augmenter le seuil de 2\nEntrées -> opération -> indicateurs. Résultat attendu : new_size (i32) = 5\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+        "text": "Rendezvous: increase the threshold by 2\nRendezvous: increase the threshold by 2\nInputs -> operation -> indicators. Expected result: new_size (i32) = 5\nerror_status (bool) = false\nerror_code (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

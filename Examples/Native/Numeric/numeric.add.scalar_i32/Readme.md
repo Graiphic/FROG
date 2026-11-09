@@ -2,9 +2,9 @@
 
 Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : a (i32) = 2; b (i32) = 3.
-Résultats attendus : result (i32) = 5.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: a (i32) = 2; b (i32) = 3.
+Expected results: result (i32) = 5.
 
 Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
 

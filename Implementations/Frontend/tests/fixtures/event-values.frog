@@ -1,0 +1,1901 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "Canonical public Event profile"
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": []
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "timeout_read",
+        "kind": "widget_value",
+        "widget": "timeout"
+      },
+      {
+        "id": "events",
+        "kind": "structure",
+        "structure_type": "event_structure",
+        "boundary": {
+          "inputs": [],
+          "outputs": []
+        },
+        "structure_terminals": {
+          "timeout": {
+            "type": "i64",
+            "outer_visible": true,
+            "exposed_in_body": true,
+            "read_only": true,
+            "outer_port": "timeout",
+            "body_port": "timeout_value",
+            "role": "timeout_milliseconds"
+          },
+          "event_data": {
+            "outer_visible": false,
+            "exposed_in_body": true,
+            "read_only": true,
+            "role": "event_data",
+            "fields": [
+              {
+                "id": "source",
+                "type": "string",
+                "body_port": "event_data.source"
+              },
+              {
+                "id": "type",
+                "type": "string",
+                "body_port": "event_data.type"
+              },
+              {
+                "id": "time",
+                "type": "u64",
+                "body_port": "event_data.time"
+              }
+            ]
+          }
+        },
+        "regions": [
+          {
+            "id": "timeout",
+            "event": {
+              "kind": "timeout"
+            },
+            "event_data_fields": [
+              "type"
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "timeout_write",
+                  "kind": "widget_value",
+                  "widget": "timeout_type"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "timeout_kind",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.type"
+                  },
+                  "to": {
+                    "node": "timeout_write",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_bool",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_bool"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "bool",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "bool",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read_current",
+                  "kind": "widget_value",
+                  "widget": "source_bool"
+                },
+                {
+                  "id": "write_old",
+                  "kind": "widget_value",
+                  "widget": "old_bool"
+                },
+                {
+                  "id": "write_new",
+                  "kind": "widget_value",
+                  "widget": "new_bool"
+                },
+                {
+                  "id": "write_current",
+                  "kind": "widget_value",
+                  "widget": "current_bool"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire_old",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.old_value"
+                  },
+                  "to": {
+                    "node": "write_old",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_new",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "write_new",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_current",
+                  "from": {
+                    "node": "read_current",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "write_current",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_string",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_string"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "string",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "string",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read_current",
+                  "kind": "widget_value",
+                  "widget": "source_string"
+                },
+                {
+                  "id": "write_old",
+                  "kind": "widget_value",
+                  "widget": "old_string"
+                },
+                {
+                  "id": "write_new",
+                  "kind": "widget_value",
+                  "widget": "new_string"
+                },
+                {
+                  "id": "write_current",
+                  "kind": "widget_value",
+                  "widget": "current_string"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire_old",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.old_value"
+                  },
+                  "to": {
+                    "node": "write_old",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_new",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "write_new",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_current",
+                  "from": {
+                    "node": "read_current",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "write_current",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_path",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_path"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "path",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "path",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read_current",
+                  "kind": "widget_value",
+                  "widget": "source_path"
+                },
+                {
+                  "id": "write_old",
+                  "kind": "widget_value",
+                  "widget": "old_path"
+                },
+                {
+                  "id": "write_new",
+                  "kind": "widget_value",
+                  "widget": "new_path"
+                },
+                {
+                  "id": "write_current",
+                  "kind": "widget_value",
+                  "widget": "current_path"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire_old",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.old_value"
+                  },
+                  "to": {
+                    "node": "write_old",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_new",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "write_new",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_current",
+                  "from": {
+                    "node": "read_current",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "write_current",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_f64",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_f64"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "f64",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "f64",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read_current",
+                  "kind": "widget_value",
+                  "widget": "source_f64"
+                },
+                {
+                  "id": "write_old",
+                  "kind": "widget_value",
+                  "widget": "old_f64"
+                },
+                {
+                  "id": "write_new",
+                  "kind": "widget_value",
+                  "widget": "new_f64"
+                },
+                {
+                  "id": "write_current",
+                  "kind": "widget_value",
+                  "widget": "current_f64"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire_old",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.old_value"
+                  },
+                  "to": {
+                    "node": "write_old",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_new",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "write_new",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_current",
+                  "from": {
+                    "node": "read_current",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "write_current",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_i8",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_i8"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "i8",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "i8",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read_current",
+                  "kind": "widget_value",
+                  "widget": "source_i8"
+                },
+                {
+                  "id": "write_old",
+                  "kind": "widget_value",
+                  "widget": "old_i8"
+                },
+                {
+                  "id": "write_new",
+                  "kind": "widget_value",
+                  "widget": "new_i8"
+                },
+                {
+                  "id": "write_current",
+                  "kind": "widget_value",
+                  "widget": "current_i8"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire_old",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.old_value"
+                  },
+                  "to": {
+                    "node": "write_old",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_new",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "write_new",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_current",
+                  "from": {
+                    "node": "read_current",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "write_current",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_i16",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_i16"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "i16",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "i16",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read_current",
+                  "kind": "widget_value",
+                  "widget": "source_i16"
+                },
+                {
+                  "id": "write_old",
+                  "kind": "widget_value",
+                  "widget": "old_i16"
+                },
+                {
+                  "id": "write_new",
+                  "kind": "widget_value",
+                  "widget": "new_i16"
+                },
+                {
+                  "id": "write_current",
+                  "kind": "widget_value",
+                  "widget": "current_i16"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire_old",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.old_value"
+                  },
+                  "to": {
+                    "node": "write_old",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_new",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "write_new",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_current",
+                  "from": {
+                    "node": "read_current",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "write_current",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_i32",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_i32"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "i32",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "i32",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read_current",
+                  "kind": "widget_value",
+                  "widget": "source_i32"
+                },
+                {
+                  "id": "write_old",
+                  "kind": "widget_value",
+                  "widget": "old_i32"
+                },
+                {
+                  "id": "write_new",
+                  "kind": "widget_value",
+                  "widget": "new_i32"
+                },
+                {
+                  "id": "write_current",
+                  "kind": "widget_value",
+                  "widget": "current_i32"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire_old",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.old_value"
+                  },
+                  "to": {
+                    "node": "write_old",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_new",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "write_new",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_current",
+                  "from": {
+                    "node": "read_current",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "write_current",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_i64",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_i64"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "i64",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "i64",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read_current",
+                  "kind": "widget_value",
+                  "widget": "source_i64"
+                },
+                {
+                  "id": "write_old",
+                  "kind": "widget_value",
+                  "widget": "old_i64"
+                },
+                {
+                  "id": "write_new",
+                  "kind": "widget_value",
+                  "widget": "new_i64"
+                },
+                {
+                  "id": "write_current",
+                  "kind": "widget_value",
+                  "widget": "current_i64"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire_old",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.old_value"
+                  },
+                  "to": {
+                    "node": "write_old",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_new",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "write_new",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_current",
+                  "from": {
+                    "node": "read_current",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "write_current",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_u8",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_u8"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "u8",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "u8",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read_current",
+                  "kind": "widget_value",
+                  "widget": "source_u8"
+                },
+                {
+                  "id": "write_old",
+                  "kind": "widget_value",
+                  "widget": "old_u8"
+                },
+                {
+                  "id": "write_new",
+                  "kind": "widget_value",
+                  "widget": "new_u8"
+                },
+                {
+                  "id": "write_current",
+                  "kind": "widget_value",
+                  "widget": "current_u8"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire_old",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.old_value"
+                  },
+                  "to": {
+                    "node": "write_old",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_new",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "write_new",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_current",
+                  "from": {
+                    "node": "read_current",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "write_current",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_u16",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_u16"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "u16",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "u16",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read_current",
+                  "kind": "widget_value",
+                  "widget": "source_u16"
+                },
+                {
+                  "id": "write_old",
+                  "kind": "widget_value",
+                  "widget": "old_u16"
+                },
+                {
+                  "id": "write_new",
+                  "kind": "widget_value",
+                  "widget": "new_u16"
+                },
+                {
+                  "id": "write_current",
+                  "kind": "widget_value",
+                  "widget": "current_u16"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire_old",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.old_value"
+                  },
+                  "to": {
+                    "node": "write_old",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_new",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "write_new",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_current",
+                  "from": {
+                    "node": "read_current",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "write_current",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_u32",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_u32"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "u32",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "u32",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read_current",
+                  "kind": "widget_value",
+                  "widget": "source_u32"
+                },
+                {
+                  "id": "write_old",
+                  "kind": "widget_value",
+                  "widget": "old_u32"
+                },
+                {
+                  "id": "write_new",
+                  "kind": "widget_value",
+                  "widget": "new_u32"
+                },
+                {
+                  "id": "write_current",
+                  "kind": "widget_value",
+                  "widget": "current_u32"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire_old",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.old_value"
+                  },
+                  "to": {
+                    "node": "write_old",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_new",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "write_new",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_current",
+                  "from": {
+                    "node": "read_current",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "write_current",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_u64",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_u64"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "u64",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "u64",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "read_current",
+                  "kind": "widget_value",
+                  "widget": "source_u64"
+                },
+                {
+                  "id": "write_old",
+                  "kind": "widget_value",
+                  "widget": "old_u64"
+                },
+                {
+                  "id": "write_new",
+                  "kind": "widget_value",
+                  "widget": "new_u64"
+                },
+                {
+                  "id": "write_current",
+                  "kind": "widget_value",
+                  "widget": "current_u64"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire_old",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.old_value"
+                  },
+                  "to": {
+                    "node": "write_old",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_new",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "write_new",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_current",
+                  "from": {
+                    "node": "read_current",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "write_current",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "changed_unbound",
+            "event": {
+              "kind": "value_change",
+              "source": "widget:source_unbound"
+            },
+            "event_data_fields": [
+              "old_value",
+              "new_value"
+            ],
+            "event_payload_fields": [
+              {
+                "id": "old_value",
+                "type": "f64",
+                "body_port": "event_data.old_value"
+              },
+              {
+                "id": "new_value",
+                "type": "f64",
+                "body_port": "event_data.new_value"
+              }
+            ],
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "write_old",
+                  "kind": "widget_value",
+                  "widget": "old_unbound"
+                },
+                {
+                  "id": "write_new",
+                  "kind": "widget_value",
+                  "widget": "new_unbound"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire_old",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.old_value"
+                  },
+                  "to": {
+                    "node": "write_old",
+                    "port": "value"
+                  }
+                },
+                {
+                  "id": "wire_new",
+                  "from": {
+                    "node": "events",
+                    "port": "event_data.new_value"
+                  },
+                  "to": {
+                    "node": "write_new",
+                    "port": "value"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "layout": {
+          "x": 320,
+          "y": 80,
+          "width": 320,
+          "height": 260
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "timeout_input",
+        "from": {
+          "node": "timeout_read",
+          "port": "value"
+        },
+        "to": {
+          "node": "events",
+          "port": "timeout"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "widgets": [
+      {
+        "id": "timeout",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "i64",
+        "layout": {
+          "x": 28,
+          "y": 28,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 0
+        },
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "timeout",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "timeout_type",
+        "role": "indicator",
+        "class_ref": "frog.widgets.string_indicator",
+        "value_type": "string",
+        "layout": {
+          "x": 248,
+          "y": 164,
+          "width": 180,
+          "height": 32
+        },
+        "props": {},
+        "parts": {
+          "label": {
+            "class_ref": "frog.widgets.label",
+            "props": {
+              "text": "timeout_type",
+              "visible": true
+            }
+          }
+        }
+      },
+      {
+        "id": "source_bool",
+        "class_ref": "frog.widgets.boolean_control",
+        "role": "control",
+        "value_type": "bool",
+        "layout": {
+          "x": 196,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": false
+        }
+      },
+      {
+        "id": "old_bool",
+        "class_ref": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "value_type": "bool",
+        "layout": {
+          "x": 204,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "new_bool",
+        "class_ref": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "value_type": "bool",
+        "layout": {
+          "x": 212,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "current_bool",
+        "class_ref": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "value_type": "bool",
+        "layout": {
+          "x": 220,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "source_string",
+        "class_ref": "frog.widgets.string_control",
+        "role": "control",
+        "value_type": "string",
+        "layout": {
+          "x": 228,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": "A"
+        }
+      },
+      {
+        "id": "old_string",
+        "class_ref": "frog.widgets.string_indicator",
+        "role": "indicator",
+        "value_type": "string",
+        "layout": {
+          "x": 236,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "new_string",
+        "class_ref": "frog.widgets.string_indicator",
+        "role": "indicator",
+        "value_type": "string",
+        "layout": {
+          "x": 244,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "current_string",
+        "class_ref": "frog.widgets.string_indicator",
+        "role": "indicator",
+        "value_type": "string",
+        "layout": {
+          "x": 252,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "source_path",
+        "class_ref": "frog.widgets.path_control",
+        "role": "control",
+        "value_type": "path",
+        "layout": {
+          "x": 260,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": "/first"
+        }
+      },
+      {
+        "id": "old_path",
+        "class_ref": "frog.widgets.path_indicator",
+        "role": "indicator",
+        "value_type": "path",
+        "layout": {
+          "x": 268,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "new_path",
+        "class_ref": "frog.widgets.path_indicator",
+        "role": "indicator",
+        "value_type": "path",
+        "layout": {
+          "x": 276,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "current_path",
+        "class_ref": "frog.widgets.path_indicator",
+        "role": "indicator",
+        "value_type": "path",
+        "layout": {
+          "x": 284,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "source_f64",
+        "class_ref": "frog.widgets.numeric_control",
+        "role": "control",
+        "value_type": "f64",
+        "layout": {
+          "x": 292,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 2.5
+        }
+      },
+      {
+        "id": "old_f64",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "f64",
+        "layout": {
+          "x": 300,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "new_f64",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "f64",
+        "layout": {
+          "x": 308,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "current_f64",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "f64",
+        "layout": {
+          "x": 316,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "source_i8",
+        "class_ref": "frog.widgets.numeric_control",
+        "role": "control",
+        "value_type": "i8",
+        "layout": {
+          "x": 324,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": -7
+        }
+      },
+      {
+        "id": "old_i8",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "i8",
+        "layout": {
+          "x": 332,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "new_i8",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "i8",
+        "layout": {
+          "x": 340,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "current_i8",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "i8",
+        "layout": {
+          "x": 348,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "source_i16",
+        "class_ref": "frog.widgets.numeric_control",
+        "role": "control",
+        "value_type": "i16",
+        "layout": {
+          "x": 356,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": -300
+        }
+      },
+      {
+        "id": "old_i16",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "i16",
+        "layout": {
+          "x": 364,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "new_i16",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "i16",
+        "layout": {
+          "x": 372,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "current_i16",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "i16",
+        "layout": {
+          "x": 380,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "source_i32",
+        "class_ref": "frog.widgets.numeric_control",
+        "role": "control",
+        "value_type": "i32",
+        "layout": {
+          "x": 388,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": -70000
+        }
+      },
+      {
+        "id": "old_i32",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "i32",
+        "layout": {
+          "x": 396,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "new_i32",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "i32",
+        "layout": {
+          "x": 404,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "current_i32",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "i32",
+        "layout": {
+          "x": 412,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "source_i64",
+        "class_ref": "frog.widgets.numeric_control",
+        "role": "control",
+        "value_type": "i64",
+        "layout": {
+          "x": 420,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": -9007199254740993
+        }
+      },
+      {
+        "id": "old_i64",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "i64",
+        "layout": {
+          "x": 428,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "new_i64",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "i64",
+        "layout": {
+          "x": 436,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "current_i64",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "i64",
+        "layout": {
+          "x": 444,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "source_u8",
+        "class_ref": "frog.widgets.numeric_control",
+        "role": "control",
+        "value_type": "u8",
+        "layout": {
+          "x": 452,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 7
+        }
+      },
+      {
+        "id": "old_u8",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "u8",
+        "layout": {
+          "x": 460,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "new_u8",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "u8",
+        "layout": {
+          "x": 468,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "current_u8",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "u8",
+        "layout": {
+          "x": 476,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "source_u16",
+        "class_ref": "frog.widgets.numeric_control",
+        "role": "control",
+        "value_type": "u16",
+        "layout": {
+          "x": 484,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 300
+        }
+      },
+      {
+        "id": "old_u16",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "u16",
+        "layout": {
+          "x": 492,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "new_u16",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "u16",
+        "layout": {
+          "x": 500,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "current_u16",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "u16",
+        "layout": {
+          "x": 508,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "source_u32",
+        "class_ref": "frog.widgets.numeric_control",
+        "role": "control",
+        "value_type": "u32",
+        "layout": {
+          "x": 516,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 70000
+        }
+      },
+      {
+        "id": "old_u32",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "u32",
+        "layout": {
+          "x": 524,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "new_u32",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "u32",
+        "layout": {
+          "x": 532,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "current_u32",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "u32",
+        "layout": {
+          "x": 540,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "source_u64",
+        "class_ref": "frog.widgets.numeric_control",
+        "role": "control",
+        "value_type": "u64",
+        "layout": {
+          "x": 548,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 18446744073709551615
+        }
+      },
+      {
+        "id": "old_u64",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "u64",
+        "layout": {
+          "x": 556,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "new_u64",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "u64",
+        "layout": {
+          "x": 564,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "current_u64",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "u64",
+        "layout": {
+          "x": 572,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "source_unbound",
+        "class_ref": "frog.widgets.numeric_control",
+        "role": "control",
+        "value_type": "f64",
+        "layout": {
+          "x": 580,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {
+          "default_value": 8.0
+        }
+      },
+      {
+        "id": "old_unbound",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "f64",
+        "layout": {
+          "x": 588,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      },
+      {
+        "id": "new_unbound",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "value_type": "f64",
+        "layout": {
+          "x": 596,
+          "y": 160,
+          "width": 180,
+          "height": 32
+        },
+        "props": {}
+      }
+    ]
+  },
+  "cache": {
+    "deliberately_non_authoritative": "This is never an execution graph."
+  }
+}

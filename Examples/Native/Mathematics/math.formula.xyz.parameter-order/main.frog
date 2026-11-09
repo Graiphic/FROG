@@ -715,7 +715,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Sample three parametric coordinates\nThe t1 axis varies fastest in the FROG v1 flattened grid. Formulas [t1,t2,t1+2*t2] preserve the ordered coordinate triple at all four points.\nEntrées -> opération -> indicateurs. Résultat attendu : output-x_values (array<f64>) = [0,1,0,1]\noutput-y_values (array<f64>) = [10,10,20,20]\noutput-z_values (array<f64>) = [20,21,40,41]\noutput-error (i32) = 0\n",
+        "text": "Sample three parametric coordinates\nThe t1 axis varies fastest in the FROG v1 flattened grid. Formulas [t1,t2,t1+2*t2] preserve the ordered coordinate triple at all four points.\nInputs -> operation -> indicators. Expected result: output-x_values (array<f64>) = [0,1,0,1]\noutput-y_values (array<f64>) = [10,10,20,20]\noutput-z_values (array<f64>) = [20,21,40,41]\noutput-error (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

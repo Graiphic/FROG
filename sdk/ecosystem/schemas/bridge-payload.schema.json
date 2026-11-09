@@ -1,0 +1,751 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.io/frog/sdk/ecosystem/0.1/bridge-payload.schema.json",
+  "$defs": {
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engine_id",
+        "target_id",
+        "profile_id"
+      ],
+      "properties": {
+        "engine_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "target_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "profile_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    "fir": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family",
+        "version",
+        "sha256",
+        "utf8"
+      ],
+      "properties": {
+        "family": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "utf8": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16777216
+        }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "token",
+        "fir_sha256",
+        "context_sha256",
+        "engine_id",
+        "target_id",
+        "profile_id"
+      ],
+      "properties": {
+        "token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "fir_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "context_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "engine_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "target_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "profile_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    "handle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "token"
+      ],
+      "properties": {
+        "token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      }
+    },
+    "run_handle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "token",
+        "session_id",
+        "generation"
+      ],
+      "properties": {
+        "token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        }
+      }
+    }
+  },
+  "description": "Versioned method payload under wire 0.1. Describe success uses a direct 0.1/0.2 description document instead; legacy describe/probe request is {}. Error/cancelled response may be {}. Limits apply to the whole encoded envelope. Envelope status determines whether response handles/receipts are mandatory; cross-document hashes, tuple equality and admission cannot be established by JSON Schema alone.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "const": "describe"
+        },
+        "phase": {
+          "const": "request"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "const": "probe"
+        },
+        "phase": {
+          "const": "request"
+        },
+        "parameters": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "fir",
+        "provenance",
+        "selection"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "validate"
+          ]
+        },
+        "phase": {
+          "const": "request"
+        },
+        "fir": {
+          "$ref": "#/$defs/fir"
+        },
+        "provenance": {
+          "$ref": "frontend-context-0.3.schema.json"
+        },
+        "selection": {
+          "$ref": "#/$defs/selection"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "fir",
+        "provenance",
+        "selection",
+        "receipt"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "lower",
+            "build",
+            "deploy"
+          ]
+        },
+        "phase": {
+          "const": "request"
+        },
+        "fir": {
+          "$ref": "#/$defs/fir"
+        },
+        "provenance": {
+          "$ref": "frontend-context-0.3.schema.json"
+        },
+        "selection": {
+          "$ref": "#/$defs/selection"
+        },
+        "receipt": {
+          "$ref": "#/$defs/receipt"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "fir",
+        "provenance",
+        "selection",
+        "receipt"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "run"
+          ]
+        },
+        "phase": {
+          "const": "request"
+        },
+        "fir": {
+          "$ref": "#/$defs/fir"
+        },
+        "provenance": {
+          "$ref": "frontend-context-0.3.schema.json"
+        },
+        "selection": {
+          "$ref": "#/$defs/selection"
+        },
+        "receipt": {
+          "$ref": "#/$defs/receipt"
+        },
+        "command": {
+          "const": "start"
+        },
+        "parameters": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "run_handle",
+        "command"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "run"
+          ]
+        },
+        "phase": {
+          "const": "request"
+        },
+        "run_handle": {
+          "$ref": "#/$defs/run_handle"
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "not": {
+            "const": "start"
+          }
+        },
+        "parameters": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "run_handle"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "stop"
+          ]
+        },
+        "phase": {
+          "const": "request"
+        },
+        "run_handle": {
+          "$ref": "#/$defs/run_handle"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "run_handle"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "observe"
+          ]
+        },
+        "phase": {
+          "const": "request"
+        },
+        "run_handle": {
+          "$ref": "#/$defs/run_handle"
+        },
+        "parameters": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "describe",
+            "probe",
+            "validate",
+            "lower",
+            "build",
+            "deploy",
+            "run",
+            "stop",
+            "observe"
+          ]
+        },
+        "phase": {
+          "const": "progress"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "describe",
+            "probe",
+            "validate",
+            "lower",
+            "build",
+            "deploy",
+            "run",
+            "stop",
+            "observe"
+          ]
+        },
+        "phase": {
+          "const": "response"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "observations"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "probe"
+          ]
+        },
+        "phase": {
+          "const": "response"
+        },
+        "observations": {
+          "type": "object"
+        },
+        "run_handle": {
+          "$ref": "#/$defs/run_handle"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "receipt"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "validate"
+          ]
+        },
+        "phase": {
+          "const": "response"
+        },
+        "receipt": {
+          "$ref": "#/$defs/receipt"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "lowered_handle"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "lower"
+          ]
+        },
+        "phase": {
+          "const": "response"
+        },
+        "lowered_handle": {
+          "$ref": "#/$defs/handle"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "artifact_handle"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "build"
+          ]
+        },
+        "phase": {
+          "const": "response"
+        },
+        "artifact_handle": {
+          "$ref": "#/$defs/handle"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "deployment_handle"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "deploy"
+          ]
+        },
+        "phase": {
+          "const": "response"
+        },
+        "deployment_handle": {
+          "$ref": "#/$defs/handle"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "run_handle"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "run"
+          ]
+        },
+        "phase": {
+          "const": "response"
+        },
+        "run_handle": {
+          "$ref": "#/$defs/run_handle"
+        },
+        "values": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "run_handle"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "stop"
+          ]
+        },
+        "phase": {
+          "const": "response"
+        },
+        "run_handle": {
+          "$ref": "#/$defs/run_handle"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "method",
+        "phase",
+        "run_handle"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frog.bridge.payload"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "method": {
+          "enum": [
+            "observe"
+          ]
+        },
+        "phase": {
+          "const": "response"
+        },
+        "run_handle": {
+          "$ref": "#/$defs/run_handle"
+        },
+        "observations": {
+          "type": "object"
+        }
+      }
+    }
+  ]
+}

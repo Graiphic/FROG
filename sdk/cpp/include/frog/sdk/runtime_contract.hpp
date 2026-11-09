@@ -110,10 +110,12 @@ struct ValueType {
     };
 
     if (name == "bool") return scalar(ValueCategory::Boolean, 1U);
+    if (name == "i4") return scalar(ValueCategory::SignedInteger, 4U);
     if (name == "i8") return scalar(ValueCategory::SignedInteger, 8U);
     if (name == "i16") return scalar(ValueCategory::SignedInteger, 16U);
     if (name == "i32") return scalar(ValueCategory::SignedInteger, 32U);
     if (name == "i64") return scalar(ValueCategory::SignedInteger, 64U);
+    if (name == "u4") return scalar(ValueCategory::UnsignedInteger, 4U);
     if (name == "u8") return scalar(ValueCategory::UnsignedInteger, 8U);
     if (name == "u16") return scalar(ValueCategory::UnsignedInteger, 16U);
     if (name == "u32") return scalar(ValueCategory::UnsignedInteger, 32U);
@@ -265,6 +267,7 @@ public:
         const auto *compound=std::get_if<std::shared_ptr<const CompoundRuntimeValue>>(&value);
         return compound && *compound && !(*compound)->isReference() && (*compound)->canonicalType()==type.canonicalName && (*compound)->valid();
     }
+    case ValueCategory::Complex:
     case ValueCategory::Cluster:
     case ValueCategory::Variant:
     case ValueCategory::Map:

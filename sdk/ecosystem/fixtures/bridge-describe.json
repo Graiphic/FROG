@@ -1,0 +1,34 @@
+{
+  "schema": "frog.bridge.describe",
+  "schema_version": "0.1",
+  "bridge_id": "fixture.only.bridge",
+  "protocol_version": "0.1",
+  "fir_formats": [
+    {
+      "family": "fixture.only.fir",
+      "version": "0.1"
+    }
+  ],
+  "profiles": [
+    {
+      "id": "fixture.only.numeric",
+      "version": "0.1"
+    },
+    {
+      "id": "fixture.only.text",
+      "version": "0.1"
+    }
+  ],
+  "operations": [
+    "fixture.only.add",
+    "fixture.only.text.literal"
+  ],
+  "methods": [
+    "describe",
+    "validate"
+  ],
+  "limits": {
+    "maximum_message_bytes": 65536,
+    "request_timeout_ms": 1000
+  }
+}

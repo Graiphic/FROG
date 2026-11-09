@@ -54,11 +54,11 @@
       "behavior_summary": "Any n-D array T: size is I32 for 1D, otherwise a 1D I32 array of dimension sizes. A waveform reports the size of Y.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.size.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -97,7 +97,7 @@
           {
             "id": "index",
             "display_name": "index",
-            "type": "T:integer",
+            "type": "T:numeric",
             "default_value_type": "i32",
             "requirement": "optional",
             "cardinality": "single",
@@ -122,7 +122,7 @@
         "policy": "custom_resolver",
         "accepted_operands": [
           "T:any",
-          "T:integer"
+          "T:numeric"
         ],
         "result": "resolve:frog.studio.polymorphic.type-resolution@1",
         "implicit_coercion": true,
@@ -137,18 +137,19 @@
         "lifting": "none",
         "description": "An n-D array of T yields T when all dimensions are indexed; otherwise an array of T with one dimension removed per indexed dimension. With no index wired, the first dimension defaults to index zero. Waveforms expose Y elements."
       },
-      "behavior_summary": "An n-D array of T yields T when all dimensions are indexed; otherwise an array of T with one dimension removed per indexed dimension. With no index wired, the first dimension defaults to index zero. Waveforms expose Y elements.",
+      "behavior_summary": "An n-D array of T yields T when all dimensions are indexed; otherwise an array of T with one dimension removed per indexed dimension. With no index wired, the first dimension defaults to index zero. Waveforms expose Y elements. [Local Studio] Exact owned Array operations use the selected native target capability. The historical one-output I32 Index keeps its version-one range diagnostic. Extended ranks, groups and unwired indices use the separately versioned owned.v2 contract with full-schema defaults. Unsupported carriers remain explicit diagnostics.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.index.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "provider_requirement": "frog.studio.array.owned@1",
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target.",
-        "Studio provides one index per dimension (up to 16) and up to 32 expandable output groups. An unwired group follows the preceding group's indexed dimensions. Runtime support depends on the target."
+        "Studio provides one index per dimension (up to 16) and up to 32 expandable output groups. An unwired group follows the preceding group's indexed dimensions. Runtime support depends on the target.",
+        "Local f64 vector execution: finite rank-1 Index/single i32 index or Build/1..32 scalar f64 inputs only; no general Array or public LLVM provider."
       ],
       "authority_refs": [
         "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/index-array.html"
@@ -194,7 +195,7 @@
           {
             "id": "index",
             "display_name": "index",
-            "type": "T:integer",
+            "type": "T:numeric",
             "default_value_type": "i32",
             "requirement": "optional",
             "cardinality": "single",
@@ -238,11 +239,11 @@
       "behavior_summary": "An N-D array of T exposes N indices per replacement group. With x indexed dimensions, the inferred replacement is T of rank N-x (a scalar when x=N); full-rank replacement blocks are also accepted. Unwired groups inherit the preceding indexed dimensions, initially the first dimension. Extend the node to replace multiple subsets without enlarging the array. The result retains T and rank N.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.replace_subset.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -291,7 +292,7 @@
           {
             "id": "index",
             "display_name": "index",
-            "type": "T:integer",
+            "type": "T:numeric",
             "default_value_type": "i32",
             "requirement": "optional",
             "cardinality": "single",
@@ -335,11 +336,11 @@
       "behavior_summary": "An N-D array of T accepts T data of rank N-1 or N. Its N index terminals select one insertion dimension: wiring one disables the others; without an index, insertion appends. Additional value terminals insert consecutive blocks at the same position, with no extra index group. The result retains T and rank N.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.insert.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -378,7 +379,7 @@
           {
             "id": "length",
             "display_name": "length",
-            "type": "T:integer",
+            "type": "T:numeric",
             "default_value_type": "i32",
             "requirement": "optional",
             "cardinality": "single",
@@ -388,7 +389,7 @@
           {
             "id": "index",
             "display_name": "index",
-            "type": "T:integer",
+            "type": "T:numeric",
             "default_value_type": "i32",
             "requirement": "optional",
             "cardinality": "single",
@@ -442,11 +443,11 @@
       "behavior_summary": "An N-D array of T exposes N index terminals, with only one dimension selectable for deletion. The remaining array retains rank N. The deleted portion has rank N-1 when length is unwired (scalar for 1D), or rank N when length is wired, including a wired value of one. Default length is one; without an index, deletion starts at the last element or slice.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.delete.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -537,11 +538,11 @@
       "behavior_summary": "A scalar or cluster T initializes an M-dimensional array of T. Resize to expose M dimension-size inputs (1–16); real numeric sizes are converted to I32. A direct array element is not accepted.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.initialize.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -618,17 +619,18 @@
         "description": "Expand Build Array from 1 to 32 ordered inputs. Compatible elements must have equal or adjacent ranks. Equal rank N produces rank N+1, or rank N when Concatenate Inputs is selected. Mixed ranks N and N-1 force concatenation at rank N and lock the checked menu item. All scalars produce a 1D array and lock concatenation off. Unwired inputs supply no type evidence; without known types the output is void. Numeric leaves may promote; unrelated types cannot mix. Manual mode and input count are saved; target execution remains separately gated.",
         "shape_rule": "equal_or_adjacent_ranks; effective_concatenate_mode"
       },
-      "behavior_summary": "Expand Build Array from 1 to 32 ordered inputs. Compatible elements must have equal or adjacent ranks. Equal rank N produces rank N+1, or rank N when Concatenate Inputs is selected. Mixed ranks N and N-1 force concatenation at rank N and lock the checked menu item. All scalars produce a 1D array and lock concatenation off. Unwired inputs supply no type evidence; without known types the output is void. Numeric leaves may promote; unrelated types cannot mix. Manual mode and input count are saved; target execution remains separately gated.",
+      "behavior_summary": "Expand Build Array from 1 to 32 ordered inputs. Compatible elements must have equal or adjacent ranks. Equal rank N produces rank N+1, or rank N when Concatenate Inputs is selected. Mixed ranks N and N-1 force concatenation at rank N and lock the checked menu item. All scalars produce a 1D array and lock concatenation off. Unwired inputs supply no type evidence; without known types the output is void. Numeric leaves may promote; unrelated types cannot mix. Manual mode and input count are saved; target execution remains separately gated. [Local Studio] Local Studio Play/Highlight executes 1 through 32 finite f64 scalar inputs and returns a rank-1 array<f64>. Canonical semantic input IDs determine element order, independently of argument arrival. No concatenation or Array input is implemented by this local profile. Other types/ranks or modes fail explicitly with ARRAY_LOCAL_PROFILE_UNAVAILABLE. General authoring options remain distinct from this bounded execution capability; public FROG/LLVM target support is not declared.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.build.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "provider_requirement": "frog.studio.array.owned@1",
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile."
       },
       "blockers": [
-        "NI reference verified for authoring types; this does not establish runtime support on the active target."
+        "NI reference verified for authoring types; this does not establish runtime support on the active target.",
+        "Local f64 vector execution: finite rank-1 Index/single i32 index or Build/1..32 scalar f64 inputs only; no general Array or public LLVM provider."
       ],
       "authority_refs": [
         "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/build-array.html"
@@ -664,7 +666,7 @@
           {
             "id": "index",
             "display_name": "index",
-            "type": "T:integer",
+            "type": "T:numeric",
             "default_value_type": "i32",
             "requirement": "optional",
             "cardinality": "single",
@@ -674,7 +676,7 @@
           {
             "id": "length",
             "display_name": "length",
-            "type": "T:integer",
+            "type": "T:numeric",
             "default_value_type": "i32",
             "requirement": "optional",
             "cardinality": "single",
@@ -718,11 +720,11 @@
       "behavior_summary": "An N-D array of T exposes an optional index and length for each dimension. An unwired index defaults to zero and an unwired length keeps the remaining elements of that dimension. The result preserves T and rank N. A waveform preserves its envelope and subsets Y.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.subset.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -823,11 +825,11 @@
       "behavior_summary": "Any N-D array of T yields scalar elements T for min/max. Both indices are I32 for rank 1, and 1D arrays of I32 for rank greater than 1. Element schemas are retained.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.max_min.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -919,11 +921,11 @@
       "behavior_summary": "An array of any element type and input rank N produces the same element type at output rank M, where M is the displayed size-terminal count (1 to 16). Resize the node vertically to add or remove size terminals. Each size is a real numeric scalar converted to I32; values do not determine rank. All displayed sizes are required for readiness. Without an array type, the output remains void. Expanded rank is saved and supports Undo/Redo; connected terminals cannot be folded away. Target execution remains separately gated.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.reshape.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -994,11 +996,11 @@
       "behavior_summary": "Accepts only a 1D array of any T; sorts its elements without changing T or rank.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.sort_1d.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -1091,11 +1093,11 @@
       "behavior_summary": "A 1D array and a matching scalar/cluster element share their full element schema; compatible numeric representations promote together. Either input specializes the other. Optional start index defaults to zero; real numeric indices convert to I32. Result is an I32 index.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.search_1d.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -1187,11 +1189,11 @@
       "behavior_summary": "Accepts only a 1D array of any T; splits its elements without changing T or rank. Both outputs remain 1D arrays of T. The split index is a real number converted to I32.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.split_1d.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -1262,11 +1264,11 @@
       "behavior_summary": "Accepts only a 1D array of any T; reverses its elements without changing T or rank.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.reverse_1d.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -1348,11 +1350,11 @@
       "behavior_summary": "Accepts only a 1D array of any T; rotates its elements without changing T or rank. The offset is a real number converted to I32.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.rotate_1d.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -1385,7 +1387,7 @@
             "default_value_type": "unknown",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           },
           {
@@ -1434,11 +1436,11 @@
       "behavior_summary": "Accepts a 1D array of real numbers or two-real-number point clusters (x,y); not a multidimensional, Boolean, String or complex array. Numeric data and the fractional index/threshold use DBL. The output is a scalar DBL.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.interpolate_1d.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -1471,7 +1473,7 @@
             "default_value_type": "unknown",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           },
           {
@@ -1531,11 +1533,11 @@
       "behavior_summary": "Accepts a 1D array of real numbers or two-real-number point clusters (x,y); not a multidimensional, Boolean, String or complex array. Numeric data and the fractional index/threshold use DBL. The output is a scalar DBL. Optional start index is a real numeric scalar converted to I32, default zero.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.threshold_1d.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -1614,11 +1616,11 @@
       "behavior_summary": "Resize for 1–32 one-dimensional arrays with compatible element schemas; all connected numeric representations promote to a shared T. Output remains a 1D array of T. Input lengths need not match; their values do not affect the authoring type.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.interleave_1d.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -1689,11 +1691,11 @@
       "behavior_summary": "A 1D array of any T produces 1–32 expandable output arrays, each 1D with the complete element schema T. The number of outputs does not change their rank.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.decimate_1d.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -1764,11 +1766,11 @@
       "behavior_summary": "Accepts exactly a 2D array of any T and preserves its rank and full element schema. 1D and rank greater than 2 are rejected.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.transpose_2d.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -1996,11 +1998,11 @@
       "behavior_summary": "Spreadsheet String and format are strings. Delimiter accepts a String or 1D String array. Optional array type selects numeric/String element type and rank 1–16, default 2D DBL; output exactly follows that type.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.conversion.spreadsheet_string_to_array.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -2097,11 +2099,11 @@
       "behavior_summary": "Any-rank numeric or String array produces a scalar String. Format and delimiter are scalar strings; arrays of Boolean, clusters, paths or timestamps are rejected.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.conversion.array_to_spreadsheet_string.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -2176,11 +2178,11 @@
       "behavior_summary": "An integer or real fixed-point scalar produces a 1D Boolean array; bit width affects length, not rank. Array and cluster operands are not accepted.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.number_to_boolean_array.exact-width.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -2255,11 +2257,11 @@
       "behavior_summary": "A 1D Boolean array produces an integer or real fixed-point scalar. The output representation is configured in the editor (default U32), not inferred from array length.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.numeric.boolean_array_to_number.sign-if-signed.v1",
+        "provider_requirement": "frog.studio.numeric.aggregate-left-fold@1",
+        "notes": "The existing compiled Numeric provider realizes a bounded exact-type profile on explicitly admitted targets. Required Source schemas, parameters, shapes and physical carriers remain checked; unsupported overloads are refused. Availability declaration is not a passing test or AOT/package qualification."
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -2334,11 +2336,11 @@
       "behavior_summary": "A 1D array of T becomes a fixed-size cluster of T. Cluster Size is configured in the editor from 1 to 256 (default nine); runtime array length does not define the schema.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.conversion.array_to_cluster.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -2413,11 +2415,11 @@
       "behavior_summary": "A non-empty cluster of compatible homogeneous elements produces a 1D array. Direct array fields are not accepted. Nested clusters retain their complete compatible schema; numeric representations can promote.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.conversion.cluster_to_array.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -2492,11 +2494,11 @@
       "behavior_summary": "A scalar String produces a one-dimensional U8 array.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.conversion.string_to_byte_array.bytes.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "The exact raw-byte native operation is admitted by the selected Source/FIR/Runtime capability and its complete typed signature. This metadata does not grant every backend or configuration this capability. Legacy explicit UTF-8 profiles remain versioned separately.",
+        "provider_requirement": "frog.studio.string.raw-bytes@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -2571,11 +2573,11 @@
       "behavior_summary": "A one-dimensional U8 array produces a scalar String. Other ranks and non-byte element schemas are rejected.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.conversion.byte_array_to_string.bytes.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "The exact raw-byte native operation is admitted by the selected Source/FIR/Runtime capability and its complete typed signature. This metadata does not grant every backend or configuration this capability. Legacy explicit UTF-8 profiles remain versioned separately.",
+        "provider_requirement": "frog.studio.string.raw-bytes@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -3670,7 +3672,7 @@
             "default_value_type": "unknown",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           },
           {
@@ -3730,11 +3732,11 @@
       "behavior_summary": "A numeric 2D array retains its element representation and rank 2. Optional real numeric row/column sizes convert to I32; unwired sizes retain the corresponding input lengths.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.matrix.reshape.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -3767,7 +3769,7 @@
             "default_value_type": "unknown",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           }
         ],
@@ -3805,11 +3807,11 @@
       "behavior_summary": "A numeric 2D array remains 2D with the same real or complex element type. This is conjugate transpose, unlike ordinary Transpose 2D Array.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.matrix.transpose.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -3842,7 +3844,7 @@
             "default_value_type": "unknown",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           },
           {
@@ -3902,11 +3904,11 @@
       "behavior_summary": "A numeric 2D input exposes repeatable pairs of scalar row/column indices (real numeric, converted to I32, default zero). Every diagonal output remains 2D, with the same numeric type; its single-column length is a runtime value.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.matrix.get_diagonal.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -3939,7 +3941,7 @@
             "default_value_type": "unknown",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           },
           {
@@ -3999,11 +4001,11 @@
       "behavior_summary": "A numeric 2D array exposes repeatable row/column index pairs. Indices accept real numeric scalars or 1D arrays, converted to I32. An output is scalar only when both indices are explicitly wired as scalars; otherwise it is 2D, retaining the input numeric type.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.matrix.get_elements.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -4036,7 +4038,7 @@
             "default_value_type": "unknown",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           },
           {
@@ -4118,11 +4120,11 @@
       "behavior_summary": "Numeric 2D input/output. Four optional scalar real numeric bounds (first/last row, first/last column) convert to I32. End bounds are inclusive indices, not lengths. Unwired bounds select the full extent.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.matrix.get_subset.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -4155,7 +4157,7 @@
             "default_value_type": "unknown",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           },
           {
@@ -4175,7 +4177,7 @@
             "default_value_type": "f64",
             "requirement": "optional",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           },
           {
@@ -4226,11 +4228,11 @@
       "behavior_summary": "Repeatable scalar row/column index pairs and new diagonal inputs. Matrix input/output is numeric 2D. Replacement accepts a numeric scalar fill or 2D numeric row/column vector, with numeric promotion shared by the matrix and replacement. A 1D replacement is not accepted; vector lengths are runtime values.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.matrix.set_diagonal.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -4263,7 +4265,7 @@
             "default_value_type": "unknown",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           },
           {
@@ -4293,7 +4295,7 @@
             "default_value_type": "f64",
             "requirement": "optional",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           }
         ],
@@ -4334,11 +4336,11 @@
       "behavior_summary": "Numeric 2D matrix input/output. Repeatable row/column indices accept real scalars or 1D real arrays (I32 conversion). New elements accept a numeric scalar fill or numeric 2D array, with numeric promotion shared by the matrix and replacement. Optional replacement defaults to zero.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.matrix.set_elements.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -4371,7 +4373,7 @@
             "default_value_type": "unknown",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           },
           {
@@ -4401,7 +4403,7 @@
             "default_value_type": "f64",
             "requirement": "optional",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           },
           {
@@ -4464,11 +4466,11 @@
       "behavior_summary": "Numeric 2D matrix input/output. Repeatable groups contain four optional scalar numeric inclusive bounds and a scalar fill or numeric 2D replacement. Indices convert to I32; matrix and replacement promote to a common numeric representation. Unwired bounds select the full matrix.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.matrix.set_subset.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -4501,7 +4503,7 @@
             "default_value_type": "unknown",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           }
         ],
@@ -4549,11 +4551,11 @@
       "behavior_summary": "A numeric 2D array produces two scalar I32 outputs: number of rows and number of columns.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.matrix.size.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -4586,7 +4588,7 @@
             "default_value_type": "unknown",
             "requirement": "required",
             "cardinality": "single",
-            "connection_policy": "any_explicit",
+            "connection_policy": "numeric_scalar_or_array_implicit",
             "legacy_aliases": []
           }
         ],
@@ -4632,11 +4634,11 @@
       "behavior_summary": "Resize for 1–32 numeric scalars, 1D arrays or 2D arrays. Numeric representations promote together; output is always 2D. Append by Columns is default; Append by Rows is an editor setting.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.array.matrix.build.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Authoring support is not an execution capability.",
-        "provider_requirement": ""
+        "notes": "Conditional exact owned-value implementation selected by the current Source/FIR/native target; configuration and full element signatures are validated separately. This metadata is not unconditional support for every representation, backend or deployment profile.",
+        "provider_requirement": "frog.studio.array.owned@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."

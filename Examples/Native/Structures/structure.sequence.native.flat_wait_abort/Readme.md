@@ -1,10 +1,10 @@
-# Flat Sequence : publier une frame terminée avant une attente
+# Flat Sequence: publish a completed frame before a wait
 
-Flat Sequence : publier une frame terminée avant une attente
+Flat Sequence: publish a completed frame before a wait
 
-La première frame publie 7 avant l'attente infinie de la dernière frame. Stop retire l'attente et clôt l'instance ; il n'annule pas la valeur déjà publiée. Le test ciblé vérifie cette publication avant Abort, puis recommence après Restart.
+The first frame publishes 7 before the final frame's infinite wait. Stop withdraws the wait and closes the instance without undoing the already published value. The targeted test checks publication before Abort, then repeats after Restart.
 
-Flat Sequence : publier une frame terminée avant une attente
+Flat Sequence: publish a completed frame before a wait
 
 Mode: expected-abort. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

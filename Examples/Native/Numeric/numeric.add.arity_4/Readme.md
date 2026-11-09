@@ -2,9 +2,9 @@
 
 Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
 
-Addition de 4 opérandes FROG dans l'ordre canonique a,b puis input_3… si présents. La réduction est à gauche. NI Add reste binaire; cette extensibilité est une loi FROG conservée.
-Entrées : a (i32) = 1; b (i32) = 2; input_3 (i32) = 3; input_4 (i32) = 4.
-Résultats attendus : result (i32) = 10.
+Adds 4 FROG operands in canonical order: a, b, then input_3… when present. This is a left fold. NI Add remains binary; this extensibility is a preserved FROG language rule.
+Inputs: a (i32) = 1; b (i32) = 2; input_3 (i32) = 3; input_4 (i32) = 4.
+Expected results: result (i32) = 10.
 
 Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
 

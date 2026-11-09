@@ -1321,3 +1321,15 @@ This document provides the single repository-visible place where the published s
 <p>
 All other repository documents should keep version references lightweight and point back here instead of re-scattering cross-version policy.
 </p>
+
+
+## Common Frontend version axes — 1 November 2026
+
+The [public Frontend contracts](../sdk/ecosystem/README.md) version Source, FIR,
+semantic profiles, software, API, result documents and bridge protocol separately.
+The local API-3 checkpoint keeps Source/FIR `0.1` and uses provenance `0.3`,
+diagnostics/capabilities `0.2` and source maps `0.1`. Publishing these schemas does
+not publish the implementation or upgrade the language formats. Consumers select
+the exact schema; older versions remain historical. Studio pins a tested version
+and content identity. Local/candidate/published describes dissemination separately
+from implemented/qualified.

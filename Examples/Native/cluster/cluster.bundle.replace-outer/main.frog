@@ -549,7 +549,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Bundle — replace-outer\nAn incoming Cluster retains every unwired field. Replacement rows keep their semantic positions even when preceding or intervening rows are unwired.\nEntrées -> opération -> indicateurs. Résultat attendu : number (i64) = -7\ntext (string) = \"FROG\"\nflag (bool) = false\n",
+        "text": "Bundle — replace-outer\nAn incoming Cluster retains every unwired field. Replacement rows keep their semantic positions even when preceding or intervening rows are unwired.\nInputs -> operation -> indicators. Expected result: number (i64) = -7\ntext (string) = \"FROG\"\nflag (bool) = false\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

@@ -406,7 +406,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: nonfinite result rejected\nThe finite owned SDK profile cannot carry+Infinity; reject atomically rather than publish an empty Array or zero. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nEntrées -> opération -> indicateurs. Résultat attendu : Diagnostic: native.numeric.nonfinite_result",
+        "text": "Add: nonfinite result rejected\nThe finite owned SDK profile cannot carry+Infinity; reject atomically rather than publish an empty Array or zero. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nInputs -> operation -> indicators. Expected result: Diagnostic: native.numeric.nonfinite_result",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

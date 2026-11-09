@@ -1,10 +1,10 @@
-# Rendezvous : seuil par défaut et variation nulle
+# Rendezvous: default threshold and zero change
 
-Rendezvous : seuil par défaut et variation nulle
+Rendezvous: default threshold and zero change
 
-Create utilise le seuil initial 2. Une arrivée avec timeout=0 ne suffit pas et est retirée. Resize sans size_change utilise la variation 0 et conserve le seuil 2. Le compteur d'attentes revient à 0. Aucun message n'est transporté.
+Create uses initial threshold 2. One arrival with timeout=0 is insufficient and is withdrawn. Resize without size_change uses delta 0 and preserves threshold 2. The waiter count returns to 0. No message is transported.
 
-Rendezvous : seuil par défaut et variation nulle
+Rendezvous: default threshold and zero change
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

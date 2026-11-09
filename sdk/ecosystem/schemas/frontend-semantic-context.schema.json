@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.io/frog/sdk/ecosystem/0.1/frontend-semantic-context.schema.json",
+  "description": "Versioned explicit type dependency and ConditionalDisable contexts. v1 remains unchanged; v2 adds immutable draft dependency resolution and explicit built-in/project/target symbol maps.",
+  "oneOf": [
+    {
+      "type": "object",
+      "maxProperties": 0,
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "dependencies"
+      ],
+      "properties": {
+        "profile": {
+          "const": "frog.frontend.resolution@1"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "source_pointer"
+            ],
+            "properties": {
+              "kind": {
+                "const": 2
+              },
+              "source_pointer": {
+                "type": "string",
+                "maxLength": 8192,
+                "pattern": "^(?:/(?:[^~]|~[01])*)?$",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "conditional_disable": {
+          "type": "object",
+          "maxProperties": 0,
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile"
+      ],
+      "properties": {
+        "profile": {
+          "const": "frog.frontend.resolution@2"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "source_pointer"
+            ],
+            "properties": {
+              "kind": {
+                "const": 2
+              },
+              "source_pointer": {
+                "type": "string",
+                "maxLength": 8192,
+                "pattern": "^(?:/(?:[^~]|~[01])*)?$",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "conditional_disable": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "built_in": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "maxLength": 8192
+              },
+              "maxProperties": 4096
+            },
+            "project": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "maxLength": 8192
+              },
+              "maxProperties": 4096
+            },
+            "target": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "maxLength": 8192
+              },
+              "maxProperties": 4096
+            }
+          }
+        }
+      }
+    }
+  ]
+}

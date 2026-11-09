@@ -601,7 +601,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Adaptive coordinates preserve a straight line\nFor [2*t,t+1], every intermediate point lies exactly on the chord. The FROG refinement rule keeps the initial three parameter points and both endpoint occurrences.\nEntrées -> opération -> indicateurs. Résultat attendu : output-x_values (array<f64>) = [0,2,4]\noutput-y_values (array<f64>) = [1,2,3]\noutput-error (i32) = 0\n",
+        "text": "Adaptive coordinates preserve a straight line\nFor [2*t,t+1], every intermediate point lies exactly on the chord. The FROG refinement rule keeps the initial three parameter points and both endpoint occurrences.\nInputs -> operation -> indicators. Expected result: output-x_values (array<f64>) = [0,2,4]\noutput-y_values (array<f64>) = [1,2,3]\noutput-error (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

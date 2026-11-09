@@ -223,7 +223,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Set algebra — symmetric-difference\nThe two operands share one invariant exact Set<T> model. The result uses mathematical membership, retaining each value once in the declared order.\nEntrées -> opération -> indicateurs. Résultat attendu : result (set<i32>) = {\"elements\":[1,2,4]}\n",
+        "text": "Set algebra — symmetric-difference\nThe two operands share one invariant exact Set<T> model. The result uses mathematical membership, retaining each value once in the declared order.\nInputs -> operation -> indicators. Expected result: result (set<i32>) = {\"elements\":[1,2,4]}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

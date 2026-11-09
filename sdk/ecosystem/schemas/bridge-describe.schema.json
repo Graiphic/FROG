@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.io/frog/sdk/ecosystem/0.1/bridge-describe.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "bridge_id",
+    "protocol_version",
+    "fir_formats",
+    "profiles",
+    "operations",
+    "methods",
+    "limits"
+  ],
+  "properties": {
+    "schema": {
+      "const": "frog.bridge.describe"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "bridge_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+    },
+    "protocol_version": {
+      "const": "0.1"
+    },
+    "fir_formats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "family",
+          "version"
+        ],
+        "properties": {
+          "family": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        }
+      },
+      "maxItems": 4096,
+      "minItems": 1
+    },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        }
+      },
+      "maxItems": 4096,
+      "minItems": 1
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      },
+      "maxItems": 4096,
+      "uniqueItems": true
+    },
+    "methods": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "describe",
+          "probe",
+          "validate",
+          "lower",
+          "build",
+          "deploy",
+          "run",
+          "stop",
+          "observe"
+        ]
+      },
+      "maxItems": 4096,
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maximum_message_bytes",
+        "request_timeout_ms"
+      ],
+      "properties": {
+        "maximum_message_bytes": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 16777216
+        },
+        "request_timeout_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300000
+        }
+      }
+    }
+  }
+}

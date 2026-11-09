@@ -1,0 +1,747 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "Bounded Build32 Index Size",
+    "description": "Finite public Source for independent C/LLVM execution parity."
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": []
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "head-read",
+        "kind": "widget_value",
+        "widget": "head"
+      },
+      {
+        "id": "position-read",
+        "kind": "widget_value",
+        "widget": "position"
+      },
+      {
+        "id": "item-1",
+        "kind": "constant",
+        "type": "f64",
+        "value": 1.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-2",
+        "kind": "constant",
+        "type": "f64",
+        "value": 2.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-3",
+        "kind": "constant",
+        "type": "f64",
+        "value": 3.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-4",
+        "kind": "constant",
+        "type": "f64",
+        "value": 4.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-5",
+        "kind": "constant",
+        "type": "f64",
+        "value": 5.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-6",
+        "kind": "constant",
+        "type": "f64",
+        "value": 6.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-7",
+        "kind": "constant",
+        "type": "f64",
+        "value": 7.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-8",
+        "kind": "constant",
+        "type": "f64",
+        "value": 8.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-9",
+        "kind": "constant",
+        "type": "f64",
+        "value": 9.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-10",
+        "kind": "constant",
+        "type": "f64",
+        "value": 10.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-11",
+        "kind": "constant",
+        "type": "f64",
+        "value": 11.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-12",
+        "kind": "constant",
+        "type": "f64",
+        "value": 12.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-13",
+        "kind": "constant",
+        "type": "f64",
+        "value": 13.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-14",
+        "kind": "constant",
+        "type": "f64",
+        "value": 14.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-15",
+        "kind": "constant",
+        "type": "f64",
+        "value": 15.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-16",
+        "kind": "constant",
+        "type": "f64",
+        "value": 16.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-17",
+        "kind": "constant",
+        "type": "f64",
+        "value": 17.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-18",
+        "kind": "constant",
+        "type": "f64",
+        "value": 18.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-19",
+        "kind": "constant",
+        "type": "f64",
+        "value": 19.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-20",
+        "kind": "constant",
+        "type": "f64",
+        "value": 20.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-21",
+        "kind": "constant",
+        "type": "f64",
+        "value": 21.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-22",
+        "kind": "constant",
+        "type": "f64",
+        "value": 22.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-23",
+        "kind": "constant",
+        "type": "f64",
+        "value": 23.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-24",
+        "kind": "constant",
+        "type": "f64",
+        "value": 24.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-25",
+        "kind": "constant",
+        "type": "f64",
+        "value": 25.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-26",
+        "kind": "constant",
+        "type": "f64",
+        "value": 26.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-27",
+        "kind": "constant",
+        "type": "f64",
+        "value": 27.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-28",
+        "kind": "constant",
+        "type": "f64",
+        "value": 28.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-29",
+        "kind": "constant",
+        "type": "f64",
+        "value": 29.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-30",
+        "kind": "constant",
+        "type": "f64",
+        "value": 30.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "item-31",
+        "kind": "constant",
+        "type": "f64",
+        "value": 31.25,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "build",
+        "kind": "primitive",
+        "type": "frog.studio.array.build.real1d.v1",
+        "array_execution_profile": "frog.studio.array.real1d@1",
+        "input_ports": [
+          "array_a",
+          "array_b",
+          "input_3",
+          "input_4",
+          "input_5",
+          "input_6",
+          "input_7",
+          "input_8",
+          "input_9",
+          "input_10",
+          "input_11",
+          "input_12",
+          "input_13",
+          "input_14",
+          "input_15",
+          "input_16",
+          "input_17",
+          "input_18",
+          "input_19",
+          "input_20",
+          "input_21",
+          "input_22",
+          "input_23",
+          "input_24",
+          "input_25",
+          "input_26",
+          "input_27",
+          "input_28",
+          "input_29",
+          "input_30",
+          "input_31",
+          "input_32"
+        ]
+      },
+      {
+        "id": "index",
+        "kind": "primitive",
+        "type": "frog.studio.array.index.real1d.v1",
+        "array_execution_profile": "frog.studio.array.real1d@1"
+      },
+      {
+        "id": "size",
+        "kind": "primitive",
+        "type": "frog.studio.array.size.real1d.v1",
+        "array_execution_profile": "frog.studio.array.real1d@1"
+      },
+      {
+        "id": "element-write",
+        "kind": "widget_value",
+        "widget": "element"
+      },
+      {
+        "id": "size-write",
+        "kind": "widget_value",
+        "widget": "size"
+      }
+    ],
+    "edges": [
+      {
+        "id": "build-0",
+        "from": {
+          "node": "head-read",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "array_a"
+        }
+      },
+      {
+        "id": "build-1",
+        "from": {
+          "node": "item-1",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "array_b"
+        }
+      },
+      {
+        "id": "build-2",
+        "from": {
+          "node": "item-2",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_3"
+        }
+      },
+      {
+        "id": "build-3",
+        "from": {
+          "node": "item-3",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_4"
+        }
+      },
+      {
+        "id": "build-4",
+        "from": {
+          "node": "item-4",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_5"
+        }
+      },
+      {
+        "id": "build-5",
+        "from": {
+          "node": "item-5",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_6"
+        }
+      },
+      {
+        "id": "build-6",
+        "from": {
+          "node": "item-6",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_7"
+        }
+      },
+      {
+        "id": "build-7",
+        "from": {
+          "node": "item-7",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_8"
+        }
+      },
+      {
+        "id": "build-8",
+        "from": {
+          "node": "item-8",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_9"
+        }
+      },
+      {
+        "id": "build-9",
+        "from": {
+          "node": "item-9",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_10"
+        }
+      },
+      {
+        "id": "build-10",
+        "from": {
+          "node": "item-10",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_11"
+        }
+      },
+      {
+        "id": "build-11",
+        "from": {
+          "node": "item-11",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_12"
+        }
+      },
+      {
+        "id": "build-12",
+        "from": {
+          "node": "item-12",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_13"
+        }
+      },
+      {
+        "id": "build-13",
+        "from": {
+          "node": "item-13",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_14"
+        }
+      },
+      {
+        "id": "build-14",
+        "from": {
+          "node": "item-14",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_15"
+        }
+      },
+      {
+        "id": "build-15",
+        "from": {
+          "node": "item-15",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_16"
+        }
+      },
+      {
+        "id": "build-16",
+        "from": {
+          "node": "item-16",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_17"
+        }
+      },
+      {
+        "id": "build-17",
+        "from": {
+          "node": "item-17",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_18"
+        }
+      },
+      {
+        "id": "build-18",
+        "from": {
+          "node": "item-18",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_19"
+        }
+      },
+      {
+        "id": "build-19",
+        "from": {
+          "node": "item-19",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_20"
+        }
+      },
+      {
+        "id": "build-20",
+        "from": {
+          "node": "item-20",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_21"
+        }
+      },
+      {
+        "id": "build-21",
+        "from": {
+          "node": "item-21",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_22"
+        }
+      },
+      {
+        "id": "build-22",
+        "from": {
+          "node": "item-22",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_23"
+        }
+      },
+      {
+        "id": "build-23",
+        "from": {
+          "node": "item-23",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_24"
+        }
+      },
+      {
+        "id": "build-24",
+        "from": {
+          "node": "item-24",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_25"
+        }
+      },
+      {
+        "id": "build-25",
+        "from": {
+          "node": "item-25",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_26"
+        }
+      },
+      {
+        "id": "build-26",
+        "from": {
+          "node": "item-26",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_27"
+        }
+      },
+      {
+        "id": "build-27",
+        "from": {
+          "node": "item-27",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_28"
+        }
+      },
+      {
+        "id": "build-28",
+        "from": {
+          "node": "item-28",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_29"
+        }
+      },
+      {
+        "id": "build-29",
+        "from": {
+          "node": "item-29",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_30"
+        }
+      },
+      {
+        "id": "build-30",
+        "from": {
+          "node": "item-30",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_31"
+        }
+      },
+      {
+        "id": "build-31",
+        "from": {
+          "node": "item-31",
+          "port": "value"
+        },
+        "to": {
+          "node": "build",
+          "port": "input_32"
+        }
+      },
+      {
+        "id": "index-array",
+        "from": {
+          "node": "build",
+          "port": "result"
+        },
+        "to": {
+          "node": "index",
+          "port": "array"
+        }
+      },
+      {
+        "id": "index-position",
+        "from": {
+          "node": "position-read",
+          "port": "value"
+        },
+        "to": {
+          "node": "index",
+          "port": "index"
+        }
+      },
+      {
+        "id": "size-array",
+        "from": {
+          "node": "build",
+          "port": "result"
+        },
+        "to": {
+          "node": "size",
+          "port": "array"
+        }
+      },
+      {
+        "id": "element-result",
+        "from": {
+          "node": "index",
+          "port": "element"
+        },
+        "to": {
+          "node": "element-write",
+          "port": "value"
+        }
+      },
+      {
+        "id": "size-result",
+        "from": {
+          "node": "size",
+          "port": "size"
+        },
+        "to": {
+          "node": "size-write",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "widgets": [
+      {
+        "id": "head",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "f64",
+        "props": {
+          "default_value": 0.25
+        }
+      },
+      {
+        "id": "position",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "i32",
+        "props": {
+          "default_value": 31
+        }
+      },
+      {
+        "id": "element",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "f64"
+      },
+      {
+        "id": "size",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "i32"
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "frog.diagnostic",
+  "version": "0.1",
+  "code": "fixture.not-executed",
+  "stage": "validate",
+  "severity": "info",
+  "message": "Synthetic contract fixture; no production compilation or execution.",
+  "source": {
+    "uri": "fixture://diagram",
+    "pointer": "/objects/0",
+    "object_id": "fixture.node",
+    "port_id": "fixture.in",
+    "region_id": "fixture.region"
+  }
+}

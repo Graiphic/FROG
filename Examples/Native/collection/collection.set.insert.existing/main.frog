@@ -288,7 +288,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Insert Into Set — existing element\nSet insertion preserves exact element type and reports whether the element was already included. Repeated insertion does not duplicate it.\nEntrées -> opération -> indicateurs. Résultat attendu : result (set<i32>) = {\"elements\":[1,2,3]}\nalready (bool) = true\n",
+        "text": "Insert Into Set — existing element\nSet insertion preserves exact element type and reports whether the element was already included. Repeated insertion does not duplicate it.\nInputs -> operation -> indicators. Expected result: result (set<i32>) = {\"elements\":[1,2,3]}\nalready (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

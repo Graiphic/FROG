@@ -1,10 +1,10 @@
-# Retain First : conserver le premier avertissement en l'absence d'erreur
+# Retain First: keep the first warning when no error exists
 
-Retain First : conserver le premier avertissement en l'absence d'erreur
+Retain First: keep the first warning when no error exists
 
-Les deux clusters ont status=False et des codes non nuls41 puis42. En l'absence d'erreur, Retain First garde le premier avertissement dans l'ordre des terminaux : status=False, code41 et source first warning. Le cas d'une vraie erreur prioritaire est présenté séparément.
+Both clusters have status=False and nonzero codes41 then42. With no error, Retain First keeps the first warning in terminal order: status=False, code41 and source first warning. A separate case presents a priority error.
 
-Retain First : conserver le premier avertissement en l'absence d'erreur
+Retain First: keep the first warning when no error exists
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

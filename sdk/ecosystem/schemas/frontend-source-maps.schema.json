@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.io/frog/sdk/ecosystem/0.1/frontend-source-maps.schema.json",
+  "description": "The real FIR component records plus explicit resolution transformations. Metadata-only form is valid before derivation or after result-budget refusal.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version"
+  ],
+  "properties": {
+    "schema": {
+      "const": "frog.frontend.source_maps"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "authored_source_sha256": {
+      "type": "string",
+      "pattern": "^(?:[a-f0-9]{64})?$"
+    },
+    "fir_source_sha256": {
+      "type": "string",
+      "pattern": "^(?:sha256:)?[a-f0-9]{64}$"
+    },
+    "transformations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profile",
+          "source_uri",
+          "source_pointer",
+          "dependency_uri",
+          "dependency_pointer",
+          "dependency_sha256"
+        ],
+        "properties": {
+          "profile": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_uri": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 8192
+          },
+          "source_pointer": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~]|~[01])*)?$"
+          },
+          "dependency_uri": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 8192
+          },
+          "dependency_pointer": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~]|~[01])*)?$"
+          },
+          "dependency_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      },
+      "minItems": 0
+    },
+    "source_map": {
+      "type": "array",
+      "items": {
+        "$ref": "https://graiphic.io/frog/ir/schema/frog.execution-ir.source-map.schema.json"
+      },
+      "minItems": 0
+    },
+    "correspondence": {
+      "type": "array",
+      "items": {
+        "$ref": "https://graiphic.io/frog/ir/schema/frog.execution-ir.correspondence.schema.json"
+      },
+      "minItems": 0
+    },
+    "draft_identities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "source_pointer",
+          "public_pointer",
+          "generated"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "source_pointer": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~]|~[01])*)?$"
+          },
+          "public_pointer": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~]|~[01])*)?$"
+          },
+          "generated": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

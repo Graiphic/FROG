@@ -1,0 +1,20 @@
+#include "OrdinaryDifferentialBindingSemanticDetail.hpp"
+namespace frog::native_engine {
+using namespace ordinarydifferential_binding_detail;
+bool isOrdinaryDifferentialFunction(std::string_view id)noexcept{return !ordinaryDifferentialFunctionKey(id).empty();}
+
+std::string_view ordinaryDifferentialFunctionKey(std::string_view id)noexcept{if(id.starts_with("frog.studio."))id.remove_prefix(12);if(id.starts_with("math.ode.")){id.remove_prefix(9);for(const auto key:{"solve","solve.reference","rk4","cash_karp54","euler","linear_nth_numeric","linear_nth_symbolic","linear_system_numeric","linear_system_symbolic"})if(id==key)return id;}if(id=="math.dae.radau_iia5")return "radau_iia5";if(id=="math.dae.radau_iia5.reference")return "radau_iia5.reference";return{};}
+
+T ordinaryDifferentialCallableType(bool dae){std::vector<std::string> ids{"in_t","in_X"};std::vector<T> fields{T::primitive("f64"),T::array(T::primitive("f64"))};if(dae){ids.push_back("in_dX");fields.push_back(T::array(T::primitive("f64")));}ids.insert(ids.end(),{"in_data",dae?"out_residual":"out_dX","out_diagnostic"});fields.insert(fields.end(),{T::primitive("variant"),T::array(T::primitive("f64")),type("cluster<status:bool,code:i32,source:string>")});return T::reference("connectivity.document.strict",T::cluster(std::move(ids),std::move(fields)));}
+
+T ordinaryDifferentialFormulaType(bool dae){return type(dae?"cluster<equations:array<string>,variables:array<string>,derivatives:array<string>,time:string>":"cluster<equations:array<string>,variables:array<string>,time:string>");}
+
+T ordinaryDifferentialParametersType(bool dae){return type(dae?"cluster<t0:f64,tf:f64,atol:array<f64>,rtol:array<f64>,initial_step:f64,min_step:f64,max_step:f64>":"cluster<t0:f64,tf:f64,step:f64,method:string,atol:f64,rtol:f64,initial_step:f64,min_step:f64,max_step:f64>");}
+
+OrdinaryDifferentialTypeResult resolveOrdinaryDifferentialPort(std::string_view id,std::string_view port,std::span<const OrdinaryDifferentialTypeEvidence> evidence){
+    const auto key=ordinaryDifferentialFunctionKey(id);std::string catalog(id);if(catalog.starts_with("frog.studio."))catalog.erase(0,12);const auto *definition=ordinaryRuntimeDefinition(catalog);if(key.empty()||!definition)return {{binding::ResolutionStatus::Incompatible,{},"math.ode.unknown_function","This ODE signature is not registered."},false};const auto *target=ordinaryRuntimePort(*definition,port);if(!target)return {{binding::ResolutionStatus::Incompatible,{},"math.ode.missing_port","Unknown ODE connector identity."},false};std::map<std::string_view,T> known;bool complete=true;
+    for(const auto &item:evidence){const auto *input=ordinaryRuntimePort(*definition,item.portId);if(!input||input->direction!=FunctionPortDirection::Input||!known.emplace(item.portId,item.valueType).second)return {{binding::ResolutionStatus::Incompatible,{},"math.ode.multiple_sources","Unknown input or multiple sources."},false};const auto expected=type(input->defaultValueType);if(!item.valueType.known())return {{binding::ResolutionStatus::Unresolved,{},"math.ode.unresolved_type","Input type is unresolved."},false};const bool callable=item.portId=="function"&&callableCompatible(item.valueType,ordinaryDifferentialCallableType(key.starts_with("radau")));const auto compatibility=binding::connect(item.valueType,expected,expected.kind==binding::TypeKind::Primitive?binding::ConnectionPolicy::NumericImplicit:binding::ConnectionPolicy::Exact);if(!callable&&!compatibility.accepted())return {{binding::ResolutionStatus::Incompatible,{},"math.ode.unsupported_type","ODE ports require their fixed real scalar, vector, matrix, descriptor or strict callable type; there is no element-wise lifting."},false};}
+    for(const auto &input:definition->ports)if(input.direction==FunctionPortDirection::Input&&input.requirement==FunctionPortRequirement::Required&&!known.contains(input.portId))complete=false;
+    auto result=type(target->defaultValueType);if(port=="function"&&known.contains(port))result=known.at(port);return {{binding::ResolutionStatus::Compatible,result,{},{}},complete};
+}
+}

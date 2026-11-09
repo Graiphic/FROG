@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 7,
   "language": "FROG",
-  "title": "Appel C : signature pointeur non admise par scalar5",
+  "title": "C call: pointer signature not admitted by scalar5",
   "metadata": {
-    "name": "Appel C : signature pointeur non admise par scalar5",
+    "name": "C call: pointer signature not admitted by scalar5",
     "name_source": "document",
-    "description": "Le vrai nœud NativeCall utilise la bibliothèque C livrée avec les exemples, via un chemin relatif au document. Profil scalar5 : I32/U32/I64/U64/F64 par valeur, thread Any, C ABI. Les IDs param.<id>.in/out sont persistants. Les arguments restent dans l'ordre ABI même lorsque leurs lignes visuelles sont inversées. Les nombres entiers ne transitent jamais par un double.\n\nAppel C : signature pointeur non admise par scalar5\n\nMode: expected-diagnostic. Profile: studio-draft. Capability: windows-x64/native-call.scalar5@1.\nExpected:\nDiagnostic: migration.native_call_signature_unavailable",
+    "description": "The actual NativeCall node uses the C library shipped with the examples, through a document-relative path. The scalar5 profile passes I32/U32/I64/U64/F64 by value, on thread Any, using the C ABI. param.<id>.in/out IDs are persistent. Arguments retain ABI order even when their visual rows are reversed. Integers never pass through a double.\n\nC call: pointer signature not admitted by scalar5\n\nMode: expected-diagnostic. Profile: studio-draft. Capability: windows-x64/native-call.scalar5@1.\nExpected:\nDiagnostic: migration.native_call_signature_unavailable",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -426,7 +426,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Appel C : signature pointeur non admise par scalar5\nAppel C : signature pointeur non admise par scalar5\nEntrées -> opération -> indicateurs. Résultat attendu : Diagnostic: migration.native_call_signature_unavailable",
+        "text": "C call: pointer signature not admitted by scalar5\nC call: pointer signature not admitted by scalar5\nInputs -> operation -> indicators. Expected result: Diagnostic: migration.native_call_signature_unavailable",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

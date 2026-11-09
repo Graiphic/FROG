@@ -2,9 +2,9 @@
 
 Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
 
-Une égalité exacte se départage vers l'entier pair. Le nouveau profil Studio even64 est indépendant du mode FENV du processus; le profil historique fenv64 explicitement enregistré garde son sens propre.
-Entrées : in (f64) = 0.5.
-Résultats attendus : result (f64) = 0.0.
+Exact ties round to the nearest even integer. The new Studio even64 profile is independent of the process FENV mode; the explicitly saved historical fenv64 profile retains its own meaning.
+Inputs: in (f64) = 0.5.
+Expected results: result (f64) = 0.0.
 
 Numeric scalar, array or recursively numeric cluster; result preserves aggregate structure.
 

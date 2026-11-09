@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Not Equal? — exact i32",
     "name_source": "document",
-    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : x (i32) = 3; y (i32) = 2.\nRésultats attendus : result (bool) = true.\n\nTests inequality of compatible values.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (bool) = true\n",
+    "description": "Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.\nInputs: x (i32) = 3; y (i32) = 2.\nExpected results: result (bool) = true.\n\nTests inequality of compatible values.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (bool) = true\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -294,7 +294,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Not Equal? — exact i32\nTests inequality of compatible values.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (bool) = true\n",
+        "text": "Not Equal? — exact i32\nTests inequality of compatible values.\nInputs -> operation -> indicators. Expected result: output-result (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

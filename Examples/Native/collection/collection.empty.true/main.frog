@@ -195,7 +195,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "An empty collection\nA Set containing the value zero is nonempty. Default values are real stored elements and must not be confused with absence.\nEntrées -> opération -> indicateurs. Résultat attendu : result (bool) = true\n",
+        "text": "An empty collection\nA Set containing the value zero is nonempty. Default values are real stored elements and must not be confused with absence.\nInputs -> operation -> indicators. Expected result: result (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

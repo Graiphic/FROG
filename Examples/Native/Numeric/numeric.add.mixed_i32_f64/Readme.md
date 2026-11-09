@@ -2,9 +2,9 @@
 
 Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
 
-Le résolveur promeut I32 et DBL vers DBL. Cette variante est explicitement exécutée en Simulation privée tant que le lowering natif des opérandes mixtes n'est pas admis; aucune troncature ni repli silencieux.
-Entrées : a (i32) = 2; b (f64) = 0.5.
-Résultats attendus : result (f64) = 2.5.
+The resolver promotes I32 and DBL to DBL. This variant explicitly executes in private Simulation until native lowering of mixed operands is admitted; there is no truncation or silent fallback.
+Inputs: a (i32) = 2; b (f64) = 0.5.
+Expected results: result (f64) = 2.5.
 
 Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
 

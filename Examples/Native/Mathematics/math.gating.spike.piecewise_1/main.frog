@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Spike — piecewise 1",
     "name_source": "document",
-    "description": "Primitive de fenêtrage/palier. Gating Square est périodique de période 2; elle ne calcule jamais le carré numérique x*x.\nEntrées : x (f64) = 0.\nRésultats attendus : result (f64) = 1.\n\nReturns 1 for 0≤x<1 and 0 elsewhere; a nonperiodic unit rectangular pulse.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (f64) = 1\n",
+    "description": "Windowing/step primitive. Gating Square is periodic with period 2; it never computes the numeric square x*x.\nInputs: x (f64) = 0.\nExpected results: result (f64) = 1.\n\nReturns 1 for 0≤x<1 and 0 elsewhere; a nonperiodic unit rectangular pulse.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (f64) = 1\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -229,7 +229,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Spike — piecewise 1\nReturns 1 for 0≤x<1 and 0 elsewhere; a nonperiodic unit rectangular pulse.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = 1\n",
+        "text": "Spike — piecewise 1\nReturns 1 for 0≤x<1 and 0 elsewhere; a nonperiodic unit rectangular pulse.\nInputs -> operation -> indicators. Expected result: output-result (f64) = 1\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

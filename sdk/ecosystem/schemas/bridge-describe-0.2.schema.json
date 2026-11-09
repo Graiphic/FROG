@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.io/frog/sdk/ecosystem/0.2/bridge-describe.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "bridge_id",
+    "protocol_version",
+    "fir_formats",
+    "profiles",
+    "operations",
+    "methods",
+    "limits",
+    "software_version",
+    "engine_id",
+    "operations_exhaustive",
+    "type_families",
+    "services",
+    "commands",
+    "targets",
+    "constraints"
+  ],
+  "properties": {
+    "schema": {
+      "const": "frog.bridge.describe"
+    },
+    "schema_version": {
+      "const": "0.2"
+    },
+    "bridge_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+    },
+    "protocol_version": {
+      "const": "0.1"
+    },
+    "fir_formats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "family",
+          "version"
+        ],
+        "properties": {
+          "family": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        }
+      },
+      "maxItems": 4096,
+      "minItems": 1
+    },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        }
+      },
+      "maxItems": 4096,
+      "minItems": 1
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      },
+      "maxItems": 4096,
+      "uniqueItems": true
+    },
+    "methods": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "describe",
+          "probe",
+          "validate",
+          "lower",
+          "build",
+          "deploy",
+          "run",
+          "stop",
+          "observe"
+        ]
+      },
+      "maxItems": 4096,
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maximum_message_bytes",
+        "request_timeout_ms",
+        "maximum_progress_messages",
+        "maximum_stderr_bytes"
+      ],
+      "properties": {
+        "maximum_message_bytes": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 16777216
+        },
+        "request_timeout_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300000
+        },
+        "maximum_progress_messages": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65536
+        },
+        "maximum_stderr_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1048576
+        }
+      }
+    },
+    "software_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "engine_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "operations_exhaustive": {
+      "type": "boolean"
+    },
+    "type_families": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      },
+      "minItems": 0,
+      "maxItems": 4096,
+      "uniqueItems": true
+    },
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      },
+      "minItems": 0,
+      "maxItems": 4096,
+      "uniqueItems": true
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      },
+      "minItems": 0,
+      "maxItems": 4096,
+      "uniqueItems": true
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "hardware_id",
+          "backend_id",
+          "profiles"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "hardware_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "backend_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "profiles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "minItems": 0,
+            "maxItems": 4096,
+            "uniqueItems": true
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 4096,
+      "uniqueItems": true
+    },
+    "constraints": {
+      "type": "object",
+      "description": "Descriptive versioned constraints; never an admission receipt."
+    }
+  },
+  "description": "Explicit discovery contract 0.2; wire protocol remains 0.1. Discovery never replaces complete-graph validate admission."
+}

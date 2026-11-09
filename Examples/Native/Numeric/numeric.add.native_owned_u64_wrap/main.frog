@@ -406,7 +406,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: u64 wrap\nModulo2^64: maximum+1 is0. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (array<u64>) = [0]\n",
+        "text": "Add: u64 wrap\nModulo2^64: maximum+1 is0. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nInputs -> operation -> indicators. Expected result: output-result (array<u64>) = [0]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

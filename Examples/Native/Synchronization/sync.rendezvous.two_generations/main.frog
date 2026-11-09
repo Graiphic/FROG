@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 6,
   "language": "FROG",
-  "title": "Rendezvous : trois participants, deux générations",
+  "title": "Rendezvous: three participants, two generations",
   "metadata": {
-    "name": "Rendezvous : trois participants, deux générations",
+    "name": "Rendezvous: three participants, two generations",
     "name_source": "document",
-    "description": "Run this document. Each of three independent branches crosses generation 1, then generation 2 on the same reference. Cleanup waits for all second-generation outcomes. The scheduler may choose any branch first; this model does not manufacture a prescribed timing gap between participants.\n\nRendezvous : trois participants, deux générations\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ntimed_out_0_0 (bool) = false\ntimed_out_0_1 (bool) = false\ntimed_out_1_0 (bool) = false\ntimed_out_1_1 (bool) = false\ntimed_out_2_0 (bool) = false\ntimed_out_2_1 (bool) = false\n",
+    "description": "Run this document. Each of three independent branches crosses generation 1, then generation 2 on the same reference. Cleanup waits for all second-generation outcomes. The scheduler may choose any branch first; this model does not manufacture a prescribed timing gap between participants.\n\nRendezvous: three participants, two generations\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ntimed_out_0_0 (bool) = false\ntimed_out_0_1 (bool) = false\ntimed_out_1_0 (bool) = false\ntimed_out_1_1 (bool) = false\ntimed_out_2_0 (bool) = false\ntimed_out_2_1 (bool) = false\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -1401,7 +1401,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Rendezvous : trois participants, deux générations\nRendezvous : trois participants, deux générations\nEntrées -> opération -> indicateurs. Résultat attendu : timed_out_0_0 (bool) = false\ntimed_out_0_1 (bool) = false\ntimed_out_1_0 (bool) = false\ntimed_out_1_1 (bool) = false\ntimed_out_2_0 (bool) = false\ntimed_out_2_1 (bool) = false\n",
+        "text": "Rendezvous: three participants, two generations\nRendezvous: three participants, two generations\nInputs -> operation -> indicators. Expected result: timed_out_0_0 (bool) = false\ntimed_out_0_1 (bool) = false\ntimed_out_1_0 (bool) = false\ntimed_out_1_1 (bool) = false\ntimed_out_2_0 (bool) = false\ntimed_out_2_1 (bool) = false\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

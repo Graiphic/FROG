@@ -165,7 +165,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Temporary Directory follows the current system\nThe existing native Path service obtains the current system temporary directory. The expected path is computed at execution time, so this example remains portable between users and machines.\nEntrées -> opération -> indicateurs. Résultat attendu : result (path) = <system temporary directory>\n",
+        "text": "Temporary Directory follows the current system\nThe existing native Path service obtains the current system temporary directory. The expected path is computed at execution time, so this example remains portable between users and machines.\nInputs -> operation -> indicators. Expected result: result (path) = <system temporary directory>\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

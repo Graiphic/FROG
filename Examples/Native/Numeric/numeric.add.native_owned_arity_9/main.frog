@@ -869,7 +869,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: arity 9\nThe true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain sep...\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (array<i32>) = [45,46]\n",
+        "text": "Add: arity 9\nThe true ordered operands1..N sum toN(N+1)/2 in the first element; only the first Array element of the second position differs by+1. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain sep...\nInputs -> operation -> indicators. Expected result: output-result (array<i32>) = [45,46]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

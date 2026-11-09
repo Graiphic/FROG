@@ -223,7 +223,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Cartesian product with two element types\nThe Cartesian product keeps its two independent input types. Every result element is a Cluster whose stable fields first and second retain the corresponding values.\nEntrées -> opération -> indicateurs. Résultat attendu : result (set<cluster<\"first\":i32,\"second\":string>>) = {\"elements\":[{\"first\":1,\"second\":\"a\"},{\"first\":1,\"second\":\"b\"},{\"first\":2,\"second\":\"a\"},{\"first\":2,\"second\":\"b\"}]}\n",
+        "text": "Cartesian product with two element types\nThe Cartesian product keeps its two independent input types. Every result element is a Cluster whose stable fields first and second retain the corresponding values.\nInputs -> operation -> indicators. Expected result: result (set<cluster<\"first\":i32,\"second\":string>>) = {\"elements\":[{\"first\":1,\"second\":\"a\"},{\"first\":1,\"second\":\"b\"},{\"first\":2,\"second\":\"a\"},{\"first\":2,\"second\":\"b\"}]}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

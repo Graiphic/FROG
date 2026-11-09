@@ -264,7 +264,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Reverse exact I64 elements\nThe operation reverses immutable elements without a floating-point conversion. The value 9007199254740993 remains exact.\nEntrées -> opération -> indicateurs. Résultat attendu : result (array<i64>) = [7,-2,9007199254740993]\n",
+        "text": "Reverse exact I64 elements\nThe operation reverses immutable elements without a floating-point conversion. The value 9007199254740993 remains exact.\nInputs -> operation -> indicators. Expected result: result (array<i64>) = [7,-2,9007199254740993]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

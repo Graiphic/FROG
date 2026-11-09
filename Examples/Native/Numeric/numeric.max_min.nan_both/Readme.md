@@ -2,9 +2,9 @@
 
 Compatible comparable x,y -> max/min of the common type.
 
-Le diagramme produit réellement NaN avec Divide 0/0, puis le transmet à both. Ce n'est pas un littéral JSON non fini ni une valeur d'indicateur préfabriquée. Un seul NaN donne 5 sur les deux sorties; deux NaN donnent NaN.
-Entrées : x (f64) = 0; y (f64) = 0.
-Résultats attendus : max (f64) = NaN; min (f64) = NaN.
+The diagram actually produces NaN with Divide 0/0, then passes it to both. This is neither a non-finite JSON literal nor a prefabricated indicator value. One NaN yields 5 on both outputs; two NaNs yield NaN.
+Inputs: x (f64) = 0; y (f64) = 0.
+Expected results: max (f64) = NaN; min (f64) = NaN.
 
 Compatible comparable x,y -> max/min of the common type.
 

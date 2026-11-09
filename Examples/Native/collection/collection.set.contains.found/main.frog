@@ -230,7 +230,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Set membership — present\nMembership compares the complete typed value. It does not consume or mutate the Set.\nEntrées -> opération -> indicateurs. Résultat attendu : result (bool) = true\n",
+        "text": "Set membership — present\nMembership compares the complete typed value. It does not consume or mutate the Set.\nInputs -> operation -> indicators. Expected result: result (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

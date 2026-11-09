@@ -2,9 +2,9 @@
 
 Counts ordered selections of k distinct elements among n, without replacement.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : n (u32) = 5; k (u32) = 2.
-Résultats attendus : result (f64) = 20.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: n (u32) = 5; k (u32) = 2.
+Expected results: result (f64) = 20.
 
 Counts ordered selections of k distinct elements among n, without replacement.
 

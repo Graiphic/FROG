@@ -2,9 +2,9 @@
 
 Returns 0 for negative x and 1 for positive or zero x.
 
-Primitive de fenêtrage/palier. Gating Square est périodique de période 2; elle ne calcule jamais le carré numérique x*x.
-Entrées : x (f64) = 0.
-Résultats attendus : result (f64) = 1.
+Windowing/step primitive. Gating Square is periodic with period 2; it never computes the numeric square x*x.
+Inputs: x (f64) = 0.
+Expected results: result (f64) = 1.
 
 Returns 0 for negative x and 1 for positive or zero x.
 

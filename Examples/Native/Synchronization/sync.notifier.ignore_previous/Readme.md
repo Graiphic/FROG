@@ -1,10 +1,10 @@
-# Notifier : ignorer un signal précédent sans l'effacer
+# Notifier: ignore a previous signal without clearing it
 
-Notifier : ignorer un signal précédent sans l'effacer
+Notifier: ignore a previous signal without clearing it
 
-Send publie 42. Status peut lire ce signal sans le consommer. Wait avec ignore_previous=True et timeout=0 demande un signal futur : timed_out=True et notification=0. Release retourne pourtant toujours last_notification=42, car ignorer n'efface pas la ressource.
+Send publishes 42. Status can read that signal without consuming it. Wait with ignore_previous=True and timeout=0 requests a future signal: timed_out=True and notification=0. Release still returns last_notification=42 because ignoring a signal does not clear the resource.
 
-Notifier : ignorer un signal précédent sans l'effacer
+Notifier: ignore a previous signal without clearing it
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Display Error : inspecter un record sans erreur",
+  "title": "Display Error: inspect an error-free record",
   "metadata": {
-    "name": "Display Error : inspecter un record sans erreur",
+    "name": "Display Error: inspect an error-free record",
     "name_source": "document",
-    "description": "Le record possède status=False et code0, avec une source descriptive. Display Error restitue False,0, la localisation et une description vide. Le mode par défaut ne présente aucun dialogue pour ce record sans erreur. Ce test n'établit pas les modes interactifs Continue/Stop, qui exigent un contrat d'hôte distinct.\n\nDisplay Error : inspecter un record sans erreur\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nerror (bool) = false\ncode (i32) = 0\nlocation (string) = \"example location\"\ndescription (string) = \"\"\n",
+    "description": "The record has status=False and code0, with a descriptive source. Display Error returns False,0, the location and an empty description. The default mode shows no dialog for this error-free record. This test does not establish interactive Continue/Stop modes, which require a separate host contract.\n\nDisplay Error: inspect an error-free record\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nerror (bool) = false\ncode (i32) = 0\nlocation (string) = \"example location\"\ndescription (string) = \"\"\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -521,7 +521,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Display Error : inspecter un record sans erreur\nDisplay Error : inspecter un record sans erreur\nEntrées -> opération -> indicateurs. Résultat attendu : error (bool) = false\ncode (i32) = 0\nlocation (string) = \"example location\"\ndescription (string) = \"\"\n",
+        "text": "Display Error: inspect an error-free record\nDisplay Error: inspect an error-free record\nInputs -> operation -> indicators. Expected result: error (bool) = false\ncode (i32) = 0\nlocation (string) = \"example location\"\ndescription (string) = \"\"\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

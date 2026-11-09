@@ -2,9 +2,9 @@
 
 The Studio node stores and exposes the fixed Boolean value false through output value.
 
-La véritable constante booléenne de palette est directement reliée à un indicateur. Aucun opérateur d'identité ni contrôle synthétique ne remplace cette constante.
-Entrées : aucune; constante typée.
-Résultats attendus : value (bool) = false.
+The actual palette Boolean constant connects directly to an indicator. No identity operator or synthetic control replaces it.
+Inputs: none; typed constant.
+Expected results: value (bool) = false.
 
 The Studio node stores and exposes the fixed Boolean value false through output value.
 

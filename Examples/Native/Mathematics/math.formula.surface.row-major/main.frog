@@ -700,7 +700,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Sample a two-variable surface\nFor 100*x1+x2, rows follow x2 and columns follow x1 in the explicit FROG v1 layout. The output is a rank-two Array, distinct from a Matrix.\nEntrées -> opération -> indicateurs. Résultat attendu : output-x1_values (array<f64>) = [0,1,2]\noutput-x2_values (array<f64>) = [10,20,30]\noutput-y_values (array<f64,rank=2>) = {\"shape\":[3,3],\"elements\":[10,110,210,20,120,220,30,130,230]}\noutput-error (i32) = 0\n",
+        "text": "Sample a two-variable surface\nFor 100*x1+x2, rows follow x2 and columns follow x1 in the explicit FROG v1 layout. The output is a rank-two Array, distinct from a Matrix.\nInputs -> operation -> indicators. Expected result: output-x1_values (array<f64>) = [0,1,2]\noutput-x2_values (array<f64>) = [10,20,30]\noutput-y_values (array<f64,rank=2>) = {\"shape\":[3,3],\"elements\":[10,110,210,20,120,220,30,130,230]}\noutput-error (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

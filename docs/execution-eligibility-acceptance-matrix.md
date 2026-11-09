@@ -1,158 +1,158 @@
-# Matrice d'acceptation de l'exécutabilité
+<a id="matrice-dacceptation-de-lexécutabilité"></a>
 
-Révision 1 — 16 septembre 2026. **Document de qualification, non preuve de conformité.**
+# Execution eligibility acceptance matrix
 
-Source : étude fournie « FROG / Graiphic Studio — Validation complète du diagramme
-et des structures », révision 2 du 5 septembre 2026. Ses 137 identifiants VAL sont
-conservés pour assurer la traçabilité. Les résultats ci-dessous sont les attentes
-initiales de l'étude, pas des résultats d'exécution.
+Revision 1 — 16 September 2026. **Qualification document, not conformance evidence.**
 
-Les [règles EXEC](../Language/Execution%20eligibility.md) et les contrats publiés
-du profil/cible choisi priment. Lorsqu'une ligne propose une extension, elle ne
-publie pas à elle seule le format ou le runtime correspondant. Par exemple,
-VAL-100 traite l'absence de priorité : un profil publiant explicitement une
-priorité doit être testé selon cette priorité, sans être déclaré ambigu par défaut.
+Source: supplied study “FROG / Graiphic Studio — Complete diagram and structure
+validation,” revision 2 of 5 September 2026. Its 137 VAL identifiers are retained
+for traceability. Results below are the study's initial expectations, not execution results.
 
-Pour remplacer « À qualifier », fournir un lien de preuve identifiant le test,
-le commit, la configuration/cible et le résultat. Les tests globaux Studio sont
-résumés [séparément](execution-eligibility-studio-coverage.md).
+The [EXEC rules](../Language/Execution%20eligibility.md) and published contracts of
+the selected profile/target take precedence. A row proposing an extension does not
+itself publish a corresponding format/runtime. For example, VAL-100 addresses
+absent priority: a profile explicitly publishing priority must be tested against
+that priority, not declared ambiguous by default.
 
-| ID | Situation | Attente de l'étude | Qualification / preuve |
+Replacing “To qualify” requires evidence identifying test, commit, configuration/target
+and result. Global Studio tests are summarized [separately](execution-eligibility-studio-coverage.md).
+
+| ID | Situation | Study expectation | Qualification / evidence |
 | --- | --- | --- | --- |
-| VAL-001 | Document JSON non analysable. | Chargement sémantique refusé ; conserver l’accès au texte si possible. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-002 | Deux identifiants de nœud identiques dans la même portée. | Erreur d’identité bloquante. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-003 | Même identifiant local dans deux régions différentes, avec chemins qualifiés distincts. | Valide si les références de portée sont correctes. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-004 | Fil vers un nœud supprimé. | Erreur de référence ; ne pas compter l’entrée comme alimentée. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-005 | Fil vers un port supprimé après changement d’interface. | Erreur de port ou de signature. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-006 | Deux sources pour la même entrée. | Erreur de cardinalité. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-007 | Une source vers plusieurs destinations. | Valide si chaque destination est compatible. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-008 | Croisement de deux fils sans binding partagé. | Aucune connexion ajoutée. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-009 | Fil direct entre deux régions sans frontière explicite. | Erreur de portée. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-010 | Fragment de fil incomplet dans une région active. | Enregistrement possible ; validation exécutable bloquée. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-011 | Sortie ordinaire valide sans consommateur. | Pas d’erreur du seul fait de son inutilisation. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-012 | Nœud isolé avec une entrée requise vide. | Erreur ; ne pas l’effacer implicitement pour autoriser Run. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-013 | Entrée Required absente. | Erreur bloquante. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-014 | Entrée Optional absente avec défaut contractuel valide. | Valide ; valeur par défaut définie. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-015 | Entrée Recommended absente mais contrat complet. | Valide, avertissement possible. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-016 | Port présent graphiquement mais absent du contrat effectif. | Erreur, pas de port inventé par le renderer. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-017 | Connexion avec coercition numérique autorisée. | Valide ; diagnostic ou point de coercition approprié. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-018 | Connexion avec conversion non autorisée. | Erreur de type. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-019 | Type générique non résolu en fin de validation. | Blocage explicite, pas de repli implicite vers f64. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-020 | Deux formes fixes incompatibles pour une opération qui les exige identiques. | Erreur avant exécution. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-021 | Deux tailles dynamiques pouvant différer. | Validation possible si le nœud prévoit un contrôle runtime. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-022 | Producteur câblé mais lui-même invalide. | Consommateur bloqué par la cause racine, pas déclaré prêt. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-023 | Case booléenne avec sélecteur valide et sorties définies dans Vrai et Faux. | Valide. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-024 | Case sans sélecteur. | MISSING_STRUCTURE_SELECTOR. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-025 | Case booléenne avec branche Faux absente. | MISSING_CASE_REGION. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-026 | Case booléenne avec deux branches Vrai. | DUPLICATE_CASE_MATCH ou cardinalité invalide. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-027 | Case texte sans branche default. | MISSING_DEFAULT_REGION. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-028 | Case texte avec deux branches default. | Erreur de sélection ambiguë. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-029 | Case texte avec deux correspondances identiques. | DUPLICATE_CASE_MATCH. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-030 | Sortie définie dans Vrai mais absente dans Faux. | UNBOUND_REGION_OUTPUT. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-031 | Branche default présente mais sa sortie result non produite. | UNBOUND_REGION_OUTPUT : default de sélection ne couvre pas la sortie. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-032 | Deux sorties ; une seule est couverte dans toutes les branches. | Structure invalide pour la sortie restante. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-033 | Branche affichée correcte, autre branche masquée incorrecte. | Structure et Run marqués invalides. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-034 | Sortie incomplète sans aucun consommateur extérieur. | Erreur tant que cette sortie reste déclarée. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-035 | Case sans sortie de données et deux branches valides. | Valide, sous réserve du sélecteur et des autres contrats. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-036 | Entrée de frontière fournie mais inutilisée dans une des branches. | Pas d’erreur du seul fait de cette inutilisation. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-037 | Case interne incomplète alimentant une sortie externe. | Erreur propagée jusqu’à la structure externe. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-038 | Sélecteur constant mais autre branche ordinaire incomplète. | Erreur dans la politique stricte proposée ; aucune exclusion implicite. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-039 | Sortie absente dans Faux avec type connu et défaut explicite valide. | Valide ; la valeur de remplacement est présente dans le sens validé. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-040 | Défaut activé mais type de sortie non résolu. | UNRESOLVED_TYPE ; le drapeau ne suffit pas. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-041 | Valeur de défaut incompatible avec le type de sortie. | INVALID_OUTPUT_DEFAULT. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-042 | Défaut activé et fil incompatible déjà présent dans la branche. | Erreur ; ne pas ignorer le fil. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-043 | Défaut activé et deux producteurs dans la branche. | Erreur de cardinalité ; pas de choix arbitraire. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-044 | Défaut activé et fragment incomplet associé au binding. | Erreur d’édition incomplète, pas de remplacement silencieux. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-045 | Default booléen false. | Valeur présente et valide, à ne pas confondre avec champ absent. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-046 | Default numérique zéro. | Valeur présente et valide, à ne pas traiter comme absence. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-047 | Default chaîne vide. | Valeur présente si le type l’autorise. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-048 | Tableau de taille fixe avec défaut tableau vide. | Erreur de forme, sauf définition de type explicitement différente. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-049 | Type de ressource sans défaut constructible. | Défaut refusé ; producteur ou type nullable explicite requis. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-050 | Suppression du mode défaut avec branches non câblées. | Les branches deviennent immédiatement invalides. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-051 | Ajout d’une branche avec politique stricte. | Nouvelle cellule de sortie non couverte ; erreur jusqu’à complétion. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-052 | Ajout d’une branche avec politique persistante valide. | Défaut applicable selon le contrat, visible et sérialisé. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-053 | Round-trip d’une politique de défaut. | Même résultat, même type et même couverture après réouverture. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-054 | Commande ponctuelle de génération de defaults puis ajout d’une branche. | Ne pas appliquer une politique persistante qui n’a jamais été déclarée. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-055 | Sélecteur entier dans un lecteur ne supportant que bool/string. | Refus explicite du profil ou du type ; pas de conversion cachée. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-056 | Sélecteur entier avec intervalles non chevauchants et default. | Valide après normalisation du contrat étendu. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-057 | Deux intervalles de cas qui se chevauchent sans règle de priorité. | OVERLAPPING_CASE_MATCH. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-058 | Valeur de cas hors plage du type du sélecteur. | Erreur statique. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-059 | Enum exhaustif dont on ajoute un élément, sans default. | Revalidation ; couverture insuffisante tant qu’aucune branche ne couvre le nouvel élément. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-060 | Enum avec default autorisé et nouveau membre. | Couverture de sélection conservée ; sorties du default toujours vérifiées. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-061 | Constante flottante reliée à une case entière par arrondi non explicite. | Refus si le contrat ne prévoit pas cette adaptation. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-062 | For de base sans count. | MISSING_LOOP_COUNT. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-063 | For avec count valide et corps vide sans sortie. | Valide. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-064 | For avec count constant négatif. | INVALID_LOOP_COUNT avant exécution. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-065 | For avec count dynamique devenant négatif. | Contrôle runtime selon le contrat, sans lancer des itérations invalides. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-066 | For pouvant exécuter zéro tour, sortie last_value sans zero_iteration_value. | MISSING_ZERO_ITERATION_VALUE. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-067 | For count = 0 avec zero_iteration_value valide. | La sortie vaut cette valeur et non un contenu mémoire indéfini. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-068 | For count = 3 avec sortie body complète et fallback valide. | Sortie de la dernière itération ; fallback non utilisé. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-069 | Fallback zéro itération valide mais sortie absente dans le corps. | Erreur de couverture du corps. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-070 | Fallback zéro itération de type incompatible. | Erreur de valeur ou de type. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-071 | For count = 0 contenant un nœud invalide dans le corps. | Erreur dans la politique stricte ; le compte zéro ne désactive pas le programme. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-072 | Deux régions body dans une For de base. | Erreur structurelle. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-073 | Écriture vers le terminal index en lecture seule. | Erreur de direction ou de contrat. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-074 | Index non utilisé. | Valide. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-075 | For auto-indexée sans count sous un profil qui l’autorise. | Compte dérivé conformément au contrat ; pas de faux mandatory. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-076 | Collecte conditionnelle sans aucun élément retenu. | Sortie vide typée, et non dernière valeur indéfinie. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-077 | Sortie anticipée et tableau annoncé de taille fixe non garantie. | Erreur de contrat de forme ou type dynamique requis. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-078 | While post-test sans producteur de condition. | MISSING_LOOP_CONDITION. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-079 | While de base avec condition false constante. | Exactement une itération normale. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-080 | While de base avec condition true constante. | Valide au sens du langage ; avertissement de non-terminaison possible. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-081 | Condition calculée par une case interne incomplète. | While invalide par propagation. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-082 | Présentation Stop if True sans inversion/normalisation de la polarité publiée. | Divergence à détecter par test de sémantique. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-083 | While post-test avec sortie définie et sans fallback zéro itération. | Valide pour ce point précis. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-084 | While pré-test d’un profil futur avec sortie sans cas zéro. | Erreur si zéro tour est possible et non défini. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-085 | Delay sans champ initial. | MISSING_STATE_INITIAL. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-086 | Delay avec initial de type incompatible. | Erreur de type ou de valeur. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-087 | Delay correctement initialisé dans une récurrence valide. | Cycle temporel autorisé sous réserve des autres règles. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-088 | Cycle A → B → A sans mémoire. | INVALID_COMBINATIONAL_CYCLE. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-089 | Composante avec Delay mais sous-cycle A ↔ B sans Delay. | INVALID_COMBINATIONAL_CYCLE malgré la présence d’une mémoire dans la composante. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-090 | Nœud stateful non temporel dans un cycle. | Ne rend pas le cycle légal par sa seule classification. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-091 | Cycle combinatoire dessiné à l’intérieur d’une boucle. | Toujours invalide ; la bordure ne fournit pas de mémoire. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-092 | Branche qui ne met pas à jour un état et ne définit pas de hold/passthrough. | Erreur de prochain état incomplet selon le contrat de la mémoire. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-093 | Deux instances indépendantes du même sous-FROG avec mémoire. | États distincts conformément au contrat, pas d’alias caché. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-094 | Région explicitement désactivée avec erreur sémantique interne. | Ne bloque pas la variante active si le profil d’exclusion le définit ; erreur conservée pour inspection. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-095 | Même région simplement masquée graphiquement. | Son erreur reste bloquante. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-096 | Diagram Disable sans région active dans le contrat proposé. | Configuration invalide. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-097 | Diagram Disable avec deux régions actives. | Configuration ambiguë. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-098 | Région active de Disable avec sortie non couverte. | UNBOUND_REGION_OUTPUT. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-099 | Conditional Disable avec symbole requis inconnu. | UNKNOWN_COMPILE_SYMBOL. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-100 | Plusieurs conditions de compilation vraies sans priorité définie. | AMBIGUOUS_COMPILE_SELECTION. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-101 | Dépendance uniquement présente dans une variante exclue. | Ne bloque pas la construction active ; contrôlable par audit toutes variantes. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-102 | Changement du symbole activant une branche incorrecte. | Invalidation et nouveau diagnostic bloquant. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-103 | Structure Event avec timeout optionnel non câblé. | Valide si l’attente indéfinie est définie par le contrat. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-104 | Cas Timeout dont une sortie commune est absente. | Erreur ou défaut explicitement autorisé, comme tout cas terminant normalement. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-105 | Lecture d’un champ de données propre à un autre événement. | Erreur de portée/type. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-106 | Séquence utilisant une donnée seulement produite dans un cadre futur. | Erreur de dépendance ou de portée. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-107 | Timed Loop avec période statiquement interdite. | Erreur de configuration. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-108 | Timed Loop correcte sur cible sans garantie requise. | Blocage de capacité, sans accuser un fil valide. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-109 | Structure In Place avec paire de bornes incohérente. | Erreur de contrat de frontière. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-110 | Référence temporaire sortant de sa durée de vie autorisée. | Erreur de portée/ressource. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-111 | Région parallèle avec deux producteurs non arbitrés d’une sortie. | Erreur ; pas de fusion implicite. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-112 | Add déplié avec a et b valides et six emplacements optionnels vides. | Valide ; géométrie ignorée pour l’arité active. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-113 | Add avec a valide et b absent. | Entrée requise manquante. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-114 | Add avec input_3 connecté mais de type invalide. | Erreur ; operand actif non ignoré. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-115 | Multiply variadique dans un lecteur dont le contrat reste binaire. | Refus explicite ou migration documentée ; pas d’omission d’opérande. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-116 | Appel dont le sous-FROG actif possède une erreur. | BROKEN_DEPENDENCY avec accès à la cause racine. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-117 | Fichier de fonction invalide mais non référencé par l’entrée lancée. | Ne bloque pas cette entrée ; peut bloquer un build global demandé. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-118 | Interface appelée modifiée après la validation de l’appelant. | Invalidation transitive et revalidation des ports. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-119 | Chemin d’appel statique introuvable. | MISSING_DEPENDENCY. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-120 | Sortie publique promise mais sans producteur ni politique explicite. | Erreur d’interface, même si aucun appelant n’est actuellement ouvert. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-121 | Widget supprimé encore référencé par le diagramme. | Erreur de référence sémantique. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-122 | Écriture vers une propriété UI en lecture seule. | Erreur de contrat. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-123 | Icône de palette présente, fournisseur runtime absent. | Pas de faux statut runnable. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-124 | Ajout d’une branche qui rend une sortie incomplète. | Run ne conserve pas l’ancien succès. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-125 | Undo de cet ajout. | Couverture et état restaurés, après contrôle de la bonne révision. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-126 | Déplacement d’un coude sans modification de binding. | Aucun changement de sens ni de validité. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-127 | Déplacement d’un nœud à travers une frontière structurelle. | Transaction sémantique et revalidation de portée. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-128 | Validation de R terminant après édition de R+1. | Résultat marqué ancien ; ne valide pas R+1. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-129 | Cible changée après un résultat de validation positif. | Capacités et variantes revalidées. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-130 | Artefact construit pour une ancienne révision. | ARTIFACT_REVISION_MISMATCH ; pas de lancement silencieux. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-131 | Programme valide mais runtime non disponible. | Blocage de lancement distinct de la validité du langage. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-132 | Avertissement de précision sans politique stricte. | Pas de blocage sémantique automatique. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-133 | Profil strict transformant une coercition risquée en refus explicite. | Refus cohérent dans Studio, CLI et backend. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-134 | Sortie non liée injectée artificiellement dans le FIR. | Backend refuse ; aucune valeur indéfinie de remplacement. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-135 | Structure inconnue sans validateur enregistré. | Unsupported ou erreur explicite ; jamais valid par défaut. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-136 | Annulation d’une exécution avant terminaison normale. | Aucun résultat de succès artificiel ; protocole d’annulation. | À qualifier — aucune preuve individuelle rattachée |
-| VAL-137 | Round-trip d’un graphe incomplet avec wire_fragments. | Travail conservé sans devenir exécutable artificiellement. | À qualifier — aucune preuve individuelle rattachée |
+| VAL-001 | Unparseable JSON document. | Reject semantic loading; retain text access if possible. | To qualify — no individual evidence attached |
+| VAL-002 | Duplicate node IDs in the same scope. | Blocking identity error. | To qualify — no individual evidence attached |
+| VAL-003 | Same local ID in two regions with distinct qualified paths. | Valid if scoped references are correct. | To qualify — no individual evidence attached |
+| VAL-004 | Wire to a deleted node. | Reference error; do not count the input as supplied. | To qualify — no individual evidence attached |
+| VAL-005 | Wire to a port removed by an interface change. | Port or signature error. | To qualify — no individual evidence attached |
+| VAL-006 | Two sources for one input. | Cardinality error. | To qualify — no individual evidence attached |
+| VAL-007 | One source with multiple destinations. | Valid if every destination is compatible. | To qualify — no individual evidence attached |
+| VAL-008 | Two wires cross without a shared binding. | Add no connection. | To qualify — no individual evidence attached |
+| VAL-009 | Direct wire between regions without an explicit boundary. | Scope error. | To qualify — no individual evidence attached |
+| VAL-010 | Incomplete wire fragment in an active region. | Saving possible; executable validation blocked. | To qualify — no individual evidence attached |
+| VAL-011 | Valid ordinary output without a consumer. | No error merely because it is unused. | To qualify — no individual evidence attached |
+| VAL-012 | Isolated node with an empty required input. | Error; do not implicitly erase it to permit Run. | To qualify — no individual evidence attached |
+| VAL-013 | Missing Required input. | Blocking error. | To qualify — no individual evidence attached |
+| VAL-014 | Missing Optional input with valid contractual default. | Valid; defined default value. | To qualify — no individual evidence attached |
+| VAL-015 | Missing Recommended input but complete contract. | Valid, possibly a warning. | To qualify — no individual evidence attached |
+| VAL-016 | Graphically present port absent from the effective contract. | Error; renderer must not invent a port. | To qualify — no individual evidence attached |
+| VAL-017 | Connection with permitted numeric coercion. | Valid; appropriate diagnostic or coercion dot. | To qualify — no individual evidence attached |
+| VAL-018 | Connection with an unauthorized conversion. | Type error. | To qualify — no individual evidence attached |
+| VAL-019 | Generic type unresolved after validation. | Explicit blocker, no implicit f64 fallback. | To qualify — no individual evidence attached |
+| VAL-020 | Incompatible fixed shapes where an operation requires equality. | Error before execution. | To qualify — no individual evidence attached |
+| VAL-021 | Two dynamic sizes that may differ. | Validation possible if the node defines a runtime check. | To qualify — no individual evidence attached |
+| VAL-022 | Wired producer that is itself invalid. | Consumer blocked by root cause, not declared ready. | To qualify — no individual evidence attached |
+| VAL-023 | Boolean Case with valid selector and outputs in True and False. | Valid. | To qualify — no individual evidence attached |
+| VAL-024 | Case without a selector. | MISSING_STRUCTURE_SELECTOR. | To qualify — no individual evidence attached |
+| VAL-025 | Boolean Case missing its False branch. | MISSING_CASE_REGION. | To qualify — no individual evidence attached |
+| VAL-026 | Boolean Case with two True branches. | DUPLICATE_CASE_MATCH or invalid cardinality. | To qualify — no individual evidence attached |
+| VAL-027 | Text Case without a default branch. | MISSING_DEFAULT_REGION. | To qualify — no individual evidence attached |
+| VAL-028 | Text Case with two default branches. | Ambiguous selection error. | To qualify — no individual evidence attached |
+| VAL-029 | Text Case with duplicate matches. | DUPLICATE_CASE_MATCH. | To qualify — no individual evidence attached |
+| VAL-030 | Output defined in True but absent from False. | UNBOUND_REGION_OUTPUT. | To qualify — no individual evidence attached |
+| VAL-031 | Default branch present but not producing result. | UNBOUND_REGION_OUTPUT: selection default does not cover the output. | To qualify — no individual evidence attached |
+| VAL-032 | Two outputs, only one covered in every branch. | Structure invalid for the remaining output. | To qualify — no individual evidence attached |
+| VAL-033 | Correct displayed branch, incorrect hidden branch. | Structure and Run marked invalid. | To qualify — no individual evidence attached |
+| VAL-034 | Incomplete output with no external consumer. | Error while that output remains declared. | To qualify — no individual evidence attached |
+| VAL-035 | Case without data output and two valid branches. | Valid subject to selector and other contracts. | To qualify — no individual evidence attached |
+| VAL-036 | Supplied boundary input unused in a branch. | No error merely because it is unused. | To qualify — no individual evidence attached |
+| VAL-037 | Incomplete inner Case feeding an outer output. | Error propagates to the outer structure. | To qualify — no individual evidence attached |
+| VAL-038 | Constant selector with another ordinary incomplete branch. | Error under the proposed strict policy; no implicit exclusion. | To qualify — no individual evidence attached |
+| VAL-039 | Output absent from False, with known type and valid explicit default. | Valid; replacement value present in validated meaning. | To qualify — no individual evidence attached |
+| VAL-040 | Default enabled but output type unresolved. | UNRESOLVED_TYPE; the flag alone is insufficient. | To qualify — no individual evidence attached |
+| VAL-041 | Default value incompatible with output type. | INVALID_OUTPUT_DEFAULT. | To qualify — no individual evidence attached |
+| VAL-042 | Default enabled with an already present incompatible branch wire. | Error; do not ignore the wire. | To qualify — no individual evidence attached |
+| VAL-043 | Default enabled with two producers in the branch. | Cardinality error; no arbitrary choice. | To qualify — no individual evidence attached |
+| VAL-044 | Default enabled with an incomplete binding fragment. | Incomplete-edit error, no silent replacement. | To qualify — no individual evidence attached |
+| VAL-045 | Boolean default false. | Present and valid value, not an absent field. | To qualify — no individual evidence attached |
+| VAL-046 | Numeric default zero. | Present and valid value, not absence. | To qualify — no individual evidence attached |
+| VAL-047 | Empty-string default. | Present value if the type allows it. | To qualify — no individual evidence attached |
+| VAL-048 | Fixed-size array with empty-array default. | Shape error unless the type is explicitly defined otherwise. | To qualify — no individual evidence attached |
+| VAL-049 | Resource type with no constructible default. | Reject default; require a producer or explicit nullable type. | To qualify — no individual evidence attached |
+| VAL-050 | Default mode removed with unwired branches. | Branches become immediately invalid. | To qualify — no individual evidence attached |
+| VAL-051 | Branch added under strict policy. | New output cell uncovered; error until completed. | To qualify — no individual evidence attached |
+| VAL-052 | Branch added with valid persistent policy. | Default applies contractually, visible and serialized. | To qualify — no individual evidence attached |
+| VAL-053 | Default-policy round trip. | Same result, type and coverage after reopening. | To qualify — no individual evidence attached |
+| VAL-054 | One-shot default generation, then branch addition. | Do not apply an undeclared persistent policy. | To qualify — no individual evidence attached |
+| VAL-055 | Integer selector in a bool/string-only reader. | Explicit profile/type refusal; no hidden conversion. | To qualify — no individual evidence attached |
+| VAL-056 | Integer selector with non-overlapping ranges and default. | Valid after extended-contract normalization. | To qualify — no individual evidence attached |
+| VAL-057 | Overlapping case ranges without priority rules. | OVERLAPPING_CASE_MATCH. | To qualify — no individual evidence attached |
+| VAL-058 | Case value outside the selector type's range. | Static error. | To qualify — no individual evidence attached |
+| VAL-059 | Item added to exhaustive Enum without default. | Revalidate; insufficient coverage until a branch covers the new item. | To qualify — no individual evidence attached |
+| VAL-060 | New Enum member with allowed default. | Selection coverage retained; default outputs still checked. | To qualify — no individual evidence attached |
+| VAL-061 | Floating constant into integer Case through non-explicit rounding. | Reject if the contract does not define this adaptation. | To qualify — no individual evidence attached |
+| VAL-062 | Basic For without count. | MISSING_LOOP_COUNT. | To qualify — no individual evidence attached |
+| VAL-063 | For with valid count and empty body without output. | Valid. | To qualify — no individual evidence attached |
+| VAL-064 | For with constant negative count. | INVALID_LOOP_COUNT before execution. | To qualify — no individual evidence attached |
+| VAL-065 | For with dynamic count becoming negative. | Contractual runtime check; no invalid iterations launched. | To qualify — no individual evidence attached |
+| VAL-066 | For may execute zero iterations; last_value without zero_iteration_value. | MISSING_ZERO_ITERATION_VALUE. | To qualify — no individual evidence attached |
+| VAL-067 | For count = 0 with valid zero_iteration_value. | Output equals that value, not undefined memory. | To qualify — no individual evidence attached |
+| VAL-068 | For count = 3 with complete body output and valid fallback. | Last iteration's output; fallback unused. | To qualify — no individual evidence attached |
+| VAL-069 | Valid zero-iteration fallback but missing body output. | Body-coverage error. | To qualify — no individual evidence attached |
+| VAL-070 | Incompatibly typed zero-iteration fallback. | Value or type error. | To qualify — no individual evidence attached |
+| VAL-071 | For count = 0 with an invalid body node. | Error under strict policy; zero count does not disable the program. | To qualify — no individual evidence attached |
+| VAL-072 | Two body regions in a basic For. | Structural error. | To qualify — no individual evidence attached |
+| VAL-073 | Write to read-only index terminal. | Direction or contract error. | To qualify — no individual evidence attached |
+| VAL-074 | Unused index. | Valid. | To qualify — no individual evidence attached |
+| VAL-075 | Auto-indexed For without count under a permitting profile. | Count derived contractually; no false mandatory requirement. | To qualify — no individual evidence attached |
+| VAL-076 | Conditional collection retains no element. | Typed empty output, not an undefined last value. | To qualify — no individual evidence attached |
+| VAL-077 | Early exit with an unguaranteed declared fixed-size array. | Shape-contract error or dynamic type required. | To qualify — no individual evidence attached |
+| VAL-078 | Post-test While without condition producer. | MISSING_LOOP_CONDITION. | To qualify — no individual evidence attached |
+| VAL-079 | Basic While with constant false condition. | Exactly one normal iteration. | To qualify — no individual evidence attached |
+| VAL-080 | Basic While with constant true condition. | Language-valid; nontermination warning possible. | To qualify — no individual evidence attached |
+| VAL-081 | Condition from an incomplete inner Case. | While invalid by propagation. | To qualify — no individual evidence attached |
+| VAL-082 | Stop if True presentation without published polarity inversion/normalization. | Semantic test must detect the divergence. | To qualify — no individual evidence attached |
+| VAL-083 | Post-test While with defined output and no zero-iteration fallback. | Valid for this particular requirement. | To qualify — no individual evidence attached |
+| VAL-084 | Future-profile pre-test While with output but no zero case. | Error if zero iterations are possible and undefined. | To qualify — no individual evidence attached |
+| VAL-085 | Delay without initial field. | MISSING_STATE_INITIAL. | To qualify — no individual evidence attached |
+| VAL-086 | Delay with incompatible initial type. | Type or value error. | To qualify — no individual evidence attached |
+| VAL-087 | Correctly initialized Delay in valid recurrence. | Temporal cycle allowed subject to other rules. | To qualify — no individual evidence attached |
+| VAL-088 | A → B → A cycle without memory. | INVALID_COMBINATIONAL_CYCLE. | To qualify — no individual evidence attached |
+| VAL-089 | Component has Delay but A ↔ B subcycle has none. | INVALID_COMBINATIONAL_CYCLE despite memory elsewhere in the component. | To qualify — no individual evidence attached |
+| VAL-090 | Non-temporal stateful node in a cycle. | Its classification alone does not legalize the cycle. | To qualify — no individual evidence attached |
+| VAL-091 | Combinational cycle drawn inside a loop. | Still invalid; a border supplies no memory. | To qualify — no individual evidence attached |
+| VAL-092 | Branch neither updates state nor defines hold/passthrough. | Incomplete-next-state error under the memory contract. | To qualify — no individual evidence attached |
+| VAL-093 | Two independent instances of the same stateful sub-FROG. | Distinct states as contracted, no hidden alias. | To qualify — no individual evidence attached |
+| VAL-094 | Explicitly disabled region with internal semantic error. | Does not block the active variant if the exclusion profile says so; error retained for inspection. | To qualify — no individual evidence attached |
+| VAL-095 | Same region merely graphically hidden. | Its error remains blocking. | To qualify — no individual evidence attached |
+| VAL-096 | Diagram Disable without active region under the proposed contract. | Invalid configuration. | To qualify — no individual evidence attached |
+| VAL-097 | Diagram Disable with two active regions. | Ambiguous configuration. | To qualify — no individual evidence attached |
+| VAL-098 | Active Disable region with uncovered output. | UNBOUND_REGION_OUTPUT. | To qualify — no individual evidence attached |
+| VAL-099 | Conditional Disable with unknown required symbol. | UNKNOWN_COMPILE_SYMBOL. | To qualify — no individual evidence attached |
+| VAL-100 | Several true compile conditions without defined priority. | AMBIGUOUS_COMPILE_SELECTION. | To qualify — no individual evidence attached |
+| VAL-101 | Dependency only in an excluded variant. | Does not block active build; an all-variants audit may check it. | To qualify — no individual evidence attached |
+| VAL-102 | Symbol change activates an incorrect branch. | Invalidation and a new blocking diagnostic. | To qualify — no individual evidence attached |
+| VAL-103 | Event Structure with unwired optional timeout. | Valid if indefinite waiting is contractually defined. | To qualify — no individual evidence attached |
+| VAL-104 | Timeout case missing a shared output. | Error or explicitly allowed default, like any normally terminating case. | To qualify — no individual evidence attached |
+| VAL-105 | Reading a data field belonging to another event. | Scope/type error. | To qualify — no individual evidence attached |
+| VAL-106 | Sequence uses data produced only in a future frame. | Dependency or scope error. | To qualify — no individual evidence attached |
+| VAL-107 | Timed Loop with statically forbidden period. | Configuration error. | To qualify — no individual evidence attached |
+| VAL-108 | Correct Timed Loop on a target lacking a required guarantee. | Capability block, without blaming a valid wire. | To qualify — no individual evidence attached |
+| VAL-109 | In Place Structure with inconsistent boundary pair. | Boundary-contract error. | To qualify — no individual evidence attached |
+| VAL-110 | Temporary reference escapes its permitted lifetime. | Scope/resource error. | To qualify — no individual evidence attached |
+| VAL-111 | Parallel region with two unarbitrated producers of one output. | Error; no implicit merge. | To qualify — no individual evidence attached |
+| VAL-112 | Expanded Add with valid a/b and six empty optional slots. | Valid; geometry does not define active arity. | To qualify — no individual evidence attached |
+| VAL-113 | Add with valid a but missing b. | Missing required input. | To qualify — no individual evidence attached |
+| VAL-114 | Add with connected but invalidly typed input_3. | Error; active operand is not ignored. | To qualify — no individual evidence attached |
+| VAL-115 | Variadic Multiply in a reader with a binary contract. | Explicit refusal or documented migration; no omitted operand. | To qualify — no individual evidence attached |
+| VAL-116 | Call whose active sub-FROG has an error. | BROKEN_DEPENDENCY with access to root cause. | To qualify — no individual evidence attached |
+| VAL-117 | Invalid function file unreferenced by the launched entry. | Does not block that entry; may block a requested global build. | To qualify — no individual evidence attached |
+| VAL-118 | Called interface changes after caller validation. | Transitive invalidation and port revalidation. | To qualify — no individual evidence attached |
+| VAL-119 | Static call path not found. | MISSING_DEPENDENCY. | To qualify — no individual evidence attached |
+| VAL-120 | Promised public output without producer or explicit policy. | Interface error even with no caller currently open. | To qualify — no individual evidence attached |
+| VAL-121 | Deleted widget still referenced by the diagram. | Semantic reference error. | To qualify — no individual evidence attached |
+| VAL-122 | Write to read-only UI property. | Contract error. | To qualify — no individual evidence attached |
+| VAL-123 | Palette icon present, runtime provider absent. | No false runnable status. | To qualify — no individual evidence attached |
+| VAL-124 | Added branch makes an output incomplete. | Run does not retain the old success. | To qualify — no individual evidence attached |
+| VAL-125 | Undo that addition. | Coverage/state restored after checking the correct revision. | To qualify — no individual evidence attached |
+| VAL-126 | Move a wire bend without changing binding. | No change to meaning or validity. | To qualify — no individual evidence attached |
+| VAL-127 | Move a node across a structural boundary. | Semantic transaction and scope revalidation. | To qualify — no individual evidence attached |
+| VAL-128 | Validation of R finishes after editing R+1. | Result marked stale; does not validate R+1. | To qualify — no individual evidence attached |
+| VAL-129 | Target changed after successful validation. | Capabilities and variants revalidated. | To qualify — no individual evidence attached |
+| VAL-130 | Artifact built for an old revision. | ARTIFACT_REVISION_MISMATCH; no silent launch. | To qualify — no individual evidence attached |
+| VAL-131 | Valid program with unavailable runtime. | Launch block distinct from language validity. | To qualify — no individual evidence attached |
+| VAL-132 | Precision warning without strict policy. | No automatic semantic block. | To qualify — no individual evidence attached |
+| VAL-133 | Strict profile explicitly rejects risky coercion. | Consistent refusal in Studio, CLI and backend. | To qualify — no individual evidence attached |
+| VAL-134 | Unbound output artificially injected into FIR. | Backend refuses; no undefined replacement value. | To qualify — no individual evidence attached |
+| VAL-135 | Unknown structure without a registered validator. | Unsupported or explicit error; never valid by default. | To qualify — no individual evidence attached |
+| VAL-136 | Execution cancelled before normal termination. | No fabricated success result; cancellation protocol. | To qualify — no individual evidence attached |
+| VAL-137 | Round trip of an incomplete graph with wire_fragments. | Work preserved without becoming artificially executable. | To qualify — no individual evidence attached |

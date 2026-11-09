@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Notifier : ignorer un signal précédent sans l'effacer",
+  "title": "Notifier: ignore a previous signal without clearing it",
   "metadata": {
-    "name": "Notifier : ignorer un signal précédent sans l'effacer",
+    "name": "Notifier: ignore a previous signal without clearing it",
     "name_source": "document",
-    "description": "Send publie 42. Status peut lire ce signal sans le consommer. Wait avec ignore_previous=True et timeout=0 demande un signal futur : timed_out=True et notification=0. Release retourne pourtant toujours last_notification=42, car ignorer n'efface pas la ressource.\n\nNotifier : ignorer un signal précédent sans l'effacer\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nlatest (f64) = 42\nnotification (f64) = 0\ntimed_out (bool) = true\nlast (f64) = 42\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+    "description": "Send publishes 42. Status can read that signal without consuming it. Wait with ignore_previous=True and timeout=0 requests a future signal: timed_out=True and notification=0. Release still returns last_notification=42 because ignoring a signal does not clear the resource.\n\nNotifier: ignore a previous signal without clearing it\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nlatest (f64) = 42\nnotification (f64) = 0\ntimed_out (bool) = true\nlast (f64) = 42\nerror_status (bool) = false\nerror_code (i32) = 0\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -756,7 +756,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Notifier : ignorer un signal précédent sans l'effacer\nNotifier : ignorer un signal précédent sans l'effacer\nEntrées -> opération -> indicateurs. Résultat attendu : latest (f64) = 42\nnotification (f64) = 0\ntimed_out (bool) = true\nlast (f64) = 42\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+        "text": "Notifier: ignore a previous signal without clearing it\nNotifier: ignore a previous signal without clearing it\nInputs -> operation -> indicators. Expected result: latest (f64) = 42\nnotification (f64) = 0\ntimed_out (bool) = true\nlast (f64) = 42\nerror_status (bool) = false\nerror_code (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

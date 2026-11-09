@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Max & Min — ascending u32",
     "name_source": "document",
-    "description": "Max/Min conserve les types exacts et publient les deux sorties de la même activation. Le profil authored v2 ignore un seul NaN; le profil explicite historique exact.v1 reste séparé.\nEntrées : x (u32) = 2; y (u32) = 7.\nRésultats attendus : max (u32) = 7; min (u32) = 2.\n\nCompatible comparable x,y -> max/min of the common type.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-max (u32) = 7\noutput-min (u32) = 2\n",
+    "description": "Max/Min preserve exact types and publish both outputs from the same activation. The authored v2 profile ignores a single NaN; the explicit historical exact.v1 profile remains separate.\nInputs: x (u32) = 2; y (u32) = 7.\nExpected results: max (u32) = 7; min (u32) = 2.\n\nCompatible comparable x,y -> max/min of the common type.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-max (u32) = 7\noutput-min (u32) = 2\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -361,7 +361,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Max & Min — ascending u32\nCompatible comparable x,y -> max/min of the common type.\nEntrées -> opération -> indicateurs. Résultat attendu : output-max (u32) = 7\noutput-min (u32) = 2\n",
+        "text": "Max & Min — ascending u32\nCompatible comparable x,y -> max/min of the common type.\nInputs -> operation -> indicators. Expected result: output-max (u32) = 7\noutput-min (u32) = 2\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

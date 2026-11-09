@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Quotient & Remainder — signed x7 yneg3",
     "name_source": "document",
-    "description": "q=floor(x/y), r=x-y*q. Les identifiants persistés historiques sont conservés: quotient est la sortie R (reste), remainder est la sortie IQ (quotient entier). Les libellés expliquent ce décalage sans casser les fils existants.\nEntrées : x (i32) = 7; y (i32) = -3.\nRésultats attendus : quotient (i32) = -2; remainder (i32) = -3.\n\nFloor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure.\n\nMode: execution. Profile: studio-draft. Capability: explicit private Simulation; not a compiled-native claim.\nExpected:\noutput-quotient (i32) = -2\noutput-remainder (i32) = -3\n",
+    "description": "q=floor(x/y), r=x-y*q. Historical persisted identifiers are preserved: quotient is output R (remainder), and remainder is output IQ (integer quotient). Labels explain this mismatch without breaking existing wires.\nInputs: x (i32) = 7; y (i32) = -3.\nExpected results: quotient (i32) = -2; remainder (i32) = -3.\n\nFloor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure.\n\nMode: execution. Profile: studio-draft. Capability: explicit private Simulation; not a compiled-native claim.\nExpected:\noutput-quotient (i32) = -2\noutput-remainder (i32) = -3\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -361,7 +361,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Quotient & Remainder — signed x7 yneg3\nFloor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure.\nEntrées -> opération -> indicateurs. Résultat attendu : output-quotient (i32) = -2\noutput-remainder (i32) = -3\n",
+        "text": "Quotient & Remainder — signed x7 yneg3\nFloor quotient q=floor(x/y), remainder r=x-y*q in the promoted numeric structure.\nInputs -> operation -> indicators. Expected result: output-quotient (i32) = -2\noutput-remainder (i32) = -3\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

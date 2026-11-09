@@ -1,0 +1,94 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "Full nominal U32 must not collapse to physical U32",
+    "description": "Declared negative for the limited reference C bridge; common Frontend Source/FIR remains valid."
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": []
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "constant_profile": "frog.studio.composed-program@1",
+        "id": "nominal-u32",
+        "kind": "constant",
+        "studio_ports": [
+          {
+            "direction": "output",
+            "id": "value",
+            "studio_type_schema": {
+              "canonical": "enum<\"test.collection.nonzero\",u32>",
+              "children": [
+                {
+                  "canonical": "u32",
+                  "children": [],
+                  "choice_kind": "none",
+                  "choices": [],
+                  "field_names": []
+                }
+              ],
+              "choice_kind": "enum",
+              "choices": [
+                {
+                  "disabled": false,
+                  "id": "two",
+                  "label": "Two",
+                  "value": 2,
+                  "visible": true
+                },
+                {
+                  "disabled": true,
+                  "id": "seven",
+                  "label": "Seven",
+                  "value": 7,
+                  "visible": false
+                }
+              ],
+              "field_names": []
+            },
+            "type": "u32"
+          }
+        ],
+        "studio_type_schema": {
+          "canonical": "enum<\"test.collection.nonzero\",u32>",
+          "children": [
+            {
+              "canonical": "u32",
+              "children": [],
+              "choice_kind": "none",
+              "choices": [],
+              "field_names": []
+            }
+          ],
+          "choice_kind": "enum",
+          "choices": [
+            {
+              "disabled": false,
+              "id": "two",
+              "label": "Two",
+              "value": 2,
+              "visible": true
+            },
+            {
+              "disabled": true,
+              "id": "seven",
+              "label": "Seven",
+              "value": 7,
+              "visible": false
+            }
+          ],
+          "field_names": []
+        },
+        "type": "u32",
+        "value": 2
+      }
+    ],
+    "edges": [],
+    "profile": "frog.studio.composed-program@1"
+  },
+  "front_panel": {
+    "widgets": []
+  }
+}

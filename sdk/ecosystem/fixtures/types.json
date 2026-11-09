@@ -1,0 +1,14 @@
+{
+  "profile": "frog.frontend.type-definitions@1",
+  "identity": "example.types",
+  "version": "1",
+  "definitions": {
+    "Count": {
+      "canonical": "i64",
+      "children": [],
+      "choice_kind": "none",
+      "choices": [],
+      "field_names": []
+    }
+  }
+}

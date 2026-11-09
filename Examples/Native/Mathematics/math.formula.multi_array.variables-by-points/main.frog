@@ -552,7 +552,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Evaluate named variables over three columns\nThe FROG profile stores one row per variable and one column per point. 10*a+b over rows [1,2,3] and [4,5,6] gives [14,25,36].\nEntrées -> opération -> indicateurs. Résultat attendu : output-y_values (array<f64>) = [14,25,36]\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
+        "text": "Evaluate named variables over three columns\nThe FROG profile stores one row per variable and one column per point. 10*a+b over rows [1,2,3] and [4,5,6] gives [14,25,36].\nInputs -> operation -> indicators. Expected result: output-y_values (array<f64>) = [14,25,36]\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

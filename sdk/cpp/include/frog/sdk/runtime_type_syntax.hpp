@@ -124,7 +124,7 @@ private:
         const auto begin = position_;
         while (position_ < value_.size() && value_[position_] != ',' && value_[position_] != '>') ++position_;
         const auto scalar = value_.substr(begin, position_ - begin);
-        for (const auto name : {"bool", "i8", "i16", "i32", "i64", "u8", "u16", "u32", "u64", "f32", "f64", "string", "path"})
+        for (const auto name : {"bool", "i4", "i8", "i16", "i32", "i64", "u4", "u8", "u16", "u32", "u64", "f32", "f64", "string", "path"})
             if (scalar == name) return true;
         if (!transportOnly) for (const auto name : {"c32", "c64", "fxp", "cfx", "timestamp", "variant"}) if (scalar == name) return true;
         return false;

@@ -1,0 +1,758 @@
+#pragma once
+
+#include "frog/sdk/runtime_type_syntax.hpp"
+
+#include <algorithm>
+#include <array>
+#include <cstdint>
+#include <optional>
+#include <memory>
+#include <limits>
+#include <span>
+#include <string>
+#include <string_view>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <variant>
+#include <vector>
+
+namespace frog::sdk::runtime {
+
+struct ProtocolVersion {
+    std::uint16_t major = 1U;
+    std::uint16_t minor = 0U;
+
+    [[nodiscard]] bool operator==(const ProtocolVersion &) const noexcept = default;
+};
+
+inline constexpr ProtocolVersion kProtocolVersion{ 1U, 0U };
+inline constexpr std::uint32_t kArtifactSchemaVersion = 1U;
+inline constexpr std::uint32_t kTypedArtifactSchemaVersion = 2U;
+// Local packed rank-one f64 transport; schema2 Record/Event is unchanged.
+inline constexpr std::uint32_t kPackedF64ArrayArtifactSchemaVersion = 3U;
+inline constexpr std::size_t kMaximumF64ArrayElements = UINT32_MAX;
+inline constexpr std::size_t kMaximumF64ArrayPayloadBytes =
+    std::uint64_t{UINT32_MAX}*sizeof(double)>(std::numeric_limits<std::size_t>::max)()
+        ? (std::numeric_limits<std::size_t>::max)()
+        : static_cast<std::size_t>(std::uint64_t{UINT32_MAX}*sizeof(double));
+inline constexpr std::string_view kPackedF64ArrayProfile = "frog.studio.array.real1d@1";
+
+template <typename Tag>
+struct StableId {
+    std::string value;
+
+    [[nodiscard]] bool empty() const noexcept { return value.empty(); }
+    [[nodiscard]] explicit operator bool() const noexcept { return !empty(); }
+    [[nodiscard]] bool operator==(const StableId &) const noexcept = default;
+};
+
+struct ArtifactIdTag;
+struct DocumentIdTag;
+struct SessionIdTag;
+struct NodeIdTag;
+struct PortIdTag;
+struct EdgeIdTag;
+struct WidgetIdTag;
+struct SourceIdentityIdTag;
+
+using ArtifactId = StableId<ArtifactIdTag>;
+using DocumentId = StableId<DocumentIdTag>;
+using SessionId = StableId<SessionIdTag>;
+using NodeId = StableId<NodeIdTag>;
+using PortId = StableId<PortIdTag>;
+using EdgeId = StableId<EdgeIdTag>;
+using WidgetId = StableId<WidgetIdTag>;
+using SourceIdentityId = StableId<SourceIdentityIdTag>;
+
+enum class ValueCategory {
+    Unknown,
+    Boolean,
+    SignedInteger,
+    UnsignedInteger,
+    FloatingPoint,
+    Complex,
+    FixedPoint,
+    String,
+    Path,
+    Array,
+    Cluster,
+    ObjectReference,
+    // Local frog.studio.ipe@1 carriers, never a claim of published transport.
+    Variant, Map, Timestamp, Set
+};
+
+struct ValueType {
+    std::string canonicalName;
+    ValueCategory category = ValueCategory::Unknown;
+    std::uint16_t bitWidth = 0U;
+    std::uint8_t rank = 0U;
+    std::string elementType;
+
+    [[nodiscard]] bool known() const noexcept {
+        return category != ValueCategory::Unknown && !canonicalName.empty();
+    }
+
+    [[nodiscard]] bool isNumeric() const noexcept {
+        return category == ValueCategory::SignedInteger ||
+            category == ValueCategory::UnsignedInteger ||
+            category == ValueCategory::FloatingPoint ||
+            category == ValueCategory::Complex ||
+            category == ValueCategory::FixedPoint;
+    }
+
+    [[nodiscard]] bool operator==(const ValueType &) const noexcept = default;
+};
+
+[[nodiscard]] inline ValueType valueTypeFromCanonicalName(std::string_view name) {
+    const auto scalar = [name](ValueCategory category, std::uint16_t bits = 0U) {
+        return ValueType{ std::string(name), category, bits, 0U, {} };
+    };
+
+    if (name == "bool") return scalar(ValueCategory::Boolean, 1U);
+    if (name == "i4") return scalar(ValueCategory::SignedInteger, 4U);
+    if (name == "i8") return scalar(ValueCategory::SignedInteger, 8U);
+    if (name == "i16") return scalar(ValueCategory::SignedInteger, 16U);
+    if (name == "i32") return scalar(ValueCategory::SignedInteger, 32U);
+    if (name == "i64") return scalar(ValueCategory::SignedInteger, 64U);
+    if (name == "u4") return scalar(ValueCategory::UnsignedInteger, 4U);
+    if (name == "u8") return scalar(ValueCategory::UnsignedInteger, 8U);
+    if (name == "u16") return scalar(ValueCategory::UnsignedInteger, 16U);
+    if (name == "u32") return scalar(ValueCategory::UnsignedInteger, 32U);
+    if (name == "u64") return scalar(ValueCategory::UnsignedInteger, 64U);
+    if (name == "f32") return scalar(ValueCategory::FloatingPoint, 32U);
+    if (name == "f64") return scalar(ValueCategory::FloatingPoint, 64U);
+    if (name == "c32") return scalar(ValueCategory::Complex, 64U);
+    if (name == "c64") return scalar(ValueCategory::Complex, 128U);
+    if (name == "fxp" || name == "cfx") return scalar(ValueCategory::FixedPoint);
+    if (name == "string") return scalar(ValueCategory::String);
+    if (name == "path") return scalar(ValueCategory::Path);
+    if (name == "variant") return scalar(ValueCategory::Variant);
+    if (name == "timestamp") return scalar(ValueCategory::Timestamp);
+    if (name.starts_with("map<") && structural_detail::TypeSyntax(name).collection()) return scalar(ValueCategory::Map);
+    if (name.starts_with("set<") && structural_detail::TypeSyntax(name).collection()) {
+        auto t=scalar(ValueCategory::Set);t.elementType=std::string(name.substr(4,name.size()-5));return t;
+    }
+    if (name.starts_with("array<") && structural_detail::TypeSyntax(name).collection()) {
+        auto body=name.substr(6,name.size()-7);std::uint8_t rank=1;
+        std::size_t comma=std::string_view::npos;unsigned nested=0;bool quoted=false,escaped=false;
+        for(std::size_t i=0;i<body.size();++i){const auto c=body[i];if(quoted){if(escaped)escaped=false;else if(c=='\\')escaped=true;else if(c=='"')quoted=false;continue;}if(c=='"')quoted=true;else if(c=='<')++nested;else if(c=='>')--nested;else if(c==','&&!nested){comma=i;break;}}
+        if(comma!=std::string_view::npos){
+            const auto digits=body.substr(comma+6);unsigned count=0;
+            for(const auto ch:digits){if(ch<'0'||ch>'9'||count>16)return {};count=count*10+unsigned(ch-'0');}
+            if(!count||count>16)return {};rank=static_cast<std::uint8_t>(count);body=body.substr(0,comma);
+        }
+        return ValueType{std::string(name),ValueCategory::Array,0,rank,std::string(body)};
+    }
+
+    constexpr std::string_view arrayPrefix = "array:";
+    if (name.starts_with(arrayPrefix) && name.size() > arrayPrefix.size()) {
+        return ValueType{
+            std::string(name),
+            ValueCategory::Array,
+            0U,
+            1U,
+            std::string(name.substr(arrayPrefix.size()))
+        };
+    }
+    if (name.starts_with("cluster<") && structural_detail::TypeSyntax(name).record())
+        return scalar(ValueCategory::Cluster);
+    if (name.starts_with("ref<") && structural_detail::TypeSyntax(name).reference())
+        return scalar(ValueCategory::ObjectReference);
+    return ValueType{ std::string(name), ValueCategory::Unknown, 0U, 0U, {} };
+}
+
+struct RuntimeValueOwner {
+    std::string id, sourceDigest;
+    std::uint64_t epoch = 0, sourceRevision = 0, artifactRevision = 0;
+    bool operator==(const RuntimeValueOwner &) const noexcept = default;
+};
+inline bool runtimeValueOwnerValid(const RuntimeValueOwner &owner) noexcept {
+    return structural_detail::identity(owner.id) && owner.epoch != 0 && owner.sourceDigest.size() == 64 &&
+        std::all_of(owner.sourceDigest.begin(), owner.sourceDigest.end(), [](char ch) {
+            return (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F');
+        });
+}
+namespace codec_detail { class Reader; }
+class ImmutableF64Array;
+using RuntimeF64Array = std::shared_ptr<const ImmutableF64Array>;
+enum class F64ArrayFailure { None, OwnerInvalid, ElementLimit, NonFinite, PayloadLimit, ResourceFailure };
+struct F64ArrayCreateResult {
+    RuntimeF64Array value;
+    F64ArrayFailure failure = F64ArrayFailure::None;
+    [[nodiscard]] bool accepted() const noexcept { return value && failure == F64ArrayFailure::None; }
+};
+[[nodiscard]] inline ValueType f64ArrayValueType() { return valueTypeFromCanonicalName("array:f64"); }
+[[nodiscard]] inline F64ArrayCreateResult makeRuntimeF64Array(
+    std::span<const double>, const RuntimeValueOwner &, std::size_t availablePayloadBytes);
+// Only the factory and the checked schema3 decoder can seal private storage.
+// No mutable caller buffer is adopted by the public factory.
+class ImmutableF64Array final {
+public:
+    [[nodiscard]] std::span<const double> elements() const noexcept { return values_; }
+    [[nodiscard]] std::array<std::uint32_t,1> shape() const noexcept { return {static_cast<std::uint32_t>(values_.size())}; }
+    [[nodiscard]] std::size_t payloadBytes() const noexcept { return values_.size() * sizeof(double); }
+    [[nodiscard]] const RuntimeValueOwner &owner() const noexcept { return owner_; }
+    [[nodiscard]] bool validForOwner(const RuntimeValueOwner &owner) const noexcept { return owner == owner_ && runtimeValueOwnerValid(owner_); }
+private:
+    friend F64ArrayCreateResult makeRuntimeF64Array(std::span<const double>, const RuntimeValueOwner &, std::size_t);
+    friend class codec_detail::Reader;
+    ImmutableF64Array(RuntimeValueOwner owner, std::vector<double> values) : owner_(std::move(owner)), values_(std::move(values)) {}
+    const RuntimeValueOwner owner_;
+    const std::vector<double> values_;
+};
+namespace array_detail {
+inline std::optional<std::size_t> elementCount(std::span<const std::uint32_t> shape) noexcept {
+    if(shape.empty())return {};
+    for(const auto extent:shape)if(!extent)return 0;
+    std::uint64_t count=1;
+    for(const auto extent:shape){if(count>UINT32_MAX/extent)return {};count*=extent;}
+    if(count>(std::numeric_limits<std::size_t>::max)())return {};
+    return static_cast<std::size_t>(count);
+}
+inline bool descriptor(const ValueType &type) noexcept {
+    return type.canonicalName == "array:f64" && type.category == ValueCategory::Array &&
+        type.bitWidth == 0 && type.rank == 1 && type.elementType == "f64";
+}
+}
+class CompoundRuntimeValue;
+using RuntimeValue = std::variant<
+    std::monostate,
+    bool,
+    std::int64_t,
+    std::uint64_t,
+    double,
+    std::string,
+    std::shared_ptr<const CompoundRuntimeValue>,
+    RuntimeF64Array>;
+
+struct RuntimeNamedField {
+    std::string id;
+    ValueType type;
+    RuntimeValue value;
+};
+// Immutable in-process carrier. Record implementations own validated fields;
+// references are borrowed capabilities backed by the host registry.
+class CompoundRuntimeValue {
+public:
+    virtual ~CompoundRuntimeValue() = default;
+    virtual std::string_view canonicalType() const noexcept = 0;
+    virtual bool isReference() const noexcept = 0;
+    virtual bool valid() const noexcept = 0;
+    virtual bool validForOwner(const RuntimeValueOwner &) const noexcept = 0;
+    virtual std::span<const RuntimeNamedField> fields() const noexcept = 0;
+};
+
+[[nodiscard]] inline bool runtimeValueMatches(
+    const RuntimeValue &value,
+    const ValueType &type) noexcept {
+    if (std::holds_alternative<std::monostate>(value)) {
+        return true;
+    }
+    switch (type.category) {
+    case ValueCategory::Boolean:
+        return std::holds_alternative<bool>(value);
+    case ValueCategory::SignedInteger:
+        return std::holds_alternative<std::int64_t>(value);
+    case ValueCategory::UnsignedInteger:
+        return std::holds_alternative<std::uint64_t>(value);
+    case ValueCategory::FloatingPoint:
+        return std::holds_alternative<double>(value);
+    case ValueCategory::String:
+    case ValueCategory::Path:
+        return std::holds_alternative<std::string>(value);
+    case ValueCategory::Array: {
+        const auto *array = std::get_if<RuntimeF64Array>(&value);
+        if(array_detail::descriptor(type))return array && *array && (*array)->validForOwner((*array)->owner());
+        const auto *compound=std::get_if<std::shared_ptr<const CompoundRuntimeValue>>(&value);
+        return compound && *compound && !(*compound)->isReference() && (*compound)->canonicalType()==type.canonicalName && (*compound)->valid();
+    }
+    case ValueCategory::Complex:
+    case ValueCategory::Cluster:
+    case ValueCategory::Variant:
+    case ValueCategory::Map:
+    case ValueCategory::Set:
+    case ValueCategory::Timestamp:
+    case ValueCategory::ObjectReference: {
+        const auto *compound = std::get_if<std::shared_ptr<const CompoundRuntimeValue>>(&value);
+        return compound && *compound && (*compound)->valid() &&
+            (*compound)->canonicalType() == type.canonicalName &&
+            (*compound)->isReference() == (type.category == ValueCategory::ObjectReference);
+    }
+    default:
+        return false;
+    }
+}
+
+enum class PortDirection { Input, Output };
+enum class PortRequirement { Required, Recommended, Optional };
+enum class PortCardinality { Single, Variadic };
+enum class ConnectionPolicy {
+    Exact,
+    NumericImplicit,
+    NumericExplicit,
+    IntegerExplicit,
+    AnyExplicit
+};
+
+[[nodiscard]] inline bool valueTypesCompatible(
+    const ValueType &source,
+    const ValueType &sink,
+    ConnectionPolicy policy) noexcept {
+    if (!source.known() || !sink.known()) {
+        return false;
+    }
+    if (source == sink) {
+        return true;
+    }
+
+    const auto isInteger = [](const ValueType &type) noexcept {
+        return type.category == ValueCategory::SignedInteger ||
+            type.category == ValueCategory::UnsignedInteger;
+    };
+    switch (policy) {
+    case ConnectionPolicy::Exact:
+        return false;
+    case ConnectionPolicy::NumericImplicit:
+    case ConnectionPolicy::NumericExplicit:
+        return source.isNumeric() && sink.isNumeric();
+    case ConnectionPolicy::IntegerExplicit:
+        return isInteger(source) && isInteger(sink);
+    case ConnectionPolicy::AnyExplicit:
+        return true;
+    }
+    return false;
+}
+
+struct RuntimePort {
+    PortId id;
+    std::string displayName;
+    PortDirection direction = PortDirection::Input;
+    ValueType valueType;
+    PortRequirement requirement = PortRequirement::Required;
+    PortCardinality cardinality = PortCardinality::Single;
+    ConnectionPolicy connectionPolicy = ConnectionPolicy::Exact;
+
+    [[nodiscard]] bool operator==(const RuntimePort &) const noexcept = default;
+};
+
+enum class NodeKind { Control, Indicator, Constant, Function, Call };
+
+struct RuntimeNode {
+    NodeId id;
+    NodeKind kind = NodeKind::Function;
+    std::string operationId;
+    std::string implementationId;
+    std::vector<RuntimePort> ports;
+    std::optional<RuntimeValue> literalValue;
+    // Schema v2: compiler-resolved selections, never inferred from display text.
+    std::vector<std::string> selectedFields;
+
+    [[nodiscard]] bool operator==(const RuntimeNode &) const noexcept = default;
+};
+
+struct RuntimeEndpoint {
+    NodeId nodeId;
+    PortId portId;
+
+    [[nodiscard]] bool operator==(const RuntimeEndpoint &) const noexcept = default;
+};
+
+struct RuntimeEdge {
+    EdgeId id;
+    RuntimeEndpoint source;
+    RuntimeEndpoint sink;
+
+    [[nodiscard]] bool operator==(const RuntimeEdge &) const noexcept = default;
+};
+
+enum class UiBindingDirection { ControlToRuntime, RuntimeToIndicator };
+
+struct UiBinding {
+    WidgetId widgetId;
+    RuntimeEndpoint endpoint;
+    UiBindingDirection direction = UiBindingDirection::ControlToRuntime;
+    ValueType valueType;
+    RuntimeValue initialValue;
+    // Event Data may be unavailable until a real occurrence injects this input.
+    // Only the Event lowerer may author this flag; standalone Start faults if
+    // that occurrence value has not actually arrived. Schema v2 only.
+    bool suppliedByEvent = false;
+
+    [[nodiscard]] bool operator==(const UiBinding &) const noexcept = default;
+};
+
+struct SourceSpan {
+    std::uint32_t beginLine = 0U;
+    std::uint32_t beginColumn = 0U;
+    std::uint32_t endLine = 0U;
+    std::uint32_t endColumn = 0U;
+
+    [[nodiscard]] bool operator==(const SourceSpan &) const noexcept = default;
+};
+
+struct SourceIdentity {
+    SourceIdentityId id;
+    std::string sourceUri;
+    SourceSpan span;
+    NodeId nodeId;
+    PortId portId;
+
+    [[nodiscard]] bool operator==(const SourceIdentity &) const noexcept = default;
+};
+
+struct ArtifactRevision {
+    std::uint64_t semantic = 0U;
+    std::uint64_t interfaceContract = 0U;
+    std::uint64_t topology = 0U;
+
+    [[nodiscard]] bool operator==(const ArtifactRevision &) const noexcept = default;
+};
+
+struct ProgramArtifact {
+    ProtocolVersion protocol = kProtocolVersion;
+    std::uint32_t schemaVersion = kArtifactSchemaVersion;
+    ArtifactId artifactId;
+    DocumentId sourceDocumentId;
+    std::string sourceDocumentUri;
+    ArtifactRevision revision;
+    std::vector<RuntimeNode> nodes;
+    std::vector<RuntimeEdge> edges;
+    std::vector<UiBinding> uiBindings;
+    std::vector<SourceIdentity> sourceIdentities;
+    // Schema v2 typed bodies carry the actual source/run owner context.
+    // It is not an opaque reference token or an IR/source graph authority.
+    std::optional<RuntimeValueOwner> valueOwner;
+};
+
+enum class DiagnosticSeverity { Information, Warning, Error };
+enum class DiagnosticStage {
+    ContractIntake,
+    ArtifactResolution,
+    CapabilityResolution,
+    Scheduling,
+    Execution,
+    UiBinding,
+    SessionLifecycle
+};
+
+struct Diagnostic {
+    DiagnosticSeverity severity = DiagnosticSeverity::Error;
+    DiagnosticStage stage = DiagnosticStage::ContractIntake;
+    std::string code;
+    std::string message;
+    NodeId nodeId;
+    PortId portId;
+    EdgeId edgeId;
+    bool blocksBuild = true;
+    bool blocksRun = true;
+};
+
+struct RuntimeCapabilities {
+    std::string targetId;
+    ProtocolVersion protocol = kProtocolVersion;
+    std::vector<std::string> operationIds;
+    std::vector<std::string> valueTypes;
+    bool supportsStop = true;
+    bool supportsRestart = true;
+    bool supportsIncrementalControlUpdates = true;
+    // Opt-in typed transport only. This never advertises arithmetic on records
+    // or references, nor changes the legacy Numeric/Boolean target.
+    bool supportsTypedEventValues = false;
+    // Separate local schema3 opt-in. Never enables Array inside Record/Event.
+    bool supportsPackedF64Arrays = false;
+    // Explicit local frog.studio.ipe@1 value transport. Default consumers keep
+    // their original closed transport grammar; this grants no arithmetic.
+    bool supportsLocalInPlaceValues = false;
+    // Independent opt-in for the local sorted Collection value contract.
+    bool supportsLocalCollectionValues = false;
+
+    [[nodiscard]] bool supportsOperation(std::string_view operationId) const {
+        return std::find(operationIds.begin(), operationIds.end(), operationId) !=
+            operationIds.end();
+    }
+
+    [[nodiscard]] bool supportsValueType(std::string_view valueType) const {
+        if (std::find(valueTypes.begin(), valueTypes.end(), valueType) != valueTypes.end()) return true;
+        if (supportsPackedF64Arrays && valueType == "array:f64") return true;
+        if (supportsLocalInPlaceValues && structural_detail::TypeSyntax(valueType).ipe()) return true;
+        if (supportsLocalCollectionValues && structural_detail::TypeSyntax(valueType).collection()) return true;
+        return supportsTypedEventValues &&
+            (valueType.starts_with("cluster<") || valueType.starts_with("ref<")) &&
+            structural_detail::TypeSyntax(valueType).transport();
+    }
+};
+
+enum class SessionCommandKind { Start, Stop, Restart, SetControlValue };
+
+struct SessionCommand {
+    SessionCommandKind kind = SessionCommandKind::Start;
+    SessionId sessionId;
+    ArtifactId artifactId;
+    ArtifactRevision artifactRevision;
+    WidgetId widgetId;
+    RuntimeValue value;
+};
+
+enum class SessionEventKind {
+    SessionStarted,
+    SessionStopped,
+    SessionRestarted,
+    ControlValueAccepted,
+    NodeEntered,
+    NodeCompleted,
+    WireValuePublished,
+    IndicatorValueChanged,
+    DiagnosticRaised,
+    RuntimeFault,
+    StaleArtifactRejected
+};
+
+struct SessionEvent {
+    SessionEventKind kind = SessionEventKind::DiagnosticRaised;
+    SessionId sessionId;
+    ArtifactId artifactId;
+    ArtifactRevision artifactRevision;
+    std::uint64_t sequence = 0U;
+    NodeId nodeId;
+    PortId portId;
+    EdgeId edgeId;
+    WidgetId widgetId;
+    RuntimeValue value;
+    std::optional<Diagnostic> diagnostic;
+};
+
+[[nodiscard]] inline const RuntimeNode *findNode(
+    const ProgramArtifact &artifact,
+    std::string_view nodeId) noexcept {
+    const auto found = std::find_if(
+        artifact.nodes.begin(), artifact.nodes.end(),
+        [nodeId](const RuntimeNode &node) { return node.id.value == nodeId; });
+    return found == artifact.nodes.end() ? nullptr : &*found;
+}
+
+[[nodiscard]] inline const RuntimePort *findPort(
+    const RuntimeNode &node,
+    std::string_view portId) noexcept {
+    const auto found = std::find_if(
+        node.ports.begin(), node.ports.end(),
+        [portId](const RuntimePort &port) { return port.id.value == portId; });
+    return found == node.ports.end() ? nullptr : &*found;
+}
+
+[[nodiscard]] inline std::vector<Diagnostic> validateProgramArtifact(
+    const ProgramArtifact &artifact) {
+    std::vector<Diagnostic> diagnostics;
+    const auto add = [&diagnostics](
+                         std::string code,
+                         std::string message,
+                         NodeId nodeId = {},
+                         PortId portId = {},
+                         EdgeId edgeId = {}) {
+        diagnostics.push_back(Diagnostic{
+            DiagnosticSeverity::Error,
+            DiagnosticStage::ContractIntake,
+            std::move(code),
+            std::move(message),
+            std::move(nodeId),
+            std::move(portId),
+            std::move(edgeId),
+            true,
+            true
+        });
+    };
+
+    if (artifact.protocol.major != kProtocolVersion.major) {
+        add("contract.protocol.unsupported", "Unsupported Runtime protocol major version.");
+    }
+    if (artifact.schemaVersion != kArtifactSchemaVersion && artifact.schemaVersion != kTypedArtifactSchemaVersion &&
+        artifact.schemaVersion != kPackedF64ArrayArtifactSchemaVersion) {
+        add("contract.artifact_schema.unsupported", "Unsupported Runtime artifact schema version.");
+    }
+    const bool typed = artifact.schemaVersion == kTypedArtifactSchemaVersion;
+    const bool packed = artifact.schemaVersion == kPackedF64ArrayArtifactSchemaVersion;
+    if (((typed || packed) && (!artifact.valueOwner || !runtimeValueOwnerValid(*artifact.valueOwner))) ||
+        (!typed && !packed && artifact.valueOwner)) {
+        add("contract.value_owner.invalid", "Typed bodies require their actual source/run owner; legacy artifacts cannot carry it.");
+    }
+    if (artifact.artifactId.empty()) {
+        add("contract.artifact_id.missing", "The Runtime artifact requires a stable artifact ID.");
+    }
+    if (artifact.sourceDocumentId.empty()) {
+        add("contract.document_id.missing", "The Runtime artifact requires a stable source document ID.");
+    }
+
+    std::size_t arrayPayload = 0;
+    const auto checkArray = [&](const RuntimeValue &value, const ValueType &type, NodeId node, PortId port) {
+        const auto *array=std::get_if<RuntimeF64Array>(&value);
+        if(!array)return;
+        if(!packed) { add("contract.array.schema_invalid", "Packed Array values require local artifact schema3.",node,port); return; }
+        if(!*array || !array_detail::descriptor(type) || !artifact.valueOwner || !(*array)->validForOwner(*artifact.valueOwner)) {
+            add("contract.array.owner_invalid", "Packed Array value must match its exact descriptor and artifact owner.",node,port);return;
+        }
+        const auto bytes=(*array)->payloadBytes();
+        if(bytes>kMaximumF64ArrayPayloadBytes-arrayPayload)add("contract.array.payload_limit", "Packed Array artifact payload exceeds addressable memory.",node,port);
+        else arrayPayload+=bytes;
+    };
+    std::unordered_set<std::string> nodeIds;
+    for (const auto &node : artifact.nodes) {
+        if (node.id.empty()) {
+            add("contract.node_id.missing", "Every Runtime node requires a stable ID.");
+            continue;
+        }
+        if (!nodeIds.insert(node.id.value).second) {
+            add("contract.node_id.duplicate", "Runtime node IDs must be unique.", node.id);
+        }
+        if (node.operationId.empty()) {
+            add("contract.operation_id.missing", "Every Runtime node requires an operation ID.", node.id);
+        }
+        if (node.selectedFields.size() > 64 || (!node.selectedFields.empty() && (!typed || node.kind != NodeKind::Function)))
+            add("contract.record.selection_invalid", "Resolved record selections require a schema-v2 function.", node.id);
+        for (const auto &field : node.selectedFields)
+            if (!structural_detail::identity(field))
+                add("contract.record.selection_invalid", "A resolved field requires a canonical identity.", node.id);
+        std::unordered_set<std::string> portIds;
+        for (const auto &port : node.ports) {
+            if ((typed || packed) && port.valueType != valueTypeFromCanonicalName(port.valueType.canonicalName))
+                add("contract.value_type.descriptor_invalid", "A schema-v2 port descriptor must match its canonical type.", node.id, port.id);
+            if (port.id.empty()) {
+                add("contract.port_id.missing", "Every Runtime port requires a stable ID.", node.id);
+                continue;
+            }
+            if (!portIds.insert(port.id.value).second) {
+                add("contract.port_id.duplicate", "Port IDs must be unique within a node.", node.id, port.id);
+            }
+            if (!typed && (port.valueType.category == ValueCategory::Cluster ||
+                port.valueType.category == ValueCategory::ObjectReference))
+                add("contract.value_type.schema_invalid", "Record/reference transport requires artifact schema v2.", node.id, port.id);
+            if (packed && (port.valueType.category == ValueCategory::String || port.valueType.category == ValueCategory::Path ||
+                (port.valueType.category == ValueCategory::Array && !array_detail::descriptor(port.valueType))))
+                add("contract.array.profile_invalid", "Schema3 admits only exact packed rank1 f64 Arrays and scalar support values.",node.id,port.id);
+            if (!port.valueType.known()) {
+                add("contract.value_type.unknown", "Every Runtime port requires a known value type.", node.id, port.id);
+            }
+        }
+        if (node.literalValue.has_value()) {
+            const auto output = std::find_if(
+                node.ports.begin(), node.ports.end(),
+                [](const RuntimePort &port) { return port.direction == PortDirection::Output; });
+            if (output == node.ports.end() ||
+                !runtimeValueMatches(*node.literalValue, output->valueType)) {
+                add("contract.literal.type_mismatch", "A literal value must match an output port type.", node.id);
+            }
+            checkArray(*node.literalValue,output == node.ports.end() ? ValueType{} : output->valueType,node.id,{});
+        }
+    }
+
+    std::unordered_set<std::string> edgeIds;
+    std::unordered_set<std::string> occupiedSingleInputs;
+    for (const auto &edge : artifact.edges) {
+        if (edge.id.empty() || !edgeIds.insert(edge.id.value).second) {
+            add("contract.edge_id.invalid", "Runtime edge IDs must be present and unique.", {}, {}, edge.id);
+        }
+        const auto *sourceNode = findNode(artifact, edge.source.nodeId.value);
+        const auto *sinkNode = findNode(artifact, edge.sink.nodeId.value);
+        const auto *sourcePort = sourceNode == nullptr
+            ? nullptr : findPort(*sourceNode, edge.source.portId.value);
+        const auto *sinkPort = sinkNode == nullptr
+            ? nullptr : findPort(*sinkNode, edge.sink.portId.value);
+        if (sourceNode == nullptr || sourcePort == nullptr ||
+            sourcePort->direction != PortDirection::Output) {
+            add("contract.edge.source_invalid", "An edge source must reference an output port.", edge.source.nodeId, edge.source.portId, edge.id);
+        }
+        if (sinkNode == nullptr || sinkPort == nullptr ||
+            sinkPort->direction != PortDirection::Input) {
+            add("contract.edge.sink_invalid", "An edge sink must reference an input port.", edge.sink.nodeId, edge.sink.portId, edge.id);
+        } else {
+            const std::string inputKey = edge.sink.nodeId.value + "\n" +
+                edge.sink.portId.value;
+            if (sinkPort->cardinality == PortCardinality::Single &&
+                !occupiedSingleInputs.insert(inputKey).second) {
+                add("contract.edge.sink_occupied", "A single-cardinality input may receive only one edge.", edge.sink.nodeId, edge.sink.portId, edge.id);
+            }
+        }
+        if (sourcePort != nullptr && sinkPort != nullptr &&
+            sourcePort->direction == PortDirection::Output &&
+            sinkPort->direction == PortDirection::Input &&
+            !valueTypesCompatible(
+                sourcePort->valueType,
+                sinkPort->valueType,
+                sinkPort->connectionPolicy)) {
+            add("contract.edge.type_mismatch", "The source value type is not compatible with the sink connection policy.", edge.sink.nodeId, edge.sink.portId, edge.id);
+        }
+    }
+
+    for (const auto &binding : artifact.uiBindings) {
+        if (binding.suppliedByEvent && (!typed || binding.direction != UiBindingDirection::ControlToRuntime))
+            add("contract.event_input.invalid", "Deferred occurrence inputs require a schema-v2 control binding.", binding.endpoint.nodeId, binding.endpoint.portId);
+        checkArray(binding.initialValue,binding.valueType,binding.endpoint.nodeId,binding.endpoint.portId);
+        const auto *node = findNode(artifact, binding.endpoint.nodeId.value);
+        const auto *port = node == nullptr
+            ? nullptr : findPort(*node, binding.endpoint.portId.value);
+        const auto requiredDirection = binding.direction == UiBindingDirection::ControlToRuntime
+            ? PortDirection::Output : PortDirection::Input;
+        if (binding.widgetId.empty() || port == nullptr || port->direction != requiredDirection) {
+            add("contract.ui_binding.invalid", "A UI binding must reference a compatible Runtime port.", binding.endpoint.nodeId, binding.endpoint.portId);
+        } else if (!(port->valueType == binding.valueType) ||
+                   !runtimeValueMatches(binding.initialValue, binding.valueType)) {
+            add("contract.ui_binding.type_mismatch", "A UI binding value and port must use the same type.", binding.endpoint.nodeId, binding.endpoint.portId);
+        }
+    }
+
+    return diagnostics;
+}
+
+[[nodiscard]] inline std::vector<Diagnostic> validateRuntimeCapabilities(
+    const ProgramArtifact &artifact,
+    const RuntimeCapabilities &capabilities) {
+    std::vector<Diagnostic> diagnostics;
+    const auto add = [&diagnostics](
+                         std::string code,
+                         std::string message,
+                         NodeId nodeId = {},
+                         PortId portId = {}) {
+        diagnostics.push_back(Diagnostic{
+            DiagnosticSeverity::Error,
+            DiagnosticStage::CapabilityResolution,
+            std::move(code),
+            std::move(message),
+            std::move(nodeId),
+            std::move(portId),
+            {},
+            true,
+            true
+        });
+    };
+
+    if (capabilities.protocol.major != artifact.protocol.major) {
+        add("capability.protocol.unsupported",
+            "The Runtime and artifact protocol major versions are incompatible.");
+    }
+    if (artifact.schemaVersion == kPackedF64ArrayArtifactSchemaVersion && !capabilities.supportsPackedF64Arrays)
+        add("capability.packed_f64_arrays.unavailable", "This target has not opted into local schema3 packed f64 Arrays.");
+    if (artifact.schemaVersion == kTypedArtifactSchemaVersion && !capabilities.supportsTypedEventValues)
+        add("capability.typed_event_values.unavailable", "This target has not opted into schema-v2 typed Event values.");
+    for (const auto &node : artifact.nodes) {
+        if (node.kind == NodeKind::Function || node.kind == NodeKind::Call) {
+            const std::string_view operation = node.implementationId.empty()
+                ? std::string_view(node.operationId)
+                : std::string_view(node.implementationId);
+            if (!capabilities.supportsOperation(operation)) {
+                add("capability.operation.unavailable",
+                    "The target Runtime does not provide the node implementation.",
+                    node.id);
+            }
+        }
+        for (const auto &port : node.ports) {
+            if (!capabilities.supportsValueType(port.valueType.canonicalName)) {
+                add("capability.value_type.unavailable",
+                    "The target Runtime does not support the port value type.",
+                    node.id,
+                    port.id);
+            }
+        }
+    }
+    return diagnostics;
+}
+
+} // namespace frog::sdk::runtime

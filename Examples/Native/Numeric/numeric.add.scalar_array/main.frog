@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Add — scalar array",
     "name_source": "document",
-    "description": "Une valeur scalaire s'applique à chaque élément du tableau. Les trois valeurs attendues sont 11,12,13 et la forme reste [3]. Ceci ne constitue pas du broadcasting entre axes.\nEntrées : a (i32) = 10; b (array<i32>) = [1, 2, 3].\nRésultats attendus : result (array<i32>) = [11, 12, 13].\n\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\n\nMode: execution. Profile: studio-draft. Capability: explicit private Simulation; not a compiled-native claim.\nExpected:\noutput-result (array<i32>) = [11, 12, 13]\n",
+    "description": "A scalar value applies to each array element. The three expected values are 11,12,13 and the shape remains [3]. This is not broadcasting across axes.\nInputs: a (i32) = 10; b (array<i32>) = [1, 2, 3].\nExpected results: result (array<i32>) = [11, 12, 13].\n\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\n\nMode: execution. Profile: studio-draft. Capability: explicit private Simulation; not a compiled-native claim.\nExpected:\noutput-result (array<i32>) = [11, 12, 13]\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -408,7 +408,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add — scalar array\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (array<i32>) = [11, 12, 13]\n",
+        "text": "Add — scalar array\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\nInputs -> operation -> indicators. Expected result: output-result (array<i32>) = [11, 12, 13]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

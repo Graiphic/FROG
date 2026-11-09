@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Add — arrays same shape",
     "name_source": "document",
-    "description": "Deux tableaux de même forme s'additionnent élément par élément; aucune concaténation et aucune modification de leurs dimensions.\nEntrées : a (array<i32>) = [1, 2, 3]; b (array<i32>) = [10, 20, 30].\nRésultats attendus : result (array<i32>) = [11, 22, 33].\n\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\n\nMode: execution. Profile: studio-draft. Capability: explicit private Simulation; not a compiled-native claim.\nExpected:\noutput-result (array<i32>) = [11, 22, 33]\n",
+    "description": "Two arrays of the same shape are added element by element, without concatenation or changes to their dimensions.\nInputs: a (array<i32>) = [1, 2, 3]; b (array<i32>) = [10, 20, 30].\nExpected results: result (array<i32>) = [11, 22, 33].\n\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\n\nMode: execution. Profile: studio-draft. Capability: explicit private Simulation; not a compiled-native claim.\nExpected:\noutput-result (array<i32>) = [11, 22, 33]\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -467,7 +467,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add — arrays same shape\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (array<i32>) = [11, 22, 33]\n",
+        "text": "Add — arrays same shape\nAdds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.\nInputs -> operation -> indicators. Expected result: output-result (array<i32>) = [11, 22, 33]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

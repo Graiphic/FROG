@@ -418,7 +418,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Split 1D Array — negative\nThe second array starts at the split index. Indices outside the array clamp to its ends; elements are preserved.\nEntrées -> opération -> indicateurs. Résultat attendu : before (array<i32>) = []\nafter (array<i32>) = [1,2,3,4]\n",
+        "text": "Split 1D Array — negative\nThe second array starts at the split index. Indices outside the array clamp to its ends; elements are preserved.\nInputs -> operation -> indicators. Expected result: before (array<i32>) = []\nafter (array<i32>) = [1,2,3,4]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

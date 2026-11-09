@@ -31,6 +31,7 @@
   <li><a href="#source-map-and-correspondence-posture">16. Source Map and Correspondence Posture</a></li>
   <li><a href="#identity-and-recoverability-posture">17. Identity and Recoverability Posture</a></li>
   <li><a href="#widget-object-and-ui-schema-posture">18. Widget Object and UI Schema Posture</a></li>
+  <li><a href="#current-finite-producer-profiles">18.1 Current Finite Producer Profiles (Experimental 0.1)</a></li>
   <li><a href="#schema-validity-versus-architectural-validity">19. Schema Validity Versus Architectural Validity</a></li>
   <li><a href="#forbidden-misreadings">20. Forbidden Misreadings</a></li>
   <li><a href="#relation-with-lowering-and-backend-contract">21. Relation with Lowering and Backend Contract</a></li>
@@ -849,6 +850,101 @@ This keeps the same canonical JSON IR compatible with:
   <li>native executable front-panel hosts,</li>
   <li>mixed compute / UI target corridors.</li>
 </ul>
+
+<hr/>
+
+<h3 id="current-finite-producer-profiles">18.1 Current Finite Producer Profiles (Experimental 0.1)</h3>
+
+<p>
+The experimental <code>frog.execution_ir</code> format remains version <code>0.1</code>.
+The existing schemas add structural recognition of forms already emitted by the common
+<a href="../sdk/ecosystem/docs/frontend-api.md">Frontend</a>. This is an additive schema
+alignment, not a new Frontend API, a second IR grammar, or an assertion that every
+consumer realizes these profiles. Historical role-bearing ports and existing metadata
+remain valid. Unknown object families, document metadata members and port members remain
+rejected by their closed schema owners.
+</p>
+
+<ul>
+  <li><code>constant</code> is an object family. An explicit empty object <code>role</code>
+      is permitted only for this family; other families still require a nonempty role
+      when that optional field is present. Literal meaning belongs to the declared
+      <code>attributes.constant_profile</code>, exact <code>literal_value</code> and type.
+      Structural recognition does not turn the emitted scalar-constant extension into
+      an unrestricted canonical constant language.</li>
+  <li>Document metadata may contain <code>profile</code>, a nonempty string of at most
+      256 characters, and <code>source_sha256</code>, exactly <code>sha256:</code> followed
+      by 64 lowercase hexadecimal digits. The latter identifies the exact authoritative
+      Source bytes; checking that identity remains the consumer's responsibility.</li>
+  <li>A port retains its existing nonempty enumerated <code>role</code>, or carries the
+      complete nonempty object <code>studio_type_schema</code>. Only the latter form may
+      omit <code>role</code>. The surrounding port record remains closed. An empty or
+      non-object type schema cannot serve as this alternative.</li>
+</ul>
+
+<p>
+<code>studio_type_schema</code> is a profile-defined semantic object, not a host storage
+descriptor. No separate public JSON Schema currently defines its complete type grammar;
+the common Frontend's existing type codec validates that meaning. The IR schema therefore
+checks its object boundary without inventing another recursive type system. Consumers
+MUST preserve its complete content, including nested children, nominal identity, fields
+and choice metadata. A physical <code>type_ref</code> such as <code>u32</code> MUST NOT
+replace an Enum schema such as <code>enum&lt;"test.collection.nonzero",u32&gt;</code>.
+Schema validity alone neither permits ignoring that schema nor grants nominal-type
+support to a backend. A consumer that cannot preserve its meaning must refuse the graph
+with attribution rather than flatten the type or choose another backend implicitly.
+</p>
+
+<table>
+  <thead><tr><th>Emitted profile</th><th>Forms preserved at this boundary</th></tr></thead>
+  <tbody>
+    <tr><td><code>frog.canonical.widget-f64-add.v1</code></td><td>Legacy role-bearing
+        f64 control/indicator ports and <code>frog.core.add</code>.</td></tr>
+    <tr><td><code>frog.canonical.typed-structures.v1</code></td><td>Exact scalar types,
+        typed constants and explicit structured regions, terminals and state transfers.</td></tr>
+    <tr><td><code>frog.studio.scalar-constant@1</code></td><td>Declared scalar literal
+        extension, retaining exact I64/U64 JSON integer tokens instead of conversion
+        through binary64.</td></tr>
+    <tr><td><code>frog.studio.array.real1d@1</code></td><td>The declared one-dimensional
+        f64 Build/Index/Size operations, with their own checked indexing contract;
+        this is not a claim to implement all public Collections.</td></tr>
+    <tr><td><code>frog.studio.composed-program@1</code></td><td>Complete semantic
+        schemas on objects and ports, including nominal types whose physical carrier
+        alone is insufficient.</td></tr>
+  </tbody>
+</table>
+
+<p>
+The finite reference-C consumer uses the same emitted FIR as LLVM. Its declared
+<code>graiphic.reference-c.finite@1</code> realization admits bool, f64, i32, u32, i64 and
+u64 scalars, rank-one f64 Arrays of at most 32 elements, the listed addition and Array
+operations, and pure statically bounded For loops of 0 through 32 iterations. These are
+consumer admission limits, not restrictions imposed on every schema-valid IR document.
+Valid Frontend subtraction and nominal Enum documents remain valid IR even when this
+consumer rejects them. The complete graph still requires its actual backend admission.
+</p>
+
+<p>
+For the emitted <code>for_loop</code>, count and iteration terminals are explicit, body
+objects belong to an owned region, and <code>attributes.shift_registers</code> declares
+each pair's initializer/read stages, write port and exterior result port. The finite
+corpus initializes the shift register before the first iteration, reads the current
+state in the body, writes the next state after that iteration, and publishes the last
+state through <code>result_port</code>. Count zero executes no body and returns the
+initializer. Iterations are zero-based and stop before count. Internal iteration,
+count-value and history-read ports are not exterior results. The full type and operation
+contracts still determine value semantics; the JSON Schema does not execute this loop
+or infer transfers from port names or geometry.
+</p>
+
+<p>
+The regression owner
+<a href="../sdk/ecosystem/tests/test_reference_c_fir_contract.py">test_reference_c_fir_contract.py</a>
+validates eight immutable real Frontend artifacts: scalar Add, exact typed scalars,
+Array Build/Index/Size, three For bounds, and two valid-Frontend documents refused by
+the finite backend. It resolves the existing schema family through a local-only
+registry. Neither fixtures nor emitted FIR are rewritten to satisfy validation.
+</p>
 
 <hr/>
 

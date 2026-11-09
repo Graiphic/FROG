@@ -576,7 +576,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Evaluate a persisted prepared expression\nThe real authoring producer stores the versioned FROG AST of x^2+c. Binding [c,x] to [4,5] yields 29. This portable Record is not an NI binary instruction table.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (f64) = 29\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
+        "text": "Evaluate a persisted prepared expression\nThe real authoring producer stores the versioned FROG AST of x^2+c. Binding [c,x] to [4,5] yields 29. This portable Record is not an NI binary instruction table.\nInputs -> operation -> indicators. Expected result: output-result (f64) = 29\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

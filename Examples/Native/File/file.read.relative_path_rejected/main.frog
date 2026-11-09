@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Read Text : refuser un chemin relatif sans base explicite",
+  "title": "Read Text: reject a relative path without an explicit base",
   "metadata": {
-    "name": "Read Text : refuser un chemin relatif sans base explicite",
+    "name": "Read Text: reject a relative path without an explicit base",
     "name_source": "document",
-    "description": "Le chemin relatif est câblé explicitement. FileIoRuntime le refuse par une erreur de données au lieu de lire arbitrairement dans le répertoire courant du processus. Aucun sélecteur n'est ouvert, aucun fichier n'est modifié.\n\nRead Text : refuser un chemin relatif sans base explicite\n\nMode: execution. Profile: studio-draft. Capability: windows/highlight-fileio.\nExpected:\ncancelled (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 1\n",
+    "description": "The relative path is explicitly wired. FileIoRuntime rejects it with a data error instead of reading arbitrarily from the process working directory. No picker opens and no file is modified.\n\nRead Text: reject a relative path without an explicit base\n\nMode: execution. Profile: studio-draft. Capability: windows/highlight-fileio.\nExpected:\ncancelled (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 1\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -383,7 +383,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Read Text : refuser un chemin relatif sans base explicite\nRead Text : refuser un chemin relatif sans base explicite\nEntrées -> opération -> indicateurs. Résultat attendu : cancelled (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 1\n",
+        "text": "Read Text: reject a relative path without an explicit base\nRead Text: reject a relative path without an explicit base\nInputs -> operation -> indicators. Expected result: cancelled (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 1\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

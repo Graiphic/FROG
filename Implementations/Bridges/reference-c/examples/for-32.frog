@@ -1,0 +1,183 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "Static For 32 with exact external state",
+    "description": "Finite public Source for independent C/LLVM execution parity."
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": []
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "count",
+        "kind": "constant",
+        "type": "i64",
+        "value": 32,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "seed-read",
+        "kind": "widget_value",
+        "widget": "seed"
+      },
+      {
+        "id": "loop",
+        "kind": "structure",
+        "structure_type": "for_loop",
+        "boundary": {
+          "inputs": [
+            {
+              "id": "seed",
+              "type": "i64",
+              "shift_register_pair_id": "accumulator",
+              "shift_register_history_index": 0
+            }
+          ],
+          "outputs": [
+            {
+              "id": "next",
+              "type": "i64",
+              "shift_register_pair_id": "accumulator"
+            }
+          ]
+        },
+        "structure_terminals": {
+          "index": {
+            "type": "i64",
+            "outer_visible": false,
+            "exposed_in_body": true,
+            "read_only": true,
+            "body_port": "iteration",
+            "role": "index"
+          },
+          "count": {
+            "type": "i64",
+            "outer_visible": true,
+            "exposed_in_body": true,
+            "read_only": true,
+            "outer_port": "count",
+            "body_port": "count_value",
+            "role": "count"
+          }
+        },
+        "regions": [
+          {
+            "id": "body",
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "one",
+                  "kind": "constant",
+                  "type": "i64",
+                  "value": 1,
+                  "constant_profile": "frog.studio.scalar-constant@1"
+                },
+                {
+                  "id": "advance",
+                  "kind": "primitive",
+                  "type": "frog.studio.numeric.add.ieee-wrap64.v1"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "previous",
+                  "from": {
+                    "node": "loop",
+                    "port": "tunnel:seed:output"
+                  },
+                  "to": {
+                    "node": "advance",
+                    "port": "a"
+                  }
+                },
+                {
+                  "id": "increment",
+                  "from": {
+                    "node": "one",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "advance",
+                    "port": "b"
+                  }
+                },
+                {
+                  "id": "next-value",
+                  "from": {
+                    "node": "advance",
+                    "port": "result"
+                  },
+                  "to": {
+                    "node": "loop",
+                    "port": "tunnel:next:input"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "result-write",
+        "kind": "widget_value",
+        "widget": "result"
+      }
+    ],
+    "edges": [
+      {
+        "id": "count-value",
+        "from": {
+          "node": "count",
+          "port": "value"
+        },
+        "to": {
+          "node": "loop",
+          "port": "count"
+        }
+      },
+      {
+        "id": "initial-state",
+        "from": {
+          "node": "seed-read",
+          "port": "value"
+        },
+        "to": {
+          "node": "loop",
+          "port": "tunnel:seed:input"
+        }
+      },
+      {
+        "id": "final-state",
+        "from": {
+          "node": "loop",
+          "port": "tunnel:next:output"
+        },
+        "to": {
+          "node": "result-write",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "widgets": [
+      {
+        "id": "seed",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "i64",
+        "props": {
+          "default_value": 9007199254740993
+        }
+      },
+      {
+        "id": "result",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "i64"
+      }
+    ]
+  }
+}

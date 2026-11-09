@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Gauss — reference 2",
     "name_source": "document",
-    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : x (f64) = 0.1; a (f64) = 1; b (f64) = 1; c (f64) = 2.\nRésultats attendus : value (f64) = 1.053605156578263015467231547163895356671665471164437968.\n\nEvaluates ordinary Gauss hypergeometric 2F1, not a Gaussian density or regularized 2F1/Gamma(c).\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-value (f64) = 1.053605156578263015467231547163895356671665471164437968\n",
+    "description": "Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.\nInputs: x (f64) = 0.1; a (f64) = 1; b (f64) = 1; c (f64) = 2.\nExpected results: value (f64) = 1.053605156578263015467231547163895356671665471164437968.\n\nEvaluates ordinary Gauss hypergeometric 2F1, not a Gaussian density or regularized 2F1/Gamma(c).\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-value (f64) = 1.053605156578263015467231547163895356671665471164437968\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -427,7 +427,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Gauss — reference 2\nEvaluates ordinary Gauss hypergeometric 2F1, not a Gaussian density or regularized 2F1/Gamma(c).\nEntrées -> opération -> indicateurs. Résultat attendu : output-value (f64) = 1.053605156578263015467231547163895356671665471164437968\n",
+        "text": "Gauss — reference 2\nEvaluates ordinary Gauss hypergeometric 2F1, not a Gaussian density or regularized 2F1/Gamma(c).\nInputs -> operation -> indicators. Expected result: output-value (f64) = 1.053605156578263015467231547163895356671665471164437968\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

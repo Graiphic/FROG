@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Notifier : Status, Cancel et Release ont des rôles différents",
+  "title": "Notifier: Status, Cancel and Release have distinct roles",
   "metadata": {
-    "name": "Notifier : Status, Cancel et Release ont des rôles différents",
+    "name": "Notifier: Status, Cancel and Release have distinct roles",
     "name_source": "document",
-    "description": "Send publie 42. Status lit 42 sans consommer. Cancel retourne 42 puis efface le signal retenu ; Wait avec timeout=0 retourne sa valeur de type par défaut 0 et timed_out=True. Release retrouve une notification vide 0 et ferme le handle.\n\nNotifier : Status, Cancel et Release ont des rôles différents\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nlatest (f64) = 42\nnotification (f64) = 0\ntimed_out (bool) = true\nlast (f64) = 0\nerror_status (bool) = false\nerror_code (i32) = 0\ncanceled (f64) = 42\n",
+    "description": "Send publishes 42. Status reads 42 without consuming it. Cancel returns 42, then clears the retained signal; Wait with timeout=0 returns its type default, 0, and timed_out=True. Release finds an empty notification, 0, and closes the handle.\n\nNotifier: Status, Cancel and Release have distinct roles\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\nlatest (f64) = 42\nnotification (f64) = 0\ntimed_out (bool) = true\nlast (f64) = 0\nerror_status (bool) = false\nerror_code (i32) = 0\ncanceled (f64) = 42\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -819,7 +819,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Notifier : Status, Cancel et Release ont des rôles différents\nNotifier : Status, Cancel et Release ont des rôles différents\nEntrées -> opération -> indicateurs. Résultat attendu : latest (f64) = 42\nnotification (f64) = 0\ntimed_out (bool) = true\nlast (f64) = 0\nerror_status (bool) = false\nerror_code (i32) = 0\ncanceled (f64) = 42\n",
+        "text": "Notifier: Status, Cancel and Release have distinct roles\nNotifier: Status, Cancel and Release have distinct roles\nInputs -> operation -> indicators. Expected result: latest (f64) = 42\nnotification (f64) = 0\ntimed_out (bool) = true\nlast (f64) = 0\nerror_status (bool) = false\nerror_code (i32) = 0\ncanceled (f64) = 42\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

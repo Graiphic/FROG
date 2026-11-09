@@ -6,7 +6,7 @@
   "metadata": {
     "name": "GCD — basic exact",
     "name_source": "document",
-    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : x (i32) = 48; y (i32) = 18.\nRésultats attendus : gcd (i32) = 6.\n\nComputes the nonnegative greatest common divisor of two I32 integers.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-gcd (i32) = 6\n",
+    "description": "Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.\nInputs: x (i32) = 48; y (i32) = 18.\nExpected results: gcd (i32) = 6.\n\nComputes the nonnegative greatest common divisor of two I32 integers.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-gcd (i32) = 6\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -295,7 +295,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "GCD — basic exact\nComputes the nonnegative greatest common divisor of two I32 integers.\nEntrées -> opération -> indicateurs. Résultat attendu : output-gcd (i32) = 6\n",
+        "text": "GCD — basic exact\nComputes the nonnegative greatest common divisor of two I32 integers.\nInputs -> operation -> indicators. Expected result: output-gcd (i32) = 6\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

@@ -407,7 +407,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: i64 extremes\nExact signed carrier and modulo2^64 restore, with no invalid signed C++ overflow. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (array<i64>) = [-9223372036854775807,-9223372036854775808]\n",
+        "text": "Add: i64 extremes\nExact signed carrier and modulo2^64 restore, with no invalid signed C++ overflow. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nInputs -> operation -> indicators. Expected result: output-result (array<i64>) = [-9223372036854775807,-9223372036854775808]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

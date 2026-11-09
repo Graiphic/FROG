@@ -329,7 +329,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Cluster To Array preserves homogeneous I64 — alternate palette entry\nHomogeneous fields retain their exact integer carrier. An integer above 2^53 remains unchanged, and stable Cluster field order determines Array order.\nEntrées -> opération -> indicateurs. Résultat attendu : result (array<i64>) = [9007199254740993,-7]\n",
+        "text": "Cluster To Array preserves homogeneous I64 — alternate palette entry\nHomogeneous fields retain their exact integer carrier. An integer above 2^53 remains unchanged, and stable Cluster field order determines Array order.\nInputs -> operation -> indicators. Expected result: result (array<i64>) = [9007199254740993,-7]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

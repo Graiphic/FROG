@@ -2,7 +2,7 @@
 
 Notifier : Multiple retourne les notifications disponibles
 
-Les sources A puis B publient 10 et 20 avant l'attente. Le tableau de références contient [A,B,A] : une source répétée ne crée pas une seconde notification. Avec timeout=0 et ignore_previous=False, les valeurs disponibles sont [10,20] dans l'ordre des sources, sans exiger qu'un nouveau signal arrive après le démarrage de Wait.
+Sources A then B publish 10 and 20 before the wait. The reference array contains [A,B,A]: a repeated source does not create a second notification. With timeout=0 and ignore_previous=False, available values are [10,20] in source order, without requiring a new signal after Wait starts.
 
 Notifier : Multiple retourne les notifications disponibles
 

@@ -211,7 +211,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "string.rotate — bytes\nThe operation transforms ASCII bytes and leaves non-ASCII bytes unchanged for case conversion. Rotate moves exactly the first byte to the end.\nEntrées -> opération -> indicateurs. Résultat attendu : result (string) = \"bcda\"\n",
+        "text": "string.rotate — bytes\nThe operation transforms ASCII bytes and leaves non-ASCII bytes unchanged for case conversion. Rotate moves exactly the first byte to the end.\nInputs -> operation -> indicators. Expected result: result (string) = \"bcda\"\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

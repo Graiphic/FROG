@@ -1,0 +1,169 @@
+// SPDX-License-Identifier: Apache-2.0
+#include "frog_native_engine/graph/XYGraph.hpp"
+#include "frog_native_engine/WidgetInstance.hpp"
+#include "frog_native_engine/NumericValueLexeme.hpp"
+#include <algorithm>
+#include <array>
+#include <charconv>
+#include <cmath>
+#include <limits>
+#include <set>
+#include <stdexcept>
+#include <utility>
+
+namespace frog::native_engine::xy {
+namespace {
+using Type=binding::TypeRef; using Kind=binding::TypeKind; using Json=source::JsonValue;
+bool real(const Type &t){static constexpr std::string_view names[]={"i4","u4","i8","u8","i16","u16","i32","u32","i64","u64","f32","f64"};return t.kind==Kind::Primitive&&t.children.empty()&&std::find(std::begin(names),std::end(names),t.name)!=std::end(names);}
+bool complex(const Type &t){return t.kind==Kind::Primitive&&(t.name=="c32"||t.name=="c64")&&t.children.empty();}
+bool array(const Type&t){return t.kind==Kind::Array&&t.rank==1&&t.children.size()==1;}
+bool record(const Type&t,std::size_t count){return t.kind==Kind::Cluster&&t.children.size()==count&&t.fieldIds.size()==count;}
+bool pointRecord(const Type&t){return t.children.size()>=2&&record(t,t.children.size())&&
+    std::all_of(t.children.begin(),t.children.end(),real);}
+bool separate(const Type&t){return record(t,2)&&array(t.children[0])&&array(t.children[1])&&real(t.children[0].children[0])&&real(t.children[1].children[0]);}
+const Json &field(const Json&v,std::string_view id){const auto*p=v.member(id);if(!p)throw std::runtime_error("XY value is missing stable field '"+std::string(id)+"'.");return *p;}
+void fields(const Json&v,const Type&t){if(v.type!=Json::Type::Object||v.object.size()!=t.fieldIds.size())throw std::runtime_error("XY Record must contain exactly its declared stable fields.");for(const auto &id:t.fieldIds)(void)field(v,id);}
+std::string token(const Json&v){if(v.type!=Json::Type::Number&&v.type!=Json::Type::String)throw std::runtime_error("XY coordinate requires a typed numeric token.");if(!v.string.empty())return v.string;std::array<char,64>b{};auto r=std::to_chars(b.data(),b.data()+b.size(),v.number);if(r.ec!=std::errc{})throw std::runtime_error("Cannot encode XY coordinate.");return {b.data(),r.ptr};}
+std::span<const Json> elements(const Json&v,const Type&t){const Json*a=&v;if(v.type==Json::Type::Object){if(v.object.size()!=2)throw std::runtime_error("XY Array requires precisely shape and elements.");a=&field(v,"elements");const auto&s=field(v,"shape");if(s.type!=Json::Type::Array||s.array.size()!=1)throw std::runtime_error("XY Array must have rank one.");std::size_t n=0;const auto str=token(s.array[0]);auto p=std::from_chars(str.data(),str.data()+str.size(),n);if(p.ec!=std::errc{}||p.ptr!=str.data()+str.size()||n!=a->array.size())throw std::runtime_error("XY Array shape does not match element count.");}if(a->type!=Json::Type::Array)throw std::runtime_error("XY value requires a one-dimensional Array.");if(t.extent&&a->array.size()!=*t.extent)throw std::runtime_error("XY Array does not match its declared extent.");return a->array;}
+Coordinate scalar(const Json&v,const Type&t){const auto str=token(v);if(t.integer()){const bool uns=t.name[0]=='u';const auto width=unsigned(std::stoi(t.name.substr(1)));const auto exact=numeric_value::canonicalWideIntegerLexeme(str,uns?"u64":"i64");if(!exact)throw std::runtime_error("XY integer is outside its exact declared representation: "+t.name);if(uns){std::uint64_t n=0;auto p=std::from_chars(exact->data(),exact->data()+exact->size(),n);if(p.ec!=std::errc{}||(width<64&&n>((std::uint64_t{1}<<width)-1)))throw std::runtime_error("XY unsigned coordinate exceeds "+t.name);return Coordinate(n);}std::int64_t n=0;auto p=std::from_chars(exact->data(),exact->data()+exact->size(),n);if(p.ec!=std::errc{}||(width<64&&(n<-(std::int64_t{1}<<(width-1))||n>((std::int64_t{1}<<(width-1))-1))))throw std::runtime_error("XY signed coordinate exceeds "+t.name);return Coordinate(n);}
+    if(v.type==Json::Type::String){if(str=="NaN"||str=="nan")return Coordinate(std::numeric_limits<double>::quiet_NaN());if(str=="Inf"||str=="+Inf"||str=="inf")return Coordinate(std::numeric_limits<double>::infinity());if(str=="-Inf"||str=="-inf")return Coordinate(-std::numeric_limits<double>::infinity());throw std::runtime_error("Only explicit NaN/Inf/-Inf strings encode XY real gaps.");}
+    if(t.name=="f32"){float n=0;auto p=std::from_chars(str.data(),str.data()+str.size(),n);if(p.ec!=std::errc{}||p.ptr!=str.data()+str.size()||!std::isfinite(n))throw std::runtime_error("XY coordinate exceeds f32; use an explicit nonfinite marker.");return Coordinate(double(n));}
+    double n=0;auto p=std::from_chars(str.data(),str.data()+str.size(),n);if(p.ec!=std::errc{}||p.ptr!=str.data()+str.size()||!std::isfinite(n))throw std::runtime_error("XY coordinate exceeds f64; use an explicit nonfinite marker.");return Coordinate(n);
+}
+void appendSeries(Dataset &out,const Type &t,const Json &v,Form form,std::size_t &total) {
+    if(out.series.size()>=maximumSeries)throw std::runtime_error("XY plot quota exceeded.");
+    const auto first=out.series.size();
+    const auto makeSeries=[&](std::size_t ordinal) {
+        Series s;s.id="plot-"+std::to_string(ordinal+1);s.name="Plot "+std::to_string(ordinal+1);return s;
+    };
+    if(form==Form::D2) {
+        const auto points=elements(v,t);const auto &record=t.children[0];
+        const auto ordinates=record.children.size()-1;
+        if(ordinates>maximumSeries-first)throw std::runtime_error("XY plot quota exceeded.");
+        if(points.size()>(maximumSamples-total)/ordinates)throw std::runtime_error("XY sample quota exceeded.");
+        for(std::size_t column=1;column<=ordinates;++column) {
+            auto s=makeSeries(first+column-1);
+            // Existing two-field points keep their historical plot identity.
+            // New multi-Y plots follow stable field IDs, never display labels.
+            if(ordinates>1) {
+                s.id="plot-"+std::to_string(first+1)+"-field:"+
+                    std::to_string(record.fieldIds[column].size())+":"+record.fieldIds[column];
+                if(record.fieldNames.size()==record.children.size()&&!record.fieldNames[column].empty())
+                    s.name=record.fieldNames[column];
+            }
+            s.xCount=s.yCount=points.size();s.samples.reserve(points.size());out.series.push_back(std::move(s));
+        }
+        for(std::size_t i=0;i<points.size();++i) {
+            fields(points[i],record);
+            const auto x=scalar(field(points[i],record.fieldIds[0]),record.children[0]);
+            for(std::size_t column=1;column<=ordinates;++column) {
+                Sample p;p.sourceIndex=i;p.x=x;
+                p.y=scalar(field(points[i],record.fieldIds[column]),record.children[column]);
+                out.series[first+column-1].samples.push_back(std::move(p));
+            }
+        }
+        total+=points.size()*ordinates;return;
+    }
+    auto s=makeSeries(first);
+    if(form==Form::D1) {
+        fields(v,t);const auto xs=elements(field(v,t.fieldIds[0]),t.children[0]);
+        const auto ys=elements(field(v,t.fieldIds[1]),t.children[1]);
+        s.xCount=xs.size();s.yCount=ys.size();const auto n=std::max(xs.size(),ys.size());
+        if(n>maximumSamples-total)throw std::runtime_error("XY sample quota exceeded.");
+        s.samples.reserve(n);
+        for(std::size_t i=0;i<n;++i) {
+            Sample p;p.sourceIndex=i;p.hasX=i<xs.size();p.hasY=i<ys.size();
+            if(p.hasX)p.x=scalar(xs[i],t.children[0].children[0]);
+            if(p.hasY)p.y=scalar(ys[i],t.children[1].children[0]);s.samples.push_back(std::move(p));
+        }
+        if(xs.size()!=ys.size())out.diagnostics.push_back(s.id+": X/Y length mismatch ("+
+            std::to_string(xs.size())+" / "+std::to_string(ys.size())+"); only paired indices are drawn.");
+        total+=n;
+    } else {
+        const auto points=elements(v,t);
+        if(points.size()>maximumSamples-total)throw std::runtime_error("XY sample quota exceeded.");
+        s.xCount=s.yCount=points.size();s.samples.reserve(points.size());
+        const auto component=Type::primitive(t.children[0].name=="c32"?"f32":"f64");
+        for(std::size_t i=0;i<points.size();++i) {
+            const auto &c=points[i];if(c.type!=Json::Type::Object||c.object.size()!=2)
+                throw std::runtime_error("XY Complex requires exactly real and imaginary fields.");
+            Sample p;p.sourceIndex=i;p.x=scalar(field(c,"real"),component);p.y=scalar(field(c,"imaginary"),component);
+            s.samples.push_back(std::move(p));
+        }
+        total+=points.size();
+    }
+    out.series.push_back(std::move(s));
+}
+struct Integer {bool negative;std::uint64_t magnitude;};
+std::string addIntegerText(std::string a,std::string b){
+    const bool an=a.starts_with('-'),bn=b.starts_with('-');if(an)a.erase(0,1);if(bn)b.erase(0,1);
+    const auto trim=[](std::string&v){const auto n=v.find_first_not_of('0');v=n==v.npos?"0":v.substr(n);};trim(a);trim(b);
+    if(an==bn){std::string out;int carry=0;std::size_t i=a.size(),j=b.size();while(i||j||carry){const int v=carry+(i?a[--i]-'0':0)+(j?b[--j]-'0':0);out+=char('0'+v%10);carry=v/10;}std::reverse(out.begin(),out.end());if(an&&out!="0")out.insert(0,1,'-');return out;}
+    bool negative=an;const bool less=a.size()<b.size()||(a.size()==b.size()&&a<b);if(less){std::swap(a,b);negative=bn;}
+    std::string out;int borrow=0;std::size_t i=a.size(),j=b.size();while(i){int v=(a[--i]-'0')-borrow-(j?b[--j]-'0':0);borrow=v<0;if(borrow)v+=10;out+=char('0'+v);}std::reverse(out.begin(),out.end());trim(out);if(negative&&out!="0")out.insert(0,1,'-');return out;
+}
+std::optional<std::string> integerText(const Coordinate&c){
+    if(!std::isfinite(c.residual)||std::trunc(c.residual)!=c.residual)return {};
+    std::array<char,512>base{},offset{};
+    const auto raw=std::visit([&](auto n)->std::optional<std::string>{using V=decltype(n);if constexpr(std::is_same_v<V,double>){if(!std::isfinite(n)||std::trunc(n)!=n)return {};const auto r=std::to_chars(base.data(),base.data()+base.size(),n,std::chars_format::fixed,0);if(r.ec!=std::errc{})return {};return std::string(base.data(),r.ptr);}else{const auto r=std::to_chars(base.data(),base.data()+base.size(),n);if(r.ec!=std::errc{})return {};return std::string(base.data(),r.ptr);}},c.value);
+    if(!raw)return {};const auto r=std::to_chars(offset.data(),offset.data()+offset.size(),c.residual,std::chars_format::fixed,0);if(r.ec!=std::errc{})return {};return addIntegerText(*raw,std::string(offset.data(),r.ptr));
+}
+std::optional<Integer> integer(const Coordinate&c){if(auto*p=std::get_if<std::int64_t>(&c.value))return Integer{*p<0,*p<0?std::uint64_t(-(*p+1))+1:std::uint64_t(*p)};if(auto*p=std::get_if<std::uint64_t>(&c.value))return Integer{false,*p};return {};}
+void quoted(std::string&o,std::string_view s){static constexpr char hex[]="0123456789abcdef";o+='"';for(unsigned char c:s){if(c=='"'||c=='\\'){o+='\\';o+=char(c);}else if(c<32){o+="\\u00";o+=hex[c>>4];o+=hex[c&15];}else o+=char(c);}o+='"';}
+void dump(std::string&o,const Json&v){switch(v.type){case Json::Type::Null:o+="null";break;case Json::Type::Boolean:o+=v.boolean?"true":"false";break;case Json::Type::Number:if(!v.string.empty())o+=v.string;else{o+=Coordinate(v.number).text();}break;case Json::Type::String:quoted(o,v.string);break;case Json::Type::Array:{o+='[';bool first=true;for(const auto &x:v.array){if(!first)o+=',';first=false;dump(o,x);}o+=']';break;}case Json::Type::Object:{o+='{';bool first=true;for(const auto &[k,x]:v.object){if(!first)o+=',';first=false;quoted(o,k);o+=':';dump(o,x);}o+='}';break;}}}
+}
+Classification classify(const Type &t) {
+    if(!t.known())return {Form::Invalid,"XY_TYPE: A complete declared type is required."};
+    if(separate(t))return {Form::D1,{}};
+    if(array(t)) {
+        const auto &e=t.children[0];
+        if(pointRecord(e))return {Form::D2,{}};
+        if(complex(e))return {Form::D3,{}};
+        if(separate(e))return {Form::D4,{}};
+        if(record(e,1)&&array(e.children[0])) {
+            if(pointRecord(e.children[0].children[0]))return {Form::D5,{}};
+            if(complex(e.children[0].children[0]))return {Form::D6,{}};
+        }
+    }
+    return {Form::Invalid,"XY_TYPE: Expected D1 {Array<number>,Array<number>}, D2 Array<{X:number,Y1:number,...,Yn:number}>, D3 Array<Complex>, D4 Array<D1>, D5 Array<{D2}>, or D6 Array<{D3}>. Received "+t.canonical()+". Coordinates admit i4/u4 through i64/u64, f32/f64; Complex admits c32/c64. Timestamp requires explicit conversion to seconds; other catalogued precisions lack a native value carrier."};
+}
+
+std::string validateType(const Type&t){return classify(t).diagnostic;}
+
+Type defaultType(){return Type::cluster({"X","Y"},{Type::array(Type::primitive("f64")),Type::array(Type::primitive("f64"))});}
+
+Json emptyValue(const Type&t){Json v;if(t.kind==Kind::Array){v.type=Json::Type::Array;}else if(t.kind==Kind::Cluster){v.type=Json::Type::Object;for(std::size_t i=0;i<t.children.size()&&i<t.fieldIds.size();++i)v.object.emplace(t.fieldIds[i],emptyValue(t.children[i]));}return v;}
+
+double Coordinate::approximate()const noexcept{return std::visit([](auto n){return double(n);},value)+residual;}
+
+bool Coordinate::finite()const noexcept{return std::isfinite(std::visit([](auto n){return double(n);},value))&&std::isfinite(residual);}
+
+bool Coordinate::positive()const noexcept{return difference(*this,Coordinate(0.0))>0;}
+
+std::string Coordinate::text()const{std::array<char,128>b{};if(residual!=0){if(const auto exact=integerText(*this))return *exact;const double v=approximate();if(std::isnan(v))return "NaN";if(std::isinf(v))return v<0?"-Inf":"Inf";auto r=std::to_chars(b.data(),b.data()+b.size(),v);return r.ec==std::errc{}?std::string(b.data(),r.ptr):std::string{};}return std::visit([&](auto n)->std::string{using T=decltype(n);if constexpr(std::is_same_v<T,double>){if(std::isnan(n))return "NaN";if(std::isinf(n))return n<0?"-Inf":"Inf";}auto r=std::to_chars(b.data(),b.data()+b.size(),n);return r.ec==std::errc{}?std::string(b.data(),r.ptr):std::string{};},value);}
+
+double difference(const Coordinate&a,const Coordinate&b)noexcept{auto x=integer(a),y=integer(b);double d=0;if(x&&y){if(x->negative==y->negative){const bool neg=x->magnitude<y->magnitude;const auto m=neg?y->magnitude-x->magnitude:x->magnitude-y->magnitude;d=double(m)*(neg?-1:1)*(x->negative?-1:1);}else d=(double(x->magnitude)+double(y->magnitude))*(x->negative?-1:1);}else if(x||y){const auto &i=x?a:b;const auto &r=x?b:a;const auto n=std::get<double>(r.value);if(n==0x1p64){auto base=i;base.residual=0;d=difference(base,Coordinate((std::numeric_limits<std::uint64_t>::max)()))-1.;if(!x)d=-d;}else if(std::isfinite(n)&&n>=-9223372036854775808.0&&n<18446744073709551616.0){Coordinate truncated=n<0?Coordinate(std::int64_t(n)):Coordinate(std::uint64_t(n));auto base=i;base.residual=0;d=difference(base,truncated)+(truncated.approximate()-n);if(!x)d=-d;}else d=std::visit([](auto n){return double(n);},a.value)-std::visit([](auto n){return double(n);},b.value);}else d=std::get<double>(a.value)-std::get<double>(b.value);return d+(a.residual-b.residual);}
+
+Coordinate shifted(Coordinate c,double d)noexcept{c.residual+=d;return c;}
+
+std::string exactJson(const Json&v){std::string o;dump(o,v);return o;}
+
+std::shared_ptr<const Dataset> decodeTypedValue(const Type&t,const Json&v,std::string*error){try{auto c=classify(t);if(!c.accepted())throw std::runtime_error(c.diagnostic);auto data=std::make_shared<Dataset>();data->datatype=t;data->exactSource=v;std::size_t total=0;if(c.form==Form::D1||c.form==Form::D2||c.form==Form::D3)appendSeries(*data,t,v,c.form,total);else{auto plots=elements(v,t);if(plots.size()>maximumSeries)throw std::runtime_error("XY plot quota exceeded.");for(const auto &p:plots){const auto&e=t.children[0];if(c.form==Form::D4)appendSeries(*data,e,p,Form::D1,total);else{fields(p,e);appendSeries(*data,e.children[0],field(p,e.fieldIds[0]),c.form==Form::D5?Form::D2:Form::D3,total);}}}if(error)error->clear();return data;}catch(const std::exception&e){if(error)*error=e.what();return {};}}
+
+State::State(){Axis x;x.id="x";x.name="X";Axis y;y.id="y";y.name="Y";y.horizontal=false;y.side=Side::Left;design.axes={x,y};initialSnapshot=decodeTypedValue(datatype,emptyValue(datatype));initialValue=std::shared_ptr<const Json>(initialSnapshot,&initialSnapshot->exactSource);}
+
+const Axis*findAxis(const Design&d,std::string_view id)noexcept{auto p=std::find_if(d.axes.begin(),d.axes.end(),[&](const Axis&a){return a.id==id;});return p==d.axes.end()?nullptr:&*p;}
+
+Axis*findAxis(Design&d,std::string_view id)noexcept{return const_cast<Axis*>(findAxis(std::as_const(d),id));}
+
+const source::JsonValue&initialValueSource(const State&s)noexcept{static const Json empty;return s.initialValue?*s.initialValue:empty;}
+
+std::shared_ptr<const Dataset> displayedData(const State&s){if(s.preservedSource)return {};if(s.current)return s.current;if(s.initialSnapshot)return s.initialSnapshot;return decodeTypedValue(s.datatype,initialValueSource(s));}
+
+bool setInitialData(State&s,const Type&t,const Json&v,std::string*error){auto data=decodeTypedValue(t,v,error);if(!data)return false;s.datatype=t;s.initialSnapshot=std::move(data);s.initialValue=std::shared_ptr<const Json>(s.initialSnapshot,&s.initialSnapshot->exactSource);s.current.reset();s.preservedSource.reset();++s.dataRevision;s.diagnostic=s.initialSnapshot->diagnostics.empty()?"":s.initialSnapshot->diagnostics.front();return true;}
+
+std::string validate(const Design&d){if(auto error=validateDecorations(d);!error.empty())return error;if(d.axes.size()>64||d.plots.size()>maximumSeries||d.cursors.size()>256||d.annotations.size()>1024)return "XY configuration quota exceeded.";std::set<std::string>ids;bool x=false,y=false;for(const auto&a:d.axes){if(a.id.empty()||!ids.insert(a.id).second)return "XY axis IDs must be nonempty and unique.";x|=a.horizontal;y|=!a.horizontal;if(!validRange(a,a.range))return "Invalid XY axis range: "+a.id;if(auto error=validateAxisTextFormat(a);!error.empty())return error;for(const auto&marker:a.markers)if(!marker.value.finite())return "XY arbitrary tick marker must be finite.";if(unsigned(a.mapping)>1||unsigned(a.autoscale)>2||unsigned(a.side)>3||unsigned(a.format)>8||a.rgb>0xFFFFFF||a.gridRgb>0xFFFFFF||a.precision<0||a.precision>17||a.markers.size()>1024)return "Invalid XY axis text/tick precision.";if(a.horizontal?(a.side!=Side::Top&&a.side!=Side::Bottom):(a.side!=Side::Left&&a.side!=Side::Right))return "XY axis side does not match its orientation.";}if(!x||!y)return "XY requires at least one X and one Y scale.";const auto pairOk=[&](std::string_view a,std::string_view b){auto*p=findAxis(d,a),*q=findAxis(d,b);return p&&q&&p->horizontal&&!q->horizontal;};ids.clear();for(const auto&p:d.plots){if(p.id.empty()||!ids.insert(p.id).second)return "XY plot IDs must be unique.";if(unsigned(p.symbol)>16||unsigned(p.lineStyle)>4||unsigned(p.interpolation)>5||unsigned(p.presentation)>5||unsigned(p.fill)>4||unsigned(p.orientation)>1||p.rgb>0xFFFFFF||p.pointRgb>0xFFFFFF||p.fillRgb>0xFFFFFF||!p.reference.finite())return "Invalid XY plot style enumeration or color.";if(!pairOk(p.xAxis,p.yAxis))return "XY plot has invalid scale associations.";if(!std::isfinite(p.width)||p.width<=0||p.width>64||!std::isfinite(p.symbolSize)||p.symbolSize<0||p.symbolSize>256||!std::isfinite(p.opacity)||p.opacity<0||p.opacity>1||!std::isfinite(p.fillOpacity)||p.fillOpacity<0||p.fillOpacity>1||!std::isfinite(p.barWidth)||p.barWidth<=0||!std::isfinite(p.barOffset))return "Invalid XY plot style.";}ids.clear();for(const auto&c:d.cursors){if(c.id.empty()||!ids.insert(c.id).second||unsigned(c.anchor.mode)>2||unsigned(c.lineStyle)>4||c.rgb>0xFFFFFF||!c.anchor.x.finite()||!c.anchor.y.finite()||!pairOk(c.anchor.xAxis,c.anchor.yAxis))return "Invalid XY cursor identity or scale association.";}ids.clear();for(const auto&a:d.annotations){if(a.id.empty()||!ids.insert(a.id).second||unsigned(a.anchor.mode)>2||a.rgb>0xFFFFFF||!a.anchor.x.finite()||!a.anchor.y.finite()||!pairOk(a.anchor.xAxis,a.anchor.yAxis)||!std::isfinite(a.textOffset.x)||!std::isfinite(a.textOffset.y)||!std::isfinite(a.pointSize)||a.pointSize<=0)return "Invalid XY annotation identity or style.";}if(unsigned(d.plane.kind)>4||!pairOk(d.plane.xAxis,d.plane.yAxis))return "Invalid XY plane scale association.";if(d.equalAspect){if(!pairOk(d.aspectXAxis,d.aspectYAxis))return "Invalid XY aspect scale association.";if(findAxis(d,d.aspectXAxis)->mapping!=Mapping::Linear||findAxis(d,d.aspectYAxis)->mapping!=Mapping::Linear)return "Equal units require a linear X/Y scale pair.";}return {};}
+
+std::string validateState(const State&s){if(s.preservedSource)return s.diagnostic.empty()?"XY_UNSUPPORTED_SOURCE: The retained opaque profile has no interpreted typed dataset.":s.diagnostic;if(auto e=validateType(s.datatype);!e.empty())return e;if(auto e=validate(s.design);!e.empty())return e;std::string error;if(!decodeTypedValue(s.datatype,initialValueSource(s),&error))return error;return {};}
+
+}

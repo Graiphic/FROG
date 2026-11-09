@@ -1,0 +1,69 @@
+{
+  "schema": "frog.frontend.context",
+  "schema_version": "0.2",
+  "source": {
+    "family": "frog.source",
+    "version": "0.1",
+    "uri": "fixture://frontend-api2/root",
+    "document_id": "fixture.api2.document",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "fir": {
+    "family": "frog.execution_ir",
+    "version": "0.1"
+  },
+  "frontend": {
+    "software_version": "0.1.0-local",
+    "api_version": "2",
+    "commit": "1111111111111111111111111111111111111111",
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "profiles": [
+    "fixture.only.profile@1"
+  ],
+  "operations": [
+    "fixture.only.operation"
+  ],
+  "dependencies": [
+    {
+      "kind": 2,
+      "identity": "fixture.types",
+      "version": "0.1.0",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "source_uri": "fixture://frontend-api2/types",
+      "origin": "explicit-resolver"
+    }
+  ],
+  "closure_complete": true,
+  "semantic_context": {
+    "profile": "frog.frontend.resolution@1",
+    "dependencies": [
+      {
+        "kind": 2,
+        "source_pointer": "/diagram/nodes/0/studio_type_schema"
+      }
+    ]
+  },
+  "limits": {
+    "max_source_bytes": 8388608,
+    "max_dependency_bytes": 8388608,
+    "max_total_dependency_bytes": 67108864,
+    "max_result_bytes": 33554432,
+    "max_nodes": 1024,
+    "max_connections": 4096,
+    "max_nesting_depth": 64,
+    "max_dependencies": 256,
+    "max_diagnostics": 256
+  },
+  "transformations": [
+    {
+      "profile": "frog.frontend.resolution@1",
+      "source_uri": "fixture://frontend-api2/root",
+      "source_pointer": "/diagram/nodes/0/studio_type_schema",
+      "dependency_uri": "fixture://frontend-api2/types",
+      "dependency_pointer": "/definitions/T",
+      "dependency_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ],
+  "projected_source_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+}

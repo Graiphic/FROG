@@ -750,7 +750,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Sample a surface with parameters\nWith a=2,b=3, a*x1+b*x2 is sampled at x1=[0,1],x2=[0,2]. Named parameter Records and the rank-two output persist in the actual document.\nEntrées -> opération -> indicateurs. Résultat attendu : output-x1_values (array<f64>) = [0,1]\noutput-x2_values (array<f64>) = [0,2]\noutput-y_values (array<f64,rank=2>) = {\"shape\":[2,2],\"elements\":[0,2,6,8]}\noutput-error (i32) = 0\n",
+        "text": "Sample a surface with parameters\nWith a=2,b=3, a*x1+b*x2 is sampled at x1=[0,1],x2=[0,2]. Named parameter Records and the rank-two output persist in the actual document.\nInputs -> operation -> indicators. Expected result: output-x1_values (array<f64>) = [0,1]\noutput-x2_values (array<f64>) = [0,2]\noutput-y_values (array<f64,rank=2>) = {\"shape\":[2,2],\"elements\":[0,2,6,8]}\noutput-error (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

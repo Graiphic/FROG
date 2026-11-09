@@ -83,7 +83,9 @@ public:
         // encoding unchanged. Older readers reject these tags; a live opaque
         // reference is deliberately never serialized.
         std::uint8_t tag=static_cast<std::uint8_t>(value.index());
-        if(runtimeArray(value))tag=8;else if(runtimeVariant(value))tag=9;
+        if(runtimeNullReferenceOwner(value))tag=15;
+        else if(runtimeComplex(value))tag=13;else if(runtimeArray(value))tag=8;
+        else if(const auto *variant=runtimeVariant(value))tag=variant->isEmptyVariant()?14:9;
         else if(runtimeMap(value))tag=10;else if(runtimeTimestamp(value))tag=11;else if(runtimeSet(value))tag=12;
         enumeration(tag);
         switch (tag) {
@@ -126,7 +128,25 @@ public:
             --arrayDepth_;if(!arrayDepth_)arrayEnvelopeBytes_+=data_.size()-begin;
             break;
         }
-        case 8U: case 9U: case 10U: case 11U: case 12U: {
+        case 15U: {
+            const auto &reference=std::get<6>(value);
+            if(!typed_||packed_||!arrayOwner_||!reference||!reference->validForOwner(*arrayOwner_)||
+                reference->canonicalType().size()>65536||reference->canonicalType().size()>16'000'000-valueBytes_){valid_=false;return;}
+            valueBytes_+=reference->canonicalType().size();string(reference->canonicalType());break;
+        }
+        case 13U: {
+            const auto *complex=runtimeComplex(value);
+            if(!typed_||packed_||!complex||!complex->valid()) {valid_=false;return;}
+            const std::size_t payload=complex->canonicalType()=="c32"?8:16;
+            if(payload>16'000'000-valueBytes_){valid_=false;return;}valueBytes_+=payload;
+            string(complex->canonicalType());
+            if(complex->canonicalType()=="c32") {
+                unsignedInteger(static_cast<std::uint32_t>(complex->realBits()));
+                unsignedInteger(static_cast<std::uint32_t>(complex->imaginaryBits()));
+            }else {unsignedInteger(complex->realBits());unsignedInteger(complex->imaginaryBits());}
+            break;
+        }
+        case 8U: case 9U: case 10U: case 11U: case 12U: case 14U: {
             const auto &carrier=*std::get<6>(value);
             if(!typed_||packed_||!runtimeValueRepresentable(value,valueTypeFromCanonicalName(carrier.canonicalType()))||
                 (tag!=11&&(!arrayOwner_||!runtimeValueValidForOwner(value,valueTypeFromCanonicalName(carrier.canonicalType()),*arrayOwner_)))) {valid_=false;return;}
@@ -138,8 +158,12 @@ public:
                 for(const auto &v:a.elements()){valueNodes_=0;valueBytes_=0;runtimeValue(v,depth+1);}
                 --arrayDepth_;valueNodes_=outerNodes;valueBytes_=outerBytes;
                 if(!arrayDepth_)arrayEnvelopeBytes_+=data_.size()-begin;
-            }else if(tag==9) {
-                const auto &v=*runtimeVariant(value);valueType(v.payloadType());string(v.payloadSchemaJson());runtimeValue(v.payload(),depth+1);
+            }else if(tag==9 || tag==14) {
+                const auto &v=*runtimeVariant(value);
+                // Tag9's payload layout remains byte-for-byte unchanged.
+                // Tag14 is an additive typed capability; old readers refuse
+                // it rather than fabricating a payload or accepting emptiness.
+                if(tag==9){valueType(v.payloadType());string(v.payloadSchemaJson());runtimeValue(v.payload(),depth+1);}
                 unsignedInteger(static_cast<std::uint32_t>(v.attributes().size()));
                 for(const auto &field:v.attributes()){string(field.id);valueType(field.type);runtimeValue(field.value,depth+1);}
             }else if(tag==10) {
@@ -260,6 +284,13 @@ public:
         if (!unsignedInteger(tag)) return false;
         switch (tag) {
         case 0U: value = std::monostate{}; return true;
+        case 15U: {
+            if(!typed_||packed_||!arrayOwner_)return fail("An intrinsic NULL reference requires a typed receiving owner.");
+            std::string type;if(!string(type)||type.size()>65536||type.size()>16'000'000-valueBytes_)return fail("The intrinsic NULL reference type exceeds its bound.");
+            const auto null=makeRuntimeNullReference(type,*arrayOwner_);
+            if(!null)return fail("The intrinsic NULL reference has no exact reference type.");
+            valueBytes_+=type.size();value=*null;return true;
+        }
         case 1U: {
             bool decoded = false;
             if (!boolean(decoded)) return false;
@@ -341,7 +372,24 @@ public:
             }catch(const std::bad_alloc &) {return fail("Not enough memory to complete this operation; no partial Array value was produced.");}
             catch(const std::length_error &) {return fail("Not enough memory to complete this operation; no partial Array value was produced.");}
         }
-        case 8U: case 9U: case 10U: case 11U: case 12U: {
+        case 13U: {
+            if(!typed_||packed_)return fail("Complex values require the explicit typed private codec profile.");
+            std::string canonical;if(!string(canonical)||(canonical!="c32"&&canonical!="c64"))return fail("Invalid complex value type.");
+            const std::size_t payload=canonical=="c32"?8:16;
+            if(payload>16'000'000-valueBytes_)return fail("Complex value exceeds its declared byte budget.");valueBytes_+=payload;
+            double real=0,imaginary=0;
+            if(canonical=="c32") {
+                std::uint32_t re=0,im=0;if(!unsignedInteger(re)||!unsignedInteger(im))return false;
+                real=std::bit_cast<float>(re);imaginary=std::bit_cast<float>(im);
+            }else {
+                std::uint64_t re=0,im=0;if(!unsignedInteger(re)||!unsignedInteger(im))return false;
+                real=std::bit_cast<double>(re);imaginary=std::bit_cast<double>(im);
+            }
+            auto decoded=makeRuntimeComplex(valueTypeFromCanonicalName(canonical),real,imaginary);
+            if(!decoded)return fail("Complex components violate the exact finite carrier contract.");
+            value=std::move(*decoded);return true;
+        }
+        case 8U: case 9U: case 10U: case 11U: case 12U: case 14U: {
             if(!typed_||packed_||(tag!=11&&(!arrayOwner_||!runtimeValueOwnerValid(*arrayOwner_))))return fail("Local IPE values require a typed envelope and its exact value owner.");
             std::optional<RuntimeValue> complete;
             if(tag==8) {
@@ -364,12 +412,14 @@ public:
                 complete=makeRuntimeArray(std::move(element),std::move(shape),std::move(elements),*arrayOwner_);
                 }catch(const std::bad_alloc &){return fail("Not enough memory to complete this operation; no partial Array value was produced.");}
                 catch(const std::length_error &){return fail("Not enough memory to complete this operation; no partial Array value was produced.");}
-            }else if(tag==9) {
+            }else if(tag==9 || tag==14) {
                 ValueType payloadType;RuntimeValue payload;std::uint32_t size=0;std::string payloadSchema;
-                if(!valueType(payloadType)||!string(payloadSchema)||payloadSchema.size()>65536||!runtimeValue(payload,depth+1)||!count(size)||size>4096)return fail("Invalid IPE Variant attribute count or schema.");
+                if(tag==9 && (!valueType(payloadType)||!string(payloadSchema)||payloadSchema.size()>65536||!runtimeValue(payload,depth+1)))return fail("Invalid typed IPE Variant payload or schema.");
+                if(!count(size)||size>4096)return fail("Invalid IPE Variant attribute count.");
                 std::vector<RuntimeNamedField> attributes;attributes.reserve(size);
                 for(std::uint32_t i=0;i<size;++i){RuntimeNamedField field;if(!string(field.id)||!valueType(field.type)||!runtimeValue(field.value,depth+1))return false;attributes.push_back(std::move(field));}
-                complete=makeRuntimeVariant(std::move(payloadType),std::move(payload),std::move(attributes),*arrayOwner_,std::move(payloadSchema));
+                complete=tag==14?makeRuntimeEmptyVariant(std::move(attributes),*arrayOwner_):
+                    makeRuntimeVariant(std::move(payloadType),std::move(payload),std::move(attributes),*arrayOwner_,std::move(payloadSchema));
             }else if(tag==10) {
                 ValueType key,item;std::uint32_t size=0;if(!valueType(key)||!valueType(item)||!count(size)||size>4096)return fail("Invalid IPE Map entry count.");
                 std::vector<std::pair<RuntimeValue,RuntimeValue>> entries;entries.reserve(size);

@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Read Text : conserver l'erreur amont sans accès disque",
+  "title": "Read Text: preserve the upstream error without disk access",
   "metadata": {
-    "name": "Read Text : conserver l'erreur amont sans accès disque",
+    "name": "Read Text: preserve the upstream error without disk access",
     "name_source": "document",
-    "description": "L'erreur 77 arrive avant Read Text. L'opération propage cette même erreur sans ouvrir le chemin, ni afficher un sélecteur. Un défaut de chemin ne doit pas remplacer l'erreur du traitement amont.\n\nRead Text : conserver l'erreur amont sans accès disque\n\nMode: execution. Profile: studio-draft. Capability: windows/highlight-fileio.\nExpected:\ncancelled (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 77\n",
+    "description": "Error 77 arrives before Read Text. The operation propagates that same error without opening the path or displaying a picker. A path failure must not replace the upstream processing error.\n\nRead Text: preserve the upstream error without disk access\n\nMode: execution. Profile: studio-draft. Capability: windows/highlight-fileio.\nExpected:\ncancelled (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 77\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -542,7 +542,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Read Text : conserver l'erreur amont sans accès disque\nRead Text : conserver l'erreur amont sans accès disque\nEntrées -> opération -> indicateurs. Résultat attendu : cancelled (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 77\n",
+        "text": "Read Text: preserve the upstream error without disk access\nRead Text: preserve the upstream error without disk access\nInputs -> operation -> indicators. Expected result: cancelled (bool) = false\nerror_status (bool) = true\nerror_code (i32) = 77\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

@@ -264,7 +264,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Transpose a 2 × 3 Array\nA two-dimensional Array is distinct from the Matrix type. Transpose swaps the two dimensions and preserves every exact element in row-major order.\nEntrées -> opération -> indicateurs. Résultat attendu : result (array<i32,rank=2>) = {\"shape\":[3,2],\"elements\":[1,4,2,5,3,6]}\n",
+        "text": "Transpose a 2 × 3 Array\nA two-dimensional Array is distinct from the Matrix type. Transpose swaps the two dimensions and preserves every exact element in row-major order.\nInputs -> operation -> indicators. Expected result: result (array<i32,rank=2>) = {\"shape\":[3,2],\"elements\":[1,4,2,5,3,6]}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

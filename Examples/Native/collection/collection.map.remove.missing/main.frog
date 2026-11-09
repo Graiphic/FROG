@@ -364,7 +364,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Remove From Map — missing key\nRemoval emits a new Map and the removed value. A missing key preserves the Map and returns the intrinsic I32 default with key_not_found true.\nEntrées -> opération -> indicateurs. Résultat attendu : result (map<string,i32>) = {\"entries\":[{\"key\":\"A\",\"value\":10},{\"key\":\"B\",\"value\":20}]}\nremoved (i32) = 0\nnot-found (bool) = true\n",
+        "text": "Remove From Map — missing key\nRemoval emits a new Map and the removed value. A missing key preserves the Map and returns the intrinsic I32 default with key_not_found true.\nInputs -> operation -> indicators. Expected result: result (map<string,i32>) = {\"entries\":[{\"key\":\"A\",\"value\":10},{\"key\":\"B\",\"value\":20}]}\nremoved (i32) = 0\nnot-found (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

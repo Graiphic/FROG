@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 7,
   "language": "FROG",
-  "title": "Appel C : scalaire exact i32",
+  "title": "C call: exact i32 scalar",
   "metadata": {
-    "name": "Appel C : scalaire exact i32",
+    "name": "C call: exact i32 scalar",
     "name_source": "document",
-    "description": "Le vrai nœud NativeCall utilise la bibliothèque C livrée avec les exemples, via un chemin relatif au document. Profil scalar5 : I32/U32/I64/U64/F64 par valeur, thread Any, C ABI. Les IDs param.<id>.in/out sont persistants. Les arguments restent dans l'ordre ABI même lorsque leurs lignes visuelles sont inversées. Les nombres entiers ne transitent jamais par un double.\n\nAppel C : scalaire exact i32\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/native-call.scalar5@1.\nExpected:\nreturned (i32) = -2147483648\nerror_status (bool) = false\nerror_code (i32) = 0\nmirror_0 (i32) = -2147483648\n",
+    "description": "The actual NativeCall node uses the C library shipped with the examples, through a document-relative path. The scalar5 profile passes I32/U32/I64/U64/F64 by value, on thread Any, using the C ABI. param.<id>.in/out IDs are persistent. Arguments retain ABI order even when their visual rows are reversed. Integers never pass through a double.\n\nC call: exact i32 scalar\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/native-call.scalar5@1.\nExpected:\nreturned (i32) = -2147483648\nerror_status (bool) = false\nerror_code (i32) = 0\nmirror_0 (i32) = -2147483648\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -426,7 +426,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Appel C : scalaire exact i32\nAppel C : scalaire exact i32\nEntrées -> opération -> indicateurs. Résultat attendu : returned (i32) = -2147483648\nerror_status (bool) = false\nerror_code (i32) = 0\nmirror_0 (i32) = -2147483648\n",
+        "text": "C call: exact i32 scalar\nC call: exact i32 scalar\nInputs -> operation -> indicators. Expected result: returned (i32) = -2147483648\nerror_status (bool) = false\nerror_code (i32) = 0\nmirror_0 (i32) = -2147483648\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

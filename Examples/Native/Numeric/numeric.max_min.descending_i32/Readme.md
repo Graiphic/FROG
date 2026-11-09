@@ -2,9 +2,9 @@
 
 Compatible comparable x,y -> max/min of the common type.
 
-Max/Min conserve les types exacts et publient les deux sorties de la même activation. Le profil authored v2 ignore un seul NaN; le profil explicite historique exact.v1 reste séparé.
-Entrées : x (i32) = 7; y (i32) = 2.
-Résultats attendus : max (i32) = 7; min (i32) = 2.
+Max/Min preserve exact types and publish both outputs from the same activation. The authored v2 profile ignores a single NaN; the explicit historical exact.v1 profile remains separate.
+Inputs: x (i32) = 7; y (i32) = 2.
+Expected results: max (i32) = 7; min (i32) = 2.
 
 Compatible comparable x,y -> max/min of the common type.
 

@@ -374,7 +374,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Variant type mismatch is a normal error\nA boxed String cannot be extracted as I32. The result is the I32 intrinsic default and an error status; no numeric parsing or reinterpretation is attempted. Native and historical Simulation currently have distinct error codes, so this examp...\nEntrées -> opération -> indicateurs. Résultat attendu : result (i32) = 0\nerror-status (bool) = true\n",
+        "text": "Variant type mismatch is a normal error\nA boxed String cannot be extracted as I32. The result is the I32 intrinsic default and an error status; no numeric parsing or reinterpretation is attempted. Native and historical Simulation currently have distinct error codes, so this examp...\nInputs -> operation -> indicators. Expected result: result (i32) = 0\nerror-status (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

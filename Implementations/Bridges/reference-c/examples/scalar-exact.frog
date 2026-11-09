@@ -1,0 +1,346 @@
+{
+  "spec_version": "0.1",
+  "metadata": {
+    "name": "Exact six scalar carriers and wrap64",
+    "description": "Finite public Source for independent C/LLVM execution parity."
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": []
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "i64-read",
+        "kind": "widget_value",
+        "widget": "i64"
+      },
+      {
+        "id": "i64-write",
+        "kind": "widget_value",
+        "widget": "i64-out"
+      },
+      {
+        "id": "i64-one",
+        "kind": "constant",
+        "type": "i64",
+        "value": 1,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "i64-add",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.add.ieee-wrap64.v1"
+      },
+      {
+        "id": "u64-read",
+        "kind": "widget_value",
+        "widget": "u64"
+      },
+      {
+        "id": "u64-write",
+        "kind": "widget_value",
+        "widget": "u64-out"
+      },
+      {
+        "id": "u64-one",
+        "kind": "constant",
+        "type": "u64",
+        "value": 1,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "u64-add",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.add.ieee-wrap64.v1"
+      },
+      {
+        "id": "i32-read",
+        "kind": "widget_value",
+        "widget": "i32"
+      },
+      {
+        "id": "i32-write",
+        "kind": "widget_value",
+        "widget": "i32-out"
+      },
+      {
+        "id": "u32-read",
+        "kind": "widget_value",
+        "widget": "u32"
+      },
+      {
+        "id": "u32-write",
+        "kind": "widget_value",
+        "widget": "u32-out"
+      },
+      {
+        "id": "flag-read",
+        "kind": "widget_value",
+        "widget": "flag"
+      },
+      {
+        "id": "flag-write",
+        "kind": "widget_value",
+        "widget": "flag-out"
+      },
+      {
+        "id": "f64-read",
+        "kind": "widget_value",
+        "widget": "f64"
+      },
+      {
+        "id": "f64-write",
+        "kind": "widget_value",
+        "widget": "f64-out"
+      },
+      {
+        "id": "f64-one",
+        "kind": "constant",
+        "type": "f64",
+        "value": 1,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      },
+      {
+        "id": "f64-add",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.add.ieee-wrap64.v1"
+      },
+      {
+        "id": "negative-exact",
+        "kind": "constant",
+        "type": "i64",
+        "value": -9007199254740993,
+        "constant_profile": "frog.studio.scalar-constant@1"
+      }
+    ],
+    "edges": [
+      {
+        "id": "i64-a",
+        "from": {
+          "node": "i64-read",
+          "port": "value"
+        },
+        "to": {
+          "node": "i64-add",
+          "port": "a"
+        }
+      },
+      {
+        "id": "i64-b",
+        "from": {
+          "node": "i64-one",
+          "port": "value"
+        },
+        "to": {
+          "node": "i64-add",
+          "port": "b"
+        }
+      },
+      {
+        "id": "i64-result",
+        "from": {
+          "node": "i64-add",
+          "port": "result"
+        },
+        "to": {
+          "node": "i64-write",
+          "port": "value"
+        }
+      },
+      {
+        "id": "u64-a",
+        "from": {
+          "node": "u64-read",
+          "port": "value"
+        },
+        "to": {
+          "node": "u64-add",
+          "port": "a"
+        }
+      },
+      {
+        "id": "u64-b",
+        "from": {
+          "node": "u64-one",
+          "port": "value"
+        },
+        "to": {
+          "node": "u64-add",
+          "port": "b"
+        }
+      },
+      {
+        "id": "u64-result",
+        "from": {
+          "node": "u64-add",
+          "port": "result"
+        },
+        "to": {
+          "node": "u64-write",
+          "port": "value"
+        }
+      },
+      {
+        "id": "i32-direct",
+        "from": {
+          "node": "i32-read",
+          "port": "value"
+        },
+        "to": {
+          "node": "i32-write",
+          "port": "value"
+        }
+      },
+      {
+        "id": "u32-direct",
+        "from": {
+          "node": "u32-read",
+          "port": "value"
+        },
+        "to": {
+          "node": "u32-write",
+          "port": "value"
+        }
+      },
+      {
+        "id": "flag-direct",
+        "from": {
+          "node": "flag-read",
+          "port": "value"
+        },
+        "to": {
+          "node": "flag-write",
+          "port": "value"
+        }
+      },
+      {
+        "id": "f64-a",
+        "from": {
+          "node": "f64-read",
+          "port": "value"
+        },
+        "to": {
+          "node": "f64-add",
+          "port": "a"
+        }
+      },
+      {
+        "id": "f64-b",
+        "from": {
+          "node": "f64-one",
+          "port": "value"
+        },
+        "to": {
+          "node": "f64-add",
+          "port": "b"
+        }
+      },
+      {
+        "id": "f64-result",
+        "from": {
+          "node": "f64-add",
+          "port": "result"
+        },
+        "to": {
+          "node": "f64-write",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "front_panel": {
+    "widgets": [
+      {
+        "id": "i64",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "i64",
+        "props": {
+          "default_value": 9007199254740993
+        }
+      },
+      {
+        "id": "i64-out",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "i64"
+      },
+      {
+        "id": "u64",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "u64",
+        "props": {
+          "default_value": 18446744073709551615
+        }
+      },
+      {
+        "id": "u64-out",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "u64"
+      },
+      {
+        "id": "i32",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "i32",
+        "props": {
+          "default_value": -2147483648
+        }
+      },
+      {
+        "id": "i32-out",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "i32"
+      },
+      {
+        "id": "u32",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "u32",
+        "props": {
+          "default_value": 4294967295
+        }
+      },
+      {
+        "id": "u32-out",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "u32"
+      },
+      {
+        "id": "flag",
+        "role": "control",
+        "class_ref": "frog.widgets.boolean_control",
+        "value_type": "bool",
+        "props": {
+          "default_value": true
+        }
+      },
+      {
+        "id": "flag-out",
+        "role": "indicator",
+        "class_ref": "frog.widgets.boolean_indicator",
+        "value_type": "bool"
+      },
+      {
+        "id": "f64",
+        "role": "control",
+        "class_ref": "frog.widgets.numeric_control",
+        "value_type": "f64",
+        "props": {
+          "default_value": 1.25
+        }
+      },
+      {
+        "id": "f64-out",
+        "role": "indicator",
+        "class_ref": "frog.widgets.numeric_indicator",
+        "value_type": "f64"
+      }
+    ]
+  }
+}

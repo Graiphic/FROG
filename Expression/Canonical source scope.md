@@ -302,6 +302,20 @@ turning runtime rendering or SVG geometry into language semantics.
 
 <hr/>
 
+<h2>Validation Inputs Beyond Source Bytes</h2>
+
+<p>External tools identify the exact source format/version and URI, provide immutable
+referenced contents through an explicit resolver, and supply any semantic context
+required by the selected profiles. A file extension, editor projection or successful
+JSON Schema check does not establish semantic validity.</p>
+
+<p>See the <a href="../docs/frontend-tools-guide.md">Frontend external-tool guide</a>
+for the separate source, operation-completion and target gates. A resolved projection
+has its own hash and attribution; it does not replace or silently repair the
+original source.</p>
+
+<hr/>
+
 <h2>Structural Validity Boundary</h2>
 
 <p>

@@ -445,7 +445,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Construct a heterogeneous Cluster\nWithout an incoming Cluster, Bundle constructs its ordered heterogeneous schema. The Cluster keeps individual exact field values.\nEntrées -> opération -> indicateurs. Résultat attendu : number (i64) = 9007199254740993\ntext (string) = \"FROG\"\nflag (bool) = true\n",
+        "text": "Construct a heterogeneous Cluster\nWithout an incoming Cluster, Bundle constructs its ordered heterogeneous schema. The Cluster keeps individual exact field values.\nInputs -> operation -> indicators. Expected result: number (i64) = 9007199254740993\ntext (string) = \"FROG\"\nflag (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

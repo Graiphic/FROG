@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 6,
   "language": "FROG",
-  "title": "Référence de contrôle : lire sa vraie valeur",
+  "title": "Control reference: read its actual value",
   "metadata": {
-    "name": "Référence de contrôle : lire sa vraie valeur",
+    "name": "Control reference: read its actual value",
     "name_source": "document",
-    "description": "La référence transportée dans un vrai cluster cible le contrôle B. Son état courant est True et sa valeur par défaut sauvegardée est False. Property Value lit/écrit l'état de la vraie session ; Invoke Reinitialize applique le défaut sauvegardé. Ce profil local ne prétend pas exécuter tous les membres proposés par l'éditeur.\n\nRéférence de contrôle : lire sa vraie valeur\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/object-reference.local@1.\nExpected:\nresult (bool) = true\n",
+    "description": "The reference transported in an actual cluster targets control B. Its current state is True and its saved default is False. Property Value reads/writes the real session state; Invoke Reinitialize applies the saved default. This local profile does not claim to execute every member offered by the editor.\n\nControl reference: read its actual value\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/object-reference.local@1.\nExpected:\nresult (bool) = true\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -470,7 +470,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Référence de contrôle : lire sa vraie valeur\nRéférence de contrôle : lire sa vraie valeur\nEntrées -> opération -> indicateurs. Résultat attendu : result (bool) = true\n",
+        "text": "Control reference: read its actual value\nControl reference: read its actual value\nInputs -> operation -> indicators. Expected result: result (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

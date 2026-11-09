@@ -120,3 +120,19 @@ slots may appear in an artifact. Live borrowed handles are in-process capabiliti
 and are never encoded; encoding such a value returns an empty payload. No raw
 pointer/token persistence, cross-process registry access or NI binary ABI is
 claimed. Scalar schema-1 bytes remain protected by a fixed golden artifact.
+
+### Intrinsic NULL reference values (typed tag 15)
+
+The schema-2 typed codec additionally transports an explicit intrinsic NULL
+reference using tag15 and its canonical reference type. It uses the existing
+Reference value carrier, sealed by `makeRuntimeNullReference`; it has no live
+registry, target, address or resource. Decoding binds this immutable NULL to the
+declared receiving value owner. It never obtains a Queue or creates a resource.
+Full nominal widget/source schemas remain part of their existing contracts.
+
+Only this sealed intrinsic authority is encodable. Ordinary provider-backed
+references, including live Queue handles, remain rejected. The existing depth,
+node and aggregate byte bounds apply; the reference type is limited to65536
+bytes. Legacy scalar and packed-array profiles reject this tag. Historical
+encodings are unchanged; older typed readers reject the new tag rather than
+silently substituting a value. Consumers must use the qualified matching SDK.

@@ -4,7 +4,28 @@
 
 <h1 align="center">🐸 FROG — Free Open Graphical Language</h1>
 
-<p><strong>Current implementation/corpus reconciliation — 26 October 2026:</strong>
+<p><strong>Open participation, Graiphic leadership:</strong>
+<a href="GOVERNANCE.md#official-project-rules">seven simple project rules</a> and
+<a href="CONTRIBUTING.md#contribution-rules">how to contribute</a>. Shared components are proven in Studio and qualified independently before an official release; all merges require maintainer review.</p>
+
+<p><strong>Public implementation checkpoint — 2 November 2026:</strong>
+The <a href="Implementations/Frontend/README.md">common C++ Frontend library and CLI</a>
+and the <a href="Implementations/Bridges/reference-c/README.md">finite reference C bridge</a>
+are now available as source. The Frontend candidate <code>0.2.0-local</code>, API 3,
+was exercised in Studio 0.0.6.836 and independently reconstructed from its public-only kit.
+See the <a href="docs/frontend-checkpoint-2026-11-02.json">attributed qualification checkpoint</a>
+for exact content identity and limits. Source publication is separate from a tagged binary release,
+whole-palette qualification and clean-machine qualification.</p>
+
+<p><strong>Frontend interoperability contracts — 1 November 2026:</strong>
+<a href="docs/frontend-tools-guide.md">Validation, FIR derivation and external-tool integration</a>;
+<a href="sdk/ecosystem/README.md">versioned JSON Schemas and data examples</a>.
+This update publishes documentation and schemas only. The common Frontend library
+and CLI have an <a href="sdk/ecosystem/docs/frontend-licensing.md">accepted Apache-2.0 release policy</a>
+for their selected Graiphic-owned files. Their code release is deferred; no implementation,
+executable or production Runtime code is included in this update.</p>
+
+<p><strong>Implementation/corpus checkpoint — 26 October 2026:</strong>
 <a href="docs/studio-current-state-2026-10-26.md">Published SDK, 625 examples, native profiles and documentation boundaries</a>.
 This is a dated implementation update, not a new normative language contract.</p>
 

@@ -2,9 +2,9 @@
 
 Evaluates Si(x)=integral(0,x,sin(t)/t,dt) in radians with signed x.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : x (f64) = -2.
-Résultats attendus : result (f64) = -1.6054129768026948.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: x (f64) = -2.
+Expected results: result (f64) = -1.6054129768026948.
 
 Evaluates Si(x)=integral(0,x,sin(t)/t,dt) in radians with signed x.
 

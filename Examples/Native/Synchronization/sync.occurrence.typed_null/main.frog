@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 6,
   "language": "FROG",
-  "title": "occurrence : référence nulle correctement typée",
+  "title": "occurrence: correctly typed null reference",
   "metadata": {
-    "name": "occurrence : référence nulle correctement typée",
+    "name": "occurrence: correctly typed null reference",
     "name_source": "document",
-    "description": "La constante porte la classe nominale exacte ; elle ne contient aucun handle vivant. Une référence invalide ne doit jamais créer une attente infinie. timed_out=True. Semaphore et Rendezvous renvoient également leur erreur locale ; Occurrence n'a pas de terminaux d'erreur.\n\noccurrence : référence nulle correctement typée\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ntimed_out (bool) = true\n",
+    "description": "The constant carries the exact nominal class and no live handle. An invalid reference must never create an infinite wait. timed_out=True. Semaphore and Rendezvous also return their local error; Occurrence has no error terminals.\n\noccurrence: correctly typed null reference\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ntimed_out (bool) = true\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -249,7 +249,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "occurrence : référence nulle correctement typée\noccurrence : référence nulle correctement typée\nEntrées -> opération -> indicateurs. Résultat attendu : timed_out (bool) = true\n",
+        "text": "occurrence: correctly typed null reference\noccurrence: correctly typed null reference\nInputs -> operation -> indicators. Expected result: timed_out (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

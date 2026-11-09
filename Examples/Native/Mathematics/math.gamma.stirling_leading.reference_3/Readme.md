@@ -2,9 +2,9 @@
 
 First Stirling term for Gamma at r=abs(x)>0: sqrt(2*pi)*r^(r-1/2)*exp(-r), evaluated in log space.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : x (f64) = 0.5.
-Résultats attendus : value (f64) = 1.520346901066281.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: x (f64) = 0.5.
+Expected results: value (f64) = 1.520346901066281.
 
 First Stirling term for Gamma at r=abs(x)>0: sqrt(2*pi)*r^(r-1/2)*exp(-r), evaluated in log space.
 

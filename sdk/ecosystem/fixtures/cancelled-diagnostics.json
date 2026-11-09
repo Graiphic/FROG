@@ -1,0 +1,16 @@
+[
+  {
+    "schema": "frog.diagnostic",
+    "version": "0.2",
+    "code": "frontend.cancelled",
+    "stage": "resolve",
+    "severity": "info",
+    "category": "control",
+    "message": "The operation was cancelled before resolution completed.",
+    "source": {
+      "uri": "example:/program.frog",
+      "pointer": "",
+      "document_id": "example.source"
+    }
+  }
+]

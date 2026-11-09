@@ -1,10 +1,10 @@
-# Read Text : refuser un chemin relatif sans base explicite
+# Read Text: reject a relative path without an explicit base
 
-Read Text : refuser un chemin relatif sans base explicite
+Read Text: reject a relative path without an explicit base
 
-Le chemin relatif est câblé explicitement. FileIoRuntime le refuse par une erreur de données au lieu de lire arbitrairement dans le répertoire courant du processus. Aucun sélecteur n'est ouvert, aucun fichier n'est modifié.
+The relative path is explicitly wired. FileIoRuntime rejects it with a data error instead of reading arbitrarily from the process working directory. No picker opens and no file is modified.
 
-Read Text : refuser un chemin relatif sans base explicite
+Read Text: reject a relative path without an explicit base
 
 Mode: execution. Profile: studio-draft. Capability: windows/highlight-fileio.
 Expected:

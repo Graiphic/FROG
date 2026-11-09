@@ -409,7 +409,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: rank2 i32\nRow-major rank and shape stay unchanged. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (array<i32,rank=2>) = {\"shape\":[2,2],\"elements\":[11,12,13,14]}\n",
+        "text": "Add: rank2 i32\nRow-major rank and shape stay unchanged. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nInputs -> operation -> indicators. Expected result: output-result (array<i32,rank=2>) = {\"shape\":[2,2],\"elements\":[11,12,13,14]}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

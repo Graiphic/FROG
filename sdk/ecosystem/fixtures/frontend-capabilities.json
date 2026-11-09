@@ -1,0 +1,36 @@
+{
+  "schema": "frog.frontend.capabilities",
+  "schema_version": "0.1",
+  "source_formats": [
+    {
+      "family": "fixture.only.source",
+      "version": "0.1"
+    }
+  ],
+  "fir_formats": [
+    {
+      "family": "fixture.only.fir",
+      "version": "0.1"
+    }
+  ],
+  "frontend_apis": [
+    "1"
+  ],
+  "profiles": [
+    {
+      "id": "fixture.only.numeric",
+      "version": "0.1",
+      "operations": [
+        "fixture.only.add",
+        "fixture.only.literal"
+      ]
+    },
+    {
+      "id": "fixture.only.text",
+      "version": "0.1",
+      "operations": [
+        "fixture.only.text.literal"
+      ]
+    }
+  ]
+}

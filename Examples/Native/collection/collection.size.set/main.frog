@@ -196,7 +196,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Set size\nCollection Size reports the stored entry count, not a maximum key or highest index.\nEntrées -> opération -> indicateurs. Résultat attendu : result (i32) = 3\n",
+        "text": "Set size\nCollection Size reports the stored entry count, not a maximum key or highest index.\nInputs -> operation -> indicators. Expected result: result (i32) = 3\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.io/frog/sdk/ecosystem/0.1/evidence.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "version",
+    "scenario_id",
+    "status",
+    "level",
+    "command",
+    "input_sha256",
+    "implementation",
+    "expected",
+    "observed",
+    "duration_ms",
+    "environment",
+    "limits",
+    "artifacts"
+  ],
+  "properties": {
+    "schema": {
+      "const": "graiphic.evidence"
+    },
+    "version": {
+      "const": "0.1"
+    },
+    "scenario_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "status": {
+      "enum": [
+        "pass",
+        "fail",
+        "skipped",
+        "unsupported",
+        "blocked"
+      ]
+    },
+    "level": {
+      "enum": [
+        "contract",
+        "unit",
+        "integration",
+        "ui",
+        "native",
+        "hardware"
+      ]
+    },
+    "command": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2048
+      },
+      "maxItems": 4096
+    },
+    "input_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "commit",
+        "sha256"
+      ],
+      "properties": {
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "expected": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "observed": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "duration_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "environment": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "limits": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2048
+      },
+      "maxItems": 4096
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      },
+      "maxItems": 4096
+    }
+  }
+}

@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 2,
   "language": "FROG",
-  "title": "Queue : capacité, Preview, perte contrôlée et Flush",
+  "title": "Queue: capacity, Preview, controlled loss and Flush",
   "metadata": {
-    "name": "Queue : capacité, Preview, perte contrôlée et Flush",
+    "name": "Queue: capacity, Preview, controlled loss and Flush",
     "name_source": "document",
-    "description": "Une Queue<f64> de capacité 2 reçoit 10 puis 20. Preview lit 10 sans l'enlever : Status retourne toujours [10,20] et count=2. Lossy Enqueue de 30 évince exactement 10 ; Flush retourne [20,30]. Dequeue avec timeout=0 constate ensuite une file vide, sans créer de valeur. Release ferme le handle et retourne un tableau restant vide.\n\nQueue : capacité, Preview, perte contrôlée et Flush\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\npreview (f64) = 10\ncount (i32) = 2\ncapacity (i32) = 2\nbefore (array<f64>) = [10,20]\noverflow (bool) = true\nevicted (f64) = 10\nflushed (array<f64>) = [20,30]\nempty_timeout (bool) = true\nremaining (array<f64>) = []\nerror_status (bool) = false\nerror_code (i32) = 0\n",
+    "description": "A Queue<f64> of capacity 2 receives 10, then 20. Preview reads 10 without removing it: Status still returns [10,20] and count=2. Lossy Enqueue of 30 evicts exactly 10; Flush returns [20,30]. Dequeue with timeout=0 then observes an empty queue without creating a value. Release closes the handle and returns an empty remaining array.\n\nQueue: capacity, Preview, controlled loss and Flush\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\npreview (f64) = 10\ncount (i32) = 2\ncapacity (i32) = 2\nbefore (array<f64>) = [10,20]\noverflow (bool) = true\nevicted (f64) = 10\nflushed (array<f64>) = [20,30]\nempty_timeout (bool) = true\nremaining (array<f64>) = []\nerror_status (bool) = false\nerror_code (i32) = 0\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -1584,7 +1584,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Queue : capacité, Preview, perte contrôlée et Flush\nQueue : capacité, Preview, perte contrôlée et Flush\nEntrées -> opération -> indicateurs. Résultat attendu : preview (f64) = 10\ncount (i32) = 2\ncapacity (i32) = 2\nbefore (array<f64>) = [10,20]\noverflow (bool) = true\nevicted (f64) = 10\nflushed (array<f64>) = [20,30]\nempty_timeout (bool) = true\nremaining (array<f64>) = []\nerror_s...",
+        "text": "Queue: capacity, Preview, controlled loss and Flush\nQueue: capacity, Preview, controlled loss and Flush\nInputs -> operation -> indicators. Expected result: preview (f64) = 10\ncount (i32) = 2\ncapacity (i32) = 2\nbefore (array<f64>) = [10,20]\noverflow (bool) = true\nevicted (f64) = 10\nflushed (array<f64>) = [20,30]\nempty_timeout (bool) = true\nremaining (array<f64>) = []\nerror_s...",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

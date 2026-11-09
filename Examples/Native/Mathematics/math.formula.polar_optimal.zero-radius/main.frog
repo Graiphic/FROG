@@ -586,7 +586,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Adaptive polar sampling preserves parameter occurrences\nZero radius gives three coincident coordinate pairs. At angles 0,1,2, cos(2) is negative, so +0*cos(2) is IEEE -0; the independent x oracle preserves that sign. Distinct parameter occurrences are retained; the output must not deduplicate th...\nEntrées -> opération -> indicateurs. Résultat attendu : output-x_values (array<f64>) = [0,0,-0]\noutput-y_values (array<f64>) = [0,0,0]\noutput-error (i32) = 0\n",
+        "text": "Adaptive polar sampling preserves parameter occurrences\nZero radius gives three coincident coordinate pairs. At angles 0,1,2, cos(2) is negative, so +0*cos(2) is IEEE -0; the independent x oracle preserves that sign. Distinct parameter occurrences are retained; the output must not deduplicate th...\nInputs -> operation -> indicators. Expected result: output-x_values (array<f64>) = [0,0,-0]\noutput-y_values (array<f64>) = [0,0,0]\noutput-error (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

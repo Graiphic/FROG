@@ -1,10 +1,10 @@
-# Clear Error : réinitialiser les trois champs du cluster
+# Clear Error: reset all three cluster fields
 
-Clear Error : réinitialiser les trois champs du cluster
+Clear Error: reset all three cluster fields
 
-L'erreur d'entrée est {status:True, code:77, source:example operation failed}. Clear Error retourne le record complet {False,0,chaîne vide}, puis Unbundle expose séparément ses trois champs. L'erreur est une valeur typée transportée dans le diagramme, pas une exception C++ ni un arrêt du runtime.
+The input error is {status:True, code:77, source:example operation failed}. Clear Error returns the complete record {False,0,empty string}, then Unbundle exposes its three fields separately. The error is a typed value transported through the diagram, not a C++ exception or a runtime stop.
 
-Clear Error : réinitialiser les trois champs du cluster
+Clear Error: reset all three cluster fields
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

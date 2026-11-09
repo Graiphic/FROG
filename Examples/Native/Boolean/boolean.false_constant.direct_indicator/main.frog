@@ -6,7 +6,7 @@
   "metadata": {
     "name": "False Constant — direct indicator",
     "name_source": "document",
-    "description": "La véritable constante booléenne de palette est directement reliée à un indicateur. Aucun opérateur d'identité ni contrôle synthétique ne remplace cette constante.\nEntrées : aucune; constante typée.\nRésultats attendus : value (bool) = false.\n\nThe Studio node stores and exposes the fixed Boolean value false through output value.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-value (bool) = false\n",
+    "description": "The actual palette Boolean constant connects directly to an indicator. No identity operator or synthetic control replaces it.\nInputs: none; typed constant.\nExpected results: value (bool) = false.\n\nThe Studio node stores and exposes the fixed Boolean value false through output value.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-value (bool) = false\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -162,7 +162,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "False Constant — direct indicator\nThe Studio node stores and exposes the fixed Boolean value false through output value.\nEntrées -> opération -> indicateurs. Résultat attendu : output-value (bool) = false\n",
+        "text": "False Constant — direct indicator\nThe Studio node stores and exposes the fixed Boolean value false through output value.\nInputs -> operation -> indicators. Expected result: output-value (bool) = false\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

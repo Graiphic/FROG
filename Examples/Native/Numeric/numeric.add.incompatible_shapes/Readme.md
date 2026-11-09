@@ -2,9 +2,9 @@
 
 Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
 
-Cas négatif: les tableaux ont des formes [2] et [3]. La Simulation privée doit produire exactement Incompatible aggregate shapes or Cluster fields et ne publier aucune valeur d'indicateur. Ce message est celui du moteur privé, pas un code public inventé. Aucun broadcasting silencieux n'est admis.
-Entrées : a (array<i32>) = [1, 2]; b (array<i32>) = [3, 4, 5].
-Résultats attendus : .
+Negative case: the arrays have shapes [2] and [3]. Private Simulation must report exactly Incompatible aggregate shapes or Cluster fields and publish no indicator value. This is a private-engine message, not an invented public code. No silent broadcasting is allowed.
+Inputs: a (array<i32>) = [1, 2]; b (array<i32>) = [3, 4, 5].
+Expected results: .
 
 Adds connected operands in canonical port order with a canonical left fold after coercion to the resolved result leaf type.
 

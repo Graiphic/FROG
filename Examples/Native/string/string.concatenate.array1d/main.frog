@@ -270,7 +270,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Concatenate a String Array\nA one-dimensional String Array contributes its elements in index order. The trailing scalar is then appended.\nEntrées -> opération -> indicateurs. Résultat attendu : result (string) = \"abc!\"\n",
+        "text": "Concatenate a String Array\nA one-dimensional String Array contributes its elements in index order. The trailing scalar is then appended.\nInputs -> operation -> indicators. Expected result: result (string) = \"abc!\"\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

@@ -1,0 +1,22 @@
+{
+  "schema": "graiphic.evidence",
+  "version": "0.1",
+  "scenario_id": "fixture.only.not-a-qualification",
+  "status": "unsupported",
+  "level": "contract",
+  "command": [],
+  "input_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "implementation": {
+    "version": "fixture-only",
+    "commit": "1111111111111111111111111111111111111111",
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "expected": "Schema fixture can represent unexecuted work explicitly.",
+  "observed": "Synthetic fixture; no real execution evidence.",
+  "duration_ms": 0,
+  "environment": "fixture-only",
+  "limits": [
+    "Not an execution report or a qualification claim."
+  ],
+  "artifacts": []
+}

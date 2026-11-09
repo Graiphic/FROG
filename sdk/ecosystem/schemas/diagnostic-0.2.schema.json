@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.io/frog/sdk/ecosystem/0.2/diagnostic.schema.json",
+  "description": "API-2 local result document. Its document, C ABI and Source/FIR versions are independent.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "version",
+    "code",
+    "stage",
+    "severity",
+    "category",
+    "message",
+    "source"
+  ],
+  "properties": {
+    "schema": {
+      "const": "frog.diagnostic"
+    },
+    "version": {
+      "const": "0.2"
+    },
+    "code": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stage": {
+      "enum": [
+        "read",
+        "resolve",
+        "adaptation",
+        "validate",
+        "derive"
+      ]
+    },
+    "severity": {
+      "enum": [
+        "info",
+        "warning",
+        "error"
+      ]
+    },
+    "category": {
+      "enum": [
+        "format",
+        "compatibility",
+        "structure",
+        "interface",
+        "integrity",
+        "semantics",
+        "dependency",
+        "frontend-capability",
+        "control"
+      ]
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uri",
+        "pointer",
+        "document_id"
+      ],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 8192
+        },
+        "pointer": {
+          "type": "string",
+          "pattern": "^(?:/(?:[^~]|~[01])*)?$"
+        },
+        "document_id": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 8192
+        },
+        "object_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "port_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "connection_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "region_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "capability_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "derived_pointer": {
+      "type": "string",
+      "pattern": "^(?:/(?:[^~]|~[01])*)?$"
+    },
+    "related_locations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "uri",
+          "pointer"
+        ],
+        "properties": {
+          "uri": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 8192
+          },
+          "pointer": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~]|~[01])*)?$"
+          },
+          "document_id": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 8192
+          },
+          "object_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "port_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "connection_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "minItems": 0
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "category": {
+            "const": "frontend-capability"
+          }
+        },
+        "required": [
+          "category"
+        ]
+      },
+      "then": {
+        "required": [
+          "capability_id"
+        ]
+      }
+    }
+  ]
+}

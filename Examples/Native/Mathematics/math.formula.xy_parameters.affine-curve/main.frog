@@ -616,7 +616,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Sample a curve with named parameters\nWith a=2,b=1 and t=[0,1,2], [a*t,b+t] gives x=[0,2,4],y=[1,2,3]. The parameter Array contains genuine named Cluster values.\nEntrées -> opération -> indicateurs. Résultat attendu : output-x_values (array<f64>) = [0,2,4]\noutput-y_values (array<f64>) = [1,2,3]\noutput-error (i32) = 0\n",
+        "text": "Sample a curve with named parameters\nWith a=2,b=1 and t=[0,1,2], [a*t,b+t] gives x=[0,2,4],y=[1,2,3]. The parameter Array contains genuine named Cluster values.\nInputs -> operation -> indicators. Expected result: output-x_values (array<f64>) = [0,2,4]\noutput-y_values (array<f64>) = [1,2,3]\noutput-error (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

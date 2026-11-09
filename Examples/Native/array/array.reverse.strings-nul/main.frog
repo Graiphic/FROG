@@ -278,7 +278,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Reverse String elements without altering bytes\nArray reversal changes element order only. The embedded NUL and UTF-8 bytes inside each String remain unchanged.\nEntrées -> opération -> indicateurs. Résultat attendu : result (array<string>) = [\"FROG\",\"é\",\"A\\u0000B\"]\n",
+        "text": "Reverse String elements without altering bytes\nArray reversal changes element order only. The embedded NUL and UTF-8 bytes inside each String remain unchanged.\nInputs -> operation -> indicators. Expected result: result (array<string>) = [\"FROG\",\"é\",\"A\\u0000B\"]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

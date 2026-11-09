@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Jacobi Elliptic — reference 1",
     "name_source": "document",
-    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : argument (f64) = 0.0; parameter (f64) = 0.0.\nRésultats attendus : cn (f64) = 1.0; dn (f64) = 1.0; sn (f64) = 0.0; amplitude (f64) = 0.0.\n\nEvaluates Jacobi cn, dn, sn and continuous amplitude phi for real x and parameter m=k (not k squared and not the modulus).\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-cn (f64) = 1.0\noutput-dn (f64) = 1.0\noutput-sn (f64) = 0.0\noutput-amplitude (f64) = 0.0\n",
+    "description": "Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.\nInputs: argument (f64) = 0.0; parameter (f64) = 0.0.\nExpected results: cn (f64) = 1.0; dn (f64) = 1.0; sn (f64) = 0.0; amplitude (f64) = 0.0.\n\nEvaluates Jacobi cn, dn, sn and continuous amplitude phi for real x and parameter m=k (not k squared and not the modulus).\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-cn (f64) = 1.0\noutput-dn (f64) = 1.0\noutput-sn (f64) = 0.0\noutput-amplitude (f64) = 0.0\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -493,7 +493,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Jacobi Elliptic — reference 1\nEvaluates Jacobi cn, dn, sn and continuous amplitude phi for real x and parameter m=k (not k squared and not the modulus).\nEntrées -> opération -> indicateurs. Résultat attendu : output-cn (f64) = 1.0\noutput-dn (f64) = 1.0\noutput-sn (f64) = 0.0\noutput-amplitude (f64) = 0.0\n",
+        "text": "Jacobi Elliptic — reference 1\nEvaluates Jacobi cn, dn, sn and continuous amplitude phi for real x and parameter m=k (not k squared and not the modulus).\nInputs -> operation -> indicators. Expected result: output-cn (f64) = 1.0\noutput-dn (f64) = 1.0\noutput-sn (f64) = 0.0\noutput-amplitude (f64) = 0.0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

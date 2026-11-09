@@ -262,7 +262,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Numeric String to byte Array\nThe Numeric palette alias uses the existing native raw-byte operation. The persisted endpoints remain value/result. NUL is data; no character decoding or numeric conversion occurs.\nEntrées -> opération -> indicateurs. Résultat attendu : result (array<u8>) = [195,169,0,65]\n",
+        "text": "Numeric String to byte Array\nThe Numeric palette alias uses the existing native raw-byte operation. The persisted endpoints remain value/result. NUL is data; no character decoding or numeric conversion occurs.\nInputs -> operation -> indicators. Expected result: result (array<u8>) = [195,169,0,65]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

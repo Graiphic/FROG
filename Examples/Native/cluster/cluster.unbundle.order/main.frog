@@ -355,7 +355,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Unbundle preserves field order and exact types\nThe incoming Cluster fixes the positional output count and types. Its I64 field must remain exact, and the String is a separate output terminal.\nEntrées -> opération -> indicateurs. Résultat attendu : number (i64) = 9007199254740993\ntext (string) = \"kept\"\n",
+        "text": "Unbundle preserves field order and exact types\nThe incoming Cluster fixes the positional output count and types. Its I64 field must remain exact, and the String is a separate output terminal.\nInputs -> operation -> indicators. Expected result: number (i64) = 9007199254740993\ntext (string) = \"kept\"\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

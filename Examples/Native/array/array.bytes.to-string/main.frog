@@ -213,7 +213,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Convert bytes including NUL to String\nByte Array To String preserves all bytes, including NUL; no C-string termination is used.\nEntrées -> opération -> indicateurs. Résultat attendu : result (string) = \"A\\u0000B\"\n",
+        "text": "Convert bytes including NUL to String\nByte Array To String preserves all bytes, including NUL; no C-string termination is used.\nInputs -> operation -> indicators. Expected result: result (string) = \"A\\u0000B\"\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

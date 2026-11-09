@@ -5,6 +5,7 @@ real directory alias and back-edge demonstrate cycle handling. No unsupported
 filesystem feature becomes a skip; junction creation failures fail the owner.
 """
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -96,9 +97,10 @@ def main():
                 "The temporary directory does not resolve to its explicitly named parent and prefix")
         require(not excluded(sandbox / "sentinel.hpp"), "Fixture temp parent unexpectedly belongs to a historically excluded source path")
 
-        def run(name, configure, errors=(), check_sources=(), has_cycle=False, ordered_errors=False):
+        def run(name, configure, errors=(), check_sources=(), has_cycle=False, ordered_errors=False,
+                canonical_relative="canonical/runtime_contract.hpp"):
             tree = sandbox / name
-            canonical = tree / "canonical/runtime_contract.hpp"
+            canonical = tree / canonical_relative
             canonical.parent.mkdir(parents=True, exist_ok=True)
             canonical.write_bytes(canonical_bytes)
             configure(tree, canonical)
@@ -224,6 +226,105 @@ def main():
 
         run("copied-header", lambda tree, canonical: put(tree, "include/nested/runtime_contract.hpp", canonical_bytes.decode("utf-8")),
             errors=("copied public contract header is forbidden",))
+
+        snapshot_name = "Implementations/Frontend/snapshot/sdk/include/frog/sdk/runtime_contract.hpp"
+        origin_name = "Implementations/Frontend/source-origin.json"
+        canonical_name = "sdk/cpp/include/frog/sdk/runtime_contract.hpp"
+        bridge_name = "sdk/ecosystem/include/frog/bridge.hpp"
+
+        def declared_snapshot(tree, canonical, mutation=None):
+            target = tree / snapshot_name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(canonical_bytes)
+            entry = {"path": "snapshot/sdk/include/frog/sdk/runtime_contract.hpp",
+                     "upstream": "FROG/" + canonical_name, "ownership": "snapshot",
+                     "sha256": hashlib.sha256(canonical_bytes).hexdigest(), "bytes": len(canonical_bytes)}
+            manifest = {"format": "frog.frontend.source-origin", "version": 1, "sources": [entry]}
+            if mutation:
+                mutation(tree, canonical, target, manifest)
+            put(tree, origin_name, json.dumps(manifest))
+
+        run("declared-snapshot", declared_snapshot, canonical_relative=canonical_name)
+
+        mutations = {
+            "altered": lambda t,c,p,m: p.write_bytes(canonical_bytes + b"\n// drift\n"),
+            "rehashed-altered": lambda t,c,p,m: (
+                p.write_bytes(canonical_bytes + b"\n// drift\n"),
+                m["sources"][0].update(sha256=hashlib.sha256(p.read_bytes()).hexdigest(), bytes=p.stat().st_size)),
+            "upstream": lambda t,c,p,m: m["sources"][0].update(upstream="FROG/sdk/other/runtime_contract.hpp"),
+            "ownership": lambda t,c,p,m: m["sources"][0].update(ownership="shared"),
+            "digest": lambda t,c,p,m: m["sources"][0].update(sha256="0"*64),
+            "bytes": lambda t,c,p,m: m["sources"][0].update(bytes=len(canonical_bytes)+1),
+            "boolean-bytes": lambda t,c,p,m: m["sources"][0].update(bytes=True),
+            "path": lambda t,c,p,m: m["sources"][0].update(path="snapshot/sdk/include/frog/sdk/../sdk/runtime_contract.hpp"),
+            "duplicate": lambda t,c,p,m: m["sources"].append(dict(m["sources"][0])),
+            "case-collision": lambda t,c,p,m: m["sources"].append(dict(m["sources"][0], path=m["sources"][0]["path"].upper())),
+            "format": lambda t,c,p,m: m.update(format="unrecognized"),
+        }
+        for label, mutation in mutations.items():
+            run("snapshot-" + label,
+                lambda t,c,mutation=mutation: declared_snapshot(t,c,mutation),
+                errors=("copied public contract header is forbidden",), canonical_relative=canonical_name)
+
+        def invalid_origin(tree, canonical, content):
+            declared_snapshot(tree, canonical)
+            put(tree, origin_name, content)
+        for label, content in (("malformed", "{"), ("duplicate-member", '{"format":"bad","format":"frog.frontend.source-origin"}')):
+            run("snapshot-origin-"+label, lambda t,c,content=content: invalid_origin(t,c,content),
+                errors=("copied public contract header is forbidden",), canonical_relative=canonical_name)
+        def missing_origin(tree, canonical):
+            declared_snapshot(tree, canonical)
+            (tree / origin_name).unlink()
+        run("snapshot-origin-missing", missing_origin,
+            errors=("copied public contract header is forbidden",), canonical_relative=canonical_name)
+        run("snapshot-wrong-selected-owner", declared_snapshot,
+            errors=("copied public contract header is forbidden",))
+        def extra_copy(tree, canonical):
+            declared_snapshot(tree, canonical)
+            put(tree, "elsewhere/runtime_contract.hpp", canonical_bytes.decode("utf-8"))
+        run("snapshot-plus-unauthorized-copy", extra_copy,
+            errors=("copied public contract header is forbidden",), canonical_relative=canonical_name)
+        def alias_snapshot(tree, canonical):
+            declared_snapshot(tree, canonical)
+            alias_directory(sandbox, tree / "Implementations/Frontend/snapshot", tree / "snapshot_alias")
+        run("snapshot-alias-not-authorized", alias_snapshot,
+            errors=("copied public contract header is forbidden",), canonical_relative=canonical_name)
+        def redirected_snapshot(tree, canonical):
+            declared_snapshot(tree, canonical)
+            source = tree / "Implementations/Frontend/snapshot/sdk"
+            actual = tree / "actual-sdk"
+            source.rename(actual)
+            alias_directory(sandbox, actual, source)
+        run("snapshot-declared-path-redirected", redirected_snapshot,
+            errors=("copied public contract header is forbidden",), canonical_relative=canonical_name)
+
+        bridge = "namespace frog::bridge { struct Diagnostic { int bridge; }; }\n"
+        for label, code in (("qualified", bridge),
+                            ("nested", "namespace frog { namespace bridge { class Diagnostic { int bridge; }; }}\n")):
+            run("bridge-diagnostic-" + label, lambda t,c,code=code: put(t,bridge_name,code), check_sources=(bridge_name,))
+        for label, code in (
+            ("runtime-in-same-file", bridge + "namespace frog::sdk::runtime { struct Diagnostic { int copied; }; }\n"),
+            ("global", "struct Diagnostic { int copied; };\n"),
+            ("other-namespace", "namespace another { struct Diagnostic { int copied; }; }\n"),
+            ("nested-body", "namespace frog::bridge { struct Wrapper { struct Diagnostic { int copied; }; }; }\n"),
+            ("anonymous", "namespace frog::bridge { namespace { struct Diagnostic { int copied; }; }}\n"),
+            ("inline", "namespace frog::bridge { inline namespace v1 { struct Diagnostic { int copied; }; }}\n"),
+            ("fake-comment", "/* namespace frog::bridge { */ struct Diagnostic { int copied; }; /* } */\n"),
+            ("fake-string", 'const char *s="namespace frog::bridge {"; struct Diagnostic { int copied; };\n'),
+            ("fake-raw-string", 'const char *s=R"tag(namespace frog::bridge {)tag"; struct Diagnostic { int copied; };\n'),
+            ("fake-macro", "#define FAKE namespace frog::bridge {\nstruct Diagnostic { int copied; };\n"),
+            ("fake-conditional", "#if 0\nnamespace frog::bridge {\n#endif\nstruct Diagnostic { int copied; };\n#if 0\n}\n#endif\n"),
+        ):
+            run("bridge-diagnostic-"+label, lambda t,c,code=code: put(t,bridge_name,code),
+                errors=("private definition of Diagnostic",), check_sources=(bridge_name,))
+        run("bridge-owner-other-contract", lambda t,c: put(t,bridge_name,bridge+"struct NodeId { int copied; };\n"),
+            errors=("private definition of NodeId",), check_sources=(bridge_name,))
+        run("bridge-diagnostic-unowned-copy", lambda t,c: put(t,"arbitrary/bridge.hpp",bridge),
+            errors=("private definition of Diagnostic",), check_sources=("arbitrary/bridge.hpp",))
+        for code in ("namespace frog::sdk::runtime { struct Diagnostic { int copied; }; }\n",
+                     "namespace frog { namespace sdk { namespace runtime { struct Diagnostic { int copied; }; }}}\n"):
+            run("runtime-namespace-"+str(len(records)), lambda t,c,code=code: put(t,"arbitrary/runtime.hpp",code),
+                errors=("private definition of Diagnostic",), check_sources=("arbitrary/runtime.hpp",))
 
         # An admitted alias into a lexical build directory must still reveal
         # its real copied header; excluded lexical traversal may not premark it.

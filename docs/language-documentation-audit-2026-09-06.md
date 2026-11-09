@@ -1,222 +1,216 @@
-# Audit documentaire FROG / Studio — 6 septembre 2026
+<a id="audit-documentaire-frog--studio--6-septembre-2026"></a>
 
-## Périmètre et preuve
+# FROG / Studio documentation audit — 6 September 2026
 
-Audit des fichiers locaux et de leur historique Git, sans fetch, push, génération
-de code ni lancement de Studio. Les références distantes locales ne prouvent pas
-l'état courant des sites publiés. Les modifications déjà présentes ont été conservées.
+<a id="périmètre-et-preuve"></a>
 
-| Dépôt | HEAD local au début de la passe | État observé |
+## Scope and evidence
+
+Audit of local files and Git history, without fetch, push, code generation or
+launching Studio. Local remote-tracking references do not prove the current state
+of published sites. Pre-existing modifications were preserved.
+
+| Repository | Local HEAD at the start | Observed state |
 | --- | --- | --- |
-| FROG | `55e4554` — publication Timed Loop, 30 août | Branche `agent/fix-default-asset-path-case`, modifications et contrats locaux non suivis |
-| FROG-STUDIO | `606db16` — authoring et structures typées, 5 septembre | Branche `agent/complete-studio-interaction-conformance`, nombreuses modifications locales |
-| Graiphic-Studio | `19a4f4b` — documentation des réalisations, 25 août | `main`, propre avant cette passe |
+| FROG | `55e4554` — Timed Loop publication, 30 August | Branch `agent/fix-default-asset-path-case`, modifications and untracked local contracts |
+| FROG-STUDIO | `606db16` — authoring and typed structures, 5 September | Branch `agent/complete-studio-interaction-conformance`, many local changes |
+| Graiphic-Studio | `19a4f4b` — realization documentation, 25 August | `main`, clean before this pass |
 
-Inventaire initial : 560 Markdown dans FROG. Le contrôle de liens a parcouru
-250 documents : `Readme.md`, `GOVERNANCE.md`, les quatre `FROG-*.md` d'orientation,
-et toutes les familles ci-dessous. Les nouveaux documents créés parallèlement
-pendant cette intervention ne sont pas inclus dans ce décompte initial.
+Initial inventory: 560 Markdown files in FROG. Link checking traversed 250 documents:
+`Readme.md`, `GOVERNANCE.md`, the four orientation `FROG-*.md` files and every family
+below. Documents created concurrently during this intervention are excluded from
+that initial count.
 
-| Famille FROG parcourue | Markdown | Autorité examinée |
+| FROG family traversed | Markdown | Authority examined |
 | --- | ---: | --- |
-| Expression | 28 | Source canonique, types, widgets, structures et schémas |
-| Language | 7 | Sens validé et règles d'exécution, avant FIR |
-| IR | 12 | Représentation dérivée, conservation, lowering et handoff |
-| IDE | 11 | Concepts d'édition et observation, sans redéfinir le langage |
-| Conformance | 184 | Attentes publiques accept/reject/preserve, par étape |
-| Versioning | 2 | Version du corpus et statut des surfaces |
+| Expression | 28 | Canonical source, types, widgets, structures and schemas |
+| Language | 7 | Validated meaning and execution rules before FIR |
+| IR | 12 | Derived representation, preservation, lowering and handoff |
+| IDE | 11 | Editing and observation concepts, without redefining the language |
+| Conformance | 184 | Public accept/reject/preserve expectations by stage |
+| Versioning | 2 | Corpus version and surface status |
 
-Les 32 Markdown de Graiphic-Studio ont été parcourus pour leurs liens et leur
-organisation. Dans FROG-STUDIO, 67 fichiers documentaires ont été inventoriés
-dans `docs/` et `native-portable-engine/docs/`, dont 50 Markdown ; lecture ciblée
-du README, des contrats de structures et des rapports de livraison/architecture.
-Cet inventaire n'est pas une lecture sémantique exhaustive de chaque paragraphe,
-une validation visuelle de chaque capture, ni une exécution de chaque exemple.
+The 32 Graiphic-Studio Markdown files were traversed for links and organization.
+FROG-STUDIO's `docs/` and `native-portable-engine/docs/` contained 67 inventoried
+documentation files, including 50 Markdown; targeted reading covered the README,
+structure contracts and delivery/architecture reports. This is neither exhaustive
+semantic reading of every paragraph, visual validation of every capture nor
+execution of every example.
 
-## Autorité à conserver
+<a id="autorité-à-conserver"></a>
 
-La séparation publiée est solide : `Expression/` définit ce qui est écrit ;
-`Language/` définit le sens admis ; `IR/` dérive ce sens sans en devenir le premier
-propriétaire ; `Conformance/` publie les résultats attendus. `Versioning/` décrit
-les frontières de publication, pas de nouvelles sémantiques. Voir
-`Language/Readme.md:53`, `GOVERNANCE.md:166` et `GOVERNANCE.md:330`.
+## Authority to preserve
 
-`IDE/Editors.md:83` réserve à FROG source, sens, types et contrats inter-outils.
-La documentation Graiphic-Studio décrit les workflows du produit ; les exigences
-`STR-*` de FROG-STUDIO gouvernent ses gestes, visuels et preuves d'implémentation.
-Une réalisation ou un validateur de référence ne devient pas normatif par sa
-seule existence. Une apparence implémentée ne prouve pas l'exécution.
+The published separation is sound: `Expression/` defines authored content;
+`Language/` defines accepted meaning; `IR/` derives that meaning without becoming
+its primary owner; `Conformance/` publishes expected outcomes. `Versioning/`
+describes publication boundaries, not new semantics. See `Language/Readme.md:53`,
+`GOVERNANCE.md:166` and `GOVERNANCE.md:330`.
 
-`Versioning/Readme.md:172` déclare **corpus `0.1-draft`**, tandis que sa ligne 187
-déclare **source `spec_version = 0.1`**. Ce n'est pas une contradiction : la
-distinction est explicite. Ne pas confondre non plus ces valeurs avec
-`metadata.program_version`, `wfrog_version`, un profil d'extension ou le numéro
-de build Studio.
+`IDE/Editors.md:83` assigns source, meaning, types and cross-tool contracts to FROG.
+Graiphic-Studio documentation describes product workflows; FROG-STUDIO's `STR-*`
+requirements govern its gestures, visuals and implementation evidence. A realization
+or reference validator does not become normative merely by existing. Implemented
+appearance does not prove execution.
 
-## Constats prioritaires
+`Versioning/Readme.md:172` declares **corpus `0.1-draft`**, while line 187 declares
+**source `spec_version = 0.1`**. This is not contradictory: the distinction is
+explicit. Do not confuse these with `metadata.program_version`, `wfrog_version`,
+an extension profile or the Studio build number.
 
-1. **Schémas non garantis par une CI verte.** Au début de l'audit,
-   `Validator/tests/test_public_structure_contract.py:10` rend `jsonschema`
-   optionnel, puis les tests de validation sont conditionnellement sautés.
-   `.github/workflows/reference-workspace.yml` et `reference-pipeline.yml`
-   installent seulement `pytest`. Les assertions présentes ne garantissent donc
-   pas l'exécution du moteur Draft 2020-12. La correction dépendances/CI relève
-   de la passe centrale ; ce rapport n'en annonce pas le résultat.
-2. **Le statut public est contradictoire et périmé.**
-   `FROG-Project-Status.md:42` annonce les exemples 01–20, sa ligne 319 annonce
-   01–24, alors que 47 dossiers numérotés existent. `Versioning/Matrix.md:23`
-   borne correctement le runtime public à 01–15, mais ses tableaux de fermeture
-   et de kinds ne listent que 01–07 ; ses lignes 254 et 285 parlent encore de
-   01–09. Le runner `Pipeline/check_examples01_10_full.py:2` décrit bien 01–15
-   et conserve volontairement son ancien nom pour compatibilité. Ne pas déduire
-   une exécution publique des exemples 16–47 de leur seule présence.
-3. **Contrats locaux acceptés ≠ publication Git vérifiée.** Les profils
-   `Expression/Typed Binding Contract v1.md` et `Case Editing Profile v1.md`
-   étaient non suivis tout en portant « accepted » en ligne 3. Le premier
-   conserve explicitement des étapes inachevées en lignes 154–162, notamment
-   la migration de l'enveloppe Studio. Conserver ces limites et associer toute
-   publication de profil à une révision et une matrice de capacités vérifiables.
-4. **Largeur des boucles : contradiction produit corrigée.** Le contrat FROG
-   fixe déjà `i64` pour count/index (`Expression/Control structures.md:716`,
-   `:721`, `:868` ; `Language/Control structures.md:410`). Les exigences produit
-   `STR-FOR-022` et `STR-WHILE-010` présentaient encore cette largeur comme non
-   tranchée. Elles sont alignées sur FROG ; l'I32 LabVIEW reste historique et
-   n'impose pas sa règle de saturation au langage.
-5. **Pas de contrôle général des schémas source/IR identifié dans le runner.**
-   La recherche des références de schémas dans les Python de
-   `Implementations/Reference/` a identifié le test dédié des nœuds de structure,
-   mais pas d'appel généralisé au schéma racine `.frog` ou à la famille IR.
-   Les contrôles manuels d'artefacts ne sont pas équivalents à une couverture
-   Draft 2020-12 exhaustive. `Expression/schema/frog.schema.json:5` annonce
-   honnêtement un périmètre conservateur, principalement top-level ; accepter
-   ce schéma ne prouve ni typage complet, ni sens, ni lowering.
+<a id="constats-prioritaires"></a>
 
-## Liens et navigation
+## Priority findings
 
-Mise à jour documentaire après ces constats : `FROG-Project-Status.md` et
-`Versioning/Matrix.md` distinguent désormais les 47 dossiers présents de la
-fermeture runtime publique 01–15. Leurs anciens tableaux sont explicitement
-historiques et partiels ; aucun kind ni niveau de couverture n'a été extrapolé
-aux dossiers absents de ces tableaux. L'entrée `Versioning/Readme.md` renvoie
-au contrat de compatibilité et de profils. La commande d'installation des tests
-dans le statut projet utilise le fichier de dépendances explicites.
+1. **A green CI does not guarantee schema checks.** At audit start,
+   `Validator/tests/test_public_structure_contract.py:10` made `jsonschema`
+   optional and conditionally skipped validation tests.
+   `.github/workflows/reference-workspace.yml` and `reference-pipeline.yml`
+   installed only `pytest`. Existing assertions therefore did not guarantee
+   execution of the Draft 2020-12 engine. Dependency/CI correction belongs to the
+   central pass; this report does not announce its result.
+2. **Public status is contradictory and outdated.** `FROG-Project-Status.md:42`
+   lists examples 01–20 and line 319 lists 01–24, whereas 47 numbered directories
+   exist. `Versioning/Matrix.md:23` correctly bounds the public runtime to 01–15,
+   but its closure/kind tables list only 01–07; lines 254 and 285 still mention
+   01–09. Runner `Pipeline/check_examples01_10_full.py:2` correctly describes 01–15
+   and intentionally retains its old name for compatibility. Mere presence does
+   not establish public execution of examples 16–47.
+3. **Accepted local contracts ≠ verified Git publication.** Profiles
+   `Expression/Typed Binding Contract v1.md` and `Case Editing Profile v1.md`
+   were untracked despite saying “accepted” on line 3. The former explicitly
+   retains unfinished stages on lines 154–162, including Studio envelope migration.
+   Preserve these limits and bind every profile publication to a verifiable
+   revision and capability matrix.
+4. **Loop width: product contradiction corrected.** FROG already specifies `i64`
+   for count/index (`Expression/Control structures.md:716`, `:721`, `:868`;
+   `Language/Control structures.md:410`). Product requirements `STR-FOR-022` and
+   `STR-WHILE-010` still described this width as undecided. They now align with
+   FROG; LabVIEW I32 remains historical and imposes no saturation rule on the language.
+5. **No general source/IR schema check identified in the runner.** Searching
+   Python schema references under `Implementations/Reference/` identified the
+   dedicated structure-node test, but no general invocation of the root `.frog`
+   schema or IR family. Manual artifact checks are not exhaustive Draft 2020-12
+   coverage. `Expression/schema/frog.schema.json:5` honestly announces a conservative,
+   mainly top-level scope; acceptance by this schema proves neither complete typing,
+   meaning nor lowering.
 
-Le scan statique de 250 documents FROG a examiné 356 références locales HTML
-`href/src` et Markdown inline. Un chemin inexistant certain a été trouvé et
-corrigé : le logo de
+<a id="liens-et-navigation"></a>
+
+## Links and navigation
+
+Documentation updated after these findings: `FROG-Project-Status.md` and
+`Versioning/Matrix.md` now distinguish the 47 existing directories from public
+runtime closure 01–15. Older tables are explicitly historical and partial; no
+kind or coverage level was extrapolated to directories absent from those tables.
+`Versioning/Readme.md` links the compatibility/profile contract. The project-status
+test-install command uses the explicit dependency file.
+
+The static scan of 250 FROG documents examined 356 local HTML `href/src` and inline
+Markdown references. One certainly missing path was corrected: the logo in
 `Conformance/invalid/12_public_interface_declaration_must_not_require_front_panel_widget_existence.md:2`
-remonte désormais de deux niveaux. Les ancres, liens externes, liens Markdown
-de référence et différences de casse sensibles à Linux ne sont pas certifiés
-par ce scan Windows.
+now goes up two levels. This Windows scan does not certify anchors, external links,
+reference-style Markdown links or Linux-sensitive case differences.
 
-Le scan des 32 documents Graiphic-Studio a examiné 126 références locales.
-Il a signalé 26 références de `docs/index.md` comme non résolubles relativement
-au fichier : 25 liens `docs/...` et une image `assets/...`. Tous les fichiers
-cibles existent depuis la racine du dépôt. Les 25 liens restent un problème
-pour la lecture directe du Markdown GitHub. Le site utilise une homepage
-Docsify et `relativePath: true` (`index.html:193–197`) ; le plugin en
-`index.html:213` réécrit les **images**. Une vérification de la homepage et de
-la route directe `#/docs/index` est nécessaire avant de qualifier toutes ces
-alertes d'erreurs du site déployé ou de changer leurs chemins.
+The scan of 32 Graiphic-Studio documents examined 126 local references. It flagged
+26 references in `docs/index.md` as unresolvable relative to that file: 25 `docs/...`
+links and one `assets/...` image. All targets exist from the repository root. The
+25 links remain a direct-GitHub-Markdown issue. The site uses a Docsify homepage
+and `relativePath: true` (`index.html:193–197`); the plugin at `index.html:213`
+rewrites **images**. Check the homepage and direct `#/docs/index` route before
+classifying every warning as a deployed-site error or changing paths.
 
-Le vérificateur existant
-`.github/scripts/verify-pages-navigation.ps1` a d'abord été exécuté en lecture seule :
-**échec**, premier chemin absent du sidebar :
-`/Expression/Case%20Editing%20Profile%20v1.md`. Cela concerne un ajout local,
-pas une preuve de panne de la publication distante. Son périmètre n'inclut pas
-`Versioning/` dans les sections générées et ne remplace pas un contrôle de tous
-les liens éditoriaux.
+The existing `.github/scripts/verify-pages-navigation.ps1` first ran read-only:
+**FAIL**, first sidebar path missing: `/Expression/Case%20Editing%20Profile%20v1.md`.
+This concerns a local addition, not proof of a remote publication failure. Its
+generated sections exclude `Versioning/`; it is not a check of all editorial links.
 
-Après création des documents de convergence et accord de coordination, le script
-officiel `build-pages-navigation.ps1` puis son vérificateur officiel ont été
-exécutés sous `pwsh`, comme dans le workflow : **PASS**, 728 chemins de recherche
-et 19 entrées racine. Le contrat de compatibilité et le profil Case figurent dans
-la navigation. Le générateur est inchangé ; les rapports restent découvrables
-par les liens éditoriaux du README et du contrat. Un contrôle complémentaire des
-sept documents nouveaux ou d'entrée modifiés a vérifié 47 références locales :
-aucune cible manquante. Ce résultat ne certifie pas les ancres ou le site distant.
+After creating convergence documents and obtaining coordination approval, the
+official `build-pages-navigation.ps1` and verifier ran under `pwsh`, as in the
+workflow: **PASS**, 728 search paths and 19 root entries. The compatibility contract
+and Case profile are in navigation. The generator is unchanged; reports remain
+discoverable through editorial README/contract links. A supplementary check of
+seven new or modified entry documents verified 47 local references with no missing
+target. This does not certify anchors or the remote site.
 
-## Corrections de tests vérifiées
+<a id="corrections-de-tests-vérifiées"></a>
 
-Les échecs Tab/Tree provenaient de tests antérieurs aux contrats publiés, pas
-d'une justification a posteriori par le commit `fa8373f` : ce dernier n'a modifié
-ni Tab ni Tree.
+## Verified test corrections
 
-- `7f20ae55` (19 mai) publie les cinq parties `page_label_display*`, leur propriété
-  et leurs marqueurs SVG. Le test Tab conserve un ensemble exact et vérifie
-  aussi les bindings `svg_or_host_surface`, conformément à `Default/Tab.md:111`.
-- `ca21e49e` puis `5a884a34` (22 mai) publient respectivement les en-têtes de
-  colonnes Tree et `active_cell`, tous deux overlays hôte.
-- `d8935c9c` (22 mai) ajoute les cinq SVG de symboles Tree. Ils ne sont pas la
-  géométrie shell. Les tests vérifient désormais séparément les six marqueurs
-  shell exacts, les overlays, le registre exact des cinq symboles et le seul
-  marqueur `item_symbol_path` dans chaque ressource de symbole.
+Tab/Tree failures came from tests predating published contracts, not a retroactive
+justification using `fa8373f`: that commit changed neither Tab nor Tree.
 
-Validation ciblée réelle : Python 3.11, `-B -m pytest -p no:cacheprovider`, les
-deux fichiers `test_tab_deepening.py` et `test_tree_deepening.py` : **7 PASS**.
-Cela ne constitue pas un résultat global du workspace ni une preuve runtime.
+- `7f20ae55` (19 May) publishes five `page_label_display*` parts, their property
+  and SVG markers. The Tab test retains an exact set and also checks
+  `svg_or_host_surface` bindings, consistent with `Default/Tab.md:111`.
+- `ca21e49e`, then `5a884a34` (22 May), publish Tree column headers and `active_cell`,
+  respectively, both host overlays.
+- `d8935c9c` (22 May) adds five Tree symbol SVGs. They are not shell geometry.
+  Tests now separately check six exact shell markers, overlays, the exact five-symbol
+  registry and the sole `item_symbol_path` marker in each symbol resource.
 
-## Conclusion actionnable
+Actual targeted validation: Python 3.11, `-B -m pytest -p no:cacheprovider`, files
+`test_tab_deepening.py` and `test_tree_deepening.py`: **7 PASS**. This is neither a
+global workspace result nor runtime evidence.
 
-Le bon rangement est celui des responsabilités existantes, pas une fusion des
-trois dépôts. La convergence doit utiliser un registre de capacités versionné
-qui relie **contrat FROG → forme source/profil → fixture positive et négative →
-test Studio → statut validation/lowering/runtime → documentation produit**.
-Les matrices humaines peuvent être dérivées de ce registre ; les décisions
-normatives restent relues et appartiennent à leur couche.
+<a id="conclusion-actionnable"></a>
 
-Priorités recommandées : rendre les dépendances de tests explicites sans skip
-silencieux ; synchroniser les matrices 01–15 / 16–47 ; publier les profils avec
-leurs limites et preuves ; contrôler séparément liens GitHub et routes Docsify ;
-relier les pages produit à un build/capture vérifiés. Conserver les profils
-incomplets comme tels et refuser explicitement un export non pris en charge.
-Ni une migration générale d'enveloppe, ni un build, ni une publication distante
-n'est annoncé comme accompli par cette passe documentaire.
+## Actionable conclusion
 
-## Annexe — échecs du rendu Python UI après audit complet
+Organization should follow existing responsibilities, not merge all three
+repositories. Convergence should use a versioned capability registry linking
+**FROG contract → source/profile form → positive and negative fixtures → Studio
+test → validation/lowering/runtime status → product documentation**. Human-readable
+matrices can derive from it; normative decisions still require review by their layer.
 
-Reproduction bornée : huit fichiers `Runtime/python/tests/test_runtime_ui_slice`
-05, 06, 08, 09, 10, 11, 12 et 13_15, Python 3.11, dépendances isolées, cache
-pytest désactivé et répertoire temporaire neuf. Avant correction : **9 FAIL,
-21 PASS**. Après les adaptations ci-dessous et trois cas de régression ajoutés :
-**1 FAIL, 32 PASS en 2,70 s**. Il ne s'agit ni du bilan global Reference ni d'une
-validation visuelle dans un navigateur. Les rendus concernés empruntent le
-lecteur JSON local de `Runtime/python/runtime_core.py`, pas le nouveau lecteur
-commun durci ; les écarts examinés préexistent donc à cette modification.
+Recommended priorities: make test dependencies explicit without silent skips;
+synchronize 01–15 / 16–47 matrices; publish profiles with limits/evidence; separately
+check GitHub links and Docsify routes; bind product pages to a verified build/capture.
+Keep incomplete profiles explicitly incomplete and reject unsupported exports.
+This documentation pass claims no completed general envelope migration, build or
+remote publication.
 
-| Périmètre | Preuve et traitement |
+<a id="annexe--échecs-du-rendu-python-ui-après-audit-complet"></a>
+
+## Appendix — Python UI rendering failures after the complete audit
+
+Bounded reproduction: eight `Runtime/python/tests/test_runtime_ui_slice` files,
+05, 06, 08, 09, 10, 11, 12 and 13_15; Python 3.11, isolated dependencies, pytest
+cache disabled and a new temporary directory. Before correction: **9 FAIL, 21 PASS**.
+After the adaptations below and three new regression cases: **1 FAIL, 32 PASS in
+2.70 s**. This is neither the global Reference result nor browser visual validation.
+Affected rendering uses the local JSON reader in `Runtime/python/runtime_core.py`,
+not the new hardened common reader; the examined discrepancies predate that change.
+
+| Scope | Evidence and treatment |
 | --- | --- |
-| Numeric 05 | `a301cba` / `7af8c9a` publient les nouvelles dimensions et la géométrie `placement_bounds`. Le test suit désormais le panneau 500×128, les widgets 96×32, le SVG 220×88, les couleurs source et `value_face`, sans certifier les anciens paramètres `frame` devenus inopérants. Les routes, actions et égalité du snapshot partagé restent testées. |
-| Boolean 06 | `869e10a` puis `5d2a24e` actualisent réalisation, couleurs et placement. Les assertions suivent le recadrage `placement_bounds`, les parties `state_face` / `focus_ring`, le faux blanc et le focus cyan 1px. Le bouton local porte `data-toggle-target=true` quand la valeur courante/entrée cachée est fausse ; l'ancienne assertion `value=true` confondait ces deux rôles. |
-| Enum 08 | `f9af09e` migre les propriétés `style.dropdown` vers `style.popup` et les skins associés. Les assertions suivent le sélecteur masqué et les couleurs popup source. L'interdiction globale de `<pre>` est remplacée par la vérification du lien d'inspection source : ce balisage appartient désormais aux panneaux d'artefacts, pas à un dump permanent de l'état UI. |
-| Path 09 | La réalisation actuelle possède une bordure 0,5px et un focus SVG masqué (`1bfc9a1`, contrat public de focus SVG). Les assertions correspondent à ces valeurs, tout en conservant les tests des deux paires indépendantes et des interactions. |
-| Button 10–15 | `39f6e27` publie `style.button_face.*` et les marqueurs SVG `button_face`, mais ne migre pas le Python. Le core transmet maintenant ces propriétés ; le renderer lit leurs états et aligne géométrie, overlay, CSS et sélecteur JavaScript sur cette partie. Les anciens documents/skins `style.face` / `face` restent lisibles par un adaptateur borné ; les propriétés canoniques priment comme groupe lorsqu'elles existent. Les tests conservent les couleurs attendues et les comportements press/release/read. |
-| Boolean dans Button | L'appel du renderer indicateur reçoit maintenant son chemin SVG résolu via `asset_map`, comme dans le runtime Boolean. Son absence produisait réellement `missing-skin`, ce n'était pas une assertion obsolète. Les textes source `Off` / `On` remplacent les anciennes attentes `FALSE` / `TRUE`. |
+| Numeric 05 | `a301cba` / `7af8c9a` publish new dimensions and `placement_bounds` geometry. The test now follows the 500×128 panel, 96×32 widgets, 220×88 SVG, source colors and `value_face`, without certifying obsolete, ineffective `frame` parameters. Routes, actions and shared-snapshot equality remain tested. |
+| Boolean 06 | `869e10a`, then `5d2a24e`, update realization, colors and placement. Assertions follow the `placement_bounds` crop, `state_face` / `focus_ring` parts, off-white and 1px cyan focus. The local button has `data-toggle-target=true` when the current value/hidden input is false; the old `value=true` assertion confused these roles. |
+| Enum 08 | `f9af09e` migrates `style.dropdown` properties to `style.popup` and associated skins. Assertions follow the hidden selector and source popup colors. The global `<pre>` ban becomes a source-inspection-link check: this markup now belongs to artifact panels, not a permanent UI-state dump. |
+| Path 09 | The current realization has a 0.5px border and hidden SVG focus (`1bfc9a1`, public SVG-focus contract). Assertions match those values while retaining both independent pairs and interaction checks. |
+| Button 10–15 | `39f6e27` publishes `style.button_face.*` and `button_face` SVG markers without migrating Python. The core now forwards these properties; the renderer reads their states and aligns geometry, overlay, CSS and JavaScript selector with that part. Older `style.face` / `face` documents/skins remain readable through a bounded adapter; canonical properties take group precedence when present. Tests retain expected colors and press/release/read behavior. |
+| Boolean in Button | The indicator renderer now receives its resolved SVG path through `asset_map`, as in Boolean runtime. Its absence actually produced `missing-skin`; this was not an obsolete assertion. Source texts `Off` / `On` replace the old `FALSE` / `TRUE` expectations. |
 
-Les nouveaux cas vérifient les géométries personnalisées canonique et ancienne,
-les six couleurs false/true/hover/pressed, la priorité canonique, le repli d'un
-état absent sur sa base, les sélecteurs des deux générations et la présence du
-SVG Boolean. Ils ne prouvent pas le rendu effectif CSS/JavaScript en navigateur.
+New cases check canonical/historical custom geometry, all six false/true/hover/pressed
+colors, canonical precedence, fallback of an absent state to its base, both generations'
+selectors and the Boolean SVG's presence. They do not prove actual CSS/JavaScript
+rendering in a browser.
 
-**Défaut de la passe initiale : héritage des propriétés de réalisation.**
-Corrigé lors de la reprise du 6 septembre 2026 : les références de réalisation
-sont maintenant résolues avant les defaults du package et les surcharges
-d'instance. Le test initial et onze tests de régression supplémentaires passent,
-dont les diagnostics de sélecteurs `class_id` / `target_class` non textuels.
-La dernière passe unique de la suite Python complète donne **514 réussites,
-aucun échec et aucun test ignoré en 25,79 s**, avec la chaîne WinLibs explicitement
-visible dans le processus Python ; voir les [preuves de la reprise](language-studio-convergence-audit-2026-09-06.md#reprise-du-6-septembre-2026--defaults-boolean).
-Le constat ci-dessous est conservé comme historique de la passe initiale.
+**Initial-pass defect: realization-property inheritance.** Corrected during the
+6 September 2026 continuation: realization references are now resolved before package
+defaults and instance overrides. The original test and eleven extra regressions pass,
+including diagnostics for non-text `class_id` / `target_class` selectors. The latest
+single complete Python-suite pass reports **514 passed, no failures or skips in
+25.79 s**, with WinLibs explicitly visible to the Python process; see the
+[continuation evidence](language-studio-convergence-audit-2026-09-06.md#reprise-du-6-septembre-2026--defaults-boolean).
+The finding below remains the historical initial-pass record.
 
-Les indicateurs des exemples Button omettent leur typographie source. Le core
-ne fusionne pas les propriétés par défaut de `boolean.default.wfrog` ; le
-renderer utilise alors 18px pour caption et state text. La réalisation circulaire
-publique définit respectivement **12px et 13px** (lignes 511 et 518). Le test 10
-conserve une assertion échouante sur ces valeurs publiques, au lieu d'accepter
-le repli 18px ; ses anciennes attentes 18px/12px n'étaient pas non plus alignées
-sur le contrat courant. Aucun mécanisme existant de fusion des defaults dans le
-core Boolean ne pouvait être réutilisé par un simple paramètre local. La suite
-ne peut donc pas être déclarée verte. Le chantier précis est de résoudre les
-defaults de réalisation avant les surcharges d'instance et de tester cette
-priorité, sans importer une politique générique nouvelle au cours de cette
-correction limitée.
+Button example indicators omit source typography. The core does not merge
+`boolean.default.wfrog` defaults, so the renderer uses 18px for caption/state text.
+The public circular realization specifies **12px and 13px**, respectively (lines 511
+and 518). Test 10 retains a failing assertion against those public values instead
+of accepting 18px fallback; its old 18px/12px expectations also disagreed with the
+current contract. No existing Boolean-core default merge could be reused through
+a simple local parameter. The suite therefore cannot be declared green. The precise
+follow-up is resolving realization defaults before instance overrides and testing
+that precedence, without importing a new generic policy into this bounded correction.

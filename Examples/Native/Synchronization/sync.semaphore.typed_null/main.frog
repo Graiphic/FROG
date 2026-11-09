@@ -2,11 +2,11 @@
   "format": "frog.document.draft",
   "draft_revision": 6,
   "language": "FROG",
-  "title": "semaphore : référence nulle correctement typée",
+  "title": "semaphore: correctly typed null reference",
   "metadata": {
-    "name": "semaphore : référence nulle correctement typée",
+    "name": "semaphore: correctly typed null reference",
     "name_source": "document",
-    "description": "La constante porte la classe nominale exacte ; elle ne contient aucun handle vivant. Une référence invalide ne doit jamais créer une attente infinie. timed_out=True. Semaphore et Rendezvous renvoient également leur erreur locale ; Occurrence n'a pas de terminaux d'erreur.\n\nsemaphore : référence nulle correctement typée\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ntimed_out (bool) = true\nerror_status (bool) = true\nerror_code (i32) = 1535\n",
+    "description": "The constant carries the exact nominal class and no live handle. An invalid reference must never create an infinite wait. timed_out=True. Semaphore and Rendezvous also return their local error; Occurrence has no error terminals.\n\nsemaphore: correctly typed null reference\n\nMode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.\nExpected:\ntimed_out (bool) = true\nerror_status (bool) = true\nerror_code (i32) = 1535\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -412,7 +412,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "semaphore : référence nulle correctement typée\nsemaphore : référence nulle correctement typée\nEntrées -> opération -> indicateurs. Résultat attendu : timed_out (bool) = true\nerror_status (bool) = true\nerror_code (i32) = 1535\n",
+        "text": "semaphore: correctly typed null reference\nsemaphore: correctly typed null reference\nInputs -> operation -> indicators. Expected result: timed_out (bool) = true\nerror_status (bool) = true\nerror_code (i32) = 1535\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

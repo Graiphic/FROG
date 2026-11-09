@@ -329,7 +329,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Cluster To Array promotes numeric fields\nI16 and I32 fields promote to the resolver's common I32 element type. Field order determines array order; stable field IDs remain in the original Cluster.\nEntrées -> opération -> indicateurs. Résultat attendu : result (array<i32>) = [-3,70000]\n",
+        "text": "Cluster To Array promotes numeric fields\nI16 and I32 fields promote to the resolver's common I32 element type. Field order determines array order; stable field IDs remain in the original Cluster.\nInputs -> operation -> indicators. Expected result: result (array<i32>) = [-3,70000]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

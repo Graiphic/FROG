@@ -1,10 +1,10 @@
-# Timed Loop : configuration des nœuds de temporisation
+# Timed Loop: timing-node configuration
 
-Timed Loop : configuration des nœuds de temporisation
+Timed Loop: timing-node configuration
 
-Les quatre nœuds de bordure conservent la configuration de temporisation et leurs lignes visibles. Cet exemple vérifie seulement la sauvegarde/réouverture du modèle actuel. Le backend canonique ne fournit pas encore de contrat d'exécution Timed Loop ; aucune précision temps réel ni exécution périodique n'est annoncée.
+The four border nodes retain their timing configuration and visible rows. This example checks only persistence and reopening of the current model. The canonical backend does not yet provide a Timed Loop execution contract; no real-time precision or periodic execution is claimed.
 
-Timed Loop : configuration des nœuds de temporisation
+Timed Loop: timing-node configuration
 
 Mode: persistence. Profile: studio-draft. Capability: studio/timed-loop-authoring.
 Expected:

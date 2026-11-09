@@ -406,7 +406,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Add: i32 wrap\nModulo2^32 with restoration of the signed representation. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (array<i32>) = [-2147483648]\n",
+        "text": "Add: i32 wrap\nModulo2^32 with restoration of the signed representation. Native finite owned profile; original scalar IEEE slots and explicit private Simulation examples remain separate.\nInputs -> operation -> indicators. Expected result: output-result (array<i32>) = [-2147483648]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

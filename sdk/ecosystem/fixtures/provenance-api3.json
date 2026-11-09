@@ -1,0 +1,68 @@
+{
+  "schema": "frog.frontend.context",
+  "schema_version": "0.3",
+  "source": {
+    "family": "frog.source",
+    "version": "0.1",
+    "uri": "example:/program.frog",
+    "document_id": "example.source",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "fir": {
+    "family": "frog.execution_ir",
+    "version": "0.1",
+    "document_id": "example.fir"
+  },
+  "frontend": {
+    "software_version": "0.1.0-local",
+    "api_version": "3",
+    "commit": "1111111111111111111111111111111111111111",
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "profiles": [
+    "frog.frontend.resolution@1"
+  ],
+  "operations": [],
+  "dependencies": [
+    {
+      "kind": 2,
+      "identity": "example.types",
+      "version": "1",
+      "sha256": "d521e8b12e19b815ad5fae209da9d373b2042a09b61d472a11fb64b8b52ac740",
+      "source_uri": "example:/types.json",
+      "origin": "explicit-resolver"
+    }
+  ],
+  "closure_complete": true,
+  "semantic_context": {
+    "profile": "frog.frontend.resolution@1",
+    "dependencies": [
+      {
+        "kind": 2,
+        "source_pointer": "/diagram/nodes/0/studio_type_schema"
+      }
+    ]
+  },
+  "limits": {
+    "max_source_bytes": 8388608,
+    "max_dependency_bytes": 8388608,
+    "max_total_dependency_bytes": 67108864,
+    "max_result_bytes": 33554432,
+    "max_nodes": 1024,
+    "max_connections": 4096,
+    "max_nesting_depth": 64,
+    "max_dependencies": 256,
+    "max_diagnostics": 256
+  },
+  "transformations": [
+    {
+      "profile": "frog.frontend.resolution@1",
+      "source_uri": "example:/program.frog",
+      "source_pointer": "/diagram/nodes/0/studio_type_schema",
+      "dependency_uri": "example:/types.json",
+      "dependency_pointer": "/definitions/Count",
+      "dependency_sha256": "d521e8b12e19b815ad5fae209da9d373b2042a09b61d472a11fb64b8b52ac740"
+    }
+  ],
+  "projected_source_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+}

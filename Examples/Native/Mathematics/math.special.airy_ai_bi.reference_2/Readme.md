@@ -2,9 +2,9 @@
 
 Returns both Airy functions on independent real F64 outputs ai and bi.
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : x (f64) = 1.0.
-Résultats attendus : ai (f64) = 0.13529241631288141; bi (f64) = 1.2074235949528713.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: x (f64) = 1.0.
+Expected results: ai (f64) = 0.13529241631288141; bi (f64) = 1.2074235949528713.
 
 Returns both Airy functions on independent real F64 outputs ai and bi.
 

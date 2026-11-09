@@ -1,10 +1,10 @@
-# Stacked Sequence : ne pas publier avant la dernière frame
+# Stacked Sequence: do not publish before the final frame
 
-Stacked Sequence : ne pas publier avant la dernière frame
+Stacked Sequence: do not publish before the final frame
 
-La première frame calcule 7, mais cette sortie extérieure reste privée pendant l'attente infinie de la dernière frame. Stop doit retirer l'attente sans publier de résultat prématuré. Un nouveau lancement possède une nouvelle attente.
+The first frame computes 7, but that external output remains private during the final frame's infinite wait. Stop must withdraw the wait without publishing a premature result. A new run owns a new wait.
 
-Stacked Sequence : ne pas publier avant la dernière frame
+Stacked Sequence: do not publish before the final frame
 
 Mode: expected-abort. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

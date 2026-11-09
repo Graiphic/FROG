@@ -1,227 +1,222 @@
-# Audit du langage FROG et convergence avec Graiphic Studio
+<a id="audit-du-langage-frog-et-convergence-avec-graiphic-studio"></a>
 
-Date : 6 septembre 2026. Audit et corrections locales ; aucune publication distante
-ni conversion générale de fichiers utilisateur effectuée.
+# FROG language audit and Graiphic Studio convergence
+
+Date: 6 September 2026. Local audit/corrections; no remote publication or general
+conversion of user files performed.
 
 ## Verdict
 
-Les principes du langage sont solides : source explicite, interfaces indépendantes
-de l'IHM, séparation source/sens/FIR/cible, identités stables et contrats de classes.
-Studio a apporté des améliorations concrètes d'édition et de typage à conserver.
-Mais **le système n'est pas encore unifié de bout en bout** : plusieurs formats et
-deux chemins de validation/dérivation coexistent. Les masquer sous le nom `.frog`
-donnerait une impression de compatibilité que les tests ne démontrent pas.
+Language principles are sound: explicit source, UI-independent interfaces,
+source/meaning/FIR/target separation, stable identities and class contracts.
+Studio introduced concrete editing/typing improvements worth preserving. But
+**the system is not yet unified end to end**: several formats and two validation/
+derivation paths coexist. Hiding them under `.frog` would imply compatibility
+not demonstrated by tests.
 
-Cette passe corrige des défauts démontrés et publie les décisions de convergence
-dans [Source compatibility and profiles](../Expression/Source%20compatibility%20and%20profiles.md).
-La migration canonique complète reste un chantier distinct, avec des critères
-d'acceptation et sans réécriture destructive des anciens documents.
+This pass corrects demonstrated defects and records convergence decisions in
+[Source compatibility and profiles](../Expression/Source%20compatibility%20and%20profiles.md).
 
-## Périmètre et méthode
+<a id="périmètre-et-méthode"></a>
 
-Révisions locales de départ : FROG `55e4554`, FROG-STUDIO `606db16`,
-FROG-Runtime `31944f5`, documentation produit Graiphic-Studio `19a4f4b`,
-contexte FROG-Context `a2e03e0`. Les changements préexistants sont conservés.
-Des contrats acceptés localement étaient encore non suivis ; leur présence ne
-prouve pas leur publication sur GitHub. Aucun fetch/push n'est annoncé.
+## Scope actually examined
 
-- Inventaire documentaire initial de 560 Markdown FROG ; contrôle de liens sur
-  250 documents des couches Expression, Language, IR, IDE, Conformance, Versioning
-  et entrées racine ; 32 documents produit et inventaire documentaire Studio.
-- Lecture ciblée des schémas, types, structures, `.wfrog`, versions, chargement,
-  sérialisation, ports, profils, validation et dérivation ; confrontation aux
-  tests, aux exemples et à l'historique Git.
-- Analyse de 119 projections Numeric/Boolean contre le catalogue compilé et des
-  12 réalisations `.wfrog` communes aux dépôts public/Studio.
-- Contrôle JSON strict et schéma racine des 48 sources `.frog` publiées dans les
-  47 dossiers d'exemples, sans assimiler ce contrôle à une validation sémantique.
-- Tests positifs, négatifs et de préservation ; contrôles Python, C++, PowerShell,
-  compilation canonique Studio et vérifications de documentation.
+- Initial documentation inventory: 560 FROG Markdown files; links checked in
+  250 Expression, Language, IR, IDE, Conformance, Versioning and root documents;
+  32 product documents and Studio documentation inventory.
+- Targeted reading of schemas, types, structures, `.wfrog`, versions, loading,
+  serialization, ports, profiles, validation/derivation, compared with tests,
+  examples and Git history.
+- Analysis of 119 Numeric/Boolean projections against the compiled catalog and
+  12 `.wfrog` realizations shared by public and Studio repositories.
+- Strict JSON/root-schema checking of 48 published `.frog` sources in 47 example
+  directories, without equating that with semantic validation.
+- Positive, negative and preservation tests; Python, C++, PowerShell checks,
+  canonical Studio compilation and documentation checks.
 
-Il ne s'agit pas d'une preuve formelle de tout le langage, d'une lecture manuelle
-de chaque paragraphe, ni d'une certification de tous les backends. Le détail du
-périmètre documentaire est dans [l'annexe documentaire](language-documentation-audit-2026-09-06.md).
+This is neither a formal proof of the whole language, manual reading of every
+paragraph nor certification of all backends. Documentation scope is detailed in
+the [documentation appendix](language-documentation-audit-2026-09-06.md).
 
-## Les formats réellement présents
+<a id="les-formats-réellement-présents"></a>
 
-| Format | Rôle et constat | Décision |
+## Formats actually present
+
+| Format | Role and finding | Decision |
 | --- | --- | --- |
-| `.frog` public : `spec_version`, `metadata`, `interface`, `diagram` | Source canonique ; front panel facultatif. | Autorité source à conserver. |
-| Studio : `frog.document.draft`, `draft_revision`, `frontPanel` | Format privé d'édition, encore écrit par Studio dans des `.frog`. | Compatibilité legacy maintenue ; migration explicite, pas renommage des clés. |
-| `.wfrog` | Famille d'artefacts de classes/composition/réalisation, avec contrats distincts. | Ne pas confondre géométrie de réalisation et valeur/ports de la classe. |
-| `frog_fir_unit` des exemples | Artefact de référence par motifs, utile et testé. | Ne pas le présenter comme conforme au schéma canonique Execution IR. |
-| Execution IR `schema_family: frog.execution_ir` | Contrat public avec unité, objets, connexions, régions, source_map et correspondance. | Conserver cette cible d'interopérabilité ; adaptateur depuis la référence à réaliser. |
+| Public `.frog`: `spec_version`, `metadata`, `interface`, `diagram` | Canonical source; optional front panel. | Preserve source authority. |
+| Studio: `frog.document.draft`, `draft_revision`, `frontPanel` | Private editing format still written as `.frog` by Studio. | Retain legacy compatibility; explicit migration, not key renaming. |
+| `.wfrog` | Class/composition/realization artifact family with distinct contracts. | Do not confuse realization geometry with class value/ports. |
+| Examples' `frog_fir_unit` | Useful, tested pattern-based reference artifact. | Do not present it as conforming to canonical Execution IR schema. |
+| Execution IR `schema_family: frog.execution_ir` | Public contract with unit, objects, connections, regions, source_map and correspondence. | Preserve this interoperability target; reference adapter remains to be implemented. |
 
-Le test `test_canonical_artifact_boundaries.py` rend explicites les deux
-distinctions de formats. Il contrôle les schémas source/IR, les fixtures publiques
-de racine, et une fixture IR structurelle volontairement vide. Cette dernière
-n'est pas un programme exécutable ni une preuve de couverture sémantique IR.
-Les 48 sources d'exemples sont aussi testées systématiquement. L'exemple 36
-contenait six propriétés de style redéclarées dans les mêmes objets. Les
-occurrences masquées ont été retirées : le document effectif reste identique
-au décodage historique du HEAD Git qui conservait la dernière valeur. Ce
-nettoyage élimine l'ambiguïté sans changer les valeurs de style consommées.
+`test_canonical_artifact_boundaries.py` makes both format distinctions explicit.
+It checks source/IR schemas, public root fixtures and an intentionally empty
+structural IR fixture. The latter is neither executable nor semantic IR coverage
+evidence. All 48 example sources are systematically checked. Example 36 redeclared
+six style properties in the same objects. Hidden occurrences were removed; the
+effective document matches historical Git-HEAD decoding that retained the last
+value. This removes ambiguity without changing consumed style values.
 
-## Exigences et vérification individuelle
+<a id="exigences-et-vérification-individuelle"></a>
 
-« Corrigé » ci-dessous est toujours limité au consommateur et aux tests cités ;
-cela ne signifie pas que les autres implémentations ont été automatiquement migrées.
+## Requirements and individual verification
 
-| ID | Exigence | Résultat de cette passe |
+“Corrected” below is limited to the cited consumer/tests; other implementations
+are not automatically migrated.
+
+| ID | Requirement | Result of this pass |
 | --- | --- | --- |
-| LF-01 | Une autorité explicite par couche. | Clarifiée dans le contrat de convergence et le README produit. |
-| LF-02 | Version de source distincte du build, du corpus, du programme et du draft. | Confirmé : source 0.1, corpus 0.1-draft, draft_revision 2 ; pas de nouvelle version inventée. |
-| LF-03 | Une version inconnue ne doit pas être interprétée comme 0.1. | Corrigé dans le précontrôle Python et l'import public Studio ; diagnostic sans acceptation. |
-| LF-04 | Les sections d'une version future ne doivent pas être jugées selon l'enveloppe ancienne. | Test future source sans metadata/interface/diagram ; statut unsupported_source. |
-| LF-05 | UTF-8/JSON ambigus ou hors capacité donnent un diagnostic. | Lecteur commun Python renforcé : clés dupliquées, tokens NaN/Infinity, limites entières/flottantes et profondeur. |
-| LF-06 | Les entiers exacts ne passent pas par binary64. | Entiers Python et chaînes exactes préservés ; cas U64 maximal et limites testés. |
-| LF-07 | Le front panel reste facultatif. | Règle publique confirmée ; Studio accepte le headless vide mais pas encore les graphes publics avec interface indépendante. |
-| LF-08 | L'interface publique n'est pas reconstruite exclusivement depuis les widgets. | Non livré : modèle Studio à extraire. Import actuellement refusé pour éviter la perte des déclarations. |
-| LF-09 | Un import ne supprime pas silencieusement les constructions exécutables qu'il ne représente pas. | Garde Studio ajoutée : interfaces, kinds/champs ignorés, pertes après aplatissement, ambiguïtés d'IDs et endpoints. Protection bornée, pas importeur universel lossless. |
-| LF-10 | Draft historique et source publique ne forment pas deux autorités dans le même document. | Enveloppe mixte format/spec_version refusée ; drafts seuls et import UI historique testés. |
-| LF-11 | IDs stables et non ambigus. | Validation Python des ports sur toute l'interface, nœuds et arêtes top-level ; rejet des identifiants malformés. |
-| LF-12 | État auteur sauvegardable distinct de programme valide. | Conservé : fils incomplets et Case drafts bloquent validation/dérivation ; pas de normalisation réparatrice implicite. |
-| LF-13 | Ports des manifestes cohérents avec l'implémentation. | 26 divergences corrigées dans 13 entrées Numeric ; 119 projections contrôlées strictement sur les champs exportés. |
-| LF-14 | Une entrée de palette n'implique ni signature ni exécution. | Increment/decrement restent explicitement bloqués/catalog-only ; faux profils de réduction déplacés vers les bons opérateurs. |
-| LF-15 | Toute signature provient d'une autorité déclarative. | Partiel : Add et Case ont leurs autorités/projections ; généralisation fonctions/widgets/autres structures encore nécessaire. |
-| LF-16 | Types agrégés/enum/unknown ont une identité définie. | Contrat typed-binding conservé : rang, champs ordonnés, domaine enum, unknown non universel ; support Runtime distinct. |
-| LF-17 | Conditional Disable a une règle Default unique. | Reliquat « exactement un » remplacé par « au plus un » ; sélection/default/no-match restent distincts. |
-| LF-18 | Largeurs des compteurs de boucles explicites. | Exigences Studio alignées sur i64 public ; pas d'import implicite de la règle I32 LabVIEW. |
-| LF-19 | Politiques host/execution ne sont pas devinées. | Versions non prises en charge et champs execution_policy inconnus bloqués ; valeurs host connues contrôlées. Les extensions host restent opaques : leur validité/sémantique n'est pas certifiée. |
-| LF-20 | Métadonnées descriptives correctement typées et champs inconnus préservés. | Contrôle Python des champs standard ; extension descriptive opaque préservée. Studio ne revendique pas une préservation générale des extensions. |
-| LF-21 | Une dérivation ne certifie pas un sous-graphe en ignorant le reste. | Garde d'enveloppe et inventaires exacts récursifs ajoutés ; les quatre connexions internes de l'accumulateur sont aussi vérifiées. 156 tests Deriver passent. Les deux validateurs sémantiques ne sont pas fusionnés. |
-| LF-22 | FIR de référence et IR canonique clairement distingués. | Documentation et test de frontière ajoutés ; adaptateur canonique non livré. |
-| LF-23 | Tests schémas réellement exécutés en CI. | Dépendances communes déclarées, import jsonschema obligatoire, suppression des skips conditionnels ; tests WidgetValidator ajoutés au runner --include-pytest. |
-| LF-24 | Exemples, statut et navigation concordent. | 47 dossiers distingués des 15 exemples du corridor runtime public ; anciens tableaux partiels explicités ; navigation officielle générée et vérifiée, 728 chemins de recherche et 19 entrées racine. |
-| LF-25 | Classes et réalisations publiques/Studio concordent. | Écarts Cluster/Picture/Waveform identifiés ; consommateurs Button Python corrigés. Defaults Boolean Python résolus lors de la reprise du 6 septembre, test initial et onze régressions supplémentaires réussis ; aucune compatibilité globale annoncée. |
+| LF-01 | One explicit authority per layer. | Clarified in convergence contract and product README. |
+| LF-02 | Source version distinct from build, corpus, program and draft. | Confirmed: source 0.1, corpus 0.1-draft, draft_revision 2; no invented version. |
+| LF-03 | Unknown version must not be treated as 0.1. | Corrected in Python precheck/public Studio import; diagnostic without acceptance. |
+| LF-04 | Future-version sections must not be judged by an old envelope. | Future source without metadata/interface/diagram tested; unsupported_source. |
+| LF-05 | Ambiguous or over-capacity UTF-8/JSON gets a diagnostic. | Common Python reader hardened: duplicate keys, NaN/Infinity tokens, integer/float limits and depth. |
+| LF-06 | Exact integers do not pass through binary64. | Python integers/exact strings preserved; maximum U64 and boundaries tested. |
+| LF-07 | Front panel remains optional. | Public rule confirmed; Studio accepts empty headless source, not yet public graphs with independent interfaces. |
+| LF-08 | Public interface is not reconstructed exclusively from widgets. | Not delivered: Studio model must be extracted. Import currently rejected to avoid losing declarations. |
+| LF-09 | Import must not silently erase executable constructs it cannot represent. | Studio guard added: ignored interfaces/kinds/fields, flattening losses, ambiguous IDs/endpoints. Bounded protection, not a universal lossless importer. |
+| LF-10 | Historical draft/public source are not competing authorities in one document. | Mixed format/spec_version envelope rejected; drafts and historical UI import tested. |
+| LF-11 | Stable, unambiguous IDs. | Python validates ports across the whole interface and top-level nodes/edges; malformed IDs rejected. |
+| LF-12 | Saveable authored state distinct from valid program. | Preserved: incomplete wires/Case drafts block validation/derivation; no implicit repair normalization. |
+| LF-13 | Manifest ports consistent with implementation. | 26 discrepancies corrected in 13 Numeric entries; 119 projections strictly checked on exported fields. |
+| LF-14 | Palette entry implies neither signature nor execution. | Increment/decrement remain explicitly blocked/catalog-only; false reduction profiles moved to correct operators. |
+| LF-15 | Every signature has a declarative authority. | Partial: Add/Case have authorities/projections; functions/widgets/other structures still need generalization. |
+| LF-16 | Aggregate/enum/unknown types have defined identity. | Typed-binding contract retained: rank, ordered fields, enum domain, non-universal unknown; Runtime support separate. |
+| LF-17 | Conditional Disable has one Default rule. | Residual “exactly one” changed to “at most one”; selection/default/no-match stay distinct. |
+| LF-18 | Explicit loop-counter widths. | Studio requirements aligned to public i64; no implicit LabVIEW I32 rule. |
+| LF-19 | Host/execution policies are not guessed. | Unsupported versions/unknown execution_policy fields blocked; known host values checked. Host extensions remain opaque, without certified validity/semantics. |
+| LF-20 | Descriptive metadata correctly typed; unknown fields preserved. | Python checks standard fields; opaque descriptive extension retained. Studio does not claim general extension preservation. |
+| LF-21 | Derivation must not certify a subgraph while ignoring the rest. | Envelope guard/exact recursive inventories added; accumulator's four internal connections checked. 156 Deriver tests pass. The two semantic validators are not merged. |
+| LF-22 | Reference FIR and canonical IR clearly distinguished. | Documentation/boundary test added; canonical adapter not delivered. |
+| LF-23 | Schema tests actually run in CI. | Shared dependencies declared, jsonschema import mandatory, conditional skips removed; WidgetValidator tests added to --include-pytest runner. |
+| LF-24 | Examples, status and navigation agree. | 47 directories distinguished from 15 public-runtime-corridor examples; historical partial tables explained; official navigation generated/verified, 728 search paths and 19 root entries. |
+| LF-25 | Public/Studio classes and realizations agree. | Cluster/Picture/Waveform differences identified; Python Button consumers corrected. Boolean Python defaults resolved in the 6 September continuation, original test and eleven extra regressions pass; no global compatibility claimed. |
 
-## Corrections et choix concrets
+<a id="corrections-et-choix-concrets"></a>
 
-### Import Studio
+## Concrete corrections and choices
 
-Avant correction, `Examples/01_pure_addition/main.frog`, accepté par le validateur
-de référence, était refusé par Studio pour frontPanel manquant. Ajouter ce panel
-ne résolvait pas le problème : les nœuds interface_input/output étaient hors du
-filtre conservé ; les ports publics ne sont pas représentés indépendamment des
-widgets. Une ouverture plus permissive aurait pu détruire le programme à la sauvegarde.
+<a id="import-studio"></a>
 
-La correction choisie est un refus explicite avant import/conversion quand le
-modèle ne sait pas conserver le contenu exécutable, avec contrôles avant et après
-aplatissement. Le writer reste draft revision 2. La garde privée est isolée dans
-`src/FrogDocumentPublicImport.hpp` ; elle ne crée pas une deuxième définition
-normative du langage. Le test existant `frog-document-revision-smoke` est enrichi.
+### Studio import
 
-### Fonctions déclaratives
+Before correction, reference-validator-accepted `Examples/01_pure_addition/main.frog`
+was rejected by Studio for missing frontPanel. Adding it did not solve the problem:
+interface_input/output nodes were outside the retained filter; public ports are
+not represented independently of widgets. More permissive opening could destroy
+the program when saving.
 
-Les neuf unaires concernés déclaraient `value` dans la projection privée contre
-`in` dans le contrat public et le C++ : la projection suit maintenant `in`.
-Les faux profils de réduction attribués à increment/decrement sont retirés ;
-les profils existants vont à Add/Multiply Array Elements. Aucun ID de port C++
-persisté n'est modifié.
+The chosen correction explicitly rejects import/conversion when the model cannot
+preserve executable content, checking before/after flattening. The writer remains
+draft revision 2. The private guard is isolated in `src/FrogDocumentPublicImport.hpp`;
+it creates no second normative language definition. Existing
+`frog-document-revision-smoke` coverage is extended.
 
-Le contrôle compare ordre/direction/nombre des ports, TypeExpr, requirement,
-connection policy, fallback lorsqu'il est déclaré, résolution, implémentation et
-bornes variadiques. Dix-sept mutations doivent être rejetées. Le CSV historique
-ne fournit pas une preuve complète de cardinalité, defaults ou TypeExpr arbitraire
-contenant ses séparateurs : un export structuré et la génération commune restent
-préférables à long terme. 119 projections ne couvrent pas les 239 opérations.
+<a id="fonctions-déclaratives"></a>
 
-### Validation et dérivation
+### Declarative functions
 
-Le validateur pédagogique `validate_source` et le dériveur `fir_deriver` n'ont pas
-le même sous-ensemble. Brancher brutalement le premier devant tout le second
-rejetterait les exemples déjà pris en charge. La sonde initiale montrait qu'une
-version 99.0 ou un nœud supplémentaire ignoré pouvait donner le même FIR que
-l'addition valide. Les corrections bornées ferment ces passages sans
-prétendre transformer les motifs en compilateur général. Chaque règle possède
-un inventaire statique de nœuds/types/arêtes et de régions autorisées, vérifié
-avant son exécution. L'accumulateur vérifie également ses quatre connexions
-internes : une reconnexion à nombre de nœuds/arêtes constant ne doit pas produire
-le calcul précédent. L'ordre et les IDs d'arêtes ne changent pas ce contrat.
+Nine affected unary projections declared `value` privately versus public/C++ `in`;
+the projection now follows `in`. Incorrect increment/decrement reduction profiles
+are removed; existing profiles go to Add/Multiply Array Elements. No persisted C++
+port ID changes.
 
-Ce contrôle ne prouve pas l'équivalence sémantique de tous les câblages dans
-toutes les règles. L'indépendance au nom de métadonnée est démontrée pour
-l'addition ; les gardes héritées sur `metadata.name` des règles 06–16 restent
-présentes et sont maintenant documentées et testées. Ce sont encore des profils
-de référence bornés, pas une implémentation générale du langage.
+Checks compare port order/direction/count, TypeExpr, requirement, connection policy,
+declared fallback, resolution, implementation and variadic bounds. Seventeen mutations
+must be rejected. Historical CSV does not fully prove cardinality, defaults or arbitrary
+TypeExpr containing separators: structured export/shared generation remain preferable
+long term. 119 projections do not cover all 239 operations.
 
-Le précontrôle d'enveloppe consomme required/properties/versions du schéma public,
-avec tests de parité. Les champs locaux restent des validations spécialisées.
-Le lecteur commun distingue JSON invalide, dépassement de capacité et source
-future non comprise. Une profondeur lisible par JSON mais excessive pour le
-validateur donne aussi un diagnostic sans modification de la source chargée.
-Aucun échec ne produit de programme validé partiel.
+<a id="validation-et-dérivation"></a>
 
-### Widgets et réalisations
+### Validation and derivation
 
-Sur 12 réalisations communes, huit sont identiques octet pour octet. Enum/Ring
-diffèrent dans le libellé Item 0/Item 1. Les autres écarts sont plus profonds :
+Educational `validate_source` and `fir_deriver` support different subsets. Simply
+placing the former before the latter would reject already supported examples.
+The initial probe showed version 99.0 or an ignored extra node could yield the same
+FIR as valid addition. Bounded corrections close those paths without turning pattern
+rules into a general compiler. Each rule has a static inventory of allowed nodes/types/
+edges/regions checked before execution. The accumulator also checks its four internal
+connections: rewiring at unchanged node/edge count must not produce the old calculation.
+Edge order/IDs do not change this contract.
 
-- Cluster public : classe commune et composition ; Studio : projection réduite
-  control/indicator. Il faut un adaptateur et des tests de composition/round-trip.
-- Picture : public image/control+indicator/viewport contre Studio indicateur
-  matrice U32/affichage 1:1. Choisir un profil explicite avant migration des valeurs.
-- Waveform : classe/réalisation locales Studio ; leur enveloppe n'est pas celle
-  du package de classe public. Le document public actuel annonce déjà les limites.
+This proves no semantic equivalence for every wiring in every rule. Independence
+from metadata name is demonstrated for addition; inherited `metadata.name` guards
+in rules 06–16 remain, now documented/tested. These remain bounded reference profiles,
+not a general language implementation.
 
-Ces contrats ne doivent pas être fusionnés par synchronisation brute de fichiers.
+The envelope precheck consumes required/properties/versions from the public schema,
+with parity tests. Local fields retain specialized validation. The common reader
+distinguishes invalid JSON, capacity overflow and unsupported future source. JSON-readable
+depth excessive for the validator also yields a diagnostic without modifying loaded
+source. No failure produces a partial validated program.
 
-La suite Python élargie a aussi révélé un défaut réel de consommation du contrat
-Button : `style.button_face` et les marqueurs `button_face` publics n'étaient pas
-appliqués partout. Le passage des propriétés, la géométrie, les overlays et les
-sélecteurs sont corrigés, avec un adaptateur borné pour les anciens skins `face`.
-Le SVG de l'indicateur Boolean associé est maintenant effectivement fourni au
-renderer. Les tests obsolètes sont distingués des défauts réels grâce à
-l'historique Git, détaillé dans l'annexe documentaire.
+<a id="widgets-et-réalisations"></a>
 
-La passe initiale laissait un échec : les defaults typographiques de
-`boolean.default.wfrog` n'étaient pas hérités quand l'instance les omettait.
-Le renderer utilisait 18/18 px au lieu des 12/13 px publics. La reprise du
-6 septembre décrite ci-dessous ferme ce défaut par résolution des manifests
-avant les surcharges de package puis d'instance. Les tests de chaîne HTML ne
-constituent pas une vérification visuelle CSS/JavaScript en navigateur.
+### Widgets and realizations
 
-## Vérifications de la passe initiale
+Eight of 12 common realizations are byte-identical. Enum/Ring differ in Item 0/Item 1
+labels. Other differences are deeper:
 
-Les chiffres Studio ci-dessous restent historiques. La livraison native
-ultérieure et ses contrôles sont consignés dans le
-[bilan de modularisation et d'optimisation](https://github.com/Graiphic/FROG-STUDIO/blob/main/docs/source-optimization-follow-up-2026-09-06.md).
+- Public Cluster: common class/composition; Studio: reduced control/indicator projection.
+  An adapter and composition/round-trip tests are required.
+- Picture: public image/control+indicator/viewport versus Studio U32 matrix indicator/1:1
+  display. Select an explicit profile before migrating values.
+- Waveform: local Studio class/realization with a different envelope from the public
+  class package. The current public document already states limits.
 
-- Studio canonique **0.0.1.245**, compilation `all`, liaison et signature valides ;
-  le raccourci du Bureau pointe vers `build-nmake-verify/frog-engine-shell.exe`.
-  Aucun second exécutable Studio n'a été créé.
-- Analyse statique ciblée `FrogDocument.cpp` et sa garde d'import : clang-tidy
-  passe après retrait de deux concaténations temporaires inutiles. L'analyse
-  statique globale de la passe précédente n'est pas présentée comme relancée ici.
-- CTest hors UI/analysis/coverage : **115 réussites sur 117** sur le build final
-  0.0.1.245, en 97,66 s. Les deux échecs préexistants sont
-  `frog-studio-architecture-budget-contract` (20 fichiers hors budget) et
-  `frog-studio-front-panel-ownership-contract`. Les seuils n'ont pas été relevés.
-  Catalogue, empreintes et index d'architecture sont régénérés et vérifiés :
-  427 fichiers, 5 886 fonctions compilateur, 239 157 lignes, aucun index périmé.
-  Les tests directs de révision et limites des documents passent également.
-- Suite Python complète `pytest Implementations/Reference` : **502 réussites,
-  1 échec, aucun test ignoré**, en 25,66 s. L'échec restant est
-  `Runtime/python/tests/test_runtime_ui_slice10.py:91`, l'héritage Boolean décrit
-  ci-dessus. Les 48 sources d'exemples passent le contrôle JSON strict/schéma
-  racine ; les 156 tests Deriver passent, dont les références 01–16 API et CLI.
-- Pipeline standard `check_reference_workspace.py` : **réussi**, Examples 01–15,
-  en 6,54 s. Validation de 20 familles `.wfrog` : 0 erreur, 1 avertissement
-  préexistant sur `Picture.placement_bounds` absent du document de classe.
-  Ce succès du pipeline n'annule ni l'échec pytest UI ni les écarts de formats.
-- Ponts natifs Python/LLVM 05–15 : **11 tests réussis**, bibliothèques temporaires
-  compilées avec la chaîne WinLibs locale. Ces tests avaient d'abord été ignorés
-  faute de compilateur visible dans le PATH du processus Python ; ils ont été
-  relancés avec la chaîne explicitement configurée.
-- Navigation officielle générée/vérifiée ; **47 liens locaux de 7 documents
-  contrôlés, aucune cible manquante**. Les 47 dossiers d'exemples ne sont pas
-  présentés comme 47 corridors Runtime implémentés.
+Do not merge these contracts by raw file synchronization.
 
-Les limites restent explicites : pas de certification de tous les backends,
-de l'IR canonique complet, des performances UI ou d'un import/export universel.
+The expanded Python suite also exposed an actual Button-contract-consumption bug:
+public `style.button_face`/`button_face` markers were not applied everywhere.
+Property forwarding, geometry, overlays and selectors are corrected, with a bounded
+old-`face`-skin adapter. The associated Boolean indicator SVG now actually reaches
+the renderer. Git history distinguishes obsolete tests from real defects, detailed
+in the documentation appendix.
 
-Commandes reproductibles depuis la racine FROG, avec Python 3.11 et la chaîne
-native visible dans le PATH du processus pour les ponts dynamiques :
+One failure remained initially: `boolean.default.wfrog` typography defaults were
+not inherited when omitted by an instance. The renderer used 18/18 px rather than
+public 12/13 px. The continuation below resolves manifests before package/instance
+overrides. HTML-string tests are not browser CSS/JavaScript visual verification.
+
+<a id="vérifications-de-la-passe-initiale"></a>
+
+## Initial-pass verification
+
+Studio figures below remain historical. Later native delivery/checks appear in the
+[modularization and optimization report](https://github.com/Graiphic/FROG-STUDIO/blob/main/docs/source-optimization-follow-up-2026-09-06.md).
+
+- Canonical Studio **0.0.1.245**, `all` compilation, valid link/signature; Desktop
+  shortcut targets `build-nmake-verify/frog-engine-shell.exe`. No second Studio executable.
+- Targeted static analysis of `FrogDocument.cpp`/import guard: clang-tidy passes
+  after removing two unnecessary temporary concatenations. No claimed rerun of
+  the previous global static analysis.
+- CTest excluding UI/analysis/coverage: **115/117 passed** on final 0.0.1.245 in
+  97.66 s. Pre-existing failures: `frog-studio-architecture-budget-contract`
+  (20 over-budget files) and `frog-studio-front-panel-ownership-contract`. Thresholds
+  were not raised. Catalog, hashes and architecture index regenerated/verified:
+  427 files, 5,886 compiler functions, 239,157 lines, no stale index. Direct document
+  revision/limit tests also pass.
+- Complete `pytest Implementations/Reference`: **502 passed, 1 failed, no skips**,
+  25.66 s. Remaining failure: `Runtime/python/tests/test_runtime_ui_slice10.py:91`,
+  Boolean inheritance above. All 48 example sources pass strict JSON/root schema;
+  156 Deriver tests pass, including 01–16 API/CLI references.
+- Standard `check_reference_workspace.py`: **PASS**, Examples 01–15, 6.54 s.
+  Validation of 20 `.wfrog` families: 0 errors, 1 pre-existing missing
+  `Picture.placement_bounds` class-document warning. Pipeline success cancels neither
+  the pytest UI failure nor format differences.
+- Python/LLVM native bridges 05–15: **11 passed**, temporary libraries compiled with
+  local WinLibs. Initially skipped because the Python process PATH lacked a compiler;
+  rerun with explicitly configured toolchain.
+- Official navigation generated/verified; **47 local links in seven documents,
+  no missing target**. The 47 example directories are not 47 implemented Runtime corridors.
+
+Limits remain explicit: no certification of every backend, complete canonical IR,
+UI performance or universal import/export.
+
+Reproducible commands from FROG root, Python 3.11 and native toolchain visible in
+the process PATH for dynamic bridges:
 
 ```text
 python -m pip install -r Implementations/Reference/requirements-test.txt
@@ -230,90 +225,83 @@ python Implementations/Reference/check_reference_workspace.py --include-pytest
 pwsh -File .github/scripts/verify-pages-navigation.ps1
 ```
 
-Depuis `FROG-STUDIO/native-portable-engine`, après la compilation par le wrapper
-canonique et la génération officielle du catalogue :
+From `FROG-STUDIO/native-portable-engine`, after canonical-wrapper compilation and
+official catalog generation:
 
 ```text
 ctest --test-dir build-nmake-verify -LE "^(ui|analysis|coverage)$" --output-on-failure -j 1
 ```
 
-Ces commandes ne sont pas une demande de publication Git. Les nouveaux fichiers
-et modifications doivent être versionnés avec leurs dépendances locales avant
-publication ; une exécution locale réussie ne prouve pas une CI distante verte.
+These commands do not request Git publication. New files/modifications must be
+versioned with local dependencies before publication; local execution success
+does not prove green remote CI.
 
-## Suite ordonnée
+<a id="suite-ordonnée"></a>
 
-1. **Defaults `.wfrog` de réalisation** : correction Boolean Python terminée à
-   la reprise du 6 septembre ; généralisation aux autres familles à traiter
-   selon leurs contrats respectifs.
-2. **Modèle source public indépendant de l'IHM** : interfaces, références,
-   régions et extensions préservables ; tests sur source pure sans front panel.
-3. **Lecteur/writer canonique transactionnel** : golden files inter-outils,
-   migration explicite depuis draft, conservation de l'original et diagnostics.
-4. **Registre commun de contrats et capacités** : classes, fonctions, structures,
-   champs complets et projections générées ; statuts read/preserve/edit/validate/
-   lower/execute séparés, pas un simple booléen « supported ».
-5. **Validation sémantique et FIR unifiés** : mêmes diagnostics et type resolver,
-   fermeture de chaque profil, attribution source et adaptateur vers l'IR public.
-6. **Profils Cluster/Picture/Waveform/Variant** : source, packages, sémantique,
-   runtime et migrations documentés ensemble avant d'annoncer leur portabilité.
+## Ordered follow-up
 
-La bonne convergence n'est pas de fusionner les dépôts ou de renommer toutes les
-structures. C'est de rendre chaque contrat unique, chaque compatibilité prouvée,
-chaque limitation visible et chaque évolution migrable sans perdre le travail.
+1. **Realization `.wfrog` defaults**: Python Boolean corrected in the 6 September
+   continuation; generalization to other families follows their own contracts.
+2. **UI-independent public source model**: preservable interfaces, references,
+   regions/extensions; pure-source tests without a front panel.
+3. **Transactional canonical reader/writer**: cross-tool golden files, explicit
+   draft migration, original preservation and diagnostics.
+4. **Common contract/capability registry**: classes, functions, structures, full
+   fields and generated projections; separate read/preserve/edit/validate/lower/execute
+   statuses, not one “supported” Boolean.
+5. **Unified semantic validation/FIR**: same diagnostics/type resolver, each profile's
+   closure, source attribution and public-IR adapter.
+6. **Cluster/Picture/Waveform/Variant profiles**: source, packages, semantics, runtime
+   and migrations documented together before promising portability.
 
-## Reprise du 6 septembre 2026 : defaults Boolean
+Convergence does not mean merging repositories or renaming every structure. It means
+one authority per contract, proven compatibility, visible limits and migratable changes
+without losing user work.
 
-Le défaut LF-25 est corrigé dans les consommateurs Python Boolean et Button.
-`boolean_runtime.merge_boolean_realization_defaults` charge les manifests
-déclarés par `realization_refs`, filtre leurs `target_classes`, puis réutilise
-la fusion existante par classe et rôle. L'ordre est explicite : defaults du
-manifest, defaults locaux du package, propriétés/visuel de l'instance. Les
-valeurs explicites `false` et `0` restent prioritaires. Les documents source,
-packages et manifests ne sont pas modifiés. Aucune taille de police publique
-n'est recopiée dans le renderer.
+<a id="reprise-du-6-septembre-2026--defaults-boolean"></a>
 
-La résolution intervient une fois à l'initialisation du runtime ; les rendus
-et événements suivants réutilisent les propriétés résolues. La lecture stricte
-commune produit une erreur si un manifest déclaré manque ou contient un JSON
-ambigu. La portée reste les deux classes Boolean et les références directes
-des packages d'exemples, exprimées depuis la racine du dépôt. Les defaults
-Button, notamment les alias historiques `style.face`, conservent leur chemin
-existant. Ce lecteur borné ne résout pas un graphe général de dépendances de
-packages ni une bibliothèque arbitraire de widgets.
+## Continuation of 6 September 2026: Boolean defaults
 
-Preuves locales de cette reprise, avec Python 3.11 et les dépendances déjà
-présentes dans `Source/.tools/frog-language-audit-python` :
+LF-25 is corrected in Python Boolean/Button consumers.
+`boolean_runtime.merge_boolean_realization_defaults` loads `realization_refs` manifests,
+filters `target_classes`, then reuses existing class/role merging. Order is explicit:
+manifest defaults, package-local defaults, instance properties/visual. Explicit
+`false`/`0` values retain precedence. Source documents/packages/manifests are unchanged.
+No public font size is copied into the renderer.
 
-- Tests ciblés `test_boolean_realization_defaults.py`, `test_runtime_ui_slice06.py`
-  et `test_runtime_ui_slice10.py` : **22 réussites**, en 0,84 s. Le test initial
-  confirme désormais les 12/13 px publics. Les onze régressions ajoutées
-  couvrent les trois niveaux de priorité, classe/rôle, préservation des sources,
-  valeurs explicites, chargement unique et diagnostics des manifests invalides,
-  y compris les sélecteurs `class_id` / `target_class` non textuels.
-- Passe finale unique `pytest Implementations/Reference -q` : **514 réussites,
-  aucun échec et aucun test ignoré**, en **25,79 s**, avec
-  `Source/.tools/WinLibs/mingw64/bin` dans les variables PATH/Path du processus
-  Python. Ce résultat inclut les onze ponts dynamiques LLVM 05–15 et remplace
-  les résultats fragmentés des premiers passages.
-- `python Implementations/Reference/check_reference_workspace.py` : **réussi**,
-  Examples 01–15, en 8,34 s. Validation des 20 familles `.wfrog` : 0 erreur,
-  l'avertissement préexistant `Picture.placement_bounds` reste présent.
-- Navigation officielle régénérée et vérifiée après l'ajout du fichier de tests :
-  **729 chemins de recherche**. `git diff --check` réussit sur les modifications
-  locales.
+Resolution runs once at runtime initialization; later rendering/events reuse resolved
+properties. The common strict reader rejects missing declared manifests or ambiguous
+JSON. Scope remains both Boolean classes and direct example-package references
+expressed from repository root. Button defaults, including historical `style.face`
+aliases, retain their existing path. This bounded reader resolves neither a general
+package-dependency graph nor an arbitrary widget library.
 
-Le premier lancement ciblé avait rencontré le répertoire temporaire global
-pytest non accessible ; les exécutions rapportées utilisent un nouveau
-`--basetemp` sous `.pytest_tmp` dans FROG. Le premier essai de suite complète
-manquait aussi `jsonschema` dans le Python utilisateur : les dépendances locales
-existantes ont été ajoutées au `PYTHONPATH`, sans installer de dépendance globale.
-Sous cet hôte Windows, le PATH de clang a dû être normalisé dans Python pour
-les tests natifs ; les tests ignorés n'ont pas été comptés comme des succès.
+Local continuation evidence, Python 3.11 and existing dependencies under
+`Source/.tools/frog-language-audit-python`:
 
-Les autres limites de convergence demeurent : modèle Studio indépendant de
-l'IHM, writer public transactionnel, adaptateur FIR vers l'IR canonique,
-registre partagé de capacités et profils Cluster/Picture/Waveform. Cette
-correction ne modifie aucun artefact Studio et ne remplace pas une vérification
-visuelle CSS/JavaScript en navigateur. Les preuves Studio de la section
-précédente restent celles de la passe initiale, datées par leur version de build.
+- Targeted `test_boolean_realization_defaults.py`, `test_runtime_ui_slice06.py` and
+  `test_runtime_ui_slice10.py`: **22 passed**, 0.84 s. The original test now confirms
+  public 12/13 px. Eleven added regressions cover three-level precedence, class/role,
+  source preservation, explicit values, single loading and invalid-manifest diagnostics,
+  including non-text `class_id` / `target_class` selectors.
+- One final `pytest Implementations/Reference -q` pass: **514 passed, no failures or
+  skips**, **25.79 s**, with `Source/.tools/WinLibs/mingw64/bin` in Python's PATH/Path.
+  This includes eleven LLVM dynamic bridges 05–15 and supersedes fragmented early runs.
+- `python Implementations/Reference/check_reference_workspace.py`: **PASS**, Examples
+  01–15, 8.34 s. Twenty `.wfrog` families: 0 errors; pre-existing
+  `Picture.placement_bounds` warning retained.
+- Official navigation regenerated/verified after the new test file: **729 search
+  paths**. `git diff --check` passes on local changes.
+
+The first targeted launch encountered an inaccessible global pytest temporary
+directory; reported runs use a new `--basetemp` under FROG's `.pytest_tmp`. The first
+complete-suite attempt also lacked `jsonschema` in user Python; existing local
+dependencies were added to `PYTHONPATH` without global installation. On this Windows
+host, Python needed a normalized clang PATH for native tests; skipped tests were
+not counted as passes.
+
+Other convergence limits remain: UI-independent Studio model, transactional public
+writer, FIR-to-canonical-IR adapter, shared capability registry and Cluster/Picture/
+Waveform profiles. This correction changes no Studio artifact and replaces no browser
+CSS/JavaScript visual check. Studio evidence above remains attributed to the initial
+pass and its build version.

@@ -1,10 +1,10 @@
-# Rendezvous : trois participants, deux générations
+# Rendezvous: three participants, two generations
 
-Rendezvous : trois participants, deux générations
+Rendezvous: three participants, two generations
 
 Run this document. Each of three independent branches crosses generation 1, then generation 2 on the same reference. Cleanup waits for all second-generation outcomes. The scheduler may choose any branch first; this model does not manufacture a prescribed timing gap between participants.
 
-Rendezvous : trois participants, deux générations
+Rendezvous: three participants, two generations
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

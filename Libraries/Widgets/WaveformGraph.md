@@ -21,3 +21,34 @@ Effective authoring limits: 64 series, 1 000 000 total samples, RGB styles and l
 The sample quota above is the in-memory dataset limit. Persisted initial data also shares the host document's 250 000 JSON-value and 64 MiB source budgets with all other objects and metadata. The host must refuse an unreadable over-budget save without overwriting the previously saved document; it does not truncate samples to fit.
 
 The native editor currently contains separate local class-package and Default-realization descriptors. They are not promoted to a universal canonical `.wfrog` envelope by this document. Harmonization and independent validator coverage are still required before full standard publication.
+
+
+## Optional authored cursors (local common-Frontend extension, 8 November 2026)
+
+The current common reader/writer also accepts an optional `cursors` array in
+`props.waveform_graph`. This presentation extension does not change the logical
+value port, sample representation, target admission or runtime ABI above. Its
+presence is not a claim of complete WFG or VI Server conformance.
+
+Each cursor has a unique `id`, a `name`, finite `x`/`y`, `plot` (stable series ID),
+`index` (sample index), `mode` (0 free, 1 single-plot), `visible`, `show_name`,
+`allow_dragging`, RGB `rgb`, `line_style` (0 solid, 1 dash, 2 dot, 3 dash-dot,
+4 dash-dot-dot), `line_width` (0 hairline, 1–4 source units), `point_style`
+(0–16, the existing XY point-symbol vocabulary), and `style` (0 none,
+1 short vertical, 2 vertical, 3 short horizontal, 4 horizontal, 5 short cross,
+6 vertical/short horizontal, 7 horizontal/short vertical, 8 full cross).
+These are GS presentation indices, not an asserted mapping to VI Server IDs.
+At most 256 cursors are admitted; invalid/unknown data is preserved with a
+support diagnostic rather than silently discarded.
+
+Free cursors use their data coordinates. A single-plot cursor resolves its
+series ID and sample index against the actually displayed immutable dataset;
+`x = origin + index * step` and Y is that sample. Missing series, missing indices
+and non-finite samples have no fabricated measured value. Dragging selects the
+nearest finite sample in X on the associated series. Styles, visibility and
+movement permissions never change the graph's data or saved defaults.
+
+The editor retires the former annotation actions for this graph. Legacy
+`annotations` (text and X/Y) are read once as named free cursors with a small
+plus marker; text and coordinates survive, and a repeated save/open does not
+duplicate them. XY annotations remain a separate existing facility.

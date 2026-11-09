@@ -5,11 +5,29 @@
 <h1 align="center">🐸 Contributing to FROG</h1>
 
 <p align="center">
-Contribution guidelines for the FROG specification repository<br/>
+Contribution guidelines for the FROG specification and public components<br/>
 <em>FROG — Free Open Graphical Language</em>
 </p>
 
 <hr/>
+
+<h2 id="contribution-rules">Contribution rules at a glance</h2>
+
+<p>Graiphic leads the official project; participation is open and every merge
+requires an explicit maintainer decision. Read the
+<a href="./GOVERNANCE.md#official-project-rules">seven project rules</a> before proposing a change.</p>
+
+<ul>
+  <li>Write public documentation, example explanations, comments and contributor-facing messages in English, including generated exports. Preserve identifiers, exact test data, original source titles and third-party legal notices when their original wording is required.</li>
+  <li>For a bug, provide a small reproduction, expected and observed behavior, and relevant versions.</li>
+  <li>For a substantial feature or architecture change, open an issue first to agree on scope.</li>
+  <li>Keep a pull request focused. Explain the change, compatibility impact, checks actually run and remaining limits; preserve licenses and attribution.</li>
+  <li>For public code, follow the component's build/test instructions and include a targeted regression test when needed. Shared Studio behavior must be qualified before an official component release.</li>
+  <li>Review can lead to acceptance, a revision request, deferral or rejection with a concise reason. Passing tests alone does not guarantee a merge.</li>
+</ul>
+
+<p>The existing <a href="./CLA.md">CLA</a> and <a href="./LICENSE">license</a> continue to apply.
+No automatic acceptance, new contributor agreement or change of license is introduced by these rules.</p>
 
 <h2>Contents</h2>
 
@@ -35,7 +53,9 @@ Contribution guidelines for the FROG specification repository<br/>
 <h2 id="project-status">1. Project Status</h2>
 
 <p>
-FROG is an open specification project defining a modern graphical dataflow language and its related architectural layers.
+FROG defines an open graphical dataflow language and its related architectural layers.
+This repository also maintains the common Frontend library and CLI, public SDKs and finite reference bridges.
+The proprietary Studio editor and production Runtime remain outside this repository.
 </p>
 
 <p>
@@ -45,7 +65,7 @@ Contributions in the form of ideas, corrections, issue reports, specification pr
 </p>
 
 <p>
-Because this is a specification repository rather than an ordinary application repository, contributions SHOULD prioritize:
+Specification contributions SHOULD prioritize:
 </p>
 
 <ul>
@@ -57,15 +77,12 @@ Because this is a specification repository rather than an ordinary application r
 </ul>
 
 <pre>
-This repository is not primarily:
-- an app codebase
-- a demo collection
-- a vendor product manual
+This repository includes:
+- the language specification and architecture contracts
+- public implementation components and SDKs
+- attributed examples, tests and qualification material
 
-This repository is primarily:
-- a language specification
-- an architecture baseline
-- a durable normative document set
+It does not include the complete Studio IDE or proprietary production Runtime.
 </pre>
 
 <hr/>
@@ -275,7 +292,7 @@ pull request
 <h2 id="before-you-modify-a-document">6. Before You Modify a Document</h2>
 
 <p>
-Because FROG is a specification repository, contributors MUST work from the current repository state rather than from memory, assumption, or older draft wording.
+For both specifications and public code, contributors MUST work from the current repository state rather than from memory, assumption, or older draft wording.
 </p>
 
 <p>

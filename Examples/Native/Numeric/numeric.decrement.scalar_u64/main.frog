@@ -6,7 +6,7 @@
   "metadata": {
     "name": "Decrement — scalar u64",
     "name_source": "document",
-    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : in (u64) = 3.\nRésultats attendus : result (u64) = 2.\n\nNumeric or enum x -> same structure/representation x-1; NI also has timestamp and waveform overloads.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (u64) = 2\n",
+    "description": "Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.\nInputs: in (u64) = 3.\nExpected results: result (u64) = 2.\n\nNumeric or enum x -> same structure/representation x-1; NI also has timestamp and waveform overloads.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-result (u64) = 2\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -44,7 +44,7 @@
     "clear_indicators_when_called": false
   },
   "icon": {
-    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" role=\"img\" aria-labelledby=\"title\">\n  <title id=\"title\">Décrémenter</title>\n  <g shape-rendering=\"geometricPrecision\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n    <path d=\"M7 3.5C5.4 2.7 4 3.7 4 5.5v37c0 1.9 1.9 3 3.6 2.1l36.1-18.2c1.8-.9 1.8-3.5 0-4.4L7 3.5Z\" fill=\"#4B5563\" stroke=\"#AAB4C0\" stroke-width=\"1.8\"/><g data-role=\"glyph\" data-shell=\"triangle\" transform=\"translate(-2.5 0)\"><text x=\"20.5\" y=\"24.5\" fill=\"#F8FAFC\" font-family=\"Segoe UI, Arial, sans-serif\" font-size=\"12\" font-weight=\"700\" font-style=\"normal\" text-anchor=\"middle\" dominant-baseline=\"middle\" letter-spacing=\"0\">−1</text></g>\n  </g>\n</svg>\n"
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" role=\"img\" aria-labelledby=\"title\">\n  <title id=\"title\">Decrement</title>\n  <g shape-rendering=\"geometricPrecision\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n    <path d=\"M7 3.5C5.4 2.7 4 3.7 4 5.5v37c0 1.9 1.9 3 3.6 2.1l36.1-18.2c1.8-.9 1.8-3.5 0-4.4L7 3.5Z\" fill=\"#4B5563\" stroke=\"#AAB4C0\" stroke-width=\"1.8\"/><g data-role=\"glyph\" data-shell=\"triangle\" transform=\"translate(-2.5 0)\"><text x=\"20.5\" y=\"24.5\" fill=\"#F8FAFC\" font-family=\"Segoe UI, Arial, sans-serif\" font-size=\"12\" font-weight=\"700\" font-style=\"normal\" text-anchor=\"middle\" dominant-baseline=\"middle\" letter-spacing=\"0\">−1</text></g>\n  </g>\n</svg>\n"
   },
   "frontPanel": {
     "grid": {
@@ -229,7 +229,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Decrement — scalar u64\nNumeric or enum x -> same structure/representation x-1; NI also has timestamp and waveform overloads.\nEntrées -> opération -> indicateurs. Résultat attendu : output-result (u64) = 2\n",
+        "text": "Decrement — scalar u64\nNumeric or enum x -> same structure/representation x-1; NI also has timestamp and waveform overloads.\nInputs -> operation -> indicators. Expected result: output-result (u64) = 2\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

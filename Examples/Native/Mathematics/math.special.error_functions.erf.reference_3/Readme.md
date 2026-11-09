@@ -2,9 +2,9 @@
 
 Evaluates erf(q)=2/sqrt(pi)*integral(0,q,exp(-t*t),dt).
 
-Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.
-Entrées : x (f64) = -0.5.
-Résultats attendus : result (f64) = 0.5204998778130465.
+Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.
+Inputs: x (f64) = -0.5.
+Expected results: result (f64) = 0.5204998778130465.
 
 Evaluates erf(q)=2/sqrt(pi)*integral(0,q,exp(-t*t),dt).
 

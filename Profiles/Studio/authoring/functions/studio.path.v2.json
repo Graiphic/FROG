@@ -1446,11 +1446,11 @@
       "behavior_summary": "One scalar Path produces one scalar Boolean indicating a non-empty valid path. No arrays or clusters; this predicate does not establish file existence.",
       "runtime_availability": {
         "available": false,
-        "implementation_kind": "none",
-        "implementation_id": "",
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.path.is_not_empty.owned.v1",
         "availability_scope": "requires_explicit_target_capability",
-        "notes": "Provider identity is retained from Studio. Executability must be established by the active target; it is not inferred from catalog visibility.",
-        "provider_requirement": ""
+        "notes": "The existing compiled NumericAggregate service provides the bounded Comparison profile on explicitly admitted targets. The fixed scalar Path input and Boolean output retain their existing authoring contract; this predicate does not establish file existence. Complete types, nominal schemas, shapes and exact physical carriers remain checked. This declaration is not a passing test, full overload coverage or AOT/package qualification.",
+        "provider_requirement": "frog.studio.comparison.owned-tree@1"
       },
       "blockers": [
         "NI reference verified for authoring types; this does not establish runtime support on the active target."
@@ -1647,6 +1647,240 @@
         "schema_version": 1,
         "maturity": "reference_verified",
         "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/constants/path.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.current_frog_path",
+      "definition_ref": "frog.studio.path.current_frog_path",
+      "contract_status": "defined",
+      "profile_id": "frog.studio.context-path.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Full saved filename of the source-owning FROG document, resolved by explicit runtime owner identity. Unsaved or unavailable owners fault without publishing a Path."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "One scalar Path; no implicit lifting or text conversion."
+      },
+      "behavior_summary": "Full saved filename of the source-owning FROG document, resolved by explicit runtime owner identity. Unsaved or unavailable owners fault without publishing a Path.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.path.current_frog_path",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Local Studio context-path@1 service; the actual native backend and explicit host context must admit it. Palette visibility alone does not prove deployment support.",
+        "provider_requirement": "frog.studio.context-path@1"
+      },
+      "blockers": [],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "docs/functions/path/context-paths.md",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.default_directory",
+      "definition_ref": "frog.studio.path.default_directory",
+      "contract_status": "defined",
+      "profile_id": "frog.studio.context-path.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Installation directory of the explicit Graiphic Studio executable. No current-working-directory, project or deployed-executable fallback is permitted."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "One scalar Path; no implicit lifting or text conversion."
+      },
+      "behavior_summary": "Installation directory of the explicit Graiphic Studio executable. No current-working-directory, project or deployed-executable fallback is permitted.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.path.default_directory",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Local Studio context-path@1 service; the actual native backend and explicit host context must admit it. Palette visibility alone does not prove deployment support.",
+        "provider_requirement": "frog.studio.context-path@1"
+      },
+      "blockers": [],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "docs/functions/path/context-paths.md",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.temporary_directory",
+      "definition_ref": "frog.studio.path.temporary_directory",
+      "contract_status": "defined",
+      "profile_id": "frog.studio.context-path.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Existing current process/user system temporary directory from the platform filesystem service; no directory is created per evaluation."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "One scalar Path; no implicit lifting or text conversion."
+      },
+      "behavior_summary": "Existing current process/user system temporary directory from the platform filesystem service; no directory is created per evaluation.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.path.temporary_directory",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Local Studio context-path@1 service; the actual native backend and explicit host context must admit it. Palette visibility alone does not prove deployment support.",
+        "provider_requirement": "frog.studio.context-path@1"
+      },
+      "blockers": [],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "docs/functions/path/context-paths.md",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "path.application_directory",
+      "definition_ref": "frog.studio.path.application_directory",
+      "contract_status": "defined",
+      "profile_id": "frog.studio.context-path.v1",
+      "ports": {
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "result",
+            "display_name": "result",
+            "type": "path",
+            "default_value_type": "path",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Directory of the compiled FROG executable when deployed. Studio Run uses its saved owning project directory, or the saved top-level document directory when no project owns it. An unsaved project, or an unsaved top-level document outside a project, has no Path authority; CWD and Studio installation are never substitutes."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 0
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "One scalar Path; no implicit lifting or text conversion."
+      },
+      "behavior_summary": "Directory of the compiled FROG executable when deployed. Studio Run uses its saved owning project directory, or the saved top-level document directory when no project owns it. An unsaved project, or an unsaved top-level document outside a project, has no Path authority; CWD and Studio installation are never substitutes.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.path.application_directory",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Local Studio context-path@1 service; the actual native backend and explicit host context must admit it. Palette visibility alone does not prove deployment support.",
+        "provider_requirement": "frog.studio.context-path@1"
+      },
+      "blockers": [],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/file-llb/application-directory-vi.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "docs/functions/path/context-paths.md",
         "resolver_id": "",
         "evaluation_order": "unspecified",
         "reduction_policy": "unspecified",

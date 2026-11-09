@@ -1,10 +1,10 @@
-# Case u64 : sélection exacte et tunnels
+# Case u64: exact selection and tunnels
 
-Case u64 : sélection exacte et tunnels
+Case u64: exact selection and tunnels
 
-Le sélecteur choisit la branche exécutée, indépendamment de la branche affichée. La branche chosen incrémente l'entrée 40 et publie 41 ; l'autre publie 99. Tous les contenus et les producteurs du tunnel de sortie persistent, y compris dans la branche cachée. Les sélecteurs I64/U64 conservent les valeurs exactes ; les enums comparent les IDs de domaine/items.
+The selector chooses the executed branch independently of the displayed branch. The chosen branch increments input 40 and publishes 41; the other publishes 99. All contents and output-tunnel producers persist, including in the hidden branch. I64/U64 selectors retain exact values; enums compare domain/item IDs.
 
-Case u64 : sélection exacte et tunnels
+Case u64: exact selection and tunnels
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

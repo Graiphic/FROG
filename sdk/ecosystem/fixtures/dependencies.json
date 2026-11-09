@@ -1,0 +1,15 @@
+{
+  "format": "frog.frontend.dependencies",
+  "version": "1",
+  "dependencies": [
+    {
+      "kind": 2,
+      "reference": "dep:example.types",
+      "requesting_source_uri": "example:/program.frog",
+      "source_uri": "example:/types.json",
+      "identity": "example.types",
+      "version": "1",
+      "path": "types.json"
+    }
+  ]
+}

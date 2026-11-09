@@ -341,7 +341,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Look In Map — missing-default\nLookup does not modify the Map. A missing key returns the connected default, or the exact intrinsic value for V when the default is unwired.\nEntrées -> opération -> indicateurs. Résultat attendu : result (i32) = 99\nnot-found (bool) = true\n",
+        "text": "Look In Map — missing-default\nLookup does not modify the Map. A missing key returns the connected default, or the exact intrinsic value for V when the default is unwired.\nInputs -> operation -> indicators. Expected result: result (i32) = 99\nnot-found (bool) = true\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

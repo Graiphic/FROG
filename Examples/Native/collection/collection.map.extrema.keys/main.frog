@@ -267,7 +267,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Map extrema compare keys\nMap extrema compare keys rather than values. The empty Map yields the intrinsic default of its exact key type.\nEntrées -> opération -> indicateurs. Résultat attendu : maximum (string) = \"B\"\nminimum (string) = \"A\"\n",
+        "text": "Map extrema compare keys\nMap extrema compare keys rather than values. The empty Map yields the intrinsic default of its exact key type.\nInputs -> operation -> indicators. Expected result: maximum (string) = \"B\"\nminimum (string) = \"A\"\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

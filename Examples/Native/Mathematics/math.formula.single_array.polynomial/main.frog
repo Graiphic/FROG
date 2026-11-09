@@ -491,7 +491,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Evaluate a formula at three points\nA rank-one F64 Array is evaluated element by element: x^2+1 at [-2,0,3] gives [5,1,10]. No shape or point is manufactured.\nEntrées -> opération -> indicateurs. Résultat attendu : output-y_values (array<f64>) = [5,1,10]\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
+        "text": "Evaluate a formula at three points\nA rank-one F64 Array is evaluated element by element: x^2+1 at [-2,0,3] gives [5,1,10]. No shape or point is manufactured.\nInputs -> operation -> indicators. Expected result: output-y_values (array<f64>) = [5,1,10]\noutput-error (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"status\":false,\"code\":0,\"source\":\"\"}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

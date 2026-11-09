@@ -1,0 +1,36 @@
+{
+  "schema": "frog.bridge.kernel.inputs",
+  "schema_version": "0.1",
+  "controls": [
+    {
+      "widget_id": "i64",
+      "type": "i64",
+      "value": 9223372036854775807
+    },
+    {
+      "widget_id": "u64",
+      "type": "u64",
+      "value": 0
+    },
+    {
+      "widget_id": "i32",
+      "type": "i32",
+      "value": 2147483647
+    },
+    {
+      "widget_id": "u32",
+      "type": "u32",
+      "value": 0
+    },
+    {
+      "widget_id": "flag",
+      "type": "bool",
+      "value": false
+    },
+    {
+      "widget_id": "f64",
+      "type": "f64",
+      "value": -2.5
+    }
+  ]
+}

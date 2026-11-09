@@ -6,7 +6,7 @@
   "metadata": {
     "name": "LCM — basic exact",
     "name_source": "document",
-    "description": "Relier les contrôles aux ports nommés, puis lancer Run. Les types et valeurs sont explicites; sélectionner la fiche n'exécute rien.\nEntrées : x (i32) = 48; y (i32) = 18.\nRésultats attendus : lcm (i64) = 144.\n\nComputes the nonnegative least common multiple of two I32 integers in I64 arithmetic.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-lcm (i64) = 144\n",
+    "description": "Connect the controls to the named ports, then select Run. Types and values are explicit; selecting the example does not execute it.\nInputs: x (i32) = 48; y (i32) = 18.\nExpected results: lcm (i64) = 144.\n\nComputes the nonnegative least common multiple of two I32 integers in I64 arithmetic.\n\nMode: execution. Profile: studio-draft. Capability: windows-x64; LLVM 22.1.7; exact declared scalar signature.\nExpected:\noutput-lcm (i64) = 144\n",
     "author": "",
     "automatic_versioning": false,
     "program_version": "0.0.0.0",
@@ -295,7 +295,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "LCM — basic exact\nComputes the nonnegative least common multiple of two I32 integers in I64 arithmetic.\nEntrées -> opération -> indicateurs. Résultat attendu : output-lcm (i64) = 144\n",
+        "text": "LCM — basic exact\nComputes the nonnegative least common multiple of two I32 integers in I64 arithmetic.\nInputs -> operation -> indicators. Expected result: output-lcm (i64) = 144\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

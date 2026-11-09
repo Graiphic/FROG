@@ -264,7 +264,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Convert ASCII codes without rounding I64\nThe numeric overload preserves the exact I64 Array schema and order. ASCII codes 97 and 122 become 65 and 90; the unrelated exact integer 9007199254740993 remains unchanged.\nEntrées -> opération -> indicateurs. Résultat attendu : result (array<i64>) = [65,9007199254740993,90]\n",
+        "text": "Convert ASCII codes without rounding I64\nThe numeric overload preserves the exact I64 Array schema and order. ASCII codes 97 and 122 become 65 and 90; the unrelated exact integer 9007199254740993 remains unchanged.\nInputs -> operation -> indicators. Expected result: result (array<i64>) = [65,9007199254740993,90]\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

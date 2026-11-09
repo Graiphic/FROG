@@ -207,7 +207,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "String Length — empty\nLength counts bytes, including NUL. UTF-8 é occupies two bytes; this example does not count Unicode characters.\nEntrées -> opération -> indicateurs. Résultat attendu : result (i32) = 0\n",
+        "text": "String Length — empty\nLength counts bytes, including NUL. UTF-8 é occupies two bytes; this example does not count Unicode characters.\nInputs -> operation -> indicators. Expected result: result (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

@@ -367,7 +367,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Read a nested field by stable identity\nThe displayed Config.Offset path resolves the stable IDs config-id / offset-id. Unrelated fields are not read or rebuilt.\nEntrées -> opération -> indicateurs. Résultat attendu : result (i64) = 9007199254740993\n",
+        "text": "Read a nested field by stable identity\nThe displayed Config.Offset path resolves the stable IDs config-id / offset-id. Unrelated fields are not read or rebuilt.\nInputs -> operation -> indicators. Expected result: result (i64) = 9007199254740993\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

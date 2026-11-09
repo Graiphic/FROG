@@ -1,0 +1,30 @@
+{
+  "schema": "frog.bridge.message",
+  "protocol_version": "0.1",
+  "request_id": "fixture.request",
+  "session_id": "fixture.session",
+  "generation": 7,
+  "kind": "response",
+  "method": "validate",
+  "payload": {
+    "fixture_only": true
+  },
+  "status": "error",
+  "diagnostics": [
+    {
+      "schema": "frog.diagnostic",
+      "version": "0.1",
+      "code": "fixture.not-executed",
+      "stage": "validate",
+      "severity": "info",
+      "message": "Synthetic contract fixture; no production compilation or execution.",
+      "source": {
+        "uri": "fixture://diagram",
+        "pointer": "/objects/0",
+        "object_id": "fixture.node",
+        "port_id": "fixture.in",
+        "region_id": "fixture.region"
+      }
+    }
+  ]
+}

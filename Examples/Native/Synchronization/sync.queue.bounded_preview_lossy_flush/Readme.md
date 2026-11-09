@@ -1,10 +1,10 @@
-# Queue : capacité, Preview, perte contrôlée et Flush
+# Queue: capacity, Preview, controlled loss and Flush
 
-Queue : capacité, Preview, perte contrôlée et Flush
+Queue: capacity, Preview, controlled loss and Flush
 
-Une Queue<f64> de capacité 2 reçoit 10 puis 20. Preview lit 10 sans l'enlever : Status retourne toujours [10,20] et count=2. Lossy Enqueue de 30 évince exactement 10 ; Flush retourne [20,30]. Dequeue avec timeout=0 constate ensuite une file vide, sans créer de valeur. Release ferme le handle et retourne un tableau restant vide.
+A Queue<f64> of capacity 2 receives 10, then 20. Preview reads 10 without removing it: Status still returns [10,20] and count=2. Lossy Enqueue of 30 evicts exactly 10; Flush returns [20,30]. Dequeue with timeout=0 then observes an empty queue without creating a value. Release closes the handle and returns an empty remaining array.
 
-Queue : capacité, Preview, perte contrôlée et Flush
+Queue: capacity, Preview, controlled loss and Flush
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

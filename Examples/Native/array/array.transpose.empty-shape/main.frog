@@ -264,7 +264,7 @@
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Transpose an empty rectangular shape\nAn empty Array still has two distinct dimensions. Shape [0,3] becomes [3,0], without allocating elements or losing its rank.\nEntrées -> opération -> indicateurs. Résultat attendu : result (array<i32,rank=2>) = {\"shape\":[3,0],\"elements\":[]}\n",
+        "text": "Transpose an empty rectangular shape\nAn empty Array still has two distinct dimensions. Shape [0,3] becomes [3,0], without allocating elements or losing its rank.\nInputs -> operation -> indicators. Expected result: result (array<i32,rank=2>) = {\"shape\":[3,0],\"elements\":[]}\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",

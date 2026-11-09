@@ -1,0 +1,287 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.io/frog/sdk/ecosystem/0.2/frontend-context.schema.json",
+  "description": "API-2 local result document. Its document, C ABI and Source/FIR versions are independent.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "source",
+    "fir",
+    "frontend",
+    "profiles",
+    "operations",
+    "dependencies",
+    "closure_complete",
+    "semantic_context",
+    "limits",
+    "transformations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "frog.frontend.context"
+    },
+    "schema_version": {
+      "const": "0.2"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family",
+        "version",
+        "uri",
+        "document_id",
+        "sha256"
+      ],
+      "properties": {
+        "family": {
+          "type": "string",
+          "minLength": 0
+        },
+        "version": {
+          "type": "string",
+          "minLength": 0
+        },
+        "uri": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 8192
+        },
+        "document_id": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 8192
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^(?:[a-f0-9]{64})?$"
+        }
+      }
+    },
+    "fir": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family",
+        "version"
+      ],
+      "properties": {
+        "family": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 0
+        }
+      }
+    },
+    "frontend": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "software_version",
+        "api_version",
+        "commit",
+        "sha256"
+      ],
+      "properties": {
+        "software_version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+        },
+        "api_version": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "identity",
+          "version",
+          "sha256",
+          "source_uri",
+          "origin"
+        ],
+        "properties": {
+          "kind": {
+            "const": 2
+          },
+          "identity": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "source_uri": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "origin": {
+            "const": "explicit-resolver"
+          }
+        }
+      },
+      "minItems": 0
+    },
+    "closure_complete": {
+      "type": "boolean"
+    },
+    "semantic_context": {
+      "type": "object"
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_source_bytes",
+        "max_dependency_bytes",
+        "max_total_dependency_bytes",
+        "max_result_bytes",
+        "max_nodes",
+        "max_connections",
+        "max_nesting_depth",
+        "max_dependencies",
+        "max_diagnostics"
+      ],
+      "properties": {
+        "max_source_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "max_dependency_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "max_total_dependency_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "max_result_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "max_nodes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "max_connections": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "max_nesting_depth": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "max_dependencies": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "max_diagnostics": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        }
+      }
+    },
+    "transformations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profile",
+          "source_uri",
+          "source_pointer",
+          "dependency_uri",
+          "dependency_pointer",
+          "dependency_sha256"
+        ],
+        "properties": {
+          "profile": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_uri": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 8192
+          },
+          "source_pointer": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~]|~[01])*)?$"
+          },
+          "dependency_uri": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 8192
+          },
+          "dependency_pointer": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~]|~[01])*)?$"
+          },
+          "dependency_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      },
+      "minItems": 0
+    },
+    "projected_source_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}

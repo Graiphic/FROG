@@ -1,10 +1,10 @@
-# Semaphore : acquérir et nettoyer malgré une erreur
+# Semaphore: acquire and clean up despite an error
 
-Semaphore : acquérir et nettoyer malgré une erreur
+Semaphore: acquire and clean up despite an error
 
-L'erreur 77 est une donnée. Acquire retire une place malgré cette erreur ; Release la restitue ; Release Reference ferme ensuite le handle tout en conservant l'erreur prioritaire. Status inspecte sans erreur amont pour observer le vrai compteur.
+Error 77 is data. Acquire takes a slot despite that error; Release returns it; Release Reference then closes the handle while preserving the priority error. Status inspects without an upstream error to observe the actual count.
 
-Semaphore : acquérir et nettoyer malgré une erreur
+Semaphore: acquire and clean up despite an error
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:
