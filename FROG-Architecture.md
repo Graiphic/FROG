@@ -579,12 +579,16 @@ application-level proof answer different questions. A graph or runtime observati
 is not a mathematical guarantee. Source identities and mappings support traceability;
 they do not establish translation correctness.</p>
 
-<p>The <a href="Strategy/Visual-Programming-and-Human-Control.md">general project philosophy</a>
-connects visual programming, execution and maintenance. The
-<a href="Strategy/Inspection-and-Assurance.md">supporting evidence guide</a>
-explains the role of each check. Optional verification adapters or partner-specific
-guarantees require their own supported semantics and trusted components; they add
-no profile, ABI, backend or source field through this strategy update. Existing
+<p>The <a href="Strategy/Visual-Programming-and-Human-Control.md">project philosophy</a>
+centers human oversight of generated code. The program model carries meaning,
+<code>.frog</code> serializes it, and Studio's graphical projection supports
+human comprehension. FIR/IR and qualified lowering serve machine execution.
+These representations must preserve their declared associations and semantics;
+serialization or a shared backend alone establishes neither fidelity nor performance.</p>
+
+<p>The <a href="Strategy/Inspection-and-Assurance.md">evidence guide</a> supports
+that workflow. Partner-specific verification options remain separate. This
+informative direction adds no source field, profile, ABI or backend; existing
 specification owners retain those responsibilities.</p>
 
 <h2 id="execution-observability-debugging-and-inspection">Execution observability, debugging, and inspection</h2>

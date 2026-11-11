@@ -1,10 +1,10 @@
 # FROG and Graiphic Studio — Heilmeier framing
 
-**General project framing · reviewed 11 November 2026 · Non-normative**
+**Human oversight of code generation · general project framing reviewed 11 November 2026 · Non-normative**
 
-FROG provides an open graphical dataflow language foundation. Graiphic Studio is Graiphic's proprietary environment for building programs, understanding their behavior and maintaining them through execution and change. This page describes the overall project, using the eight questions of [the Heilmeier Catechism](https://www.darpa.mil/about/heilmeier-catechism).
+The project aims to increase human capacity to follow, understand and validate machine-generated software. FROG provides a structured program model serialized in `.frog`; Studio projects it into graphical dataflow for human comprehension and intervention. FIR and downstream IR connect the program to supported compilation and execution.
 
-The [project philosophy](../Visual-Programming-and-Human-Control.md) explains the role of visual representation, execution and human control. Specialized research proposals remain separate from this general framing. Older section anchors are retained for incoming links.
+This page applies the eight questions of [the Heilmeier Catechism](https://www.darpa.mil/about/heilmeier-catechism) to the general project. The [philosophy](../Visual-Programming-and-Human-Control.md) explains the architecture and limits. Partner-specific research remains separate. Existing section anchors are retained.
 
 - [Objective](#question-1)
 - [Current practice](#question-2)
@@ -20,111 +20,121 @@ The [project philosophy](../Visual-Programming-and-Human-Control.md) explains th
 <a id="positioning-gap"></a>
 ## The project and the problem
 
-People need to build software, understand unfamiliar behavior and make changes that work. The program may be their own, inherited from a colleague or proposed by an AI tool. As software grows, connecting an overview to relevant detail and actual execution becomes important engineering work.
+The strategic premise is that machine generation becomes routine in software production. Human attention and review effort do not automatically grow with that production. In processes requiring human acceptance, an engineer must still understand consequential behavior, judge a change and identify what is being accepted.
 
-Graphical programming offers a spatial way to express dependencies and organize behavior. The opportunity is to make that representation useful throughout development and maintenance, supported by an open language foundation and an integrated environment. Existing graphical environments, textual tools and AI assistants provide substantial capabilities and meaningful comparison baselines.
+Graphical abstraction offers an additional way to present relationships: color, shape, position, text, arrangement, labels, connections and hierarchy. FROG and Studio seek to use that dimension to make machine-produced software accessible to human investigation, while retaining a path to efficient and deployable execution.
+
+The same foundation also supports direct human programming and maintenance. It remains a general-purpose language and product, with a focused strategic motivation rather than a restriction on who authors a program.
 
 <a id="heilmeier-h1"></a>
 <a id="question-1"></a>
 ## 1. What are we trying to do?
 
-Give engineers a practical way to build programs whose organization and behavior they can understand and change. They should be able to connect an interface to its logic, follow what happens during execution, locate an unexpected result and check a correction in the version that runs.
+Help people keep up with generated software well enough to understand relevant behavior and make informed acceptance decisions. An engineer should be able to inspect the program, follow what a proposed change does, find a problem and check a correction in the version that actually runs.
 
-FROG supplies the open language and public representation contracts. Studio develops the corresponding programming experience, from visual authoring through supported execution and deployment. Human control matters throughout that workflow, whether the first implementation is drawn by a person or proposed by a tool.
+The goal is to increase useful human oversight through a graphical abstraction, with access to necessary detail. It does not assume that a person can read every generated operation or that an attractive overview alone validates a program.
 
 <a id="heilmeier-h2"></a>
 <a id="question-2"></a>
 ## 2. How is it done today, and what are the limits?
 
-Engineers use textual languages, graphical programming, model-based tools, debuggers, tests and increasingly AI assistance. Many environments already integrate parts of the workflow. Text code can be analyzed and visualized; graphical tools can expose programmatic interfaces. Neither medium automatically establishes correctness or makes useful automation impossible.
+Engineers use source review, coding assistants, debuggers, tests, static analysis, graphical programming and other inspection tools. Existing textual and graphical environments already provide important capabilities and meaningful comparison baselines.
 
-Practical difficulty arises when people must reconstruct relationships, move between representations, find the consequential state or effect, and determine whether a change reached the actual executable. Graphical abstraction can help, but poorly organized diagrams can also hide detail. The relevant comparison is the complete engineering task with a defined tool version and application.
+The difficulty is connecting generated changes to relevant behavior and to the version accepted for execution. Long textual implementations can require readers to reconstruct relationships across files and functions. Graphical tools can also overwhelm readers when hierarchy or layout is weak. AI integration can use supported programmatic interfaces; a binary format alone does not establish an impossibility.
+
+The relevant comparison is the complete review and correction task with equivalent information, application scope and tool versions. The intended benefit of FROG must be demonstrated in that context.
 
 <a id="heilmeier-h3"></a>
 <a id="question-3"></a>
 ## 3. What is new, and why might it work?
 
-The proposed contribution combines an open graphical dataflow language with an integrated environment for authoring, navigation, execution observation and correction. Connections expose dependencies; structures and hierarchy organize behavior; values and activity can be examined in the context of the program. The engineer can work on the representation used to express the application.
+The proposed contribution connects machine production, human graphical comprehension and machine execution through a common structured program representation. A FROG model can be serialized in `.frog`, projected into navigable graphical dataflow and processed through FIR/IR for supported compilers and targets.
 
-Public source, semantic and FIR contracts separate the language from a particular editor, compiler or target. They provide a foundation for independent tooling and implementations. Compatibility and supported execution profiles must remain explicit as integrations develop.
+Two entry routes are intended: direct FROG generation and declared translations from existing languages. Universal conversion is not an existing capability. A bridge must preserve supported types, state, memory, effects and execution rules; its graph must remain faithful to what the engineer will execute.
 
-Graphs, JSON and code generation are established techniques. Differentiation depends on the quality of the integrated experience, faithful mappings and the practical benefit in programming and maintenance. The calculator walkthrough illustrates the intended continuity from an overview to a case, execution and a correction. It is a concrete demonstration format, not a measured productivity study.
+The graphical abstraction uses connections and perceptual cues to expose relationships, with hierarchy from overview to detail. The calculator illustrates the idea: about 1,000 C/H lines correspond to an application whose architecture can be shown on one graphical page with navigable cases. The source and overview expose different detail, so this is an illustration of abstraction, not a measured productivity result or evidence of an automatic importer.
 
-There is an existing foundation: the public common C++ Frontend library/CLI, finite executable dossiers and selected Studio normal Run, Highlight and LLVM/native paths on Windows/x86-64. The [9 November checkpoint](../../docs/frontend-checkpoint-2026-11-09.json) identifies its own evidence. Broader function coverage, general source imports and additional targets require further work.
+The technical foundation includes public language/FIR contracts, the common C++ Frontend library/CLI and selected Studio normal Run, Highlight and LLVM/native paths on Windows/x86-64. The [9 November checkpoint](../../docs/frontend-checkpoint-2026-11-09.json) identifies its own finite evidence. Graphs, serialization and IR are established techniques; the contribution to establish is their effective integration for human oversight.
+
+A graphical abstraction can target efficient native execution. Efficiency depends on algorithms, semantics, data representation, runtime requirements, IR quality, optimization and hardware. Using an established backend is a sound direction, not a guarantee of equal performance for every language or program.
 
 <a id="heilmeier-h4"></a>
 <a id="heilmeier-h5"></a>
 <a id="question-4"></a>
 ## 4. Who cares, and what difference would success make?
 
-Engineers building instrumentation, acquisition, test and automation applications provide a concrete initial field. Maintainers, reviewers and teams transferring work between people also need to understand existing behavior and make reliable changes. The language architecture is general purpose.
+Teams that require human review or acceptance of software changes have a direct need. Industrial engineering, instrumentation, acquisition, test and automation provide concrete initial applications. Maintainers and teams inheriting unfamiliar software face related comprehension problems.
 
-Success would make relevant relationships easier to find, reduce the effort of moving from diagnosis to a working change and support continued maintenance as applications evolve. AI-assisted development is an important use case alongside everyday human programming. The benefit must be evaluated on actual tasks, including errors and integration effort.
+Success would let people locate consequential behavior, understand generated changes and complete valid corrections with an effort compatible with the workflow. It would connect acceptance to an identified executable revision. The same product also supports people writing programs directly.
 
-The open FROG foundation supports an ecosystem of compatible tools. Studio's proprietary value lies in a useful, reliable and extensible engineering experience. Industrial adoption depends on application coverage, performance, usability and maintained integrations as well as the clarity of the representation.
+FROG remains an open language foundation supporting compatible tools. Studio's proprietary value is the integrated human experience: graphical comprehension, authoring, navigation, execution observation and supported deployment. Adoption requires useful application coverage, usability and performance as well as an explanatory diagram.
 
 <a id="heilmeier-h6"></a>
 <a id="question-5"></a>
 ## 5. What are the risks?
 
-- Large graphs or unsuitable abstractions can overwhelm the engineer or hide relevant state and effects.
-- Source, editor views, execution and target mappings can diverge unless their contracts and compatibility are maintained.
-- Missing function coverage, performance limits or weak deployment support can prevent practical use despite an attractive overview.
-- A visually convincing presentation can encourage conclusions that the available tests or observations do not establish.
-- Integration and maintenance costs can outweigh the benefit, while partner-specific requests can distract from common product needs.
+- A conversion can alter semantics or hide memory, state, exceptions, concurrency or external behavior.
+- A generated graph can be too dense, or its layout can change so much between revisions that the engineer loses the mental map.
+- Abstraction can conceal relevant details and create confidence unsupported by the available evidence.
+- A review, observation or acceptance can refer to an older revision than the code actually executed.
+- Poor lowering, lost semantic information or runtime overhead can undermine performance despite a mature compiler backend.
+- Broad import and target ambitions, missing function coverage or dedicated partner requests can exceed available engineering and maintenance resources.
 
-Use explicit contracts, readable hierarchy, attributable diagnostics, suitable regression checks and complete application examples. Assess usefulness and maintenance cost before promoting an extension into the common product. Specialized guarantees require their own evidence; they are not a condition imposed on every Studio workflow.
+Use explicit supported subsets, appropriate hierarchy, attributable diagnostics, meaningful change navigation and identified revisions. Compare behavior and performance under declared conditions. Advanced application-specific guarantees need their own methods and remain separate from the general product objective.
 
 <a id="heilmeier-h7"></a>
 <a id="question-6"></a>
 ## 6. How much will it cost?
 
-A costed overall programme is not established by this page. Estimates should cover the real product work: language/profile stabilization, function and widget coverage, editor usability, execution and Build, diagnostics, performance, documentation, integrations and maintenance.
+No costed overall programme is established here. Estimate bounded stages: language/profile stabilization, import and semantic mapping, graphical abstraction and layout, navigation of changes, execution/source associations, FIR/lowering, function coverage, performance, documentation and maintenance.
 
-Estimate each bounded development stage against its existing owners and reusable components. Include qualification and adoption effort. A dedicated research demonstrator or customer-specific bridge needs a separate scope, owner and cost estimate; its budget should not silently become the cost model for FROG and Studio as a whole.
+Reuse the existing Frontend, product components and qualified compiler infrastructure. Include the effort to preserve semantics, support users and maintain each bridge. A partner-specific verification demonstrator needs its own scope and budget rather than becoming the cost model for the project as a whole.
 
 <a id="heilmeier-h8"></a>
 <a id="question-7"></a>
 ## 7. How long will it take?
 
-No new delivery calendar is committed here. Continue stabilizing source/profile documentation and the existing execution path. After stabilization, language-import work and missing-function/performance work can progress within the maintained roadmap. Additional compiler or hardware bridges need their own readiness decisions.
+No new delivery calendar is committed by this page. Continue stabilizing source/profile documentation and the supported execution path. Broader language-import work, missing-function coverage and performance progress through the maintained roadmap; additional compiler or hardware bridges have their own readiness decisions.
 
-Duration depends on the chosen application coverage, staffing, integration complexity and qualification scope. The [roadmap](../../Roadmap/Readme.md) owns sequencing. A prospective partner discussion does not automatically reorder it or establish a date for a new capability.
+Stage the human-oversight workflow by declared application and source subsets rather than promise all languages and targets at once. Design requirements such as stable change views are not announced as delivered features. Existing owners and the [roadmap](../../Roadmap/Readme.md) retain sequencing authority.
 
 <a id="question-8"></a>
 ## 8. What are the intermediate and final exams?
 
 | Area | Evidence to seek |
 | --- | --- |
-| Language and compatible tools | Identified source/profile contracts, reproducible validation and faithful preservation of supported types, structures and behavior. |
-| Complete application workflow | A representative application authored or modified in Studio, executed with known inputs and checked outputs, then saved/reopened and built within its supported profile. |
-| Understanding and diagnosis | An engineer can move from an overview to the relevant detail, explain behavior and find a fault using the available observations. |
-| A valid change | The intended correction reaches the tested executable while unrelated behavior and supported data remain intact. |
-| Usability and performance | Representative editing, observation and execution tasks stay usable at the declared application scale; costs and limits are recorded. |
-| Integration and adoption | Supported tools or targets work under explicit contracts, with reproducible setup and an understood maintenance burden. |
+| Faithful representation | An identified supported input maps to a FROG model without silently losing relevant behavior; unsupported constructs are reported. |
+| Human comprehension | A reviewer can move from an overview to necessary detail and correctly explain the behavior relevant to a task. |
+| Following generation | A reviewer can identify a meaningful generated change, its affected behavior and the revision under consideration. |
+| Diagnosis and correction | An introduced fault can be found and a valid correction checked without damaging unrelated behavior. |
+| Acceptance and execution | The reviewed, tested and built program revisions are attributable; changes invalidate relevant old conclusions. |
+| Machine efficiency and deployment | FIR/lowering and the selected backend produce correct results with recorded runtime, memory and packaging conditions for the declared target. |
+| Practical adoption | Representative applications remain usable at the declared scale, with an understood integration and maintenance burden. |
 
-The calculator is a useful initial walkthrough because its interface and expected results are familiar while it exercises events, a queue and explicit state. Extend examples according to actual user needs. For comparative benefit claims, give workflows equivalent tasks and assess correct understanding, valid changes and effort. Source-line counts or the size of an overview alone do not establish superiority.
+The calculator is an initial demonstration because its inputs and outputs are familiar while it exercises events, a queue and explicit state. Show the overview, enter a case, follow values with Highlight and check a change. Its roughly 1,000-line C comparison motivates the abstraction; source-line counts and screen area alone do not establish human efficiency.
 
-Acceptance criteria should match the stage being evaluated. Language validity, target support, execution results and human effectiveness answer different questions. A successful bounded example does not qualify every palette function or deployment target.
+For comparative claims, use equivalent requirements and information. Measure correct understanding, valid changes, effort and mistaken confidence. For performance comparisons, control algorithm, semantics, inputs, target and configuration; a shared compiler name alone is insufficient.
+
+These are evaluation requirements, not results reported by this update. A bounded success does not qualify every language importer, palette function or deployment target.
 
 <a id="what-is-already-demonstrated-in-the-repository"></a>
 ## Existing foundation and remaining work
 
-The common Frontend, published contracts and finite reference dossiers are existing foundations. Selected Studio paths already connect normal execution, Highlight and native LLVM compilation. [Project status](../../FROG-Project-Status.md), versioned checkpoints and individual dossiers retain their own dates and scope.
+The common Frontend, public contracts and finite dossiers are existing foundations. Selected Studio paths already connect normal execution, Highlight and native LLVM compilation. [Project status](../../FROG-Project-Status.md), checkpoints and individual dossiers retain their own dates and scope.
 
-Source/profile stabilization, function coverage and performance continue. General imports from other languages and broader deployment support remain development directions. The general project is evaluated on its useful programming workflow and supported applications.
+General imports, complete change-review workflows and broader target support require further work and attributable evidence. The strategy keeps the distinction between intended architecture, editor capability and an admitted executable program.
 
 <a id="future-end-to-end-poc-direction"></a>
 ## Separate collaboration options
 
-Specific partners may justify a dedicated experiment, verification adapter or constrained-target integration. Assess its wider value, architecture fit, resources and maintenance before deciding whether any part belongs in the core. [DARPA-oriented verification options](../Research/DARPA-Collaboration-Options.md), including a possible bounded-model demonstrator, are kept separately. They do not define the general project or its required next milestone.
+Formal-verification adapters and specialized resource or fault guarantees can justify dedicated collaborations. Their value, architecture fit, cost and maintenance are assessed separately. [DARPA-oriented verification options](../Research/DARPA-Collaboration-Options.md) remain an independent exploration; they do not define the general philosophy or impose a required next milestone.
 
 <a id="relation-with-strategy-roadmap-and-versioning"></a>
 ## Ownership and status
 
-Strategy explains purpose and hypotheses. [Roadmap](../../Roadmap/Readme.md) owns sequencing; [Versioning](../../Versioning/Readme.md) and attributed dossiers own their published implementation status. Existing specification, governance, licenses and public/private boundaries remain in force.
+Strategy explains purpose and hypotheses. [Roadmap](../../Roadmap/Readme.md) owns sequencing; [Versioning](../../Versioning/Readme.md) and attributed dossiers own implementation status. Existing specifications, governance, licenses and public/private boundaries remain in force.
 
 <a id="summary"></a>
 ## Summary
 
-FROG and Studio pursue useful graphical programming: build software, understand its behavior and maintain control as it executes and evolves. Visual structure, an open foundation and an integrated working environment support that purpose. Concrete applications and appropriate evidence must establish the benefit.
+The central objective is human oversight of software produced at machine scale. FROG offers a structured common model, Studio uses graphical abstraction for comprehension and intervention, and FIR/IR support qualified compilation and execution. Faithful mappings, practical human benefit and machine efficiency each need evidence within their declared scope.

@@ -6,8 +6,8 @@
 
 <p align="center">
   <strong>Illustrative research positioning, not a benchmark</strong>
-  <br/>Reviewed 11 November 2026: the chart illustrates compatible tooling and useful human inspection.
-  See <a href="Strategy/Visual-Programming-and-Human-Control.md">the general project philosophy</a>.<br/>
+  <br/>Reviewed 11 November 2026: the strategic focus is human comprehension and acceptance of machine-generated code.
+  See <a href="Strategy/Visual-Programming-and-Human-Control.md">the FROG and graphical-abstraction philosophy</a>.<br/>
   FROG <code>(.frog / JSON)</code> targets the upper-right quadrant where AI-generatable source and AI-inspectable graphical system structure meet.
 </p>
 

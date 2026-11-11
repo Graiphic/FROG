@@ -2,31 +2,35 @@
 
 **Supporting guide · reviewed 11 November 2026**
 
-FROG and Graiphic Studio aim to make graphical programs practical to build, understand, execute and maintain. The [general philosophy](Visual-Programming-and-Human-Control.md) explains that purpose. This guide clarifies the evidence available during development and review.
+The [project philosophy](Visual-Programming-and-Human-Control.md) focuses on the human capacity to follow and validate machine-generated code. FROG serializes a structured program model in `.frog`; Studio projects it into navigable graphical dataflow. This guide explains the supporting evidence used to understand changes and check their results.
 
 ## What each view or check tells you
 
 | Question | Relevant view or evidence | Scope |
 | --- | --- | --- |
-| How is the program organized? | Graph connections, structures, types, labels and hierarchy | Helps navigate behavior and locate relevant detail. |
-| Is this document valid? | Structural and semantic validation | Checks the applicable language rules, not whether the chosen algorithm meets the user's need. |
-| Can this target execute it? | Admission against the selected backend/provider profile | Applies to the complete admitted graph and the declared capabilities. |
-| What happened during execution? | Identified Run, Highlight observations, inputs and results | Describes that execution and its conditions. |
-| Does a change work as intended? | A specified task, expected results and appropriate tests | Establishes the tested behavior and the limits of that evidence. |
-| Was the application packaged? | Build result and captured dependencies/configuration | Identifies what was compiled and packaged; execution remains a separate check. |
+| How is the program organized? | Connections, hierarchy, types, labels, color, shape and arrangement | Helps expose relationships and locate relevant detail. |
+| Is the conversion faithful? | Declared source subset, semantic mappings, identified dependencies and suitable behavior comparisons | A serialized model alone does not establish preservation of behavior. |
+| What did generation change? | Identified revisions, stable associations, meaningful differences and impact navigation | A design requirement; the update does not announce a complete change-review feature. |
+| Is this document valid? | Structural and semantic validation | Checks language rules rather than whether the chosen algorithm meets the intended need. |
+| Can this target execute it? | Admission against the selected backend/provider profile | Applies to the complete admitted graph and declared capabilities. |
+| What happened? | Identified Run, Highlight observations, inputs and results | Describes that execution and its conditions. |
+| Is the correction acceptable? | Review of the relevant behavior, expected results, tests and revision identity | Establishes only the scope of the review and checks actually performed. |
+| What was deployed? | Build result, program revision, dependencies and configuration | Captures the compiled package; execution remains a separate check. |
 
-These stages help an engineer investigate and correct a program. Keep observations attributable to the version that ran. A change to the program or its relevant dependencies may invalidate an earlier result. Stable identities and source maps help connect views; they do not alone prove preservation of meaning.
+Source identities and source maps help connect the human view to execution. They are not themselves proof of translation correctness. A relevant change invalidates old conclusions about the behavior affected; an old observation cannot stand for the newly generated candidate.
 
-## Demonstrate the practical workflow
+## A complete example and a meaningful comparison
 
-A complete example should let someone move from an overview to the relevant operation, follow values and check the result of a change. The calculator illustrates this with events, a queue and explicit state. Comparisons should account for the detail and work represented in each implementation.
+The calculator illustrates how the architecture of about 1,000 C/H lines can be made accessible on one graphical page, with details in navigable cases. Follow an event, inspect state with Highlight and check a change. The C source includes UI, parser and queue work; the diagram is an abstraction of relevant architecture. This does not establish an automatic importer or a measured speed advantage.
 
-Measure relevant engineering outcomes when making comparative claims: understanding the behavior correctly, finding the cause of a fault, completing a valid change and the effort required. A compact diagram is useful communication, while review-speed or productivity claims require their own evidence.
+Evaluate whether people identify the consequential change, explain behavior, diagnose a fault and complete a valid correction. Stable visual conventions and hierarchy should support those tasks. Keep requirements and information equivalent in a comparative evaluation.
+
+For machine-performance claims, record algorithms, semantics, data representations, runtime services, inputs and target configuration. FIR/IR and established backends provide a path to optimization; frontend and lowering quality still matter.
 
 ## Current scope and optional extensions
 
-The public common Frontend and selected Studio Run/Highlight/LLVM paths provide an existing foundation. Check the [current status](../FROG-Project-Status.md), [source/profile compatibility](../docs/studio-source-compatibility.md) and attributed dossiers for each supported scope. A palette entry or a saved editor document alone does not establish target support.
+The public common Frontend and selected Studio Run/Highlight/LLVM paths provide an existing foundation. Check [current status](../FROG-Project-Status.md), [source/profile compatibility](../docs/studio-source-compatibility.md) and attributed dossiers. General imports and broader change-review capabilities remain development work, not features qualified by this document.
 
-Formal verification can be useful where a particular application needs a stated guarantee under explicit assumptions. It remains an optional extension with its own supported semantics and trusted components. No verification adapter is required by the general philosophy or introduced by this guide. The specific bounded-model proposal and candidate tools are kept in the separate [collaboration note](Research/DARPA-Collaboration-Options.md).
+Specialized formal verification can address a particular application's guarantees under explicit assumptions. The separate [DARPA-oriented note](Research/DARPA-Collaboration-Options.md) keeps those candidate tools and demonstrators outside the general product philosophy. This guide adds no verification profile, source field or execution mode.
 
-[Project philosophy](Visual-Programming-and-Human-Control.md) · [General Heilmeier framing](Heilmeier/Readme.md) · [Governance and validation](../docs/graiphic-philosophy-and-validation.md)
+[Project philosophy](Visual-Programming-and-Human-Control.md) · [Heilmeier framing](Heilmeier/Readme.md) · [Governance and validation](../docs/graiphic-philosophy-and-validation.md)

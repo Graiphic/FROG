@@ -50,9 +50,9 @@ Control over the product does not require rewriting everything. A proven, optimi
 <a id="des-preuves-attribuées-des-limites-visibles"></a>
 ## Visual programming and human control
 
-The product direction is a practical environment for building programs, understanding their behavior and making changes whose results can be checked. Visual relationships, hierarchy and execution observation connect an overview to relevant detail. This serves everyday human programming, maintenance of inherited software and review of proposals from tools, including AI.
+The strategic focus is the human capacity to follow, understand and validate software as machine generation grows. FROG supplies a structured model serialized in `.frog`; Studio projects it into graphical dataflow, using connections, color, shape, position, text, arrangement and labels to expose relevant relationships. FIR/IR and qualified lowering support efficient execution under declared semantics.
 
-The [general project philosophy](../Strategy/Visual-Programming-and-Human-Control.md) connects those benefits to the open FROG foundation and proprietary Studio experience. The [supporting evidence guide](../Strategy/Inspection-and-Assurance.md) explains what validation, observations and tests establish. Dedicated research extensions are assessed separately for usefulness, architecture fit and maintenance cost; a partner-specific demonstrator does not define the common product roadmap.
+The [project philosophy](../Strategy/Visual-Programming-and-Human-Control.md) explains this direction, the calculator abstraction and the need to connect review to the actual program revision. Direct human programming and maintenance remain supported purposes. The [evidence guide](../Strategy/Inspection-and-Assurance.md) distinguishes the available checks. Partner-specific research, including DARPA demonstrators, remains separate and is assessed for wider value and maintenance cost.
 
 ## Attributed evidence and visible limits
 

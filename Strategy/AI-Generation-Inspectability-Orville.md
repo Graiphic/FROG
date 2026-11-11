@@ -102,15 +102,15 @@ The claim is not that FROG makes AI-generated systems automatically correct. The
 
 <h2>Strategic reading</h2>
 
-<p>Direct generation and useful inspection are complementary design goals. Textual
-languages and existing graphical tools already support important parts of both.
-FROG's open source/FIR contracts and Studio's integrated experience must demonstrate
-their benefit through complete tasks, including error detection and valid repair.</p>
+<p>The strategic problem is human capacity to follow machine-generated software,
+especially where acceptance requires human understanding. FROG provides a structured
+model serialized in <code>.frog</code>; Studio's graphical abstraction exposes
+relationships, while FIR/IR serve supported compilation and execution.</p>
 
-<p>See <a href="Visual-Programming-and-Human-Control.md">Visual programming and human control</a>
-for the general project direction, complete examples and the role of compatible tools.
-Practical benefit should be assessed through understanding, valid changes and effort.
-Specialized research proposals have their own scope and value decisions.</p>
+<p>See <a href="Visual-Programming-and-Human-Control.md">the project philosophy</a>
+for the calculator overview, semantic-fidelity requirements and performance boundaries.
+Evaluate whether people understand consequential changes and complete valid corrections.
+The chart remains qualitative; DARPA-specific research stays separate.</p>
 
 <hr/>
 

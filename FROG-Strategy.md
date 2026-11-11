@@ -1,11 +1,11 @@
 <h1>FROG Strategy and Positioning</h1>
 
-<p><strong>11 November 2026 — visual programming and human control:</strong>
-The project connects practical authoring, understanding of behavior, execution
-and maintenance. Read the <a href="Strategy/Visual-Programming-and-Human-Control.md">project philosophy</a>
-and <a href="Strategy/Heilmeier/Readme.md">general Heilmeier framing</a>.
-Visual structure, an open language and the integrated Studio environment serve
-human programming and compatible tooling, including AI-assisted proposals.</p>
+<p><strong>11 November 2026 — human oversight of code generation:</strong>
+The strategic focus is human comprehension and acceptance as machine production
+of software grows. Read the <a href="Strategy/Visual-Programming-and-Human-Control.md">project philosophy</a>
+and <a href="Strategy/Heilmeier/Readme.md">Heilmeier framing</a>.
+A FROG model serialized in <code>.frog</code> connects machine generation,
+human graphical abstraction and FIR/IR-based compilation for supported targets.</p>
 
 <p>
 Strategic framing for FROG: what the language is, why Graiphic opened this layer, how it relates to GO HW, and why inspectable graphical dataflow matters in the AI era.
@@ -286,13 +286,13 @@ path, including missing functions, correctness and performance. Language-import
 development and additional deployment bridges require explicit contracts and
 qualification within the maintained roadmap.</p>
 
-<p>The calculator walkthrough shows a reusable way to explain Studio: move from
-an overview to relevant detail, follow an execution and check a change. Evaluate
-benefit on complete programming and maintenance tasks. The
-<a href="Strategy/Visual-Programming-and-Human-Control.md">project philosophy</a>
-states this general direction. <a href="Strategy/Research/DARPA-Collaboration-Options.md">Dedicated
-collaboration options</a> have their own feasibility, cost and value decisions;
-they do not define the core roadmap.</p>
+<p>The calculator illustrates an architecture accessible on one graphical page
+for an application represented by about 1,000 C/H lines. Detail remains available
+in its cases. The objective is to help a person follow behavior and generated
+changes, with the reviewed revision connected to execution. Faithful imports,
+useful abstraction and efficient FIR/lowering each need their own evidence.
+<a href="Strategy/Research/DARPA-Collaboration-Options.md">Dedicated DARPA options</a>
+remain separate from this general product direction and its roadmap.</p>
 
 <hr/>
 

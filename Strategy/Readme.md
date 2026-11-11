@@ -4,13 +4,13 @@
 
 <h1 align="center">🐸 FROG Strategy</h1>
 
-<p><strong>General project framing — 11 November 2026:</strong>
-<a href="Visual-Programming-and-Human-Control.md">Visual programming and human control</a>
-connects the open FROG foundation with Studio's proprietary programming experience.
-The <a href="Heilmeier/Readme.md">Heilmeier page</a> describes the overall project.
-<a href="Inspection-and-Assurance.md">Inspection and evidence</a> supports that workflow;
-<a href="Research/DARPA-Collaboration-Options.md">DARPA-oriented collaboration options</a>
-are a separate exploration. These documents preserve existing contracts and roadmap ownership.</p>
+<p><strong>Human oversight of code generation — 11 November 2026:</strong>
+The <a href="Visual-Programming-and-Human-Control.md">project philosophy</a> and
+<a href="Heilmeier/Readme.md">Heilmeier framing</a> connect machine production to
+human comprehension through a FROG model and its graphical abstraction, with FIR/IR
+for supported execution. <a href="Inspection-and-Assurance.md">Inspection and evidence</a>
+explains the checks; <a href="Research/DARPA-Collaboration-Options.md">DARPA collaboration options</a>
+remain separate. Existing contracts, governance and roadmap owners are preserved.</p>
 
 <p align="center">
   Non-normative strategic framing layer for the long-term purpose, positioning, ecosystem logic, and industrial relevance of FROG<br/>

@@ -8,13 +8,13 @@
 <a href="GOVERNANCE.md#official-project-rules">seven simple project rules</a> and
 <a href="CONTRIBUTING.md#contribution-rules">how to contribute</a>. Shared components are proven in Studio and qualified independently before an official release; all merges require maintainer review.</p>
 
-<p><strong>Project philosophy — 11 November 2026:</strong>
-<a href="Strategy/Visual-Programming-and-Human-Control.md">Visual programming and human control</a>
-and the <a href="Strategy/Heilmeier/Readme.md">general Heilmeier framing</a>
-explain the value of building programs, understanding their behavior and checking
-changes in an integrated environment. FROG provides the open language foundation;
-Studio develops the proprietary product experience. Specialized research proposals
-are assessed separately from this general direction.</p>
+<p><strong>Human oversight of code generation — 11 November 2026:</strong>
+The <a href="Strategy/Visual-Programming-and-Human-Control.md">project philosophy</a>
+and <a href="Strategy/Heilmeier/Readme.md">Heilmeier framing</a> center the human
+capacity to follow and validate machine-generated software. FROG serializes a
+structured model in <code>.frog</code>; Studio projects it into graphical dataflow
+for comprehension and intervention. FIR/IR support qualified compilation and
+execution. Specialized DARPA collaboration options remain separate.</p>
 
 <p><strong>Public implementation evidence — 9 November 2026:</strong>
 The <a href="Implementations/Frontend/README.md">common C++ Frontend library and CLI</a>

@@ -11,9 +11,10 @@ Windows/x86-64. Broader operator and target coverage is not inferred from that e
 continue to develop. General source-language imports and additional deployment
 bridges remain prospective. Read the
 <a href="Strategy/Visual-Programming-and-Human-Control.md">general project philosophy</a>
-for the role of visual programming, execution and maintenance. Specialized research
-options are documented separately. This review adds no runtime result, consumer pin
-or new binary qualification.</p>
+for human oversight of code generation through <code>.frog</code>, graphical
+projection and FIR/IR-based execution. Broad imports and complete change-review
+workflows are development directions, not capabilities introduced here. DARPA
+options stay separate. This review adds no runtime result, pin or binary qualification.</p>
 
 <p>The numbered-example inventories below are dated historical reference snapshots.
 Use the maintained <a href="Examples/index.v1.json">example index</a> and individual
