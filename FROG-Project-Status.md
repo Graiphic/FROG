@@ -1,5 +1,25 @@
 <h1>FROG Project Status</h1>
 
+<h2 id="strategy-and-assurance-review-2026-11-11">Strategy and assurance review — 11 November 2026</h2>
+
+<p>The <a href="docs/frontend-checkpoint-2026-11-09.json">9 November public Frontend checkpoint</a>
+identifies the shared C++ library/CLI, finite standalone checks and source publication.
+Selected Studio functions already have normal Run, Highlight and LLVM/native paths on
+Windows/x86-64. Broader operator and target coverage is not inferred from that evidence.</p>
+
+<p>Serialization/profile documentation and Studio development continue. General
+source-language imports, additional deployment bridges, a FROG/Studio-to-Verus
+integration and measured human-review gains are not established by this update.
+Read the <a href="Strategy/Inspection-and-Assurance.md">current research framing</a>
+for the proposed verification scope. This documentation review executes no new runtime
+tests, changes no consumer pin and publishes no new binary qualification.</p>
+
+<p>The numbered-example inventories below are dated historical reference snapshots.
+Use the maintained <a href="Examples/index.v1.json">example index</a> and individual
+dossiers for the available corpus; neither their count nor their presence certifies
+every backend. Public reference-runtime closure and private Studio capability are
+separate scopes.</p>
+
 <p><strong>Current implementation/corpus reconciliation — 26 October 2026:</strong>
 <a href="docs/studio-current-state-2026-10-26.md">Published SDK, 625 examples, native profiles and documentation boundaries</a>.
 This is a dated implementation update, not a new normative language contract.</p>
@@ -51,7 +71,7 @@ The repository also contains repository-level support areas and repository-level
 </ul>
 
 <p>
-The repository-visible numbered example inventory contains 47 directories, <code>Examples/01_*</code> through <code>Examples/47_*</code>, as checked on 2026-10-02.
+The historical repository-visible numbered example inventory contained 47 directories, <code>Examples/01_*</code> through <code>Examples/47_*</code>, as checked on 2026-10-02.
 Examples <code>01</code> through <code>15</code> define the current public reference runtime closure.
 Examples beyond this boundary may remain repository-visible as specification-facing, widget-facing, conformance-facing, or design-progression examples, while Graiphic production runtime work for those later examples continues in the proprietary <code>Graiphic/FROG-Runtime</code> repository unless explicitly promoted later.
 All example families are organized by the public
@@ -401,7 +421,7 @@ The repository already contains substantial material across canonical source rep
 </p>
 
 <p>
-The repository contains 47 numbered example dossiers with differing artifact and validation depths.
+The earlier 47 numbered-example snapshot described dossiers with differing artifact and validation depths; it is not the current complete example count.
 Source, FIR, lowering, backend-contract, widget and LLVM-oriented proof artifacts must be assessed per dossier rather than inferred from that count.
 Examples <code>06</code> through <code>15</code> extend the current public reference workspace with validated widget-front-panel runtime slices for Boolean, String, Enum, Path, and Button.
 Examples <code>16</code> through <code>47</code> extend the public post-boundary widget and authoring progression while later runtime implementation remains outside the bounded public runtime closure.
@@ -425,14 +445,14 @@ deliberately promoted later.
 </p>
 
 <p>
-At the same time, the repository has not yet reached:
+The bounded public reference snapshot does not establish the following broader coverage:
 </p>
 
 <ul>
   <li>full generalized multi-runtime symmetry across all future serious examples,</li>
-  <li>a generic contract executor that removes all example-specific runtime acceptance logic,</li>
-  <li>a generic LLVM backend driven by lowered-unit kind rather than bounded example patterns,</li>
-  <li>full native non-browser rendered front-panel closure,</li>
+  <li>general execution coverage beyond the explicitly admitted reference profiles,</li>
+  <li>complete native LLVM support for every operator, profile and target,</li>
+  <li>public publication and independent qualification of every production native front-panel path,</li>
   <li>or final depth across all observability, debugging, and IDE-facing surfaces.</li>
 </ul>
 

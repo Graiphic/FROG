@@ -572,6 +572,21 @@ complements the execution diagram; policy evaluation does not replace these gate
 
 <hr/>
 
+<h2 id="assurance-boundaries">Inspection and assurance boundaries</h2>
+
+<p>Source-aligned inspection, semantic validation, target admission, test execution and
+application-level proof answer different questions. A graph or runtime observation
+is not a mathematical guarantee. Source identities and mappings support traceability;
+they do not establish translation correctness.</p>
+
+<p>A proposed verification adapter must state the supported semantics, property,
+assumptions, artifact actually checked and trusted toolchain. A proof of exported
+Rust would not automatically verify the original graph, exporter or a separate LLVM
+binary. Unsupported, inconclusive and stale results must remain distinct from a
+verified property. The <a href="Strategy/Inspection-and-Assurance.md">non-normative
+research direction</a> adds no verification profile, ABI, backend or standardized
+source field; the existing specification owners retain those responsibilities.</p>
+
 <h2 id="execution-observability-debugging-and-inspection">Execution observability, debugging, and inspection</h2>
 
 <p>

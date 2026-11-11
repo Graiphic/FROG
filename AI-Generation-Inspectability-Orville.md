@@ -5,7 +5,9 @@
 <h1 align="center">FROG AI Generation Compatibility vs AI Inspectability Orville Chart</h1>
 
 <p align="center">
-  <strong>Repository entry point for the AI-era Orville positioning chart</strong><br/>
+  <strong>Illustrative research positioning, not a benchmark</strong>
+  <br/>Reviewed 11 November 2026: AI generation, human inspection and formal assurance
+  are distinct capabilities. See <a href="Strategy/Inspection-and-Assurance.md">the current research framing</a>.<br/>
   FROG <code>(.frog / JSON)</code> targets the upper-right quadrant where AI-generatable source and AI-inspectable graphical system structure meet.
 </p>
 

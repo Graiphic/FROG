@@ -48,8 +48,14 @@ Painting simply means drawing the interface. It consumes a published prepared st
 Control over the product does not require rewriting everything. A proven, optimized library may be the best choice. A replacement must offer a demonstrated benefit, preserve contracts and be verified. Dependency count or an “in-house” label is not a measure of quality. Origins, licenses and notices remain preserved, including for adapted third-party code.
 
 <a id="des-preuves-attribuées-des-limites-visibles"></a>
+## Human understanding and assurance
+
+Our product direction is continuity of informed human control from generated logic to executable results. The open FROG foundation and the proprietary Studio experience have complementary roles. Readable dataflow, hierarchical inspection and actionable correction should make engineering judgment more effective; their benefit needs comparison on complete tasks.
+
+Human inspection, semantic checks, tests, simulation and formal verification are complementary. Each claim must name the property, artifact, assumptions and trusted components involved. A proof of exported code does not automatically prove the source mapping or a separate product binary. Verification-tool integration remains a proposed research direction; the [inspection and assurance note](../Strategy/Inspection-and-Assurance.md) defines its current scope and limits.
+
 ## Attributed evidence and visible limits
 
 Always distinguish implementation, compilation, testing, local delivery, GitHub publication and qualification on an independent machine. A bounded success does not qualify an entire palette. Publishing a retained failure does not turn it into a PASS.
 
-The [2 November 2026 Frontend checkpoint](frontend-checkpoint-2026-11-02.json) identifies the corpus and its limits; the [build instructions](../Implementations/Frontend/README.md) describe the standalone component. Changes retain their own versions and evidence. Existing licenses, the [CLA](../CLA.md) and the [contribution process](../CONTRIBUTING.md) continue to apply.
+The [9 November 2026 Frontend checkpoint](frontend-checkpoint-2026-11-09.json) identifies its corpus and limits, following the [2 November checkpoint](frontend-checkpoint-2026-11-02.json); the [build instructions](../Implementations/Frontend/README.md) describe the standalone component. Changes retain their own versions and evidence. Existing licenses, the [CLA](../CLA.md) and the [contribution process](../CONTRIBUTING.md) continue to apply.

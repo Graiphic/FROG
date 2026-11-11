@@ -1,5 +1,13 @@
 <h1>FROG Strategy and Positioning</h1>
 
+<p><strong>11 November 2026 — informed human control:</strong>
+The objective is to connect generated or human-authored logic, relevant evidence,
+a valid correction and the executable accepted by the engineer. Read the
+<a href="Strategy/Inspection-and-Assurance.md">inspection and assurance direction</a>
+and the revised <a href="Strategy/Heilmeier/Readme.md">Heilmeier framing</a>.
+Human inspection, tests and scoped mathematical verification complement one another;
+no graphical form alone establishes correctness.</p>
+
 <p>
 Strategic framing for FROG: what the language is, why Graiphic opened this layer, how it relates to GO HW, and why inspectable graphical dataflow matters in the AI era.
 </p>
@@ -264,64 +272,28 @@ It aims at full architectural mastery from source to execution, while preserving
 
 <hr/>
 
-<h2 id="campaign-priority">Campaign priority</h2>
+<h2 id="campaign-priority">Current foundation and development direction</h2>
 
-<p>
-The current campaign priority is explicit:
-<strong>keep the published executable corridor green, then generalize cautiously.</strong>
-</p>
+<p>The public common Frontend and finite reference consumers are existing foundations.
+Selected Studio functions already connect normal execution, Highlight and native LLVM
+compilation on Windows/x86-64. These bounded paths are not universal runtime support,
+a general language-import bridge or an application correctness proof. The
+<a href="docs/frontend-checkpoint-2026-11-09.json">9 November source checkpoint</a>
+records its own implementation identity and tests; historical reference examples
+retain their individual profiles and limits.</p>
 
-<p>
-A serious example is no longer considered finished merely because it is source-readable or architecturally plausible.
-A serious example should progressively converge toward:
-</p>
+<p>Continue stabilizing the source/profile documentation and the supported execution
+path, including missing functions, correctness and performance. Broader imports
+and additional deployment bridges require explicit semantic contracts and qualification.
+A restricted verification experiment is a candidate to assess within that sequence,
+not a new implementation campaign or a replacement roadmap.</p>
 
-<ul>
-  <li>one canonical <code>.frog</code> source,</li>
-  <li>one explicit front-panel posture when applicable,</li>
-  <li>one explicit FIR reading,</li>
-  <li>one explicit lowering posture,</li>
-  <li>one backend contract,</li>
-  <li>one shared runtime-acceptance posture,</li>
-  <li>and, where applicable, one LLVM-oriented native proof path.</li>
-</ul>
-
-<p>
-The current published numbered examples provide this progression in bounded form:
-</p>
-
-<pre><code>.frog
-  -> FIR
-  -> lowering
-  -> backend contract
-  -> runtime acceptance
-  -> LLVM proof
-</code></pre>
-
-<p>
-Example <code>05_bounded_ui_accumulator</code> remains the primary applicative corridor for runtime-family and UI-facing work.
-The earlier examples now serve as smaller executable anchors for pure computation, widget value flow, object-style UI effects, and explicit state.
-</p>
-
-<p>
-The next implementation priority after keeping the checks green is to remove unnecessary example-specific execution logic.
-The target direction is:
-</p>
-
-<pre><code>backend contract JSON
-  -> generic reference contract executor
-  -> observed runtime snapshot
-
-lowered_unit.kind
-  -> generic LLVM emitter dispatch
-  -> native proof module
-</code></pre>
-
-<p>
-This campaign does <strong>not</strong> make one runtime the definition of FROG.
-It makes the opposite point:
-the language remains stable while downstream consumers remain modular and independently checkable.
-</p>
+<p>The research question is whether the common dataflow representation helps an engineer
+understand why a property ceases to hold and make a valid repair. It needs both a
+faithful technical mapping and a controlled comparison of human outcomes.
+The <a href="Strategy/Inspection-and-Assurance.md">assurance note</a> states the
+proposed scope, trust boundaries and evaluation gates. It establishes no FROG-to-Verus
+integration, funding commitment or delivery calendar.</p>
 
 <hr/>
 
@@ -562,7 +534,7 @@ A serious organization must be able to answer:
 <p>
 FROG is designed to support that responsibility chain.
 It does not claim that graphical representation automatically makes software correct.
-It claims that structured graphical source, explicit dataflow, validated meaning, open FIR, lowering, backend contracts, acceptance artifacts, and runtime/compiler separation make the system easier to inspect and govern than opaque generated code alone.
+It proposes structured graphical source, explicit dataflow, validated meaning, open FIR and attributable execution as a basis for useful inspection. Whether this improves diagnosis and valid correction over a defined alternative remains a hypothesis to measure.
 </p>
 
 <pre><code>AI-generated or human-authored intent
@@ -611,7 +583,7 @@ FROG follows a true <strong>dataflow execution model</strong>.
 
 <p>
 In instruction-sequenced programming, execution is primarily described as ordered steps.
-In dataflow programming, operations become executable when their required input data is available.
+In dataflow programming, operations become eligible when their required inputs are available, subject to enclosing structures and effect constraints.
 </p>
 
 <pre>
@@ -630,15 +602,15 @@ Dataflow execution
 </pre>
 
 <p>
-Execution order therefore emerges from dependencies rather than from manually authored textual ordering.
-This model enables:
+Dependency structure exposes possible independence; the selected execution contract determines scheduling. Graph placement alone does not determine order.
+This model supports:
 </p>
 
 <ul>
-  <li>automatic parallelism where valid,</li>
+  <li>opportunities for parallelism when admitted by the scheduler and target,</li>
   <li>clear dependency visibility,</li>
-  <li>deterministic execution models where required,</li>
-  <li>efficient mapping to heterogeneous hardware.</li>
+  <li>deterministic behavior where the complete semantic and execution contract establishes it,</li>
+  <li>qualified mappings to additional hardware as suitable bridges are developed.</li>
 </ul>
 
 <hr/>

@@ -8,22 +8,30 @@
 <a href="GOVERNANCE.md#official-project-rules">seven simple project rules</a> and
 <a href="CONTRIBUTING.md#contribution-rules">how to contribute</a>. Shared components are proven in Studio and qualified independently before an official release; all merges require maintainer review.</p>
 
-<p><strong>Public implementation checkpoint — 2 November 2026:</strong>
+<p><strong>Strategy and assurance review — 11 November 2026:</strong>
+<a href="Strategy/Inspection-and-Assurance.md">Inspection, verification and human control</a>
+and the revised <a href="Strategy/Heilmeier/Readme.md">eight-question Heilmeier framing</a>
+connect the open language foundation to Graiphic Studio's proprietary engineering
+experience. Readability, successful tests and scoped formal proof are distinct.
+A restricted verifier integration is proposed; no FROG-to-Verus capability or
+measured review advantage is claimed.</p>
+
+<p><strong>Public implementation evidence — 9 November 2026:</strong>
 The <a href="Implementations/Frontend/README.md">common C++ Frontend library and CLI</a>
 and the <a href="Implementations/Bridges/reference-c/README.md">finite reference C bridge</a>
-are now available as source. The Frontend candidate <code>0.2.0-local</code>, API 3,
-was exercised in Studio 0.0.6.836 and independently reconstructed from its public-only kit.
-See the <a href="docs/frontend-checkpoint-2026-11-02.json">attributed qualification checkpoint</a>
-for exact content identity and limits. Source publication is separate from a tagged binary release,
-whole-palette qualification and clean-machine qualification.</p>
+are available as source. The <a href="docs/frontend-checkpoint-2026-11-09.json">9 November checkpoint</a>
+identifies Frontend <code>0.2.0-local</code>, API 3, the qualified source kit and its finite results.
+It follows the <a href="docs/frontend-checkpoint-2026-11-02.json">2 November source checkpoint</a>.
+Publication is separate from a tagged binary release, whole-product support,
+clean-machine qualification and application-level correctness proof.</p>
 
-<p><strong>Frontend interoperability contracts — 1 November 2026:</strong>
+<p><strong>Frontend interoperability contracts:</strong>
 <a href="docs/frontend-tools-guide.md">Validation, FIR derivation and external-tool integration</a>;
 <a href="sdk/ecosystem/README.md">versioned JSON Schemas and data examples</a>.
-This update publishes documentation and schemas only. The common Frontend library
-and CLI have an <a href="sdk/ecosystem/docs/frontend-licensing.md">accepted Apache-2.0 release policy</a>
-for their selected Graiphic-owned files. Their code release is deferred; no implementation,
-executable or production Runtime code is included in this update.</p>
+The 1 November documentation-only update preceded the later source publications;
+its former code-release deferral is not the current publication status.
+The <a href="sdk/ecosystem/docs/frontend-licensing.md">selected Apache-2.0 scope</a>
+does not publish Studio or the complete production Runtime.</p>
 
 <p><strong>Implementation/corpus checkpoint — 26 October 2026:</strong>
 <a href="docs/studio-current-state-2026-10-26.md">Published SDK, 625 examples, native profiles and documentation boundaries</a>.
@@ -148,7 +156,7 @@ FROG is a public language specification, not a single IDE, runtime, compiler, de
 
 <p align="center">
   <em>
-    In the generative AI era, FROG targets the upper-right quadrant where machine-generatable structured source meets graph-level inspection, validation, and governance.
+    Illustrative research positioning for the generative AI era: FROG targets machine-generatable source and useful human inspection. The chart is not a benchmark or a formal assurance result.
   </em>
 </p>
 
@@ -186,7 +194,7 @@ interface concepts, widget definitions, and execution-facing contracts.
 <p>
 One such editor effort is
 <a href="https://github.com/Graiphic/Graiphic-Studio">Graiphic Studio</a>,
-the Graiphic authoring environment being developed around the FROG language.
+Graiphic's proprietary engineering environment being developed around the open FROG language.
 Graiphic Studio documentation is maintained separately as user-facing product
 documentation. It does not replace this repository as the public FROG language
 specification.

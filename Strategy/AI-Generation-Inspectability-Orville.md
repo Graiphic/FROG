@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Non-normative strategic positioning note</strong><br/>
-  Why FROG targets the upper-right quadrant where AI-generatable source and AI-inspectable system structure meet.
+  An illustrative research target combining machine-generatable source and effective human inspection of software. Reviewed 11 November 2026; not a benchmark.
 </p>
 
 <p align="center">
@@ -53,8 +53,8 @@ This page is intended to be referenced from the root <code>Readme.md</code>, <co
     </tr>
     <tr>
       <td><strong>AI Inspectability</strong></td>
-      <td>How well generated software can be reviewed, validated, governed, and audited.</td>
-      <td>The artifact is structurally reviewable rather than only linearly readable.</td>
+      <td>Human inspection of generated software: how accurately people can understand relevant behavior, assess evidence and make a valid correction.</td>
+      <td>An intended workflow outcome to evaluate. Graph structure alone establishes neither human effectiveness nor formal correctness.</td>
     </tr>
   </tbody>
 </table>
@@ -68,61 +68,20 @@ All points live in the positive quadrant. The diagonal arrow is the improvement 
 <h2>Qualitative coordinates</h2>
 
 <p>
-The chart uses qualitative normalized coordinates rather than benchmark scores. The purpose is strategic communication, not empirical ranking.
+The retained illustration is conceptual, not a current capability score or empirical ranking. Its FROG position is a research target. The comparison below describes mechanisms and questions instead of assigning unmeasured product scores.
 </p>
 
 <table>
-  <thead>
-    <tr>
-      <th>Technology</th>
-      <th>AI Inspectability</th>
-      <th>AI Generation Compatibility</th>
-      <th>Interpretation</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>C</td>
-      <td>Low</td>
-      <td>High</td>
-      <td>Easy for AI systems to emit as text, but inspection is mostly syntax-first and linear.</td>
-    </tr>
-    <tr>
-      <td>C++</td>
-      <td>Low</td>
-      <td>High</td>
-      <td>Easy to generate as text, but review remains heavily implementation-oriented.</td>
-    </tr>
-    <tr>
-      <td>Rust</td>
-      <td>Low to medium</td>
-      <td>High</td>
-      <td>AI-generatable as text and helped by explicit language constraints, but still syntax-first.</td>
-    </tr>
-    <tr>
-      <td>Python</td>
-      <td>Medium</td>
-      <td>Very high</td>
-      <td>Very natural for AI code generation, but system-level inspection still depends largely on textual review and tests.</td>
-    </tr>
-    <tr>
-      <td>LabVIEW</td>
-      <td>High</td>
-      <td>Low</td>
-      <td>Strong visual inspection properties, but weak direct generation compatibility for general-purpose text-oriented AI coding workflows.</td>
-    </tr>
-    <tr>
-      <td><strong>FROG (.frog / JSON)</strong></td>
-      <td><strong>Very high</strong></td>
-      <td><strong>Very high</strong></td>
-      <td>Designed to combine machine-friendly structured source with graph-level reviewability and open execution-facing artifacts.</td>
-    </tr>
-  </tbody>
-</table>
+<thead><tr><th>Approach</th><th>Relevant capability</th><th>Question for comparison</th></tr></thead>
+<tbody>
+<tr><td>C, C++, Rust and Python tooling</td><td>Text-oriented generation, analysis, tests, debugging and, for selected tools and properties, formal verification.</td><td>How accurately and efficiently can the engineer follow the consequential behavior and validate a repair?</td></tr>
+<tr><td>Graphical engineering environments, including LabVIEW</td><td>Visible dependencies and runtime debugging; AI integration can use APIs or other supported interfaces.</td><td>How much of the complete generation, inspection and correction task is supported for the chosen version and application?</td></tr>
+<tr><td>FROG and Graiphic Studio</td><td>Open machine-friendly language foundation and a proprietary dataflow inspection/correction workflow in development.</td><td>Research target: demonstrate faithful mappings and improved human outcomes within an explicit supported scope.</td></tr>
+</tbody></table>
 
 <hr/>
 
-<h2>Why FROG sits in the upper-right quadrant</h2>
+<h2>Why FROG targets the upper-right quadrant</h2>
 
 <p>
 FROG targets the AI-governable zone because its core artifacts are intended to remain both machine-friendly and human-inspectable.
@@ -143,23 +102,15 @@ The claim is not that FROG makes AI-generated systems automatically correct. The
 
 <h2>Strategic reading</h2>
 
-<blockquote>
-  <p>
-  Textual languages are easy for AI to generate, but harder to inspect as structured systems.
-  </p>
-</blockquote>
+<p>Direct generation and useful inspection are complementary design goals. Textual
+languages and existing graphical tools already support important parts of both.
+FROG's open source/FIR contracts and Studio's integrated experience must demonstrate
+their benefit through complete tasks, including error detection and valid repair.</p>
 
-<blockquote>
-  <p>
-  Historical graphical environments are easier to inspect visually, but weakly aligned with direct general-purpose AI generation.
-  </p>
-</blockquote>
-
-<blockquote>
-  <p>
-  FROG (.frog / JSON) is designed to combine both: AI-generatable source and AI-inspectable graphical system structure.
-  </p>
-</blockquote>
+<p>See <a href="Inspection-and-Assurance.md">Inspection, verification and human control</a>
+for the current maturity, proposed formal-verification experiment and evaluation
+criteria. A readability advantage, a formal guarantee and a shorter engineering task
+are distinct claims requiring their own evidence.</p>
 
 <hr/>
 
