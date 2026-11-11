@@ -579,13 +579,13 @@ application-level proof answer different questions. A graph or runtime observati
 is not a mathematical guarantee. Source identities and mappings support traceability;
 they do not establish translation correctness.</p>
 
-<p>A proposed verification adapter must state the supported semantics, property,
-assumptions, artifact actually checked and trusted toolchain. A proof of exported
-Rust would not automatically verify the original graph, exporter or a separate LLVM
-binary. Unsupported, inconclusive and stale results must remain distinct from a
-verified property. The <a href="Strategy/Inspection-and-Assurance.md">non-normative
-research direction</a> adds no verification profile, ABI, backend or standardized
-source field; the existing specification owners retain those responsibilities.</p>
+<p>The <a href="Strategy/Visual-Programming-and-Human-Control.md">general project philosophy</a>
+connects visual programming, execution and maintenance. The
+<a href="Strategy/Inspection-and-Assurance.md">supporting evidence guide</a>
+explains the role of each check. Optional verification adapters or partner-specific
+guarantees require their own supported semantics and trusted components; they add
+no profile, ABI, backend or source field through this strategy update. Existing
+specification owners retain those responsibilities.</p>
 
 <h2 id="execution-observability-debugging-and-inspection">Execution observability, debugging, and inspection</h2>
 

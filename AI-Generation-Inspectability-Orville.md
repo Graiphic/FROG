@@ -6,8 +6,8 @@
 
 <p align="center">
   <strong>Illustrative research positioning, not a benchmark</strong>
-  <br/>Reviewed 11 November 2026: AI generation, human inspection and formal assurance
-  are distinct capabilities. See <a href="Strategy/Inspection-and-Assurance.md">the current research framing</a>.<br/>
+  <br/>Reviewed 11 November 2026: the chart illustrates compatible tooling and useful human inspection.
+  See <a href="Strategy/Visual-Programming-and-Human-Control.md">the general project philosophy</a>.<br/>
   FROG <code>(.frog / JSON)</code> targets the upper-right quadrant where AI-generatable source and AI-inspectable graphical system structure meet.
 </p>
 

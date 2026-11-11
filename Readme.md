@@ -8,13 +8,13 @@
 <a href="GOVERNANCE.md#official-project-rules">seven simple project rules</a> and
 <a href="CONTRIBUTING.md#contribution-rules">how to contribute</a>. Shared components are proven in Studio and qualified independently before an official release; all merges require maintainer review.</p>
 
-<p><strong>Strategy and assurance review — 11 November 2026:</strong>
-<a href="Strategy/Inspection-and-Assurance.md">Inspection, verification and human control</a>
-and the revised <a href="Strategy/Heilmeier/Readme.md">eight-question Heilmeier framing</a>
-connect the open language foundation to Graiphic Studio's proprietary engineering
-experience. Readability, successful tests and scoped formal proof are distinct.
-A restricted verifier integration is proposed; no FROG-to-Verus capability or
-measured review advantage is claimed.</p>
+<p><strong>Project philosophy — 11 November 2026:</strong>
+<a href="Strategy/Visual-Programming-and-Human-Control.md">Visual programming and human control</a>
+and the <a href="Strategy/Heilmeier/Readme.md">general Heilmeier framing</a>
+explain the value of building programs, understanding their behavior and checking
+changes in an integrated environment. FROG provides the open language foundation;
+Studio develops the proprietary product experience. Specialized research proposals
+are assessed separately from this general direction.</p>
 
 <p><strong>Public implementation evidence — 9 November 2026:</strong>
 The <a href="Implementations/Frontend/README.md">common C++ Frontend library and CLI</a>
@@ -156,7 +156,7 @@ FROG is a public language specification, not a single IDE, runtime, compiler, de
 
 <p align="center">
   <em>
-    Illustrative research positioning for the generative AI era: FROG targets machine-generatable source and useful human inspection. The chart is not a benchmark or a formal assurance result.
+    Illustrative research positioning for the generative AI era: FROG targets machine-generatable source and useful human inspection. Its qualitative positions are research targets.
   </em>
 </p>
 

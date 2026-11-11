@@ -4,13 +4,13 @@
 
 <h1 align="center">🐸 FROG Strategy</h1>
 
-<p><strong>Current framing — 11 November 2026:</strong>
-<a href="Inspection-and-Assurance.md">Inspection, verification and human control</a>
-connects FROG's open language foundation with Graiphic Studio's proprietary
-engineering workflow. It distinguishes visual understanding, tests and scoped formal
-proof, states current implementation boundaries and proposes a bounded experiment.
-The <a href="Heilmeier/Readme.md">Heilmeier page</a> follows the eight official questions.
-These strategic documents change neither language contracts nor roadmap ownership.</p>
+<p><strong>General project framing — 11 November 2026:</strong>
+<a href="Visual-Programming-and-Human-Control.md">Visual programming and human control</a>
+connects the open FROG foundation with Studio's proprietary programming experience.
+The <a href="Heilmeier/Readme.md">Heilmeier page</a> describes the overall project.
+<a href="Inspection-and-Assurance.md">Inspection and evidence</a> supports that workflow;
+<a href="Research/DARPA-Collaboration-Options.md">DARPA-oriented collaboration options</a>
+are a separate exploration. These documents preserve existing contracts and roadmap ownership.</p>
 
 <p align="center">
   Non-normative strategic framing layer for the long-term purpose, positioning, ecosystem logic, and industrial relevance of FROG<br/>

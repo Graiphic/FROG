@@ -1,18 +1,19 @@
 <h1>FROG Project Status</h1>
 
-<h2 id="strategy-and-assurance-review-2026-11-11">Strategy and assurance review — 11 November 2026</h2>
+<h2 id="strategy-and-assurance-review-2026-11-11">Project philosophy and capability review — 11 November 2026</h2>
 
 <p>The <a href="docs/frontend-checkpoint-2026-11-09.json">9 November public Frontend checkpoint</a>
 identifies the shared C++ library/CLI, finite standalone checks and source publication.
 Selected Studio functions already have normal Run, Highlight and LLVM/native paths on
 Windows/x86-64. Broader operator and target coverage is not inferred from that evidence.</p>
 
-<p>Serialization/profile documentation and Studio development continue. General
-source-language imports, additional deployment bridges, a FROG/Studio-to-Verus
-integration and measured human-review gains are not established by this update.
-Read the <a href="Strategy/Inspection-and-Assurance.md">current research framing</a>
-for the proposed verification scope. This documentation review executes no new runtime
-tests, changes no consumer pin and publishes no new binary qualification.</p>
+<p>Serialization/profile documentation, function coverage, correctness and performance
+continue to develop. General source-language imports and additional deployment
+bridges remain prospective. Read the
+<a href="Strategy/Visual-Programming-and-Human-Control.md">general project philosophy</a>
+for the role of visual programming, execution and maintenance. Specialized research
+options are documented separately. This review adds no runtime result, consumer pin
+or new binary qualification.</p>
 
 <p>The numbered-example inventories below are dated historical reference snapshots.
 Use the maintained <a href="Examples/index.v1.json">example index</a> and individual

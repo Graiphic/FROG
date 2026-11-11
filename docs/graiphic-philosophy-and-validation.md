@@ -48,11 +48,11 @@ Painting simply means drawing the interface. It consumes a published prepared st
 Control over the product does not require rewriting everything. A proven, optimized library may be the best choice. A replacement must offer a demonstrated benefit, preserve contracts and be verified. Dependency count or an “in-house” label is not a measure of quality. Origins, licenses and notices remain preserved, including for adapted third-party code.
 
 <a id="des-preuves-attribuées-des-limites-visibles"></a>
-## Human understanding and assurance
+## Visual programming and human control
 
-Our product direction is continuity of informed human control from generated logic to executable results. The open FROG foundation and the proprietary Studio experience have complementary roles. Readable dataflow, hierarchical inspection and actionable correction should make engineering judgment more effective; their benefit needs comparison on complete tasks.
+The product direction is a practical environment for building programs, understanding their behavior and making changes whose results can be checked. Visual relationships, hierarchy and execution observation connect an overview to relevant detail. This serves everyday human programming, maintenance of inherited software and review of proposals from tools, including AI.
 
-Human inspection, semantic checks, tests, simulation and formal verification are complementary. Each claim must name the property, artifact, assumptions and trusted components involved. A proof of exported code does not automatically prove the source mapping or a separate product binary. Verification-tool integration remains a proposed research direction; the [inspection and assurance note](../Strategy/Inspection-and-Assurance.md) defines its current scope and limits.
+The [general project philosophy](../Strategy/Visual-Programming-and-Human-Control.md) connects those benefits to the open FROG foundation and proprietary Studio experience. The [supporting evidence guide](../Strategy/Inspection-and-Assurance.md) explains what validation, observations and tests establish. Dedicated research extensions are assessed separately for usefulness, architecture fit and maintenance cost; a partner-specific demonstrator does not define the common product roadmap.
 
 ## Attributed evidence and visible limits
 

@@ -1,12 +1,11 @@
 <h1>FROG Strategy and Positioning</h1>
 
-<p><strong>11 November 2026 — informed human control:</strong>
-The objective is to connect generated or human-authored logic, relevant evidence,
-a valid correction and the executable accepted by the engineer. Read the
-<a href="Strategy/Inspection-and-Assurance.md">inspection and assurance direction</a>
-and the revised <a href="Strategy/Heilmeier/Readme.md">Heilmeier framing</a>.
-Human inspection, tests and scoped mathematical verification complement one another;
-no graphical form alone establishes correctness.</p>
+<p><strong>11 November 2026 — visual programming and human control:</strong>
+The project connects practical authoring, understanding of behavior, execution
+and maintenance. Read the <a href="Strategy/Visual-Programming-and-Human-Control.md">project philosophy</a>
+and <a href="Strategy/Heilmeier/Readme.md">general Heilmeier framing</a>.
+Visual structure, an open language and the integrated Studio environment serve
+human programming and compatible tooling, including AI-assisted proposals.</p>
 
 <p>
 Strategic framing for FROG: what the language is, why Graiphic opened this layer, how it relates to GO HW, and why inspectable graphical dataflow matters in the AI era.
@@ -282,18 +281,18 @@ a general language-import bridge or an application correctness proof. The
 records its own implementation identity and tests; historical reference examples
 retain their individual profiles and limits.</p>
 
-<p>Continue stabilizing the source/profile documentation and the supported execution
-path, including missing functions, correctness and performance. Broader imports
-and additional deployment bridges require explicit semantic contracts and qualification.
-A restricted verification experiment is a candidate to assess within that sequence,
-not a new implementation campaign or a replacement roadmap.</p>
+<p>Continue stabilizing source/profile documentation and the supported execution
+path, including missing functions, correctness and performance. Language-import
+development and additional deployment bridges require explicit contracts and
+qualification within the maintained roadmap.</p>
 
-<p>The research question is whether the common dataflow representation helps an engineer
-understand why a property ceases to hold and make a valid repair. It needs both a
-faithful technical mapping and a controlled comparison of human outcomes.
-The <a href="Strategy/Inspection-and-Assurance.md">assurance note</a> states the
-proposed scope, trust boundaries and evaluation gates. It establishes no FROG-to-Verus
-integration, funding commitment or delivery calendar.</p>
+<p>The calculator walkthrough shows a reusable way to explain Studio: move from
+an overview to relevant detail, follow an execution and check a change. Evaluate
+benefit on complete programming and maintenance tasks. The
+<a href="Strategy/Visual-Programming-and-Human-Control.md">project philosophy</a>
+states this general direction. <a href="Strategy/Research/DARPA-Collaboration-Options.md">Dedicated
+collaboration options</a> have their own feasibility, cost and value decisions;
+they do not define the core roadmap.</p>
 
 <hr/>
 
