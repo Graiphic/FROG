@@ -1,3 +1,4 @@
+#include "frog_native_engine/OptimizationBinding.hpp"
 #include "frog_native_engine/ReferenceWidget.hpp"
 #include "frog_native_engine/ArrayCapacity.hpp"
 #include "frog_native_engine/FrogDraftData.hpp"
@@ -2802,6 +2803,12 @@ std::optional<FrogDraftData> readFrogDraftData(
                 }
                 node.valueType = jsonStringField(nodeValue, "value_type")
                     .value_or(jsonStringField(nodeValue, "valueType").value_or({}));
+                // An early Optimization reference used Fitting's writer, which
+                // did not store value_type. Only these finite nominal operations
+                // identify a recoverable schema; explicit declarations remain
+                // intact and the mapped callable interface is still validated.
+                if(node.kind=="fitting_model_reference"&&node.valueType.empty())
+                    if(auto kind=optimizationReferenceKind(node.type))node.valueType=optimizationReferenceSchema(kind);
                 // The historical Variant-constant writer omitted value_type.
                 // Its fixed operation identifies Variant unambiguously; a
                 // present conflicting declaration is preserved for diagnosis.
@@ -3068,7 +3075,7 @@ std::optional<FrogDraftData> readFrogDraftData(
                 if (const auto *labelSize = objectField(nodeValue, "label_size")) {
                     loadedLabelSize = true;
                     node.labelWidth = (std::max)(
-                        24.0,
+                        1.0,
                         jsonNumberField(*labelSize, "width").value_or(node.labelWidth));
                     node.labelHeight = (std::max)(
                         16.0,

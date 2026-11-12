@@ -7,6 +7,7 @@ namespace frog::sdk::runtime::validation_metrics {
 struct Counts {
     std::uint64_t types=0,owners=0,values=0,arrayEnvelopes=0;
     std::uint64_t materializations=0,materializedElements=0,signatureChecks=0;
+    std::uint64_t numericLeaves=0,numericPreflight=0,incrementArrays=0,incrementCells=0,incrementAllocations=0,incrementReuses=0;
 };
 inline thread_local Counts *active=nullptr;
 }

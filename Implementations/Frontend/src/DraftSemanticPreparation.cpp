@@ -137,7 +137,7 @@ struct PortDescription {
         if(portId!="value")return std::nullopt;
         return PortDescription{FunctionPortDirection::Output,"f64"};
     }
-    if((node.kind=="fitting_model_reference" && node.type==fittingModelReferenceOperation)||(node.kind=="calculus_function_reference"&&calculusFunctionReferenceDimensions(node.type))) {
+    if((node.kind=="fitting_model_reference" && nativeNumericalModelReference(node.type))||(node.kind=="calculus_function_reference"&&calculusFunctionReferenceDimensions(node.type))) {
         const auto *definition=functionBindingDefinitionForNode(node);
         const auto *port=definition?findFunctionBindingPort(*definition,portId):nullptr;
         if(!port)return std::nullopt;

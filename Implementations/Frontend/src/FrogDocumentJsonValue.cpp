@@ -510,6 +510,7 @@ void deserializeStructureProperties(
         return; // Do not replace the shared appearance with unrelated Case defaults.
     }
     if (node.type == "frog.studio.structures.sequence_structure") {
+        node.sequenceFrameNumbersVisible=jsonBooleanField(nodeValue,"studio_sequence_frame_numbers_visible").value_or(true);
         node.structureSubdiagramLabelVisible=jsonBooleanField(nodeValue,"structure_subdiagram_label_visible").value_or(false);
         node.structureSubdiagramLabelHeight=clampStructureSubdiagramLabelHeight(
             jsonNumberField(nodeValue,"structure_subdiagram_label_height").value_or(kStructureSubdiagramLabelDefaultHeight));

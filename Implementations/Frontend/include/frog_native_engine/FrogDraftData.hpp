@@ -631,6 +631,10 @@ struct DiagramNode {
     // textRgb/background_rgb retain their historical meanings.
     std::optional<std::uint32_t> commentBorderRgb;
 
+    // Studio presentation only. Legacy documents retain visible ordinals;
+    // this never selects, reorders or suppresses an executable frame.
+    bool sequenceFrameNumbersVisible = true;
+
 };
 
 [[nodiscard]] inline std::string_view normalizeFeedbackNodeConfiguration(

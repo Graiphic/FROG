@@ -80,9 +80,9 @@
                     !(v.kind==TypeKind::Array && v.rank==2 && v.children.front().numeric()))
                     return invalid("A matrix replacement must be a numeric scalar or two-dimensional numeric array.");
                 if(replacement.resolution.accepted() && matrix.resolution.accepted()) {
-                    const auto promoted=commonType(t.children.front(),v.kind==TypeKind::Array?v.children.front():v);
-                    if(!promoted.accepted()) return {promoted,false,{}};
-                    t.children.front()=promoted.type;
+                    const auto adapted=connect(v.kind==TypeKind::Array?v.children.front():v,
+                        t.children.front(),ConnectionPolicy::NumericImplicit);
+                    if(!adapted.accepted()) return {adapted,false,{}};
                 }
             } else {
                 auto check=expectedNumber(name,split->first=="row_indices" || split->first=="column_indices");
@@ -125,14 +125,15 @@
             auto query=input("value");
             if(query.resolution.accepted() && query.resolution.type.kind==TypeKind::Array)
                 return invalid("Search requires an element, not an array.");
-            TypeResolution common;
-            if(array.resolution.accepted() && query.resolution.accepted()) common=commonType(t.children.front(),query.resolution.type);
-            else if(array.resolution.accepted()) common={ResolutionStatus::Compatible,t.children.front(),{},{}};
-            else if(query.resolution.accepted()) common=query.resolution;
-            if(common.status==ResolutionStatus::Incompatible) return {common,false,{}};
+            TypeResolution element;
+            if(array.resolution.accepted() && query.resolution.accepted())
+                element=connect(query.resolution.type,t.children.front(),ConnectionPolicy::NumericImplicit);
+            else if(array.resolution.accepted()) element={ResolutionStatus::Compatible,t.children.front(),{},{}};
+            else if(query.resolution.accepted()) element=query.resolution;
+            if(element.status==ResolutionStatus::Incompatible) return {element,false,{}};
             if(port=="index" || port=="start_index") return known(TypeRef::primitive("i32"));
-            if(!common.accepted()) return unresolved();
-            return known(port=="array"?TypeRef::array(common.type):common.type);
+            if(!element.accepted()) return unresolved();
+            return known(port=="array"?TypeRef::array(element.type):element.type);
         }
         if(interpolation && array.resolution.accepted()) {
             const auto &leaf=t.children.front();

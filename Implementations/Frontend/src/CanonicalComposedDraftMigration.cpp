@@ -56,6 +56,7 @@
 #include "frog_native_engine/FittingBinding.hpp"
 #include "frog_native_engine/CalculusBinding.hpp"
 #include "frog_native_engine/CanonicalDifferentialNative.hpp"
+#include "frog_native_engine/OptimizationBinding.hpp"
 #include "frog_native_engine/CanonicalDiscreteArrayNative.hpp"
 #include "frog_native_engine/StatisticsBinding.hpp"
 #include "frog_native_engine/InterpolationBinding.hpp"
@@ -74,6 +75,7 @@
 #include "frog_native_engine/SemaphoreReference.hpp"
 #include "frog_native_engine/OccurrenceReferenceLiteral.hpp"
 #include "frog_native_engine/QueueReference.hpp"
+#include "frog_native_engine/NotifierReference.hpp"
 #include "frog_native_engine/RendezvousReference.hpp"
 #include "frog_native_engine/BuildArrayBinding.hpp"
 #include "frog_native_engine/FrogDraftData.hpp"
@@ -152,7 +154,7 @@ bool configuredTypedNullResourceWidget(const Json &widget,const binding::TypeRef
     const auto *klass=widget.member("classId"),*declared=widget.member("valueType");
     if(!klass||klass->type!=Json::Type::String||klass->string!="frog.studio.widgets.reference"||
        !declared||declared->type!=Json::Type::String||declared->string!=type.canonical()||
-       !(isOccurrenceReference(type)||isSemaphoreReference(type)||isRendezvousReference(type)||isQueueReference(type)))return false;
+       !(isOccurrenceReference(type)||isSemaphoreReference(type)||isRendezvousReference(type)||isQueueReference(type)||isNotifierReference(type)))return false;
     const auto *configuration=widget.member("studio_application_control");
     if(!configuration)return false;
     const auto value=application_control_source::readConfiguration(*configuration);
@@ -1004,7 +1006,21 @@ struct Adapter {
             const auto full=source::parseJson(witness->fullTypeJson,nullptr,source::JsonNumberPolicy::PreserveLexeme);
             const auto attested=full?canonicalObjectReferenceReadType(*full):std::nullopt;
             bool compositeArray=false,choiceProjection=false,resourceReferenceProjection=false,complexProjection=false;
-            if(attested){std::vector<const binding::TypeRef*> pending{&*attested};while(!pending.empty()){const auto *t=pending.back();pending.pop_back();compositeArray=compositeArray||t->kind==binding::TypeKind::Array;choiceProjection=choiceProjection||t->kind==binding::TypeKind::Enum||t->choiceKind!=binding::ChoiceKind::None;resourceReferenceProjection=resourceReferenceProjection||isQueueReference(*t)||isOccurrenceReference(*t)||isSemaphoreReference(*t)||isRendezvousReference(*t);complexProjection=complexProjection||(t->kind==binding::TypeKind::Primitive&&(t->name=="c32"||t->name=="c64"));for(const auto &c:t->children)pending.push_back(&c);}}
+            if(attested) {
+                std::vector<const binding::TypeRef*> pending{&*attested};
+                while(!pending.empty()) {
+                    const auto *t=pending.back();pending.pop_back();
+                    compositeArray=compositeArray||t->kind==binding::TypeKind::Array;
+                    choiceProjection=choiceProjection||t->kind==binding::TypeKind::Enum||t->choiceKind!=binding::ChoiceKind::None;
+                    resourceReferenceProjection=resourceReferenceProjection||isQueueReference(*t)||isNotifierReference(*t)||isOccurrenceReference(*t)||isSemaphoreReference(*t)||isRendezvousReference(*t);
+                    complexProjection=complexProjection||(t->kind==binding::TypeKind::Primitive&&(t->name=="c32"||t->name=="c64"));
+                    // The child of Reference<T> is its target/message model,
+                    // not a value contained in the widget. A Notifier<Array>
+                    // remains a Reference widget, never an Array widget.
+                    if(t->kind!=binding::TypeKind::Reference)
+                        for(const auto &c:t->children)pending.push_back(&c);
+                }
+            }
             const bool projectedValue=compositeArray||choiceProjection||resourceReferenceProjection||complexProjection;
             // The private codec owns compact/sparse widget storage. Consume its
             // bounded typed projection of the same hash-bound model instead of
@@ -1232,6 +1248,7 @@ struct Adapter {
         if(const auto *poly=findPolynomialFunction(authored))return std::string(poly->operationId);
         if(const auto discrete=canonicalDiscreteArrayMigrationIdentity(authored);!discrete.empty())return std::string(discrete);
         if(const auto operation=canonicalDifferentialMigrationIdentity(authored);!operation.empty())return std::string(operation);
+        if(const auto *optimization=optimizationDefinition(authored))return optimization->definitionId;
         if(const auto *linear=findLinearAlgebraFunction(authored))return std::string(linear->operationId);
         if(const auto *blas=findBlasFunction(authored))return std::string(blas->operationId);
         if(isGeometryFunction(authored)) {
@@ -1511,9 +1528,11 @@ struct Adapter {
             const auto *type=node.member("type");const auto id=type&&type->type==Json::Type::String?canonicalCollectionOperationId(type->string):std::string_view{};
             if(id!="frog.collection.map.build"&&id!="frog.collection.set.build")fail(path,"Collection Build row configuration belongs only to Build Map or Build Set.", "migration.composed_source_invalid", Domain::Semantics);
         }
-        if(node.member("studio_sequence_profile")||node.member("studio_sequence_selected_frame")) {
+        if(node.member("studio_sequence_profile")||node.member("studio_sequence_selected_frame")||node.member("studio_sequence_frame_numbers_visible")) {
             const auto *kind=node.member("structure_type");
             if(!kind||kind->type!=Json::Type::String||kind->string!="sequence_structure")fail(path,"Sequence configuration belongs only to its actual structure.","migration.sequence.owner_invalid", Domain::Semantics);
+            if(const auto *visible=node.member("studio_sequence_frame_numbers_visible");visible&&visible->type!=Json::Type::Boolean)
+                fail(path+"/studio_sequence_frame_numbers_visible","Sequence frame number visibility must remain Boolean.","migration.composed_source_invalid",Domain::Integrity);
         }
         if(const auto *variant=node.member("geometry_variant")) {
             const auto owner=bare(text(node.member("type"),path));
@@ -1571,7 +1590,7 @@ struct Adapter {
                 key=="studio_event_dynamic_terminals_visible"||key=="studio_event_dynamic_terminals_normalized_y"||key=="studio_event_response_node_normalized_y"||
                 (key=="studio_event_registration_rows"&&node.member("type")&&bare(text(node.member("type"),path))=="dialog.events.register_for_events")||
                 key=="studio_in_place_pairs"||key=="studio_in_place_profile"||key=="studio_in_place_next_pair_serial"||
-                key=="studio_subdiagram_label_text"||key=="studio_sequence_profile"||key=="studio_sequence_selected_frame"||key=="array_constant"||
+                key=="studio_subdiagram_label_text"||key=="studio_sequence_profile"||key=="studio_sequence_selected_frame"||key=="studio_sequence_frame_numbers_visible"||key=="array_constant"||
                 ((key=="array_element_template"||key=="array_element_icon")&&(arrayLiteral(node)||actualArrayTerminal))||
                 key=="studio_collection_constant"||key=="studio_collection_build"||
                 key=="feedback_node_configuration"||key=="feedback_delay"||key=="feedback_initialization"||
@@ -1711,11 +1730,11 @@ struct Adapter {
                 auto config=object();config.object["call"]=call;
                 item.object["studio_configuration"]=std::move(config);
             } else if(kind=="fitting_model_reference") {
-                if(text(node.member("type"),at)!=fittingModelReferenceOperation)
+                if(!nativeNumericalModelReference(text(node.member("type"),at)))
                     fail(at,"The model reference must preserve its exact native model identity.","migration.fitting.model_identity_invalid",Domain::Semantics);
                 const auto &call=objectAt(node.member("call"),at+"/call");
-                item.object["kind"]=string("primitive");item.object["type"]=string(std::string(fittingModelReferenceOperation));
-                item.object["studio_authored_type"]=string(std::string(fittingModelReferenceOperation));
+                item.object["kind"]=string("primitive");item.object["type"]=string(text(node.member("type"),at));
+                item.object["studio_authored_type"]=string(text(node.member("type"),at));
                 auto config=object();config.object["call"]=call;
                 item.object["studio_configuration"]=std::move(config);
             } else if(kind=="primitive"&&(recordLiteral(node)||scalarLiteral(node)||arrayLiteral(node)||collectionLiteral(node))) {

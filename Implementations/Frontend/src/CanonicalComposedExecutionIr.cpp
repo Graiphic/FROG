@@ -52,6 +52,7 @@
 #include "frog_native_engine/FittingBinding.hpp"
 #include "frog_native_engine/CalculusBinding.hpp"
 #include "frog_native_engine/CanonicalDifferentialNative.hpp"
+#include "frog_native_engine/OptimizationBinding.hpp"
 #include "frog_native_engine/CanonicalDiscreteArrayNative.hpp"
 #include "frog_native_engine/StatisticsBinding.hpp"
 #include "frog_native_engine/InterpolationBinding.hpp"
@@ -191,10 +192,11 @@ struct Builder {
         if(declaredNumericArray)*declaredNumericArray=numericArray;
         // These polymorphic Array data receivers also admit Bool/String/Path/
         // nominal Records. Their AnyExplicit palette policy must stay broad;
-        // only their documented numeric common-type fold requests conversion.
+        // only their resolved numeric receiver schemas request conversion.
         const auto cid=std::string_view(catalog->catalogId),port=std::string_view(declared->portId);
         const bool commonArrayData=(cid=="array.replace_subset"||cid=="array.insert")?(port=="array"||port=="subset"):
-            cid=="array.interleave_1d"?port=="array_a":cid=="array.search_1d"?(port=="array"||port=="value"):false;
+            cid=="array.interleave_1d"?port=="array_a":cid=="array.search_1d"?(port=="array"||port=="value"):
+            cid.starts_with("array.matrix.set_")&&(port=="elements"||port=="diagonal_values"||port=="subset");
         return declared->connectionPolicy==FunctionPortConnectionPolicy::NumericImplicit||
              declared->connectionPolicy==FunctionPortConnectionPolicy::NumericScalarOrArrayImplicit||numericArray||commonArrayData;
     }
@@ -496,7 +498,7 @@ struct Builder {
                             fail("IR_STATISTICS_TYPE","STATISTICS connector differs from the shared resolved contract.",p+"/ports/"+actual.id);
                     }
                 }
-                if(!canonicalDiscreteArrayMigrationIdentity(n.kind).empty()||canonicalDifferentialDefinition(n.kind)) {
+                if(!canonicalDiscreteArrayMigrationIdentity(n.kind).empty()||canonicalDifferentialDefinition(n.kind)||optimizationDefinition(n.kind)) {
                     std::vector<CanonicalNumericAggregatePort> signature;
                     for(const auto &actual:n.ports) {
                         const auto type=canonicalObjectReferenceReadType(parse(actual.fullTypeJson));
@@ -504,7 +506,7 @@ struct Builder {
                         signature.push_back({actual.id,*type,actual.input,true});
                     }
                     std::string why,at;
-                    if(!(!canonicalDiscreteArrayMigrationIdentity(n.kind).empty()?canonicalDiscreteArraySignatureValid(n.kind,signature,&why,&at):canonicalDifferentialSignatureValid(n.kind,signature,&why,&at)))
+                    if(!(optimizationDefinition(n.kind)?optimizationSignatureValid(n.kind,signature,&why,&at):!canonicalDiscreteArrayMigrationIdentity(n.kind).empty()?canonicalDiscreteArraySignatureValid(n.kind,signature,&why,&at):canonicalDifferentialSignatureValid(n.kind,signature,&why,&at)))
                         fail("IR_DIFFERENTIAL_SIGNATURE",why,p+"/ports/"+at);
                 }
                 if(const auto *calculus=findCalculusFunction(n.kind)) {
@@ -1085,7 +1087,7 @@ void Builder::structures() {
                     const auto *spec=diagramStructureShelfFieldById(role.fields,field.substr(0,field.find('#')));
                     if(!spec||port.input!=(role.direction=="input"))fail("IR_TIMED_LOOP_PORT","Unknown timing field or direction.",p+":"+port.id);
                     const auto actual=canonicalObjectReferenceReadType(parse(port.fullTypeJson));
-                    const auto expected=binding::parseType(spec->valueType=="error"?std::string_view("cluster<\"status\":bool,\"code\":i32,\"source\":string>"):spec->valueType);
+                    const auto expected=binding::parseType(spec->valueType);
                     if(!actual||!expected.valid()||actual->canonical()!=expected.type.canonical())fail("IR_TIMED_LOOP_PORT_TYPE","Timing terminal lost its exact declared type.",p+":"+port.id);
                     known=true;break;
                 }

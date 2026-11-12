@@ -1,4 +1,5 @@
 #pragma once
+#include "frog_native_engine/CanonicalErrorHandlingNative.hpp"
 
 #include <algorithm>
 #include <array>
@@ -71,7 +72,7 @@ inline constexpr std::array<DiagramStructureShelfFieldSpec, 8>
 
 inline constexpr std::array<DiagramStructureShelfFieldSpec, 14>
     kDiagramTimedLoopFeedbackFields{ {
-        { "error", "Error", "error" },
+        { "error", "Error", kErrorClusterType },
         { "expected_start", "Expected Start", "i64" },
         { "actual_start", "Actual Start", "i64" },
         { "expected_end", "Expected End", "i64" },
@@ -100,7 +101,7 @@ inline constexpr std::array<DiagramStructureShelfFieldSpec, 7>
 
 inline constexpr std::array<DiagramStructureShelfFieldSpec, 7>
     kDiagramTimedLoopResultFields{ {
-        { "error", "Error", "error" },
+        { "error", "Error", kErrorClusterType },
         { "expected_end", "Expected End", "i64" },
         { "actual_end", "Actual End", "i64" },
         { "finished_late", "Finished Late?", "bool" },

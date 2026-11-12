@@ -33,6 +33,7 @@
 #include "frog_native_engine/DiagramStructureCatalog.hpp"
 #include "frog_native_engine/FunctionBindingCatalog.hpp"
 #include "frog_native_engine/FittingNodeBinding.hpp"
+#include "frog_native_engine/OptimizationBinding.hpp"
 #include "frog_native_engine/FunctionBindingContract.hpp"
 #include "frog_native_engine/StructureBindingDefinition.hpp"
 #include "frog_native_engine/StructureTunnelMode.hpp"
@@ -812,6 +813,9 @@ BindingResult TypeResolver::paletteFunction(const DiagramNode &node, std::string
         definition->providerRequirement == frog::math::formula::profile &&
         definition->implementationId == "frog.studio." + entry->catalogId &&
         frog::math::formula::parseOperationId(definition->implementationId).has_value();
+    const bool fixedOptimization = optimizationDefinition(node.type) &&
+        definition->typeResolution == FunctionTypeResolutionPolicy::Fixed &&
+        definition->providerRequirement == "frog.studio.math.optimization.owned@1";
     const auto source = [&](std::string_view id) {
         auto value = input(node, id);
         const auto *declared = functionPort(*definition, id);
@@ -823,7 +827,7 @@ BindingResult TypeResolver::paletteFunction(const DiagramNode &node, std::string
                 entry->family==FunctionFamily::Path || entry->family==FunctionFamily::Error ||
                 entry->family==FunctionFamily::Timestamp ||
                 entry->catalogId.starts_with("string.") ||
-                (fixedFormula && declared->connectionPolicy==FunctionPortConnectionPolicy::Exact))) {
+                ((fixedFormula || fixedOptimization) && declared->connectionPolicy==FunctionPortConnectionPolicy::Exact))) {
             auto defaultType=fromParsed(parseType(declared->defaultValueType));
             // String/Path/Error/Timestamp panes have declared editor representations, including
             // unwired polymorphic conversions. This is type evidence only:
@@ -1436,8 +1440,15 @@ BindingResult TypeResolver::resolveImpl(const DiagramNode &node, std::string_vie
             const auto *record=objects.find(ObjectReferenceKind::Widget,configuration.target.widgetId);
             if (!record)
                 return {{ResolutionStatus::Incompatible, {}, "binding.reference_target_missing", "The reference target was removed."}, false, {}};
-            configuration.expectedClass=record->classId;
-            configuration.valueType=record->valueType;
+            const bool genericView=!configuration.valueType.known()&&
+                (configuration.expectedClass=="frog.control"||configuration.expectedClass=="frog.object");
+            if(genericView) {
+                if(!referenceClassAssignable(record->classId,configuration.expectedClass))
+                    return {{ResolutionStatus::Incompatible,{},"binding.reference_class","The actual target is not assignable to its declared generic reference class."},false,{}};
+            }else {
+                configuration.expectedClass=record->classId;
+                configuration.valueType=record->valueType;
+            }
         }
         for (const auto &description:applicationControlPorts(configuration,wired,
             applicationControlReferencePresentation(node,nodes_,edges_,canvas_))) {
@@ -1544,8 +1555,8 @@ BindingResult TypeResolver::resolveImpl(const DiagramNode &node, std::string_vie
     if (const auto *boundary = findTunnel(node, port)) return tunnelPort(node, *boundary, port);
     if(node.kind=="calculus_function_reference" && calculusFunctionReferenceDimensions(node.type) && port=="reference")
         return fromParsed(parseType(calculusFunctionReferenceSchema(calculusFunctionReferenceDimensions(node.type))));
-    if(node.kind=="fitting_model_reference" && node.type==fittingModelReferenceOperation && port=="reference")
-        return fromParsed(parseType(fittingModelReferenceSchema));
+    if(node.kind=="fitting_model_reference" && nativeNumericalModelReference(node.type) && port=="reference")
+        return fromParsed(parseType(nativeNumericalModelSchema(node.type)));
     if (node.kind == "frog_call") {
         for (const auto &callPort : node.callPorts) if (callPort.id == port) return fromParsed(parseType(callPort.valueType));
     }
@@ -1776,8 +1787,14 @@ std::optional<FunctionPortDirection> TypeResolver::direction(const DiagramEdgeEn
             if (!objects.accepted()) return std::nullopt;
             const auto *record=objects.find(ObjectReferenceKind::Widget,configuration.target.widgetId);
             if (!record) return std::nullopt;
-            configuration.expectedClass=record->classId;
-            configuration.valueType=record->valueType;
+            const bool genericView=!configuration.valueType.known()&&
+                (configuration.expectedClass=="frog.control"||configuration.expectedClass=="frog.object");
+            if(genericView) {
+                if(!referenceClassAssignable(record->classId,configuration.expectedClass))return std::nullopt;
+            }else {
+                configuration.expectedClass=record->classId;
+                configuration.valueType=record->valueType;
+            }
         }
         for (const auto &port:applicationControlPorts(configuration,wired,
             applicationControlReferencePresentation(node,nodes_,edges_,canvas_)))
@@ -1828,7 +1845,7 @@ std::optional<FunctionPortDirection> TypeResolver::direction(const DiagramEdgeEn
             std::optional{FunctionPortDirection::Input} : std::nullopt;
     }
     if(node.kind=="calculus_function_reference"&&calculusFunctionReferenceDimensions(node.type)&&endpoint.portId=="reference")return FunctionPortDirection::Output;
-    if(node.kind=="fitting_model_reference"&&node.type==fittingModelReferenceOperation&&endpoint.portId=="reference")return FunctionPortDirection::Output;
+    if(node.kind=="fitting_model_reference"&&nativeNumericalModelReference(node.type)&&endpoint.portId=="reference")return FunctionPortDirection::Output;
     if (!frog::native_engine::canonicalNumericIeeeConstantMigrationIdentity(node.type).empty() && endpoint.portId=="value")return FunctionPortDirection::Output;
     if (node.kind == "conditional_default" && endpoint.portId == "value") return FunctionPortDirection::Output;
     if (node.type == "frog.studio.structures.for_loop" && endpoint.portId == "condition")
@@ -2288,6 +2305,18 @@ TypeResolution TypeResolver::connectionInRegion(const DiagramEdgeEndpoint &sourc
                         return value;
                     }, wired, formatLiteral);
                 if (candidate.resolution.status == ResolutionStatus::Incompatible) return candidate.resolution;
+                // These receivers have a primary source Array. Their numeric
+                // data input adopts its element representation, unlike Build/
+                // Interleave's common-type fold. Candidate checks remain pure.
+                const auto catalog=std::string_view(entry->catalogId);
+                const auto dataPort=targetPort.substr(0,targetPort.find(':'));
+                const bool arrayData=(arrayEditKind(catalog)==ArrayEditKind::Replace ||
+                    arrayEditKind(catalog)==ArrayEditKind::Insert) ? dataPort=="subset" :
+                    catalog=="array.search_1d" ? dataPort=="value" :
+                    catalog.starts_with("array.matrix.set_") &&
+                        (dataPort=="elements" || dataPort=="diagonal_values" || dataPort=="subset");
+                if(arrayData && candidate.resolution.accepted())
+                    return connect(sourceResult.resolution.type,candidate.resolution.type,ConnectionPolicy::NumericImplicit);
             }
             if (const auto expected = entry?fixedStringNumericParameterType(entry->catalogId, *port):std::nullopt)
                 return connect(sourceResult.resolution.type, *expected, ConnectionPolicy::NumericImplicit);

@@ -1,3 +1,4 @@
+#include "frog_native_engine/OptimizationBinding.hpp"
 #include "frog_native_engine/ReferenceWidget.hpp"
 #include "frog_native_engine/FrogDraftData.hpp"
 #include "frog_native_engine/ConnectivityConfiguration.hpp"
@@ -738,7 +739,8 @@ void appendDiagramNode(
         // Save must not erase an explicit type or reconstruct it from the UI.
         appendJsonField(output, indent + 1, "type", node.type);
     }
-    if(node.kind=="calculus_function_reference") {
+    if(node.kind=="calculus_function_reference" ||
+        (node.kind=="fitting_model_reference"&&optimizationReferenceKind(node.type))) {
         appendJsonField(output,indent+1,"value_type",node.valueType);
     }
     if (node.kind == "widget_value" && !node.widgetId.empty()) {
@@ -1398,6 +1400,9 @@ void appendDiagramNode(
         // Explicit Studio-private profile, not an executable standard extension.
         appendJsonField(output, indent + 1, "studio_sequence_profile", node.sequenceSemanticProfile);
         appendJsonField(output, indent + 1, "studio_sequence_selected_frame", node.sequenceSelectedFrameId);
+        if (!node.sequenceFrameNumbersVisible) {
+            appendIndent(output, indent + 1); output << "\"studio_sequence_frame_numbers_visible\": false,\n";
+        }
         appendIndent(output, indent + 1); output << "\"regions\": [\n";
         for (std::size_t i=0; i<node.sequenceFrames.size(); ++i) {
             const auto &frame=node.sequenceFrames[i];

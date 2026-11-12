@@ -49,6 +49,7 @@ inline constexpr std::size_t allocationBudget=64*1024*1024;
 struct Fault:std::runtime_error { int code; Fault(int c,std::string m):std::runtime_error(std::move(m)),code(c){} };
 using CanonicalNumber=std::variant<std::int64_t,std::uint64_t,double>;
 CanonicalNumber decodeCanonicalNumber(const source::JsonValue &,bool unsignedInteger,bool signedInteger);
+bool scalarType(NativeCallNumericType) noexcept;
 void scalarProfileDiagnostics(const NativeCallConfiguration &,NativeCallValidation &);
 // Internal throwing form preserves the invocation's existing 7606/7607 phase.
 std::optional<NativeCallScalarValue> scalarCanonicalDefault(const NativeCallParameter &);

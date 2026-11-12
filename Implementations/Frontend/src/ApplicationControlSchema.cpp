@@ -146,7 +146,9 @@ static std::vector<ApplicationControlMemberDescriptor> baseApplicationControlMem
         property("value","Value","Value",dataType,true,true);
         property("default_value","Default Value","Value",dataType,true,true);
         property("value_type","Value Type","Value",primitive("string"));
-        property("value_signaling","Value (Signaling)","Value",dataType,false,true,false,"Event publication provider unavailable.");
+        property("value_signaling","Value (Signaling)","Value",dataType,false,true,false);
+        result.back().runtimeAvailable=true;
+        result.back().help="Writes the current typed value and queues Value Change, including identical values. Write-only; Latch Boolean actions are unsupported. Value writes stay silent. Uses captured OldVal/NewVal and the actual control reference; handler completion is asynchronous.";
     }
     property("interaction.visible","Visible","Appearance",primitive("bool"),true,true);
     property("interaction.enabled","Enabled","Appearance",primitive("bool"),true,true,!definition || cap(WidgetCapability::EnabledState),
@@ -688,7 +690,7 @@ std::vector<Descriptor> referenceCatalogue(std::string_view classId,const TypeRe
 }
 }
 std::string applicationControlMemberLabel(const ApplicationControlMemberDescriptor &member) {
-    return memberDisplayName(member);
+    return member.id=="value_signaling"?"Val(Sgnl)":memberDisplayName(member);
 }
 std::vector<ApplicationControlMemberDescriptor> applicationControlMembers(std::string_view classId,
     const TypeRef &valueType,const WidgetInstance *presentation) {

@@ -21371,6 +21371,583 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsBindingsChunk
         };
         definitions.push_back(std::move(definition));
     }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.lp";
+        definition.definitionId = "frog.studio.math.optimization.lp";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.lp";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/optimization-llb/linear-programming-simplex-method-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "c", "C", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "m", "M", FunctionPortDirection::Input, "array<f64,rank=2>", "array<f64,rank=2>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "b", "B", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "maximum", "max f(X)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "solution", "X", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "ticks", "ticks", FunctionPortDirection::Output, "u32", "u32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error", "error", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.qp.ip";
+        definition.definitionId = "frog.studio.math.optimization.qp.ip";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.qp.ip";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/quadratic-programming-ip-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "start", "start", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "objective", "objective function", FunctionPortDirection::Input, "cluster<Q:array<f64,rank=2>,c:array<f64>>", "cluster<Q:array<f64,rank=2>,c:array<f64>>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "bounds", "parameter bounds", FunctionPortDirection::Input, "cluster<minimum:array<f64>,maximum:array<f64>>", "cluster<minimum:array<f64>,maximum:array<f64>>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "equalities", "equality constraints", FunctionPortDirection::Input, "cluster<A:array<f64,rank=2>,b:array<f64>>", "cluster<A:array<f64,rank=2>,b:array<f64>>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_in", "error in (no error)", FunctionPortDirection::Input, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "inequalities", "inequality constraints", FunctionPortDirection::Input, "cluster<D:array<f64,rank=2>,minimum:array<f64>,maximum:array<f64>>", "cluster<D:array<f64,rank=2>,minimum:array<f64>,maximum:array<f64>>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "criteria", "stopping criteria", FunctionPortDirection::Input, "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "minimum", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(minimum)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "multipliers", "Lagrangian multipliers", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_out", "error out", FunctionPortDirection::Output, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.qp.as";
+        definition.definitionId = "frog.studio.math.optimization.qp.as";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.qp.as";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/quadratic-programming-as-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "warm_start", "warm start?", FunctionPortDirection::Input, "bool", "bool", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "start", "start", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "objective", "objective function", FunctionPortDirection::Input, "cluster<Q:array<f64,rank=2>,c:array<f64>>", "cluster<Q:array<f64,rank=2>,c:array<f64>>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "bounds", "parameter bounds", FunctionPortDirection::Input, "cluster<minimum:array<f64>,maximum:array<f64>>", "cluster<minimum:array<f64>,maximum:array<f64>>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "equalities", "equality constraints", FunctionPortDirection::Input, "cluster<A:array<f64,rank=2>,b:array<f64>>", "cluster<A:array<f64,rank=2>,b:array<f64>>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_in", "error in (no error)", FunctionPortDirection::Input, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "inequalities", "inequality constraints", FunctionPortDirection::Input, "cluster<D:array<f64,rank=2>,minimum:array<f64>,maximum:array<f64>>", "cluster<D:array<f64,rank=2>,minimum:array<f64>,maximum:array<f64>>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "criteria", "stopping criteria", FunctionPortDirection::Input, "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "minimum", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(minimum)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "multipliers", "Lagrangian multipliers", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_out", "error out", FunctionPortDirection::Output, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.unconstrained.quasi_newton.formula";
+        definition.definitionId = "frog.studio.math.optimization.unconstrained.quasi_newton.formula";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.unconstrained.quasi_newton.formula";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/quasi-newton-formula-string-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "variables", "X", FunctionPortDirection::Input, "array<string>", "array<string>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "formula", "f(X)", FunctionPortDirection::Input, "string", "string", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "start", "start", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "criteria", "stopping criteria", FunctionPortDirection::Input, "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_in", "error in (no error)", FunctionPortDirection::Input, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "minimum", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(minimum)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "evaluations", "number of function evaluations", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_out", "error out", FunctionPortDirection::Output, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.unconstrained.quasi_newton.reference";
+        definition.definitionId = "frog.studio.math.optimization.unconstrained.quasi_newton.reference";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.unconstrained.quasi_newton.reference";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/quasi-newton-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "data", "function data", FunctionPortDirection::Input, "variant", "variant", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "function", "objective function", FunctionPortDirection::Input, "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:f64,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:f64,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "start", "start", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "criteria", "stopping criteria", FunctionPortDirection::Input, "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_in", "error in (no error)", FunctionPortDirection::Input, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "minimum", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(minimum)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "evaluations", "number of function evaluations", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_out", "error out", FunctionPortDirection::Output, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.unconstrained.conjugate_gradient.formula";
+        definition.definitionId = "frog.studio.math.optimization.unconstrained.conjugate_gradient.formula";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.unconstrained.conjugate_gradient.formula";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/conjugate-gradient-formula-string-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "variables", "X", FunctionPortDirection::Input, "array<string>", "array<string>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "formula", "f(X)", FunctionPortDirection::Input, "string", "string", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "start", "start", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cg_settings", "conjugate gradient settings", FunctionPortDirection::Input, "cluster<gradient_method:i32,line_minimization:i32>", "cluster<gradient_method:i32,line_minimization:i32>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "criteria", "stopping criteria", FunctionPortDirection::Input, "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_in", "error in (no error)", FunctionPortDirection::Input, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "minimum", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(minimum)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "evaluations", "number of function evaluations", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_out", "error out", FunctionPortDirection::Output, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.unconstrained.conjugate_gradient.reference";
+        definition.definitionId = "frog.studio.math.optimization.unconstrained.conjugate_gradient.reference";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.unconstrained.conjugate_gradient.reference";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/conjugate-gradient-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "data", "function data", FunctionPortDirection::Input, "variant", "variant", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "function", "objective function", FunctionPortDirection::Input, "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:f64,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:f64,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "start", "start", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cg_settings", "conjugate gradient settings", FunctionPortDirection::Input, "cluster<gradient_method:i32,line_minimization:i32>", "cluster<gradient_method:i32,line_minimization:i32>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "criteria", "stopping criteria", FunctionPortDirection::Input, "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_in", "error in (no error)", FunctionPortDirection::Input, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "minimum", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(minimum)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "evaluations", "number of function evaluations", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_out", "error out", FunctionPortDirection::Output, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.unconstrained.simplex.formula";
+        definition.definitionId = "frog.studio.math.optimization.unconstrained.simplex.formula";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.unconstrained.simplex.formula";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/downhill-simplex-formula-string-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "variables", "X", FunctionPortDirection::Input, "array<string>", "array<string>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "formula", "f(X)", FunctionPortDirection::Input, "string", "string", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "start", "start", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "criteria", "stopping criteria", FunctionPortDirection::Input, "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_in", "error in (no error)", FunctionPortDirection::Input, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "minimum", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(minimum)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "evaluations", "number of function evaluations", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_out", "error out", FunctionPortDirection::Output, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.unconstrained.simplex.reference";
+        definition.definitionId = "frog.studio.math.optimization.unconstrained.simplex.reference";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.unconstrained.simplex.reference";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/downhill-simplex-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "data", "function data", FunctionPortDirection::Input, "variant", "variant", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "function", "objective function", FunctionPortDirection::Input, "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:f64,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:f64,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "start", "start", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "criteria", "stopping criteria", FunctionPortDirection::Input, "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_in", "error in (no error)", FunctionPortDirection::Input, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "minimum", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(minimum)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "evaluations", "number of function evaluations", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_out", "error out", FunctionPortDirection::Output, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.constrained";
+        definition.definitionId = "frog.studio.math.optimization.constrained";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.constrained";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/constrained-nonlinear-optimization-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "data", "function data", FunctionPortDirection::Input, "variant", "variant", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "function", "objective function", FunctionPortDirection::Input, "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:f64,out_equalities:array<f64>,out_inequalities:array<f64>,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:f64,out_equalities:array<f64>,out_inequalities:array<f64>,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "start", "start", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "bounds", "parameter bounds", FunctionPortDirection::Input, "cluster<minimum:array<f64>,maximum:array<f64>>", "cluster<minimum:array<f64>,maximum:array<f64>>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "constraint_bounds", "constraint bounds", FunctionPortDirection::Input, "cluster<minimum:array<f64>,maximum:array<f64>>", "cluster<minimum:array<f64>,maximum:array<f64>>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "beginning_state", "beginning state", FunctionPortDirection::Input, "cluster<active:array<i32>,multipliers:array<f64>,hessian:array<f64,rank=2>>", "cluster<active:array<i32>,multipliers:array<f64>,hessian:array<f64,rank=2>>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "sqp_settings", "SQP settings", FunctionPortDirection::Input, "cluster<constraint_weight:f64,max_minor_iterations:i32>", "cluster<constraint_weight:f64,max_minor_iterations:i32>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "criteria", "stopping criteria", FunctionPortDirection::Input, "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_in", "error in (no error)", FunctionPortDirection::Input, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "evaluations", "number of function evaluations", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "minimum", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(minimum)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "ending_state", "ending state", FunctionPortDirection::Output, "cluster<active:array<i32>,multipliers:array<f64>,hessian:array<f64,rank=2>>", "cluster<active:array<i32>,multipliers:array<f64>,hessian:array<f64,rank=2>>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_out", "error out", FunctionPortDirection::Output, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.global";
+        definition.definitionId = "frog.studio.math.optimization.global";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.global";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/global-optimization-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "data", "function data", FunctionPortDirection::Input, "variant", "variant", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "function", "objective function", FunctionPortDirection::Input, "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:array<f64>,out_equalities:array<f64>,out_inequalities:array<f64>,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:array<f64>,out_equalities:array<f64>,out_inequalities:array<f64>,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "bounds", "parameter bounds", FunctionPortDirection::Input, "cluster<minimum:array<f64>,maximum:array<f64>>", "cluster<minimum:array<f64>,maximum:array<f64>>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "initial_parameters", "initial parameters", FunctionPortDirection::Input, "array<f64,rank=2>", "array<f64,rank=2>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "beginning_state", "beginning state", FunctionPortDirection::Input, "cluster<population:cluster<parameters:array<f64,rank=2>,objectives:array<f64,rank=2>,equalities:array<f64,rank=2>,inequalities:array<f64,rank=2>,base_index:i32>,pareto:array<i32>>", "cluster<population:cluster<parameters:array<f64,rank=2>,objectives:array<f64,rank=2>,equalities:array<f64,rank=2>,inequalities:array<f64,rank=2>,base_index:i32>,pareto:array<i32>>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "evolution", "evolution settings", FunctionPortDirection::Input, "cluster<population_size:i32,scale:f64,crossover_rate:f64,mutation:i32,crossover:i32,bound_mapping:i32,seed:u64>", "cluster<population_size:i32,scale:f64,crossover_rate:f64,mutation:i32,crossover:i32,bound_mapping:i32,seed:u64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "criteria", "stopping criteria", FunctionPortDirection::Input, "cluster<max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<max_iterations:i32,max_function_calls:i32,max_time:f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_in", "error in (no error)", FunctionPortDirection::Input, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "minimum", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(minimum)", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "ending_state", "ending state", FunctionPortDirection::Output, "cluster<population:cluster<parameters:array<f64,rank=2>,objectives:array<f64,rank=2>,equalities:array<f64,rank=2>,inequalities:array<f64,rank=2>,base_index:i32>,pareto:array<i32>>", "cluster<population:cluster<parameters:array<f64,rank=2>,objectives:array<f64,rank=2>,equalities:array<f64,rank=2>,inequalities:array<f64,rank=2>,base_index:i32>,pareto:array<i32>>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "evaluations", "number of function evaluations", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_out", "error out", FunctionPortDirection::Output, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.brent";
+        definition.definitionId = "frog.studio.math.optimization.brent";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.brent";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/brent-with-derivatives-1d-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "accuracy", "accuracy", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "a", "a (start)", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "b", "b (start)", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "c", "c (start)", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "formula", "formula", FunctionPortDirection::Input, "string", "string", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "minimum", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(minimum)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "ticks", "ticks", FunctionPortDirection::Output, "u32", "u32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error", "error", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.golden";
+        definition.definitionId = "frog.studio.math.optimization.golden";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.golden";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/golden-section-1d-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "accuracy", "accuracy", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "a", "a (start)", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "b", "b (start)", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "c", "c (start)", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "formula", "formula", FunctionPortDirection::Input, "string", "string", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "minimum", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(minimum)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "ticks", "ticks", FunctionPortDirection::Output, "u32", "u32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error", "error", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.cg_nd";
+        definition.definitionId = "frog.studio.math.optimization.cg_nd";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.cg_nd";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/conjugate-gradient-nd-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "accuracy", "accuracy", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "gradient_method", "gradient method", FunctionPortDirection::Input, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "line_minimization", "line minimization", FunctionPortDirection::Input, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "start", "Start", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "variables", "X", FunctionPortDirection::Input, "array<string>", "array<string>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "formula", "f(X)", FunctionPortDirection::Input, "string", "string", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "Minimum", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(Minimum)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "ticks", "ticks", FunctionPortDirection::Output, "u32", "u32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error", "error", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.simplex_nd";
+        definition.definitionId = "frog.studio.math.optimization.simplex_nd";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.simplex_nd";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/downhill-simplex-nd-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "accuracy", "accuracy", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "start", "Start", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "variables", "X", FunctionPortDirection::Input, "array<string>", "array<string>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "formula", "f(X)", FunctionPortDirection::Input, "string", "string", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minimum", "Minimum", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "cost", "f(Minimum)", FunctionPortDirection::Output, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "ticks", "ticks", FunctionPortDirection::Output, "u32", "u32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error", "error", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.minima_1d";
+        definition.definitionId = "frog.studio.math.optimization.minima_1d";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.minima_1d";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/find-all-minima-1d-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "accuracy", "accuracy", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "step_type", "step type", FunctionPortDirection::Input, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "algorithm", "algorithm", FunctionPortDirection::Input, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "start", "start", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "end", "end", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "formula", "formula", FunctionPortDirection::Input, "string", "string", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minima", "Minima", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "costs", "f(Minima)", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "ticks", "ticks", FunctionPortDirection::Output, "u32", "u32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error", "error", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.minima_nd";
+        definition.definitionId = "frog.studio.math.optimization.minima_nd";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.minima_nd";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/find-all-minima-nd-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "accuracy", "accuracy", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "algorithm", "algorithm", FunctionPortDirection::Input, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "gradient_method", "gradient method", FunctionPortDirection::Input, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "line_minimization", "line minimum", FunctionPortDirection::Input, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "trials", "number of trials", FunctionPortDirection::Input, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "start", "Start", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "end", "End", FunctionPortDirection::Input, "array<f64>", "array<f64>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "variables", "X", FunctionPortDirection::Input, "array<string>", "array<string>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "formula", "F(X)", FunctionPortDirection::Input, "string", "string", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "minima", "X Values", FunctionPortDirection::Output, "array<f64,rank=2>", "array<f64,rank=2>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "costs", "F Values", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "ticks", "ticks", FunctionPortDirection::Output, "u32", "u32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error", "error", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "math.optimization.chebyshev";
+        definition.definitionId = "frog.studio.math.optimization.chebyshev";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.math.optimization.chebyshev";
+        definition.providerRequirement = "frog.studio.math.optimization.owned@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/chebyshev-approximation-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::Draft;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "points", "number of points", FunctionPortDirection::Input, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "start", "start", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "end", "end", FunctionPortDirection::Input, "f64", "f64", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "order", "order", FunctionPortDirection::Input, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "formula", "formula", FunctionPortDirection::Input, "string", "string", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "coefficients", "C", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "x", "X", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "y", "Y", FunctionPortDirection::Output, "array<f64>", "array<f64>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error", "error", FunctionPortDirection::Output, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
 }
 void appendGeneratedMathematicsBindings(std::vector<FunctionBindingDefinition> &definitions) {
     appendGeneratedMathematicsBindingsChunk0(definitions);
@@ -23941,7 +24518,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedCollectionBindings(std::
 }
 std::vector<FunctionBindingDefinition> generatedFunctionBindingDefinitions() {
     std::vector<FunctionBindingDefinition> definitions;
-    definitions.reserve(892U);
+    definitions.reserve(910U);
     appendGeneratedStructuresBindings(definitions);
     appendGeneratedNumericBindings(definitions);
     appendGeneratedBooleanBindings(definitions);
@@ -38498,7 +39075,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.hyperbolic.sinh.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Computes the hyperbolic sine of x. Every real x; signed zero is preserved, and sinh(\302\261Infinity)=\302\261Infinity. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.sinh. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
+        contract.behaviorSummary = "Computes the hyperbolic sine of x. Every real x; signed zero is preserved, and sinh(\303\202\302\261Infinity)=\303\202\302\261Infinity. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.sinh. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
         contract.blockers = std::vector<std::string>{ "Extended precision, fixed-point, physical units and Matrix dispatch are outside this profile.", "Non-finite complex results cannot be represented by the inherited finite-component lexical transport.", "No universal target Runtime provider is declared." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-sine.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-trigonometry-nodes.html", "https://dlmf.nist.gov/4.28", "https://dlmf.nist.gov/4.37" };
         contract.overload.policy = "custom_resolver";
@@ -38535,7 +39112,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.hyperbolic.cosh.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Computes the hyperbolic cosine of x. Every real x; cosh(\302\261""0)=1 and cosh(\302\261Infinity)=+Infinity. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.cosh. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
+        contract.behaviorSummary = "Computes the hyperbolic cosine of x. Every real x; cosh(\303\202\302\261""0)=1 and cosh(\303\202\302\261Infinity)=+Infinity. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.cosh. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
         contract.blockers = std::vector<std::string>{ "Extended precision, fixed-point, physical units and Matrix dispatch are outside this profile.", "Non-finite complex results cannot be represented by the inherited finite-component lexical transport.", "No universal target Runtime provider is declared." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-cosine.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-trigonometry-nodes.html", "https://dlmf.nist.gov/4.28", "https://dlmf.nist.gov/4.37" };
         contract.overload.policy = "custom_resolver";
@@ -38572,7 +39149,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.hyperbolic.tanh.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Computes the hyperbolic tangent of x. Every real x; signed zero is preserved and tanh(\302\261Infinity)=\302\261""1. Large finite inputs may round to \302\261""1. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.tanh. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
+        contract.behaviorSummary = "Computes the hyperbolic tangent of x. Every real x; signed zero is preserved and tanh(\303\202\302\261Infinity)=\303\202\302\261""1. Large finite inputs may round to \303\202\302\261""1. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.tanh. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
         contract.blockers = std::vector<std::string>{ "Extended precision, fixed-point, physical units and Matrix dispatch are outside this profile.", "Non-finite complex results cannot be represented by the inherited finite-component lexical transport.", "No universal target Runtime provider is declared." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-tangent.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-trigonometry-nodes.html", "https://dlmf.nist.gov/4.28", "https://dlmf.nist.gov/4.37" };
         contract.overload.policy = "custom_resolver";
@@ -38609,7 +39186,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.hyperbolic.sech.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Computes the reciprocal of the hyperbolic cosine, not its inverse function. Every real x; sech(0)=1 and sech(\302\261Infinity)=+0. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.sech. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
+        contract.behaviorSummary = "Computes the reciprocal of the hyperbolic cosine, not its inverse function. Every real x; sech(0)=1 and sech(\303\202\302\261Infinity)=+0. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.sech. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
         contract.blockers = std::vector<std::string>{ "Extended precision, fixed-point, physical units and Matrix dispatch are outside this profile.", "Non-finite complex results cannot be represented by the inherited finite-component lexical transport.", "No universal target Runtime provider is declared." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-secant.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-trigonometry-nodes.html", "https://dlmf.nist.gov/4.28", "https://dlmf.nist.gov/4.37" };
         contract.overload.policy = "custom_resolver";
@@ -38646,7 +39223,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.hyperbolic.csch.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Computes the reciprocal of the hyperbolic sine. Real domain x\342\211\240""0. FROG extends csch(\302\261""0)=\302\261Infinity and csch(\302\261Infinity)=\302\261""0. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.csch. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
+        contract.behaviorSummary = "Computes the reciprocal of the hyperbolic sine. Real domain x\303\242\342\200\260\302\240""0. FROG extends csch(\303\202\302\261""0)=\303\202\302\261Infinity and csch(\303\202\302\261Infinity)=\303\202\302\261""0. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.csch. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
         contract.blockers = std::vector<std::string>{ "Extended precision, fixed-point, physical units and Matrix dispatch are outside this profile.", "Non-finite complex results cannot be represented by the inherited finite-component lexical transport.", "No universal target Runtime provider is declared." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-cosecant.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-trigonometry-nodes.html", "https://dlmf.nist.gov/4.28", "https://dlmf.nist.gov/4.37" };
         contract.overload.policy = "custom_resolver";
@@ -38683,7 +39260,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.hyperbolic.coth.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Computes the reciprocal of the hyperbolic tangent. Real domain x\342\211\240""0. FROG extends coth(\302\261""0)=\302\261Infinity; coth(\302\261Infinity)=\302\261""1. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.coth. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
+        contract.behaviorSummary = "Computes the reciprocal of the hyperbolic tangent. Real domain x\303\242\342\200\260\302\240""0. FROG extends coth(\303\202\302\261""0)=\303\202\302\261Infinity; coth(\303\202\302\261Infinity)=\303\202\302\261""1. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.coth. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
         contract.blockers = std::vector<std::string>{ "Extended precision, fixed-point, physical units and Matrix dispatch are outside this profile.", "Non-finite complex results cannot be represented by the inherited finite-component lexical transport.", "No universal target Runtime provider is declared." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-cotangent.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-trigonometry-nodes.html", "https://dlmf.nist.gov/4.28", "https://dlmf.nist.gov/4.37" };
         contract.overload.policy = "custom_resolver";
@@ -38720,7 +39297,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.hyperbolic.asinh.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Returns y such that sinh(y)=x, using the principal branch for a complex input. Every real x; signed zero is preserved and asinh(\302\261Infinity)=\302\261Infinity. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.asinh. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
+        contract.behaviorSummary = "Returns y such that sinh(y)=x, using the principal branch for a complex input. Every real x; signed zero is preserved and asinh(\303\202\302\261Infinity)=\303\202\302\261Infinity. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.asinh. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
         contract.blockers = std::vector<std::string>{ "Extended precision, fixed-point, physical units and Matrix dispatch are outside this profile.", "Non-finite complex results cannot be represented by the inherited finite-component lexical transport.", "No universal target Runtime provider is declared." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/inverse-hyperbolic-sine.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-trigonometry-nodes.html", "https://dlmf.nist.gov/4.28", "https://dlmf.nist.gov/4.37" };
         contract.overload.policy = "custom_resolver";
@@ -38757,7 +39334,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.hyperbolic.acosh.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Returns the non-negative real y such that cosh(y)=x, or the principal complex result. Real domain x\342\211\245""1; x<1 gives NaN. acosh(1)=+0 and acosh(+Infinity)=+Infinity. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.acosh. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
+        contract.behaviorSummary = "Returns the non-negative real y such that cosh(y)=x, or the principal complex result. Real domain x\303\242\342\200\260\302\245""1; x<1 gives NaN. acosh(1)=+0 and acosh(+Infinity)=+Infinity. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.acosh. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
         contract.blockers = std::vector<std::string>{ "Extended precision, fixed-point, physical units and Matrix dispatch are outside this profile.", "Non-finite complex results cannot be represented by the inherited finite-component lexical transport.", "No universal target Runtime provider is declared." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/inverse-hyperbolic-cosine.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-trigonometry-nodes.html", "https://dlmf.nist.gov/4.28", "https://dlmf.nist.gov/4.37" };
         contract.overload.policy = "custom_resolver";
@@ -38794,7 +39371,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.hyperbolic.atanh.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Returns y such that tanh(y)=x, using the principal branch for a complex input. Finite real results require |x|<1. atanh(\302\261""1)=\302\261Infinity; |x|>1 gives NaN. Signed zero is preserved. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.atanh. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
+        contract.behaviorSummary = "Returns y such that tanh(y)=x, using the principal branch for a complex input. Finite real results require |x|<1. atanh(\303\202\302\261""1)=\303\202\302\261Infinity; |x|>1 gives NaN. Signed zero is preserved. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.atanh. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
         contract.blockers = std::vector<std::string>{ "Extended precision, fixed-point, physical units and Matrix dispatch are outside this profile.", "Non-finite complex results cannot be represented by the inherited finite-component lexical transport.", "No universal target Runtime provider is declared." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/inverse-hyperbolic-tangent.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-trigonometry-nodes.html", "https://dlmf.nist.gov/4.28", "https://dlmf.nist.gov/4.37" };
         contract.overload.policy = "custom_resolver";
@@ -38831,7 +39408,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.hyperbolic.asech.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Returns the non-negative real y such that sech(y)=x, or the principal complex result. Finite real domain 0<x\342\211\244""1. asech(1)=+0; FROG defines asech(+0)=+Infinity and asech(\342\210\222""0)=NaN. Negative x and x>1 give NaN. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.asech. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
+        contract.behaviorSummary = "Returns the non-negative real y such that sech(y)=x, or the principal complex result. Finite real domain 0<x\303\242\342\200\260\302\244""1. asech(1)=+0; FROG defines asech(+0)=+Infinity and asech(\303\242\313\206\342\200\231""0)=NaN. Negative x and x>1 give NaN. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.asech. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
         contract.blockers = std::vector<std::string>{ "Extended precision, fixed-point, physical units and Matrix dispatch are outside this profile.", "Non-finite complex results cannot be represented by the inherited finite-component lexical transport.", "No universal target Runtime provider is declared." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/inverse-hyperbolic-secant.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-trigonometry-nodes.html", "https://dlmf.nist.gov/4.28", "https://dlmf.nist.gov/4.37" };
         contract.overload.policy = "custom_resolver";
@@ -38868,7 +39445,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.hyperbolic.acsch.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Returns y such that csch(y)=x, using the principal branch for a complex input. Real domain x\342\211\240""0, including negative inputs. FROG extends acsch(\302\261""0)=\302\261Infinity and acsch(\302\261Infinity)=\302\261""0. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.acsch. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
+        contract.behaviorSummary = "Returns y such that csch(y)=x, using the principal branch for a complex input. Real domain x\303\242\342\200\260\302\240""0, including negative inputs. FROG extends acsch(\303\202\302\261""0)=\303\202\302\261Infinity and acsch(\303\202\302\261Infinity)=\303\202\302\261""0. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.acsch. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
         contract.blockers = std::vector<std::string>{ "Extended precision, fixed-point, physical units and Matrix dispatch are outside this profile.", "Non-finite complex results cannot be represented by the inherited finite-component lexical transport.", "No universal target Runtime provider is declared." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/inverse-hyperbolic-cosecant.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-trigonometry-nodes.html", "https://dlmf.nist.gov/4.28", "https://dlmf.nist.gov/4.37" };
         contract.overload.policy = "custom_resolver";
@@ -38905,7 +39482,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.hyperbolic.acoth.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Returns y such that coth(y)=x, using the principal branch for a complex input. Finite real domain |x|>1. acoth(\302\261""1)=\302\261Infinity; |x|<1 gives NaN and acoth(\302\261Infinity)=\302\261""0. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.acoth. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
+        contract.behaviorSummary = "Returns y such that coth(y)=x, using the principal branch for a complex input. Finite real domain |x|>1. acoth(\303\202\302\261""1)=\303\202\302\261Infinity; |x|<1 gives NaN and acoth(\303\202\302\261Infinity)=\303\202\302\261""0. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 before calculation and values above 2^53 may round. Arrays are processed element by element, preserving rank and dimensions; recursively numeric clusters preserve ordered fields. Typed empty arrays remain typed. String, Boolean, reference, mixed nonnumeric clusters, fixed-point, extended precision and Matrix inputs are not supported. The input x is required; the F64 unwired preview is not a numerical default. Local Highlight calculation uses frog.studio.hyperbolic.acoth. Real NaN propagates; real inputs never become complex based on their value. No angle conversion. Principal complex branches are used; non-finite complex results fail with a capability diagnostic.";
         contract.blockers = std::vector<std::string>{ "Extended precision, fixed-point, physical units and Matrix dispatch are outside this profile.", "Non-finite complex results cannot be represented by the inherited finite-component lexical transport.", "No universal target Runtime provider is declared." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/inverse-hyperbolic-cotangent.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/hyperbolic-trigonometry-nodes.html", "https://dlmf.nist.gov/4.28", "https://dlmf.nist.gov/4.37" };
         contract.overload.policy = "custom_resolver";
@@ -38942,7 +39519,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.gating.spike.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Returns 1 for 0\342\211\244x<1 and 0 elsewhere; a nonperiodic unit rectangular pulse. Spike(\302\261""0)=1; Spike(1)=0; Spike(\302\261Infinity)=+0. NaN produces NaN. FROG extension: real F32/F64 scalars retain their precision; signed and unsigned integer leaves convert to F64 before calculation, so values above 2^53 may round before interval classification. Apply element by element to arrays of rank 1 through 16 and recursively real numeric clusters, preserving dimensions, typed empty arrays, ordered field identities and names. Complex, Boolean, Enum, String, Path, Variant, reference, nonnumeric cluster, fixed-point, extended precision and Matrix inputs are rejected. Input x is required; the F64 editor preview supplies no implicit zero. Outputs remain numeric, never Boolean. NI classic LabVIEW documentation establishes only the scalar DBL connector and mathematical definition. The numeric-tree overloads, IEEE rules and integer promotions are FROG extensions. No detailed NXG signature or overload was verified, and no bit-for-bit LabVIEW equivalence is claimed. Local Highlight calculation uses frog.studio.gating.spike.";
+        contract.behaviorSummary = "Returns 1 for 0\303\242\342\200\260\302\244x<1 and 0 elsewhere; a nonperiodic unit rectangular pulse. Spike(\303\202\302\261""0)=1; Spike(1)=0; Spike(\303\202\302\261Infinity)=+0. NaN produces NaN. FROG extension: real F32/F64 scalars retain their precision; signed and unsigned integer leaves convert to F64 before calculation, so values above 2^53 may round before interval classification. Apply element by element to arrays of rank 1 through 16 and recursively real numeric clusters, preserving dimensions, typed empty arrays, ordered field identities and names. Complex, Boolean, Enum, String, Path, Variant, reference, nonnumeric cluster, fixed-point, extended precision and Matrix inputs are rejected. Input x is required; the F64 editor preview supplies no implicit zero. Outputs remain numeric, never Boolean. NI classic LabVIEW documentation establishes only the scalar DBL connector and mathematical definition. The numeric-tree overloads, IEEE rules and integer promotions are FROG extensions. No detailed NXG signature or overload was verified, and no bit-for-bit LabVIEW equivalence is claimed. Local Highlight calculation uses frog.studio.gating.spike.";
         contract.blockers = std::vector<std::string>{ "Complex, Boolean, Enum, reference, nonnumeric, Matrix, fixed-point and extended-precision operands are outside this real numeric profile.", "The scalar native target does not supply recursive aggregate or f32 execution.", "NI reference is classic LabVIEW scalar DBL; FROG overloads and IEEE conventions are not a verified NXG contract." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/function-llb/spike-function-vi.html", "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/gating-functions-mnu.html", "https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fmod-fmodf?view=msvc-170" };
         contract.overload.policy = "custom_resolver";
@@ -38979,7 +39556,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.gating.square.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Returns a numeric 0/1 pulse of period 2: 1 on [2n,2n+1) and 0 elsewhere, also for negative x. This is the Gating function, distinct from arithmetic x\303\227x. Square(\302\261""0)=1; even integers give 1 and odd integers give 0 after numeric conversion. Square(\302\261Infinity)=NaN. NaN produces NaN; all zero outputs are positive. FROG extension: real F32/F64 scalars retain their precision; signed and unsigned integer leaves convert to F64 before calculation, so values above 2^53 may round before interval classification. Apply element by element to arrays of rank 1 through 16 and recursively real numeric clusters, preserving dimensions, typed empty arrays, ordered field identities and names. Complex, Boolean, Enum, String, Path, Variant, reference, nonnumeric cluster, fixed-point, extended precision and Matrix inputs are rejected. Input x is required; the F64 editor preview supplies no implicit zero. Outputs remain numeric, never Boolean. NI classic LabVIEW documentation establishes only the scalar DBL connector and mathematical definition. The numeric-tree overloads, IEEE rules and integer promotions are FROG extensions. No detailed NXG signature or overload was verified, and no bit-for-bit LabVIEW equivalence is claimed. Local Highlight calculation uses frog.studio.gating.square.";
+        contract.behaviorSummary = "Returns a numeric 0/1 pulse of period 2: 1 on [2n,2n+1) and 0 elsewhere, also for negative x. This is the Gating function, distinct from arithmetic x\303\203\342\200\224x. Square(\303\202\302\261""0)=1; even integers give 1 and odd integers give 0 after numeric conversion. Square(\303\202\302\261Infinity)=NaN. NaN produces NaN; all zero outputs are positive. FROG extension: real F32/F64 scalars retain their precision; signed and unsigned integer leaves convert to F64 before calculation, so values above 2^53 may round before interval classification. Apply element by element to arrays of rank 1 through 16 and recursively real numeric clusters, preserving dimensions, typed empty arrays, ordered field identities and names. Complex, Boolean, Enum, String, Path, Variant, reference, nonnumeric cluster, fixed-point, extended precision and Matrix inputs are rejected. Input x is required; the F64 editor preview supplies no implicit zero. Outputs remain numeric, never Boolean. NI classic LabVIEW documentation establishes only the scalar DBL connector and mathematical definition. The numeric-tree overloads, IEEE rules and integer promotions are FROG extensions. No detailed NXG signature or overload was verified, and no bit-for-bit LabVIEW equivalence is claimed. Local Highlight calculation uses frog.studio.gating.square.";
         contract.blockers = std::vector<std::string>{ "Complex, Boolean, Enum, reference, nonnumeric, Matrix, fixed-point and extended-precision operands are outside this real numeric profile.", "The scalar native target does not supply recursive aggregate or f32 execution.", "NI reference is classic LabVIEW scalar DBL; FROG overloads and IEEE conventions are not a verified NXG contract." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/function-llb/square-function-vi.html", "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/gating-functions-mnu.html", "https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fmod-fmodf?view=msvc-170" };
         contract.overload.policy = "custom_resolver";
@@ -39016,7 +39593,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.gating.step.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Returns 0 for negative x and 1 for positive or zero x. The value at zero is exactly 1; this is a pure unit step, not an edge detector. Step(\302\261""0)=1; Step(+Infinity)=1 and Step(-Infinity)=+0. NaN produces NaN; all zero outputs are positive. FROG extension: real F32/F64 scalars retain their precision; signed and unsigned integer leaves convert to F64 before calculation, so values above 2^53 may round before interval classification. Apply element by element to arrays of rank 1 through 16 and recursively real numeric clusters, preserving dimensions, typed empty arrays, ordered field identities and names. Complex, Boolean, Enum, String, Path, Variant, reference, nonnumeric cluster, fixed-point, extended precision and Matrix inputs are rejected. Input x is required; the F64 editor preview supplies no implicit zero. Outputs remain numeric, never Boolean. NI classic LabVIEW documentation establishes only the scalar DBL connector and mathematical definition. The numeric-tree overloads, IEEE rules and integer promotions are FROG extensions. No detailed NXG signature or overload was verified, and no bit-for-bit LabVIEW equivalence is claimed. Local Highlight calculation uses frog.studio.gating.step.";
+        contract.behaviorSummary = "Returns 0 for negative x and 1 for positive or zero x. The value at zero is exactly 1; this is a pure unit step, not an edge detector. Step(\303\202\302\261""0)=1; Step(+Infinity)=1 and Step(-Infinity)=+0. NaN produces NaN; all zero outputs are positive. FROG extension: real F32/F64 scalars retain their precision; signed and unsigned integer leaves convert to F64 before calculation, so values above 2^53 may round before interval classification. Apply element by element to arrays of rank 1 through 16 and recursively real numeric clusters, preserving dimensions, typed empty arrays, ordered field identities and names. Complex, Boolean, Enum, String, Path, Variant, reference, nonnumeric cluster, fixed-point, extended precision and Matrix inputs are rejected. Input x is required; the F64 editor preview supplies no implicit zero. Outputs remain numeric, never Boolean. NI classic LabVIEW documentation establishes only the scalar DBL connector and mathematical definition. The numeric-tree overloads, IEEE rules and integer promotions are FROG extensions. No detailed NXG signature or overload was verified, and no bit-for-bit LabVIEW equivalence is claimed. Local Highlight calculation uses frog.studio.gating.step.";
         contract.blockers = std::vector<std::string>{ "Complex, Boolean, Enum, reference, nonnumeric, Matrix, fixed-point and extended-precision operands are outside this real numeric profile.", "The scalar native target does not supply recursive aggregate or f32 execution.", "NI reference is classic LabVIEW scalar DBL; FROG overloads and IEEE conventions are not a verified NXG contract." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/function-llb/step-function-vi.html", "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/menus/categories/mathematics/elementary/gating-functions-mnu.html", "https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fmod-fmodf?view=msvc-170" };
         contract.overload.policy = "custom_resolver";
@@ -39358,7 +39935,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.trigonometric.sin.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "sin(x). Every finite real angle; sin(\302\261""0)=\302\261""0. Infinite real angles produce NaN. Angles and real inverse results are radians; no implicit degree conversion. Real NaN propagates without value-dependent complex promotion. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 and values above 2^53 may round. Arrays preserve rank, dimensions and typed empties; numeric-only clusters preserve ordered fields. No Boolean, String, reference, mixed nonnumeric cluster, fixed-point, extended precision, physical-unit or Matrix overload. Required inputs have no implicit unwired value. Principal complex branches; non-finite complex results require unavailable finite-component lexical transport capability. Local Highlight provider: frog.studio.trigonometric.sin.";
+        contract.behaviorSummary = "sin(x). Every finite real angle; sin(\303\202\302\261""0)=\303\202\302\261""0. Infinite real angles produce NaN. Angles and real inverse results are radians; no implicit degree conversion. Real NaN propagates without value-dependent complex promotion. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 and values above 2^53 may round. Arrays preserve rank, dimensions and typed empties; numeric-only clusters preserve ordered fields. No Boolean, String, reference, mixed nonnumeric cluster, fixed-point, extended precision, physical-unit or Matrix overload. Required inputs have no implicit unwired value. Principal complex branches; non-finite complex results require unavailable finite-component lexical transport capability. Local Highlight provider: frog.studio.trigonometric.sin.";
         contract.blockers = std::vector<std::string>{ "No analytic Matrix, extended precision, fixed-point or physical-unit overload.", "Principal complex branches; non-finite complex results require unavailable finite-component lexical transport capability.", "No universal Runtime provider is declared by this authoring profile." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/sine.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/trigonometric-nodes.html", "https://dlmf.nist.gov/4.14", "https://dlmf.nist.gov/4.23" };
         contract.overload.policy = "custom_resolver";
@@ -39395,7 +39972,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.trigonometric.cos.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "cos(x). Every finite real angle; cos(\302\261""0)=1. Infinite real angles produce NaN. Angles and real inverse results are radians; no implicit degree conversion. Real NaN propagates without value-dependent complex promotion. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 and values above 2^53 may round. Arrays preserve rank, dimensions and typed empties; numeric-only clusters preserve ordered fields. No Boolean, String, reference, mixed nonnumeric cluster, fixed-point, extended precision, physical-unit or Matrix overload. Required inputs have no implicit unwired value. Principal complex branches; non-finite complex results require unavailable finite-component lexical transport capability. Local Highlight provider: frog.studio.trigonometric.cos.";
+        contract.behaviorSummary = "cos(x). Every finite real angle; cos(\303\202\302\261""0)=1. Infinite real angles produce NaN. Angles and real inverse results are radians; no implicit degree conversion. Real NaN propagates without value-dependent complex promotion. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 and values above 2^53 may round. Arrays preserve rank, dimensions and typed empties; numeric-only clusters preserve ordered fields. No Boolean, String, reference, mixed nonnumeric cluster, fixed-point, extended precision, physical-unit or Matrix overload. Required inputs have no implicit unwired value. Principal complex branches; non-finite complex results require unavailable finite-component lexical transport capability. Local Highlight provider: frog.studio.trigonometric.cos.";
         contract.blockers = std::vector<std::string>{ "No analytic Matrix, extended precision, fixed-point or physical-unit overload.", "Principal complex branches; non-finite complex results require unavailable finite-component lexical transport capability.", "No universal Runtime provider is declared by this authoring profile." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/cosine.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/trigonometric-nodes.html", "https://dlmf.nist.gov/4.14", "https://dlmf.nist.gov/4.23" };
         contract.overload.policy = "custom_resolver";
@@ -39654,7 +40231,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.trigonometric.acot.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "atan(1/x). FROG principal convention atan(1/x): acot(-1)=-pi/4 and acot(\302\261""0)=\302\261pi/2. This is not atan2(1,x); the negative NXG branch has not been measured. Angles and real inverse results are radians; no implicit degree conversion. Real NaN propagates without value-dependent complex promotion. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 and values above 2^53 may round. Arrays preserve rank, dimensions and typed empties; numeric-only clusters preserve ordered fields. No Boolean, String, reference, mixed nonnumeric cluster, fixed-point, extended precision, physical-unit or Matrix overload. Required inputs have no implicit unwired value. Principal complex branches; non-finite complex results require unavailable finite-component lexical transport capability. Local Highlight provider: frog.studio.trigonometric.acot.";
+        contract.behaviorSummary = "atan(1/x). FROG principal convention atan(1/x): acot(-1)=-pi/4 and acot(\303\202\302\261""0)=\303\202\302\261pi/2. This is not atan2(1,x); the negative NXG branch has not been measured. Angles and real inverse results are radians; no implicit degree conversion. Real NaN propagates without value-dependent complex promotion. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 and values above 2^53 may round. Arrays preserve rank, dimensions and typed empties; numeric-only clusters preserve ordered fields. No Boolean, String, reference, mixed nonnumeric cluster, fixed-point, extended precision, physical-unit or Matrix overload. Required inputs have no implicit unwired value. Principal complex branches; non-finite complex results require unavailable finite-component lexical transport capability. Local Highlight provider: frog.studio.trigonometric.acot.";
         contract.blockers = std::vector<std::string>{ "No analytic Matrix, extended precision, fixed-point or physical-unit overload.", "Principal complex branches; non-finite complex results require unavailable finite-component lexical transport capability.", "No universal Runtime provider is declared by this authoring profile." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/inverse-cotangent.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/trigonometric-nodes.html", "https://dlmf.nist.gov/4.14", "https://dlmf.nist.gov/4.23" };
         contract.overload.policy = "custom_resolver";
@@ -39878,7 +40455,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.polymorphic.math.trigonometric.sinc.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "sin(x)/x; sinc(\302\261""0)=1. Unnormalized sin(x)/x with FROG continuous extension sinc(\302\261""0)=1. No implicit pi factor. A stable local kernel handles small arguments. Angles and real inverse results are radians; no implicit degree conversion. Real NaN propagates without value-dependent complex promotion. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 and values above 2^53 may round. Arrays preserve rank, dimensions and typed empties; numeric-only clusters preserve ordered fields. No Boolean, String, reference, mixed nonnumeric cluster, fixed-point, extended precision, physical-unit or Matrix overload. Required inputs have no implicit unwired value. Principal complex branches; non-finite complex results require unavailable finite-component lexical transport capability. Local Highlight provider: frog.studio.trigonometric.sinc.";
+        contract.behaviorSummary = "sin(x)/x; sinc(\303\202\302\261""0)=1. Unnormalized sin(x)/x with FROG continuous extension sinc(\303\202\302\261""0)=1. No implicit pi factor. A stable local kernel handles small arguments. Angles and real inverse results are radians; no implicit degree conversion. Real NaN propagates without value-dependent complex promotion. F32/F64 and finite C32/C64 inputs retain their precision; integer leaves convert to F64 and values above 2^53 may round. Arrays preserve rank, dimensions and typed empties; numeric-only clusters preserve ordered fields. No Boolean, String, reference, mixed nonnumeric cluster, fixed-point, extended precision, physical-unit or Matrix overload. Required inputs have no implicit unwired value. Principal complex branches; non-finite complex results require unavailable finite-component lexical transport capability. Local Highlight provider: frog.studio.trigonometric.sinc.";
         contract.blockers = std::vector<std::string>{ "No analytic Matrix, extended precision, fixed-point or physical-unit overload.", "Principal complex branches; non-finite complex results require unavailable finite-component lexical transport capability.", "No universal Runtime provider is declared by this authoring profile." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/sinc.html", "https://www.ni.com/docs/en-US/bundle/labview-nxg-nodes-api-ref/page/trigonometric-nodes.html", "https://dlmf.nist.gov/4.14", "https://dlmf.nist.gov/4.23" };
         contract.overload.policy = "custom_resolver";
@@ -41543,7 +42120,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.palette.math.ode.solve.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Solves X'=F(t,X) from initial_values. Formula supplies equations, declared state variables and a time name. Default method rk45 is Dormand\342\200\223Prince 5(4), distinct from Cash\342\200\223Karp. Real choices: euler, rk2, rk3, rk4, rk23, rk45 and bdf. bdf is the documented FROG BDF2 backend, not a claim of reproducing the NI BDF implementation. cash_karp54 is an explicit additional choice. Adams\342\200\223Moulton, Rosenbrock and Discrete States Only are unavailable and disabled with an explanation; imported requests return a diagnostic without substitution. Parameters: t0=0,tf=1,step=.1,method=rk45,atol=1e-9,rtol=1e-6,initial_step=.01,min_step=1e-12,max_step=.1. Fixed methods use step; adaptive methods use tolerances and adaptive bounds. tf>t0, positive steps, nonnegative tolerances not both zero. Real f64 coupled systems, not element-wise batch lifting. Vectors are rank 1; matrices and multistate trajectories are actual rank-2 Arrays, not nominal Matrix transport. Values[row,column] is state column at Times[row]. Explicit exception: Linear nth Order Numeric returns only x(t) as a rank-1 Array, without its derivatives. Borrowed Variant user data is opaque to the f64 ODE state profile and may preserve exact common typed payloads, including I128/U128 lexical values, without numeric conversion. No complex transport, implicit batch, dimensional broadcasting or scalar lifting. Formula and FROG Reference are explicitly selected persisted identities sharing one palette artwork. Common connector IDs survive switching instances. ODE Solver and DAE use error in/out clusters; the legacy RK4, CK, Euler and linear functions retain error:i32 (zero means success). ticks:u32 is elapsed calculation milliseconds, not step count or simulated time. Invalid preconditions return empty results; a stopped integration retains accepted rows with an explicit nonzero diagnostic. Resource limits, cancellation, invalid references, nonfinite values and unavailable methods never become plausible zero-valued success. Classic LabVIEW connector documentation and mathematical algorithms; no measured NI runtime parity or confirmed NXG graphical signatures. FROG owns endpoint_policy=clip, long declared identifiers, CK accuracy mapping, repeated-root and Jordan support. Local execution uses the existing immutable authored graph and its owned Highlight worker, through Play with or without the bulb. The public-source LLVM compiled target corridor does not admit these aggregate signatures yet and rejects them explicitly; there is no substituted provider.";
+        contract.behaviorSummary = "Solves X'=F(t,X) from initial_values. Formula supplies equations, declared state variables and a time name. Default method rk45 is Dormand\303\242\342\202\254\342\200\234Prince 5(4), distinct from Cash\303\242\342\202\254\342\200\234Karp. Real choices: euler, rk2, rk3, rk4, rk23, rk45 and bdf. bdf is the documented FROG BDF2 backend, not a claim of reproducing the NI BDF implementation. cash_karp54 is an explicit additional choice. Adams\303\242\342\202\254\342\200\234Moulton, Rosenbrock and Discrete States Only are unavailable and disabled with an explanation; imported requests return a diagnostic without substitution. Parameters: t0=0,tf=1,step=.1,method=rk45,atol=1e-9,rtol=1e-6,initial_step=.01,min_step=1e-12,max_step=.1. Fixed methods use step; adaptive methods use tolerances and adaptive bounds. tf>t0, positive steps, nonnegative tolerances not both zero. Real f64 coupled systems, not element-wise batch lifting. Vectors are rank 1; matrices and multistate trajectories are actual rank-2 Arrays, not nominal Matrix transport. Values[row,column] is state column at Times[row]. Explicit exception: Linear nth Order Numeric returns only x(t) as a rank-1 Array, without its derivatives. Borrowed Variant user data is opaque to the f64 ODE state profile and may preserve exact common typed payloads, including I128/U128 lexical values, without numeric conversion. No complex transport, implicit batch, dimensional broadcasting or scalar lifting. Formula and FROG Reference are explicitly selected persisted identities sharing one palette artwork. Common connector IDs survive switching instances. ODE Solver and DAE use error in/out clusters; the legacy RK4, CK, Euler and linear functions retain error:i32 (zero means success). ticks:u32 is elapsed calculation milliseconds, not step count or simulated time. Invalid preconditions return empty results; a stopped integration retains accepted rows with an explicit nonzero diagnostic. Resource limits, cancellation, invalid references, nonfinite values and unavailable methods never become plausible zero-valued success. Classic LabVIEW connector documentation and mathematical algorithms; no measured NI runtime parity or confirmed NXG graphical signatures. FROG owns endpoint_policy=clip, long declared identifiers, CK accuracy mapping, repeated-root and Jordan support. Local execution uses the existing immutable authored graph and its owned Highlight worker, through Play with or without the bulb. The public-source LLVM compiled target corridor does not admit these aggregate signatures yet and rejects them explicitly; there is no substituted provider.";
         contract.blockers = std::vector<std::string>{ "Classic LabVIEW connector documentation and mathematical algorithms; no measured NI runtime parity or confirmed NXG graphical signatures. FROG owns endpoint_policy=clip, long declared identifiers, CK accuracy mapping, repeated-root and Jordan support.", "No universal public FROG target provider is declared; local Highlight executes this exact signature." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/ode-llb/ode-solver-formula-string-vi.html" };
         contract.overload.policy = "custom_resolver";
@@ -41585,7 +42162,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.palette.math.ode.solve.reference.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "FROG Reference instance. A borrowed strict Static FROG Reference with parameter IDs t, X, data supplies the residual or derivative and diagnostic. Resolve and validate the private immutable authored graph once, retain opaque typed data for the integration, reject wrong dimensions and do not close the borrowed reference. This is a bounded pure callback profile: numeric functions except random generation, math.exponential.*, math.trigonometric.*, cluster.bundle_by_name/unbundle_by_name, variant.to_variant and variant.to_data, plus source and indicator terminals. Array support is limited to array.index on finite rank-1 f64 with one explicit i32 index/output, and array.build from 1..32 finite scalar f64 inputs; no general Array execution, subarrays or concatenation. Invalid indexes produce ARRAY_INDEX_RANGE without a fabricated value. Structures/control flow, other functions and side effects are rejected explicitly. Callbacks may be evaluated repeatedly or on rejected steps: keep independent invocation state, no externally visible dependence on evaluation count and no blocking Front Panel access. A concurrent call to a busy non-reentrant program fails explicitly. Solves X'=F(t,X) from initial_values. Formula supplies equations, declared state variables and a time name. Default method rk45 is Dormand\342\200\223Prince 5(4), distinct from Cash\342\200\223Karp. Real choices: euler, rk2, rk3, rk4, rk23, rk45 and bdf. bdf is the documented FROG BDF2 backend, not a claim of reproducing the NI BDF implementation. cash_karp54 is an explicit additional choice. Adams\342\200\223Moulton, Rosenbrock and Discrete States Only are unavailable and disabled with an explanation; imported requests return a diagnostic without substitution. Parameters: t0=0,tf=1,step=.1,method=rk45,atol=1e-9,rtol=1e-6,initial_step=.01,min_step=1e-12,max_step=.1. Fixed methods use step; adaptive methods use tolerances and adaptive bounds. tf>t0, positive steps, nonnegative tolerances not both zero. Real f64 coupled systems, not element-wise batch lifting. Vectors are rank 1; matrices and multistate trajectories are actual rank-2 Arrays, not nominal Matrix transport. Values[row,column] is state column at Times[row]. Explicit exception: Linear nth Order Numeric returns only x(t) as a rank-1 Array, without its derivatives. Borrowed Variant user data is opaque to the f64 ODE state profile and may preserve exact common typed payloads, including I128/U128 lexical values, without numeric conversion. No complex transport, implicit batch, dimensional broadcasting or scalar lifting. Formula and FROG Reference are explicitly selected persisted identities sharing one palette artwork. Common connector IDs survive switching instances. ODE Solver and DAE use error in/out clusters; the legacy RK4, CK, Euler and linear functions retain error:i32 (zero means success). ticks:u32 is elapsed calculation milliseconds, not step count or simulated time. Invalid preconditions return empty results; a stopped integration retains accepted rows with an explicit nonzero diagnostic. Resource limits, cancellation, invalid references, nonfinite values and unavailable methods never become plausible zero-valued success. Classic LabVIEW connector documentation and mathematical algorithms; no measured NI runtime parity or confirmed NXG graphical signatures. FROG owns endpoint_policy=clip, long declared identifiers, CK accuracy mapping, repeated-root and Jordan support. Local execution uses the existing immutable authored graph and its owned Highlight worker, through Play with or without the bulb. The public-source LLVM compiled target corridor does not admit these aggregate signatures yet and rejects them explicitly; there is no substituted provider.";
+        contract.behaviorSummary = "FROG Reference instance. A borrowed strict Static FROG Reference with parameter IDs t, X, data supplies the residual or derivative and diagnostic. Resolve and validate the private immutable authored graph once, retain opaque typed data for the integration, reject wrong dimensions and do not close the borrowed reference. This is a bounded pure callback profile: numeric functions except random generation, math.exponential.*, math.trigonometric.*, cluster.bundle_by_name/unbundle_by_name, variant.to_variant and variant.to_data, plus source and indicator terminals. Array support is limited to array.index on finite rank-1 f64 with one explicit i32 index/output, and array.build from 1..32 finite scalar f64 inputs; no general Array execution, subarrays or concatenation. Invalid indexes produce ARRAY_INDEX_RANGE without a fabricated value. Structures/control flow, other functions and side effects are rejected explicitly. Callbacks may be evaluated repeatedly or on rejected steps: keep independent invocation state, no externally visible dependence on evaluation count and no blocking Front Panel access. A concurrent call to a busy non-reentrant program fails explicitly. Solves X'=F(t,X) from initial_values. Formula supplies equations, declared state variables and a time name. Default method rk45 is Dormand\303\242\342\202\254\342\200\234Prince 5(4), distinct from Cash\303\242\342\202\254\342\200\234Karp. Real choices: euler, rk2, rk3, rk4, rk23, rk45 and bdf. bdf is the documented FROG BDF2 backend, not a claim of reproducing the NI BDF implementation. cash_karp54 is an explicit additional choice. Adams\303\242\342\202\254\342\200\234Moulton, Rosenbrock and Discrete States Only are unavailable and disabled with an explanation; imported requests return a diagnostic without substitution. Parameters: t0=0,tf=1,step=.1,method=rk45,atol=1e-9,rtol=1e-6,initial_step=.01,min_step=1e-12,max_step=.1. Fixed methods use step; adaptive methods use tolerances and adaptive bounds. tf>t0, positive steps, nonnegative tolerances not both zero. Real f64 coupled systems, not element-wise batch lifting. Vectors are rank 1; matrices and multistate trajectories are actual rank-2 Arrays, not nominal Matrix transport. Values[row,column] is state column at Times[row]. Explicit exception: Linear nth Order Numeric returns only x(t) as a rank-1 Array, without its derivatives. Borrowed Variant user data is opaque to the f64 ODE state profile and may preserve exact common typed payloads, including I128/U128 lexical values, without numeric conversion. No complex transport, implicit batch, dimensional broadcasting or scalar lifting. Formula and FROG Reference are explicitly selected persisted identities sharing one palette artwork. Common connector IDs survive switching instances. ODE Solver and DAE use error in/out clusters; the legacy RK4, CK, Euler and linear functions retain error:i32 (zero means success). ticks:u32 is elapsed calculation milliseconds, not step count or simulated time. Invalid preconditions return empty results; a stopped integration retains accepted rows with an explicit nonzero diagnostic. Resource limits, cancellation, invalid references, nonfinite values and unavailable methods never become plausible zero-valued success. Classic LabVIEW connector documentation and mathematical algorithms; no measured NI runtime parity or confirmed NXG graphical signatures. FROG owns endpoint_policy=clip, long declared identifiers, CK accuracy mapping, repeated-root and Jordan support. Local execution uses the existing immutable authored graph and its owned Highlight worker, through Play with or without the bulb. The public-source LLVM compiled target corridor does not admit these aggregate signatures yet and rejects them explicitly; there is no substituted provider.";
         contract.blockers = std::vector<std::string>{ "Classic LabVIEW connector documentation and mathematical algorithms; no measured NI runtime parity or confirmed NXG graphical signatures. FROG owns endpoint_policy=clip, long declared identifiers, CK accuracy mapping, repeated-root and Jordan support.", "No universal public FROG target provider is declared; local Highlight executes this exact signature." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/ode-llb/ode-solver-main-vi.html" };
         contract.overload.policy = "custom_resolver";
@@ -41676,7 +42253,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         contract.profileId = "frog.studio.palette.math.ode.cash_karp54.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Cash\342\200\223Karp embedded explicit 5(4), six derivative stages with accepted/rejected adaptive steps. h is initial step, not fixed spacing. accuracy=0 uses automatic core tolerances atol=1e-10 and rtol=1e-9; accuracy>0 sets atol=rtol=accuracy; negative accuracy is invalid. This FROG local error-scale mapping does not promise the same bound on global error. Times may be irregular. Cash\342\200\223Karp is never substituted by Dormand\342\200\223Prince. Real f64 coupled systems, not element-wise batch lifting. Vectors are rank 1; matrices and multistate trajectories are actual rank-2 Arrays, not nominal Matrix transport. Values[row,column] is state column at Times[row]. Explicit exception: Linear nth Order Numeric returns only x(t) as a rank-1 Array, without its derivatives. Borrowed Variant user data is opaque to the f64 ODE state profile and may preserve exact common typed payloads, including I128/U128 lexical values, without numeric conversion. No complex transport, implicit batch, dimensional broadcasting or scalar lifting. Formula and FROG Reference are explicitly selected persisted identities sharing one palette artwork. Common connector IDs survive switching instances. ODE Solver and DAE use error in/out clusters; the legacy RK4, CK, Euler and linear functions retain error:i32 (zero means success). ticks:u32 is elapsed calculation milliseconds, not step count or simulated time. Invalid preconditions return empty results; a stopped integration retains accepted rows with an explicit nonzero diagnostic. Resource limits, cancellation, invalid references, nonfinite values and unavailable methods never become plausible zero-valued success. Classic LabVIEW connector documentation and mathematical algorithms; no measured NI runtime parity or confirmed NXG graphical signatures. FROG owns endpoint_policy=clip, long declared identifiers, CK accuracy mapping, repeated-root and Jordan support. Local execution uses the existing immutable authored graph and its owned Highlight worker, through Play with or without the bulb. The public-source LLVM compiled target corridor does not admit these aggregate signatures yet and rejects them explicitly; there is no substituted provider.";
+        contract.behaviorSummary = "Cash\303\242\342\202\254\342\200\234Karp embedded explicit 5(4), six derivative stages with accepted/rejected adaptive steps. h is initial step, not fixed spacing. accuracy=0 uses automatic core tolerances atol=1e-10 and rtol=1e-9; accuracy>0 sets atol=rtol=accuracy; negative accuracy is invalid. This FROG local error-scale mapping does not promise the same bound on global error. Times may be irregular. Cash\303\242\342\202\254\342\200\234Karp is never substituted by Dormand\303\242\342\202\254\342\200\234Prince. Real f64 coupled systems, not element-wise batch lifting. Vectors are rank 1; matrices and multistate trajectories are actual rank-2 Arrays, not nominal Matrix transport. Values[row,column] is state column at Times[row]. Explicit exception: Linear nth Order Numeric returns only x(t) as a rank-1 Array, without its derivatives. Borrowed Variant user data is opaque to the f64 ODE state profile and may preserve exact common typed payloads, including I128/U128 lexical values, without numeric conversion. No complex transport, implicit batch, dimensional broadcasting or scalar lifting. Formula and FROG Reference are explicitly selected persisted identities sharing one palette artwork. Common connector IDs survive switching instances. ODE Solver and DAE use error in/out clusters; the legacy RK4, CK, Euler and linear functions retain error:i32 (zero means success). ticks:u32 is elapsed calculation milliseconds, not step count or simulated time. Invalid preconditions return empty results; a stopped integration retains accepted rows with an explicit nonzero diagnostic. Resource limits, cancellation, invalid references, nonfinite values and unavailable methods never become plausible zero-valued success. Classic LabVIEW connector documentation and mathematical algorithms; no measured NI runtime parity or confirmed NXG graphical signatures. FROG owns endpoint_policy=clip, long declared identifiers, CK accuracy mapping, repeated-root and Jordan support. Local execution uses the existing immutable authored graph and its owned Highlight worker, through Play with or without the bulb. The public-source LLVM compiled target corridor does not admit these aggregate signatures yet and rejects them explicitly; there is no substituted provider.";
         contract.blockers = std::vector<std::string>{ "Classic LabVIEW connector documentation and mathematical algorithms; no measured NI runtime parity or confirmed NXG graphical signatures. FROG owns endpoint_policy=clip, long declared identifiers, CK accuracy mapping, repeated-root and Jordan support.", "No universal public FROG target provider is declared; local Highlight executes this exact signature." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/ode-llb/ode-cash-karp-5th-order-vi.html" };
         contract.overload.policy = "custom_resolver";
@@ -54432,6 +55009,835 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedMathematicsContractsChun
         };
         contracts.push_back(std::move(contract));
     }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.lp";
+        contract.profileId = "frog.studio.palette.math.optimization.lp.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Maximizes C\303\202\302\267X with M\303\202\302\267X \303\242\342\200\260\302\245 B and X \303\242\342\200\260\302\245 0 using two-phase simplex.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/optimization-llb/linear-programming-simplex-method-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "array<f64>", "array<f64,rank=2>" };
+        contract.overload.result = "f64";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Maximizes C\303\202\302\267X with M\303\202\302\267X \303\242\342\200\260\302\245 B and X \303\242\342\200\260\302\245 0 using two-phase simplex.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "c", "m", "b" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Maximizes C\303\202\302\267X with M\303\202\302\267X \303\242\342\200\260\302\245 B and X \303\242\342\200\260\302\245 0 using two-phase simplex.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 3U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.lp";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "c", std::vector<std::string>{  } },
+            FunctionPortAliases{ "m", std::vector<std::string>{  } },
+            FunctionPortAliases{ "b", std::vector<std::string>{  } },
+            FunctionPortAliases{ "maximum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "solution", std::vector<std::string>{  } },
+            FunctionPortAliases{ "ticks", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.qp.ip";
+        contract.profileId = "frog.studio.palette.math.optimization.qp.ip.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Minimizes a convex quadratic objective subject to linear equalities, inequalities and parameter bounds.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/quadratic-programming-ip-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "array<f64>", "cluster<Q:array<f64,rank=2>,c:array<f64>>", "cluster<minimum:array<f64>,maximum:array<f64>>", "cluster<A:array<f64,rank=2>,b:array<f64>>", "cluster<status:bool,code:i32,source:string>", "cluster<D:array<f64,rank=2>,minimum:array<f64>,maximum:array<f64>>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>" };
+        contract.overload.result = "array<f64>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Minimizes a convex quadratic objective subject to linear equalities, inequalities and parameter bounds.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "start", "objective", "bounds", "equalities", "error_in", "inequalities", "criteria" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Minimizes a convex quadratic objective subject to linear equalities, inequalities and parameter bounds.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 7U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.qp.ip";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "objective", std::vector<std::string>{  } },
+            FunctionPortAliases{ "bounds", std::vector<std::string>{  } },
+            FunctionPortAliases{ "equalities", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "inequalities", std::vector<std::string>{  } },
+            FunctionPortAliases{ "criteria", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "multipliers", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_out", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.qp.as";
+        contract.profileId = "frog.studio.palette.math.optimization.qp.as.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Minimizes a convex quadratic objective subject to linear equalities, inequalities and parameter bounds.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/quadratic-programming-as-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "bool", "array<f64>", "cluster<Q:array<f64,rank=2>,c:array<f64>>", "cluster<minimum:array<f64>,maximum:array<f64>>", "cluster<A:array<f64,rank=2>,b:array<f64>>", "cluster<status:bool,code:i32,source:string>", "cluster<D:array<f64,rank=2>,minimum:array<f64>,maximum:array<f64>>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>" };
+        contract.overload.result = "array<f64>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Minimizes a convex quadratic objective subject to linear equalities, inequalities and parameter bounds.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "warm_start", "start", "objective", "bounds", "equalities", "error_in", "inequalities", "criteria" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Minimizes a convex quadratic objective subject to linear equalities, inequalities and parameter bounds.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 8U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.qp.as";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "warm_start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "objective", std::vector<std::string>{  } },
+            FunctionPortAliases{ "bounds", std::vector<std::string>{  } },
+            FunctionPortAliases{ "equalities", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "inequalities", std::vector<std::string>{  } },
+            FunctionPortAliases{ "criteria", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "multipliers", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_out", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.unconstrained.quasi_newton.formula";
+        contract.profileId = "frog.studio.palette.math.optimization.unconstrained.quasi_newton.formula.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Finds a local minimum using Quasi-Newton with an explicit formula objective.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/quasi-newton-formula-string-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "array<string>", "string", "array<f64>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<status:bool,code:i32,source:string>" };
+        contract.overload.result = "array<f64>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Finds a local minimum using Quasi-Newton with an explicit formula objective.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "variables", "formula", "start", "criteria", "error_in" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Finds a local minimum using Quasi-Newton with an explicit formula objective.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 5U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.unconstrained.quasi_newton.formula";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "variables", std::vector<std::string>{  } },
+            FunctionPortAliases{ "formula", std::vector<std::string>{  } },
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "criteria", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "evaluations", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_out", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.unconstrained.quasi_newton.reference";
+        contract.profileId = "frog.studio.palette.math.optimization.unconstrained.quasi_newton.reference.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Finds a local minimum using Quasi-Newton with an explicit reference objective.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/quasi-newton-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "variant", "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:f64,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", "array<f64>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<status:bool,code:i32,source:string>" };
+        contract.overload.result = "array<f64>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Finds a local minimum using Quasi-Newton with an explicit reference objective.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "data", "function", "start", "criteria", "error_in" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Finds a local minimum using Quasi-Newton with an explicit reference objective.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 5U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.unconstrained.quasi_newton.reference";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "data", std::vector<std::string>{  } },
+            FunctionPortAliases{ "function", std::vector<std::string>{  } },
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "criteria", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "evaluations", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_out", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.unconstrained.conjugate_gradient.formula";
+        contract.profileId = "frog.studio.palette.math.optimization.unconstrained.conjugate_gradient.formula.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Finds a local minimum using Conjugate Gradient with an explicit formula objective.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/conjugate-gradient-formula-string-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "array<string>", "string", "array<f64>", "cluster<gradient_method:i32,line_minimization:i32>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<status:bool,code:i32,source:string>" };
+        contract.overload.result = "array<f64>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Finds a local minimum using Conjugate Gradient with an explicit formula objective.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "variables", "formula", "start", "cg_settings", "criteria", "error_in" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Finds a local minimum using Conjugate Gradient with an explicit formula objective.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 6U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.unconstrained.conjugate_gradient.formula";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "variables", std::vector<std::string>{  } },
+            FunctionPortAliases{ "formula", std::vector<std::string>{  } },
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cg_settings", std::vector<std::string>{  } },
+            FunctionPortAliases{ "criteria", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "evaluations", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_out", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.unconstrained.conjugate_gradient.reference";
+        contract.profileId = "frog.studio.palette.math.optimization.unconstrained.conjugate_gradient.reference.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Finds a local minimum using Conjugate Gradient with an explicit reference objective.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/conjugate-gradient-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "variant", "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:f64,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", "array<f64>", "cluster<gradient_method:i32,line_minimization:i32>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<status:bool,code:i32,source:string>" };
+        contract.overload.result = "array<f64>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Finds a local minimum using Conjugate Gradient with an explicit reference objective.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "data", "function", "start", "cg_settings", "criteria", "error_in" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Finds a local minimum using Conjugate Gradient with an explicit reference objective.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 6U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.unconstrained.conjugate_gradient.reference";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "data", std::vector<std::string>{  } },
+            FunctionPortAliases{ "function", std::vector<std::string>{  } },
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cg_settings", std::vector<std::string>{  } },
+            FunctionPortAliases{ "criteria", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "evaluations", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_out", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.unconstrained.simplex.formula";
+        contract.profileId = "frog.studio.palette.math.optimization.unconstrained.simplex.formula.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Finds a local minimum using Downhill Simplex with an explicit formula objective.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/downhill-simplex-formula-string-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "array<string>", "string", "array<f64>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<status:bool,code:i32,source:string>" };
+        contract.overload.result = "array<f64>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Finds a local minimum using Downhill Simplex with an explicit formula objective.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "variables", "formula", "start", "criteria", "error_in" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Finds a local minimum using Downhill Simplex with an explicit formula objective.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 5U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.unconstrained.simplex.formula";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "variables", std::vector<std::string>{  } },
+            FunctionPortAliases{ "formula", std::vector<std::string>{  } },
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "criteria", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "evaluations", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_out", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.unconstrained.simplex.reference";
+        contract.profileId = "frog.studio.palette.math.optimization.unconstrained.simplex.reference.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Finds a local minimum using Downhill Simplex with an explicit reference objective.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/downhill-simplex-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "variant", "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:f64,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", "array<f64>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<status:bool,code:i32,source:string>" };
+        contract.overload.result = "array<f64>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Finds a local minimum using Downhill Simplex with an explicit reference objective.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "data", "function", "start", "criteria", "error_in" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Finds a local minimum using Downhill Simplex with an explicit reference objective.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 5U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.unconstrained.simplex.reference";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "data", std::vector<std::string>{  } },
+            FunctionPortAliases{ "function", std::vector<std::string>{  } },
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "criteria", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "evaluations", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_out", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.constrained";
+        contract.profileId = "frog.studio.palette.math.optimization.constrained.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Finds a constrained local minimum by sequential quadratic programming with a merit line search.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/constrained-nonlinear-optimization-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "variant", "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:f64,out_equalities:array<f64>,out_inequalities:array<f64>,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", "array<f64>", "cluster<minimum:array<f64>,maximum:array<f64>>", "cluster<active:array<i32>,multipliers:array<f64>,hessian:array<f64,rank=2>>", "cluster<constraint_weight:f64,max_minor_iterations:i32>", "cluster<function_tolerance:f64,parameter_tolerance:f64,gradient_tolerance:f64,max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<status:bool,code:i32,source:string>" };
+        contract.overload.result = "i32";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Finds a constrained local minimum by sequential quadratic programming with a merit line search.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "data", "function", "start", "bounds", "constraint_bounds", "beginning_state", "sqp_settings", "criteria", "error_in" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Finds a constrained local minimum by sequential quadratic programming with a merit line search.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 9U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.constrained";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "data", std::vector<std::string>{  } },
+            FunctionPortAliases{ "function", std::vector<std::string>{  } },
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "bounds", std::vector<std::string>{  } },
+            FunctionPortAliases{ "constraint_bounds", std::vector<std::string>{  } },
+            FunctionPortAliases{ "beginning_state", std::vector<std::string>{  } },
+            FunctionPortAliases{ "sqp_settings", std::vector<std::string>{  } },
+            FunctionPortAliases{ "criteria", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "evaluations", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "ending_state", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_out", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.global";
+        contract.profileId = "frog.studio.palette.math.optimization.global.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Searches bounded parameters by differential evolution and retains vector objectives and Pareto candidates; no global optimum guarantee.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/numericaloptimization/global-optimization-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "variant", "ref<connectivity.document.strict,cluster<in_parameters:array<f64>,in_data:variant,out_value:array<f64>,out_equalities:array<f64>,out_inequalities:array<f64>,out_diagnostic:cluster<status:bool,code:i32,source:string>>>", "cluster<minimum:array<f64>,maximum:array<f64>>", "array<f64,rank=2>", "cluster<population:cluster<parameters:array<f64,rank=2>,objectives:array<f64,rank=2>,equalities:array<f64,rank=2>,inequalities:array<f64,rank=2>,base_index:i32>,pareto:array<i32>>", "cluster<population_size:i32,scale:f64,crossover_rate:f64,mutation:i32,crossover:i32,bound_mapping:i32,seed:u64>", "cluster<max_iterations:i32,max_function_calls:i32,max_time:f64>", "cluster<status:bool,code:i32,source:string>" };
+        contract.overload.result = "array<f64>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Searches bounded parameters by differential evolution and retains vector objectives and Pareto candidates; no global optimum guarantee.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "data", "function", "bounds", "initial_parameters", "beginning_state", "evolution", "criteria", "error_in" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Searches bounded parameters by differential evolution and retains vector objectives and Pareto candidates; no global optimum guarantee.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 8U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.global";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "data", std::vector<std::string>{  } },
+            FunctionPortAliases{ "function", std::vector<std::string>{  } },
+            FunctionPortAliases{ "bounds", std::vector<std::string>{  } },
+            FunctionPortAliases{ "initial_parameters", std::vector<std::string>{  } },
+            FunctionPortAliases{ "beginning_state", std::vector<std::string>{  } },
+            FunctionPortAliases{ "evolution", std::vector<std::string>{  } },
+            FunctionPortAliases{ "criteria", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "ending_state", std::vector<std::string>{  } },
+            FunctionPortAliases{ "evaluations", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_out", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.brent";
+        contract.profileId = "frog.studio.palette.math.optimization.brent.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Refines a strict 1D minimum bracket using derivatives.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/brent-with-derivatives-1d-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "f64", "string" };
+        contract.overload.result = "f64";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Refines a strict 1D minimum bracket using derivatives.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "accuracy", "a", "b", "c", "formula" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Refines a strict 1D minimum bracket using derivatives.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 5U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.brent";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "accuracy", std::vector<std::string>{  } },
+            FunctionPortAliases{ "a", std::vector<std::string>{  } },
+            FunctionPortAliases{ "b", std::vector<std::string>{  } },
+            FunctionPortAliases{ "c", std::vector<std::string>{  } },
+            FunctionPortAliases{ "formula", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "ticks", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.golden";
+        contract.profileId = "frog.studio.palette.math.optimization.golden.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Refines a strict 1D minimum bracket without derivatives.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/golden-section-1d-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "f64", "string" };
+        contract.overload.result = "f64";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Refines a strict 1D minimum bracket without derivatives.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "accuracy", "a", "b", "c", "formula" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Refines a strict 1D minimum bracket without derivatives.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 5U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.golden";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "accuracy", std::vector<std::string>{  } },
+            FunctionPortAliases{ "a", std::vector<std::string>{  } },
+            FunctionPortAliases{ "b", std::vector<std::string>{  } },
+            FunctionPortAliases{ "c", std::vector<std::string>{  } },
+            FunctionPortAliases{ "formula", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "ticks", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.cg_nd";
+        contract.profileId = "frog.studio.palette.math.optimization.cg_nd.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Finds a local minimum with Fletcher\303\242\342\202\254\342\200\234Reeves or Polak\303\242\342\202\254\342\200\234Ribi\303\203\302\250re conjugate gradients and the selected line search.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/conjugate-gradient-nd-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "f64", "i32", "array<f64>", "array<string>", "string" };
+        contract.overload.result = "array<f64>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Finds a local minimum with Fletcher\303\242\342\202\254\342\200\234Reeves or Polak\303\242\342\202\254\342\200\234Ribi\303\203\302\250re conjugate gradients and the selected line search.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "accuracy", "gradient_method", "line_minimization", "start", "variables", "formula" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Finds a local minimum with Fletcher\303\242\342\202\254\342\200\234Reeves or Polak\303\242\342\202\254\342\200\234Ribi\303\203\302\250re conjugate gradients and the selected line search.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 6U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.cg_nd";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "accuracy", std::vector<std::string>{  } },
+            FunctionPortAliases{ "gradient_method", std::vector<std::string>{  } },
+            FunctionPortAliases{ "line_minimization", std::vector<std::string>{  } },
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "variables", std::vector<std::string>{  } },
+            FunctionPortAliases{ "formula", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "ticks", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.simplex_nd";
+        contract.profileId = "frog.studio.palette.math.optimization.simplex_nd.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Finds a local minimum with a coupled Nelder\303\242\342\202\254\342\200\234Mead simplex generated from the start point.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/downhill-simplex-nd-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "f64", "array<f64>", "array<string>", "string" };
+        contract.overload.result = "array<f64>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Finds a local minimum with a coupled Nelder\303\242\342\202\254\342\200\234Mead simplex generated from the start point.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "accuracy", "start", "variables", "formula" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Finds a local minimum with a coupled Nelder\303\242\342\202\254\342\200\234Mead simplex generated from the start point.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 4U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.simplex_nd";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "accuracy", std::vector<std::string>{  } },
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "variables", std::vector<std::string>{  } },
+            FunctionPortAliases{ "formula", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minimum", std::vector<std::string>{  } },
+            FunctionPortAliases{ "cost", std::vector<std::string>{  } },
+            FunctionPortAliases{ "ticks", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.minima_1d";
+        contract.profileId = "frog.studio.palette.math.optimization.minima_1d.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Samples an interval and refines detected local minima; finite sampling cannot guarantee exhaustive discovery.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/find-all-minima-1d-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "f64", "i32", "string" };
+        contract.overload.result = "array<f64>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Samples an interval and refines detected local minima; finite sampling cannot guarantee exhaustive discovery.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "accuracy", "step_type", "algorithm", "start", "end", "formula" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Samples an interval and refines detected local minima; finite sampling cannot guarantee exhaustive discovery.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 6U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.minima_1d";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "accuracy", std::vector<std::string>{  } },
+            FunctionPortAliases{ "step_type", std::vector<std::string>{  } },
+            FunctionPortAliases{ "algorithm", std::vector<std::string>{  } },
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "end", std::vector<std::string>{  } },
+            FunctionPortAliases{ "formula", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minima", std::vector<std::string>{  } },
+            FunctionPortAliases{ "costs", std::vector<std::string>{  } },
+            FunctionPortAliases{ "ticks", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.minima_nd";
+        contract.profileId = "frog.studio.palette.math.optimization.minima_nd.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Runs local searches from random points in a box and returns distinct minima as rows; discovery is not exhaustive.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/find-all-minima-nd-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "f64", "i32", "array<f64>", "array<string>", "string" };
+        contract.overload.result = "array<f64,rank=2>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Runs local searches from random points in a box and returns distinct minima as rows; discovery is not exhaustive.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "accuracy", "algorithm", "gradient_method", "line_minimization", "trials", "start", "end", "variables", "formula" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Runs local searches from random points in a box and returns distinct minima as rows; discovery is not exhaustive.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 9U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.minima_nd";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "accuracy", std::vector<std::string>{  } },
+            FunctionPortAliases{ "algorithm", std::vector<std::string>{  } },
+            FunctionPortAliases{ "gradient_method", std::vector<std::string>{  } },
+            FunctionPortAliases{ "line_minimization", std::vector<std::string>{  } },
+            FunctionPortAliases{ "trials", std::vector<std::string>{  } },
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "end", std::vector<std::string>{  } },
+            FunctionPortAliases{ "variables", std::vector<std::string>{  } },
+            FunctionPortAliases{ "formula", std::vector<std::string>{  } },
+            FunctionPortAliases{ "minima", std::vector<std::string>{  } },
+            FunctionPortAliases{ "costs", std::vector<std::string>{  } },
+            FunctionPortAliases{ "ticks", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "math.optimization.chebyshev";
+        contract.profileId = "frog.studio.palette.math.optimization.chebyshev.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Approximates a formula in the Chebyshev basis and evaluates it on an equidistant grid.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/gmath/opti-llb/chebyshev-approximation-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "i32", "f64", "string" };
+        contract.overload.result = "array<f64>";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Approximates a formula in the Chebyshev basis and evaluates it on an equidistant grid.";
+        contract.variadicity.enabled = false;
+        contract.variadicity.portOrder = std::vector<std::string>{ "points", "start", "end", "order", "formula" };
+        contract.arrayPolicy.shapeRule = "exact_real_dbl_rank_and_structured_constraint_signature";
+        contract.arrayPolicy.scalarLift = false;
+        contract.arrayPolicy.broadcasting = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Approximates a formula in the Chebyshev basis and evaluates it on an equidistant grid.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 5U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = true;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.math.optimization.chebyshev";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.math.optimization.owned@1";
+        contract.runtimeAvailability.notes = "Exact owned native service; target admission and end-to-end qualification remain separately attributed.";
+        contract.presentation = FunctionContractPresentation{ "square", "none" };
+        contract.portAliases = {
+            FunctionPortAliases{ "points", std::vector<std::string>{  } },
+            FunctionPortAliases{ "start", std::vector<std::string>{  } },
+            FunctionPortAliases{ "end", std::vector<std::string>{  } },
+            FunctionPortAliases{ "order", std::vector<std::string>{  } },
+            FunctionPortAliases{ "formula", std::vector<std::string>{  } },
+            FunctionPortAliases{ "coefficients", std::vector<std::string>{  } },
+            FunctionPortAliases{ "x", std::vector<std::string>{  } },
+            FunctionPortAliases{ "y", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
 }
 void appendGeneratedMathematicsContracts(std::vector<FunctionBindingContract> &contracts) {
     appendGeneratedMathematicsContractsChunk0(contracts);
@@ -57968,7 +59374,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedCollectionContracts(std:
 }
 std::vector<FunctionBindingContract> generatedFunctionBindingContracts() {
     std::vector<FunctionBindingContract> contracts;
-    contracts.reserve(892U);
+    contracts.reserve(910U);
     appendGeneratedStructuresContracts(contracts);
     appendGeneratedNumericContracts(contracts);
     appendGeneratedBooleanContracts(contracts);

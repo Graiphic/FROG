@@ -1,0 +1,25 @@
+{
+  "format": "frog.public.frontend-checkpoint.v1",
+  "date": "2026-11-12",
+  "frontend": {
+    "software": "0.2.0-local",
+    "api": 3,
+    "content_sha256": "c815f0a1e9d5f466598f5e780cec556d3b046d71b326b98502bee49f7f0df9a9"
+  },
+  "studio": {
+    "version": "0.0.8.094",
+    "sha256": "E9F4A4CD556543851299B571C5465312E1819A980EB7AE12A378FF88581ED499"
+  },
+  "qualification": {
+    "basis": "Previously executed finite Studio tests retain their individual source and binary identities; this publication adds no product qualification",
+    "standalone_public_build": "NOT RERUN for this source checkpoint",
+    "publication_tool_checks": "Recorded separately in the canonical Context publication report"
+  },
+  "limits": [
+    "Source publication, not a tagged binary release",
+    "No new Studio/Runtime rebuild, global CTest or clean-machine qualification",
+    "Studio pin retained exactly",
+    "T385 has 36/37 latest targeted identities passing; missing diagnostic node identity remains a failure",
+    "T385 final manual exported Run and manual palette placement remain unqualified"
+  ]
+}

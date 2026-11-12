@@ -57,6 +57,13 @@ const FunctionBindingDefinition *functionBindingDefinitionForNode(const DiagramN
         }();return &definitions[d-1];
     }
 
+    if(node.kind=="fitting_model_reference"&&optimizationReferenceKind(node.type)) {
+        static const auto definitions=[] {std::array<FunctionBindingDefinition,3> out;
+            for(unsigned k=1;k<=3;++k){auto &d=out[k-1];d.implementationId=optimizationReferenceOperation(k);
+                FunctionPortBinding p;p.portId="reference";p.displayName="Objective Reference";p.direction=FunctionPortDirection::Output;
+                p.typeExpression=optimizationReferenceSchema(k);p.defaultValueType=p.typeExpression;p.connectionPolicy=FunctionPortConnectionPolicy::Exact;d.ports.push_back(std::move(p));}
+            return out;}();return &definitions[optimizationReferenceKind(node.type)-1];
+    }
     if(node.kind=="fitting_model_reference"&&node.type==fittingModelReferenceOperation) {
         static const auto model=[] {
             FunctionBindingDefinition result;

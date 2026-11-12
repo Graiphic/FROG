@@ -19,7 +19,8 @@ void scalarProfileDiagnostics(const NativeCallConfiguration &config,NativeCallVa
         if(!supported)result.diagnostics.push_back({std::move(code),std::move(message),std::move(id),
             NativeCallDiagnosticCategory::Unavailable,NativeCallDiagnosticSeverity::Error});
     };
-    unavailable(config.thread==NativeCallThread::Any,"scalar_thread_unavailable","The exact scalar service admits Any execution only; Ui needs its own real dispatcher.");
+    // Ui is a valid scalar signature. Its real dispatcher is a host admission
+    // requirement, not a structural restriction of the portable configuration.
     unavailable(!config.library.specifyPathOnDiagram,"scalar_dynamic_path_unavailable","Dynamic path input/output ports are outside the exact scalar service.");
     unavailable(config.callbacks.reserve.empty()&&config.callbacks.unreserve.empty()&&config.callbacks.abort.empty(),
         "scalar_callbacks_unavailable","The exact scalar service does not admit lifecycle callback configurations.");

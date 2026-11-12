@@ -253,7 +253,12 @@ static BindingResult resolvePolymorphicFunctionImpl(const DiagramNode &node,
                 const auto &leaf = replacementRank ? replacement.children.front() : replacement;
                 const auto compatible = connect(leaf, data.children.front(), ConnectionPolicy::NumericImplicit);
                 if (!compatible.accepted()) return {compatible, false, {}};
+                // The source Array owns the element schema. Keep the admitted
+                // slice/block rank, but expose its receiver representation so
+                // Source/FIR can derive the existing NumericImplicit conversion.
                 valueType = replacement;
+                if (replacementRank) valueType.children.front() = data.children.front();
+                else valueType = data.children.front();
                 complete = complete && value.complete;
             }
             if (group == requested->group) requestedValue = std::move(valueType);

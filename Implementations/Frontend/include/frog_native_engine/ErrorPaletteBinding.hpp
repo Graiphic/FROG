@@ -1,5 +1,6 @@
 #pragma once
 #include "frog_native_engine/FrogDraftData.hpp"
+#include "frog_native_engine/CanonicalErrorHandlingNative.hpp"
 #include "frog_native_engine/FunctionBindingCatalog.hpp"
 #include "frog_native_engine/BindingType.hpp"
 #include "frog_native_engine/FunctionErrorPortLayout.hpp"
@@ -11,7 +12,6 @@
 #include <cmath>
 
 namespace frog::native_engine {
-inline constexpr std::string_view kErrorClusterType = "cluster<status:bool,code:i32,source:string>";
 // Expanded Error constants use compact editable fields, independently of the
 // larger standalone palette defaults. Keep a clear gutter around each field.
 inline constexpr double kErrorConstantPadding = 2.0;

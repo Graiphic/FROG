@@ -810,15 +810,15 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/manifests/function-bindings/studio.function-bindings.v2.inc",
       "path": "manifests/function-bindings/studio.function-bindings.v2.inc",
-      "sha256": "12a1c4b3d0cfdedd1520fb76674b545b6ca24b05d5321f32ebeaf7ec1339a6a9",
-      "bytes": 5863698,
+      "sha256": "0380047c9a60b03e697349f6528c9d450bfae8ff7f634d9ceefe83ab931b972a",
+      "bytes": 6000003,
       "ownership": "snapshot"
     },
     {
       "upstream": "FROG-STUDIO/native-portable-engine/manifests/math/entries.inc",
       "path": "manifests/math/entries.inc",
-      "sha256": "7ad1f70a62c44c313f532a950cb5888f1a3de1b81e8892fcfc0cea39762bcfd4",
-      "bytes": 105120,
+      "sha256": "23cde4e98dd421ededd210609ee97281d70577ec49eb46d829ef7d30d096b2c6",
+      "bytes": 109305,
       "ownership": "snapshot"
     },
     {
@@ -880,8 +880,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalComposedExecutionIr.cpp",
       "path": "src/CanonicalComposedExecutionIr.cpp",
-      "sha256": "7d80f02874f5ceec1b1aa388d53031fa0dc0439848c143086684b3a7b1219dbd",
-      "bytes": 132721,
+      "sha256": "d2519cdc13065932dd155533dd9c7e00b4675392292816dd068a22b30b8f1c07",
+      "bytes": 135277,
       "ownership": "move"
     },
     {
@@ -1305,8 +1305,8 @@
       "path": "src/CanonicalComposedDraftMigration.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalComposedDraftMigration.cpp",
       "ownership": "moved",
-      "sha256": "7b5b51a69acbcdbddb08fdaff17962336b197a66426d20ea5f375a85c6c7262b",
-      "bytes": 223660
+      "sha256": "44f6652c03669b7d846530ef02708434b625160bf49f6705102cfa8b8775191b",
+      "bytes": 227221
     },
     {
       "path": "src/CanonicalComposedDraftMigration.hpp",
@@ -1467,8 +1467,8 @@
       "path": "src/DiagramBindingResolver.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/DiagramBindingResolver.cpp",
       "ownership": "split",
-      "sha256": "36b744b7b03be912f5e42bd9617b23a0e59850409885e6c949bac87c89539c5b",
-      "bytes": 154758,
+      "sha256": "892b311d8510b58e6f967055574ab4541ec5706f59100f647a752f43d6cbad67",
+      "bytes": 158827,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/src/DiagramBindingResolver.cpp",
@@ -1580,8 +1580,8 @@
       "path": "src/DraftSemanticPreparation.cpp",
       "upstream": "FROG/Implementations/Frontend/src/DraftSemanticPreparation.cpp",
       "ownership": "created",
-      "sha256": "c4eaf8380262e4e3b7351edefb44a9b2555dd3033fa370a9de619188a4e97751",
-      "bytes": 35643
+      "sha256": "7d9949751ec0a2b41d477d24fcb793f3d10be7bf6b1584a8477ef8c15a841f09",
+      "bytes": 35642
     },
     {
       "path": "src/DraftSubFrogExecutionProjection.cpp",
@@ -2002,8 +2002,8 @@
       "path": "src/FrogDraftReader.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocument.cpp",
       "ownership": "split",
-      "sha256": "5afa4d424c9b838006991833152d35a95fca5aa5abdc81d812af54de4ed0c7d3",
-      "bytes": 238498,
+      "sha256": "5c2e40eacb6502f09f65162c7297d03ebcd5af5491c05516748d8a49cd8fe7d9",
+      "bytes": 243027,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/src/FrogDocument.cpp",
@@ -2043,8 +2043,8 @@
       "path": "src/FrogDraftWriter.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentSerialization.cpp",
       "ownership": "split",
-      "sha256": "1ca3ddf15876afff42fbb8bec9098b38483551e0617063441730d8f439804971",
-      "bytes": 168090,
+      "sha256": "baf4fbf23d9092ebcce8f67fd0c28bf9b44e6ced2d0f691021108f9a6d12d513",
+      "bytes": 171468,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/src/FrogDocumentSerialization.cpp",
@@ -5495,22 +5495,22 @@
       "path": "src/FittingNodeBinding.cpp",
       "upstream": "FROG/Implementations/Frontend/src/FittingNodeBinding.cpp",
       "ownership": "native",
-      "sha256": "437bf600f4c13dfb2d9a5975e6cc7488c6817b1c94d958b25af31cc7be8dca80",
-      "bytes": 5184
+      "sha256": "b0ea3651b7cac16c3be2e3862952b7c5b8657a2acded240a429c060187406712",
+      "bytes": 5887
     },
     {
       "path": "include/frog_native_engine/FittingNodeBinding.hpp",
       "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/FittingNodeBinding.hpp",
       "ownership": "native",
-      "sha256": "e4df184d208df40bedbc24abefe91dab2a1d245b70e04702f762fe17c082c973",
-      "bytes": 991
+      "sha256": "1d93ce8538950847ef363f58c6c3540f06793560671f98f20e2f47fdcf9be4dd",
+      "bytes": 2968
     },
     {
       "path": "src/FittingModelPreparation.cpp",
       "upstream": "FROG/Implementations/Frontend/src/FittingModelPreparation.cpp",
       "ownership": "native",
-      "sha256": "92633955dd09e6c5b47f712addb0a2d7e3de6aa5759c62bea101dbd72583e57d",
-      "bytes": 32833
+      "sha256": "7b339b3eca5aff08de0288ef452a8fac3bfa30aeb79e93b9f2cf6ea06e9f109d",
+      "bytes": 33393
     },
     {
       "path": "include/frog_native_engine/FittingModelPreparation.hpp",
@@ -5992,6 +5992,14 @@
       "sha256": "910facb2e3442e42a6952c514223c4502d95ed957bf7dc73982b3b03785b361b",
       "bytes": 1175,
       "integration": "T298 exact existing Studio document codec, 2026-11-09; no new version or dependency"
+    },
+    {
+      "path": "include/frog_native_engine/OptimizationBinding.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/OptimizationBinding.hpp",
+      "ownership": "native",
+      "sha256": "2d745f56dfc0c699c4d9512def5b1935ead649a073182a6c3f6b74801a743c27",
+      "bytes": 3752,
+      "integration": "T306 exact Optimization Source/FIR metadata; numerical implementation owned by Runtime"
     }
   ],
   "repository_baselines": {

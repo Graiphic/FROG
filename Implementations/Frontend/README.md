@@ -18,6 +18,15 @@ is separate from a tagged binary release and does not update Studio's pin automa
 The existing Zstandard 1.5.7 document codec now includes its bounded writer as well
 as its decoder; original BSD notices and the selected third-party licence remain intact.
 
+## Source checkpoint — 12 November 2026
+
+The current sources retain candidate software `0.2.0-local` and public API 3.
+Their production content is `c815f0a1e9d5f466598f5e780cec556d3b046d71b326b98502bee49f7f0df9a9`, consumed by Studio `0.0.8.094`.
+The [dated source checkpoint](../../docs/frontend-checkpoint-2026-11-12.json)
+separates these source identities from prior finite application tests. No new
+standalone public build or tagged binary release is claimed for this publication;
+Studio's existing pin is preserved. Original third-party notices remain intact.
+
 ## Public contract and versions
 
 Consumers use [`frog/frontend.h`](snapshot/api/frog/frontend.h), installed as `include/frog/frontend.h`, and target `Frog::frog-frontend`. The `include/frog_native_engine` headers, C++ owners and `runOperation` are implementation details shared with Studio, without a guaranteed public C++ ABI.
