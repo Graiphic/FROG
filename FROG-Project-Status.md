@@ -1,5 +1,13 @@
 <h1>FROG Project Status</h1>
 
+<p><strong>Public source checkpoint — 12 November 2026:</strong>
+the <a href="docs/frontend-checkpoint-2026-11-12.json">receipt</a> identifies the
+shared Frontend 0.2.0-local API 3 consumed by Studio 0.0.8.094. The release scope
+is source publication. Standalone-build evidence for the earlier source kit
+remains in the dated 9 November receipt below. The
+<a href="Strategy/Inspection-and-Assurance.md#trace-one-program-through-the-stages">public example dossier</a>
+shows the distinction between representation, validation and execution.</p>
+
 <h2 id="strategy-and-assurance-review-2026-11-11">Project philosophy and capability review — 11 November 2026</h2>
 
 <p>The <a href="docs/frontend-checkpoint-2026-11-09.json">9 November public Frontend checkpoint</a>

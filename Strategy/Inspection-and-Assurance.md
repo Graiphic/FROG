@@ -1,6 +1,6 @@
 # Inspection, execution and evidence
 
-**Supporting guide · reviewed 11 November 2026**
+**Supporting guide · reviewed 11 November 2026 · public example added 13 November 2026**
 
 The [project philosophy](Visual-Programming-and-Human-Control.md) focuses on the human capacity to follow and validate machine-generated code. FROG serializes a structured program model in `.frog`; Studio projects it into navigable graphical dataflow. This guide explains the supporting evidence used to understand changes and check their results.
 
@@ -18,6 +18,12 @@ The [project philosophy](Visual-Programming-and-Human-Control.md) focuses on the
 | What was deployed? | Build result, program revision, dependencies and configuration | Captures the compiled package; execution remains a separate check. |
 
 Source identities and source maps help connect the human view to execution. They are not themselves proof of translation correctness. A relevant change invalidates old conclusions about the behavior affected; an old observation cannot stand for the newly generated candidate.
+
+## Trace one program through the stages
+
+[Example 02, UI Value Roundtrip](../Examples/02_ui_value_roundtrip/Readme.md), shows how two F64 control values flow through Add to one indicator. A reviewer can locate the control and indicator bindings, follow the edges and identify the operation to inspect. The dossier links the Source, FIR, lowering artifact, reference-runtime acceptance and optional LLVM proof. Its [expected native outputs](../Implementations/Reference/LLVM/examples/02_ui_value_roundtrip/expected-output.json) are 3.0 for inputs 1.0 and 2.0, and 10.0 for inputs 4.5 and 5.5.
+
+Each artifact supports a different check. The Source describes the program, FIR records resolved meaning and lowering prepares it for a backend. An execution result applies to the identified input and artifact. This example exercises value bindings and addition. Claims about graphical rendering, import fidelity, review effort or standalone deployment require their own evidence.
 
 ## A complete example and a meaningful comparison
 

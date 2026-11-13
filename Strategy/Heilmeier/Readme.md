@@ -1,6 +1,6 @@
 # FROG and Graiphic Studio — Heilmeier framing
 
-**Human oversight of code generation · general project framing reviewed 11 November 2026 · Non-normative**
+**Human oversight of code generation · general framing reviewed 11 November 2026 · capability references updated 13 November 2026 · Non-normative**
 
 The project aims to increase human capacity to follow, understand and validate machine-generated software. FROG provides a structured program model serialized in `.frog`; Studio projects it into graphical dataflow for human comprehension and intervention. FIR and downstream IR connect the program to supported compilation and execution.
 
@@ -54,7 +54,7 @@ Two entry routes are intended: direct FROG generation and declared translations 
 
 The graphical abstraction uses connections and perceptual cues to expose relationships, with hierarchy from overview to detail. The calculator illustrates the idea: about 1,000 C/H lines correspond to an application whose architecture can be shown on one graphical page with navigable cases. The source and overview expose different detail, so this is an illustration of abstraction, not a measured productivity result or evidence of an automatic importer.
 
-The technical foundation includes public language/FIR contracts, the common C++ Frontend library/CLI and selected Studio normal Run, Highlight and LLVM/native paths on Windows/x86-64. The [9 November checkpoint](../../docs/frontend-checkpoint-2026-11-09.json) identifies its own finite evidence. Graphs, serialization and IR are established techniques; the contribution to establish is their effective integration for human oversight.
+The technical foundation includes public language and FIR contracts, the common C++ Frontend library and CLI, and selected Studio Run, Highlight and LLVM/native paths on Windows x64. The [12 November source checkpoint](../../docs/frontend-checkpoint-2026-11-12.json) identifies the Frontend consumed by Studio 0.0.8.094. The [9 November checkpoint](../../docs/frontend-checkpoint-2026-11-09.json) records separate standalone checks for its source kit. The contribution to establish is how effectively these techniques support human oversight.
 
 A graphical abstraction can target efficient native execution. Efficiency depends on algorithms, semantics, data representation, runtime requirements, IR quality, optimization and hardware. Using an established backend is a sound direction, not a guarantee of equal performance for every language or program.
 
@@ -115,7 +115,7 @@ The calculator is an initial demonstration because its inputs and outputs are fa
 
 For comparative claims, use equivalent requirements and information. Measure correct understanding, valid changes, effort and mistaken confidence. For performance comparisons, control algorithm, semantics, inputs, target and configuration; a shared compiler name alone is insufficient.
 
-These are evaluation requirements, not results reported by this update. A bounded success does not qualify every language importer, palette function or deployment target.
+The [public UI Value Roundtrip dossier](../../Examples/02_ui_value_roundtrip/Readme.md) provides a small technical baseline with Source, FIR, lowering, acceptance outputs and an optional native proof. A human evaluation still needs defined tasks, equivalent information, observed errors and recorded effort. Establish importer, palette and target coverage for each scope claimed.
 
 <a id="what-is-already-demonstrated-in-the-repository"></a>
 ## Existing foundation and remaining work

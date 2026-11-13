@@ -1,6 +1,6 @@
 # Visual programming and human control
 
-**Human oversight of code generation · project philosophy reviewed 11 November 2026 · Non-normative**
+**Human oversight of code generation · philosophy reviewed 11 November 2026 · capability references updated 13 November 2026 · Non-normative**
 
 Graiphic's strategic focus is to increase the human capacity to follow, understand and validate software as machine generation expands. The strategic premise is that generated code becomes routine in software production, while some engineering processes continue to require human review and acceptance. Producing a candidate program and understanding what one is accepting have different costs.
 
@@ -27,10 +27,12 @@ Direct FROG authoring or generation ---------------------------+
                                                               v
                                                 FROG program (.frog)
                                                    /             \
-                                  navigable dataflow             FIR / IR
-                                  human review/change      lowering and compiler
-                                                   \             target execution
-                                                    same program revision
+                             Studio's navigable diagram     common Frontend
+                                  human review/change      validation and FIR
+                                                   \        target admission
+                                                    \      lowering/backend IR
+                                                     \     compiler and target
+                                                      same program revision
 ```
 
 Human inspection should retain high-level structure and meaningful names. Compilation needs precise types, operations and effects. These are related views of the same program, with different responsibilities. A low-level machine IR alone may no longer contain the hierarchy useful to the reader.
@@ -71,7 +73,7 @@ C, C++, Rust, Java and Python are abstractions, but they also define execution s
 
 [LLVM's frontend guidance](https://www.llvm.org/docs/Frontend/PerformanceTips.html) explains how IR construction and language-specific information influence optimization. [MLIR's rationale](https://mlir.llvm.org/docs/Rationale/Rationale/) describes progressive lowering across abstraction levels. These support the architectural approach; they do not qualify a particular FROG bridge or add a new compiler dependency.
 
-The existing foundation includes the public common Frontend and selected normal Run, Highlight and LLVM/native paths on Windows/x86-64. The [9 November checkpoint](../docs/frontend-checkpoint-2026-11-09.json), [project status](../FROG-Project-Status.md) and individual dossiers retain their own scope. Broader imports and deployment targets require independent work and evidence within the maintained roadmap.
+The existing foundation includes the public common Frontend and selected Studio Run, Highlight and LLVM/native paths on Windows x64. The [12 November source checkpoint](../docs/frontend-checkpoint-2026-11-12.json) identifies the Frontend consumed by Studio 0.0.8.094. It records a source publication. The [9 November checkpoint](../docs/frontend-checkpoint-2026-11-09.json) retains the standalone-build evidence for its own source kit. The [evidence guide](Inspection-and-Assurance.md#trace-one-program-through-the-stages) follows a public example through the stages. Broader imports and targets require their own qualification.
 
 ## Evaluate ideas by their value to the project
 
