@@ -16,14 +16,16 @@ structured model in <code>.frog</code>; Studio projects it into graphical datafl
 for comprehension and intervention. FIR/IR support qualified compilation and
 execution. Specialized DARPA collaboration options remain separate.</p>
 
-<p><strong>Public implementation evidence — 9 November 2026:</strong>
+<p><strong>Published Frontend sources — 12 November 2026:</strong>
 The <a href="Implementations/Frontend/README.md">common C++ Frontend library and CLI</a>
 and the <a href="Implementations/Bridges/reference-c/README.md">finite reference C bridge</a>
-are available as source. The <a href="docs/frontend-checkpoint-2026-11-09.json">9 November checkpoint</a>
-identifies Frontend <code>0.2.0-local</code>, API 3, the qualified source kit and its finite results.
-It follows the <a href="docs/frontend-checkpoint-2026-11-02.json">2 November source checkpoint</a>.
-Publication is separate from a tagged binary release, whole-product support,
-clean-machine qualification and application-level correctness proof.</p>
+are available as source. The <a href="docs/frontend-checkpoint-2026-11-12.json">12 November checkpoint</a>
+identifies Frontend <code>0.2.0-local</code>, API 3, as used by Studio 0.0.8.094.
+The <a href="docs/frontend-checkpoint-2026-11-09.json">9 November checkpoint</a>
+and <a href="docs/frontend-checkpoint-2026-11-02.json">initial 2 November checkpoint</a>
+retain their own standalone qualification. The
+<a href="docs/studio-source-compatibility.md#coverage-matrix">Source and Studio draft coverage matrix</a>
+identifies the formats, profiles and versions exercised.</p>
 
 <p><strong>Frontend interoperability contracts:</strong>
 <a href="docs/frontend-tools-guide.md">Validation, FIR derivation and external-tool integration</a>;

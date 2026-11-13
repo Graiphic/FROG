@@ -36,7 +36,7 @@ Consumers use [`frog/frontend.h`](snapshot/api/frog/frontend.h), installed as `i
 | Software | `0.2.0-local`; base commit and content SHA256 in describe/provenance |
 | C ABI | `3`; exact structure sizes, reserved fields zeroed |
 | Public Source | `frog.source`, version `0.1` |
-| Historical documents | `frog.document.draft`, explicit revisions `0` through `9` |
+| Studio documents | `frog.document.draft`, explicit reader revisions `0` through `9`. See the [writer and recovery coverage matrix](../../docs/studio-source-compatibility.md#coverage-matrix). |
 | FIR | `frog.execution_ir`, version `0.1` |
 | JSON results | Diagnostics `0.2`, context/provenance `0.3`, capabilities `0.2`, maps `0.1` |
 | Semantic profiles | Their own identities and revisions, preserved in FIR/provenance |

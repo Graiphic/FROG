@@ -1,43 +1,42 @@
 # Studio numeric array storage profile, version 1
 
-Implementation record updated 14 October 2026 against Studio's serializer.
-This document describes an opt-in **Studio authoring adapter**, not an amendment
-to public FROG `spec_version: "0.1"`. The [current reconciliation](studio-reconciliation-2026-10-14.md)
-separates existing product qualification from static documentation checks. No
-new Array-storage execution qualification is claimed by this update.
+Implementation notes reconciled 13 November 2026. The compact records are
+part of the Studio authoring profile. The
+[14 October reconciliation](studio-reconciliation-2026-10-14.md) retains the
+original rollout evidence. See the [coverage matrix](studio-source-compatibility.md)
+for the current evidence on persistence and Run.
 
 ## Envelope and author intent
 
-The format is `frog.document.draft`, and Readable remains the default storage
-mode. An ordinary document with no newer feature requirement writes revision 2.
-Selecting Automatic or Compact standalone requires at least revision 3 and emits
-this root property:
+The format is `frog.document.draft`. Automatic is the current default for new
+documents and when loading a document without Storage. The ordinary writer
+records all three modes, including explicit Readable, starting at revision 3:
 
 ```json
 "storage": { "version": 1, "array_mode": "automatic" }
 ```
 
-The three tokens are `readable`, `automatic` and `compact_standalone`. Absence
-means Readable. Unknown versions or modes are errors. Changing this choice must
+The three tokens are `readable`, `automatic` and `compact_standalone`.
+Unknown versions or modes are errors. Changing this choice must
 not change identities, types, shape, rank, field order, viewport or values.
 The complete document determines the final revision: exact integer state can
-require 4, complex state 5, Application Control 6 and Connectivity 7. These
-requirements compose with the storage mode; revision 6 or 7 does not imply that
-Array storage is disabled. Conversely, Readable mode does not force a newer
-feature back to revision 2. See the [writer profile](../Expression/Studio%20authoring%20document%20profile%20v1.md).
+require 4, complex state 5, Application Control 6, Connectivity 7 and linked
+Type Definitions 8. Readable remains available at these revisions. See the
+[writer profile](../Expression/Studio%20authoring%20document%20profile%20v1.md).
 Readers reject revisions beyond their supported range before projection.
 Mixing a private `format` with public `spec_version` remains invalid.
 Revision 3 preserves Studio's historical private byte-string compatibility for
 unrelated existing binary String constants. This admission is specific to the
 private editing adapter; the public JSON/source reader remains strict UTF-8.
 
-In Automatic mode, arrays whose readable value representation is below 4096 UTF-8
-bytes remain readable. Above that cutoff, the writer compares the complete encoded
-value object, including base64 and metadata, with the readable representation.
-It compacts only when the encoded representation is smaller. This is a conservative
-initial policy, not a benchmark-derived optimal threshold or a compression guarantee.
-Compact standalone requests the binary representation even when a small array
-would occupy fewer bytes as readable JSON. No external resource is required.
+For supported numeric Diagram constants, Automatic requires compact storage
+from 4,096 cells or when the remaining readable cell budget is insufficient.
+Other eligible Automatic writes use the readable byte threshold and compare the
+complete encoded object with the readable representation. Compact standalone
+requests the compact encoding for supported values. The codec chooses raw or
+Zstandard per block and embeds its payload. See the
+[storage producer](../Implementations/Frontend/src/FrogDocumentArrayStorage.cpp)
+for the exact guards.
 
 ## Supported values
 

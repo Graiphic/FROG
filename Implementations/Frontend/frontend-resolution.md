@@ -164,9 +164,11 @@ library as the C consumer. Diagnostic text, identities and maps come from actual
 preparation. Reading/migration support does not authorize modifying the original
 document or approving a Studio repair.
 
-**Status: implemented, NOT yet qualified on the new kit.** Targeted draft/dependency
-tests must run with the exact source/library/CLI identity. Historical Source `@1`
-successes do not automatically qualify `@2`.
+The 13 November local replay validated a Studio revision 8 document with its
+captured Type Definition through the API 3 CLI. It rejected the same document
+without a resolver. See the [coverage matrix](../../docs/studio-source-compatibility.md#coverage-matrix)
+for the tested content identity and the remaining bounds. Standalone reconstruction
+of the newer local Studio pin and general `@2` qualification remain open.
 
 <a id="limites-et-annulation"></a>
 

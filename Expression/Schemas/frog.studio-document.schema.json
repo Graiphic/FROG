@@ -2,18 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://graiphic.github.io/FROG/Expression/Schemas/frog.studio-document.schema.json",
   "title": "Graiphic Studio authoring writer profile v1",
-  "description": "Structural documentation of existing frog.document.draft writer output, revisions 2..7. Not canonical spec_version conformance, historical loader grammar, semantic validation, runtime admission or complete feature/revision checking.",
-  "$comment": "Evidence owner: Graiphic Studio FrogDocumentFormat/FrogDocumentSerialization. Unknown authoring members remain open for repair and extension; accepting an opaque property is not execution support. Numeric lexical state, recursive container props and provider payloads require their actual implementation validators.",
+  "description": "Structural compatibility for historical ordinary drafts from revision 2, current writer revisions 3 through 8, and Studio recovery revision 9. Semantic validation and execution admission are separate operations.",
+  "$comment": "Evidence owners: common Frontend FrogDocumentFormat/FrogDraftWriter/FrogDraftReader and Studio FrogDocumentCompatibility. Opaque properties require their actual implementation validators. This schema covers writer-shaped artifacts and the explicit recovery envelope.",
   "type": "object",
   "required": [
     "format",
     "draft_revision",
-    "language",
     "title",
-    "metadata",
-    "interface",
-    "frontPanel",
-    "diagram"
+    "metadata"
   ],
   "properties": {
     "format": {
@@ -22,7 +18,7 @@
     "draft_revision": {
       "type": "integer",
       "minimum": 2,
-      "maximum": 7
+      "maximum": 9
     },
     "language": {
       "const": "FROG"
@@ -79,7 +75,12 @@
       "type": "object"
     },
     "storage": {
-      "type": "object"
+      "type": "object",
+      "required": ["version", "array_mode"],
+      "properties": {
+        "version": {"const": 1},
+        "array_mode": {"enum": ["readable", "automatic", "compact_standalone"]}
+      }
     },
     "icon": {
       "type": "object"
@@ -107,10 +108,84 @@
           }
         }
       }
+    },
+    {
+      "if": {"properties": {"draft_revision": {"maximum": 7}}},
+      "then": {"$ref": "#/$defs/noTypeDefinitionLink"}
+    },
+    {
+      "if": {"properties": {"draft_revision": {"const": 9}}},
+      "then": {
+        "required": ["ide"],
+        "properties": {
+          "ide": {
+            "required": ["recoverability"],
+            "properties": {
+              "recoverability": {
+                "type": "object",
+                "required": ["frog_document_recovery"],
+                "properties": {
+                  "frog_document_recovery": {"$ref": "#/$defs/recovery"}
+                }
+              }
+            }
+          }
+        },
+        "if": {"anyOf": [{"required": ["diagram"]}, {"required": ["frontPanel"]}]},
+        "then": {"required": ["language", "diagram", "frontPanel"]}
+      },
+      "else": {"required": ["language", "diagram", "frontPanel"]}
     }
   ],
   "additionalProperties": true,
   "$defs": {
+    "noTypeDefinitionLink": {
+      "if": {"type": "object"},
+      "then": {
+        "not": {"required": ["type_definition"]},
+        "additionalProperties": {"$ref": "#/$defs/noTypeDefinitionLink"}
+      },
+      "else": {"items": {"$ref": "#/$defs/noTypeDefinitionLink"}}
+    },
+    "typeDefinitionLink": {
+      "type": "object",
+      "required": ["definition_id", "source_path", "resolved_revision", "schema_fingerprint", "baseline_widget"],
+      "properties": {
+        "definition_id": {"type": "string", "minLength": 1},
+        "source_path": {"type": "string"},
+        "resolved_revision": {"type": "integer", "minimum": 1},
+        "schema_fingerprint": {"type": "string", "minLength": 64, "maxLength": 64},
+        "baseline_widget": {"type": "string", "minLength": 1},
+        "unresolved_reason": {"type": "string"},
+        "icon_svg": {"type": "string"}
+      }
+    },
+    "recovery": {
+      "type": "object",
+      "required": ["version", "original_source_base64", "working_source_base64", "issues"],
+      "properties": {
+        "version": {"const": 1},
+        "original_source_base64": {"type": "string", "contentEncoding": "base64"},
+        "working_source_base64": {"type": "string", "contentEncoding": "base64"},
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["category", "code", "pointer", "message", "interpretation", "blocks_run"],
+            "properties": {
+              "category": {"type": "integer", "minimum": 0, "maximum": 5},
+              "code": {"type": "string", "minLength": 1},
+              "pointer": {"type": "string"},
+              "message": {"type": "string"},
+              "interpretation": {"type": "integer", "minimum": 0, "maximum": 2},
+              "blocks_run": {"type": "boolean"}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "bounds": {
       "type": "object",
       "required": [
@@ -373,6 +448,9 @@
         "props": {
           "type": "object"
         },
+        "type_definition": {
+          "$ref": "#/$defs/typeDefinitionLink"
+        },
         "state": {
           "type": "object"
         },
@@ -483,6 +561,9 @@
         },
         "constant_field_order": {
           "type": "integer"
+        },
+        "type_definition": {
+          "$ref": "#/$defs/typeDefinitionLink"
         },
         "regions": {
           "type": "array",

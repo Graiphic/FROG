@@ -1,29 +1,35 @@
 # Graiphic Studio and public FROG source compatibility
 
-Historical authoring checkpoint: 14 October 2026; common-Frontend update: 1 November 2026. This page describes integration status,
-not a new source format or a conformance certification. The
-[source guide](../Expression/Frog%20source%20guide.md) explains public `.frog` syntax.
+Documentation reconciliation, 13 November 2026. Start with the [canonical Source
+guide](../Expression/Frog%20source%20guide.md) or the [Studio draft
+profile](../Expression/Studio%20authoring%20document%20profile%20v1.md).
+Use the [coverage matrix](#coverage-matrix) to identify the tested operation.
 
-## Common Frontend checkpoint — 1 November 2026
+## Common Frontend and published checkpoints
 
-The accepted direction is one versioned public Frontend for Studio and external
-tools: reading, explicit resolution, validation, FIR, diagnostics, source maps and
-provenance. Studio pins a tested software/API/content identity. A later public
-release is not automatically loaded into an installed IDE. The common library and
-CLI are intended for open-source publication; code is held for a later release.
-This update contains contracts and schemas, not a runnable Frontend kit.
+The [common Frontend library and CLI](../Implementations/Frontend/README.md)
+are available as source. They own reading, explicit dependency resolution, types,
+semantic validation, FIR, diagnostics, maps and provenance. Studio pins the
+software, API and content it uses.
 
-The local checkpoint uses software `0.1.0-local`, API `3`, Source/FIR `0.1`,
-diagnostic/capability documents `0.2`, provenance `0.3` and source maps `0.1`.
-These axes are independent. Local finite tests are not a public code release or
-proof that every palette function is implemented.
+- [12 November source checkpoint](frontend-checkpoint-2026-11-12.json)
+  records the published content `c815f0a1…0df9a9`, Frontend `0.2.0-local`
+  API 3 and Studio `0.0.8.094`. That publication reused qualification.
+- [9 November checkpoint](frontend-checkpoint-2026-11-09.json)
+  records the standalone build and 6/6 public CTests for `81a502cc…35278e`.
+- [2 November checkpoint](frontend-checkpoint-2026-11-02.json) records the
+  original source publication, the standalone kit and finite Studio validation.
+  The 1 November documentation-only stage is historical.
+
+The checkpoint versions refer to source publications. Tagged binaries,
+whole-palette qualification and clean-machine support have separate evidence.
 
 Studio retains historical capture/migration, diagnostic presentation, repair
-proposals, transaction preview/application and Undo/Redo. Its adaptations use the
-common semantic owner. Public resolution currently binds Type Definition fragments
-(kind 2). General Source/library/profile dependencies (kinds 1/3/4) and nonempty
-public ConditionalDisable contexts remain explicit limitations. Historical private
-adaptations do not establish equivalent raw public-input support.
+proposals, transaction preview/application and Undo/Redo. The common Frontend
+supports finite Type Definition resolution and explicit captured Source
+dependencies in specific profiles. General dependency resolution and arbitrary
+ConditionalDisable contexts remain outside the qualified matrix. Refer to the
+exact operation result and its provenance for the accepted dependency kinds.
 
 See [the tool guide](frontend-tools-guide.md) and
 [operation contract](../sdk/ecosystem/docs/frontend-api.md).
@@ -46,8 +52,8 @@ decision, diagnostics and qualification evidence.
 
 | Surface | Public source | Studio authoring document |
 | --- | --- | --- |
-| Envelope | `spec_version: "0.1"` | `format: "frog.document.draft"`; readable revision 2, conditional feature revisions 3..7 |
-| Required public sections | `metadata`, `interface`, `diagram` | Studio-owned document model; not a substitute for the public envelope |
+| Envelope | `spec_version: "0.1"` | `format: "frog.document.draft"`; reader 0–9, ordinary current writer 3–8, recovery writer 9 |
+| Required sections | `metadata`, `interface`, `diagram` | Ordinary writer emits `metadata`, `frontPanel`, `diagram`. Independent `interface` is optional. Archive-only recovery can omit panel and diagram. |
 | Front Panel spelling | Optional `front_panel` | `frontPanel` |
 | Public interface | Independent of widgets | Retained independent declarations when present; historical widget-derived projection remains a compatibility path |
 | Writer | Public source preservation/transaction writer | Studio editing-model serializer |
@@ -59,25 +65,41 @@ unsupported versions. Its editing-model importer has narrower support. These are
 different code paths, so a successful source read does not promise full canvas
 editing, semantic validation, export migration or execution.
 
-The opt-in [Studio numeric array storage profile](studio-array-storage-v1.md)
-documents the three document choices and the exact private binary/base64 records.
-It is implemented in Studio; its qualification is scoped to the recorded product owners, not inferred from this page or the general test-pause setting. It does not change the public 0.1 schema or claim canonical compact source
-interoperability. Readable remains the default; loading compact values currently
-expands them into the existing editing model.
+The [Studio numeric array storage profile](studio-array-storage-v1.md)
+documents the three modes and private records. The current producer selects
+Automatic for new documents and for input without Storage. An explicit Readable
+selection remains Readable. Compact draft storage belongs to the Studio envelope.
 
-The current implementation record is the
-[14 October reconciliation](studio-reconciliation-2026-10-14.md), with captured
-code revisions and separate targeted qualification receipts. It supersedes the
-old 0.0.4.235 desktop checkpoint without declaring a new complete regression gate.
-Normal private Run, public native Run and captured Event execution are distinct
-paths. POC OFF is not a statement that every runtime path is absent.
+The [14 October reconciliation](studio-reconciliation-2026-10-14.md) remains a
+historical record. Private Run, public native Run and captured Event execution
+have separate target and provider coverage.
 
 The [Studio document profile](../Expression/Studio%20authoring%20document%20profile%20v1.md)
-describes actual saved revisions 2..7. Its
+describes historical input, current writer output and recovery. Its
 [structural schema](../Expression/Schemas/frog.studio-document.schema.json) and
 [authoring contract snapshots](../Profiles/StudioAuthoring.md) are public
 compatibility documentation; they do not promote an editing projection or
 private provider to universal canonical execution.
+
+## Coverage matrix
+
+| Format and profile | GS / Frontend identity | Established coverage and boundary |
+| --- | --- | --- |
+| Canonical Source 0.1, finite scalar and captured/profile cases | GS 0.0.6.836, API 3, `b6123302…c70f8cd` | Dated kit, installed C consumer, CLI/Studio parity and finite Run/Highlight/Build evidence. Use the 2 November receipt for the scope. |
+| Canonical Source 0.1, scalar and Type Definition fragments | API 3, `c815f0a1…0df9a9` | Local CLI checks validate and derive the named fixtures. Source/FIR 0.1 and frontend dependency contracts have separate versions. A CLI derive makes no execution claim. |
+| Draft scalar, Array/Cluster, Case, For and Sequence | GS 0.0.8.092/.094, published API 3 checkpoint on .094 | Finite product corpus includes actual authoring, Save/Open and observed outputs of the qualified exported executables. Use the per-program receipt for execution and version attribution. |
+| Draft 2, Map/Set and Variant | GS 0.0.7.284 for Map/Set and 0.0.7.656 for Variant | Historical native Save/Open and Run cover typed Map/Set controls and indicators and a Variant containing a Cluster. An incomplete Map is saveable while waiting for its type. The two saved files pass the draft structural schema. |
+| Historical draft 0/1 and readable 2 | Studio recovery and common reader | Historical admission and model projection only where supported. The migration and recovery checks preserve original bytes, known edits, wires and explicit refusals. Revision 2 is still accepted as input. |
+| Draft 3, numeric Array storage | GS 0.0.8.190, pin `8a675af7…ea6d038` | Edit, Undo/Redo, Save and Open in Automatic and Compact standalone at 10,000,001 I32. Run with expected length and values was qualified at 1,500,001 I32. The larger file round trip establishes persistence. |
+| Draft 4/5, exact integer and complex lexical state | Shared writer and structural fixture owner | Conditional revision and lossless lexemes checked. Unsupported complex carriers preserve source and refuse native execution in the recovery fixture. |
+| Draft 6/7, symbolic objects and configured external calls | Shared writer, API 3, GS 0.0.7.750 for the scalar DLL case | Authoring and structural checks for Application Control. The revision 7 `gs_add` fixture reopened and produced 5 in Studio and the exported EXE. Migration and execution require a supported signature and provider. |
+| Draft 8, linked standard Type Definition | GS 0.0.6.052 historical delivery, API 3 `c815f0a1…0df9a9` CLI, Studio publication fixtures | Historical demonstration ran after Save/Open. The CLI validates `Acquisition.frog` with the exact captured `.ftype` and reports the missing resolver without it. The Studio replay verifies stable IDs and distinct current/default values across publication and reopening. TD-20 Enum/Case resolution failed. |
+| Draft 9, explicit recovery | GS 0.0.7.662 recovery fixture and Studio recovery model checks | Projection and archive-only shapes, exact origin preservation and diagnostic revalidation. The known repaired cosine program ran with 10,000 values per Run. An unresolved archive has no runnable graph. |
+
+The CTests used for this reconciliation were already-built component binaries.
+Their individual results do not qualify every path on the installed Studio
+version. The published checkpoint and the local product identity are tracked
+separately.
 
 ## Integration rules for the ecosystem
 

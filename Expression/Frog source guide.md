@@ -71,6 +71,11 @@ declare an independent authoritative type; the endpoint contracts resolve it.
 The source needs no stored execution order for these three edges: data dependencies
 determine which inputs the operation needs.
 
+For reproducible Frontend validation, use the [scalar CLI fixture](../Implementations/Frontend/tests/fixtures/pure-add.frog)
+or the [Type Definition example with its dependency lock](../Implementations/Frontend/examples/type-definition/).
+The [tool guide](../docs/frontend-tools-guide.md) shows how to select the envelope
+and profile explicitly.
+
 ## Add presentation without changing the graph
 
 | Optional section | Owner and purpose |
@@ -104,6 +109,22 @@ numbered example and its declared profile rather than converting a flat graph in
 a structure by inventing JSON fields. A Case extension declares its profile at
 the Case node; this does not introduce an undocumented root-level field.
 
+| Source data | Required, optional or derived |
+| --- | --- |
+| `spec_version`, `metadata`, `interface`, `diagram` | Required root objects and version. The writer uses the string `"0.1"`; the base schema also accepts the numeric form. |
+| Interface, node, connection and region identities | Authored identities and references within their declared scopes. Interface port IDs span input and output directions. Resolve operation ports by their versioned contract. |
+| Complete types and values | Preserve typed defaults and constants, Enum representation/domain/order, Cluster field IDs/order/types, and Array element type and rank. Shape belongs to the value unless contractual. A missing value is distinct from an explicit zero, false, empty value or typed default. |
+| Structure configuration and region boundaries | Required as specified by the selected structure/profile. Resolve tunnels, boundary faces and internal connections within their region. |
+| `diagram.dependencies` | Optional when unused, required for SubFROG references. `subfrog.ref` resolves the dependency's logical name and explicit source path. The host supplies captured inputs to the Frontend. |
+| `front_panel`, bindings and visual resources | Optional presentation. Bind value widgets to declared identities. Connector slots, layout, asset or SVG resources and captions do not define ports, causality or data values. |
+| `cache` and analysis results | Derived. Types inferred from the graph, normalized connections, FIR and source maps are recomputed by their owners. They do not replace authored declarations. |
+
+An incomplete graph may remain readable for editing. Missing required drivers,
+unknown operations, unresolvable dependencies and incompatible types need
+diagnostics before lowering or execution. A Studio wire fragment is a draft
+repair record. A symbolic Source dependency or target identity is resolved
+under its profile. Host handles and process addresses are transient.
+
 ## Reading, validating and running are separate steps
 
 1. Decode strict JSON and recognize the version and source envelope.
@@ -127,10 +148,11 @@ does not make them runnable.
 ## Graiphic Studio documents
 
 Graiphic Studio writes authoring documents with `"format": "frog.document.draft"`
-and `frontPanel`. Ordinary Readable documents use revision 2; the configured
-features can require a newer revision. Numeric Array storage requires at least
-3, exact integer state 4, complex state 5, Application Control 6 and Connectivity
-7. Storage mode and feature requirements compose for the whole document.
+and `frontPanel`. The current ordinary writer records Storage and starts at
+revision 3. Revision 2 remains a historical readable input. Later minimums
+cover exact integer state (4), complex state (5), Application Control (6),
+configured Connectivity (7) and linked Type Definitions (8). Studio recovery
+writes revision 9 with retained origin. Features compose for the whole document.
 The [actual writer profile](Studio%20authoring%20document%20profile%20v1.md) and
 [storage profile](../docs/studio-array-storage-v1.md) document these existing
 rules. Their structural documentation is distinct from product execution

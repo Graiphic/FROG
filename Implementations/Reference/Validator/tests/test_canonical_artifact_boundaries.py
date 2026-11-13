@@ -11,6 +11,7 @@ from referencing import Registry, Resource
 
 ROOT = Path(__file__).resolve().parents[4]
 SCHEMA_FILES = sorted((ROOT / "IR/schema").glob("*.json")) + sorted((ROOT / "Expression/schema").glob("*.json"))
+STUDIO_SCHEMA = ROOT / "Expression/Schemas/frog.studio-document.schema.json"
 
 
 def read(path):
@@ -50,6 +51,40 @@ def test_private_draft_envelope_does_not_pass_as_canonical_source():
     draft = {"format": "frog.document.draft", "draft_revision": 2, "frontPanel": {"widgets": []},
              "diagram": {"nodes": [], "edges": []}}
     assert not validator.is_valid(draft)
+
+
+def test_studio_writer_and_recovery_schema():
+    schema = read(STUDIO_SCHEMA)
+    jsonschema.Draft202012Validator.check_schema(schema)
+    validator = jsonschema.Draft202012Validator(schema)
+    draft = {"format": "frog.document.draft", "draft_revision": 3, "language": "FROG",
+             "title": "Ordinary writer shape", "metadata": {}, "frontPanel": {"widgets": []},
+             "diagram": {"nodes": [], "edges": []}, "storage": {"version": 1, "array_mode": "readable"}}
+    assert validator.is_valid(draft)
+    assert not validator.is_valid(dict(draft, draft_revision=2))
+    assert not validator.is_valid(dict(draft, spec_version="0.1"))
+    assert not validator.is_valid(dict(draft, draft_revision=10))
+
+    link = {"definition_id": "example", "source_path": "example.ftype",
+            "resolved_revision": 1, "schema_fingerprint": "a" * 64, "baseline_widget": "{}"}
+    linked = copy.deepcopy(draft)
+    linked["diagram"]["nodes"].append({"id": "node", "kind": "constant", "type_definition": link})
+    assert not validator.is_valid(dict(linked, draft_revision=7))
+    linked["draft_revision"] = 8
+    assert validator.is_valid(linked)
+    assert not validator.is_valid(dict(linked, draft_revision=9))
+    del link["resolved_revision"]
+    assert not validator.is_valid(linked)
+
+    recovery = {"version": 1, "original_source_base64": "ew==",
+                "working_source_base64": "ew==", "issues": []}
+    ide = {"recoverability": {"frog_document_recovery": recovery}}
+    archive = {"format": draft["format"], "draft_revision": 9, "title": "Archive", "metadata": {}, "ide": ide}
+    assert validator.is_valid(archive)
+    assert validator.is_valid(dict(draft, draft_revision=9, ide=ide))
+    assert not validator.is_valid(dict(archive, diagram=draft["diagram"]))
+    del recovery["original_source_base64"]
+    assert not validator.is_valid(archive)
 
 
 @pytest.mark.parametrize("path", sorted((ROOT / "Conformance/valid").glob("*/case.frog")), ids=lambda path: path.parent.name)

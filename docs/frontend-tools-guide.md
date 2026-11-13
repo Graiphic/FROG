@@ -1,15 +1,16 @@
 # FROG validation and FIR: guide for external tools
 
-**Source publication: 2 November 2026.** The [common library and CLI](../Implementations/Frontend/README.md)
-are now available, following qualification in Studio and a standalone public-only build.
-See the [exact checkpoint and limits](frontend-checkpoint-2026-11-02.json).
-This supersedes the documentation-only publication of 1 November; no tagged binary release
-or universal capability qualification is claimed.
+The [common library and CLI](../Implementations/Frontend/README.md) are available
+as source. The [12 November checkpoint](frontend-checkpoint-2026-11-12.json)
+identifies the published content. The [2 November](frontend-checkpoint-2026-11-02.json)
+and [9 November](frontend-checkpoint-2026-11-09.json) receipts retain their
+standalone qualification. See [Source and Studio draft compatibility](studio-source-compatibility.md)
+for the scope of reading, migration and execution.
 
 The [Apache-2.0 decision](../sdk/ecosystem/docs/frontend-licensing.md) is accepted
 for the selected Graiphic-owned common Frontend and CLI files. Third-party material
 retains its own notices and licenses. The dated licensing decision records the earlier
-documentation-only stage; the checkpoint above records the subsequent source publication.
+documentation-only stage.
 
 ## One shared Frontend
 
@@ -107,15 +108,15 @@ separate maintainer decision; these rules add no scheduled or automatic publicat
 The following describes the earlier contract publication, not the current candidate.
 For current software, formats, dependency kinds and admitted contexts, use the
 [implementation profile](../Implementations/Frontend/docs/candidate-profile.md) and
-[qualification checkpoint](frontend-checkpoint-2026-11-02.json).
+[12 November source checkpoint](frontend-checkpoint-2026-11-12.json).
 
 The local integration uses software `0.1.0-local`, API `3` and Source/FIR `0.1`.
 API-3 provenance is `0.3`; diagnostic/capability documents remain `0.2` and source
 maps `0.1`. Published schemas describe these shapes, not a universal capability set.
 
-The public resolution profile currently binds kind-2 Type Definition fragments.
-Kinds 1/3/4 and nonempty public ConditionalDisable contexts are not yet generally
-supported. An empty context and exact kind-2 bindings have explicit examples.
+At that checkpoint the public resolution profile bound kind-2 Type Definition
+fragments. The current [resolution guide](../Implementations/Frontend/frontend-resolution.md)
+also describes the explicit Source inputs used by supported draft operations.
 The historical Studio `frog.document.draft` envelope requires Studio-owned capture
 or migration; it is not canonical public Source merely because it also uses a
 `.frog` filename. Keep [the two envelopes](studio-source-compatibility.md) distinct.
