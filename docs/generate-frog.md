@@ -30,6 +30,56 @@ Keep the original input and write a separate candidate for validation.
 | Dependencies and refusal diagnostics | [Resolver contract](../Implementations/Frontend/frontend-resolution.md), [Frontend outputs](../sdk/ecosystem/docs/frontend-result-contracts.md), [execution eligibility](../Language/Execution%20eligibility.md). |
 | Studio versions and tested profiles | [Compatibility matrix](studio-source-compatibility.md), [12 November checkpoint](frontend-checkpoint-2026-11-12.json) and the [qualified example paths](#3-qualified-example-paths) below. |
 
+### Lay out generated diagrams for left-to-right dataflow
+
+Use Graiphic Studio as the reference for editor geometry. Measure the actual
+port contacts and painted bounds in the target Studio version. Positions,
+wire bends and visible slot order are presentation data.
+
+1. **Place every diagram control on the left and every indicator on the
+   right.** Give each region its own left-to-right flow. Order terminals by
+   the physical ports they serve and keep independent work on separate rows.
+   Place local constants next to their consumers and align the output and
+   input contacts for a straight lead. Use Studio's standard function sizes.
+   Keep ordinary functions at least 85% of their standard size and
+   compact functions at 100%. Control and indicator sizes remain editable.
+2. **Route only as far as necessary.** Use a straight wire between aligned
+   ports. For lateral ports on different rows, prefer horizontal approaches
+   joined by one continuous vertical segment. Add bends only to clear a
+   body, label, port approach or structure boundary. Fix placement first if
+   the router would otherwise create small steps or run across text.
+3. **Make branches and joins readable.** Give independent wires separate
+   lanes. If a crossing is unavoidable, keep it perpendicular and free of a
+   junction. Share a trunk only for branches of the same source port in the
+   same execution region. Use a real junction and remove redundant parallel
+   segments. For stacked branches descending to a collector on the right,
+   start with the lowest branch on the leftmost vertical lane and place the
+   higher branches progressively farther right. Preserve the collector's
+   input identities and priority. Check every Case region separately, and
+   preserve the tunnel identities and connections on both sides of the wall.
+4. **Keep the error path visible and typed.** For a graph with an error
+   flow, use the native **Error Cluster Control** at the lower left and
+   **Error Cluster Indicator** at the lower right. Connect the control to
+   the first applicable error input. Carry the whole ordered cluster
+   (status, code and source) through every applicable operation or tunnel
+   to the output indicator. Extract a field only when a decision or
+   diagnostic needs it. For operations that follow standard error handling,
+   an incoming true status skips the normal work and carries the incoming
+   cluster forward. Honor explicitly documented cleanup and execute-on-error
+   behavior. In an authored guard, use an Error Case to make execution
+   conditional. A Select choosing a result still evaluates its producers.
+5. **Fit labels and comments to the content.** Leave room for the rendered
+   labels, comment text and attachment grip. Fit the comment frame to the
+   text and use one concise explanation of the example's expected behavior.
+   Widen the diagram when needed to keep text clear of bodies and wires.
+6. **Verify the result in Studio.** Reopen the diagram at 100% and inspect
+   every Case for anchored, orthogonal wires, readable labels and intentional
+   junctions. For a layout-only change, compare the node and wire IDs, port
+   endpoints, regions, types and values, and run the same inputs before and
+   after. For a new error path, test normal execution and a true incoming
+   status with a known code and source. Check both propagation and whether
+   the normal work or required cleanup actually ran.
+
 ## 2. Validate, derive and select a target
 
 Run these PowerShell commands from the repository root with `frog-frontend.exe`
