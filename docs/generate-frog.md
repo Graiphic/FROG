@@ -68,10 +68,29 @@ wire bends and visible slot order are presentation data.
    cluster forward. Honor explicitly documented cleanup and execute-on-error
    behavior. In an authored guard, use an Error Case to make execution
    conditional. A Select choosing a result still evaluates its producers.
-5. **Fit labels and comments to the content.** Leave room for the rendered
-   labels, comment text and attachment grip. Fit the comment frame to the
-   text and use one concise explanation of the example's expected behavior.
-   Widen the diagram when needed to keep text clear of bodies and wires.
+5. **Label the data and the work.** Put a control's visible diagram label to
+   its left and an indicator's to its right. Place other needed labels above
+   or below the object, on whichever side has room. Use this especially for
+   wide constants such as an array. Hide the external labels of functions
+   and structures by default when the icon or caption already identifies
+   them. Keep a function label only when it adds information the icon cannot
+   convey.
+   - Give each structure, and each separately visible region or frame, a
+     short native subdiagram label where Studio supports one. Describe the
+     work in a few words. Use “Process loop” for a simple loop, “False case”
+     or “True case” when that is sufficient, and a short description of each
+     sequence step. Use the Studio field for that structure or region and
+     reserve the resulting header area when placing tunnels, nodes and wires.
+   - Prefer a short native label on an existing clear wire segment when the
+     data needs explanation. Keep it away from bends, junctions, terminals
+     and other labels. If the wire already names the destination clearly,
+     hide the duplicate diagram label on that terminal. Keep the underlying
+     widget name and binding intact.
+   - Reserve space for the actual rendered text. A label must clear all
+     other text, wire routes, nodes and structure chrome, with the native
+     inline label on its own wire as the intentional exception. Adjust
+     spacing before routing. Fit free comments to the text and leave room
+     for their attachment grip.
 6. **Verify the result in Studio.** Reopen the diagram at 100% and inspect
    every Case for anchored, orthogonal wires, readable labels and intentional
    junctions. For a layout-only change, compare the node and wire IDs, port
