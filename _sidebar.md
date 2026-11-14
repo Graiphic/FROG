@@ -1541,9 +1541,6 @@
       - [Table](/Libraries/Realizations/Default/Table.md)
       - [Tree](/Libraries/Realizations/Default/Tree.md)
       - [Validation](/Libraries/Realizations/Default/Validation.md)
-      - [Assets](/Libraries/Realizations/Default/Assets/Readme.md)
-        - [Naming](/Libraries/Realizations/Default/Assets/Naming.md)
-        - [ring](/Libraries/Realizations/Default/Assets/ring/Readme.md)
       - assets
         - [array](/Libraries/Realizations/Default/assets/array/Readme.md)
         - [boolean](/Libraries/Realizations/Default/assets/boolean/Readme.md)
@@ -1564,6 +1561,9 @@
         - [tab](/Libraries/Realizations/Default/assets/tab/Readme.md)
         - [table](/Libraries/Realizations/Default/assets/table/Readme.md)
         - [tree](/Libraries/Realizations/Default/assets/tree/Readme.md)
+      - [Assets](/Libraries/Realizations/Default/Assets/Readme.md)
+        - [Naming](/Libraries/Realizations/Default/Assets/Naming.md)
+        - [ring](/Libraries/Realizations/Default/Assets/ring/Readme.md)
       - [Examples](/Libraries/Realizations/Default/Examples/Readme.md)
         - [Button default realization.wfrog](/Libraries/Realizations/Default/Examples/Button%20default%20realization.wfrog.md)
         - [Button package and assets example](/Libraries/Realizations/Default/Examples/Button%20package%20and%20assets%20example.md)
@@ -1723,6 +1723,10 @@
         - [case.frog](/Conformance/invalid/structural/01_front_panel_widgets_must_be_array/case.frog)
       - [02 front panel canvas must be object](/Conformance/invalid/structural/02_front_panel_canvas_must_be_object/Readme.md)
         - [case.frog](/Conformance/invalid/structural/02_front_panel_canvas_must_be_object/case.frog)
+  - [studio-save-open](/Conformance/studio-save-open/Readme.md)
+    - [canonical-add.frog](/Conformance/studio-save-open/canonical-add.frog)
+    - [compact-array.frog](/Conformance/studio-save-open/compact-array.frog)
+    - [variant-cluster.frog](/Conformance/studio-save-open/variant-cluster.frog)
   - valid
     - [01 pure addition](/Conformance/valid/01_pure_addition.md)
     - [02 ui value roundtrip](/Conformance/valid/02_ui_value_roundtrip.md)
@@ -2008,6 +2012,7 @@
       - [test_public_structure_contract.py](/Implementations/Reference/Validator/tests/test_public_structure_contract.py)
       - [test_reference_validator.py](/Implementations/Reference/Validator/tests/test_reference_validator.py)
       - [test_source_boundary.py](/Implementations/Reference/Validator/tests/test_source_boundary.py)
+      - [test_studio_source_versioning.py](/Implementations/Reference/Validator/tests/test_studio_source_versioning.py)
   - [WidgetValidator](/Implementations/Reference/WidgetValidator/Readme.md)
     - [validate_widget_layer.py](/Implementations/Reference/WidgetValidator/validate_widget_layer.py)
     - notes

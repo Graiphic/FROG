@@ -11501,28 +11501,6 @@
                     },
                     {
                       "key": "libraries/realizations/default/assets/",
-                      "title": "Assets",
-                      "path": "/Libraries/Realizations/Default/Assets/Readme.md",
-                      "kind": "category",
-                      "children": [
-                        {
-                          "key": "libraries/realizations/default/assets/naming.md",
-                          "title": "Naming",
-                          "path": "/Libraries/Realizations/Default/Assets/Naming.md",
-                          "kind": "page",
-                          "children": []
-                        },
-                        {
-                          "key": "libraries/realizations/default/assets/ring/",
-                          "title": "ring",
-                          "path": "/Libraries/Realizations/Default/Assets/ring/Readme.md",
-                          "kind": "category",
-                          "children": []
-                        }
-                      ]
-                    },
-                    {
-                      "key": "libraries/realizations/default/assets/",
                       "title": "assets",
                       "path": null,
                       "kind": "category",
@@ -11657,6 +11635,28 @@
                           "key": "libraries/realizations/default/assets/tree/",
                           "title": "tree",
                           "path": "/Libraries/Realizations/Default/assets/tree/Readme.md",
+                          "kind": "category",
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "key": "libraries/realizations/default/assets/",
+                      "title": "Assets",
+                      "path": "/Libraries/Realizations/Default/Assets/Readme.md",
+                      "kind": "category",
+                      "children": [
+                        {
+                          "key": "libraries/realizations/default/assets/naming.md",
+                          "title": "Naming",
+                          "path": "/Libraries/Realizations/Default/Assets/Naming.md",
+                          "kind": "page",
+                          "children": []
+                        },
+                        {
+                          "key": "libraries/realizations/default/assets/ring/",
+                          "title": "ring",
+                          "path": "/Libraries/Realizations/Default/Assets/ring/Readme.md",
                           "kind": "category",
                           "children": []
                         }
@@ -12796,6 +12796,35 @@
                       ]
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "key": "conformance/studio-save-open/",
+              "title": "studio-save-open",
+              "path": "/Conformance/studio-save-open/Readme.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "conformance/studio-save-open/canonical-add.frog",
+                  "title": "canonical-add.frog",
+                  "path": "/Conformance/studio-save-open/canonical-add.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "conformance/studio-save-open/compact-array.frog",
+                  "title": "compact-array.frog",
+                  "path": "/Conformance/studio-save-open/compact-array.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "conformance/studio-save-open/variant-cluster.frog",
+                  "title": "variant-cluster.frog",
+                  "path": "/Conformance/studio-save-open/variant-cluster.frog",
+                  "kind": "code",
+                  "children": []
                 }
               ]
             },
@@ -14834,6 +14863,13 @@
                       "path": "/Implementations/Reference/Validator/tests/test_source_boundary.py",
                       "kind": "code",
                       "children": []
+                    },
+                    {
+                      "key": "implementations/reference/validator/tests/test_studio_source_versioning.py",
+                      "title": "test_studio_source_versioning.py",
+                      "path": "/Implementations/Reference/Validator/tests/test_studio_source_versioning.py",
+                      "kind": "code",
+                      "children": []
                     }
                   ]
                 }
@@ -16542,9 +16578,6 @@
     "/Libraries/Realizations/Default/Table.md",
     "/Libraries/Realizations/Default/Tree.md",
     "/Libraries/Realizations/Default/Validation.md",
-    "/Libraries/Realizations/Default/Assets/Naming.md",
-    "/Libraries/Realizations/Default/Assets/ring/Readme.md",
-    "/Libraries/Realizations/Default/Assets/Readme.md",
     "/Libraries/Realizations/Default/assets/array/Readme.md",
     "/Libraries/Realizations/Default/assets/boolean/Readme.md",
     "/Libraries/Realizations/Default/assets/button/Readme.md",
@@ -16564,6 +16597,9 @@
     "/Libraries/Realizations/Default/assets/tab/Readme.md",
     "/Libraries/Realizations/Default/assets/table/Readme.md",
     "/Libraries/Realizations/Default/assets/tree/Readme.md",
+    "/Libraries/Realizations/Default/Assets/Naming.md",
+    "/Libraries/Realizations/Default/Assets/ring/Readme.md",
+    "/Libraries/Realizations/Default/Assets/Readme.md",
     "/Libraries/Realizations/Default/Examples/Button%20default%20realization.wfrog.md",
     "/Libraries/Realizations/Default/Examples/Button%20package%20and%20assets%20example.md",
     "/Libraries/Realizations/Default/Examples/Numeric%20control%20default%20realization.wfrog.md",
@@ -16723,6 +16759,10 @@
     "/Conformance/invalid/structural/02_front_panel_canvas_must_be_object/case.frog",
     "/Conformance/invalid/structural/02_front_panel_canvas_must_be_object/Readme.md",
     "/Conformance/invalid/structural/Readme.md",
+    "/Conformance/studio-save-open/canonical-add.frog",
+    "/Conformance/studio-save-open/compact-array.frog",
+    "/Conformance/studio-save-open/variant-cluster.frog",
+    "/Conformance/studio-save-open/Readme.md",
     "/Conformance/valid/01_pure_addition.md",
     "/Conformance/valid/02_ui_value_roundtrip.md",
     "/Conformance/valid/03_ui_property_write.md",
@@ -16993,6 +17033,7 @@
     "/Implementations/Reference/Validator/tests/test_public_structure_contract.py",
     "/Implementations/Reference/Validator/tests/test_reference_validator.py",
     "/Implementations/Reference/Validator/tests/test_source_boundary.py",
+    "/Implementations/Reference/Validator/tests/test_studio_source_versioning.py",
     "/Implementations/Reference/Validator/Readme.md",
     "/Implementations/Reference/WidgetValidator/validate_widget_layer.py",
     "/Implementations/Reference/WidgetValidator/notes/chart_deepening.md",
