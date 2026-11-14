@@ -1,0 +1,28 @@
+# FROG
+
+> Public entry points for writing, generating and importing FROG programs. Use the linked contracts for field, type and operation semantics.
+
+## Start
+
+- [Generator guide, exact CLI and tested corpus](docs/generate-frog.md)
+- [Canonical Source syntax and full example](Expression/Frog%20source%20guide.md)
+- [Canonical Source JSON Schema](Expression/schema/frog.schema.json)
+- [Studio draft profile](Expression/Studio%20authoring%20document%20profile%20v1.md)
+- [Studio and Frontend compatibility](docs/studio-source-compatibility.md)
+
+## Contracts
+
+- [Versioned library index](Libraries/Readme.md)
+- [Add operation and stable ports](Libraries/Manifests/frog.core.add.v1.json)
+- [Dated Studio authoring catalogue](Profiles/StudioAuthoring.md)
+- [Types and typed bindings](Expression/Typed%20Binding%20Contract%20v1.md)
+- [Control structures and regions](Expression/Control%20structures.md)
+- [Front Panel and bindings](Expression/Front%20panel.md)
+- [Captured Event profile](Expression/Event%20Captured%20Profile%20v1.md)
+
+## Validation
+
+- [Common Frontend CLI and library](Implementations/Frontend/README.md)
+- [Frontend diagnostics and provenance](sdk/ecosystem/docs/frontend-result-contracts.md)
+- [Execution eligibility](Language/Execution%20eligibility.md)
+- [Conformance index](Conformance/Readme.md)

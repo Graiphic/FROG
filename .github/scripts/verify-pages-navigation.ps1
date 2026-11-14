@@ -36,6 +36,7 @@ $rootSections = @(
 )
 
 $preferredRootDocs = @(
+    @{ File = "docs/generate-frog.md"; Label = "Write, generate or import FROG" },
     @{ File = "docs/studio-source-compatibility.md"; Label = "Studio and source compatibility" },
     @{ File = "FROG-Strategy.md"; Label = "FROG Strategy" },
     @{ File = "FROG-Architecture.md"; Label = "FROG Architecture" },
@@ -48,6 +49,7 @@ $preferredRootDocs = @(
 
 $expectedRootOrder = @(
     "Home",
+    "Write, generate or import FROG",
     "Expression",
     "Examples",
     "Language",
@@ -77,6 +79,8 @@ $requiredFiles = @(
     "nav-tree.json",
     "_navbar.md",
     "Readme.md",
+    "llms.txt",
+    "docs/generate-frog.md",
     "Expression/Frog source guide.md",
     "docs/studio-source-compatibility.md",
     "FROG-Strategy.md",
@@ -227,6 +231,14 @@ $navPaths = New-Object System.Collections.Generic.HashSet[string]([System.String
 foreach ($section in @($navTree.sections)) {
     foreach ($node in @($section.children)) {
         Add-NavPaths -Node $node -Paths $navPaths
+    }
+}
+
+$offTopicPaths = '(?i)^/(?:knowledge/|methodology/reporting_standard_v0_runtime_alignment\.md$|docs/(?:research_manifest_runtime_requirements|runtime_patch_required_for_research_manifest)\.md$)'
+$allListedPaths = @($navPaths) + @($navTree.searchPaths)
+foreach ($listedPath in $allListedPaths) {
+    if ($listedPath -match $offTopicPaths) {
+        throw "Pages navigation includes unrelated campaign material: $listedPath"
     }
 }
 

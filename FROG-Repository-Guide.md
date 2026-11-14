@@ -1,15 +1,24 @@
 <h1>FROG Repository Guide</h1>
 
 <p>New readers and tool authors should begin with the
-<a href="./Expression/Frog%20source%20guide.md">.frog source syntax guide</a>
+<a href="./docs/generate-frog.md">guide to writing, generating and importing FROG</a>
 and <a href="./docs/studio-source-compatibility.md">Studio/source integration record</a>.
-The <a href="./docs/studio-array-storage-v1.md">opt-in Studio array storage profile</a>
+The <a href="./docs/studio-array-storage-v1.md">Studio array storage profile</a>
 records the private adapter separately from the published source syntax.
 They connect concrete JSON source with its owners and implementation limits.</p>
 
 <p>
 Public repository orientation: what this repository defines, what it deliberately does not define, how the public specification boundary works, and where readers should go next.
 </p>
+
+<h2 id="documentation-map">Documentation map</h2>
+
+<ul>
+  <li><strong>Current workflow.</strong> <a href="./docs/generate-frog.md">Generator guide and qualified examples</a>, <a href="./docs/frontend-tools-guide.md">Frontend tools</a> and <a href="./docs/studio-source-compatibility.md">Studio compatibility</a>.</li>
+  <li><strong>Language and conformance references.</strong> <a href="./Expression/Readme.md">Expression</a>, <a href="./Language/Readme.md">Language</a>, <a href="./Libraries/Readme.md">Libraries</a>, <a href="./IR/Readme.md">FIR</a> and <a href="./Conformance/Readme.md">Conformance cases</a>.</li>
+  <li><strong>Proposals and planning.</strong> <a href="./docs/proposals/">Engineering proposals</a> and <a href="./Roadmap/Readme.md">roadmap</a>. Each proposal carries its own status.</li>
+  <li><strong>Dated evidence and archives.</strong> <a href="./docs/frontend-checkpoint-2026-11-12.json">12 November source checkpoint</a>, <a href="./docs/frontend-checkpoint-2026-11-09.json">9 November standalone receipt</a>, <a href="./docs/frontend-checkpoint-2026-11-02.json">2 November receipt</a> and <a href="./docs/language-studio-convergence-audit-2026-09-06.md">September convergence audit</a>. Results apply to their named inputs and versions.</li>
+</ul>
 
 <p>
 This document preserves long-form material that was previously maintained in

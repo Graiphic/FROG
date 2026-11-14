@@ -1,5 +1,8 @@
 # Research Manifest Runtime Requirements
 
+> Archived Botschild campaign material. These requirements concern the
+> Botschild research runner.
+
 This document records the operational requirements that make research-driven campaigns executable and auditable.
 
 ## Required behavior

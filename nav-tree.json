@@ -11,6 +11,13 @@
           "children": []
         },
         {
+          "key": "docs/generate-frog.md",
+          "title": "Write, generate or import FROG",
+          "path": "/docs/generate-frog.md",
+          "kind": "page",
+          "children": []
+        },
+        {
           "key": "expression/",
           "title": "Expression",
           "path": "/Expression/Readme.md",
@@ -17003,6 +17010,7 @@
     "/Roadmap/Milestones.md",
     "/Roadmap/Readme.md",
     "/Strategy/Heilmeier/Readme.md",
+    "/docs/generate-frog.md",
     "/docs/studio-source-compatibility.md",
     "/FROG-Strategy.md",
     "/FROG-Architecture.md",

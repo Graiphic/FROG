@@ -37,6 +37,7 @@ $rootSections = @(
 )
 
 $preferredRootDocs = @(
+    @{ File = "docs/generate-frog.md"; Label = "Write, generate or import FROG"; First = $true },
     @{ File = "docs/studio-source-compatibility.md"; Label = "Studio and source compatibility" },
     @{ File = "FROG-Strategy.md"; Label = "FROG Strategy" },
     @{ File = "FROG-Architecture.md"; Label = "FROG Architecture" },
@@ -520,15 +521,22 @@ foreach ($rootDoc in $preferredRootDocs) {
     $href = Convert-ToDocsifyHref -RelativePath $rootDoc.File
     Add-UniqueSearchPath -SearchPaths $searchPaths -Path $href
 
-    $rootNodes.Add([ordered]@{
+    $node = [ordered]@{
         key = Convert-ToNodeKey -Value $rootDoc.File
         title = $rootDoc.Label
         path = $href
         kind = "page"
         children = @()
-    })
+    }
 
-    $sidebarLines.Add(("- [{0}]({1})" -f $rootDoc.Label, $href))
+    $line = "- [{0}]({1})" -f $rootDoc.Label, $href
+    if ($rootDoc.First) {
+        $rootNodes.Insert(1, $node)
+        $sidebarLines.Insert(3, $line)
+    } else {
+        $rootNodes.Add($node)
+        $sidebarLines.Add($line)
+    }
 }
 
 $sidebarLines | Set-Content -LiteralPath $sidebarPath -Encoding UTF8

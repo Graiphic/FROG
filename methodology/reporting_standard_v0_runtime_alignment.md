@@ -1,5 +1,8 @@
 # Reporting Standard V0 Runtime Alignment
 
+> Archived Botschild reporting material. The vocabulary below belongs to
+> that project's campaign tooling.
+
 This file resolves the legacy vocabulary ambiguity in `methodology/reporting_standard.md`.
 
 ## Current V0 vocabulary

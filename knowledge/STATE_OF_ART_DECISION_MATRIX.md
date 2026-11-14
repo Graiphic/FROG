@@ -1,5 +1,7 @@
 # State-of-the-Art Decision Matrix
 
+> Archived Botschild finance and reinforcement-learning material.
+
 This matrix tells Codex how to combine finance/RL knowledge with observed Context results before choosing a campaign.
 
 ## Mandatory decision inputs

@@ -13,6 +13,10 @@
 
 <h2>Overview</h2>
 
+<p>Start with the <a href="../docs/generate-frog.md#3-qualified-example-paths">small
+qualified corpus for generators</a> for exact Frontend commands, output oracles
+and target boundaries.</p>
+
 <p>
 The proposed <a href="./Native_examples.md">native Studio corpus and shared
 example index</a> complements this historical numbered progression. Its

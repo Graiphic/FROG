@@ -1,5 +1,9 @@
 # Knowledge
 
+> Archived Botschild campaign material. This directory is outside the FROG
+> language documentation. The historical text below records that project's
+> workflow at the time it was written.
+
 This folder contains the operational knowledge layer used by Codex before creating or launching Botschild campaigns.
 
 Codex must combine this folder with observed project evidence:

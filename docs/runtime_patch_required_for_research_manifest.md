@@ -1,5 +1,8 @@
 # Runtime Patch Required for Research Manifests
 
+> Archived Botschild campaign material. This patch note concerns the
+> Botschild research runner.
+
 This repository now documents research-driven campaign manifests, but the runtime should also enforce the research contract directly in `scripts/run_campaign.py` or `src/cac40_rl/training/campaign.py`.
 
 ## Required runtime behavior

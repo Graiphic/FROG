@@ -74,12 +74,12 @@ authored, lowered, compiled and tested capabilities remain distinct.</p>
 
 <h2 id="start-here">Start here</h2>
 
-<p>To understand or generate a <code>.frog</code> file, start with the
-<a href="./Expression/Frog%20source%20guide.md">source syntax guide and complete example</a>.
-Then read <a href="./docs/studio-source-compatibility.md">Graiphic Studio and public-source compatibility</a>
-for the implementation boundary and requirements for ecosystem tools. Graiphic
-leads the specification's stewardship and develops the lead authoring implementation;
-portable contracts remain public and independently implementable.</p>
+<p>To <strong>write, generate or import a <code>.frog</code> file</strong>, use the
+<a href="./docs/generate-frog.md">generator guide</a> for a complete example,
+stable ports, exact CLI commands, expected outputs and refusals. The
+<a href="./llms.txt">compact tool and LLM index</a> links directly to the same
+public authorities. Use the <a href="./docs/studio-source-compatibility.md">Studio
+compatibility matrix</a> to match a format and profile to a tested version.</p>
 
 <p>
 The maintained <a href="./Language/Execution%20eligibility.md">Execution eligibility and diagnostics</a>
@@ -92,9 +92,8 @@ and the evidence required to claim support. See also the
 <p>
 The current source/editor convergence decisions are in
 <a href="./Expression/Source%20compatibility%20and%20profiles.md">Source compatibility and profiles</a>.
-The <a href="./docs/language-studio-convergence-audit-2026-09-06.md">6 September 2026 convergence audit</a>
-records implementation evidence and remaining gaps; it is not a claim that all
-editors, reference artifacts or runtimes already implement the same source profile.
+Use the <a href="./FROG-Repository-Guide.md#documentation-map">documentation map</a>
+for references, proposals and dated evidence.
 </p>
 
 <table>
