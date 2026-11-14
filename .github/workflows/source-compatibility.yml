@@ -1,0 +1,67 @@
+name: FROG source compatibility
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/source-compatibility.yml'
+      - '.gitattributes'
+      - 'Conformance/studio-save-open/**'
+      - 'Expression/**'
+      - 'IR/schema/**'
+      - 'Implementations/Frontend/**'
+      - 'Implementations/Reference/requirements-test.txt'
+      - 'Implementations/Reference/Validator/tests/test_studio_source_versioning.py'
+      - 'Versioning/**'
+      - 'docs/studio-source-compatibility.md'
+  pull_request:
+    paths:
+      - '.github/workflows/source-compatibility.yml'
+      - '.gitattributes'
+      - 'Conformance/studio-save-open/**'
+      - 'Expression/**'
+      - 'IR/schema/**'
+      - 'Implementations/Frontend/**'
+      - 'Implementations/Reference/requirements-test.txt'
+      - 'Implementations/Reference/Validator/tests/test_studio_source_versioning.py'
+      - 'Versioning/**'
+      - 'docs/studio-source-compatibility.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-compatibility:
+    name: Schemas and common Frontend on GS fixtures
+    runs-on: windows-2022
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: Implementations/Reference/requirements-test.txt
+      - name: Install schema test dependencies
+        run: python -m pip install -r Implementations/Reference/requirements-test.txt
+      - name: Build the common Frontend CLI
+        shell: pwsh
+        run: |
+          $build = Join-Path $env:RUNNER_TEMP frog-source-compatibility
+          cmake -S Implementations/Frontend -B $build -G "Visual Studio 17 2022" -A x64
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cmake --build $build --config Release --target frog-frontend-cli --parallel 2
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          "FROG_VERSIONING_FRONTEND=$(Join-Path $build Release/frog-frontend.exe)" >> $env:GITHUB_ENV
+      - name: Verify the versioning contract
+        shell: pwsh
+        run: |
+          if (!(Test-Path -LiteralPath $env:FROG_VERSIONING_FRONTEND -PathType Leaf)) {
+            throw "Common Frontend CLI is missing."
+          }
+          & $env:FROG_VERSIONING_FRONTEND describe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B -m pytest -p no:cacheprovider -q Implementations/Reference/Validator/tests/test_studio_source_versioning.py

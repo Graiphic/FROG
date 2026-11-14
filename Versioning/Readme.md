@@ -1333,3 +1333,40 @@ not publish the implementation or upgrade the language formats. Consumers select
 the exact schema; older versions remain historical. Studio pins a tested version
 and content identity. Local/candidate/published describes dissemination separately
 from implemented/qualified.
+
+## Advancing a Source format with GS evidence
+
+Graiphic Studio is the reference implementation for qualifying what the
+product writes, reopens and preserves. Record the exact GS version and the
+common Frontend it uses. The common Frontend owns semantic admission.
+The public Source contracts and schemas describe the portable part of
+what has been qualified.
+
+Keep the version axes independent:
+
+- `spec_version` selects the canonical Source contract. The supported
+  version is currently `"0.1"`. Generators should emit the string spelling.
+- `draft_revision` selects the Studio document envelope. Its reader
+  advertises revisions 0â€“9; the public writer-shaped schema covers 2â€“9.
+- FIR, profiles, Frontend software/API and a program's metadata have
+  separate versions. Frontend software `0.2.0-local` supports Source 0.1.
+
+For a candidate Source version, first identify a portable change that needs
+an explicit format boundary. Add files written and reopened in GS through
+the actual producer and reader. Record exact bytes, identities and behavior
+for each supported operation, and retain old fixtures for compatibility
+checks. Verify the version against the public schema, the Frontend's
+description and validation, and precise refusals for unknown or incorrectly
+declared versions. Qualify FIR derivation or Run separately whenever a
+release claims them. Update the format entry, schema, compatibility matrix,
+examples and migration guidance together after qualification.
+
+The current review retains Source `0.1`. The qualified Compact Array,
+configured native call and linked Type Definition writer changes concern
+Studio draft revisions. The qualified portable Type Definition profile
+already derives from Source 0.1. Editor geometry is presentation. None of
+these changes establishes a portable Source 0.2 boundary.
+
+See the [GS compatibility matrix](../docs/studio-source-compatibility.md#coverage-matrix),
+the [sealed fixtures and provenance](../Conformance/studio-save-open/Readme.md)
+and the [focused CI workflow](../.github/workflows/source-compatibility.yml).

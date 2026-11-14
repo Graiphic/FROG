@@ -1,0 +1,55 @@
+{
+  "canonical_source_versions": [
+    "0.1"
+  ],
+  "studio_reader_revisions": {
+    "first": 0,
+    "last": 9
+  },
+  "studio_schema_revisions": {
+    "first": 2,
+    "last": 9
+  },
+  "fixtures": [
+    {
+      "id": "canonical-scalar",
+      "path": "Conformance/studio-save-open/canonical-add.frog",
+      "sha256": "df6326c73bd31df37f39cb8fa5056aad717bde1ed5d1462a9c8e1d6ac887ee0f",
+      "format": "frog.source",
+      "version": "0.1",
+      "studio_save_open": {
+        "version": "0.0.8.215",
+        "scenario": "Canonical Source editor Apply, Save and fresh Open",
+        "studio_sha256": "e91d1e836004f06b13cd339a07f58beaa0f2e98b4f668084872aa3738b207815",
+        "frontend_content_sha256": "191b0b215c92500fe6f8954e5dcde09e0c13edebf9ca1248cf0849622dcfd92c"
+      },
+      "frontend_validation": true
+    },
+    {
+      "id": "studio-variant-cluster",
+      "path": "Conformance/studio-save-open/variant-cluster.frog",
+      "sha256": "6579a0f78075fbed83d75f1a59a08823aac9bdc05df33bc19dec7b07d14667da",
+      "format": "frog.document.draft",
+      "version": "2",
+      "studio_save_open": {
+        "version": "0.0.7.656",
+        "scenario": "T310",
+        "test_executable_sha256": "95f8c75c4dabce09efc6e3d197cf4102154794ae426843882315762bc67d52b"
+      },
+      "frontend_validation": true
+    },
+    {
+      "id": "studio-compact-array",
+      "path": "Conformance/studio-save-open/compact-array.frog",
+      "sha256": "156f4f7f70e3bc767af5e70c72371192e5404201f07b76d52c5cbbc228e7ac57",
+      "format": "frog.document.draft",
+      "version": "3",
+      "studio_save_open": {
+        "version": "0.0.8.190",
+        "scenario": "Compact Standalone round trip, 10,000,001 I32",
+        "frontend_content_sha256": "8a675af70e13f99c18fd18d2e3c945376deae2adeacf6f2a7c53158d5ea6d038"
+      },
+      "frontend_validation": false
+    }
+  ]
+}

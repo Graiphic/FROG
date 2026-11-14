@@ -38,8 +38,9 @@ See [the tool guide](frontend-tools-guide.md) and
 
 Graiphic leads FROG's stewardship and develops Graiphic Studio. The public
 [governance](../GOVERNANCE.md) remains the decision authority for changes to the
-language. Studio is the lead authoring implementation and provides concrete
-requirements and regression examples. Accepted portable behavior is specified
+language. Studio is the authority for which authoring operations have actually
+been qualified on its files. Its common Frontend owns semantic validation.
+Accepted portable behavior is specified
 in the public contracts so that other editors, generators, validators and runtimes
 can implement it independently.
 
@@ -100,6 +101,20 @@ The CTests used for this reconciliation were already-built component binaries.
 Their individual results do not qualify every path on the installed Studio
 version. The published checkpoint and the local product identity are tracked
 separately.
+
+### Checked-in version baseline
+
+| File | Format and profile | GS Save/Open | Public CI |
+| --- | --- | --- | --- |
+| Scalar addition and Front Panel | Source `spec_version: "0.1"` | Signed GS 0.0.8.215; Source edit, Save and fresh Open | Sealed bytes, canonical schema, semantic validation and FIR provenance |
+| Variant containing a Cluster | Studio draft 2 | 0.0.7.656, T310 UI bench; typed Cluster round trip | Sealed bytes, Studio schema, common Frontend validation |
+| Compact Standalone numeric Array | Studio draft 3 | 0.0.8.190, native benchmark; Save/Open of 10,000,001 I32 elements | Sealed bytes and Studio schema. The local Frontend rejected the execution projection at its JSON representation budget. |
+
+See the [files and manifest](../Conformance/studio-save-open/Readme.md)
+and the [version advancement criteria](../Versioning/Readme.md#advancing-a-source-format-with-gs-evidence).
+The checked-in fixtures supplement the broader historical evidence above.
+The workflow builds the common Frontend from the checkout. The Studio
+versions in the table identify the native Save/Open evidence.
 
 ## Integration rules for the ecosystem
 

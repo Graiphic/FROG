@@ -819,3 +819,4 @@ sdk/ecosystem/src/BridgeJson.cpp -text
 sdk/ecosystem/src/BridgeProtocol.cpp -text
 sdk/ecosystem/tests/test_frontend_documents.py -text
 sdk/ecosystem/tests/validate_frontend_results.py -text
+Conformance/studio-save-open/*.frog -text
