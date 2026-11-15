@@ -1400,6 +1400,13 @@
                   "path": "/Examples/compiler/03_explicit_state.md",
                   "kind": "page",
                   "children": []
+                },
+                {
+                  "key": "examples/compiler/classes-v1/",
+                  "title": "classes-v1",
+                  "path": "/Examples/compiler/classes-v1/README.md",
+                  "kind": "category",
+                  "children": []
                 }
               ]
             },
@@ -2304,6 +2311,21 @@
                           "key": "examples/native/cluster/cluster.bundle.replace-outer/main.frog",
                           "title": "main.frog",
                           "path": "/Examples/Native/cluster/cluster.bundle.replace-outer/main.frog",
+                          "kind": "code",
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "key": "examples/native/cluster/cluster.by-name.ni-layout-order/",
+                      "title": "cluster.by-name.ni-layout-order",
+                      "path": "/Examples/Native/cluster/cluster.by-name.ni-layout-order/Readme.md",
+                      "kind": "category",
+                      "children": [
+                        {
+                          "key": "examples/native/cluster/cluster.by-name.ni-layout-order/main.frog",
+                          "title": "main.frog",
+                          "path": "/Examples/Native/cluster/cluster.by-name.ni-layout-order/main.frog",
                           "kind": "code",
                           "children": []
                         }
@@ -13558,6 +13580,28 @@
                   ]
                 }
               ]
+            },
+            {
+              "key": "conformance/widget-composite-mesure/",
+              "title": "widget-composite-mesure",
+              "path": "/Conformance/widget-composite-mesure/README.md",
+              "kind": "category",
+              "children": [
+                {
+                  "key": "conformance/widget-composite-mesure/mesure.frog",
+                  "title": "Mesure.frog",
+                  "path": "/Conformance/widget-composite-mesure/Mesure.frog",
+                  "kind": "code",
+                  "children": []
+                },
+                {
+                  "key": "conformance/widget-composite-mesure/generate.py",
+                  "title": "generate.py",
+                  "path": "/Conformance/widget-composite-mesure/generate.py",
+                  "kind": "code",
+                  "children": []
+                }
+              ]
             }
           ]
         },
@@ -15247,6 +15291,7 @@
     "/Examples/compiler/01_pure_arithmetic.md",
     "/Examples/compiler/02_structured_control.md",
     "/Examples/compiler/03_explicit_state.md",
+    "/Examples/compiler/classes-v1/README.md",
     "/Examples/compiler/Readme.md",
     "/Examples/Native/ApplicationControl/application_control.read_value/main.frog",
     "/Examples/Native/ApplicationControl/application_control.read_value/Readme.md",
@@ -15364,6 +15409,8 @@
     "/Examples/Native/cluster/cluster.bundle.replace-one/Readme.md",
     "/Examples/Native/cluster/cluster.bundle.replace-outer/main.frog",
     "/Examples/Native/cluster/cluster.bundle.replace-outer/Readme.md",
+    "/Examples/Native/cluster/cluster.by-name.ni-layout-order/main.frog",
+    "/Examples/Native/cluster/cluster.by-name.ni-layout-order/Readme.md",
     "/Examples/Native/cluster/cluster.to-array.exact-i64/main.frog",
     "/Examples/Native/cluster/cluster.to-array.exact-i64/Readme.md",
     "/Examples/Native/cluster/cluster.to-array.promotion/main.frog",
@@ -16864,6 +16911,9 @@
     "/Conformance/valid/structural/02_front_panel_recursive_children_shape_is_valid/case.frog",
     "/Conformance/valid/structural/02_front_panel_recursive_children_shape_is_valid/Readme.md",
     "/Conformance/valid/structural/Readme.md",
+    "/Conformance/widget-composite-mesure/Mesure.frog",
+    "/Conformance/widget-composite-mesure/generate.py",
+    "/Conformance/widget-composite-mesure/README.md",
     "/Conformance/Readme.md",
     "/Implementations/Reference/checks.md",
     "/Implementations/Reference/example-artifact-requirements.md",
