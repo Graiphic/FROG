@@ -4,6 +4,13 @@
 
 <h1 align="center">🐸 FROG — Free Open Graphical Language</h1>
 
+<p><strong>Writing, generating or importing a <code>.frog</code> file?</strong>
+Start with <a href="./llms.txt"><code>llms.txt</code></a>, then follow the
+<a href="./docs/generate-frog.md">generator guide</a> for complete examples,
+stable ports, exact CLI commands, expected outputs and refusals. Use the
+<a href="./docs/studio-source-compatibility.md">Studio compatibility matrix</a>
+to match a format and profile to a tested version.</p>
+
 <p><strong>Open participation, Graiphic leadership:</strong>
 <a href="GOVERNANCE.md#official-project-rules">seven simple project rules</a> and
 <a href="CONTRIBUTING.md#contribution-rules">how to contribute</a>. Shared components are proven in Studio and qualified independently before an official release; all merges require maintainer review.</p>
@@ -73,13 +80,6 @@ authored, lowered, compiled and tested capabilities remain distinct.</p>
 <hr/>
 
 <h2 id="start-here">Start here</h2>
-
-<p>To <strong>write, generate or import a <code>.frog</code> file</strong>, use the
-<a href="./docs/generate-frog.md">generator guide</a> for a complete example,
-stable ports, exact CLI commands, expected outputs and refusals. The
-<a href="./llms.txt">compact tool and LLM index</a> links directly to the same
-public authorities. Use the <a href="./docs/studio-source-compatibility.md">Studio
-compatibility matrix</a> to match a format and profile to a tested version.</p>
 
 <p>
 The maintained <a href="./Language/Execution%20eligibility.md">Execution eligibility and diagnostics</a>
