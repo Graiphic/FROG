@@ -155,6 +155,30 @@ if ($LASTEXITCODE -ne 0) { throw 'FIR derivation failed' }
 4. **Execution.** Compare observed outputs and faults with explicit expectations
    on that target. Derivation alone supplies no observed value.
 
+### Run a generated program
+
+For an editable Studio document on Windows, pass the saved file path to the
+installed Graiphic Studio executable. For the Windows portable distribution,
+set the path to its copy of GS.exe.
+
+```powershell
+$studio = 'C:\Graiphic Studio\GS.exe'
+$program = (Resolve-Path -LiteralPath '.\generated.frog').Path
+& $studio $program
+```
+
+In Studio, check that the document is ready to run, enter the intended control
+values, then click **Run**. Compare the observed indicator values or diagnostics
+with the expected results. The command above opens the editor. Studio currently
+has no documented command that runs an arbitrary saved .frog headlessly and
+returns its outputs.
+
+For supported programs that need to run independently of Studio, use
+**Build** in Studio and launch the exported .exe with its accompanying
+dependencies. For command-line validation or FIR generation, use the Frontend
+commands above. The [qualified execution paths below](#3-qualified-example-paths)
+list the public reference targets and the examples each actually ran.
+
 ## 3. Qualified example paths
 
 The examples below use Source and FIR 0.1 where applicable. The CLI replay used
